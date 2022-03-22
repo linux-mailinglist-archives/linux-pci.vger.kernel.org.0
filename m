@@ -2,81 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C61974E3EC9
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Mar 2022 13:51:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEB1D4E3F48
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Mar 2022 14:17:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233662AbiCVMxD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Mar 2022 08:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
+        id S234963AbiCVNSM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Mar 2022 09:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230049AbiCVMxB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 08:53:01 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA6ACE0A0;
-        Tue, 22 Mar 2022 05:51:33 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a8so35960748ejc.8;
-        Tue, 22 Mar 2022 05:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TKFjKWAaCF4H2cz+VJloGhXj3Wp4pEyNggKK9y2BrUE=;
-        b=UcooYFvZ+488qpuOzPyRhq1slUM2DQN24rwpn/CpYHbOaN33zhz++3VA1YMjtMP8BJ
-         XtL/1HWlnjHz7a/ghVgLwJyQkEQqTQ+UOgPzsxlkvVHJPdk0orXYABh8zXnnb/lMo5il
-         OzozR8K4TACRlUHWcHLLs80cqoGGY/h4UvEoFKpz7UzbwWEiAHI5AqLe7W938YZByE0O
-         HDCb0OykNygl1oHpqryfnVqSLbfXyZl7qrzsOcOO12PlV46VNQ0dBD7B96D9D+EVWTlx
-         DSlQWo9ygHnepA4U/xWUIjVAy/ENdd6K1Afv1dE8dj5JfU7zJIgYeQMPh9wEJTEX29ys
-         Halw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TKFjKWAaCF4H2cz+VJloGhXj3Wp4pEyNggKK9y2BrUE=;
-        b=ZDa/Ojr3n11MMoidBiojFib0OyOB9GMiRKyVZHhDBjezVxnIsLnOQf/OTTG5MpyMHq
-         wWJJoBti51FyMswYPlBPFlWH5xXLrIpVlYgA2GlAh3FKjHPvoqApK8fVIyb93KVzjitV
-         mLiMhMModx6OGyUT+DniwBCJUy92upPd8q0RZORFlNO2UuSCMs3UOjRZM9wcUDI4v57+
-         evkMi097tvdd1k6Yqkc2gN8jn2knJqkNylCP/IK5PYEvmE/WcABKwx1HpOuWWpD60kJd
-         waJcir4Bq4I2TTrM6SbHv4BD//1aavq7gp8Okvgec0b3cqqKE+ShFEy4JgcjPEyc8hIx
-         9SFA==
-X-Gm-Message-State: AOAM5331WbnJ3rVtyYZqWNcdmymsxHrSeMaqzc0yL7RWTlRCm5bb63Bp
-        j9hAGHxiH6shT2tHn3TGiNM=
-X-Google-Smtp-Source: ABdhPJyRw22b6w+fQUkpmr2TGGOQ9Mqh+x3XjLkpt8ll3SjGYajRJLgYqiI8/2r1fyzS8QIys2SMnA==
-X-Received: by 2002:a17:906:c107:b0:6df:c114:e286 with SMTP id do7-20020a170906c10700b006dfc114e286mr18153971ejc.216.1647953491997;
-        Tue, 22 Mar 2022 05:51:31 -0700 (PDT)
-Received: from anparri (host-82-59-4-232.retail.telecomitalia.it. [82.59.4.232])
-        by smtp.gmail.com with ESMTPSA id g13-20020a50bf4d000000b00410d407da2esm9780512edk.13.2022.03.22.05.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Mar 2022 05:51:31 -0700 (PDT)
-Date:   Tue, 22 Mar 2022 13:51:22 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] PCI: hv: Use IDR to generate transaction IDs for
- VMBus hardening
-Message-ID: <20220322125122.GA2158@anparri>
-References: <20220318174848.290621-1-parri.andrea@gmail.com>
- <20220318174848.290621-2-parri.andrea@gmail.com>
- <PH0PR21MB3025016203AAB9AB6ECB6A3ED7149@PH0PR21MB3025.namprd21.prod.outlook.com>
- <20220320145833.GA1393@anparri>
- <PH0PR21MB3025C19EDC8F5230DB1957EBD7169@PH0PR21MB3025.namprd21.prod.outlook.com>
+        with ESMTP id S233647AbiCVNSK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 09:18:10 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EC0F1606F0;
+        Tue, 22 Mar 2022 06:16:42 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B66E9152B;
+        Tue, 22 Mar 2022 06:16:42 -0700 (PDT)
+Received: from [10.57.43.230] (unknown [10.57.43.230])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C3173F73B;
+        Tue, 22 Mar 2022 06:16:40 -0700 (PDT)
+Message-ID: <61809b8f-acaa-bae2-ac5e-aa47c55eea23@arm.com>
+Date:   Tue, 22 Mar 2022 13:16:35 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH0PR21MB3025C19EDC8F5230DB1957EBD7169@PH0PR21MB3025.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v2 0/2] PCI: xgene: Restore working PCIe functionnality
+Content-Language: en-GB
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
+        dann frazier <dann.frazier@canonical.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
+        Android Kernel Team <kernel-team@android.com>
+References: <20220321104843.949645-1-maz@kernel.org>
+ <CAL_JsqJacC6GbNebTfYyUEScROCFN4+Fg2v1_iYFfqAvW4E9Vw@mail.gmail.com>
+ <87h77rxnyl.wl-maz@kernel.org>
+ <CAL_JsqK57KpZmzCE=86dLcHK4Ws_0w0ga4_qoYUe2GwFNpDzRw@mail.gmail.com>
+ <87fsnbxgau.wl-maz@kernel.org> <e52c8cbd-031b-848f-3d78-dff8b93bd416@arm.com>
+In-Reply-To: <e52c8cbd-031b-848f-3d78-dff8b93bd416@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,124 +56,105 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> > I think I should elaborate on the design underlying this submission;
-> > roughly, the present solution diverges from the 'generic' requestor
-> > mechanism you mentioned above in two main aspects:
-> > 
-> >   A) it 'moves' the ID removal into hv_compose_msi_msg() and other
-> >      functions,
+On 2022-03-21 20:06, Robin Murphy wrote:
+> On 2022-03-21 19:21, Marc Zyngier wrote:
+>> On Mon, 21 Mar 2022 18:03:27 +0000,
+>> Rob Herring <robh@kernel.org> wrote:
+>>>
+>>> On Mon, Mar 21, 2022 at 11:36 AM Marc Zyngier <maz@kernel.org> wrote:
+>>>>
+>>>> On Mon, 21 Mar 2022 15:17:34 +0000,
+>>>> Rob Herring <robh@kernel.org> wrote:
+>>>>>
+>>>>> On Mon, Mar 21, 2022 at 5:49 AM Marc Zyngier <maz@kernel.org> wrote:
+>>>>>>
+>>>>> For XGene-1, I'd still like to understand what the issue is. Reverting
+>>>>> the first fix and fixing 'dma-ranges' should have fixed it. I need a
+>>>>> dump of how the IB registers are initialized in both cases. I'm not
+>>>>> saying changing 'dma-ranges' in the firmware is going to be required
+>>>>> here. There's a couple of other ways we could fix that without a
+>>>>> firmware change, but first I need to understand why it broke.
+>>>>
+>>>> Reverting 6dce5aa59e0b was enough for me, without changing anything
+>>>> else.
+>>>
+>>> Meaning c7a75d07827a didn't matter for you. I'm not sure that it would.
+>>>
+>>> Can you tell me what 'dma-ranges' contains on your system?
+>>
+>> Each pcie node (all 5 of them) has:
+>>
+>> dma-ranges = <0x42000000 0x80 0x00 0x80 0x00 0x00 0x80000000
+>>                0x42000000 0x00 0x00 0x00 0x00 0x80 0x00>;
 > 
-> Right.  A key implication is that this patch allows the completion
-> function to be called multiple times, if Hyper-V were to be malicious
-> and send multiple responses with the same requestID.  This is OK as
-> long as the completion functions are idempotent, which after looking,
-> I think they are in this driver.
-> 
-> Furthermore, this patch allows the completion function to run anytime
-> between when the requestID is created and when it is deleted.  This
-> patch creates the requestID just before calling vmbus_sendpacket(),
-> which is good.  The requestID is deleted later in the various functions.
-> I saw only one potential problem, which is in new_pcichild_device(),
-> where the new hpdev is added to a global list before the requestID is
-> deleted. There's a window where the completion function could run
-> and update the probed_bar[] values asynchronously after the hpdev is
-> on the global list.  I don't know if this is a problem or not, but it could
-> be prevented by deleting the requestID a little earlier in the function.
-> 
-> > 
-> >   B) it adopts some ad-hoc locking scheme in the channel callback.
-> > 
-> > AFAICT, such changes preserve the 'confidentiality' and correctness
-> > guarantees of the generic approach (modulo the issue discussed here
-> > with Saurabh).
-> 
-> Yes, I agree, assuming the current functionality of the completion
-> functions.
-> 
-> > 
-> > These changes are justified by the bug/fix discussed in 2/2.  For
-> > concreteness, consider a solution based on the VMbus requestor as
-> > reported at the end of this email.
-> > 
-> > AFAICT, this solution can't fix the bug discussed in 2/2.  Moreover
-> > (and looking back at (A-B)), we observe that:
-> > 
-> >   1) locking in the channel callback is not quite as desired: we'd
-> >      want a request_addr_callback_nolock() say and 'protected' it
-> >      together with ->completion_func();
-> 
-> I'm not understanding this point.  Could you clarify?
+> Hmm, is there anyone other than iommu-dma who actually depends on the 
+> resource list being sorted in ascending order of bus address? I recall 
+> at the time I pushed for creating the list in sorted order as it was the 
+> simplest and most efficient option, but there's no technical reason we 
+> couldn't create it in as-found order and defer the sorting until 
+> iova_reserve_pci_windows() (at worst that could even operate on a 
+> temporary copy if need be). It's just more code, which didn't need to 
+> exist without a good reason, but if this is one then exist it certainly 
+> may.
 
-Basically (on top of the previous diff):
+Taking a closer look, the Cadence driver is already re-sorting the list
+for its own setup, so iommu-dma can't assume the initial sort is
+preserved and needs to do its own anyway. Does the (untested) diff below
+end up helping X-Gene also?
 
-@@ -2700,6 +2725,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	int ret;
- 	struct hv_pcibus_device *hbus = context;
- 	struct vmbus_channel *chan = hbus->hdev->channel;
-+	struct vmbus_requestor *rqstor = &chan->requestor;
- 	u32 bytes_recvd;
- 	u64 req_id, req_addr;
- 	struct vmpacket_descriptor *desc;
-@@ -2713,6 +2739,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	struct pci_dev_inval_block *inval;
- 	struct pci_dev_incoming *dev_message;
- 	struct hv_pci_dev *hpdev;
-+	unsigned long flags;
- 
- 	buffer = kmalloc(bufferlen, GFP_ATOMIC);
- 	if (!buffer)
-@@ -2747,8 +2774,10 @@ static void hv_pci_onchannelcallback(void *context)
- 		switch (desc->type) {
- 		case VM_PKT_COMP:
- 
--			req_addr = chan->request_addr_callback(chan, req_id);
-+			spin_lock_irqsave(&rqstor->req_lock, flags);
-+			req_addr = __hv_pci_request_addr(chan, req_id);
- 			if (!req_addr || req_addr == VMBUS_RQST_ERROR) {
-+				spin_unlock_irqrestore(&rqstor->req_lock, flags);
- 				dev_warn_ratelimited(&hbus->hdev->device,
- 						     "Invalid request ID\n");
- 				break;
-@@ -2758,6 +2787,7 @@ static void hv_pci_onchannelcallback(void *context)
- 			comp_packet->completion_func(comp_packet->compl_ctxt,
- 						     response,
- 						     bytes_recvd);
-+			spin_unlock_irqrestore(&rqstor->req_lock, flags);
- 			break;
- 
- 		case VM_PKT_DATA_INBAND:
+Robin.
 
-
-where I renamed request_addr_callback_nolock() to __hv_pci_request_addr()
-(this being as in vmbus_request_addr() but without the requestor lock).
-A "locked" callback would still be wanted and used in, e.g., the failure
-path of hv_ringbuffer_write().
-
-
-> >   2) hv_compose_msi_msg() doesn't know the value of the request ID
-> >      it has allocated (hv_compose_msi_msg() -> vmbus_sendpacket();
-> >      cf. also remove_request_id() in the current submission).
-> 
-> Agreed.  This would have to be addressed by adding another version of
-> vmbus_sendpacket() that returns the request ID.
-
-Indeed...  Some care would be needed to make sure that that "ID removal"
-can't "race" with hv_pci_onchannelcallback() (which could have removed
-the ID now), but yes...
-
-
-> > Hope this helps clarify the problems at stake, and move forward to a
-> > 'final' solution...
-> 
-> I think there's a reasonable way for the vmbus_next_request_id()
-> mechanism to solve the problem in Patch 2/2 (if a new version of
-> vmbus_sendpacket is added).  To me, that mechanism seems safer
-> in that it restricts the completion function to running just once
-> per requestID.  With this patch, we must remember that the
-> completion functions must remain idempotent.
-
-Fair enough.  Thank you for bearing with me and patiently reviewing these
-matters.  Working out the details...
-
-Thanks,
-  Andrea
+----->8-----
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index b22034975301..8ef603c9ca3e 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -20,6 +20,7 @@
+  #include <linux/iommu.h>
+  #include <linux/iova.h>
+  #include <linux/irq.h>
++#include <linux/list_sort.h>
+  #include <linux/mm.h>
+  #include <linux/mutex.h>
+  #include <linux/pci.h>
+@@ -414,6 +415,14 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
+  	return 0;
+  }
+  
++static int iommu_dma_ranges_sort(void *priv, const struct list_head *a, const struct list_head *b)
++{
++	struct resource_entry *res_a = list_entry(a, typeof(*res_a), node);
++	struct resource_entry *res_b = list_entry(b, typeof(*res_b), node);
++
++	return res_a->res->start > res_b->res->start;
++}
++
+  static int iova_reserve_pci_windows(struct pci_dev *dev,
+  		struct iova_domain *iovad)
+  {
+@@ -432,6 +441,7 @@ static int iova_reserve_pci_windows(struct pci_dev *dev,
+  	}
+  
+  	/* Get reserved DMA windows from host bridge */
++	list_sort(NULL, &bridge->dma_ranges, iommu_dma_ranges_sort);
+  	resource_list_for_each_entry(window, &bridge->dma_ranges) {
+  		end = window->res->start - window->offset;
+  resv_iova:
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index cb2e8351c2cc..d176b4bc6193 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -393,12 +393,7 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+  			goto failed;
+  		}
+  
+-		/* Keep the resource list sorted */
+-		resource_list_for_each_entry(entry, ib_resources)
+-			if (entry->res->start > res->start)
+-				break;
+-
+-		pci_add_resource_offset(&entry->node, res,
++		pci_add_resource_offset(ib_resources, res,
+  					res->start - range.pci_addr);
+  	}
+  
