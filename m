@@ -2,135 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E044E4526
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Mar 2022 18:27:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ADD54E473C
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Mar 2022 21:10:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238291AbiCVR3L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Mar 2022 13:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60420 "EHLO
+        id S229498AbiCVUMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Mar 2022 16:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235913AbiCVR3K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 13:29:10 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 218C68CCDE
-        for <linux-pci@vger.kernel.org>; Tue, 22 Mar 2022 10:27:40 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 925511042;
-        Tue, 22 Mar 2022 10:27:40 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7CD4C3F66F;
-        Tue, 22 Mar 2022 10:27:39 -0700 (PDT)
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     joro@8bytes.org, will@kernel.org
-Cc:     iommu@lists.linux-foundation.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, maz@kernel.org, robh@kernel.org,
-        dann.frazier@canonical.com
-Subject: [PATCH] iommu/dma: Explicitly sort PCI DMA windows
-Date:   Tue, 22 Mar 2022 17:27:36 +0000
-Message-Id: <65657c5370fa0161739ba094ea948afdfa711b8a.1647967875.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.28.0.dirty
+        with ESMTP id S232727AbiCVUMF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 16:12:05 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EE6C5EBD6
+        for <linux-pci@vger.kernel.org>; Tue, 22 Mar 2022 13:10:32 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id i184so2592966pgc.1
+        for <linux-pci@vger.kernel.org>; Tue, 22 Mar 2022 13:10:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yxRoOuDAQ32T7epvmjmCMUDa2ze+iRE6nt0uAlg4Cn4=;
+        b=lmELaTz7WP/HCCZzx81ngJJsBsHi+8NNkFAdHtPQ8AA9Up+PwmmEc27JoRzPCC3bGF
+         ypk4x3onyQ3gaTiIYEwIDn5jRK/vCJg3N5JhJf6RAjv4NRF5GENUps0Ntr+1PcidHWaB
+         2a6jKQMajECNEYH6nQUEqAFRtx2s1//6L8S/oUjHhiCItaEBkG9fYZMeHRARLVRof+fU
+         VeqU2FeJGUYPCNnYajwC2MZNe12kKcEphyLwe+XM0C13pKnxJoNN8QEk0KXf4o5afx/X
+         Kq+6r3tYjHYxjwRpkEyKGU0QDVqvlg29oIG0TAs3YSO/LyFvemSnXsoHZLDq+hg0KcvL
+         9tcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yxRoOuDAQ32T7epvmjmCMUDa2ze+iRE6nt0uAlg4Cn4=;
+        b=dN/rCjGiNkj3a8+QWDwcep81CTJy072xAS+8vnw+WBWbuUBy3/V/FzK8SyavIIJJ/c
+         FmIQdTB0rlgtjc6d+tJILn2AjZLYLI1QS97/IMQ1obWErByt6JZMNhN6U0BGZ44gQVgi
+         yT9+4O3hM0FLnhT6CdposydGPhAr6M0opHZ0pqQjnHPApfbNeEH+IYQ6BKCg8TO3phnR
+         4QygeTBAvjJhzIKMw8wT07MkJXg/d5RZrhyQ3fafBNKRqHWS/xeLyhc2ymOYbPn37r0h
+         QneEc+jao32TTSqEGXA98bCQXxANpH9I5dKIYaGzu+PRrmZoXtRysGULihSagrhVe8WR
+         ifDQ==
+X-Gm-Message-State: AOAM530QyKPh4j2x7PBQhWiH9muDLsE5PVy2lb5WLP0sa92YafVMcxSS
+        X5RFuDLdOzzYqm0Nnug0bdN8zXOi5gWjXuERVhpesXE+jzc=
+X-Google-Smtp-Source: ABdhPJyiLa4J6HZobaRPPLdsxYqNc7OtUXhU/czFKSJbwUv9zO/SiqHx4I4DyNmue6FaGBfUb/DumAGOIvZe5zD0WZc=
+X-Received: by 2002:a63:416:0:b0:386:66e:33d9 with SMTP id 22-20020a630416000000b00386066e33d9mr833745pge.146.1647979831669;
+ Tue, 22 Mar 2022 13:10:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220320062907.3272903-1-rajatja@google.com> <YjmQq1DvWnJwUh6R@infradead.org>
+ <CAJZ5v0h9TnUELahzkO59Vqoio1QRHfixk58Yxgffa72rmEBgOA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0h9TnUELahzkO59Vqoio1QRHfixk58Yxgffa72rmEBgOA@mail.gmail.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 22 Mar 2022 13:09:55 -0700
+Message-ID: <CACK8Z6Fz-TPW1fMpQB09fw11neq8eyn89XB8vy0ioB5zB0Hb9Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] PCI: Rename "pci_dev->untrusted" to "pci_dev->poses_dma_risk"
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Pavel Machek <pavel@denx.de>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Originally, creating the dma_ranges resource list in pre-sorted fashion
-was the simplest and most efficient way to enforce the order required by
-iova_reserve_pci_windows(). However since then at least one PCI host
-driver is now re-sorting the list for its own probe-time processing,
-which doesn't seem entirely unreasonable, so that basic assumption no
-longer holds. Make iommu-dma robust and get the sort order it needs by
-explicitly sorting, which means we can also save the effort at creation
-time and just build the list in whatever natural order the DT had.
+On Tue, Mar 22, 2022 at 4:12 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, Mar 22, 2022 at 10:02 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Sat, Mar 19, 2022 at 11:29:05PM -0700, Rajat Jain wrote:
+> > > Rename the field to make it more clear, that the device can execute DMA
+> > > attacks on the system, and thus the system may need protection from
+> > > such attacks from this device.
+> > >
+> > > No functional change intended.
+> > >
+> > > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > > ---
+> > > v4: Initial version, created based on comments on other patch
+> >
+> > What a horrible name.  Why not untrusted_dma which captures the
+> > intent much better?
+>
+> FWIW, I like this one much better too.
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
+Sure, no problems. I can change the name to "untrusted_dma".
 
-Looking at this area off the back of the XGene thread[1] made me realise
-that we need to do it anyway, regardless of whether it might also happen
-to restore the previous XGene behaviour or not. Presumably nobody's
-tried to use pcie-cadence-host behind an IOMMU yet...
+Mika, can I carry forward your "Reviewed-by" tag with this name change too?
 
-Boot-tested on Juno to make sure I hadn't got the sort comparison
-backwards.
+Thanks & Best Regards,
 
-Robin.
-
-[1] https://lore.kernel.org/linux-pci/20220321104843.949645-1-maz@kernel.org/
-
- drivers/iommu/dma-iommu.c | 13 ++++++++++++-
- drivers/pci/of.c          |  7 +------
- 2 files changed, 13 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index b22034975301..91d134c0c9b1 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -20,6 +20,7 @@
- #include <linux/iommu.h>
- #include <linux/iova.h>
- #include <linux/irq.h>
-+#include <linux/list_sort.h>
- #include <linux/mm.h>
- #include <linux/mutex.h>
- #include <linux/pci.h>
-@@ -414,6 +415,15 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
- 	return 0;
- }
- 
-+static int iommu_dma_ranges_sort(void *priv, const struct list_head *a,
-+		const struct list_head *b)
-+{
-+	struct resource_entry *res_a = list_entry(a, typeof(*res_a), node);
-+	struct resource_entry *res_b = list_entry(b, typeof(*res_b), node);
-+
-+	return res_a->res->start > res_b->res->start;
-+}
-+
- static int iova_reserve_pci_windows(struct pci_dev *dev,
- 		struct iova_domain *iovad)
- {
-@@ -432,6 +442,7 @@ static int iova_reserve_pci_windows(struct pci_dev *dev,
- 	}
- 
- 	/* Get reserved DMA windows from host bridge */
-+	list_sort(NULL, &bridge->dma_ranges, iommu_dma_ranges_sort);
- 	resource_list_for_each_entry(window, &bridge->dma_ranges) {
- 		end = window->res->start - window->offset;
- resv_iova:
-@@ -440,7 +451,7 @@ static int iova_reserve_pci_windows(struct pci_dev *dev,
- 			hi = iova_pfn(iovad, end);
- 			reserve_iova(iovad, lo, hi);
- 		} else if (end < start) {
--			/* dma_ranges list should be sorted */
-+			/* DMA ranges should be non-overlapping */
- 			dev_err(&dev->dev,
- 				"Failed to reserve IOVA [%pa-%pa]\n",
- 				&start, &end);
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index cb2e8351c2cc..d176b4bc6193 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -393,12 +393,7 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
- 			goto failed;
- 		}
- 
--		/* Keep the resource list sorted */
--		resource_list_for_each_entry(entry, ib_resources)
--			if (entry->res->start > res->start)
--				break;
--
--		pci_add_resource_offset(&entry->node, res,
-+		pci_add_resource_offset(ib_resources, res,
- 					res->start - range.pci_addr);
- 	}
- 
--- 
-2.28.0.dirty
-
+Rajat
