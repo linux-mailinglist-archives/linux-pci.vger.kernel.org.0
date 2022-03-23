@@ -2,218 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F7A84E5828
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Mar 2022 19:09:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09D3F4E59DB
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Mar 2022 21:31:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235178AbiCWSLP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Mar 2022 14:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53944 "EHLO
+        id S1344646AbiCWUdL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Mar 2022 16:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230446AbiCWSLP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 14:11:15 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E166788B17
-        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 11:09:44 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id q5so2303833plg.3
-        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 11:09:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VAZZx4yARy2bKiWJUAHdWlVunec6BHxeT5QzHW1tg88=;
-        b=PHbNOcWJhOiuq9FYpf2BLGL+KcJUD8yv398yfLyzaYJqcUZYygYK8VtrNRR/IoSEqU
-         F3zb98OaADAGpiDgWbcBrG0JM7PoMDuATFYf3AG4eKzcqdL6jZ7uwm+YT2/uLWoWKvfT
-         gazsEehP6guPSbnFmGMmgzDb3MM+rwqvRrskLhE2wNRNAXt5Vrc+tarwlbfJiZqHyfT4
-         p5vD8QumOnCptAMJXSYnVlPaPoFfVAKLbR4HNdpeeSKToiArAkPt4x8MkG9EeINZSdiB
-         oJlQRF0aJALatIOa/H4oS1vioSAqRq8Blf0iQUyIRHLqTEkc1OzWDHHvUPWbTadfCPqx
-         QIdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VAZZx4yARy2bKiWJUAHdWlVunec6BHxeT5QzHW1tg88=;
-        b=tV5wjD9Imun8oIvcQAdzCwPway7N5rgeGORZH1dTXQyqJf4nShNXsxTxAV3iD7N8dY
-         6fuYHgYBr5OfYSWTck50cIqfB5I1Jl2ZWSm7AyXCmHrl2vyY0aIoKjv17W2vFXjTuZdE
-         KyAKyy3zv7xr6zkD2VjJC8dUvTEKLwIo9Uh+ip63ZU0Bno8fwHAJwZNjwdxxEv9Kjeu9
-         idlw38+M+pbAFD+Kn/UCT2LULl5qKtfcj+enNR/+/ZB4iVD+M9zzWOxT1atL9HW/G9wr
-         zAvTYZTRbauH8x3DgTWOBmN6cGKlb3r00snVQSYZAdG3ACnp2rmhGiMUcuy5aSgBC7Wr
-         kz4w==
-X-Gm-Message-State: AOAM532o+CcQ3psJ1kAgZrdHG55TQaLKYo4q7i+m2X+rdg2F+1VqY+7/
-        nG7uPLFRo4go4whdicPbGaKT
-X-Google-Smtp-Source: ABdhPJxRawOxfVPQ8IfHp83njNoGoQyDNWo8LB3IeXind2f3A8QUP7qFqLe6UFd7l3C0hlPvGyweAQ==
-X-Received: by 2002:a17:90b:4d8e:b0:1c7:1e1f:484b with SMTP id oj14-20020a17090b4d8e00b001c71e1f484bmr13107731pjb.216.1648058984275;
-        Wed, 23 Mar 2022 11:09:44 -0700 (PDT)
-Received: from thinkpad ([220.158.158.25])
-        by smtp.gmail.com with ESMTPSA id h2-20020a056a00218200b004f66d50f054sm538127pfi.158.2022.03.23.11.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 11:09:43 -0700 (PDT)
-Date:   Wed, 23 Mar 2022 23:39:39 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     lorenzo.pieralisi@arm.com, Vidya Sagar <vidyas@nvidia.com>,
-        kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        dmitry.baryshkov@linaro.org
-Subject: Re: [PATCH v2] PCI: endpoint: Use blocking notifier instead of atomic
-Message-ID: <20220323180939.GA81772@thinkpad>
-References: <20220228055240.24774-1-manivannan.sadhasivam@linaro.org>
- <e151083b-c15a-7baa-3423-84bd1881105a@ti.com>
- <20220228062830.GA37219@thinkpad>
- <a66ccea3-b854-75d7-dc3d-6c9bb2057a0d@ti.com>
+        with ESMTP id S230260AbiCWUdL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 16:33:11 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eus2azon11020020.outbound.protection.outlook.com [52.101.56.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F108BF33;
+        Wed, 23 Mar 2022 13:31:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TD4611Do860P0WEyhr4iQk9ev3VKCZi7Dcu+jS14vf7JPk14J3uos5D0VePvigHs2zvWoNlPkUCKsrTQf2ilx6G8n3ng42qBX4ip6XbvwBXvUI2TPOrpUIFINZ0t3wNDZEKUOvaDr/upJ4nr4YG+pf1VhP1fqIg16TVPQTQQDHTZRIdxwWWoIROoSDK5X+fp1/cTCHcM8fAbETZcHO9/mJiO97GGB7s2TEaLBbLGFyqqsUItcfVezbIP9hQf2mFr/nA7HHnlL5/eDBMk1CcYL09BGpdM7fmB3VzHFQ0WM1a4ratkMiweBuzJaUSRSoKTgcpg9MAGlSDE+t/IO68s/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xy8OZinl7z11NmrBLDmzzm9ZbxBjHOPfF+9VYwefMio=;
+ b=C+4G6lzHGwaO0Bpp4Lo/tCkup5EdbpZoSiR1++E8IR77NPaayb/QYkZ9vNMWHQJJk2rysy6QfiotylRjwdA2OonvbtPRWaRKxgTfFReR3wqr3JRTgKlQToX6G+2aVB1yUGbs3nBBhhxCcAeE1DiV6fQb+qEKAAD3X4CGx6U+ReecKzizPWmc4cer1QPblKiNHtFnHv29u2dz4yE1NrbzYnwqsRO5G+rOwcg3ATu46bK8PUGis5bf7w6DvPNgyyxmxhD/Qwz0XtNXeQHhEgBImP606CioYZ1W2LhsEl2Ul6bd81JkXSlrEN6W1DR+qU+8f6XxeOBrwpgfwzG3h2sCiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xy8OZinl7z11NmrBLDmzzm9ZbxBjHOPfF+9VYwefMio=;
+ b=akN59Imquyb5HQnHgFMIJN7y197vjfIRmaWaujHdTZvRttoOPuwnydu87S5eaLCLy4+gpffpJtsLrB10NcYx44XA36g+fOliuhAHbslJK9Ky6UahkPT6CdiG88LcBzrpOIjwtA5iQFKvgS1jq8q3WtDxgBgh1rKBBVYwlRw34kw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
+ by SN6PR2101MB0942.namprd21.prod.outlook.com (2603:10b6:805:4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.8; Wed, 23 Mar
+ 2022 20:31:38 +0000
+Received: from DM6PR21MB1514.namprd21.prod.outlook.com
+ ([fe80::f8aa:99ff:9265:bb6b]) by DM6PR21MB1514.namprd21.prod.outlook.com
+ ([fe80::f8aa:99ff:9265:bb6b%4]) with mapi id 15.20.5123.008; Wed, 23 Mar 2022
+ 20:31:38 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     sthemmin@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, rafael@kernel.org,
+        lenb@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     mikelley@microsoft.com
+Subject: [PATCH v2 0/2] Fix coherence for VMbus and PCI pass-thru devices in Hyper-V VM
+Date:   Wed, 23 Mar 2022 13:31:10 -0700
+Message-Id: <1648067472-13000-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW3PR05CA0019.namprd05.prod.outlook.com
+ (2603:10b6:303:2b::24) To DM6PR21MB1514.namprd21.prod.outlook.com
+ (2603:10b6:5:22d::11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a66ccea3-b854-75d7-dc3d-6c9bb2057a0d@ti.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 75e49e35-c2b2-41cd-14d8-08da0d0c2190
+X-MS-TrafficTypeDiagnostic: SN6PR2101MB0942:EE_
+X-MS-Exchange-AtpMessageProperties: SA|SL
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB094243028C5B85ACA1E16FB7D7189@SN6PR2101MB0942.namprd21.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TaNcIdyKCxcvsPgZIyI+qZK3wOebWpPzZEsmQT9Jn9ric6UhLAlLHHpmUhtyoAaRQwwmDIpp8b+t9zTm4jj4LPoibP4TVS+FwUoRJA6f54lRokgTuecQSWJJmnv1w0Rnt4LQreetKYgMOUDLQgufxu4n+l9X1QFg4bfHcPL1NyW+bt6UuqHY61gaTkgQZU8hAqDlpGLPlUzVxPPGCajtUMVzks3qWICwZHPvwcaL3KFCTsJ21CofHMLs1gg58llG4+fAvwTeScgo90MFrsyRueTMBH6dS1fCSB4J/AICwoFwQMQN0nFg9vHJzdlDVlYGuDAsOYvMqtHIKp3IHov9ohj8W9JxXHYA8ZKCNNK2XjgV2dodcUa+3jDbBpZOXPwxwYlcJjwLKDJx3PHVSUF22moZheUIEpJ5q4pv5e06qYho1oTV7/sLuVrjRAi2PEidJqItrQ0O17oY8IcTkI6joAxWsznn8w4JFZc8JhsC38qYvBflMoYnYyH5dpYRA45mQPFa/rN2hY0ji2h4/smWSeR+eU4QkjmPFSFL5b/5eH4lkGDR2UjHh1oziqUlS61kAXfVl7OGN/Ud5t9r5N+OdQ1a5TXaI9gZ58S4gDzX6vK71xjPn/Kv7ugdhHEmlxjDJw7vL1Y9dCk/+O2the4q8FgDKlsTQE8lDRJvPp2+jJofDuLhBDAgH7FhaUyjPlk8FIdthYAs7BJxOGziVqLKuKXWG97nX/y19/aUe8qOS+EhpKJV19iTLkZHv66iiWUZXdxzw/S7Ar58yKd0ZvT3OQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(921005)(5660300002)(107886003)(316002)(7416002)(36756003)(38100700002)(82950400001)(82960400001)(38350700002)(2906002)(86362001)(66946007)(4326008)(8676002)(66476007)(66556008)(6486002)(10290500003)(8936002)(26005)(186003)(2616005)(6506007)(6512007)(508600001)(6666004)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?krpYi6JbrhbTNEHm19ZjDVtyxArTMH3reIz2t8w/Lr+SEnrUDDuESyvd2ltW?=
+ =?us-ascii?Q?CwHExkcuem83CVZP3cPYb87zGY2bJzo+IV5N0SJQB4dPrbYnFTJT3gxJ81lV?=
+ =?us-ascii?Q?Mv0xo/ELdxiidK0Y3nlbqRGblpwcP9OTbW7gZi6a18o2mCH9MXCVwry1LIu0?=
+ =?us-ascii?Q?pBXvjxPJkQnCHKoLRIHivhkSbUFD8JZShhShf5FDSjz4G33CrU1HuCyd+Okw?=
+ =?us-ascii?Q?vXlFae581QJQdqfDDUALsSWcvow+5wkwsFHSX7YAXiGZQ5e//Etbgt21PvRS?=
+ =?us-ascii?Q?jeMiyUw8/hpFevefXqeCAtMmX0kFNQdvHGdJpV+ExfPcuvb1bNeLXO7X6Fv1?=
+ =?us-ascii?Q?GryqJtt3VTkW8TxdH1t1kCcJe3eJmQBTlJfkAxCzEKFYDNOicED4AAoF38fR?=
+ =?us-ascii?Q?uNyxSUCyuUzQgMdvFQ8TrnG+cv9JbP+3SLPOTZLSS68etWvi6NcFOLjd5txy?=
+ =?us-ascii?Q?gyWrrXuXIRapCE2yB9UuIsyJcin7TSQE0XfMPSqkS8TQGgJTxwFOCjSBQbQE?=
+ =?us-ascii?Q?ps0KgHlUT3hlIn/8Fy1+mnF+td7SihDioD9qKB1+QA6ila4sew2ULRnVk7va?=
+ =?us-ascii?Q?TXSdX9jlCDOrxEuuXhB6ufYnBBscVpla5I38ACFFGtC63K8V5MLM0AXc8neD?=
+ =?us-ascii?Q?YNC7B4kihCgJvcILzAIu0ZFbFncs3kBNX9oPNkWXxLSq1l/0Jxiog+sn73d3?=
+ =?us-ascii?Q?cS4x0Ii7ChXSNVUxJiDNjrlkstBsOPMyrMVW2l6vPL/wFzRfoSo2wt4YAOAW?=
+ =?us-ascii?Q?mdgXe6sQQ57Q8dTvkpnrfGNxLbkR5K47Y6wzsrBzFtGp71odSynZYGOTsgJa?=
+ =?us-ascii?Q?IBVBhpecr8Qm2KYdhFhhIaL9VzCozFTX+DxLhmj2x5T1sX1ncZMYtO7BXt6o?=
+ =?us-ascii?Q?lBaZ28v05c1D7OZZ7cjrOJagSjCU22Qqf21J34G59ybf/HzMzhAyOVih+914?=
+ =?us-ascii?Q?RTCkqUP2p9eUNkhB9GD3UNRHN73/wgRM9O8S9OZMsshgQPANzXCkan3F89fu?=
+ =?us-ascii?Q?OHJmirt2ur8xSE3Lk9wukY3N8EAqEF9lebLy99ZMoWeAzPMA7NRlo8xbiiV1?=
+ =?us-ascii?Q?vYkcBJ6vJJY5ZpsyHi7RldLkFhVwQ+509UniOdEcs1lVSvIaBmrJE8F4hYGt?=
+ =?us-ascii?Q?ghQgoO3BK7OuxhddFal4dmbQFv3VWXXyhgpD8k+wGKmM+4Ki2+lfJBqqDtV8?=
+ =?us-ascii?Q?FhL13WLtoE8LzLuCMJgTKprkR6UQNefv1Ji6EWNYDC+agXVaH5QVOgs/mryB?=
+ =?us-ascii?Q?r+VcTj481/Xq1EjopQvMURWunSKgwqX5uIoOh1Ixm4BpZWXQ8cSU84crAg4w?=
+ =?us-ascii?Q?2aNd2/JZCEXyuRUiYLgEpBp8Sqa3GPB9A/Gub1leexJeo7hyUsiw46zLGxLd?=
+ =?us-ascii?Q?QFc+Vp9nsvGoWyqxaiDLDGNR5E/vsozfV/N+//JfWLv9pONA+4frPsTvOmst?=
+ =?us-ascii?Q?G2cV/R81a+H9M/6BHntT/oAvE4pTf92v6ZE/OenrCQLy5249RY+ff8Ihtyn+?=
+ =?us-ascii?Q?5WatsYEqy91oo5AzmqmQCcUrp+qp+bv1JmjoNLZnGG/9BoAfAK4p0FWLusER?=
+ =?us-ascii?Q?ZwYFJfGZeymjdVYK7snIP7USm3xV+E5mp1Wt1cEJGy8Y7Budxhip9FwMrAx6?=
+ =?us-ascii?Q?rXiIt/9vMxNEhN8ktyNTICegFs4Qhai5aRtkwgRdAl37lnLhPGJw/w4HxYyi?=
+ =?us-ascii?Q?YylGtHi+DmBJoyzFU3ACwhrQXf4hCQJFjaNpcUfKhCQBUrw0C3SPjFmfaZWM?=
+ =?us-ascii?Q?iuWOtDW/mQ=3D=3D?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75e49e35-c2b2-41cd-14d8-08da0d0c2190
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2022 20:31:38.1255
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: coamfU/WhEitvZBazjy2szzYwBcJRa49TTthDf6I5OJFJ2QcFwnleIdGudbScTAFua6nrL1hx7ewgMh82v76KQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0942
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+Hyper-V VMs have VMbus synthetic devices and PCI pass-thru devices that are added
+dynamically via the VMbus protocol and are not represented in the ACPI DSDT. Only
+the top level VMbus node exists in the DSDT. As such, on ARM64 these devices don't
+pick up coherence information and default to not hardware coherent.  This results
+in extra software coherence management overhead since the synthetic devices are
+always hardware coherent. PCI pass-thru devices are also hardware coherent in all
+current usage scenarios.
 
-On Wed, Mar 09, 2022 at 10:07:47AM +0530, Kishon Vijay Abraham I wrote:
-> Hi Mani,
-> 
-> On 28/02/22 11:58 am, Manivannan Sadhasivam wrote:
-> > Hi,
-> > 
-> > On Mon, Feb 28, 2022 at 11:46:52AM +0530, Kishon Vijay Abraham I wrote:
-> >> Hi Manivannan,
-> >>
-> >> On 28/02/22 11:22 am, Manivannan Sadhasivam wrote:
-> >>> The use of atomic notifier causes sleeping in atomic context bug when
-> >>> the EPC core functions are used in the notifier chain. This is due to the
-> >>> use of epc->lock (mutex) in core functions protecting the concurrent use of
-> >>> EPC.
-> >>
-> >> The notification from the controller to the function driver is used for
-> >> propagating interrupts to function driver and should be in interrupt context.
-> >> How it should be handled maybe left to the function driver. I don't prefer
-> >> moving everything to blocking notifier.
-> >>
-> > 
-> > I agree that we need to handle it quick enough but I don't see any other valid
-> > options to get rid of the issue. EPF driver may use a non-atomic notifier but
-> > that seems to be an overkill workaround for something that could be fixed in the
-> > EPC core.
-> > 
-> > And propagating interrupts is not going to work or needed all the time. Do you
-> > forsee any issue with blocking notifier?
-> 
-> I think any interrupt to the EP should be delivered to the function driver in
-> interrupt context, it could be function level reset interrupt, hot reset
-> interrupt, link state interrupt etc., These are right now not supported but it
-> will use the same notification mechanism to propagate interrupt from controller
-> driver to function driver.
-> 
+Fix this by propagating coherence information from the top level VMbus node in
+the DSDT to all VMbus synthetic devices and PCI pass-thru devices. While smaller
+granularity of control would be better, basing on the VMbus node in the DSDT
+gives as escape path if a future scenario arises with devices that are not
+hardware coherent.
 
-In mainline, I can see only 2 users of this notifier:
+Robin Murphy -- I'm not ignoring your feedback about pci_dma_configure(), but
+I wanted to try this alternate approach where pci_dma_configure() works as is.
+If reviewers prefer modifying pci_dma_configure() to handle the Hyper-V
+specifics, I can go back to that.
 
-1. pcie-tegra194
-2. pcie-qcom-ep
+Changes since v1:
+* Use device_get_dma_attr() instead of acpi_get_dma_attr(), eliminating the
+  need to export acpi_get_dma_attr() [Robin Murphy]
+* Use arch_setup_dma_ops() to set device coherence [Robin Murphy]
+* Move handling of missing _CCA to vmbus_acpi_add() so it is only done once
+* Rework handling of PCI devices so existing code in pci_dma_configure()
+  just works
 
-In both drivers, CORE_INIT is called from a threaded irq handler so it is not
-running in interrupt context. And the CORE_INIT of pci-epf-test driver is
-calling EPC functions that could potentially sleep.
+Michael Kelley (2):
+  Drivers: hv: vmbus: Propagate VMbus coherence to each VMbus device
+  PCI: hv: Propagate coherence from VMbus device to PCI device
 
-For LINK_UP, tegra driver is calling it from hard irq handler but the LINK_UP
-of pci-epf-test driver is queueing up the delayed work. In the qcom driver,
-LINK_UP is called from a threaded irq handler.
+ drivers/hv/hv_common.c              | 11 +++++++++++
+ drivers/hv/vmbus_drv.c              | 23 +++++++++++++++++++++++
+ drivers/pci/controller/pci-hyperv.c |  9 +++++++++
+ include/asm-generic/mshyperv.h      |  1 +
+ 4 files changed, 44 insertions(+)
 
-In both cases I don't see any necessity to use the atomic notifier chain.
-I agree with you that the notification need to be passed from EPC to EPF asap,
-but I'm not sure if it really has to be atomic.
+-- 
+1.8.3.1
 
-Thanks,
-Mani
-
-> Thanks,
-> Kishon
-> 
-> > 
-> >> I'm wondering how other users for CORE_INIT didn't see this issue.
-> > 
-> > This can be triggered with EPF test or NTB if CONFIG_DEBUG_ATOMIC_SLEEP is
-> > enabled.
-> > 
-> > Thanks,
-> > Mani
-> > 
-> >>
-> >> Thanks,
-> >> Kishon
-> >>
-> >>>
-> >>> So switch to blocking notifier for getting rid of the bug as it runs in
-> >>> non-atomic context and allows sleeping in notifier chain.
-> >>>
-> >>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >>> ---
-> >>>
-> >>> Changes in v2:
-> >>>
-> >>> * Removed the changes related to non-upstreamed patches
-> >>>
-> >>>  drivers/pci/endpoint/pci-epc-core.c | 6 +++---
-> >>>  include/linux/pci-epc.h             | 4 ++--
-> >>>  2 files changed, 5 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> >>> index 3bc9273d0a08..c4347f472618 100644
-> >>> --- a/drivers/pci/endpoint/pci-epc-core.c
-> >>> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> >>> @@ -693,7 +693,7 @@ void pci_epc_linkup(struct pci_epc *epc)
-> >>>  	if (!epc || IS_ERR(epc))
-> >>>  		return;
-> >>>  
-> >>> -	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
-> >>> +	blocking_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
-> >>>  }
-> >>>  EXPORT_SYMBOL_GPL(pci_epc_linkup);
-> >>>  
-> >>> @@ -710,7 +710,7 @@ void pci_epc_init_notify(struct pci_epc *epc)
-> >>>  	if (!epc || IS_ERR(epc))
-> >>>  		return;
-> >>>  
-> >>> -	atomic_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
-> >>> +	blocking_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
-> >>>  }
-> >>>  EXPORT_SYMBOL_GPL(pci_epc_init_notify);
-> >>>  
-> >>> @@ -774,7 +774,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
-> >>>  
-> >>>  	mutex_init(&epc->lock);
-> >>>  	INIT_LIST_HEAD(&epc->pci_epf);
-> >>> -	ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
-> >>> +	BLOCKING_INIT_NOTIFIER_HEAD(&epc->notifier);
-> >>>  
-> >>>  	device_initialize(&epc->dev);
-> >>>  	epc->dev.class = pci_epc_class;
-> >>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> >>> index a48778e1a4ee..04a2e74aed63 100644
-> >>> --- a/include/linux/pci-epc.h
-> >>> +++ b/include/linux/pci-epc.h
-> >>> @@ -149,7 +149,7 @@ struct pci_epc {
-> >>>  	/* mutex to protect against concurrent access of EP controller */
-> >>>  	struct mutex			lock;
-> >>>  	unsigned long			function_num_map;
-> >>> -	struct atomic_notifier_head	notifier;
-> >>> +	struct blocking_notifier_head	notifier;
-> >>>  };
-> >>>  
-> >>>  /**
-> >>> @@ -195,7 +195,7 @@ static inline void *epc_get_drvdata(struct pci_epc *epc)
-> >>>  static inline int
-> >>>  pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
-> >>>  {
-> >>> -	return atomic_notifier_chain_register(&epc->notifier, nb);
-> >>> +	return blocking_notifier_chain_register(&epc->notifier, nb);
-> >>>  }
-> >>>  
-> >>>  struct pci_epc *
-> >>>
