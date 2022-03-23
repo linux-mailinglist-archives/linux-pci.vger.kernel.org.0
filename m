@@ -2,113 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29B094E4DBA
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Mar 2022 09:04:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DD9F4E4E99
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Mar 2022 09:50:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242401AbiCWIFp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Mar 2022 04:05:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
+        id S240660AbiCWIv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Mar 2022 04:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232115AbiCWIFp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 04:05:45 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DB7B70F78;
-        Wed, 23 Mar 2022 01:04:16 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id bi12so1204842ejb.3;
-        Wed, 23 Mar 2022 01:04:16 -0700 (PDT)
+        with ESMTP id S242949AbiCWIvr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 04:51:47 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AD17523A
+        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 01:50:13 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id c15so878422ljr.9
+        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 01:50:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oNMVyc/j83Ecy4cv3OC0iNO8ILErqvD2g6W5CyTq9YM=;
-        b=Jm/YB+FO7nUYcqHPWrxgd7j2+1gT2mX8y52Dm2suYxlLEFFoExFfUKJW6LO9p2JjTu
-         TMoYyPmiohkYGrIKIaRrbzbjuvPNFxs+bZvnUtqDHworqhd4tOIUlGRpkU3Agxw8gJZ2
-         1O6srV/XGOl5VhiOOR5xtGi5Lf6PJIYYPpk/djhqe4LirE/hkaMKV2YLwTSXW54EcSDK
-         Y/KTJwY/7vdDIh+iKy6hkEvgGIF4hhFPnE3ketYo5Mc1M38QD7n5nut6NzNHZI4U09zr
-         I2NljQls0K6joLTi4Q7j9J6tUex6uHSwdqcfAD5T5TVIcrnq/8G4Q5TtUU16NUh3LJrr
-         5Pug==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/s85OGqNXpkecnGselKWsKN2lTwYoyTplSl6MyjZK1Y=;
+        b=Rv1EUItMANZppwyCr9Jl2CMrJmPC0C5EQ/mwQX4i9HwrH9gjUugekbESDuDoXXXdgw
+         lM4vHt+/zzY8T2DfU/eSP+6kb9qV0uaH+EqQUO9cOmOKL+QM6DZza6yPtk4boMJYGQ4b
+         pXscXdP/SF7CNI3VDCX5COa+YoOaf831fzok1D0fxUV7kL9vcX/kw89M4QtEQG/AjLPF
+         FfSYO0Yui+BSak0K4c7d47o/QDMjToQYt12Kf6S80nk3KJnXWyPmfuobJTvUW7dBbNL3
+         0XPmFCmoM/tY2EGrzUd8z6Dlz6lMl9nyDUl+w9ixuBz2mbFa2Xilg9gClILyCRkvFPMP
+         a2qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oNMVyc/j83Ecy4cv3OC0iNO8ILErqvD2g6W5CyTq9YM=;
-        b=ZCJBtG7wXUzFf5U9cOk+prJld0vaxPJT8NLPK4N9N2Wjzp7ZkFXepoMrw41+Ajy3f7
-         y8YDV4Onshg0EJY0m0WlavcNPii8+/EEAIFtgL4hVLnAzvhEwKs60urITCrkK0LVT26I
-         FGI39PisgPCUVEZxVhsYCaPxP2K/n74pq1qm+tQ95BuycOvxT93NJIAfYXk1gkdkPcdr
-         3V5/W87EgyKlCwCJe/u7mRkKVs6v92j1SvGBCzhKQUs7gpCzRwKL3YnDV0RUWaFpsxJr
-         vrfHlcfWdDFAE8/iOECg6xsysJ7BdhG67HLUZKSACnRFxDS+6da7xd0ZCPS8HJJmsabr
-         DZZQ==
-X-Gm-Message-State: AOAM531lvMAkD8eNyYyOQGUfRVrfc0xSgFU7HqXRPODOGw/XNnhiNGba
-        fSIPaqtPmOjhf6btB6mOpXwUwoXrxcbseIsLgDg=
-X-Google-Smtp-Source: ABdhPJzzGbjOXUeBkq9zpKAWT/MCjB4wYcea3KJDMCCPLzfGY8i5/1+dy3ASew7xPHJw2QglcLN2XVoyI1rxtLt9oWo=
-X-Received: by 2002:a17:907:7289:b0:6df:9746:e7c4 with SMTP id
- dt9-20020a170907728900b006df9746e7c4mr28874304ejc.497.1648022654472; Wed, 23
- Mar 2022 01:04:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220321183446.1108325-1-helgaas@kernel.org> <20220323022648.GA1243295@bhelgaas>
-In-Reply-To: <20220323022648.GA1243295@bhelgaas>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 23 Mar 2022 10:03:38 +0200
-Message-ID: <CAHp75VfdoAbSTkO7eaor94pkmN0ttLXstc1DS_Sa7i45Dt5GAA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Avoid broken MSI on SB600 USB devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mick Lorain <micklorain@protonmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/s85OGqNXpkecnGselKWsKN2lTwYoyTplSl6MyjZK1Y=;
+        b=vszvRR7Tzu7lUz+as/yNpa1wPGZg3Ri778I7AKUkMeZlQwYMJfE9FkT2s5M+xj4jYl
+         foE19Nve+QGqBcVQEeBgBvdU3LDF6Go4Fw5bqSrth3Etd0kw6oyqmZWaZfmsEpIQdViv
+         4t4L66LORZwu7gO2nd8d+E73IFju/zoHn0l+UDi8asr83WmraQcODoGtz+eKs8MqxA9h
+         nN6XYnnx4740CbH07Y1G2nglistGOmoamjMP9LxEg0Mw14j45htUjSxbKqfDVmOqOuEV
+         n8BN8bkQTM+DAIVontnl5ujC0s0ijowbOqhf533nmqq2BrcVaVOF959mjS3dju0q+Hkt
+         F/ow==
+X-Gm-Message-State: AOAM531XA5TnYrMWVg/AKByOrpiEHOjotFKk29kBDJlLRi7+dAFocVc5
+        0Ryrq1hLwE2njrrETSmDk+DooA==
+X-Google-Smtp-Source: ABdhPJzZBjgziwAktuqj5IF3PvEcgzoqe5VUzz07rF9U+wnxqiPYUwlXvbKIw1wNahdhKbyS4/fXIQ==
+X-Received: by 2002:a05:651c:506:b0:22d:b44b:113e with SMTP id o6-20020a05651c050600b0022db44b113emr22374179ljp.32.1648025411971;
+        Wed, 23 Mar 2022 01:50:11 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id c40-20020a05651223a800b0044a1edf823dsm1376140lfv.150.2022.03.23.01.50.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Mar 2022 01:50:11 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v1 0/5] PCI: qcom: rework pipe_clk/pipe_clk_src handling
+Date:   Wed, 23 Mar 2022 11:50:05 +0300
+Message-Id: <20220323085010.1753493-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 23, 2022 at 4:26 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Mon, Mar 21, 2022 at 01:34:46PM -0500, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > Some ATI SB600 USB adapters advertise MSI, but if INTx is disabled by
-> > setting PCI_COMMAND_INTX_DISABLE,
+PCIe pipe clk (and some other clocks) must be parked to the "safe"
+source (bi_tcxo) when corresponding GDSC is turned off and on again.
+Currently this is handcoded in the PCIe driver by reparenting the
+gcc_pipe_N_clk_src clock.
 
-> > MSI doesn't work either.
+Instead of doing it manually, follow the approach used by
+clk_rcg2_shared_ops and implement this parking in the enable() and
+disable() clock operations for respective pipe clocks.
 
-I think this is not correct.
+Changes since RFC:
+ - Rework clk-regmap-mux fields. Specify safe parent as P_* value rather
+   than specifying the register value directly
+ - Expand commit message to the first patch to specially mention that
+   it is required only on newer generations of Qualcomm chipsets.
 
-> >  The PCI/PCIe
-> > specs do not require software to set PCI_COMMAND_INTX_DISABLE when enabling
-> > MSI, but Linux has done that for many years.
-> >
-> > Mick reported that 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI
-> > devices") broke these devices.  Prior to 306c54d0edb6, they used INTx.
-> > Starting with 306c54d0edb6, they use MSI, and and the fact that Linux sets
-> > PCI_COMMAND_INTX_DISABLE means both INTx and MSI are disabled on these
-> > devices.
+Dmitry Baryshkov (5):
+  clk: qcom: regmap-mux: add pipe clk implementation
+  clk: qcom: gcc-sm8450: use new clk_regmap_mux_safe_ops for PCIe pipe
+    clocks
+  clk: qcom: gcc-sc7280: use new clk_regmap_mux_safe_ops for PCIe pipe
+    clocks
+  PCI: qcom: Remove unnecessary pipe_clk handling
+  PCI: qcom: Drop manual pipe_clk_src handling
 
-> > Avoid this SB600 defect by disabling MSI so we use INTx as before.
-
-And this is kinda too conservative approach.
-
-> > Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=215690
-> > Link: https://lore.kernel.org/all/PxIByDyBRcsbpcmVhGSNDFAoUcMmb78ctXCkw6fbpx25TGlCHvA6SJjjFkNr1FfQZMntYPTNyvEnblxzAZ8a6jP9ddLpKeCN6Chi_2FuexU=@protonmail.com/
-> > BugLink: https://lore.kernel.org/all/20200702143045.23429-1-andriy.shevchenko@linux.intel.com/
-> > Link: https://lore.kernel.org/r/20220314101448.90074-1-andriy.shevchenko@linux.intel.com
-> > Reported-by: Mick Lorain <micklorain@protonmail.com>
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-And it hasn't been tested by the reporter.
-
-> Unless there's objection, I plan to include this in the v5.18 pull
-> request in the next few days.
-
-You are the maintainer here and it's your choice. I'm not going to stop you.
+ drivers/clk/qcom/clk-regmap-mux.c      | 78 +++++++++++++++++++++++
+ drivers/clk/qcom/clk-regmap-mux.h      |  3 +
+ drivers/clk/qcom/gcc-sc7280.c          |  6 +-
+ drivers/clk/qcom/gcc-sm8450.c          |  6 +-
+ drivers/pci/controller/dwc/pcie-qcom.c | 87 +-------------------------
+ 5 files changed, 92 insertions(+), 88 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.35.1
+
