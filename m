@@ -2,50 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69E034E4AE4
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Mar 2022 03:26:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 306954E4AFA
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Mar 2022 03:37:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241335AbiCWC2W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Mar 2022 22:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53226 "EHLO
+        id S230153AbiCWCiw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Mar 2022 22:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241307AbiCWC2U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 22:28:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2CD70849;
-        Tue, 22 Mar 2022 19:26:50 -0700 (PDT)
+        with ESMTP id S241735AbiCWCip (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 22:38:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC6370857;
+        Tue, 22 Mar 2022 19:37:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A5A8B614A8;
-        Wed, 23 Mar 2022 02:26:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAC59C340F3;
-        Wed, 23 Mar 2022 02:26:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DA434614D1;
+        Wed, 23 Mar 2022 02:37:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC36C340EC;
+        Wed, 23 Mar 2022 02:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648002410;
-        bh=I0pEfglO0yt0xCKf2wZmloRgsww6wV2diAt8iOVavzk=;
+        s=k20201202; t=1648003036;
+        bh=lidTMFrvgsD4QNxlYdNfhfYSm5MsACsoLgJwIQ3WW6I=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UqDZT02mq2UVYAxkEODaMI7jLFRlVDRq2NZ53Z5b3DcpqNKSzyYHqI3y9UW0mRwq2
-         gY+ZaA6HvhmsNUyGhcKkulP/G8DHWBVEFVFLQRKs8qTDadV2f1wg1yxEvRHl7e4ZWP
-         JNiU5GnCUDp0hy7fwdlohqfpL1CP/0QfZd9JBFTjGyLIbXc1JNuYYJ8dvSUQNVcFk9
-         kI8XexkuIIb5Ptkr7pNl5A3pVA+DyzGs16BM4EVqYfH/vmjnC3kMks3ZlDb/e3yAqd
-         vib8vTzlroMRYgS63ey5NTCPJ7zfOvCwCB8tVh6hjj4mZ0VbI+Fn1EOLLhVrKfslC0
-         CJbj9AiTN+UkA==
-Date:   Tue, 22 Mar 2022 21:26:48 -0500
+        b=QJWgbJaKhND3p8maoI9Bjz9VY0auADyH0KFPYaLcCYy6fC8PuTUakQRgw8aTfDCB3
+         m8tbXe4UdlAXTJ84jVqmQwpebyGCrNBCVkkZjwGXS/R7pUtQZiCOMV7pt4ThkuJ7BY
+         9HRD51pyi1lSm8Yx+ij+o8j9Fyeji7fF37z6ywu8TCX/Ok+PZdOrcKJNow92AwjCP4
+         +/Vla3UiUsKkrNP6i/8i25Gmchy85p4I3z34evPt+ixn009tqvHujKd/r95e0yA5E+
+         qGOoO+O5qkEGeU4A9t5kNYavFSMfmSU5xIs2WjX/cC25r7V6Ji6VytyU22HVXPeVM3
+         qeRSfoDXl0TeQ==
+Date:   Tue, 22 Mar 2022 21:37:14 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Mick Lorain <micklorain@protonmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: Avoid broken MSI on SB600 USB devices
-Message-ID: <20220323022648.GA1243295@bhelgaas>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: cadence: Enable Controller to respond to
+ received PTM Requests
+Message-ID: <20220323023714.GA1244184@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220321183446.1108325-1-helgaas@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH9NwWec6ovS1xQbuPsB5duskJdmK_qv4t+URTK6thCvGNST7w@mail.gmail.com>
 X-Spam-Status: No, score=-7.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,63 +59,86 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 21, 2022 at 01:34:46PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Some ATI SB600 USB adapters advertise MSI, but if INTx is disabled by
-> setting PCI_COMMAND_INTX_DISABLE, MSI doesn't work either.  The PCI/PCIe
-> specs do not require software to set PCI_COMMAND_INTX_DISABLE when enabling
-> MSI, but Linux has done that for many years.
-> 
-> Mick reported that 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI
-> devices") broke these devices.  Prior to 306c54d0edb6, they used INTx.
-> Starting with 306c54d0edb6, they use MSI, and and the fact that Linux sets
-> PCI_COMMAND_INTX_DISABLE means both INTx and MSI are disabled on these
-> devices.
-> 
-> Avoid this SB600 defect by disabling MSI so we use INTx as before.
-> 
-> Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215690
-> Link: https://lore.kernel.org/all/PxIByDyBRcsbpcmVhGSNDFAoUcMmb78ctXCkw6fbpx25TGlCHvA6SJjjFkNr1FfQZMntYPTNyvEnblxzAZ8a6jP9ddLpKeCN6Chi_2FuexU=@protonmail.com/
-> BugLink: https://lore.kernel.org/all/20200702143045.23429-1-andriy.shevchenko@linux.intel.com/
-> Link: https://lore.kernel.org/r/20220314101448.90074-1-andriy.shevchenko@linux.intel.com
-> Reported-by: Mick Lorain <micklorain@protonmail.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Mar 22, 2022 at 02:20:14PM +0100, Christian Gmeiner wrote:
+> Am Do., 10. März 2022 um 13:14 Uhr schrieb Christian Gmeiner
+> <christian.gmeiner@gmail.com>:
+> >
+> > Hi all
+> >
+> > > This enables the Controller [RP] to automatically respond with
+> > > Response/ResponseD messages if CDNS_PCIE_LM_TPM_CTRL_PTMRSEN
+> > > and PCI_PTM_CTRL_ENABLE bits are both set.
+> > >
+> > > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-Unless there's objection, I plan to include this in the v5.18 pull
-request in the next few days.
+We're in the middle of the merge window right now, but I'm sure
+Lorenzo will be able to look at it after -rc1.  This looks fine to me.
 
-It was in the 20220322 linux-next tree:
-https://lore.kernel.org/linux-next/20220322203829.2bb0166c@canb.auug.org.au/
+> > > ---
+> > >  drivers/pci/controller/cadence/pcie-cadence-host.c | 10 ++++++++++
+> > >  drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++++
+> > >  2 files changed, 14 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> > > index fb96d37a135c..940c7dd701d6 100644
+> > > --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> > > +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> > > @@ -123,6 +123,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+> > >         return ret;
+> > >  }
+> > >
+> > > +static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
+> > > +{
+> > > +       u32 val;
+> > > +
+> > > +       val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> > > +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
 
-> ---
->  drivers/pci/quirks.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+Lorenzo will likely wrap this line to fit in 80 columns like the rest
+of the file, or if you rebase to v5.18-rc1 and post a v3, you could do
+so.
+
+> > > +}
+> > > +
+> > >  static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+> > >  {
+> > >         struct cdns_pcie *pcie = &rc->pcie;
+> > > @@ -501,6 +509,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+> > >         if (rc->quirk_detect_quiet_flag)
+> > >                 cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+> > >
+> > > +       cdns_pcie_host_enable_ptm_response(pcie);
+> > > +
+> > >         ret = cdns_pcie_start_link(pcie);
+> > >         if (ret) {
+> > >                 dev_err(dev, "Failed to start link\n");
+> > > diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> > > index c8a27b6290ce..1ffa8fa77a8a 100644
+> > > --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> > > +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> > > @@ -116,6 +116,10 @@
+> > >  #define LM_RC_BAR_CFG_APERTURE(bar, aperture)          \
+> > >                                         (((aperture) - 2) << ((bar) * 8))
+> > >
+> > > +/* PTM Control Register */
+> > > +#define CDNS_PCIE_LM_PTM_CTRL  (CDNS_PCIE_LM_BASE + 0x0da8)
+> > > +#define CDNS_PCIE_LM_TPM_CTRL_PTMRSEN  BIT(17)
+> > > +
+> > >  /*
+> > >   * Endpoint Function Registers (PCI configuration space for endpoint functions)
+> > >   */
+> > > --
+> > > 2.35.1
+> > >
+> >
+> > This patch should be ready to land - or is anything missing?
+> >
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index d2dd6a6cda60..5f46fed01e6c 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -1811,6 +1811,18 @@ static void quirk_alder_ioapic(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_EESSC,	quirk_alder_ioapic);
->  #endif
->  
-> +static void quirk_no_msi(struct pci_dev *dev)
-> +{
-> +	pci_info(dev, "avoiding MSI to work around a hardware defect\n");
-> +	dev->no_msi = 1;
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x4386, quirk_no_msi);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x4387, quirk_no_msi);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x4388, quirk_no_msi);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x4389, quirk_no_msi);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x438a, quirk_no_msi);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x438b, quirk_no_msi);
-> +
->  static void quirk_pcie_mch(struct pci_dev *pdev)
->  {
->  	pdev->no_msi = 1;
+> Gentle ping.
+> 
 > -- 
-> 2.25.1
+> greets
+> --
+> Christian Gmeiner, MSc
 > 
+> https://christian-gmeiner.info/privacypolicy
