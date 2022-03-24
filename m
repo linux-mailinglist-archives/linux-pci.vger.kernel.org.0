@@ -2,151 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E52FB4E5C9B
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 02:10:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF6B94E5D6D
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 04:09:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347082AbiCXBLh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Mar 2022 21:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53362 "EHLO
+        id S232209AbiCXDLS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Mar 2022 23:11:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241590AbiCXBLg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 21:11:36 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 781BE91AEB;
-        Wed, 23 Mar 2022 18:10:05 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id v13so2508807qkv.3;
-        Wed, 23 Mar 2022 18:10:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yB8Xhdcr1UmQH8x5bcI6sm+S/MTI1xulItthpHA07WI=;
-        b=McdUogDwPYB9swFBm2FXkncFErKcszgRCGc2+vf+t4VBJPShVyXnSPpMv3YcxJWDED
-         F3EzvLFhmqSIaYRhQoJJKcNqwxUThjiXAKoIAvLd0tBsCL0kSGVwJ2Vjr/7rmxOlfA0m
-         t7ej0shvb++RaMQy2JZQFzk6Z/O4vPZx0NOFae+Ai9tcKD8LD7cTqpmOh/1rR2rysvnS
-         w5Up28ZSSUKpvJc/qbuGM4gfYJFYhHzODtN/JwPJuXLc9XItIibJzge48Wgl+zp1cxHs
-         J+cnD/Zp0tv7toQzqHnlImRzvh3I7XAkemv1mb7g0IBjUhCCeCx8kEek4LKyZvIhjzB7
-         OHdQ==
+        with ESMTP id S231992AbiCXDLR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 23:11:17 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0A090FDA
+        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 20:09:46 -0700 (PDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B61743F6C6
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 03:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1648091384;
+        bh=yfWPx49ia0Oq9KnR/zdf6cTRm4Fx3KUjs75NQ5Bs2aQ=;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+         Content-Type:In-Reply-To;
+        b=PJP5cKoML4n19Ls2rhrajAqXHps4CzA89rrHFiXiMpPb/Ihu6cMcy8l34L9mEESBb
+         L1wXG51NhCrEfjAXN85JbdgrlHkSdUx0/wyZPu3yoLG2+5NG7anK/7QGtagg8qUep/
+         Bs3lNRkUgqvNXwinVSDDzzGMx0LMP8AVmPdd9aaZ0Z3tyO+deOHa3SoXez4QjF9Es8
+         VKbL5BrPfepvKEYJZcZ+Lw2EY0gEbzikSt25QK2h1D38xGSBtSI9D3++UNBItBRA0V
+         sPnqOVmFHUXwD7gfrmZvCdJI6pTxqXcgt23Z9una8LveqjVlTaD/o/21SRyG7oXFVw
+         6UJkmxJfqTsRA==
+Received: by mail-io1-f70.google.com with SMTP id z10-20020a056602080a00b00645b9fdc630so2310063iow.5
+        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 20:09:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=yB8Xhdcr1UmQH8x5bcI6sm+S/MTI1xulItthpHA07WI=;
-        b=Vhm8ci28pKBh1NYIYf0ZJ2kpmLLyJ1SuQB/Rp5MQReVElrcn4JPxuKuk3kVgJ2a2YQ
-         U+cMcaZkBcvOeuMXd1h5K5uUGaEdi3NMuJQGob7VXWE6xyBDLJxipC6I+yPNa7guNIMu
-         d7w0mRYtOryOjwQslkVmhkkJYJEy/tabx095z8S9fL4atSo1hQM6U9mv9hTiEgyRdjzA
-         2RkBN7DY5HZaejSiul81MHHQKAz17BPCojdphUOWCsatWeLtBlR3l3Ns3cFR7TtOUM4h
-         TXItYW2Luj8lOsroAxVZys/x7onMwXiGWq2oRVbXD+SeCFmTxntMqt1gwidNoQtsqTxx
-         /AsA==
-X-Gm-Message-State: AOAM530BOIa8PRz41Zzz3w4qdZSwF508Yw3FvNdUoAQuRXqipnNQovLB
-        XTRO1wjuR8nqvbHZozzc3nE=
-X-Google-Smtp-Source: ABdhPJyOkEF06bgFmKyQhBb+A0wmpygZlW/7H7ia7YahrrMcQBz4D9XJ0EDr8NY3ZI4WwKEs5GrHkA==
-X-Received: by 2002:a05:620a:294e:b0:67e:704d:7c55 with SMTP id n14-20020a05620a294e00b0067e704d7c55mr1865658qkp.118.1648084204497;
-        Wed, 23 Mar 2022 18:10:04 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id o15-20020ae9f50f000000b0067d27e196f1sm729885qkg.133.2022.03.23.18.10.03
+        bh=yfWPx49ia0Oq9KnR/zdf6cTRm4Fx3KUjs75NQ5Bs2aQ=;
+        b=mO1+iTe5nm2S/tLTAIQpSjVekL8a/DvsOkJ52KyNajYESlPwbD+G7YZJeHnnkgrBIM
+         4e9lR3ipLtl0FFNcDKuPBY3UbXIx5xBf9i5Rg9r+igyIOgtQYytwYUAaunhQ737KzZ1o
+         Dk+2JKCQdvE7fiBriyrkYCN2/j3sGHqK/K6S4s3UKqECjM9szRJi23pnt92I/H4lrzSZ
+         PtpQv64tm5P2qn+XZQOgCsqTTJYjUoIMk0kt5WMCR1yxUGOfp+R9TGsDeR69hg6dVLe9
+         fON+AXQXHuHgDLUW1FkKvRztBo7bYZshuIgGaNoGZUbPUR51onRCDZh+3/Dxt0r2ruMW
+         WHZw==
+X-Gm-Message-State: AOAM530RNY2fwmk4M85QmYDBP3Ye1o2gzjlJGO1knLj/f+L8HWTzNmQG
+        mR/XRyehZSw/rjoc7qe7UE+rP71j1mQA5RNjRjLIypy3bfYoVf1ryA6/bf2Ktz+5B9SKBiTg3Xx
+        EqHky/Ad6avuTm2CypqqIgrTAiBQ7loO6OnHFJA==
+X-Received: by 2002:a05:6638:4129:b0:319:f5e5:2d21 with SMTP id ay41-20020a056638412900b00319f5e52d21mr1775620jab.148.1648091383544;
+        Wed, 23 Mar 2022 20:09:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz6e3IYZRLfskdJ+DZp2Uaz51HnZfEwes4aBSpX0UEk+ZXiYNBuaMeCuXyfqFYokd4kyWP1iQ==
+X-Received: by 2002:a05:6638:4129:b0:319:f5e5:2d21 with SMTP id ay41-20020a056638412900b00319f5e52d21mr1775608jab.148.1648091383293;
+        Wed, 23 Mar 2022 20:09:43 -0700 (PDT)
+Received: from xps13.dannf (c-73-14-97-161.hsd1.co.comcast.net. [73.14.97.161])
+        by smtp.gmail.com with ESMTPSA id e15-20020a92194f000000b002c25e778042sm885509ilm.73.2022.03.23.20.09.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 18:10:03 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id BFA8127C0054;
-        Wed, 23 Mar 2022 21:10:02 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 23 Mar 2022 21:10:02 -0400
-X-ME-Sender: <xms:6cQ7Yv14XCzJ365b4Jqxuq1yNfSLClI1w5uiWCXa0ixK2_r6dHbuwQ>
-    <xme:6cQ7YuHtRC-vWlBHjbbLS1yQGN6jcE69QnWjlVhZv6rAJYgTlzz_A7huNMPtrj7ZZ
-    rxR0VJT-63j7Xvn5w>
-X-ME-Received: <xmr:6cQ7Yv7G3W5Hg3KFn9xzZqcA1ilzEHjjc2or0DEwd9BvoHwhE6b534ps5NYx3Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudegkedgfedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
-    geejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
-    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
-    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
-    hmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:6cQ7Yk1aQXDv7c6Kky7fz7Ax1u6QICsQXHEPa5BNv3LSMZAOfhAK5w>
-    <xmx:6cQ7YiFlNMRafLKMQALAlK-PDKP1FMuf0MMyyVROfchzWrwxQhyB0A>
-    <xmx:6cQ7Yl9RffYNrNvz3ypcwkw5KOId3nS45xF1wl7DTs4klKDcIFLPlw>
-    <xmx:6sQ7YiIIKzTS6Q0leKUkgVjkgN_eoduPzGJriRDFY3p7HYT21Wv-dw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 23 Mar 2022 21:10:01 -0400 (EDT)
-Date:   Thu, 24 Mar 2022 09:09:16 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     sthemmin@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, rafael@kernel.org,
-        lenb@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, hch@lst.de,
-        m.szyprowski@samsung.com, robin.murphy@arm.com,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v2 2/2] PCI: hv: Propagate coherence from VMbus device to
- PCI device
-Message-ID: <YjvEvFFuKJiV/NU+@boqun-archlinux>
-References: <1648067472-13000-1-git-send-email-mikelley@microsoft.com>
- <1648067472-13000-3-git-send-email-mikelley@microsoft.com>
+        Wed, 23 Mar 2022 20:09:42 -0700 (PDT)
+Date:   Wed, 23 Mar 2022 21:09:39 -0600
+From:   dann frazier <dann.frazier@canonical.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] iommu/dma: Explicitly sort PCI DMA windows
+Message-ID: <Yjvg846XOpsAbgi6@xps13.dannf>
+References: <65657c5370fa0161739ba094ea948afdfa711b8a.1647967875.git.robin.murphy@arm.com>
+ <874k3pxalr.wl-maz@kernel.org>
+ <Yjub51Ct3esuNA9B@xps13.dannf>
+ <CAL_JsqLFnN46WixKwsuhPswNo8fye4ERhU7_hPdPABi=70p7HA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1648067472-13000-3-git-send-email-mikelley@microsoft.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAL_JsqLFnN46WixKwsuhPswNo8fye4ERhU7_hPdPABi=70p7HA@mail.gmail.com>
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 23, 2022 at 01:31:12PM -0700, Michael Kelley wrote:
-> PCI pass-thru devices in a Hyper-V VM are represented as a VMBus
-> device and as a PCI device.  The coherence of the VMbus device is
-> set based on the VMbus node in ACPI, but the PCI device has no
-> ACPI node and defaults to not hardware coherent.  This results
-> in extra software coherence management overhead on ARM64 when
-> devices are hardware coherent.
+On Wed, Mar 23, 2022 at 07:55:23PM -0500, Rob Herring wrote:
+> On Wed, Mar 23, 2022 at 5:15 PM dann frazier <dann.frazier@canonical.com> wrote:
+> >
+> > On Wed, Mar 23, 2022 at 09:49:04AM +0000, Marc Zyngier wrote:
+> > > On Tue, 22 Mar 2022 17:27:36 +0000,
+> > > Robin Murphy <robin.murphy@arm.com> wrote:
+> > > >
+> > > > Originally, creating the dma_ranges resource list in pre-sorted fashion
+> > > > was the simplest and most efficient way to enforce the order required by
+> > > > iova_reserve_pci_windows(). However since then at least one PCI host
+> > > > driver is now re-sorting the list for its own probe-time processing,
+> > > > which doesn't seem entirely unreasonable, so that basic assumption no
+> > > > longer holds. Make iommu-dma robust and get the sort order it needs by
+> > > > explicitly sorting, which means we can also save the effort at creation
+> > > > time and just build the list in whatever natural order the DT had.
+> > > >
+> > > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> > > > ---
+> > > >
+> > > > Looking at this area off the back of the XGene thread[1] made me realise
+> > > > that we need to do it anyway, regardless of whether it might also happen
+> > > > to restore the previous XGene behaviour or not. Presumably nobody's
+> > > > tried to use pcie-cadence-host behind an IOMMU yet...
+> > >
+> > > This definitely restores PCIe functionality on my Mustang (XGene-1).
+> > > Hopefully dann can comment on whether this addresses his own issue, as
+> > > his firmware is significantly different.
+> >
+> > Robin, Marc,
+> >
+> > Adding just this patch on top of v5.17 (w/ vendor dtb) isn't enough to
+> > fix m400 networking:
 > 
-> Fix this by setting up the PCI host bus so that normal
-> PCI mechanisms will propagate the coherence of the VMbus
-> device to the PCI device. There's no effect on x86/x64 where
-> devices are always hardware coherent.
+> I wouldn't expect it to given both the IB register selection changed
+> and the 2nd dma-ranges entry is ignored.
 > 
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> Can you (and others) try out this branch:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git xgene-pci-fix
+> 
+> It should maintain the same IB register usage for both cases and
+> handle the error in 'dma-ranges'.
 
-Acked-by: Boqun Feng <boqun.feng@gmail.com>
+Looks good Rob :)
 
-Regards,
-Boqun
+https://paste.ubuntu.com/p/zJF9PKhQpS/
 
-> ---
->  drivers/pci/controller/pci-hyperv.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index ae0bc2f..88b3b56 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -3404,6 +3404,15 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	hbus->bridge->domain_nr = dom;
->  #ifdef CONFIG_X86
->  	hbus->sysdata.domain = dom;
-> +#elif defined(CONFIG_ARM64)
-> +	/*
-> +	 * Set the PCI bus parent to be the corresponding VMbus
-> +	 * device. Then the VMbus device will be assigned as the
-> +	 * ACPI companion in pcibios_root_bridge_prepare() and
-> +	 * pci_dma_configure() will propagate device coherence
-> +	 * information to devices created on the bus.
-> +	 */
-> +	hbus->sysdata.parent = hdev->device.parent;
->  #endif
->  
->  	hbus->hdev = hdev;
-> -- 
-> 1.8.3.1
-> 
-> 
+
+  -dann
+
