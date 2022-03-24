@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1FFE4E9AF2
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 17:24:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D04804E9AEB
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 17:24:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237160AbiC1PZ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 11:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45082 "EHLO
+        id S236760AbiC1PZy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 11:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236701AbiC1PZy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 11:25:54 -0400
+        with ESMTP id S236516AbiC1PZw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 11:25:52 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31D2021E16;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 70E781F63E;
         Mon, 28 Mar 2022 08:24:11 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 00CDF1E4925;
-        Thu, 24 Mar 2022 04:37:54 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 00CDF1E4925
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0FA201E4926;
+        Thu, 24 Mar 2022 04:37:55 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 0FA201E4926
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1648085874;
-        bh=aHKH/Se4RYpqfGYBZz3KHRmEZDGqpu682MJw8JgKJKQ=;
+        d=baikalelectronics.ru; s=mail; t=1648085875;
+        bh=fzWBessojaDhJfCKXZFdY7ORBS7FG8LumKb/yK55pnQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=E0rU9OGoW76lpgW8j7jaW28UlvbBzX6GWJmTCfHnoQSKv1ZJ2MfXsnotXsX68nOi+
-         N6wyjlk/Wp/GFzEkrshT/2eXUoAL164b+h/9QPYUAh7sVso/QXMwqWwEnL5g90J0C5
-         Oep29BVsydKbR7FbIIaxcBQfrxbo9H0/a60cZF/w=
+        b=AXIQbY/iHV+kQugnH4mWh/jF5iabsqUhGQquBASSdGeLJmz1zt2WEx+8qJgSyx00j
+         i+O1KzysflcjduxMIKU28vT0bBYOoag00H99M6E8WbDmD2NcfoW5iVfXCsg6pLVYon
+         HSm03zUXYaDOlMEcRn/ZzkUtdFksslEU57yJldkA=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:37:53 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:37:54 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -42,9 +42,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 07/16] PCI: dwc: Add host de-initialization callback
-Date:   Thu, 24 Mar 2022 04:37:25 +0300
-Message-ID: <20220324013734.18234-8-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 08/16] PCI: dwc: Drop inbound iATU types enumeration - dw_pcie_as_type
+Date:   Thu, 24 Mar 2022 04:37:26 +0300
+Message-ID: <20220324013734.18234-9-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -60,94 +60,187 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Seeing the platform-specific DW PCIe host-initialization is performed from
-within the generic dw_pcie_host_init() method by means of the dedicated
-dw_pcie_ops.host_init() callback, there must be declared an antagonist
-which would perform the corresponding cleanups. Let's add such callback
-then. It will be called in the dw_pcie_host_deinit() method and in the
-cleanup-on-error path in the dw_pcie_host_init() function.
+There is no point in having an enumeration declared in the driver for the
+PCIe end-point. First of all it's redundant since the driver already has a
+set of macro declared which describe the available in/out iATU types, thus
+having an addition abstraction just needlessly complicates the code.
+Secondly checking the passed iATU type for validity within a single driver
+is pointless since the driver is supposed to be consistent by its nature.
+Finally the outbound iATU type isn't encoded by the denoted enumeration,
+thus giving a false impression that the in and out iATU types are
+unrelated while they are the same. So to speak let's drop the redundant
+dw_pcie_as_type enumeration replacing it with the direct iATU type usage.
+
+While at it, since we are touching the iATU inbound regions config methods
+anyway, let's fix the arguments order so the type would be followed by the
+address-related parameters. Thus the inbound and outbound iATU setup
+methods will look alike. That shall improve the code readability a bit.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- .../pci/controller/dwc/pcie-designware-host.c | 21 ++++++++++++++-----
- drivers/pci/controller/dwc/pcie-designware.h  |  1 +
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ .../pci/controller/dwc/pcie-designware-ep.c   | 21 +++++------
+ drivers/pci/controller/dwc/pcie-designware.c  | 35 +++----------------
+ drivers/pci/controller/dwc/pcie-designware.h  |  9 +----
+ 3 files changed, 15 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 8f0d473ff770..602cf4fe502b 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -354,20 +354,23 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			pp->num_vectors = MSI_DEF_NUM_VECTORS;
- 		} else if (pp->num_vectors > MAX_MSI_IRQS) {
- 			dev_err(dev, "Invalid number of vectors\n");
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto err_host_deinit;
- 		}
- 
- 		if (pp->ops->msi_host_init) {
- 			ret = pp->ops->msi_host_init(pp);
- 			if (ret < 0)
--				return ret;
-+				goto err_host_deinit;
- 		} else if (pp->has_msi_ctrl) {
- 			if (!pp->msi_irq) {
- 				pp->msi_irq = platform_get_irq_byname_optional(pdev, "msi");
- 				if (pp->msi_irq < 0) {
- 					pp->msi_irq = platform_get_irq(pdev, 0);
--					if (pp->msi_irq < 0)
--						return pp->msi_irq;
-+					if (pp->msi_irq < 0) {
-+						ret = pp->msi_irq;
-+						goto err_host_deinit;
-+					}
- 				}
- 			}
- 
-@@ -375,7 +378,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 
- 			ret = dw_pcie_allocate_domains(pp);
- 			if (ret)
--				return ret;
-+				goto err_host_deinit;
- 
- 			if (pp->msi_irq > 0)
- 				irq_set_chained_handler_and_data(pp->msi_irq,
-@@ -428,6 +431,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
- err_free_msi:
- 	if (pp->has_msi_ctrl)
- 		dw_pcie_free_msi(pp);
-+
-+err_host_deinit:
-+	if (pp->ops->host_deinit)
-+		pp->ops->host_deinit(pp);
-+
- 	return ret;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 3b981d13cca9..3bd9026071e8 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -154,9 +154,8 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(dw_pcie_host_init);
-@@ -444,6 +452,9 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
  
- 	if (pp->has_msi_ctrl)
- 		dw_pcie_free_msi(pp);
-+
-+	if (pp->ops->host_deinit)
-+		pp->ops->host_deinit(pp);
+-static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no,
+-				  enum pci_barno bar, dma_addr_t cpu_addr,
+-				  enum dw_pcie_as_type as_type)
++static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
++				  dma_addr_t cpu_addr, enum pci_barno bar)
+ {
+ 	int ret;
+ 	u32 free_win;
+@@ -168,8 +167,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no,
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, bar, cpu_addr,
+-				       as_type);
++	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, type,
++				       cpu_addr, bar);
+ 	if (ret < 0) {
+ 		dev_err(pci->dev, "Failed to program IB window\n");
+ 		return ret;
+@@ -221,27 +220,25 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 			      struct pci_epf_bar *epf_bar)
+ {
+-	int ret;
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	enum pci_barno bar = epf_bar->barno;
+ 	size_t size = epf_bar->size;
+ 	int flags = epf_bar->flags;
+-	enum dw_pcie_as_type as_type;
+-	u32 reg;
+ 	unsigned int func_offset = 0;
++	int ret, type;
++	u32 reg;
+ 
+ 	func_offset = dw_pcie_ep_func_select(ep, func_no);
+ 
+ 	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset;
+ 
+ 	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+-		as_type = DW_PCIE_AS_MEM;
++		type = PCIE_ATU_TYPE_MEM;
+ 	else
+-		as_type = DW_PCIE_AS_IO;
++		type = PCIE_ATU_TYPE_IO;
+ 
+-	ret = dw_pcie_ep_inbound_atu(ep, func_no, bar,
+-				     epf_bar->phys_addr, as_type);
++	ret = dw_pcie_ep_inbound_atu(ep, func_no, type, epf_bar->phys_addr, bar);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index d5ce19625769..b983128584ff 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -421,10 +421,9 @@ static void dw_pcie_writel_ib_unroll(struct dw_pcie *pci, u32 index, u32 reg,
  }
- EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
  
+ static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+-					   int index, int bar, u64 cpu_addr,
+-					   enum dw_pcie_as_type as_type)
++					   int index, int type,
++					   u64 cpu_addr, u8 bar)
+ {
+-	int type;
+ 	u32 retries, val;
+ 
+ 	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_LOWER_TARGET,
+@@ -432,17 +431,6 @@ static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ 	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+ 				 upper_32_bits(cpu_addr));
+ 
+-	switch (as_type) {
+-	case DW_PCIE_AS_MEM:
+-		type = PCIE_ATU_TYPE_MEM;
+-		break;
+-	case DW_PCIE_AS_IO:
+-		type = PCIE_ATU_TYPE_IO;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+ 	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, type |
+ 				 PCIE_ATU_FUNC_NUM(func_no));
+ 	dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+@@ -468,32 +456,19 @@ static int dw_pcie_prog_inbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ }
+ 
+ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-			     int bar, u64 cpu_addr,
+-			     enum dw_pcie_as_type as_type)
++			     int type, u64 cpu_addr, u8 bar)
+ {
+-	int type;
+ 	u32 retries, val;
+ 
+ 	if (pci->iatu_unroll_enabled)
+-		return dw_pcie_prog_inbound_atu_unroll(pci, func_no, index, bar,
+-						       cpu_addr, as_type);
++		return dw_pcie_prog_inbound_atu_unroll(pci, func_no, index, type,
++						       cpu_addr, bar);
+ 
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, PCIE_ATU_REGION_INBOUND |
+ 			   index);
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET, lower_32_bits(cpu_addr));
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET, upper_32_bits(cpu_addr));
+ 
+-	switch (as_type) {
+-	case DW_PCIE_AS_MEM:
+-		type = PCIE_ATU_TYPE_MEM;
+-		break;
+-	case DW_PCIE_AS_IO:
+-		type = PCIE_ATU_TYPE_IO;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
+ 			   PCIE_ATU_FUNC_NUM(func_no));
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE |
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 1868773ecb91..bca1d3e83636 100644
+index bca1d3e83636..449c5ad92edc 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -200,6 +200,7 @@ enum dw_pcie_device_mode {
- 
- struct dw_pcie_host_ops {
- 	int (*host_init)(struct pcie_port *pp);
-+	void (*host_deinit)(struct pcie_port *pp);
- 	int (*msi_host_init)(struct pcie_port *pp);
+@@ -227,12 +227,6 @@ struct pcie_port {
+ 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
  };
  
+-enum dw_pcie_as_type {
+-	DW_PCIE_AS_UNKNOWN,
+-	DW_PCIE_AS_MEM,
+-	DW_PCIE_AS_IO,
+-};
+-
+ struct dw_pcie_ep_ops {
+ 	void	(*ep_init)(struct dw_pcie_ep *ep);
+ 	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
+@@ -331,8 +325,7 @@ void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+ 				  int type, u64 cpu_addr, u64 pci_addr,
+ 				  u64 size);
+ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-			     int bar, u64 cpu_addr,
+-			     enum dw_pcie_as_type as_type);
++			     int type, u64 cpu_addr, u8 bar);
+ void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
+ 			 enum dw_pcie_region_type type);
+ void dw_pcie_setup(struct dw_pcie *pci);
 -- 
 2.35.1
 
