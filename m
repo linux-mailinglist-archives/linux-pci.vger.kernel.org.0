@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C08D54E6871
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 19:13:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54DE94E687B
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 19:14:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242697AbiCXSOl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 14:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48682 "EHLO
+        id S1352561AbiCXSQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 14:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352536AbiCXSOj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 14:14:39 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104B1EB8
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 11:13:03 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id t14so4465630pgr.3
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 11:13:03 -0700 (PDT)
+        with ESMTP id S1352552AbiCXSQJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 14:16:09 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D753A8EDA
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 11:14:36 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id l4-20020a17090a49c400b001c6840df4a3so5921340pjm.0
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 11:14:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=B9ualNSGObXfxaCa3kXHHyApJTXDIAKHdNNtrcoqJWI=;
-        b=MExshGDIxKjIurGB37rYruuvymM2AkRYuBHIbyagDRS4ILfNBgz/dqnyI/Zw7/0JLH
-         wZNN5AvUoo66OL1cIYxX8fmi9tBe5WoWxqfanEtjTeLdkgLWSTC7xX3kZofmZDu2ua96
-         qqlcrHM0i7sC6MJ9DvDQfJp9gB5x7jqqtv7Ty4ybLZDUVKYRh4Sv/JH9i+SzLgdveqSS
-         aFzL65g/6jhnp/55WnFCQyqq799VHArujGpCYA8SAPa3ORWs8mP5GpKP8wo4xTyB9qNc
-         RFM11wud888ixz7h25LQpeYIAFQ+FuNkOEBxfuMpPcfLMaVNNOIxsz4tAPgi1r8oD0Fz
-         RKyA==
+        bh=kaWyOFUTIvk7Jf/C253NUkUi7ERn3SB2Cf+AuYAeK5I=;
+        b=amB2XOhqEhJQzky4D/NKJxmo5mgT7AHDpjkIdKEpr/M9SRrGbDmIJKdhcVytEu/4L7
+         htCJrv4/j43jObsH4ywenMqqmYlNVK2yBCj1vogP6lnGaC6BYwUqy3WjRNyDaf6oxCs4
+         YtrFZe7aMzI6EIIofn54JjExiJCeOH6Tzu2gdqZFfsGcv4eBvohezzn09Klr62eKVFO7
+         lOMbXNKsUH+Kb85LmSYR0M9ScZo+E6NvpWc9mgVCz5JWAXAU4WwZzLb4xrelrBDc6DF8
+         Si4h3M2gz4kl/bm1RGkobe1CLqnqaqhouujzDaaokzWGJfrXIXRk4KDudjWy6g1pn5Vm
+         QLcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=B9ualNSGObXfxaCa3kXHHyApJTXDIAKHdNNtrcoqJWI=;
-        b=q7K6XR+8qeCi9gCL7i1Muq7egCRXigRYMNv7NoYAMsw1vCphs6wf4PXmRrfmHq7GiR
-         Fm7cmOvtYeI52T91x0TiLO0VxdXEvhvHv6+eSiIAgUuDVNEtR9YTXLZm8aZpmYtGGI69
-         /E74+dpktRAoa3J54BVb8Fcj8e4JpPSYq7U7d6Aa3CT/UK7HsqAIDRaXSYU1SrgJX9GB
-         snNO4b49QUeBOoiJ7cQ0jY04JPj9uG4RCAUmUQV7wavmgw/QEySazTVZwHqDNMlrXDxU
-         RYXApnlEQbdTS7nFzB1+fJW5feM5D7lE/z9QBt03scG1OS+o1p/jHOUG5ccOGu6J3+fL
-         4ReQ==
-X-Gm-Message-State: AOAM533ZOFqjJatzZnHKvWE9LubPnukeL5O+VfP9XBTLHFrXV2KvBB/P
-        EwLgmSQaxGieF2oybdPUossz
-X-Google-Smtp-Source: ABdhPJyF08kfFc5MvihMf3hsgPrkVapyZtyaD61zjIxm3Yzhqocq4XWT/5Us5T8udLRICCL93zyNOw==
-X-Received: by 2002:a05:6a00:b8e:b0:4fa:de88:9fc7 with SMTP id g14-20020a056a000b8e00b004fade889fc7mr6314709pfj.56.1648145582915;
-        Thu, 24 Mar 2022 11:13:02 -0700 (PDT)
+        bh=kaWyOFUTIvk7Jf/C253NUkUi7ERn3SB2Cf+AuYAeK5I=;
+        b=oMInJWjSj5qtTeVhnOJa0wyvSFjXKZ/jfoOr54jrfs/yht6DY0qPaeabFwjOYB2JOq
+         rPxWo3EpFGESul3nXjxfe+o2IQGIADEh/73c98AIlWUr+YIGliW92YJhA1xYeWzs8hJ+
+         VUu0dBmvb6U/OPlcAnrBEFWWMSg9wsCW/8Nil+3zOZvUQkYJ18yAS2W+K1bMB8PT/Ik9
+         UgEsS6+Ab6aJtUUda721tlaNUOjBErkW2i8yeSKR271K04wtrsS825uz3ziUiIoUXfQU
+         LwhE+icKEqKag5B2XoEnoo0LJHVrT+NuXqQZM/NhbDFnYLbd0ifxEsQy4wGQ6mdLOTvL
+         OlZw==
+X-Gm-Message-State: AOAM530VkZTJQj7pJbug2/Z3MZPuWRS3OB0mYySWV3U9Gq3+iyitm0ee
+        EjSBuSi65e8wU3b8D/0o01X2
+X-Google-Smtp-Source: ABdhPJwua8sOXe+hMuGfnKTODS9uECovRKgCETxT8KTPmXOFY4YzITVwYpfUP+ddtha72kZJ5pnBSA==
+X-Received: by 2002:a17:902:c401:b0:154:1398:a16b with SMTP id k1-20020a170902c40100b001541398a16bmr7152359plk.67.1648145675984;
+        Thu, 24 Mar 2022 11:14:35 -0700 (PDT)
 Received: from thinkpad ([27.111.75.218])
-        by smtp.gmail.com with ESMTPSA id d18-20020a056a0010d200b004fa2e13ce80sm4244469pfu.76.2022.03.24.11.12.57
+        by smtp.gmail.com with ESMTPSA id q10-20020a056a00088a00b004f7ceff389esm4622229pfj.152.2022.03.24.11.14.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 11:13:02 -0700 (PDT)
-Date:   Thu, 24 Mar 2022 23:42:55 +0530
+        Thu, 24 Mar 2022 11:14:35 -0700 (PDT)
+Date:   Thu, 24 Mar 2022 23:44:29 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -63,15 +63,15 @@ Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/25] dmaengine: dw-edma: Stop checking
- debugfs_create_*() return value
-Message-ID: <20220324181255.GV2854@thinkpad>
+Subject: Re: [PATCH 14/25] dmaengine: dw-edma: Add dw_edma prefix to the
+ DebugFS nodes descriptor
+Message-ID: <20220324181429.GW2854@thinkpad>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-14-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-15-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220324014836.19149-14-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220324014836.19149-15-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -82,19 +82,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:48:24AM +0300, Serge Semin wrote:
-> First of all they never return NULL. So checking their return value for
-> being not NULL just pointless. Secondly the DebugFS subsystem is designed
-> in a way to be used as simple as possible. So if one of the
-> debugfs_create_*() method in a hierarchy fails, the following methods will
-> just silently return the passed erroneous parental dentry. Finally the
-> code is supposed to be working no matter whether anything DebugFS-related
-> fails. So in order to make code simpler and DebugFS-independent let's drop
-> the debugfs_create_*() methods return value checking in the same way as
-> the most of the kernel drivers do.
-> 
-> Note in order to preserve some memory space we suggest to skip the DebugFS
-> nodes initialization if the file system in unavailable.
+On Thu, Mar 24, 2022 at 04:48:25AM +0300, Serge Semin wrote:
+> The rest of the locally defined and used methods and structures have
+> dw_edma prefix in their names. It's right in accordance with the kernel
+> coding style to follow the locally defined rule of naming. Let's add that
+> prefix to the debugfs_entries structure too especially seeing it's name
+> may be confusing as if that structure belongs to the global DebugFS space.
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
@@ -104,89 +97,94 @@ Thanks,
 Man
 
 > ---
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 20 +++++---------------
->  1 file changed, 5 insertions(+), 15 deletions(-)
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
 > diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> index 12845a2dc016..808eed212be8 100644
+> index 808eed212be8..afd519d9568b 100644
 > --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
 > +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> @@ -100,9 +100,8 @@ static void dw_edma_debugfs_create_x32(const struct debugfs_entries entries[],
->  	int i;
+> @@ -46,7 +46,7 @@ static struct {
+>  	void					__iomem *end;
+>  } lim[2][EDMA_V0_MAX_NR_CH];
 >  
->  	for (i = 0; i < nr_entries; i++) {
-> -		if (!debugfs_create_file_unsafe(entries[i].name, 0444, dir,
-> -						entries[i].reg,	&fops_x32))
-> -			break;
-> +		debugfs_create_file_unsafe(entries[i].name, 0444, dir,
-> +					   entries[i].reg, &fops_x32);
->  	}
+> -struct debugfs_entries {
+> +struct dw_edma_debugfs_entry {
+>  	const char				*name;
+>  	void __iomem				*reg;
+>  };
+> @@ -94,7 +94,7 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
 >  }
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_edma_debugfs_u32_get, NULL, "0x%08llx\n");
 >  
-> @@ -168,8 +167,6 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
->  	char name[16];
->  
->  	regs_dir = debugfs_create_dir(WRITE_STR, dir);
-> -	if (!regs_dir)
-> -		return;
->  
->  	nr_entries = ARRAY_SIZE(debugfs_regs);
->  	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
-> @@ -184,8 +181,6 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
->  		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
->  
->  		ch_dir = debugfs_create_dir(name, regs_dir);
-> -		if (!ch_dir)
-> -			return;
->  
->  		dw_edma_debugfs_regs_ch(&regs->type.unroll.ch[i].wr, ch_dir);
->  
-> @@ -237,8 +232,6 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
->  	char name[16];
->  
->  	regs_dir = debugfs_create_dir(READ_STR, dir);
-> -	if (!regs_dir)
-> -		return;
->  
->  	nr_entries = ARRAY_SIZE(debugfs_regs);
->  	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
-> @@ -253,8 +246,6 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
->  		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
->  
->  		ch_dir = debugfs_create_dir(name, regs_dir);
-> -		if (!ch_dir)
-> -			return;
->  
->  		dw_edma_debugfs_regs_ch(&regs->type.unroll.ch[i].rd, ch_dir);
->  
-> @@ -273,8 +264,6 @@ static void dw_edma_debugfs_regs(void)
->  	int nr_entries;
->  
->  	regs_dir = debugfs_create_dir(REGISTERS_STR, dw->debugfs);
-> -	if (!regs_dir)
-> -		return;
->  
->  	nr_entries = ARRAY_SIZE(debugfs_regs);
->  	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
-> @@ -285,6 +274,9 @@ static void dw_edma_debugfs_regs(void)
->  
->  void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
+> -static void dw_edma_debugfs_create_x32(const struct debugfs_entries entries[],
+> +static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry entries[],
+>  				       int nr_entries, struct dentry *dir)
 >  {
-> +	if (!debugfs_initialized())
-> +		return;
-> +
->  	dw = chip->dw;
->  	if (!dw)
->  		return;
-> @@ -294,8 +286,6 @@ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
->  		return;
+>  	int i;
+> @@ -108,8 +108,7 @@ static void dw_edma_debugfs_create_x32(const struct debugfs_entries entries[],
+>  static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
+>  				    struct dentry *dir)
+>  {
+> -	int nr_entries;
+> -	const struct debugfs_entries debugfs_regs[] = {
+> +	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+>  		REGISTER(ch_control1),
+>  		REGISTER(ch_control2),
+>  		REGISTER(transfer_size),
+> @@ -120,6 +119,7 @@ static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
+>  		REGISTER(llp.lsb),
+>  		REGISTER(llp.msb),
+>  	};
+> +	int nr_entries;
 >  
->  	dw->debugfs = debugfs_create_dir(dw->name, NULL);
-> -	if (!dw->debugfs)
-> -		return;
+>  	nr_entries = ARRAY_SIZE(debugfs_regs);
+>  	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, dir);
+> @@ -127,7 +127,7 @@ static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
 >  
->  	debugfs_create_u32("mf", 0444, dw->debugfs, &dw->chip->mf);
->  	debugfs_create_u16("wr_ch_cnt", 0444, dw->debugfs, &dw->wr_ch_cnt);
+>  static void dw_edma_debugfs_regs_wr(struct dentry *dir)
+>  {
+> -	const struct debugfs_entries debugfs_regs[] = {
+> +	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+>  		/* eDMA global registers */
+>  		WR_REGISTER(engine_en),
+>  		WR_REGISTER(doorbell),
+> @@ -148,7 +148,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
+>  		WR_REGISTER(ch67_imwr_data),
+>  		WR_REGISTER(linked_list_err_en),
+>  	};
+> -	const struct debugfs_entries debugfs_unroll_regs[] = {
+> +	const struct dw_edma_debugfs_entry debugfs_unroll_regs[] = {
+>  		/* eDMA channel context grouping */
+>  		WR_REGISTER_UNROLL(engine_chgroup),
+>  		WR_REGISTER_UNROLL(engine_hshake_cnt.lsb),
+> @@ -191,7 +191,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
+>  
+>  static void dw_edma_debugfs_regs_rd(struct dentry *dir)
+>  {
+> -	const struct debugfs_entries debugfs_regs[] = {
+> +	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+>  		/* eDMA global registers */
+>  		RD_REGISTER(engine_en),
+>  		RD_REGISTER(doorbell),
+> @@ -213,7 +213,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
+>  		RD_REGISTER(ch45_imwr_data),
+>  		RD_REGISTER(ch67_imwr_data),
+>  	};
+> -	const struct debugfs_entries debugfs_unroll_regs[] = {
+> +	const struct dw_edma_debugfs_entry debugfs_unroll_regs[] = {
+>  		/* eDMA channel context grouping */
+>  		RD_REGISTER_UNROLL(engine_chgroup),
+>  		RD_REGISTER_UNROLL(engine_hshake_cnt.lsb),
+> @@ -256,7 +256,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
+>  
+>  static void dw_edma_debugfs_regs(void)
+>  {
+> -	const struct debugfs_entries debugfs_regs[] = {
+> +	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+>  		REGISTER(ctrl_data_arb_prior),
+>  		REGISTER(ctrl),
+>  	};
 > -- 
 > 2.35.1
 > 
