@@ -2,197 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 590CA4E641A
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 14:30:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83C844E64A9
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 15:05:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350448AbiCXNbq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 09:31:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
+        id S1350542AbiCXOHR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 10:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236979AbiCXNbo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 09:31:44 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 717C766613
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 06:30:12 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id b8so4718495pjb.4
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 06:30:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Pg5zMHUoMOtfnb1TjqGEq+NoQ1459IJ3m+O0DUiruc0=;
-        b=omvcrbN7lriPpSW5JaDifABkKoRy+47eDe5UOjgYcZYvGQlbPu6UX9LSEe8FXyZJsa
-         iA4E7Y1dEpDv1TBqcgYb0x+NLebJXtHBP1M1Pcwa8JX29WOxvSReHn8/l0PVwcnvF430
-         59aicx9zgfahnRG9MD556r2AI1GFa1lRuBvga4UxFpm3SaxZJ6ERW+ZXis8i/PwMdIbb
-         02CFAatVGbDSo2MjvyGdNcdvX7Zu/dcFEHnuZJyddYEShRstLEZm6jwWWEi6M+VaOx3D
-         2UW+1n54RTfwPrZEn29ASdd7e8IPfJBCHfwiJBaSJz5tNddYOfSfiVtIOtS1CxFICfb2
-         InGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Pg5zMHUoMOtfnb1TjqGEq+NoQ1459IJ3m+O0DUiruc0=;
-        b=3ITrUyxxJWsJ6Vatn9l3tZb8cOkHPaWL4bXf4mvHOKrIPcH4+4bPqTG7DKt2MpaP+5
-         pbbk+nYh9+dRg5v7hB5aTrL7AvW6PLdSR8JWuopzjWh6xszOLcigXCSYWfEQSJ6guKVu
-         QtOo1h+n7Ig/l1yKR/03a+W1Va7M8Oqy/Sk2eR0HAKf0uBttp8jNvWjagjT4nAoGFdtt
-         5dtuJBYlQJI8W0fUSbeb+mVZDqO3zvoxMo/x/JWKbRnkMTMilNQJ84iY8r/SIXeMbE6O
-         i71fxqatLivCt7k9s4wzhBh2EjT7O7A3WcFB39Wf6eMWNTDx8kiYuBI/JCC2yTIm8EIl
-         wIFA==
-X-Gm-Message-State: AOAM531hPaj/PAzLge82NRx+VSXL84VU83gvPmM9KSA9C1sjEbxnxoEG
-        U7gFMfLLxsSsOl26dh+ND4Wz
-X-Google-Smtp-Source: ABdhPJxo834+q44cy6Y/VdrbWR6viwcZl217ze+h8Xiz6Pw+AFEkkQShW97freIJEBaF33PZjpG9Xw==
-X-Received: by 2002:a17:902:8506:b0:154:8692:a7ac with SMTP id bj6-20020a170902850600b001548692a7acmr5896100plb.10.1648128611696;
-        Thu, 24 Mar 2022 06:30:11 -0700 (PDT)
-Received: from thinkpad ([220.158.158.107])
-        by smtp.gmail.com with ESMTPSA id oa16-20020a17090b1bd000b001c72b632222sm10085543pjb.32.2022.03.24.06.30.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 06:30:11 -0700 (PDT)
-Date:   Thu, 24 Mar 2022 19:00:04 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        with ESMTP id S231871AbiCXOHR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 10:07:17 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4A56D1AF;
+        Thu, 24 Mar 2022 07:05:44 -0700 (PDT)
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KPRlx4qz2z67ZTj;
+        Thu, 24 Mar 2022 22:03:57 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Thu, 24 Mar 2022 15:05:41 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 24 Mar
+ 2022 14:05:41 +0000
+Date:   Thu, 24 Mar 2022 14:05:39 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/25] dmaengine: dw-edma: Drop
- dma_slave_config.direction field usage
-Message-ID: <20220324133004.GM2854@thinkpad>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-2-Sergey.Semin@baikalelectronics.ru>
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V6 04/10] PCI/DOE: Introduce pci_doe_create_doe_devices
+Message-ID: <20220324140539.00004be8@Huawei.com>
+In-Reply-To: <Yju6quQsBDSMaNC2@iweiny-desk3>
+References: <20220201071952.900068-5-ira.weiny@intel.com>
+        <20220203224437.GA120552@bhelgaas>
+        <Yju6quQsBDSMaNC2@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220324014836.19149-2-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:48:12AM +0300, Serge Semin wrote:
-> The dma_slave_config.direction field usage in the DW eDMA driver has been
-> introduced in the commit bd96f1b2f43a ("dmaengine: dw-edma: support local
-> dma device transfer semantics"). Mainly the change introduced there was
-> correct (indeed DEV_TO_MEM means using RD-channel and MEM_TO_DEV -
-> WR-channel for the case of having eDMA accessed locally from
-> CPU/Application side), but providing an additional
-> MEM_TO_MEM/DEV_TO_DEV-based semantics was quite redundant if not to say
-> potentially harmful (when it comes to removing the denoted field). First
-> of all since the dma_slave_config.direction field has been marked as
-> obsolete (see [1] and the structure dc [2]) and will be discarded in
-> future, using it especially in a non-standard way is discouraged. Secondly
-> in accordance with the commit denoted above the default
-> dw_edma_device_transfer() semantics has been changed despite what it's
-> message said. So claiming that the method was left backward compatible was
-> wrong.
-> 
-> Anyway let's fix the problems denoted above and simplify the
-> dw_edma_device_transfer() method by dropping the parsing of the
-> DMA-channel direction field. Instead of having that implicit
-> dma_slave_config.direction field semantic we can use the recently added
-> DW_EDMA_CHIP_LOCAL flag to distinguish between the local and remote DW
-> eDMA setups thus preserving both cases support. In addition to that an
-> ASCII-figure has been added to clarify the complication out.
-> 
-> [1] Documentation/driver-api/dmaengine/provider.rst
-> [2] include/linux/dmaengine.h: dma_slave_config.direction
-> 
-> Co-developed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> ---
-> 
-> In accordance with agreement with Frank and Manivannan this patch is
-> supposed to be moved to the series:
-> Link: https://lore.kernel.org/dmaengine/20220310192457.3090-1-Frank.Li@nxp.com/
-> in place of the patch:
-> [PATCH v5 6/9] dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> Link: https://lore.kernel.org/dmaengine/20220310192457.3090-7-Frank.Li@nxp.com/
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c | 49 +++++++++++++++++++++---------
->  1 file changed, 34 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index 5be8a5944714..e9e32ed74aa9 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -339,21 +339,40 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
->  	if (!chan->configured)
->  		return NULL;
->  
-> -	switch (chan->config.direction) {
-> -	case DMA_DEV_TO_MEM: /* local DMA */
-> -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ)
-> -			break;
-> -		return NULL;
-> -	case DMA_MEM_TO_DEV: /* local DMA */
-> -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE)
-> -			break;
-> -		return NULL;
-> -	default: /* remote DMA */
-> -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_READ)
-> -			break;
-> -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE)
-> -			break;
-> -		return NULL;
-> +	/*
-> +	 * Local Root Port/End-point              Remote End-point
-> +	 * +-----------------------+ PCIe bus +----------------------+
-> +	 * |                       |    +-+   |                      |
-> +	 * |    DEV_TO_MEM   Rx Ch <----+ +---+ Tx Ch  DEV_TO_MEM    |
-> +	 * |                       |    | |   |                      |
-> +	 * |    MEM_TO_DEV   Tx Ch +----+ +---> Rx Ch  MEM_TO_DEV    |
-> +	 * |                       |    +-+   |                      |
-> +	 * +-----------------------+          +----------------------+
-> +	 *
-> +	 * 1. Normal logic:
-> +	 * If eDMA is embedded into the DW PCIe RP/EP and controlled from the
-> +	 * CPU/Application side, the Rx channel (EDMA_DIR_READ) will be used
-> +	 * for the device read operations (DEV_TO_MEM) and the Tx channel
-> +	 * (EDMA_DIR_WRITE) - for the write operations (MEM_TO_DEV).
-> +	 *
-> +	 * 2. Inverted logic:
-> +	 * If eDMA is embedded into a Remote PCIe EP and is controlled by the
-> +	 * MWr/MRd TLPs sent from the CPU's PCIe host controller, the Tx
-> +	 * channel (EDMA_DIR_WRITE) will be used for the device read operations
-> +	 * (DEV_TO_MEM) and the Rx channel (EDMA_DIR_READ) - for the write
-> +	 * operations (MEM_TO_DEV).
-> +	 *
-> +	 * It is the client driver responsibility to choose a proper channel
-> +	 * for the DMA transfers.
-> +	 */
+Hi Ira,
 
-I think it'd be good to document this using some form in "enum dw_edma_dir"
-declaration.
+> Here is the code to be more clear...
+> 
+> 
+> drivers/cxl/pci.c:
+> 
+> int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> {               
+>         struct device *dev = &pdev->dev;
+>         bool use_irq = true;
+>         int irqs = 0;
+>         u16 off = 0;         
+>         int rc;
+>         
+>         pci_doe_for_each_off(pdev, off)
+>                 irqs++;
+>         pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
+>         
+>         /*                         
+>          * Allocate enough vectors for the DOE's
+>          */     
+>         rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
+>                                                      PCI_IRQ_MSIX);
+>         if (rc != irqs) {
+>                 pci_err(pdev, "Not enough interrupts for all the DOEs; use polling\n");
+>                 use_irq = false;
+>                 /* Some got allocated; clean them up */
+>                 if (rc > 0)
+>                         cxl_pci_free_irq_vectors(pdev); 
+>         } else {
+>                 /*
+>                  * Enabling bus mastering is require for MSI/MSIx.  It could be
+>                  * done later within the DOE initialization, but as it
+>                  * potentially has other impacts keep it here when setting up
+>                  * the IRQ's.
+>                  */
+>                 pci_set_master(pdev);
+>                 rc = devm_add_action_or_reset(dev,
+>                                               cxl_pci_free_irq_vectors,
+>                                               pdev);
+>                 if (rc)
+>                         return rc;
+>         }
+> 
+>         pci_doe_for_each_off(pdev, off) {
+> ...
+> 		/* Create each auxiliary device which internally calls */
+> 		pci_doe_create_mb(pdev, off, use_irq);
+> ...
+> 	}
+> ...
+> }
+> 
+> 
+> drivers/pci/pci-doe.c:
+> 
+> static irqreturn_t pci_doe_irq_handler(int irq, void *data)
+> {
+> ...
+> }
+> 
+> static int pci_doe_request_irq(struct pci_doe_mb *doe_mb)
+> {
+>         struct pci_dev *pdev = doe_mb->pdev;
+>         int offset = doe_mb->cap_offset;
+>         int doe_irq, rc;
+>         u32 val;
+> 
+>         pci_read_config_dword(pdev, offset + PCI_DOE_CAP, &val);
+> 
+>         if (!FIELD_GET(PCI_DOE_CAP_INT, val))
+>                 return -ENOTSUPP;
+> 
+>         doe_irq = FIELD_GET(PCI_DOE_CAP_IRQ, val);
+>         rc = pci_request_irq(pdev, doe_irq, pci_doe_irq_handler,
+>                              NULL, doe_mb,
+>                              "DOE[%d:%s]", doe_irq, pci_name(pdev));
+>         if (rc) 
+>                 return rc;
+> 
+>         doe_mb->irq = doe_irq;
+>         pci_write_config_dword(pdev, offset + PCI_DOE_CTRL,
+>                                PCI_DOE_CTRL_INT_EN);
+>         return 0;
+> }
+> 
+> struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev, u16 cap_offset,
+>                                      bool use_irq)
+> {
+> ...
+>         if (use_irq) {
+>                 rc = pci_doe_request_irq(doe_mb);
+>                 if (rc) 
+>                         pci_err(pdev, "DOE request irq failed for mailbox @ %u : %d\n",
+>                                 cap_offset, rc);
+>         }
+> ...
+> }
+> 
+> 
+> Does this look reasonable?
 
-Thanks,
-Mani
+I'm a little nervous about how we are going to make DOEs on switches work.
+Guess I'll do an experiment once your next version is out and check we
+can do that reasonably cleanly.  For switches we'll probably have to
+check for DOEs on all such ports and end up with infrastructure to
+map to all protocols we might see on a switch.
 
-> +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-> +		if ((chan->dir == EDMA_DIR_READ && dir != DMA_DEV_TO_MEM) ||
-> +		    (chan->dir == EDMA_DIR_WRITE && dir != DMA_MEM_TO_DEV))
-> +			return NULL;
-> +	} else {
-> +		if ((chan->dir == EDMA_DIR_WRITE && dir != DMA_DEV_TO_MEM) ||
-> +		    (chan->dir == EDMA_DIR_READ && dir != DMA_MEM_TO_DEV))
-> +			return NULL;
->  	}
->  
->  	if (xfer->type == EDMA_XFER_CYCLIC) {
-> -- 
-> 2.35.1
+Jonathan
+
 > 
