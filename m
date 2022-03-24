@@ -2,40 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DBB924E9BD7
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 18:04:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F9FD4E9C8E
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 18:44:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240932AbiC1QFw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 12:05:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43844 "EHLO
+        id S243245AbiC1QqM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 12:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239807AbiC1QFv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 12:05:51 -0400
-X-Greylist: delayed 4200 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 28 Mar 2022 09:04:09 PDT
+        with ESMTP id S242895AbiC1QqD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 12:46:03 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 24D011A3B7;
-        Mon, 28 Mar 2022 09:04:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EED20220C4;
+        Mon, 28 Mar 2022 09:44:16 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9FBFB1E28FC;
-        Thu, 24 Mar 2022 04:09:18 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 9FBFB1E28FC
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8D61D1E493A;
+        Thu, 24 Mar 2022 04:48:38 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 8D61D1E493A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1648084158;
-        bh=KwgRwEaLuj9S7bcXvNqk9nfNR+7FKV+wml4/e4DFTxo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=ROn3Fxd7SVgCbaeh6EHEBzZUnw8DuOGGUcegQOYTAYZvEY3BVkS5M2U6zepKglqWd
-         9myfruuGLx7AYQj3Md1hvAY+74MZ5LG+KS8U3q2ruZyBLKiM28d7A7kbhUjHjFiwob
-         UwTBGx9Z1V4Mv7PW31AlvsxHa513RByGtX9NprIM=
+        d=baikalelectronics.ru; s=mail; t=1648086518;
+        bh=ckQ87WPTnxT61AdGkyIyqSu26w060GYud1Srpg67xm4=;
+        h=From:To:CC:Subject:Date:From;
+        b=he4V38X6dd//0y+FYKe4vGFADj13n3EASg9+bLhxKdCjTRJMit7YnSaSbYRJSZDtT
+         iy3LC4cDfQHtdZjiJIoWZCW4YSqg2G3HXApFq7HiyBQuvB/ppDokCGcmo6oGIPPLrQ
+         sl6COO0bZAZ4+AotOv9FDl4H3Zzzy27b1XQIXENs=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:09:18 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:48:38 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -43,270 +41,154 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        <linux-clk@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH 4/4] clk: baikal-t1: Add DDR/PCIe directly controlled resets support
-Date:   Thu, 24 Mar 2022 04:09:05 +0300
-Message-ID: <20220324010905.15589-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20220324010905.15589-1-Sergey.Semin@baikalelectronics.ru>
-References: <20220324010905.15589-1-Sergey.Semin@baikalelectronics.ru>
+        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 00/25] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+Date:   Thu, 24 Mar 2022 04:48:11 +0300
+Message-ID: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Aside with a set of the trigger-like resets Baikal-T1 CCU provides two
-additional blocks with directly controlled reset signals. In particular it
-concerns DDR full and initial resets and various PCIe sub-domains resets.
-Let's add the direct reset assertion/de-assertion of the corresponding
-flags support into the Baikal-T1 CCU driver then. It will be required at
-least for the PCIe platform driver. Obviously the DDR controller isn't
-supposed to be fully reset in the kernel, so the corresponding controls
-are added just for the sake of the interface implementation completeness.
+This is a final patchset in the series created in the framework of
+my Baikal-T1 PCIe/eDMA-related work:
+
+[1: In-progress] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+Link: --submitted--
+[2: In-progress] PCI: dwc: Various fixes and cleanups
+Link: --submitted--
+[3: In-progress] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+Link: --submitted--
+[4: In-progress] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+Link: --you are looking at it--
+
+Note it is recommended to merge the last patchset after the former ones in
+order to prevent merge conflicts. @Bjorn could you merge in this patchset
+through your PCIe repo? After getting all the ack'es of course.
+
+Please note originally this series was self content, but due to Frank
+being a bit faster in his work submission I had to rebase my patchset onto
+his one. So now this patchset turns to be dependent on the Frank' work:
+Link: https://lore.kernel.org/dmaengine/20220310192457.3090-1-Frank.Li@nxp.com/
+So please review and merge his series first before applying this one.
+
+@Frank, @Manivannan as we agreed here:
+Link: https://lore.kernel.org/dmaengine/20220309211204.26050-6-Frank.Li@nxp.com/
+this series contains two patches with our joint work. Here they are:
+[PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+[PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
+@Frank, could you please pick them up and add them to your series in place
+of the patches:
+[PATCH v5 6/9] dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+Link: https://lore.kernel.org/dmaengine/20220310192457.3090-7-Frank.Li@nxp.com/
+[PATCH v5 5/9] dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+Link: https://lore.kernel.org/dmaengine/20220310192457.3090-6-Frank.Li@nxp.com/
+respectively?
+
+@Frank please don't forget to fix your series so the chip->dw field is
+initialized after all the probe() initializations are done. For that sake
+you also need to make sure that the dw_edma_irq_request(),
+dw_edma_channel_setup() and dw_edma_v0_core_debugfs_on() methods take
+dw_edma structure pointer as a parameter.
+
+Here is a short summary regarding this patchset. The series starts with
+fixes patches. The very first two patches have been modified based on
+discussion with @Frank and @Manivannan as I noted in the previous
+paragraph. They concern fixing the Read/Write channels xfer semantics.
+See the patches description for more details. After that goes the fix of
+the dma_direct_map_resource() method, which turned out to be not working
+correctly for the case of having devive.dma_range_map being non-empty
+(non-empty dma-ranges DT property). Then we discovered that the
+dw-edma-pcie.c driver incorrectly initializes the LL/DT base addresses for
+the platforms with not matching CPU and PCIe memory spaces. It is fixed by
+using the pci_bus_address() method to get a correct base address. After
+that you can find a series of interleaved xfers fixes. It turned out the
+interleaved transfers implementation didn't work quite correctly from the
+very beginning for instance missing src/dst addresses initialization, etc.
+In the framework of the next two patches we suggest to add a new
+platform-specific callback - pci_addrees() and use to convert the CPU
+address to the PCIe space address. It is at least required for the DW eDAM
+remote End-point setup on the platforms with not-matching address spaces.
+In case of the DW eDMA local RP/EP setup the conversion will be done
+automatically by the outbound iATU (if no DMA-bypass flag is specified for
+the corresponding iATU window). Then we introduce a set of patches to make
+the DebugFS part of the code supporting the multi-eDMA controllers
+platforms. It starts with several cleanup patches and is closed joining
+the Read/Write channels into a single DMA-device as they originally should
+have been. After that you can find the patches with adding the non-atomic
+io-64 methods usage, dropping DT-region descriptors allocation, replacing
+chip IDs with device name. In addition to that in order to have the eDMA
+embedded into the DW PCIe RP/EP supported we need to bypass the
+dma-ranges-based memory ranges mapping since in case of the root port DT
+node it's applicable for the peripheral PCIe devices only. Finally at the
+series closure we introduce a generic DW eDMA controller support being
+available in the DW PCIe Host/End-point driver.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
----
- drivers/clk/baikal-t1/ccu-rst.c     | 117 +++++++++++++++++++++++++++-
- drivers/clk/baikal-t1/ccu-rst.h     |   4 +
- include/dt-bindings/reset/bt1-ccu.h |   9 +++
- 3 files changed, 129 insertions(+), 1 deletion(-)
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: linux-pci@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-diff --git a/drivers/clk/baikal-t1/ccu-rst.c b/drivers/clk/baikal-t1/ccu-rst.c
-index 5e33c3ce962a..186a1491a7d9 100644
---- a/drivers/clk/baikal-t1/ccu-rst.c
-+++ b/drivers/clk/baikal-t1/ccu-rst.c
-@@ -25,17 +25,33 @@
- #include "ccu-div.h"
- #include "ccu-rst.h"
- 
-+#define CCU_SYS_DDR_BASE		0x02c
-+#define CCU_SYS_PCIE_BASE		0x144
-+
- #define CCU_RST_MAP(_rst_id, _clk_id)		\
- 	{					\
- 		.rst_id = _rst_id,		\
- 		.clk_id = _clk_id,		\
- 	}
- 
-+#define CCU_RST_DIR(_rst_id, _base, _ofs)	\
-+	{					\
-+		.rst_id = _rst_id,		\
-+		.base = _base,			\
-+		.ofs = _ofs			\
-+	}
-+
- struct ccu_rst_map {
- 	unsigned int rst_id;
- 	unsigned int clk_id;
- };
- 
-+struct ccu_rst_dir {
-+	unsigned int rst_id;
-+	unsigned int base;
-+	unsigned int ofs;
-+};
-+
- struct ccu_rst_data {
- 	struct device_node *np;
- 	struct regmap *sys_regs;
-@@ -46,6 +62,9 @@ struct ccu_rst_data {
- 	unsigned int rsts_map_num;
- 	const struct ccu_rst_map *rsts_map;
- 
-+	unsigned int rsts_dir_num;
-+	const struct ccu_rst_dir *rsts_dir;
-+
- 	unsigned int divs_num;
- 	struct ccu_div **divs;
- 
-@@ -81,6 +100,23 @@ static const struct ccu_rst_map sys_rst_map[] = {
- 	CCU_RST_MAP(CCU_SYS_APB_RST, CCU_SYS_APB_CLK),
- };
- 
-+/*
-+ * DDR and PCIe sub-domains can be reset with directly controlled reset
-+ * signals. I wouldn't suggest to reset the DDR controller though at least
-+ * while the Linux kernel is working.
-+ */
-+static const struct ccu_rst_dir sys_rst_dir[] = {
-+	CCU_RST_DIR(CCU_SYS_DDR_FULL_RST, CCU_SYS_DDR_BASE, 1),
-+	CCU_RST_DIR(CCU_SYS_DDR_INIT_RST, CCU_SYS_DDR_BASE, 2),
-+	CCU_RST_DIR(CCU_SYS_PCIE_PCS_PHY_RST, CCU_SYS_PCIE_BASE, 0),
-+	CCU_RST_DIR(CCU_SYS_PCIE_PIPE0_RST, CCU_SYS_PCIE_BASE, 4),
-+	CCU_RST_DIR(CCU_SYS_PCIE_CORE_RST, CCU_SYS_PCIE_BASE, 8),
-+	CCU_RST_DIR(CCU_SYS_PCIE_PWR_RST, CCU_SYS_PCIE_BASE, 9),
-+	CCU_RST_DIR(CCU_SYS_PCIE_STICKY_RST, CCU_SYS_PCIE_BASE, 10),
-+	CCU_RST_DIR(CCU_SYS_PCIE_NSTICKY_RST, CCU_SYS_PCIE_BASE, 11),
-+	CCU_RST_DIR(CCU_SYS_PCIE_HOT_RST, CCU_SYS_PCIE_BASE, 12),
-+};
-+
- static int ccu_rst_reset(struct reset_controller_dev *rcdev,
- 			 unsigned long idx)
- {
-@@ -92,12 +128,81 @@ static int ccu_rst_reset(struct reset_controller_dev *rcdev,
- 		return -EINVAL;
- 	}
- 
-+	/*
-+	 * No CCU divider descriptor means having directly handled reset control,
-+	 * which is mapped into the CCU Divider registers.
-+	 */
- 	rst = &data->rsts[idx];
-+	if (!rst->div)
-+		return -EOPNOTSUPP;
-+
- 	return ccu_div_reset_domain(rst->div);
- }
- 
-+static int ccu_rst_set(struct ccu_rst_data *data,
-+		       unsigned long idx, bool high)
-+{
-+	struct ccu_rst *rst;
-+
-+	if (idx >= data->rsts_num) {
-+		pr_err("Invalid reset ID %lu specified\n", idx);
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Having CCU divider descriptor means trigger-like reset control so
-+	 * direct assertion/de-assertion is unsupported.
-+	 */
-+	rst = &data->rsts[idx];
-+	if (rst->div)
-+		return high ? -EOPNOTSUPP : 0;
-+
-+	return regmap_update_bits(data->sys_regs, rst->reg_ctl,
-+				  rst->mask, high ? rst->mask : 0);
-+}
-+
-+static int ccu_rst_assert(struct reset_controller_dev *rcdev,
-+			  unsigned long idx)
-+{
-+	struct ccu_rst_data *data = to_ccu_rst_data(rcdev);
-+
-+	return ccu_rst_set(data, idx, true);
-+}
-+
-+static int ccu_rst_deassert(struct reset_controller_dev *rcdev,
-+			    unsigned long idx)
-+{
-+	struct ccu_rst_data *data = to_ccu_rst_data(rcdev);
-+
-+	return ccu_rst_set(data, idx, false);
-+}
-+
-+static int ccu_rst_status(struct reset_controller_dev *rcdev,
-+			  unsigned long idx)
-+{
-+	struct ccu_rst_data *data = to_ccu_rst_data(rcdev);
-+	struct ccu_rst *rst;
-+	u32 val;
-+
-+	if (idx >= data->rsts_num) {
-+		pr_err("Invalid reset ID %lu specified\n", idx);
-+		return -EINVAL;
-+	}
-+
-+	rst = &data->rsts[idx];
-+	if (rst->div)
-+		return -EOPNOTSUPP;
-+
-+	regmap_read(data->sys_regs, rst->reg_ctl, &val);
-+
-+	return !!(val & rst->mask);
-+}
-+
- static const struct reset_control_ops ccu_rst_ops = {
- 	.reset = ccu_rst_reset,
-+	.assert = ccu_rst_assert,
-+	.deassert = ccu_rst_deassert,
-+	.status = ccu_rst_status,
- };
- 
- static int ccu_rst_of_idx_get(struct reset_controller_dev *rcdev,
-@@ -153,6 +258,8 @@ static struct ccu_rst_data *ccu_rst_create_data(const struct ccu_rst_init_data *
- 	} else if (of_device_is_compatible(data->np, "baikal,bt1-ccu-sys")) {
- 		data->rsts_map_num = ARRAY_SIZE(sys_rst_map);
- 		data->rsts_map = sys_rst_map;
-+		data->rsts_dir_num = ARRAY_SIZE(sys_rst_dir);
-+		data->rsts_dir = sys_rst_dir;
- 	} else {
- 		pr_err("Incompatible DT node '%s' specified\n",
- 			of_node_full_name(data->np));
-@@ -160,7 +267,7 @@ static struct ccu_rst_data *ccu_rst_create_data(const struct ccu_rst_init_data *
- 		goto err_kfree_data;
- 	}
- 
--	data->rsts_num = data->rsts_map_num;
-+	data->rsts_num = data->rsts_map_num + data->rsts_dir_num;
- 	data->rsts = kcalloc(data->rsts_num, sizeof(*data->rsts), GFP_KERNEL);
- 	if (!data->rsts) {
- 		ret = -ENOMEM;
-@@ -198,6 +305,14 @@ static int ccu_rst_init_desc(struct ccu_rst_data *data)
- 		}
- 	}
- 
-+	for (idx = 0; idx < data->rsts_dir_num; ++idx, ++rst) {
-+		const struct ccu_rst_dir *dir = &data->rsts_dir[idx];
-+
-+		rst->id = dir->rst_id;
-+		rst->reg_ctl = dir->base;
-+		rst->mask = BIT(dir->ofs);
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/clk/baikal-t1/ccu-rst.h b/drivers/clk/baikal-t1/ccu-rst.h
-index 2ef82899dba8..58347dc8a504 100644
---- a/drivers/clk/baikal-t1/ccu-rst.h
-+++ b/drivers/clk/baikal-t1/ccu-rst.h
-@@ -33,10 +33,14 @@ struct ccu_rst_init_data {
-  * struct ccu_div - CCU Reset descriptor
-  * @id: Reset identifier.
-  * @div: Pointer to the CCU Divider descriptor (can be NULL).
-+ * @reg_ctl: reset control register base address.
-+ * @mask: reset flag within the control register.
-  */
- struct ccu_rst {
- 	unsigned int id;
- 	struct ccu_div *div;
-+	unsigned int reg_ctl;
-+	unsigned int mask;
- };
- 
- #ifdef CONFIG_CLK_BT1_CCU_RST
-diff --git a/include/dt-bindings/reset/bt1-ccu.h b/include/dt-bindings/reset/bt1-ccu.h
-index 3578e83026bc..c691efaa678f 100644
---- a/include/dt-bindings/reset/bt1-ccu.h
-+++ b/include/dt-bindings/reset/bt1-ccu.h
-@@ -21,5 +21,14 @@
- 
- #define CCU_SYS_SATA_REF_RST		0
- #define CCU_SYS_APB_RST			1
-+#define CCU_SYS_DDR_FULL_RST		2
-+#define CCU_SYS_DDR_INIT_RST		3
-+#define CCU_SYS_PCIE_PCS_PHY_RST	4
-+#define CCU_SYS_PCIE_PIPE0_RST		5
-+#define CCU_SYS_PCIE_CORE_RST		6
-+#define CCU_SYS_PCIE_PWR_RST		7
-+#define CCU_SYS_PCIE_STICKY_RST		8
-+#define CCU_SYS_PCIE_NSTICKY_RST	9
-+#define CCU_SYS_PCIE_HOT_RST		10
- 
- #endif /* __DT_BINDINGS_RESET_BT1_CCU_H */
+Serge Semin (25):
+  dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+  dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
+    semantics
+  dma-direct: take dma-ranges/offsets into account in resource mapping
+  dmaengine: Fix dma_slave_config.dst_addr description
+  dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
+  dmaengine: dw-edma: Fix missing src/dst address of the interleaved
+    xfers
+  dmaengine: dw-edma: Don't permit non-inc interleaved xfers
+  dmaengine: dw-edma: Fix invalid interleaved xfers semantics
+  dmaengine: dw-edma: Add CPU to PCIe bus address translation
+  dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
+    glue-driver
+  dmaengine: dw-edma: Drop chancnt initialization
+  dmaengine: dw-edma: Fix DebugFS reg entry type
+  dmaengine: dw-edma: Stop checking debugfs_create_*() return value
+  dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
+  dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
+  dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
+  dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
+  dmaengine: dw-edma: Join Write/Read channels into a single device
+  dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
+  dmaengine: dw-edma: Use non-atomic io-64 methods
+  dmaengine: dw-edma: Drop DT-region allocation
+  dmaengine: dw-edma: Replace chip ID number with device name
+  dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
+  dmaengine: dw-edma: Skip cleanup procedure if no private data found
+  PCI: dwc: Add DW eDMA engine support
+
+ drivers/dma/dw-edma/dw-edma-core.c            | 249 +++++++------
+ drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
+ drivers/dma/dw-edma/dw-edma-v0-core.c         |  76 ++--
+ drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 350 ++++++++----------
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
+ .../pci/controller/dwc/pcie-designware-ep.c   |   4 +
+ .../pci/controller/dwc/pcie-designware-host.c |  13 +-
+ drivers/pci/controller/dwc/pcie-designware.c  | 188 ++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h  |  23 +-
+ include/linux/dma/edma.h                      |  18 +-
+ include/linux/dmaengine.h                     |   2 +-
+ kernel/dma/direct.c                           |   2 +-
+ 14 files changed, 598 insertions(+), 367 deletions(-)
+
 -- 
 2.35.1
 
