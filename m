@@ -2,33 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C62814E674E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 17:54:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A11564E675C
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 17:55:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245224AbiCXQ4J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 12:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40222 "EHLO
+        id S1350897AbiCXQ4v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 12:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352141AbiCXQz4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 12:55:56 -0400
+        with ESMTP id S1352052AbiCXQ4t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 12:56:49 -0400
 Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [IPv6:2001:67c:2050:1::465:204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE90220F
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 09:53:00 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E9858389
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 09:55:08 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4KPWVy166Zz9sWt;
-        Thu, 24 Mar 2022 17:52:58 +0100 (CET)
-Message-ID: <a1cb00f8-175e-a9c8-4d01-9ae8baa963e5@denx.de>
-Date:   Thu, 24 Mar 2022 17:52:54 +0100
+        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4KPWYR1XyCz9sSG;
+        Thu, 24 Mar 2022 17:55:07 +0100 (CET)
+Message-ID: <cdcf6b43-7baf-c247-8943-1883dde5460c@denx.de>
+Date:   Thu, 24 Mar 2022 17:55:02 +0100
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/2] Add support to register platform service IRQ
+Subject: Re: [PATCH v4 0/3] Fully enable AER
 Content-Language: en-US
 From:   Stefan Roese <sr@denx.de>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-References: <20220114075834.1938409-1-sr@denx.de>
-In-Reply-To: <20220114075834.1938409-1-sr@denx.de>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Yao Hongbo <yaohongbo@linux.alibaba.com>,
+        Naveen Naidu <naveennaidu479@gmail.com>
+References: <20220125071820.2247260-1-sr@denx.de>
+In-Reply-To: <20220125071820.2247260-1-sr@denx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
@@ -40,50 +46,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/14/22 08:58, Stefan Roese wrote:
-> Some platforms have dedicated IRQ lines for platform-specific System Errors
-> like AER/PME etc. The root complex on these platform will use these seperate
-> IRQ lines to report AER/PME etc., interrupts and will not generate
-> MSI/MSI-X/INTx interrupts for these services.
+On 1/25/22 08:18, Stefan Roese wrote:
+> While working on AER support on a ZynqMP based system, which has some
+> PCIe Device connected via a PCIe switch, problems with AER enabling in
+> the Device Control registers of all PCIe devices but the Root Port. In
+> fact, only the Root Port has AER enabled right now. This patch set now
+> fixes this problem by first fixing the AER enabing in the
+> interconnected PCIe switches between the Root Port and the PCIe
+> devices and in a 2nd patch, also enabling AER in the PCIe Endpoints.
 > 
-> These patches will add new method for these kind of platforms to register the
-> platform IRQ number with respective PCIe services.
+> Please note that these changes are quite invasive, as with these
+> patches applied, AER now will be enabled in the Device Control
+> registers of all available PCIe Endpoints, which currently is not the
+> case.
 > 
-> Changes in v4 (Stefan):
-> - Remove 2nd check for PCI_EXP_TYPE_ROOT_PORT
-> - Change init_platform_service_irqs() from void to return int
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Pali Rohár <pali@kernel.org>
+> Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: Yao Hongbo <yaohongbo@linux.alibaba.com>
+> Cc: Naveen Naidu <naveennaidu479@gmail.com>
 > 
-> Changes in v3 (Stefan):
-> - Restructure patches from 4 patches in v2 to now 2 patches in v3
-> - Rename of functions names
-> - init_platform_service_irqs() now uses "struct pci_dev *" instead of
->    "struct pci_host_bridge *"
-> - pcie_init_platform_service_irqs() is called before pcie_init_service_irqs()
-> - Use more PCIe spec terminology as suggested by Bjorn (hopefully enough, I
->    don't have the spec at hand)
+> Stefan Roese (3):
+>    PCI/AER: Call pcie_set_ecrc_checking() for each PCIe device
+>    PCI/portdrv: Don't disable AER reporting in
+>      get_port_device_capability()
+>    PCI/AER: Enable AER on all PCIe devices supporting it
+> 
+>   drivers/pci/pcie/aer.c          | 10 +++++++---
+>   drivers/pci/pcie/portdrv_core.c |  9 +--------
+>   2 files changed, 8 insertions(+), 11 deletions(-)
+> 
 
-Bjorn, what's the status of this patchset? I was under the impression,
-that it would make it into v5.18. Please let me know if something is
-missing.
+Bjorn, what's the status of this patchset? I know this is sensible
+stuff, to fully enable PCIe AER. How should be handle this? Do you
+plan to pull this soon'ish? Please let me know if something is missing.
 
 Thanks,
 Stefan
-
-> Bharat Kumar Gogada (2):
->    PCI/portdrv: Add option to setup IRQs for platform-specific Service
->      Errors
->    PCI: xilinx-nwl: Add method to init_platform_service_irqs hook
-> 
->   drivers/pci/controller/pcie-xilinx-nwl.c | 18 +++++++++++
->   drivers/pci/pcie/portdrv_core.c          | 39 +++++++++++++++++++++++-
->   include/linux/pci.h                      |  2 ++
->   3 files changed, 58 insertions(+), 1 deletion(-)
-> 
-
-Viele Grüße,
-Stefan Roese
-
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
