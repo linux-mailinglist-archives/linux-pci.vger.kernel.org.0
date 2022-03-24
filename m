@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 036E74E9A73
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 17:09:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 461594E9A6D
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 17:09:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244302AbiC1PK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 11:10:58 -0400
+        id S244271AbiC1PK4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 11:10:56 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244279AbiC1PKw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 11:10:52 -0400
+        with ESMTP id S244275AbiC1PKv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 11:10:51 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9146A24587;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 283615FF30;
         Mon, 28 Mar 2022 08:09:11 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D1AEA1D5AAF;
-        Thu, 24 Mar 2022 04:25:31 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru D1AEA1D5AAF
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 932E01D5AB0;
+        Thu, 24 Mar 2022 04:25:32 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 932E01D5AB0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1648085131;
-        bh=Qya4utQ87ZDiwd2kYZMSdUDFWkl7X0Bsg4XAU9JzMHM=;
+        d=baikalelectronics.ru; s=mail; t=1648085132;
+        bh=Dbgc6/dIoGYhBdhIbPzmzSMnuOn91k3d9y6pTYpNWJk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=hS81a7d229QtBZGGOUjgBYO9xcR8XNSm15GX+4DQj/PpUoLzdEE60zTO47j/yu/8d
-         ACDSFis3C+JOk2JkC4C1uSvSTLicm+jDt9pboZNVQFcoFFUy+d7MauAVFQ1nAyKChz
-         ZeOXVaJ8dO7jWz7Q05+C58xhsFGYBmBxkB0G3uak=
+        b=oSHtuRxHXPHxaJYdDuGrLKof+OUuE1wf4y2oQ6le7umJJbexr9KnaM2H2OBo8EFVF
+         4I18HyCI27utupWHbZr74kpLeGNjWZirXOsYNzXHZ9lVncnTJezlSh32FFbUidrwRf
+         A+wtAaKv3qcIP2tz+dIZ0z8rAhbi+6vFGPuo5eBY=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:25:31 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:25:32 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -41,9 +41,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 06/12] PCI: dwc: Add braces to the multi-line if-else statements
-Date:   Thu, 24 Mar 2022 04:25:17 +0300
-Message-ID: <20220324012524.16784-7-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 07/12] PCI: dwc: Add trailing new-line literals to the log messages
+Date:   Thu, 24 Mar 2022 04:25:18 +0300
+Message-ID: <20220324012524.16784-8-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -59,50 +59,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In accordance with [1] if there is at least one multi-line if-else
-clause in the statement, then each clause will need to be surrounded by
-the braces. The driver code violates that coding style rule in a few
-places. Let's fix it.
-
-[1] Documentation/process/coding-style.rst
+There are two places in the DW PCIe controller driver, which omit the
+trailing newlines in the log info and warn messages. Not having them there
+will cause leaving the messages in the printk ring buffer until a next
+'\n'-terminated message is printed (it will consequently cause the buffer
+flush). As it isn't what the corresponding code implies let's add the
+new-line characters in the messages.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++--
- drivers/pci/controller/dwc/pcie-designware.c    | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
+ drivers/pci/controller/dwc/pcie-designware.c      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 0eda8236c125..7c9315fffe24 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -699,9 +699,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index a048d88e0c30..8364ea234e88 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -657,7 +657,7 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 		}
  
- 	if (!pci->dbi_base2) {
- 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
--		if (!res)
-+		if (!res) {
- 			pci->dbi_base2 = pci->dbi_base + SZ_4K;
--		else {
-+		} else {
- 			pci->dbi_base2 = devm_pci_remap_cfg_resource(dev, res);
- 			if (IS_ERR(pci->dbi_base2))
- 				return PTR_ERR(pci->dbi_base2);
+ 		if (pci->num_ob_windows <= atu_idx)
+-			dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)",
++			dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
+ 				 pci->num_ob_windows);
+ 	}
+ 
 diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index d737af058903..9f4d2b44612b 100644
+index 9f4d2b44612b..3bd1cfd12148 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.c
 +++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -699,8 +699,9 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
- 			pci->atu_size = SZ_4K;
- 
- 		dw_pcie_iatu_detect_regions_unroll(pci);
--	} else
-+	} else {
- 		dw_pcie_iatu_detect_regions(pci);
-+	}
- 
+@@ -706,7 +706,7 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
  	dev_info(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
  		"enabled" : "disabled");
+ 
+-	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound",
++	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound\n",
+ 		 pci->num_ob_windows, pci->num_ib_windows);
+ }
+ 
 -- 
 2.35.1
 
