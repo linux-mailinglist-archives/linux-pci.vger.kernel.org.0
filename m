@@ -2,77 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F41EC4E5B20
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Mar 2022 23:15:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65A7E4E5C4D
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 01:26:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345182AbiCWWQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Mar 2022 18:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42068 "EHLO
+        id S241649AbiCXA1w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Mar 2022 20:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241243AbiCWWQk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 18:16:40 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB6A8FE46
-        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 15:15:09 -0700 (PDT)
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 9E6353F1E0
-        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 22:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1648073707;
-        bh=dReMzwCuA7DzR3YY7V/dxHTfz3+PzXUF3Uux3SdiUmI=;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-         Content-Type:In-Reply-To;
-        b=ORMAxMXYx/809Tb9hd0Oz5e7cBj2ilZvVfG/BhPLLFeA4OEuKuCaaOqjT2/Wlz5cf
-         AMCXD8Bi2vvxhivQ9HWUwGT8XSxD1r+bhXbSqSfJhu10Zv2tB+G+4zZE8jpdLcFirk
-         uqv8tsueYfMlQclbUajpKcrNChw7XhhfdmimfoFGpugPlhamIax6Lut5R2RGu3Hd4F
-         kSf65m9aKQ9AvhYfXWfYEOB5TLmWWyVWJq9E8/2umAhdNnfk30T7mByggxQHSVMTnt
-         6lBjt+Bnh1bjp4Uye8tLG0MmaFTzPrSLARjruLjE3n5Gxq8fxW8kahN0Al6UWwvQFj
-         cD2tqXwL1Hgkw==
-Received: by mail-il1-f199.google.com with SMTP id h13-20020a056e021d8d00b002c7fb1ec601so1698259ila.6
-        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 15:15:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dReMzwCuA7DzR3YY7V/dxHTfz3+PzXUF3Uux3SdiUmI=;
-        b=ikYu/37V6EF1mUJtMhLj37cgGX2PpMUNAM1MRJMuvJQqlBoH8KCfw6Emay2De+ZPPX
-         OZPzGDsgA6E2ghVxg8SkeYS6lutgMAowk0P/QCd/mVraiDn691w4aBsONNNj80ut59ry
-         sPrmFnTkGAIFjXFBsFlXBJmANr094w3fQXe8jkRJOwXE+QY9cHXHZVj33tFY4zM+fhEf
-         oiVqCI5d/Z5u76xDzXzAUjKNKfcMQyC5glbgNGQZLELCfgIk1kSD9mM9rPoZ0VIqtu0z
-         CeBQ+F0ssQWrVlE70Wcnjs6LUo+kedIXeeGnOSt0sQ+YJ/XzGC39/I33DbNOqyiOZP6G
-         +UKA==
-X-Gm-Message-State: AOAM532FoYJl7UaZpfYyAo1fnZ7W6eIvs8sQ26n6CnAiPQMpDc3Wx/fW
-        ku6Qf53ik1W9vHBusoXsxbTQAqOb571YMyZXqE/nWpwVcp5LjM1BCOvnOhn2i5BmvnlQ+OTjOn2
-        nWNyVBIyPI0YMGjeMckZay+yeHqyINl3ScFIIxQ==
-X-Received: by 2002:a5e:a80a:0:b0:645:b477:bc23 with SMTP id c10-20020a5ea80a000000b00645b477bc23mr1117707ioa.191.1648073706601;
-        Wed, 23 Mar 2022 15:15:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw+6tp9O8ufnlxk71fZyefoiD5uwhUdp8quxvaa4yYGqMyrpN0FkBtdLritCC8OWbVnRtSNug==
-X-Received: by 2002:a5e:a80a:0:b0:645:b477:bc23 with SMTP id c10-20020a5ea80a000000b00645b477bc23mr1117696ioa.191.1648073706394;
-        Wed, 23 Mar 2022 15:15:06 -0700 (PDT)
-Received: from xps13.dannf (c-73-14-97-161.hsd1.co.comcast.net. [73.14.97.161])
-        by smtp.gmail.com with ESMTPSA id n7-20020a056e021ba700b002c63098855csm588677ili.23.2022.03.23.15.15.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 15:15:05 -0700 (PDT)
-Date:   Wed, 23 Mar 2022 16:15:03 -0600
-From:   dann frazier <dann.frazier@canonical.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>, joro@8bytes.org,
-        will@kernel.org, iommu@lists.linux-foundation.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org, robh@kernel.org
-Subject: Re: [PATCH] iommu/dma: Explicitly sort PCI DMA windows
-Message-ID: <Yjub51Ct3esuNA9B@xps13.dannf>
-References: <65657c5370fa0161739ba094ea948afdfa711b8a.1647967875.git.robin.murphy@arm.com>
- <874k3pxalr.wl-maz@kernel.org>
+        with ESMTP id S241068AbiCXA1v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 20:27:51 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD067CB0E;
+        Wed, 23 Mar 2022 17:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648081580; x=1679617580;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=L34B6VEslpB+6f2BVeWKV1uDlr8W1Fk/YMhgeirUVt0=;
+  b=BgF5AEaLTguNtGSG+ATHmhdQdq6bQbhglhn+A1ssVfgWEKiGQIBleFBs
+   gSpCfn4VVYBFLC1yBU6tkrc3BmxK+EcXux1b9lDT952z1GICO09IoHYQ8
+   3JppmQoY6TDX+5S0G9f8Ub9uqxqRhW7jGQfKJbcqyxROwNSAQEe6Ofhn4
+   /gyL6nqvSTe4EQ+0RnZXy5rRCIRHIVQe0wX3LuC5TGg7OBOM2urtGRcte
+   iiEBT+DU896CMgVBJJqY6/Oq/NFibbtDkfHeYc4gD6If0m8k9oKlje2Ck
+   jDyqx6ald2IAt+TvUBD3PxuiDBWxQinp0aTNkYsdg1nreKyPGsqUy0jVl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10295"; a="258209603"
+X-IronPort-AV: E=Sophos;i="5.90,205,1643702400"; 
+   d="scan'208";a="258209603"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 17:26:19 -0700
+X-IronPort-AV: E=Sophos;i="5.90,205,1643702400"; 
+   d="scan'208";a="544421046"
+Received: from aasanche-mobl.amr.corp.intel.com (HELO localhost) ([10.212.46.175])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 17:26:19 -0700
+Date:   Wed, 23 Mar 2022 17:26:18 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V6 04/10] PCI/DOE: Introduce pci_doe_create_doe_devices
+Message-ID: <Yju6quQsBDSMaNC2@iweiny-desk3>
+References: <20220201071952.900068-5-ira.weiny@intel.com>
+ <20220203224437.GA120552@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <874k3pxalr.wl-maz@kernel.org>
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20220203224437.GA120552@bhelgaas>
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,36 +65,364 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 23, 2022 at 09:49:04AM +0000, Marc Zyngier wrote:
-> On Tue, 22 Mar 2022 17:27:36 +0000,
-> Robin Murphy <robin.murphy@arm.com> wrote:
+On Thu, Feb 03, 2022 at 04:44:37PM -0600, Bjorn Helgaas wrote:
+> On Mon, Jan 31, 2022 at 11:19:46PM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
 > > 
-> > Originally, creating the dma_ranges resource list in pre-sorted fashion
-> > was the simplest and most efficient way to enforce the order required by
-> > iova_reserve_pci_windows(). However since then at least one PCI host
-> > driver is now re-sorting the list for its own probe-time processing,
-> > which doesn't seem entirely unreasonable, so that basic assumption no
-> > longer holds. Make iommu-dma robust and get the sort order it needs by
-> > explicitly sorting, which means we can also save the effort at creation
-> > time and just build the list in whatever natural order the DT had.
-> > 
-> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> > ---
-> > 
-> > Looking at this area off the back of the XGene thread[1] made me realise
-> > that we need to do it anyway, regardless of whether it might also happen
-> > to restore the previous XGene behaviour or not. Presumably nobody's
-> > tried to use pcie-cadence-host behind an IOMMU yet...
+> > CXL and/or PCI devices can define DOE mailboxes.  
 > 
-> This definitely restores PCIe functionality on my Mustang (XGene-1).
-> Hopefully dann can comment on whether this addresses his own issue, as
-> his firmware is significantly different.
+> In concrete terms, "DOE mailbox" refers to a DOE Capability, right?
 
-Robin, Marc,
+Right.
 
-Adding just this patch on top of v5.17 (w/ vendor dtb) isn't enough to
-fix m400 networking:
+> PCIe devices are allowed to implement several instances of the DOE
+> Capability, of course.  I'm kind of partial to concreteness because it
+> makes it easier to map between the code and the spec.
 
-  https://paste.ubuntu.com/p/H5ZNbRvP8V/
+I agree.  I'm just not great at remembering the terminology.  I've fixed it up
+in this next go round.
 
-  -dann
+> 
+> > Normally the kernel will want to maintain control of all of these
+> > mailboxes.  However, under a limited number of use cases users may
+> > want to allow user space access to some of these mailboxes while the
+> > kernel retains control of the rest.
+> 
+> Is there something in this patch related to user-space vs kernel
+> control of things?  To me this patch looks like "for every DOE
+> Capability on a device, create an auxiliary device and try to attach
+> an auxiliary device driver to it."
+
+That was the way this series worked yest.
+
+> 
+> If part of creating the auxiliary devices is adding things in sysfs, I
+> think it would be useful to mention that here.
+
+Nothing was added in sysfs for this series and nothing is planned in the next
+series.
+
+That said Dan and I discussed internally and have settled on the PCI layer
+being agnostic to the aux bus idea.
+
+The new PCI layer code I have simply provides helpers to create struct
+pci_doe_mb (mailbox objects) which control the state machine and accept
+pci_doe_tasks as work requests.
+
+The idea of using auxiliary bus devices is now used in the CXL layer as a way
+to allow individual mailboxes to be controlled via user space directly by
+unlinking that auxiliary device.
+
+I have also added a modified version of Dan's patch from here:
+
+https://lore.kernel.org/all/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
+
+The new version taints the kernel if a write occurs but allows any read.
+
+I'm curious if allowing reads is really ok though.  Because allowing a read at
+just the right time could allow snooping of DOE protocol data.  Could this be a
+potential security issue with protocols like IDE?  It would be a difficult
+attack for sure but...  :-/
+
+> 
+> > An example of this is for CXL Compliance Testing (see CXL 2.0
+> > 14.16.4 Compliance Mode DOE) which offers a mechanism to set
+> > different test modes for a device.
+> 
+> Not sure exactly what this contributes here.  I guess you're saying
+> you might want user-space access to this, but I don't see anything in
+> this patch related to that.
+
+The detail in this patch was that if user space unlinked a specific DOE device
+then user space could control that device directly and without interference
+from this kernel code.  As I stated above we will use this mechanism for CXL
+but other subsystems could decide to do something else and own each DOE MB
+capability directly.
+
+> 
+> > Rather than re-invent the wheel the architecture creates auxiliary
+> > devices for each DOE mailbox which can then be driven by a generic
+> > DOE mailbox driver.  If access to an individual mailbox is required
+> > by user space the driver for that mailbox can be unloaded and access
+> > handed to user space.
+> 
+> IIUC a device can have several DOE Capabilities, and each Capability
+> can support several protocols.  So I would think the granularity might
+> be "protocol" rather than "mailbox" (DOE Capability).
+
+We debated that and decided that was to fine a granularity.
+
+> 
+> But either way this text seems like it would go with a different patch
+> since this patch has nothing to specify a particular protocol or even
+> a particular mailbox/DOE Capability.
+
+Again, this was just more justification for the aux bus architecture.
+
+> 
+> > Create the helper pci_doe_create_doe_devices() which iterates each DOE
+> > mailbox found in the device and creates a DOE auxiliary device on the
+> > auxiliary bus.  While doing so ensure that the auxiliary DOE driver
+> > loads to drive that device.
+> 
+> Here's a case where "iterating over DOE mailboxes found in the device"
+> is slightly abstract.  The code obviously iterates over DOE
+> *Capabilities* (PCI_EXT_CAP_ID_DOE), and that's something I can easily
+> find in the spec.
+
+I've clarified that thanks.  Also in the new version I've created an iterator
+to find the capabilities.
+
+	pci_doe_for_each_off()
+
+> 
+> Knowing that this is a PCIe Capability is useful because it puts it in
+> the context of other capabilities ("optional things that live in
+> config space") and the mechanisms for synchronization and user-space
+> access.
+
+Yes thanks.
+
+> 
+> > +/**
+> > + * pci_doe_create_doe_devices - Create auxiliary DOE devices for all DOE
+> > + *                              mailboxes found
+> > + * @pci_dev: The PCI device to scan for DOE mailboxes
+> > + *
+> > + * There is no coresponding destroy of these devices.  This function associates
+> > + * the DOE auxiliary devices created with the pci_dev passed in.  That
+> > + * association is device managed (devm_*) such that the DOE auxiliary device
+> > + * lifetime is always greater than or equal to the lifetime of the pci_dev.
+> 
+> This seems backwards.  What does it mean if the DOE aux dev lifetime
+> is *greater* than that of the pci_dev?  Surely you can't access a PCI
+> DOE Capability if the pci_dev is gone?
+
+No you could not.  Thus the idea that the pci_dev's lifetime was greater than
+the lifetime of the auxiliary devices.
+
+Regardless this has all changed away from being part of the core and more tied
+to the management of particular devices.  Which I think is much more clear.
+
+> 
+> > + * RETURNS: 0 on success -ERRNO on failure.
+> > + */
+> > +int pci_doe_create_doe_devices(struct pci_dev *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	int irqs, rc;
+> > +	u16 pos = 0;
+> > +
+> > +	/*
+> > +	 * An implementation may support an unknown number of interrupts.
+> > +	 * Assume that number is not that large and request them all.
+> 
+> This doesn't really inspire confidence :)  Playing devil's advocate,
+> since pdev is an arbitrary device, I would assume the number *is*
+> large.
+
+I've moved the call to pci_alloc_irq_vectors() to the CXL code which is
+managing the pci_dev itself (rather than being buried in this auxiliary device
+stuff.)
+
+> 
+> > +	irqs = pci_msix_vec_count(pdev);
+> > +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSIX);
+> 
+> pci_msix_vec_count() is apparently sort of discouraged; see
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/PCI/msi-howto.rst?id=v5.16#n179
+
+I've removed pci_msix_vec_count() in favor of counting the DOE capabilities and
+allocating the vectors based on that count.
+
+> 
+> A DOE Capability may be implemented by any device, e.g., a NIC or
+> storage HBA, etc.  I'm a little queasy about IRQ alloc happening both
+> here and in the driver for the device's primary functionality.  Can
+> you reassure me that this is actually OK and safe?
+
+I think it was perfectly safe for this implementation but it was probably not
+a good idea generally.
+
+> 
+> Sorry if I've asked this before.  If I have, perhaps a comment would
+> be useful.
+> 
+> > +	if (rc != irqs) {
+> > +		/* No interrupt available - carry on */
+> > +		pci_dbg(pdev, "No interrupts available for DOE\n");
+> > +	} else {
+> > +		/*
+> > +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
+> 
+> s/require/required/
+> s/MSIx/MSI-X/ to match spec usage.
+> 
+> But I think you only support MSI-X, since you passed "PCI_IRQ_MSIX", not
+> "PCI_IRQ_MSI | PCI_IRQ_MSIX" above?
+
+Done.
+
+> 
+> > +		 * done later within the DOE initialization, but as it
+> > +		 * potentially has other impacts keep it here when setting up
+> > +		 * the IRQ's.
+> 
+> s/IRQ's/IRQs/
+> 
+> "Potentially has other impacts" is too vague, and this doesn't explain
+> why bus mastering should be enabled here rather than later.  The
+> device should not issue an MSI-X until DOE Interrupt Enable is set, so
+> near there seems like a logical place.
+
+Is it safe to call pci_set_master() more than once?
+
+The reason I am asking is because I've debated between having the new create
+mailbox command [pci_doe_create_mb()] request the irq or not.
+
+The issue is the irq handler is part of the DOE state machine and so
+pci_request_irq() needs to pass that handler.  I would rather not make that a
+globally visible function.  Nor do I think it is appropriate for the DOE state
+machine to trust callers setting the correct handler.
+
+So currently the pci_alloc_irq_vectors() is the responsibility of the consumer
+(CXL layer in this series) and pci_{request,free}_irq() is handled in the PCI
+layer.
+
+But placing pci_set_master() near the DOE Interrupt Enable would then cause
+pci_set_master() to be called for each mailbox create.
+
+For now I have left the pci_set_master() call next to pci_alloc_irq_vectors()
+in the CXL layer.  As in Jonathans original code it gets called if the
+allocation gets enough vectors for all mailboxes found.  And the use of irq's
+is all or nothing for each CXL device.
+
+Here is the code to be more clear...
+
+
+drivers/cxl/pci.c:
+
+int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+{               
+        struct device *dev = &pdev->dev;
+        bool use_irq = true;
+        int irqs = 0;
+        u16 off = 0;         
+        int rc;
+        
+        pci_doe_for_each_off(pdev, off)
+                irqs++;
+        pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
+        
+        /*                         
+         * Allocate enough vectors for the DOE's
+         */     
+        rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
+                                                     PCI_IRQ_MSIX);
+        if (rc != irqs) {
+                pci_err(pdev, "Not enough interrupts for all the DOEs; use polling\n");
+                use_irq = false;
+                /* Some got allocated; clean them up */
+                if (rc > 0)
+                        cxl_pci_free_irq_vectors(pdev); 
+        } else {
+                /*
+                 * Enabling bus mastering is require for MSI/MSIx.  It could be
+                 * done later within the DOE initialization, but as it
+                 * potentially has other impacts keep it here when setting up
+                 * the IRQ's.
+                 */
+                pci_set_master(pdev);
+                rc = devm_add_action_or_reset(dev,
+                                              cxl_pci_free_irq_vectors,
+                                              pdev);
+                if (rc)
+                        return rc;
+        }
+
+        pci_doe_for_each_off(pdev, off) {
+...
+		/* Create each auxiliary device which internally calls */
+		pci_doe_create_mb(pdev, off, use_irq);
+...
+	}
+...
+}
+
+
+drivers/pci/pci-doe.c:
+
+static irqreturn_t pci_doe_irq_handler(int irq, void *data)
+{
+...
+}
+
+static int pci_doe_request_irq(struct pci_doe_mb *doe_mb)
+{
+        struct pci_dev *pdev = doe_mb->pdev;
+        int offset = doe_mb->cap_offset;
+        int doe_irq, rc;
+        u32 val;
+
+        pci_read_config_dword(pdev, offset + PCI_DOE_CAP, &val);
+
+        if (!FIELD_GET(PCI_DOE_CAP_INT, val))
+                return -ENOTSUPP;
+
+        doe_irq = FIELD_GET(PCI_DOE_CAP_IRQ, val);
+        rc = pci_request_irq(pdev, doe_irq, pci_doe_irq_handler,
+                             NULL, doe_mb,
+                             "DOE[%d:%s]", doe_irq, pci_name(pdev));
+        if (rc) 
+                return rc;
+
+        doe_mb->irq = doe_irq;
+        pci_write_config_dword(pdev, offset + PCI_DOE_CTRL,
+                               PCI_DOE_CTRL_INT_EN);
+        return 0;
+}
+
+struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev, u16 cap_offset,
+                                     bool use_irq)
+{
+...
+        if (use_irq) {
+                rc = pci_doe_request_irq(doe_mb);
+                if (rc) 
+                        pci_err(pdev, "DOE request irq failed for mailbox @ %u : %d\n",
+                                cap_offset, rc);
+        }
+...
+}
+
+
+Does this look reasonable?
+
+> 
+> > +		 */
+> > +		pci_set_master(pdev);
+> > +		rc = devm_add_action_or_reset(dev,
+> > +					      pci_doe_free_irq_vectors,
+> > +					      pdev);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> 
+> > +++ b/include/linux/pci-doe.h
+> > @@ -13,6 +13,8 @@
+> >  #ifndef LINUX_PCI_DOE_H
+> >  #define LINUX_PCI_DOE_H
+> >  
+> > +#define DOE_DEV_NAME "doe"
+> 
+> This is only used once, above.  Why not just use the string there
+> directly and skip the #define?  If it's needed elsewhere eventually,
+> we can add a #define then.
+
+This is now moved elsewhere in the series.
+
+Thanks for the feedback and sorry it's taken so long to respond.
+Ira
+
+> 
+> Bjorn
