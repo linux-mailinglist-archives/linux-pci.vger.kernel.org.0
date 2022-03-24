@@ -2,88 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02EB34E6A15
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 22:04:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0F294E6A5B
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 22:40:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353862AbiCXVFt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 17:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45470 "EHLO
+        id S1355171AbiCXVkP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 17:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353882AbiCXVFs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 17:05:48 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 957E99D4DB;
-        Thu, 24 Mar 2022 14:04:16 -0700 (PDT)
-Received: by mail-oi1-f171.google.com with SMTP id e189so6175333oia.8;
-        Thu, 24 Mar 2022 14:04:16 -0700 (PDT)
+        with ESMTP id S1354206AbiCXVkO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 17:40:14 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98C8562FA
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 14:38:41 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id a12-20020a25938c000000b0063467614126so4561182ybm.13
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 14:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=iKkzGcGXHNcNBC8QzCNubVd1VUuqnCpLdh8zslocqU0=;
+        b=JVbOmq76XrgynnBO5Yhxuas50bYdBiMTf7e2IRWZzuXOwZnZDGqhmUDVmzJ/ZkYW9C
+         ikB/1e4diohU0+QBEeuTLaRtpmtN56uFgGKJxf0sleQIO2brQqw1GNfXU2vGCCr0QOPS
+         hAp92VeJiPj93PD3VRCf0Xze5IEsn/t1UdAr9vr9ZZF0Gdxdwum1c3Nfp5AVn0GhW5xA
+         kzkEkISLYgP/gYhc/cWYUWCi/ozbgfwwZukixDEcO4Mbuj+zCQ3YgTxzG/Mje1mORDHq
+         ZAWAEF2hXJ56RT0BKDiP33cUzznaD3L/baMvqQAPGb7BWkPoCyz2nsln57WD90fRxYj1
+         mdIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QwE0l0Di9czJLn9RSeTlxzvPzQRFACDPyPmoojChbjk=;
-        b=apIHNrGqydmF6YBS01DsU7XhWNQLOvUCgfO6dPE9gak4iPUJaf676pUJE4Qrr40XI1
-         kODALnZM7SAAAs9LAP/54OEhig7bQ0Yu/M1jywDxrjsBXpgYcediP683TeOVXlmO9KSZ
-         TFQw9k+9wQv0RWTPj1o7ViZrqClS8XAjdtnHUYXdLHYlA/WK+cHSmq5oKAlCT6foFw4I
-         shMYddqL5zAW8Tw3swXjMjIK/I3EreiuUJgrw5urjaOid02taL03AiMdZg0zbauJtqSe
-         yhbadDFDPN02A1XSrStd+xVgGXkYW1hn7TPyPdYp+mtAapAhDZjWMas9R9Q6O2wMDtw1
-         KRgQ==
-X-Gm-Message-State: AOAM5307vTl9TJfQtOgAY97jJV/QQPONFriTQV5lAHdY4o6RTZDe4kz1
-        +alEzNLO4uQMHaQMAdMsxmhpQzoi0w==
-X-Google-Smtp-Source: ABdhPJwp4zD+dsz4UF3dn8rC+v4s5pkDAlQb2fjRaMWWt6T+3Zn13ChMVMoVsUKgdDOuoEOtU5BH2g==
-X-Received: by 2002:a05:6808:11cd:b0:2d5:3f90:b9e with SMTP id p13-20020a05680811cd00b002d53f900b9emr3462595oiv.113.1648155855909;
-        Thu, 24 Mar 2022 14:04:15 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id p8-20020a0568301cc800b005b2259500e2sm1830857otg.25.2022.03.24.14.04.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 14:04:15 -0700 (PDT)
-Received: (nullmailer pid 2570475 invoked by uid 1000);
-        Thu, 24 Mar 2022 21:04:14 -0000
-Date:   Thu, 24 Mar 2022 16:04:14 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jiantao Zhang <water.zhangjiantao@huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zhangjianrong (E)" <zhangjianrong5@huawei.com>,
-        caiyadong <caiyadong@huawei.com>,
-        "xuetao (kirin)" <xuetao09@huawei.com>,
-        xuhaiyang <xuhaiyang5@hisilicon.com>, songxiaowei@hisilicon.com,
-        guhengsheng@hisilicon.com
-Subject: Re: [PATCH v2] PCI: dwc: Fix setting error return on MSI DMA mapping
- failure
-Message-ID: <Yjzczp4SX3CPdKM8@robh.at.kernel.org>
-References: <CAL_JsqJNMGobo1iaBjqSQJXNy9arXGU+et20dMueCK44seGnQw@mail.gmail.com>
- <30170911-0e2f-98ce-9266-70465b9073e5@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <30170911-0e2f-98ce-9266-70465b9073e5@huawei.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=iKkzGcGXHNcNBC8QzCNubVd1VUuqnCpLdh8zslocqU0=;
+        b=mJGnC4Aak4AVrRVy5wp2Itv7Gb5Fa2zRcJhlHT2IPP4/YDfUck6tIfHARveInFWCH5
+         DgneADoX0Li2bzdB/hJQrWb9CvFDQvszvxDKAyh3mJRji8sm1FejMNYZ+vjf39P4loHq
+         yUGoQHScxsD3+vdvAdeHNi2pjmn51+Kw63NuS9fICWqTbNuotIu6TkLgAot6uR1kcWGf
+         9ylim1WecbkuVHNm0CvIIX/8wYo8UDHCh9lHRZBMNou58ehq6pjeqgt/8SnotTdcZzab
+         ec0JJwhPSrbSjC5M3gSz2QIW/mEqYeLuefe7aFBvXtXPI2dyJvMbwLDkCOPgSOYug6dY
+         MEAA==
+X-Gm-Message-State: AOAM533ma+qv69u0gFyVXSeBlevd8HAsqaPSLHVkYmU7cOQqsoYkIL6+
+        MOropbvuiLjZeds76Gu+oxXI2uWsBLgkBTI=
+X-Google-Smtp-Source: ABdhPJxTr1QrHSXm1+rYF8oG4K+DdHiIEldvDy9VQkzZg+de7iMSrqbdS1scNMr0ut5PICcY5RvxcTwXgt/GceE=
+X-Received: from tansuresh.svl.corp.google.com ([2620:15c:2c5:13:849f:5cb9:7db8:508a])
+ (user=tansuresh job=sendgmr) by 2002:a05:6902:1d1:b0:636:fa07:4b9a with SMTP
+ id u17-20020a05690201d100b00636fa074b9amr6337359ybh.590.1648157920886; Thu,
+ 24 Mar 2022 14:38:40 -0700 (PDT)
+Date:   Thu, 24 Mar 2022 14:38:33 -0700
+Message-Id: <20220324213833.3056034-1-tansuresh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.35.1.1021.g381101b075-goog
+Subject: [PATCH 2/3] PCI: Support asynchronous shutdown
+From:   Tanjore Suresh <tansuresh@google.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tanjore Suresh <tansuresh@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 09, 2022 at 08:01:04PM +0800, Jiantao Zhang wrote:
-> When dma_mapping_error() returns error because of no enough memory,
-> but dw_pcie_host_init() returns success, which will mislead the callers.
-> 
-> Fixes: 07940c369a6b ("PCI: dwc: Fix MSI page leakage in suspend/resume")
-> Signed-off-by: Jianrong Zhang <zhangjianrong5@huawei.com>
-> Signed-off-by: Jiantao Zhang <water.zhangjiantao@huawei.com>
-> ---
->   drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+Enhances the base PCI driver to add support for asynchronous
+shutdown.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Assume a device takes n secs to shutdown. If a machine has been
+populated with M such devices, the total time spent in shutting down
+all the devices will be M * n secs, if the shutdown is done
+synchronously. For example, if NVMe PCI Controllers take 5 secs
+to shutdown and if there are 16 such NVMe controllers in a system,
+system will spend a total of 80 secs to shutdown all
+NVMe devices in that system.
+
+In order to speed up the shutdown time, asynchronous interface to
+shutdown has been implemented. This will significantly reduce
+the machine reboot time.
+
+Signed-off-by: Tanjore Suresh <tansuresh@google.com>
+---
+ drivers/pci/pci-driver.c | 17 ++++++++++++++---
+ include/linux/pci.h      |  2 ++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 4ceeb75fc899..0d0b46d71e88 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -501,14 +501,16 @@ static void pci_device_remove(struct device *dev)
+ 	pci_dev_put(pci_dev);
+ }
+ 
+-static void pci_device_shutdown(struct device *dev)
++static void pci_device_shutdown_pre(struct device *dev)
+ {
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	struct pci_driver *drv = pci_dev->driver;
+ 
+ 	pm_runtime_resume(dev);
+ 
+-	if (drv && drv->shutdown)
++	if (drv && drv->shutdown_pre)
++		drv->shutdown_pre(pci_dev);
++	else if (drv && drv->shutdown)
+ 		drv->shutdown(pci_dev);
+ 
+ 	/*
+@@ -522,6 +524,14 @@ static void pci_device_shutdown(struct device *dev)
+ 		pci_clear_master(pci_dev);
+ }
+ 
++static void pci_device_shutdown_post(struct device *dev)
++{
++	struct pci_dev *pci_dev = to_pci_dev(dev);
++	struct pci_driver *drv = pci_dev->driver;
++
++	if (drv && drv->shutdown_post)
++		drv->shutdown_post(pci_dev);
++}
+ #ifdef CONFIG_PM
+ 
+ /* Auxiliary functions used for system resume and run-time resume. */
+@@ -1625,7 +1635,8 @@ struct bus_type pci_bus_type = {
+ 	.uevent		= pci_uevent,
+ 	.probe		= pci_device_probe,
+ 	.remove		= pci_device_remove,
+-	.shutdown	= pci_device_shutdown,
++	.shutdown_pre	= pci_device_shutdown_pre,
++	.shutdown_post	= pci_device_shutdown_post,
+ 	.dev_groups	= pci_dev_groups,
+ 	.bus_groups	= pci_bus_groups,
+ 	.drv_groups	= pci_drv_groups,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 60d423d8f0c4..bdd3a4d65a19 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -904,6 +904,8 @@ struct pci_driver {
+ 	int  (*suspend)(struct pci_dev *dev, pm_message_t state);	/* Device suspended */
+ 	int  (*resume)(struct pci_dev *dev);	/* Device woken up */
+ 	void (*shutdown)(struct pci_dev *dev);
++	void (*shutdown_pre)(struct pci_dev *dev);
++	void (*shutdown_post)(struct pci_dev *dev);
+ 	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
+ 	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
+ 	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
+-- 
+2.35.1.1021.g381101b075-goog
+
