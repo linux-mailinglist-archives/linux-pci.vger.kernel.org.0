@@ -2,58 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30D854E6793
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 18:15:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BC544E6795
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 18:15:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352170AbiCXRQj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 13:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40958 "EHLO
+        id S1352181AbiCXRQx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 13:16:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240788AbiCXRQi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 13:16:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A60633B;
-        Thu, 24 Mar 2022 10:15:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C3C4EB82331;
-        Thu, 24 Mar 2022 17:15:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49CE7C340EC;
-        Thu, 24 Mar 2022 17:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648142103;
-        bh=dbFxjA3fmX6GItpv2KyqqK1dciNTwAKoNTj92pNTJuw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SSASOwTudJjrUxjmbBSXiLg7nKXxcBDILsLNKp1FNKKAr4rBinRROn4jVa+4mnOdW
-         6kE9nkbN9mVfqueVOU5fAwPatYiDKuC9UL7RtvjrpbORQp73WmGgzLohiAS5pyTEYl
-         k6iVxpJl3QQB/WpFHxQEixnyh4MgvLyeG4fCqgsME9/FhDubOI5H9nbWaeRsjHHWlf
-         UuL9zJ+gJmHLpqYzFYIdGgAX40+b7OiFjFfaR0UT+VZHlSt5vvFlhAoEBLr1+p4Xip
-         qpSnuCx9l3mO+CC6yvuOM0Wx+3M6GBHP14USmqr/Zdy7VXC9TXnF/optAjd5/u7tXQ
-         pCGVAXcDSG5Mg==
-Date:   Thu, 24 Mar 2022 12:15:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        with ESMTP id S1347252AbiCXRQx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 13:16:53 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB91EB1891
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 10:15:20 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id m18so536942plx.3
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 10:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XWV/NU9KBDK+6NrxZTVbhSQcmAs/2MmqDrZDpchQ340=;
+        b=ixCpJFtXz7n5lU0fj9BgLDP7UC3OMn8q9JBDP5g98XPWInsmFxPmbvXze0gWL3kvos
+         1QGYzP3u5O2ZU7ozLqiD6gvXMsg2XfWPmV9asM48DF0qw2h4qMbHKcDEaK8vTKLa6v88
+         J9FWnRtsNBe8ch/pOmydHp6kZAuUlo2luEiTZNWEAFJR/dUEbjs79SbkCWcWQy84Qd5j
+         OBHBjavgjpBh6LSWKsxkWL2GiKYHQRD6QB6h1jUXlvh1YZcLGfxxdHX6YPcBzlZFCOqY
+         un6peG8v7y5K4x3J105drZE5rLKBikz356aElBa7RFteeRAOAcAbbj8YChKdlhQd3ESv
+         qUHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XWV/NU9KBDK+6NrxZTVbhSQcmAs/2MmqDrZDpchQ340=;
+        b=Xy/iT8IQZIeeyGE3MX2/9pKg0twKMaLzuEOQRQwUhPuccuSve/4E8uAPokIvawwQpn
+         SapsvOV2s+2U5UWcPZHby2CmWKFPODyoYi6X9Mxa7eKpQG4LBe6EfMaM5/znPJUJaNbS
+         5mt6+XWihBLr+uSbLPiZyU0epVRaGmAwBm2ri0r3novaQ5VJ2FT68A1QVuj3IABRHZxV
+         Zj/RxEn/hpIJQI/5ABPL1YCEbhcte2jDA0Tk1ZSkzucLluk2gPI97nCms3bTmg/vaN59
+         PQKKUvaq5aVtguvNS8QuaCtR4Cyv9mn3g4gePPeUfpITe77g+Jh851eEZQyUCzHBHz+f
+         r9UQ==
+X-Gm-Message-State: AOAM531plHqRSAil67DSN8EJnQBXfdze3HtfWPWsYiCoHZoq1WQSmbdc
+        v21CmfEUPlNtHH8RJwaVuIfw
+X-Google-Smtp-Source: ABdhPJx3paZ+Kg390H0v1ZUeHXIdxQXx4drh90s6/ujRUve2+kXpx5NrwOSnlaSW3pdBF9MN3log9g==
+X-Received: by 2002:a17:90a:168f:b0:1b9:453a:fe79 with SMTP id o15-20020a17090a168f00b001b9453afe79mr19700814pja.107.1648142120256;
+        Thu, 24 Mar 2022 10:15:20 -0700 (PDT)
+Received: from thinkpad ([27.111.75.218])
+        by smtp.gmail.com with ESMTPSA id h6-20020a636c06000000b00363a2533b17sm3063524pgc.8.2022.03.24.10.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Mar 2022 10:15:19 -0700 (PDT)
+Date:   Thu, 24 Mar 2022 22:45:12 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] PCI: mvebu: Add support for sending
- Set_Slot_Power_Limit message
-Message-ID: <20220324171501.GA1460207@bhelgaas>
+Subject: Re: [PATCH 07/25] dmaengine: dw-edma: Don't permit non-inc
+ interleaved xfers
+Message-ID: <20220324171512.GQ2854@thinkpad>
+References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-8-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220302145733.12606-5-pali@kernel.org>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20220324014836.19149-8-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,218 +82,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 03:57:33PM +0100, Pali Rohár wrote:
-> If DT supplies the 'slot-power-limit-milliwatt' property, program
-> the value in the Slot Power Limit in the Slot Capabilities register
-> and program the Root Port to send a Set_Slot_Power_Limit Message
-> when the Link transitions to DL_Up.
+On Thu, Mar 24, 2022 at 04:48:18AM +0300, Serge Semin wrote:
+> DW eDMA controller always increments both source and destination
+> addresses. Permitting DMA interleaved transfers with no src_inc/dst_inc
+> flags set may lead to unexpected behaviour for the device users. Let's fix
+> that by terminating the interleaved transfers if at least one of the
+> dma_interleaved_template.{src_inc,dst_inc} flag is initialized with false
+> value. Note in addition to that we need we need to increase the source and
+> destination addresses accordingly after each iteration.
 > 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
 
-I didn't review this carefully but have no objection.
+Can you please point me where this gets documented in databook?
 
+Thanks,
+Mani
+
+> Fixes: 85e7518f42c8 ("dmaengine: dw-edma: Add device_prep_interleave_dma() support")
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > ---
-> Changes in v2:
-> * Fix handling of slot power limit with scale x1.0 (0x00 value)
-> * Use FIELD_PREP instead of _SHIFT macros
-> * Changed commit message to Bjorn's suggestion
-> * Changed comments in the code to match PCIe spec
-> * Preserve user settings of PCI_EXP_SLTCTL_ASPL_DISABLE bit
-> ---
->  drivers/pci/controller/pci-mvebu.c | 96 ++++++++++++++++++++++++++++--
->  1 file changed, 91 insertions(+), 5 deletions(-)
+>  drivers/dma/dw-edma/dw-edma-core.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index a75d2b9196f9..26ae7c29fece 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -8,6 +8,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
-> +#include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/gpio.h>
-> @@ -66,6 +67,12 @@
->  #define  PCIE_STAT_BUS                  0xff00
->  #define  PCIE_STAT_DEV                  0x1f0000
->  #define  PCIE_STAT_LINK_DOWN		BIT(0)
-> +#define PCIE_SSPL_OFF		0x1a0c
-> +#define  PCIE_SSPL_VALUE_SHIFT		0
-> +#define  PCIE_SSPL_VALUE_MASK		GENMASK(7, 0)
-> +#define  PCIE_SSPL_SCALE_SHIFT		8
-> +#define  PCIE_SSPL_SCALE_MASK		GENMASK(9, 8)
-> +#define  PCIE_SSPL_ENABLE		BIT(16)
->  #define PCIE_RC_RTSTA		0x1a14
->  #define PCIE_DEBUG_CTRL         0x1a60
->  #define  PCIE_DEBUG_SOFT_RESET		BIT(20)
-> @@ -111,6 +118,8 @@ struct mvebu_pcie_port {
->  	struct mvebu_pcie_window iowin;
->  	u32 saved_pcie_stat;
->  	struct resource regs;
-> +	u8 slot_power_limit_value;
-> +	u8 slot_power_limit_scale;
->  	struct irq_domain *intx_irq_domain;
->  	raw_spinlock_t irq_lock;
->  	int intx_irq;
-> @@ -239,7 +248,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 2010d7f8191f..f41bde27795c 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -386,6 +386,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+>  			return NULL;
+>  		if (xfer->xfer.il->numf > 0 && xfer->xfer.il->frame_size > 0)
+>  			return NULL;
+> +		if (!xfer->xfer.il->src_inc || !xfer->xfer.il->dst_inc)
+> +			return NULL;
+>  	} else {
+>  		return NULL;
+>  	}
+> @@ -485,15 +487,13 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+>  			struct dma_interleaved_template *il = xfer->xfer.il;
+>  			struct data_chunk *dc = &il->sgl[i];
 >  
->  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
->  {
-> -	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
-> +	u32 ctrl, lnkcap, cmd, dev_rev, unmask, sspl;
+> -			if (il->src_sgl) {
+> -				src_addr += burst->sz;
+> +			src_addr += burst->sz;
+> +			if (il->src_sgl)
+>  				src_addr += dmaengine_get_src_icg(il, dc);
+> -			}
 >  
->  	/* Setup PCIe controller to Root Complex mode. */
->  	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
-> @@ -292,6 +301,20 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
->  	/* Point PCIe unit MBUS decode windows to DRAM space. */
->  	mvebu_pcie_setup_wins(port);
->  
-> +	/*
-> +	 * Program Root Port to automatically send Set_Slot_Power_Limit
-> +	 * PCIe Message when changing status from Dl_Down to Dl_Up and valid
-> +	 * slot power limit was specified.
-> +	 */
-> +	sspl = mvebu_readl(port, PCIE_SSPL_OFF);
-> +	sspl &= ~(PCIE_SSPL_VALUE_MASK | PCIE_SSPL_SCALE_MASK | PCIE_SSPL_ENABLE);
-> +	if (port->slot_power_limit_value) {
-> +		sspl |= port->slot_power_limit_value << PCIE_SSPL_VALUE_SHIFT;
-> +		sspl |= port->slot_power_limit_scale << PCIE_SSPL_SCALE_SHIFT;
-> +		sspl |= PCIE_SSPL_ENABLE;
-> +	}
-> +	mvebu_writel(port, sspl, PCIE_SSPL_OFF);
-> +
->  	/* Mask all interrupt sources. */
->  	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
->  
-> @@ -628,9 +651,23 @@ mvebu_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
->  			  (PCI_EXP_LNKSTA_DLLLA << 16) : 0);
->  		break;
->  
-> -	case PCI_EXP_SLTCTL:
-> -		*value = PCI_EXP_SLTSTA_PDS << 16;
-> +	case PCI_EXP_SLTCTL: {
-> +		u16 slotsta = le16_to_cpu(bridge->pcie_conf.slotsta);
-> +		u32 val = 0;
-> +		/*
-> +		 * When slot power limit was not specified in DT then
-> +		 * ASPL_DISABLE bit is stored only in emulated config space.
-> +		 * Otherwise reflect status of PCIE_SSPL_ENABLE bit in HW.
-> +		 */
-> +		if (!port->slot_power_limit_value)
-> +			val |= slotctl & PCI_EXP_SLTCTL_ASPL_DISABLE;
-> +		else if (!(mvebu_readl(port, PCIE_SSPL_OFF) & PCIE_SSPL_ENABLE))
-> +			val |= PCI_EXP_SLTCTL_ASPL_DISABLE;
-> +		/* This callback is 32-bit and in high bits is slot status. */
-> +		val |= slotsta << 16;
-> +		*value = val;
->  		break;
-> +	}
->  
->  	case PCI_EXP_RTSTA:
->  		*value = mvebu_readl(port, PCIE_RC_RTSTA);
-> @@ -774,6 +811,22 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
->  		mvebu_writel(port, new, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL);
->  		break;
->  
-> +	case PCI_EXP_SLTCTL:
-> +		/*
-> +		 * Allow to change PCIE_SSPL_ENABLE bit only when slot power
-> +		 * limit was specified in DT and configured into HW.
-> +		 */
-> +		if ((mask & PCI_EXP_SLTCTL_ASPL_DISABLE) &&
-> +		    port->slot_power_limit_value) {
-> +			u32 sspl = mvebu_readl(port, PCIE_SSPL_OFF);
-> +			if (new & PCI_EXP_SLTCTL_ASPL_DISABLE)
-> +				sspl &= ~PCIE_SSPL_ENABLE;
-> +			else
-> +				sspl |= PCIE_SSPL_ENABLE;
-> +			mvebu_writel(port, sspl, PCIE_SSPL_OFF);
-> +		}
-> +		break;
-> +
->  	case PCI_EXP_RTSTA:
->  		/*
->  		 * PME Status bit in Root Status Register (PCIE_RC_RTSTA)
-> @@ -868,8 +921,26 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
->  	/*
->  	 * Older mvebu hardware provides PCIe Capability structure only in
->  	 * version 1. New hardware provides it in version 2.
-> +	 * Enable slot support which is emulated.
->  	 */
-> -	bridge->pcie_conf.cap = cpu_to_le16(pcie_cap_ver);
-> +	bridge->pcie_conf.cap = cpu_to_le16(pcie_cap_ver | PCI_EXP_FLAGS_SLOT);
-> +
-> +	/*
-> +	 * Set Presence Detect State bit permanently as there is no support for
-> +	 * unplugging PCIe card from the slot. Assume that PCIe card is always
-> +	 * connected in slot.
-> +	 *
-> +	 * Set physical slot number to port+1 as mvebu ports are indexed from
-> +	 * zero and zero value is reserved for ports within the same silicon
-> +	 * as Root Port which is not mvebu case.
-> +	 *
-> +	 * Also set correct slot power limit.
-> +	 */
-> +	bridge->pcie_conf.slotcap = cpu_to_le32(
-> +		FIELD_PREP(PCI_EXP_SLTCAP_SPLV, port->slot_power_limit_value) |
-> +		FIELD_PREP(PCI_EXP_SLTCAP_SPLS, port->slot_power_limit_scale) |
-> +		FIELD_PREP(PCI_EXP_SLTCAP_PSN, port->port+1));
-> +	bridge->pcie_conf.slotsta = cpu_to_le16(PCI_EXP_SLTSTA_PDS);
->  
->  	bridge->subsystem_vendor_id = ssdev_id & 0xffff;
->  	bridge->subsystem_id = ssdev_id >> 16;
-> @@ -1191,6 +1262,7 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
->  {
->  	struct device *dev = &pcie->pdev->dev;
->  	enum of_gpio_flags flags;
-> +	u32 slot_power_limit;
->  	int reset_gpio, ret;
->  	u32 num_lanes;
->  
-> @@ -1291,6 +1363,15 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
->  		port->reset_gpio = gpio_to_desc(reset_gpio);
+> -			if (il->dst_sgl) {
+> -				dst_addr += burst->sz;
+> +			dst_addr += burst->sz;
+> +			if (il->dst_sgl)
+>  				dst_addr += dmaengine_get_dst_icg(il, dc);
+> -			}
+>  		}
 >  	}
 >  
-> +	slot_power_limit = of_pci_get_slot_power_limit(child,
-> +				&port->slot_power_limit_value,
-> +				&port->slot_power_limit_scale);
-> +	if (slot_power_limit)
-> +		dev_info(dev, "%s: Slot power limit %u.%uW\n",
-> +			 port->name,
-> +			 slot_power_limit / 1000,
-> +			 (slot_power_limit / 100) % 10);
-> +
->  	port->clk = of_clk_get_by_name(child, NULL);
->  	if (IS_ERR(port->clk)) {
->  		dev_err(dev, "%s: cannot get clock\n", port->name);
-> @@ -1587,7 +1668,7 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
->  {
->  	struct mvebu_pcie *pcie = platform_get_drvdata(pdev);
->  	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> -	u32 cmd;
-> +	u32 cmd, sspl;
->  	int i;
->  
->  	/* Remove PCI bus with all devices. */
-> @@ -1624,6 +1705,11 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
->  		/* Free config space for emulated root bridge. */
->  		pci_bridge_emul_cleanup(&port->bridge);
->  
-> +		/* Disable sending Set_Slot_Power_Limit PCIe Message. */
-> +		sspl = mvebu_readl(port, PCIE_SSPL_OFF);
-> +		sspl &= ~(PCIE_SSPL_VALUE_MASK | PCIE_SSPL_SCALE_MASK | PCIE_SSPL_ENABLE);
-> +		mvebu_writel(port, sspl, PCIE_SSPL_OFF);
-> +
->  		/* Disable and clear BARs and windows. */
->  		mvebu_pcie_disable_wins(port);
->  
 > -- 
-> 2.20.1
+> 2.35.1
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
