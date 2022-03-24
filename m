@@ -2,135 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF6B94E5D6D
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 04:09:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D41D4E5F3A
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 08:20:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232209AbiCXDLS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Mar 2022 23:11:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
+        id S1348413AbiCXHVf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 03:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231992AbiCXDLR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Mar 2022 23:11:17 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0A090FDA
-        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 20:09:46 -0700 (PDT)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B61743F6C6
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 03:09:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1648091384;
-        bh=yfWPx49ia0Oq9KnR/zdf6cTRm4Fx3KUjs75NQ5Bs2aQ=;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-         Content-Type:In-Reply-To;
-        b=PJP5cKoML4n19Ls2rhrajAqXHps4CzA89rrHFiXiMpPb/Ihu6cMcy8l34L9mEESBb
-         L1wXG51NhCrEfjAXN85JbdgrlHkSdUx0/wyZPu3yoLG2+5NG7anK/7QGtagg8qUep/
-         Bs3lNRkUgqvNXwinVSDDzzGMx0LMP8AVmPdd9aaZ0Z3tyO+deOHa3SoXez4QjF9Es8
-         VKbL5BrPfepvKEYJZcZ+Lw2EY0gEbzikSt25QK2h1D38xGSBtSI9D3++UNBItBRA0V
-         sPnqOVmFHUXwD7gfrmZvCdJI6pTxqXcgt23Z9una8LveqjVlTaD/o/21SRyG7oXFVw
-         6UJkmxJfqTsRA==
-Received: by mail-io1-f70.google.com with SMTP id z10-20020a056602080a00b00645b9fdc630so2310063iow.5
-        for <linux-pci@vger.kernel.org>; Wed, 23 Mar 2022 20:09:44 -0700 (PDT)
+        with ESMTP id S230138AbiCXHVf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 03:21:35 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9928148395;
+        Thu, 24 Mar 2022 00:20:03 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id w25so4525766edi.11;
+        Thu, 24 Mar 2022 00:20:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z7RLcBdTbxi1WJP/NXFvAkUEgz8GJWltXH26XBP4pcs=;
+        b=EUJi+hW0qIpfw16k6ctPdUfv4TMiBL4PEvkuL7XBLZTCFbVaN0bsle28cE1XGTN00D
+         AGQuT9u6Nl7JmOH8n7XahqSke0fjmsUEU1OuKNQJoVyJuIEwK6gC4TVqr/A+uSu7I/qh
+         xLQ7E3z/SfuqWHywXtDGNsYMw8gdhVhsZouHJHpr7BGSUkqK3BPvgWitrW1kDcEdgrar
+         x8PEnVuqbU+yK7wrTApECVLHi2CPGleN4jGpE/jUVzUanWNPN8RBW3PRVrD1LJmpdC+5
+         v1F/5wu/RR2f2+DC3ybHd6WwV+oEa677OOCNAqaK5Nwfc5UtdUJrz0uHHu8amA1/sme9
+         um/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yfWPx49ia0Oq9KnR/zdf6cTRm4Fx3KUjs75NQ5Bs2aQ=;
-        b=mO1+iTe5nm2S/tLTAIQpSjVekL8a/DvsOkJ52KyNajYESlPwbD+G7YZJeHnnkgrBIM
-         4e9lR3ipLtl0FFNcDKuPBY3UbXIx5xBf9i5Rg9r+igyIOgtQYytwYUAaunhQ737KzZ1o
-         Dk+2JKCQdvE7fiBriyrkYCN2/j3sGHqK/K6S4s3UKqECjM9szRJi23pnt92I/H4lrzSZ
-         PtpQv64tm5P2qn+XZQOgCsqTTJYjUoIMk0kt5WMCR1yxUGOfp+R9TGsDeR69hg6dVLe9
-         fON+AXQXHuHgDLUW1FkKvRztBo7bYZshuIgGaNoGZUbPUR51onRCDZh+3/Dxt0r2ruMW
-         WHZw==
-X-Gm-Message-State: AOAM530RNY2fwmk4M85QmYDBP3Ye1o2gzjlJGO1knLj/f+L8HWTzNmQG
-        mR/XRyehZSw/rjoc7qe7UE+rP71j1mQA5RNjRjLIypy3bfYoVf1ryA6/bf2Ktz+5B9SKBiTg3Xx
-        EqHky/Ad6avuTm2CypqqIgrTAiBQ7loO6OnHFJA==
-X-Received: by 2002:a05:6638:4129:b0:319:f5e5:2d21 with SMTP id ay41-20020a056638412900b00319f5e52d21mr1775620jab.148.1648091383544;
-        Wed, 23 Mar 2022 20:09:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz6e3IYZRLfskdJ+DZp2Uaz51HnZfEwes4aBSpX0UEk+ZXiYNBuaMeCuXyfqFYokd4kyWP1iQ==
-X-Received: by 2002:a05:6638:4129:b0:319:f5e5:2d21 with SMTP id ay41-20020a056638412900b00319f5e52d21mr1775608jab.148.1648091383293;
-        Wed, 23 Mar 2022 20:09:43 -0700 (PDT)
-Received: from xps13.dannf (c-73-14-97-161.hsd1.co.comcast.net. [73.14.97.161])
-        by smtp.gmail.com with ESMTPSA id e15-20020a92194f000000b002c25e778042sm885509ilm.73.2022.03.23.20.09.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z7RLcBdTbxi1WJP/NXFvAkUEgz8GJWltXH26XBP4pcs=;
+        b=cQfRjO/snTveMv1FtZWjbgdO9gkGW1z4jmT8hs8DGIdR+Mry99e/FavhyJTefE/244
+         dPt5u9R2psHHQ0XHSaCYHxQqKmDV7CcvWap0qAopNBD59TWQXYlMPvytNLaH/Y3XXtkC
+         m9+dlgx5oMvH1kBnxqsH3c/isRI0kogUnHFIm3A1VrHPXbtEwINAZiAaK4jEakOE+o4z
+         avNI8b7Nik4R1JviXfnvcNsRBY76cf9x9BvGNIxClqo66ep+Pdl5lps3akWK53EpgP5J
+         fF0fd/mP8vLhwJm4xoAShbtow4lonvV6J/KzUBPZfZb+ET2UoJdW12S5sG/ofoebxjVX
+         iAzw==
+X-Gm-Message-State: AOAM531gMNiOMIW3T32aq4dS9CEsCHDayjbmFRjdoAm+NI7YnkMmw6g7
+        /PaebICgs5QLs4hACXkEVuc=
+X-Google-Smtp-Source: ABdhPJwVbOvL94lJaiSAi7r4eCIhA+TG4CK3uYT174+6+5cxOh0mz3JK7y0uXJ/kKuAGPBaVgb4HAg==
+X-Received: by 2002:a05:6402:1111:b0:416:2ac8:b98e with SMTP id u17-20020a056402111100b004162ac8b98emr5026577edv.236.1648106402097;
+        Thu, 24 Mar 2022 00:20:02 -0700 (PDT)
+Received: from localhost.localdomain (i130160.upc-i.chello.nl. [62.195.130.160])
+        by smtp.googlemail.com with ESMTPSA id z1-20020a05640235c100b004192c7266f5sm989540edc.16.2022.03.24.00.20.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 20:09:42 -0700 (PDT)
-Date:   Wed, 23 Mar 2022 21:09:39 -0600
-From:   dann frazier <dann.frazier@canonical.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] iommu/dma: Explicitly sort PCI DMA windows
-Message-ID: <Yjvg846XOpsAbgi6@xps13.dannf>
-References: <65657c5370fa0161739ba094ea948afdfa711b8a.1647967875.git.robin.murphy@arm.com>
- <874k3pxalr.wl-maz@kernel.org>
- <Yjub51Ct3esuNA9B@xps13.dannf>
- <CAL_JsqLFnN46WixKwsuhPswNo8fye4ERhU7_hPdPABi=70p7HA@mail.gmail.com>
+        Thu, 24 Mar 2022 00:20:01 -0700 (PDT)
+From:   Jakob Koschel <jakobkoschel@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Naveen Naidu <naveennaidu479@gmail.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
+        "Brian Johannesmeyer" <bjohannesmeyer@gmail.com>,
+        Cristiano Giuffrida <c.giuffrida@vu.nl>,
+        "Bos, H.J." <h.j.bos@vu.nl>, Jakob Koschel <jakobkoschel@gmail.com>
+Subject: [PATCH] PCI/PME: replace usage of found with dedicated list iterator variable
+Date:   Thu, 24 Mar 2022 08:18:52 +0100
+Message-Id: <20220324071852.61587-1-jakobkoschel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLFnN46WixKwsuhPswNo8fye4ERhU7_hPdPABi=70p7HA@mail.gmail.com>
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 23, 2022 at 07:55:23PM -0500, Rob Herring wrote:
-> On Wed, Mar 23, 2022 at 5:15 PM dann frazier <dann.frazier@canonical.com> wrote:
-> >
-> > On Wed, Mar 23, 2022 at 09:49:04AM +0000, Marc Zyngier wrote:
-> > > On Tue, 22 Mar 2022 17:27:36 +0000,
-> > > Robin Murphy <robin.murphy@arm.com> wrote:
-> > > >
-> > > > Originally, creating the dma_ranges resource list in pre-sorted fashion
-> > > > was the simplest and most efficient way to enforce the order required by
-> > > > iova_reserve_pci_windows(). However since then at least one PCI host
-> > > > driver is now re-sorting the list for its own probe-time processing,
-> > > > which doesn't seem entirely unreasonable, so that basic assumption no
-> > > > longer holds. Make iommu-dma robust and get the sort order it needs by
-> > > > explicitly sorting, which means we can also save the effort at creation
-> > > > time and just build the list in whatever natural order the DT had.
-> > > >
-> > > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> > > > ---
-> > > >
-> > > > Looking at this area off the back of the XGene thread[1] made me realise
-> > > > that we need to do it anyway, regardless of whether it might also happen
-> > > > to restore the previous XGene behaviour or not. Presumably nobody's
-> > > > tried to use pcie-cadence-host behind an IOMMU yet...
-> > >
-> > > This definitely restores PCIe functionality on my Mustang (XGene-1).
-> > > Hopefully dann can comment on whether this addresses his own issue, as
-> > > his firmware is significantly different.
-> >
-> > Robin, Marc,
-> >
-> > Adding just this patch on top of v5.17 (w/ vendor dtb) isn't enough to
-> > fix m400 networking:
-> 
-> I wouldn't expect it to given both the IB register selection changed
-> and the 2nd dma-ranges entry is ignored.
-> 
-> Can you (and others) try out this branch:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git xgene-pci-fix
-> 
-> It should maintain the same IB register usage for both cases and
-> handle the error in 'dma-ranges'.
+To move the list iterator variable into the list_for_each_entry_*()
+macro in the future it should be avoided to use the list iterator
+variable after the loop body.
 
-Looks good Rob :)
+To *never* use the list iterator variable after the loop it was
+concluded to use a separate iterator variable instead of a
+found boolean [1].
 
-https://paste.ubuntu.com/p/zJF9PKhQpS/
+This removes the need to use a found variable and simply checking if
+the variable was set, can determine if the break/goto was hit.
 
+Link: https://lore.kernel.org/all/CAHk-=wgRr_D8CB-D9Kg-c=EHreAsk5SqXPwr9Y7k9sA6cWXJ6w@mail.gmail.com/
+Signed-off-by: Jakob Koschel <jakobkoschel@gmail.com>
+---
+ drivers/pci/pcie/pme.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-  -dann
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index ef8ce436ead9..dc8cbf8987ba 100644
+--- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -130,7 +130,7 @@ static void pcie_pme_handle_request(struct pci_dev *port, u16 req_id)
+ {
+ 	u8 busnr = req_id >> 8, devfn = req_id & 0xff;
+ 	struct pci_bus *bus;
+-	struct pci_dev *dev;
++	struct pci_dev *dev = NULL, *iter;
+ 	bool found = false;
+ 
+ 	/* First, check if the PME is from the root port itself. */
+@@ -169,17 +169,17 @@ static void pcie_pme_handle_request(struct pci_dev *port, u16 req_id)
+ 
+ 	/* Finally, try to find the PME source on the bus. */
+ 	down_read(&pci_bus_sem);
+-	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		pci_dev_get(dev);
+-		if (dev->devfn == devfn) {
+-			found = true;
++	list_for_each_entry(iter, &bus->devices, bus_list) {
++		pci_dev_get(iter);
++		if (iter->devfn == devfn) {
++			dev = iter;
+ 			break;
+ 		}
+-		pci_dev_put(dev);
++		pci_dev_put(iter);
+ 	}
+ 	up_read(&pci_bus_sem);
+ 
+-	if (found) {
++	if (dev) {
+ 		/* The device is there, but we have to check its PME status. */
+ 		found = pci_check_pme_status(dev);
+ 		if (found) {
+
+base-commit: f443e374ae131c168a065ea1748feac6b2e76613
+-- 
+2.25.1
 
