@@ -2,128 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D44C64E655E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 15:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 441E24E6584
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 15:42:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351063AbiCXOhS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 10:37:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
+        id S1351145AbiCXOn2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 10:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351053AbiCXOhR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 10:37:17 -0400
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-eopbgr20045.outbound.protection.outlook.com [40.107.2.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06540B5F;
-        Thu, 24 Mar 2022 07:35:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F6QTwJgVwnFqnAor2wJgnKdGcduSzGEY28YPF3TNJf1p9Pfn5zhui25SZe5bl9+VdLrC/HmP9YkbI9lNmrWuEAtjZ/bVI36mY0cRPnBhVq5G03NjTzdKs2HCLVdoiQYjlpnNyubf+H6XnDN4HBX5t4B5hMG5ehFLEAmMEPm3gxySsOHuXIsy0KYB+8zFN7ii/XbnxAgAVxyNfG0acRIjisvIjinxm6tLKXJ4ZmS3a8gcuqzusnspAnY4W2QgxGzt8d4Aw6UtnFwqLC6QM/rkGPQKnb6eLALERbfprd1zl7zsn2MmXHY+ZlLwsVb1o7uSSsbYVDrt4ygKSeSlwKX94g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AJ2sEWB74BPqbeT5jvXs+01zKssANX2LSoP2T1W0iSk=;
- b=XLl52QDuVBIU4QhzKVc+3gPJjb0SZ1fuvqTbh9cpmymMTwsCTFfJbkJoGe0aDbfoabZNV/KcMrjr6VcBh7QDyf0P34SWDcDW6Co4/3BAf/1IWKRhZNUKQlcd9IlApbS74k5SNQtOWX7z5XOhr24rEM/pfAwSQ/21f45LEtDUa9qvURlAD32vTHUnqioJGfHeTn2jwUqH0zhLXhRY4IAxUrojDMHvnIyu9kZUkq+EIJ672J7Hs2xiybcMLenVjncWEWzCijcmAj4dNao0BjDnDzPq6iADD35EGXuMxs/iEPVVxTK5nYcpXXLyqFU2/v1+NmjlZ03ldWDTwECCUyoX7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AJ2sEWB74BPqbeT5jvXs+01zKssANX2LSoP2T1W0iSk=;
- b=FTUxBjAbKDH4tj+XY9xXPXp1viP7ayL1UsVAYUw3GLJd9FGM6dWOrk4VuLRy5o84sD9hMvn4lscGToWHTimU4mllOqkfveo/VC6UynJvFnsASlPPJSOIaqXdQmqhJRcjO6ny5IkiCWkMSrN2myOmeSVPD/4xAKFrmZqtsrdJAfI=
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
- by AM0PR0402MB3764.eurprd04.prod.outlook.com (2603:10a6:208:9::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.18; Thu, 24 Mar
- 2022 14:35:42 +0000
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::bcbf:f029:4f34:1be1]) by PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::bcbf:f029:4f34:1be1%6]) with mapi id 15.20.5102.016; Thu, 24 Mar 2022
- 14:35:42 +0000
-From:   Frank Li <frank.li@nxp.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 01/25] dmaengine: dw-edma: Drop dma_slave_config.direction
- field usage
-Thread-Topic: [PATCH 01/25] dmaengine: dw-edma: Drop
- dma_slave_config.direction field usage
-Thread-Index: Adg/jC7s1tot06cvQ3KYPrTBiXTrlg==
-Date:   Thu, 24 Mar 2022 14:35:42 +0000
-Message-ID: <PAXPR04MB9186A02D1A0753A6E1000A0188199@PAXPR04MB9186.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6a48e2ab-8154-4496-9f30-08da0da39303
-x-ms-traffictypediagnostic: AM0PR0402MB3764:EE_
-x-microsoft-antispam-prvs: <AM0PR0402MB3764DA75393E4CE0671912D188199@AM0PR0402MB3764.eurprd04.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eF3qbKuq9L9kdbPIfget8FGcQigKWXv1NKhLU7pjd5tsL8EThvNNda5wX4i14X2paIftOjUcj4Ky7TH2V1ZDsIu2H53serv9JFTKnJGTJwI7RFXypEsc5OMZXNa9fHlLEulLJlLlmiInN0W3QmQ0evsdSTN8uKB4/nZDywRJwp7GIz93PYCyssQI5qCYubMT8Jcsp49Q+JI3iovuvrrS93znSjY4dU0MfzF6c7c4GN+5iF5t0CXPi4cDameTMQ9e6kt1Z/zNVUT5delTVyXeqPAE/mbunWWeWA9VA2SHRq9mksSEgZCbIBIaSZPIPFSLNhhdEgmUG24S4aHI3n894im69HOs8mMa58drrqU2stZabRh1ayrqdAd4ckVVOwOEg3Buehk0PMOc4M3cbdUGjV9tGvt0efvjLcK9YND550LNkL+boL+0ng6/oGG1kuD0O2ZVPiqNz13C/dlYJvCX04qTiBtS4MkFNyLq+dc3YSolU6Mm94ezymL8JQOYyjNkTgSk8agcjUUXgbuoewtuFzgcQcIWhoTkSk9rOMr05JjrR6PWub+IU0h7R+lh37VPYvXBFymx+kQ43xW4Oh43ywQPmtbyVlflp6ug6JWKWXhIlkbFJUym0Od5h9UHeAwXE8qOGWFpdNXgzUw0DXt4kElbp9sNXYinNlTuVQ5BoTYCJ1cBYwaHNdALmkYKJ7+Uk5Ds2NLf/S8RKrVlJVlsyAV3fZMGJ5cw6C6QO+b2F2pAuTcLZRdKDqZguMzMblil30GXp8gdqeoqxPr03qCz/ptQyzA1nmmyA9VhCFlZunA=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(7696005)(66574015)(6506007)(186003)(55236004)(53546011)(9686003)(26005)(83380400001)(4326008)(5660300002)(8676002)(52536014)(7416002)(44832011)(8936002)(2906002)(966005)(71200400001)(45080400002)(508600001)(110136005)(76116006)(64756008)(66476007)(55016003)(66556008)(66446008)(66946007)(54906003)(122000001)(316002)(38100700002)(86362001)(38070700005)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?9P9Jlc5KTQnj1pLa+HnfWYQY3tLAP9J1Y28xBCpsdR/C6pazOcorzYlUIe?=
- =?iso-8859-2?Q?eSZUp0y5OimS+kH0/BKrwp2o3kSTk6phYhZH1a15IU4Yxx0LaUeHlyP2to?=
- =?iso-8859-2?Q?07EqzbWYFG/PFUPiMvdy5fNfOXVlLDZYh7D0OV1hOx/AfTWL+e+RSSxDMY?=
- =?iso-8859-2?Q?pQThGXh0p79mMqr4QEzOKFNd/nkADDjbrqB1+Gkdf28zxx51PMtulc3wNi?=
- =?iso-8859-2?Q?OQt9Qar179+/xvtdGP5bnA6fKxOHJ+Z6495a53U2YEdi4mUA6YKssLcs7u?=
- =?iso-8859-2?Q?eEmnJ/NpXB0dVXSTInj2AjLE/+pOb5OMJMdJV0Sa0ITjsX8cSn2ffUZuaU?=
- =?iso-8859-2?Q?cdUUG/6ZWmnYv+kOoqBKDkR0efrLd6mV+4BsDKDN1ZPO7repL812ZOP8qy?=
- =?iso-8859-2?Q?sGkzPeBqmFMG62U8Mq/RswTQ1ywgMPHTsK0RfnxNsiqOxWz1AbkoBIGEvD?=
- =?iso-8859-2?Q?s1+0lnCvGR/pxXOxREVffbwoNpND1zt9s6NPS7eW+xcvQt2cx0E4k0bfrS?=
- =?iso-8859-2?Q?ZO3NhoP5Uck3rjkaJGIUUFaRDkRkewstV/hp42/zJYrFzpnr5ef/jneEQO?=
- =?iso-8859-2?Q?+BuJTHoU9VXiYzinPV+u2XcaEVrpiqsqcIe9uyW/vjCZjRtE314jn+6t3p?=
- =?iso-8859-2?Q?LjhdrbYcF4gbK0gewV3TklbpI6+Rk3965M3C6IHqLNpQSU2myaRr3JISPD?=
- =?iso-8859-2?Q?IlQ6BaFKb4pIsZQopV1aqXdgFFt8mRQDJY78/mFWMoKCgrzKr5wtSH7t5B?=
- =?iso-8859-2?Q?0dOZBrE0xDE8mGxHCkjIxOqj9tatblueHUkPLC+935NwDV+6pVk387mfJF?=
- =?iso-8859-2?Q?gE6IbtT0lQ1uNsZ7wW8eTjekB1eo7+xNrLyK2kB1nGvbZJU+EoFKOzg/Hg?=
- =?iso-8859-2?Q?rle7jyT1jCVUrYyoEjUe6svtAX3TFTn5PK6ctETBxA7OjQj8p33a1nDjUh?=
- =?iso-8859-2?Q?XrB9BZdFfdozYHDWhNhx4/HjPUKvP/QmzV7QfLq8287dzrGrs5llUtXkA0?=
- =?iso-8859-2?Q?ZaxXp+tVE39x6xWzhLTj+a5MYHPDsoacOBf47FDSQZ0oYhGJ7wt7prh8G5?=
- =?iso-8859-2?Q?A9dD0Ub20yBikvWG2+s+R7cVWlHEEU+WDHRfP/RC3FRf6TcwPdsUzuvtyJ?=
- =?iso-8859-2?Q?JtXh4hd/MC7Qq1cr51PU2hAbv9I8Qc3ZxehmxlQnS3YnCHRb+peRjZmAgo?=
- =?iso-8859-2?Q?9JhV4mS2G18STrIynPiyMtNbSFQQj7OpkXgO7bUJy4NSmput0JaNQX1qKV?=
- =?iso-8859-2?Q?QsXPZjOWWuZbC1oQSQsvzvHKHH5z6mjRtz0yOrg5dKNomeGQj4kCt4i1/n?=
- =?iso-8859-2?Q?JmtoNNaCVUlD0yUC3Qa4uH5L04KGv4wss3oshlqWGIbVzSPD/+1tdrDVWQ?=
- =?iso-8859-2?Q?E2CYSQNmf0Q1xok0Ys8/y279trgivEsfhfRKdaad2+Yn04yOwsgghcVWHF?=
- =?iso-8859-2?Q?zcV5k6Agm/2LJ3o7s326OTCL+b6gVPNhno/GkkEO6oJchhbZ4XnvGGTVjp?=
- =?iso-8859-2?Q?wM8rXx3E9GKLoA0dwNIhn/0eNedr/xmrXslQ7P1sunts8o7DXtt2QDACFQ?=
- =?iso-8859-2?Q?+FseUWcC/66OyIK/fQvsHYltcgElzwqkvNhPRS3fiLjIJG5dY6zy9mwsA9?=
- =?iso-8859-2?Q?vxhnVw9FGbZ8SxaBFcZKSFduLAciyei9iuRjlBSXOw9/IDktn5k2uu6BMt?=
- =?iso-8859-2?Q?jIhalrmwRI8BxvavxlLB+o62jp32mPiHrSUy9Xgd+sH0S2/5MoHFqFaUR0?=
- =?iso-8859-2?Q?6NUmq6zrjdVnSNrYbQVH53hKkGQ7vYDZ97ehZcHtNjfwYfQnNUwOLd+VXL?=
- =?iso-8859-2?Q?/OmkuJ3Tyg=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S1351331AbiCXOnU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 10:43:20 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AFEEDAA02A;
+        Thu, 24 Mar 2022 07:41:48 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 708AA1515;
+        Thu, 24 Mar 2022 07:41:48 -0700 (PDT)
+Received: from [10.57.41.19] (unknown [10.57.41.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B8173F73D;
+        Thu, 24 Mar 2022 07:41:45 -0700 (PDT)
+Message-ID: <e3cf16f2-e9d7-b169-cccf-038df5acdb79@arm.com>
+Date:   Thu, 24 Mar 2022 14:41:41 +0000
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a48e2ab-8154-4496-9f30-08da0da39303
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2022 14:35:42.2727
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mveSLIR7JbFklfPrFd29Jr4cjlgGb6h1SKyVnz7XXnJFlkgUtWQqGl9aBkalEblqRfPIh6wT11NMDCqNbsP9qg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3764
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v2 1/2] Drivers: hv: vmbus: Propagate VMbus coherence to
+ each VMbus device
+Content-Language: en-GB
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+References: <1648067472-13000-1-git-send-email-mikelley@microsoft.com>
+ <1648067472-13000-2-git-send-email-mikelley@microsoft.com>
+ <f984116a-c748-ada0-c073-6e62f486b4f5@arm.com>
+ <PH0PR21MB3025C5DFB189B9609F7A601FD7199@PH0PR21MB3025.namprd21.prod.outlook.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <PH0PR21MB3025C5DFB189B9609F7A601FD7199@PH0PR21MB3025.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -131,185 +63,158 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 2022-03-24 13:18, Michael Kelley (LINUX) wrote:
+> From: Robin Murphy <robin.murphy@arm.com> Sent: Thursday, March 24, 2022 4:59 AM
+>>
+>> On 2022-03-23 20:31, Michael Kelley wrote:
+>>> VMbus synthetic devices are not represented in the ACPI DSDT -- only
+>>> the top level VMbus device is represented. As a result, on ARM64
+>>> coherence information in the _CCA method is not specified for
+>>> synthetic devices, so they default to not hardware coherent.
+>>> Drivers for some of these synthetic devices have been recently
+>>> updated to use the standard DMA APIs, and they are incurring extra
+>>> overhead of unneeded software coherence management.
+>>>
+>>> Fix this by propagating coherence information from the VMbus node
+>>> in ACPI to the individual synthetic devices. There's no effect on
+>>> x86/x64 where devices are always hardware coherent.
+>>>
+>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+>>> ---
+>>>    drivers/hv/hv_common.c         | 11 +++++++++++
+>>>    drivers/hv/vmbus_drv.c         | 23 +++++++++++++++++++++++
+>>>    include/asm-generic/mshyperv.h |  1 +
+>>>    3 files changed, 35 insertions(+)
+>>>
+>>> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+>>> index 181d16b..820e814 100644
+>>> --- a/drivers/hv/hv_common.c
+>>> +++ b/drivers/hv/hv_common.c
+>>> @@ -20,6 +20,7 @@
+>>>    #include <linux/panic_notifier.h>
+>>>    #include <linux/ptrace.h>
+>>>    #include <linux/slab.h>
+>>> +#include <linux/dma-map-ops.h>
+>>>    #include <asm/hyperv-tlfs.h>
+>>>    #include <asm/mshyperv.h>
+>>>
+>>> @@ -216,6 +217,16 @@ bool hv_query_ext_cap(u64 cap_query)
+>>>    }
+>>>    EXPORT_SYMBOL_GPL(hv_query_ext_cap);
+>>>
+>>> +void hv_setup_dma_ops(struct device *dev, bool coherent)
+>>> +{
+>>> +	/*
+>>> +	 * Hyper-V does not offer a vIOMMU in the guest
+>>> +	 * VM, so pass 0/NULL for the IOMMU settings
+>>> +	 */
+>>> +	arch_setup_dma_ops(dev, 0, 0, NULL, coherent);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(hv_setup_dma_ops);
+>>> +
+>>>    bool hv_is_hibernation_supported(void)
+>>>    {
+>>>    	return !hv_root_partition && acpi_sleep_state_supported(ACPI_STATE_S4);
+>>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>>> index 12a2b37..2d2c54c 100644
+>>> --- a/drivers/hv/vmbus_drv.c
+>>> +++ b/drivers/hv/vmbus_drv.c
+>>> @@ -905,6 +905,14 @@ static int vmbus_probe(struct device *child_device)
+>>>    	struct hv_device *dev = device_to_hv_device(child_device);
+>>>    	const struct hv_vmbus_device_id *dev_id;
+>>>
+>>> +	/*
+>>> +	 * On ARM64, propagate the DMA coherence setting from the top level
+>>> +	 * VMbus ACPI device to the child VMbus device being added here.
+>>> +	 * On x86/x64 coherence is assumed and these calls have no effect.
+>>> +	 */
+>>> +	hv_setup_dma_ops(child_device,
+>>> +		device_get_dma_attr(&hv_acpi_dev->dev) == DEV_DMA_COHERENT);
+>>
+>> Would you mind hooking up the hv_bus.dma_configure method to do this?
+>> Feel free to fold hv_setup_dma_ops entirely into that if you're not
+>> likely to need to call it from anywhere else.
+> 
+> I'm pretty sure using hv_bus.dma_configure() is doable.  A separate
+> hv_setup_dma_ops() is still needed because arch_setup_dma_ops() isn't
+> exported and this VMbus driver can be built as a module.
 
+Ah, right you are, I keep forgetting that.
 
-> -----Original Message-----
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Sent: Wednesday, March 23, 2022 8:48 PM
-> To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>; Vinod Koul
-> <vkoul@kernel.org>; Jingoo Han <jingoohan1@gmail.com>; Bjorn Helgaas
-> <bhelgaas@google.com>; Frank Li <frank.li@nxp.com>; Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org>
-> Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>; Serge Semin
-> <fancer.lancer@gmail.com>; Alexey Malahov
-> <Alexey.Malahov@baikalelectronics.ru>; Pavel Parkhomenko
-> <Pavel.Parkhomenko@baikalelectronics.ru>; Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com>; Rob Herring <robh@kernel.org>; Krzysztof
-> Wilczy=F1ski <kw@linux.com>; linux-pci@vger.kernel.org;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [EXT] [PATCH 01/25] dmaengine: dw-edma: Drop
-> dma_slave_config.direction field usage
->=20
-> Caution: EXT Email
->=20
-> The dma_slave_config.direction field usage in the DW eDMA driver has been
-> introduced in the commit bd96f1b2f43a ("dmaengine: dw-edma: support local
-> dma device transfer semantics"). Mainly the change introduced there was
-> correct (indeed DEV_TO_MEM means using RD-channel and MEM_TO_DEV -
-> WR-channel for the case of having eDMA accessed locally from
-> CPU/Application side), but providing an additional
-> MEM_TO_MEM/DEV_TO_DEV-based semantics was quite redundant if not to say
-> potentially harmful (when it comes to removing the denoted field). First
-> of all since the dma_slave_config.direction field has been marked as
-> obsolete (see [1] and the structure dc [2]) and will be discarded in
-> future, using it especially in a non-standard way is discouraged. Secondl=
-y
-> in accordance with the commit denoted above the default
-> dw_edma_device_transfer() semantics has been changed despite what it's
-> message said. So claiming that the method was left backward compatible wa=
-s
-> wrong.
->=20
-> Anyway let's fix the problems denoted above and simplify the
-> dw_edma_device_transfer() method by dropping the parsing of the
-> DMA-channel direction field. Instead of having that implicit
-> dma_slave_config.direction field semantic we can use the recently added
-> DW_EDMA_CHIP_LOCAL flag to distinguish between the local and remote DW
-> eDMA setups thus preserving both cases support. In addition to that an
-> ASCII-figure has been added to clarify the complication out.
->=20
-> [1] Documentation/driver-api/dmaengine/provider.rst
-> [2] include/linux/dmaengine.h: dma_slave_config.direction
->=20
-> Co-developed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->=20
-> ---
->=20
-> In accordance with agreement with Frank and Manivannan this patch is
-> supposed to be moved to the series:
-> Link:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kern
-> el.org%2Fdmaengine%2F20220310192457.3090-1-
-> Frank.Li%40nxp.com%2F&amp;data=3D04%7C01%7CFrank.Li%40nxp.com%7C4918ae854=
-5e94
-> ab137dc08da0d386b3f%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63783683=
-32
-> 30354384%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJB=
-Ti
-> I6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DejkihPy4A5spPj%2BcCgZgheZXdWd=
-nvRQ
-> 52SOE0wtDqMI%3D&amp;reserved=3D0
-> in place of the patch:
-> [PATCH v5 6/9] dmaengine: dw-edma: Don't rely on the deprecated "directio=
-n"
-> member
-> Link:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kern
-> el.org%2Fdmaengine%2F20220310192457.3090-7-
-> Frank.Li%40nxp.com%2F&amp;data=3D04%7C01%7CFrank.Li%40nxp.com%7C4918ae854=
-5e94
-> ab137dc08da0d386b3f%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63783683=
-32
-> 30354384%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJB=
-Ti
-> I6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DqedpXrMGAR9frJWydd9Q63hZDHTYf=
-%2BE
-> ScsHfIx9019M%3D&amp;reserved=3D0
-> ---
+>>> +
+>>>    	dev_id = hv_vmbus_get_id(drv, dev);
+>>>    	if (drv->probe) {
+>>>    		ret = drv->probe(dev, dev_id);
+>>> @@ -2428,6 +2436,21 @@ static int vmbus_acpi_add(struct acpi_device *device)
+>>>
+>>>    	hv_acpi_dev = device;
+>>>
+>>> +	/*
+>>> +	 * Older versions of Hyper-V for ARM64 fail to include the _CCA
+>>> +	 * method on the top level VMbus device in the DSDT. But devices
+>>> +	 * are hardware coherent in all current Hyper-V use cases, so fix
+>>> +	 * up the ACPI device to behave as if _CCA is present and indicates
+>>> +	 * hardware coherence.
+>>> +	 */
+>>> +	ACPI_COMPANION_SET(&device->dev, device);
+>>> +	if (IS_ENABLED(CONFIG_ACPI_CCA_REQUIRED) &&
+>>> +	    device_get_dma_attr(&device->dev) == DEV_DMA_NOT_SUPPORTED) {
+>>> +		pr_info("No ACPI _CCA found; assuming coherent device I/O\n");
+>>> +		device->flags.cca_seen = true;
+>>> +		device->flags.coherent_dma = true;
+>>> +	}
+>>
+>> I'm not the biggest fan of this, especially since I'm not convinced that
+>> there are any out-of-support deployments of ARM64 Hyper-V that can't be
+>> updated. However I suppose it's not "real" firmware, and one Hyper-V
+>> component is at liberty to hack another Hyper-V component's data if it
+>> really wants to...
+> 
+> Agreed, it's a hack.  But Hyper-V instances are out there as part of
+> Windows 10/11 on ARM64 PCs, and they run ARM64 VMs for the
+> Windows Subsystem for Linux.  Microsoft gets pilloried for breaking
+> stuff, and this removes the potential for that happening if someone
+> runs a new Linux kernel version in that VM.
 
-Did you have extern git, so I can pull patch from it. Our Email server
-change patch's format, which cause git am failure and https://patchwork.ker=
-nel.org/ still
-have not this patches yet, or send two patches as attachment to me .=20
+And actually that one's on me as well - for some reason I was thinking 
+that this had never worked, and therefore you could likely get a Hyper-V 
+update pushed out long before users get this patch through distros, but 
+of course it only becomes an issue now because previously there was no 
+connection to any ACPI node at all. As I said, personally I'm happy to 
+consider this a Hyper-V internal workaround, but if anyone else objects 
+to poking at the ACPI flags, I suppose you've also got the fallback 
+option of flipping it around and making the ACPI_COMPANION_SET() 
+conditional, so that the behaviour for older versions remains entirely 
+unchanged. If it happens, feel free to keep my ack for that approach too.
 
-Best regards
-Frank Li
+Cheers,
+Robin.
 
->  drivers/dma/dw-edma/dw-edma-core.c | 49 +++++++++++++++++++++---------
->  1 file changed, 34 insertions(+), 15 deletions(-)
->=20
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-
-> edma-core.c
-> index 5be8a5944714..e9e32ed74aa9 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -339,21 +339,40 @@ dw_edma_device_transfer(struct dw_edma_transfer *xf=
-er)
->         if (!chan->configured)
->                 return NULL;
->=20
-> -       switch (chan->config.direction) {
-> -       case DMA_DEV_TO_MEM: /* local DMA */
-> -               if (dir =3D=3D DMA_DEV_TO_MEM && chan->dir =3D=3D EDMA_DI=
-R_READ)
-> -                       break;
-> -               return NULL;
-> -       case DMA_MEM_TO_DEV: /* local DMA */
-> -               if (dir =3D=3D DMA_MEM_TO_DEV && chan->dir =3D=3D EDMA_DI=
-R_WRITE)
-> -                       break;
-> -               return NULL;
-> -       default: /* remote DMA */
-> -               if (dir =3D=3D DMA_MEM_TO_DEV && chan->dir =3D=3D EDMA_DI=
-R_READ)
-> -                       break;
-> -               if (dir =3D=3D DMA_DEV_TO_MEM && chan->dir =3D=3D EDMA_DI=
-R_WRITE)
-> -                       break;
-> -               return NULL;
-> +       /*
-> +        * Local Root Port/End-point              Remote End-point
-> +        * +-----------------------+ PCIe bus +----------------------+
-> +        * |                       |    +-+   |                      |
-> +        * |    DEV_TO_MEM   Rx Ch <----+ +---+ Tx Ch  DEV_TO_MEM    |
-> +        * |                       |    | |   |                      |
-> +        * |    MEM_TO_DEV   Tx Ch +----+ +---> Rx Ch  MEM_TO_DEV    |
-> +        * |                       |    +-+   |                      |
-> +        * +-----------------------+          +----------------------+
-> +        *
-> +        * 1. Normal logic:
-> +        * If eDMA is embedded into the DW PCIe RP/EP and controlled from
-> the
-> +        * CPU/Application side, the Rx channel (EDMA_DIR_READ) will be
-> used
-> +        * for the device read operations (DEV_TO_MEM) and the Tx channel
-> +        * (EDMA_DIR_WRITE) - for the write operations (MEM_TO_DEV).
-> +        *
-> +        * 2. Inverted logic:
-> +        * If eDMA is embedded into a Remote PCIe EP and is controlled by
-> the
-> +        * MWr/MRd TLPs sent from the CPU's PCIe host controller, the Tx
-> +        * channel (EDMA_DIR_WRITE) will be used for the device read
-> operations
-> +        * (DEV_TO_MEM) and the Rx channel (EDMA_DIR_READ) - for the writ=
-e
-> +        * operations (MEM_TO_DEV).
-> +        *
-> +        * It is the client driver responsibility to choose a proper
-> channel
-> +        * for the DMA transfers.
-> +        */
-> +       if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-> +               if ((chan->dir =3D=3D EDMA_DIR_READ && dir !=3D DMA_DEV_T=
-O_MEM)
-> ||
-> +                   (chan->dir =3D=3D EDMA_DIR_WRITE && dir !=3D DMA_MEM_=
-TO_DEV))
-> +                       return NULL;
-> +       } else {
-> +               if ((chan->dir =3D=3D EDMA_DIR_WRITE && dir !=3D DMA_DEV_=
-TO_MEM)
-> ||
-> +                   (chan->dir =3D=3D EDMA_DIR_READ && dir !=3D DMA_MEM_T=
-O_DEV))
-> +                       return NULL;
->         }
->=20
->         if (xfer->type =3D=3D EDMA_XFER_CYCLIC) {
-> --
-> 2.35.1
-
+> 
+> Michael
+> 
+>>
+>> If you can hook up .dma_configure, or clarify if it wouldn't work,
+>>
+>> Acked-by: Robin Murphy <robin.murphy@arm.com>
+>>
+>> Cheers,
+>> Robin.
+>>
+>>> +
+>>>    	result = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
+>>>    					vmbus_walk_resources, NULL);
+>>>
+>>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>>> index c08758b..c05d2ce 100644
+>>> --- a/include/asm-generic/mshyperv.h
+>>> +++ b/include/asm-generic/mshyperv.h
+>>> @@ -269,6 +269,7 @@ static inline int cpumask_to_vpset_noself(struct hv_vpset
+>> *vpset,
+>>>    u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size);
+>>>    void hyperv_cleanup(void);
+>>>    bool hv_query_ext_cap(u64 cap_query);
+>>> +void hv_setup_dma_ops(struct device *dev, bool coherent);
+>>>    void *hv_map_memory(void *addr, unsigned long size);
+>>>    void hv_unmap_memory(void *addr);
+>>>    #else /* CONFIG_HYPERV */
