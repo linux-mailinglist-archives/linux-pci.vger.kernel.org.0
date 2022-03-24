@@ -2,50 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B87214E6A80
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 23:09:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCA6E4E6A95
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 23:19:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344696AbiCXWKs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 18:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32964 "EHLO
+        id S230169AbiCXWVD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 18:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354883AbiCXWKr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 18:10:47 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3634D54187
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 15:09:12 -0700 (PDT)
+        with ESMTP id S241989AbiCXWVD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 18:21:03 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548947CB20
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 15:19:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 978D4B8250D
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 22:09:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15F51C340EC;
-        Thu, 24 Mar 2022 22:09:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 18482B8250D
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 22:19:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F265C340EC;
+        Thu, 24 Mar 2022 22:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648159750;
-        bh=dJXmvTZr5UdvSBioFLt7gHEk3eUV5mfLXEidGrj7R3E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E93uG7rMXbl4t4n3pGHFMwSsUg0Iv/aIW/HfELzxf5YRj45WEs2phGH/4fhuSENpH
-         qw97m4QnFG3QNcut5yw+HoIZFV2GPd30ATnboC5H9VupGLQrtvMDHOVK1oTzApVxX9
-         QMY2ZiK1kGXyHz+0R0drGUozJD5jcC60xB8qzjUVEX/j11+Rx3umkn5vrnKrPfs69i
-         ugRfhEAgDy3eu3N+KGRkyqKfI2DIg2UxFArT7t8yplOdl4Dga910cbZwy6mWcmeIFp
-         qwZKu0ZJphxhhap5fXikcyiM1IccTw2VZ1ftiwcn+qlXoQ2t7dtOhgYjNbtcBbGQyP
-         J5HS5mfoINfeg==
-Date:   Thu, 24 Mar 2022 17:09:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH 2/2] powerpc/eeh: Use pcie_reset_state_t type in function
- arguments
-Message-ID: <20220324220908.GA171268@bhelgaas>
+        s=k20201202; t=1648160368;
+        bh=epz6WS11anM7dgEmdIw5kK894Jpyd/LXevilN/Hp3f8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MApF8/dHNjZHHsHretJGKIwSej6wgFRlQr7mbicRQWV6GOCmVm9msyGA1XikgeVcb
+         pKvVzvbBq4O2aiEGzdsnA436Tqn2+ZJOVlrVkRownYeUzqL7lyiWUTqTT/fuUwHzFA
+         kFuxj5avCgPKb4IhBm7zBayWNtskqE7PxwPRggwrOBtFKskeag0c+xJglmlooAgXoz
+         JfkW+lzwE5B8AZ2i7llgamizj5tvrYTsBD/MXKGJQbfGew5z4s4JLm2wdi6Ktt59GD
+         CgT0Lvwd2hA87xnDfSEVLY/k97EcfTwiwYgpoHtadrdRq0enbKYAUBvGncozx990IG
+         dxDjbyD4cPguA==
+Date:   Thu, 24 Mar 2022 22:19:23 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        kernelci-results@groups.io, bot@kernelci.org,
+        gtucker@collabora.com, linux-pci@vger.kernel.org
+Subject: Re: next/master bisection: baseline.login on asus-C523NA-A20057-coral
+Message-ID: <Yjzua8Wye/3DHBKx@sirena.org.uk>
+References: <623c13ec.1c69fb81.8cbdb.5a7a@mx.google.com>
+ <Yjyv03JsetIsTJxN@sirena.org.uk>
+ <4e9fca2f-0af1-3684-6c97-4c35befd5019@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gKXeS8yd8BxBqR7N"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f55dba9c-f00f-3aa9-d84d-1cda2b660dcb@csgroup.eu>
+In-Reply-To: <4e9fca2f-0af1-3684-6c97-4c35befd5019@redhat.com>
+X-Cookie: Orders subject to approval.
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,68 +60,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 09:51:13AM +0100, Christophe Leroy wrote:
-> Le 13/07/2021 à 02:25, Krzysztof Wilczyński a écrit :
-> > The pcie_reset_state_t type has been introduced in the commit
-> > f7bdd12d234d ("pci: New PCI-E reset API") along with the enum
-> > pcie_reset_state, but it has never been used for anything else
-> > other than to define the members of the enumeration set in the
-> > enum pcie_reset_state.
-> > 
-> > Thus, replace the direct use of enum pcie_reset_state in function
-> > arguments and replace it with pcie_reset_state_t type so that the
-> > argument type matches the type used in enum pcie_reset_state.
-> > 
-> > Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-> 
-> I don't understand the purpose of this change. Does any tool like
-> sparse of so reports an error here ?
-> 
-> My feeling is that by doing this you loose the added value of using
-> an enumerate.
-> 
-> state is used in a switch/case, that's exactly what we expect from
-> an enum.
 
-I think this is true: in the patch below, we remove use of "enum
-pcie_reset_state", so the compiler no longer knows that "state" is an
-enum, and it cannot verify that "state" has a legal value in the
-switch statement.  And at least with "gcc -Wall", it looks like it
-*does* complain in that case.
+--gKXeS8yd8BxBqR7N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Whether that value is worthwhile, I don't know.  AFAICT this is the
-only place that uses "state", so there's not *much* value.
+On Thu, Mar 24, 2022 at 09:34:30PM +0100, Hans de Goede wrote:
 
-If we did apply the patch below, I think we could probably make "enum
-pcie_reset_state" an anonymous enum instead, like the enum for
-pci_channel_state_t.
+> Mark, if one of use writes a test patch, can you get that Asus machine to boot a
+> kernel build from next + the test patch ?
 
-But let's back up for a minute.  This is only used in the
-pci_set_pcie_reset_state() path, and that's only used by three
-drivers: cxl, genwqe, and ipr, and obviously only on powerpc, since
-that's the only arch that implements pcibios_set_pcie_reset_state().
+I can't directly unfortunately as the board is in Collabora's lab but
+Guillaume (who's already CCed) ought to be able to, and I can generally
+prod and try to get that done.
 
-What's special about them?  Why do they need this and no other drivers
-do?  And why only on powerpc?
+--gKXeS8yd8BxBqR7N
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I wonder if that powerpc functionality could be implemented in some
-way that's more integrated into the PCI core reset and error handling
-framework.
+-----BEGIN PGP SIGNATURE-----
 
-> > ---
-> >   arch/powerpc/kernel/eeh.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
-> > index 3bbdcc86d01b..15485abb89ff 100644
-> > --- a/arch/powerpc/kernel/eeh.c
-> > +++ b/arch/powerpc/kernel/eeh.c
-> > @@ -714,7 +714,7 @@ static void eeh_restore_dev_state(struct eeh_dev *edev, void *userdata)
-> >    * Return value:
-> >    * 	0 if success
-> >    */
-> > -int pcibios_set_pcie_reset_state(struct pci_dev *dev, enum pcie_reset_state state)
-> > +int pcibios_set_pcie_reset_state(struct pci_dev *dev, pcie_reset_state_t state)
-> >   {
-> >   	struct eeh_dev *edev = pci_dev_to_eeh_dev(dev);
-> >   	struct eeh_pe *pe = eeh_dev_to_pe(edev);
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmI87msACgkQJNaLcl1U
+h9Ak2Qf+I8fn2G5idH0xTHkB7uSNSm9XnHDVepInrM7xRgJmhMmmDimWNWWbp6Ex
+veGuY1PBjmO9pkuPhblSO8WWW0xonJ5qjvgfq8v/pb9o9m20y9AKTMHzix807RJN
+qprKI3HYIwDEeppsHq9X0VrkAkibfljbsidMFFj/mkYzblLOjpbHzAI65uS2cRZm
+nwGQ6fV1mIuAyO2zdN1KrVvgjCO6aKn2X8jntuZsgwhauGiArih2De9E31MtpNIL
+o2zG/p0Hc2RE3EOeYqiICD1LEGT0kzO7k6nIgVBm9tFJaVjETT5eLboswdD4MHnd
+TaAv7c9GJMCAokXQ1Gd8x4d+coRWsg==
+=BsS/
+-----END PGP SIGNATURE-----
+
+--gKXeS8yd8BxBqR7N--
