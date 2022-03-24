@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28C674E6784
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 18:13:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7333B4E678B
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 18:13:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243141AbiCXROc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 13:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32912 "EHLO
+        id S241088AbiCXRPR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 13:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239179AbiCXROb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 13:14:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A03CB1889;
-        Thu, 24 Mar 2022 10:12:59 -0700 (PDT)
+        with ESMTP id S1352161AbiCXRPO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 13:15:14 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EDB6326F7;
+        Thu, 24 Mar 2022 10:13:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3545E6198C;
-        Thu, 24 Mar 2022 17:12:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30762C340EC;
-        Thu, 24 Mar 2022 17:12:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BF3C5B82337;
+        Thu, 24 Mar 2022 17:13:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 454AEC340EC;
+        Thu, 24 Mar 2022 17:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648141978;
-        bh=tjBA4TpVMWUci3qwG39vCc+WacEs0bnKcqEXkAKHzvg=;
+        s=k20201202; t=1648142019;
+        bh=jMi1G5nIwMEKhuPCL/A1QiK7aP2q19+GorUJGSunucs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EwfSKjQRK47UJiLv8QWb6GjAWCsRGsYLeL5M655cgAm3vkBH4Q+okaFDI03fCwFzI
-         qvUS0GdrTISyj7HZdptQOc3tKnMeaDbph7+CHOF7Sdgr4d23x3rjir5qwSAb6xlO2x
-         kvBLneIFcZMZD/MSpLD5ZqaMxPjMYys2Jntp+/xvNQRji6RrYSZGzwI1EAhWEW4NQ+
-         Uq31ABBc92Wzbrqx7xLRVaRgNJG5fQNeTxntYlIl2o/Rq3z8ffbgDE+33TxtUeg9PG
-         cYWUQ0B5pz2A6KwJ2DlTL5XnJtv4cQAIcVzmUM62YHVvZm8F4f9pImo8r/vmUwB3nO
-         Ys5uxfgHfu30A==
-Date:   Thu, 24 Mar 2022 12:12:56 -0500
+        b=Egwfe4rrC4QgezISl4qPVGP1OusolFa0RQbX4Ftdyx/XRCHIU/gAhzejII7unpM2o
+         6SjwZO/Zj797OyqbQg9m8TlsZaXvDgt4CBYY1jdURGssOABT/82RBUpBQiaGiozdI3
+         NZDZJnWw8iOpbT38ilwI9WmWXzwdLiJRVI9jTlLhjyncEtwLPI0xlSVqXN6wdqn6RO
+         8uHpM6PnvAZ1BvDbWVZjxoFhnRzbZwYe+hoau7pbIaQwedMuvm5ZosuJeuI/knQz7A
+         NX+zWUaLfR98Kp312ZBhTx+Abn/UynAxReSJVacE/gXuAwoidrONNoi37xAER1mTfk
+         U+celXAOvWMTw==
+Date:   Thu, 24 Mar 2022 12:13:37 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
@@ -43,13 +43,14 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] PCI: mvebu: Slot support
-Message-ID: <20220324171256.GA1459996@bhelgaas>
+Subject: Re: [PATCH v2 3/4] PCI: Add function for parsing
+ 'slot-power-limit-milliwatt' DT property
+Message-ID: <20220324171337.GA1458545@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220321182908.3q4s2ramvhfdpgab@pali>
+In-Reply-To: <20220302145733.12606-4-pali@kernel.org>
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,50 +61,96 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 21, 2022 at 07:29:08PM +0100, Pali Rohár wrote:
-> PING?
-
-Sorry, my fault.  I reviewed v1 of this patch, so obviously Lorenzo
-would wait for me to chime in here.
-
-> On Tuesday 08 March 2022 12:38:31 Pali Rohár wrote:
-> > Hello Bjorn! Could you look if v2 changes are now fine?
-> > 
-> > On Wednesday 02 March 2022 15:57:29 Pali Rohár wrote:
-> > > This patch series add slot support to pci-mvebu.c driver.
-> > > 
-> > > It is based on branch pci/mvebu of git repository:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
-> > > 
-> > > Changes in v2:
-> > > * Dropped patch with PCI_EXP_SLTCAP_*_SHIFT macros as it is not needed anymore
-> > > * Dropped patch "ARM: dts: turris-omnia: Set PCIe slot-power-limit-milliwatt properties" which was applied
-> > > * Added support for PCIe 6.0 slot power limit encodings
-> > > * Round down slot power limit value
-> > > * Fix handling of slot power limit with scale x1.0 (0x00 value)
-> > > * Use FIELD_PREP instead of _SHIFT macros
-> > > * Changed commit message to Bjorn's suggestion
-> > > * Changed comments in the code to match PCIe spec
-> > > * Preserve user settings of PCI_EXP_SLTCTL_ASPL_DISABLE bit
-> > > 
-> > > Pali Rohár (4):
-> > >   PCI: Add PCI_EXP_SLTCTL_ASPL_DISABLE macro
-> > >   dt-bindings: Add 'slot-power-limit-milliwatt' PCIe port property
-> > >   PCI: Add function for parsing 'slot-power-limit-milliwatt' DT property
-> > >   PCI: mvebu: Add support for sending Set_Slot_Power_Limit message
-> > > 
-> > >  Documentation/devicetree/bindings/pci/pci.txt |  6 ++
-> > >  drivers/pci/controller/pci-mvebu.c            | 96 ++++++++++++++++++-
-> > >  drivers/pci/of.c                              | 64 +++++++++++++
-> > >  drivers/pci/pci.h                             | 15 +++
-> > >  include/uapi/linux/pci_regs.h                 |  1 +
-> > >  5 files changed, 177 insertions(+), 5 deletions(-)
-> > > 
-> > > -- 
-> > > 2.20.1
-> > > 
+On Wed, Mar 02, 2022 at 03:57:32PM +0100, Pali Rohár wrote:
+> Add function of_pci_get_slot_power_limit(), which parses the
+> 'slot-power-limit-milliwatt' DT property, returning the value in
+> milliwatts and in format ready for the PCIe Slot Capabilities Register.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes in v2:
+> * Added support for PCIe 6.0 slot power limit encodings
+> * Round down slot power limit value
+> ---
+>  drivers/pci/of.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h | 15 +++++++++++
+>  2 files changed, 79 insertions(+)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index cb2e8351c2cc..549a404bd536 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -633,3 +633,67 @@ int of_pci_get_max_link_speed(struct device_node *node)
+>  	return max_link_speed;
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> +
+> +/**
+> + * of_pci_get_slot_power_limit - Parses the "slot-power-limit-milliwatt"
+> + *				 property.
+> + *
+> + * @node: device tree node with the slot power limit information
+> + * @slot_power_limit_value: pointer where the value should be stored in PCIe
+> + *			    Slot Capabilities Register format
+> + * @slot_power_limit_scale: pointer where the scale should be stored in PCIe
+> + *			    Slot Capabilities Register format
+> + *
+> + * Returns the slot power limit in milliwatts and if @slot_power_limit_value
+> + * and @slot_power_limit_scale pointers are non-NULL, fills in the value and
+> + * scale in format used by PCIe Slot Capabilities Register.
+> + *
+> + * If the property is not found or is invalid, returns 0.
+> + */
+> +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> +				u8 *slot_power_limit_value,
+> +				u8 *slot_power_limit_scale)
+> +{
+> +	u32 slot_power_limit_mw;
+> +	u8 value, scale;
+> +
+> +	if (of_property_read_u32(node, "slot-power-limit-milliwatt",
+> +				 &slot_power_limit_mw))
+> +		slot_power_limit_mw = 0;
+> +
+> +	/* Calculate Slot Power Limit Value and Slot Power Limit Scale */
+> +	if (slot_power_limit_mw == 0) {
+> +		value = 0x00;
+> +		scale = 0;
+> +	} else if (slot_power_limit_mw <= 255) {
+> +		value = slot_power_limit_mw;
+> +		scale = 3;
+> +	} else if (slot_power_limit_mw <= 255*10) {
+> +		value = slot_power_limit_mw / 10;
+> +		scale = 2;
+> +	} else if (slot_power_limit_mw <= 255*100) {
+> +		value = slot_power_limit_mw / 100;
+> +		scale = 1;
+> +	} else if (slot_power_limit_mw <= 239*1000) {
+> +		value = slot_power_limit_mw / 1000;
+> +		scale = 0;
+> +	} else if (slot_power_limit_mw <= 250*1000) {
+> +		value = 0xF0;
+> +		scale = 0;
+> +	} else if (slot_power_limit_mw <= 600*1000) {
+> +		value = 0xF0 + (slot_power_limit_mw / 1000 - 250) / 25;
+> +		scale = 0;
+> +	} else {
+> +		value = 0xFF;
+> +		scale = 0;
+
+The purpose of this function is to return values that can be
+programmed into the Slot Capabilities register.  The 0xFF Slot Power
+Limit Value is reserved, and I don't think we should use it until the
+spec defines a meaning for it.
+
+If the DT tells us 800W is available, we'll put 0xFF in Slot Power
+Limit Value.  If the spec eventually defines (0xFF, 0) to mean "1000W
+available", a device may try to consume all 1000W, which will not
+work.
+
+If slot_power_limit_mw > 600*1000, I think we should advertise 600W
+available (value 0xFE, scale 0) and return 600W (600*1000).
+
+Bjorn
