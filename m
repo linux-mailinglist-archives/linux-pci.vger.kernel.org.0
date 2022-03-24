@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D88364E9A79
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 17:09:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABE194E9A6C
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 17:09:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244310AbiC1PLC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 11:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54350 "EHLO
+        id S244280AbiC1PKw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 11:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244270AbiC1PKw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 11:10:52 -0400
+        with ESMTP id S244253AbiC1PKu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 11:10:50 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C33305FF3D;
-        Mon, 28 Mar 2022 08:09:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E0FB85FF30;
+        Mon, 28 Mar 2022 08:09:08 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8CF071D5AAB;
-        Thu, 24 Mar 2022 04:25:29 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 8CF071D5AAB
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4646C1D5AAC;
+        Thu, 24 Mar 2022 04:25:30 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 4646C1D5AAC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1648085129;
-        bh=60xl7mC2mqeKL65zdGsBIIWEMSxp2vuKmudDQGN5FbE=;
+        d=baikalelectronics.ru; s=mail; t=1648085130;
+        bh=WyUEHQwRbzTYusmkhpPdM3zwcxHdvdvDo5BzzE9zs8k=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=Gna3OMyUsLeCvKrGe2UV9VyKO7TgX2XrJ4e7XIXgJbmkJ17Erf1Zr4C6Uv+q9REP1
-         SdelwNHqt+DYCN8dZBeyE104DCKlQFiL3d6k7IYXPzGYSpWGevQyYB2qIZu32W27dU
-         MrpT55UAuKt1ky9EH5wg9CShgeCKHMSmnTzzdIRw=
+        b=Wsq5hWq9XQEEdi7KBJwfdQAi7Nmt4seqpr2o4F2PbaMEj+Em9DNCURiIj5PDPZC07
+         TbMwkj4ZRqp7Y3it0+Uy1y5taHho0nBx2qk9EPiu7EYSNmpwGEUKxf1gnmXgK/rmLZ
+         pu6t/T0/1gnwHQDRBrPcdcNedbyH+L3HVdps4wdA=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:25:29 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:25:30 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -42,9 +41,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 03/12] PCI: dwc: Add unroll iATU space support to the regions disable method
-Date:   Thu, 24 Mar 2022 04:25:14 +0300
-Message-ID: <20220324012524.16784-4-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 04/12] PCI: dwc: Disable outbound windows for controllers with iATU
+Date:   Thu, 24 Mar 2022 04:25:15 +0300
+Message-ID: <20220324012524.16784-5-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -60,54 +59,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The dw_pcie_disable_atu() method was introduced in the commit f8aed6ec624f
-("PCI: dwc: designware: Add EP mode support"). Since then it hasn't
-changed at all.  For all that time the method has supported the viewport
-version of the iATU CSRs only. Basically it works for the DW PCIe IP-cores
-older than v4.80a since the newer controllers are equipped with the
-unrolled iATU/eDMA space. It means the methods using it like
-pci_epc_ops.clear_bar and pci_epc_ops.unmap_addr callbacks just don't work
-correctly for the DW PCIe controllers with unrolled iATU CSRs. The same
-concerns the dw_pcie_setup_rc() method, which disables the outbound iATU
-entries before re-initializing them.
+In accordance with the dw_pcie_setup_rc() method semantics and judging by
+what the comment added in commit dd193929d91e ("PCI: designware: Explain
+why we don't program ATU for some platforms") states there are DWC
+PCIe-available platforms like Keystone (pci-keystone.c) or Amazon's
+Annapurna Labs (pcie-al.c) which don't have the DW PCIe internal ATU
+enabled and use it's own address translation approach implemented. In
+these cases at the very least there is no point in touching the DW PCIe
+iATU CSRs. Moreover depending on the vendor-specific address translation
+implementation it might be even erroneous. So let's move the iATU windows
+disabling procedure to being under the corresponding conditional statement
+clause thus performing that procedure only if the iATU is expected to be
+available on the platform.
 
-So in order to fix the problems denoted above let's convert the
-dw_pcie_disable_atu() method to disabling the iATU inbound and outbound
-regions in the unrolled iATU CSRs in case the DW PCIe controller has been
-synthesized with the ones support. The former semantics will be remained
-for the controller having iATU mapped over the viewport.
-
-Fixes: f8aed6ec624f ("PCI: dwc: designware: Add EP mode support")
+Fixes: 458ad06c4cdd ("PCI: dwc: Ensure all outbound ATU windows are reset")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index d92c8a25094f..7dc8c360a0d4 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -504,8 +504,18 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
- 		return;
- 	}
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index f89e6552139b..a048d88e0c30 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -566,7 +566,6 @@ static struct pci_ops dw_pcie_ops = {
  
--	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, region | index);
--	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, ~(u32)PCIE_ATU_ENABLE);
-+	if (pci->iatu_unroll_enabled) {
-+		if (region == PCIE_ATU_REGION_INBOUND) {
-+			dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-+						 ~(u32)PCIE_ATU_ENABLE);
-+		} else {
-+			dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-+						 ~(u32)PCIE_ATU_ENABLE);
-+		}
-+	} else {
-+		dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, region | index);
-+		dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, ~(u32)PCIE_ATU_ENABLE);
-+	}
- }
+ void dw_pcie_setup_rc(struct pcie_port *pp)
+ {
+-	int i;
+ 	u32 val, ctrl, num_ctrls;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
  
- int dw_pcie_wait_for_link(struct dw_pcie *pci)
+@@ -618,19 +617,22 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+ 	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
+ 
+-	/* Ensure all outbound windows are disabled so there are multiple matches */
+-	for (i = 0; i < pci->num_ob_windows; i++)
+-		dw_pcie_disable_atu(pci, i, DW_PCIE_REGION_OUTBOUND);
+-
+ 	/*
+ 	 * If the platform provides its own child bus config accesses, it means
+ 	 * the platform uses its own address translation component rather than
+ 	 * ATU, so we should not program the ATU here.
+ 	 */
+ 	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
+-		int atu_idx = 0;
++		int i, atu_idx = 0;
+ 		struct resource_entry *entry;
+ 
++		/*
++		 * Ensure all outbound windows are disabled so there are
++		 * multiple matches
++		 */
++		for (i = 0; i < pci->num_ob_windows; i++)
++			dw_pcie_disable_atu(pci, i, DW_PCIE_REGION_OUTBOUND);
++
+ 		/* Get last memory resource entry */
+ 		resource_list_for_each_entry(entry, &pp->bridge->windows) {
+ 			if (resource_type(entry->res) != IORESOURCE_MEM)
 -- 
 2.35.1
 
