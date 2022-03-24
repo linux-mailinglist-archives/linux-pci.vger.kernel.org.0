@@ -2,130 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D41D4E5F3A
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 08:20:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CEF84E5F54
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Mar 2022 08:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348413AbiCXHVf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Mar 2022 03:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
+        id S1347519AbiCXH1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Mar 2022 03:27:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230138AbiCXHVf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 03:21:35 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9928148395;
-        Thu, 24 Mar 2022 00:20:03 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id w25so4525766edi.11;
-        Thu, 24 Mar 2022 00:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z7RLcBdTbxi1WJP/NXFvAkUEgz8GJWltXH26XBP4pcs=;
-        b=EUJi+hW0qIpfw16k6ctPdUfv4TMiBL4PEvkuL7XBLZTCFbVaN0bsle28cE1XGTN00D
-         AGQuT9u6Nl7JmOH8n7XahqSke0fjmsUEU1OuKNQJoVyJuIEwK6gC4TVqr/A+uSu7I/qh
-         xLQ7E3z/SfuqWHywXtDGNsYMw8gdhVhsZouHJHpr7BGSUkqK3BPvgWitrW1kDcEdgrar
-         x8PEnVuqbU+yK7wrTApECVLHi2CPGleN4jGpE/jUVzUanWNPN8RBW3PRVrD1LJmpdC+5
-         v1F/5wu/RR2f2+DC3ybHd6WwV+oEa677OOCNAqaK5Nwfc5UtdUJrz0uHHu8amA1/sme9
-         um/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z7RLcBdTbxi1WJP/NXFvAkUEgz8GJWltXH26XBP4pcs=;
-        b=cQfRjO/snTveMv1FtZWjbgdO9gkGW1z4jmT8hs8DGIdR+Mry99e/FavhyJTefE/244
-         dPt5u9R2psHHQ0XHSaCYHxQqKmDV7CcvWap0qAopNBD59TWQXYlMPvytNLaH/Y3XXtkC
-         m9+dlgx5oMvH1kBnxqsH3c/isRI0kogUnHFIm3A1VrHPXbtEwINAZiAaK4jEakOE+o4z
-         avNI8b7Nik4R1JviXfnvcNsRBY76cf9x9BvGNIxClqo66ep+Pdl5lps3akWK53EpgP5J
-         fF0fd/mP8vLhwJm4xoAShbtow4lonvV6J/KzUBPZfZb+ET2UoJdW12S5sG/ofoebxjVX
-         iAzw==
-X-Gm-Message-State: AOAM531gMNiOMIW3T32aq4dS9CEsCHDayjbmFRjdoAm+NI7YnkMmw6g7
-        /PaebICgs5QLs4hACXkEVuc=
-X-Google-Smtp-Source: ABdhPJwVbOvL94lJaiSAi7r4eCIhA+TG4CK3uYT174+6+5cxOh0mz3JK7y0uXJ/kKuAGPBaVgb4HAg==
-X-Received: by 2002:a05:6402:1111:b0:416:2ac8:b98e with SMTP id u17-20020a056402111100b004162ac8b98emr5026577edv.236.1648106402097;
-        Thu, 24 Mar 2022 00:20:02 -0700 (PDT)
-Received: from localhost.localdomain (i130160.upc-i.chello.nl. [62.195.130.160])
-        by smtp.googlemail.com with ESMTPSA id z1-20020a05640235c100b004192c7266f5sm989540edc.16.2022.03.24.00.20.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 00:20:01 -0700 (PDT)
-From:   Jakob Koschel <jakobkoschel@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Naveen Naidu <naveennaidu479@gmail.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
-        "Brian Johannesmeyer" <bjohannesmeyer@gmail.com>,
-        Cristiano Giuffrida <c.giuffrida@vu.nl>,
-        "Bos, H.J." <h.j.bos@vu.nl>, Jakob Koschel <jakobkoschel@gmail.com>
-Subject: [PATCH] PCI/PME: replace usage of found with dedicated list iterator variable
-Date:   Thu, 24 Mar 2022 08:18:52 +0100
-Message-Id: <20220324071852.61587-1-jakobkoschel@gmail.com>
+        with ESMTP id S231129AbiCXH1c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Mar 2022 03:27:32 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D50198F5A;
+        Thu, 24 Mar 2022 00:26:00 -0700 (PDT)
+X-UUID: 3d572a62549e4be9af2a25521a0c819d-20220324
+X-UUID: 3d572a62549e4be9af2a25521a0c819d-20220324
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 616016198; Thu, 24 Mar 2022 15:25:55 +0800
+Received: from mtkexhb02.mediatek.inc (172.21.101.103) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 24 Mar 2022 15:25:54 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 24 Mar
+ 2022 15:25:54 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 24 Mar 2022 15:25:53 +0800
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <jieyy.yang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
+        <jian.yang@mediatek.com>
+Subject: [PATCH] PCI: mediatek-gen3: Print LTSSM state when PCIe link down
+Date:   Thu, 24 Mar 2022 15:25:48 +0800
+Message-ID: <20220324072548.11408-1-jianjun.wang@mediatek.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To move the list iterator variable into the list_for_each_entry_*()
-macro in the future it should be avoided to use the list iterator
-variable after the loop body.
+Print current LTSSM state when PCIe link down instead of the register
+value, make it easier to get the link status.
 
-To *never* use the list iterator variable after the loop it was
-concluded to use a separate iterator variable instead of a
-found boolean [1].
-
-This removes the need to use a found variable and simply checking if
-the variable was set, can determine if the break/goto was hit.
-
-Link: https://lore.kernel.org/all/CAHk-=wgRr_D8CB-D9Kg-c=EHreAsk5SqXPwr9Y7k9sA6cWXJ6w@mail.gmail.com/
-Signed-off-by: Jakob Koschel <jakobkoschel@gmail.com>
+Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
 ---
- drivers/pci/pcie/pme.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/pci/controller/pcie-mediatek-gen3.c | 40 ++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index ef8ce436ead9..dc8cbf8987ba 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -130,7 +130,7 @@ static void pcie_pme_handle_request(struct pci_dev *port, u16 req_id)
- {
- 	u8 busnr = req_id >> 8, devfn = req_id & 0xff;
- 	struct pci_bus *bus;
--	struct pci_dev *dev;
-+	struct pci_dev *dev = NULL, *iter;
- 	bool found = false;
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 7705d61fba4c..54663f025e27 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -153,6 +153,37 @@ struct mtk_gen3_pcie {
+ 	DECLARE_BITMAP(msi_irq_in_use, PCIE_MSI_IRQS_NUM);
+ };
  
- 	/* First, check if the PME is from the root port itself. */
-@@ -169,17 +169,17 @@ static void pcie_pme_handle_request(struct pci_dev *port, u16 req_id)
- 
- 	/* Finally, try to find the PME source on the bus. */
- 	down_read(&pci_bus_sem);
--	list_for_each_entry(dev, &bus->devices, bus_list) {
--		pci_dev_get(dev);
--		if (dev->devfn == devfn) {
--			found = true;
-+	list_for_each_entry(iter, &bus->devices, bus_list) {
-+		pci_dev_get(iter);
-+		if (iter->devfn == devfn) {
-+			dev = iter;
- 			break;
- 		}
--		pci_dev_put(dev);
-+		pci_dev_put(iter);
++/* LTSSM state in PCIE_LTSSM_STATUS_REG bit[28:24] */
++static const char *const ltssm_str[] = {
++	"detect.quiet",			/* 0x00 */
++	"detect.active",		/* 0x01 */
++	"polling.active",		/* 0x02 */
++	"polling.compliance",		/* 0x03 */
++	"polling.configuration",	/* 0x04 */
++	"config.linkwidthstart",	/* 0x05 */
++	"config.linkwidthaccept",	/* 0x06 */
++	"config.lanenumwait",		/* 0x07 */
++	"config.lanenumaccept",		/* 0x08 */
++	"config.complete",		/* 0x09 */
++	"config.idle",			/* 0x0A */
++	"recovery.receiverlock",	/* 0x0B */
++	"recovery.equalization",	/* 0x0C */
++	"recovery.speed",		/* 0x0D */
++	"recovery.receiverconfig",	/* 0x0E */
++	"recovery.idle",		/* 0x0F */
++	"L0",				/* 0x10 */
++	"L0s",				/* 0x11 */
++	"L1.entry",			/* 0x12 */
++	"L1.idle",			/* 0x13 */
++	"L2.idle",			/* 0x14 */
++	"L2.transmitwake",		/* 0x15 */
++	"disable",			/* 0x16 */
++	"loopback.entry",		/* 0x17 */
++	"loopback.active",		/* 0x18 */
++	"loopback.exit",		/* 0x19 */
++	"hotreset",			/* 0x1A */
++};
++
+ /**
+  * mtk_pcie_config_tlp_header() - Configure a configuration TLP header
+  * @bus: PCI bus to query
+@@ -327,8 +358,15 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+ 				 !!(val & PCIE_PORT_LINKUP), 20,
+ 				 PCI_PM_D3COLD_WAIT * USEC_PER_MSEC);
+ 	if (err) {
++		const char *ltssm_state;
++		int ltssm_index;
++
+ 		val = readl_relaxed(pcie->base + PCIE_LTSSM_STATUS_REG);
+-		dev_err(pcie->dev, "PCIe link down, ltssm reg val: %#x\n", val);
++		ltssm_index = PCIE_LTSSM_STATE(val);
++		ltssm_state = ltssm_index >= ARRAY_SIZE(ltssm_str) ?
++			      "Unknown state" : ltssm_str[ltssm_index];
++		dev_err(pcie->dev, "PCIe link down, current ltssm state: %s\n",
++			ltssm_state);
+ 		return err;
  	}
- 	up_read(&pci_bus_sem);
  
--	if (found) {
-+	if (dev) {
- 		/* The device is there, but we have to check its PME status. */
- 		found = pci_check_pme_status(dev);
- 		if (found) {
-
-base-commit: f443e374ae131c168a065ea1748feac6b2e76613
 -- 
-2.25.1
+2.18.0
 
