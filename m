@@ -2,31 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68AD64E9A6F
+	by mail.lfdr.de (Postfix) with ESMTP id 5A8BD4E9A6E
 	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 17:09:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244295AbiC1PKz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 11:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54222 "EHLO
+        id S244278AbiC1PKx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 11:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244265AbiC1PKu (ORCPT
+        with ESMTP id S244268AbiC1PKu (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 11:10:50 -0400
+X-Greylist: delayed 898 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 28 Mar 2022 08:09:08 PDT
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E0DF25D678;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E106C5FF3D;
         Mon, 28 Mar 2022 08:09:08 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A5BAF1D9D79;
-        Thu, 24 Mar 2022 04:25:34 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru A5BAF1D9D79
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 462B31D9D98;
+        Thu, 24 Mar 2022 04:25:35 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 462B31D9D98
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1648085134;
-        bh=x89tsMKho6WoVTq6R1YvpMJGBDqdDnQvgiGVKdpmT88=;
+        d=baikalelectronics.ru; s=mail; t=1648085135;
+        bh=wmVxswwOr/7rLM0lSdXVmOHrZ7bYkH00p1vibYS9LJk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=lWhm1tbMirzpzxmTwcDIWSj/Ofvbjv8L+V09oTbOOx0D7ucDvxBDmnGHObLZw+08C
-         LA77/bp+wewlv2lpTC7P/b13a6p+ZjTXM2BRcJKeyc+7/ye4QQaXmw0BLY+slzotof
-         QwMKj8CDN3Dq15mtyPdEPuw+YjVdWSMMfMhBwVDg=
+        b=VqVZratyCkUNBT7RXiUZ4FWZlZu7q/beTbwHdrCNvo5Xim275qID122pWjmNbaHMm
+         N6+/AIYgppQy/UOVxJ4tH5zDR2pAcRLQbSiNFPcgcjbDkDAosd0ROmvI2YUXqQ3F4z
+         GiJZKrzYLKEW5n6mUTq9JW1PAvUMnrOJBydzMyrw=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:25:34 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:25:35 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -41,9 +42,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 10/12] PCI: dwc-plat: Simplify the probe method return value handling
-Date:   Thu, 24 Mar 2022 04:25:21 +0300
-Message-ID: <20220324012524.16784-11-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 11/12] PCI: dwc-plat: Discard unused regmap pointer
+Date:   Thu, 24 Mar 2022 04:25:22 +0300
+Message-ID: <20220324012524.16784-12-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -59,53 +60,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The whole switch-case-logic implemented in the DWC PCIe RC/EP probe
-procedure doesn't seem well thought through. First of all the ret variable
-is unused in the EP-case and is only partly involved in the RC-case of the
-switch-case statement, which unnecessary complicates the code. Secondly
-the probe method will return zero if an unknown mode is detected. That is
-improbable situation since the OF-device data is initialized only with
-valid modes, but such code is still wrong at least from maintainability
-point of view. So let's convert the switch-case part of the probe function
-to being more coherent. We suggest to use the local ret variable to
-preserve the status of the case-clauses and return its value from the
-probe procedure after the work is done.
+The regmap pointer was added into the dw_plat_pcie structure in
+commit 1d906b22076e ("PCI: dwc: Add support for EP mode"), but it hasn't
+been utilized neither in the code submitted in the denoted so far nor in
+the platform driver evolving afterwards. Drop it then for good.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/pci/controller/dwc/pcie-designware-plat.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-plat.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
-index 0c5de87d3cc6..fea785096261 100644
+index fea785096261..99cf2ac5b0ba 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-@@ -153,20 +153,21 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
- 			return -ENODEV;
+@@ -17,13 +17,11 @@
+ #include <linux/platform_device.h>
+ #include <linux/resource.h>
+ #include <linux/types.h>
+-#include <linux/regmap.h>
  
- 		ret = dw_plat_add_pcie_port(dw_plat_pcie, pdev);
--		if (ret < 0)
--			return ret;
- 		break;
- 	case DW_PCIE_EP_TYPE:
- 		if (!IS_ENABLED(CONFIG_PCIE_DW_PLAT_EP))
- 			return -ENODEV;
+ #include "pcie-designware.h"
  
- 		pci->ep.ops = &pcie_ep_ops;
--		return dw_pcie_ep_init(&pci->ep);
-+		ret = dw_pcie_ep_init(&pci->ep);
-+		break;
- 	default:
- 		dev_err(dev, "INVALID device type %d\n", dw_plat_pcie->mode);
-+		ret = -EINVAL;
-+		break;
- 	}
+ struct dw_plat_pcie {
+ 	struct dw_pcie			*pci;
+-	struct regmap			*regmap;
+ 	enum dw_pcie_device_mode	mode;
+ };
  
--	return 0;
-+	return ret;
- }
- 
- static const struct dw_plat_pcie_of_data dw_plat_pcie_rc_of_data = {
 -- 
 2.35.1
 
