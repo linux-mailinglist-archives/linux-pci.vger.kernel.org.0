@@ -2,128 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E1384E7570
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 15:53:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B2404E7986
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 17:56:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358133AbiCYOyc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Mar 2022 10:54:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58626 "EHLO
+        id S1359820AbiCYQ6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Mar 2022 12:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356285AbiCYOyc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 10:54:32 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70073.outbound.protection.outlook.com [40.107.7.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7735DA46;
-        Fri, 25 Mar 2022 07:52:56 -0700 (PDT)
+        with ESMTP id S1354491AbiCYQ6S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 12:58:18 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469693CFE6;
+        Fri, 25 Mar 2022 09:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648227404; x=1679763404;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=e+gazxV02hO4Y0QttnzzPG5b4go6J2+ijR2StZtIa5Q=;
+  b=lD7oJz+cxE7Jqtql7+LwDeHotVR+S/8CTRijiIsRmNa3oqzUqUm4xUhs
+   s9KSVPuzh/52zb5u6wTWup6hugVBzt8ONI8Y5J0EFQeSHLCLDMkFyvIV8
+   0tdwLEBdP32ASp/dHMpMTW/NuoUlUgU4fRYFbb1oHR5xPX03ToKVNm0Ac
+   HTu9bfUuFfdqh1n3ydeKvon7oKFjV6jD12kTN0U4muen7VHsgEj9U+fAK
+   BgdtSLEhxBTTIYX1USEzX8bFDf/GsNeZDH78LqqIeI/oZmYxMXJqk0wF9
+   52Xt16UTDaS9mqugsOihHrsQV9obKG9//uOwqC9VFtSjzEEG9E1QLXcRI
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10297"; a="258864667"
+X-IronPort-AV: E=Sophos;i="5.90,209,1643702400"; 
+   d="scan'208";a="258864667"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2022 09:56:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,209,1643702400"; 
+   d="scan'208";a="648321347"
+Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Mar 2022 09:56:29 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Fri, 25 Mar 2022 09:56:29 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Fri, 25 Mar 2022 09:56:28 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Fri, 25 Mar 2022 09:56:28 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.104)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.21; Fri, 25 Mar 2022 09:56:28 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j/utftwVmswKK4LHNLFmAGVOo9PLQFuHPZtIN2HmSgmQhyFti1V1S0BEGEBat9pDY15Sg+erErag7uKGg781glnbRLb3wzOFDUSBo38SdILCT6HjYqZkOSZ3BXh9ynYm6KCvy08nNHPYhVuOLF7RGeUr2IztrWdUu5B1ZxkaGRiWFYSPuxZ9AWqvs6edFMjj6RqU2vJb/4LHqqTsQCgrrZX2iBA7KtlnrGj0B4kZnZMSz9c1UnMJ5qlse/BmDL68rF9wbwtrAgCb6BZi1NwGNCY9C1lVmRrYn5NZciFpQEN/co+xvZ7sVbWnfD2D7BxFEiIxK31g4oJyvXae/Wa3RQ==
+ b=ElHgRwhP4STrAU7FYNZWcouihm8CgXddMeKbNEDXE/0U7IrRiUH2dYMNlxlE6PoUlat3ELDLMQvGKNdzMHSH3Wd9lUjw5coK0MYhgLaqfum+ge6GhW3W1v+ypm+CJKXSlRZwm+6dfEG7JX9iBVGzN5TeAuoYJNJFQAbhvY+tn8yjFXaym9N7ZgH27hHgBlz6ZUfa3FxwGHqAn2oBmS8afUupjxXfdEubOPMXufgF3uX2CzeJH5015NvezOZNlaxO0cD4k5QOk5b9QoOXNngcyBLiuhtxo8ABuot/gaG2/i0f4nDDG3ebcAGu0C0UmR0f3uJwwlsKY8UFc1Mp7VP93g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x519u5Fp0VVtJAngNOEo1TGjXXh+HppSJkSaP0ieVkM=;
- b=aZTk92Uw0lOnKnqcyC8alkH/JALnZKvWPQaW6QeX67jDa/W92jRIpCN9KaovLMQtMGSJAOfbw+0tGjS+2dFxN9qaB7ACQTgqWn3ekmcAqpcRqQyNLbR6cGUW1fMW83z2fLg0204ZMjmIytouNy2qWO3YCXIwsRYXFSfXlVWBQ3GBS6pfrB7zLZ1uCmadLQWJWiXgs13VNp/yYAKNNEyTvI032Y6u4Z5+NcYpUt1Mlm0DARzWUUUq5mspTAh/mZFkRDTT6ASBL4pyYH8G0JN9bjcdIZbcVaHtBFkpqTHVZnuZnyXGoM4+RSTTMlrFrlxw/7yo2FNzisiL97QyCbugiA==
+ bh=8AjwmJIHDcCRmD6Qlx6kTlcvEt2aftS6cfBn/25ch7c=;
+ b=K5gPADiWJSSVrr4UFssnkMHSy11JXxBUDrWAInb786927ROHinAt02IZZHoxPT8hNu+e6mFERWAzDjcySQFDfWaVhg7FzweL38JBPZrZQpOzvolrSb+NC2i1Q+zXTPB/+iv4UKe1ZZEn1ouWN+bs2epJRkIDKz4MSQXP8XkVM/HIL64WltEMmJcUzGIO4DGYC7U41jLmFmDHIT27UIagwAP1rTRSCXv9Qj74FZow8+z3X8HYu3fxxKTRcB7I2/qH0NbRwORDhG6vzmrPHq3NMSyT4alLS/YSZNBMJQI6b4ocHdWydW43yMBxfG3rGwZUjZc2laXdttvzTMSaPKwZ5w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x519u5Fp0VVtJAngNOEo1TGjXXh+HppSJkSaP0ieVkM=;
- b=MZe5eDZNWc2nmO0280LfRtm53xEg+ksK6v3VKAVNLsq1zav0M0Ophaca3FHmnQIuI/+YnsX64qk1DhIkMfy25hxZH5Z8zIvJR1j+xOAuy9wot1n4AmQbMMwoun5hlnNr7KuH0zBUyklmVfIaLiwnWxZ5eWlSBoePyT3V/u2BpTE=
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
- by AM9PR04MB7537.eurprd04.prod.outlook.com (2603:10a6:20b:282::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.19; Fri, 25 Mar
- 2022 14:52:54 +0000
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::bcbf:f029:4f34:1be1]) by PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::bcbf:f029:4f34:1be1%6]) with mapi id 15.20.5102.016; Fri, 25 Mar 2022
- 14:52:54 +0000
-From:   Frank Li <frank.li@nxp.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 00/25] dmaengine: dw-edma: Add RP/EP local DMA controllers
- support
-Thread-Topic: [PATCH 00/25] dmaengine: dw-edma: Add RP/EP local DMA
- controllers support
-Thread-Index: AdhAV8ZNQ5LiEBVAR7arpMVAC87NQQ==
-Date:   Fri, 25 Mar 2022 14:52:53 +0000
-Message-ID: <PAXPR04MB9186C220089D1480CD5C4826881A9@PAXPR04MB9186.eurprd04.prod.outlook.com>
-Accept-Language: en-US
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MW5PR11MB5810.namprd11.prod.outlook.com (2603:10b6:303:192::22)
+ by DM6PR11MB3337.namprd11.prod.outlook.com (2603:10b6:5:a::27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5081.18; Fri, 25 Mar 2022 16:56:26 +0000
+Received: from MW5PR11MB5810.namprd11.prod.outlook.com
+ ([fe80::dda5:a04:f265:68ad]) by MW5PR11MB5810.namprd11.prod.outlook.com
+ ([fe80::dda5:a04:f265:68ad%3]) with mapi id 15.20.5081.022; Fri, 25 Mar 2022
+ 16:56:26 +0000
+Message-ID: <16ba3681-a6fc-1359-2016-9d2199b6805a@intel.com>
+Date:   Fri, 25 Mar 2022 17:56:20 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.7.0
+Subject: Re: [PATCH v3 1/2] PCI/PM: refactor pci_pm_suspend_noirq()
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d2a02f73-b848-4a51-ddea-08da0e6f245f
-x-ms-traffictypediagnostic: AM9PR04MB7537:EE_
-x-microsoft-antispam-prvs: <AM9PR04MB7537BEA500145C45F8388612881A9@AM9PR04MB7537.eurprd04.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cJMyyrX1T+sn5mgvm1yu5wRaJ1WNmQQERcc53MgBISg9UXKX7w2LINP51ACqtC2+9LQ/eWAnIiQzZYj9ex1GBrrO8jdJhIAd3rNZisJStuN0O0mLZNNWOpbLd1JesmOKYdczvbuKTErgOAaCBaDNZyvoc43kiG4P3W5cFrSSpGqIbOQ9be7/g5X3yY9bCJxW5qapXs0YoxVYsIkN24m5LD02TX18jrBlrbypyfX1TRFR0nYR3qLwSB8szEXEDl/o1r318JHHI9ucexU9V1NbLVIL5ikawf/LCHZeFH4Qc3RSb31xwRLfnIEsZ+5Gc1OuLedRrocTdBed/bjzNzKQyPmkEH05uBkDJCsM9MuhboIJzlphWagJDi233joyURfysg+VL34XIcRyJtbgi+GDlhKhXoUJamYPUb73mRITlwZFlO19CNzeF9yBY7PkUVt6Ox+YP/heHP0Fgbif5UujPuUJpiJmrD7bpxF5my79l34zRO3Esx3pciKYQEsMjzq5tCcvmr4F11h6iZXwkZI/eDBq3cnxEicXQ5xb765qJzC/qT6BkyXY8VIdJh6QGRZE7wV/d6biP51ujWpRVvD7VanTiN/Mvf3jjJ/ZLK6m+z74JJiLosKkrVo1wGNRvMt8H0EbIDnAZhdDs9QRuh0yv6JNsclhoLqk3ynvj28giABh+niCLFhT4MbWHaN+NStFMGRV05g66DLGx83//vOf96/3CaWvmROiBPWnPShkpTC6osju64JoEOLxBDQ5Ov7Bx1Qil+NKbz/qXkppVovHD7ZmVtIJlfFPzmHS1B3r50Y=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(55236004)(66574015)(7696005)(53546011)(6506007)(45080400002)(33656002)(26005)(45954011)(7416002)(55016003)(186003)(8936002)(122000001)(5660300002)(38100700002)(52536014)(38070700005)(9686003)(2906002)(83380400001)(508600001)(86362001)(54906003)(76116006)(66946007)(44832011)(316002)(19627235002)(71200400001)(8676002)(66556008)(66476007)(4326008)(66446008)(966005)(64756008)(110136005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?ivxa6b6UO1UUfwPwvmGn9F5A+988fdiKLeaSMJakwXcKHSPn6YeWl0Kb/B?=
- =?iso-8859-2?Q?WnuKt8FOuiYa+nYsdT0KX4PJ1flIGlCt5Aj0CZlBDC6capjBPwq3xzXzCS?=
- =?iso-8859-2?Q?Nysqq8k4FWzH3f0208hW43n2ryCfM2LxP9f42jysBYptr8UNdHs8IJ0+F5?=
- =?iso-8859-2?Q?4c9jky9hqIiG2ZIl5jYSB9xhj6LvabJWrUBjYPmJqo0wv2zbMovAVL6lrv?=
- =?iso-8859-2?Q?uxk3LliSStIfQFRtQx7bbjBhgwW+rbjvBsEU2Ru8CBZs1nQieb3oKV2zXo?=
- =?iso-8859-2?Q?sIb1OAZXnq17EEAXQg7rYbaxEGuHghC90UA8Lf8Ry2Jtg8nchCr7ct0Ksb?=
- =?iso-8859-2?Q?bgx9h5syKUvOwCE8IkgihZNrjTL6Ksv7I8677zU5scQipqNKB+mUkHMage?=
- =?iso-8859-2?Q?cH4whteHzgIs9S5HKw4Ub0Ce2Xtw3TopHuFm19hSHDo4FDnAeH/GJy4rGO?=
- =?iso-8859-2?Q?+58G4HVPGmlFEer9vVsKmqG+/h0bDOue4yuAsmxAKj+lfl3p6YfX1JyzLf?=
- =?iso-8859-2?Q?aO6RA5iKjEXXp2vVeBxnncDP3SI3pmLZOizYjqqV74TV4K/vNBomV+sXcu?=
- =?iso-8859-2?Q?7p59xghWgKIsh/b1lZLfmq0EYGMw7zxW0tb6UaWykFJ2LKBjNVUHJoFK3g?=
- =?iso-8859-2?Q?WeKi6ua2RHjv+LOPNvXFymI2Ag+64mYd4Jnjnra5h6eB+70xHk0zk0CEYc?=
- =?iso-8859-2?Q?XO5U4RFfSEJkrks9p703MQ0ZOWESTdqzbaqZX/moZMHww6emYz3JF3lCfU?=
- =?iso-8859-2?Q?INPu7hUoZaZJPJwObXjyQlKmeJXrY4YpRFxLmUAV887UzekCrRnMG2gtVU?=
- =?iso-8859-2?Q?7K8Ri3AWvH+iFD4M9B8FIfGloUASQqqUaM442efdvbclGKkLHWHGJYZ4sz?=
- =?iso-8859-2?Q?3rhRYSlgG0c0ELtH/S5mPx3cAxi6/eMhrlbpmzlkc8sD4DObVp2qITNygO?=
- =?iso-8859-2?Q?eS4i27CspwvxbtK4s8BelZAX/SBLJOMjjGT5KKkitNnczHO3v+C1wO+h8g?=
- =?iso-8859-2?Q?yWeVgp5ok2w9knQ4vPvUcs+QugPInwG0oc05OW4SCAkvpQI3IhGmKudcqx?=
- =?iso-8859-2?Q?BVPQB2WJCTT0T2Z/mS6AHr1xvZ6Im88j8whC5Y73gkB0wXQvFVvDwy7W4z?=
- =?iso-8859-2?Q?iKXrKb+INC6kQgIuozAmoJqmkcCkt5ITD/C1cpGomM0Prcp+SV1F3oLrBq?=
- =?iso-8859-2?Q?dWt9WjPuAIB09Jn30oFOakwl76D1fMp4FZI8hR0sK/CFmUXMrpKFuLgcqw?=
- =?iso-8859-2?Q?xcXwcx30X5E18eG7VzbYv2yPdCprVV4oD29R/d+blAqI8Z+HpWInApayYY?=
- =?iso-8859-2?Q?3Omlv7ysxj79SYXsthsqgHC1ARmaLeTDEQ82tGNoIpFfNDpor+GyBGHqcc?=
- =?iso-8859-2?Q?mmFnHunVs5hi5Nj6LPJbCsZE1BAQaFVtp48FeiGZH2dGtKwlvovbWWefw/?=
- =?iso-8859-2?Q?vNHiknpfvvCJurE5kXbMNOM/kODneuOtmjjtxI0M5X8VzXc7BFvvW5Vcy0?=
- =?iso-8859-2?Q?wPSWw5rKrBmVdxaYFgW0vKO/FE+r/JP6TSHwGDhoCMUSHoFyVfkvI9g0aI?=
- =?iso-8859-2?Q?SKSxskyazGumw2P6N3Xn7yvr7G1q0e7iDV3dsk8qc3Clf5f2iMRKaA5rK3?=
- =?iso-8859-2?Q?fBGHwSe68Rx18ORI5QYr02C7w95SFjZB/EY+/MeVjvdXdKSrCHgsShghPc?=
- =?iso-8859-2?Q?XKpNiPapIwL9CfDRHv/mW+Wr/mlpq3hTHc6trxV0rIdIa9hXSM/9OF3yJj?=
- =?iso-8859-2?Q?GOwbPnVaw8+ypUNzsstdWxk4FqL0igjnPwNfkD3Q0mNN/cWzUk0fMTmpL4?=
- =?iso-8859-2?Q?9LtCTsPu7A=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+To:     Rajvi Jingar <rajvi.jingar@intel.com>, <bhelgaas@google.com>
+CC:     <david.e.box@linux.intel.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+References: <20220318221932.3305691-1-rajvi.jingar@intel.com>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+In-Reply-To: <20220318221932.3305691-1-rajvi.jingar@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM5PR0701CA0010.eurprd07.prod.outlook.com
+ (2603:10a6:203:51::20) To MW5PR11MB5810.namprd11.prod.outlook.com
+ (2603:10b6:303:192::22)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: db1b6227-24b3-4be0-53ac-08da0e80662f
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3337:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR11MB33375EB06A8059A48375D9D9CB1A9@DM6PR11MB3337.namprd11.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tGRDDuziZ7jnBsXz0Vv77VKBiIER2RITiyLXY9Snw6Irkz1ltihshPJ6VgC/9lM6yPhgRsvQclrPhiI+CwjzreFe2Rv3g9kZEv35+4eH8SDXuxC5O2EP/jodNWGQUm4jgUqBgYoRkq2Ahkk1/gK91zo0WO3PxowWtbstUzKRN0EIuOWUJ+k73XfrkWm46bzCODznBHkLz+VZu29SfLW0CvIut9h6Xo6h4BkJ903U4et8gWL/JBXq6AbyTTpIImHqjA1tzKQMTzAUq+DK7zYQqb8sVizHF8QANSFwjy4O++1Y0S0VzqN6s8lqeZ2MbEMjHeBChU7mTCv9vN/6UxoWFyRkslEjURJcBqy4aGSRlYby413TbBoMsC0gYsWgyo3xHBmihFae7rmmTrQu6vkCgNgYjTTnoOD2ZvPWwL/OHz0BfkdEWZKfjVLjgjI3v8M7SSpj1d0FSTNnG3f3+fLK8mNIzE5B7tX77Cvw+ieu1i2O5Hxe+AwgrXWd5XiuVFk5L96cey+D1s9FWfbvnZ3uWkJadpRc4qRhnzxFYHNvHX4uW3jWLvPS7aJZoXXP9grqIKW49Iw243ivASWONi0IfZzHKDQ8GZAPdXTUV824mESfEiozvzTIajWjD87tPhKRtIWpG/aJ7aOFAS7nNRbjxPUExgKGtxBStUb2id5h1/YjkfDUSMr6MQZUTecw89myMCDVE3DVyN82alp4nyElsrpnLgKjzHwJA4jf7HoKims=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5810.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(86362001)(5660300002)(6666004)(66946007)(8936002)(6486002)(6506007)(8676002)(66476007)(316002)(66556008)(31696002)(508600001)(83380400001)(82960400001)(36916002)(186003)(2616005)(38100700002)(4326008)(53546011)(2906002)(6512007)(36756003)(31686004)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eFhGTmxvajRCMWgzU2VIaGs1Vmd0cWJ2UHp4MVNwK0lBM05tTVJHeUhKdTlk?=
+ =?utf-8?B?ZXkrejl5YVNzMlQycHhVNUlyNHhCRXdMdVU3SW1rMmxjc284MDJ1QlBmc1pE?=
+ =?utf-8?B?RjlLWHhXM1J3aU9ySXlqY1Z4NTRUWkNNcmZiMVJCSVZoVXVHNlBVeG8xVzRL?=
+ =?utf-8?B?QTdKYnVUbmFSZmhycWVYL2ZPcXlId1NjMUJlQWI4Y01NbVAwTTgza1d3ZC8y?=
+ =?utf-8?B?R0ZLZ0d3NUVoWHkzL01oT3hPalE0ZDd1TXVyM2o1Mm5Jb0U3YmxTamRCcUo5?=
+ =?utf-8?B?K2ZtcXl5dVJJMG93Qno3d2NvcVR1Yk5DZll0SVV5ejRzVnRDb1k0aURBRlhm?=
+ =?utf-8?B?T1JpWkpENUZldGJGOVd1ZGVKQkNKaVgzTnRSb0IwNmlOUmpha28wNGVXYXh3?=
+ =?utf-8?B?STg5NFBVVVJieUU3Tll6S0oyL200Z1pFZ0J1MDJURTVvalQwRnJzb3hOU1F5?=
+ =?utf-8?B?dGdicUhlelczS0ZiTU1EN0JEZGRjVzlReXBSQnZqNjdPTk5DVkZPbWNUSVFl?=
+ =?utf-8?B?TkVPakt5SnhKUDFUUXdMV0ZySGt4ZEdVZ1FvVXR0aDJkd09ydEJ3WVI5N0tz?=
+ =?utf-8?B?RTBaK2tTdUhWZHZMdXdiNXVvK1F4SnN4VVhlQVBaMWttZTVkSHRWUnA0Rnhm?=
+ =?utf-8?B?MjZvNTlEK0lUZXZFSTIyeXpOWnhUMjhGRmZmaGEzcjJpYmJGaWJFMGlEV3NR?=
+ =?utf-8?B?Nnd6SmFWNWlDa0RJZXNJM0NwZGtvNFZ4RW1ITW51b1NibEYzanpsdkhlKzBn?=
+ =?utf-8?B?TmVnWURmZWk2NU80Um9DNXpMYTUxYlI4eU9STVJ3U0JSTXJyU3MrSlhsMURZ?=
+ =?utf-8?B?MGxLVWlqVDRINit0NkxWdGJOZDJMQ3MvcURzM1c1c3NXa1pzK1lHcDFUbmI4?=
+ =?utf-8?B?U0EzcWVZQjZsaEFBeXorbHhSSDRBbkJkRW9oelF4NlFETHpMaUMvQ0NldElz?=
+ =?utf-8?B?TEFiRFlOeHFneGJGOTBoejdHWCtrY2ZCNFJrQnlzVWswMEVCZXdIL0JzY04y?=
+ =?utf-8?B?MWpBU3VWTi93SGE2cXpNMHBGWGZrWmM3K00rb1QyNkQ1dlN3RStyVGRIMUZ6?=
+ =?utf-8?B?aXA4eGtYcFh6UktLUDU3VEVJNkNnS2h5QVRNU2JSVTBWSjhhRnhyck9tNHo4?=
+ =?utf-8?B?OWl4bWRuUFNUSGNNVWhaSVNqdmhmekFHcm42SU9tTzZqRFJ4ck81RkVlRUMz?=
+ =?utf-8?B?cW0xbVhyUDZ3NHg2SW8wSDNBdCtPNGl2SUpsQzR3RWY3OXVFSHBjOWN2RmIv?=
+ =?utf-8?B?OWk0SUUyR2paQ0FONW9UdzRQZ3IyaUlIdTY5bndibmx4U1NhTzVlTnZGbmgw?=
+ =?utf-8?B?eCtMNi8xNVlZVXBTSEJkTVZiK2lmS0pYd1phYnBTdmFFRzVvY0RVRnJ1d2lw?=
+ =?utf-8?B?c3Q3OGVWdGxYcjVqMzNHS09KTDVOYm5qamV2MUJlcFJSQzQ3WUhRRmw3TThv?=
+ =?utf-8?B?US9MbjVFbTg5bW1uanBJSnJia3I3dzVUanRYc1BJUENpNkxNbGpFOFVsdytn?=
+ =?utf-8?B?OVF2eWJkdUVqK0F4d1lKRTU4cHM5SWtPQ0RCRzNxTzdNM3lDcmlMS1VEZ1hI?=
+ =?utf-8?B?TGJtMEw1RWRkUzBNM0N6Z3Y5enMyYmRwZnp3M2oxRm5wTnVCb0M2ZVhhN0xM?=
+ =?utf-8?B?MlcrS0FKMmw3eEJVeDZRdkpHaTFPbkxZN3dEaWYvR0Q2bm1GNi9KMW1weWVp?=
+ =?utf-8?B?UFhhVUNXVENkUnYyaHd4a0QyYStDc2FuYmNWb3RnUzBxRFRHRXFUV3JLb3Bk?=
+ =?utf-8?B?a3prcTBnWlJrNE9IaEdwVW1HbDZrejVwVGRtUUdhTDhNOUNFYUF4S1UyVEVu?=
+ =?utf-8?B?WVZGWllWeTNaYW9XNmFwSU9nOFJpd0NacnlncFNGK2EzbTNOd3lXNFZPVWFv?=
+ =?utf-8?B?ckp0ekxBQUpwRytPU1RXcnl3SmNGeEExS1FPZU1pVk15dkVSVGR4RXpOcy9S?=
+ =?utf-8?B?UzFab2laNy8wUHVucmNyeUlIaWhvUEZURi9GZmRyWWRUMU9zWWI2QU1Bc253?=
+ =?utf-8?B?VTRKaFdrd0l3PT0=?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: db1b6227-24b3-4be0-53ac-08da0e80662f
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5810.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2a02f73-b848-4a51-ddea-08da0e6f245f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2022 14:52:53.9517
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2022 16:56:26.2465
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VmbgMTh7HLZUCLKGJkHJbKVDhvqkYUps+WVevQSp6FPbXVpFXCUcHMAakRaUah6Sd2NcxyHWJSON5bY6RNJ7Xg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7537
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /Ik4vXnv6EGfZiof7EEw4R+Ec1iNOw3J8WnmrD+UT/zsEWjs5eU6Tmda/8YIcw2qUF2w2fd6F4pk+eOtxINtXMN23RkJbUhzhJ/onqLyWkE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3337
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -131,230 +158,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 3/18/2022 11:19 PM, Rajvi Jingar wrote:
+> The state of the device is saved during pci_pm_suspend_noirq(), if it
+> has not already been saved, regardless of the skip_bus_pm flag value. So
+> skip_bus_pm check is removed before saving the device state.
+>
+> Signed-off-by: Rajvi Jingar <rajvi.jingar@intel.com>
+> Suggested-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>   v1 -> v2: add comments to the changes
+>   v2 -> v3: move changelog after "---" marker
 
+And you need to add one more "---" marker right after it.
 
-> -----Original Message-----
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Sent: Wednesday, March 23, 2022 8:48 PM
-> To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>; Vinod Koul
-> <vkoul@kernel.org>; Jingoo Han <jingoohan1@gmail.com>; Bjorn Helgaas
-> <bhelgaas@google.com>; Frank Li <frank.li@nxp.com>; Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org>
-> Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>; Serge Semin
-> <fancer.lancer@gmail.com>; Alexey Malahov
-> <Alexey.Malahov@baikalelectronics.ru>; Pavel Parkhomenko
-> <Pavel.Parkhomenko@baikalelectronics.ru>; Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com>; Rob Herring <robh@kernel.org>; Krzysztof
-> Wilczy=F1ski <kw@linux.com>; linux-pci@vger.kernel.org;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [EXT] [PATCH 00/25] dmaengine: dw-edma: Add RP/EP local DMA
-> controllers support
->=20
-> Caution: EXT Email
->=20
-> This is a final patchset in the series created in the framework of
-> my Baikal-T1 PCIe/eDMA-related work:
->=20
-> [1: In-progress] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
-> Link: --submitted--
-> [2: In-progress] PCI: dwc: Various fixes and cleanups
-> Link: --submitted--
-> [3: In-progress] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
-> Link: --submitted--
-> [4: In-progress] dmaengine: dw-edma: Add RP/EP local DMA controllers
-> support
-> Link: --you are looking at it--
->=20
-> Note it is recommended to merge the last patchset after the former ones i=
-n
-> order to prevent merge conflicts. @Bjorn could you merge in this patchset
-> through your PCIe repo? After getting all the ack'es of course.
->=20
-> Please note originally this series was self content, but due to Frank
-> being a bit faster in his work submission I had to rebase my patchset ont=
-o
-> his one. So now this patchset turns to be dependent on the Frank' work:
-> Link:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kern
-> el.org%2Fdmaengine%2F20220310192457.3090-1-
-> Frank.Li%40nxp.com%2F&amp;data=3D04%7C01%7CFrank.Li%40nxp.com%7Cfc099c7e4=
-02d4
-> 556176e08da0d386b19%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63783683=
-32
-> 26917527%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJB=
-Ti
-> I6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3D3wsUdFo2TpBCVe8haYoFMxPyY78D4=
-yABM
-> B%2Bz0QHkE3Q%3D&amp;reserved=3D0
-> So please review and merge his series first before applying this one.
->=20
-> @Frank, @Manivannan as we agreed here:
-> Link:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kern
-> el.org%2Fdmaengine%2F20220309211204.26050-6-
-> Frank.Li%40nxp.com%2F&amp;data=3D04%7C01%7CFrank.Li%40nxp.com%7Cfc099c7e4=
-02d4
-> 556176e08da0d386b19%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63783683=
-32
-> 26917527%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJB=
-Ti
-> I6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DUwV79KHJWWhHZ9dYuqrBP8%2B5n6x=
-onLU
-> bK5wqduuSg%2FM%3D&amp;reserved=3D0
-> this series contains two patches with our joint work. Here they are:
-> [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field
-> usage
-> [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-directio=
-n
-> semantics
-> @Frank, could you please pick them up and add them to your series in plac=
-e
-> of the patches:
-> [PATCH v5 6/9] dmaengine: dw-edma: Don't rely on the deprecated "directio=
-n"
-> member
-> Link:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kern
-> el.org%2Fdmaengine%2F20220310192457.3090-7-
-> Frank.Li%40nxp.com%2F&amp;data=3D04%7C01%7CFrank.Li%40nxp.com%7Cfc099c7e4=
-02d4
-> 556176e08da0d386b19%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63783683=
-32
-> 26917527%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJB=
-Ti
-> I6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DG2Q2BTfp4vt0yiyHbPnn9kKBDfOx6=
-QBmE
-> ypOREcWq4g%3D&amp;reserved=3D0
-> [PATCH v5 5/9] dmaengine: dw-edma: Fix programming the source & dest
-> addresses for ep
-> Link:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kern
-> el.org%2Fdmaengine%2F20220310192457.3090-6-
-> Frank.Li%40nxp.com%2F&amp;data=3D04%7C01%7CFrank.Li%40nxp.com%7Cfc099c7e4=
-02d4
-> 556176e08da0d386b19%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63783683=
-32
-> 26917527%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJB=
-Ti
-> I6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DUppQMqEDobyEN2JU05MS6k%2FuXeS=
-6%2B
-> skrr%2BeN%2FeQzPk8%3D&amp;reserved=3D0
-> respectively?
->=20
-> @Frank please don't forget to fix your series so the chip->dw field is
-> initialized after all the probe() initializations are done. For that sake
-> you also need to make sure that the dw_edma_irq_request(),
-> dw_edma_channel_setup() and dw_edma_v0_core_debugfs_on() methods take
-> dw_edma structure pointer as a parameter.
->=20
-> Here is a short summary regarding this patchset. The series starts with
-> fixes patches. The very first two patches have been modified based on
-> discussion with @Frank and @Manivannan as I noted in the previous
-> paragraph. They concern fixing the Read/Write channels xfer semantics.
-> See the patches description for more details. After that goes the fix of
-> the dma_direct_map_resource() method, which turned out to be not working
-> correctly for the case of having devive.dma_range_map being non-empty
-> (non-empty dma-ranges DT property). Then we discovered that the
-> dw-edma-pcie.c driver incorrectly initializes the LL/DT base addresses fo=
-r
-> the platforms with not matching CPU and PCIe memory spaces. It is fixed b=
-y
-> using the pci_bus_address() method to get a correct base address. After
-> that you can find a series of interleaved xfers fixes. It turned out the
-> interleaved transfers implementation didn't work quite correctly from the
-> very beginning for instance missing src/dst addresses initialization, etc=
-.
-> In the framework of the next two patches we suggest to add a new
-> platform-specific callback - pci_addrees() and use to convert the CPU
-> address to the PCIe space address. It is at least required for the DW eDA=
-M
-> remote End-point setup on the platforms with not-matching address spaces.
-> In case of the DW eDMA local RP/EP setup the conversion will be done
-> automatically by the outbound iATU (if no DMA-bypass flag is specified fo=
-r
-> the corresponding iATU window). Then we introduce a set of patches to mak=
-e
-> the DebugFS part of the code supporting the multi-eDMA controllers
-> platforms. It starts with several cleanup patches and is closed joining
-> the Read/Write channels into a single DMA-device as they originally shoul=
-d
-> have been. After that you can find the patches with adding the non-atomic
-> io-64 methods usage, dropping DT-region descriptors allocation, replacing
-> chip IDs with device name. In addition to that in order to have the eDMA
-> embedded into the DW PCIe RP/EP supported we need to bypass the
-> dma-ranges-based memory ranges mapping since in case of the root port DT
-> node it's applicable for the peripheral PCIe devices only. Finally at the
-> series closure we introduce a generic DW eDMA controller support being
-> available in the DW PCIe Host/End-point driver.
->=20
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Krzysztof Wilczy=F1ski" <kw@linux.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
->=20
-> Serge Semin (25):
->   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
->   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
->     semantics
->   dma-direct: take dma-ranges/offsets into account in resource mapping
->   dmaengine: Fix dma_slave_config.dst_addr description
->   dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
->   dmaengine: dw-edma: Fix missing src/dst address of the interleaved
->     xfers
->   dmaengine: dw-edma: Don't permit non-inc interleaved xfers
->   dmaengine: dw-edma: Fix invalid interleaved xfers semantics
->   dmaengine: dw-edma: Add CPU to PCIe bus address translation
->   dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
->     glue-driver
->   dmaengine: dw-edma: Drop chancnt initialization
->   dmaengine: dw-edma: Fix DebugFS reg entry type
->   dmaengine: dw-edma: Stop checking debugfs_create_*() return value
->   dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
->   dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
->   dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
->   dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
->   dmaengine: dw-edma: Join Write/Read channels into a single device
->   dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
->   dmaengine: dw-edma: Use non-atomic io-64 methods
->   dmaengine: dw-edma: Drop DT-region allocation
->   dmaengine: dw-edma: Replace chip ID number with device name
->   dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
->   dmaengine: dw-edma: Skip cleanup procedure if no private data found
->   PCI: dwc: Add DW eDMA engine support
+Analogously in the second patch.
 
-Why I can't see your patch in https://www.spinics.net/lists/linux-pci/
-But there are Manivannan's reply in https://www.spinics.net/lists/linux-pci=
-/
+>   drivers/pci/pci-driver.c | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 588588cfda48..ffe76f238d7e 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -834,20 +834,14 @@ static int pci_pm_suspend_noirq(struct device *dev)
+>   		}
+>   	}
+>   
+> -	if (pci_dev->skip_bus_pm) {
+> +	if (!pci_dev->state_saved) {
+> +		pci_save_state(pci_dev);
+>   		/*
+> -		 * Either the device is a bridge with a child in D0 below it, or
+> -		 * the function is running for the second time in a row without
+> -		 * going through full resume, which is possible only during
+> -		 * suspend-to-idle in a spurious wakeup case.  The device should
+> -		 * be in D0 at this point, but if it is a bridge, it may be
+> -		 * necessary to save its state.
+> +		 * If the device is a bridge with a child in D0 below it, it needs to
+> +		 * stay in D0, so check skip_bus_pm to avoid putting it into a
+> +		 * low-power state in that case.
+>   		 */
+> -		if (!pci_dev->state_saved)
+> -			pci_save_state(pci_dev);
+> -	} else if (!pci_dev->state_saved) {
+> -		pci_save_state(pci_dev);
+> -		if (pci_power_manageable(pci_dev))
+> +		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+>   			pci_prepare_to_sleep(pci_dev);
+>   	}
+>   
 
-Best regards
-Frank Li
-
->=20
->  drivers/dma/dw-edma/dw-edma-core.c            | 249 +++++++------
->  drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
->  drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c         |  76 ++--
->  drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 350 ++++++++----------
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
->  .../pci/controller/dwc/pcie-designware-ep.c   |   4 +
->  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
->  drivers/pci/controller/dwc/pcie-designware.c  | 188 ++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h  |  23 +-
->  include/linux/dma/edma.h                      |  18 +-
->  include/linux/dmaengine.h                     |   2 +-
->  kernel/dma/direct.c                           |   2 +-
->  14 files changed, 598 insertions(+), 367 deletions(-)
->=20
-> --
-> 2.35.1
 
