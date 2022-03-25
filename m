@@ -2,169 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B0784E7066
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 11:02:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3D074E72AB
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 13:02:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352981AbiCYKDr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Mar 2022 06:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
+        id S1344291AbiCYMEb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Mar 2022 08:04:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230496AbiCYKDq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 06:03:46 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1033CFBA5
-        for <linux-pci@vger.kernel.org>; Fri, 25 Mar 2022 03:02:12 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id m22so7139230pja.0
-        for <linux-pci@vger.kernel.org>; Fri, 25 Mar 2022 03:02:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a9wI0zrpHRmLcU6l6ReXG7FlwJwxzTl2kn8IaeujIKc=;
-        b=AWQTz4Pau2/UbzV0gD4UDl72E2iQJSZearFX+Hzbp0itLTqdtNkCkWEy7/DS7WJoLj
-         2BXrDCAFbVhEXn05+g2CnB3aWbBCHT5UpacQfi+eZlhRmP/7g+8ieGH474Yk+aGYfOgd
-         r12IaTjcr3vz/rbtEDNCZaWzJmqPCQmplrdhemho8/ghm8wxjm8cfFvEcOLGEMdPgr3E
-         ko+IoEIagPDlJBcMHNZWuy35xGp0OCauWpOgsr1FlgQgREyRCk38P1sy/v/uMFs9gI/j
-         8KaX32JNUsbUabLJPjCxvhCKhGO6cwDI9bqYqpi/IHJV53kkZ4TTn780VTImrclxq/60
-         3XqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a9wI0zrpHRmLcU6l6ReXG7FlwJwxzTl2kn8IaeujIKc=;
-        b=xg51ceHTEGufd1Q53HZclU22bx+XVac7/4TFU+FORao36pehKXlTjdxXsi21jWYXKU
-         q87+GJiSFsZ2+p+Y3CJlxCA8rIZCminj3lU6Wk3obpvj3r/+JPsSxqvNfTCq/m4PO8rg
-         Vk60gm4ufygfVDOf6ia5bJrt9YErQ8kP8dik5epT/NOAtoedjVjM70dSqhlTbyI0FbKA
-         rvA4IbzvTDDrbgts6cLHUuoCWAgPdNLECH6f4uImPzJv86ZR74di12GWbB+zbLV/Z5IK
-         cQ/N472TiSjulyUhyZu4Cd/JmznC7XtjwzffokheauAgM8ZiIroVxrds9ZfP1hNAqOvg
-         uvcg==
-X-Gm-Message-State: AOAM5320lIrOuwthG5Wb1Jyv8ni2NGYeiNQsY7rrIEOSTzQFrtKiBofJ
-        iR4MXxoeLr48jtTBVl73Yl28
-X-Google-Smtp-Source: ABdhPJxPvoeFfAo6RUxJOiaJWZrNziwqKzEQooxzqe4kW7GIjHjATC/oOEFynNN+CJ2IUuMOlUKfdQ==
-X-Received: by 2002:a17:902:9a02:b0:14f:2d93:92f4 with SMTP id v2-20020a1709029a0200b0014f2d9392f4mr11061794plp.160.1648202531847;
-        Fri, 25 Mar 2022 03:02:11 -0700 (PDT)
-Received: from thinkpad ([27.111.75.218])
-        by smtp.gmail.com with ESMTPSA id f21-20020a056a00239500b004fb02a7a45bsm3062961pfc.214.2022.03.25.03.02.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Mar 2022 03:02:11 -0700 (PDT)
-Date:   Fri, 25 Mar 2022 15:32:04 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        with ESMTP id S1358082AbiCYMEa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 08:04:30 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F01D4C93;
+        Fri, 25 Mar 2022 05:02:55 -0700 (PDT)
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KQ0zl44lXz6864S;
+        Fri, 25 Mar 2022 20:01:07 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 25 Mar 2022 13:02:53 +0100
+Received: from localhost (10.47.31.18) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Fri, 25 Mar
+ 2022 12:02:52 +0000
+Date:   Fri, 25 Mar 2022 12:02:46 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 22/25] dmaengine: dw-edma: Replace chip ID number with
- device name
-Message-ID: <20220325100204.GJ4675@thinkpad>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-23-Sergey.Semin@baikalelectronics.ru>
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V6 04/10] PCI/DOE: Introduce pci_doe_create_doe_devices
+Message-ID: <20220325120246.000028de@Huawei.com>
+In-Reply-To: <Yj0CYdSrVMxlmXyJ@iweiny-desk3>
+References: <20220201071952.900068-5-ira.weiny@intel.com>
+        <20220203224437.GA120552@bhelgaas>
+        <Yju6quQsBDSMaNC2@iweiny-desk3>
+        <20220324140539.00004be8@Huawei.com>
+        <Yj0CYdSrVMxlmXyJ@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220324014836.19149-23-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.31.18]
+X-ClientProxiedBy: lhreml753-chm.china.huawei.com (10.201.108.203) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:48:33AM +0300, Serge Semin wrote:
-> Using some abstract number as the DW eDMA chip identifier isn't really
-> practical. First of all there can be more than one DW eDMA controller on
-> the platform some of them can be detected as the PCIe end-points, some of
-> them can be embedded into the DW PCIe Root Port/End-point controllers.
-> Seeing some abstract number in for instance IRQ handlers list doesn't give
-> a notion regarding their reference to the particular DMA controller.
-> Secondly current DW eDMA chip id implementation doesn't provide the
-> multi-eDMA platforms support for same reason of possibly having eDMA
-> detected on different system buses. At the same time re-implementing
-> something ida-based won't give much benefits especially seeing the DW eDMA
-> chip ID is only used in the IRQ request procedure. So to speak in order to
-> preserve the code simplicity and get to have the multi-eDMA platforms
-> support let's just use the parental device name to create the DW eDMA
-> controller name.
+On Thu, 24 Mar 2022 16:44:33 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
+
+> On Thu, Mar 24, 2022 at 02:05:39PM +0000, Jonathan Cameron wrote:
+> > Hi Ira,
+> >   
+> > > Here is the code to be more clear...
+> > > 
+> > > 
+> > > drivers/cxl/pci.c:
+> > > 
+> > > int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> > > {               
+> > >         struct device *dev = &pdev->dev;
+> > >         bool use_irq = true;
+> > >         int irqs = 0;
+> > >         u16 off = 0;         
+> > >         int rc;
+> > >         
+> > >         pci_doe_for_each_off(pdev, off)
+> > >                 irqs++;
+> > >         pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
+> > >         
+> > >         /*                         
+> > >          * Allocate enough vectors for the DOE's
+> > >          */     
+> > >         rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
+> > >                                                      PCI_IRQ_MSIX);
+> > >         if (rc != irqs) {
+> > >                 pci_err(pdev, "Not enough interrupts for all the DOEs; use polling\n");
+> > >                 use_irq = false;
+> > >                 /* Some got allocated; clean them up */
+> > >                 if (rc > 0)
+> > >                         cxl_pci_free_irq_vectors(pdev); 
+> > >         } else {
+> > >                 /*
+> > >                  * Enabling bus mastering is require for MSI/MSIx.  It could be
+> > >                  * done later within the DOE initialization, but as it
+> > >                  * potentially has other impacts keep it here when setting up
+> > >                  * the IRQ's.
+> > >                  */
+> > >                 pci_set_master(pdev);
+> > >                 rc = devm_add_action_or_reset(dev,
+> > >                                               cxl_pci_free_irq_vectors,
+> > >                                               pdev);
+> > >                 if (rc)
+> > >                         return rc;
+> > >         }
+> > > 
+> > >         pci_doe_for_each_off(pdev, off) {
+> > > ...
+> > > 		/* Create each auxiliary device which internally calls */
+> > > 		pci_doe_create_mb(pdev, off, use_irq);
+> > > ...
+> > > 	}
+> > > ...
+> > > }
+> > > 
+> > > 
+> > > drivers/pci/pci-doe.c:
+> > > 
+> > > static irqreturn_t pci_doe_irq_handler(int irq, void *data)
+> > > {
+> > > ...
+> > > }
+> > > 
+> > > static int pci_doe_request_irq(struct pci_doe_mb *doe_mb)
+> > > {
+> > >         struct pci_dev *pdev = doe_mb->pdev;
+> > >         int offset = doe_mb->cap_offset;
+> > >         int doe_irq, rc;
+> > >         u32 val;
+> > > 
+> > >         pci_read_config_dword(pdev, offset + PCI_DOE_CAP, &val);
+> > > 
+> > >         if (!FIELD_GET(PCI_DOE_CAP_INT, val))
+> > >                 return -ENOTSUPP;
+> > > 
+> > >         doe_irq = FIELD_GET(PCI_DOE_CAP_IRQ, val);
+> > >         rc = pci_request_irq(pdev, doe_irq, pci_doe_irq_handler,
+> > >                              NULL, doe_mb,
+> > >                              "DOE[%d:%s]", doe_irq, pci_name(pdev));
+> > >         if (rc) 
+> > >                 return rc;
+> > > 
+> > >         doe_mb->irq = doe_irq;
+> > >         pci_write_config_dword(pdev, offset + PCI_DOE_CTRL,
+> > >                                PCI_DOE_CTRL_INT_EN);
+> > >         return 0;
+> > > }
+> > > 
+> > > struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev, u16 cap_offset,
+> > >                                      bool use_irq)
+> > > {
+> > > ...
+> > >         if (use_irq) {
+> > >                 rc = pci_doe_request_irq(doe_mb);
+> > >                 if (rc) 
+> > >                         pci_err(pdev, "DOE request irq failed for mailbox @ %u : %d\n",
+> > >                                 cap_offset, rc);
+> > >         }
+> > > ...
+> > > }
+> > > 
+> > > 
+> > > Does this look reasonable?  
+> > 
+> > I'm a little nervous about how we are going to make DOEs on switches work.
+> > Guess I'll do an experiment once your next version is out and check we
+> > can do that reasonably cleanly.  For switches we'll probably have to
+> > check for DOEs on all such ports and end up with infrastructure to
+> > map to all protocols we might see on a switch.  
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c | 3 ++-
->  drivers/dma/dw-edma/dw-edma-core.h | 2 +-
->  drivers/dma/dw-edma/dw-edma-pcie.c | 1 -
->  include/linux/dma/edma.h           | 1 -
->  4 files changed, 3 insertions(+), 4 deletions(-)
+> Are the switches not represented as PCI devices in linux?
 > 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index dbe1119fd1d2..72a51970bfba 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -970,7 +970,8 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  	if (!dw->chan)
->  		return -ENOMEM;
->  
-> -	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%d", chip->id);
-> +	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%s",
-> +		 dev_name(chip->dev));
->  
->  	/* Disable eDMA, only to establish the ideal initial conditions */
->  	dw_edma_v0_core_off(dw);
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 980adb079182..dc25798d4ba9 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -96,7 +96,7 @@ struct dw_edma_irq {
->  };
->  
->  struct dw_edma {
-> -	char				name[20];
-> +	char				name[30];
+> If my vision of switches is correct I think that problem is independent of what
+> I'm solving here.  In other words the relationship between a port on a switch
+> and a DOE capability on that switch will have to be established somehow and
+> nothing I'm doing precludes doing that, but at the same time nothing I'm doing
+> helps that either.
 
-I'm not sure if this length is sufficient. Other than this,
+Sure, I'm just expressing nervousness and would want a PoC of that at least
+to check it's not too nasty.  The port drivers are rather 'unusual' in PCI
+so touching them always ends up more complex than I expect.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Anyhow, start of cycle so should be plenty of time to do such an RFC
+once your code is out there.
 
-Thanks,
-Mani
+Jonathan
 
->  
->  	struct dma_device		dma;
->  
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index f530bacfd716..3f9dadc73854 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -222,7 +222,6 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  
->  	/* Data structure initialization */
->  	chip->dev = dev;
-> -	chip->id = pdev->devfn;
->  
->  	chip->mf = vsec_data.mf;
->  	chip->nr_irqs = nr_irqs;
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index 5cc87cfdd685..241c5a97ddf4 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -73,7 +73,6 @@ enum dw_edma_map_format {
->   */
->  struct dw_edma_chip {
->  	struct device		*dev;
-> -	int			id;
->  	int			nr_irqs;
->  	const struct dw_edma_core_ops   *ops;
->  	u32			flags;
-> -- 
-> 2.35.1
 > 
+> Ira
+> 
+> > 
+> > Jonathan
+> >   
+> > >   
+
