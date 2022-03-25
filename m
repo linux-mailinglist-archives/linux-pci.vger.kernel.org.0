@@ -2,78 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A6644E6F7E
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 09:33:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2260D4E6FE6
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 10:20:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355128AbiCYIer (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Mar 2022 04:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40628 "EHLO
+        id S1356586AbiCYJV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Mar 2022 05:21:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352767AbiCYIeq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 04:34:46 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE6215FED
-        for <linux-pci@vger.kernel.org>; Fri, 25 Mar 2022 01:33:11 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id a16-20020a17090a6d9000b001c7d6c1bb13so2634875pjk.4
-        for <linux-pci@vger.kernel.org>; Fri, 25 Mar 2022 01:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2vwrQNfNFnmUwYH0dlT3PEmHOLC7uVtwRjd3bwzS04k=;
-        b=V8rwhr26dlZa9x4wMUV5jggdmXlskZVpyJshD464GTPpfdwQ/rz6qLWvk5OLpHdQpw
-         il7WcwQT+51VCqU/GPvXrd2QP5yIkznMp+MwFKlKpkGxlfRWZA5jHHeGXf7+hVKwH26u
-         KxjltpxtpOg9ZsHmoKZq3PxRPH30nQfPWiQcx3P1RadSzuFcTF3ZcKFsSKW9sDRA0VuH
-         LXSqAJvSawPP9PmH6Uj1f2tl/648yS7WjeNmOZM94i7Txa4KClNMxctXYsI2cSH++8Bo
-         m/vJmTWmxU0kSqURHoVi9b4cPygywW/6Y809OATZUIDAvDgmvEMExVEgJMiv/QmkDEks
-         Sz2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2vwrQNfNFnmUwYH0dlT3PEmHOLC7uVtwRjd3bwzS04k=;
-        b=FW2iXsM3sMYX7skaaDWLh0j/5skX6805DR+vMYLPKnvFcO/oM2l4EgpCrs5zbsFR7+
-         s15UGoc1RfxoGwEPt92JK1EZRaHhphjFUOb+UGiULmdQ9Yl8nCCxoUH/oQTsMIN5J7hp
-         3pUYmkZ7jv6QCxOHQ5DB+zj98IYyGfJzzL1iMYDWXXHduS7s/JxW6/Jb2DyGGh2SVIpd
-         7I8BGPUPk6qbakhSpEpCvv7wjCMqXVxpICWEPGeBRmP7VteGpWnBp0iNY0SqfIBPC6aq
-         qdrFZ7bqLC50135zAPoFQe6Thdzt8zrba79f51rdx/2T+Z4TEaKf8I0KCJlHN577pCbF
-         fjnA==
-X-Gm-Message-State: AOAM532b5njNSTS3J/rjz6EljsGz3YYggZlT7/mlSZ3060c5zsuO7K4C
-        S7rfBLHqDtAnbL89tsQgyIaV
-X-Google-Smtp-Source: ABdhPJyqazmKZeq5C8bGQY4LGvQk1xi6h457kGB/Ke4kT3F22nZtMc4jl/KV3981qsN49JKVGnlLfQ==
-X-Received: by 2002:a17:902:d2d1:b0:154:45d2:a05d with SMTP id n17-20020a170902d2d100b0015445d2a05dmr10367179plc.74.1648197191383;
-        Fri, 25 Mar 2022 01:33:11 -0700 (PDT)
-Received: from thinkpad ([27.111.75.218])
-        by smtp.gmail.com with ESMTPSA id z23-20020a056a001d9700b004fa8f24702csm5060773pfw.85.2022.03.25.01.33.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Mar 2022 01:33:11 -0700 (PDT)
-Date:   Fri, 25 Mar 2022 14:03:05 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        with ESMTP id S1356541AbiCYJVw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 05:21:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C81BBCF48C;
+        Fri, 25 Mar 2022 02:20:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 60A0C60C33;
+        Fri, 25 Mar 2022 09:20:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A01C340E9;
+        Fri, 25 Mar 2022 09:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648200017;
+        bh=lxwHTABmCN1CazROEdpejwhPX+nwGGj7wnIuHcqcTZw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TYxt8xCECLPqXVdNHCptJNzUFZzBhfTL09WONwZX7s/1yqG4DSTMEy03TGOAi7hxR
+         T9IHLyZ1xPrudvbKDYUgxUZwJYqNqMTP5OJ2+2x7gsDmuTBp+pDKewmvcfIa4OyH51
+         I47vMRUd3fw/s971NUzdp0ccyT5ME8wMLWMfizeEGuI5GNZQn0zxbgAGgcjKNCXwRp
+         nKUocdjQAz8SkrJwN2cCiLIrILerDZU46uDCBtMYOPf9utnR6ik8oBMpuknqxU5/mo
+         zRP7IsSJKJT1kis4nzAJNHliEoVWuwu3XLrqWWYYjYmeXiKeIe/42ogv9gP+J+cgKO
+         5547Xbu3oJSfg==
+Received: by pali.im (Postfix)
+        id 811B97DD; Fri, 25 Mar 2022 10:20:14 +0100 (CET)
+Date:   Fri, 25 Mar 2022 10:20:14 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 21/25] dmaengine: dw-edma: Drop DT-region allocation
-Message-ID: <20220325083305.GI4675@thinkpad>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-22-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v2 3/4] PCI: Add function for parsing
+ 'slot-power-limit-milliwatt' DT property
+Message-ID: <20220325092014.yfxf474odzqfymml@pali>
+References: <20220302145733.12606-4-pali@kernel.org>
+ <20220324171337.GA1458545@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220324014836.19149-22-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220324171337.GA1458545@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,75 +66,99 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:48:32AM +0300, Serge Semin wrote:
-> There is no point in allocating an additional memory for the data target
-> regions passed then to the client drivers. Just use the already available
-> structures defined in the dw_edma_chip instance.
+On Thursday 24 March 2022 12:13:37 Bjorn Helgaas wrote:
+> On Wed, Mar 02, 2022 at 03:57:32PM +0100, Pali Rohár wrote:
+> > Add function of_pci_get_slot_power_limit(), which parses the
+> > 'slot-power-limit-milliwatt' DT property, returning the value in
+> > milliwatts and in format ready for the PCIe Slot Capabilities Register.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> > Changes in v2:
+> > * Added support for PCIe 6.0 slot power limit encodings
+> > * Round down slot power limit value
+> > ---
+> >  drivers/pci/of.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/pci/pci.h | 15 +++++++++++
+> >  2 files changed, 79 insertions(+)
+> > 
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index cb2e8351c2cc..549a404bd536 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -633,3 +633,67 @@ int of_pci_get_max_link_speed(struct device_node *node)
+> >  	return max_link_speed;
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> > +
+> > +/**
+> > + * of_pci_get_slot_power_limit - Parses the "slot-power-limit-milliwatt"
+> > + *				 property.
+> > + *
+> > + * @node: device tree node with the slot power limit information
+> > + * @slot_power_limit_value: pointer where the value should be stored in PCIe
+> > + *			    Slot Capabilities Register format
+> > + * @slot_power_limit_scale: pointer where the scale should be stored in PCIe
+> > + *			    Slot Capabilities Register format
+> > + *
+> > + * Returns the slot power limit in milliwatts and if @slot_power_limit_value
+> > + * and @slot_power_limit_scale pointers are non-NULL, fills in the value and
+> > + * scale in format used by PCIe Slot Capabilities Register.
+> > + *
+> > + * If the property is not found or is invalid, returns 0.
+> > + */
+> > +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > +				u8 *slot_power_limit_value,
+> > +				u8 *slot_power_limit_scale)
+> > +{
+> > +	u32 slot_power_limit_mw;
+> > +	u8 value, scale;
+> > +
+> > +	if (of_property_read_u32(node, "slot-power-limit-milliwatt",
+> > +				 &slot_power_limit_mw))
+> > +		slot_power_limit_mw = 0;
+> > +
+> > +	/* Calculate Slot Power Limit Value and Slot Power Limit Scale */
+> > +	if (slot_power_limit_mw == 0) {
+> > +		value = 0x00;
+> > +		scale = 0;
+> > +	} else if (slot_power_limit_mw <= 255) {
+> > +		value = slot_power_limit_mw;
+> > +		scale = 3;
+> > +	} else if (slot_power_limit_mw <= 255*10) {
+> > +		value = slot_power_limit_mw / 10;
+> > +		scale = 2;
+> > +	} else if (slot_power_limit_mw <= 255*100) {
+> > +		value = slot_power_limit_mw / 100;
+> > +		scale = 1;
+> > +	} else if (slot_power_limit_mw <= 239*1000) {
+> > +		value = slot_power_limit_mw / 1000;
+> > +		scale = 0;
+> > +	} else if (slot_power_limit_mw <= 250*1000) {
+> > +		value = 0xF0;
+> > +		scale = 0;
+> > +	} else if (slot_power_limit_mw <= 600*1000) {
+> > +		value = 0xF0 + (slot_power_limit_mw / 1000 - 250) / 25;
+> > +		scale = 0;
+> > +	} else {
+> > +		value = 0xFF;
+> > +		scale = 0;
 > 
-> Note these regions are unused in normal circumstances since they are
-> specific to the case of eDMA being embedded into the DW PCIe End-point and
-> having it's CSRs accessible over a End-point' BAR. This case is only known
-> to be implemented as a part of the Synopsys PCIe EndPoint IP prototype
-> kit.
+> The purpose of this function is to return values that can be
+> programmed into the Slot Capabilities register.  The 0xFF Slot Power
+> Limit Value is reserved, and I don't think we should use it until the
+> spec defines a meaning for it.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> If the DT tells us 800W is available, we'll put 0xFF in Slot Power
+> Limit Value.  If the spec eventually defines (0xFF, 0) to mean "1000W
+> available", a device may try to consume all 1000W, which will not
+> work.
+> 
+> If slot_power_limit_mw > 600*1000, I think we should advertise 600W
+> available (value 0xFE, scale 0) and return 600W (600*1000).
+> 
+> Bjorn
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c | 21 ++++-----------------
->  1 file changed, 4 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index bc530f0a2468..dbe1119fd1d2 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -744,7 +744,6 @@ static void dw_edma_free_chan_resources(struct dma_chan *dchan)
->  static int dw_edma_channel_setup(struct dw_edma_chip *chip, u32 wr_alloc,
->  				 u32 rd_alloc)
->  {
-> -	struct dw_edma_region *dt_region;
->  	struct device *dev = chip->dev;
->  	struct dw_edma *dw = chip->dw;
->  	struct dw_edma_chan *chan;
-> @@ -761,12 +760,6 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, u32 wr_alloc,
->  	for (i = 0; i < ch_cnt; i++) {
->  		chan = &dw->chan[i];
->  
-> -		dt_region = devm_kzalloc(dev, sizeof(*dt_region), GFP_KERNEL);
-> -		if (!dt_region)
-> -			return -ENOMEM;
-> -
-> -		chan->vc.chan.private = dt_region;
-> -
->  		chan->dw = dw;
->  
->  		if (i < dw->wr_ch_cnt) {
-> @@ -814,17 +807,11 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, u32 wr_alloc,
->  			 chan->msi.data);
->  
->  		chan->vc.desc_free = vchan_free_desc;
-> -		vchan_init(&chan->vc, dma);
-> +		chan->vc.chan.private = chan->dir == EDMA_DIR_WRITE ?
-> +					&dw->chip->dt_region_wr[chan->id] :
-> +					&dw->chip->dt_region_rd[chan->id];
->  
-> -		if (chan->dir == EDMA_DIR_WRITE) {
-> -			dt_region->paddr = chip->dt_region_wr[chan->id].paddr;
-> -			dt_region->vaddr = chip->dt_region_wr[chan->id].vaddr;
-> -			dt_region->sz = chip->dt_region_wr[chan->id].sz;
-> -		} else {
-> -			dt_region->paddr = chip->dt_region_rd[chan->id].paddr;
-> -			dt_region->vaddr = chip->dt_region_rd[chan->id].vaddr;
-> -			dt_region->sz = chip->dt_region_rd[chan->id].sz;
-> -		}
-> +		vchan_init(&chan->vc, dma);
->  
->  		dw_edma_v0_core_device_config(chan);
->  	}
-> -- 
-> 2.35.1
-> 
+Ok, I will send a v3 with this change.
