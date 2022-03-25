@@ -2,62 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12CCC4E6D26
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 05:19:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E0D14E6E15
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 07:04:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236938AbiCYEVA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Mar 2022 00:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34804 "EHLO
+        id S1347579AbiCYGFd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Mar 2022 02:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230312AbiCYEU7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 00:20:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E585D46B0F;
-        Thu, 24 Mar 2022 21:19:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 80BC261889;
-        Fri, 25 Mar 2022 04:19:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C059EC340E9;
-        Fri, 25 Mar 2022 04:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648181965;
-        bh=M+30WQWFiWcxarQLidDh8zL22qXkHedtyeYWaeVHqdk=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=MzviDmJuZnlAlivadEOUaJX+unFykST9QGoLMglYB+8OA+JVvHCxs8vhOm7yAxSuw
-         wqXgW9lmU6mrwCb+cjUGhRNoQxlCOGUCZFOttM0QzI+qYauC6dNW9dxhsdEtDmO/4m
-         85gGWlBULP0K7N4k6yCGsu1/O9nqJsokjHE48r5VFFJ8dmE+A6e+msCch3QOVeabHY
-         u17x/tCU1wHxHTDtjYThyz1K4KYzAZQYbIx/34jhz/plTcgVyg6+maJqDEyYAPtE1x
-         81jFfYjAjrDt0NuldufpGjborSfarhuodqSrTqUJ1PoBRzEM0sJzr6T9fXZ/Vul6I5
-         FVeNxbA40FR+Q==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20220324010905.15589-4-Sergey.Semin@baikalelectronics.ru>
-References: <20220324010905.15589-1-Sergey.Semin@baikalelectronics.ru> <20220324010905.15589-4-Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH 3/4] clk: baikal-t1: Move reset-controls code into a dedicated module
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        with ESMTP id S238264AbiCYGFc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 02:05:32 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 979D05F40
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 23:03:57 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id bx5so6668415pjb.3
+        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 23:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LhShCTyJix25hq+Gg0P/VVyKpEibeGlZ7bcArAjiUFo=;
+        b=ofHA8XTEA9/FKIJqMo631J1fRsWcscPnskTUZ5bvA4RoKhl8Td+cJEDQv5b9VyEaNQ
+         8SyMQiu38zFAUZQfxsPBpyC7rej/ifJJeA/ogcfbYtAaxl8B8qUOEw/CwGsck65SDd9O
+         gMoWEfVsHQLSOE/C31okXfLaVYU3mesqrJLV6ncsP15+qVGutW/idvPmA9G7OBT4NEMy
+         pVoNx+hu8H6treHlsFHH80rS4DIskzq40xinSG2KO2R1LlFZl6j+udMnhRVVvMx26yHl
+         3KjeXuV8FcCkkzQoYlLF23qYUKzvVmExw/a6juf9a/SwUSowPyuW2xvvqMmzeZbccKe6
+         09XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LhShCTyJix25hq+Gg0P/VVyKpEibeGlZ7bcArAjiUFo=;
+        b=ftcipbI6jQZ7a9atPBy7Drp+h2jrawyn4auT8qfbiKjZXuxNR5op8ShdclNS07qXpT
+         w4d7+EAc/UGRo5gfwKaz/kgrb7CjQrU2gFuhYV6nnKqYQyXyCEKpq25hbE0FbevSGsqY
+         HOQHHz7NTUm2ddSknaakLtmdo2iDRd/y+Bh9fyKWdRGJKns177+DcUL0cSY0z8LeusBx
+         ajmU4WQuxDN4/1hEIRFmx/ZyOI/b/Tm5HLev0FmGaOwlk3kTbfk0KDp2h7pm7tXY3pUx
+         soiOR0vV2Q4X17HTKy/vY/0/SWT6H5vSNwqRUADz98VMEug0e5IOZ+xD4MsjQ9r6DU1s
+         fh7g==
+X-Gm-Message-State: AOAM532Gt5oD76mfbx4nqp+u2FbueDqPXvi38XBeO6jkn49E7j2xvj2O
+        CSBsnpdxDLNOvH/vhfpdY7ci
+X-Google-Smtp-Source: ABdhPJwTAQR1vWgHnkgkyClvfuBdqLQ+oXGYaiggJeB9iKLzhWutBh4xCS3Xo4LIqDmuTB0gQ/tJwA==
+X-Received: by 2002:a17:902:da90:b0:154:1510:acc7 with SMTP id j16-20020a170902da9000b001541510acc7mr9739603plx.103.1648188237001;
+        Thu, 24 Mar 2022 23:03:57 -0700 (PDT)
+Received: from thinkpad ([27.111.75.218])
+        by smtp.gmail.com with ESMTPSA id pg14-20020a17090b1e0e00b001c75634df70sm11546767pjb.31.2022.03.24.23.03.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Mar 2022 23:03:56 -0700 (PDT)
+Date:   Fri, 25 Mar 2022 11:33:49 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Li <Frank.Li@nxp.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-clk@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Date:   Thu, 24 Mar 2022 21:19:23 -0700
-User-Agent: alot/0.10
-Message-Id: <20220325041925.C059EC340E9@smtp.kernel.org>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/25] dmaengine: dw-edma: Convert DebugFS descs to being
+ kz-allocated
+Message-ID: <20220325060349.GA4675@thinkpad>
+References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-16-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220324014836.19149-16-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -66,21 +82,77 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Please Cc reset maintainer on reset patches (Philipp Zabel <p.zabel@pengutr=
-onix.de>)
+On Thu, Mar 24, 2022 at 04:48:26AM +0300, Serge Semin wrote:
+> Currently all the DW eDMA DebugFS nodes descriptors are allocated on
+> stack, while the DW eDMA driver private data and CSR limits are statically
+> preserved. Such design won't work for the multi-eDMA platforms.
 
-Quoting Serge Semin (2022-03-23 18:09:04)
-> Before adding the directly controlled resets support it's reasonable to
-> move the existing resets control functionality into a dedicated object for
-> the sake of the CCU dividers clock driver simplification. After the new
-> functionality is added clk-ccu-div.c would have got to a mixture of the
-> weakly dependent clocks and resets methods. Splitting the methods up into
-> the two objects will make code easier to read especially seeing it isn't
-> that hard to do.
->=20
-> As before the CCU reset module will support the trigger-like CCU resets
-> only, which are responsible for the AXI-bus, APB-bus and SATA-ref blocks
-> reset. The assert/de-assert-capable reset controls support will be added
-> in the next commit.
->=20
+Can you please explain why?
+
+> As a
+> preparation to adding the multi-eDMA system setups support we need to have
+> each DebugFS node separately allocated and described. Afterwards we'll put
+> an addition info there like Read/Write channel flag, channel ID, DW eDMA
+> private data reference.
+> 
+> Note this conversion is mainly required due to having the legacy DW eDMA
+> controllers with indirect Read/Write channels context CSRs access. If we
+> didn't need to have a synchronized access to these registers the DebugFS
+> code of the driver would have been much simpler.
+> 
+
+I fail to understand how this change is beneficial or the exact issue.
+
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> ---
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+> index afd519d9568b..7eb0147912fa 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+> @@ -53,7 +53,8 @@ struct dw_edma_debugfs_entry {
+>  
+>  static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+>  {
+> -	void __iomem *reg = data;
+> +	struct dw_edma_debugfs_entry __iomem *entry = data;
+
+Why the entry has to be of __iomem?
+
+Thanks,
+Mani
+
+> +	void __iomem *reg = entry->reg;
+>  
+>  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY &&
+>  	    reg >= (void __iomem *)&regs->type.legacy.ch) {
+> @@ -94,14 +95,22 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+>  }
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_edma_debugfs_u32_get, NULL, "0x%08llx\n");
+>  
+> -static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry entries[],
+> +static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry ini[],
+>  				       int nr_entries, struct dentry *dir)
+>  {
+> +	struct dw_edma_debugfs_entry *entries;
+>  	int i;
+>  
+> +	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
+> +			       GFP_KERNEL);
+> +	if (!entries)
+> +		return;
+> +
+>  	for (i = 0; i < nr_entries; i++) {
+> +		entries[i] = ini[i];
+> +
+>  		debugfs_create_file_unsafe(entries[i].name, 0444, dir,
+> -					   entries[i].reg, &fops_x32);
+> +					   &entries[i], &fops_x32);
+>  	}
+>  }
+>  
+> -- 
+> 2.35.1
+> 
