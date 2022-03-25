@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5023B4E6E4F
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 07:42:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B202A4E6EF5
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 08:34:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358478AbiCYGnv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Mar 2022 02:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45558 "EHLO
+        id S1353999AbiCYHgJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Mar 2022 03:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358472AbiCYGnv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 02:43:51 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6FA3C6838
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 23:42:17 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id v4so6743363pjh.2
-        for <linux-pci@vger.kernel.org>; Thu, 24 Mar 2022 23:42:17 -0700 (PDT)
+        with ESMTP id S1353679AbiCYHgJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 03:36:09 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC89853E11
+        for <linux-pci@vger.kernel.org>; Fri, 25 Mar 2022 00:34:34 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id jx9so6817930pjb.5
+        for <linux-pci@vger.kernel.org>; Fri, 25 Mar 2022 00:34:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TlbCL6RW6dYnP7/Z3HsS7ysuAk05cXSMOHQcAK+OE3w=;
-        b=oU8e1xATeNZJ9ypnX9s18oyOGKCF+BTTBpqqt5valvk/JAHrRfwNn1To3IUSWHREsk
-         C3UZMU24HYxEjk6Ly5PRWM9gQ0YdQO2NNmYn1I+qY+ycBJ5oyh0PncTO6P+d4lzZv4Xx
-         8tuhcUepE0a3PNrP43aC6aTZ2ue0UFidW3/HRYKm+eTugdQnMUpswluc1wdXG0jaXMly
-         OcMBQY0ActwAdl8Tjcgvw9hBMEYvG0mlrWkq2ijeMS9bBuolpfG462m8tmSgpQgwb+tO
-         qeiEj9LtIW4BUDOUzdaBAB1Xew3PP1DjHX7zajOEy/YDTxE2U6KTbl6ONN1I0NPOIS0o
-         pX9w==
+        bh=9mPxNgbpCa+tGKbSe4YpvLjq1NEl6vqMzhNrbhx47Ew=;
+        b=VtKey67aqIZcWkfIoqqDPjAeScCNaCp+1fSrZnzyWMeOfbWQX3B0koGLUj2N+aHPaf
+         4Jfey3se0m78qEh7DWeMG+bsxD4gSW24wFtqRNPPwdX8m8yRQUq7P+AY41sVqrh3raVw
+         UFMbtk3YF2r28ZhPySsu40O5BpcHu4ysoGMeGpRXL5r1pgGx0J2xXgyZvOTjFRSx2hkj
+         FU2pbIUxAV8oVw4ucjPhEIIng2lGB2KC6KjGZZE5SN0SZ2THUNPHXOUIW7e8GNnvh5dV
+         +kzOqx+SHnuANpzViHX8GGSrXE6oz8Tudjau7JlpeEdm/qqY2saAE/Cc4Wbmx4Lk7sqv
+         7kqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TlbCL6RW6dYnP7/Z3HsS7ysuAk05cXSMOHQcAK+OE3w=;
-        b=Cvl/9xOdfx/TCslK/tK9Ss+r24PPJ+gcq+fp4OajLRWUsNQeqRcndP2j8C3fA95Z/v
-         1F/i0dggZA547wOhJaCyjIJWzecSsewVGFHxtBiG+hvb661S8s/blSzIA8Oe/YnPfwLi
-         SuZDbbEHmhs0oKlqc/qRyB0OThdLU5w63nJA2Yhl5i/xJcTUbBrkKKIWYO7yN4ODWJ7g
-         XbMtuMKjwB9tParppM3WFwJlqxdXWqh4OTrwhd6ZM8ZnNVn3vqCcd8WQtIFd/00doF7V
-         pvbRk8oq86+Vgt0IACdhHNxOGeg6JWPQ8gX1TDb6Yro9JRjGvGy0H8ZgB65vUPR7WOi9
-         CT3A==
-X-Gm-Message-State: AOAM531UWH8JwmquTSoiP8jaK4oCwHZxXm5GTUhfyK55oXaGea0BtpEa
-        zGDgCU1euRBHQHg8dqMfLU5C
-X-Google-Smtp-Source: ABdhPJy57GPWiTEW71xktpPJI24IuhMeC87zH7XrpORXbzOffyRtwnN8nw+QP52F9hSv93PQhY1XRg==
-X-Received: by 2002:a17:902:e748:b0:153:b484:bdf4 with SMTP id p8-20020a170902e74800b00153b484bdf4mr9931063plf.66.1648190537099;
-        Thu, 24 Mar 2022 23:42:17 -0700 (PDT)
+        bh=9mPxNgbpCa+tGKbSe4YpvLjq1NEl6vqMzhNrbhx47Ew=;
+        b=D+qONHAEtT+tNsaLYmGth5pt0ImF+I2TmShpOjRJ1Zt0GUULfKr94NHEZoSSZg9xRt
+         gd7B3LWUJz27G1TCD8vj/DjIn7Tb91lbOe0eBARGl4bBwKAqyfOZNAm+YhpOW7F7nTqq
+         H8DL6d+Z4OtlCcjRtrLY2GfeeYiMPQ/0+n2xE/nb6+YUFj1KnAGGWJEMsedhFAca+d5r
+         LDv5VnyWpKzAOjeoT9+4dIoPhbhq7UdXepsJoqAYueYV8a7gN+Sk9EhvJWVsIrmK7ew3
+         VrTjTQBPn9LsVeGqcseB9GBHWwzL9W2fmuTBni1WGl99cwde2ut4W6UHyI8bh8QeRpHd
+         2pSQ==
+X-Gm-Message-State: AOAM532H+ntiLX+N+eP+tJiDB74NGZUTbzz1M9RS26nBQk9wXd5ARVdN
+        wvse4W9zFMtVhmdbTsk3Ltmg
+X-Google-Smtp-Source: ABdhPJx+MbAMxsh/k9xnYv8OKIA6m5OXzPt7R4clQZpD5RZzQmH2p2QJp7mEeKo0EAXhTrKDkLtz9g==
+X-Received: by 2002:a17:90b:38d2:b0:1c7:1326:ec98 with SMTP id nn18-20020a17090b38d200b001c71326ec98mr11099094pjb.18.1648193674267;
+        Fri, 25 Mar 2022 00:34:34 -0700 (PDT)
 Received: from thinkpad ([27.111.75.218])
-        by smtp.gmail.com with ESMTPSA id oa16-20020a17090b1bd000b001c72b632222sm11928283pjb.32.2022.03.24.23.42.11
+        by smtp.gmail.com with ESMTPSA id kk11-20020a17090b4a0b00b001c73933d803sm12100265pjb.10.2022.03.25.00.34.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 23:42:16 -0700 (PDT)
-Date:   Fri, 25 Mar 2022 12:12:09 +0530
+        Fri, 25 Mar 2022 00:34:33 -0700 (PDT)
+Date:   Fri, 25 Mar 2022 13:04:27 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -63,16 +63,15 @@ Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/25] dmaengine: dw-edma: Convert DebugFS descs to being
- kz-allocated
-Message-ID: <20220325064209.GE4675@thinkpad>
+Subject: Re: [PATCH 18/25] dmaengine: dw-edma: Join Write/Read channels into
+ a single device
+Message-ID: <20220325073427.GF4675@thinkpad>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-16-Sergey.Semin@baikalelectronics.ru>
- <20220325060349.GA4675@thinkpad>
+ <20220324014836.19149-19-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220325060349.GA4675@thinkpad>
+In-Reply-To: <20220324014836.19149-19-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -83,84 +82,270 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 25, 2022 at 11:33:57AM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Mar 24, 2022 at 04:48:26AM +0300, Serge Semin wrote:
-> > Currently all the DW eDMA DebugFS nodes descriptors are allocated on
-> > stack, while the DW eDMA driver private data and CSR limits are statically
-> > preserved. Such design won't work for the multi-eDMA platforms.
+On Thu, Mar 24, 2022 at 04:48:29AM +0300, Serge Semin wrote:
+> Indeed there is no point in such split up because due to multiple reasons.
+> First of all eDMA read and write channels belong to one physical
+> controller. Splitting them up illogical. Secondly the channels
+> differentiating can be done by means of the filtering and the
+> dma_get_slave_caps() method. Finally having these channels handled
+> separately not only needlessly complicates the code, but also causes the
+> DebugFS error printed to console:
 > 
-> Can you please explain why?
+> >> Debugfs: Directory '1f052000.pcie' with parent 'dmaengine' already present!
 > 
-> > As a
-> > preparation to adding the multi-eDMA system setups support we need to have
-> > each DebugFS node separately allocated and described. Afterwards we'll put
-> > an addition info there like Read/Write channel flag, channel ID, DW eDMA
-> > private data reference.
-> > 
-> > Note this conversion is mainly required due to having the legacy DW eDMA
-> > controllers with indirect Read/Write channels context CSRs access. If we
-> > didn't need to have a synchronized access to these registers the DebugFS
-> > code of the driver would have been much simpler.
-> > 
+> So to speak let's join the read/write channels into a single DMA device.
+> The client drivers will be able to choose the channel with required
+> capability by getting the DMA slave direction setting. It's default value
+> is overridden by the dw_edma_device_caps() callback in accordance with the
+> channel nature.
 > 
-> I fail to understand how this change is beneficial or the exact issue.
-> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-I think I get the reasoning after going through the successive patches.
+I'm all in for this!
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 Thanks,
 Mani
 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > ---
-> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 15 ++++++++++++---
-> >  1 file changed, 12 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> > index afd519d9568b..7eb0147912fa 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> > @@ -53,7 +53,8 @@ struct dw_edma_debugfs_entry {
-> >  
-> >  static int dw_edma_debugfs_u32_get(void *data, u64 *val)
-> >  {
-> > -	void __iomem *reg = data;
-> > +	struct dw_edma_debugfs_entry __iomem *entry = data;
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c | 117 +++++++++++++++--------------
+>  drivers/dma/dw-edma/dw-edma-core.h |   5 +-
+>  2 files changed, 62 insertions(+), 60 deletions(-)
 > 
-> Why the entry has to be of __iomem?
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index cefa73412bf7..a391e44da039 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -209,6 +209,24 @@ static void dw_edma_start_transfer(struct dw_edma_chan *chan)
+>  	desc->chunks_alloc--;
+>  }
+>  
+> +static void dw_edma_device_caps(struct dma_chan *dchan,
+> +				struct dma_slave_caps *caps)
+> +{
+> +	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+> +
+> +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> +		if (chan->dir == EDMA_DIR_READ)
+> +			caps->directions = BIT(DMA_DEV_TO_MEM);
+> +		else
+> +			caps->directions = BIT(DMA_MEM_TO_DEV);
+> +	} else {
+> +		if (chan->dir == EDMA_DIR_WRITE)
+> +			caps->directions = BIT(DMA_DEV_TO_MEM);
+> +		else
+> +			caps->directions = BIT(DMA_MEM_TO_DEV);
+> +	}
+> +}
+> +
+>  static int dw_edma_device_config(struct dma_chan *dchan,
+>  				 struct dma_slave_config *config)
+>  {
+> @@ -723,8 +741,8 @@ static void dw_edma_free_chan_resources(struct dma_chan *dchan)
+>  	pm_runtime_put(chan->dw->chip->dev);
+>  }
+>  
+> -static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+> -				 u32 wr_alloc, u32 rd_alloc)
+> +static int dw_edma_channel_setup(struct dw_edma_chip *chip, u32 wr_alloc,
+> +				 u32 rd_alloc)
+>  {
+>  	struct dw_edma_region *dt_region;
+>  	struct device *dev = chip->dev;
+> @@ -732,27 +750,15 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+>  	struct dw_edma_chan *chan;
+>  	struct dw_edma_irq *irq;
+>  	struct dma_device *dma;
+> -	u32 alloc, off_alloc;
+> -	u32 i, j, cnt;
+> -	int err = 0;
+> +	u32 i, ch_cnt;
+>  	u32 pos;
+>  
+> -	if (write) {
+> -		i = 0;
+> -		cnt = dw->wr_ch_cnt;
+> -		dma = &dw->wr_edma;
+> -		alloc = wr_alloc;
+> -		off_alloc = 0;
+> -	} else {
+> -		i = dw->wr_ch_cnt;
+> -		cnt = dw->rd_ch_cnt;
+> -		dma = &dw->rd_edma;
+> -		alloc = rd_alloc;
+> -		off_alloc = wr_alloc;
+> -	}
+> +	ch_cnt = dw->wr_ch_cnt + dw->rd_ch_cnt;
+> +	dma = &dw->dma;
+>  
+>  	INIT_LIST_HEAD(&dma->channels);
+> -	for (j = 0; (alloc || chip->nr_irqs == 1) && j < cnt; j++, i++) {
+> +
+> +	for (i = 0; i < ch_cnt; i++) {
+>  		chan = &dw->chan[i];
+>  
+>  		dt_region = devm_kzalloc(dev, sizeof(*dt_region), GFP_KERNEL);
+> @@ -762,52 +768,62 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+>  		chan->vc.chan.private = dt_region;
+>  
+>  		chan->dw = dw;
+> -		chan->id = j;
+> -		chan->dir = write ? EDMA_DIR_WRITE : EDMA_DIR_READ;
+> +
+> +		if (i < dw->wr_ch_cnt) {
+> +			chan->id = i;
+> +			chan->dir = EDMA_DIR_WRITE;
+> +		} else {
+> +			chan->id = i - dw->wr_ch_cnt;
+> +			chan->dir = EDMA_DIR_READ;
+> +		}
+> +
+>  		chan->configured = false;
+>  		chan->request = EDMA_REQ_NONE;
+>  		chan->status = EDMA_ST_IDLE;
+>  
+> -		if (write)
+> -			chan->ll_max = (chip->ll_region_wr[j].sz / EDMA_LL_SZ);
+> +		if (chan->dir == EDMA_DIR_WRITE)
+> +			chan->ll_max = (chip->ll_region_wr[chan->id].sz / EDMA_LL_SZ);
+>  		else
+> -			chan->ll_max = (chip->ll_region_rd[j].sz / EDMA_LL_SZ);
+> +			chan->ll_max = (chip->ll_region_rd[chan->id].sz / EDMA_LL_SZ);
+>  		chan->ll_max -= 1;
+>  
+>  		dev_vdbg(dev, "L. List:\tChannel %s[%u] max_cnt=%u\n",
+> -			 write ? "write" : "read", j, chan->ll_max);
+> +			 chan->dir == EDMA_DIR_WRITE ? "write" : "read",
+> +			 chan->id, chan->ll_max);
+>  
+>  		if (chip->nr_irqs == 1)
+>  			pos = 0;
+> +		else if (chan->dir == EDMA_DIR_WRITE)
+> +			pos = chan->id % wr_alloc;
+>  		else
+> -			pos = off_alloc + (j % alloc);
+> +			pos = wr_alloc + chan->id % rd_alloc;
+>  
+>  		irq = &dw->irq[pos];
+>  
+> -		if (write)
+> -			irq->wr_mask |= BIT(j);
+> +		if (chan->dir == EDMA_DIR_WRITE)
+> +			irq->wr_mask |= BIT(chan->id);
+>  		else
+> -			irq->rd_mask |= BIT(j);
+> +			irq->rd_mask |= BIT(chan->id);
+>  
+>  		irq->dw = dw;
+>  		memcpy(&chan->msi, &irq->msi, sizeof(chan->msi));
+>  
+>  		dev_vdbg(dev, "MSI:\t\tChannel %s[%u] addr=0x%.8x%.8x, data=0x%.8x\n",
+> -			 write ? "write" : "read", j,
+> +			 chan->dir == EDMA_DIR_WRITE  ? "write" : "read", chan->id,
+>  			 chan->msi.address_hi, chan->msi.address_lo,
+>  			 chan->msi.data);
+>  
+>  		chan->vc.desc_free = vchan_free_desc;
+>  		vchan_init(&chan->vc, dma);
+>  
+> -		if (write) {
+> -			dt_region->paddr = chip->dt_region_wr[j].paddr;
+> -			dt_region->vaddr = chip->dt_region_wr[j].vaddr;
+> -			dt_region->sz = chip->dt_region_wr[j].sz;
+> +		if (chan->dir == EDMA_DIR_WRITE) {
+> +			dt_region->paddr = chip->dt_region_wr[chan->id].paddr;
+> +			dt_region->vaddr = chip->dt_region_wr[chan->id].vaddr;
+> +			dt_region->sz = chip->dt_region_wr[chan->id].sz;
+>  		} else {
+> -			dt_region->paddr = chip->dt_region_rd[j].paddr;
+> -			dt_region->vaddr = chip->dt_region_rd[j].vaddr;
+> -			dt_region->sz = chip->dt_region_rd[j].sz;
+> +			dt_region->paddr = chip->dt_region_rd[chan->id].paddr;
+> +			dt_region->vaddr = chip->dt_region_rd[chan->id].vaddr;
+> +			dt_region->sz = chip->dt_region_rd[chan->id].sz;
+>  		}
+>  
+>  		dw_edma_v0_core_device_config(chan);
+> @@ -819,7 +835,7 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+>  	dma_cap_set(DMA_CYCLIC, dma->cap_mask);
+>  	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
+>  	dma_cap_set(DMA_INTERLEAVE, dma->cap_mask);
+> -	dma->directions = BIT(write ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV);
+> +	dma->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+>  	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+>  	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+>  	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+> @@ -828,6 +844,7 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+>  	dma->dev = chip->dev;
+>  	dma->device_alloc_chan_resources = dw_edma_alloc_chan_resources;
+>  	dma->device_free_chan_resources = dw_edma_free_chan_resources;
+> +	dma->device_caps = dw_edma_device_caps;
+>  	dma->device_config = dw_edma_device_config;
+>  	dma->device_pause = dw_edma_device_pause;
+>  	dma->device_resume = dw_edma_device_resume;
+> @@ -841,9 +858,7 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+>  	dma_set_max_seg_size(dma->dev, U32_MAX);
+>  
+>  	/* Register DMA device */
+> -	err = dma_async_device_register(dma);
+> -
+> -	return err;
+> +	return dma_async_device_register(dma);
+>  }
+>  
+>  static inline void dw_edma_dec_irq_alloc(int *nr_irqs, u32 *alloc, u16 cnt)
+> @@ -982,13 +997,8 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  	if (err)
+>  		return err;
+>  
+> -	/* Setup write channels */
+> -	err = dw_edma_channel_setup(chip, true, wr_alloc, rd_alloc);
+> -	if (err)
+> -		goto err_irq_free;
+> -
+> -	/* Setup read channels */
+> -	err = dw_edma_channel_setup(chip, false, wr_alloc, rd_alloc);
+> +	/* Setup write/read channels */
+> +	err = dw_edma_channel_setup(chip, wr_alloc, rd_alloc);
+>  	if (err)
+>  		goto err_irq_free;
+>  
+> @@ -1028,15 +1038,8 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+>  	pm_runtime_disable(dev);
+>  
+>  	/* Deregister eDMA device */
+> -	dma_async_device_unregister(&dw->wr_edma);
+> -	list_for_each_entry_safe(chan, _chan, &dw->wr_edma.channels,
+> -				 vc.chan.device_node) {
+> -		tasklet_kill(&chan->vc.task);
+> -		list_del(&chan->vc.chan.device_node);
+> -	}
+> -
+> -	dma_async_device_unregister(&dw->rd_edma);
+> -	list_for_each_entry_safe(chan, _chan, &dw->rd_edma.channels,
+> +	dma_async_device_unregister(&dw->dma);
+> +	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
+>  				 vc.chan.device_node) {
+>  		tasklet_kill(&chan->vc.task);
+>  		list_del(&chan->vc.chan.device_node);
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+> index e254c2fc3d9c..ec9f84a857d1 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.h
+> +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> @@ -98,10 +98,9 @@ struct dw_edma_irq {
+>  struct dw_edma {
+>  	char				name[20];
+>  
+> -	struct dma_device		wr_edma;
+> -	u16				wr_ch_cnt;
+> +	struct dma_device		dma;
+>  
+> -	struct dma_device		rd_edma;
+> +	u16				wr_ch_cnt;
+>  	u16				rd_ch_cnt;
+>  
+>  	struct dw_edma_irq		*irq;
+> -- 
+> 2.35.1
 > 
-> Thanks,
-> Mani
-> 
-> > +	void __iomem *reg = entry->reg;
-> >  
-> >  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY &&
-> >  	    reg >= (void __iomem *)&regs->type.legacy.ch) {
-> > @@ -94,14 +95,22 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
-> >  }
-> >  DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_edma_debugfs_u32_get, NULL, "0x%08llx\n");
-> >  
-> > -static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry entries[],
-> > +static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry ini[],
-> >  				       int nr_entries, struct dentry *dir)
-> >  {
-> > +	struct dw_edma_debugfs_entry *entries;
-> >  	int i;
-> >  
-> > +	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
-> > +			       GFP_KERNEL);
-> > +	if (!entries)
-> > +		return;
-> > +
-> >  	for (i = 0; i < nr_entries; i++) {
-> > +		entries[i] = ini[i];
-> > +
-> >  		debugfs_create_file_unsafe(entries[i].name, 0444, dir,
-> > -					   entries[i].reg, &fops_x32);
-> > +					   &entries[i], &fops_x32);
-> >  	}
-> >  }
-> >  
-> > -- 
-> > 2.35.1
-> > 
