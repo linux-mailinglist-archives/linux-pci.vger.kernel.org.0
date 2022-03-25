@@ -2,250 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E62F4E740A
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 14:16:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13B0A4E748C
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Mar 2022 14:56:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351441AbiCYNSK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Mar 2022 09:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36678 "EHLO
+        id S1357963AbiCYN5j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Mar 2022 09:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354798AbiCYNSH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 09:18:07 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA60D110E;
-        Fri, 25 Mar 2022 06:16:33 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22PB1jP9006051;
-        Fri, 25 Mar 2022 13:16:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=VKd5vFUiEKfuRcGuSWKwzFHHhQa5vtGA/lkq5v9/Zc8=;
- b=d69tMUxi54X86z0LBmohP/FJOVgeJAlviYq4s5qJVQ44S/IAAuWT4EF5hQlFLRFEvaPK
- BITtgoeZ2ZqqfUsyDbQofVCs63OjIp3o1i+WyDCVrm02F7YsoZwiDlgiFlznGyEKWcKS
- d96Yf3qbCDGOfenChqtEVynyUN1dfsugj+cgsGLWL9ocMo6Vy5rd3wYOE6irnJq7vf0k
- TEpzhIIZGDK12n4dXm5KRt0+Z4CsjDfsMUdSeoRKvhJwMwvx+A+y6LMYZSfdSEBvf1j4
- GkKueOdUckEnSVdIE6tmgNSWxq27t1QUOP6gzgfXDJibgspxH8aZKlp0oaM2mdZb7uMp Eg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3f0rgtc1ug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Mar 2022 13:16:30 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 22PD2whF016921;
-        Fri, 25 Mar 2022 13:16:29 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3f0rgtc1tq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Mar 2022 13:16:29 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22PDAMc9006725;
-        Fri, 25 Mar 2022 13:16:27 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 3ew6t95awc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Mar 2022 13:16:27 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22PDGO3H35455248
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Mar 2022 13:16:24 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 281A35204F;
-        Fri, 25 Mar 2022 13:16:24 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E56F952050;
-        Fri, 25 Mar 2022 13:16:23 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 2/2] s390/pci: allow zPCI zbus without a function zero
-Date:   Fri, 25 Mar 2022 14:16:23 +0100
-Message-Id: <20220325131623.4183566-2-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220325131623.4183566-1-schnelle@linux.ibm.com>
-References: <20220325131623.4183566-1-schnelle@linux.ibm.com>
+        with ESMTP id S1353781AbiCYN5j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 09:57:39 -0400
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0271D0802;
+        Fri, 25 Mar 2022 06:56:04 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-2e6650cde1bso83446087b3.12;
+        Fri, 25 Mar 2022 06:56:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PF/pvAnVHQBRQISxJmprBIcsYSMudqcYszk7AML3ZLI=;
+        b=n8P/51BFnSNUSXgqowieTJVp4/XIW8bumvMMfbfv8KZebQ20pgc0cZsSAfZu5doU7q
+         JImrweZiT9UxwX37iwfQH3IS9ha0NCfp6+4IHyjrQd2AjB3XfqWig1IDI3atRDThRKYZ
+         5rIV3NWPYjlQ1t3RXqyrZm9G0ijRCEN6yYabhd+zEkSLo2F5IstsOutYZ1AgiXNOgxdx
+         Nqpq7RE5nT6rnr9BjM/H+bx0BjPyOO9O6ZYXUXUkkDyj11ufE2RCmRHULNvfH5k/Zg0i
+         xtKHFVSBFrHHNLCbniV/RBlLJooqLBN46gmr4StBL3hHjJUab3um6LdIMUpPGu6CdSxC
+         Donw==
+X-Gm-Message-State: AOAM533BAaelakkgpqBk8SeLUKRFw+ji0swBSH0GQU8Jp/2hqyB9p62C
+        AvhGGz2EqmUwG3N25euk8Vg9WyT/1I/+XMyD99c=
+X-Google-Smtp-Source: ABdhPJxFqAA6th2WKP6PEpU7wg4CeoG0BN+7K2HIHAa01clp5Tgl1g0JaiMPCHnRM4MuRR/JMWRN7yPvHIyWJlRP/MQ=
+X-Received: by 2002:a81:6887:0:b0:2e6:126d:3102 with SMTP id
+ d129-20020a816887000000b002e6126d3102mr10778712ywc.7.1648216562463; Fri, 25
+ Mar 2022 06:56:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Q0SMxE-Jhqwn2Mqt_5ES1IIgIJUz9kdz
-X-Proofpoint-GUID: 91x-pGB_SGMd6CtZ2SpYubRXUuYFmooK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-25_02,2022-03-24_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- suspectscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=941
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203250073
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAJZ5v0hVFkKXTJcrFqRR4FoK5v_k3zCacKPmurWm=sozt7GPiQ@mail.gmail.com>
+ <20220324185237.GA1466503@bhelgaas> <CAJZ5v0j6xSBgZCWPAbVEK4X0Q8saJe+5xnKcgugA2i2Y5gm3Dw@mail.gmail.com>
+ <BL1PR12MB51578C9CFF18412814C0E94DE2199@BL1PR12MB5157.namprd12.prod.outlook.com>
+In-Reply-To: <BL1PR12MB51578C9CFF18412814C0E94DE2199@BL1PR12MB5157.namprd12.prod.outlook.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 25 Mar 2022 14:55:49 +0100
+Message-ID: <CAJZ5v0jQ0WuDPzm1TJ8DOvMm6Daw-F2Q1ZQVRmwMRgqn1D5THA@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI / ACPI: Assume `HotPlugSupportInD3` only if device
+ can wake from D3
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Mehta, Sanju" <Sanju.Mehta@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently the zPCI code block PCI bus creation and probing of a zPCI
-zbus unless there is a PCI function with devfn 0. This is always the
-case for the PCI functions with hidden RID but may keep PCI functions
-from a multi-function PCI device with RID information invisible until
-the function 0 becomes visible. Worse as a PCI bus is necessary to even
-present a PCI hotplug slot even that remains invisible.
+On Fri, Mar 25, 2022 at 12:13 AM Limonciello, Mario
+<Mario.Limonciello@amd.com> wrote:
+>
+> [Public]
+>
+>
+>
+> > -----Original Message-----
+> > From: Rafael J. Wysocki <rafael@kernel.org>
+> > Sent: Thursday, March 24, 2022 14:10
+> > To: Bjorn Helgaas <helgaas@kernel.org>
+> > Cc: Rafael J. Wysocki <rafael@kernel.org>; Limonciello, Mario
+> > <Mario.Limonciello@amd.com>; Bjorn Helgaas <bhelgaas@google.com>;
+> > open list:PCI SUBSYSTEM <linux-pci@vger.kernel.org>; Linux PM <linux-
+> > pm@vger.kernel.org>; Mehta, Sanju <Sanju.Mehta@amd.com>; Mika
+> > Westerberg <mika.westerberg@linux.intel.com>
+> > Subject: Re: [PATCH v4] PCI / ACPI: Assume `HotPlugSupportInD3` only if
+> > device can wake from D3
+> >
+> > On Thu, Mar 24, 2022 at 7:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Thu, Mar 24, 2022 at 07:31:56PM +0100, Rafael J. Wysocki wrote:
+> > > > On Thu, Mar 24, 2022 at 6:15 PM Limonciello, Mario
+> > > > <Mario.Limonciello@amd.com> wrote:
+> > > > > > -----Original Message-----
+> > > > > > From: Bjorn Helgaas <helgaas@kernel.org>
+> > > > > > Sent: Thursday, March 24, 2022 11:35
+> > > > > > To: Limonciello, Mario <Mario.Limonciello@amd.com>
+> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>; open list:PCI SUBSYSTEM
+> > <linux-
+> > > > > > pci@vger.kernel.org>; Linux PM <linux-pm@vger.kernel.org>;
+> > Mehta, Sanju
+> > > > > > <Sanju.Mehta@amd.com>; Rafael J. Wysocki <rafael@kernel.org>;
+> > Mika
+> > > > > > Westerberg <mika.westerberg@linux.intel.com>
+> > > > > > Subject: Re: [PATCH v4] PCI / ACPI: Assume `HotPlugSupportInD3`
+> > only if
+> > > > > > device can wake from D3
+> > > > > >
+> > > > > > [+cc Mika, "HotPlugSupportInD3" scope question below]
+> > > > >
+> > > > > FYI - Mika had approved some earlier versions of this, so I expect
+> > conceptual
+> > > > > Alignment at least with the latest one.
+> > > > >
+> > > > > <snip>
+> > > > >
+> > > > > > > > Can we at least list some common scenarios?  E.g., it affects
+> > > > > > > > kernels after commit X, or it affects machines with CPUs newer
+> > > > > > > > than Y, or it affects a certain kind of tunneling, etc?  Distros
+> > > > > > > > need this information so they can figure whether and how far to
+> > > > > > > > backport things like this.
+> > > > > > >
+> > > > > > > It's going to affect any retail machine with the SOC we refer to in
+> > > > > > > the kernel as "Yellow Carp".  This is one of the first non-Intel
+> > > > > > > USB4 hosts and will be using the USB4 SW CM in the kernel.
+> > > > > > >
+> > > > > > > Without this change, effectively PCIe tunneling will not work when
+> > > > > > > any downstream PCIe device is hotplugged.  In the right
+> > > > > > > circumstances it might work if it's coldbooted (if the paths
+> > > > > > > selected by the pre-boot firmware connection manager are
+> > identical
+> > > > > > > to that selected by SW CM).
+> > > > > >
+> > > > > > Thanks a lot for this context!  As far as I can tell from grubbing
+> > > > > > through the git history, there are no PCI, USB4, or Thunderbolt
+> > > > > > changes related to Yellow Carp, so I assume this has to do with Yellow
+> > > > > > Carp firmware doing things differently than previous platforms.
+> > > > >
+> > > > > There have been a variety of Thunderbolt/USB4 changes as a result of
+> > > > > Yellow Carp development and findings, but they have not been quirks;
+> > > > > they have been done as generic changes that still make sense for all
+> > > > > USB4 devices.
+> > > > >
+> > > > > Sanju (on CC) has submitted a majority of these, so if you want to see
+> > > > > a sense of what these are you can look for his commits in
+> > drivers/thunderbolt.
+> > > > >
+> > > > > > Previously, if a Root Port implemented the HotPlugSupportInD3
+> > > > > > property, we assumed that the Root Port and any downstream
+> > bridges
+> > > > > > could handle hot-plug events while in D3hot.
+> > > > > >
+> > > > > > I guess the difference here is that on Yellow Carp firmware, even if
+> > > > > > there is a HotPlugSupportInD3 property on the Root Port, the Root
+> > Port
+> > > > > > cannot handle hot-plug events in D3hot UNLESS there is also an _S0W
+> > > > > > method AND that _S0W says the Root Port can wakeup from D3hot or
+> > > > > > D3cold, right?
+> > > > >
+> > > > > Yes, correct!
+> > > > >
+> > > > > > I have some heartburn about this that's only partly related to this
+> > > > > > patch.  The Microsoft doc clearly says "HotPlugSupportInD3" must be
+> > > > > > implemented on Root Ports and its presence tells us that the *Root
+> > > > > > Port* can handle hot-plug events while in D3.
+> > > > > >
+> > > > > > But acpi_pci_bridge_d3() looks up the Root Port at the top of the
+> > > > > > hierarchy and assume that its "HotPlugSupportInD3" applies to any
+> > > > > > switch ports that may be below that Root Port (added by
+> > 26ad34d510a8
+> > > > > > ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports") [1]).
+> > > >
+> > > > Not really.
+> > > >
+> > > > "HotPlugSupportInD3" applies to the root port only and the platform
+> > > > firmware may not know about any ports below it.
+> > > >
+> > > > However, the presence of "HotPlugSupportInD3" is used as an indicator
+> > > > that the entire hierarchy is "D3cold-aware", so to speak.
+> > > > Essentially, this boils down to the "Is the hardware modern enough?"
+> > > > consideration and the answer is assumed to be "yes" if the property in
+> > > > question is present for the root port.
+> > >
+> > > Seems weird to me since we're talking about a hot-plug Root Port and
+> > > anything at all could be plugged into it.  We're basically saying that
+> > > we can assume a property of an arbitrary downstream device based on
+> > > something we know about the upstream device.  I'm still not
+> > > comfortable with that.
+> > >
+> > > At a minimum we should add a comment about this assumption.  The
+> > > existing "... we know the hierarchy behind it supports D3 just fine"
+> > > seems a little too strong.
+> > >
+> > > > But if "HotPlugSupportInD3" is not consistent with the other pieces of
+> > > > information regarding the root port available from the firmware (_PRW
+> > > > and _S0W in this particular case), the presence of it is questionable
+> > > > in the first place, so IMO the approach here makes sense.
+> > >
+> > > This part seems reasonable to me, as long as we have good confidence
+> > > that requiring "HotPlugSupportInD3" + _PRW + _S0W where we used to
+> > > require only "HotPlugSupportInD3" is unlikely to break anything.
+> > >
+> > > I can't judge that, but I assume you know that we don't use the
+> > > acpi_pci_bridge_d3() result unless _PRW and _S0W exist, so I'll take
+> > > your word for it :)
+> >
+> > Actually, that is an extremely good point I didn't think about.
+> >
+> > Thinking about it now, one thing is missing: a check if _S0W is
+> > present, because the lack of it means "any power state should be
+> > fine".
+> >
+> > With this check in place we would only avoid taking
+> > "HotPlugSupportInD3" into account if it were not consistent with the
+> > other settings and if that didn't work, we would end up in the quirks
+> > territory this way or another.
+>
+> In that case something like this instead?
 
-With the probing of these so called isolated PCI functions enabled for
-s390 in common code this restriction is no longer necessary. On network
-cards with multiple ports and a PF per port this also allows using each
-port on its own while still providing the physical PCI topology
-information in the devfn needed to associate VFs with their parent PF.
+Works for me.
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- arch/s390/pci/pci_bus.c | 82 ++++++++++-------------------------------
- 1 file changed, 20 insertions(+), 62 deletions(-)
-
-diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-index 5d77acbd1c87..6a8da1b742ae 100644
---- a/arch/s390/pci/pci_bus.c
-+++ b/arch/s390/pci/pci_bus.c
-@@ -145,9 +145,6 @@ int zpci_bus_scan_bus(struct zpci_bus *zbus)
- 	struct zpci_dev *zdev;
- 	int devfn, rc, ret = 0;
- 
--	if (!zbus->function[0])
--		return 0;
--
- 	for (devfn = 0; devfn < ZPCI_FUNCTIONS_PER_BUS; devfn++) {
- 		zdev = zbus->function[devfn];
- 		if (zdev && zdev->state == ZPCI_FN_STATE_CONFIGURED) {
-@@ -184,26 +181,26 @@ void zpci_bus_scan_busses(void)
- 
- /* zpci_bus_create_pci_bus - Create the PCI bus associated with this zbus
-  * @zbus: the zbus holding the zdevices
-- * @f0: function 0 of the bus
-+ * @fr: PCI root function that will determine the bus's domain, and bus speeed
-  * @ops: the pci operations
-  *
-- * Function zero is taken as a parameter as this is used to determine the
-- * domain, multifunction property and maximum bus speed of the entire bus.
-+ * The PCI function @fr determines the domain (its UID), multifunction property
-+ * and maximum bus speed of the entire bus.
-  *
-  * Return: 0 on success, an error code otherwise
-  */
--static int zpci_bus_create_pci_bus(struct zpci_bus *zbus, struct zpci_dev *f0, struct pci_ops *ops)
-+static int zpci_bus_create_pci_bus(struct zpci_bus *zbus, struct zpci_dev *fr, struct pci_ops *ops)
- {
- 	struct pci_bus *bus;
- 	int domain;
- 
--	domain = zpci_alloc_domain((u16)f0->uid);
-+	domain = zpci_alloc_domain((u16)fr->uid);
- 	if (domain < 0)
- 		return domain;
- 
- 	zbus->domain_nr = domain;
--	zbus->multifunction = f0->rid_available;
--	zbus->max_bus_speed = f0->max_bus_speed;
-+	zbus->multifunction = fr->rid_available;
-+	zbus->max_bus_speed = fr->max_bus_speed;
- 
- 	/*
- 	 * Note that the zbus->resources are taken over and zbus->resources
-@@ -303,47 +300,6 @@ void pcibios_bus_add_device(struct pci_dev *pdev)
- 	}
- }
- 
--/* zpci_bus_create_hotplug_slots - Add hotplug slot(s) for device added to bus
-- * @zdev: the zPCI device that was newly added
-- *
-- * Add the hotplug slot(s) for the newly added PCI function. Normally this is
-- * simply the slot for the function itself. If however we are adding the
-- * function 0 on a zbus, it might be that we already registered functions on
-- * that zbus but could not create their hotplug slots yet so add those now too.
-- *
-- * Return: 0 on success, an error code otherwise
-- */
--static int zpci_bus_create_hotplug_slots(struct zpci_dev *zdev)
--{
--	struct zpci_bus *zbus = zdev->zbus;
--	int devfn, rc = 0;
--
--	rc = zpci_init_slot(zdev);
--	if (rc)
--		return rc;
--	zdev->has_hp_slot = 1;
--
--	if (zdev->devfn == 0 && zbus->multifunction) {
--		/* Now that function 0 is there we can finally create the
--		 * hotplug slots for those functions with devfn != 0 that have
--		 * been parked in zbus->function[] waiting for us to be able to
--		 * create the PCI bus.
--		 */
--		for  (devfn = 1; devfn < ZPCI_FUNCTIONS_PER_BUS; devfn++) {
--			zdev = zbus->function[devfn];
--			if (zdev && !zdev->has_hp_slot) {
--				rc = zpci_init_slot(zdev);
--				if (rc)
--					return rc;
--				zdev->has_hp_slot = 1;
--			}
--		}
--
--	}
--
--	return rc;
--}
--
- static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
- {
- 	int rc = -EINVAL;
-@@ -352,21 +308,19 @@ static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
- 		pr_err("devfn %04x is already assigned\n", zdev->devfn);
- 		return rc;
- 	}
-+
- 	zdev->zbus = zbus;
- 	zbus->function[zdev->devfn] = zdev;
- 	zpci_nb_devices++;
- 
--	if (zbus->bus) {
--		if (zbus->multifunction && !zdev->rid_available) {
--			WARN_ONCE(1, "rid_available not set for multifunction\n");
--			goto error;
--		}
--
--		zpci_bus_create_hotplug_slots(zdev);
--	} else {
--		/* Hotplug slot will be created once function 0 appears */
--		zbus->multifunction = 1;
-+	if (zbus->multifunction && !zdev->rid_available) {
-+		WARN_ONCE(1, "rid_available not set for multifunction\n");
-+		goto error;
- 	}
-+	rc = zpci_init_slot(zdev);
-+	if (rc)
-+		goto error;
-+	zdev->has_hp_slot = 1;
- 
- 	return 0;
- 
-@@ -400,7 +354,11 @@ int zpci_bus_device_register(struct zpci_dev *zdev, struct pci_ops *ops)
- 			return -ENOMEM;
- 	}
- 
--	if (zdev->devfn == 0) {
-+	if (!zbus->bus) {
-+		/* The UID of the first PCI function registered with a zpci_bus
-+		 * is used as the domain number for that bus. Currently there
-+		 * is exactly one zpci_bus per domain.
-+		 */
- 		rc = zpci_bus_create_pci_bus(zbus, zdev, ops);
- 		if (rc)
- 			goto error;
--- 
-2.32.0
-
+> +       if (!adev->wakeup.flags.valid)
+> +               return false;
+> +
+> +       if (ACPI_SUCCESS(acpi_evaluate_integer(adev->handle, "_S0W", NULL, &ret)))
+> +               return ret >= ACPI_STATE_D3_HOT;
+> +
+> +       return true;
