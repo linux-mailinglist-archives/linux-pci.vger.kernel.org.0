@@ -2,58 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5F754E7CF7
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Mar 2022 01:22:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EFA44E7EC6
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Mar 2022 04:27:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232445AbiCYVIg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Mar 2022 17:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
+        id S230515AbiCZD3U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Mar 2022 23:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232883AbiCYVIf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 17:08:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCB131EC611;
-        Fri, 25 Mar 2022 14:07:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A53861D41;
-        Fri, 25 Mar 2022 21:07:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D3701C004DD;
-        Fri, 25 Mar 2022 21:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648242419;
-        bh=M/x6qBkGqzdDZYrnIYl79Nsx6Wan8hcfIryiBqOzO5I=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=oHTSL0AdIkf9Cv+im8pwOXhCHYfDd7iF6VUUF6PhPG9X+Ck5X5Q5VIjhLv5SBkNg2
-         es/EFrb6Nqdee5TZSpakjscXF4Ag7I09NDeejSHNuj7rEw4woWybTIGVKtIAwZhSi5
-         GR+yBVPJE81rKIAJa5t3OfdkXXv37C9b7fMJNbjOX1JNrhwe5jxA/nfJm8dPD/pHhb
-         HG2oq0Ox1eBwZbY+9Oirlgmpg0EZY6s1SBwzjUQMB2pB8Z++jiorirbTXP2RRRRnha
-         zYfa5t8HLmSuBAtZZSRbxK+ZvW/sHzfD1nurD2PC1ipMGNE8F2fJI3PHccY8K5oOA0
-         VjL65qBv1FhGA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C118BE7BB0B;
-        Fri, 25 Mar 2022 21:06:59 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI changes for v5.18
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220323211743.GA1372301@bhelgaas>
-References: <20220323211743.GA1372301@bhelgaas>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220323211743.GA1372301@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.18-changes
-X-PR-Tracked-Commit-Id: 611f841830aa5723ea67682628bd214cbc18df41
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 148a650476955705482dd57e7ffcf105d8b65440
-Message-Id: <164824241978.8431.17098189777835562632.pr-tracker-bot@kernel.org>
-Date:   Fri, 25 Mar 2022 21:06:59 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S229773AbiCZD3S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Mar 2022 23:29:18 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8089515E8BF;
+        Fri, 25 Mar 2022 20:27:41 -0700 (PDT)
+X-UUID: 0e9932cd26824c4883750dfecb4a2a30-20220326
+X-UUID: 0e9932cd26824c4883750dfecb4a2a30-20220326
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 121017082; Sat, 26 Mar 2022 11:27:35 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sat, 26 Mar 2022 11:27:34 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 26 Mar 2022 11:27:33 +0800
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] PCI: mediatek: Update entries to distinguish MediaTek PCIe controller
+Date:   Sat, 26 Mar 2022 11:27:08 +0800
+Message-ID: <20220326032708.3626-1-jianjun.wang@mediatek.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,15 +54,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Wed, 23 Mar 2022 16:17:43 -0500:
+Add model numbers in Kconfig and update driver name in
+pcie-mediatek-gen3.c to distinguish the MediaTek PCIe controllers.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.18-changes
+Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+---
+ drivers/pci/controller/Kconfig              | 11 +++++++----
+ drivers/pci/controller/pcie-mediatek-gen3.c | 12 ++++++------
+ 2 files changed, 13 insertions(+), 10 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/148a650476955705482dd57e7ffcf105d8b65440
-
-Thank you!
-
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 601f2531ee91..dd7a2caf8da9 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -237,8 +237,11 @@ config PCIE_MEDIATEK
+ 	depends on OF
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	help
+-	  Say Y here if you want to enable PCIe controller support on
+-	  MediaTek SoCs.
++	  Adds support for PCIe MAC controller for MediaTek SoCs.
++
++	  The following SoCs are supported for this PCIe controller:
++	  MT2701 and MT7623 with no MSI supported.
++	  MT2712, MT7622 and MT7629 support up to 32 MSI interrupt numbers.
+ 
+ config PCIE_MEDIATEK_GEN3
+ 	tristate "MediaTek Gen3 PCIe controller"
+@@ -250,8 +253,8 @@ config PCIE_MEDIATEK_GEN3
+ 	  and support up to 256 MSI interrupt numbers for
+ 	  multi-function devices.
+ 
+-	  Say Y here if you want to enable Gen3 PCIe controller support on
+-	  MediaTek SoCs.
++	  The following SoCs are supported for this PCIe controller:
++	  MT8192 and MT8195.
+ 
+ config VMD
+ 	depends on PCI_MSI && X86_64 && SRCU && !UML
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 7705d61fba4c..6745076a02b9 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -1011,21 +1011,21 @@ static const struct dev_pm_ops mtk_pcie_pm_ops = {
+ 				      mtk_pcie_resume_noirq)
+ };
+ 
+-static const struct of_device_id mtk_pcie_of_match[] = {
++static const struct of_device_id mtk_pcie_gen3_of_match[] = {
+ 	{ .compatible = "mediatek,mt8192-pcie" },
+ 	{},
+ };
+-MODULE_DEVICE_TABLE(of, mtk_pcie_of_match);
++MODULE_DEVICE_TABLE(of, mtk_pcie_gen3_of_match);
+ 
+-static struct platform_driver mtk_pcie_driver = {
++static struct platform_driver mtk_pcie_driver_gen3 = {
+ 	.probe = mtk_pcie_probe,
+ 	.remove = mtk_pcie_remove,
+ 	.driver = {
+-		.name = "mtk-pcie",
+-		.of_match_table = mtk_pcie_of_match,
++		.name = "mtk-pcie-gen3",
++		.of_match_table = mtk_pcie_gen3_of_match,
+ 		.pm = &mtk_pcie_pm_ops,
+ 	},
+ };
+ 
+-module_platform_driver(mtk_pcie_driver);
++module_platform_driver(mtk_pcie_driver_gen3);
+ MODULE_LICENSE("GPL v2");
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.18.0
+
