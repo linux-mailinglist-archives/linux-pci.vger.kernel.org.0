@@ -2,248 +2,292 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB5E84E9C0E
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 18:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FCEE4E9C2A
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 18:23:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241876AbiC1QTd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 12:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52850 "EHLO
+        id S241963AbiC1QYZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 12:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241774AbiC1QT1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 12:19:27 -0400
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00E23E5DC;
-        Mon, 28 Mar 2022 09:17:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1648484267; x=1680020267;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Eu7nJy5jkPS6ql5ANPoXUckpfZ6g40U1vF2Yo2ODg4c=;
-  b=lWeb1oJMQ0HozGS+eGbIRSBM70ecG0kNOWkFHmOM/8VfoOy75JCLoOb4
-   d47bbHtIXAkYOjAlBNW0AoXXVcWbG5tVN29cajuIQEVQ8nwDfHSXvscLI
-   8mEC8S3Z/VJIDvO+2/MEaYOobW+KYXjxtQ5n5Wam2hweqmslucbf1Rpki
-   4=;
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 28 Mar 2022 09:17:46 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 09:17:44 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Mon, 28 Mar 2022 09:17:44 -0700
-Received: from [10.110.35.108] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Mon, 28 Mar
- 2022 09:17:41 -0700
-Message-ID: <f0ebc901-051a-c7fe-ca5a-bc798e7c31e7@quicinc.com>
-Date:   Mon, 28 Mar 2022 09:17:40 -0700
+        with ESMTP id S238203AbiC1QYZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 12:24:25 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C022FFEA;
+        Mon, 28 Mar 2022 09:22:44 -0700 (PDT)
+Received: by mail-ot1-f50.google.com with SMTP id w17-20020a056830111100b005b22c584b93so11009532otq.11;
+        Mon, 28 Mar 2022 09:22:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=J1jMR9dXB4EBClhx/VkwbBtXY45OnmdTpgwd1QsgBQ0=;
+        b=MhE+obHAa1C9fRo/5Blx9G6NbyqbnNQUzkUnOEuBMPi9fODml7nwUVMmZvjD8UpCO/
+         18KVdmtxCZcpNqwfpHZa2GHAnH9R8e0srvxbDzg1z4iLWHp5SlOrD40oCaFh71Y61quu
+         Dw+O7FXP7rM17uopU6UWBvJFsQUAGHLySh8z+M+EgR5thQs1RmwitNwn/Px6ZJ9GZOkH
+         PrPxfC0KHTfXXXZQedxuDTxbld2M4/mYFnpkLwDMTNJnxtnYnduAhrmthUmczR4Xj28o
+         ABm7uDcntb0PeDLp2GEAXT+QWcDbTbiS9xoSVHNrpd+LltcgnbCFo9mF6Aba8WOTs7aa
+         dk7A==
+X-Gm-Message-State: AOAM531NKXQMArL80WAFpRVChgbrs3lLgvsLGer3h2g+yFvnryWoVC6g
+        ZvVMiR0SSed5STLsQodDtA==
+X-Google-Smtp-Source: ABdhPJxrUjcZd0pzxFr4q2rWryMDDV/OHhC+GnOG4OjChVysYlaPrNdSQQtr2s79Mp1NPLmf4hpKdg==
+X-Received: by 2002:a05:6830:1f5b:b0:5a2:2ec7:4ea4 with SMTP id u27-20020a0568301f5b00b005a22ec74ea4mr10412065oth.206.1648484563468;
+        Mon, 28 Mar 2022 09:22:43 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id e4-20020a056808148400b002d9be41b179sm7702224oiw.50.2022.03.28.09.22.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Mar 2022 09:22:42 -0700 (PDT)
+Received: (nullmailer pid 2497885 invoked by uid 1000);
+        Mon, 28 Mar 2022 16:22:41 -0000
+Date:   Mon, 28 Mar 2022 11:22:41 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: uniphier: Convert uniphier-pcie.txt to
+ json-schema
+Message-ID: <YkHg0UeS9kPOW6Kf@robh.at.kernel.org>
+References: <1648433498-23450-1-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH 19/22] wnc36xx: Replace comments with C99 initializers
-Content-Language: en-US
-To:     =?UTF-8?Q?Benjamin_St=c3=bcrz?= <benni@stuerz.xyz>,
-        <andrew@lunn.ch>
-CC:     <sebastian.hesselbarth@gmail.com>, <gregory.clement@bootlin.com>,
-        <linux@armlinux.org.uk>, <linux@simtec.co.uk>, <krzk@kernel.org>,
-        <alim.akhtar@samsung.com>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-        <hpa@zytor.com>, <robert.moore@intel.com>,
-        <rafael.j.wysocki@intel.com>, <lenb@kernel.org>,
-        <3chas3@gmail.com>, <laforge@gnumonks.org>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <mchehab@kernel.org>,
-        <tony.luck@intel.com>, <james.morse@arm.com>, <rric@kernel.org>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <mike.marciniszyn@cornelisnetworks.com>,
-        <dennis.dalessandro@cornelisnetworks.com>, <jgg@ziepe.ca>,
-        <pali@kernel.org>, <dmitry.torokhov@gmail.com>,
-        <isdn@linux-pingi.de>, <benh@kernel.crashing.org>,
-        <fbarrat@linux.ibm.com>, <ajd@linux.ibm.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <nico@fluxnic.net>, <loic.poulain@linaro.org>, <kvalo@kernel.org>,
-        <pkshih@realtek.com>, <bhelgaas@google.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <devel@acpica.org>,
-        <linux-atm-general@lists.sourceforge.net>,
-        <netdev@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-input@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-media@vger.kernel.org>, <wcn36xx@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <20220326165909.506926-1-benni@stuerz.xyz>
- <20220326165909.506926-19-benni@stuerz.xyz>
-From:   Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20220326165909.506926-19-benni@stuerz.xyz>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1648433498-23450-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/26/2022 9:59 AM, Benjamin Stürz wrote:
-> This replaces comments with C99's designated
-> initializers because the kernel supports them now.
+On Mon, Mar 28, 2022 at 11:11:38AM +0900, Kunihiko Hayashi wrote:
+> Convert the file into a JSON description at the yaml format.
 > 
-> Signed-off-by: Benjamin Stürz <benni@stuerz.xyz>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->   drivers/net/wireless/ath/wcn36xx/main.c | 122 ++++++++++++------------
->   1 file changed, 61 insertions(+), 61 deletions(-)
+>  .../bindings/pci/socionext,uniphier-pcie.yaml | 100 ++++++++++++++++++
+>  .../devicetree/bindings/pci/uniphier-pcie.txt |  82 --------------
+>  MAINTAINERS                                   |   2 +-
+>  3 files changed, 101 insertions(+), 83 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
 > 
-> diff --git a/drivers/net/wireless/ath/wcn36xx/main.c b/drivers/net/wireless/ath/wcn36xx/main.c
-> index 95ea7d040d8c..0fed64bd37b4 100644
-> --- a/drivers/net/wireless/ath/wcn36xx/main.c
-> +++ b/drivers/net/wireless/ath/wcn36xx/main.c
-> @@ -193,67 +193,67 @@ static inline u8 get_sta_index(struct ieee80211_vif *vif,
->   }
->   
->   static const char * const wcn36xx_caps_names[] = {
-> -	"MCC",				/* 0 */
-> -	"P2P",				/* 1 */
-> -	"DOT11AC",			/* 2 */
-> -	"SLM_SESSIONIZATION",		/* 3 */
-> -	"DOT11AC_OPMODE",		/* 4 */
-> -	"SAP32STA",			/* 5 */
-> -	"TDLS",				/* 6 */
-> -	"P2P_GO_NOA_DECOUPLE_INIT_SCAN",/* 7 */
-> -	"WLANACTIVE_OFFLOAD",		/* 8 */
-> -	"BEACON_OFFLOAD",		/* 9 */
-> -	"SCAN_OFFLOAD",			/* 10 */
-> -	"ROAM_OFFLOAD",			/* 11 */
-> -	"BCN_MISS_OFFLOAD",		/* 12 */
-> -	"STA_POWERSAVE",		/* 13 */
-> -	"STA_ADVANCED_PWRSAVE",		/* 14 */
-> -	"AP_UAPSD",			/* 15 */
-> -	"AP_DFS",			/* 16 */
-> -	"BLOCKACK",			/* 17 */
-> -	"PHY_ERR",			/* 18 */
-> -	"BCN_FILTER",			/* 19 */
-> -	"RTT",				/* 20 */
-> -	"RATECTRL",			/* 21 */
-> -	"WOW",				/* 22 */
-> -	"WLAN_ROAM_SCAN_OFFLOAD",	/* 23 */
-> -	"SPECULATIVE_PS_POLL",		/* 24 */
-> -	"SCAN_SCH",			/* 25 */
-> -	"IBSS_HEARTBEAT_OFFLOAD",	/* 26 */
-> -	"WLAN_SCAN_OFFLOAD",		/* 27 */
-> -	"WLAN_PERIODIC_TX_PTRN",	/* 28 */
-> -	"ADVANCE_TDLS",			/* 29 */
-> -	"BATCH_SCAN",			/* 30 */
-> -	"FW_IN_TX_PATH",		/* 31 */
-> -	"EXTENDED_NSOFFLOAD_SLOT",	/* 32 */
-> -	"CH_SWITCH_V1",			/* 33 */
-> -	"HT40_OBSS_SCAN",		/* 34 */
-> -	"UPDATE_CHANNEL_LIST",		/* 35 */
-> -	"WLAN_MCADDR_FLT",		/* 36 */
-> -	"WLAN_CH144",			/* 37 */
-> -	"NAN",				/* 38 */
-> -	"TDLS_SCAN_COEXISTENCE",	/* 39 */
-> -	"LINK_LAYER_STATS_MEAS",	/* 40 */
-> -	"MU_MIMO",			/* 41 */
-> -	"EXTENDED_SCAN",		/* 42 */
-> -	"DYNAMIC_WMM_PS",		/* 43 */
-> -	"MAC_SPOOFED_SCAN",		/* 44 */
-> -	"BMU_ERROR_GENERIC_RECOVERY",	/* 45 */
-> -	"DISA",				/* 46 */
-> -	"FW_STATS",			/* 47 */
-> -	"WPS_PRBRSP_TMPL",		/* 48 */
-> -	"BCN_IE_FLT_DELTA",		/* 49 */
-> -	"TDLS_OFF_CHANNEL",		/* 51 */
-> -	"RTT3",				/* 52 */
-> -	"MGMT_FRAME_LOGGING",		/* 53 */
-> -	"ENHANCED_TXBD_COMPLETION",	/* 54 */
-> -	"LOGGING_ENHANCEMENT",		/* 55 */
-> -	"EXT_SCAN_ENHANCED",		/* 56 */
-> -	"MEMORY_DUMP_SUPPORTED",	/* 57 */
-> -	"PER_PKT_STATS_SUPPORTED",	/* 58 */
-> -	"EXT_LL_STAT",			/* 60 */
-> -	"WIFI_CONFIG",			/* 61 */
-> -	"ANTENNA_DIVERSITY_SELECTION",	/* 62 */
-> +	[0]  = "MCC",
-> +	[1]  = "P2P",
-> +	[2]  = "DOT11AC",
-> +	[3]  = "SLM_SESSIONIZATION",
-> +	[4]  = "DOT11AC_OPMODE",
-> +	[5]  = "SAP32STA",
-> +	[6]  = "TDLS",
-> +	[7]  = "P2P_GO_NOA_DECOUPLE_INIT_SCAN",
-> +	[8]  = "WLANACTIVE_OFFLOAD",
-> +	[9]  = "BEACON_OFFLOAD",
-> +	[10] = "SCAN_OFFLOAD",
-> +	[11] = "ROAM_OFFLOAD",
-> +	[12] = "BCN_MISS_OFFLOAD",
-> +	[13] = "STA_POWERSAVE",
-> +	[14] = "STA_ADVANCED_PWRSAVE",
-> +	[15] = "AP_UAPSD",
-> +	[16] = "AP_DFS",
-> +	[17] = "BLOCKACK",
-> +	[18] = "PHY_ERR",
-> +	[19] = "BCN_FILTER",
-> +	[20] = "RTT",
-> +	[21] = "RATECTRL",
-> +	[22] = "WOW",
-> +	[23] = "WLAN_ROAM_SCAN_OFFLOAD",
-> +	[24] = "SPECULATIVE_PS_POLL",
-> +	[25] = "SCAN_SCH",
-> +	[26] = "IBSS_HEARTBEAT_OFFLOAD",
-> +	[27] = "WLAN_SCAN_OFFLOAD",
-> +	[28] = "WLAN_PERIODIC_TX_PTRN",
-> +	[29] = "ADVANCE_TDLS",
-> +	[30] = "BATCH_SCAN",
-> +	[31] = "FW_IN_TX_PATH",
-> +	[32] = "EXTENDED_NSOFFLOAD_SLOT",
-> +	[33] = "CH_SWITCH_V1",
-> +	[34] = "HT40_OBSS_SCAN",
-> +	[35] = "UPDATE_CHANNEL_LIST",
-> +	[36] = "WLAN_MCADDR_FLT",
-> +	[37] = "WLAN_CH144",
-> +	[38] = "NAN",
-> +	[39] = "TDLS_SCAN_COEXISTENCE",
-> +	[40] = "LINK_LAYER_STATS_MEAS",
-> +	[41] = "MU_MIMO",
-> +	[42] = "EXTENDED_SCAN",
-> +	[43] = "DYNAMIC_WMM_PS",
-> +	[44] = "MAC_SPOOFED_SCAN",
-> +	[45] = "BMU_ERROR_GENERIC_RECOVERY",
-> +	[46] = "DISA",
-> +	[47] = "FW_STATS",
-> +	[48] = "WPS_PRBRSP_TMPL",
-> +	[49] = "BCN_IE_FLT_DELTA",
-> +	[51] = "TDLS_OFF_CHANNEL",
-> +	[52] = "RTT3",
-> +	[53] = "MGMT_FRAME_LOGGING",
-> +	[54] = "ENHANCED_TXBD_COMPLETION",
-> +	[55] = "LOGGING_ENHANCEMENT",
-> +	[56] = "EXT_SCAN_ENHANCED",
-> +	[57] = "MEMORY_DUMP_SUPPORTED",
-> +	[58] = "PER_PKT_STATS_SUPPORTED",
-> +	[60] = "EXT_LL_STAT",
-> +	[61] = "WIFI_CONFIG",
-> +	[62] = "ANTENNA_DIVERSITY_SELECTION",
->   };
->   
->   static const char *wcn36xx_get_cap_name(enum place_holder_in_cap_bitmap x)
+> diff --git a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
+> new file mode 100644
+> index 000000000000..57176f62f955
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/socionext,uniphier-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Socionext UniPhier PCIe host controller
+> +
+> +description: |
+> +  UniPhier PCIe host controller is based on the Synopsys DesignWare
+> +  PCI core. It shares common features with the PCIe DesignWare core and
+> +  inherits common properties defined in
+> +  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
+> +
+> +maintainers:
+> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - socionext,uniphier-pcie
+> +
+> +  reg:
+> +    minItems: 3
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    oneOf:
+> +      - items:
+> +          - const: dbi
+> +          - const: link
+> +          - const: config
+> +      - items:
+> +          - const: dbi
+> +          - const: link
+> +          - const: config
+> +          - const: atu
 
-I know there has been much discussion on this series. For this specific 
-patch this would be a great change if you use the actual enumerations 
-from enum place_holder_in_cap_bitmap as the index values,
-i.e.
-  [MCC] = "MCC",
-  etc.
+You can have just the 2nd list plus 'minItems: 3' to do the same thing.
 
-So a v2 for this patch would be appreciated
-
-
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  num-viewport: true
+> +
+> +  num-lanes: true
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pcie-phy
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - resets
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie: pcie@66000000 {
+> +        compatible = "socionext,uniphier-pcie";
+> +        reg-names = "dbi", "link", "config";
+> +        reg = <0x66000000 0x1000>, <0x66010000 0x10000>, <0x2fff0000 0x10000>;
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +        clocks = <&sys_clk 24>;
+> +        resets = <&sys_rst 24>;
+> +        num-lanes = <1>;
+> +        num-viewport = <1>;
+> +        bus-range = <0x0 0xff>;
+> +        device_type = "pci";
+> +        ranges = <0x81000000 0 0x00000000  0x2ffe0000  0 0x00010000>,
+> +                 <0x82000000 0 0x00000000  0x20000000  0 0x0ffe0000>;
+> +        phy-names = "pcie-phy";
+> +        phys = <&pcie_phy>;
+> +        #interrupt-cells = <1>;
+> +        interrupt-names = "dma", "msi";
+> +        interrupts = <0 224 4>, <0 225 4>;
+> +        interrupt-map-mask = <0 0 0  7>;
+> +        interrupt-map = <0 0 0  1  &pcie_intc 0>,
+> +                        <0 0 0  2  &pcie_intc 1>,
+> +                        <0 0 0  3  &pcie_intc 2>,
+> +                        <0 0 0  4  &pcie_intc 3>;
+> +
+> +        pcie_intc: legacy-interrupt-controller {
+> +            interrupt-controller;
+> +            #interrupt-cells = <1>;
+> +            interrupt-parent = <&gic>;
+> +            interrupts = <0 226 4>;
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> deleted file mode 100644
+> index 359585db049f..000000000000
+> --- a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> +++ /dev/null
+> @@ -1,82 +0,0 @@
+> -Socionext UniPhier PCIe host controller bindings
+> -
+> -This describes the devicetree bindings for PCIe host controller implemented
+> -on Socionext UniPhier SoCs.
+> -
+> -UniPhier PCIe host controller is based on the Synopsys DesignWare PCI core.
+> -It shares common functions with the PCIe DesignWare core driver and inherits
+> -common properties defined in
+> -Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
+> -
+> -Required properties:
+> -- compatible: Should be "socionext,uniphier-pcie".
+> -- reg: Specifies offset and length of the register set for the device.
+> -	According to the reg-names, appropriate register sets are required.
+> -- reg-names: Must include the following entries:
+> -    "dbi"    - controller configuration registers
+> -    "link"   - SoC-specific glue layer registers
+> -    "config" - PCIe configuration space
+> -    "atu"    - iATU registers for DWC version 4.80 or later
+> -- clocks: A phandle to the clock gate for PCIe glue layer including
+> -	the host controller.
+> -- resets: A phandle to the reset line for PCIe glue layer including
+> -	the host controller.
+> -- interrupts: A list of interrupt specifiers. According to the
+> -	interrupt-names, appropriate interrupts are required.
+> -- interrupt-names: Must include the following entries:
+> -    "dma" - DMA interrupt
+> -    "msi" - MSI interrupt
+> -
+> -Optional properties:
+> -- phys: A phandle to generic PCIe PHY. According to the phy-names, appropriate
+> -	phys are required.
+> -- phy-names: Must be "pcie-phy".
+> -
+> -Required sub-node:
+> -- legacy-interrupt-controller: Specifies interrupt controller for legacy PCI
+> -	interrupts.
+> -
+> -Required properties for legacy-interrupt-controller:
+> -- interrupt-controller: identifies the node as an interrupt controller.
+> -- #interrupt-cells: specifies the number of cells needed to encode an
+> -	interrupt source. The value must be 1.
+> -- interrupt-parent: Phandle to the parent interrupt controller.
+> -- interrupts: An interrupt specifier for legacy interrupt.
+> -
+> -Example:
+> -
+> -	pcie: pcie@66000000 {
+> -		compatible = "socionext,uniphier-pcie", "snps,dw-pcie";
+> -		status = "disabled";
+> -		reg-names = "dbi", "link", "config";
+> -		reg = <0x66000000 0x1000>, <0x66010000 0x10000>,
+> -		      <0x2fff0000 0x10000>;
+> -		#address-cells = <3>;
+> -		#size-cells = <2>;
+> -		clocks = <&sys_clk 24>;
+> -		resets = <&sys_rst 24>;
+> -		num-lanes = <1>;
+> -		num-viewport = <1>;
+> -		bus-range = <0x0 0xff>;
+> -		device_type = "pci";
+> -		ranges =
+> -		/* downstream I/O */
+> -			<0x81000000 0 0x00000000  0x2ffe0000  0 0x00010000
+> -		/* non-prefetchable memory */
+> -			 0x82000000 0 0x00000000  0x20000000  0 0x0ffe0000>;
+> -		#interrupt-cells = <1>;
+> -		interrupt-names = "dma", "msi";
+> -		interrupts = <0 224 4>, <0 225 4>;
+> -		interrupt-map-mask = <0 0 0  7>;
+> -		interrupt-map = <0 0 0  1  &pcie_intc 0>,	/* INTA */
+> -				<0 0 0  2  &pcie_intc 1>,	/* INTB */
+> -				<0 0 0  3  &pcie_intc 2>,	/* INTC */
+> -				<0 0 0  4  &pcie_intc 3>;	/* INTD */
+> -
+> -		pcie_intc: legacy-interrupt-controller {
+> -			interrupt-controller;
+> -			#interrupt-cells = <1>;
+> -			interrupt-parent = <&gic>;
+> -			interrupts = <0 226 4>;
+> -		};
+> -	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4cc47b2dbdc9..c1d377be991c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15337,7 +15337,7 @@ PCIE DRIVER FOR SOCIONEXT UNIPHIER
+>  M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/pci/uniphier-pcie*
+> +F:	Documentation/devicetree/bindings/pci/socionext,uniphier-pcie*
+>  F:	drivers/pci/controller/dwc/pcie-uniphier*
+>  
+>  PCIE DRIVER FOR ST SPEAR13XX
+> -- 
+> 2.25.1
+> 
 
