@@ -2,108 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 725D24E9F2D
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 20:52:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 425BB4EA158
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 22:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245308AbiC1Sxv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 14:53:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
+        id S1344443AbiC1UWH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 16:22:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245305AbiC1Sxu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 14:53:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA359644DD;
-        Mon, 28 Mar 2022 11:52:09 -0700 (PDT)
+        with ESMTP id S1344410AbiC1UWA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 16:22:00 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B4740E4D;
+        Mon, 28 Mar 2022 13:20:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 64C526121C;
-        Mon, 28 Mar 2022 18:52:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD98C004DD;
-        Mon, 28 Mar 2022 18:52:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AAD83B81204;
+        Mon, 28 Mar 2022 20:20:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF991C340F0;
+        Mon, 28 Mar 2022 20:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648493528;
-        bh=u5yZg0ynUEhZ3+K56tIjbNb4wQz9q4pZXSSN0Va1QRM=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=dHuq3HQI76JS7or/PSye/mbCBLHhmsQ8iHfU2Iz1h9HijDrIAaghYkjPOwwyBQWGB
-         h+BarIKxRpEDThmdQC9RYTThbn+QRn0B6XcmPQaO4RpXu8g0TQdOc8mF5CYRSNcPEu
-         vu9LEJpmPd0SQA7PptXC0rnZvaMJF+Gfp2DHy4Z/RTyoYfHhLGj4Ww9H512tGipZNI
-         slfAMUq/f7bP6OmJOIgfN/nQKdUP7D4Ep0KIV4vgPU1H9hfxrjgjZSWdeU8Jx2SqL8
-         ee9Jksk8v4rGeeXyf0c+vhPmjhMJcqEF4HqJmmRsgvnLilEOoL4ZoDXF2kUkQUczNe
-         //KVxsqiYnTRg==
-Message-ID: <35d98937-40cb-7f57-ab53-49153aa5ce7d@kernel.org>
-Date:   Mon, 28 Mar 2022 20:52:02 +0200
+        s=k20201202; t=1648498816;
+        bh=DYKSgCLyLSG5eVAyXEXBJzv5wUb4KbwLHueX4TuM2es=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nccR77DmMt5fnc/o6gzPVyT3/n47SLxU5yK+UpwKdHx+DMcaLuX/6OketRHPbmZK4
+         q8cXPhOeS5U/lTt4ZBRJMWdOApW5jbpoUqhxVh/BedGBZMTMV5wkH3BtP7s6iGDW7Q
+         y0QdQapyEyF3Bt/RYtFN3DcVWfO6ymXfIwUMVbM0YopTHxL2aIt7JhbD6dj4ejWOxW
+         pc+m/7ZMIf0Ie62Bdb6sgKnlk4iE+Z9kmM5yyWzogfPqXEglCECce8tPm4qxiKW+nA
+         n66IatdJU8T97URqDPNt56LnxyLR99fOCTtEa0OoWadqYlrX2oFEX/OYDMGmH5+pqh
+         E51HpRAN1M85Q==
+Date:   Mon, 28 Mar 2022 13:20:14 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Benjamin =?UTF-8?B?U3TDvHJ6?= <benni@stuerz.xyz>
+Cc:     Kalle Valo <kvalo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-input@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-media@vger.kernel.org,
+        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 00/22] Replace comments with C99 initializers
+Message-ID: <20220328132014.6b8c0a21@kernel.org>
+In-Reply-To: <cc104272-d79a-41e1-f4de-cb78fb073991@stuerz.xyz>
+References: <20220326165909.506926-1-benni@stuerz.xyz>
+        <8f9271b6-0381-70a9-f0c2-595b2235866a@stuerz.xyz>
+        <87fsn2zaix.fsf@kernel.org>
+        <cc104272-d79a-41e1-f4de-cb78fb073991@stuerz.xyz>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
-Content-Language: en-US
-To:     wangseok.lee@samsung.com,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
-        "lars.persson@axis.com" <lars.persson@axis.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        "kernel@axis.com" <kernel@axis.com>,
-        =?UTF-8?B?7KCE66y46riw?= <moonki.jun@samsung.com>
-References: <CGME20220328021453epcms2p15977e72b6c96253ecaefcb71e6d2acfe@epcms2p1>
- <20220328021453epcms2p15977e72b6c96253ecaefcb71e6d2acfe@epcms2p1>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20220328021453epcms2p15977e72b6c96253ecaefcb71e6d2acfe@epcms2p1>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/03/2022 04:14, 이왕석 wrote:
-> Add support Axis, ARTPEC-8 SoC.
-> ARTPEC-8 is the SoC platform of Axis Communications.
-> This is based on arm64 and support GEN4 & 2lane.
-> This PCIe controller is based on DesignWare Hardware core
-> and uses DesignWare core functions to implement the driver.
-> This is based on driver/pci/controller/dwc/pci-exynos.c
-> 
-> Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig        |  31 +
->  drivers/pci/controller/dwc/Makefile       |   1 +
->  drivers/pci/controller/dwc/pcie-artpec8.c | 912 ++++++++++++++++++++++++++++++
->  3 files changed, 944 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-artpec8.c
-> 
+On Mon, 28 Mar 2022 13:51:42 +0200 Benjamin St=C3=BCrz wrote:
+> > Just a small tip: If you are new, start with something small and learn
+> > from that. Don't do a controversial big patchset spanning multiple
+> > subsystems, that's the hard way to learn things. First submit one patch
+> > at a time to one subsystem and gain understanding of the process that
+> > way.
+>=20
+> I actually thought this would be such simple thing. Do you know of any
+> good thing where to start? I already looked into drivers/staging/*/TODO
+> and didn't found something for me personally.
 
-I took a look at the your driver and at existing PCIe Exynos driver.
-Unfortunately PCIe Exynos driver is in poor shape, really poor. This
-would explain that maybe it's better to have new driver instead of
-merging them, especially that hardware is different. Although I am still
-waiting for some description of these differences...
+FWIW on the netdev side there's work coming to convert a set of features
+from unsigned long to a BITMAP which will require converting a lot of
+drivers to an explicit helpers from direct access.
 
-I said that Exynos PCIe looks poor... but what is worse, it looks like
-you based on it so you copied or some bad patterns it had.
+https://lore.kernel.org/all/20220324154932.17557-14-shenjian15@huawei.com/
 
-Except this the driver has several coding style issues, so please be
-sure to run checkpatch, sparse and smatch before sending it.
-
-Please work on this driver to make it close to Linux coding style, so
-there will be no need for us, reviewers, focus on basic stuff.
-
-Optionally, send all this to staging. :)
-
-Best regards,
-Krzysztof
+If it seems interesting enough you can try reaching out to Jian Shen.
