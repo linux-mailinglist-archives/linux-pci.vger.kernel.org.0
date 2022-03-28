@@ -2,479 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF2954EA1F3
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 22:48:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF14B4EA210
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 22:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239183AbiC1Utz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 16:49:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51288 "EHLO
+        id S231340AbiC1U5I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 16:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346343AbiC1Use (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 16:48:34 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A48E3C72E;
-        Mon, 28 Mar 2022 13:46:07 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id i11-20020a9d4a8b000000b005cda3b9754aso11479033otf.12;
-        Mon, 28 Mar 2022 13:46:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kd8MEXbP15/rDKHYy6zW9hjs14aaScv/w6ero/vX3B4=;
-        b=0hWPlr5VCjYdz5VfTObi80wfn2YSZQk0qXQKZxoHVpRvr7sL5q/DJrZQ7ByTyLr+MK
-         Q2UxnalP5qkJHwnzGHDYj4troAkKkrPpypnjQfxXKi04JdozfnPSiq1Wl1LVPNGElIWF
-         z0HE0nZ3ruUSPsnX3BVtnQTmuo+HHMsfSRDeHeeBQbkV1dD2oRYXsIfJOvsuJjZYalEc
-         RwXSxdpuKvj4h6NF7HunGUihmGwaT6s10JsK8wVicOYQSGR5kjZADWGFaKWwOmFv9MQj
-         35ZkdNttYLPhPK3PZI9saPyoroNEXSNX7Vr59rOBeyr/jujfG/8CCsUAi4WGjMlA0gFP
-         OmDg==
-X-Gm-Message-State: AOAM531+AtsHVZ48EHNZKlsS2jhlc9yuZAiPpqc1GmpEf/PgOj8TAqSI
-        5dtcCZt+HmBxSF4jU59C2w==
-X-Google-Smtp-Source: ABdhPJyjZLfximVRbl9/nniw4S8IXjuPcQhZMN0GEqP3u2A+HV1fY1+/jyA25tYP27SposYVZu5NGg==
-X-Received: by 2002:a9d:5:0:b0:5b2:2cac:4f4f with SMTP id 5-20020a9d0005000000b005b22cac4f4fmr11125185ota.48.1648500366477;
-        Mon, 28 Mar 2022 13:46:06 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id w8-20020aca3008000000b002ef7e3ad3b8sm7546722oiw.29.2022.03.28.13.46.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Mar 2022 13:46:05 -0700 (PDT)
-Received: (nullmailer pid 2979770 invoked by uid 1000);
-        Mon, 28 Mar 2022 20:46:04 -0000
-Date:   Mon, 28 Mar 2022 15:46:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 01/16] dt-bindings: PCI: dwc: Define generic and native
- DT bindings
-Message-ID: <YkIejIE27RD4+8Z+@robh.at.kernel.org>
-References: <20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru>
- <20220324013734.18234-2-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S230362AbiC1U5H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 16:57:07 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2078.outbound.protection.outlook.com [40.107.93.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2D56A427;
+        Mon, 28 Mar 2022 13:55:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GY0YJtKTKVrNCu46HrDFsLpb7Od5iKtnm4lJ/xT29/S0TCq9FgoVGiYMfZfsRSlTLR9oqAs/1ygNfneXvXvVXybMWHUF8xlFG40vJO3fW9WXKRK5JJkKUZin0xaZPsxuWcxnu8Em2GRBYDPV+LqeSxnDh7NE42jiQSroIS6n/2q7lrs4Xr3Y17Lbt3pkRvA2/KROEFRdqyKAmUzae0x/QTCaCNKLYITOJferaFNU6PxFV5TjM1WtYywrGXFdWWN7/sG6Btud9e7lk/kSJIt4TiobQjvwVaeNp9JsOaISxvM84M6SyA0gSHaaeCF1P97F9M7sPAlpCgOP+ZFoG2E37w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5iGQg0tLSdhHhW3xgY70qgGalZ0A839jwOQS8WUOAIo=;
+ b=XtWo3pP+thxv5dtWlP+U5VIHkG9N4gGitIw64EjfbqN9HtgCbUwuKIMSfnfAq0z8ubr2/5CJOWXZ5KQeWkyhRyLDL8qn84HW4f9j9d+3wQYw1QbYEd/JoAwf1y4uw8fPYS8sUSYM15WSqntEBLd3Wl7jgkrknKRn5qXB+s/808/dNY71S3BdjOoHwjvBFtzxamiC4rse88P2kNOhlLDPN+m8f5BqP1xSAEWvsdZTotuEIecU0eDr315lb7u+ntfCGX7bMh6Rf7ZZJo/LiPe4TwPIRz5sjgjUc18ohdEg9zEz2TFqAAZgVrKDbvaAgdDE22IJjksDPzwBAgSII0ZRKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5iGQg0tLSdhHhW3xgY70qgGalZ0A839jwOQS8WUOAIo=;
+ b=jqzafFjc0ytX4F6Xz2hZ5VkRwXyCw/3fyj435i+P4fdT5PtFhNGvwAW9PMw/pqIfYOVeNlg2m3acs9N9xTpEyo/ZLVO715FbXbyNnhPle607IK4gqKAt96Ouor6q9KZkw1FW45bENLCy002Wy+/DG4UOVgyrpQvAbpcU+3FMXfc=
+Received: from BN6PR20CA0071.namprd20.prod.outlook.com (2603:10b6:404:151::33)
+ by DM6PR12MB4187.namprd12.prod.outlook.com (2603:10b6:5:212::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.18; Mon, 28 Mar
+ 2022 20:55:23 +0000
+Received: from BN8NAM11FT009.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:404:151:cafe::3e) by BN6PR20CA0071.outlook.office365.com
+ (2603:10b6:404:151::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.18 via Frontend
+ Transport; Mon, 28 Mar 2022 20:55:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT009.mail.protection.outlook.com (10.13.176.65) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5102.17 via Frontend Transport; Mon, 28 Mar 2022 20:55:23 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 28 Mar
+ 2022 15:55:22 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <Sanju.Mehta@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v5 1/2] PCI / ACPI: Assume `HotPlugSupportInD3` only if device can wake from D3
+Date:   Mon, 28 Mar 2022 15:55:18 -0500
+Message-ID: <20220328205519.250-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220324013734.18234-2-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4c17aaad-c5d4-4ee0-448c-08da10fd474c
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4187:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4187DB512CD16845778DC87AE21D9@DM6PR12MB4187.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jd1B8N2KFGm3SZ8mxiDKxcbsnASYtqcHOcyU0uncJmOZEFKJslIgKobr1Nmfn0bB0PxG1k57xZCVevKNowkIxQduL5i0pxJAg9dK2U2lG8HKPBzVEC0oNyjcO25rgj2cjNphNRqI0uDqPOdIKbVEf4WI+2ZyCOwFnEmtLpP/Q3Y2JRpip0ZrM327a65Lrd8JMIWSVI7vCLIVDP1QDPCaKp/uIkm1yhnxkfpLSVPaUeNQzmQtBhXDmf+KgHsXiZRlxSc0sgadWAl7rewC4Vdi9XQtdsJ6LGvc6QM3u2f2uxZIuE8jZUGcPUJHwuvPZL4kL5yVFkHkumyvNnEs+4gvJbh4gcPls7IrcrigjEq6o9/z2pAOB36r0fu6zFBM6LhHLVvZJwRV7pHuZlF0vDrbhXmGesm4ayLA/WE6R5nIGn3M9+3/WaMNRZNch5oEwqdJnJJEmDHqHx6WuAdhuaN5UhDoYJBd4vXy0Y5+p4DxKmPrXDdrkXDl7jVjfJ8jKdYlBbbYGC+/yVuLcQDX2Cu+gdvkJZYLqQfdgcNMBiVLR6XKx4eaYs3WQ0StRHcpFOXxJfCuA7RSh4+Bs9LDbd2+IZzX38L3+YJIBt4yu0iRV1SHJJOp2rcxN3vw87zSq+HV03+rPcCbnV/5Ybsdmw4hAnD0ql6LFKHPYEmNXrzNjdrgLivnm2HVX3JG/7mA+vBHWtifSuaF49ktSzNJKiaI6TVnka/VgttsXULOeHEqNsUVwsWM2nIwSDMvmOeow/E/7SAJBrlPg1qcXsIHCO9wXY5wSYwE4u1eKmhqRHjiwaMZRBfI+8gSPsyiip5GdEFUO4OzJNV1bKUgQBywnhKQCiwsFTmQLbb5lnRN85BA3E0=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(6029001)(4636009)(40470700004)(36840700001)(46966006)(356005)(81166007)(36756003)(45080400002)(316002)(2616005)(16526019)(26005)(44832011)(186003)(426003)(336012)(2906002)(1076003)(7696005)(47076005)(6666004)(8936002)(83380400001)(82310400004)(110136005)(5660300002)(36860700001)(54906003)(70586007)(4326008)(8676002)(70206006)(40460700003)(966005)(86362001)(508600001)(81973001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2022 20:55:23.4672
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c17aaad-c5d4-4ee0-448c-08da10fd474c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT009.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4187
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:37:19AM +0300, Serge Semin wrote:
-> Currently both DW PCIe Root Port and End-point DT bindings are too generic
-> to be used as a descriptive set the device properties. Yes, it's very handy
-> to have them that way so the DT-schemas could be used to evaluate as many
-> DW PCIe-related DT-nodes as possible. But at the same time they don't
-> provide well defined DW PCIe RP/EP DT interface description thus leaving
-> too much flexibility for the new platforms, no encouraging the developers
-> to preserve a compatible interface.
-> 
-> Instead of currently implemented approach we suggest to be more
-> restrictive and yet preserve some level of flexibility in the DW PCIe
-> DT-bindings description. The device tree DT-schema is split up into
-> three parts: a common YAML-schema applicable for both DWC Root Port and
-> End-point controller configs, DWC PCIe Root Port-specific YAML-schema
-> and DWC PCIe End-point-specific YAML-schema, where
-> 1) pci/snps,dw-pcie-common.yaml - The common DT-schema describes the most
-> generic constraints of the "reg", "interrupts", "clocks", "resets" and
-> "phys" properties together with a set of common for both device types
-> PCIe/AXI bus properties like a maximum number of lanes or a maximum link
-> speed, number of inbound and outbound iATU windows. In addition to that a
-> set of schema definitions declared under the "$defs" property with "reg",
-> "interrupt", "clock" and "reset" names common for DWC PCIe Root Port and
-> End-point devices. They can be used by the successive DT-schemas in case
-> they are supposed to be compatible with the generic DWC PCIe controller
-> DT-bindings.
-> 2) pci/snps,dw-pcie.yaml, pci/snps,dw-pcie-ep.yaml - generic DW PCIe Root
-> Port and End-point DT-bindings which aside with the device-specific
-> properties set also contain more restrictive constraints. All new DW PCIe
-> platforms are supposed to be compatible with one of these bindings by
-> using "allOf: " property and additionally defining their own constraints
-> to close up the DT-bindings set.
-> 
-> So to speak in case if a DW PCIe-based device for some reason has too many
-> specific properties or it's bindings have already been defined in a
-> non-generic way, it's DT-schema is supposed to include 1) YAML-file and
-> provide its own constraints. Otherwise the ready-to-use bindings from 2)
-> should be utilized. There only two DT-schemas compatible with 2) at the
-> moment are samsung,axynos-pcie.yaml and intel-gw-pcie.yaml. The
-> rest of the DW PCIe-related DT-schemas are supposed to use more generic
-> DW PCIe DT-bindings - pci/snps,dw-pcie-common.yaml.
-> 
-> Note the provided here generic properties and their possible values are
-> derived from the DW PCIe RC/EP hardware manuals and from the interface
-> implemented in the driver. The DT-bindings schemas are created to be as
-> full as possible with detailed properties/names description for the
-> easier interface comprehension and new platforms bindings development.
-> 
-> Also note since there are no generic DT-nodes can be found in the kernel
-> dts-es which would have a pure "snps,dw-pcie" compatible string, these
-> DT-bindings have been created to not be selected by default for
-> evaluation. They are supposed to be used by the new vendor-specific
-> DT-schemas to at least stop adding new bindings for the same set of DWC
-> PCIe signals or properties.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> ---
-> 
-> Rob, if you comment the "select: false" line out you'll get a lot of "'*'
-> is not of type 'array'" errors on the dt_bindings_check command execution.
-> I have spend tons of time trying to figure out what was wrong, but still
-> failed to find out a solution. For some reason the "$ref"-ed schemas
-> defined under the "$defs" basic property are considered by the parser as
-> defining an array. No matter whether I specified the "type: string"
-> keyword or not, as long as there is "enum" or "oneOf" keyword used in the
-> "*-names" property definition in "$defs" it's considered as describing an
-> array thus causing the errors like:
+According to the Microsoft spec the _DSD `HotPlugSupportInD3` is
+indicates the ability for a bridge to be able to wakeup from D3:
 
-As-is, there were lots of errors...
+  This ACPI object [HotPlugSupportInD3] enables the operating system
+  to identify and power manage PCIe Root Ports that are capable of
+  handling hot plug events while in D3 state.
 
-> 
-> >  DTC     Documentation/devicetree/bindings/pci/snps,dw-pcie.example.dt.yaml
-> >  CHECK   Documentation/devicetree/bindings/pci/snps,dw-pcie.example.dt.yaml
-> > /.../snps,dw-pcie.example.dt.yaml: pcie@1f052000: reg-names:0: 'oneOf' conditional failed, one must be fixed:
-> >        'dbi' is not of type 'array'
-> >        From schema: /.../snps,dw-pcie.yaml
-> > /.../snps,dw-pcie.example.dt.yaml: pcie@1f052000: reg-names:1: 'oneOf' conditional failed, one must be fixed:
-> >         'config' is not of type 'array'
-> >         From schema: /.../snps,dw-pcie.yaml
-> > /.../snps,dw-pcie.example.dt.yaml: pcie@1f052000: interrupt-names:0: 'anyOf' conditional failed, one must be fixed:
-> >         /.../snps,dw-pcie.example.dt.yaml: pcie@1f052000: interrupt-names:0: 'oneOf' conditional failed, one must be fixed:
-> >                 'msi' is not of type 'array'
-> >         /../snps,dw-pcie.example.dt.yaml: pcie@1f052000: interrupt-names:0: 'oneOf' conditional failed, one must be fixed:
-> >                 'msi' is not of type 'array'
-> >         From schema: /.../snps,dw-pcie.yaml
-> 
-> As soon as I manually moved the same "$defs"-schemas into the places they
-> are referenced to, the errors disappeared and the DT-schemas validation
-> worked as expected by the semantics.
-> 
-> As I see it there must be some bug in the parser, otherwise I am out of
-> ideas how to implement the suggested in this patch design pattern. Rob,
-> could you take a look at the DT-schemas and help me out with debugging the
-> problem described above?
+This however is static information in the ACPI table at BIOS compilation
+time and on some platforms it's possible to configure the firmware at boot
+up such that _S0W returns "0" indicating the inability to wake up the
+device from D3 as explained in the ACPI specification:
 
-There is at least an error in your schema, details latter on.
+  7.3.20 _S0W (S0 Device Wake State)
 
-It could be an issue in the fixups which in general convert 
-schemas for strings to string arrays and scalars/arrays to matrix. You 
-have to look at processed-schema.json to debug it.
+  This object evaluates to an integer that conveys to OSPM the deepest
+  D-state supported by this device in the S0 system sleeping state
+  where the device can wake itself.
 
-The other thing is 'oneOf' errors can be confusing in terms of error 
-messages because the tooling doesn't really know which entry had the 
-least error. Like the type was right, but some secondary constraint 
-failed (as what's secondary is not expressed in any way).
+This mismatch may lead to being unable to enumerate devices behind the
+hotplug bridge when a device is plugged in. To remedy these situations
+that `HotPlugSupportInD3` is specified by _S0W returns 0, explicitly
+check that the ACPI companion has returned _S0W greater than or equal
+to 3 and the device has a GPE allowing the device to generate wakeup
+signals handled by the platform in `acpi_pci_bridge_d3`.
 
-I would debug it further, but I don't really like the end result. I 
-think it's too hard to follow. For the most part, we avoid $refs at the 
-property level across different schema files with the big exception 
-being types.yaml. $defs are also used sparingly. The challenge is that 
-json-schema by default will be silent on schemas misformed in lots of 
-ways. Our meta-schema adds a lot of constraints which limits what the 
-schemas can look like and ensures schemas are valid. It also allows me 
-to define new constraints rather than repeat the same review comment 
-over and over.
+Windows 10 and Windows 11 both will prevent the bridge from going in D3
+when the firmware is configured this way and this changes aligns the
+handling of the situation to be the same.
 
-> ---
->  .../bindings/pci/fsl,imx6q-pcie.yaml          |   5 +-
->  .../bindings/pci/hisilicon,kirin-pcie.yaml    |   4 +-
->  .../bindings/pci/sifive,fu740-pcie.yaml       |   4 +-
->  .../bindings/pci/snps,dw-pcie-common.yaml     | 298 ++++++++++++++++++
->  .../bindings/pci/snps,dw-pcie-ep.yaml         | 143 ++++++---
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml | 189 +++++++----
->  .../bindings/pci/toshiba,visconti-pcie.yaml   |   2 +-
->  7 files changed, 524 insertions(+), 121 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
+Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
+Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+v4-v5:
+ * Don't fail if _S0W is missing
+ drivers/pci/pci-acpi.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 1f15ab7eabf8..91c165ea4346 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -977,6 +977,7 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	const union acpi_object *obj;
+ 	struct acpi_device *adev;
+ 	struct pci_dev *rpdev;
++	unsigned long long ret;
+ 
+ 	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+ 		return false;
+@@ -1003,7 +1004,21 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 				   ACPI_TYPE_INTEGER, &obj) < 0)
+ 		return false;
+ 
+-	return obj->integer.value == 1;
++	if (!obj->integer.value)
++		return false;
++
++	/*
++	 * If 'HotPlugSupportInD3' is set, but wakeup is not actually supported,
++	 * the former cannot be trusted anyway, so validate it by verifying the
++	 * latter.
++	 */
++	if (!adev->wakeup.flags.valid)
++		return false;
++
++	if (ACPI_SUCCESS(acpi_evaluate_integer(adev->handle, "_S0W", NULL, &ret)))
++		return ret >= ACPI_STATE_D3_HOT;
++
++	return true;
+ }
+ 
+ int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+-- 
+2.34.1
 
-> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-> new file mode 100644
-> index 000000000000..27fe1f5c450f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-> @@ -0,0 +1,298 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/snps,dw-pcie-common.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys DWC PCIe RP/EP controller
-> +
-> +maintainers:
-> +  - Jingoo Han <jingoohan1@gmail.com>
-> +  - Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> +
-> +properties:
-> +  reg:
-> +    description:
-> +      DWC PCIe CSR space is normally accessed over the dedicated Data Bus
-> +      Interface - DBI. In accordance with the reference manual the register
-> +      configuration space belongs to the Configuration-Dependent Module (CDM)
-> +      and is split up into several sub-parts Standard PCIe configuration
-> +      space, Port Logic Registers (PL), Shadow Config-space Registers,
-> +      iATU/eDMA registers. The particular sub-space is selected by the
-> +      CDM/ELBI (dbi_cs) and CS2 (dbi_cs2) signals (selector bits). Such
-> +      configuration provides a flexible interface for the system engineers to
-> +      either map the particular space at a desired MMIO address or just leave
-> +      them in a contiguous memory space if pure Native or AXI Bridge DBI access
-> +      is selected. Note the PCIe CFG-space, PL and Shadow registers are
-> +      specific to each activated function, while the rest of the sub-spaces
-> +      are common for all of them (if there are more than one).
-> +    minItems: 2
-> +    maxItems: 6
-> +
-> +  interrupts:
-> +    description:
-> +      There are two main sub-blocks which are normally capable of
-> +      generating interrupts. It's System Information Interface and MSI
-> +      interface. While the former one has some common for the Host and
-> +      End-point controllers IRQ-signals, the later interface is obviously
-> +      Root Complex specific since it's responsible for the incoming MSI
-> +      messages signalling. The System Information IRQ signals are mainly
-> +      responsible for reporting the generic PCIe hierarchy and Root
-> +      Complex events like VPD IO request, general AER, PME, Hot-plug, link
-> +      bandwidth change, link equalization request, INTx asserted/deasserted
-> +      Message detection, embedded DMA Tx/Rx/Error.
-> +    minItems: 1
-> +    maxItems: 26
-> +
-> +  clocks:
-> +    description:
-> +      DWC PCIe reference manual explicitly defines a set of the clocks required
-> +      to get the controller working correctly. In general all of them can
-> +      be divided into two groups':' application and core clocks. Note the
-> +      platforms may have some of the clock sources unspecified in case if the
-> +      corresponding domains are fed up from a common clock source.
-> +    minItems: 1
-> +    maxItems: 7
-> +
-> +  resets:
-> +    description:
-> +      DWC PCIe reference manual explicitly defines a set of the reset
-> +      signals required to be de-asserted to properly activate the controller
-> +      sub-parts. All of these signals can be divided into two sub-groups':'
-> +      application and core resets with respect to the main sub-domains they
-> +      are supposed to reset. Note the platforms may have some of these signals
-> +      unspecified in case if they are automatically handled or aggregated into
-> +      a comprehensive control module.
-> +    minItems: 1
-> +    maxItems: 10
-> +
-> +  reset-gpio:
-> +    deprecated: true
-> +    description:
-> +      Reference to the GPIO-controlled PERST# signal. It is used to reset all
-> +      the peripheral devices available on the PCIe bus.
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description:
-> +      Reference to the GPIO-controlled PERST# signal. It is used to reset all
-> +      the peripheral devices available on the PCIe bus.
-> +    maxItems: 1
-> +
-> +  phys:
-> +    description:
-> +      There can be up to number of possible lanes PHYs specified.
-> +      Obviously each specified PHY is supposed to be able to work in the
-> +      PCIe mode with a speed implied by the DWC PCIe controller it is
-> +      attached to.
-> +    minItems: 1
-> +    maxItems: 16
-> +
-> +  phy-names:
-> +    minItems: 1
-> +    maxItems: 16
-> +    items:
-> +      pattern: '^pcie([0-9]+|-?phy)?$'
-> +
-> +  num-lanes:
-> +    maximum: 16
-> +
-> +  max-link-speed:
-> +    maximum: 4
-> +
-> +  num-ob-windows:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    deprecated: true
-> +    description:
-> +      Number of outbound address translation windows. This parameter can be
-> +      auto-detected based on the iATU memory writability. So there is no
-> +      point in having a dedicated DT-property for it.
-> +    maximum: 256
-> +
-> +  num-ib-windows:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    deprecated: true
-> +    description:
-> +      Number of inbound address translation windows. In the same way as
-> +      for the outbound AT windows, this parameter can be auto-detected based
-> +      on the iATU memory writability. There is no point having a dedicated
-> +      DT-property for it either.
-> +    maximum: 256
-> +
-> +  num-viewport:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    deprecated: true
-> +    description:
-> +      Number of outbound view ports configured in hardware. It's the same as
-> +      the number of outbound AT windows.
-> +    maximum: 256
-> +
-> +  snps,enable-cdm-check:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Enable automatic checking of CDM (Configuration Dependent Module)
-> +      registers for data corruption. CDM registers include standard PCIe
-> +      configuration space registers, Port Logic registers, DMA and iATU
-> +      registers. This feature has been available since DWC PCIe v4.80a.
-> +
-> +additionalProperties: true
-> +
-> +$defs:
-> +  reg-names:
-> +    description:
-> +      CSR space names common for the DWC PCIe Root Port and End-point
-> +      controllers.
-> +    oneOf:
-> +      - description:
-> +          Basic DWC PCIe controller configuration-space accessible over
-> +          the DBI interface. This memory space is either activated with
-> +          the CDM/ELBI = 0 and CS2 = 0 or is a contiguous memory region
-> +          with all spaces. Note iATU/eDMA CSRs are indirectly accessible
-> +          via the PL viewports on the DWC PCIe controllers older than
-> +          v4.80a.
-> +        const: dbi
-
-This passes only for 'reg-names = "dbi";'
-
-> +      - description:
-> +          Shadow DWC PCIe config-space registers. This space is selected
-> +          by setting CDM/ELBI = 0 and CS2 = 1. This is an intermix of
-> +          the PCI-SIG PCIe CFG-space with the shadow registers for some
-> +          PCI Header space, PCI Standard and Extended Structures. It's
-> +          mainly relevant for the end-point controller configuration,
-> +          but still there are some shadow registers available for the
-> +          Root Port mode too.
-> +        const: dbi2
-
-This passes only for 'reg-names = "dbi2";'
-
-> +      - description:
-> +          External Local Bus registers. It's an application-dependent
-> +          registers normally defined by the platform engineers, which
-> +          are selected by setting CDM/ELBI = 1 and CS2 = 0.
-> +        enum: [ elbi, appl, app ]
-
-This passes only for 'reg-names = "elbi", "appl", "app";'
-
-See the problem? Replacing the 'oneOf' above with 'items' is what you 
-want. But then the schema will not allow any missing entries either. 
-DBI2 is optional for example. There is no way in json-schema to define a 
-list of ordered values(string) once and say some entries are optional 
-which I think is what you are trying to do here.
-
-> +      - description:
-> +          iATU/eDMA registers common for all device functions. It's an
-> +          unrolled memory space with the internal Address Translation
-> +          Unit and Enhanced DMA, which is selected by setting CDM/ELBI = 1
-> +          and CS2 = 1. For IP-core releases prior v4.80a, these registers
-> +          have been programmed via an indirect addressing scheme using a
-> +          set of viewport CSRs mapped into the PL space. Note iATU is
-> +          normally mapped to the 0x0 address of this region, while eDMA
-> +          is available at 0x80000 base address.
-> +        enum: [ atu, atu_dma ]
-> +      - description:
-> +          Outbound iATU-available memory-region which usage scenario
-> +          depends on the DWC PCIe controller being either Root Port or
-> +          End-point. If it's Root Port then the register space shall
-> +          have the "config" name and it will be used to access the
-> +          peripheral PCIe devices configuration space. If it's PCIe
-> +          end-point controller, then the region shall be named as
-> +          "addr_space" and it will be used to generate various traffic
-> +          on the PCIe bus hierarchy. It's usage scenario depends on the
-> +          end-point functionality, for instance it can be used to create
-> +          MSI(X) messages.
-> +        enum: [ config, addr_space ]
-
-So 'addr_space' is now valid for host mode?
-
-(Really, for DW blocks with iATU, this should have been the whole memory 
-space and the driver could size the config space itself. (IOW, the 
-config region is configuration rather than h/w description.)
-
-> +      - description:
-> +          PHY/PCS configuration registers. Some platforms can have the
-> +          PCS and PHY CSRs accessible over a dedicated memory mapped
-> +          region, but mainly these registers are indirectly accessible
-> +          either by means of the embedded PHY viewport schema or by some
-> +          platform-specific method.
-> +        enum: [ link, phy ]
-
-These should not be in any new users as the phy should be separate.
-
-> +
-> +  interrupt-names:
-> +    description:
-> +      IRQ signal names common for the DWC PCIe Root Port and End-point
-> +      controllers.
-> +    oneOf:
-> +      - description:
-> +          Controller request to read or write virtual product data
-> +          from/to the VPD capability registers.
-> +        const: vpd
-> +      - description:
-> +          Link Equalization Request flag is set in the Link Status 2
-> +          register (applicable if the corresponding IRQ is enabled in
-> +          the Link Control 3 register).
-> +        const: l_eq
-> +      - description:
-> +          Indicates that the eDMA Tx/Rx transfer is complete or that an
-> +          error has occurred on the corresponding channel. eDMA can have
-> +          eight Tx (Write) and Rx (Read) eDMA channels thus supporting up
-> +          to 16 IRQ signals all together. Write eDMA channels shall go
-> +          first in the ordered row as per default edma_int[*] bus setup.
-> +        pattern: '^dma([0-9]|1[0-5])?$'
-> +      - description:
-> +          PCIe protocol correctable error or a Data Path protection
-> +          correctable error is detected by the automotive/safety
-> +          feature.
-> +        const: sft_ce
-> +      - description:
-> +          Indicates that the internal safety mechanism detected and
-> +          uncorrectable error.
-> +        const: sft_ue
-
-This says there is only a single interrupt entry. Same for the other 
-$defs.
-
-Rob
