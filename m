@@ -2,183 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00F314E954C
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 13:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 437894E9550
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 13:40:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241847AbiC1LlP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 07:41:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
+        id S238168AbiC1LlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 07:41:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244067AbiC1LhQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 07:37:16 -0400
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26A6724BE7
-        for <linux-pci@vger.kernel.org>; Mon, 28 Mar 2022 04:29:27 -0700 (PDT)
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220328112922epoutp011ff9a544335bd1590d675e7881bfbe47~gh-fp7Vzg1018710187epoutp01m
-        for <linux-pci@vger.kernel.org>; Mon, 28 Mar 2022 11:29:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220328112922epoutp011ff9a544335bd1590d675e7881bfbe47~gh-fp7Vzg1018710187epoutp01m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1648466962;
-        bh=vSUewbMNA8HwQeSd5z30bPDEh+33/q5/Gq8I560ttKc=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=gakbeW79Y0jc0ql5GIXom6Qw7gE0yqON97hvR1zPbFODfr7XRP+uQspLTNW2xKQjJ
-         0TxVxEWqATpZMZZ3EQCv0iyxA5D2FaWggKjumLw0kLkJZX2HT/bRHNgOLk1u5zUJM2
-         mLSjDVT4VZUyHWhjMhMY0oFlX2qrSdpgvsmJYFiw=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20220328112921epcas2p1d144d08a77e255896603a159bddc0568~gh-eoj-I71362413624epcas2p1w;
-        Mon, 28 Mar 2022 11:29:21 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.97]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4KRr7f5WN9z4x9Pw; Mon, 28 Mar
-        2022 11:29:18 +0000 (GMT)
-X-AuditID: b6c32a46-bffff70000023ea8-7a-62419c0e60bc
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        41.82.16040.E0C91426; Mon, 28 Mar 2022 20:29:18 +0900 (KST)
-Mime-Version: 1.0
-Subject: Re: [PATCH 0/5] Add support for Axis, ARTPEC-8 PCIe driver
-Reply-To: wangseok.lee@samsung.com
-Sender: =?UTF-8?B?7J207JmV7ISd?= <wangseok.lee@samsung.com>
-From:   =?UTF-8?B?7J207JmV7ISd?= <wangseok.lee@samsung.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
-        "lars.persson@axis.com" <lars.persson@axis.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        "kernel@axis.com" <kernel@axis.com>,
-        =?UTF-8?B?7KCE66y46riw?= <moonki.jun@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <564c7092-d6a3-7766-d83f-9762075d055f@kernel.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20220328112918epcms2p44bfdd6ef74c14f04bae6a475054860b6@epcms2p4>
-Date:   Mon, 28 Mar 2022 20:29:18 +0900
-X-CMS-MailID: 20220328112918epcms2p44bfdd6ef74c14f04bae6a475054860b6
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBJsWRmVeSWpSXmKPExsWy7bCmuS7fHMckg1+PNC2WNGVYvDykaTH/
-        yDlWi+eHZjFbfGpRtbjwtIfN4uWse2wW589vYLdo6PnNanHkzUdmi/3HVzJZXN41h83i7Lzj
-        bBYTVn1jsXjz+wW7xbnFmRate4+wW+y8c4LZQchjzbw1jB7X1wV4LNhU6rFpVSebx5Mr05k8
-        Ni+p9+jbsorR4/iN7UwenzfJBXBGZdtkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqY
-        KynkJeam2iq5+AToumXmAL2ipFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwL9Ar
-        TswtLs1L18tLLbEyNDAwMgUqTMjOuHFmF1PBMc2K2Ut0Ghg3aXQxcnJICJhIrOhaxwJiCwns
-        YJT4tMKqi5GDg1dAUOLvDmGQsLCAs8S/263MECVKEjvWzGOGiFtLfJpyGayVTcBS4mLrQ8Yu
-        Ri4OEYFvTBKzf7xiA3GYBW4zS8x//p4FYhmvxIz2p1C2tMT25VsZQWxOATuJPweeQ8U1JH4s
-        62WGsEUlbq5+yw5jvz82nxHCFpFovXcWqkZQ4sHP3VBxKYkFTw6xQtjVEvv//maCsBsYJfrv
-        p4I8JiGgL7HjujFImFfAV+J162WwMSwCqhLb1q+BKneR+HD7PlicWUBbYtnC18wgrcwCmhLr
-        d+lDTFGWOHIL7qmGjb/Z0dnMAnwSHYf/wsV3zHsCNV1NYt7KncwTGJVnIQJ6FpJdsxB2LWBk
-        XsUollpQnJueWmxUYASP2eT83E2M4CSt5baDccrbD3qHGJk4GA8xSnAwK4nwyp61TxLiTUms
-        rEotyo8vKs1JLT7EaAr05URmKdHkfGCeyCuJNzSxNDAxMzM0NzI1MFcS5/VK2ZAoJJCeWJKa
-        nZpakFoE08fEwSnVwJSf6+jWNLm9XK36/oPytRe8+tWkjHYcUihuiTzN91FbcXqxpNbGpwX9
-        N7aEKm4xN4xatNpiYgn7/rkzVMMvtDXdOSVVFsx39mJ6y4sc0ZZtuy9MyFvOf+DruaKlgnrm
-        ihvkUjWffq+6P7PTa/nGFAHzKwfZxL9lpZ5c02zNGbXpu9hj28btR8zu9WjOuKrh9fcys/LW
-        TV9aud547b4y4cbMCf/4NghfrJvdWXWTWcPP3uzC4WsC/0x8PnBuizqzOlXE9/f/n4czjvmE
-        /E5dVKR42kE20Nb3Q8jFSQ2ea6frHhFoc/ikHiCzdfnPzDd/60M3XOnQr26942z6r/p1/zeV
-        PstL7eXen05Fns45+FqJpTgj0VCLuag4EQDI7jzTWwQAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220328014430epcms2p7063834feb0abdf2f38a62723c96c9ff1
-References: <564c7092-d6a3-7766-d83f-9762075d055f@kernel.org>
-        <0716d9e4-24e1-d16c-162c-00a8664296e1@kernel.org>
-        <20220328014430epcms2p7063834feb0abdf2f38a62723c96c9ff1@epcms2p7>
-        <20220328090200epcms2p8637d2a2e09a3a627be776586b80c8adf@epcms2p8>
-        <CGME20220328014430epcms2p7063834feb0abdf2f38a62723c96c9ff1@epcms2p4>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S245188AbiC1LjN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 07:39:13 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2063.outbound.protection.outlook.com [40.107.94.63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184A1A3;
+        Mon, 28 Mar 2022 04:37:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BOS7Nje7xnbJPIs1E7tUEoRn3OW16Z3Nzhl7F1/M0qL/JvNIJZeRqRo0iZx15ry472eZbmHvyyMnCQVRxiBDdKfpEGtQDh179V8mf6cZqsVq+C+h0BmV6HAqnhKG40SsxY/DH1OykOrPE9nwnPmjeQfEEzezUJH50ncQ94KMV3+gRBszGHmqTF6vd4vNPVNWLahKC2iNR2YxwrW8RgSP3U12uPgUfkRdeO9+GsBWAMvR2KER/0tvwT8PAhgejZV6ZSI432y9Q4JpIM6jFUvCvXCjs80WeFU88YpYUK18q0G+8JEOsWJXGHGTyCvrl3UGitt8Y5mWnEJSXP+pcFUkUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Wky6Dw4IOL0VUIvGxK33h2O0Oa8eBHODGGjK86WgDvg=;
+ b=h7h5LhTngIc2/N/oaepT937DZ+dSKRhiEVQnogYayRuMfbV6cgNNPVJN2jsi8cQ30lYpYYfoUyReOR4h2YwrBkrCUx42saFpdrcDmCycKzO0+SUtnS4UKxhAprUrwJhjKq52AWF8EuDzlKFJSQDT/Y41VP+OgkhvNtC3035+9965d94xYG3mI3c2N20iwB/kL2jZEhRmbdfnpREN/idEN8keQb/Bl/asFlj9Oomfw+Mhpr7fAN0gs126khxGUfmPTVVLnoYs5qHkVMWyjBJIUK7RrX30zosfKM+4eaBmj67P4G35u+rksnFa8yZy/VgfHMg1qDNgK+2nlG8zeegwJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wky6Dw4IOL0VUIvGxK33h2O0Oa8eBHODGGjK86WgDvg=;
+ b=JfTJcCU4iMl0S4OuoisPgeBGgI/uTep4OJ2FkYUBeFedtQ5LmIeO5IdUtVPaNSnN/AcXs9GKTDJkTMOASTGoMnh4Zj1nUJO4oI/fdOEOgS1qssS9VP1hcL0NyDJ81KTm3yDRFCT49m16TrrPTe2twWc3/HSRqH3JLmdDEXmrU90uNlwnYe05wzpyidwZ3Ce+XvKieIBnLfZ+NG7SU/0wNdiXOcC+mxhY1c1pKXexr35Bl487P1PYn/9aliEXiC71PbCEggsc1SV+18h2d+d5ZJNESFILE3wNd8FBMCJDznEkip+HszylGLIFoZwWevngun7PZkElvSxLdoQb8N/2ow==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB4181.namprd12.prod.outlook.com (2603:10b6:610:a8::16)
+ by CY4PR1201MB2550.namprd12.prod.outlook.com (2603:10b6:903:ce::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.16; Mon, 28 Mar
+ 2022 11:37:31 +0000
+Received: from CH2PR12MB4181.namprd12.prod.outlook.com
+ ([fe80::9ce9:6278:15f:fd03]) by CH2PR12MB4181.namprd12.prod.outlook.com
+ ([fe80::9ce9:6278:15f:fd03%8]) with mapi id 15.20.5102.023; Mon, 28 Mar 2022
+ 11:37:31 +0000
+Date:   Mon, 28 Mar 2022 08:37:28 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Shlomo Pongratz <shlomopongratz@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrew.maier@eideticom.com, logang@deltatee.com,
+        bhelgaas@google.com, Shlomo Pongratz <shlomop@pliops.com>
+Subject: Re: [PATCH V2 1/1] Intel Sky Lake-E host root ports check.
+Message-ID: <20220328113728.GA1693573@nvidia.com>
+References: <20220327112011.3350-1-shlomop@pliops.com>
+ <20220327112011.3350-2-shlomop@pliops.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220327112011.3350-2-shlomop@pliops.com>
+X-ClientProxiedBy: BLAPR03CA0062.namprd03.prod.outlook.com
+ (2603:10b6:208:329::7) To CH2PR12MB4181.namprd12.prod.outlook.com
+ (2603:10b6:610:a8::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2fe7f0a4-dd50-4b0d-a3e5-08da10af57c8
+X-MS-TrafficTypeDiagnostic: CY4PR1201MB2550:EE_
+X-Microsoft-Antispam-PRVS: <CY4PR1201MB25505100B3C43A4341F8920CC21D9@CY4PR1201MB2550.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7FeXMVfGdUfRyZTJ8Rmw+WyTkDlSJDNSebfq2rljNaKYlqeZoy4bRfrfl5PGnx16LscGPhPTUDqkeKSRgkiFVkvMQ7ZDOFMv2hi7rN6HOYGijELXf1No7blr6uMDObljYDCwDOUj8eCcVN99Pzu1t6hSvyK44IJb9oJd41ocDU0yFmEFBKeJFT12yRzouYrP6XFbK2n/WaXmTLeBKTmPiDp1XceZJlENOV1FhuKCtsSAuiW9mOLaRpXo8yUwo8zcRVlnP+5d5PjK6sIEalWkQ44INoDfGPkklFtO9rYaNTvxtEblZ3PkB+BIZH4l/fSHLZ9vHtucqCGrh4bprWQEUudo02Kj4U1haEPpu2iIXQB8XSYaf7JhAkbstzITZkq17DC+Ah/2i2HrNiatqO9a/JsjufEWojCllESbD/id+vWjdaVTNcK9KZhrbUGgKD/sYV6dEKOdG19aqCzmTRGsp+ErgOhc3r78+/oRsXWAOLAU9/RNnC7ZK2ZgZjbAnYG8nVsg7ncD8q+mayQ0P0ZVxYjP01fvcf5FTovGYoCtl8MGb6duRJtmVOnOfqRsNj6l0+iWMlNDZoX1IK9o0ShbhBZvNqn1kS5NhaCUXyFgujPFScxLMrcEg2oFq0bUOdRdA215GU/E+34IC4Tnr0qi2g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4181.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(86362001)(36756003)(6512007)(6506007)(6666004)(316002)(6916009)(66476007)(66556008)(66946007)(8676002)(508600001)(6486002)(33656002)(2906002)(2616005)(1076003)(26005)(186003)(83380400001)(5660300002)(4326008)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nhMScBxNe6YcWyN5yqadSjxMdgbF5nIS+WUKqvjXCy32AJcZdADEGqtwNvq+?=
+ =?us-ascii?Q?T4vND/NaFkS/wIIALpVjM0H41FLbP4KGCCy6I4vD4wLRA5t3k29c6vUD/nbx?=
+ =?us-ascii?Q?S2jWoCHy3j8adEUpMKIM9X3e8m+nyLVfzT5cdH6EEhVkspUbcV0v/xtry/BM?=
+ =?us-ascii?Q?bnBGjil0OlsncrscNZwEphS08pE6IH9Kuna+6uqgFVlpJyvhE5g9O/9UWgD5?=
+ =?us-ascii?Q?ZAxjzUlJBK3hXZvAdouMXjp9mEZI9D2W3yOQGnfMw3z3ZcXNpagzqK2/HnVu?=
+ =?us-ascii?Q?mCJWw+PuJ7r4By47ajOtN9xOvTCmi5OgliwSjYSlb/1/vSIW11w7u4xfqwyU?=
+ =?us-ascii?Q?g38YM5ReAljeHWXmbilfhwRv5Qzfx3YhTTWei8Pcq2+OkeL36tG4VcYo9BGl?=
+ =?us-ascii?Q?J1uplzwwUwLN16T18UxfJkPVaaMraPOyHtLsezDyCncySQZ+BQRQCRbuvCXe?=
+ =?us-ascii?Q?/r9sNQJMZ9GrKIE8EH5+MCKGQ/9TcbGI3wwrMqJ+FeMqzkTgZOkMyWAgReOq?=
+ =?us-ascii?Q?6LSSjWztJCx81hh5FMfNFZdlzqKG08fK/QTptiZwg/dUpN8SCa1mgKG/UbF3?=
+ =?us-ascii?Q?KPQ7rIb7y7KHFqXQIhRym70suEwl125W1LuVWuxGDtN7tksOH962K8R9VPPA?=
+ =?us-ascii?Q?Z5YC476CuD5YuCtmnJUvYNdEQn401MfCTgrwNnyxoM3lOsgAvyY0PrbLL8VI?=
+ =?us-ascii?Q?sL59zxQe0VaxGcnKWqWtdWDdYuMrcTBibq4ZbncnAw84spFAhBiEj9xuqmTU?=
+ =?us-ascii?Q?qdKL800gjqbUc0JeZBj3f9PutrDtHdsYLqM1pLUbyZL2SL9J9w+W8YRoemy4?=
+ =?us-ascii?Q?+NNsGw541OF9qaFLsGt9RMOViPY4Vo7dQPTC0g4mUhLLLKlN0zGcXheWqd95?=
+ =?us-ascii?Q?ERbzRolABguzmfqtUHXucJvOSEA4oWx+q4VVVM90bZCRwcmUeh5ndwO2kLY9?=
+ =?us-ascii?Q?i52Q3EUrKZw9x205ossCxe4tRzf6uf3Ctko6X6WUGlc44VIHaBX+L8thEhFQ?=
+ =?us-ascii?Q?uaWS5WHuVK99wmpvTDNKdtXOlr3iYGSpXQH/X/LfBYIsogM6YbAwqx166coZ?=
+ =?us-ascii?Q?FAJ39MIazLppdr+ZD9dwRi6HuR7fo0D+ZOkcZ0+a8jR2NvhP8fBiz2eZWdIb?=
+ =?us-ascii?Q?xgwSQPJFZpGRZwUgTapLOoLXxJNR+X8lvx/QTNrtoKu4uxNayTo2ew2HL1KZ?=
+ =?us-ascii?Q?I3Wu4gmFeR3KFYkMmi9YcN23wfvS1pIcYHAdNBtoF7//Waicz7NnCOQGFela?=
+ =?us-ascii?Q?XytOjXkYM1nV4PMQsqeJ2rIfYNjH4uF30IcLHCe5oaYHr4UviwOm5VQeK7sn?=
+ =?us-ascii?Q?SZOwNRNybv51UJK118Tqj34Y7qPubZqSqzFjIixFkj5NAlH8U7ynSpvYIu1f?=
+ =?us-ascii?Q?mD5P5nQu2mOi2EOPUISaFlcPtZXaApGjtPEit824Xchm0+xkmQirHwcHJ9i+?=
+ =?us-ascii?Q?zARHBdalqeBtZQlQTCeaPUm/IkUAAOzxuS9lZapRIUde6kJPbRqLWKKpneGx?=
+ =?us-ascii?Q?iho/rGgZZI7ujkDDhRx2dpzKRuzmm5PG65UbpXGaRjHJiKMSdlRgpmC/XF89?=
+ =?us-ascii?Q?A2wT6cnH334v5kQ42n3oC/igJXVnWAjz93ea61pL0jz5exlnDwFef/OV6FnH?=
+ =?us-ascii?Q?10FSXRZCj7Kg9tDhCG3zBcZo8XKpwcOF4nkImNi5F2r10CPb5CRZuzc6FgOG?=
+ =?us-ascii?Q?m67lbbw85A3bEXIO5g9BG1qQTb/O6FubgqTWgQJZRIEdSFNUxZE8P6RZW9w4?=
+ =?us-ascii?Q?4KxG37AbIQ=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fe7f0a4-dd50-4b0d-a3e5-08da10af57c8
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4181.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2022 11:37:30.9590
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ybOsBiocxSyc/e/FSRCnUQ8BPJTkgdgeKXj4q0ydtxoo40m3tsvP+zsFRQ8/Rgxf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2550
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> --------- Original Message ---------
-> Sender : Krzysztof Kozlowski=C2=A0<krzk=40kernel.org>=0D=0A>=20Date=20:=
-=202022-03-28=2018:38=20(GMT+9)=0D=0A>=20Title=20:=20Re:=20=5BPATCH=200/5=
-=5D=20Add=20support=20for=20Axis,=20ARTPEC-8=20PCIe=20driver=0D=0A>=20=0D=
-=0A>=20On=C2=A028/03/2022=C2=A011:02,=C2=A0=EC=9D=B4=EC=99=95=EC=84=9D=C2=
-=A0wrote:=0D=0A>>>=C2=A0---------=C2=A0Original=C2=A0Message=C2=A0---------=
-=0D=0A>>>=C2=A0Sender=C2=A0:=C2=A0Krzysztof=C2=A0Kozlowski=C2=A0<krzk=40ker=
-nel.org>=0D=0A>>>=C2=A0Date=C2=A0:=C2=A02022-03-28=C2=A016:12=C2=A0(GMT+9)=
-=0D=0A>>>=C2=A0Title=C2=A0:=C2=A0Re:=C2=A0=5BPATCH=C2=A00/5=5D=C2=A0Add=C2=
-=A0support=C2=A0for=C2=A0Axis,=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0driver=0D=0A>>>=
-=0D=0A>>>=C2=A0On=C2=A028/03/2022=C2=A003:44,=C2=A0=EC=9D=B4=EC=99=95=EC=84=
-=9D=C2=A0wrote:=0D=0A>>>>=C2=A0=C2=A0This=C2=A0series=C2=A0patches=C2=A0inc=
-lude=C2=A0newly=C2=A0PCIe=C2=A0support=C2=A0for=C2=A0Axis=C2=A0ARTPEC-8=C2=
-=A0SoC.=0D=0A>>>>=C2=A0=C2=A0ARTPEC-8=C2=A0is=C2=A0the=C2=A0SoC=C2=A0platfo=
-rm=C2=A0of=C2=A0Axis=C2=A0Communications.=0D=0A>>>>=C2=A0=C2=A0PCIe=C2=A0co=
-ntroller=C2=A0driver=C2=A0and=C2=A0phy=C2=A0driver=C2=A0have=C2=A0been=C2=
-=A0newly=C2=A0added.=0D=0A>>>>=C2=A0=C2=A0There=C2=A0is=C2=A0also=C2=A0a=C2=
-=A0new=C2=A0MAINTAINER=C2=A0in=C2=A0the=C2=A0addition=C2=A0of=C2=A0phy=C2=
-=A0driver.=0D=0A>>>>=C2=A0=C2=A0PCIe=C2=A0controller=C2=A0is=C2=A0designed=
-=C2=A0based=C2=A0on=C2=A0Design-Ware=C2=A0PCIe=C2=A0controller=C2=A0IP=0D=
-=0A>>>>=C2=A0=C2=A0and=C2=A0PCIe=C2=A0phy=C2=A0is=C2=A0desinged=C2=A0based=
-=C2=A0on=C2=A0SAMSUNG=C2=A0PHY=C2=A0IP.=0D=0A>>>>=C2=A0=C2=A0It=C2=A0also=
-=C2=A0includes=C2=A0modifications=C2=A0to=C2=A0the=C2=A0Design-Ware=C2=A0co=
-ntroller=C2=A0driver=C2=A0to=C2=A0=0D=0A>>>>=C2=A0=C2=A0run=C2=A0the=C2=A06=
-4bit-based=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0controller=C2=A0driver.=0D=0A>>>>=
-=C2=A0=C2=A0It=C2=A0consists=C2=A0of=C2=A06=C2=A0patches=C2=A0in=C2=A0total=
-.=0D=0A>>>>=C2=A0=C2=A0=0D=0A>>>>=C2=A0=C2=A0This=C2=A0series=C2=A0has=C2=
-=A0been=C2=A0tested=C2=A0on=C2=A0AXIS=C2=A0SW=C2=A0bring-up=C2=A0board=C2=
-=A0=0D=0A>>>>=C2=A0=C2=A0with=C2=A0ARTPEC-8=C2=A0chipset.=0D=0A>>>=0D=0A>>>=
-=C2=A0You=C2=A0lost=C2=A0mail=C2=A0threading.=C2=A0This=C2=A0makes=C2=A0rea=
-ding=C2=A0this=C2=A0difficult=C2=A0for=C2=A0us.=C2=A0Plus=0D=0A>>>=C2=A0you=
-=C2=A0sent=C2=A0something=C2=A0non-applicable=C2=A0(patch=C2=A0=232),=C2=A0=
-so=C2=A0please=C2=A0resend.=0D=0A>>>=0D=0A>>>=C2=A0Knowing=C2=A0recent=C2=
-=A0Samsung=C2=A0reluctance=C2=A0to=C2=A0extend=C2=A0existing=C2=A0drivers=
-=C2=A0and=C2=A0always=0D=0A>>>=C2=A0duplicate,=C2=A0please=C2=A0provide=C2=
-=A0description/analysis=C2=A0why=C2=A0this=C2=A0driver=C2=A0cannot=C2=A0be=
-=0D=0A>>>=C2=A0combined=C2=A0with=C2=A0existing=C2=A0driver.=C2=A0The=C2=A0=
-answer=C2=A0like:=C2=A0we=C2=A0need=C2=A0several=C2=A0syscon=0D=0A>>>=C2=A0=
-because=C2=A0we=C2=A0do=C2=A0not=C2=A0implement=C2=A0other=C2=A0frameworks=
-=C2=A0(like=C2=A0interconnect)=C2=A0are=C2=A0not=0D=0A>>>=C2=A0valid.=0D=0A=
->>>=0D=0A>>>=C2=A0Best=C2=A0regards,=0D=0A>>>=C2=A0Krzysztof=0D=0A>>=C2=A0=
-=0D=0A>>=C2=A0Hello,=C2=A0Krzysztof=0D=0A>>=C2=A0Thanks=C2=A0for=C2=A0your=
-=C2=A0review.=0D=0A>>=C2=A0=0D=0A>>=C2=A0patch=232=C2=A0was=C2=A0sent=C2=A0=
-to=C2=A0the=C2=A0wrong=C2=A0format=C2=A0so=C2=A0sent=C2=A0again.=0D=0A>>=C2=
-=A0Sorry=C2=A0for=C2=A0causing=C2=A0confusion.=0D=0A>=20=C2=A0=0D=0A>=20The=
-=C2=A0first=C2=A0sending=C2=A0was=C2=A0HTML.=C2=A0Second=C2=A0was=C2=A0brok=
-en=C2=A0text,=C2=A0so=C2=A0still=C2=A0not=C2=A0working.=0D=0A>=20=0D=0A>=20=
-Please=C2=A0resend=C2=A0everything=C2=A0with=C2=A0proper=C2=A0threading.=0D=
-=0A=0D=0AHello,=20Krzysztof=0D=0A=0D=0AI=20sent=20patch=232=20three=20times=
-.=0D=0Adue=20to=20the=20influence=20of=20the=20email=20system,=0D=0Athere=
-=20was=20something=20wrong=20with=20the=20first=20and=20second=20mails.=0D=
-=0ASorry=20for=20causing=20confusion.=0D=0ADid=20you=20receive=20the=20thir=
-d=20patch=20i=20sent=20you?=0D=0A=20=0D=0A>>=C2=A0This=C2=A0patch=C2=A0is=
-=C2=A0specialized=C2=A0in=C2=A0Artpec-8,=C2=A0=0D=0A>>=C2=A0the=C2=A0SoC=C2=
-=A0Platform=C2=A0of=C2=A0Axis=C2=A0Communication,=C2=A0and=C2=A0is=C2=A0new=
-ly=C2=A0applied.=0D=0A>>=C2=A0Since=C2=A0the=C2=A0target=C2=A0SoC=C2=A0plat=
-form=C2=A0is=C2=A0different=C2=A0from=C2=A0the=C2=A0driver=C2=A0previously=
-=C2=A0=0D=0A>>=C2=A0used=C2=A0by=C2=A0Samsung,=C2=A0it=C2=A0is=C2=A0difficu=
-lt=C2=A0to=C2=A0merge=C2=A0with=C2=A0the=C2=A0existing=C2=A0driver.=0D=0A>=
-=20=0D=0A>=20Recently=C2=A0I=C2=A0always=C2=A0saw=C2=A0such=C2=A0answers=C2=
-=A0and=C2=A0sometimes=C2=A0it=C2=A0was=C2=A0true,=C2=A0sometimes=0D=0A>=20n=
-ot.=C2=A0What=C2=A0is=C2=A0exactly=C2=A0different?=0D=0A>=20=0D=0A>=20Best=
-=C2=A0regards,=0D=0A>=20Krzysztof=0D=0A=0D=0AThe=20main=20reason=20this=20p=
-atch=20should=20be=20added=20is=20that=0D=0Athis=20patch=20is=20not=20the=
-=20driver=20applied=20to=20exynos=20platform.=0D=0ABecause=20the=20SoC=20pl=
-atform=20is=20different,=20=0D=0Athe=20IP=20configuration=20of=20PCIe=20is=
-=20also=20different.=0D=0AWe=20will=20organize=20a=20driver=20for=20Artpec-=
-8=20platform=20and=20=0D=0Aif=20there=20is=20no=20special=20reason,=20maint=
-ain=20this=20=0D=0Awithout=20adding=20it=20from=20the=20next=20series.=0D=
-=0A=0D=0AThank=20you.
+On Sun, Mar 27, 2022 at 02:20:11PM +0300, Shlomo Pongratz wrote:
+> On commit 7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
+> Andrew Maier added the Sky Lake-E additional devices
+> 2031, 2032 and 2033 root ports to the already existing 2030 device.
+> 
+> The Intel devices 2030, 2031, 2032 and 2033 which are ports A, B, C and D,
+> and if all exist they will occupy slots 0 till 3 in that order.
+> 
+> Now if for example device 2030 is missing then there will no device on slot 0, but
+> other devices can reside on other slots according to there port.
+> For this reason the test that insisted that the bridge should be on slot 0 was modified
+> to support bridges that are not on slot 0.
+
+This helped our systems here! Thanks
+
+Though to be clear the BIOS/ACPI modeling seems to be wrong in a way
+which prevents linux from finding the true root port which is the main
+cause of this problem.
+
+2030-2033 are *root ports* not host bridges. So when we are in
+pci_host_bridge_dev() the code is not looking at the system's host
+bridge device at all, but a root port off the host bridge.
+
+Which explains why the non-zero slot is happening.
+
+So this might be better to add a flag 'IS_ROOT_PORT' instead of 'port'
+and then just ignore the slot number entirely for root ports.
+
+Though maybe someone has a better idea how the host bridge stuff is
+supposed to work on these skylake-e systems.
+
+> + * The method above will work in most cases but not for all.
+> + * Note that the Intel devices 2030, 2031, 2032 and 2033 are ports A, B, C and D.
+> + * Consider on a bus X only port C is connected downstream so in the PCI scan only
+> + * device 8086:2032 on 0000:X:02.0 will be found as birdges with no children are ignored
+
+'bridges' mispelled
+
+> + *
+>   * This function is equivalent to pci_get_slot(host->bus, 0), however it does
+>   * not take the pci_bus_sem lock seeing __host_bridge_whitelist() must not
+>   * sleep.
+> @@ -350,7 +356,10 @@ static struct pci_dev *pci_host_bridge_dev(struct pci_host_bridge *host)
+>  
+>  	if (!root)
+>  		return NULL;
+> -	if (root->devfn != PCI_DEVFN(0, 0))
+> +	/* Here just check that the function is 0
+> +	 * The slot number will be checked later
+> +	 */
+> +	if (PCI_FUNC(root->devfn) != 0)
+>  		return NULL;
+>  
+>  	return root;
+> @@ -372,6 +381,13 @@ static bool __host_bridge_whitelist(struct pci_host_bridge *host,
+>  	for (entry = pci_p2pdma_whitelist; entry->vendor; entry++) {
+>  		if (vendor != entry->vendor || device != entry->device)
+>  			continue;
+> +		/* For devices which are bounded to a specific slot
+> +		 * (e.g. Intel Sky Lake-E host root ports) check the port is
+> +		 * Identical to the slot number.
+> +		 * For other devices continue to inssist on slot 0
+
+"insist" mispelled.
+
+Jason
