@@ -2,287 +2,294 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 411C14EA37E
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 01:13:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38DE04EA393
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 01:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230317AbiC1XKF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 19:10:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34220 "EHLO
+        id S230242AbiC1XVt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 19:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230283AbiC1XKD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 19:10:03 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B471DFE5;
-        Mon, 28 Mar 2022 16:08:21 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1648508897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GW5piibXVKo9A/BIxG2OaJSsIL3nRb2gFVpSMD8Zngg=;
-        b=RataHu52uLY+1j4O0rcSXT0F7L8lkLcVrcT9weAkzaKSC0NHIk3kvnB0qFAmfvDIlsEd0G
-        UPZTvh7TgcalSd1NjpUx2DmQFqGZapNjbfS1SP9dFm7PLlrXhDbbKJaQePnxynRB6i580m
-        j6ExbwCCgxEpnvnJtrTQioJk/TtTamCz93AG21LXrtGWDNLj5x3PzKowf6NJKDBdv2In6T
-        SFHIAuVbgNhvLIZf52lVvPW/bj3bqilEfjSg6IVt2pNR0ffuYP/vkLbkT8Stt8Ous3Qlax
-        Bc9PCNEBPEy1tyHAqwSE/gSh3gZUmCRoc/yd8/iF4MdHN+pFm90GiY7eASJ96Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1648508897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GW5piibXVKo9A/BIxG2OaJSsIL3nRb2gFVpSMD8Zngg=;
-        b=aOELans+tovI5r1VYnU410Rrhjf4G2toTen/ParOs+ebyjfwwNbUXzKvkk4zFq8Hn7i6vn
-        uY0etoAkLcKmnUCg==
-To:     Benjamin =?utf-8?Q?St=C3=BCrz?= <benni@stuerz.xyz>, andrew@lunn.ch
-Cc:     sebastian.hesselbarth@gmail.com, gregory.clement@bootlin.com,
-        linux@armlinux.org.uk, linux@simtec.co.uk, krzk@kernel.org,
-        alim.akhtar@samsung.com, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, robert.moore@intel.com,
-        rafael.j.wysocki@intel.com, lenb@kernel.org, 3chas3@gmail.com,
-        laforge@gnumonks.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-        mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
-        rric@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
-        mike.marciniszyn@cornelisnetworks.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        pali@kernel.org, dmitry.torokhov@gmail.com, isdn@linux-pingi.de,
-        benh@kernel.crashing.org, fbarrat@linux.ibm.com, ajd@linux.ibm.com,
-        davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-        nico@fluxnic.net, loic.poulain@linaro.org, kvalo@kernel.org,
-        pkshih@realtek.com, bhelgaas@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-input@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-media@vger.kernel.org,
-        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Benjamin =?utf-8?Q?St=C3=BCrz?= <benni@stuerz.xyz>
-Subject: Re: [PATCH 04/22] x86: Replace comments with C99 initializers
-In-Reply-To: <20220326165909.506926-4-benni@stuerz.xyz>
-References: <20220326165909.506926-1-benni@stuerz.xyz>
- <20220326165909.506926-4-benni@stuerz.xyz>
-Date:   Tue, 29 Mar 2022 01:08:16 +0200
-Message-ID: <87lewtfzfj.ffs@tglx>
+        with ESMTP id S230240AbiC1XVt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 19:21:49 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACD1134;
+        Mon, 28 Mar 2022 16:20:06 -0700 (PDT)
+Received: by mail-oi1-f171.google.com with SMTP id q129so17365961oif.4;
+        Mon, 28 Mar 2022 16:20:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Az+MY9NSlQZZNnS3o0rLrGelAp7EayLadbgOGpBV7a0=;
+        b=vnGDD/vGqF7m4PbOUtfTrVazlvjE52ttDP3wkUK+x0y7s/4zRMfnzsQji0ntFdqEcx
+         A0TAQJGdsPNpFn5taBS0JJMsUWfAmxvojvI2lDYHRLb6q6MDk+qvSe3s5Wf5OODEt71V
+         HBz/xs3m2F3BKjA7LulETI5wMqt0+RQYlyzgeiuUn7KanqJWso8vPzeD51CsnIfOoWwT
+         t43mhAHUMSDIosEWa37oGIDLhPVdCoNUb5qDCmIYo13Kmd4B7ZYESEFFQnOynSpGPiYS
+         v/2WwhLlpquT1Zf7zsJ62EbY197oNL6HZcYoDBe8bF2ywfHBY0Cp9taFOoGAEySotgYA
+         Y8cA==
+X-Gm-Message-State: AOAM533RHwwF7xmuj1HwK4RDuno7oaH+a3+u8k2Y2wqw/1Lri5OcwJX8
+        F6s6sxolepxVVv/7qeutXA==
+X-Google-Smtp-Source: ABdhPJyAuKzd/h23jgh/6Vp1uLc82of3PFROtweM3HvlHdJkNRANCNS43he2n/hdyVEtd9aeKJP5eg==
+X-Received: by 2002:a05:6808:170d:b0:2f7:3e70:fdb3 with SMTP id bc13-20020a056808170d00b002f73e70fdb3mr812746oib.139.1648509605211;
+        Mon, 28 Mar 2022 16:20:05 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id r19-20020a056830121300b005cdb11a7b85sm7761844otp.29.2022.03.28.16.20.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Mar 2022 16:20:04 -0700 (PDT)
+Received: (nullmailer pid 3227660 invoked by uid 1000);
+        Mon, 28 Mar 2022 23:20:03 -0000
+Date:   Mon, 28 Mar 2022 18:20:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/16] dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root
+ Port bindings
+Message-ID: <YkJCo1PrdKlHYt8D@robh.at.kernel.org>
+References: <20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324013734.18234-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220324013734.18234-3-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Benjamin,
+On Thu, Mar 24, 2022 at 04:37:20AM +0300, Serge Semin wrote:
+> Baikal-T1 SoC is equipped with DWC PCIe v4.60a Root Port controller, which
+> link can be trained to work on up to Gen.3 speed over up to x4 lanes. The
+> controller is supposed to be fed up with four clock sources: DBI
+> peripheral clock, AXI application Tx/Rx clocks and external PHY/core
+> reference clock generating the 100MHz signal. In addition to that the
+> platform provide a way to reset each part of the controller:
+> sticky/non-sticky bits, host controller core, PIPE interface, PCS/PHY and
+> Hot/Power reset signal. The Root Port controller is equipped with multiple
+> IRQ lines like MSI, system AER, PME, HP, Bandwidth change, Link
+> equalization request and eDMA ones. The registers space is accessed over
+> the DBI interface. There can be no more than four inbound or outbound iATU
+> windows configured.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> ---
+> 
+> Rob, this DT-bindings most likely will fail the dt_bindings_check
+> evaluations with the "'*' is not of type 'array'" errors for the same
+> reason described in the previous patch. Let's discuss the problem there.
+> ---
+>  .../bindings/pci/baikal,bt1-pcie.yaml         | 148 ++++++++++++++++++
+>  1 file changed, 148 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+> new file mode 100644
+> index 000000000000..f34438330a86
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+> @@ -0,0 +1,148 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/baikal,bt1-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Baikal-T1 PCIe Root Port Controller
+> +
+> +maintainers:
+> +  - Serge Semin <fancer.lancer@gmail.com>
+> +
+> +description: |
+> +  Embedded into Baikal-T1 SoC Root Complex controller. It's based on the
+> +  DWC RC PCIe v4.60a IP-core, which is configured to have just a single Root
+> +  Port function and is capable of establishing the link up to Gen.3 speed
+> +  on x4 lanes. It doesn't have embedded clock and reset control module, so
+> +  the proper interface initialization is supposed to be performed by software.
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +  - $ref: snps,dw-pcie.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    contains:
+> +      const: baikal,bt1-pcie
+> +
+> +  reg:
+> +    description:
+> +      DBI, DBI2 and at least 4KB outbound iATU-capable region are available.
 
-On Sat, Mar 26 2022 at 17:58, Benjamin St=C3=BCrz wrote:
+outbound iATU-capable region? While configured with iATU, it's just 
+config space from a binding standpoint.
 
-> This replaces comments with C99's designated
-> initializers because the kernel supports them now.
+It's a bit more precise to do this:
 
-the kernel has used designated array initializers for a very long time
-simply because the kernel did not use pure C89 but C89 with GNU
-extensions, i.e. -std=3Dgnu89, which include designated array
-initializers. GCC supports this since 1998 with =3Dgnu89, so 'now' is
-more than slightly off.
+items:
+  - description: DBI...
+  - description: DBI2...
+  - ...
 
-Explicit value assignment to enum constants are a different story. They
-are neither designated initializers nor new in C99. The following
-paragraph from the standard has not been changed since C89:
 
-   "The identifiers in an enumerator list are declared as constants that
-    have type int and may appear wherever such are permitted. An
-    enumerator with =3D defines its enumeration constant as the value of
-    the constant expression. If the first enumerator has no =3D, the value
-    of its enumeration constant is 0. Each subsequent enumerator with no
-    =3D defines its enumeration constant as the value of the constant
-    expression obtained by adding 1 to the value of the previous
-    enumeration constant. (The use of enumerators with =3D may produce
-    enumeration constants with values that duplicate other values in the
-    same enumeration.)"
+> +    maxItems: 3
 
-Please make sure that your changelogs are factual. Making uninformed
-claims is not helping your cause.
+And then drop this.
 
-The most important part is the WHY:
+> +
+> +  reg-names:
+> +    minItems: 3
+> +    maxItems: 3
+> +    items:
+> +      enum: [ dbi, dbi2, config ]
 
-    Why is the current code suboptimal?
+To enforce the order:
 
-    Why is the proposed change making it better, more correct, less
-    error prone?
+items:
+  - const: dbi
+  - const: dbi2
+  - const: config
 
-If you can't come up with proper technical answers for these questions
-then why should it be changed?
+> +
+> +  interrupts:
+> +    description:
+> +      MSI, AER, PME, Hot-plug, Link Bandwidth Management, Link Equalization
+> +      request and eight Read/Write eDMA IRQ lines are available.
+> +    maxItems: 14
+> +
+> +  interrupt-names:
+> +    minItems: 14
+> +    maxItems: 14
+> +    items:
+> +      oneOf:
+> +        - pattern: '^dma[0-7]$'
+> +        - enum: [ msi, aer, pme, hp, bw_mg, l_eq ]
 
->  enum regnames {
-> -	GDB_AX,			/* 0 */
-> +	GDB_AX =3D 0,
+Can't you define the order?
 
-Linear enums without value assignment like here are not a problem at
-all. Simply because they are well defined and well understood. See the
-above quote of the standard.
+> +
+> +  clocks:
+> +    description:
+> +      DBI (attached to the APB bus), AXI-bus master and slave interfaces
+> +      are fed up by the dedicated application clocks. A common reference
+> +      clock signal is supposed to be attached to the corresponding Ref-pad
+> +      of the SoC. It will be redistributed amongst the controller core
+> +      sub-modules (pipe, core, aux, etc).
+> +    minItems: 4
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    minItems: 4
+> +    maxItems: 4
+> +    items:
+> +      enum: [ dbi, mstr, slv, ref ]
+> +
+> +  resets:
+> +    description:
+> +      A comprehensive controller reset logic is supposed to be implemented
+> +      by software, so almost all the possible application and core reset
+> +      signals are exposed via the system CCU module.
+> +    minItems: 9
+> +    maxItems: 9
+> +
+> +  reset-names:
+> +    minItems: 9
+> +    maxItems: 9
+> +    items:
+> +      enum: [ mstr, slv, pwr, hot, phy, core, pipe, sticky, non-sticky ]
 
-Whether the explicit assignment is an improvement over the trailing
-comment or not is a matter of taste and preference. There is absolutely
-_zero_ technical advantage in using explicit value assignments in _this_
-case and neither in many other cases of your series.
+Again, define the order.
 
-Also completely removing the comments here loses information:
+> +
+> +  syscon:
 
-> -	GDB_PC,			/* 8 also known as eip */
-> -	GDB_PS,			/* 9 also known as eflags */
+Needs a vendor prefix.
 
-Can you map _PC to EIP and _PS to EFLAGS? I can't without digging
-deep...
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to the Baikal-T1 System Controller DT node. It's required to
+> +      access some additional PM, Reset-related and LTSSM signals.
+> +
+> +  num-lanes:
+> +    maximum: 4
+> +
+> +  max-link-speed:
+> +    maximum: 3
+> +
 
->  static const char *const mtrr_strings[MTRR_NUM_TYPES] =3D
->  {
-> -	"uncachable",		/* 0 */
-> -	"write-combining",	/* 1 */
-> -	"?",			/* 2 */
-> -	"?",			/* 3 */
-> -	"write-through",	/* 4 */
-> -	"write-protect",	/* 5 */
-> -	"write-back",		/* 6 */
-> +	[0] =3D "uncachable",
-> +	[1] =3D "write-combining",
-> +	[2] =3D "?",
-> +	[3] =3D "?",
-> +	[4] =3D "write-through",
-> +	[5] =3D "write-protect",
-> +	[6] =3D "write-back",
+> +  num-ob-windows:
+> +    const: 4
+> +
+> +  num-ib-windows:
+> +    const: 4
 
-Again, while not supported in C89, the kernel uses designators in array
-initializers for a very long time...
+These are deprecated. The driver probes for how many now.
 
-Linear array initializers like the mtrr strings are not a real problem
-simply because there is no correlation and the code using the array
-still has to make sure that the index into the array is what it expects
-to be the content. Changing it from C89 automatic to explicit C99
-designators does not help there at all.
-
-It becomes a different story if you combine [enum] constants and arrays
-and use the constants in code because then the change to the constants
-will immediately be reflected in the array initializer. I.e. for this
-case:
-
-enum foo {
-     BAR,
-     BAZ,
-     RAB,
-     ZAR,
-};
-
-char foobar[] =3D {
-     "bar",
-     "baz",
-     "rab",
-     "zar",
-};
-
-it makes a difference if someone does:
-
-  enum foo {
-     BAR,
-     BAZ,
-+    MOO,
-     RAB,
-     ZAR,
-  };
-
-because then the related array initializer is obviously out of
-order. With:
-
-char *foobar[] =3D {
-     [BAR] =3D "bar",
-     [BAZ] =3D "baz",
-     [RAB] =3D "rab",
-     [ZAR] =3D "zar",
-};
-
-the existing values are still in the same place, just the newly added
-value is a NULL pointer. It also does not matter when the fixup for the
-missing array entry becomes:
-
-  char *foobar[] =3D {
-     [BAR] =3D "bar",
-     [BAZ] =3D "baz",
-     [RAB] =3D "rab",
-     [ZAR] =3D "zar",
-+    [MOO] =3D "moo",=20=20=20=20=20
-  };
-
-because the compiled result is still in enum order. While doing
-
-  char foobar[] =3D {
-     "bar",
-     "baz",
-     "rab",
-     "zar",
-+    "moo",
-  };
-
-would be blantantly wrong. See?
-
-But that does not apply to any of your proposed changes.
-
-So you really need to look at things and not just throw a mechanical
-change scheme at it, which results even in failures like reported by
-the 0-day robot against patch 10/22.
-
-That said, I'm not completely opposed to those changes, but you really
-have to come up with good reasons why they make sense aside of
-cosmetical reasons.
-
-Btw, the really important change regarding initializers between C89 and
-C99 was the ability to initialize struct members explicitly.
-
-In C89 the only way to initialize a struct was
-
-   =3D { a, b, c, d }
-
-which was way more error prone than the enum/array initializers. The
-dangerous part or C89 struct initializers are changes to the struct
-unless the change of the struct is actually triggering a type
-mismatch.
-
-But even that needs some serious inspection whether there is confusion
-potential or not. The harmless example is a file local:
-
-struct foo {
-       unsigned int      id;
-       unsigned int      flags;
-};
-
-and the C89 style initializer:
-
-static struct foo[] {
-       { ID_A, 0x01 },
-       { ID_B, 0x02 },
-       { ID_C, 0x01 },
-};
-
-which has a very low confusion potential simply because it's scope is
-file local and well defined and unlikely to change.
-
-A globally used structure is a different problem especially when it
-becomes necessary to insert a new struct member in the middle instead of
-appending it, changing the order, removing a member... That ends up in a
-hard to diagnose disaster with C89 style unnamed initializers pretty
-fast.
-
-Ideally C89 style unnamed struct initializers should not be used at all,
-but again it's a matter of common sense and justification whether it's
-worth to change it just because.
-
-Thanks,
-
-        tglx
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie@1f052000 {
+> +      compatible = "baikal,bt1-pcie", "snps,dw-pcie-4.60a", "snps,dw-pcie";
+> +      device_type = "pci";
+> +      reg = <0x1f052000 0x1000>, <0x1f053000 0x1000>, <0x1bdbf000 0x1000>;
+> +      reg-names = "dbi", "dbi2", "config";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      ranges = <0x81000000 0 0x00000000 0x1bdb0000 0 0x00008000>,
+> +               <0x82000000 0 0x20000000 0x08000000 0 0x13db0000>;
+> +      bus-range = <0x0 0xff>;
+> +
+> +      interrupts = <0 80 4>, <0 81 4>, <0 82 4>, <0 83 4>,
+> +                   <0 84 4>, <0 85 4>, <0 86 4>, <0 87 4>,
+> +                   <0 88 4>, <0 89 4>, <0 90 4>, <0 91 4>,
+> +                   <0 92 4>, <0 93 4>;
+> +      interrupt-names = "dma0", "dma1", "dma2", "dma3", "dma4", "dma5", "dma6",
+> +                        "dma7", "msi", "aer", "pme", "hp", "bw_mg", "l_eq";
+> +
+> +      clocks = <&ccu_sys 1>, <&ccu_axi 6>, <&ccu_axi 7>, <&clk_pcie>;
+> +      clock-names = "dbi", "mstr", "slv", "ref";
+> +
+> +      resets = <&ccu_axi 6>, <&ccu_axi 7>, <&ccu_sys 7>, <&ccu_sys 10>,
+> +               <&ccu_sys 4>, <&ccu_sys 6>, <&ccu_sys 5>, <&ccu_sys 8>,
+> +               <&ccu_sys 9>;
+> +      reset-names = "mstr", "slv", "pwr", "hot", "phy", "core", "pipe",
+> +                    "sticky", "non-sticky";
+> +
+> +      reset-gpios = <&port0 0 1>;
+> +
+> +      num-lanes = <4>;
+> +      max-link-speed = <3>;
+> +    };
+> +...
+> -- 
+> 2.35.1
+> 
+> 
