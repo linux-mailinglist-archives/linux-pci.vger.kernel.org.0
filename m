@@ -2,75 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFB594E916B
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 11:34:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88FC54E9186
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Mar 2022 11:38:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239844AbiC1Jfj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 05:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60896 "EHLO
+        id S239881AbiC1Jjo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 05:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232922AbiC1Jfi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 05:35:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07C0DFAE;
-        Mon, 28 Mar 2022 02:33:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 763D060F04;
-        Mon, 28 Mar 2022 09:33:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0B4C004DD;
-        Mon, 28 Mar 2022 09:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648460036;
-        bh=vyhorH3ReopEjyyeOaqNXz1F+fuDMA3PtzKea0coFV8=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=N7gslZiAbUk2K0itCjecfsI/RWbD921JgzGNP2Kjob9tlNWKxpcv0XxXJfPNZin/w
-         A0IR7YQPjfgzcF8nfIw2Qp9ZjcFTNb7LTztL9AYoQlq+D0DFSUCrNS2qiH6JPnE1fC
-         d1KCYuVMQdA55JmSSOhMn38gdsnsuJiIvXS7xjuBjd+D58bh2S8/2S5hzqSNDwuMtF
-         wL6A4k/3MHLny+7jUG8f45x9h9oK0icdinMC+NM7pK2YaZF62B/PFs4TG4m+pXcVBe
-         gM+xB7pqzFL7oswhmEfyYWWLVgaR1DNvn0CsMhOvyHk4QEK83ayzd9+XQz5ZI40AA0
-         C+vN55O6TsHMw==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Benjamin =?utf-8?Q?St=C3=BCrz?= <benni@stuerz.xyz>
-Cc:     sebastian.hesselbarth@gmail.com, gregory.clement@bootlin.com,
-        linux@armlinux.org.uk, linux@simtec.co.uk, krzk@kernel.org,
-        alim.akhtar@samsung.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        robert.moore@intel.com, rafael.j.wysocki@intel.com,
-        lenb@kernel.org, 3chas3@gmail.com, laforge@gnumonks.org,
-        arnd@arndb.de, gregkh@linuxfoundation.org, mchehab@kernel.org,
-        tony.luck@intel.com, james.morse@arm.com, rric@kernel.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl,
-        mike.marciniszyn@cornelisnetworks.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        pali@kernel.org, dmitry.torokhov@gmail.com, isdn@linux-pingi.de,
-        benh@kernel.crashing.org, fbarrat@linux.ibm.com, ajd@linux.ibm.com,
-        davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-        nico@fluxnic.net, loic.poulain@linaro.org, pkshih@realtek.com,
-        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org, linux-atm-general@lists.sourceforge.net,
-        netdev@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-input@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-media@vger.kernel.org, wcn36xx@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 00/22] Replace comments with C99 initializers
-References: <20220326165909.506926-1-benni@stuerz.xyz>
-        <8f9271b6-0381-70a9-f0c2-595b2235866a@stuerz.xyz>
-Date:   Mon, 28 Mar 2022 12:33:42 +0300
-In-Reply-To: <8f9271b6-0381-70a9-f0c2-595b2235866a@stuerz.xyz> ("Benjamin
-        \=\?utf-8\?Q\?St\=C3\=BCrz\=22's\?\= message of "Sun, 27 Mar 2022 14:46:00 +0200")
-Message-ID: <87fsn2zaix.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        with ESMTP id S239872AbiC1Jjo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 05:39:44 -0400
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FB8541B1;
+        Mon, 28 Mar 2022 02:38:03 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id yy13so27413881ejb.2;
+        Mon, 28 Mar 2022 02:38:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=DrPaEMfDat9GUeQRRHhxK3bi9z/y1g5nfYZpdXBeJh0=;
+        b=Q3OiKon3Vg93LsG1eTgqGoot1xXNCnEGl3I9Huxn6T9UdbK40VKGH8Dy+yV2FRe62p
+         qD6xx7HhVkxyx4oRUJre9KCoC2srEWfkZ6DZLfCMfl5DCpXBejJ5uF6/22L6p/tJ2wOn
+         morxrPBls7C545b92zEsutJ9TJXdRQ2h3+ub/1uXTyEXSh90iBlvawTm7gxY+kPAMQmr
+         Eq9LX6MVCssWoH23aR+MTZf9aoV0VdvgPRQTWNQXOWTvGPOe50McBLpSUDq06vxbKUJT
+         cHgsg7MsH1lwcHat7JBrjUD+9kqduJpIPElhfShKWT7XqtAcRqJy5gLi7bsvZY7Dj+v7
+         j7IA==
+X-Gm-Message-State: AOAM531GSr15buJCCmJOZfM/xwejTQVy1AMH074WxORaYt0BqOR0fyK+
+        BBviwZmrNXO6gtpyebhvcW8=
+X-Google-Smtp-Source: ABdhPJwLsldpE5WWlbufSSBwZw6+SgXRr/UdYD3h5M6meozH4epky2mYxDMbkRWCkKh6Y8bzyTb+Yw==
+X-Received: by 2002:a17:906:a046:b0:6b9:20c:47c1 with SMTP id bg6-20020a170906a04600b006b9020c47c1mr26357100ejb.615.1648460282232;
+        Mon, 28 Mar 2022 02:38:02 -0700 (PDT)
+Received: from [192.168.0.162] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
+        by smtp.googlemail.com with ESMTPSA id k12-20020aa7c38c000000b0041939d9ccd0sm6775331edq.81.2022.03.28.02.38.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Mar 2022 02:38:01 -0700 (PDT)
+Message-ID: <564c7092-d6a3-7766-d83f-9762075d055f@kernel.org>
+Date:   Mon, 28 Mar 2022 11:38:00 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 0/5] Add support for Axis, ARTPEC-8 PCIe driver
+Content-Language: en-US
+To:     wangseok.lee@samsung.com,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
+        "lars.persson@axis.com" <lars.persson@axis.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        "kernel@axis.com" <kernel@axis.com>,
+        =?UTF-8?B?7KCE66y46riw?= <moonki.jun@samsung.com>
+References: <0716d9e4-24e1-d16c-162c-00a8664296e1@kernel.org>
+ <20220328014430epcms2p7063834feb0abdf2f38a62723c96c9ff1@epcms2p7>
+ <CGME20220328014430epcms2p7063834feb0abdf2f38a62723c96c9ff1@epcms2p8>
+ <20220328090200epcms2p8637d2a2e09a3a627be776586b80c8adf@epcms2p8>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20220328090200epcms2p8637d2a2e09a3a627be776586b80c8adf@epcms2p8>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,21 +80,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Benjamin St=C3=BCrz <benni@stuerz.xyz> writes:
+On 28/03/2022 11:02, 이왕석 wrote:
+>> --------- Original Message ---------
+>> Sender : Krzysztof Kozlowski <krzk@kernel.org>
+>> Date : 2022-03-28 16:12 (GMT+9)
+>> Title : Re: [PATCH 0/5] Add support for Axis, ARTPEC-8 PCIe driver
+>>
+>> On 28/03/2022 03:44, 이왕석 wrote:
+>>>  This series patches include newly PCIe support for Axis ARTPEC-8 SoC.
+>>>  ARTPEC-8 is the SoC platform of Axis Communications.
+>>>  PCIe controller driver and phy driver have been newly added.
+>>>  There is also a new MAINTAINER in the addition of phy driver.
+>>>  PCIe controller is designed based on Design-Ware PCIe controller IP
+>>>  and PCIe phy is desinged based on SAMSUNG PHY IP.
+>>>  It also includes modifications to the Design-Ware controller driver to 
+>>>  run the 64bit-based ARTPEC-8 PCIe controller driver.
+>>>  It consists of 6 patches in total.
+>>>  
+>>>  This series has been tested on AXIS SW bring-up board 
+>>>  with ARTPEC-8 chipset.
+>>
+>> You lost mail threading. This makes reading this difficult for us. Plus
+>> you sent something non-applicable (patch #2), so please resend.
+>>
+>> Knowing recent Samsung reluctance to extend existing drivers and always
+>> duplicate, please provide description/analysis why this driver cannot be
+>> combined with existing driver. The answer like: we need several syscon
+>> because we do not implement other frameworks (like interconnect) are not
+>> valid.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> Hello, Krzysztof
+> Thanks for your review.
+> 
+> patch#2 was sent to the wrong format so sent again.
+> Sorry for causing confusion.
 
-> This patch series replaces comments with C99's designated initializers
-> in a few places. It also adds some enum initializers. This is my first
-> time contributing to the Linux kernel, therefore I'm probably doing a
-> lot of things the wrong way. I'm sorry for that.
+The first sending was HTML. Second was broken text, so still not working.
 
-Just a small tip: If you are new, start with something small and learn
-from that. Don't do a controversial big patchset spanning multiple
-subsystems, that's the hard way to learn things. First submit one patch
-at a time to one subsystem and gain understanding of the process that
-way.
+Please resend everything with proper threading.
 
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+> This patch is specialized in Artpec-8, 
+> the SoC Platform of Axis Communication, and is newly applied.
+> Since the target SoC platform is different from the driver previously 
+> used by Samsung, it is difficult to merge with the existing driver.
+
+Recently I always saw such answers and sometimes it was true, sometimes
+not. What is exactly different?
+
+Best regards,
+Krzysztof
