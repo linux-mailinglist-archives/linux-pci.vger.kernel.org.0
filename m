@@ -2,150 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35A854EA347
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 00:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E43A04EA35C
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 01:03:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbiC1WpH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Mar 2022 18:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        id S230156AbiC1XB5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Mar 2022 19:01:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbiC1WpF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 18:45:05 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4403AF1CC;
-        Mon, 28 Mar 2022 15:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648507403; x=1680043403;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=43i2ldLha0/YWAMiMHUcHxUpHyrhfZrIuZwK4n9t+sA=;
-  b=bnVtTPJRthHdAgnuUeKx53O1kiSdgzWTnONWmeAL0rJSSqldxSD/LdEK
-   J1N9nj3FcMuoj8GSr1nSHPCpCxBcp0vHOPE3WvWbe+eLp6+++kpbeGoEU
-   oLhMXyq0Hvc4Q/bV4ajewWSDjLzoVE2pNwiaFkmJOZpDVMyu4xWIKMnFv
-   Zwsy597Xwpixkk0acVyPeGJXhvtDvxJOxeKUZgg3ltFclbyTuQhYzJGwJ
-   4GoohaD4cqK3dntc3yiH7YyJzWojl4uz5233y73mX66C3khNLcYc7YRpF
-   Gaalv0s1yh8HYMarFdj35Invya26MxBgGdmh/Arvbe+bqCvObJOfkufjC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="345543595"
-X-IronPort-AV: E=Sophos;i="5.90,218,1643702400"; 
-   d="scan'208";a="345543595"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 14:35:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,218,1643702400"; 
-   d="scan'208";a="502664503"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 28 Mar 2022 14:35:51 -0700
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nYx1j-0002Kv-4R; Mon, 28 Mar 2022 21:35:51 +0000
-Date:   Tue, 29 Mar 2022 05:34:53 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/12] PCI: dwc: Add unroll iATU space support to the
- regions disable method
-Message-ID: <202203290527.iS9iplnr-lkp@intel.com>
-References: <20220324012524.16784-4-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220324012524.16784-4-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230163AbiC1XB4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Mar 2022 19:01:56 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC062459A
+        for <linux-pci@vger.kernel.org>; Mon, 28 Mar 2022 16:00:14 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z15-20020a25bb0f000000b00613388c7d99so11971250ybg.8
+        for <linux-pci@vger.kernel.org>; Mon, 28 Mar 2022 16:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=4i1l9AwTfFdRqUE9mxnbmrk0dHwvz4ZAenZccJvB6o4=;
+        b=qhQZecwTYMf+9F7yNoTpRhQqYlOzBbcyLmOjLGZ+2DfFLnN01ArsyEc9L7i4fW5gIW
+         wrxurOmtOwKxa22NDpX1WjFuENaqRudK5KYX4o5DTCZDzvB1ApjdSVEqdraxxjyLCAH8
+         F2CdZhA5eh6qpyE2sFKVxh9A2/F1rO1MbiqNhzvrAYNt6IXbe+iWvWzawNcppFFX1gDN
+         QEy5IaxY4b4XhR+DUb22pzXMedvHOcdcg1P3m53/ejxgDotSV8vSMW9g5YicsNVmNd5w
+         TbMLzukw8r0a8bwmSzuyzT7T3BcIqEbgNIWtEq6FCjEqb0bm8g7kXPzcd73diH9jL9TW
+         MjbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=4i1l9AwTfFdRqUE9mxnbmrk0dHwvz4ZAenZccJvB6o4=;
+        b=faHqEcrZSO8/pYFiG6r8DcLTJOlYE6ejSHCQ9oW6imKq3G48Y1Ith+JHDLrrdlAv3d
+         zTvW3hTKeiunTE0o4gC3wkZH8MIWpRYpLNOfWYu0y999ZCTXiSBAR1rj+sWj30dHRalP
+         XzgP/iyAdI0WMdFmUZSvoHZkfqOVRva+X2I9/5AL4SNGg5wf2DHpHwwl+RlkiCEP0ErX
+         Iiro1P4KqjeEDy2qBFvabAouscrJz2sqHqlm2XsJHwP6UocLe10WAj4dY9sCeH8k3CSC
+         B64Dq6IooIvWLUeYSIrXQ79/0/GsjHd6/HtR6xYoa/E1BBj13MnUqQOWO/CF1WjxpfUr
+         cDLg==
+X-Gm-Message-State: AOAM533K5oKDx0v1NgYZywpXW8iKrwAghMT6MLncPoHPbR/UZ+5/x1RB
+        KY6y5TI5qb63248ZazAjWA5mDyXYAxpLXR0=
+X-Google-Smtp-Source: ABdhPJwQazt4139wX1tGxlX7XgKb6/VZvyzPRdIhufvuYPe+Sy8H/VS5jPEanUTEUA+sCU5Vw6ybWDF1XyuZkCg=
+X-Received: from tansuresh.svl.corp.google.com ([2620:15c:2c5:13:3dbb:6bbc:98be:a31e])
+ (user=tansuresh job=sendgmr) by 2002:a25:e30c:0:b0:633:6081:d44b with SMTP id
+ z12-20020a25e30c000000b006336081d44bmr25995917ybd.523.1648508413391; Mon, 28
+ Mar 2022 16:00:13 -0700 (PDT)
+Date:   Mon, 28 Mar 2022 16:00:05 -0700
+Message-Id: <20220328230008.3587975-1-tansuresh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.35.1.1021.g381101b075-goog
+Subject: [PATCH v1 0/3] Asynchronous shutdown interface and example implementation
+From:   Tanjore Suresh <tansuresh@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, Tanjore Suresh <tansuresh@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Serge,
+Problem:
 
-I love your patch! Perhaps something to improve:
+Some of our machines are configured with  many NVMe devices and
+are validated for strict shutdown time requirements. Each NVMe
+device plugged into the system, typicaly takes about 4.5 secs
+to shutdown. A system with 16 such NVMe devices will takes
+approximately 80 secs to shutdown and go through reboot.
 
-[auto build test WARNING on helgaas-pci/next]
-[also build test WARNING on v5.17 next-20220328]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+The current shutdown APIs as defined at bus level is defined to be
+synchronous. Therefore, more devices are in the system the greater
+the time it takes to shutdown. This shutdown time significantly
+contributes the machine reboot time.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Serge-Semin/PCI-dwc-Various-fixes-and-cleanups/20220328-231112
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-config: x86_64-randconfig-a013-20220328 (https://download.01.org/0day-ci/archive/20220329/202203290527.iS9iplnr-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 0f6d9501cf49ce02937099350d08f20c4af86f3d)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/fb5c4386b8af12124d1e7b48bd7f538c12d85100
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Serge-Semin/PCI-dwc-Various-fixes-and-cleanups/20220328-231112
-        git checkout fb5c4386b8af12124d1e7b48bd7f538c12d85100
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/pci/controller/dwc/
+Solution:
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+This patch set proposes an asynchronous shutdown interface at bus level,
+modifies the core driver, device shutdown routine to exploit the
+new interface while maintaining backward compatibility with synchronous
+implementation already existing (Patch 1 of 3) and exploits new interface
+to enable all PCI-E based devices to use asynchronous interface semantics
+if necessary (Patch 2 of 3). The implementation at PCI-E level also works
+in a backward compatible way, to allow exiting device implementation
+to work with current synchronous semantics. Only show cases an example
+implementation for NVMe device to exploit this asynchronous shutdown
+interface. (Patch 3 of 3).
 
-All warnings (new ones prefixed by >>):
+Tanjore Suresh (3):
+  driver core: Support asynchronous driver shutdown
+  PCI: Support asynchronous shutdown
+  nvme: Add async shutdown support
 
->> drivers/pci/controller/dwc/pcie-designware.c:508:14: warning: result of comparison of constant 2147483648 with expression of type 'int' is always false [-Wtautological-constant-out-of-range-compare]
-                   if (region == PCIE_ATU_REGION_INBOUND) {
-                       ~~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~
-   1 warning generated.
-
-
-vim +/int +508 drivers/pci/controller/dwc/pcie-designware.c
-
-   490	
-   491	void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
-   492				 enum dw_pcie_region_type type)
-   493	{
-   494		int region;
-   495	
-   496		switch (type) {
-   497		case DW_PCIE_REGION_INBOUND:
-   498			region = PCIE_ATU_REGION_INBOUND;
-   499			break;
-   500		case DW_PCIE_REGION_OUTBOUND:
-   501			region = PCIE_ATU_REGION_OUTBOUND;
-   502			break;
-   503		default:
-   504			return;
-   505		}
-   506	
-   507		if (pci->iatu_unroll_enabled) {
- > 508			if (region == PCIE_ATU_REGION_INBOUND) {
-   509				dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-   510							 ~(u32)PCIE_ATU_ENABLE);
-   511			} else {
-   512				dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-   513							 ~(u32)PCIE_ATU_ENABLE);
-   514			}
-   515		} else {
-   516			dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, region | index);
-   517			dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, ~(u32)PCIE_ATU_ENABLE);
-   518		}
-   519	}
-   520	
+ drivers/base/core.c        | 39 ++++++++++++++++++-
+ drivers/nvme/host/core.c   | 28 +++++++++----
+ drivers/nvme/host/nvme.h   |  8 ++++
+ drivers/nvme/host/pci.c    | 80 ++++++++++++++++++++++++--------------
+ drivers/pci/pci-driver.c   | 17 ++++++--
+ include/linux/device/bus.h | 10 +++++
+ include/linux/pci.h        |  2 +
+ 7 files changed, 144 insertions(+), 40 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.35.1.1021.g381101b075-goog
+
