@@ -2,70 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E90E4EB0B0
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 17:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A786C4EB286
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 19:15:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238718AbiC2PdF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Mar 2022 11:33:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34526 "EHLO
+        id S236314AbiC2RQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Mar 2022 13:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238674AbiC2PdD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 11:33:03 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF9611629D;
-        Tue, 29 Mar 2022 08:31:20 -0700 (PDT)
-Received: by mail-oi1-f180.google.com with SMTP id w127so19370040oig.10;
-        Tue, 29 Mar 2022 08:31:20 -0700 (PDT)
+        with ESMTP id S240083AbiC2RQp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 13:16:45 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6915B606C1
+        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 10:15:02 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id c10so18077322ejs.13
+        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 10:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=u4/Xoq8QX2+BSN1akZ5eJ0B56WB/4G+OnIBGzph+8D8=;
+        b=Uqle8LLPZRhi7EFrBAFaa3v0GJirU8cirdL4/0+sEr4luHTyY44LMh/eNY2bjY14q4
+         aYAHCvphytwYlzNtmOVjY5J4zofpkdMkXDH27OhFhaSXwqoLQmnrckfUaxTK7keEbL9a
+         vFfm5O4zrJEMHp+P3J/Lab5BUDEWoYXhs/oswOmVGtVQwyE15ol0UN/UR3+qI/Nht4dH
+         yHJ1loyFFR4NMMEhc5VaHdSzS+uoWlngIPdGKGZ3MBO6Tz8dcC7tnhnZ/bPvLUERAe7W
+         lIpZ9vj6gg93r/xmvrzO9tKZG2p3ZtLRRwodCX8rEUemAUhC+DOftKx/q/jL1LABxcW6
+         g5dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PvY0F/be7YTKOMJTR8VDW/v15Xk3QY2EesChHl1hKgI=;
-        b=BStzDRiObUq4ZNMr+2B8Ft9O2kOEvb0Vh0IRqLw+3/zqJPnsS9zbRak7FfS21RShfy
-         xZBeD8gB8rfIHQ9ZA5TiGROio8Gtb5HdW47nWBwt6RRTTOWVvNz/ak5JGO6jcFC3M50Q
-         8pxK72udinpfFz3UnCdHVT/E/qJswwnFWijfhsMvTgN6eK2kymuToPhkBLg4SA/JsyPR
-         y9zFpW7zszfECnM2AgfKCsmqOahN9IsKPu3C7CdFHdmXHBCewwOUJYC0CLyUu04SYkNu
-         LOQCxU5yOMTgSFhsex1zZqdpRoXiDWohPp5MXoeOATaWQwnK+3VkJbgKVORU2gqXbk1b
-         uY5Q==
-X-Gm-Message-State: AOAM530zmBn48LKMswdB4a0iX8O/WnFvqhP+uYS+GAoTMUz4jXrd4JHu
-        dIEAHMtl5TRDa2fgBGt7Iw==
-X-Google-Smtp-Source: ABdhPJwjYUE9YiYwrmM3u4QfcBz+PfqHfMHxhsovn8+GB23SpgirybkYplWaog51nuRKzWOnWKyWnw==
-X-Received: by 2002:a05:6808:118d:b0:2cc:ef90:3812 with SMTP id j13-20020a056808118d00b002ccef903812mr115228oil.48.1648567879795;
-        Tue, 29 Mar 2022 08:31:19 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id 190-20020a4a0dc7000000b003244ae0bbd5sm8659861oob.7.2022.03.29.08.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Mar 2022 08:31:19 -0700 (PDT)
-Received: (nullmailer pid 717474 invoked by uid 1000);
-        Tue, 29 Mar 2022 15:31:18 -0000
-Date:   Tue, 29 Mar 2022 10:31:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/16] PCI: dwc: Drop iATU regions enumeration -
- dw_pcie_region_type
-Message-ID: <YkMmRrF0e7WyvKsO@robh.at.kernel.org>
-References: <20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru>
- <20220324013734.18234-11-Sergey.Semin@baikalelectronics.ru>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=u4/Xoq8QX2+BSN1akZ5eJ0B56WB/4G+OnIBGzph+8D8=;
+        b=8RsB9CP4Mxo17apZFHyrdB9c0i19M8yPx61fZmt1syYq45RLdM88K1qVUZAAIAXhOY
+         QltKMKkUGq2+VsLWJOSCWVYWW77+ZRLfsMyamYfcWlFFEZONB9jGVCfH9osBYFw7ZQ3K
+         j6AGiqwRCFLsrBlIl6zGf4l8rvcmhl3S1BX3hazFA8G6gyOZATz0+M1JMHh7bU7hoGwK
+         SHFtZN4IoFPYX813TFNs08hqoKW2TcoSFxKO/880aQVsSfmLCmTdvpnMDVW5RQMeE+lw
+         wq0gUh1qL43XOd+50eTHuaAsE4JGQadOC/htxgY8/HvMNSU17P3dJ5oxhwe3VVDN7q6a
+         FsnQ==
+X-Gm-Message-State: AOAM533T8xxcRCAAs8C2oQN8VroxbrCdEfbrlzpA57A/d9xzG9pRgZTC
+        ObRSJf3NYPmDi0hfTpaVaAKJKg==
+X-Google-Smtp-Source: ABdhPJyO+8+whle+3kOlbJHCsgtYjuqBeH8vGylEvAwP94rgXmdsghv9CEj0b2o9qYXnTEPXWCihvg==
+X-Received: by 2002:a17:907:6093:b0:6e0:dabf:1a9f with SMTP id ht19-20020a170907609300b006e0dabf1a9fmr20867752ejc.424.1648574100077;
+        Tue, 29 Mar 2022 10:15:00 -0700 (PDT)
+Received: from [192.168.0.162] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
+        by smtp.gmail.com with ESMTPSA id e26-20020a50ec9a000000b004193fe50151sm8782747edr.9.2022.03.29.10.14.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Mar 2022 10:14:59 -0700 (PDT)
+Message-ID: <a1c70fd7-efe5-aacc-bb4f-74d7a21a310e@linaro.org>
+Date:   Tue, 29 Mar 2022 19:14:58 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220324013734.18234-11-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH RFC] dt-bindings: PCI: mediatek-gen3: Remove clock-names
+Content-Language: en-US
+To:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "allen-kh . cheng" <allen-kh.cheng@mediatek.com>
+References: <20220329071526.10298-1-jianjun.wang@mediatek.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220329071526.10298-1-jianjun.wang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,33 +78,18 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:37:28AM +0300, Serge Semin wrote:
-> There is no point in having the dw_pcie_region_type enumeration for almost
-> the same reasons as it was stated for dw_pcie_as_type. First of all it's
-> redundant since the driver already has a set of macro declared which
-> describe the possible inbound and outbound iATU regions. Having an
-> addition abstraction just needlessly complicates the code. Secondly
-> checking the region index passed to the dw_pcie_disable_atu() method for
-> validity is pointless since the erroneous situation will be just
-> ignored in the current code implementation. So to speak let's drop the
-> redundant dw_pcie_region_type enumeration replacing it with the direct
-> iATU direction macro usage.
-> 
-> While at it we suggest to convert the dw_pcie_disable_atu() method to
-> being more consistent with the dw_pcie_readl_atu{_ib}() and
-> dw_pcie_readl_atu{_ob}() functions by having the direction parameter
-> specified ahead of the region index. Thus the code will be a little bit
-> more pleasant to read.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c  |  4 ++--
->  .../pci/controller/dwc/pcie-designware-host.c    |  2 +-
->  drivers/pci/controller/dwc/pcie-designware.c     | 16 +---------------
->  drivers/pci/controller/dwc/pcie-designware.h     |  9 +--------
->  4 files changed, 5 insertions(+), 26 deletions(-)
+On 29/03/2022 09:15, Jianjun Wang wrote:
+> Some SoC may have different clocks (e.g. MT8192 uses clock 'top_133m',
+> but MT8195 use clock 'peri_mem' instead), since these clocks do not have
+> any timing dependencies and the PCIe controller driver uses
+> 'devm_clk_bulk_get_all' to gets all of them, remove 'clock-names' in
+> dt-bindings file for compatible with different SoCs.
 
-This answers my question. I would have expected this to come before the 
-previous patch, but if it's easier to do it this way it's fine.
+One driver behaves like this, other different. Driver implementation
+might not be a reliable source. :)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The clock entries are expected to be ordered and fixed, so clock-names
+should stay.
+
+Best regards,
+Krzysztof
