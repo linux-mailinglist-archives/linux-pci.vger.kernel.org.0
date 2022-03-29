@@ -2,103 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64DFA4EABB1
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 12:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D8114EACEB
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 14:15:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234399AbiC2K5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Mar 2022 06:57:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48768 "EHLO
+        id S236219AbiC2MRP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Mar 2022 08:17:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232269AbiC2K5I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 06:57:08 -0400
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 785051B78B;
-        Tue, 29 Mar 2022 03:55:25 -0700 (PDT)
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 29 Mar 2022 19:55:24 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id D73092058B50;
-        Tue, 29 Mar 2022 19:55:24 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 29 Mar 2022 19:55:24 +0900
-Received: from [10.212.183.172] (unknown [10.212.183.172])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id E9630B62B7;
-        Tue, 29 Mar 2022 19:55:23 +0900 (JST)
-Subject: Re: [PATCH] dt-bindings: PCI: uniphier: Convert uniphier-pcie.txt to
- json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1648433498-23450-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1648471865.799906.2153573.nullmailer@robh.at.kernel.org>
- <YkHhF7dF9SYS2qTx@robh.at.kernel.org>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <0c71c397-c48f-46e4-1813-2d7fbb029be7@socionext.com>
-Date:   Tue, 29 Mar 2022 19:55:23 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        with ESMTP id S232767AbiC2MRP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 08:17:15 -0400
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F02A234558;
+        Tue, 29 Mar 2022 05:15:32 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id h16so10166965wmd.0;
+        Tue, 29 Mar 2022 05:15:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=T2jLrwWe1iSHMc5kpeBG3DQY2pIuRegpnsz85M8uusM=;
+        b=W1MpE2ttN/acM+zNpdMUgN21uUTsn2ELEePtgInxF33vAy5ddUq/sQYhlLifeWTEdH
+         wQLQcbm9Vq3dv6hCn9lw5vGKDw6VRB7JTS/fiLYvUqMnIwPxB4w2EI9zFXS6fLwb6Jsm
+         2la0ADxXxOq4EXTrnQSaWT4h8fcyYPPb0IQ8Mls1vHFp00HbJ7lFpGjyqcEwvUI/PI5h
+         cQ3UrWR0RnaO25IMwqyjx4MvoNb/P95WmYkd07ofCZrH8zCBqe23q2CWSqbP42Qv2imj
+         AYeI5IwjpDatUltr5yhn5+WvrajsrchtiQ2HfJ8Ahofgi2wY2KXN/v/BOllo99gO0PwR
+         dccw==
+X-Gm-Message-State: AOAM533YwnvETz6S0/KoAkkmiy8jSrrT8sKjXvM7k91C4mfMVVbpp2R2
+        3Y8Cj+w//qWrQPGnBM/zYpc=
+X-Google-Smtp-Source: ABdhPJxXuTcR3NfAkRsxJHv6E8qdHUJogLPiA+Q9aX4xvsnU07sHIdhCXFrrTUWp10zLcRWE4C3qjw==
+X-Received: by 2002:a05:600c:4ec9:b0:38c:9146:563 with SMTP id g9-20020a05600c4ec900b0038c91460563mr6670263wmq.198.1648556130816;
+        Tue, 29 Mar 2022 05:15:30 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id c1-20020a5d4141000000b00205d3d37dcdsm904568wrq.103.2022.03.29.05.15.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Mar 2022 05:15:30 -0700 (PDT)
+Date:   Tue, 29 Mar 2022 12:15:28 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     sthemmin@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, rafael@kernel.org,
+        lenb@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v3 0/2] Fix coherence for VMbus and PCI pass-thru devices
+ in Hyper-V VM
+Message-ID: <20220329121528.lrk4fjfgpw3yg3bg@liuwe-devbox-debian-v2>
+References: <1648138492-2191-1-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <YkHhF7dF9SYS2qTx@robh.at.kernel.org>
-Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1648138492-2191-1-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
-
-On 2022/03/29 1:23, Rob Herring wrote:
-> On Mon, Mar 28, 2022 at 07:51:05AM -0500, Rob Herring wrote:
->> On Mon, 28 Mar 2022 11:11:38 +0900, Kunihiko Hayashi wrote:
->>> Convert the file into a JSON description at the yaml format.
->>>
->>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>> ---
->>>   .../bindings/pci/socionext,uniphier-pcie.yaml | 100
-> ++++++++++++++++++
->>>   .../devicetree/bindings/pci/uniphier-pcie.txt |  82 --------------
->>>   MAINTAINERS                                   |   2 +-
->>>   3 files changed, 101 insertions(+), 83 deletions(-)
->>>   create mode 100644
-> Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
->>>   delete mode 100644
-> Documentation/devicetree/bindings/pci/uniphier-pcie.txt
->>>
->>
->> Running 'make dtbs_check' with the schema in this patch gives the
->> following warnings. Consider if they are expected or the schema is
->> incorrect. These may not be new warnings.
->>
->> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
->> This will change in the future.
->>
->> Full log is available here: https://patchwork.ozlabs.org/patch/1609988
->>
->>
->> pcie@66000000: compatible: ['socionext,uniphier-pcie', 'snps,dw-pcie']
-> is too long
->> 	arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dt.yaml
->> 	arch/arm64/boot/dts/socionext/uniphier-ld20-global.dt.yaml
->> 	arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dt.yaml
->> 	arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dt.yaml
+On Thu, Mar 24, 2022 at 09:14:50AM -0700, Michael Kelley wrote:
+> Hyper-V VMs have VMbus synthetic devices and PCI pass-thru devices that are added
+> dynamically via the VMbus protocol and are not represented in the ACPI DSDT. Only
+> the top level VMbus node exists in the DSDT. As such, on ARM64 these devices don't
+> pick up coherence information and default to not hardware coherent.  This results
+> in extra software coherence management overhead since the synthetic devices are
+> always hardware coherent. PCI pass-thru devices are also hardware coherent in all
+> current usage scenarios.
 > 
-> Ignore this if your intent is to fix these by dropping 'snps,dw-pcie'. I
-> think that is the right thing to do. 'snps,dw-pcie' is not too
-> meaningful.
+> Fix this by propagating coherence information from the top level VMbus node in
+> the DSDT to all VMbus synthetic devices and PCI pass-thru devices. While smaller
+> granularity of control would be better, basing on the VMbus node in the DSDT
+> gives as escape path if a future scenario arises with devices that are not
+> hardware coherent.
+> 
+> Changes since v2:
+> * Move coherence propagation for VMbus synthetic devices to a separate
+>   .dma_configure function instead of the .probe fucntion [Robin Murphy]
+> 
+> Changes since v1:
+> * Use device_get_dma_attr() instead of acpi_get_dma_attr(), eliminating the
+>   need to export acpi_get_dma_attr() [Robin Murphy]
+> * Use arch_setup_dma_ops() to set device coherence [Robin Murphy]
+> * Move handling of missing _CCA to vmbus_acpi_add() so it is only done once
+> * Rework handling of PCI devices so existing code in pci_dma_configure()
+>   just works
+> 
+> Michael Kelley (2):
+>   Drivers: hv: vmbus: Propagate VMbus coherence to each VMbus device
+>   PCI: hv: Propagate coherence from VMbus device to PCI device
 
-I see. I should remove "snps,dw-pcie" from the existing devicetree, so
-I'll fix it as a devicetree patch.
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+Patch 2 will not be very useful without patch 1 so I've applied the
+whole series to hyperv-fixes. Thanks.
