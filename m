@@ -2,105 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEDB84EB632
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Mar 2022 00:48:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D2434EB6BF
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Mar 2022 01:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238301AbiC2WuI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Mar 2022 18:50:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
+        id S229889AbiC2X3x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Mar 2022 19:29:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238302AbiC2WuH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 18:50:07 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D2564ED
-        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 15:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648594103; x=1680130103;
-  h=message-id:date:mime-version:subject:to:references:cc:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dnz9bBLqYECghcBbHYz+u+/115qB8Ma6DgD4F948W/8=;
-  b=OziNulYyWG+xDcF7Ww6T8a3Z0nIeWzsaZ+RdQCI8HjWc/EUmZZRVBPLM
-   NUx6Mrb6z/JPy+rtMHd/1kXKzSGMjqyZrimB17XalzrLAJ/poccdAKmwf
-   4TI6bAEUEUjs3t7oFHjTaYeutnn1j7u/v8hACc4DlolR05rSi5ppO8mt7
-   BP4qIuv9whoLpt/wDqauVqxCF0SiJYKPmvQpnE8f7Xs3RDXoyXrFsflbq
-   Eph/AlDVpd/xu17jiPTGRKlseVlJmN+KrQQL9gh3Jk/oZi2Yn73giXdIs
-   EwmTEApCDO2LbhxeS/yFzgMOLDDXT5wQ5YVxZl0olENRcF32gEyN3sD5I
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="259579176"
-X-IronPort-AV: E=Sophos;i="5.90,220,1643702400"; 
-   d="scan'208";a="259579176"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 15:48:23 -0700
-X-IronPort-AV: E=Sophos;i="5.90,220,1643702400"; 
-   d="scan'208";a="521642721"
-Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.212.64.125]) ([10.212.64.125])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 15:48:22 -0700
-Message-ID: <8eddff32-1347-ad09-642c-951a69c82388@linux.intel.com>
-Date:   Tue, 29 Mar 2022 15:48:21 -0700
+        with ESMTP id S229512AbiC2X3w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 19:29:52 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D792D186F8A
+        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 16:28:08 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id y16so6199894pju.4
+        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 16:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fumKJ517NWCBVyjN2meVqb1HuI+Id6ZlkDRB9tEmcTk=;
+        b=2zKTrFVO0nPiUFWP78YpFBL46t3sRAgjtrrIF7HTGDsWcd0PdjnWQ9eDyLfkUv8F9/
+         mKPnIOtu6Xax9zg5PdkCrtz7Uhn4xxPOL1EyqPTtFHQHrOKNJzwGsfDyCoes6UJYvZ7t
+         wJVyQhPyekARlB0pSimoimrHmXYIIx3Bd9InX4bJ8tr2CUab0tITb/NF93ixw0vT3l59
+         aaHGQsgdadf2MxAWfIPZ+3fZ5VJnOb6KvNRMO1h6FXXJNq0jBqLRmp+XoDo3WlMWwc5S
+         w7lViG+aDpmXvwrMvoHwMJltS2I91lD42BSxitsyb4wj4HQdFfOOQpcMO1d7+V+ZOJY4
+         gDOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fumKJ517NWCBVyjN2meVqb1HuI+Id6ZlkDRB9tEmcTk=;
+        b=lYkUp4SgYfovt2TODl6QokahUPWsMVJ3ZZVhvQiMxgfcRBBvWQOXMTHOLgLHH87wo4
+         qfeKx+DTomZSW+SaOGI3w2NHQUbiXz6/Aq4FcKnhzboCYtmBsJMyziJE1uv0hxefQals
+         HAMUJRYOSDSjYbN9AjdMT5aJmIeZaVRRQ8mRtW/YsxQoD1pV5/UeVXS6Bbw/MnjDGZnD
+         F94Si5dlfMfXl7fFPyry0MLXXbZYV+RCTPwFTZ+Df7Z5Sm8gf6OX0HwZLtKwdHFLaRxc
+         RL8ibKAarfMkqs+k9109uqOlXyAswIjzMaT+9AIr//E/ZcN2l+NEo21L9i6mDus2Q3P0
+         CZ2Q==
+X-Gm-Message-State: AOAM533FaHX3rl7bDb3yTCJ+0WFS4NKjIB5qXaPPgdixMQm+fihL437J
+        Jd1OzW7Szs48tWc0slytau761D3TD2zYNZ0H3LQtiQ==
+X-Google-Smtp-Source: ABdhPJy2eG1kgcrctpwFc4ZE+JOAMU0NLxfMFUI03K3yJ8wC0uNWggng71O2nvEJMyG91UEXAqZlkUX144MfajXhLOI=
+X-Received: by 2002:a17:90a:c083:b0:1c6:a164:fd5d with SMTP id
+ o3-20020a17090ac08300b001c6a164fd5dmr1669554pjs.8.1648596488391; Tue, 29 Mar
+ 2022 16:28:08 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v2 2/2] Allow VMD to disable MSIX remapping with interrupt
- remapping enabled.
-Content-Language: en-US
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <20220316155103.8415-1-nirmal.patel@intel.com>
- <20220316155103.8415-2-nirmal.patel@intel.com>
-Cc:     linux-pci@vger.kernel.org, Nirmal Patel <nirmal.patel@intel.com>
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-In-Reply-To: <20220316155103.8415-2-nirmal.patel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220316155103.8415-1-nirmal.patel@intel.com> <6b2b0c52-4b01-db11-1c89-ab291ae633b3@linux.intel.com>
+In-Reply-To: <6b2b0c52-4b01-db11-1c89-ab291ae633b3@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 29 Mar 2022 16:27:57 -0700
+Message-ID: <CAPcyv4hUVZEXyEW0C5rU5rkyMwBYbc4-Pq7A7aMz0GQr8d7NoA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] PCI: vmd: Assign VMD IRQ domain before enumeration
+To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Jon Derrick <jonathan.derrick@linux.dev>,
+        Nirmal Patel <nirmal.patel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/16/2022 8:51 AM, Nirmal Patel wrote:
-> This patch removes a placeholder patch 2565e5b69c44 ("PCI: vmd: Do
-> not disable MSI-X remapping if interrupt remapping is enabled by IOMMU.")
-> This patch was added as a workaround to disable MSI remapping if iommu
-> enables interrupt remapping. VMD does not assign proper IRQ domain to
-> child devices when MSIX is disabled. There is no dependency between MSI
-> remapping by VMD and interrupt remapping by iommu. MSI remapping can be
-> enabled or disabled with and without interrupt remap.
+On Tue, Mar 29, 2022 at 3:48 PM Patel, Nirmal
+<nirmal.patel@linux.intel.com> wrote:
 >
-> Signed-off-by: Nirmal Patel <nirmal.patel@intel.com>
-> ---
->  drivers/pci/controller/vmd.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> On 3/16/2022 8:51 AM, Nirmal Patel wrote:
+> > From: Nirmal Patel <nirmal.patel@linux.intel.com>
+> >
+> > VMD creates and assigns a separate IRQ domain only when MSI remapping is
+> > enabled. For example VMD-MSI. But VMD doesn't assign IRQ domain when
+> > MSI remapping is disabled resulting child devices getting default
+> > PCI-MSI IRQ domain. Now when interrupt remapping is enabled by
+> > intel-iommu all the PCI devices are assigned INTEL-IR-MSI domain
+> > including VMD endpoints. But devices behind VMD get PCI-MSI IRQ domain
+> > when VMD create a root bus and configures child devices.
+> >
+> > As a result DMAR errors were observed when interrupt remapping was
+> > enabled on Intel Icelake CPUs. For instance:
+> >
+> >   DMAR: DRHD: handling fault status reg 2
+> >   DMAR: [INTR-REMAP] Request device [0xe2:0x00.0] fault index 0xa00 [fault reason 0x25] Blocked a compatibility format interrupt request
+> >
+> > Acked-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> > ---
+> >  drivers/pci/controller/vmd.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > index cc166c683638..3a6570e5b765 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -853,6 +853,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> >       vmd_attach_resources(vmd);
+> >       if (vmd->irq_domain)
+> >               dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+> > +     else
+> > +             dev_set_msi_domain(&vmd->bus->dev, dev_get_msi_domain(&vmd->dev->dev));
+> >
+> >       vmd_acpi_begin();
+> >
 >
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 3a6570e5b765..91bc1b40d40c 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -6,7 +6,6 @@
->  
->  #include <linux/device.h>
->  #include <linux/interrupt.h>
-> -#include <linux/iommu.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> @@ -813,8 +812,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	 * acceptable because the guest is usually CPU-limited and MSI
->  	 * remapping doesn't become a performance bottleneck.
->  	 */
-> -	if (iommu_capable(vmd->dev->dev.bus, IOMMU_CAP_INTR_REMAP) ||
-> -	    !(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
-> +	if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
->  	    offset[0] || offset[1]) {
->  		ret = vmd_alloc_irqs(vmd);
->  		if (ret)
+> Gentle ping!
 
-Gentle ping!
-
-Thanks
-nirmal
-
+It helps to be explicit when you send a patch and a follow-up ping.
+Are you asking Lorenzo to take this? Is this urgent such that Bjorn
+should consider taking it directly? The changelog notes what happens,
+but not the severity of end user visible impact. The merge window is
+presently open so the natural inclination is to just wait until that
+closes to circle back to outstanding patches.
