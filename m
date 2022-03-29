@@ -2,187 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6E084EA94F
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 10:32:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFA1E4EAB87
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 12:43:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233945AbiC2IeJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Mar 2022 04:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51530 "EHLO
+        id S232916AbiC2KpL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Mar 2022 06:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232607AbiC2IeI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 04:34:08 -0400
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE79B189F;
-        Tue, 29 Mar 2022 01:32:26 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 14D5B3F919;
-        Tue, 29 Mar 2022 08:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1648542742;
-        bh=ZMV7jiiv20/COdBN01hHhEFUr36cXC299DWKybztlsk=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version;
-        b=VeFkKF14YGfh+Bd69kSQEO+T/c41vrpudzdyz8hhpw9RePo4H4L7vysWccTOJgoNu
-         GqmfO2lgD6kmToG4DZUGIvZ/LjB6VMIyl8RnqmK9aF2sHc2nOwl1r/MQMwV3NnFOm+
-         eRYgCA1y2H19gDpP5qZ9O8w9yuSJkKUE+o/844mNH7WI1UgzDJgD4WdXU0tnGHpXKM
-         5uNQQufe2U3UvMfoeKD47F7tnfQxl66ldMDrCnPmh9AiBVX3XMhvvST5fQwY7LaBds
-         Jy9r4YV4c5ine2ONjA0Tw//kKqNpAWyybmAXuEzy8UW5hHFpNBqVyLBvUohnt6Gko8
-         TSfgKnP7rqWtg==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com
-Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
-        baolu.lu@linux.intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Russell Currey <ruscur@russell.cc>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] PCI/DPC: Disable DPC service when link is in L2/L3 ready, L2 and L3 state
-Date:   Tue, 29 Mar 2022 16:31:29 +0800
-Message-Id: <20220329083130.817316-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220329083130.817316-1-kai.heng.feng@canonical.com>
-References: <20220329083130.817316-1-kai.heng.feng@canonical.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232979AbiC2KpK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 06:45:10 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7F4B1066DF;
+        Tue, 29 Mar 2022 03:43:27 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id p189so10013681wmp.3;
+        Tue, 29 Mar 2022 03:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=PDWWz2FvYsmPPpMQfWtqRe/F5339QYlPvsOFYtUGTi0=;
+        b=URVPWEjpkYRMzHEI1XW0hNYSLDOtK5jAMS/LWrZ9aTf8gnxJkH7LYHQgWKvnogqdEN
+         xRV7AlJ5+U0BG2MkHQlr0nUuoBYv6dJlcMg7YXOSzRQct7ayJYs0K+D0ovGi44v2s7be
+         /X81ZkvfCgJKCm4zcUSs33GC//oyWO7JZ95ba9D/LnXGTjQ5S5TewV5DdefIYOEP/MYX
+         7jZqx0+clMzX5Rvj5SMMyWWm+jIZYU2E4mouHwVOROxfWlfBiVRSRv5vVvYIEXFUgdIv
+         f0FIRgbCnhk3lo6QD/hbEO89/6fpBOdtdAcUozTGdLkrVAfWWG8zg0JEIdUdAGxZm9R5
+         HZkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PDWWz2FvYsmPPpMQfWtqRe/F5339QYlPvsOFYtUGTi0=;
+        b=L3Y+rfkDOOnJ5oI8q5v/wcXMXvTvN5uBTFE9oTePPkLwpbGbksyuKxPvbfUUcM8OrM
+         Iw9sqrLUWTGe4ATa/Yq8U9PCnyl3sIM7JbA1p+yUXt5V2lzPL/Dqx9MosgA1TwstOT9l
+         oTX9O2Kpotpuw34OY/05GMlYITpWW/LYNU98o7IP5f4O/iDbyupk9Z3ojZrmKzCt+DBQ
+         MvdCnOhyCzHgYnofD/Woc7SnrpZzkNQyDtWI48XjmtI0u9X8GKjh7JSRtw92ERIscT7N
+         zpOlpf4sYkTj0LKoXWme4pItuFOfmZerltf2GF9UgFhettHHbkGkcS25jOQtw9Y6h0NY
+         u2bg==
+X-Gm-Message-State: AOAM533+arDEieqeCpyQftZyFGyW47Qm1jctMYWj2BdgFoHaH8xOmWRf
+        yIrUWaLLBGoM7I7E7aWksXRqs/vIFKiPOw==
+X-Google-Smtp-Source: ABdhPJy5HIONP88/nvafukkq6kzzwJlzqCfaKjkcLt4QxeO5u+OjvEvclZBh/TscByaonyE+I6FLew==
+X-Received: by 2002:a05:600c:3016:b0:38c:8786:d3b6 with SMTP id j22-20020a05600c301600b0038c8786d3b6mr6032209wmh.135.1648550605848;
+        Tue, 29 Mar 2022 03:43:25 -0700 (PDT)
+Received: from Dev-shlomop.pliops.ent (bzq-219-32-62.isdn.bezeqint.net. [62.219.32.62])
+        by smtp.googlemail.com with ESMTPSA id 3-20020a5d47a3000000b0020412ba45f6sm16919344wrb.8.2022.03.29.03.43.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Mar 2022 03:43:25 -0700 (PDT)
+From:   Shlomo Pongratz <shlomopongratz@gmail.com>
+X-Google-Original-From: Shlomo Pongratz <shlomop@pliops.com>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andrew.maier@eideticom.com,
+        logang@deltatee.com, bhelgaas@google.com, jgg@nvidia.com,
+        Shlomo Pongratz <shlomop@pliops.com>
+Subject: [PATCH V3 0/1]  Intel Sky Lake-E host root ports check. 
+Date:   Tue, 29 Mar 2022 13:43:20 +0300
+Message-Id: <20220329104321.4712-1-shlomop@pliops.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On some Intel AlderLake platforms, Thunderbolt entering D3cold can cause
-some errors reported by AER:
-[   30.100211] pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
-[   30.100251] pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-[   30.100256] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
-[   30.100262] pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-[   30.100267] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-[   30.100372] thunderbolt 0000:0a:00.0: AER: can't recover (no error_detected callback)
-[   30.100401] xhci_hcd 0000:3e:00.0: AER: can't recover (no error_detected callback)
-[   30.100427] pcieport 0000:00:1d.0: AER: device recovery failed
+Changes in v3:
 
-Since AER is disabled in previous patch for a Link in L2/L3 Ready, L2
-and L3, also disable DPC here as DPC depends on AER to work.
+Use Jason Gunthorpe suggestion, that is add a flag 'IS_ROOT_PORT'
+instead of 'port' and then just ignore the slot number entirely for root ports. 
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v3:
- - Wording change to make the patch more clear.
+Changes in v2:
 
-v2:
- - Wording change.
- - Empty line dropped.
+Change comment and description based on Logan Gunthorpe comments.
 
- drivers/pci/pcie/dpc.c | 60 +++++++++++++++++++++++++++++++-----------
- 1 file changed, 44 insertions(+), 16 deletions(-)
+Shlomo Pongratz (1):
+  Intel Sky Lake-E host root ports check.
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 3e9afee02e8d1..414258967f08e 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -343,13 +343,33 @@ void pci_dpc_init(struct pci_dev *pdev)
- 	}
- }
- 
-+static void dpc_enable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	u16 ctl;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-+	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+}
-+
-+static void dpc_disable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	u16 ctl;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-+	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+}
-+
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
- 	struct device *device = &dev->device;
- 	int status;
--	u16 ctl, cap;
-+	u16 cap;
- 
- 	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
-@@ -364,10 +384,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	}
- 
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--
--	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+	dpc_enable(dev);
- 	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
- 
- 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-@@ -380,22 +397,33 @@ static int dpc_probe(struct pcie_device *dev)
- 	return status;
- }
- 
--static void dpc_remove(struct pcie_device *dev)
-+static int dpc_suspend(struct pcie_device *dev)
- {
--	struct pci_dev *pdev = dev->port;
--	u16 ctl;
-+	dpc_disable(dev);
-+	return 0;
-+}
- 
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+static int dpc_resume(struct pcie_device *dev)
-+{
-+	dpc_enable(dev);
-+	return 0;
-+}
-+
-+static void dpc_remove(struct pcie_device *dev)
-+{
-+	dpc_disable(dev);
- }
- 
- static struct pcie_port_service_driver dpcdriver = {
--	.name		= "dpc",
--	.port_type	= PCIE_ANY_PORT,
--	.service	= PCIE_PORT_SERVICE_DPC,
--	.probe		= dpc_probe,
--	.remove		= dpc_remove,
-+	.name			= "dpc",
-+	.port_type		= PCIE_ANY_PORT,
-+	.service		= PCIE_PORT_SERVICE_DPC,
-+	.probe			= dpc_probe,
-+	.suspend		= dpc_suspend,
-+	.resume			= dpc_resume,
-+	.runtime_suspend	= dpc_suspend,
-+	.runtime_resume		= dpc_resume,
-+	.remove			= dpc_remove,
- };
- 
- int __init pcie_dpc_init(void)
+ drivers/pci/p2pdma.c | 42 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
+
 -- 
-2.34.1
+2.17.1
 
