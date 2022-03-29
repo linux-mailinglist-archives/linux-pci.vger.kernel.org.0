@@ -2,53 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7896F4EB5B0
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Mar 2022 00:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A065A4EB631
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Mar 2022 00:48:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235575AbiC2WP6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Mar 2022 18:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38984 "EHLO
+        id S238175AbiC2Wt4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Mar 2022 18:49:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233830AbiC2WP5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 18:15:57 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21806186FA6
-        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 15:14:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D1341B81A9A
-        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 22:14:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4811EC340ED;
-        Tue, 29 Mar 2022 22:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648592048;
-        bh=iRxdJc6hq33OJ8nbZHjA3BvKF674SnL3GyDCH8wum+M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QeNF7nP6/U5sCedxUftGZwWIGQ1O7XZdfA728cjnK9S9KQFWtNlzvanLddqAksU+g
-         MOI6e+DpcCnXIkA9DUl1fXcng/OdLcJjXr130pTaAULqXSXCPB9Gd3SM3I6QAD420l
-         ZZK9N5rMeKebxzNju+BFgGNjlB/3owMzqDdfpewadha8DZJa268rou5JyKhv3TmtGq
-         iJ+UwpoJ+1s4GKX4ItdHpUaNDLx03jj+wH/J0aWDWdWg00xd953LbX5yq/eiqiDKwI
-         JQSnY0BiG8nVSClHvX5sR2c7S2VK62n4csQwyH+vtHkogkebFDaCDNSSlZ50xaOAzg
-         a3UDBkPuOnwFw==
-Date:   Tue, 29 Mar 2022 17:14:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        kernelci-results@groups.io, bot@kernelci.org,
-        gtucker@collabora.com, linux-pci@vger.kernel.org
-Subject: Re: next/master bisection: baseline.login on asus-C523NA-A20057-coral
-Message-ID: <20220329221406.GA1638556@bhelgaas>
+        with ESMTP id S238301AbiC2Wt4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 18:49:56 -0400
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9960B11E
+        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 15:48:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648594091; x=1680130091;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=34tgiB6n+RNUTw7P9CWJ4baO4naZ5smc6iaeQuIKAwQ=;
+  b=kSmuNE2D9jeJvh0hgoaCcpNxeDqbkLp4yjLC8Ot+WY5VbfjZIivfHRtE
+   CmnGHw7d5WPGJaAiqZLLT3jyc0rgPimb1Zzxs2EDTM7h6mn2VicjIzraE
+   YnGw/rw2JRZqDFtSHWLDIPl6HHKWmTIMLVQHVE04BpHKizp3w8geAEA0S
+   jqunqpCqSb5NS2zDnr/dmsOFYtk29fZQDQ7Hw4MjGodENHWi3OaNr7WF1
+   ew7i6UytDTaZ8Ov0quY0zZ4GEJE/crLTFc7ZpyBfDfepzk23LHDPwNKd2
+   URVNp/8gHOhA3m+i/JJZnHe0pOM7oBEfsDJhgEzd6s1WHASF1vKOseAFy
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="320091276"
+X-IronPort-AV: E=Sophos;i="5.90,220,1643702400"; 
+   d="scan'208";a="320091276"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 15:47:46 -0700
+X-IronPort-AV: E=Sophos;i="5.90,220,1643702400"; 
+   d="scan'208";a="521642509"
+Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.212.64.125]) ([10.212.64.125])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 15:47:46 -0700
+Message-ID: <6b2b0c52-4b01-db11-1c89-ab291ae633b3@linux.intel.com>
+Date:   Tue, 29 Mar 2022 15:47:44 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yjyv03JsetIsTJxN@sirena.org.uk>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v2 1/2] PCI: vmd: Assign VMD IRQ domain before enumeration
+Content-Language: en-US
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org,
+        Jon Derrick <jonathan.derrick@linux.dev>,
+        Nirmal Patel <nirmal.patel@intel.com>
+References: <20220316155103.8415-1-nirmal.patel@intel.com>
+From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+In-Reply-To: <20220316155103.8415-1-nirmal.patel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,41 +62,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 05:52:19PM +0000, Mark Brown wrote:
-> On Wed, Mar 23, 2022 at 11:47:08PM -0700, KernelCI bot wrote:
-> 
-> The KernelCI bisection bot has identified commit 5949965ec9340cfc0e
-> ("x86/PCI: Preserve host bridge windows completely covered by E820")
-> as causing a boot regression in next on asus-C523NA-A20057-coral (a
-> Chromebook AIUI).  Unfortunately there's no useful output when starting
-> the kernel.  I've left the full report below including links to the web
-> dashboard.
+On 3/16/2022 8:51 AM, Nirmal Patel wrote:
+> From: Nirmal Patel <nirmal.patel@linux.intel.com>
+>
+> VMD creates and assigns a separate IRQ domain only when MSI remapping is
+> enabled. For example VMD-MSI. But VMD doesn't assign IRQ domain when
+> MSI remapping is disabled resulting child devices getting default
+> PCI-MSI IRQ domain. Now when interrupt remapping is enabled by
+> intel-iommu all the PCI devices are assigned INTEL-IR-MSI domain
+> including VMD endpoints. But devices behind VMD get PCI-MSI IRQ domain
+> when VMD create a root bus and configures child devices.
+>
+> As a result DMAR errors were observed when interrupt remapping was
+> enabled on Intel Icelake CPUs. For instance:
+>
+>   DMAR: DRHD: handling fault status reg 2
+>   DMAR: [INTR-REMAP] Request device [0xe2:0x00.0] fault index 0xa00 [fault reason 0x25] Blocked a compatibility format interrupt request
+>
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> ---
+>  drivers/pci/controller/vmd.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index cc166c683638..3a6570e5b765 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -853,6 +853,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	vmd_attach_resources(vmd);
+>  	if (vmd->irq_domain)
+>  		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+> +	else
+> +		dev_set_msi_domain(&vmd->bus->dev, dev_get_msi_domain(&vmd->dev->dev));
+>  
+>  	vmd_acpi_begin();
+>  
 
-Details for the archives, since I got these via private email while
-traveling (thanks, Guillaume!):
+Gentle ping!
 
-> On 28/03/2022 09:08, Guillaume Tucker wrote:
->> On 27/03/2022 21:38, Bjorn Helgaas wrote:
->>> I dropped other recipients because I'm traveling and can't easily
->>> send plain text email.
->>>
->>> If there are logs of the last good commit from these bisects, could
->>> you add links to the thread?
->>
->> The logs from each bisection step aren't kept in KernelCI but they
->> could be found in the test lab archives directly, I'll take a look.
->>
->> Otherwise, details for this regression can be found here:
->>
->>   https://linux.kernelci.org/test/case/id/6239d0afe9d42800692172dd/
->
-> Actually here's all the test jobs for this bisection:
->
->  https://lava.collabora.co.uk/scheduler/device_type/asus-C523NA-A20057-coral?dt_search=lava-bisection-161
->
-> The last passing one is from iteration 13:
->
->  https://lava.collabora.co.uk/scheduler/job/5937945
->
-> I've attached the full log as a text file since the web UI for
-> the lab is sometimes very slow.  Hope this helps.
+Thanks
+nirmal
+
