@@ -2,186 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 497604EAD2D
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 14:31:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD3EE4EAF8E
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 16:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236327AbiC2Mcj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Mar 2022 08:32:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47042 "EHLO
+        id S238103AbiC2Osw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Mar 2022 10:48:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236326AbiC2Mci (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 08:32:38 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB8060A93
-        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 05:30:53 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id o10so34840321ejd.1
-        for <linux-pci@vger.kernel.org>; Tue, 29 Mar 2022 05:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nRQGNy0JNeG8yPE1QXXWKqsK/KgT2iVgd9NOSAmnpao=;
-        b=rghn0NZ7veo+c7F9TgovwmfTphDZN1nzJMzcXj5lds+VNPPlWVx4s9Km9UFuESnj9C
-         0j6zPwG/Xf6D92JpGQDO2SsY514Cc3dispUkIKCGzRnO4C9HS7T9TWQ6L1NWItI9HoVR
-         Wk/smMInsq69ioZO8yNZDu546rixqBUH1Q7RKjgyI+USlKpBx73H+Jxrz2inmb2EkToU
-         H2vf7Sa/pckmLcWFoAxiMBDzr7UgHBsB2Q8hra4/Kl5ny0G8cLhgWaE+yEkyTutDGHt1
-         d/7ehdh+gvbKH2tMg6SF+fI/PRBhqZLpgBB/Oz9YxV+MxEClGvdSUz2pl20OT0F+Mpvd
-         d2oQ==
+        with ESMTP id S238100AbiC2Ost (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 10:48:49 -0400
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AEC5A94C5;
+        Tue, 29 Mar 2022 07:47:06 -0700 (PDT)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-de3ca1efbaso18917452fac.9;
+        Tue, 29 Mar 2022 07:47:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nRQGNy0JNeG8yPE1QXXWKqsK/KgT2iVgd9NOSAmnpao=;
-        b=W4OZsqlQd2DyV9GlwUSJoebrf1BifyDe2/u/xd9HX2pqspitC2rRiM7MtEB7xi8ZF1
-         L3a55AIfzyMEJ1kC8qZQzX55UIMpvdvtf/f6X4hJQ5ZIpivM3POXmsAyWdJJHZY+6nzx
-         optaAkBQaMWMz3wQupBBwlpT5zVXCF9eBFAs7Y0dxwt58RVhAmpR0HqfUR+113IdN5SC
-         CFVZalkyVM9A05j4UnURnm77QamCa6sUmazuwka8BHruWAIjPJiKCBRCmLpA3qA02wS+
-         egO4vl0h++E6ixlC1gybcyl7Mx1itr2D2DCPkDqyr/p+dzqzYBiABCQ+l3mh39U7uMqI
-         UxoA==
-X-Gm-Message-State: AOAM531baRTv68BvaHBDWfoKunNbYvMd1hzJYfKH94mYGKatVw0eeLal
-        VlaNSl3rLKdDgZEsYhPgv72T+sM4+bagaVbDcz3mqA==
-X-Google-Smtp-Source: ABdhPJyPZNX8y3gOGfSZgg3AGAll74j9kjPNXJs0DTpnrEh1/wBVEgROdTkgglF1+DGDwH7nabIubcnQbpp8LiNpfow=
-X-Received: by 2002:a17:907:d2a:b0:6e0:963c:97d9 with SMTP id
- gn42-20020a1709070d2a00b006e0963c97d9mr28430774ejc.736.1648557051475; Tue, 29
- Mar 2022 05:30:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220326165909.506926-1-benni@stuerz.xyz> <20220326165909.506926-9-benni@stuerz.xyz>
-In-Reply-To: <20220326165909.506926-9-benni@stuerz.xyz>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 29 Mar 2022 14:30:40 +0200
-Message-ID: <CAMRc=Md5qTnP1ZYak4f3hyqmaOR6jT_KL=rNr5cwAOcZ22yXfg@mail.gmail.com>
-Subject: Re: [PATCH 09/22] gpio-winbond: Use C99 initializers
-To:     =?UTF-8?Q?Benjamin_St=C3=BCrz?= <benni@stuerz.xyz>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>, linux@simtec.co.uk,
-        Krzysztof Kozlowski <krzk@kernel.org>, alim.akhtar@samsung.com,
-        Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
-        Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com,
-        hpa@zytor.com, robert.moore@intel.com,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, lenb@kernel.org,
-        3chas3@gmail.com, laforge@gnumonks.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        mike.marciniszyn@cornelisnetworks.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        pali@kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        isdn@linux-pingi.de,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        fbarrat@linux.ibm.com, ajd@linux.ibm.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, nico@fluxnic.net,
-        loic.poulain@linaro.org, kvalo@kernel.org, pkshih@realtek.com,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aNacSkhtv5IJOB39+Ynb54nY/qoQFWMGRXyHWBxG+7Y=;
+        b=0MJS3FKGQvT25KuuUgAQeQGNkykjGu/RIiMwo6dA5wLxx6ZBkFh1S8qgyxkuahZIDb
+         nelr8V2XbEQAF9PI4ZdWOpsJjhnfNp9hR5Jd5nTE+xjXK+3gs6Diu/BUFbVV3jY/BaYQ
+         wRcmbFXoNXCFD8bJ6KwX7N2GBUlXlu61MFU/74rDUTDFeJg2VqID1T8KM4oStyLGSGKW
+         nNqY3fDxIRGls9BIoOvcD0DiQxwcwce7G+S8fDdXlMLNh6sWhHxWNyQ1889lBtxxAxlj
+         0/LFDPwlwhI/8cX37KNnB4ddF5O3iDV16RKfb0ZDeGKVhwpxq/lJfa07SNXtyKUgUCPK
+         AWsw==
+X-Gm-Message-State: AOAM532/FOEz4i/Zsep+mBKewRjtCZzEleOaOfhSPxv8Pjy6nBWAHCtM
+        c3QKK5biSX5s6fkDmbCxqbikRv34cQ==
+X-Google-Smtp-Source: ABdhPJxlmvBOjomcLq2SRUquEzBWLffZw3P2b+KP+xjs/3Rn7ha/syyvw9fwqdrvqE9O1XpHRRdK9g==
+X-Received: by 2002:a05:6870:e253:b0:dd:a40e:ae92 with SMTP id d19-20020a056870e25300b000dda40eae92mr1619644oac.233.1648565225325;
+        Tue, 29 Mar 2022 07:47:05 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id h8-20020a056830400800b005cdceb42261sm6068792ots.66.2022.03.29.07.47.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Mar 2022 07:47:04 -0700 (PDT)
+Received: (nullmailer pid 643208 invoked by uid 1000);
+        Tue, 29 Mar 2022 14:47:02 -0000
+Date:   Tue, 29 Mar 2022 09:47:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        devel@acpica.org, linux-atm-general@lists.sourceforge.net,
-        netdev <netdev@vger.kernel.org>, linux-edac@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        Linux Input <linux-input@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/16] PCI: dwc: Add more verbose link-up message
+Message-ID: <YkMb5lT91ZveLTgg@robh.at.kernel.org>
+References: <20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324013734.18234-4-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220324013734.18234-4-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 26, 2022 at 6:00 PM Benjamin St=C3=BCrz <benni@stuerz.xyz> wrot=
-e:
->
-> This replaces comments with C99's designated
-> initializers because the kernel supports them now.
->
-> Signed-off-by: Benjamin St=C3=BCrz <benni@stuerz.xyz>
+On Thu, Mar 24, 2022 at 04:37:21AM +0300, Serge Semin wrote:
+> Printing just "link up" isn't that much informative especially when it
+> comes to working with the PCI Express bus. Even if the link is up, due to
+> multiple reasons the bus performance can degrade to slower speeds or to
+> narrower width than both Root Port and its partner is capable of. In that
+> case it would be handy to know the link specifications as early as
+> possible. So let's add a more verbose message to the busy-wait link-state
+> method, which will contain the link speed generation and the PCIe bus
+> width in case if the link up state is discovered. Otherwise an error will
+> be printed to the system log.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > ---
->  drivers/gpio/gpio-winbond.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-winbond.c b/drivers/gpio/gpio-winbond.c
-> index 7f8f5b02e31d..0b637fdb407c 100644
-> --- a/drivers/gpio/gpio-winbond.c
-> +++ b/drivers/gpio/gpio-winbond.c
-> @@ -249,7 +249,7 @@ struct winbond_gpio_info {
->  };
->
->  static const struct winbond_gpio_info winbond_gpio_infos[6] =3D {
-> -       { /* 0 */
-> +       [0] =3D {
->                 .dev =3D WB_SIO_DEV_GPIO12,
->                 .enablereg =3D WB_SIO_GPIO12_REG_ENABLE,
->                 .enablebit =3D WB_SIO_GPIO12_ENABLE_1,
-> @@ -266,7 +266,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                         .warnonly =3D true
->                 }
->         },
-> -       { /* 1 */
-> +       [1] =3D {
->                 .dev =3D WB_SIO_DEV_GPIO12,
->                 .enablereg =3D WB_SIO_GPIO12_REG_ENABLE,
->                 .enablebit =3D WB_SIO_GPIO12_ENABLE_2,
-> @@ -277,7 +277,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                 .datareg =3D WB_SIO_GPIO12_REG_DATA2
->                 /* special conflict handling so doesn't use conflict data=
- */
->         },
-> -       { /* 2 */
-> +       [2] =3D {
->                 .dev =3D WB_SIO_DEV_GPIO34,
->                 .enablereg =3D WB_SIO_GPIO34_REG_ENABLE,
->                 .enablebit =3D WB_SIO_GPIO34_ENABLE_3,
-> @@ -294,7 +294,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                         .warnonly =3D true
->                 }
->         },
-> -       { /* 3 */
-> +       [3] =3D {
->                 .dev =3D WB_SIO_DEV_GPIO34,
->                 .enablereg =3D WB_SIO_GPIO34_REG_ENABLE,
->                 .enablebit =3D WB_SIO_GPIO34_ENABLE_4,
-> @@ -311,7 +311,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                         .warnonly =3D true
->                 }
->         },
-> -       { /* 4 */
-> +       [4] =3D {
->                 .dev =3D WB_SIO_DEV_WDGPIO56,
->                 .enablereg =3D WB_SIO_WDGPIO56_REG_ENABLE,
->                 .enablebit =3D WB_SIO_WDGPIO56_ENABLE_5,
-> @@ -328,7 +328,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                         .warnonly =3D true
->                 }
->         },
-> -       { /* 5 */
-> +       [5] =3D {
->                 .dev =3D WB_SIO_DEV_WDGPIO56,
->                 .enablereg =3D WB_SIO_WDGPIO56_REG_ENABLE,
->                 .enablebit =3D WB_SIO_WDGPIO56_ENABLE_6,
-> --
-> 2.35.1
->
+>  drivers/pci/controller/dwc/pcie-designware.c | 22 +++++++++++++++-----
+>  1 file changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 6e81264fdfb4..f1693e25afcb 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -528,14 +528,26 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>  
+>  	/* Check if the link is up or not */
+>  	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+> -		if (dw_pcie_link_up(pci)) {
+> -			dev_info(pci->dev, "Link up\n");
+> -			return 0;
+> -		}
+> +		if (dw_pcie_link_up(pci))
+> +			break;
+> +
+>  		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+>  	}
+>  
+> -	dev_info(pci->dev, "Phy link never came up\n");
+> +	if (retries < LINK_WAIT_MAX_RETRIES) {
+> +		u32 offset, val;
+> +
+> +		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +		val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+> +
+> +		dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
+> +			 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
+> +			 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Given these are standard registers can we do this in the core code? The 
+main issue I think is that the config space accessors don't work until 
+you create the bus struct. That still should be early enough.
+
+I think it is possible some implementations don't report the link state 
+in these registers. Maybe we don't really need to care.
+
+Rob
