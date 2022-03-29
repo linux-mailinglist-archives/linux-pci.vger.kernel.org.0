@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BE0D4EABAD
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 12:54:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64DFA4EABB1
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Mar 2022 12:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235407AbiC2K4f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Mar 2022 06:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
+        id S234399AbiC2K5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Mar 2022 06:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232269AbiC2K4e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 06:56:34 -0400
+        with ESMTP id S232269AbiC2K5I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Mar 2022 06:57:08 -0400
 Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9B55917A82;
-        Tue, 29 Mar 2022 03:54:51 -0700 (PDT)
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 29 Mar 2022 19:54:50 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 68EE12058443;
-        Tue, 29 Mar 2022 19:54:50 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 29 Mar 2022 19:54:50 +0900
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 785051B78B;
+        Tue, 29 Mar 2022 03:55:25 -0700 (PDT)
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 29 Mar 2022 19:55:24 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id D73092058B50;
+        Tue, 29 Mar 2022 19:55:24 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 29 Mar 2022 19:55:24 +0900
 Received: from [10.212.183.172] (unknown [10.212.183.172])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id A66BFB62B7;
-        Tue, 29 Mar 2022 19:54:49 +0900 (JST)
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id E9630B62B7;
+        Tue, 29 Mar 2022 19:55:23 +0900 (JST)
 Subject: Re: [PATCH] dt-bindings: PCI: uniphier: Convert uniphier-pcie.txt to
  json-schema
 To:     Rob Herring <robh@kernel.org>
@@ -32,14 +32,15 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <1648433498-23450-1-git-send-email-hayashi.kunihiko@socionext.com>
- <YkHg0UeS9kPOW6Kf@robh.at.kernel.org>
+ <1648471865.799906.2153573.nullmailer@robh.at.kernel.org>
+ <YkHhF7dF9SYS2qTx@robh.at.kernel.org>
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <00796c28-7485-8710-b76b-ac94e3358387@socionext.com>
-Date:   Tue, 29 Mar 2022 19:54:49 +0900
+Message-ID: <0c71c397-c48f-46e4-1813-2d7fbb029be7@socionext.com>
+Date:   Tue, 29 Mar 2022 19:55:23 +0900
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <YkHg0UeS9kPOW6Kf@robh.at.kernel.org>
+In-Reply-To: <YkHhF7dF9SYS2qTx@robh.at.kernel.org>
 Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -54,49 +55,47 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Rob,
 
-Thank you for reviewing.
-
-On 2022/03/29 1:22, Rob Herring wrote:
-> On Mon, Mar 28, 2022 at 11:11:38AM +0900, Kunihiko Hayashi wrote:
->> Convert the file into a JSON description at the yaml format.
->>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
->>   .../bindings/pci/socionext,uniphier-pcie.yaml | 100 ++++++++++++++++++
->>   .../devicetree/bindings/pci/uniphier-pcie.txt |  82 --------------
->>   MAINTAINERS                                   |   2 +-
->>   3 files changed, 101 insertions(+), 83 deletions(-)
->>   create mode 100644
+On 2022/03/29 1:23, Rob Herring wrote:
+> On Mon, Mar 28, 2022 at 07:51:05AM -0500, Rob Herring wrote:
+>> On Mon, 28 Mar 2022 11:11:38 +0900, Kunihiko Hayashi wrote:
+>>> Convert the file into a JSON description at the yaml format.
+>>>
+>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>>> ---
+>>>   .../bindings/pci/socionext,uniphier-pcie.yaml | 100
+> ++++++++++++++++++
+>>>   .../devicetree/bindings/pci/uniphier-pcie.txt |  82 --------------
+>>>   MAINTAINERS                                   |   2 +-
+>>>   3 files changed, 101 insertions(+), 83 deletions(-)
+>>>   create mode 100644
 > Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.
-> txt
-
-[snip]
-
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - socionext,uniphier-pcie
->> +
->> +  reg:
->> +    minItems: 3
->> +    maxItems: 4
->> +
->> +  reg-names:
->> +    oneOf:
->> +      - items:
->> +          - const: dbi
->> +          - const: link
->> +          - const: config
->> +      - items:
->> +          - const: dbi
->> +          - const: link
->> +          - const: config
->> +          - const: atu
+>>>   delete mode 100644
+> Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+>>>
+>>
+>> Running 'make dtbs_check' with the schema in this patch gives the
+>> following warnings. Consider if they are expected or the schema is
+>> incorrect. These may not be new warnings.
+>>
+>> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+>> This will change in the future.
+>>
+>> Full log is available here: https://patchwork.ozlabs.org/patch/1609988
+>>
+>>
+>> pcie@66000000: compatible: ['socionext,uniphier-pcie', 'snps,dw-pcie']
+> is too long
+>> 	arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dt.yaml
+>> 	arch/arm64/boot/dts/socionext/uniphier-ld20-global.dt.yaml
+>> 	arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dt.yaml
+>> 	arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dt.yaml
 > 
-> You can have just the 2nd list plus 'minItems: 3' to do the same thing.
+> Ignore this if your intent is to fix these by dropping 'snps,dw-pcie'. I
+> think that is the right thing to do. 'snps,dw-pcie' is not too
+> meaningful.
 
-I see. I'll rewrite it that way.
+I see. I should remove "snps,dw-pcie" from the existing devicetree, so
+I'll fix it as a devicetree patch.
 
 Thank you,
 
