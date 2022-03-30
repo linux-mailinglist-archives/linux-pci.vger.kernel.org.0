@@ -2,47 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DB824ECB0E
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Mar 2022 19:49:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A04B4ECB1D
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Mar 2022 19:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239070AbiC3Ruv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Mar 2022 13:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
+        id S1349496AbiC3R4n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Mar 2022 13:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237874AbiC3Ruu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Mar 2022 13:50:50 -0400
+        with ESMTP id S1349567AbiC3R4m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Mar 2022 13:56:42 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484A6DA3
-        for <linux-pci@vger.kernel.org>; Wed, 30 Mar 2022 10:49:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491741EAF7
+        for <linux-pci@vger.kernel.org>; Wed, 30 Mar 2022 10:54:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D91F6609FA
-        for <linux-pci@vger.kernel.org>; Wed, 30 Mar 2022 17:49:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F65C340EC;
-        Wed, 30 Mar 2022 17:49:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D280360B07
+        for <linux-pci@vger.kernel.org>; Wed, 30 Mar 2022 17:54:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C28C340EE;
+        Wed, 30 Mar 2022 17:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648662544;
-        bh=L33j1N4IfewPczDqxFtMIJIzY9R8yshsvhIvNyGLvtU=;
+        s=k20201202; t=1648662896;
+        bh=u+Vv8O+9e1PD5XljfwWsq8yYF8FGlHrHRMqRJFyiMAg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hetG+tr2A4xqYqd4SSELT/B2q9VBAWjzi0YCeHq+yKQC7wUZXJmyToeCpULzjNY0H
-         QXiGLHSyrN3QqFruM0EacAzg4SuvdKsE2QLJO15cWaoZZFK/pgfmpYQ57eyx0CcK7W
-         nDQyhJN4vHx8I3G0p2kl5nlnjItq33UhFD9VsWWZVUYnTbcwSdiWMDP1DozhVnyVy0
-         ql/2JnIe/0t9Q08n/ES+siF6gmXuakVpPo+IzrDLGFx9xU6r6mwLSGQEEOZuyxifbf
-         I1QWWNU3Jn8zH24b7508mOlkLxuD+Dm9+nEHZOw/Q2cSVvZHpAqBfXZrKlpA9PgXvm
-         X3bJX29GV8gjg==
-Date:   Wed, 30 Mar 2022 12:49:00 -0500
+        b=to09D3zUVjgkDjOIANAKggBiM2+CUTAopS6zCtKgfye6JWWkhcuUL9EE23BJC0dtl
+         4bLizkdiVnLwXvcin0KwNiGaVI7caYgqXnlbwIfSIQ8Ucrtbp4f2Vy3iTF6LAlDvuv
+         rOi3kOI7MkkWxk0TFXXi6A8SEJMLCsm0q6B9upwla3itecltlfVslEdjqcdgQbImiO
+         5Z9K47ZdqYbCQepopvqovTj1/EunDNByJEq40/2TglveC952Pk8bhq116BQPS3wyNe
+         zZZ3IjheZ/g2kZnqIVEWuJlslT5rnxzCZPHEhCtP3wGQNWPPuBpRN25/HqOCs659wK
+         PT9VEjX48hYEA==
+Date:   Wed, 30 Mar 2022 12:54:53 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Nirmal Patel <nirmal.patel@intel.com>
-Subject: Re: [PATCH v2 2/2] Allow VMD to disable MSIX remapping with
- interrupt remapping enabled.
-Message-ID: <20220330174900.GA1694073@bhelgaas>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Jon Derrick <jonathan.derrick@linux.dev>,
+        Nirmal Patel <nirmal.patel@intel.com>
+Subject: Re: [PATCH v2 1/2] PCI: vmd: Assign VMD IRQ domain before enumeration
+Message-ID: <20220330175453.GA1694874@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8eddff32-1347-ad09-642c-951a69c82388@linux.intel.com>
+In-Reply-To: <202db6b1-5b66-8f37-ba06-7456326f2cf6@linux.intel.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,65 +55,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 29, 2022 at 03:48:21PM -0700, Patel, Nirmal wrote:
-> On 3/16/2022 8:51 AM, Nirmal Patel wrote:
-> > This patch removes a placeholder patch 2565e5b69c44 ("PCI: vmd: Do
-> > not disable MSI-X remapping if interrupt remapping is enabled by IOMMU.")
-> > This patch was added as a workaround to disable MSI remapping if iommu
-> > enables interrupt remapping. VMD does not assign proper IRQ domain to
-> > child devices when MSIX is disabled. There is no dependency between MSI
-> > remapping by VMD and interrupt remapping by iommu. MSI remapping can be
-> > enabled or disabled with and without interrupt remap.
-> >
-> > Signed-off-by: Nirmal Patel <nirmal.patel@intel.com>
-> > ---
-> >  drivers/pci/controller/vmd.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > index 3a6570e5b765..91bc1b40d40c 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -6,7 +6,6 @@
-> >  
-> >  #include <linux/device.h>
-> >  #include <linux/interrupt.h>
-> > -#include <linux/iommu.h>
-> >  #include <linux/irq.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> > @@ -813,8 +812,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> >  	 * acceptable because the guest is usually CPU-limited and MSI
-> >  	 * remapping doesn't become a performance bottleneck.
-> >  	 */
-> > -	if (iommu_capable(vmd->dev->dev.bus, IOMMU_CAP_INTR_REMAP) ||
-> > -	    !(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
-> > +	if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
-> >  	    offset[0] || offset[1]) {
-> >  		ret = vmd_alloc_irqs(vmd);
-> >  		if (ret)
+On Wed, Mar 30, 2022 at 08:54:15AM -0700, Patel, Nirmal wrote:
+> On 3/29/2022 4:27 PM, Dan Williams wrote:
+> > On Tue, Mar 29, 2022 at 3:48 PM Patel, Nirmal
+> > <nirmal.patel@linux.intel.com> wrote:
+> >> On 3/16/2022 8:51 AM, Nirmal Patel wrote:
+> >>> From: Nirmal Patel <nirmal.patel@linux.intel.com>
+> >>>
+> >>> VMD creates and assigns a separate IRQ domain only when MSI remapping is
+> >>> enabled. For example VMD-MSI. But VMD doesn't assign IRQ domain when
+> >>> MSI remapping is disabled resulting child devices getting default
+> >>> PCI-MSI IRQ domain. Now when interrupt remapping is enabled by
+> >>> intel-iommu all the PCI devices are assigned INTEL-IR-MSI domain
+> >>> including VMD endpoints. But devices behind VMD get PCI-MSI IRQ domain
+> >>> when VMD create a root bus and configures child devices.
+> >>>
+> >>> As a result DMAR errors were observed when interrupt remapping was
+> >>> enabled on Intel Icelake CPUs. For instance:
+> >>>
+> >>>   DMAR: DRHD: handling fault status reg 2
+> >>>   DMAR: [INTR-REMAP] Request device [0xe2:0x00.0] fault index 0xa00 [fault reason 0x25] Blocked a compatibility format interrupt request
+> >>>
+> >>> Acked-by: Dan Williams <dan.j.williams@intel.com>
+> >>> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> >>> ---
+> >>>  drivers/pci/controller/vmd.c | 2 ++
+> >>>  1 file changed, 2 insertions(+)
+> >>>
+> >>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> >>> index cc166c683638..3a6570e5b765 100644
+> >>> --- a/drivers/pci/controller/vmd.c
+> >>> +++ b/drivers/pci/controller/vmd.c
+> >>> @@ -853,6 +853,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> >>>       vmd_attach_resources(vmd);
+> >>>       if (vmd->irq_domain)
+> >>>               dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+> >>> +     else
+> >>> +             dev_set_msi_domain(&vmd->bus->dev, dev_get_msi_domain(&vmd->dev->dev));
+> >>>
+> >>>       vmd_acpi_begin();
+> >>>
+> >> Gentle ping!
+> > It helps to be explicit when you send a patch and a follow-up ping.
+> > Are you asking Lorenzo to take this? Is this urgent such that Bjorn
+> > should consider taking it directly? The changelog notes what happens,
+> > but not the severity of end user visible impact. The merge window is
+> > presently open so the natural inclination is to just wait until that
+> > closes to circle back to outstanding patches.
+> 
+> This patch removes a flag that bypasses MSI disable feature of VMD and
+> improves the performance. So it would be nice if the patch gets accepted
+> sooner. I tend to send follow-up ping after a week or so if I do not get any
+> feedback and to allow it to get accepted in time.
 
-If/when you repost this, please update the subject and commit log to
-use "MSI-X" consistently instead of the current mix of "MSI-X" and
-"MSIX".
+There are only a few days left in the v5.18 merge window, so unless
+it's an emergency, this would be v5.19 material.
 
-Also s/iommu/IOMMU/.
-
-In subject line, add "PCI: vmd: " prefix and drop trailing period.
-
-Also rewrite commit log in imperative mood, e.g., "Revert 2565e5b69c44
-..." instead of "This patch removes ..."  It's 100% clear that the
-commit log refers to *this* patch, so it's pointless to include that.
-
-It's further confusing that "This patch was added ..." refers to
-*2565e5b69c44*, not this revert.
-
-This reverts 2565e5b69c44 (but doesn't remove the #include
-<linux/iommu.h>" added by 2565e5b69c44).
-
-2565e5b69c44 fixed a problem.  If that fix is no longer necessary
-because of some other change, the commit log should mention that
-change.  Otherwise somebody will backport this fix too far and
-reintroduce the problem solved by 2565e5b69c44.
+This claims to be a v2, but I missed the v1, and the lore archives [1]
+seem incomplete.  Maybe the v1 (and maybe the cover letter?) were HTML
+or got lost for some other reason?
 
 Bjorn
+
+[1] https://lore.kernel.org/all/?q=f%3Anirmal.patel
