@@ -2,117 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2AF64ED952
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Mar 2022 14:07:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76EA14EDBB9
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Mar 2022 16:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235099AbiCaMJg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Mar 2022 08:09:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
+        id S235214AbiCaOdF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Mar 2022 10:33:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235723AbiCaMJe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Mar 2022 08:09:34 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936E61FE56E;
-        Thu, 31 Mar 2022 05:07:46 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S237694AbiCaOc7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Mar 2022 10:32:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22FE01DE6F4;
+        Thu, 31 Mar 2022 07:31:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 436B31F37D;
-        Thu, 31 Mar 2022 12:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1648728465; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qlVb8m4lD5nimCufr4J8BkEVVy0pSTB0wUKUXvGiKnQ=;
-        b=VJejwbt3RxRmaYOVd1RAWzivrVwG65IbtZJVfYR1+mkdyXwez+30xwMANrUtS7Cotf+5sW
-        Jqk9t8vopsgag21ZNwg+52bgnHGJi1nADVLq7av+aYNOUqC5vp8ZvvVc5IvdnFOtOXQycn
-        t1+tFulT08XoAsEAzubY6hIku5GMdZA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1648728465;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qlVb8m4lD5nimCufr4J8BkEVVy0pSTB0wUKUXvGiKnQ=;
-        b=WlFEo37T55t/2eFNOZqn1Cg6uLhpMs9esYODcnslYgTZ0+pqwKNkXxi511XeDBPpmO8PtI
-        svK/iu/q08qfIsDA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 33B4E132DC;
-        Thu, 31 Mar 2022 12:07:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id cYOWDJGZRWLYCwAAMHmgww
-        (envelope-from <dwagner@suse.de>); Thu, 31 Mar 2022 12:07:45 +0000
-Date:   Thu, 31 Mar 2022 14:07:44 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     "Belanger, Martin" <Martin.Belanger@dell.com>
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Tanjore Suresh <tansuresh@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v1 1/3] driver core: Support asynchronous driver shutdown
-Message-ID: <20220331120744.sb4ai6pa2ahtb3c5@carbon.lan>
-References: <20220328230008.3587975-1-tansuresh@google.com>
- <20220328230008.3587975-2-tansuresh@google.com>
- <CAOSf1CHnaKrSH0XwKMBuUmMAuc2q6MaHaZPqVoUia9MYqMjgGg@mail.gmail.com>
- <SJ0PR19MB4544C3854D2C68853A6E8EA8F21F9@SJ0PR19MB4544.namprd19.prod.outlook.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id 708ACB8213B;
+        Thu, 31 Mar 2022 14:31:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F523C340ED;
+        Thu, 31 Mar 2022 14:31:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648737063;
+        bh=SNXLMin1yPeR9fXtTHf11aJlFW1shy9T5oOySNUqpRo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=a0bOq58j3m4sHXGsLJmOPypzaAgKs84C42qg4qA36vdMaWONZibKL1en9U1/x9KlD
+         iMK05xfh1Z23snWcdLcA2CE5Ovh2dJuRkdUOZjRoQryGbkrJqgid/mjAXbn9nb++TM
+         n5f1OXbK41b+d1FrJbPuMjoU9O2fjvJkQihkQaQ6WEwPWjyZ3fk4hV9dFcUICEoED7
+         yR/R5heDVsInICR6Acx9IfZJONGWhv06Zvy3PSXIBEhVGmxideMm20oW7nhFdL3oHN
+         FlwjltplWRc35ISFSoK/zcTq6oPyTSoZasgyxBzu01u4w2h2Vk72YkVMb/ALzfGiPX
+         ONuN3aumuqDoA==
+Date:   Thu, 31 Mar 2022 09:31:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shlomo Pongratz <shlomopongratz@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrew.maier@eideticom.com, logang@deltatee.com,
+        bhelgaas@google.com, jgg@nvidia.com,
+        Shlomo Pongratz <shlomop@pliops.com>
+Subject: Re: [PATCH V5 1/1] Intel Sky Lake-E host root ports check.
+Message-ID: <20220331143101.GA4846@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SJ0PR19MB4544C3854D2C68853A6E8EA8F21F9@SJ0PR19MB4544.namprd19.prod.outlook.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220331073539.14499-2-shlomop@pliops.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 30, 2022 at 02:12:18PM +0000, Belanger, Martin wrote:
-> I know this patch is mainly for PCI devices, however, NVMe over Fabrics 
-> devices can suffer even longer shutdowns. Last September, I reported 
-> that shutting down an NVMe-oF TCP connection while the network is down 
-> will result in a 1-minute deadlock. That's because the driver tries to perform 
-> a proper shutdown by sending commands to the remote target and the 
-> timeout for unanswered commands is 1-minute. If one needs to shut down 
-> several NVMe-oF connections, each connection will be shut down sequentially 
-> taking each 1 minute. Try running "nvme disconnect-all" while the network 
-> is down and you'll see what I mean. Of course, the KATO is supposed to 
-> detect when connectivity is lost, but if you have a long KATO (e.g. 2 minutes)
-> you will most likely hit this condition.
+On Thu, Mar 31, 2022 at 10:35:39AM +0300, Shlomo Pongratz wrote:
+> In commit 7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to
+> the whitelist")
+> Andrew Maier added the Sky Lake-E additional devices
+> 2031, 2032 and 2033 root ports to the already existing 2030 device.
+> 
+> The Intel devices 2030, 2031, 2032 and 2033 which are root ports A, B, C and D,
+> respectively and if all exist they will occupy slots 0 till 3 in that order.
 
-I've debugging something similar:
+Please make this a sentence.
 
-[44888.710527] nvme nvme0: Removing ctrl: NQN "xxx"
-[44898.981684] nvme nvme0: failed to send request -32
-[44960.982977] nvme nvme0: queue 0: timeout request 0x18 type 4
-[44960.983099] nvme nvme0: Property Set error: 881, offset 0x14
+> The original code handled only the case where the devices in the whitelist are
+> host bridges and assumed that they will be found on slot 0.
+> 
+> This assumption doesn't hold for root ports so an explicit test was added to
+> cover this case.
 
-Currently testing this patch:
+Please update the subject line to match the style of previous ones.
 
-+++ b/drivers/nvme/host/tcp.c
-@@ -1103,9 +1103,12 @@ static int nvme_tcp_try_send(struct nvme_tcp_queue *queue)
-        if (ret == -EAGAIN) {
-                ret = 0;
-        } else if (ret < 0) {
-+               struct request *rq = blk_mq_rq_from_pdu(queue->request);
-+
-                dev_err(queue->ctrl->ctrl.device,
-                        "failed to send request %d\n", ret);
--               if (ret != -EPIPE && ret != -ECONNRESET)
-+               if ((ret != -EPIPE && ret != -ECONNRESET) ||
-+                   rq->cmd_flags & REQ_FAILFAST_DRIVER)
-                        nvme_tcp_fail_request(queue->request);
-                nvme_tcp_done_send_req(queue);
-        }
+Please wrap the commit log to fit in 80 columns (including the 4
+spaces added by "git log") like previous commits.
+
+Please figure out whether you want "Sky Lake-E" or "SkyLake-E" and use
+it consistently in commit log and code comments.  It seems to be
+"Skylake" on intel.com, so I suggest using that.
+
+Please use imperative mood, e.g., instead of "an explicit test was
+added ...," write "add a test to cover this case."  Do the same in
+code comments.
+
+Bjorn
