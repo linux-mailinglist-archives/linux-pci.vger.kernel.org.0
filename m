@@ -2,33 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEB514ED486
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Mar 2022 09:12:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03A714ED494
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Mar 2022 09:13:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231935AbiCaHNm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Mar 2022 03:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39590 "EHLO
+        id S231877AbiCaHNx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Mar 2022 03:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231989AbiCaHNN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Mar 2022 03:13:13 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E9C144A38;
-        Thu, 31 Mar 2022 00:11:20 -0700 (PDT)
+        with ESMTP id S231945AbiCaHNd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Mar 2022 03:13:33 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0CA10BD2F0;
+        Thu, 31 Mar 2022 00:11:25 -0700 (PDT)
 Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id E707F92009E; Thu, 31 Mar 2022 09:11:19 +0200 (CEST)
+        id 91CB89200B3; Thu, 31 Mar 2022 09:11:24 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id E08BE92009C;
-        Thu, 31 Mar 2022 08:11:19 +0100 (BST)
-Date:   Thu, 31 Mar 2022 08:11:19 +0100 (BST)
+        by angie.orcam.me.uk (Postfix) with ESMTP id 8FA5592009E;
+        Thu, 31 Mar 2022 08:11:24 +0100 (BST)
+Date:   Thu, 31 Mar 2022 08:11:24 +0100 (BST)
 From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PING^3][PATCH v2] PCI: Sanitise firmware BAR assignments behind a
- PCI-PCI bridge
-In-Reply-To: <alpine.DEB.2.21.2203012338460.46819@angie.orcam.me.uk>
-Message-ID: <alpine.DEB.2.21.2203310031210.44113@angie.orcam.me.uk>
-References: <20220301231547.GA663097@bhelgaas> <alpine.DEB.2.21.2203012338460.46819@angie.orcam.me.uk>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PING][PATCH] PCI: Avoid handing out address 0 to devices
+In-Reply-To: <alpine.DEB.2.21.2202260044180.25061@angie.orcam.me.uk>
+Message-ID: <alpine.DEB.2.21.2203310133390.44113@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2202260044180.25061@angie.orcam.me.uk>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -41,28 +39,13 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2 Mar 2022, Maciej W. Rozycki wrote:
+On Sat, 26 Feb 2022, Maciej W. Rozycki wrote:
 
-> > > Fix an issue with the Tyan Tomcat IV S1564D system, the BIOS of which 
-> > > does not assign PCI buses beyond #2, where our resource reallocation 
-> > > code preserves the reset default of an I/O BAR assignment outside its 
-> > > upstream PCI-to-PCI bridge's I/O forwarding range for device 06:08.0 in 
-> > > this log:
-> > 
-> > Would you mind collecting the complete dmesg log before your patch?
-> > It's hard to get the entire picture from snippets.
-> 
->  Sure, here's the original log from at the time when I made the patch.  I 
-> think it's as verbose as you can get; there's no way I could have used it 
-> for the change description.
-> 
->  Also I doubt it should matter, but if you need a fresh log instead from 
-> 5.17, then I can make one too, but that will take a bit.  Let me know if 
-> you need me to try anything else too.
+> We have numerous platforms that permit assigning addresses from 0 to PCI 
+> devices, both in the memory and the I/O bus space, and we happily do so 
+> if there is no conflict, e.g.:
 
  Ping for:
-<https://lore.kernel.org/all/alpine.DEB.2.21.2202010150100.58572@angie.orcam.me.uk/>
-
-Do you need any further information?
+<https://lore.kernel.org/lkml/alpine.DEB.2.21.2202260044180.25061@angie.orcam.me.uk/>
 
   Maciej
