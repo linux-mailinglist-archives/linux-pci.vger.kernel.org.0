@@ -2,146 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FAD44ED7F8
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Mar 2022 12:50:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2AF64ED952
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Mar 2022 14:07:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234438AbiCaKw2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Mar 2022 06:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56910 "EHLO
+        id S235099AbiCaMJg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Mar 2022 08:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234757AbiCaKw1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Mar 2022 06:52:27 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8CA11BD83B
-        for <linux-pci@vger.kernel.org>; Thu, 31 Mar 2022 03:50:39 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id d30so6640259pjk.0
-        for <linux-pci@vger.kernel.org>; Thu, 31 Mar 2022 03:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TFELa/BZuowaDfyw6gLBEGWo6cMiLelNfLx1iN1T5dc=;
-        b=xRUfPHjylfqLEN+GuozHZIJyZSu8beHyqGl0lThSL2k+CIVh326KQ7XLznpBpIYXVy
-         nJkX2+7K1qmc6LWIdV+7Eef7yJN0apSodE4yKQZCyIS4Z/Y8n632+DgD/WNtA2xMGnty
-         lhxbFHyGkGUsoBYuDAt3UzwO3KpjbCmyK0arjpZJ2313PYXEEdiCM745LNy0oFwJ9C+o
-         iVLI6vrZ/3EnmLAGDVNFUY0fAQqL1WkwV7QRgRyDkjL1yixINjhPYGvc9Z3tYgB/kZR5
-         WrIy526oG2wvYyUoT9J8wkp8A+Cr0vmPUA6AWlYPiVaBpYrYxWjVUIplpxGq5H9zktAK
-         aIzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TFELa/BZuowaDfyw6gLBEGWo6cMiLelNfLx1iN1T5dc=;
-        b=qjjhlEc7LmjHYh84hFheRXI4vjy8PIvx4MBbO9Xx76+qTe4YYGw9kiuCv2vMB7R/VZ
-         5d7/QS2DL/uRie+LPZZIFsGapezLAMGrLyM4++SoC3iyaVET+DAs+pZq6ohzeXS5Ce/W
-         vuI7ZHULFLiDaGCZwwNhWpjVVgP/L4MkcsXV887strY19VhsF6mwWMgPMw8Fofu5GIpn
-         BSMSFYjpRA1xXIKIsqjWznyV9U9s76fRiGRNEkwVTGkARCX9qEtt5yPFO5pKKJQpmql+
-         CUtl0Q4bGxytB6lXH1CoCcE8nU7Rj7mE9aabkDoMfSftrxBOdGmYkWxy5Zlzz2BYZerH
-         /ltw==
-X-Gm-Message-State: AOAM5311Rti0le26rpidEhfUlImNaerKx5OcwAQ2mdskJWqctteGMWi3
-        /liB+9zRaR0Np/ph9shTXzBv
-X-Google-Smtp-Source: ABdhPJwUUVxU0eN0GZxw3u2enZxMyHOLpRn++pTKQ1RQI4MCgLEuOovkVsLaARG0uoZ++MAPnjssgQ==
-X-Received: by 2002:a17:90b:3851:b0:1c7:80f9:5306 with SMTP id nl17-20020a17090b385100b001c780f95306mr5326698pjb.207.1648723839269;
-        Thu, 31 Mar 2022 03:50:39 -0700 (PDT)
-Received: from thinkpad ([117.202.187.183])
-        by smtp.gmail.com with ESMTPSA id kb13-20020a17090ae7cd00b001c7de069bacsm10163825pjb.42.2022.03.31.03.50.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Mar 2022 03:50:38 -0700 (PDT)
-Date:   Thu, 31 Mar 2022 16:20:31 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        with ESMTP id S235723AbiCaMJe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Mar 2022 08:09:34 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936E61FE56E;
+        Thu, 31 Mar 2022 05:07:46 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 436B31F37D;
+        Thu, 31 Mar 2022 12:07:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1648728465; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qlVb8m4lD5nimCufr4J8BkEVVy0pSTB0wUKUXvGiKnQ=;
+        b=VJejwbt3RxRmaYOVd1RAWzivrVwG65IbtZJVfYR1+mkdyXwez+30xwMANrUtS7Cotf+5sW
+        Jqk9t8vopsgag21ZNwg+52bgnHGJi1nADVLq7av+aYNOUqC5vp8ZvvVc5IvdnFOtOXQycn
+        t1+tFulT08XoAsEAzubY6hIku5GMdZA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1648728465;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qlVb8m4lD5nimCufr4J8BkEVVy0pSTB0wUKUXvGiKnQ=;
+        b=WlFEo37T55t/2eFNOZqn1Cg6uLhpMs9esYODcnslYgTZ0+pqwKNkXxi511XeDBPpmO8PtI
+        svK/iu/q08qfIsDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 33B4E132DC;
+        Thu, 31 Mar 2022 12:07:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id cYOWDJGZRWLYCwAAMHmgww
+        (envelope-from <dwagner@suse.de>); Thu, 31 Mar 2022 12:07:45 +0000
+Date:   Thu, 31 Mar 2022 14:07:44 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     "Belanger, Martin" <Martin.Belanger@dell.com>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Tanjore Suresh <tansuresh@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/25] dmaengine: Fix dma_slave_config.dst_addr
- description
-Message-ID: <20220331105031.GA104799@thinkpad>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-5-Sergey.Semin@baikalelectronics.ru>
- <20220324140806.GN2854@thinkpad>
- <YkU+PupmoR/zkHxn@matsya>
- <20220331071343.eitijsfuzufh6blc@mobilestation>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v1 1/3] driver core: Support asynchronous driver shutdown
+Message-ID: <20220331120744.sb4ai6pa2ahtb3c5@carbon.lan>
+References: <20220328230008.3587975-1-tansuresh@google.com>
+ <20220328230008.3587975-2-tansuresh@google.com>
+ <CAOSf1CHnaKrSH0XwKMBuUmMAuc2q6MaHaZPqVoUia9MYqMjgGg@mail.gmail.com>
+ <SJ0PR19MB4544C3854D2C68853A6E8EA8F21F9@SJ0PR19MB4544.namprd19.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220331071343.eitijsfuzufh6blc@mobilestation>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <SJ0PR19MB4544C3854D2C68853A6E8EA8F21F9@SJ0PR19MB4544.namprd19.prod.outlook.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 10:13:43AM +0300, Serge Semin wrote:
-> On Thu, Mar 31, 2022 at 11:08:06AM +0530, Vinod Koul wrote:
-> > On 24-03-22, 19:38, Manivannan Sadhasivam wrote:
-> > > On Thu, Mar 24, 2022 at 04:48:15AM +0300, Serge Semin wrote:
-> > > > Most likely due to a copy-paste mistake the dst_addr member of the
-> > > > dma_slave_config structure has been marked as ignored if the !source!
-> > > > address belong to the memory. That is relevant to the src_addr field of
-> > > > the structure while the dst_addr field as containing a destination device
-> > > > address is supposed to be ignored if the destination is the CPU memory.
-> > > > Let's fix the field description accordingly.
-> > > > 
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > 
-> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> > > One suggestion below.
-> > > 
-> > > > ---
-> > > >  include/linux/dmaengine.h | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > > > index 842d4f7ca752..f204ea16ac1c 100644
-> > > > --- a/include/linux/dmaengine.h
-> > > > +++ b/include/linux/dmaengine.h
-> > > > @@ -395,7 +395,7 @@ enum dma_slave_buswidth {
-> > > >   * should be read (RX), if the source is memory this argument is
-> > > >   * ignored.
-> > > >   * @dst_addr: this is the physical address where DMA slave data
-> > > > - * should be written (TX), if the source is memory this argument
-> > > > + * should be written (TX), if the destination is memory this argument
-> > >
->  
-> > > Should we rename "memory" to "local memory" or something similar?
-> > 
-> > what do you mean by local memory :)
-> 
-> Most likely Manivannan just confused the whole eDMA device specifics
-> with this patch purpose. This commit has nothing to do with "local"
-> and "remote" device memory. Such definitions are relevant to the DW
-> eDMA setups (whether device is integrated into the PCIe Host/End-point
-> controller then the CPU memory is a local memory for it, or it's a
-> remote PCI End-point, then the CPU memory is a remote memory for it).
-> 
+On Wed, Mar 30, 2022 at 02:12:18PM +0000, Belanger, Martin wrote:
+> I know this patch is mainly for PCI devices, however, NVMe over Fabrics 
+> devices can suffer even longer shutdowns. Last September, I reported 
+> that shutting down an NVMe-oF TCP connection while the network is down 
+> will result in a 1-minute deadlock. That's because the driver tries to perform 
+> a proper shutdown by sending commands to the remote target and the 
+> timeout for unanswered commands is 1-minute. If one needs to shut down 
+> several NVMe-oF connections, each connection will be shut down sequentially 
+> taking each 1 minute. Try running "nvme disconnect-all" while the network 
+> is down and you'll see what I mean. Of course, the KATO is supposed to 
+> detect when connectivity is lost, but if you have a long KATO (e.g. 2 minutes)
+> you will most likely hit this condition.
 
-Ah, yes indeed. While I was reviewing the eDMA patches I just went with that
-context. Sorry for the noise.
+I've debugging something similar:
 
-Thanks,
-Mani
+[44888.710527] nvme nvme0: Removing ctrl: NQN "xxx"
+[44898.981684] nvme nvme0: failed to send request -32
+[44960.982977] nvme nvme0: queue 0: timeout request 0x18 type 4
+[44960.983099] nvme nvme0: Property Set error: 881, offset 0x14
 
-> Guys. Regarding the patchsets review procedure. I notice all the
-> comments. Just didn't have time to respond so far. Will do that till
-> the end of the week.
-> 
-> -Sergey
-> 
-> > 
-> > -- 
-> > ~Vinod
+Currently testing this patch:
+
++++ b/drivers/nvme/host/tcp.c
+@@ -1103,9 +1103,12 @@ static int nvme_tcp_try_send(struct nvme_tcp_queue *queue)
+        if (ret == -EAGAIN) {
+                ret = 0;
+        } else if (ret < 0) {
++               struct request *rq = blk_mq_rq_from_pdu(queue->request);
++
+                dev_err(queue->ctrl->ctrl.device,
+                        "failed to send request %d\n", ret);
+-               if (ret != -EPIPE && ret != -ECONNRESET)
++               if ((ret != -EPIPE && ret != -ECONNRESET) ||
++                   rq->cmd_flags & REQ_FAILFAST_DRIVER)
+                        nvme_tcp_fail_request(queue->request);
+                nvme_tcp_done_send_req(queue);
+        }
