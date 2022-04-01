@@ -2,285 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AE694EF79B
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 18:20:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB1E84EF7E4
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 18:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348908AbiDAQLp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Apr 2022 12:11:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
+        id S236007AbiDAQaO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Apr 2022 12:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352307AbiDAQLF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 12:11:05 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7AC62CB6;
-        Fri,  1 Apr 2022 08:37:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4F422B82532;
-        Fri,  1 Apr 2022 15:37:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC50FC2BBE4;
-        Fri,  1 Apr 2022 15:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648827435;
-        bh=PuaGpzL8a1jL74ecCHi7gxUKeSuanUqtKSFNaNEO6H0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ViajW4MbGFEUEkcq2mg7+MzfRHJQ+OjjbrNd0mdK2izw1UR/5HYh+0Av0q7zjlC8Q
-         nrtqgevQn1nZkWFaV0iEqwx88JXHALAGRWkQxUxyQEffhm/gtP3JWp7ZCnx+DqTNvK
-         rrfgqF2kwGZFZLQnnWiNMoa8wen0oWwopnzz/dtPtucJkBR0++k7ErMVSQmFPYEC0q
-         p6e5zPayZf4CAeZcOsk3wSfprmzTYGcAD2Ag9LP565VuDxiSpivTzuH+EC3mu53EzD
-         IdJFZc9DlSA/ivWVjuuLA1DJFAmdWfE4OYngJPE7Glwq8wXPLloXKLJ8jPwdVZdylq
-         K3Mu/S7YDQE7Q==
-Date:   Fri, 1 Apr 2022 10:37:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Sanju.Mehta@amd.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6] PCI / ACPI: Assume "HotPlugSupportInD3" only if
- device can wake from D3
-Message-ID: <20220401153713.GA100914@bhelgaas>
+        with ESMTP id S1348714AbiDAQ2A (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 12:28:00 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE1B22513;
+        Fri,  1 Apr 2022 09:00:46 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id yy13so6836121ejb.2;
+        Fri, 01 Apr 2022 09:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9jHgBZFPUit49TSD+W0vcWqdUpO3LWDl0zvqR1OYTQU=;
+        b=BsOyCfH9ORI2nZzbH2g35bwoxed+qvcrU4SidE+0rO+cW4Q2BiKEdUfs1IOK65bqQJ
+         kmBeDHc1KB2uUHHtgRmqtotncTR3ZXPqkihXVwYZna8VX0gsPmFgakoNB1nAjXZq5W/4
+         pIf5ucClXaSqWIZUNRBZ7EEUm5ZwArgN4Cun0Z0lkiDUmxEWsOFIegHUCP0IKu/6fNDI
+         wiypDEWT0b+cGAUjXeD/zbLlw5jnPl86pgSD4bcbF6x/8sakRcLTQQhTy2EGQiW3rTVV
+         0ky9PxC4fjOmxjMdLz1ytCREtWe2yJf5t7EJCP+WvJbwwdKDVUR9ssFocXMD3yaI4vAy
+         PcRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9jHgBZFPUit49TSD+W0vcWqdUpO3LWDl0zvqR1OYTQU=;
+        b=KKzlvucaLBC8ZGXlEfJfCkLh3zio02Gwq3Ba46Cz1r81ZE/DnxCejBW9MH8HxnapOM
+         zpUj4X+d24NBdHpewncrAqgJk0YW454bF/75PYRZQK615fq9AjJT5lD31H/+qklxysR6
+         H/klzghEJMoOr7M0BsbIrt8UxIz9mDEnNwSgk8soN3GRSlKkHo8THp0q7GtbbK2WJuyZ
+         GWsri8a9xJzOyvpOg3NgT8rXTcoJnYYTKavgWhVteyBo91OOWwtEE0hl2BmIjgDV83Ir
+         EkWCZkixPSKs4Yris9Gn/wM+2mfuFqQysedpPGK099xrc2quMqV9ySPLXGTz+bTBsCJ0
+         5l/A==
+X-Gm-Message-State: AOAM532rK9OontEJHvg/LKcIJBb3yP98G/AJ0MjY+nqEaTG9vJflSZQA
+        QB4S4VoOF+hhcp97Ne+jn+Y=
+X-Google-Smtp-Source: ABdhPJxwTLUF5gE9o2QdBV/5AMlb7dmQqN2evGxOiB/eEU3n8mrZHqeb4+4NLQr/Tt3aBF5S/5txwQ==
+X-Received: by 2002:a17:907:7ea5:b0:6e1:13c3:e35f with SMTP id qb37-20020a1709077ea500b006e113c3e35fmr409386ejc.99.1648828845097;
+        Fri, 01 Apr 2022 09:00:45 -0700 (PDT)
+Received: from anparri (host-82-59-4-232.retail.telecomitalia.it. [82.59.4.232])
+        by smtp.gmail.com with ESMTPSA id ds5-20020a170907724500b006df8f39dadesm1162174ejc.218.2022.04.01.09.00.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Apr 2022 09:00:44 -0700 (PDT)
+Date:   Fri, 1 Apr 2022 18:00:36 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/4] PCI: hv: Use vmbus_requestor to generate
+ transaction IDs for VMbus hardening
+Message-ID: <20220401160036.GA437893@anparri>
+References: <20220328144244.100228-1-parri.andrea@gmail.com>
+ <20220328144244.100228-3-parri.andrea@gmail.com>
+ <PH0PR21MB3025A45FCFD77242EB9EAB27D7E19@PH0PR21MB3025.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220401034003.3166-1-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <PH0PR21MB3025A45FCFD77242EB9EAB27D7E19@PH0PR21MB3025.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 10:40:03PM -0500, Mario Limonciello wrote:
-> acpi_pci_bridge_d3(dev) returns "true" if "dev" is a hotplug bridge
-> that can handle hotplug events while in D3.  Previously this meant:
+> > @@ -91,6 +91,9 @@ static enum pci_protocol_version_t pci_protocol_versions[] = {
+> >  /* space for 32bit serial number as string */
+> >  #define SLOT_NAME_SIZE 11
+> > 
+> > +/* Size of requestor for VMbus */
+> > +#define HV_PCI_RQSTOR_SIZE 64
 > 
->  1) "dev" has a _PS0 or _PR0 method, or
-> 
->  2) The Root Port above "dev" has a _DSD with a "HotPlugSupportInD3"
->     property with value 1.
-> 
-> This did not consider_S0W, which tells us the deepest D-state from
-> which a device can wake itself (ACPI v6.4, sec 7.3.20).
-> 
-> On some platforms, e.g., AMD Yellow Carp, firmware may supply
-> "HotPlugSupportInD3" even though the platform does not supply power
-> resources through _PRW and _S0W tells us the device cannot wake from
-> D3hot.  With the previous code, these devices could be put in D3hot
-> and hotplugged devices would not be recognized without manually
-> rescanning.
-> 
-> If _S0W exists and says the Root Port cannot wake itself from D3hot,
-> return "false" to indicate that "dev" cannot handle hotplug events
-> while in D3.
-> 
->  1) "dev" has a _PS0 or _PR0 method, or
-> 
->  2a) The Root Port above "dev" has _PRW and
-> 
->  2b) If the Root Port above "dev" has _S0W, it can wake from D3hot or
->      D3cold and
-> 
->  2c) The Root Port above "dev" has a _DSD with a
->      "HotPlugSupportInD3" property with value 1.
-> 
-> Windows 10 and Windows 11 both will prevent the bridge from going in D3
-> when the firmware is configured this way and this change aligns the
-> handling of the situation to be the same.
-> 
-> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
-> Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
-> Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Might include a comment about how this value was derived.  I *think*
+> it is an arbitrary value based on the assumption that having more than
+> one request outstanding is rare, and so 64 should be extremely generous
+> in ensuring that we don't ever run out.
 
-Applied to for-linus with tweaks as below.  It's awfully late (my
-fault for not pushing on this earlier) but I hope to squeeze it into
-v5.18.
-
-> --
-> v5->v6:
->  * Re-order checks to only check for _DSD if necessary as suggested by Bjorn.
->  * Adjust commit message wording
->  * Drop rewording comment patch, just apply it while moving text to avoid
->    ping-ponging the same lines in the commits.
-> v4-v5:
->  * Don't fail if _S0W is missing
-> ---
->  drivers/pci/pci-acpi.c | 25 +++++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 1f15ab7eabf8..5ab797e2709d 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -976,7 +976,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->  {
->  	const union acpi_object *obj;
->  	struct acpi_device *adev;
-> +	unsigned long long state;
->  	struct pci_dev *rpdev;
-> +	acpi_status status;
->  
->  	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
->  		return false;
-> @@ -985,12 +987,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->  	if (acpi_pci_power_manageable(dev))
->  		return true;
->  
-> -	/*
-> -	 * The ACPI firmware will provide the device-specific properties through
-> -	 * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
-> -	 * for the root port and if it is set we know the hierarchy behind it
-> -	 * supports D3 just fine.
-> -	 */
->  	rpdev = pcie_find_root_port(dev);
->  	if (!rpdev)
->  		return false;
-> @@ -999,6 +995,23 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->  	if (!adev)
->  		return false;
->  
-> +	/*
-> +	 * If the bridge can't wake from D3hot, it can't signal hotplug
-> +	 * events in D3hot.
-> +	 */
-> +	if (!adev->wakeup.flags.valid)
-> +		return false;
-> +
-> +	status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
-> +	if (ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT)
-> +		return false;
-> +
-> +	/*
-> +	 * The ACPI firmware will provide the device-specific properties through
-> +	 * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
-> +	 * for the root port and if it is set we make an assumption that the
-> +	 * hierarchy behind it supports D3 as well.
-> +	 */
->  	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
->  				   ACPI_TYPE_INTEGER, &obj) < 0)
->  		return false;
-> -- 
-> 2.34.1
-> 
+Right, I've added a comment to that effect.
 
 
-commit c1d27b79a94f ("PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3")
-Author: Mario Limonciello <mario.limonciello@amd.com>
-Date:   Thu Mar 31 22:40:03 2022 -0500
+> > @@ -2696,8 +2699,9 @@ static void hv_pci_onchannelcallback(void *context)
+> >  	const int packet_size = 0x100;
+> >  	int ret;
+> >  	struct hv_pcibus_device *hbus = context;
+> > +	struct vmbus_channel *chan = hbus->hdev->channel;
+> 
+> Having gotten the channel as a local variable, could also use the local as
+> the first argument to vmbus_recvpacket_raw().
 
-    PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3
-    
-    acpi_pci_bridge_d3(dev) returns "true" if "dev" is a hotplug bridge that
-    can handle hotplug events while in D3.  Previously this meant either:
-    
-      - "dev" has a _PS0 or _PR0 method (acpi_pci_power_manageable()), or
-    
-      - The Root Port above "dev" has a _DSD with a "HotPlugSupportInD3"
-        property with value 1.
-    
-    This did not consider _PRW, which tells us about wakeup GPEs (ACPI v6.4,
-    sec 7.3.13).  Without a wakeup GPE, from an ACPI perspective the Root Port
-    has no way of generating wakeup signals, so hotplug events will be lost if
-    we use D3.
-    
-    Similarly, it did not consider _S0W, which tells us the deepest D-state
-    from which a device can wake itself (sec 7.3.20).  If _S0W tells us the
-    device cannot wake from D3, hotplug events will again be lost if we use D3.
-    
-    Some platforms, e.g., AMD Yellow Carp, supply "HotPlugSupportInD3" without
-    _PRW or with an _S0W that says the Root Port cannot wake from D3.  On those
-    platforms, we previously put bridges in D3hot, hotplug events were lost,
-    and hotplugged devices would not be recognized without manually rescanning.
-    
-    Allow bridges to be put in D3 only if the Root Port can generate wakeup
-    GPEs (wakeup.flags.valid), it can wake from D3 (_S0W), AND it has the
-    "HotPlugSupportInD3" property.
-    
-    Neither Windows 10 nor Windows 11 puts the bridge in D3 when the firmware
-    is configured this way, and this change aligns the handling of the
-    situation to be the same.
-    
-    [bhelgaas: commit log, tidy "HotPlugSupportInD3" check and comment]
-    Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
-    Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
-    Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
-    Link: https://lore.kernel.org/r/20220401034003.3166-1-mario.limonciello@amd.com
-    Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Applied.
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 1f15ab7eabf8..3ae435beaf0a 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -974,9 +974,11 @@ bool acpi_pci_power_manageable(struct pci_dev *dev)
- 
- bool acpi_pci_bridge_d3(struct pci_dev *dev)
- {
--	const union acpi_object *obj;
--	struct acpi_device *adev;
- 	struct pci_dev *rpdev;
-+	struct acpi_device *adev;
-+	acpi_status status;
-+	unsigned long long state;
-+	const union acpi_object *obj;
- 
- 	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
- 		return false;
-@@ -985,12 +987,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
- 	if (acpi_pci_power_manageable(dev))
- 		return true;
- 
--	/*
--	 * The ACPI firmware will provide the device-specific properties through
--	 * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
--	 * for the root port and if it is set we know the hierarchy behind it
--	 * supports D3 just fine.
--	 */
- 	rpdev = pcie_find_root_port(dev);
- 	if (!rpdev)
- 		return false;
-@@ -999,11 +995,34 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
- 	if (!adev)
- 		return false;
- 
--	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
--				   ACPI_TYPE_INTEGER, &obj) < 0)
-+	/*
-+	 * If the Root Port cannot signal wakeup signals at all, i.e., it
-+	 * doesn't supply a wakeup GPE via _PRW, it cannot signal hotplug
-+	 * events from low-power states including D3hot and D3cold.
-+	 */
-+	if (!adev->wakeup.flags.valid)
- 		return false;
- 
--	return obj->integer.value == 1;
-+	/*
-+	 * If the Root Port cannot wake itself from D3hot or D3cold, we
-+	 * can't use D3.
-+	 */
-+	status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
-+	if (ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT)
-+		return false;
-+
-+	/*
-+	 * The "HotPlugSupportInD3" property in a Root Port _DSD indicates
-+	 * the Port can signal hotplug events while in D3.  We assume any
-+	 * bridges *below* that Root Port can also signal hotplug events
-+	 * while in D3.
-+	 */
-+	if (!acpi_dev_get_property(adev, "HotPlugSupportInD3",
-+				   ACPI_TYPE_INTEGER, &obj) &&
-+	    obj->integer.value == 1)
-+		return true;
-+
-+	return false;
- }
- 
- int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+
+> > @@ -2743,11 +2747,13 @@ static void hv_pci_onchannelcallback(void *context)
+> >  		switch (desc->type) {
+> >  		case VM_PKT_COMP:
+> > 
+> > -			/*
+> > -			 * The host is trusted, and thus it's safe to interpret
+> > -			 * this transaction ID as a pointer.
+> > -			 */
+> > -			comp_packet = (struct pci_packet *)req_id;
+> > +			req_addr = chan->request_addr_callback(chan, req_id);
+> > +			if (req_addr == VMBUS_RQST_ERROR) {
+> > +				dev_warn_ratelimited(&hbus->hdev->device,
+> > +						     "Invalid request ID\n");
+> 
+> Could you include the req_id value in the error message that is output?  I
+> was recently debugging a problem in the storvsc driver where having that
+> value would have been handy.
+
+Sure.
+
+Thanks,
+  Andrea
