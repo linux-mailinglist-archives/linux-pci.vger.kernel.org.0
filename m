@@ -2,53 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1532B4EF6F9
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 17:57:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AE694EF79B
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 18:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347761AbiDAPri (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Apr 2022 11:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52308 "EHLO
+        id S1348908AbiDAQLp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Apr 2022 12:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350552AbiDAPAJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 11:00:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8A01042AD;
-        Fri,  1 Apr 2022 07:47:57 -0700 (PDT)
+        with ESMTP id S1352307AbiDAQLF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 12:11:05 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7AC62CB6;
+        Fri,  1 Apr 2022 08:37:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 09BE160AC9;
-        Fri,  1 Apr 2022 14:47:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD81C2BBE4;
-        Fri,  1 Apr 2022 14:47:55 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4F422B82532;
+        Fri,  1 Apr 2022 15:37:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC50FC2BBE4;
+        Fri,  1 Apr 2022 15:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648824476;
-        bh=SU+qxcxXDq9kx8IcFAfdB8DDqxttK1H73mnNgUGzO2Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PXFNspKwhv6wvhNYYmE/RkPkaa831+9gZHv40Dj3uu0TLphZTMerJoJX6CtqdjoH+
-         xQwr6YBkGHvfJxgFGKY2WcQ0W/5+kljBuJVTU9qOqNNkstBwGzhS01+gcmhICZf4Cw
-         q9p6w+yhv9+y87WmFCqSfkN9MhQGTJ4USKxeV5AQD7g3OsEzk77r/ncmStDdQ/GCwV
-         yqOieyAMGSndcFXP/vEF4mKxO4pmiSpkc6Mo6sp8tdyKq9NjzCFspM5lopTkWBsPPD
-         Opgrbmaw1onXzjkOw9VELpPrAgC5zqreA2CXbEwFdT/h9t7slwA1gsZddYCl5rEqqK
-         1PEV3jOorRm2Q==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/22] PCI: aardvark: Fix support for MSI interrupts
-Date:   Fri,  1 Apr 2022 10:47:15 -0400
-Message-Id: <20220401144729.1955554-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220401144729.1955554-1-sashal@kernel.org>
-References: <20220401144729.1955554-1-sashal@kernel.org>
+        s=k20201202; t=1648827435;
+        bh=PuaGpzL8a1jL74ecCHi7gxUKeSuanUqtKSFNaNEO6H0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ViajW4MbGFEUEkcq2mg7+MzfRHJQ+OjjbrNd0mdK2izw1UR/5HYh+0Av0q7zjlC8Q
+         nrtqgevQn1nZkWFaV0iEqwx88JXHALAGRWkQxUxyQEffhm/gtP3JWp7ZCnx+DqTNvK
+         rrfgqF2kwGZFZLQnnWiNMoa8wen0oWwopnzz/dtPtucJkBR0++k7ErMVSQmFPYEC0q
+         p6e5zPayZf4CAeZcOsk3wSfprmzTYGcAD2Ag9LP565VuDxiSpivTzuH+EC3mu53EzD
+         IdJFZc9DlSA/ivWVjuuLA1DJFAmdWfE4OYngJPE7Glwq8wXPLloXKLJ8jPwdVZdylq
+         K3Mu/S7YDQE7Q==
+Date:   Fri, 1 Apr 2022 10:37:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Sanju.Mehta@amd.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v6] PCI / ACPI: Assume "HotPlugSupportInD3" only if
+ device can wake from D3
+Message-ID: <20220401153713.GA100914@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220401034003.3166-1-mario.limonciello@amd.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -59,79 +56,231 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+On Thu, Mar 31, 2022 at 10:40:03PM -0500, Mario Limonciello wrote:
+> acpi_pci_bridge_d3(dev) returns "true" if "dev" is a hotplug bridge
+> that can handle hotplug events while in D3.  Previously this meant:
+> 
+>  1) "dev" has a _PS0 or _PR0 method, or
+> 
+>  2) The Root Port above "dev" has a _DSD with a "HotPlugSupportInD3"
+>     property with value 1.
+> 
+> This did not consider_S0W, which tells us the deepest D-state from
+> which a device can wake itself (ACPI v6.4, sec 7.3.20).
+> 
+> On some platforms, e.g., AMD Yellow Carp, firmware may supply
+> "HotPlugSupportInD3" even though the platform does not supply power
+> resources through _PRW and _S0W tells us the device cannot wake from
+> D3hot.  With the previous code, these devices could be put in D3hot
+> and hotplugged devices would not be recognized without manually
+> rescanning.
+> 
+> If _S0W exists and says the Root Port cannot wake itself from D3hot,
+> return "false" to indicate that "dev" cannot handle hotplug events
+> while in D3.
+> 
+>  1) "dev" has a _PS0 or _PR0 method, or
+> 
+>  2a) The Root Port above "dev" has _PRW and
+> 
+>  2b) If the Root Port above "dev" has _S0W, it can wake from D3hot or
+>      D3cold and
+> 
+>  2c) The Root Port above "dev" has a _DSD with a
+>      "HotPlugSupportInD3" property with value 1.
+> 
+> Windows 10 and Windows 11 both will prevent the bridge from going in D3
+> when the firmware is configured this way and this change aligns the
+> handling of the situation to be the same.
+> 
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
+> Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
+> Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit b0b0b8b897f8e12b2368e868bd7cdc5742d5c5a9 ]
+Applied to for-linus with tweaks as below.  It's awfully late (my
+fault for not pushing on this earlier) but I hope to squeeze it into
+v5.18.
 
-Aardvark hardware supports Multi-MSI and MSI_FLAG_MULTI_PCI_MSI is already
-set for the MSI chip. But when allocating MSI interrupt numbers for
-Multi-MSI, the numbers need to be properly aligned, otherwise endpoint
-devices send MSI interrupt with incorrect numbers.
+> --
+> v5->v6:
+>  * Re-order checks to only check for _DSD if necessary as suggested by Bjorn.
+>  * Adjust commit message wording
+>  * Drop rewording comment patch, just apply it while moving text to avoid
+>    ping-ponging the same lines in the commits.
+> v4-v5:
+>  * Don't fail if _S0W is missing
+> ---
+>  drivers/pci/pci-acpi.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 1f15ab7eabf8..5ab797e2709d 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -976,7 +976,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  {
+>  	const union acpi_object *obj;
+>  	struct acpi_device *adev;
+> +	unsigned long long state;
+>  	struct pci_dev *rpdev;
+> +	acpi_status status;
+>  
+>  	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+>  		return false;
+> @@ -985,12 +987,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  	if (acpi_pci_power_manageable(dev))
+>  		return true;
+>  
+> -	/*
+> -	 * The ACPI firmware will provide the device-specific properties through
+> -	 * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
+> -	 * for the root port and if it is set we know the hierarchy behind it
+> -	 * supports D3 just fine.
+> -	 */
+>  	rpdev = pcie_find_root_port(dev);
+>  	if (!rpdev)
+>  		return false;
+> @@ -999,6 +995,23 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  	if (!adev)
+>  		return false;
+>  
+> +	/*
+> +	 * If the bridge can't wake from D3hot, it can't signal hotplug
+> +	 * events in D3hot.
+> +	 */
+> +	if (!adev->wakeup.flags.valid)
+> +		return false;
+> +
+> +	status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
+> +	if (ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT)
+> +		return false;
+> +
+> +	/*
+> +	 * The ACPI firmware will provide the device-specific properties through
+> +	 * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
+> +	 * for the root port and if it is set we make an assumption that the
+> +	 * hierarchy behind it supports D3 as well.
+> +	 */
+>  	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+>  				   ACPI_TYPE_INTEGER, &obj) < 0)
+>  		return false;
+> -- 
+> 2.34.1
+> 
 
-Fix this issue by using function bitmap_find_free_region() instead of
-bitmap_find_next_zero_area().
 
-To ensure that aligned MSI interrupt numbers are used by endpoint devices,
-we cannot use Linux virtual irq numbers (as they are random and not
-properly aligned). Instead we need to use the aligned hwirq numbers.
+commit c1d27b79a94f ("PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3")
+Author: Mario Limonciello <mario.limonciello@amd.com>
+Date:   Thu Mar 31 22:40:03 2022 -0500
 
-This change fixes receiving MSI interrupts on Armada 3720 boards and
-allows using NVMe disks which use Multi-MSI feature with 3 interrupts.
+    PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3
+    
+    acpi_pci_bridge_d3(dev) returns "true" if "dev" is a hotplug bridge that
+    can handle hotplug events while in D3.  Previously this meant either:
+    
+      - "dev" has a _PS0 or _PR0 method (acpi_pci_power_manageable()), or
+    
+      - The Root Port above "dev" has a _DSD with a "HotPlugSupportInD3"
+        property with value 1.
+    
+    This did not consider _PRW, which tells us about wakeup GPEs (ACPI v6.4,
+    sec 7.3.13).  Without a wakeup GPE, from an ACPI perspective the Root Port
+    has no way of generating wakeup signals, so hotplug events will be lost if
+    we use D3.
+    
+    Similarly, it did not consider _S0W, which tells us the deepest D-state
+    from which a device can wake itself (sec 7.3.20).  If _S0W tells us the
+    device cannot wake from D3, hotplug events will again be lost if we use D3.
+    
+    Some platforms, e.g., AMD Yellow Carp, supply "HotPlugSupportInD3" without
+    _PRW or with an _S0W that says the Root Port cannot wake from D3.  On those
+    platforms, we previously put bridges in D3hot, hotplug events were lost,
+    and hotplugged devices would not be recognized without manually rescanning.
+    
+    Allow bridges to be put in D3 only if the Root Port can generate wakeup
+    GPEs (wakeup.flags.valid), it can wake from D3 (_S0W), AND it has the
+    "HotPlugSupportInD3" property.
+    
+    Neither Windows 10 nor Windows 11 puts the bridge in D3 when the firmware
+    is configured this way, and this change aligns the handling of the
+    situation to be the same.
+    
+    [bhelgaas: commit log, tidy "HotPlugSupportInD3" check and comment]
+    Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
+    Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
+    Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+    Link: https://lore.kernel.org/r/20220401034003.3166-1-mario.limonciello@amd.com
+    Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Without this NVMe disks freeze booting as linux nvme-core.c is waiting
-60s for an interrupt.
-
-Link: https://lore.kernel.org/r/20220110015018.26359-4-kabel@kernel.org
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Marek Behún <kabel@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/host/pci-aardvark.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/host/pci-aardvark.c b/drivers/pci/host/pci-aardvark.c
-index 9ae544e113dc..124fd7cb5da5 100644
---- a/drivers/pci/host/pci-aardvark.c
-+++ b/drivers/pci/host/pci-aardvark.c
-@@ -834,7 +834,7 @@ static void advk_msi_irq_compose_msi_msg(struct irq_data *data,
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 1f15ab7eabf8..3ae435beaf0a 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -974,9 +974,11 @@ bool acpi_pci_power_manageable(struct pci_dev *dev)
  
- 	msg->address_lo = lower_32_bits(msi_msg);
- 	msg->address_hi = upper_32_bits(msi_msg);
--	msg->data = data->irq;
-+	msg->data = data->hwirq;
+ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ {
+-	const union acpi_object *obj;
+-	struct acpi_device *adev;
+ 	struct pci_dev *rpdev;
++	struct acpi_device *adev;
++	acpi_status status;
++	unsigned long long state;
++	const union acpi_object *obj;
+ 
+ 	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+ 		return false;
+@@ -985,12 +987,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	if (acpi_pci_power_manageable(dev))
+ 		return true;
+ 
+-	/*
+-	 * The ACPI firmware will provide the device-specific properties through
+-	 * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
+-	 * for the root port and if it is set we know the hierarchy behind it
+-	 * supports D3 just fine.
+-	 */
+ 	rpdev = pcie_find_root_port(dev);
+ 	if (!rpdev)
+ 		return false;
+@@ -999,11 +995,34 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	if (!adev)
+ 		return false;
+ 
+-	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+-				   ACPI_TYPE_INTEGER, &obj) < 0)
++	/*
++	 * If the Root Port cannot signal wakeup signals at all, i.e., it
++	 * doesn't supply a wakeup GPE via _PRW, it cannot signal hotplug
++	 * events from low-power states including D3hot and D3cold.
++	 */
++	if (!adev->wakeup.flags.valid)
+ 		return false;
+ 
+-	return obj->integer.value == 1;
++	/*
++	 * If the Root Port cannot wake itself from D3hot or D3cold, we
++	 * can't use D3.
++	 */
++	status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
++	if (ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT)
++		return false;
++
++	/*
++	 * The "HotPlugSupportInD3" property in a Root Port _DSD indicates
++	 * the Port can signal hotplug events while in D3.  We assume any
++	 * bridges *below* that Root Port can also signal hotplug events
++	 * while in D3.
++	 */
++	if (!acpi_dev_get_property(adev, "HotPlugSupportInD3",
++				   ACPI_TYPE_INTEGER, &obj) &&
++	    obj->integer.value == 1)
++		return true;
++
++	return false;
  }
  
- static int advk_msi_set_affinity(struct irq_data *irq_data,
-@@ -851,15 +851,11 @@ static int advk_msi_irq_domain_alloc(struct irq_domain *domain,
- 	int hwirq, i;
- 
- 	mutex_lock(&pcie->msi_used_lock);
--	hwirq = bitmap_find_next_zero_area(pcie->msi_used, MSI_IRQ_NUM,
--					   0, nr_irqs, 0);
--	if (hwirq >= MSI_IRQ_NUM) {
--		mutex_unlock(&pcie->msi_used_lock);
--		return -ENOSPC;
--	}
--
--	bitmap_set(pcie->msi_used, hwirq, nr_irqs);
-+	hwirq = bitmap_find_free_region(pcie->msi_used, MSI_IRQ_NUM,
-+					order_base_2(nr_irqs));
- 	mutex_unlock(&pcie->msi_used_lock);
-+	if (hwirq < 0)
-+		return -ENOSPC;
- 
- 	for (i = 0; i < nr_irqs; i++)
- 		irq_domain_set_info(domain, virq + i, hwirq + i,
-@@ -877,7 +873,7 @@ static void advk_msi_irq_domain_free(struct irq_domain *domain,
- 	struct advk_pcie *pcie = domain->host_data;
- 
- 	mutex_lock(&pcie->msi_used_lock);
--	bitmap_clear(pcie->msi_used, d->hwirq, nr_irqs);
-+	bitmap_release_region(pcie->msi_used, d->hwirq, order_base_2(nr_irqs));
- 	mutex_unlock(&pcie->msi_used_lock);
- }
- 
--- 
-2.34.1
-
+ int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
