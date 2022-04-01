@@ -2,50 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA8C4EF6EF
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 17:57:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC8E24EF6F5
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 17:57:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239647AbiDAPrD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Apr 2022 11:47:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48054 "EHLO
+        id S245339AbiDAPrY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Apr 2022 11:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349545AbiDAO4u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 10:56:50 -0400
+        with ESMTP id S1349869AbiDAO6L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 10:58:11 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E761EF32B3;
-        Fri,  1 Apr 2022 07:44:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 599B216BF80;
+        Fri,  1 Apr 2022 07:45:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A0FB0B8240E;
-        Fri,  1 Apr 2022 14:44:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70B43C2BBE4;
-        Fri,  1 Apr 2022 14:44:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0FBBDB823EB;
+        Fri,  1 Apr 2022 14:45:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0046C34112;
+        Fri,  1 Apr 2022 14:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648824246;
-        bh=tzTiadN5Zj6DRCCirKrLyN3UU6bVuQqMqdBzqv4dZr4=;
+        s=k20201202; t=1648824322;
+        bh=HVUaX7ds4kKDsg/MyoEV2I1jrfMt6LZshwmGktroXqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YzEg6+Xqx57qQsD7F8ic07oxZiB8DGLoYpcyLsOoJUgxO7VGjigU1Y4BNGU21QvBm
-         JPdmeD4h4BRMWyePdLWpB5O40yuXQwF/kUUHg/5Q/TZQX3GulKZvid5JeiYtJshd8N
-         mrjqtZY49cBG99jPDQX19en1dES1xGWdQHDPlfjGaMCvfYl/aUhfGa6iu0kr/MtGUe
-         0BPHuw5Uh5uQwCI6wYH5KpHS6ntIB1HyOX/A5LTiEXyCAOXhB1XRRd/pOWhqy98v59
-         BDn650SNjiewzYBTWkdmguK7Ftc0yDNV0fwX+XeWy8qpX206oPe6c0a+wZp+SbMzwn
-         EBAKAPbuX3OuQ==
+        b=ON6mdOKW+rj7gu4V7amzlt60JAlVxkN6m56NwXp08YV6g2h1MP+3ztrNrfFe0ncb+
+         U6FMOwVOhZMFclU6TwpZZWhbRF7tzhjekGKx1KIWeEbQPgzqoEVBHz+iRWOaGXN5IN
+         nCFMfOgQYgAVzdx6OuE93N3B0UH23kP2ie6FsaOsM/K/bE6+7XMta8xMqpo/CyCxYC
+         7jDPXxPXHzKerfMvcmCsERHDzT5gmptTMb0k/WRbh0AF1iDhYGl9/uC8etw7ZeF7V7
+         P5G3HpstNZxzpT12q6t4xjDWTBqOOZWSpOzDeYQmoZuBMTHU3UDtOkmU2cvcgWxnMp
+         38gl9XxDZKacw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li Chen <lchen@ambarella.com>,
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>, bhelgaas@google.com,
-        Zhiqiang.Hou@nxp.com, yangyingliang@huawei.com,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 49/65] PCI: endpoint: Fix misused goto label
-Date:   Fri,  1 Apr 2022 10:41:50 -0400
-Message-Id: <20220401144206.1953700-49-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, thomas.petazzoni@bootlin.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 13/37] PCI: aardvark: Fix support for MSI interrupts
+Date:   Fri,  1 Apr 2022 10:44:22 -0400
+Message-Id: <20220401144446.1954694-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220401144206.1953700-1-sashal@kernel.org>
-References: <20220401144206.1953700-1-sashal@kernel.org>
+In-Reply-To: <20220401144446.1954694-1-sashal@kernel.org>
+References: <20220401144446.1954694-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,34 +60,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Li Chen <lchen@ambarella.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit bf8d87c076f55b8b4dfdb6bc6c6b6dc0c2ccb487 ]
+[ Upstream commit b0b0b8b897f8e12b2368e868bd7cdc5742d5c5a9 ]
 
-Fix a misused goto label jump since that can result in a memory leak.
+Aardvark hardware supports Multi-MSI and MSI_FLAG_MULTI_PCI_MSI is already
+set for the MSI chip. But when allocating MSI interrupt numbers for
+Multi-MSI, the numbers need to be properly aligned, otherwise endpoint
+devices send MSI interrupt with incorrect numbers.
 
-Link: https://lore.kernel.org/r/17e7b9b9ee6.c6d9c6a02564.4545388417402742326@zohomail.com
-Signed-off-by: Li Chen <lchen@ambarella.com>
+Fix this issue by using function bitmap_find_free_region() instead of
+bitmap_find_next_zero_area().
+
+To ensure that aligned MSI interrupt numbers are used by endpoint devices,
+we cannot use Linux virtual irq numbers (as they are random and not
+properly aligned). Instead we need to use the aligned hwirq numbers.
+
+This change fixes receiving MSI interrupts on Armada 3720 boards and
+allows using NVMe disks which use Multi-MSI feature with 3 interrupts.
+
+Without this NVMe disks freeze booting as linux nvme-core.c is waiting
+60s for an interrupt.
+
+Link: https://lore.kernel.org/r/20220110015018.26359-4-kabel@kernel.org
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pci-aardvark.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index b861840e867c..262b2c4c70c9 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -451,7 +451,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		if (!epf_test->dma_supported) {
- 			dev_err(dev, "Cannot transfer data using DMA\n");
- 			ret = -EINVAL;
--			goto err_map_addr;
-+			goto err_dma_map;
- 		}
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index d2f8cd3a9568..5adde31e5cb7 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -1168,7 +1168,7 @@ static void advk_msi_irq_compose_msi_msg(struct irq_data *data,
  
- 		src_phys_addr = dma_map_single(dma_dev, buf, reg->size,
+ 	msg->address_lo = lower_32_bits(msi_msg);
+ 	msg->address_hi = upper_32_bits(msi_msg);
+-	msg->data = data->irq;
++	msg->data = data->hwirq;
+ }
+ 
+ static int advk_msi_set_affinity(struct irq_data *irq_data,
+@@ -1185,15 +1185,11 @@ static int advk_msi_irq_domain_alloc(struct irq_domain *domain,
+ 	int hwirq, i;
+ 
+ 	mutex_lock(&pcie->msi_used_lock);
+-	hwirq = bitmap_find_next_zero_area(pcie->msi_used, MSI_IRQ_NUM,
+-					   0, nr_irqs, 0);
+-	if (hwirq >= MSI_IRQ_NUM) {
+-		mutex_unlock(&pcie->msi_used_lock);
+-		return -ENOSPC;
+-	}
+-
+-	bitmap_set(pcie->msi_used, hwirq, nr_irqs);
++	hwirq = bitmap_find_free_region(pcie->msi_used, MSI_IRQ_NUM,
++					order_base_2(nr_irqs));
+ 	mutex_unlock(&pcie->msi_used_lock);
++	if (hwirq < 0)
++		return -ENOSPC;
+ 
+ 	for (i = 0; i < nr_irqs; i++)
+ 		irq_domain_set_info(domain, virq + i, hwirq + i,
+@@ -1211,7 +1207,7 @@ static void advk_msi_irq_domain_free(struct irq_domain *domain,
+ 	struct advk_pcie *pcie = domain->host_data;
+ 
+ 	mutex_lock(&pcie->msi_used_lock);
+-	bitmap_clear(pcie->msi_used, d->hwirq, nr_irqs);
++	bitmap_release_region(pcie->msi_used, d->hwirq, order_base_2(nr_irqs));
+ 	mutex_unlock(&pcie->msi_used_lock);
+ }
+ 
 -- 
 2.34.1
 
