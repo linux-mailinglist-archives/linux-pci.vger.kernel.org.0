@@ -2,105 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43BAA4EEC45
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 13:21:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 968084EEC6C
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 13:35:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233546AbiDALXH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Apr 2022 07:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51210 "EHLO
+        id S1343525AbiDALgx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Apr 2022 07:36:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232781AbiDALXE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 07:23:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111EB25CBB4;
-        Fri,  1 Apr 2022 04:21:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8628F618D1;
-        Fri,  1 Apr 2022 11:21:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE8DC2BBE4;
-        Fri,  1 Apr 2022 11:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648812072;
-        bh=dXmleCzB7QZP2oZPahh2esGr/t3XcZXpumVYPEyceHw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Hy1I+c5GbkocCzyWots0KGwMZiXHnvR8e4pCQWpeD/xEp+T3f8ZeFyXt07D9C73zB
-         kWY2EaRSjn4gqZeBR/iIglXs2TCa0SfRxoNeWPleWdcj18Gojyr3HVKERGBq9T4SAI
-         pMQWvKYK330SGlrCNrZBwtzwgkM9Nyx7kjOzwXeCdDHDTzAjOyOZEqoskHihwFuTXe
-         j7E10qtHxCI8zXvg+6PLb7/LEgttKGsc9o6jRYSwKNilYYoENvGr9X45VV/T14fVbJ
-         i7TwFAWdev2mMqPEhaz79YLZn4HBrAwt8kbDW5B5P+ipPt5bYZv8F9sdK4ZopF26Vz
-         JYPTov0Xcve/Q==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan+linaro@kernel.org>)
-        id 1naFL6-00054R-G8; Fri, 01 Apr 2022 13:21:12 +0200
-From:   Johan Hovold <johan+linaro@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH RESEND] PCI: qcom: fix pipe clock imbalance
-Date:   Fri,  1 Apr 2022 13:20:05 +0200
-Message-Id: <20220401112005.19417-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S241232AbiDALgw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 07:36:52 -0400
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17CBD1D66F6;
+        Fri,  1 Apr 2022 04:35:02 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-2e5e176e1b6so28793527b3.13;
+        Fri, 01 Apr 2022 04:35:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1vcpLdnxR+c+1IodUhMT7bozvTtnxFjdrTjmrW7ioa8=;
+        b=ymhoIZQsDoCBsYv+BN4xO3LxZiq6CQAKHKwl8AZEhFYCmoHUccLKAKG+1NoX/BKL0A
+         Lyptv/pBHwMPhwmF/aMd4P8D3MU0zEPYpiDB3P0SH3i2Ak2fX8J5+nxEJhO4R5RQ8bwk
+         ScrriPF4IKOrFOmqJV82st704FZ3Hc9hZvgJ+RCJfJt8GdSi7lBzF/UWR4A409d+POCO
+         eBedtqso2OJGeC+NAad5Rooz4lWyQ+NqCXW34tveimvlhhG7LYATOHShKvfSzYwmwz+J
+         DGRMY50+saqRdwmHmepqoK/EVrHSpH+EEdb7DROJf6f5MlMlJzlij8lTddqzDxOiHZlN
+         dfIA==
+X-Gm-Message-State: AOAM533UVNbXOJllJZAl7y98eAZqadW1b2M0MbBPzPbuPONLrborQ0oc
+        Qt28uP3If0c3ITXJ9dPttTUnW7+wZ+1GVVcWk1Q=
+X-Google-Smtp-Source: ABdhPJzacR+RMoy0ORGG7NFwHFOcHeSB6CcA/ae/HowmGQBYxHBi8F7c1VKDCkwOLjaykLANKDkfCFEyb1cGKUAGXnw=
+X-Received: by 2002:a81:5cf:0:b0:2e5:7477:168e with SMTP id
+ 198-20020a8105cf000000b002e57477168emr9592262ywf.149.1648812901273; Fri, 01
+ Apr 2022 04:35:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <11980172.O9o76ZdvQC@kreacher> <20220331215716.GA27368@bhelgaas>
+In-Reply-To: <20220331215716.GA27368@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 1 Apr 2022 13:34:50 +0200
+Message-ID: <CAJZ5v0hTBQ=eajovHixwMs+1YQVFV7=uAay1qdxh3uDs68HndQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: PM: Quirk bridge D3 on Elo i2
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Stefan Gottwald <gottwald@igel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit ed8cc3b1fc84 ("PCI: qcom: Add support for SDM845 PCIe
-controller") introduced a clock imbalance by enabling the pipe clock
-both in init() and in post_init() but only disabling in post_deinit().
+On Thu, Mar 31, 2022 at 11:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> Hi Rafael,
+>
+> On Thu, Mar 31, 2022 at 07:38:51PM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > If one of the PCIe root ports on Elo i2 is put into D3cold and then
+> > back into D0, the downstream device becomes permanently inaccessible,
+> > so add a bridge D3 DMI quirk for that system.
+> >
+> > This was exposed by commit 14858dcc3b35 ("PCI: Use
+> > pci_update_current_state() in pci_enable_device_flags()"), but before
+> > that commit the root port in question had never been put into D3cold
+> > for real due to a mismatch between its power state retrieved from the
+> > PCI_PM_CTRL register (which was accessible even though the platform
+> > firmware indicated that the port was in D3cold) and the state of an
+> > ACPI power resource involved in its power management.
+>
+> In the bug report you suspect a firmware issue.  Any idea what that
+> might be?  It looks like a Gemini Lake Root Port, so I wouldn't think
+> it would be a hardware issue.
 
-Note that the pipe clock was also never disabled in the init() error
-paths and that enabling the clock before powering up the PHY looks
-questionable.
+The _ON method of the ACPI power resource associated with the root
+port doesn't work correctly.
 
-Fixes: ed8cc3b1fc84 ("PCI: qcom: Add support for SDM845 PCIe controller")
-Cc: stable@vger.kernel.org      # 5.6
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
+> Weird how things come in clumps.  Was just looking at Mario's patch,
+> which also has to do with bridges and D3.
+>
+> Do we need a Fixes line?  E.g.,
+>
+>   Fixes: 14858dcc3b35 ("PCI: Use pci_update_current_state() in pci_enable_device_flags()")
 
-Resending with lists on CC.
+Strictly speaking, it is not a fix for the above commit.
 
-Johan
+It is a workaround for a firmware issue uncovered by it which wasn't
+visible, because power management was not used correctly on the
+affected system because of another firmware problem addressed by
+14858dcc3b35.  It wouldn't have worked anyway had it been attempted
+AFAICS.
 
+I was thinking about CCing this change to -stable instead.
 
- drivers/pci/controller/dwc/pcie-qcom.c | 6 ------
- 1 file changed, 6 deletions(-)
+> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215715
+> > Reported-by: Stefan Gottwald <gottwald@igel.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/pci/pci.c |   10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > Index: linux-pm/drivers/pci/pci.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/pci.c
+> > +++ linux-pm/drivers/pci/pci.c
+> > @@ -2920,6 +2920,16 @@ static const struct dmi_system_id bridge
+> >                       DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
+> >                       DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
+> >               },
+> > +             /*
+> > +              * Downstream device is not accessible after putting a root port
+> > +              * into D3cold and back into D0 on Elo i2.
+> > +              */
+> > +             .ident = "Elo i2",
+> > +             .matches = {
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Elo Touch Solutions"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Elo i2"),
+> > +                     DMI_MATCH(DMI_PRODUCT_VERSION, "RevB"),
+> > +             },
+>
+> Is this bridge_d3_blacklist[] similar to the PCI_DEV_FLAGS_NO_D3 bit?
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index b79d98e5e228..20a0e6533a1c 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1238,12 +1238,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 		goto err_disable_clocks;
- 	}
- 
--	ret = clk_prepare_enable(res->pipe_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable pipe clock\n");
--		goto err_disable_clocks;
--	}
--
- 	/* Wait for reset to complete, required on SM8450 */
- 	usleep_range(1000, 1500);
- 
--- 
-2.35.1
+Not really.  The former applies to the entire platform and not to an
+individual device.
 
+> Could they be folded together?  We have a lot of bits that seem
+> similar but maybe not exactly the same (dev->bridge_d3,
+> dev->no_d3cold, dev->d3cold_allowed, dev->runtime_d3cold,
+> PCI_DEV_FLAGS_NO_D3, pci_bridge_d3_force, etc.)  Ugh.
+
+Yes, I agree that this needs to be cleaned up.
+
+> bridge_d3_blacklist[] itself was added by 85b0cae89d52 ("PCI:
+> Blacklist power management of Gigabyte X299 DESIGNARE EX PCIe ports"),
+> which honestly looks kind of random, i.e., it doesn't seem to be
+> working around a hardware or even a firmware defect.
+>
+> Apparently the X299 issue is that 00:1c.4 is connected to a
+> Thunderbolt controller, and the BIOS keeps the Thunderbolt controller
+> powered off unless something is attached to it?  At least, 00:1c.4
+> leads to bus 05, and in the dmesg log attached to [1] shows no devices
+> on bus 05.
+>
+> It also says the platform doesn't support PCIe native hotplug, which
+> matches what Mika said about it using ACPI hotplug.  If a system is
+> using ACPI hotplug, it seems like maybe *that* should prevent us from
+> putting things in D3cold?  How can we know whether ACPI hotplug
+> depends on a certain power state?
+
+We have this check in pci_bridge_d3_possible():
+
+if (bridge->is_hotplug_bridge && !pciehp_is_native(bridge))
+            return false;
+
+but this only applies to the case when the particular bridge itself is
+a hotplug one using ACPI hotplug.
+
+If ACPI hotplug is used, it generally is unsafe to put PCIe ports into
+D3cold, because in that case it is unclear what the platform
+firmware's assumptions regarding control of the config space are.
+
+However, I'm not sure how this is related to the patch at hand.
