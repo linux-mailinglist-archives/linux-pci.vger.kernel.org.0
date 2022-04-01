@@ -2,46 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDB3A4EF159
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 16:40:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFB8C4EF0A6
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 16:38:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347774AbiDAOgA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Apr 2022 10:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38502 "EHLO
+        id S241471AbiDAOgC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Apr 2022 10:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347422AbiDAOcd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 10:32:33 -0400
+        with ESMTP id S1348282AbiDAOdx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 10:33:53 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204DB1EC99D;
-        Fri,  1 Apr 2022 07:29:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 461111E1105;
+        Fri,  1 Apr 2022 07:31:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CBB1EB824AF;
-        Fri,  1 Apr 2022 14:29:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB93C2BBE4;
-        Fri,  1 Apr 2022 14:29:03 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B8314B824D5;
+        Fri,  1 Apr 2022 14:31:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4542EC2BBE4;
+        Fri,  1 Apr 2022 14:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648823344;
-        bh=M5BM0vIqNHiaRsFpULy8uZcn1YzW5ZKvNleOyemR1TY=;
+        s=k20201202; t=1648823500;
+        bh=clkxCeeVshCjj/tkcXT/aa1TUVS1+JD8nre3csosIJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SpnOrW/n25RIVasbsxjq+RyGQgx3niOgCy3gWmsYa3JhTrqNNmAnMmn8S6GDwRdjV
-         YWpwFCfl9xzMIsSrVtqITHC6FmShWxde5H/k+aIj6QjdRZ3rY/rDk0OCtiGUJrLfar
-         lip1Jx5YThN99KxysDSxKtDaXs5NEH5Df/v9lZve59NeUv3nSZemATgSgUV7fm98DW
-         2r17ny7bv262zZ1RUyvMXmiT5H8jJsTsKUDIaOHmonpF+aNxfv773dALoo/bac7OOi
-         0trxeVv8R1KOk9ZWQ+o1ZcXeQekev9aVCkuGfFMpN0MKB0vYVHXQ4Ao6Bm4HOlxKbT
-         UvYJ7xCldeHRQ==
+        b=gC/gkYW0CTU1rvhWEXAf1BfeYUEOQbeagFTV8gwoQx175I3OsQ1S2WC4TlnwtL4We
+         FAWSGFcVjjA9gxT0lF4BOJzNHPcJN2fPdY9ADIHXV6ortnV1NGKBhMz80EZSZrV+d0
+         eaW7cMnULc4OsNTgOq+OtyXfaikA5tugi4rA/ft1kIYftfQ4bbcPXF/zduovrLS9+E
+         WjqyBgmpSUmlIM4fREpqNr+L03ZVW7xXJTljBGAQUCyVzF8kNejNhM5UgKyKM//Yiz
+         eac2S7mz53t6+XGgcwZbW62TdVkOfjGewSrhIyy+7kiTfphBi8MQHbqKcJSIFASDiK
+         GizzZli7c75lg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, lukas@wunner.de,
-        hdegoede@redhat.com, zhangliguang@linux.alibaba.com,
-        ameynarkhede03@gmail.com, mani@kernel.org,
-        naveennaidu479@gmail.com, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.17 065/149] PCI: pciehp: Add Qualcomm quirk for Command Completed erratum
-Date:   Fri,  1 Apr 2022 10:24:12 -0400
-Message-Id: <20220401142536.1948161-65-sashal@kernel.org>
+Cc:     Li Chen <lchen@ambarella.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, bhelgaas@google.com,
+        yangyingliang@huawei.com, Zhiqiang.Hou@nxp.com,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.17 120/149] PCI: endpoint: Fix misused goto label
+Date:   Fri,  1 Apr 2022 10:25:07 -0400
+Message-Id: <20220401142536.1948161-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220401142536.1948161-1-sashal@kernel.org>
 References: <20220401142536.1948161-1-sashal@kernel.org>
@@ -59,42 +59,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Li Chen <lchen@ambarella.com>
 
-[ Upstream commit 9f72d4757cbe4d1ed669192f6d23817c9e437c4b ]
+[ Upstream commit bf8d87c076f55b8b4dfdb6bc6c6b6dc0c2ccb487 ]
 
-The Qualcomm PCI bridge device (Device ID 0x0110) found in chipsets such as
-SM8450 does not set the Command Completed bit unless writes to the Slot
-Command register change "Control" bits.
+Fix a misused goto label jump since that can result in a memory leak.
 
-This results in timeouts like below:
-
-  pcieport 0001:00:00.0: pciehp: Timeout on hotplug command 0x03c0 (issued 2020 msec ago)
-
-Add the device to the Command Completed quirk to mark commands "completed"
-immediately unless they change the "Control" bits.
-
-Link: https://lore.kernel.org/r/20220210145003.135907-1-manivannan.sadhasivam@linaro.org
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lore.kernel.org/r/17e7b9b9ee6.c6d9c6a02564.4545388417402742326@zohomail.com
+Signed-off-by: Li Chen <lchen@ambarella.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/pciehp_hpc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 1c1ebf3dad43..4e4ccf3afbe3 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -1084,6 +1084,8 @@ static void quirk_cmd_compl(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
- 			      PCI_CLASS_BRIDGE_PCI, 8, quirk_cmd_compl);
-+DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_QCOM, 0x0110,
-+			      PCI_CLASS_BRIDGE_PCI, 8, quirk_cmd_compl);
- DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_QCOM, 0x0400,
- 			      PCI_CLASS_BRIDGE_PCI, 8, quirk_cmd_compl);
- DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_QCOM, 0x0401,
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index c7e45633beaf..5b833f00e980 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -451,7 +451,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 		if (!epf_test->dma_supported) {
+ 			dev_err(dev, "Cannot transfer data using DMA\n");
+ 			ret = -EINVAL;
+-			goto err_map_addr;
++			goto err_dma_map;
+ 		}
+ 
+ 		src_phys_addr = dma_map_single(dma_dev, buf, reg->size,
 -- 
 2.34.1
 
