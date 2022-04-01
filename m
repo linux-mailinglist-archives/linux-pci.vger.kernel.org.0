@@ -2,170 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 968084EEC6C
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 13:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C88224EEC7E
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 13:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343525AbiDALgx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Apr 2022 07:36:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36644 "EHLO
+        id S1345568AbiDALqo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Apr 2022 07:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241232AbiDALgw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 07:36:52 -0400
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17CBD1D66F6;
-        Fri,  1 Apr 2022 04:35:02 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-2e5e176e1b6so28793527b3.13;
-        Fri, 01 Apr 2022 04:35:02 -0700 (PDT)
+        with ESMTP id S233087AbiDALqn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 07:46:43 -0400
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A54CFB93;
+        Fri,  1 Apr 2022 04:44:54 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id u103so4493210ybi.9;
+        Fri, 01 Apr 2022 04:44:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1vcpLdnxR+c+1IodUhMT7bozvTtnxFjdrTjmrW7ioa8=;
-        b=ymhoIZQsDoCBsYv+BN4xO3LxZiq6CQAKHKwl8AZEhFYCmoHUccLKAKG+1NoX/BKL0A
-         Lyptv/pBHwMPhwmF/aMd4P8D3MU0zEPYpiDB3P0SH3i2Ak2fX8J5+nxEJhO4R5RQ8bwk
-         ScrriPF4IKOrFOmqJV82st704FZ3Hc9hZvgJ+RCJfJt8GdSi7lBzF/UWR4A409d+POCO
-         eBedtqso2OJGeC+NAad5Rooz4lWyQ+NqCXW34tveimvlhhG7LYATOHShKvfSzYwmwz+J
-         DGRMY50+saqRdwmHmepqoK/EVrHSpH+EEdb7DROJf6f5MlMlJzlij8lTddqzDxOiHZlN
-         dfIA==
-X-Gm-Message-State: AOAM533UVNbXOJllJZAl7y98eAZqadW1b2M0MbBPzPbuPONLrborQ0oc
-        Qt28uP3If0c3ITXJ9dPttTUnW7+wZ+1GVVcWk1Q=
-X-Google-Smtp-Source: ABdhPJzacR+RMoy0ORGG7NFwHFOcHeSB6CcA/ae/HowmGQBYxHBi8F7c1VKDCkwOLjaykLANKDkfCFEyb1cGKUAGXnw=
-X-Received: by 2002:a81:5cf:0:b0:2e5:7477:168e with SMTP id
- 198-20020a8105cf000000b002e57477168emr9592262ywf.149.1648812901273; Fri, 01
- Apr 2022 04:35:01 -0700 (PDT)
+        bh=13vu41OeuYYSTT4U437B0v46QttGyjHUbSgsClP5tEA=;
+        b=w2ip6Ht1mAUZ3EDKkqIwZjxQ07vkPri5ez4foudtYxqKGkHkG/6Y7T7pv93FXqxBs0
+         CYS8R2GdgXNFxjp/EyIKlXqo5pYOhNg+oNuMhkck9GpuO0q257MAQg7ywQ0+R40oj2aT
+         cJMufJ99si1W25p5WJCSJ2fi64pIsqrO9dW9lSA3uxH2XiCodKXV0EHfW6dTy3ib2Bs1
+         1Eyje4hujSoNCnysawiXm3UGcfA1G/hjglBE17UANuh4GpwVjxPtxpvRzvznZvwGdCCA
+         8Gr2+q7XwTKbcv7YLBhJHFXaXYWBvFInVCqHNBUDIKWyGYZHToxTtWM3E3eEvCYj47ml
+         NYqw==
+X-Gm-Message-State: AOAM530173/xphigLJmJwcKSmXkcCdJV/OsgyN6A8i5ncMDFWOAklB32
+        4hVhP5DngUVK2naUEacyaCoJeRU0cXV8Owtfbqk=
+X-Google-Smtp-Source: ABdhPJxK4pWfclHlIuvQRwc++3Lp8UaXg0kXUG8bCNJmzSW5aKYQWX9YhyHSVr5JYg+M2JPqqIx6nBQyQMbVvoR0xgw=
+X-Received: by 2002:a25:355:0:b0:63d:5a4a:64a8 with SMTP id
+ 82-20020a250355000000b0063d5a4a64a8mr3282425ybd.482.1648813493643; Fri, 01
+ Apr 2022 04:44:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <11980172.O9o76ZdvQC@kreacher> <20220331215716.GA27368@bhelgaas>
-In-Reply-To: <20220331215716.GA27368@bhelgaas>
+References: <20220401034003.3166-1-mario.limonciello@amd.com>
+In-Reply-To: <20220401034003.3166-1-mario.limonciello@amd.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 1 Apr 2022 13:34:50 +0200
-Message-ID: <CAJZ5v0hTBQ=eajovHixwMs+1YQVFV7=uAay1qdxh3uDs68HndQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: PM: Quirk bridge D3 on Elo i2
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Stefan Gottwald <gottwald@igel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+Date:   Fri, 1 Apr 2022 13:44:42 +0200
+Message-ID: <CAJZ5v0jqWZRp2ZcyO+w66EgE8SHFZ+ZeNka2aUMfLwU93wuxpQ@mail.gmail.com>
+Subject: Re: [PATCH v6] PCI / ACPI: Assume "HotPlugSupportInD3" only if device
+ can wake from D3
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        "Mehta, Sanju" <Sanju.Mehta@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 11:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Fri, Apr 1, 2022 at 5:40 AM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
 >
-> Hi Rafael,
+> acpi_pci_bridge_d3(dev) returns "true" if "dev" is a hotplug bridge
+> that can handle hotplug events while in D3.  Previously this meant:
 >
-> On Thu, Mar 31, 2022 at 07:38:51PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > If one of the PCIe root ports on Elo i2 is put into D3cold and then
-> > back into D0, the downstream device becomes permanently inaccessible,
-> > so add a bridge D3 DMI quirk for that system.
-> >
-> > This was exposed by commit 14858dcc3b35 ("PCI: Use
-> > pci_update_current_state() in pci_enable_device_flags()"), but before
-> > that commit the root port in question had never been put into D3cold
-> > for real due to a mismatch between its power state retrieved from the
-> > PCI_PM_CTRL register (which was accessible even though the platform
-> > firmware indicated that the port was in D3cold) and the state of an
-> > ACPI power resource involved in its power management.
+>  1) "dev" has a _PS0 or _PR0 method, or
 >
-> In the bug report you suspect a firmware issue.  Any idea what that
-> might be?  It looks like a Gemini Lake Root Port, so I wouldn't think
-> it would be a hardware issue.
-
-The _ON method of the ACPI power resource associated with the root
-port doesn't work correctly.
-
-> Weird how things come in clumps.  Was just looking at Mario's patch,
-> which also has to do with bridges and D3.
+>  2) The Root Port above "dev" has a _DSD with a "HotPlugSupportInD3"
+>     property with value 1.
 >
-> Do we need a Fixes line?  E.g.,
+> This did not consider_S0W, which tells us the deepest D-state from
+> which a device can wake itself (ACPI v6.4, sec 7.3.20).
 >
->   Fixes: 14858dcc3b35 ("PCI: Use pci_update_current_state() in pci_enable_device_flags()")
+> On some platforms, e.g., AMD Yellow Carp, firmware may supply
+> "HotPlugSupportInD3" even though the platform does not supply power
+> resources through _PRW and _S0W tells us the device cannot wake from
 
-Strictly speaking, it is not a fix for the above commit.
+More importantly, it doesn't supply a wakeup GPE number through _PRW,
+so from the ACPI perspective the bridge has no way of generating
+wakeup signals.
 
-It is a workaround for a firmware issue uncovered by it which wasn't
-visible, because power management was not used correctly on the
-affected system because of another firmware problem addressed by
-14858dcc3b35.  It wouldn't have worked anyway had it been attempted
-AFAICS.
-
-I was thinking about CCing this change to -stable instead.
-
-> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215715
-> > Reported-by: Stefan Gottwald <gottwald@igel.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/pci/pci.c |   10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > Index: linux-pm/drivers/pci/pci.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pci.c
-> > +++ linux-pm/drivers/pci/pci.c
-> > @@ -2920,6 +2920,16 @@ static const struct dmi_system_id bridge
-> >                       DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
-> >                       DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
-> >               },
-> > +             /*
-> > +              * Downstream device is not accessible after putting a root port
-> > +              * into D3cold and back into D0 on Elo i2.
-> > +              */
-> > +             .ident = "Elo i2",
-> > +             .matches = {
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Elo Touch Solutions"),
-> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Elo i2"),
-> > +                     DMI_MATCH(DMI_PRODUCT_VERSION, "RevB"),
-> > +             },
+> D3hot.  With the previous code, these devices could be put in D3hot
+> and hotplugged devices would not be recognized without manually
+> rescanning.
 >
-> Is this bridge_d3_blacklist[] similar to the PCI_DEV_FLAGS_NO_D3 bit?
-
-Not really.  The former applies to the entire platform and not to an
-individual device.
-
-> Could they be folded together?  We have a lot of bits that seem
-> similar but maybe not exactly the same (dev->bridge_d3,
-> dev->no_d3cold, dev->d3cold_allowed, dev->runtime_d3cold,
-> PCI_DEV_FLAGS_NO_D3, pci_bridge_d3_force, etc.)  Ugh.
-
-Yes, I agree that this needs to be cleaned up.
-
-> bridge_d3_blacklist[] itself was added by 85b0cae89d52 ("PCI:
-> Blacklist power management of Gigabyte X299 DESIGNARE EX PCIe ports"),
-> which honestly looks kind of random, i.e., it doesn't seem to be
-> working around a hardware or even a firmware defect.
+> If _S0W exists and says the Root Port cannot wake itself from D3hot,
+> return "false" to indicate that "dev" cannot handle hotplug events
+> while in D3.
 >
-> Apparently the X299 issue is that 00:1c.4 is connected to a
-> Thunderbolt controller, and the BIOS keeps the Thunderbolt controller
-> powered off unless something is attached to it?  At least, 00:1c.4
-> leads to bus 05, and in the dmesg log attached to [1] shows no devices
-> on bus 05.
+>  1) "dev" has a _PS0 or _PR0 method, or
 >
-> It also says the platform doesn't support PCIe native hotplug, which
-> matches what Mika said about it using ACPI hotplug.  If a system is
-> using ACPI hotplug, it seems like maybe *that* should prevent us from
-> putting things in D3cold?  How can we know whether ACPI hotplug
-> depends on a certain power state?
+>  2a) The Root Port above "dev" has _PRW and
+>
+>  2b) If the Root Port above "dev" has _S0W, it can wake from D3hot or
+>      D3cold and
+>
+>  2c) The Root Port above "dev" has a _DSD with a
+>      "HotPlugSupportInD3" property with value 1.
+>
+> Windows 10 and Windows 11 both will prevent the bridge from going in D3
+> when the firmware is configured this way and this change aligns the
+> handling of the situation to be the same.
+>
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
+> Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
+> Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> --
+> v5->v6:
+>  * Re-order checks to only check for _DSD if necessary as suggested by Bjorn.
+>  * Adjust commit message wording
+>  * Drop rewording comment patch, just apply it while moving text to avoid
+>    ping-ponging the same lines in the commits.
+> v4-v5:
+>  * Don't fail if _S0W is missing
+> ---
+>  drivers/pci/pci-acpi.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 1f15ab7eabf8..5ab797e2709d 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -976,7 +976,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  {
+>         const union acpi_object *obj;
+>         struct acpi_device *adev;
+> +       unsigned long long state;
+>         struct pci_dev *rpdev;
+> +       acpi_status status;
+>
+>         if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+>                 return false;
+> @@ -985,12 +987,6 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>         if (acpi_pci_power_manageable(dev))
+>                 return true;
+>
+> -       /*
+> -        * The ACPI firmware will provide the device-specific properties through
+> -        * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
+> -        * for the root port and if it is set we know the hierarchy behind it
+> -        * supports D3 just fine.
+> -        */
+>         rpdev = pcie_find_root_port(dev);
+>         if (!rpdev)
+>                 return false;
+> @@ -999,6 +995,23 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>         if (!adev)
+>                 return false;
+>
+> +       /*
+> +        * If the bridge can't wake from D3hot, it can't signal hotplug
+> +        * events in D3hot.
 
-We have this check in pci_bridge_d3_possible():
+I would say "If the bridge cannot signal wakeup signals at all, it
+cannot signal hotplug events from low-power states including D3hot and
+D3cold."
 
-if (bridge->is_hotplug_bridge && !pciehp_is_native(bridge))
-            return false;
+With the two above remarks addressed, please feel free to add
 
-but this only applies to the case when the particular bridge itself is
-a hotplug one using ACPI hotplug.
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-If ACPI hotplug is used, it generally is unsafe to put PCIe ports into
-D3cold, because in that case it is unclear what the platform
-firmware's assumptions regarding control of the config space are.
+to this patch.
 
-However, I'm not sure how this is related to the patch at hand.
+> +        */
+> +       if (!adev->wakeup.flags.valid)
+> +               return false;
+> +
+> +       status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
+> +       if (ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT)
+> +               return false;
+> +
+> +       /*
+> +        * The ACPI firmware will provide the device-specific properties through
+> +        * _DSD configuration object. Look for the 'HotPlugSupportInD3' property
+> +        * for the root port and if it is set we make an assumption that the
+> +        * hierarchy behind it supports D3 as well.
+> +        */
+>         if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+>                                    ACPI_TYPE_INTEGER, &obj) < 0)
+>                 return false;
+> --
+> 2.34.1
+>
