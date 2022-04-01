@@ -2,116 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 428F84EE7A1
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 07:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CE9D4EE836
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Apr 2022 08:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245011AbiDAFMe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Apr 2022 01:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
+        id S238539AbiDAGat (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Apr 2022 02:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245001AbiDAFMd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 01:12:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1859D1E8CC9;
-        Thu, 31 Mar 2022 22:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=V32+zQcO407Oigns62fencqAWiQUbjG3dkYmA/bzFgs=; b=ZfJXByG0vD8l+JFtQ4yjotGAuY
-        xAgedtPzZTd8OUi1dzB10Si101BKwG0IYWbUCcMjsIiNuwNVenxVCR/KUkSyd/oDjtfDtwUtY+Mn9
-        tnE9E6ckU/QHuJU1mNFHjKGmNRoYXc7KQCx4T17fUppasjeBeiMsnvEfkkgFKrt2669XSgfwMt26e
-        EII86iOdGu6w/fzgHJVnCqnoDNPCV3PpARH3CmgKBBJACtqcFtJloyHytdjvZpcXSGPAB9I2RnLLa
-        pVcCVcwCoVfPWnVPAvAUEZBYbQyavK/AJMzt4IuTrmRktkBZkumKIQqDVXR1iP+MBwNx5+iddah/E
-        9mEWW45w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1na9YU-004W8V-1i; Fri, 01 Apr 2022 05:10:38 +0000
-Date:   Thu, 31 Mar 2022 22:10:38 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Benjamin =?iso-8859-1?Q?St=FCrz?= <benni@stuerz.xyz>,
-        Andrew Lunn <andrew@lunn.ch>,
-        linux-atm-general@lists.sourceforge.net,
-        linux-ia64@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-pci@vger.kernel.org, Robert Moore <robert.moore@intel.com>,
-        Harald Welte <laforge@gnumonks.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, wcn36xx@lists.infradead.org,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        dennis.dalessandro@cornelisnetworks.com,
-        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Ingo Molnar <mingo@redhat.com>,
-        3chas3@gmail.com, linux-input <linux-input@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Len Brown <lenb@kernel.org>,
-        mike.marciniszyn@cornelisnetworks.com,
-        Robert Richter <rric@kernel.org>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Kalle Valo <kvalo@kernel.org>,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux@simtec.co.uk,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-wireless@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        James Morse <james.morse@arm.com>,
-        netdev <netdev@vger.kernel.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 05/22] acpica: Replace comments with C99 initializers
-Message-ID: <YkaJTh+Bhf+oPQB7@infradead.org>
-References: <20220326165909.506926-1-benni@stuerz.xyz>
- <20220326165909.506926-5-benni@stuerz.xyz>
- <CAHp75VeTXMAueQc_c0Ryj5+a8PrJ7gk-arugiNnxtAm03x7XTg@mail.gmail.com>
+        with ESMTP id S233382AbiDAGas (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Apr 2022 02:30:48 -0400
+Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F3355C64B
+        for <linux-pci@vger.kernel.org>; Thu, 31 Mar 2022 23:28:58 -0700 (PDT)
+Received: from smtp2.mailbox.org (unknown [91.198.250.124])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4KV9HD2NHKz9sSS;
+        Fri,  1 Apr 2022 08:28:56 +0200 (CEST)
+Message-ID: <473f6f13-cf01-4065-5a92-998b651f11db@denx.de>
+Date:   Fri, 1 Apr 2022 08:28:51 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Subject: Re: [PATCH v4 0/2] Add support to register platform service IRQ
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+References: <20220331153019.GA10982@bhelgaas>
+From:   Stefan Roese <sr@denx.de>
+In-Reply-To: <20220331153019.GA10982@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeTXMAueQc_c0Ryj5+a8PrJ7gk-arugiNnxtAm03x7XTg@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NEUTRAL,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Mar 27, 2022 at 10:59:54PM +0300, Andy Shevchenko wrote:
-> On Sat, Mar 26, 2022 at 7:39 PM Benjamin St�rz <benni@stuerz.xyz> wrote:
-> >
-> > This replaces comments with C99's designated
-> > initializers because the kernel supports them now.
+On 3/31/22 17:30, Bjorn Helgaas wrote:
+> On Thu, Mar 24, 2022 at 05:52:54PM +0100, Stefan Roese wrote:
+>> On 1/14/22 08:58, Stefan Roese wrote:
+>>> Some platforms have dedicated IRQ lines for platform-specific System Errors
+>>> like AER/PME etc. The root complex on these platform will use these seperate
+>>> IRQ lines to report AER/PME etc., interrupts and will not generate
+>>> MSI/MSI-X/INTx interrupts for these services.
+>>>
+>>> These patches will add new method for these kind of platforms to register the
+>>> platform IRQ number with respective PCIe services.
+>>>
+>>> Changes in v4 (Stefan):
+>>> - Remove 2nd check for PCI_EXP_TYPE_ROOT_PORT
+>>> - Change init_platform_service_irqs() from void to return int
+>>>
+>>> Changes in v3 (Stefan):
+>>> - Restructure patches from 4 patches in v2 to now 2 patches in v3
+>>> - Rename of functions names
+>>> - init_platform_service_irqs() now uses "struct pci_dev *" instead of
+>>>     "struct pci_host_bridge *"
+>>> - pcie_init_platform_service_irqs() is called before pcie_init_service_irqs()
+>>> - Use more PCIe spec terminology as suggested by Bjorn (hopefully enough, I
+>>>     don't have the spec at hand)
+>>
+>> Bjorn, what's the status of this patchset? I was under the impression,
+>> that it would make it into v5.18. Please let me know if something is
+>> missing.
 > 
-> Does it follow the conventions which are accepted in the ACPI CA project?
+> Sorry, I didn't get to it in time for v5.18, but it's on my list for
+> v5.19.
+> 
+> I thought maybe it got assigned to Lorenzo because it touches
+> drivers/pci/controller/, but I can't find it in patchwork
+> (https://patchwork.kernel.org/project/linux-pci/list/) at all.
 
-Why would ACPI CA be allowed to make up it's own conventions?  And as
-you might imply not allow using a very useful and more than 20 year old
-C feature?  This kind of BS need to stop.
+Both patches are in patchwork:
+
+https://patchwork.kernel.org/project/linux-pci/patch/20220114075834.1938409-2-sr@denx.de/
+https://patchwork.kernel.org/project/linux-pci/patch/20220114075834.1938409-3-sr@denx.de/
+
+The first one is assigned to you and the 2nd one to Lorenzo.
+
+> Would you mind posting it again to make sure patchwork picks it up?
+> If it's not in patchwork, it's very likely to get missed.
+
+Since it's already on patchwork, I did not post the patches again.
+Please let me know if I should re-post them nevertheless.
+
+Thanks,
+Stefan
+
+> Bjorn
+> 
+>>> Bharat Kumar Gogada (2):
+>>>     PCI/portdrv: Add option to setup IRQs for platform-specific Service
+>>>       Errors
+>>>     PCI: xilinx-nwl: Add method to init_platform_service_irqs hook
+>>>
+>>>    drivers/pci/controller/pcie-xilinx-nwl.c | 18 +++++++++++
+>>>    drivers/pci/pcie/portdrv_core.c          | 39 +++++++++++++++++++++++-
+>>>    include/linux/pci.h                      |  2 ++
+>>>    3 files changed, 58 insertions(+), 1 deletion(-)
+>>>
+>>
+>> Viele Grüße,
+>> Stefan Roese
+>>
+>> -- 
+>> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+>> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+>> Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
+
+Viele Grüße,
+Stefan Roese
+
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
