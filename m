@@ -2,76 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8501D4F0442
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Apr 2022 16:53:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44AA94F0532
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Apr 2022 19:21:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356849AbiDBOur (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Apr 2022 10:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41778 "EHLO
+        id S234643AbiDBRXe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Apr 2022 13:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356843AbiDBOuq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Apr 2022 10:50:46 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B5013CD8;
-        Sat,  2 Apr 2022 07:48:53 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        with ESMTP id S232431AbiDBRXd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Apr 2022 13:23:33 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2479E29821;
+        Sat,  2 Apr 2022 10:21:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 5AB8D100E2006;
-        Sat,  2 Apr 2022 16:48:45 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 3965C4E024; Sat,  2 Apr 2022 16:48:45 +0200 (CEST)
-Date:   Sat, 2 Apr 2022 16:48:45 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V7 03/10] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <20220402144845.GA7822@wunner.de>
-References: <20220330235920.2800929-1-ira.weiny@intel.com>
- <20220330235920.2800929-4-ira.weiny@intel.com>
- <YkVBJ+nRA2g/WDxa@infradead.org>
- <YkXGnKsTEUAe29io@iweiny-desk3>
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7D720B8093C;
+        Sat,  2 Apr 2022 17:21:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E74B5C340EC;
+        Sat,  2 Apr 2022 17:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648920099;
+        bh=0hnTG76H6UJd1jyN4W+fg12TNi12EMC3JQ8KEvmfHyo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iw6eGux58zywAXGTaW9sQN+eeeei2FH1V6O3bSpTL3KmRsZIWW67cTKI+0YM2YU+x
+         VmkGWm5xdluF+5Uz6MGMjownHXIMn0Ljrl06k+7Y/b9MTGMw/x4Z78uH70W3tpSo43
+         n/7hIPnAslfN1cRZdqYZCTZWJoI5dA1lRG7lj9hgNG/lpY8JuxCibsiTsOFFCqihC4
+         tOqC/NszTBXWrKj0zP4OaD5UChZSdcQbK+146iGqih81fUmPzaNFxTphodmbRNX6We
+         a14NtZgKSIt6lruL3zs7QW1CKsezGq42nOvA2ulKGdcsb0O0ijoxJAtg2I+aED5689
+         4scequ6CKHNbQ==
+Date:   Sat, 2 Apr 2022 12:21:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [GIT PULL] PCI changes for v5.18, part 2
+Message-ID: <20220402172137.GA272816@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YkXGnKsTEUAe29io@iweiny-desk3>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 08:19:56AM -0700, Ira Weiny wrote:
-> On Wed, Mar 30, 2022 at 10:50:31PM -0700, Christoph Hellwig wrote:
-> > On Wed, Mar 30, 2022 at 04:59:13PM -0700, ira.weiny@intel.com wrote:
-> > > Introduced in a PCI v6.0[1], DOE provides a config space based mailbox
-> > > with standard protocol discovery.  Each mailbox is accessed through a
-> > > DOE Extended Capability.
-> > 
-> > I really don't think this should be built unconditionally and bloat
-> > every single kernel built with PCI support.
-> 
-> I can add a Kconfig.
+The following changes since commit 148a650476955705482dd57e7ffcf105d8b65440:
 
-Ideally, that config option should live in the pcie/ subdirectory,
-i.e. in drivers/pci/pcie/Kconfig, alongside drivers/pci/pcie/doe.c,
-as we try to consolidate PCIe-specific features there and reserve
-core code in drivers/pci/*.c for functionality that also applies
-to Conventional PCI.
+  Merge tag 'pci-v5.18-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci (2022-03-25 13:02:05 -0700)
 
-Thanks,
+are available in the Git repository at:
 
-Lukas
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci-v5.18-changes-2
+
+for you to fetch changes up to 22ef7ee3eeb2a41e07f611754ab9a2663232fedf:
+
+  PCI: hv: Remove unused hv_set_msi_entry_from_desc() (2022-03-31 10:12:59 -0500)
+
+----------------------------------------------------------------
+
+  - Fix Hyper-V "defined but not used" build issue added during merge
+    window (YueHaibing)
+
+----------------------------------------------------------------
+YueHaibing (1):
+      PCI: hv: Remove unused hv_set_msi_entry_from_desc()
+
+ drivers/pci/controller/pci-hyperv.c | 8 --------
+ 1 file changed, 8 deletions(-)
