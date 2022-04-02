@@ -2,218 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 807334F0025
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Apr 2022 11:34:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE1AB4F005E
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Apr 2022 12:12:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237795AbiDBJfv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Apr 2022 05:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
+        id S231168AbiDBKOH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Apr 2022 06:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232062AbiDBJfv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Apr 2022 05:35:51 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FF44B432
-        for <linux-pci@vger.kernel.org>; Sat,  2 Apr 2022 02:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648892040; x=1680428040;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cg6yR5gEeljGUgPNzFhqVtoDLtLucnDV4Z5cOpIpdkw=;
-  b=MVULBR4o/z6+799oDx6gjqaoRxRPjvrgEmoTVZbsMGlafGaCae6cCzw1
-   K0gLLK9Y4roHr0kYO/l0O2VtJGABDybW5ykCMX6Auq2P6pz72lgn29q71
-   cx3QVrCWp6/bnDhkxpO82WWqpKHmpB2pQZ8Py+JCMSORi1n/8JyC/QJ9o
-   cFeWR3s5M0EgSx+kcuZbwlvBAcLO4sQ7p0pwnimwcs0p35syQEkoXq1VT
-   Te972/NOjw6lJ59EjTNX8P0OZ4f44Jjf9TVIeRdejEugdSnHE50/qFW65
-   yWsTT6RMzdzobsLnK/CTcqX70u4OwamrmRiR2XHrbPGNebNIATj+5CYpO
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10304"; a="259119150"
-X-IronPort-AV: E=Sophos;i="5.90,229,1643702400"; 
-   d="scan'208";a="259119150"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2022 02:34:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,229,1643702400"; 
-   d="scan'208";a="504425928"
-Received: from lkp-server02.sh.intel.com (HELO 3231c491b0e2) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 02 Apr 2022 02:33:58 -0700
-Received: from kbuild by 3231c491b0e2 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1naa8r-00027s-UT;
-        Sat, 02 Apr 2022 09:33:57 +0000
-Date:   Sat, 02 Apr 2022 17:33:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:for-linus] BUILD SUCCESS
- c1d27b79a94fea1741e643ec0e3e24fe6e1aadf8
-Message-ID: <6248184c.lvk9pQ5CtVBxtw2t%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S1354251AbiDBKOG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Apr 2022 06:14:06 -0400
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD9513A1E9;
+        Sat,  2 Apr 2022 03:12:15 -0700 (PDT)
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+        by localhost (Postfix) with ESMTP id 4KVtBP5PWTz9sSZ;
+        Sat,  2 Apr 2022 12:12:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oBVEswwalOhr; Sat,  2 Apr 2022 12:12:13 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4KVtBP4Yxhz9sSY;
+        Sat,  2 Apr 2022 12:12:13 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8AA768B76D;
+        Sat,  2 Apr 2022 12:12:13 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Y39pw8naxh-1; Sat,  2 Apr 2022 12:12:13 +0200 (CEST)
+Received: from PO20335.IDSI0.si.c-s.fr (unknown [192.168.202.136])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4008E8B768;
+        Sat,  2 Apr 2022 12:12:13 +0200 (CEST)
+Received: from PO20335.IDSI0.si.c-s.fr (localhost [127.0.0.1])
+        by PO20335.IDSI0.si.c-s.fr (8.17.1/8.16.1) with ESMTPS id 232AC21k684504
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sat, 2 Apr 2022 12:12:02 +0200
+Received: (from chleroy@localhost)
+        by PO20335.IDSI0.si.c-s.fr (8.17.1/8.17.1/Submit) id 232AC1vb684503;
+        Sat, 2 Apr 2022 12:12:01 +0200
+X-Authentication-Warning: PO20335.IDSI0.si.c-s.fr: chleroy set sender to christophe.leroy@csgroup.eu using -f
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] pci: hotplug: Prepare cleanup of powerpc's asm/prom.h
+Date:   Sat,  2 Apr 2022 12:11:56 +0200
+Message-Id: <79201f5fae8d003164ac36ed3be7789db1bc5ab4.1648833421.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1648894316; l=2747; s=20211009; h=from:subject:message-id; bh=riyiPWE4HTVvKGtVKlLpPUMpYnTwPNAnyQF6g59mDYM=; b=rQ2g85F150Av16A7yWWJ//JEv+Wvgu4E5UOvoFCjbONcbjOGHDdnXryAiFyQiyfcVJDjWnhRGzvL s5el7hyjBJWTa3+/9RLXTojkDcHbdTvkk6BPDdoXD5kh8F8EAIJm
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: c1d27b79a94fea1741e643ec0e3e24fe6e1aadf8  PCI/ACPI: Allow D3 only if Root Port can signal and wake from D3
+powerpc's asm/prom.h brings some headers that it doesn't
+need itself.
 
-elapsed time: 934m
+In order to clean it up, first add missing headers in
+users of asm/prom.h
 
-configs tested: 135
-configs skipped: 4
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ drivers/pci/hotplug/pnv_php.c       | 1 +
+ drivers/pci/hotplug/rpadlpar_core.c | 1 +
+ drivers/pci/hotplug/rpaphp_core.c   | 2 ++
+ drivers/pci/hotplug/rpaphp_pci.c    | 1 +
+ drivers/pci/hotplug/rpaphp_slot.c   | 1 +
+ 5 files changed, 6 insertions(+)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-powerpc              randconfig-c003-20220331
-arm                        clps711x_defconfig
-arm                       aspeed_g5_defconfig
-powerpc                     rainier_defconfig
-h8300                       h8s-sim_defconfig
-arm                          iop32x_defconfig
-arc                        vdk_hs38_defconfig
-sh                           sh2007_defconfig
-arm                             pxa_defconfig
-arm                          simpad_defconfig
-mips                  decstation_64_defconfig
-arm                            qcom_defconfig
-arc                           tb10x_defconfig
-h8300                     edosk2674_defconfig
-sh                          r7785rp_defconfig
-m68k                       m5208evb_defconfig
-powerpc                      makalu_defconfig
-sh                           se7721_defconfig
-powerpc                           allnoconfig
-sh                            hp6xx_defconfig
-powerpc                 mpc834x_mds_defconfig
-mips                      loongson3_defconfig
-riscv                            allmodconfig
-powerpc                     stx_gp3_defconfig
-microblaze                          defconfig
-sh                          urquell_defconfig
-sh                          rsk7201_defconfig
-arm                          gemini_defconfig
-alpha                               defconfig
-arm                         vf610m4_defconfig
-mips                 decstation_r4k_defconfig
-arm                        shmobile_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220402
-arm                  randconfig-c002-20220331
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                                defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220402
-s390                 randconfig-r044-20220402
-riscv                randconfig-r042-20220402
-arc                  randconfig-r043-20220331
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
-
-clang tested configs:
-x86_64                        randconfig-c007
-i386                          randconfig-c001
-powerpc              randconfig-c003-20220402
-riscv                randconfig-c006-20220402
-mips                 randconfig-c004-20220402
-arm                  randconfig-c002-20220402
-powerpc                      obs600_defconfig
-arm                        neponset_defconfig
-powerpc                    socrates_defconfig
-powerpc                     mpc512x_defconfig
-arm                           spitz_defconfig
-powerpc                      acadia_defconfig
-powerpc                     ksi8560_defconfig
-mips                           ip22_defconfig
-arm                         hackkit_defconfig
-powerpc                     kmeter1_defconfig
-mips                          ath79_defconfig
-arm                          ep93xx_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-s390                 randconfig-r044-20220331
-hexagon              randconfig-r041-20220331
-hexagon              randconfig-r045-20220331
-riscv                randconfig-r042-20220331
-
+diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+index f4c2e6e01be0..881d420637bf 100644
+--- a/drivers/pci/hotplug/pnv_php.c
++++ b/drivers/pci/hotplug/pnv_php.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/pci_hotplug.h>
++#include <linux/of_fdt.h>
+ 
+ #include <asm/opal.h>
+ #include <asm/pnv-pci.h>
+diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+index e6991ff67526..980bb3afd092 100644
+--- a/drivers/pci/hotplug/rpadlpar_core.c
++++ b/drivers/pci/hotplug/rpadlpar_core.c
+@@ -15,6 +15,7 @@
+ 
+ #include <linux/init.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/pci.h>
+ #include <linux/string.h>
+ #include <linux/vmalloc.h>
+diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+index 9887c9de08c3..491986197c47 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -11,6 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
++#include <linux/of.h>
+ #include <linux/pci.h>
+ #include <linux/pci_hotplug.h>
+ #include <linux/smp.h>
+@@ -20,6 +21,7 @@
+ #include <asm/eeh.h>       /* for eeh_add_device() */
+ #include <asm/rtas.h>		/* rtas_call */
+ #include <asm/pci-bridge.h>	/* for pci_controller */
++#include <asm/prom.h>
+ #include "../pci.h"		/* for pci_add_new_bus */
+ 				/* and pci_do_scan_bus */
+ #include "rpaphp.h"
+diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
+index c380bdacd146..630f77057c23 100644
+--- a/drivers/pci/hotplug/rpaphp_pci.c
++++ b/drivers/pci/hotplug/rpaphp_pci.c
+@@ -8,6 +8,7 @@
+  * Send feedback to <lxie@us.ibm.com>
+  *
+  */
++#include <linux/of.h>
+ #include <linux/pci.h>
+ #include <linux/string.h>
+ 
+diff --git a/drivers/pci/hotplug/rpaphp_slot.c b/drivers/pci/hotplug/rpaphp_slot.c
+index 93b4a945c55d..779eab12e981 100644
+--- a/drivers/pci/hotplug/rpaphp_slot.c
++++ b/drivers/pci/hotplug/rpaphp_slot.c
+@@ -11,6 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/sysfs.h>
++#include <linux/of.h>
+ #include <linux/pci.h>
+ #include <linux/string.h>
+ #include <linux/slab.h>
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.35.1
+
