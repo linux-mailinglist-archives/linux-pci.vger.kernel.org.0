@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E86084F0C12
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Apr 2022 20:39:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2344E4F0C18
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Apr 2022 20:39:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376285AbiDCSlB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 3 Apr 2022 14:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47592 "EHLO
+        id S1376272AbiDCSlQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 3 Apr 2022 14:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359870AbiDCSkg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 3 Apr 2022 14:40:36 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2ED6F54
-        for <linux-pci@vger.kernel.org>; Sun,  3 Apr 2022 11:38:27 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id u16so11427894wru.4
-        for <linux-pci@vger.kernel.org>; Sun, 03 Apr 2022 11:38:27 -0700 (PDT)
+        with ESMTP id S1376274AbiDCSkn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 3 Apr 2022 14:40:43 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3689103E
+        for <linux-pci@vger.kernel.org>; Sun,  3 Apr 2022 11:38:28 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id h4so11347624wrc.13
+        for <linux-pci@vger.kernel.org>; Sun, 03 Apr 2022 11:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zzWwD5DTusKMDFInVhaL2Q4xRdExZxvYFPCG18bh4ek=;
-        b=pXYMNOmljPv1o7EtR7qMU+QLwEsAmQfNWT5C7EmlEUDcHVev7zWnMU1wDa9z7YEgVr
-         rv0cYpCdaXctn8jk2MP5e4W1nl3/MgmVSsuslHdKngz7Y2TCVvjylcvkZCnNBzHKyYcX
-         +/u8q126tBEwg18F5VoemEeFiKO4rq5TGWe08IH/s5KCaRO+VXAhayl5tc7ilaKgTnJp
-         TrY3763NH4xwR9tqEBgWot9nt3fqO2ul1MxhAxPiERAkpXltSMCWQLcSZBAE8CFVcaDf
-         c4xGNBoBMLmHJcFh9EysU4fsVW5rn1i6PHCmp5CW678fSPgzHSd8EgNQ8ut2ZJ4V+Pff
-         z/5Q==
+        bh=7atrdHIPQWrKPdmTA65creUl3MO148uK4lDHmIisbDg=;
+        b=hVNX9Cidu2X/sm6u9wyAYEGqM/0IBQR2YvOEDgs8X1o5lfX2h1WHmc/4g0P47OrafO
+         F+LHnXVltwQtgcm4vDmUAJxCpS3dj/NvpeYdiV7BjSEw65jnEU9Y2hfnPDeRaCANOHM4
+         mc8xkmvx0E50fhFCSilb4TNIPXVpKBzFK2JWisIgiHGHdMTr3WCheZOmvXNx1ZOPUZnm
+         UyAOB70hUZLLUn089nOrWn/JVQqqGcLUe6BqjthrWDW5YJAZnN1eAsrTvK7/RT421Uvo
+         I7cb77/HfmJZ+FUQFn3z02MoVja74qNVLv49IJwubMkGcSoRfDyhGrwGLUzitdsMPsWH
+         LXpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zzWwD5DTusKMDFInVhaL2Q4xRdExZxvYFPCG18bh4ek=;
-        b=hm7AZHxBa6m2AmqDRt+NCRBuXcATGtmVcxvMiezghTlJZnwtlq+qTGjRsMwCf+NzNr
-         kLkRKQcMY0FAekNc5phnMPqupRyXeiBUrX5KNFRO11h7eKGsH6Uv+y2E9647KH+vCxqq
-         /xUB+FpI27aOC9XBzPfTmrh9pWvfBFTIjYFnrtZQOqzLx+MDrMNSq58qfGtnY/XkJLfb
-         u5pa9tURwPJd27u0nIRD4vyU04T1fW8d6UANns1Ve4ugDqg+LwM+UES+nD+CYu/4ZYn6
-         12Qf67FoLXhrC+T7AbvgtkOJhs6fD4vgNPxKA7vJiiCSQLmJykTgly5Y7H9J+Iu0AZ3Q
-         dvwA==
-X-Gm-Message-State: AOAM532hjMcRQWaqhzxptiLSKOV89a4xDy2QAOQ9FRVtc0mRhi9nR86u
-        YD7/IIZUiXj00GV6N3tIrhJ2ag==
-X-Google-Smtp-Source: ABdhPJyaCRv8PqcuHZwvS3R1N+Xo1DU43MreSMAefu84Eth/kZOjsmykNZ+Xlvb3uDypFFEK5XRoFQ==
-X-Received: by 2002:adf:816e:0:b0:1e4:ad2b:cb24 with SMTP id 101-20020adf816e000000b001e4ad2bcb24mr14679431wrm.521.1649011105785;
-        Sun, 03 Apr 2022 11:38:25 -0700 (PDT)
+        bh=7atrdHIPQWrKPdmTA65creUl3MO148uK4lDHmIisbDg=;
+        b=p5hALCIiuDHTNMY8UkzyNfq0PaSza4bfvsNIUan4wsM5Cxfqu2o5RnG62I89WuTB4O
+         GP8QbKuiQRl7shmmB2gTW+OhF61suYeRrGsFoUf+map60fuj/MDQebo5vb+RhWG3ShR7
+         5GSzNeb3ZDsphXWpkY54dibqvvMDVEStm2f0cXjKieSwlZyFsYhxi7CbT3CoSfg0/Ojm
+         8k4wBW59RjYLfN5TOFh0eEY5pB5a0oAyVIVlSQSEC0e+pRCPrClpMeKSq/51pwssVgwX
+         IV2JjMQiq8ZaCiOKlq8YNrLsweqOFF2LwAUN/37Hr2xi7WHwjTvMwtWrnVjxyGNl3WPn
+         QOCg==
+X-Gm-Message-State: AOAM531bTGurA13s/ESDZqF8UqBFv6aXN3jiSZtVWi6v63an7PVh/iHP
+        cQSvUvZKbUf8g5F7t+RpHDiECQ==
+X-Google-Smtp-Source: ABdhPJy4yd5YoqphkuK9k4HQTLrBtQPx3QnrGk9JujddMnXXbGWsTVahGCOz4/3Jom2tz+Nx6nWEBw==
+X-Received: by 2002:a5d:4dcd:0:b0:206:6c0:b814 with SMTP id f13-20020a5d4dcd000000b0020606c0b814mr5500047wru.493.1649011107352;
+        Sun, 03 Apr 2022 11:38:27 -0700 (PDT)
 Received: from localhost.localdomain (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id l28-20020a05600c1d1c00b0038e72a95ec4sm593851wms.13.2022.04.03.11.38.24
+        by smtp.gmail.com with ESMTPSA id l28-20020a05600c1d1c00b0038e72a95ec4sm593851wms.13.2022.04.03.11.38.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Apr 2022 11:38:25 -0700 (PDT)
+        Sun, 03 Apr 2022 11:38:26 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>
@@ -76,10 +76,10 @@ Cc:     Stuart Yoder <stuyoder@gmail.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH v6 07/12] spi: Use helper for safer setting of driver_override
-Date:   Sun,  3 Apr 2022 20:37:53 +0200
-Message-Id: <20220403183758.192236-8-krzysztof.kozlowski@linaro.org>
+        "Michael S . Tsirkin" <mst@redhat.com>
+Subject: [PATCH v6 08/12] vdpa: Use helper for safer setting of driver_override
+Date:   Sun,  3 Apr 2022 20:37:54 +0200
+Message-Id: <20220403183758.192236-9-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220403183758.192236-1-krzysztof.kozlowski@linaro.org>
 References: <20220403183758.192236-1-krzysztof.kozlowski@linaro.org>
@@ -99,63 +99,68 @@ Use a helper to set driver_override to the reduce amount of duplicated
 code.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/spi/spi.c       | 26 ++++----------------------
- include/linux/spi/spi.h |  2 ++
- 2 files changed, 6 insertions(+), 22 deletions(-)
+ drivers/vdpa/vdpa.c  | 29 ++++-------------------------
+ include/linux/vdpa.h |  4 +++-
+ 2 files changed, 7 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index c4dd1200fe99..1b31cae35dd8 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -71,29 +71,11 @@ static ssize_t driver_override_store(struct device *dev,
+diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
+index 2b75c00b1005..33d1ad60cba7 100644
+--- a/drivers/vdpa/vdpa.c
++++ b/drivers/vdpa/vdpa.c
+@@ -77,32 +77,11 @@ static ssize_t driver_override_store(struct device *dev,
  				     const char *buf, size_t count)
  {
- 	struct spi_device *spi = to_spi_device(dev);
--	const char *end = memchr(buf, '\n', count);
--	const size_t len = end ? end - buf : count;
+ 	struct vdpa_device *vdev = dev_to_vdpa(dev);
 -	const char *driver_override, *old;
--
--	/* We need to keep extra room for a newline when displaying value */
--	if (len >= (PAGE_SIZE - 1))
--		return -EINVAL;
--
--	driver_override = kstrndup(buf, len, GFP_KERNEL);
--	if (!driver_override)
--		return -ENOMEM;
+-	char *cp;
 +	int ret;
  
+-	/* We need to keep extra room for a newline */
+-	if (count >= (PAGE_SIZE - 1))
+-		return -EINVAL;
+-
+-	driver_override = kstrndup(buf, count, GFP_KERNEL);
+-	if (!driver_override)
+-		return -ENOMEM;
+-
+-	cp = strchr(driver_override, '\n');
+-	if (cp)
+-		*cp = '\0';
+-
 -	device_lock(dev);
--	old = spi->driver_override;
--	if (len) {
--		spi->driver_override = driver_override;
+-	old = vdev->driver_override;
+-	if (strlen(driver_override)) {
+-		vdev->driver_override = driver_override;
 -	} else {
--		/* Empty string, disable driver override */
--		spi->driver_override = NULL;
 -		kfree(driver_override);
+-		vdev->driver_override = NULL;
 -	}
 -	device_unlock(dev);
+-
 -	kfree(old);
-+	ret = driver_set_override(dev, &spi->driver_override, buf, count);
++	ret = driver_set_override(dev, &vdev->driver_override, buf, count);
 +	if (ret)
 +		return ret;
  
  	return count;
  }
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 5f8c063ddff4..f0177f9b6e13 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -138,6 +138,8 @@ extern int spi_delay_exec(struct spi_delay *_delay, struct spi_transfer *xfer);
-  *	for driver coldplugging, and in uevents used for hotplugging
-  * @driver_override: If the name of a driver is written to this attribute, then
-  *	the device will bind to the named driver and only the named driver.
-+ *	Do not set directly, because core frees it; use driver_set_override() to
-+ *	set or clear it.
-  * @cs_gpiod: gpio descriptor of the chipselect line (optional, NULL when
-  *	not using a GPIO line)
-  * @word_delay: delay to be inserted between consecutive
+diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+index 8943a209202e..c0a5083632ab 100644
+--- a/include/linux/vdpa.h
++++ b/include/linux/vdpa.h
+@@ -64,7 +64,9 @@ struct vdpa_mgmt_dev;
+  * struct vdpa_device - representation of a vDPA device
+  * @dev: underlying device
+  * @dma_dev: the actual device that is performing DMA
+- * @driver_override: driver name to force a match
++ * @driver_override: driver name to force a match; do not set directly,
++ *                   because core frees it; use driver_set_override() to
++ *                   set or clear it.
+  * @config: the configuration ops for this device.
+  * @cf_mutex: Protects get and set access to configuration layout.
+  * @index: device index
 -- 
 2.32.0
 
