@@ -2,150 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C92134F06B6
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Apr 2022 02:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB8114F06E9
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Apr 2022 05:06:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbiDCBAd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Apr 2022 21:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
+        id S231569AbiDCDHy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Apr 2022 23:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230021AbiDCBAc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Apr 2022 21:00:32 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365DF13CC4;
-        Sat,  2 Apr 2022 17:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648947519; x=1680483519;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=nVAOtsgMnAV1IoOL1iOgLnzwJVC7f0kFIyd7uqIf+BM=;
-  b=a6Ip6XgyvdpY4d4ZndcKPkgqMQnC1i5HlkTiPtBYEED5Vo/BpIVino33
-   93FlTuM/H4tGGlAEg5yGluYCqgLzf9IMCfzjBdWC4hWx4MEXpl4KFng7p
-   ZritWjYJQvElXAFlrnAPd0CSzQ/pvY66n+g6WcKapkStzonpmOEzkJf8t
-   9SnoaRjPeNoMvk2OQRu1iYbBvt3wthgZ1CCtXpqKFI3+WuCWPQdl3zk9v
-   Ixt0foXwUg0cs2HlMuZeUfyPtE5HcifJBj64Q0pmDEyvrSX5FHvWzv9Rj
-   Miz0svgQbIowvVDdf0tyW/INMXA1DCiowZS5AoymRsCfXf11qukbhHpi6
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10305"; a="260525497"
-X-IronPort-AV: E=Sophos;i="5.90,231,1643702400"; 
-   d="scan'208";a="260525497"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2022 17:58:38 -0700
-X-IronPort-AV: E=Sophos;i="5.90,231,1643702400"; 
-   d="scan'208";a="548245047"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2022 17:58:37 -0700
-Subject: [PATCH] cxl/mem: Disable suspend
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Date:   Sat, 02 Apr 2022 17:58:37 -0700
-Message-ID: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        with ESMTP id S231372AbiDCDHq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Apr 2022 23:07:46 -0400
+X-Greylist: delayed 330 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 02 Apr 2022 20:05:53 PDT
+Received: from mta-out-04.alice.it (mta-out-04.alice.it [217.169.118.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CF11030562
+        for <linux-pci@vger.kernel.org>; Sat,  2 Apr 2022 20:05:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alice.it; s=20211207; t=1648955153; 
+        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+        h=Reply-To:From:To:Date:Message-ID:MIME-Version;
+        b=TGdFlg9TPgJ/ic5NXa6OlFc/mJ5T57HuA/OlILSm4Xjpd/Dtcl1DycZ5UdxDDa73v7JdLHgHLchULLhHWWS9SQrlhYDFrPHBQTtoYaJjvbA1HAZuTJn4EC9ueCgv/FsSHRnugVZZMZX8FjwpLh1w1RDStrgnyAwW5AnW3OrZoPS46TMAnv3flNqQQXCnoocm49yUKzPMtGtvdh1epxW7Mp5cSfvBZGMq2ib8JqjuNqGXTWkyVcRlyWjKNhtRy2zRXxLz341Be058xxChPOWd7hulUdxJft/kk/iujw/PR1cFCEX839tzJMbqFNFCiQADa1S8lpVmXiq0os4QhQl/gg==
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedvvddrudeiledgiedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuvffgnffgvefqoffkvfetnffktedpqfgfvfenuceurghilhhouhhtmecufedtudenucfgmhhpthihuchsuhgsjhgvtghtucdluddtmdengfhmphhthicusghougihucdlhedtmdenucfjughrpehrhffvfffkggestddtfedttddttdenucfhrhhomhephggvuchhrghvvgcurghnuchofhhfvghruchtohcuihhnvhgvshhtuchinhcuhihouhhrucgtohhunhhtrhihuchunhguvghrucgruchjohhinhhtuchvvghnthhurhgvuchprghrthhnvghrshhhihhpuchplhgvrghsvgcurhgvphhlhicufhhorhcumhhorhgvucguvghtrghilhhsuceofhgpphgvnhhnrgesrghlihgtvgdrihhtqeenucggtffrrghtthgvrhhnpeehjeetgefhleetiedtkeelfffgjeeugeegleekueffgfegtdekkeeifedvvdffteenucfkphepudejiedrvddvjedrvdegvddrudeltdenucevlhhushhtvghrufhiiigvpeefudenucfrrghrrghmpehhvghloheprghlihgtvgdrihhtpdhinhgvthepudejiedrvddvjedrvdegvddrudeltddpmhgrihhlfhhrohhmpehfpghpvghnnhgrsegrlhhitggvrdhithdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-RazorGate-Vade-Verdict: clean 60
+X-RazorGate-Vade-Classification: clean
+Received: from alice.it (176.227.242.190) by mta-out-04.alice.it (5.8.807.04) (authenticated as f_penna@alice.it)
+        id 623DC2DC00EF6C1B for linux-pci@vger.kernel.org; Sun, 3 Apr 2022 05:00:21 +0200
+Reply-To: dougfield20@inbox.lv
+From:   We have an offer to invest in your country under a
+         joint venture partnership please reply for more
+         details <f_penna@alice.it>
+To:     linux-pci@vger.kernel.org
+Date:   02 Apr 2022 20:00:20 -0700
+Message-ID: <20220402200020.9862242EAFE51EEF@alice.it>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,BODY_EMPTY,
+        DKIM_INVALID,DKIM_SIGNED,EMPTY_MESSAGE,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,MISSING_SUBJECT,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L4,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.7 RCVD_IN_DNSWL_LOW RBL: Sender listed at https://www.dnswl.org/,
+        *       low trust
+        *      [217.169.118.10 listed in list.dnswl.org]
+        *  0.0 RCVD_IN_MSPIKE_L4 RBL: Bad reputation (-4)
+        *      [217.169.118.10 listed in bl.mailspike.net]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5050]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [f_penna[at]alice.it]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [dougfield20[at]inbox.lv]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  2.3 EMPTY_MESSAGE Message appears to have no textual parts and no
+        *      Subject: text
+        *  1.8 MISSING_SUBJECT Missing Subject: header
+        *  0.1 DKIM_INVALID DKIM or DK signature exists, but is not valid
+        *  0.0 RCVD_IN_MSPIKE_BL Mailspike blacklisted
+        *  0.0 BODY_EMPTY No body text in message
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
-
-The CXL specification claims S3 support at a hardware level, but at a
-system software level there are some missing pieces. Section 9.4 rightly
-claims that "CXL mem adapters may need aux power to retain memory
-context across S3", but there is no enumeration mechanism for the OS to
-determine if a given adapter has that support. Moreover the save state
-and resume image for the system may inadvertantly end up in a CXL device
-that needs to be restored before the save state is recoverable. I.e. a
-circular dependency that is not resolvable without a third party
-save-area.
-
-Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
-allows for suspend, but requires unbinding all CXL memory devices before
-the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
-flow is intended to also tear down all CXL memory regions associated
-with a given cxl_memdev.
-
-It is reasonable to assume that any device participating in a System RAM
-range published in the EFI memory map is covered by aux power and
-save-area outside the device itself. So this restriction can be
-minimized in the future once pre-existing region enumeration support
-arrives, and perhaps a spec update to clarify if the EFI memory is
-sufficent for determining the range of devices managed by
-platform-firmware for S3 support.
-
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/memdev.c |    1 -
- drivers/cxl/mem.c         |   26 ++++++++++++++++++++++++++
- 2 files changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 1f76b28f9826..efe4d2e9bfef 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
- 	dev->bus = &cxl_bus_type;
- 	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
- 	dev->type = &cxl_memdev_type;
--	device_set_pm_not_required(dev);
- 	INIT_WORK(&cxlmd->detach_work, detach_memdev);
- 
- 	cdev = &cxlmd->cdev;
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 49a4b1c47299..0660bb1488cb 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -3,6 +3,7 @@
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/pm.h>
- 
- #include "cxlmem.h"
- #include "cxlpci.h"
-@@ -210,10 +211,35 @@ static int cxl_mem_probe(struct device *dev)
- 	return rc;
- }
- 
-+static int cxl_mem_suspend(struct device *dev)
-+{
-+	/*
-+	 * The kernel may be operating out of CXL memory on this device,
-+	 * there is no spec defined way to determine whether this device
-+	 * preserves contents over suspend, and there is no simple way
-+	 * to arrange for the suspend image to avoid CXL memory which
-+	 * would setup a circular dependency between PCI resume and save
-+	 * state restoration.
-+	 */
-+	dev_err(dev, "CXL memory suspend not supported\n");
-+	return -EBUSY;
-+}
-+
-+static int cxl_mem_resume(struct device *dev)
-+{
-+	/* nothing to do since suspend is prevented */
-+	return 0;
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(cxl_pm_ops, cxl_mem_suspend, cxl_mem_resume);
-+
- static struct cxl_driver cxl_mem_driver = {
- 	.name = "cxl_mem",
- 	.probe = cxl_mem_probe,
- 	.id = CXL_DEVICE_MEMORY_EXPANDER,
-+	.drv = {
-+		.pm = &cxl_pm_ops,
-+	},
- };
- 
- module_cxl_driver(cxl_mem_driver);
 
