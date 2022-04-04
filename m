@@ -2,121 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AF254F1095
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Apr 2022 10:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D43C4F1124
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Apr 2022 10:45:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbiDDIRR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Apr 2022 04:17:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
+        id S230332AbiDDIrN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Apr 2022 04:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229545AbiDDIRQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Apr 2022 04:17:16 -0400
-Received: from CHE01-GV0-obe.outbound.protection.outlook.com (mail-gv0che01on2134.outbound.protection.outlook.com [40.107.23.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E22132989
-        for <linux-pci@vger.kernel.org>; Mon,  4 Apr 2022 01:15:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=POL78Ea00lDaM7RceC4UOoxHQ5NM1Nyft5EWTq/c/dzn4YY2tGXXCYt0oHgUFbzddMX86T/Tw9XEkO1BvqxbJu6pggjiR8tZSwEmi188lhMd6s8Mzc55e7QtrncVyjIvmCGH5tVdtzwJlKrmSnneGI2YcDI1u70bZQ3dFDN+/aEUogQN33oS9RO6ykXMybi5EXKgHqvK29Y+kVDvKwj+zXTJj82iAsSXpIyLLR62tDkh/5GwiIOkTtDWr8fypHotxGIwDKSpPrpDRn/2Jt4sLV1vkT9cnBRaezzYr09pSS+Hv5BcrnIfjvLM42bRJwD30y58uG2Gvxo4FVT25UwMUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SOl+zZk/9sCVnb+yit5x8rxN64Bl6GLpqGr8Evvq/yY=;
- b=WVBy3sKby+wAQ0np/XOSQd+Y6hV7NZQ/EdUNRKrfT+VsS18qD5TlEHlTB9IhbnX+BdpCPi6vIecpuqHRw84ZSsxHKrTdYbnuJePY+r+WaHq15+nrbsPTn0IJLzdzH5RTQHrCtqjt4oNH39iqZBpSrg5tFEeXz6Rqec1DURkCWZaHq3S9cMRxygA42EK/2OA3U5fBajdBmAyikZjyzczTrQfYyLyCu3+e2MeALvbma6QMAYrRyY7SMpVRwndIk1OW07o8R6G04oaoDRfB1BWkII0SCZAbQJWZ5Wb47SAuEf0fCQl7qHkrRMIAuvHtj9H0/Qlu3skAxSjsz3bBMOa9tA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SOl+zZk/9sCVnb+yit5x8rxN64Bl6GLpqGr8Evvq/yY=;
- b=rYU3zf9dNnUtgln1GM4os0umuREYD9G5N3akq8bEHXVLHFWQM9gWf9TQ1eHfS7Bg/8GYDNT0EKSFyF8N8J9tTsZafU5Qkr4HWajUVMDQfuqrpqWGkaoDWd3gurfZ8KErNGMcixqtJnL1ks8uOIqQ9tzS/qqccl1LOUpo8ApcHOM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=toradex.com;
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2e::8) by
- GVAP278MB0551.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:4a::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5123.31; Mon, 4 Apr 2022 08:15:17 +0000
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::7d6c:79fa:a2e4:ede8]) by ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::7d6c:79fa:a2e4:ede8%7]) with mapi id 15.20.5123.031; Mon, 4 Apr 2022
- 08:15:17 +0000
-From:   Francesco Dolcini <francesco.dolcini@toradex.com>
-To:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3] PCI: imx6: Fix PERST# start-up sequence
-Date:   Mon,  4 Apr 2022 10:15:09 +0200
-Message-Id: <20220404081509.94356-1-francesco.dolcini@toradex.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR0P278CA0172.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:45::6) To ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:2e::8)
+        with ESMTP id S237845AbiDDIrL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Apr 2022 04:47:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A028C15FE3
+        for <linux-pci@vger.kernel.org>; Mon,  4 Apr 2022 01:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649061914;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n/Ts5fJReuhpZGYD+CsYHS5c53jBKIODpIAVaNkw9Ys=;
+        b=GzuWXtsXPdfe6ALShROASEOJqmjxzL/3Yz7q/sBgc2MWm335ickVryYyVMFJEGuj6smWEq
+        8CHN3Q05NqOr71HyGkVGaPQBiPpu2rhJLtdMWj+eCSMSa2C6MDG0sOfr+TfQrxPYmB9wH+
+        rieIKEgMVtGO2K6TRKb1M3mZutuxYmA=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-142-gTIYYgaONnmHZ4xdkAeuVg-1; Mon, 04 Apr 2022 04:45:12 -0400
+X-MC-Unique: gTIYYgaONnmHZ4xdkAeuVg-1
+Received: by mail-ed1-f72.google.com with SMTP id b24-20020a50e798000000b0041631767675so5063547edn.23
+        for <linux-pci@vger.kernel.org>; Mon, 04 Apr 2022 01:45:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=n/Ts5fJReuhpZGYD+CsYHS5c53jBKIODpIAVaNkw9Ys=;
+        b=VXdsXmetrZkIDXJlRirz6zRikYviWv9L5EznKGjeUnOh/MD3UDNpQtMdr+ylCI9QXI
+         7LU3FdNqHnwjB9+YmGCqWd96txeqha4Yt9zR7n0rRty/X5vRUWoaMZtLiR3hMze2OAOo
+         RPAXCMiLdSXEaf+GHOVVZjQMA7Xk2McBfrnrxqqzt8BsZvw4hEEYs24coq8QXqbEQ5sI
+         FjVR+vvBILwC5eyKIcwmWAaz4F94p3teLGXPUWX8Vh2QwB8ARUO3ukxeqK0L3ytyfDT/
+         j7r+a0wH7pO/YCYNAOWi7RTaARhZL81f+37JnezsyqDqc/9kFKih+iVRnHv4egxxlTss
+         3CHw==
+X-Gm-Message-State: AOAM533qzd+ko/rqFPVA0XaI0PihTGfKLjWa5qQkhh1jwHwHqz217M4z
+        jjFW0CA7u5v8YEOyF+RqQWFRvJ0QgOok3wOkhaGoo68oXSx39zFMNfYR0UDV0S7ufkUe2cqrebo
+        1WwmbL0FU7SpR6g0FoADG
+X-Received: by 2002:a17:907:6e89:b0:6df:d819:dc9c with SMTP id sh9-20020a1709076e8900b006dfd819dc9cmr10403118ejc.158.1649061911474;
+        Mon, 04 Apr 2022 01:45:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw6Ho5lEAVY4UVDgMgIwjyI2+kIxNhsRMNYXg9RCruR0kajmmWwqLJsuFmUIReofjCE8L/Nvw==
+X-Received: by 2002:a17:907:6e89:b0:6df:d819:dc9c with SMTP id sh9-20020a1709076e8900b006dfd819dc9cmr10403108ejc.158.1649061911242;
+        Mon, 04 Apr 2022 01:45:11 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id kx5-20020a170907774500b006e1382b8192sm4131374ejc.147.2022.04.04.01.45.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Apr 2022 01:45:10 -0700 (PDT)
+Message-ID: <76c5de03-a3a4-8444-d7f6-496fa119d830@redhat.com>
+Date:   Mon, 4 Apr 2022 10:45:10 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0e4ac876-d1ab-489d-760a-08da1613407a
-X-MS-TrafficTypeDiagnostic: GVAP278MB0551:EE_
-X-Microsoft-Antispam-PRVS: <GVAP278MB0551903F4ECD85446246C617E2E59@GVAP278MB0551.CHEP278.PROD.OUTLOOK.COM>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VALrbejnlPKadzeAX1m8GKMP4+bkq77epWwFPQ5FX7hySfrB7qhdtvqJkZ6JXezCAkGhI6CdSnBOpCH5CeBxtZxvqJ/We+0Jy8WXNbi5gN6TjqcsG8+IJfAVAxDezQBUeNgvLuwGoO4tSK3s5//591N6kRSAB2BhEMnaipk41t8C5Qrqk8DHWzt9cfYC2v2Qw+g4XcyRwz2NDtXnIgscdqGUFG03tR+Vf63eOTxKR8isvuBq4Ct69UCGEEXbyumeem9TLK7vO3fyKjFnAeMnL1rvmLTxaG1FPGRjcaac2yR3Zu72+uW4/5xKBo2CsIgpJRN5+lCSu8x6FrWELKios3lPxeGNzA0aVD9Del+GqreWcEw/cMekg+y2J85aEhXuPMIKqNBMNWoQ07b+0XH6lRNcD1juBCOyAI68f3+mLElIFz++fSfay3b/+XM5iRw7azO9EdaXZcmCeBeZMOmDLpBU+4HZmvd46xC3DovjouN4wO3iDGoV5+dXEHxaXsN+rG0Ny2mgHCdNEb+mCnm54Qz+T9bF2ryZql0Ba1drrHuVvqFttQivRQI5x8c88yJ5xzF0Du/UJjRUgh8vovYWNBl+b70CD+ss5vTYiL2ZeRjNvmEhFBJvy9KoFWtfUfNB+F4rx4m190fSK9+4s7QJAaKDzwfZEhJZwefYyd+M4YQHNwuy1AJPnDSh3HxEwZMnq/4Ju21OU4Zwbh96Hr2pzvIB8uAAXLIEa9KTDiBfIB0TBkgdSqzNzieDmGvvIGPfrZrw7Z6BNc5+YuiGqZTsAAkhjVcxvoDiO5DwKpfGzP0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(346002)(39840400004)(376002)(366004)(136003)(396003)(6512007)(2906002)(83380400001)(6666004)(36756003)(508600001)(966005)(6486002)(110136005)(316002)(7416002)(8676002)(1076003)(2616005)(8936002)(6506007)(66946007)(66556008)(66476007)(86362001)(186003)(5660300002)(44832011)(4326008)(52116002)(38350700002)(38100700002)(54906003)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rTOS5Ttxs7qQLo7amr9BfVX4mpg0WIZpVeM12auvPErUI3ym6b0auFABZUL0?=
- =?us-ascii?Q?9lUTLhvzHcKiZe1/m+YWnO8TKOIYaYMkdvD0kEPMP1ZAxczBltAj2WFLE9Y6?=
- =?us-ascii?Q?BfU2nagoABEz8OmSPZyLrub2bw48z740/nLEK2wD9OqLjdWOy6CwYySQ6rJN?=
- =?us-ascii?Q?NFXqZoK+Sho65UdXn1FSl0peuyTclDUZoe5HBWpi8P/vS2U+68FEhA/qiCdL?=
- =?us-ascii?Q?jdQfW9hnKNtQgbbVDeQL1bWpU0AYOkjt3hsWSybjzB/5p0PYpUddcmZn5b3l?=
- =?us-ascii?Q?t+JN+HTw6iizoc/cMVBtLx28aQ+wVeFavozJx6a9meJsV7O0hDCV5aeiJReh?=
- =?us-ascii?Q?EimiZCYs0HyQ9TKii3y0a1QksQYHhPXP0TRsKUTc+OuOsLee42BraGusnWMA?=
- =?us-ascii?Q?sFoB+Bn038NYX4EV1qiXr7KinsqB6yTWGZ8I3kM13E8bwwZRWm+nT9bfGIDu?=
- =?us-ascii?Q?Ga/P5GLTbNeuUW5I6buT9DFBthLscu5BYv9jMzlB5p4rpEbXPup2IJ8tNj0I?=
- =?us-ascii?Q?skynb7E8Hk0QiJr2Tthfmx0QSZE1DUW2Ygs/dm1EhBRnb4gqXL1qZFGV5lr8?=
- =?us-ascii?Q?hKMpXWmdUgZGxmcrtzDM5i/f/LT4TgYhJWUcSZloT5YOKVIRjSZOe0Axe+hl?=
- =?us-ascii?Q?Jmw0mNmA93oA0prsVAKkjIMOhmrmUR8nHNw7Ye2HU/3GtgqCkLkOqK9+6lOQ?=
- =?us-ascii?Q?Tf4Yci2TV5xp0+yFluvgQ6qyejyls6gx32AXtwfBB1NQDG1qM6ywfQpEWQ6L?=
- =?us-ascii?Q?TpKjth0uizB8j2xv/rlbgEru7WDW2F1jNtrz1BaOSIiHS/9zyPPsoiiHh4xE?=
- =?us-ascii?Q?j5MptdMQVTJY3HErUsKq19VeNdKEklIVX243994oZk30j28xCzOPVTUOUuwu?=
- =?us-ascii?Q?pFgK+JE1sB77HsU6qcYxOkga47CC1/d366JufDvI7JoV7AuhirM6DncgPzOs?=
- =?us-ascii?Q?w/xUIG1eYMXdrlb1vC+P8zciJu+O1chDGjwED+3iI2yCsc/CCjFx7w526r1F?=
- =?us-ascii?Q?ca8Pq0+lW75w+A2/FMImUksxSvpyTU+fZIHjIMH0afYDNFz9xn7UO1H0Rvqc?=
- =?us-ascii?Q?+O7cjMFzzXLPbk+QnlSwmI9wflVIb89lA1KNNs9SlxJuNACrKMcqXz48AA+9?=
- =?us-ascii?Q?Kk7tIeRlMGRn/11G0Y92TZ4KAQKy2DBwvjzzoqagmfbQnC92POtK4moWzJsQ?=
- =?us-ascii?Q?PurO4S2R7DOn+K4OzXfV19G6XBR6KkAlANm4fJeCxffJgqfKodcgmTFhfq0K?=
- =?us-ascii?Q?Sw6dWo6qqgXce4qFlMF7l3qCr/FxHPaQ9qioGRelwMTSkUIPrEv1MFzS7BYb?=
- =?us-ascii?Q?24ziuv58o2mNWaPMhQqjXBL7MADUpqlN8m+cbtPZk5R15+3qkPEypncCA/r8?=
- =?us-ascii?Q?JR1IF0hY0l7Ih52EspN8YuVxzqYI2dNZSfIhe46l0umN43ZCLUjQSLgnkk7i?=
- =?us-ascii?Q?Hau3JpZR4+PJlw6ml5PareE9ozwnUuKKXQqkDvVDNtUzm4P98Q6IN5oPuJlN?=
- =?us-ascii?Q?qMe/spHvuDdVE/nYwgV7fbz+LnJRPxuf034gqR0oU+CmgLqb2CxvjcCASV2e?=
- =?us-ascii?Q?JXOiXVQ/RDK78ujLqyIA3ampZBHKEaW8d1WsIJ8QYrgwggp3rVDcfeBBxElo?=
- =?us-ascii?Q?ZZ2M41kPQr6+trVMkp4CoHzUCSM0mNEjjmmwl1g9ipg1MBXOBpgP1HAG2fVz?=
- =?us-ascii?Q?RX70gwFTJ92Y9X7eZYtuF2V8OSRNWDBDmmnTZoYwl2xKa3qdGxzUHIbSPUYo?=
- =?us-ascii?Q?zUcG9EZL3JvihD1umg0kxMQ95Z4lNLQ=3D?=
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e4ac876-d1ab-489d-760a-08da1613407a
-X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2022 08:15:16.9397
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O89J7E4IauOzXERikh426D2xrnDebJETAhXRRChujjt89asiGlYU2I3U5RXdXNHmLwcVewwg7i/tHD+KNK2+AE+HIGVAjVs9tpTn7e+O+p0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVAP278MB0551
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: next/master bisection: baseline.login on asus-C523NA-A20057-coral
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        kernelci-results@groups.io, bot@kernelci.org,
+        gtucker@collabora.com, linux-pci@vger.kernel.org
+References: <20220330113550.GA1638045@bhelgaas>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220330113550.GA1638045@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -124,92 +85,240 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-According to the PCIe standard the PERST# signal (reset-gpio in
-fsl,imx* compatible dts) should be kept asserted for at least 100 usec
-before the PCIe refclock is stable, should be kept asserted for at
-least 100 msec after the power rails are stable and the host should wait
-at least 100 msec after it is de-asserted before accessing the
-configuration space of any attached device.
+Hi,
 
-From PCIe CEM r2.0, sec 2.6.2
+On 3/30/22 13:35, Bjorn Helgaas wrote:
+> On Mon, Mar 28, 2022 at 02:54:42PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 3/24/22 23:19, Mark Brown wrote:
+>>> On Thu, Mar 24, 2022 at 09:34:30PM +0100, Hans de Goede wrote:
+>>>
+>>>> Mark, if one of use writes a test patch, can you get that Asus machine to boot a
+>>>> kernel build from next + the test patch ?
+>>>
+>>> I can't directly unfortunately as the board is in Collabora's lab but
+>>> Guillaume (who's already CCed) ought to be able to, and I can generally
+>>> prod and try to get that done.
+>>
+>> Ok, Guillaume, can you try a kernel with commit 5949965ec9340cfc0e65f7d8a576b660b26e2535
+>> ("x86/PCI: Preserve host bridge windows completely covered by E820") + the 
+>> attached patch added on top a try on the asus-C523NA-A20057-coral machine please
+>> and see if that makes it boot again ?
+>>
+>> Regards,
+>>
+>> Hans
+> 
+>> From b8080a6d2d889847900e1408f71d0c01c73f5c94 Mon Sep 17 00:00:00 2001
+>> From: Hans de Goede <hdegoede@redhat.com>
+>> Date: Mon, 28 Mar 2022 14:47:41 +0200
+>> Subject: [PATCH] x86/PCI: Limit "e820 entry fully covers window" check to non
+>>  ISA MMIO addresses
+>>
+>> Commit FIXME ("x86/PCI: Preserve host bridge windows completely
+>> covered by E820") added a check to skip e820 table entries which
+>> fully cover a PCI bride's memory window when clipping PCI bridge
+>> memory windows.
+>>
+>> This check also caused ISA MMIO windows to not get clipped when
+>> fully covered, which is causing some coreboot based Chromebooks
+>> to not boot.
+>>
+>> Modify the fully covered check to not apply to ISA MMIO windows.
+> 
+> I'd like to include URLs to the kernelci results unless they are
+> ephemeral.  There's a lot of valuable information in these:
+> 
+>   Asus C523NA-A20057-coral with the last good commit:
+>   https://lava.collabora.co.uk/scheduler/job/5937945
+> 
+>   https://storage.kernelci.org/next/master/next-20220310/x86_64/x86_64_defconfig+x86-chromebook/gcc-10/lab-collabora/baseline-asus-C523NA-A20057-coral.html
+>   https://storage.kernelci.org/next/master/next-20220310/x86_64/x86_64_defconfig+x86-chromebook/gcc-10/lab-collabora/baseline-hp-x360-12b-n4000-octopus.html
 
-  T-PVPERL: Power stable to PERST# inactive - 100 msec
-  T-PERST-CLK: REFCLK stable before PERST# inactive - 100 usec.
+Ok, I'll include this in any future patches for this.
 
-From PCIe r5.0, sec 6.6.1
+> 
+>> Fixes: FIXME ("x86/PCI: Preserve host bridge windows completely covered by E820")
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  arch/x86/kernel/resource.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+>> index 6be82e16e5f4..d9ec913619c3 100644
+>> --- a/arch/x86/kernel/resource.c
+>> +++ b/arch/x86/kernel/resource.c
+>> @@ -46,8 +46,12 @@ void remove_e820_regions(struct device *dev, struct resource *avail)
+>>  		 * devices.  But if it covers the *entire* resource, it's
+>>  		 * more likely just telling us that this is MMIO space, and
+>>  		 * that doesn't need to be removed.
+>> +		 * Note this *entire* resource covering check is only
+>> +		 * intended for 32 bit memory resources for the 16 bit
+>> +		 * isa window we always apply the e820 entries.
+>>  		 */
+>> -		if (e820_start <= avail->start && avail->end <= e820_end) {
+>> +		if (avail->start >= ISA_END_ADDRESS &&
+> 
+> What is the justification for needing to check ISA_END_ADDRESS here?
+> The commit log basically says "this makes it work", which isn't very
+> satisfying.
 
-  With a Downstream Port that does not support Link speeds greater than
-  5.0 GT/s, software must wait a minimum of 100 ms before sending a
-  Configuration Request to the device immediately below that Port.
+I did not have a log with the:
 
-Failure to do so could prevent PCIe devices to be working correctly,
-and this was experienced with real devices.
+>   acpi PNP0A08:00: clipped [mem 0x000a0000-0x000bffff window] to [mem 0x00100000-0x000bffff window] for e820 entry [mem 0x000a0000-0x000fffff]
+>   acpi PNP0A08:00: clipped [mem 0x7b800000-0x7fffffff window] to [mem 0x80000000-0x7fffffff window] for e820 entry [mem 0x7b000000-0x7fffffff]
+>   acpi PNP0A08:00: clipped [mem 0x80000000-0xe0000000 window] to [mem 0x80000000-0xcfffffff window] for e820 entry [mem 0xd0000000-0xd0ffffff]
 
-Move reset assert to imx6_pcie_assert_core_reset(), this way we ensure
-that PERST# is asserted before enabling any clock, move de-assert to the
-end of imx6_pcie_deassert_core_reset() after the clock is enabled and
-deemed stable and add a new delay of 100 msec just afterward.
+messages. Instead I was looking at this log:
 
-Link: https://lore.kernel.org/all/20220211152550.286821-1-francesco.dolcini@toradex.com
-Fixes: bb38919ec56e ("PCI: imx6: Add support for i.MX6 PCIe controller")
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
+https://storage.kernelci.org/next/master/next-20220310/x86_64/x86_64_defconfig+x86-chromebook/gcc-10/lab-collabora/baseline-asus-C523NA-A20057-coral.html
 
----
-v3: Add Acked-by: Richard Zhu
-v2: Add complete reference to the PCIe standards, s/PCI-E/PCIe/g
----
- drivers/pci/controller/dwc/pci-imx6.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+With the following messages (as I quoted higher up in the email-thread):
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 6619e3caffe2..7a285fb0f619 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -408,6 +408,11 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 			dev_err(dev, "failed to disable vpcie regulator: %d\n",
- 				ret);
- 	}
-+
-+	/* Some boards don't have PCIe reset GPIO. */
-+	if (gpio_is_valid(imx6_pcie->reset_gpio))
-+		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-+					imx6_pcie->gpio_active_high);
- }
- 
- static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
-@@ -540,15 +545,6 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	/* allow the clocks to stabilize */
- 	usleep_range(200, 500);
- 
--	/* Some boards don't have PCIe reset GPIO. */
--	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
--		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
--					imx6_pcie->gpio_active_high);
--		msleep(100);
--		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
--					!imx6_pcie->gpio_active_high);
--	}
--
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MQ:
- 		reset_control_deassert(imx6_pcie->pciephy_reset);
-@@ -595,6 +591,15 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 		break;
- 	}
- 
-+	/* Some boards don't have PCIe reset GPIO. */
-+	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
-+		msleep(100);
-+		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-+					!imx6_pcie->gpio_active_high);
-+		/* Wait for 100ms after PERST# deassertion (PCIe r5.0, 6.6.1) */
-+		msleep(100);
-+	}
-+
- 	return;
- 
- err_ref_clk:
--- 
-2.25.1
+"""
+ 1839 17:54:41.406548  <6>[    0.000000] BIOS-provided physical RAM map:
+ 1840 17:54:41.413121  <6>[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x0000000000000fff] type 16
+ 1841 17:54:41.419712  <6>[    0.000000] BIOS-e820: [mem 0x0000000000001000-0x000000000009ffff] usable
+ 1842 17:54:41.430192  <6>[    0.000000] BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
+ 1843 17:54:41.436207  <6>[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000000fffffff] usable
+ 1844 17:54:41.446353  <6>[    0.000000] BIOS-e820: [mem 0x0000000010000000-0x0000000012150fff] reserved
+ 1845 17:54:41.453290  <6>[    0.000000] BIOS-e820: [mem 0x0000000012151000-0x000000007a9fcfff] usable
+ 1846 17:54:41.459966  <6>[    0.000000] BIOS-e820: [mem 0x000000007a9fd000-0x000000007affffff] type 16
+ 1847 17:54:41.469549  <6>[    0.000000] BIOS-e820: [mem 0x000000007b000000-0x000000007fffffff] reserved
+ 1848 17:54:41.476685  <6>[    0.000000] BIOS-e820: [mem 0x00000000d0000000-0x00000000d0ffffff] reserved
+ 1849 17:54:41.486439  <6>[    0.000000] BIOS-e820: [mem 0x00000000e0000000-0x00000000efffffff] reserved
+ 1850 17:54:41.492994  <6>[    0.000000] BIOS-e820: [mem 0x00000000fed10000-0x00000000fed17fff] reserved
+ 1851 17:54:41.503008  <6>[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000017fffffff] usable
+...
+ 2030 17:54:42.809183  <6>[    0.313771] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+ 2031 17:54:42.819092  <6>[    0.314424] pci_bus 0000:00: root bus resource [mem 0x7b800000-0xe0000000 window]
+"""
+
+###
+
+What I find weird here is that this boot with a somewhat earlier kernel has:
+
+ 2030 17:54:42.809183  <6>[    0.313771] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+ 2031 17:54:42.819092  <6>[    0.314424] pci_bus 0000:00: root bus resource [mem 0x7b800000-0xe0000000 window]
+
+Where as the boot with the clipped messages has:
+
+<6>[    0.313705] acpi PNP0A08:00: ignoring host bridge window [mem 0x00100000-0x000bffff window] (conflicts with PCI mem [mem 0x00000000-0x7fffffffff])
+<6>[    0.314702] acpi PNP0A08:00: ignoring host bridge window [mem 0x80000000-0x7fffffff window] (conflicts with PCI mem [mem 0x00000000-0x7fffffffff])
+<6>[    0.315747] PCI host bridge to bus 0000:00
+<6>[    0.316118] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+<6>[    0.316703] pci_bus 0000:00: root bus resource [io  0x1000-0xffff window]
+<6>[    0.317298] pci_bus 0000:00: root bus resource [mem 0x80000000-0xcfffffff window]
+<6>[    0.317703] pci_bus 0000:00: root bus resource [bus 00-ff]
+
+So in the boot with the clipped messages we are getting 3 windows from _CRS
+where as before we were getting only 2?  I know that we are now applying
+the clipping directly when we are parsing the resources. So I guess that
+before we somehow also merged the 2 resources which are back to back together
+before the "root bus resource" messages get printed. This caused me to just
+see the "root bus resource [mem 0x7b800000-0xe0000000 window]" which is
+not fully covered which is why I focused on the ISA MMIO window.
+
+> The Asus log of the last good commit shows:
+> 
+>   PCI: 00:0d.0 [8086/5a92] enabled
+>   constrain_resources: PCI: 00:0d.0 10 base d0000000 limit d0ffffff mem (fixed)
+>   ...
+>   BIOS-e820: [mem 0x000000007b000000-0x000000007fffffff] reserved
+>   BIOS-e820: [mem 0x00000000d0000000-0x00000000d0ffffff] reserved
+>   BIOS-e820: [mem 0x00000000e0000000-0x00000000efffffff] reserved
+>   ...
+>   acpi PNP0A08:00: clipped [mem 0x000a0000-0x000bffff window] to [mem 0x00100000-0x000bffff window] for e820 entry [mem 0x000a0000-0x000fffff]
+>   acpi PNP0A08:00: clipped [mem 0x7b800000-0x7fffffff window] to [mem 0x80000000-0x7fffffff window] for e820 entry [mem 0x7b000000-0x7fffffff]
+>   acpi PNP0A08:00: clipped [mem 0x80000000-0xe0000000 window] to [mem 0x80000000-0xcfffffff window] for e820 entry [mem 0xd0000000-0xd0ffffff]
+>   acpi PNP0A08:00: ignoring host bridge window [mem 0x00100000-0x000bffff window] (conflicts with PCI mem [mem 0x00000000-0x7fffffffff])
+>   acpi PNP0A08:00: ignoring host bridge window [mem 0x80000000-0x7fffffff window] (conflicts with PCI mem [mem 0x00000000-0x7fffffffff])
+> 
+> It looks like _CRS gave us [mem 0x80000000-0xe0000000 window], which
+> is one byte too big (it should end at 0xdfffffff).
+
+Yeah but that gets clipped off anyways, so that should not matter.
+
+s> 
+> From the firmware part of the log, it looks like 00:0d.0 is a hidden
+> device that consumes [mem d0000000-0xd0ffffff].  Linux doesn't
+> enumerate 00:0d.0, so firmware should have carved that out of the [mem
+> 0x80000000-0xe0000000 window] in _CRS.
+> 
+> We don't have a log with 5949965ec934 ("x86/PCI: Preserve host bridge
+> windows completely covered by E820") applied, but I think it would
+> show this:
+> 
+>   acpi PNP0A08:00: resource [mem 0x000a0000-0x000bffff window] fully covered by e820 entry [mem 0x000a0000-0x000fffff]
+>   acpi PNP0A08:00: resource [mem 0x7b800000-0x7fffffff window] fully covered by e820 entry [mem 0x7b000000-0x7fffffff]
+> 
+> instead of clipping those windows.  But none of the devices we
+> enumerate appears to be using either of those windows.
+
+Not with a working kernel no, because they are clipped of, but
+with the don't clip fully-covered _CRS windows change, the 
+[mem 0x7b000000-0x7fffffff] all of a sudden becomes fair game
+to assign BARs to.
+
+I agree that we will get a fully-covered msg for that one with
+the patch, which would change:
+
+[    0.317298] pci_bus 0000:00: root bus resource [mem 0x80000000-0xcfffffff window]
+
+to:
+
+[    0.317298] pci_bus 0000:00: root bus resource [mem 0x7b800000-0xcfffffff window]
+
+and I believe that likely is our culprit.
+
+So to fix this I guess that we first need to merge back-to-back
+windows coming from _CRS into a single window, before calling
+remove_e820_regions()
+
+That would pass [mem 0x7b800000-0xe0000000 window] to remove_e820_regions()
+in a single call (as I expected from the logs), which should result in
+both the top and the bottom still getting clipped as before.
+
+I've been looking around in the code a but I could not quickly find
+a helper to do the back-to-back resource merging before calling
+remove_e820_regions(), any suggestions for this?
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+> 
+> We do have this:
+> 
+>   pci 0000:00:18.2: reg 0x10: [mem 0xde000000-0xde000fff 64bit]
+>   pci 0000:00:18.2: reg 0x18: [mem 0xc2b31000-0xc2b31fff 64bit]
+>   pci 0000:00:18.2: can't claim BAR 0 [mem 0xde000000-0xde000fff 64bit]: no compatible bridge window
+>   pci 0000:00:18.2: BAR 0: assigned [mem 0x80000000-0x80000fff 64bit]
+> 
+> Where the original [mem 0xde000000-0xde000fff 64bit] assignment was
+> perfectly legal, but we clipped [mem 0x80000000-0xe0000000 window] to
+> [mem 0x80000000-0xcfffffff window] instead of just punching a hole for
+> the 00:0d.0 carve-out.
+> 
+> Maybe 5949965ec934 puts 00:18.2 BAR 0 somewhere that doesn't work,
+> or maybe the clipping to [mem 0x00100000-0x000bffff window] or
+> [mem 0x80000000-0x7fffffff window] doesn't work as expected?
+> They are supposed to be interpreted as "empty", but certainly
+> resource_size([0x00100000-0x000bffff]) is != 0.
+> 
+>> +		    e820_start <= avail->start && avail->end <= e820_end) {
+>>  			dev_info(dev, "resource %pR fully covered by e820 entry [mem %#010Lx-%#010Lx]\n",
+>>  				 avail, e820_start, e820_end);
+>>  			continue;
+>> -- 
+>> 2.35.1
+>>
+> 
 
