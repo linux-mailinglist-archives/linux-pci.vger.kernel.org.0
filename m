@@ -2,112 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B19FF4F1CDA
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Apr 2022 23:29:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 539724F1CF5
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Apr 2022 23:37:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380172AbiDDV3U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Apr 2022 17:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42330 "EHLO
+        id S1379826AbiDDV3m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Apr 2022 17:29:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379962AbiDDS1F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Apr 2022 14:27:05 -0400
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB53113F48;
-        Mon,  4 Apr 2022 11:25:08 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id y38so19170728ybi.8;
-        Mon, 04 Apr 2022 11:25:08 -0700 (PDT)
+        with ESMTP id S1380049AbiDDSqP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Apr 2022 14:46:15 -0400
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413411C117;
+        Mon,  4 Apr 2022 11:44:18 -0700 (PDT)
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-df02f7e2c9so11733934fac.10;
+        Mon, 04 Apr 2022 11:44:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bCV4HtxKKrFtYUzA08GGtmyQuDrR4SCJ17M7Fnxmr34=;
-        b=r3yPEzKhRac9iqyCIM8yg2iRAQmLrVVpU76b6aeqk2sl9JP/JaTv5gMhqiqBATKUlL
-         1lx6TJhRXKRFKuNcseFsIMdWIRFLbqII+4nMqSA4xoCp6cFdUvv/65BSe6OjD0QluhkU
-         lvpU1R+1PVlbM1LgOArpnn1Le4PvBNMZ0wOUly/1XVRdw+z5qVXoO6t+8SD4mZhmkXZK
-         lZiduZENQyxvhyio30T71th5sDUhzn62NOZ3lAiGeE+cnIKZ2yOQy2yWymZnxRXQ4W3P
-         P2Q8cfLHqYaM/WAByB9VAYrjJf+xw5vqzPbexcCoZ0xlnGIEeEzPddcklxd2MO66DfXW
-         JWDg==
-X-Gm-Message-State: AOAM532ywzZkKlVZ+XOcu6IcZJTAN8Xm+eBQFLBrFPURvxW450m/f8ft
-        oyxIuZWYdfh5BpoEotgDhFnLpxjLjy/qjbGClyw=
-X-Google-Smtp-Source: ABdhPJyZrHKGdImhZK9li020wFi6mVFXiU0hAl7RxyBC2L67Wz55stGtbnyQdQUfeGvM+JTuLG3HrRleXe/zWArnIiw=
-X-Received: by 2002:a05:6902:1544:b0:63d:d3a7:8cc4 with SMTP id
- r4-20020a056902154400b0063dd3a78cc4mr1059291ybu.622.1649096708257; Mon, 04
- Apr 2022 11:25:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+DVZa9rgC7XCqVmwQpif8MjcfgqohlHJqzZVbT4NdPA=;
+        b=6JF+JH6wd0/7ywTfr5v3ryTISkOXdlpaCcfqq+v+gSqf6hBI+8vk8ngOOlYaDhAbb4
+         WAy3YTXsYLkb1vr+wbPrDfOsGJfX3f+9W9bHS9uLBVL5MZY00DQ9MZCrEU7Ls0vJ4m0z
+         72hpsvSSTG+VINgD/AfqXSudkPVbKrNNyb5Gmz8/SnMgmR7yyL6xzU3T8eZC1oqqavmB
+         ZPWoP/q3+pS1OtwM0s71ApPn5GFqc2Mbytkvjze2+3hPAhLDiGmSwm3ezOUseinYdxRR
+         hDE7GZh5u59AgOui+SX1NM9BhXol1Wx/eP0/kHfd6EZJg8sI3hyUfmNV7Lw6uqrXD+DP
+         1U2g==
+X-Gm-Message-State: AOAM530hZi/cwbYGnskuyb3YyqLikeh4mmXx3JWiXYwGQOiUrpvfSLnd
+        3xNLPVVPw3NXJbBciNqLfA==
+X-Google-Smtp-Source: ABdhPJxQfrcUZKKhBzVlnqfwkA2XRgYhsqJUmARYpgm43Nh3Hvc35k/tV+fKp7H5hXzW0gHNQ64G6g==
+X-Received: by 2002:a05:6870:c353:b0:de:d908:3e6d with SMTP id e19-20020a056870c35300b000ded9083e6dmr323176oak.190.1649097857541;
+        Mon, 04 Apr 2022 11:44:17 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id t3-20020a05680800c300b002f935a7daa9sm4505802oic.19.2022.04.04.11.44.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Apr 2022 11:44:17 -0700 (PDT)
+Received: (nullmailer pid 1703057 invoked by uid 1000);
+        Mon, 04 Apr 2022 18:44:16 -0000
+Date:   Mon, 4 Apr 2022 13:44:16 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: uniphier: Convert
+ uniphier-pcie.txt to json-schema
+Message-ID: <Yks8gNN0wp7xJDST@robh.at.kernel.org>
+References: <1648617814-9217-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1648617814-9217-2-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com> <CAPcyv4hCseKbr_XXyeOACYmm0defeSet0LX3YWLKGRnCMS=MFQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4hCseKbr_XXyeOACYmm0defeSet0LX3YWLKGRnCMS=MFQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 4 Apr 2022 20:24:57 +0200
-Message-ID: <CAJZ5v0gT=aAR=aW0-kkDWv2TotmL_EW4JVPqoh9oKwxtOyZr-A@mail.gmail.com>
-Subject: Re: [PATCH] cxl/mem: Disable suspend
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-cxl@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1648617814-9217-2-git-send-email-hayashi.kunihiko@socionext.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 4, 2022 at 8:16 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Mon, Apr 4, 2022 at 9:00 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Sun, Apr 3, 2022 at 2:58 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > The CXL specification claims S3 support at a hardware level, but at a
-> > > system software level there are some missing pieces. Section 9.4 rightly
-> > > claims that "CXL mem adapters may need aux power to retain memory
-> > > context across S3", but there is no enumeration mechanism for the OS to
-> > > determine if a given adapter has that support. Moreover the save state
-> > > and resume image for the system may inadvertantly end up in a CXL device
-> > > that needs to be restored before the save state is recoverable. I.e. a
-> > > circular dependency that is not resolvable without a third party
-> > > save-area.
-> > >
-> > > Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
-> > > allows for suspend, but requires unbinding all CXL memory devices before
-> > > the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
-> > > flow is intended to also tear down all CXL memory regions associated
-> > > with a given cxl_memdev.
-> > >
-> > > It is reasonable to assume that any device participating in a System RAM
-> > > range published in the EFI memory map is covered by aux power and
-> > > save-area outside the device itself. So this restriction can be
-> > > minimized in the future once pre-existing region enumeration support
-> > > arrives, and perhaps a spec update to clarify if the EFI memory is
-> > > sufficent for determining the range of devices managed by
-> > > platform-firmware for S3 support.
-> > >
-> > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >
-> > A few thoughts:
-> >
-> > 1. I don't think it is necessary to fail suspend-to-idle too (which
-> > the driver will do after the patch AFAICS).
->
-> Ah true, I missed that this would also disable suspend to idle.
->
-> > 2. Should hibernation fail too?  From the description above it looks
-> > like that should be the case.
->
-> Yes, any CXL address range that was provisioned by the OS would need
-> some off-device save area for the device-state which seems difficult
-> to support in the general case.
+On Wed, 30 Mar 2022 14:23:33 +0900, Kunihiko Hayashi wrote:
+> Convert the file into a JSON description at the yaml format.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  .../bindings/pci/socionext,uniphier-pcie.yaml | 96 +++++++++++++++++++
+>  .../devicetree/bindings/pci/uniphier-pcie.txt | 82 ----------------
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 97 insertions(+), 83 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> 
 
-So it should cause errors to be returned from the hibernation path
-too, ideally before the freezing of tasks.
-
-> > 3. If "deep"suspend is going to fail every time, it may be better to
-> > prevent "deep" from being written to /sys/power/mem_sleep instead of
-> > failing suspend in progress, especially after freezing user space.
->
-> Yeah, that sounds much better, let me explore that option.
+Applied, thanks!
