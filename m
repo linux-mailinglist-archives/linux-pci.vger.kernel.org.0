@@ -2,118 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5B2D4F18AB
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Apr 2022 17:42:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ADE34F1910
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Apr 2022 17:59:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378362AbiDDPof (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Apr 2022 11:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55524 "EHLO
+        id S1378806AbiDDQBs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Apr 2022 12:01:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347003AbiDDPoe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Apr 2022 11:44:34 -0400
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0831393F5;
-        Mon,  4 Apr 2022 08:42:37 -0700 (PDT)
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
- id 663112fc46d070d8; Mon, 4 Apr 2022 17:42:36 +0200
-Received: from kreacher.localnet (unknown [213.134.181.62])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 3F1BC66BCD3;
-        Mon,  4 Apr 2022 17:42:35 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v1 2/2] PCI: PM: Resume bus after putting the bridge into D0 entirely
-Date:   Mon, 04 Apr 2022 17:42:27 +0200
-Message-ID: <1807986.atdPhlSkOF@kreacher>
-In-Reply-To: <4198163.ejJDZkT8p0@kreacher>
-References: <4198163.ejJDZkT8p0@kreacher>
+        with ESMTP id S242759AbiDDQBs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Apr 2022 12:01:48 -0400
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E649D245A5;
+        Mon,  4 Apr 2022 08:59:51 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-2e5e31c34bfso104471147b3.10;
+        Mon, 04 Apr 2022 08:59:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w7ocDMuZoyG16WXF5ipj2JQf4AK4I9deIE3Jm5Bs/xc=;
+        b=P/Df+aT0y9hrhXdfv/bPeNgjQqqF6kfMvONu6fRJcBsUA1hRxsve/fckaqkFgBO+vY
+         aucQLxNq0AI3yryHtViHsHggd+95t46c4n1r1MtOmI9sD6NS/kdAHRKmaQ46PKLQ9KoL
+         dtKxJY8xlKyHnEikzXgYwigBw5yCbPGoKoWjZCL/yNGVf4+Qkge3Z4pFvEAj7aTICltn
+         eVs81PTD3UQwJdW57puke/E9qOqHrTQHYxZ0HTxCLbkRy2zKSAYi+brgC0EQiV+h1t11
+         G/H9E83nzLCpxiBkAGNZ4dGkvN6lemN/E/hX8/ilrqMNApAuk3wMi6+5oEXF7HSX+N0J
+         QhwA==
+X-Gm-Message-State: AOAM5327IJT3oa7H8AtR1/w2mr7bXHw4qwdg55vOZswvldOgKD87ldE+
+        Q68khFnlXamNCzIcZOoAtjuXwBUec8nJdwqxCwabO+7E
+X-Google-Smtp-Source: ABdhPJyM8jOQfNwC1LsuoX5wt2+Tez+WgTblGOwGdMIPsSlhv9ZXF+HmUFRB3Pb+p33UR5vpweNUm7aYvABMhBWTvO0=
+X-Received: by 2002:a81:36cf:0:b0:2e5:2597:a026 with SMTP id
+ d198-20020a8136cf000000b002e52597a026mr567162ywa.301.1649087991154; Mon, 04
+ Apr 2022 08:59:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 4 Apr 2022 17:59:40 +0200
+Message-ID: <CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com>
+Subject: Re: [PATCH] cxl/mem: Disable suspend
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 213.134.181.62
-X-CLIENT-HOSTNAME: 213.134.181.62
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvvddrudejvddgkeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvjeelgffhiedukedtleekkedvudfggefhgfegjefgueekjeelvefggfdvledutdenucfkphepvddufedrudefgedrudekuddriedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddufedrudefgedrudekuddriedvpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhk
- rgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Sun, Apr 3, 2022 at 2:58 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> The CXL specification claims S3 support at a hardware level, but at a
+> system software level there are some missing pieces. Section 9.4 rightly
+> claims that "CXL mem adapters may need aux power to retain memory
+> context across S3", but there is no enumeration mechanism for the OS to
+> determine if a given adapter has that support. Moreover the save state
+> and resume image for the system may inadvertantly end up in a CXL device
+> that needs to be restored before the save state is recoverable. I.e. a
+> circular dependency that is not resolvable without a third party
+> save-area.
+>
+> Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
+> allows for suspend, but requires unbinding all CXL memory devices before
+> the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
+> flow is intended to also tear down all CXL memory regions associated
+> with a given cxl_memdev.
+>
+> It is reasonable to assume that any device participating in a System RAM
+> range published in the EFI memory map is covered by aux power and
+> save-area outside the device itself. So this restriction can be
+> minimized in the future once pre-existing region enumeration support
+> arrives, and perhaps a spec update to clarify if the EFI memory is
+> sufficent for determining the range of devices managed by
+> platform-firmware for S3 support.
+>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-It is rather counter-intuitive to attempt to resume devices on a bus
-segment before completing a transition of their parent bridge into
-D0, so do that when the transition is complete.
+A few thoughts:
 
-This matters especially when the transition in question is not
-successful, in which case it doesn't make sense to even try to
-resume the child devices at all.
+1. I don't think it is necessary to fail suspend-to-idle too (which
+the driver will do after the patch AFAICS).
+2. Should hibernation fail too?  From the description above it looks
+like that should be the case.
+3. If "deep"suspend is going to fail every time, it may be better to
+prevent "deep" from being written to /sys/power/mem_sleep instead of
+failing suspend in progress, especially after freezing user space.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/pci/pci.c |   21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+> ---
+>  drivers/cxl/core/memdev.c |    1 -
+>  drivers/cxl/mem.c         |   26 ++++++++++++++++++++++++++
+>  2 files changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 1f76b28f9826..efe4d2e9bfef 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>         dev->bus = &cxl_bus_type;
+>         dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+>         dev->type = &cxl_memdev_type;
+> -       device_set_pm_not_required(dev);
+>         INIT_WORK(&cxlmd->detach_work, detach_memdev);
+>
+>         cdev = &cxlmd->cdev;
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 49a4b1c47299..0660bb1488cb 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/pm.h>
+>
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+> @@ -210,10 +211,35 @@ static int cxl_mem_probe(struct device *dev)
+>         return rc;
+>  }
+>
+> +static int cxl_mem_suspend(struct device *dev)
+> +{
+> +       /*
+> +        * The kernel may be operating out of CXL memory on this device,
+> +        * there is no spec defined way to determine whether this device
+> +        * preserves contents over suspend, and there is no simple way
+> +        * to arrange for the suspend image to avoid CXL memory which
+> +        * would setup a circular dependency between PCI resume and save
+> +        * state restoration.
+> +        */
+> +       dev_err(dev, "CXL memory suspend not supported\n");
+> +       return -EBUSY;
+> +}
+> +
+> +static int cxl_mem_resume(struct device *dev)
+> +{
+> +       /* nothing to do since suspend is prevented */
+> +       return 0;
+> +}
 
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -1310,15 +1310,24 @@ static int pci_dev_wait(struct pci_dev *
- int pci_power_up(struct pci_dev *dev)
- {
- 	pci_power_t old_state = dev->current_state;
-+	int ret;
- 
- 	pci_platform_power_transition(dev, PCI_D0);
-+	/*
-+	 * For transitions from D3hot or deeper (including unknown), force
-+	 * PCI_PM_CTRL register write, D3*->D0 transition delay and BARS
-+	 * restoration.
-+	 */
-+	if (old_state >= PCI_D3hot)
-+		dev->current_state = PCI_D3hot;
- 
-+	ret = pci_raw_set_power_state(dev, PCI_D0);
- 	/*
- 	 * Mandatory power management transition delays are handled in
- 	 * pci_pm_resume_noirq() and pci_pm_runtime_resume() of the
- 	 * corresponding bridge.
- 	 */
--	if (dev->runtime_d3cold) {
-+	if (!ret && dev->runtime_d3cold) {
- 		/*
- 		 * When powering on a bridge from D3cold, the whole hierarchy
- 		 * may be powered on into D0uninitialized state, resume them to
-@@ -1327,15 +1336,7 @@ int pci_power_up(struct pci_dev *dev)
- 		pci_resume_bus(dev->subordinate);
- 	}
- 
--	/*
--	 * For transitions from D3hot or deeper and initial power-up, force
--	 * PCI_PM_CTRL register write, D3*->D0 transition delay and BARS
--	 * restoration.
--	 */
--	if (old_state >= PCI_D3hot)
--		dev->current_state = PCI_D3hot;
--
--	return pci_raw_set_power_state(dev, PCI_D0);
-+	return ret;
- }
- 
- /**
+This is not needed AFAICS.
 
-
-
+> +
+> +static DEFINE_SIMPLE_DEV_PM_OPS(cxl_pm_ops, cxl_mem_suspend, cxl_mem_resume);
+> +
+>  static struct cxl_driver cxl_mem_driver = {
+>         .name = "cxl_mem",
+>         .probe = cxl_mem_probe,
+>         .id = CXL_DEVICE_MEMORY_EXPANDER,
+> +       .drv = {
+> +               .pm = &cxl_pm_ops,
+> +       },
+>  };
+>
+>  module_cxl_driver(cxl_mem_driver);
+>
