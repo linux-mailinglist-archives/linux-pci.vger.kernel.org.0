@@ -2,107 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A224F419E
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Apr 2022 23:33:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FE6F4F3EF5
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Apr 2022 22:55:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236675AbiDEMoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Apr 2022 08:44:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57982 "EHLO
+        id S235369AbiDEOqf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Apr 2022 10:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381994AbiDEMAS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 08:00:18 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099093BFBD
-        for <linux-pci@vger.kernel.org>; Tue,  5 Apr 2022 04:18:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1649157507; x=1680693507;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cEEPsMWRHOEMrXyWAhOg965q8qtp7y7IkVxjJ5SnLeI=;
-  b=IT4FWw0EKawJz8X8ALMcXF7TZIhu+e+P281vP0NsrnxW8eRhGu9KTsNr
-   Govz0/EDjWaTxfL+gWejjrwcSD/C5s1U8YPS9hf/CA5q9+dmWictb2be2
-   2QwS+0kImJzESXoSHgdsHCRAUwJzQt4eg4jKKIN67eXHYaVtPOZgQJhGH
-   9/xhxZuhGuRHpIVhyJA74MHo4AyNS0jE6rjiehSWBuv9ZGbq1UVUOonjF
-   IE76524k8HjN1TlEl0ILFwJDDASqpOjsH3trzXFrP2YmViAeDiHsB5ZXP
-   Iwqjfjc8sA1LL+CIq9Th/frZfqhlvLTYt8EqHYt/phaA+vHyaI/l3rrJ1
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.90,236,1643698800"; 
-   d="scan'208";a="154420982"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Apr 2022 04:18:26 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Tue, 5 Apr 2022 04:18:01 -0700
-Received: from daire-X570.school.villiers.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2375.17 via Frontend Transport; Tue, 5 Apr 2022 04:17:59 -0700
-From:   <daire.mcnamara@microchip.com>
-To:     <helgaas@kernel.org>
-CC:     <bhelgaas@google.com>, <conor.dooley@microchip.com>,
-        <cyril.jean@microchip.com>, <maz@kernel.org>,
-        <daire.mcnamara@microchip.com>, <david.abdurachmanov@gmail.com>,
-        <linux-pci@vger.kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>
-Subject: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in interrupt handling
-Date:   Tue, 5 Apr 2022 12:17:51 +0100
-Message-ID: <20220405111751.166427-1-daire.mcnamara@microchip.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1349825AbiDENGH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 09:06:07 -0400
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8800175625;
+        Tue,  5 Apr 2022 05:07:16 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id g9so22971564ybf.1;
+        Tue, 05 Apr 2022 05:07:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=knCnV41xjhnnJ0VL0WEqN+kHikKWH8noX35ww6a147E=;
+        b=O7lckBcjELkuaLNv/vx9Zk/dwxb9uNuvdTAK9RfD2UeFpLI+xa1ocEs2O+vfLgUcsy
+         E6lMViABScXgrmVNn0UwQsQhGsBMZjx2E+J1SF4r6LWvm47xalDPaI0XJ2x+wI7/O4VW
+         hLWnU8IchmREOD59IjWNEVY3v3AhTniApfIMW+33/WKIqoHL00Cc5FpHrYpe82q0Sw5f
+         yYlqC0H9t+ZUIzWY9yhWmmJlA9jlW+JvfvfUm1iPBPJBlGqg44x1XmHa5Mx2jl+5l5Nx
+         YtKYSoqyZDYZ+I2EUT8bGKLtTFar7nvRsKdGKsStiFkHJo53hRUX/Zyy2PYRi16wMF4W
+         oWMw==
+X-Gm-Message-State: AOAM531oN2BMuSlLOg4c+fubzN47QHtqt6CXO/IXNgKM6WoRUnL+NEHf
+        dOMvpaK3MYr/99JV7bZnf1StMsg1GNX/S5tJN+ueJseC
+X-Google-Smtp-Source: ABdhPJzm72VVZWMJatZlptDAM3D3/uPEoLzUPr4PBmAZeVrej6UKEUv7t6NBnltKTsOgvbQB0rfxyKF5TOgeLVOvss8=
+X-Received: by 2002:a25:cc08:0:b0:63d:2c6d:162 with SMTP id
+ l8-20020a25cc08000000b0063d2c6d0162mr2240396ybf.137.1649160435809; Tue, 05
+ Apr 2022 05:07:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <21439956.EfDdHjke4D@kreacher> <YkwQAKcFU4CzYX5E@lahna>
+In-Reply-To: <YkwQAKcFU4CzYX5E@lahna>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 5 Apr 2022 14:07:03 +0200
+Message-ID: <CAJZ5v0ja5OKUh004wEMhrgVtk-yp_Dzvmk33xNhabjDqzV0JsQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] ACPI: PCI: PM: Power up PCI devices with ACPI
+ companions upfront
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Daire McNamara <daire.mcnamara@microchip.com>
+On Tue, Apr 5, 2022 at 1:45 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> Hi Rafael,
+>
+> On Mon, Apr 04, 2022 at 05:20:30PM +0200, Rafael J. Wysocki wrote:
+> > Hi All,
+> >
+> > There are cases in which the power state of a PCI device depends on an ACPI
+> > power resource (or more of them) in such a way that when the given power
+> > resource is in the "off" state, the PCI device depending on it is in D3cold.
+> >
+> > On some systems, the initial state of these power resources is "off", so the
+> > kernel should not access the config space of PCI devices depending on them,
+> > until the power resources in question are turned "on", but currently that is
+> > not respected during PCI device enumeration.  Namely, the PCI device
+> > enumeration code walks the entire bus and enumerates all of the devices it
+> > can find, including the ones whose initial power state in principle depends on
+> > the ACPI power resources in the "off" state.
+>
+> I guess these devices do not have _PRE() method either.
 
-Clear MSI bit in ISTATUS register after reading it before
-handling individual MSI bits
+Personally, I haven't seen any ACPI tables containing any _PRE yet.
 
-This fixes a potential race condition pointed out by Bjorn Helgaas:
-https://lore.kernel.org/linux-pci/20220127202000.GA126335@bhelgaas/
+> > Apparently, most of the time, the config space of such devices is accessible
+> > regardless of the state of the ACPI power resource associated with the PCI
+> > device, so the device enumeration is successful, but there are two potential
+> > issues related to this behavior.  First off, even if the given PCI device
+> > is accessible when the ACPI power resource depended on by it is "off",
+> > changing its configuration may confuse the platform firmware and lead to
+> > problems when the ACPI power resource in question is turned "on".  Second,
+> > the PCI device may not be actually accessible at all when the ACPI power
+> > resource depended on by it is "off", in which case it won't be found during
+> > the PCI enumeration of devices.
+> >
+> > This patch series addresses that problem by turning "on" all ACPI power
+> > resources depended on by PCI devices before attempting to access the config
+> > space of those devices for the first time.
+>
+> Makes sense.
+>
+> For the series,
+>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe controller driver")
-Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
----
-Adding linux-pci mailing list
- drivers/pci/controller/pcie-microchip-host.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 29d8e81e4181..da8e3fdc97b3 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -416,6 +416,7 @@ static void mc_handle_msi(struct irq_desc *desc)
- 
- 	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
- 	if (status & PM_MSI_INT_MSI_MASK) {
-+		writel_relaxed(status & PM_MSI_INT_MSI_MASK, bridge_base_addr + ISTATUS_LOCAL);
- 		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
- 		for_each_set_bit(bit, &status, msi->num_vectors) {
- 			ret = generic_handle_domain_irq(msi->dev_domain, bit);
-@@ -432,13 +433,8 @@ static void mc_msi_bottom_irq_ack(struct irq_data *data)
- 	void __iomem *bridge_base_addr =
- 		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	u32 bitpos = data->hwirq;
--	unsigned long status;
- 
- 	writel_relaxed(BIT(bitpos), bridge_base_addr + ISTATUS_MSI);
--	status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
--	if (!status)
--		writel_relaxed(BIT(PM_MSI_INT_MSI_SHIFT),
--			       bridge_base_addr + ISTATUS_LOCAL);
- }
- 
- static void mc_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
--- 
-2.25.1
-
+Thanks!
