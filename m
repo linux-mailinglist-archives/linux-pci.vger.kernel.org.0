@@ -2,51 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A3634F4714
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 01:27:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5C6B4F4724
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 01:27:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233306AbiDEU6w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Apr 2022 16:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39158 "EHLO
+        id S242781AbiDEVAV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Apr 2022 17:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1457624AbiDEQTd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 12:19:33 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F66E193D3;
-        Tue,  5 Apr 2022 09:17:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D8244B80E0B;
-        Tue,  5 Apr 2022 16:17:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12D0C385A4;
-        Tue,  5 Apr 2022 16:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649175451;
-        bh=9i+q2ZN9TmxfoI0nuVfh6ATI7dSt6NeIA1KoAxqH9Wo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=d9bKmV/0IMeeXRcs+lJgcy2FAU7lLCVkihgX4OgOBMkO1BYdDu8qxnUx2/rqg7UyV
-         DzDTTlCGsm+r8VfiUlQkuC+3f3h6koQ2HES1mTi9Q2now2v+7ba3/ryJgnWGydGAmV
-         uifbtzr2x1eCuFnu+B0llXSSt6zyAwaXYioJ58oNh0uEp01YDQs/9HLXhdbJ46n/LC
-         EMF8fRU7e8J/LFe++amL1j9hkDYSZ8hBWivyrqg8UyGXzu7q/I1r2+SfJ7k9vXv4pl
-         yRa6lxE7a2Dru+ZbrOLiv++PMJfDzhFEsrlGh7dWEDnp4DPIpUjAhXyMVe6QwAcqfh
-         CyBn92r+JO3Bg==
-Date:   Tue, 5 Apr 2022 11:17:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci: hotplug: Prepare cleanup of powerpc's asm/prom.h
-Message-ID: <20220405161729.GA71083@bhelgaas>
+        with ESMTP id S1457652AbiDEQZy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 12:25:54 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6941955758
+        for <linux-pci@vger.kernel.org>; Tue,  5 Apr 2022 09:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649175836; x=1680711836;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=VIIL95YZv6RsZLI0HeLhDGD9sJSPe2rvrM4tcLhpqnM=;
+  b=C1zD9HRz96za+SJoXg22L0ILpy4/MCpYqFRc0B8xJ5UIADm+HGbIZwTm
+   RXVDAHNu/vRl2OPQ3ZPHNS/h7bq1hF86XUrpJJiNcj4vPIkgPVSc6ki/+
+   ujyfoLlblmBEbsPWvsYVeYMBt2xwkdp93jtaYCD0ldgNlylc3cmSLp0NQ
+   iEmDwOJxeuZAfVRJgimJnoFMlXApU1A/IZTz3hyLvGBiZKLkMxdkYcJcn
+   PgI1oIH1SaN8DBDCtFl50D7263ktq4gGUSKryk98PwKZXX5ITG+GMj65Q
+   X2CjOaz2i/VqhWlWot0DxkDTUuxMfD587RmlD0RC0fwXsw9ttkrDWzfpC
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="260970162"
+X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
+   d="scan'208";a="260970162"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 09:23:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
+   d="scan'208";a="569964529"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga008.jf.intel.com with ESMTP; 05 Apr 2022 09:23:55 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 5 Apr 2022 09:23:54 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 5 Apr 2022 09:23:54 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
+ Tue, 5 Apr 2022 09:23:54 -0700
+From:   "Vivi, Rodrigo" <rodrigo.vivi@intel.com>
+To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: Quirk Intel DG2 ASPM L1 acceptable latency to be
+ unlimited
+Thread-Topic: [PATCH] PCI: Quirk Intel DG2 ASPM L1 acceptable latency to be
+ unlimited
+Thread-Index: AQHYSNDQWg3XdsSM/UK8Ii3alDU2Fqzh8KOAgAAGJwA=
+Date:   Tue, 5 Apr 2022 16:23:54 +0000
+Message-ID: <ef9a1811a8c6d102dd39f2e7111b9df13d354db3.camel@intel.com>
+References: <20220405160151.GA68831@bhelgaas>
+In-Reply-To: <20220405160151.GA68831@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.40.4 (3.40.4-3.fc34) 
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <58ACD115E33110408354EA2230CDC82C@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79201f5fae8d003164ac36ed3be7789db1bc5ab4.1648833421.git.christophe.leroy@csgroup.eu>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,94 +83,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 02, 2022 at 12:11:56PM +0200, Christophe Leroy wrote:
-> powerpc's asm/prom.h brings some headers that it doesn't
-> need itself.
-> 
-> In order to clean it up, first add missing headers in
-> users of asm/prom.h
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-
-I tidied the subject line to match previous history and applied to
-pci/hotplug for v5.19, thanks!
-
-> ---
->  drivers/pci/hotplug/pnv_php.c       | 1 +
->  drivers/pci/hotplug/rpadlpar_core.c | 1 +
->  drivers/pci/hotplug/rpaphp_core.c   | 2 ++
->  drivers/pci/hotplug/rpaphp_pci.c    | 1 +
->  drivers/pci/hotplug/rpaphp_slot.c   | 1 +
->  5 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-> index f4c2e6e01be0..881d420637bf 100644
-> --- a/drivers/pci/hotplug/pnv_php.c
-> +++ b/drivers/pci/hotplug/pnv_php.c
-> @@ -9,6 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/pci.h>
->  #include <linux/pci_hotplug.h>
-> +#include <linux/of_fdt.h>
->  
->  #include <asm/opal.h>
->  #include <asm/pnv-pci.h>
-> diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-> index e6991ff67526..980bb3afd092 100644
-> --- a/drivers/pci/hotplug/rpadlpar_core.c
-> +++ b/drivers/pci/hotplug/rpadlpar_core.c
-> @@ -15,6 +15,7 @@
->  
->  #include <linux/init.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/pci.h>
->  #include <linux/string.h>
->  #include <linux/vmalloc.h>
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> index 9887c9de08c3..491986197c47 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -11,6 +11,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
-> +#include <linux/of.h>
->  #include <linux/pci.h>
->  #include <linux/pci_hotplug.h>
->  #include <linux/smp.h>
-> @@ -20,6 +21,7 @@
->  #include <asm/eeh.h>       /* for eeh_add_device() */
->  #include <asm/rtas.h>		/* rtas_call */
->  #include <asm/pci-bridge.h>	/* for pci_controller */
-> +#include <asm/prom.h>
->  #include "../pci.h"		/* for pci_add_new_bus */
->  				/* and pci_do_scan_bus */
->  #include "rpaphp.h"
-> diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
-> index c380bdacd146..630f77057c23 100644
-> --- a/drivers/pci/hotplug/rpaphp_pci.c
-> +++ b/drivers/pci/hotplug/rpaphp_pci.c
-> @@ -8,6 +8,7 @@
->   * Send feedback to <lxie@us.ibm.com>
->   *
->   */
-> +#include <linux/of.h>
->  #include <linux/pci.h>
->  #include <linux/string.h>
->  
-> diff --git a/drivers/pci/hotplug/rpaphp_slot.c b/drivers/pci/hotplug/rpaphp_slot.c
-> index 93b4a945c55d..779eab12e981 100644
-> --- a/drivers/pci/hotplug/rpaphp_slot.c
-> +++ b/drivers/pci/hotplug/rpaphp_slot.c
-> @@ -11,6 +11,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/sysfs.h>
-> +#include <linux/of.h>
->  #include <linux/pci.h>
->  #include <linux/string.h>
->  #include <linux/slab.h>
-> -- 
-> 2.35.1
-> 
+T24gVHVlLCAyMDIyLTA0LTA1IGF0IDExOjAxIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBUdWUsIEFwciAwNSwgMjAyMiBhdCAxMjozODoxMFBNICswMzAwLCBNaWthIFdlc3RlcmJl
+cmcgd3JvdGU6DQo+ID4gSW50ZWwgREcyIGRpc2NyZXRlIGdyYXBoaWNzIFBDSWUgZW5kcG9pbnRz
+IGhhcmQtY29kZSB0aGVpcg0KPiA+IGFjY2VwdGFibGUgTDENCj4gPiBBU1BNIGxhdGVuY3kgdG8g
+YmUgPCAxdXMgZXZlbiB0aG91Z2ggdGhlIGhhcmR3YXJlIGFjdHVhbGx5IHN1cHBvcnRzDQo+ID4g
+aGlnaGVyIGxhdGVuY2llcyAoPiA2NCB1cykganVzdCBmaW5lLiBJbiBvcmRlciB0byBhbGxvdyB0
+aGUgbGlua3MNCj4gPiB0byBnbw0KPiA+IGludG8gTDEgYW5kIHNhdmUgcG93ZXIsIHF1aXJrIHRo
+ZSBhY2NlcHRhYmxlIEwxIEFTUE0gbGF0ZW5jeSBmb3INCj4gPiB0aGVzZQ0KPiA+IGVuZHBvaW50
+cyB0byBiZSB1bmxpbWl0ZWQuDQo+IA0KPiBJcyB0aGVyZSBhIHBsYW4gdG8gZml4IHRoaXMgaW4g
+ZnV0dXJlIERHMiBoYXJkd2FyZS9maXJtd2FyZT8NCj4gT2J2aW91c2x5IHRoZSBwb2ludCBvZiBE
+ZXYgQ2FwIGlzIHRvIG1ha2UgdGhlIGRldmljZSBzZWxmLWRlc2NyaWJpbmcNCj4gc28gd2UgY2Fu
+IGF2b2lkIHVwZGF0ZXMgbGlrZSB0aGlzIGV2ZXJ5IHRpbWUgbmV3IGhhcmR3YXJlIGNvbWVzIG91
+dC4NCg0KVW5mb3J0dW5hdGVseSBubyBmaXggcG9zc2libGUgaW4gREcyIGh3IChwY2kgaWQgbGlz
+dCBiZWxvdyksIGJ1dCBpdA0Kd2lsbCBiZSBmaXhlZCBmb3Igb3RoZXIgcGxhdGZvcm1zIGNvbWlu
+ZyBhZnRlciB0aG9zZS4NCg0KPiANCj4gPiBOb3RlIHRoaXMgZG9lcyBub3QgaGF2ZSBhbnkgZWZm
+ZWN0IHVubGVzcyB0aGUgdXNlciByZXF1ZXN0ZWQgdGhlDQo+ID4ga2VybmVsDQo+ID4gdG8gZW5h
+YmxlIEFTUE0gaW4gdGhlIGZpcnN0IHBsYWNlIChieSBkZWZhdWx0IHdlIGRvbid0IGVuYWJsZSBp
+dCkuIA0KPiANCj4gSSB0aGluayB0aGlzIGRlcGVuZHMgb24gdGhlIHBsYXRmb3JtIGFuZCBrZXJu
+ZWwgY29uZmlnLCBkb2Vzbid0IGl0Pw0KPiBJZiBDT05GSUdfUENJRUFTUE1fUE9XRVJTQVZFPXkg
+b3IgQ09ORklHX1BDSUVBU1BNX1BPV0VSX1NVUEVSU0FWRT15DQo+IEkgc3VzcGVjdCB3ZSB3b3Vs
+ZCBlbmFibGUgQVNQTSBMMSBldmVuIHdpdGhvdXQgdGhlIHBhcmFtZXRlcnMgYmVsb3cuDQo+IA0K
+PiA+IFRoaXMgaXMgZG9uZSB3aXRoICJwY2llX2FzcG09Zm9yY2UNCj4gPiBwY2llX2FzcG0ucG9s
+aWN5PXBvd2Vyc3Vwc2Vyc2F2ZSINCj4gPiBjb21tYW5kIGxpbmUgcGFyYW1ldGVycy4NCj4gDQo+
+IHMvcG93ZXJzdXBzZXJzYXZlL3Bvd2Vyc3VwZXJzYXZlLw0KPiANCj4gVGhpcyBzaG91bGQgYWZm
+ZWN0ICJwb3dlcnNhdmUiIGFzIHdlbGwgYXMgInBvd2Vyc3VwZXJzYXZlIiwgcmlnaHQ/DQo+IEJv
+dGggZW5hYmxlIEwxLsKgICJwb3dlcnN1cGVyc2F2ZSIgZW5hYmxlcyB0aGUgTDEgc3Vic3RhdGVz
+Lg0KPiANCj4gV2UgKnNob3VsZCogYmUgYWJsZSB0byBlbmFibGUvZGlzYWJsZSBBU1BNIEwxIHVz
+aW5nIHRoZSBzeXNmcw0KPiAibDFfYXNwbQ0KPiBmaWxlLCB0b28uDQo+IA0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IE1pa2EgV2VzdGVyYmVyZyA8bWlrYS53ZXN0ZXJiZXJnQGxpbnV4LmludGVsLmNvbT4N
+Cj4gPiAtLS0NCj4gPiDCoGRyaXZlcnMvcGNpL3F1aXJrcy5jIHwgNDQNCj4gPiArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+IMKgMSBmaWxlIGNoYW5nZWQs
+IDQ0IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcXVp
+cmtzLmMgYi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+IGluZGV4IGRhODI5Mjc0ZmM2Ni4uZTk3
+YjVkYWEwMGViIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQo+ID4gKysr
+IGIvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiBAQCAtNTg5NSwzICs1ODk1LDQ3IEBAIERFQ0xB
+UkVfUENJX0ZJWFVQX0VBUkxZKFBDSV9WRU5ET1JfSURfSU5URUwsDQo+ID4gMHgxNTMzLCByb21f
+YmFyX292ZXJsYXBfZGVmZWN0KTsNCj4gPiDCoERFQ0xBUkVfUENJX0ZJWFVQX0VBUkxZKFBDSV9W
+RU5ET1JfSURfSU5URUwsIDB4MTUzNiwNCj4gPiByb21fYmFyX292ZXJsYXBfZGVmZWN0KTsNCj4g
+PiDCoERFQ0xBUkVfUENJX0ZJWFVQX0VBUkxZKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4MTUzNywN
+Cj4gPiByb21fYmFyX292ZXJsYXBfZGVmZWN0KTsNCj4gPiDCoERFQ0xBUkVfUENJX0ZJWFVQX0VB
+UkxZKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4MTUzOCwNCj4gPiByb21fYmFyX292ZXJsYXBfZGVm
+ZWN0KTsNCj4gPiArDQo+ID4gKyNpZmRlZiBDT05GSUdfUENJRUFTUE0NCj4gPiArLyoNCj4gPiAr
+ICogSW50ZWwgREcyIGdyYXBoaWNzIGNhcmQgaGFzIGhhcmQtY29kZWQgYWNjZXB0YWJsZSBMMSBs
+YXRlbmN5DQo+ID4gdGhhdCBpcw0KPiA+ICsgKiB0b28gbG93IHdoaWNoIHByZXZlbnRzIEFTUE0g
+dG8gYmUgZW5hYmxlZC4gSXQgZG9lcyBzdXBwb3J0IEFTUE0NCj4gPiBMMQ0KPiA+ICsgKiBhbmQg
+dG9sZXJhdGVzIGhpZ2hlciBsYXRlbmNpZXMgc28gcXVpcmsgaXQgdG8gYmUgdW5saW1pdGVkLg0K
+PiA+ICsgKi8NCj4gPiArc3RhdGljIHZvaWQgcXVpcmtfYXNwbV9hY2NlcHRlZF9sMV9sYXRlbmN5
+KHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gK3sNCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoKGRl
+di0+ZGV2Y2FwICYgUENJX0VYUF9ERVZDQVBfTDEpID4+IDkgPCA3KSB7DQo+ID4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHUzMiBkZXZjYXAgPSBkZXYtPmRldmNhcDsNCj4gPiArDQo+
+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldi0+ZGV2Y2FwIHw9IDcgPDwgOTsN
+Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcGNpX2luZm8oZGV2LCAicXVpcmtp
+bmcgZGV2Y2FwIGZvciBMMSBhY2NlcHRlZA0KPiA+IGxhdGVuY3kgMHglMDh4IC0+IDB4JTA4eFxu
+IiwNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBk
+ZXZjYXAsIGRldi0+ZGV2Y2FwKTsNCj4gPiArwqDCoMKgwqDCoMKgwqB9DQo+ID4gK30NCj4gPiAr
+REVDTEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4NGY4MCwNCj4g
+PiBxdWlya19hc3BtX2FjY2VwdGVkX2wxX2xhdGVuY3kpOw0KPiA+ICtERUNMQVJFX1BDSV9GSVhV
+UF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0ZjgxLA0KPiA+IHF1aXJrX2FzcG1fYWNj
+ZXB0ZWRfbDFfbGF0ZW5jeSk7DQo+ID4gK0RFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVO
+RE9SX0lEX0lOVEVMLCAweDRmODIsDQo+ID4gcXVpcmtfYXNwbV9hY2NlcHRlZF9sMV9sYXRlbmN5
+KTsNCj4gPiArREVDTEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4
+NGY4MywNCj4gPiBxdWlya19hc3BtX2FjY2VwdGVkX2wxX2xhdGVuY3kpOw0KPiA+ICtERUNMQVJF
+X1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0Zjg0LA0KPiA+IHF1aXJr
+X2FzcG1fYWNjZXB0ZWRfbDFfbGF0ZW5jeSk7DQo+ID4gK0RFQ0xBUkVfUENJX0ZJWFVQX0hFQURF
+UihQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDRmODUsDQo+ID4gcXVpcmtfYXNwbV9hY2NlcHRlZF9s
+MV9sYXRlbmN5KTsNCj4gPiArREVDTEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURf
+SU5URUwsIDB4NGY4NiwNCj4gPiBxdWlya19hc3BtX2FjY2VwdGVkX2wxX2xhdGVuY3kpOw0KPiA+
+ICtERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0Zjg3LA0K
+PiA+IHF1aXJrX2FzcG1fYWNjZXB0ZWRfbDFfbGF0ZW5jeSk7DQo+ID4gK0RFQ0xBUkVfUENJX0ZJ
+WFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDRmODgsDQo+ID4gcXVpcmtfYXNwbV9h
+Y2NlcHRlZF9sMV9sYXRlbmN5KTsNCj4gPiArREVDTEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9W
+RU5ET1JfSURfSU5URUwsIDB4NTY5MCwNCj4gPiBxdWlya19hc3BtX2FjY2VwdGVkX2wxX2xhdGVu
+Y3kpOw0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwg
+MHg1NjkxLA0KPiA+IHF1aXJrX2FzcG1fYWNjZXB0ZWRfbDFfbGF0ZW5jeSk7DQo+ID4gK0RFQ0xB
+UkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDU2OTIsDQo+ID4gcXVp
+cmtfYXNwbV9hY2NlcHRlZF9sMV9sYXRlbmN5KTsNCj4gPiArREVDTEFSRV9QQ0lfRklYVVBfSEVB
+REVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4NTY5MywNCj4gPiBxdWlya19hc3BtX2FjY2VwdGVk
+X2wxX2xhdGVuY3kpOw0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9J
+RF9JTlRFTCwgMHg1Njk0LA0KPiA+IHF1aXJrX2FzcG1fYWNjZXB0ZWRfbDFfbGF0ZW5jeSk7DQo+
+ID4gK0RFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDU2OTUs
+DQo+ID4gcXVpcmtfYXNwbV9hY2NlcHRlZF9sMV9sYXRlbmN5KTsNCj4gPiArREVDTEFSRV9QQ0lf
+RklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4NTZhMCwNCj4gPiBxdWlya19hc3Bt
+X2FjY2VwdGVkX2wxX2xhdGVuY3kpOw0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJ
+X1ZFTkRPUl9JRF9JTlRFTCwgMHg1NmExLA0KPiA+IHF1aXJrX2FzcG1fYWNjZXB0ZWRfbDFfbGF0
+ZW5jeSk7DQo+ID4gK0RFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9SX0lEX0lOVEVM
+LCAweDU2YTIsDQo+ID4gcXVpcmtfYXNwbV9hY2NlcHRlZF9sMV9sYXRlbmN5KTsNCj4gPiArREVD
+TEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4NTZhMywNCj4gPiBx
+dWlya19hc3BtX2FjY2VwdGVkX2wxX2xhdGVuY3kpOw0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9I
+RUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg1NmE0LA0KPiA+IHF1aXJrX2FzcG1fYWNjZXB0
+ZWRfbDFfbGF0ZW5jeSk7DQo+ID4gK0RFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQQ0lfVkVORE9S
+X0lEX0lOVEVMLCAweDU2YTUsDQo+ID4gcXVpcmtfYXNwbV9hY2NlcHRlZF9sMV9sYXRlbmN5KTsN
+Cj4gPiArREVDTEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5URUwsIDB4NTZh
+NiwNCj4gPiBxdWlya19hc3BtX2FjY2VwdGVkX2wxX2xhdGVuY3kpOw0KPiA+ICtERUNMQVJFX1BD
+SV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg1NmIwLA0KPiA+IHF1aXJrX2Fz
+cG1fYWNjZXB0ZWRfbDFfbGF0ZW5jeSk7DQo+ID4gK0RFQ0xBUkVfUENJX0ZJWFVQX0hFQURFUihQ
+Q0lfVkVORE9SX0lEX0lOVEVMLCAweDU2YjEsDQo+ID4gcXVpcmtfYXNwbV9hY2NlcHRlZF9sMV9s
+YXRlbmN5KTsNCj4gPiArREVDTEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURfSU5U
+RUwsIDB4NTZjMCwNCj4gPiBxdWlya19hc3BtX2FjY2VwdGVkX2wxX2xhdGVuY3kpOw0KPiA+ICtE
+RUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg1NmMxLA0KPiA+
+IHF1aXJrX2FzcG1fYWNjZXB0ZWRfbDFfbGF0ZW5jeSk7DQo+ID4gKyNlbmRpZg0KPiA+IC0tIA0K
+PiA+IDIuMzUuMQ0KPiA+IA0KDQo=
