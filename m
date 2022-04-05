@@ -2,148 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C12814F471A
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 01:27:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EABF4F4710
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 01:27:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234031AbiDEU7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Apr 2022 16:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60350 "EHLO
+        id S232171AbiDEU6f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Apr 2022 16:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1444822AbiDEPmE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 11:42:04 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAE318B258;
-        Tue,  5 Apr 2022 07:06:52 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1649167611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=i81MASCCDw38dcKZylteUy/3pg50r3ulw2eAeBX1oQs=;
-        b=blb33Z/hkJODAWD0H0EQS/ucph9bnmTVwHRBaB8faYgOxdQiY1v+iBJaTHaNRuekJOtKPN
-        ftfSFYAe47v1dSNmihMBBH1Uu2xNTQVJdwHgnmhPTKiUEX4R9aGzzLCR0dShjccozOAAxp
-        oUI31XXjZk6cepgUaDwHHR6kYrdPUEy1C/4NzSt243SIacCu3JMKAXrZWqTLmqCAfJKtyt
-        Qwqz8k+Xo9itZXJ/J3gtQ2OzmHnvTghPeHmofW/8CsWy0Qp+5G+OH+2EC+BLPl1vpolf5d
-        LVWC3JV9vCMAYgjfutiivuCw3TVl2I1CqCzViZal/pBka4S7ZXg5GBCAdH3Oxg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1649167611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=i81MASCCDw38dcKZylteUy/3pg50r3ulw2eAeBX1oQs=;
-        b=6qOMCJYfbs8XtKREWwkNMmyZpa/kppvHyluNeM4S50mmbUr3N+rkt67nQ6cuHWbR+xWQR8
-        crbdlICxoSpd+BDQ==
-To:     Evan Green <evgreen@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: Lost MSIs during hibernate
-In-Reply-To: <CAE=gft4a-QL82iFJE_xRQ3JrMmz-KZKWREtz=MghhjFbJeK=8A@mail.gmail.com>
-Date:   Tue, 05 Apr 2022 16:06:50 +0200
-Message-ID: <87a6cz39qd.ffs@tglx>
+        with ESMTP id S1457249AbiDEQC7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 12:02:59 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32DB71401D
+        for <linux-pci@vger.kernel.org>; Tue,  5 Apr 2022 08:35:39 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id f18so10306577edc.5
+        for <linux-pci@vger.kernel.org>; Tue, 05 Apr 2022 08:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RAVH8ALFlz9wuASO9LQb9RbtPlxb1j2B9jBGCAw1Kh8=;
+        b=lkYAUUyQ5VX2KSG0erjEIfRcCavrJv3RISfj99CHUKLjZ9iBVnE0S1s/PsU8q6boQr
+         pO87Dskn8e+PKHSEhzMHFEwskQRIHgoDNnXeS9Pn9DuRBkzlKHvUem0Sd94K830oxqzX
+         Gp0MZzYJxADrwS8kzFR8SeOLw0yI4pns5nZ+PtZAPg3mzxPdlraHGS0+h6jK/YkpYDXr
+         5HgYd3yn5pK/z/32wL7OIcA19KzkDMvc6yLKE03cQpGajv2aRHO/RTjIGpZrjUca8f7V
+         Qi2TGcKqiYaXydZrmB9LkWAjMNTcVIYeOFW5pL176IBC/MEjlpBPh7x0jLr9LoZIuA3g
+         7ZAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RAVH8ALFlz9wuASO9LQb9RbtPlxb1j2B9jBGCAw1Kh8=;
+        b=IJ13JGyCJR+n1s7bpGQ470vhcww/C534VG+yuzWFR72PeIyVTaWogfD6Z45PZjR7aA
+         HX6sso6dgL+crSW6oX+CxjUTELwp7Kcq/TyO/nawUqAbzQV93zSgCU4c8eKW8X77J5k4
+         7lMlxKMPRXJB7M0N0iLInMnpEN2gyrC7VXhjtRi+wguGyklDMiXl8aPhwuhg1HmDS1Vl
+         iUriIfmAoINaSH/K+3BKFTRlXnf8OMniB/FAPNwJM/64fdRSqI9ahvEAaYKNkFSxd5OX
+         kexFgJMQwM+8yigbCtbs1sG/RXbbHEPYn9FS1PN5EiOBvzfw051dBtoOwioMxKzh7Ipr
+         iZFg==
+X-Gm-Message-State: AOAM532h1fg7qIDG2J/OBmCstf7yPOIrwWoKTT2CxA4wdPrXDR6u6yrZ
+        UviZh33KMUayy9m5wPN4fJR1U0lFPUz3DgePd4sngo/7udw=
+X-Google-Smtp-Source: ABdhPJzY4ISRGvJq1+mZ/kkgkoVf02i6GFXOU56VOhR/2Jf5hjCn6S3XU76jWLv1KVMWjvoV0VbCQA/PE3kN4gW+4pw=
+X-Received: by 2002:aa7:d758:0:b0:41c:dc93:4d81 with SMTP id
+ a24-20020aa7d758000000b0041cdc934d81mr4164613eds.15.1649172937536; Tue, 05
+ Apr 2022 08:35:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220222162355.32369-1-Frank.Li@nxp.com> <fa2ab3cf-1508-bbeb-47af-8b2d47904b20@ti.com>
+In-Reply-To: <fa2ab3cf-1508-bbeb-47af-8b2d47904b20@ti.com>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Tue, 5 Apr 2022 10:35:25 -0500
+Message-ID: <CAHrpEqT2zwWiiiTUDAu9JNPXmzP1zELF7YDERWjdOohGMFRBnA@mail.gmail.com>
+Subject: Re: [PATCH V2 0/4] NTB function for PCIe RC to EP connection
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>,
+        lorenzo.pieralisi@arm.com, kw@linux.com,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Evan!
-
-On Mon, Apr 04 2022 at 12:11, Evan Green wrote:
-> To my surprise, I'm back with another MSI problem, and hoping to get
-> some advice on how to approach fixing it.
-
-Why am I not surprised?
-
-> What worries me is those IRQ "no longer affine" messages, as well as
-> my "EVAN don't touch hw" prints, indicating that requests to change
-> the MSI are being dropped. These ignored requests are coming in when
-> we try to migrate all IRQs off of the non-boot CPU, and they get
-> ignored because all devices are "frozen" at this point, and presumably
-> not in D0.
-
-They are disabled at that point.
-
-> To further try and prove that theory, I wrote a script to do the
-> hibernate prepare image step in a loop, but messed with XHCI's IRQ
-> affinity beforehand. If I move the IRQ to core 0, so far I have never
-> seen a hang. But if I move it to another core, I can usually get a
-> hang in the first attempt. I also very occasionally see wifi splats
-> when trying this, and those "no longer affine" prints are all the wifi
-> queue IRQs. So I think a wifi packet coming in at the wrong time can
-> do the same thing.
->
-> I wanted to see what thoughts you might have on this. Should I try to
-> make a patch that moves all IRQs to CPU 0 *before* the devices all
-> freeze? Sounds a little unpleasant. Or should PCI be doing something
-> different to avoid this combination of "you're not allowed to modify
-> my MSIs, but I might still generate interrupts that must not be lost"?
-
-PCI cannot do much here and moving interrupts around is papering over
-the underlying problem.
-
-xhci_hcd 0000:00:0d.0: EVAN Write MSI 0 fee1e000 4023
-
-  This sets up the interrupt when the driver is loaded
-
-xhci_hcd 0000:00:14.0: EVAN Write MSI 0 fee01000 4024
-
-  Ditto
-
-xhci_hcd 0000:00:0d.0: calling pci_pm_freeze+0x0/0xad @ 423, parent: pci0000:00
-xhci_hcd 0000:00:14.0: calling pci_pm_freeze+0x0/0xad @ 4644, parent: pci0000:00
-xhci_hcd 0000:00:14.0: pci_pm_freeze+0x0/0xad returned 0 after 0 usecs
-xhci_hcd 0000:00:0d.0: EVAN Write MSI 0 fee1e000 4023
-xhci_hcd 0000:00:0d.0: pci_pm_freeze+0x0/0xad returned 0 after 196000 usecs
-
-Those freeze() calls end up in xhci_suspend(), which tears down the XHCI
-and ensures that no interrupts are on flight.
-
-xhci_hcd 0000:00:0d.0: calling pci_pm_freeze_noirq+0x0/0xb2 @ 4645, parent: pci0000:00
-xhci_hcd 0000:00:0d.0: pci_pm_freeze_noirq+0x0/0xb2 returned 0 after 30 usecs
-xhci_hcd 0000:00:14.0: calling pci_pm_freeze_noirq+0x0/0xb2 @ 4644, parent: pci0000:00
-xhci_hcd 0000:00:14.0: pci_pm_freeze_noirq+0x0/0xb2 returned 0 after 3118 usecs
-
-   Now the devices are disabled and not accessible
-
-xhci_hcd 0000:00:14.0: EVAN Don't touch hw 0 fee00000 4024
-xhci_hcd 0000:00:0d.0: EVAN Don't touch hw 0 fee1e000 4045
-xhci_hcd 0000:00:0d.0: EVAN Don't touch hw 0 fee00000 4045
-xhci_hcd 0000:00:14.0: calling pci_pm_thaw_noirq+0x0/0x70 @ 9, parent: pci0000:00
-xhci_hcd 0000:00:14.0: EVAN Write MSI 0 fee00000 4024
-
-   This is the early restore _before_ the XHCI resume code is called
-   This interrupt is targeted at CPU0 (it's the one which could not be
-   written above).
-
-xhci_hcd 0000:00:14.0: pci_pm_thaw_noirq+0x0/0x70 returned 0 after 5272 usecs
-xhci_hcd 0000:00:0d.0: calling pci_pm_thaw_noirq+0x0/0x70 @ 1123, parent: pci0000:00
-xhci_hcd 0000:00:0d.0: EVAN Write MSI 0 fee00000 4045
-
-   Ditto
-
-xhci_hcd 0000:00:0d.0: pci_pm_thaw_noirq+0x0/0x70 returned 0 after 623 usecs
-xhci_hcd 0000:00:14.0: calling pci_pm_thaw+0x0/0x7c @ 3856, parent: pci0000:00
-xhci_hcd 0000:00:14.0: pci_pm_thaw+0x0/0x7c returned 0 after 0 usecs
-xhci_hcd 0000:00:0d.0: calling pci_pm_thaw+0x0/0x7c @ 4664, parent: pci0000:00
-xhci_hcd 0000:00:0d.0: pci_pm_thaw+0x0/0x7c returned 0 after 0 usecs
-
-That means the suspend/resume logic is doing the right thing.
-
-How the XHCI ends up being confused here is a mystery. Cc'ed a few more folks.
-
-Thanks,
-
-        tglx
-
-
+T24gVHVlLCBBcHIgNSwgMjAyMiBhdCA1OjM0IEFNIEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgPGtp
+c2hvbkB0aS5jb20+IHdyb3RlOg0KPg0KPiBIaSBGcmFuayBMaSwNCj4NCj4gT24gMjIvMDIvMjIg
+OTo1MyBwbSwgRnJhbmsgTGkgd3JvdGU6DQo+ID4gVGhpcyBpbXBsZW1lbnQgTlRCIGZ1bmN0aW9u
+IGZvciBQQ0llIEVQIHRvIFJDIGNvbm5lY3Rpb25zLg0KPiA+IFRoZSBleGlzdGVkIG50YiBlcGYg
+bmVlZCB0d28gUENJIEVQcyBhbmQgdHdvIFBDSSBIb3N0Lg0KPg0KPiBBcyBJIGhhZCBlYXJsaWVy
+IG1lbnRpb25lZCBpbiBbMV0sIElNSE8gaWRlYWwgc29sdXRpb24gd291bGQgYmUgYnVpbGQgb24g
+dmlydGlvDQo+IGxheWVyIGluc3RlYWQgb2YgdHJ5aW5nIHRvIGJ1aWxkIG9uIE5UQiBsYXllciAo
+d2hpY2ggaXMgc3BlY2lmaWMgdG8gUkM8LT5SQw0KPiBjb21tdW5pY2F0aW9uKS4NCj4NCj4gQXJl
+IHRoZXJlIGFueSBzcGVjaWZpYyByZWFzb25zIGZvciBub3QgdGFraW5nIHRoYXQgcGF0aD8NCg0K
+MS4gRVAgc2lkZSB3b3JrIGFzIHZIT1NUIG1vZGUuICB2SG9zdCBzdXBwb3NlIGFjY2VzcyBhbGwg
+bWVtb3J5IG9mIHZpcnR1YWwgaW8uDQpCdXQgdGhlcmUgYXJlIG9ubHkgbWFwIHdpbmRvd3Mgb24g
+dGhlIEVQIHNpZGUgdG8gYWNjZXNzIFJDIHNpZGUNCm1lbW9yeS4gWW91IGhhdmUgdG8gbW92ZQ0K
+bWFwIHdpbmRvd3MgZm9yIGVhY2ggYWNjZXNzLiAgSXQgaXMgcXVpdGUgbG93IGVmZmljaWVuY3ku
+DQoNCjIuIFNvIGZhciBhcyBJIGtub3csIHZpcnRpbyBpcyBzdGlsbCBub3QgRE1BIHlldC4gIENQ
+VSBhY2Nlc3MgUENJDQpjYW4ndCBnZW5lcmF0ZSBsb25nZXIgUENJIFRMUCwNClNvIHRoZSBzcGVl
+ZCBpcyBxdWl0ZSBzbG93LiAgTlRCIGFscmVhZHkgaGFzIERNQSBzdXBwb3J0LiAgSWYgeW91IHVz
+ZQ0Kc3lzdGVtIGxldmVsIERNQSwNCm5vIGNoYW5nZSBpcyBuZWVkZWQgYXQgTlRCIGxldmVsLiAg
+SWYgd2Ugd2FudCB0byB1c2UgYSBQQ0kgY29udHJvbGxlcg0KZW1iZWRkZWQgRE1BLCAgc29tZSBz
+bWFsbA0KY2hhbmdlcyBuZWVkIGlmIGJhc2VkIG9uIG15IG90aGVyIERlc2lnbndhcmUgUENJIGVE
+TUEgcGF0Y2hlcywgd2hpY2gNCmFyZSB1bmRlciByZXZpZXcuDQoNCjMuIEFsbCB0aGUgbWFqb3Ig
+ZGF0YSB0cmFuc2ZlciBvZiBOVEIgaXMgdXNpbmcgd3JpdGUuICBCZWNhdXNlIFRMUA0Kd3JpdGUg
+bmVlZG4ndCB3YWl0IGZvciBjb21wbGV0ZSwgIHdyaXRlDQpwZXJmb3JtYW5jZSBpcyBiZXR0ZXIg
+dGhhbiByZWFkaW5nLiAgT24gb3VyIHBsYXRmb3JtLCAgd3JpdGUNCnBlcmZvcm1hbmNlIGlzIGFi
+b3V0IDEwJSBiZXR0ZXIgdGhhbiAgcmVhZC4NCg0KRnJhbmsNCg0KPg0KPiBUaGFua3MsDQo+IEtp
+c2hvbg0KPg0KPiBbMV0gLT4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci80NTk3NDVkMS05ZmU3
+LWU3OTItMzUzMi0zM2VlOTU1MmJjNGRAdGkuY29tDQo+ID4NCj4gPiBUaGlzIGp1c3QgbmVlZCBF
+UCB0byBSQyBjb25uZWN0aW9ucy4NCj4gPg0KPiA+ICAgICDilIzilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilJAgICAgICAgICDilIzilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJANCj4gPiAgICAg4pSCICAgICAgICAgICAg
+4pSCICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKUgg0K
+PiA+ICAgICDilJzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilKQgICAgICAg
+ICDilIIgICAgICAgICAgICAgICAgICAgICAg4pSM4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSkDQo+ID4gICAgIOKUgiBOVEIgICAgICAgIOKUgiAgICAgICAgIOKU
+giAgICAgICAgICAgICAgICAgICAgICDilIIgTlRCICAgICAgICAgIOKUgg0KPiA+ICAgICDilIIg
+TmV0RGV2ICAgICDilIIgICAgICAgICDilIIgICAgICAgICAgICAgICAgICAgICAg4pSCIE5ldERl
+diAgICAgICDilIINCj4gPiAgICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSkICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAgICAgIOKUnOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpA0KPiA+ICAgICDilIIgTlRCICAgICAgICDi
+lIIgICAgICAgICDilIIgICAgICAgICAgICAgICAgICAgICAg4pSCIE5UQiAgICAgICAgICDilIIN
+Cj4gPiAgICAg4pSCIFRyYW5zZmVyICAg4pSCICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAg
+ICAgIOKUgiBUcmFuc2ZlciAgICAg4pSCDQo+ID4gICAgIOKUnOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUpCAgICAgICAgIOKUgiAgICAgICAgICAgICAgICAgICAgICDilJzi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilKQNCj4gPiAgICAg4pSC
+ICAgICAgICAgICAg4pSCICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAgICAgIOKUgiAgICAg
+ICAgICAgICAg4pSCDQo+ID4gICAgIOKUgiAgUENJIE5UQiAgIOKUgiAgICAgICAgIOKUgiAgICAg
+ICAgICAgICAgICAgICAgICDilIIgICAgICAgICAgICAgIOKUgg0KPiA+ICAgICDilIIgICAgRVBG
+ICAgICDilIIgICAgICAgICDilIIgICAgICAgICAgICAgICAgICAgICAg4pSCICAgICAgICAgICAg
+ICDilIINCj4gPiAgICAg4pSCICAgRHJpdmVyICAg4pSCICAgICAgICAg4pSCICAgICAgICAgICAg
+ICAgICAgICAgIOKUgiBQQ0kgVmlydHVhbCAg4pSCDQo+ID4gICAgIOKUgiAgICAgICAgICAgIOKU
+giAgICAgICAgIOKUnOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUkCAgICAgIOKUgiBOVEIgRHJpdmVyICAg4pSCDQo+ID4gICAgIOKUgiAgICAgICAgICAgIOKU
+giAgICAgICAgIOKUgiBQQ0kgRVAgTlRCICAgIOKUguKXhOKUgOKUgOKUgOKUgOKWuuKUgiAgICAg
+ICAgICAgICAg4pSCDQo+ID4gICAgIOKUgiAgICAgICAgICAgIOKUgiAgICAgICAgIOKUgiAgRk4g
+RHJpdmVyICAgIOKUgiAgICAgIOKUgiAgICAgICAgICAgICAg4pSCDQo+ID4gICAgIOKUnOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpCAgICAgICAgIOKUnOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpCAgICAgIOKUnOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpA0KPiA+ICAgICDilIIgICAgICAgICAg
+ICDilIIgICAgICAgICDilIIgICAgICAgICAgICAgICDilIIgICAgICDilIIgICAgICAgICAgICAg
+IOKUgg0KPiA+ICAgICDilIIgIFBDSSBCVVMgICDilIIg4peE4pSA4pSA4pSA4pSA4pSA4pa6IOKU
+giAgUENJIEVQIEJVUyAgIOKUgiAgICAgIOKUgiAgVmlydHVhbCBQQ0kg4pSCDQo+ID4gICAgIOKU
+giAgICAgICAgICAgIOKUgiAgUENJICAgIOKUgiAgICAgICAgICAgICAgIOKUgiAgICAgIOKUgiAg
+ICAgQlVTICAgICAg4pSCDQo+ID4gICAgIOKUlOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUmCAgICAgICAgIOKUlOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUtOKUgOKUgOKUgOKUgOKUgOKUgOKUtOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUmA0KPiA+ICAgICAgICAgUENJIFJDICAgICAgICAgICAgICAg
+ICAgICAgICAgUENJIEVQDQo+ID4NCj4gPg0KPiA+DQo+ID4gRnJhbmsgTGkgKDQpOg0KPiA+ICAg
+UENJOiBkZXNpZ253YXJlLWVwOiBBbGxvdyBwY2lfZXBjX3NldF9iYXIoKSB1cGRhdGUgaW5ib3Vu
+ZCBtYXAgYWRkcmVzcw0KPiA+ICAgTlRCOiBlcGY6IEFsbG93IG1vcmUgZmxleGliaWxpdHkgaW4g
+dGhlIG1lbW9yeSBCQVIgbWFwIG1ldGhvZA0KPiA+ICAgUENJOiBlbmRwb2ludDogU3VwcG9ydCBO
+VEIgdHJhbnNmZXIgYmV0d2VlbiBSQyBhbmQgRVANCj4gPiAgIERvY3VtZW50YXRpb246IFBDSTog
+QWRkIHNwZWNpZmljYXRpb24gZm9yIHRoZSBQQ0kgdk5UQiBmdW5jdGlvbiBkZXZpY2UNCj4gPg0K
+PiA+ICBEb2N1bWVudGF0aW9uL1BDSS9lbmRwb2ludC9pbmRleC5yc3QgICAgICAgICAgfCAgICAy
+ICsNCj4gPiAgLi4uL1BDSS9lbmRwb2ludC9wY2ktdm50Yi1mdW5jdGlvbi5yc3QgICAgICAgIHwg
+IDEyNiArKw0KPiA+ICBEb2N1bWVudGF0aW9uL1BDSS9lbmRwb2ludC9wY2ktdm50Yi1ob3d0by5y
+c3QgfCAgMTY3ICsrDQo+ID4gIGRyaXZlcnMvbnRiL2h3L2VwZi9udGJfaHdfZXBmLmMgICAgICAg
+ICAgICAgICB8ICAgNDggKy0NCj4gPiAgLi4uL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2ln
+bndhcmUtZXAuYyAgIHwgICAxMCArLQ0KPiA+ICBkcml2ZXJzL3BjaS9lbmRwb2ludC9mdW5jdGlv
+bnMvS2NvbmZpZyAgICAgICAgfCAgIDExICsNCj4gPiAgZHJpdmVycy9wY2kvZW5kcG9pbnQvZnVu
+Y3Rpb25zL01ha2VmaWxlICAgICAgIHwgICAgMSArDQo+ID4gIGRyaXZlcnMvcGNpL2VuZHBvaW50
+L2Z1bmN0aW9ucy9wY2ktZXBmLXZudGIuYyB8IDE0MjQgKysrKysrKysrKysrKysrKysNCj4gPiAg
+OCBmaWxlcyBjaGFuZ2VkLCAxNzc1IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPiA+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9QQ0kvZW5kcG9pbnQvcGNpLXZudGIt
+ZnVuY3Rpb24ucnN0DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL1BDSS9l
+bmRwb2ludC9wY2ktdm50Yi1ob3d0by5yc3QNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvcGNpL2VuZHBvaW50L2Z1bmN0aW9ucy9wY2ktZXBmLXZudGIuYw0KPiA+DQo=
