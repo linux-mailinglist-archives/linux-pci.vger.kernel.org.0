@@ -2,339 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 220C84F471C
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 01:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BBB04F471B
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 01:27:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237450AbiDEU7h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Apr 2022 16:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51078 "EHLO
+        id S234686AbiDEU7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Apr 2022 16:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244252AbiDEUUc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 16:20:32 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE22692BA;
-        Tue,  5 Apr 2022 13:00:06 -0700 (PDT)
+        with ESMTP id S1346637AbiDEUWH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 16:22:07 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B937C155;
+        Tue,  5 Apr 2022 13:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649188806; x=1680724806;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=s9+5sWIrw/8+D5NpfC6Yf1k8qyONKg8kSkpaSpE5bF8=;
-  b=mwjp+Uy7XBAj/JvV932wF7wUZOXvjrLH7tuCmQJ5TJg/R2fYOc1m9656
-   LJUXKyBqigXEtwQYmps0KK368DlxNR8ZCL/yqUk9xPygyr6TATXkfQnZB
-   +UC8GAHp2GZB7GUFUGX6sQVMg/+zM0TU11vxpdcTHph8t8cTH864Yc1Bt
-   oAYQVZPE7NICBo+93+VY7rLIvDq6+JxJUDZpiRVMo7RDiYANcV/cHt9QJ
-   ruQ5J7c/zWDxz6plL8fGmFGUX2Igfe3cWkn0VZFJ2n3Sgiamw1iIBUQSK
-   nZ7/VIuiFWgjVInC2mlDGVXjG3GNJ6kgL3zQvE4saE6ZsVrr5d4o3NZQA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="260548291"
+  t=1649189148; x=1680725148;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=vDRWzQjdUdmtBAZDR/k/RRdBYSvT6Syo0e/+Aa2e9/I=;
+  b=hvmt4ZPEc7adPE2fzE8RNL/sLBDwmAzrE0cQXoEcJ8oIy1M7YrZRHjdl
+   kyFgiNBYg0eH5tjC5nvMe+bJGqGkdeVazEewvwDoJBjvXHpaF0ncdMNiY
+   24cmHcNxLV4+J/oOUIQo/+kjezHu5jjNXAu1yQAGTmvxZDNPMf45frq8m
+   Hc0XrrJ5zHtD52pWKnWq8WEx0tlRUEltdDmyZ3tigBsXy/Os9qBu0HjhZ
+   SCf5BQC3+qg5Fj5dcFWVEYsDWmoN8Mxb6ekM40mrTh/ynDHM+DSLE72SI
+   UCgZTj0avKK4ixng6J3eaJUyEkDuhrCKUuFGLqle2yfqWdlUOkPNiKaYV
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="258437082"
 X-IronPort-AV: E=Sophos;i="5.90,238,1643702400"; 
-   d="scan'208";a="260548291"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 13:00:06 -0700
+   d="scan'208";a="258437082"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 13:05:48 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,238,1643702400"; 
-   d="scan'208";a="588073914"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 13:00:05 -0700
-Subject: [PATCH v2] PM: CXL: Disable suspend
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Tue, 05 Apr 2022 13:00:05 -0700
-Message-ID: <164918880566.2022733.9710638662231385597.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
+   d="scan'208";a="523600638"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga002.jf.intel.com with ESMTP; 05 Apr 2022 13:05:48 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 5 Apr 2022 13:05:47 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Tue, 5 Apr 2022 13:05:47 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Tue, 5 Apr 2022 13:05:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YQ2A8G3UR0CJQm6cfM3N2+DsxnGW/KwEO51JgIicV4cbYeaYyIfQPWe4AVse5fIK7qYR5SngMDJlbMatXgRWpgkYIdFeYybLvcFj+5rWFa28UnVeliY9OyOoq4r7isdr1gCDPhrr5H80rvGkRIS0xkem8LAKnJ4TjgjS8MGIj15RvL7sY7z0SyFAwADjlFgAoXDKX+WQhhJ3fcQHQ25tqPjJMnvORWxECLENeTuM6U4wWX1A3R1vPpch7PEC2IS61XX44l/CMFt+VStKM4Et4JOXieNwptYWs3ypv9jZA0joVUTAl3jWvlrcQNj3tcDzw+X+G3YSshHvqZVfJrPaYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vDRWzQjdUdmtBAZDR/k/RRdBYSvT6Syo0e/+Aa2e9/I=;
+ b=B8KZYg5wuYQYsCNmnbDPUuBQ7Kf63+gky7K6vG9am5MI9Rz3DROJKURB9Y5ozZx7fxKL90peU38+TWeVD3ZtGgASNY4S4Wx/vADDqCCHSQgOX395zCQalWqa0Rlpa1vcApIqkxjWYxvJPr2TnHTUXVc7ULU0crQUmpog+ljU/Fv+N6ktzwQwG98BAZLstCvKbq1GWNoJcrChY0XtevhOxTq40N4w5hveEMQLhEMBS16wcV4HQDa1uo7SM3wmu542HVtGoXCwtU4Jy4wRSsbKxwIdGIyIJb4JdOl/5do76+9V73jMeMwlhuOYIgiDw480GlCxAqMXaUoyP8OstK3GcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ0PR11MB4895.namprd11.prod.outlook.com (2603:10b6:a03:2de::23)
+ by PH0PR11MB4821.namprd11.prod.outlook.com (2603:10b6:510:34::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.31; Tue, 5 Apr
+ 2022 20:05:43 +0000
+Received: from SJ0PR11MB4895.namprd11.prod.outlook.com
+ ([fe80::341b:28cd:7072:246a]) by SJ0PR11MB4895.namprd11.prod.outlook.com
+ ([fe80::341b:28cd:7072:246a%9]) with mapi id 15.20.5123.031; Tue, 5 Apr 2022
+ 20:05:43 +0000
+From:   "Brown, Len" <len.brown@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH v2] PM: CXL: Disable suspend
+Thread-Topic: [PATCH v2] PM: CXL: Disable suspend
+Thread-Index: AQHYSSfWDk1SaMtfn02zXJdC+fT+dKzhviYw
+Date:   Tue, 5 Apr 2022 20:05:43 +0000
+Message-ID: <SJ0PR11MB48956875FB15F900B5CF130BE0E49@SJ0PR11MB4895.namprd11.prod.outlook.com>
 References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
-MIME-Version: 1.0
+ <164918880566.2022733.9710638662231385597.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164918880566.2022733.9710638662231385597.stgit@dwillia2-desk3.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.6.401.20
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 30b3208c-102f-4b50-9355-08da173faa4c
+x-ms-traffictypediagnostic: PH0PR11MB4821:EE_
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-microsoft-antispam-prvs: <PH0PR11MB48212CD9E4C2C54C56AD3CA4E0E49@PH0PR11MB4821.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LwPqQN8y6g6Y6go9A65EHh1YT4fwFZebRiGGHN/5cUfup0vAQpINuLQy+08+v2cbd0vrCYOmDQHVivOpzjgywPGLvH6rfX+GZlbDWCQwo13jiMlPsyBqIGs+99hLGoKROm6J906MPwcU+hSq0ICi/5+0SDdnpE8j+Fv1qTobdVdxLlbS/xWqSX75/+oyODvJ8QqhsiuZd0vruXOrqIp+H4h1GDDHGjP0MNYt2fKxiiU9QtdzoPR+zYYaETJ8iEOchtYgEMtpTSxHVfodrp2N6bb7fcQAAtXfuZwQmDqxbR0Y3fSTwxqekCk1Q7rM7d+sUd5YzAwwIMKXbS8QQq8LPXkpeoIgaBb/hA5Tab1Z1ioBOtWHDfMb/z/TVFS1MWJb8UCxVdgi1j63/kzr8OQYJt57qoi7Hu/C9M0vvoQ0SuT/K0haEsTS/r3MOjrqYGFR+pG0nfOsHo+yzsO6YT4kToC9Ez3CTWXWdHqybjDc8n2KhKa0wxbbaQrmq3o6a5+SZuuwImOB1Y4ivuDhBei2FboWl513YZdpNthz+T88BAvVQkjT07C9bpVxu96hsRcf5A9TlZe/Eu4fJUaB+9VAEdQVOnUm7RFfjiKE1JOsMmgd71zEXyirY2qagNa3FZ/ymknXJEUmBloR/lCg/RkVnKF5hjy9npvRwRtWg4NfJNTJseU+xXmT9DeTgBESIGCR+x7fYZts9w+tMTwsYOCCYQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB4895.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(508600001)(4326008)(7696005)(33656002)(66556008)(76116006)(8676002)(66476007)(2906002)(66946007)(9686003)(6506007)(38100700002)(558084003)(52536014)(66446008)(82960400001)(5660300002)(64756008)(122000001)(8936002)(186003)(110136005)(55016003)(54906003)(316002)(71200400001)(38070700005)(86362001)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bkducVY3TlFkNTB0TWtnZ3BiZ2FodGhvczJSajN1cnQyQm9wT2RyeFFidHIy?=
+ =?utf-8?B?NVJ2TlFMME5JcW5xclFwdm1hZHdia2RyU0UrT2ZEMDFYdFlRdGNYbDdyeHgv?=
+ =?utf-8?B?Z2tBT255SW9nU0ViUDFOcWdicUVNYVh5TG9MbWtxZmh2TEdyYUJCZk5wNEtN?=
+ =?utf-8?B?ZHpmN3RLM2xBSEUyem1VQ2QyaHdjRTI3MkJ4RzRtaDZNeklwU3cvODk3T0Rv?=
+ =?utf-8?B?bXlxMjErTU91NHkyQXJ0QTNmaUlFQkFJMWZUeVR6M2l0TE1ZRWRkcW03TmtL?=
+ =?utf-8?B?R0Y0c0gvR1d2Qngxd0VPb09pamhKbjFHVUJZQnVaT0o3ME83WnN0Y0dWM3BZ?=
+ =?utf-8?B?cSthL2NUZ3lJSW1BaU5rZy9ZTzQ4dDlXcU1EcC9XQTNHVlhMYUx1T3IvVldo?=
+ =?utf-8?B?Q3lYVkw0c1kxUTJBZnB5ZnJKeXMyaW5yTkQwMm9uOER6R2NLa3NmSHRSQnBR?=
+ =?utf-8?B?R1cvTGpKV0Njb1ZTTm8zUldPUWlwUjVSSFpXSTFScTJZVk9Sd0x6MGM1K0l2?=
+ =?utf-8?B?TUdQckJadmRDb3lxaFFJbGhkRUpYa081b0ExajlWck1XaWNpQ2R5R0U2T0pR?=
+ =?utf-8?B?SlE3Qzl1WTFDMnRzUmVQSlVkeEhMUVlrZFRFdGRoUjZpY3R2QldOTGJBZ2xS?=
+ =?utf-8?B?aWdLb21xR2RkZlZQc2dpYnZqWlVhU283R21STlVCRVhScEphbWZCbmY5OTZw?=
+ =?utf-8?B?bml6R2ppSStNaTVtSHZWOXNtelc1QnliNndudjM3cFQ3MldIdC9wMWlEbE0r?=
+ =?utf-8?B?QXI3Sk5Qb3B3czhCcm5WZTlJYUp4bklyV29FM0pmelYrYTBRM1JCM005eFpM?=
+ =?utf-8?B?RWJicmtOSGpaVTNQN1FNY2hzWVpadnltb2s1bE1UN1lxL0tKelVwQzhUaXR6?=
+ =?utf-8?B?Z3FHOUZoSGdQN0YyZ2dNR3ZxK0xOSGhKNzgwRzlzOHRtTDdtMFAyTkEvVDJl?=
+ =?utf-8?B?VDY5T2RtVnh0ZjhVZWx0QW96bkY0M1JRbllZWmh2Z0RTRU05WjEyTGtLVzYw?=
+ =?utf-8?B?VGlHd014Z2ZlZHRibGJWV2FjSlZsSnZuTS80RGVPcm5XRlllbXl6UEl2bU1P?=
+ =?utf-8?B?Y2pWQW8zRmhTaUZTd2g2d2lqeTdlY1BDY2NkQURmdXFQK0pKSGZkb2tCcnhv?=
+ =?utf-8?B?bTFXTUM3dGJ0Vk5QZENtTDNTcTc4QktabjJ1M3NTSWlOdy9ocVkwWXNQM0Fk?=
+ =?utf-8?B?c0tDOGtEK2hwbXJQU2pHU0ZMWFlsT0pUdnJMZkxsYi9PbW9tU2N6M3VERkhi?=
+ =?utf-8?B?NmU4NEQyNmJBYzY3N3lhTER4SnQ1SWp1aHQrQXNIdjFScmlxbmJEc21MVUxt?=
+ =?utf-8?B?QjE4ZkdxWUhWN0s4U3krcEl6MGRzQytRdDFzRGpvclhEenNoZ3hBRTZtd1M5?=
+ =?utf-8?B?WS9vS2xESU5Kc0dJbFVsWVNJQzIzSktsY0FzRlQyZlRabHBwYjJaVndGN25I?=
+ =?utf-8?B?MHI1dnVaRGxRSDk4Zk5hc1JNOEhrMVVINWxGMEpiY3hBZlRXRzI2OW5BQ1Ft?=
+ =?utf-8?B?dm16eTlwMUpZbkM5akNDQU1vV2V5cEJJN2VtdkZTeTJHcjFJaFo3UjE5aVpK?=
+ =?utf-8?B?SmhJd2QrdnZHd0lQMnB1QzBHNEZkbDdCYVd0V0lsYzhHYi91YU52YkZKZmk5?=
+ =?utf-8?B?U1F0UnlnaGR2KzlPQTBlNHNCYncwWnU1ZEcwSmVVa25GV1d5cFdtZ01uMFQw?=
+ =?utf-8?B?N2phc3pWUGQrd2Uvc3N2QTVzbG1qMUxPTW1XWWt2OW82aEhNZ1hOUE83eitU?=
+ =?utf-8?B?N2c1b05US2Q4TnBUb1JGdmtOVFE3N2QzZ085TFFmK0JmV1pubVlnRkxDc3dP?=
+ =?utf-8?B?eFZLa2lIcjczeDNRa2pua2xlcHJSQ2RGOThYSy9hUHZQb3FWM2FseWdNbUpX?=
+ =?utf-8?B?N0tOYllkSm9lSWNrM3NtcEF2aitiV1NwK2xGbUVrUTBidlljN1JLM3RROGJS?=
+ =?utf-8?B?TnRaQzR5ZFZCU3NVSXZVV0hETXFJdFF0UXlzbmQ0M0Z4dElRamtSTXBkR1k4?=
+ =?utf-8?B?dFdaQXVNaEpPZk5vVzlBUDh0MXYyYkFKa3ZVUzRrMzNwMnJURWhTMFUzME9R?=
+ =?utf-8?B?MmF2dENybTdpbVRUMFZHZUZPTk4yNXBJOEpUTjluRWk1aWY0dkV6Sm5Ea1hV?=
+ =?utf-8?B?dlFpaXc4QnhpRVhVVk9lMWNLdUNySzZVYlJpc2FRclRrVm5rRkI1cmUzUG1a?=
+ =?utf-8?B?OVltM2F1Z3Bmd3dlbkc3Z3RUZnpJZHNzalZWdnpJUjI3MXpjcS9JSVdiRDJi?=
+ =?utf-8?B?LzlCNVNOckJKY3czZlE1NXNPaGdxS1M2TzdGYlZMd2s3WTk2eG9IMDRxdFJL?=
+ =?utf-8?B?NGFUNGxOdlR0aGQybTVXNTRsOFA5Z0hTbmZXZVlSZ0IzVy9YckRxUT09?=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB4895.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30b3208c-102f-4b50-9355-08da173faa4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2022 20:05:43.3089
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /Hp7xGTcg83x+tEMXbtkT/n17zcGScn5zovnR5bIGe75mvVBcHovpupvh2pOJWiCo/ZdznVY7uzHaXt5tKDALQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4821
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The CXL specification claims S3 support at a hardware level, but at a
-system software level there are some missing pieces. Section 9.4 (CXL
-2.0) rightly claims that "CXL mem adapters may need aux power to retain
-memory context across S3", but there is no enumeration mechanism for the
-OS to determine if a given adapter has that support. Moreover the save
-state and resume image for the system may inadvertantly end up in a CXL
-device that needs to be restored before the save state is recoverable.
-I.e. a circular dependency that is not resolvable without a third party
-save-area.
-
-Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
-allows for suspend, but requires unbinding all CXL memory devices before
-the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
-flow is intended to also tear down all CXL memory regions associated
-with a given cxl_memdev.
-
-It is reasonable to assume that any device participating in a System RAM
-range published in the EFI memory map is covered by aux power and
-save-area outside the device itself. So this restriction can be
-minimized in the future once pre-existing region enumeration support
-arrives, and perhaps a spec update to clarify if the EFI memory map is
-sufficent for determining the range of devices managed by
-platform-firmware for S3 support.
-
-Per Rafael, if the CXL configuration prevents suspend then it should
-fail early before tasks are frozen, and mem_sleep should stop showing
-'mem' as an option [1]. Effectively CXL augments the platform suspend
-->valid() op since, for example, the ACPI ops are not aware of the CXL /
-PCI dependencies. Given the split role of platform firmware vs OS
-provisioned CXL memory it is up to the cxl_mem driver to determine if
-the CXL configuration has elements that platform firmware may not be
-prepared to restore.
-
-Link: https://lore.kernel.org/r/CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com [1]
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Len Brown <len.brown@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/Makefile           |    2 +-
- drivers/cxl/Kconfig        |    4 ++++
- drivers/cxl/Makefile       |    2 +-
- drivers/cxl/core/Makefile  |    1 +
- drivers/cxl/core/memdev.c  |    1 -
- drivers/cxl/core/suspend.c |   23 +++++++++++++++++++++++
- drivers/cxl/cxlmem.h       |   11 +++++++++++
- drivers/cxl/mem.c          |   22 +++++++++++++++++++++-
- include/linux/pm.h         |    9 +++++++++
- kernel/power/hibernate.c   |    2 +-
- kernel/power/main.c        |    5 ++++-
- kernel/power/suspend.c     |    3 ++-
- 12 files changed, 78 insertions(+), 7 deletions(-)
- create mode 100644 drivers/cxl/core/suspend.c
-
-diff --git a/drivers/Makefile b/drivers/Makefile
-index 020780b6b4d2..f735c4955143 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -72,9 +72,9 @@ obj-$(CONFIG_PARPORT)		+= parport/
- obj-y				+= base/ block/ misc/ mfd/ nfc/
- obj-$(CONFIG_LIBNVDIMM)		+= nvdimm/
- obj-$(CONFIG_DAX)		+= dax/
--obj-$(CONFIG_CXL_BUS)		+= cxl/
- obj-$(CONFIG_DMA_SHARED_BUFFER) += dma-buf/
- obj-$(CONFIG_NUBUS)		+= nubus/
-+obj-y				+= cxl/
- obj-y				+= macintosh/
- obj-y				+= scsi/
- obj-y				+= nvme/
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index b88ab956bb7c..f64e3984689f 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -98,4 +98,8 @@ config CXL_PORT
- 	default CXL_BUS
- 	tristate
- 
-+config CXL_SUSPEND
-+	def_bool y
-+	depends on SUSPEND && CXL_MEM
-+
- endif
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index ce267ef11d93..a78270794150 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_CXL_BUS) += core/
-+obj-y += core/
- obj-$(CONFIG_CXL_PCI) += cxl_pci.o
- obj-$(CONFIG_CXL_MEM) += cxl_mem.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 6d37cd78b151..9d35085d25af 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_CXL_BUS) += cxl_core.o
-+obj-$(CONFIG_CXL_SUSPEND) += suspend.o
- 
- ccflags-y += -I$(srctree)/drivers/cxl
- cxl_core-y := port.o
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 1f76b28f9826..efe4d2e9bfef 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
- 	dev->bus = &cxl_bus_type;
- 	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
- 	dev->type = &cxl_memdev_type;
--	device_set_pm_not_required(dev);
- 	INIT_WORK(&cxlmd->detach_work, detach_memdev);
- 
- 	cdev = &cxlmd->cdev;
-diff --git a/drivers/cxl/core/suspend.c b/drivers/cxl/core/suspend.c
-new file mode 100644
-index 000000000000..88bdbe30a1df
---- /dev/null
-+++ b/drivers/cxl/core/suspend.c
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-+#include <linux/atomic.h>
-+#include <linux/export.h>
-+
-+static atomic_t mem_active;
-+
-+bool cxl_mem_active(void)
-+{
-+	return atomic_read(&mem_active) != 0;
-+}
-+
-+void cxl_mem_active_inc(void)
-+{
-+	atomic_inc(&mem_active);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_active_inc, CXL);
-+
-+void cxl_mem_active_dec(void)
-+{
-+	atomic_dec(&mem_active);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_active_dec, CXL);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 243dd86a8b46..7235d2f976e5 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -353,6 +353,17 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
- struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
- void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
- void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
-+#ifdef CONFIG_CXL_SUSPEND
-+void cxl_mem_active_inc(void);
-+void cxl_mem_active_dec(void);
-+#else
-+static inline void cxl_mem_active_inc(void)
-+{
-+}
-+static inline void cxl_mem_active_dec(void)
-+{
-+}
-+#endif
- 
- struct cxl_hdm {
- 	struct cxl_component_regs regs;
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 49a4b1c47299..0576d2d3df07 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -129,6 +129,11 @@ __mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
- 	return do_hdm_init;
- }
- 
-+static void enable_suspend(void *data)
-+{
-+	cxl_mem_active_dec();
-+}
-+
- static int cxl_mem_probe(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-@@ -207,7 +212,22 @@ static int cxl_mem_probe(struct device *dev)
- out:
- 	cxl_device_unlock(&parent_port->dev);
- 	put_device(&parent_port->dev);
--	return rc;
-+
-+	/*
-+	 * The kernel may be operating out of CXL memory on this device,
-+	 * there is no spec defined way to determine whether this device
-+	 * preserves contents over suspend, and there is no simple way
-+	 * to arrange for the suspend image to avoid CXL memory which
-+	 * would setup a circular dependency between PCI resume and save
-+	 * state restoration.
-+	 *
-+	 * TODO: support suspend when all the regions this device is
-+	 * hosting are locked and covered by the system address map,
-+	 * i.e. platform firmware owns restoring the HDM configuration
-+	 * that it locked.
-+	 */
-+	cxl_mem_active_inc();
-+	return devm_add_action_or_reset(dev, enable_suspend, NULL);
- }
- 
- static struct cxl_driver cxl_mem_driver = {
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index e65b3ab28377..7911c4c9a7be 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -36,6 +36,15 @@ static inline void pm_vt_switch_unregister(struct device *dev)
- }
- #endif /* CONFIG_VT_CONSOLE_SLEEP */
- 
-+#ifdef CONFIG_CXL_SUSPEND
-+bool cxl_mem_active(void);
-+#else
-+static inline bool cxl_mem_active(void)
-+{
-+	return false;
-+}
-+#endif
-+
- /*
-  * Device power management
-  */
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 938d5c78b421..20a66bf9f465 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -83,7 +83,7 @@ bool hibernation_available(void)
- {
- 	return nohibernate == 0 &&
- 		!security_locked_down(LOCKDOWN_HIBERNATION) &&
--		!secretmem_active();
-+		!secretmem_active() && !cxl_mem_active();
- }
- 
- /**
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 7e646079fbeb..3e6be1c33e0b 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -127,7 +127,9 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
- 	char *s = buf;
- 	suspend_state_t i;
- 
--	for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++)
-+	for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++) {
-+		if (i >= PM_SUSPEND_MEM && cxl_mem_active())
-+			continue;
- 		if (mem_sleep_states[i]) {
- 			const char *label = mem_sleep_states[i];
- 
-@@ -136,6 +138,7 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
- 			else
- 				s += sprintf(s, "%s ", label);
- 		}
-+	}
- 
- 	/* Convert the last space to a newline if needed. */
- 	if (s != buf)
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 6fcdee7e87a5..827075944d28 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -236,7 +236,8 @@ EXPORT_SYMBOL_GPL(suspend_valid_only_mem);
- 
- static bool sleep_state_supported(suspend_state_t state)
- {
--	return state == PM_SUSPEND_TO_IDLE || valid_state(state);
-+	return state == PM_SUSPEND_TO_IDLE ||
-+	       (valid_state(state) && !cxl_mem_active());
- }
- 
- static int platform_suspend_prepare(suspend_state_t state)
-
+SXMgaXQgcG9zc2libGUgZm9yIEFDUEkgdG8gYmUgYXdhcmUgdGhhdCBDWEwgb24gdGhhdCBzeXN0
+ZW0gZG9lc24ndCBzdXBwb3J0IFMzLCBhbmQgZm9yIEFDUEkgdG8gdGh1cyBzaW1wbHkgbm90IGV4
+cG9ydCBTMz8NCg0KLUxlbg0KDQo=
