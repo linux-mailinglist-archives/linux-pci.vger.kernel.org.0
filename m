@@ -2,106 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FE6F4F3EF5
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Apr 2022 22:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D693B4F421C
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Apr 2022 23:40:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235369AbiDEOqf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Apr 2022 10:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55920 "EHLO
+        id S236797AbiDEOql (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Apr 2022 10:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349825AbiDENGH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 09:06:07 -0400
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8800175625;
-        Tue,  5 Apr 2022 05:07:16 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id g9so22971564ybf.1;
-        Tue, 05 Apr 2022 05:07:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=knCnV41xjhnnJ0VL0WEqN+kHikKWH8noX35ww6a147E=;
-        b=O7lckBcjELkuaLNv/vx9Zk/dwxb9uNuvdTAK9RfD2UeFpLI+xa1ocEs2O+vfLgUcsy
-         E6lMViABScXgrmVNn0UwQsQhGsBMZjx2E+J1SF4r6LWvm47xalDPaI0XJ2x+wI7/O4VW
-         hLWnU8IchmREOD59IjWNEVY3v3AhTniApfIMW+33/WKIqoHL00Cc5FpHrYpe82q0Sw5f
-         yYlqC0H9t+ZUIzWY9yhWmmJlA9jlW+JvfvfUm1iPBPJBlGqg44x1XmHa5Mx2jl+5l5Nx
-         YtKYSoqyZDYZ+I2EUT8bGKLtTFar7nvRsKdGKsStiFkHJo53hRUX/Zyy2PYRi16wMF4W
-         oWMw==
-X-Gm-Message-State: AOAM531oN2BMuSlLOg4c+fubzN47QHtqt6CXO/IXNgKM6WoRUnL+NEHf
-        dOMvpaK3MYr/99JV7bZnf1StMsg1GNX/S5tJN+ueJseC
-X-Google-Smtp-Source: ABdhPJzm72VVZWMJatZlptDAM3D3/uPEoLzUPr4PBmAZeVrej6UKEUv7t6NBnltKTsOgvbQB0rfxyKF5TOgeLVOvss8=
-X-Received: by 2002:a25:cc08:0:b0:63d:2c6d:162 with SMTP id
- l8-20020a25cc08000000b0063d2c6d0162mr2240396ybf.137.1649160435809; Tue, 05
- Apr 2022 05:07:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <21439956.EfDdHjke4D@kreacher> <YkwQAKcFU4CzYX5E@lahna>
-In-Reply-To: <YkwQAKcFU4CzYX5E@lahna>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 5 Apr 2022 14:07:03 +0200
-Message-ID: <CAJZ5v0ja5OKUh004wEMhrgVtk-yp_Dzvmk33xNhabjDqzV0JsQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] ACPI: PCI: PM: Power up PCI devices with ACPI
- companions upfront
+        with ESMTP id S1392036AbiDENta (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Apr 2022 09:49:30 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6275113D44
+        for <linux-pci@vger.kernel.org>; Tue,  5 Apr 2022 05:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649162959; x=1680698959;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0jSLT9G94zGhIjwUiwuzGIuTV8If/WGqEu69SjRXbZI=;
+  b=W3bH7L5SD5bwkR3+iiywI70kgxSX6LJpb3wzsyd/cnIksgcDcv4VqWE3
+   NWovYlWCE1HNfdFRSgYry9OHATq9dLcQPTU8gMt+uHYFhDbGPNNufpZt8
+   tJXZuF47saDhEZ1c13Ac3bLI/RpYL3PORv88XAjw/baa4jKeq0x8U+7lz
+   0PdHurgYEt4VPUXcW15TGS2UqhPtQfIvLs+z1NRTI1X9xGQ/BMRDpC54y
+   3HRC8mryzm+1fKBcrxsi+l26+YkEXuF9h9WTU9m3cTLvvCjcSaUBIvXrT
+   HvXuN7wb4okTEOUJ2NpG2IzMYEWKUqU2zytGPVdORC02wTNxFNxHjOnfy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10307"; a="258323302"
+X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
+   d="scan'208";a="258323302"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 05:49:08 -0700
+X-IronPort-AV: E=Sophos;i="5.90,236,1643702400"; 
+   d="scan'208";a="569867567"
+Received: from sahanaar-mobl.amr.corp.intel.com (HELO intel.com) ([10.255.37.133])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 05:49:07 -0700
+Date:   Tue, 5 Apr 2022 08:49:05 -0400
+From:   Rodrigo Vivi <rodrigo.vivi@intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Quirk Intel DG2 ASPM L1 acceptable latency to be
+ unlimited
+Message-ID: <Ykw6wbMgk3u3sCLL@intel.com>
+References: <20220405093810.76613-1-mika.westerberg@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220405093810.76613-1-mika.westerberg@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 5, 2022 at 1:45 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> Hi Rafael,
->
-> On Mon, Apr 04, 2022 at 05:20:30PM +0200, Rafael J. Wysocki wrote:
-> > Hi All,
-> >
-> > There are cases in which the power state of a PCI device depends on an ACPI
-> > power resource (or more of them) in such a way that when the given power
-> > resource is in the "off" state, the PCI device depending on it is in D3cold.
-> >
-> > On some systems, the initial state of these power resources is "off", so the
-> > kernel should not access the config space of PCI devices depending on them,
-> > until the power resources in question are turned "on", but currently that is
-> > not respected during PCI device enumeration.  Namely, the PCI device
-> > enumeration code walks the entire bus and enumerates all of the devices it
-> > can find, including the ones whose initial power state in principle depends on
-> > the ACPI power resources in the "off" state.
->
-> I guess these devices do not have _PRE() method either.
+On Tue, Apr 05, 2022 at 12:38:10PM +0300, Mika Westerberg wrote:
+> Intel DG2 discrete graphics PCIe endpoints hard-code their acceptable L1
+> ASPM latency to be < 1us even though the hardware actually supports
+> higher latencies (> 64 us) just fine. In order to allow the links to go
+> into L1 and save power, quirk the acceptable L1 ASPM latency for these
+> endpoints to be unlimited.
+> 
+> Note this does not have any effect unless the user requested the kernel
+> to enable ASPM in the first place (by default we don't enable it). This
+> is done with "pcie_aspm=force pcie_aspm.policy=powersupsersave" command
+> line parameters.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/pci/quirks.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index da829274fc66..e97b5daa00eb 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5895,3 +5895,47 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1533, rom_bar_overlap_defect);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1536, rom_bar_overlap_defect);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1537, rom_bar_overlap_defect);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1538, rom_bar_overlap_defect);
+> +
+> +#ifdef CONFIG_PCIEASPM
+> +/*
+> + * Intel DG2 graphics card has hard-coded acceptable L1 latency that is
+> + * too low which prevents ASPM to be enabled. It does support ASPM L1
+> + * and tolerates higher latencies so quirk it to be unlimited.
+> + */
+> +static void quirk_aspm_accepted_l1_latency(struct pci_dev *dev)
+> +{
+> +	if ((dev->devcap & PCI_EXP_DEVCAP_L1) >> 9 < 7) {
+> +		u32 devcap = dev->devcap;
+> +
+> +		dev->devcap |= 7 << 9;
+> +		pci_info(dev, "quirking devcap for L1 accepted latency 0x%08x -> 0x%08x\n",
+> +			 devcap, dev->devcap);
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f80, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f81, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f82, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f83, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f84, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f85, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f86, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f87, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f88, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5690, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5691, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5692, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5693, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5694, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5695, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a0, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a1, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a2, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a3, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a4, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a5, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a6, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b0, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, quirk_aspm_accepted_l1_latency);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, quirk_aspm_accepted_l1_latency);
+> +#endif
 
-Personally, I haven't seen any ACPI tables containing any _PRE yet.
+This matches our expectations and IDs.
 
-> > Apparently, most of the time, the config space of such devices is accessible
-> > regardless of the state of the ACPI power resource associated with the PCI
-> > device, so the device enumeration is successful, but there are two potential
-> > issues related to this behavior.  First off, even if the given PCI device
-> > is accessible when the ACPI power resource depended on by it is "off",
-> > changing its configuration may confuse the platform firmware and lead to
-> > problems when the ACPI power resource in question is turned "on".  Second,
-> > the PCI device may not be actually accessible at all when the ACPI power
-> > resource depended on by it is "off", in which case it won't be found during
-> > the PCI enumeration of devices.
-> >
-> > This patch series addresses that problem by turning "on" all ACPI power
-> > resources depended on by PCI devices before attempting to access the config
-> > space of those devices for the first time.
->
-> Makes sense.
->
-> For the series,
->
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 
-Thanks!
+> -- 
+> 2.35.1
+> 
