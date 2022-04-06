@@ -2,92 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3FEE4F5CBF
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 13:56:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 164BC4F5DFF
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 14:46:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231296AbiDFLzp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Apr 2022 07:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
+        id S232932AbiDFMYR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Apr 2022 08:24:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231222AbiDFLzW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 07:55:22 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70335190B6B;
-        Wed,  6 Apr 2022 00:19:05 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KYG8D6JgTzdZb2;
-        Wed,  6 Apr 2022 15:18:36 +0800 (CST)
-Received: from localhost.localdomain (10.67.164.66) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 6 Apr 2022 15:19:03 +0800
-From:   Yicong Yang <yangyicong@hisilicon.com>
-To:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <john.garry@huawei.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <robin.murphy@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
-        <yangyicong@hisilicon.com>
-Subject: [PATCH v6 7/7] MAINTAINERS: Add maintainer for HiSilicon PTT driver
-Date:   Wed, 6 Apr 2022 15:17:30 +0800
-Message-ID: <20220406071730.41031-8-yangyicong@hisilicon.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20220406071730.41031-1-yangyicong@hisilicon.com>
-References: <20220406071730.41031-1-yangyicong@hisilicon.com>
+        with ESMTP id S234652AbiDFMXf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 08:23:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABA713F86;
+        Wed,  6 Apr 2022 01:09:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A8B1960B1E;
+        Wed,  6 Apr 2022 08:09:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B65C3C385A1;
+        Wed,  6 Apr 2022 08:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1649232576;
+        bh=goZBLwAg/DZhzYNdKCEzCGND7F9xwBbARNccVJHZ20o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c7MFHBL8kTnITP06VCPKeg+RSuNthXQrEzl+3zsnZC7CwNsjzGGqO90VIPWO42YI2
+         9CY1aZA1U4L3uSSb51+WK9/+o6J4ETlBUxGn6R6Rcbs2Na6wJNZU0hmfKGIqoiUJfd
+         BiCg8k8fLTOYwlZSjM8+PyRBY1F0TgbGqq96F+Nw=
+Date:   Wed, 6 Apr 2022 10:09:33 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Stevens <stevensd@chromium.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] PCI: sysfs: add bypass for config read admin check
+Message-ID: <Yk1KveOnYfSrUJLD@kroah.com>
+References: <20220406071131.2930035-1-stevensd@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.164.66]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220406071131.2930035-1-stevensd@google.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add maintainer for driver and documentation of HiSilicon PTT device.
+On Wed, Apr 06, 2022 at 04:11:31PM +0900, David Stevens wrote:
+> From: David Stevens <stevensd@chromium.org>
+> 
+> Add a moduleparam that can be set to bypass the check that limits users
+> without CAP_SYS_ADMIN to only being able to read the first 64 bytes of
+> the config space. This allows systems without problematic hardware to be
+> configured to allow users without CAP_SYS_ADMIN to read PCI
+> capabilities.
+> 
+> Signed-off-by: David Stevens <stevensd@chromium.org>
+> ---
+>  drivers/pci/pci-sysfs.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 602f0fb0b007..162423b3c052 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -28,10 +28,17 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/msi.h>
+>  #include <linux/of.h>
+> +#include <linux/moduleparam.h>
+>  #include "pci.h"
+>  
+>  static int sysfs_initialized;	/* = 0 */
+>  
+> +static bool allow_unsafe_config_reads;
+> +module_param_named(allow_unsafe_config_reads,
+> +		   allow_unsafe_config_reads, bool, 0644);
+> +MODULE_PARM_DESC(allow_unsafe_config_reads,
+> +		 "Enable full read access to config space without CAP_SYS_ADMIN.");
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+No, this is not the 1990's, please do not add system-wide module
+parameters like this.  Especially ones that circumvent security
+protections.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fd768d43e048..d30a1698251c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8858,6 +8858,13 @@ F:	Documentation/admin-guide/perf/hisi-pcie-pmu.rst
- F:	Documentation/admin-guide/perf/hisi-pmu.rst
- F:	drivers/perf/hisilicon
- 
-+HISILICON PTT DRIVER
-+M:	Yicong Yang <yangyicong@hisilicon.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/trace/hisi-ptt.rst
-+F:	drivers/hwtracing/ptt/
-+
- HISILICON QM AND ZIP Controller DRIVER
- M:	Zhou Wang <wangzhou1@hisilicon.com>
- L:	linux-crypto@vger.kernel.org
--- 
-2.24.0
+Also, where did you document this new option?
 
+Why not just add this to a LSM instead?
+
+>  /* show configuration fields */
+>  #define pci_config_attr(field, format_string)				\
+>  static ssize_t								\
+> @@ -696,7 +703,8 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
+>  	u8 *data = (u8 *) buf;
+>  
+>  	/* Several chips lock up trying to read undefined config space */
+> -	if (file_ns_capable(filp, &init_user_ns, CAP_SYS_ADMIN))
+> +	if (allow_unsafe_config_reads ||
+> +	    file_ns_capable(filp, &init_user_ns, CAP_SYS_ADMIN))
+
+This feels really dangerous.  What benifit are you getting here by
+allowing an unpriviliged user to read this information?
+
+What userspace problem are you trying to solve here that deserves this
+change?
+
+thanks,
+
+greg k-h
