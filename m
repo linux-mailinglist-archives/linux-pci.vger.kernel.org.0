@@ -2,88 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9234F6C71
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 23:18:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8089D4F6CEE
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 23:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234801AbiDFVUj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Apr 2022 17:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33546 "EHLO
+        id S236506AbiDFVjx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Apr 2022 17:39:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235559AbiDFVUK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 17:20:10 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A70E01CA
-        for <linux-pci@vger.kernel.org>; Wed,  6 Apr 2022 13:11:47 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 4AF8F1F45905
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1649275905;
-        bh=1SZ1WOXqu5WV/6I6tLHfRtLBrawOGjB+3tY304FFedk=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=EuejPVkE4emxnZpgYc8GgnjejbgVdpjnYoISQz0RbUVvVGiZtRXPa66EAePzvee5S
-         M71LnBeP1W0s7jGyHvai32s2ozboJAeodN7Y4UfX2Vx7Xcpk+dJqliXGlhKuO7w4ho
-         uOiTAsz4R0jVAhfIsWTiQhF+tkM4IpkcC1tsFz7TZtVyBxHd8okUKLWXkCTlA/qEeF
-         q6N2mFyj79zlGVLz6/Djaqq7uyuW0oWwFUl36KExUMah7PajfVaZTiH39wXu5cNUAj
-         sxdINhEpEfKDBW1V1jOU1zxymM4+89JGWSfHFxK9SCFqslVmgvAMKaWwV1DZoBVZSb
-         YhGdO6uTZIRxw==
-Message-ID: <52fd4165-2e95-e9dc-79cf-63b2a8274d30@collabora.com>
-Date:   Wed, 6 Apr 2022 21:11:42 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: next/master bisection: baseline.login on asus-C523NA-A20057-coral
-Content-Language: en-US
-To:     Mark Brown <broonie@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S237602AbiDFViO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 17:38:14 -0400
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 002D4198535
+        for <linux-pci@vger.kernel.org>; Wed,  6 Apr 2022 13:56:05 -0700 (PDT)
+Received: by mail-oi1-x235.google.com with SMTP id 12so3659936oix.12
+        for <linux-pci@vger.kernel.org>; Wed, 06 Apr 2022 13:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fB8abMIxXhMlTFQ9Us/AuUms2KKMwE9BtNrsYKnRWxU=;
+        b=dAaf334GMP778E6d8TxUv0rA3XQL5tbQ4YACJ9Assr63Va6mcLNkL4Ol0aUzkHlOqE
+         1JcRbCW2ffjEmQnfzIS4IGp7LJZzAeYOs7HihPhxfJV/OhZi4EkffRGlYFuRtGpqvrOJ
+         GzpbHXw4pWedGYL+yfa4X8UxfgotPiqK84hjbmwq/bkPmIa4/3cilHCVV/G4PjCRISTR
+         BA9uvZDwrzSvltZEMXseNGcNWB5HCuE7wk11UDVyTcvY65nik+lcVwc5RlnkD+hlQTTW
+         THBImZjAhYsShUV+0lCpLnS/s9w/uCi9yKZn14+6ZALmlORnT8HlzEOqev+O9lWbRIKk
+         O9uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=fB8abMIxXhMlTFQ9Us/AuUms2KKMwE9BtNrsYKnRWxU=;
+        b=pH7iN0ZzPQobUwinimJOzuPePuc7b1YH8xBU2inKy7q7lNsKv1c8WJpZIQk5o/Y95C
+         2k42EiIr0mx0qsBRUQXkZnGn+f8k+Y+DAcrv4vUwVtlxBvUxITk0rBjdznpqG047qK6N
+         zBGgjfuCLve/dAaoAraFdhpJisPhN4Uh81XQAA6RX5AM9dh/2RHTNPvOYXX3/5KeW9z2
+         kGv4Ht8cRTm2/rMl7mVI20b3yW96TiIa/DrciDNxIvT09twTKbu0Jb8f8crezTUGj/7r
+         8vcODH3RIIWhF31mGv0DFgYBrp5L+3JU/k8Ty8SkaHddopOluEWUBYi4krZ4kkOf777/
+         bwzg==
+X-Gm-Message-State: AOAM530WIJwv53xAFOzQZcu1M1tRAc7XTnSODym0Uu4nQciR5+WIvOzi
+        jFRmjP7O9m7ULc89wFhicLo=
+X-Google-Smtp-Source: ABdhPJxUS84vJRfRprP2yuIUhlO8twF71UcymdVx39UWwV4d7uUdS0LaI3Fio3GIKOoJYUN1vJ6+tw==
+X-Received: by 2002:a54:4608:0:b0:2d9:91fa:74f with SMTP id p8-20020a544608000000b002d991fa074fmr4212100oip.65.1649278565342;
+        Wed, 06 Apr 2022 13:56:05 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e4-20020a056870920400b000e1bdf90ba5sm6429117oaf.22.2022.04.06.13.56.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Apr 2022 13:56:04 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 6 Apr 2022 13:56:02 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Hans de Goede <hdegoede@redhat.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        kernelci-results@groups.io, linux-pci@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        "kernelci@groups.io" <kernelci@groups.io>,
-        =?UTF-8?B?TWljaGHFgiBHYcWCa2E=?= <michal.galka@collabora.com>,
-        Denys <denys.f@collabora.com>
+        kernelci-results@groups.io, bot@kernelci.org,
+        gtucker@collabora.com, linux-pci@vger.kernel.org
+Subject: Re: next/master bisection: baseline.login on asus-C523NA-A20057-coral
+Message-ID: <20220406205602.GA3711131@roeck-us.net>
 References: <20220405235315.GA101393@bhelgaas>
- <20220406185931.GA165754@bhelgaas> <Yk3r9uhIHmNumtxi@sirena.org.uk>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+ <20220406185931.GA165754@bhelgaas>
+ <Yk3r9uhIHmNumtxi@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <Yk3r9uhIHmNumtxi@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+kernelci +Michał +Denys
-
-On 06/04/2022 20:37, Mark Brown wrote:
+On Wed, Apr 06, 2022 at 08:37:26PM +0100, Mark Brown wrote:
 > On Wed, Apr 06, 2022 at 01:59:31PM -0500, Bjorn Helgaas wrote:
->> On Tue, Apr 05, 2022 at 06:53:17PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Apr 05, 2022 at 06:53:17PM -0500, Bjorn Helgaas wrote:
 > 
->>> Is there any way to get the contents of:
+> > > Is there any way to get the contents of:
 > 
->>>   /sys/firmware/acpi/tables/DSDT
->>>   /sys/firmware/acpi/tables/SSDT*
+> > >   /sys/firmware/acpi/tables/DSDT
+> > >   /sys/firmware/acpi/tables/SSDT*
 > 
->>> from these Chromebooks?
+> > > from these Chromebooks?
 > 
->> Is there hope for this, or should I look for another way to get this
->> information?
+> > Is there hope for this, or should I look for another way to get this
+> > information?
 > 
 > I believe Guillaume is out of office this week.  Copying in Guenter as
 > well since he's on the ChromeOS team in case he can help or knows
 > someone who can.
 
-Someone with access to the Collabora LAVA lab can also send a
-custom job to try and get this information.
+I _think_ the source should be in
+https://chromium.googlesource.com/chromiumos/third_party/coreboot,
+branch firmware-coral-10068.B,
+in src/mainboard/google/reef/variants/coral/devicetree.cb.
 
-I'm back to work on Monday.
+Does this help, or do you need the actual binary devicetree file(s) ?
 
-Thanks,
-Guillaume
+Guenter
