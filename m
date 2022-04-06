@@ -2,111 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 483214F6083
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 15:52:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 913154F61C8
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 16:37:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233383AbiDFNtu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Apr 2022 09:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
+        id S234702AbiDFOVU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Apr 2022 10:21:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233738AbiDFNtc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 09:49:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B00B66D1B68;
-        Wed,  6 Apr 2022 04:17:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 68401B82014;
-        Wed,  6 Apr 2022 11:17:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE273C385A3;
-        Wed,  6 Apr 2022 11:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649243874;
-        bh=7LHnVNHcEpVspRSCfG1S+Ca+XYKk7J8eU7YTFtzdfYI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=r3tjcj3EM5yCFNFZOvxZ8VmWUC2KgykSEsAsh26vJHbZc8GehVMB58ImJfzOJOCHN
-         l/CUQltVX6S2BK5NhGYZXYg3+G2gPIQs0mQ4eV08paTjUnMv0bjJ3PVX2Rgta96Yi6
-         2eoZUhFtXk313tib0tsUbGV+TaWqT7ORMqxgFzcUCM69x/46qwOlm/IofdiVsLTEgk
-         Nu9LhLVwZXaxDAn0DJQMiADlfyf02NHxANnWXmIfV+t7i/Po4ycMjfPE6p7raFdVxY
-         urq7Fm9JuXlK1DbDwfohaxpaxD0b4LzIyqS3GWDXrBra9Ei7t0lceqh95uADMOcL6B
-         9olZAcSnD8m1g==
-Date:   Wed, 6 Apr 2022 06:17:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     David Stevens <stevensd@chromium.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [RFC] PCI: sysfs: add bypass for config read admin check
-Message-ID: <20220406111751.GA132418@bhelgaas>
+        with ESMTP id S234614AbiDFOVJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 10:21:09 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6493479AB;
+        Wed,  6 Apr 2022 03:27:06 -0700 (PDT)
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KYKvz0p6rz686vL;
+        Wed,  6 Apr 2022 18:08:15 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 6 Apr 2022 12:11:12 +0200
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 6 Apr
+ 2022 11:11:11 +0100
+Date:   Wed, 6 Apr 2022 11:11:10 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Lukas Wunner <lukas@wunner.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V7 03/10] PCI: Create PCI library functions in support
+ of DOE mailboxes.
+Message-ID: <20220406111110.00000e72@Huawei.com>
+In-Reply-To: <YkzPIzIhfzQKIMe0@iweiny-desk3>
+References: <20220330235920.2800929-1-ira.weiny@intel.com>
+        <20220330235920.2800929-4-ira.weiny@intel.com>
+        <YkVBJ+nRA2g/WDxa@infradead.org>
+        <YkXGnKsTEUAe29io@iweiny-desk3>
+        <20220402144845.GA7822@wunner.de>
+        <YkzPIzIhfzQKIMe0@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220406071131.2930035-1-stevensd@google.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Kees]
+On Tue, 5 Apr 2022 16:22:11 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-On Wed, Apr 06, 2022 at 04:11:31PM +0900, David Stevens wrote:
-> From: David Stevens <stevensd@chromium.org>
+> On Sat, Apr 02, 2022 at 04:48:45PM +0200, Lukas Wunner wrote:
+> > On Thu, Mar 31, 2022 at 08:19:56AM -0700, Ira Weiny wrote:  
+> > > On Wed, Mar 30, 2022 at 10:50:31PM -0700, Christoph Hellwig wrote:  
+> > > > On Wed, Mar 30, 2022 at 04:59:13PM -0700, ira.weiny@intel.com wrote:  
+> > > > > Introduced in a PCI v6.0[1], DOE provides a config space based mailbox
+> > > > > with standard protocol discovery.  Each mailbox is accessed through a
+> > > > > DOE Extended Capability.  
+> > > > 
+> > > > I really don't think this should be built unconditionally and bloat
+> > > > every single kernel built with PCI support.  
+> > > 
+> > > I can add a Kconfig.  
+> > 
+> > Ideally, that config option should live in the pcie/ subdirectory,
+> > i.e. in drivers/pci/pcie/Kconfig, alongside drivers/pci/pcie/doe.c,
+> > as we try to consolidate PCIe-specific features there and reserve
+> > core code in drivers/pci/*.c for functionality that also applies
+> > to Conventional PCI.  
 > 
-> Add a moduleparam that can be set to bypass the check that limits users
-> without CAP_SYS_ADMIN to only being able to read the first 64 bytes of
-> the config space. This allows systems without problematic hardware to be
-> configured to allow users without CAP_SYS_ADMIN to read PCI
-> capabilities.
+> Thanks for letting me know about this direction.  I was unaware of this.
 
-Can you expand this a bit to explain the purpose of this?  I guess it
-makes "lspci -v" work without having to be root?  How much of a
-problem is that?  Is there some specific use case that needs this
-change?  Maybe there's some way to address that without having to add
-a new parameter that bypasses CAP_SYS_ADMIN.
+We had this in the pcie directory, but Bjorn asked us to move it to the pci
+directory as there isn't anything specific to PCIe about DOE. You could
+implement it on pci-x (maybe 2.0?) I think even though it's in the PCIe specification.
 
-> Signed-off-by: David Stevens <stevensd@chromium.org>
-> ---
->  drivers/pci/pci-sysfs.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+https://lore.kernel.org/linux-pci/20210413194927.GA2241331@bjorn-Precision-5520/
+
+Thanks,
+
+Jonathan
+
+
 > 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 602f0fb0b007..162423b3c052 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -28,10 +28,17 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/msi.h>
->  #include <linux/of.h>
-> +#include <linux/moduleparam.h>
->  #include "pci.h"
->  
->  static int sysfs_initialized;	/* = 0 */
->  
-> +static bool allow_unsafe_config_reads;
-> +module_param_named(allow_unsafe_config_reads,
-> +		   allow_unsafe_config_reads, bool, 0644);
-> +MODULE_PARM_DESC(allow_unsafe_config_reads,
-> +		 "Enable full read access to config space without CAP_SYS_ADMIN.");
-> +
->  /* show configuration fields */
->  #define pci_config_attr(field, format_string)				\
->  static ssize_t								\
-> @@ -696,7 +703,8 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
->  	u8 *data = (u8 *) buf;
->  
->  	/* Several chips lock up trying to read undefined config space */
-> -	if (file_ns_capable(filp, &init_user_ns, CAP_SYS_ADMIN))
-> +	if (allow_unsafe_config_reads ||
-> +	    file_ns_capable(filp, &init_user_ns, CAP_SYS_ADMIN))
->  		size = dev->cfg_size;
->  	else if (dev->hdr_type == PCI_HEADER_TYPE_CARDBUS)
->  		size = 128;
-> -- 
-> 2.35.1.1094.g7c7d902a7c-goog
+> I'll move the file no problem, thanks,
+> Ira
 > 
+> > 
+> > Thanks,
+> > 
+> > Lukas  
+
