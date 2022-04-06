@@ -2,54 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57F974F665B
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 19:07:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F3634F678E
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Apr 2022 19:39:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238321AbiDFREC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Apr 2022 13:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54842 "EHLO
+        id S238711AbiDFRZl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Apr 2022 13:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238357AbiDFRDp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 13:03:45 -0400
-Received: from out0.migadu.com (out0.migadu.com [IPv6:2001:41d0:2:267::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3F620A3B6
-        for <linux-pci@vger.kernel.org>; Wed,  6 Apr 2022 07:49:32 -0700 (PDT)
-Message-ID: <51ee3a55-dd07-7d13-f4c0-a772706d9630@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1649256570;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W+EvWnmgwCzgEhcIjth9C7JEw9KhwD2IzRt5LhF8e5Q=;
-        b=IjpOHM61dAUWkXOGgZKf/BC4wsKBg6EKd6pTfrGurKuuzWaGnOIwaPiHfiQnfoMe00+bwF
-        zwZTlE22bhH6sOSTG1tiwHYltoFlIB/fCNjGvXmU0WGe17QREMBbPHxSC+5J0JefkgDi3t
-        KZNgb2XqV8N4ZEdnWATbCuCaNaCvFFQ=
-Date:   Wed, 6 Apr 2022 08:49:27 -0600
-MIME-Version: 1.0
-Subject: Re: [PATCH v4 3/3] PCI/AER: Enable AER on all PCIe devices supporting
- it
-Content-Language: en-US
-To:     Stefan Roese <sr@denx.de>, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>
-References: <20220125071820.2247260-1-sr@denx.de>
- <20220125071820.2247260-4-sr@denx.de>
- <c1ac5a6e-24c0-822a-fc1c-660bc56c0ecf@linux.dev>
- <7f17661f-7c7a-3012-a230-8e081e475bcf@denx.de>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-In-Reply-To: <7f17661f-7c7a-3012-a230-8e081e475bcf@denx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        with ESMTP id S238958AbiDFRZd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 13:25:33 -0400
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2055.outbound.protection.outlook.com [40.107.20.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF68A482373;
+        Wed,  6 Apr 2022 08:24:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BoA8FqdVeLyvRtpL543L1vlHu6cXJaEiu0aCzDth/EvML2m4XtKFpyRsaBUFoby/G/gLlSsjcPxr5lDkfCJTvBsLy9M2aBZWUMQjNp+1mnOtb9letq7mCBYCYUQLKuYvIIR+k5iCi1otVexatc20JoKusumFxrN6pnB7GKCVSh5+C5AFY5XJiciZfq8U7j2/g0ROwg+xarfqrw2r5TKq7UDCYG96i4zD0l+XJJnOJ+NKAO0rCuGwqmY3ROkNgIS+m72nyKEWjOn4prwbDNrODHPIGffjbzb2R0A9EciHU5nNDyIdn8PetkAPeKC/zRUFmjQfkL5bZy45lADNJvgwiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QShmuTlkPiyzuO6Q7AsDeYZJhV/DkGFrT9LqZ4TVin0=;
+ b=Znlx1Lcv2SPftQWEs4YYlBoupiiqqKD+y2IQ5RJn/To87VBIv09AksNL3/objPe/W81PPAQo3gS7E3RFt3m3KXvANVeEd/mAFhXpoCHqILiwbdPO1zbMn/Cp1pzs6bJMIoK7PaRcXY1JvtP+05oT9exxVimHcvHyCtgl05N6e++PE14384PJUr3rwUz8sw8f2Zrj7CCpPzkD40juin1cp798bA+8HfbYlVIBidsKSNN4IZbHYEWzMWRSqPMdWXYqACsqQApxZxik9gtebFwEKXXV32xQm8LD38xyMTR3RzZJSHmeEf33Bz4ldnRYZNzgoJrBYMdvj0xqF0uvfrOTeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QShmuTlkPiyzuO6Q7AsDeYZJhV/DkGFrT9LqZ4TVin0=;
+ b=oXpw2akZ0Y6p+9gjWAWUFFAoAj/w/5XHiKK4aNnIyu3K41x7Uhs9E/pfrPpkYAEonYVx8kxIbzQ+TrD7g8zCG7Z+CZ6U3yXy5gbsloMFYQBWPGwQnnEbTaaKUKw8zo8MmkULNphVB5TZc1cPjggfMmFRPFxVKzi/PNwTUOL4F70=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by VE1PR04MB7343.eurprd04.prod.outlook.com (2603:10a6:800:1a2::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.31; Wed, 6 Apr
+ 2022 15:24:19 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::ade4:ad15:823b:7e2b]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::ade4:ad15:823b:7e2b%7]) with mapi id 15.20.5123.031; Wed, 6 Apr 2022
+ 15:24:19 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        fancer.lancer@gmail.com, lznuaa@gmail.com, helgaas@kernel.org
+Cc:     vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com,
+        manivannan.sadhasivam@linaro.org, Sergey.Semin@baikalelectronics.ru
+Subject: [PATCH v6 0/9] Enable designware PCI EP EDMA locally
+Date:   Wed,  6 Apr 2022 10:23:38 -0500
+Message-Id: <20220406152347.85908-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.35.1
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: linux.dev
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR11CA0046.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::23) To PAXPR04MB9186.eurprd04.prod.outlook.com
+ (2603:10a6:102:232::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8af5e269-319b-42dc-9026-08da17e184e0
+X-MS-TrafficTypeDiagnostic: VE1PR04MB7343:EE_
+X-Microsoft-Antispam-PRVS: <VE1PR04MB73436EB9776657CEF908B03C88E79@VE1PR04MB7343.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HvtYWuEcq+bbDr4qpEEf7qIeinVCqrDZPulX4glLCqbKkpufDQAasUqCp1uCx5ew3fsjAETpG1dl2FgadC6oJbA2sROCLCayeErPAyi7FdJzpw6oWh1ajBPjh1VdzLgXjEpzkQzcQFaw/UsSCfffXEVRYLxu0/g0m5/i0cq3bEgblGqL5PffG20ACx3L7awt79h4COfacGIvYk234vX8AriS5+8fkTGtYx1khvTSePFtHshuHVbOc+Ti5BW6FP8nK7anbHTFi2d6iXHfNqnl+6r4PYQc/IP+/pVXHhdk7Mnt1OFFsrx6RQuRpJvD6YgZshEAPpUg3iTbt1K51HUdsnK7+VvLA2HlYaVEaLodyg2J3FeG7+F6YRqrYm4gnr7E4U46ZW4fdOSPZcXelfY4+Lm0PGrKWuPjOe1wZhFGB2KGq6YdAOQXgf7zeKnwMjzQ4xXErISxxySzDnLk2yjX8CginlXlUvPTiSvkAYbKqYjDmcYXPAAiNFm/GuXImKmrvwsvxnn9jAGfJ9WwkC47Ds+3vSysk5NeGmf5P9E9N8NIZmquvWQaH6Sq8pNya2kbt8cDYz6ZN5xBK3XYHcM/w7W4LyavzXPJa69ftAuhq3kD5Muu3HyNzlW32PEEyYBXGtcYM4+DdJvJE70DKNVrvCd3gXKku1j5fWO1CcnuMktbgLep0z8Hq8sNaboQoC+uH/bHulME18PlghcxXl1sSr0xjdnZp7K4nx54QkwlR5OEnQn2GWYJKZMj9tPYZYIas+fG/PTrhSLQcoBXspInZhb3ruVqKfuM9RC9W6HEc3M=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(508600001)(6512007)(7416002)(6666004)(36756003)(66476007)(66946007)(66556008)(8676002)(86362001)(83380400001)(4326008)(52116002)(8936002)(26005)(5660300002)(186003)(2906002)(316002)(38350700002)(2616005)(38100700002)(1076003)(966005)(6486002)(6506007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?e+/ciIp+BwmALgaFtko+McaGKtJYq1EXzOBzwl09Rwetirv8TYpFDw3cqnbR?=
+ =?us-ascii?Q?zxI7B1lmJTmLg088dmTKSxXhuIHWC6gp1DjAKtV/upZm1zlUNj0YShboEI7c?=
+ =?us-ascii?Q?ZX056XungUy9L4FOMz5Jvmeeq8PP+6oZkOCMLw3CPsH0TKJtcyF5SbYDnAvy?=
+ =?us-ascii?Q?Ogd3bQRexNFAB4TwjjDSlgrXdw8VZZrTPeWigbPgW2pE7Fb2Md2yrmePC/db?=
+ =?us-ascii?Q?fW15J4Sva6FJXskgk/dX5dwpBw7VtYyrw4L7iUHn1fn7la1ET5AFHHQ7fvfN?=
+ =?us-ascii?Q?FfCQAtwRE5XmORY9NT34jTJfYooCSIdOtZWemwda1QB0tpmYZz8pFomWLS4V?=
+ =?us-ascii?Q?KSgPrar95Ub+5sFjJZlxup29Q6TwJQ7cDrgVmV5X18prRxrnD88Xi9UqIM/c?=
+ =?us-ascii?Q?l55VXW5WtQ4eRljylR6hZDXlISoYmEoaejM0iK2F6YVdtWZnQovs0k6gJVux?=
+ =?us-ascii?Q?qup6qkrIVRh6cNoKefDANgz6G/JCrvzk3tPZ/hPW6PKUS2TknFU9qBl3/CoK?=
+ =?us-ascii?Q?agZNmANDut/OuqjhzT4RTm19kQHwKUlKWFPJBcqmLtIpIRwKq+gyUv5sC8da?=
+ =?us-ascii?Q?VHD5oDjLD+0FlKziFrOdEuVuPuyZl6ba8M4DleVJGzhic4Omd8P5QCwlrtIH?=
+ =?us-ascii?Q?AAPWX/UqxXdt7ytTFGieKfxTIWc6CpEr/5r0rtnuDHrlD4hdM96nHbkU4fqH?=
+ =?us-ascii?Q?d91BWEGTBxWOy0MzhaudaUSDk0sLSurTZB5qvCU8pXrs8RuNSHVQp2v7O8yP?=
+ =?us-ascii?Q?vzjGpdI81lUiYAwfIIG02D9DCXKGNxcZzv4HQduXlW8Nc34yZv/zy+L2SUXu?=
+ =?us-ascii?Q?n9+xIKPv4b4PWeFZLHVYey5e6OSZAZKnJet0m6cEd8k6VvYKSkg8YTVFuO2H?=
+ =?us-ascii?Q?lgqQhzzweZg/sAitXidoGGSpMH6babxQck73+RBPfEogX2i/NpYtjmPMfR08?=
+ =?us-ascii?Q?b2TypyZo7qtjWZ2YnAvg/S1b6oX5PKV4JGocWmZH0m9KI8AEyTJDiEJj29WT?=
+ =?us-ascii?Q?z4FaGD+mWKJ45+h4OHLquW/UunENRCRUWZ7M8cQB8IR10+8I0/8o8D+MjReA?=
+ =?us-ascii?Q?/L2BmxmvdVuQzaJbdbUu+WrwvV+6Afb4ZkUbue+XDsV/FGwSAy51+wBmwthz?=
+ =?us-ascii?Q?DJYyP9vBLPRg+Kjryf27Yv7FrNXqBXXHeOKinadIdSgkz+upgZk68e6Y6nER?=
+ =?us-ascii?Q?3hDWyFfhn7Vp52ysC12t6pVF2NMMwOh3HndWzSF02byhN4gXgu7EH4N9dVId?=
+ =?us-ascii?Q?gjc3DDtXq0Jy25tCmp0p6rCy0fB6OLqIfVppDYqVAhAqLH1fBqzDrLB0u/Yv?=
+ =?us-ascii?Q?PL/jKU6Of5qk+cax6XHN62KiX0MOlY8yKu+69bJ05eUGuylZrNP5UzAsvFNl?=
+ =?us-ascii?Q?KTRAitGSTbl26lnBvacn9wPlH3BQ8w4Fqaw1ny/SXn+W5ZLYsTKgShuDTx/w?=
+ =?us-ascii?Q?dnWW17qxb3XhTYHclgYkT570oIyC5mn7WvY+8ChMhQw+4UCfB2ZiCzkyhhNC?=
+ =?us-ascii?Q?qZ+wL0JNDRwwWPIpR90gp3l+JVMcno5mHd/QcX/8RQyzrlvSb3qdo2qi/BKL?=
+ =?us-ascii?Q?8M245ZdOY4T7sI89me8aTYwrBNyr9g/sBIQ0vW0UT4NhwCkn2touEHjfmlnQ?=
+ =?us-ascii?Q?HEgK789LsazFmSEe8SNIj5ViVmNvgp4WtnfCn4+TzODP2wj1yyYTGTtQu4a0?=
+ =?us-ascii?Q?kVI45Rtpf4LKPlLeFMtsjQfxE9FCr3ozbCkLXzaofOZWoFW6dkvSuDLG5lUw?=
+ =?us-ascii?Q?84717kg7ug=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8af5e269-319b-42dc-9026-08da17e184e0
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2022 15:24:19.3539
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p7UcvkZAPJlA8Nnu6MSd+zbHE+Z9g9zU0gPxGcvy9pn/lJwDoscW807PRon3NvJgdAfTbR+9tnTYOOrpjYgykQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7343
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,66 +118,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Default Designware EDMA just probe remotely at host side.
+This patch allow EDMA driver can probe at EP side.
+
+1. Clean up patch
+   dmaengine: dw-edma: Detach the private data and chip info structures
+   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+   dmaengine: dw-edma: Change rg_region to reg_base in struct
+   dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+
+2. Enhance EDMA driver to allow prode eDMA at EP side
+   dmaengine: dw-edma: Add support for chip specific flags   
+   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+
+3. Bugs fix at EDMA driver when probe eDMA at EP side
+   dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+   dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+
+4. change pci-epf-test to use EDMA driver to transfer data.
+   PCI: endpoint: Add embedded DMA controller test
+
+5. Using imx8dxl to do test, but some EP functions still have not
+upstream yet. So below patch show how probe eDMA driver at EP
+controller driver.
+https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
 
 
-On 4/5/2022 11:16 PM, Stefan Roese wrote:
-> On 4/4/22 22:22, Jonathan Derrick wrote:
->>
->>
->> On 1/25/2022 12:18 AM, Stefan Roese wrote:
->>> With this change, AER is now enabled on all PCIe devices, also when the
->>> PCIe device is hot-plugged.
->>>
->>> Please note that this change is quite invasive, as with this patch
->>> applied, AER now will be enabled in the Device Control registers of all
->>> available PCIe Endpoints, which currently is not the case.
->>>
->>> When "pci=noaer" is selected, AER stays disabled of course.
->>>
->>> Signed-off-by: Stefan Roese <sr@denx.de>
->>> Cc: Bjorn Helgaas <helgaas@kernel.org>
->>> Cc: Pali Rohár <pali@kernel.org>
->>> Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
->>> Cc: Michal Simek <michal.simek@xilinx.com>
->>> Cc: Yao Hongbo <yaohongbo@linux.alibaba.com>
->>> Cc: Naveen Naidu <naveennaidu479@gmail.com>
->>> ---
->>> v4:
->>> - No change
->>>
->>> v3:
->>> - New patch, replacing the "old" 2/2 patch
->>>    Now enabling of AER for each PCIe device is done in pci_aer_init(),
->>>    which also makes sure that AER is enabled in each PCIe device even 
->>> when
->>>    it's hot-plugged.
->>>
->>>   drivers/pci/pcie/aer.c | 4 ++++
->>>   1 file changed, 4 insertions(+)
->>>
->>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>> index 5585fefc4d0e..10b2f7db8adb 100644
->>> --- a/drivers/pci/pcie/aer.c
->>> +++ b/drivers/pci/pcie/aer.c
->>> @@ -388,6 +388,10 @@ void pci_aer_init(struct pci_dev *dev)
->>>       pci_aer_clear_status(dev);
->>> +    /* Enable AER if requested */
->>> +    if (pci_aer_available())
->>> +        pci_enable_pcie_error_reporting(dev);
->> There are a lot of devices that do this explicitly [1]
->> May suggest a cleanup patch to follow-up?
-> 
-> Yes, good idea. I can try to work on this once this patchset is merged.
-> 
->> [1] 
->> https://elixir.bootlin.com/linux/v5.18-rc1/A/ident/pci_enable_pcie_error_reporting 
->>
->>
->> ... Also a quirk list in the future for broken devices
-> 
-> IMHO this should only be done, when such devices are detected.
-Yep; I'm just anticipating
+Frank Li (7):
+  dmaengine: dw-edma: Detach the private data and chip info structures
+  dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+  dmaengine: dw-edma: Change rg_region to reg_base in struct
+    dw_edma_chip
+  dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+    dw_edma_chip
+  dmaengine: dw-edma: Add support for chip specific flags
+  dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+  PCI: endpoint: Add embedded DMA controller test
 
-> 
-> Thanks,
-> Stefan
+Serge Semin (2):
+  dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+  dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
+    semantics
+
+ drivers/dma/dw-edma/dw-edma-core.c            | 137 +++++++++++-------
+ drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
+ drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+ drivers/dma/dw-edma/dw-edma-v0-core.c         |  54 ++++---
+ drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  10 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++--
+ include/linux/dma/edma.h                      |  58 +++++++-
+ 8 files changed, 310 insertions(+), 175 deletions(-)
+
+-- 
+2.35.1
+
