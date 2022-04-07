@@ -2,49 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5C2E4F840B
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Apr 2022 17:49:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1730B4F8478
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Apr 2022 18:01:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232193AbiDGPvP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Apr 2022 11:51:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56944 "EHLO
+        id S233537AbiDGQDY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Apr 2022 12:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345037AbiDGPvN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Apr 2022 11:51:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D0ACC55B4;
-        Thu,  7 Apr 2022 08:49:10 -0700 (PDT)
+        with ESMTP id S229816AbiDGQDW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Apr 2022 12:03:22 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C161DEA81;
+        Thu,  7 Apr 2022 09:01:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C18B3B827BE;
-        Thu,  7 Apr 2022 15:49:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30075C385A4;
-        Thu,  7 Apr 2022 15:49:03 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id B4FBECE27EE;
+        Thu,  7 Apr 2022 16:01:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04483C385A5;
+        Thu,  7 Apr 2022 16:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649346543;
-        bh=e+alSzDzrc04Tz+Z+gKtvacXXhVH6XUBwWUSuj+9OLY=;
+        s=k20201202; t=1649347278;
+        bh=yAnO4c7MDGXcf6Gal/+bTFrLqSTatoGBMYjleu4Ss1Q=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Oc2N78jCjftJ6PIjmp5gY2ESvtysUuqCXzStvWEfEv1QqIpD74eYG+szMe/ayl6VV
-         3inQ7HV6gKfAUY1Ws0V6gLvhykpmbviBaD0WVWtraPF0YJjlOY0eHNz8BtGINDzR9j
-         VtjyrKIVb60+/UjKsW+J30OjL/NA63yXrs+ZuU6+Av+RrfuNPWhtxXZ1sj5sd48eME
-         yp7TulI29pk7Lyhiq6ZjDV3Hsu//sFhYvGYR2puv91WWSEm4+52vFydk3XjtOeqvPG
-         1YL7c4tQ7sHKzEISGYghvuuA7QC72CcCpor3BQWik6dics9aVNLxgkuzHCDQnUYfMk
-         Nd+ecSrbzJM7w==
-Date:   Thu, 7 Apr 2022 10:49:01 -0500
+        b=uM+vZOCA5IzJZCsNSrAwwXCQY5jXsP16RBrgP9QPhmPtbO18pA/p6hfvg/57+7Yso
+         eE0k1MYJZtSZua5T9kMskawRJBhAdmofen15mx0p4YcU7F6J2Ate+Uy7U6obPMuizX
+         m2T4u2m5a7B+PYlVK1IyT/nwdjwwzJm/Ct1jIJIHitF6YPgUzeacK00CrIh9nxo3uN
+         PS2NRkLzeDEzDRqIQOvVqUy1vmMTrdaDUO7N50sT1JNQcV4odlcprUkUB7VXqI5lSy
+         WhSDkQAN5baOCzlGDwu+pnIqM8237y8XAV6uijFUXe+9obFohCdduB1rbO6AecohqC
+         /pVOZ+QafMZHw==
+Date:   Thu, 7 Apr 2022 11:01:16 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: PM: Power up all devices during runtime resume
-Message-ID: <20220407154901.GA239301@bhelgaas>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V7 03/10] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <20220407160116.GA239672@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4412361.LvFx2qVVIh@kreacher>
+In-Reply-To: <Yk4EvRDd/Kw5rEil@iweiny-desk3>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,49 +61,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 06, 2022 at 09:00:52PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, Apr 06, 2022 at 02:23:09PM -0700, Ira Weiny wrote:
+> On Wed, Apr 06, 2022 at 11:11:10AM +0100, Jonathan Cameron wrote:
+> > On Tue, 5 Apr 2022 16:22:11 -0700
+> > Ira Weiny <ira.weiny@intel.com> wrote:
+> > > On Sat, Apr 02, 2022 at 04:48:45PM +0200, Lukas Wunner wrote:
+> > > > On Thu, Mar 31, 2022 at 08:19:56AM -0700, Ira Weiny wrote:  
+> > > > > On Wed, Mar 30, 2022 at 10:50:31PM -0700, Christoph Hellwig wrote:  
+> > > > > > On Wed, Mar 30, 2022 at 04:59:13PM -0700, ira.weiny@intel.com wrote:  
+> > > > > > > Introduced in a PCI v6.0[1], DOE provides a config space based mailbox
+> > > > > > > with standard protocol discovery.  Each mailbox is accessed through a
+> > > > > > > DOE Extended Capability.  
+> > > > > > 
+> > > > > > I really don't think this should be built unconditionally and bloat
+> > > > > > every single kernel built with PCI support.  
+> > > > > 
+> > > > > I can add a Kconfig.  
+> > > > 
+> > > > Ideally, that config option should live in the pcie/ subdirectory,
+> > > > i.e. in drivers/pci/pcie/Kconfig, alongside drivers/pci/pcie/doe.c,
+> > > > as we try to consolidate PCIe-specific features there and reserve
+> > > > core code in drivers/pci/*.c for functionality that also applies
+> > > > to Conventional PCI.  
+> > > 
+> > > Thanks for letting me know about this direction.  I was unaware of this.
+> > 
+> > We had this in the pcie directory, but Bjorn asked us to move it to the pci
+> > directory as there isn't anything specific to PCIe about DOE. You could
+> > implement it on pci-x (maybe 2.0?) I think even though it's in the PCIe specification.
+> > 
+> > https://lore.kernel.org/linux-pci/20210413194927.GA2241331@bjorn-Precision-5520/
 > 
-> Currently, endpoint devices may not be powered up entirely during
-> runtime resume that follows a D3hot -> D0 transition of the parent
-> bridge.
+> :-/
 > 
-> Namely, even if the power state of an endpoint device, as indicated
-> by its PCI_PM_CTRL register, is D0 after powering up its parent
-> bridge, it may be still necessary to bring its ACPI companion into
-> D0 and that should be done before accessing it.  However, the current
-> code assumes that reading the PCI_PM_CTRL register is sufficient to
-> establish the endpoint device's power state, which may lead to
-> problems.
+> I'd forgotten that far back.
 > 
-> Address that by forcing a power-up of all PCI devices, including the
-> platform firmware part of it, during runtime resume.
-> 
-> Link: https://lore.kernel.org/linux-pm/11967527.O9o76ZdvQC@kreacher
-> Fixes: 5775b843a619 ("PCI: Restore config space on runtime resume despite being unbound")
-> Reported-by: Abhishek Sahu <abhsahu@nvidia.com>
-> Tested-by: Abhishek Sahu <abhsahu@nvidia.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Bjorn?
 
-Applied with Mika's reviewed-by to pci/pm for v5.19, thanks!
+I would still prefer it in drivers/pci because I don't think
+there's enough value to justify the pcie/ subdirectory.  We have
+ats.c, ecam.c, iov.c, pci-pf-stub.c, and vc.c in drivers/pci even
+though they're PCIe-specific.  Other files in drivers/pci like
+access.c, pci-acpi.c, pci.c, probe.c, etc also have some PCIe
+content.
 
-> ---
->  drivers/pci/pci-driver.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Index: linux-pm/drivers/pci/pci-driver.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci-driver.c
-> +++ linux-pm/drivers/pci/pci-driver.c
-> @@ -1312,7 +1312,7 @@ static int pci_pm_runtime_resume(struct
->  	 * to a driver because although we left it in D0, it may have gone to
->  	 * D3cold when the bridge above it runtime suspended.
->  	 */
-> -	pci_restore_standard_config(pci_dev);
-> +	pci_pm_default_resume_early(pci_dev);
->  
->  	if (!pci_dev->driver)
->  		return 0;
-> 
-> 
-> 
+Bjorn
