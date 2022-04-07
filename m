@@ -2,112 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 380264F879D
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Apr 2022 21:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9C4B4F87F2
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Apr 2022 21:17:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232075AbiDGTEM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Apr 2022 15:04:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42170 "EHLO
+        id S230159AbiDGTTb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Apr 2022 15:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbiDGTEM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Apr 2022 15:04:12 -0400
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E5F722EB16;
-        Thu,  7 Apr 2022 12:02:11 -0700 (PDT)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-2db2add4516so72800737b3.1;
-        Thu, 07 Apr 2022 12:02:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZGD1/P1eXCqhTH9MB1Py6yMHa/YFvYh5c7tHdx0u8Pk=;
-        b=av2WMsDE+fRA9olKRhATLjT5Jk7jMYeOKORh97SxOTh1so26WXzl5GII3FenxgV3Uy
-         Ootd3G2R+KrWK1CeuPFw+5CwzpHhiM6mN0IL1bbt9N4DJW1r0v35dYWbLDXKeuDyjjtg
-         2sSFVskr5dkuyumzObRxsm6UM8a8PC4odSwVkh5/Kjp1vKc34oIy50gVPN6VGRwRWy+J
-         5w/5CNTRvqiUgRt+VMDrDauNEdTHURK1Hx748MBGwCRhm0x9ywKcIpD8L3N0EDD9D+hW
-         eUIDHCOOmPZrhJ22rZUUgP5RL1Uwbf2gnYeg8lO5E1bklLQPo3dD+lF3axA5vHYt4xSd
-         BE9w==
-X-Gm-Message-State: AOAM531kTnVV+HB5JGeF0l/nYr+pbH1C4yIlCuCKnj4qnXSgNF4vsL5E
-        EkS+Z/geVXsuCHRdb8wuYG/vuCiOOUzepk/Tt04=
-X-Google-Smtp-Source: ABdhPJyPrwbHxRUQ/BZZDOo8gYVEpwEzdjyOfqe28o/yvRJgz1r6QhQB1JhX9AoyLAi7nmXy69UlHGSXkvsWBvPq4Dk=
-X-Received: by 2002:a81:1549:0:b0:2eb:3dc7:bd16 with SMTP id
- 70-20020a811549000000b002eb3dc7bd16mr12995239ywv.7.1649358130411; Thu, 07 Apr
- 2022 12:02:10 -0700 (PDT)
+        with ESMTP id S230170AbiDGTTa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Apr 2022 15:19:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA491E95E2;
+        Thu,  7 Apr 2022 12:17:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 68C06B82970;
+        Thu,  7 Apr 2022 19:17:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5072C385A6;
+        Thu,  7 Apr 2022 19:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649359038;
+        bh=FFCCGVSnknPcSGQEt20l5gj9HymHETqLW15RaE75gKw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=th/y6FLTxXotjaQlPStq/a162X1xZUWyGAW5XUrAx3JxehwphlWayv2XOPoJAU5t2
+         dyjePnBC2PH9rXgLmzJJmEgQMxIB9jdmPDwHBYxaHlL/7z2IviRGedkqYeZ/lfePtW
+         XOcki+N9ZjHQkOBlGlCOSHBkVcYkHYw+Mg/aBmMlPNZy/3UT/QMgIn9SrN83JB50d5
+         fu+EoG1I7zYo95GdloqFvsmd5+bRhTJ6alXEwKqR/Uq/5vEy9fd4REq79+M+Q8Ffw1
+         Gy8kVtqixjS2oQnc+kclYS/0J/z7DXI0wAGc+D+HK1Msvnv4lv9INJnMhzGmIqcAJy
+         lpcZ3mWij8Q/g==
+Date:   Thu, 7 Apr 2022 14:17:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Pavel Machek <pavel@denx.de>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v5 1/2] PCI: ACPI: Support Microsoft's "DmaProperty"
+Message-ID: <20220407191715.GA254460@bhelgaas>
 MIME-Version: 1.0
-References: <4198163.ejJDZkT8p0@kreacher> <3623886.MHq7AAxBmi@kreacher> <YkwRjI0KvpmiJjvK@lahna>
-In-Reply-To: <YkwRjI0KvpmiJjvK@lahna>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 7 Apr 2022 21:01:59 +0200
-Message-ID: <CAJZ5v0go9hLqv6Mcc5Ko770AU7sTYJQvgyjhGJ36AO1kURUnYA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] PCI: PM: Avoid leaving devices in D0-uninitialized
- in pci_power_up()
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220325184609.4059963-1-rajatja@google.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 5, 2022 at 1:45 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Mon, Apr 04, 2022 at 05:41:13PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > In theory, pci_power_up() may leave a device in D0-uninitialized
-> > during a transition from D3cold to D0.
-> >
-> > Say, a PCIe device depending on some ACPI power resources is put into
-> > D3cold, so the power resources in question are all turned off.  Then,
-> > pci_power_up() is called to put it into D0.
-> >
-> > It first calls pci_platform_power_transition() which invokes
-> > platform_pci_set_power_state() to turn on the ACPI power resources
-> > depended on by the device and, if that is successful, it calls
-> > pci_update_current_state() to update the current_state field of
-> > the PCI device object.  If the device's configuration space is
-> > accessible at this point, which is the case if
-> > platform_pci_set_power_state() leaves it in D0-uninitialized (and
-> > there's nothing to prevent it from doing so), current_state will be
-> > set to PCI_D0 and the pci_raw_set_power_state() called subsequently
-> > will notice that the device is in D0 already and do nothing.
-> > However, that is not correct, because it may be still necessary to
-> > restore the device's BARs at this point.
-> >
-> > To address this issue, set current_state temporarily to PCI_D3hot
-> > in the cases in which pci_raw_set_power_state() may need to do more
-> > than just changing the power state of the device.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
+In subject,
+
+  PCI/ACPI: ...
+
+would be consistent with previous history (at least things coming
+through the PCI tree :)).
+
+On Fri, Mar 25, 2022 at 11:46:08AM -0700, Rajat Jain wrote:
+> The "DmaProperty" is supported and documented by Microsoft here:
+> https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
+
+Here's a more specific link (could probably be referenced below to
+avoid cluttering the text here):
+
+https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-internal-pcie-ports-accessible-to-users-and-requiring-dma-protection
+
+> They use this property for DMA protection:
+> https://docs.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt
+> 
+> Support the "DmaProperty" with the same semantics. This is useful for
+> internal PCI devices that do not hang off a PCIe rootport, but offer
+> an attack surface for DMA attacks (e.g. internal network devices).
+
+Same semantics as what?
+
+The MS description of "ExternalFacingPort" says:
+
+  This ACPI object enables the operating system to identify externally
+  exposed PCIe hierarchies, such as Thunderbolt.
+
+and "DmaProperty" says:
+
+  This ACPI object enables the operating system to identify internal
+  PCIe hierarchies that are easily accessible by users (such as,
+  Laptop M.2 PCIe slots accessible by way of a latch) and require
+  protection by the OS Kernel DMA Protection mechanism.
+
+I don't really understand why they called out "laptop M.2 PCIe slots"
+here.  Is the idea that those are more accessible than a standard
+internal PCIe slot?  Seems like a pretty small distinction to me.
+
+I can understand your example of internal network devices adding an
+attack surface.  But I don't see how "DmaProperty" helps identify
+those.  Wouldn't a NIC in a standard internal PCIe slot add the same
+attack surface?
+
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+> v5: * Reorder the patches in the series
+> v4: * Add the GUID. 
+>     * Update the comment and commitlog.
+> v3: * Use Microsoft's documented property "DmaProperty"
+>     * Resctrict to ACPI only
+> 
+>  drivers/acpi/property.c |  3 +++
+>  drivers/pci/pci-acpi.c  | 16 ++++++++++++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index d0986bda2964..20603cacc28d 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -48,6 +48,9 @@ static const guid_t prp_guids[] = {
+>  	/* Storage device needs D3 GUID: 5025030f-842f-4ab4-a561-99a5189762d0 */
+>  	GUID_INIT(0x5025030f, 0x842f, 0x4ab4,
+>  		  0xa5, 0x61, 0x99, 0xa5, 0x18, 0x97, 0x62, 0xd0),
+> +	/* DmaProperty for PCI devices GUID: 70d24161-6dd5-4c9e-8070-705531292865 */
+> +	GUID_INIT(0x70d24161, 0x6dd5, 0x4c9e,
+> +		  0x80, 0x70, 0x70, 0x55, 0x31, 0x29, 0x28, 0x65),
+>  };
+>  
+>  /* ACPI _DSD data subnodes GUID: dbb8e3e6-5886-4ba6-8795-1319f52a966b */
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 1f15ab7eabf8..378e05096c52 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1350,12 +1350,28 @@ static void pci_acpi_set_external_facing(struct pci_dev *dev)
+>  		dev->external_facing = 1;
+>  }
+>  
+> +static void pci_acpi_check_for_dma_protection(struct pci_dev *dev)
 
-Thanks, but on second thought, I'm not sure if this is the best way to
-address the issue.
+I try to avoid function names like *_check_*() because they don't give
+any hint about whether there's a side effect or what direction things
+are going.  I prefer things that return a value or make sense when
+used as a predicate.  Maybe something like this?
 
-Basically, pci_power_up() is called in two places, in
-pci_set_power_state() (for the transitions to D0) and in
-pci_pm_default_resume_early().  In the latter case,
-pci_restore_state() is called right after it and that covers BARs
-restoration, so nothing more needs to be done in that case.
+  int pci_dev_has_dma_property(struct pci_dev *dev)
 
-This means that pci_set_power_state() is the only place needing to
-restore the BARs when going into D0 from D3hot or deeper and it is
-better to move BARs restoration directly into it.  I'll update the
-series accordingly and resend.
+  dev->untrusted |= pci_dev_has_dma_property(pci_dev);
 
-I also think that the mandatory delay is not needed at all when
-pci_raw_set_power_state() is called for transitions D3cold -> D0,
-because in that case either the device has been powered up via
-platform_pci_set_power_state(), or via the bridge resume which takes
-the delay into account.
+> +{
+> +	u8 val;
+> +
+> +	/*
+> +	 * Property also used by Microsoft Windows for same purpose,
+> +	 * (to implement DMA protection from a device, using the IOMMU).
+> +	 */
+> +	if (device_property_read_u8(&dev->dev, "DmaProperty", &val))
+
+The MS web page says a _DSD with this property must be implemented in
+the Root Port device scope, but we don't enforce that here.  We *do*
+enforce it in pci_acpi_set_untrusted().  Shouldn't we do the same
+here?
+
+We currently look at three properties from the same _DSD:
+
+  DmaProperty
+  ExternalFacingPort
+  HotPlugSupportInD3
+
+For "HotPlugSupportInD3", we check that "value == 1".  For
+"ExternalFacingPort", we check that it's non-zero.  The MS doc isn't
+explicit about the values, but shows "1" in the sample ASL.  I think
+we should handle all three cases the same.
+
+The first two use device_property_read_u8(); the last uses
+acpi_dev_get_property().  Again, I think they should all be the same.
+
+acpi_dev_get_property() is easier for me to read because there are
+slightly fewer layers of abstraction between _DSD and
+acpi_dev_get_property().
+
+But IIUC, device_property_read_u8() works for either ACPI or DT
+properties, and maybe there is interest in using this for DT systems.
+None of these appear in any in-tree DTs, but maybe it is important to
+handle these in DTs?
+
+If that's the case, this code would no longer be specific to ACPI and
+should be moved to somewhere that's compiled even when CONFIG_ACPI
+isn't set.
+
+> +		return;
+> +
+> +	if (val)
+> +		dev->untrusted = 1;
+> +}
+> +
+>  void pci_acpi_setup(struct device *dev, struct acpi_device *adev)
+>  {
+>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+>  
+>  	pci_acpi_optimize_delay(pci_dev, adev->handle);
+>  	pci_acpi_set_external_facing(pci_dev);
+> +	pci_acpi_check_for_dma_protection(pci_dev);
+>  	pci_acpi_add_edr_notifier(pci_dev);
+>  
+>  	pci_acpi_add_pm_notifier(adev, pci_dev);
+> -- 
+> 2.35.1.1021.g381101b075-goog
+> 
