@@ -2,190 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 302C54F85F8
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Apr 2022 19:25:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B4004F8517
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Apr 2022 18:41:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346323AbiDGR05 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Apr 2022 13:26:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46738 "EHLO
+        id S232771AbiDGQnh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Apr 2022 12:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346341AbiDGR0j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Apr 2022 13:26:39 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFD1DC6;
-        Thu,  7 Apr 2022 10:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Cc:To:From:content-disposition;
-        bh=rMmDd7FK89WBPMzhI41Yh5OWeVuvzuwCzfQzO0Mz/AU=; b=iG+EidunEVskeYVIo6imRxDh47
-        8oq55Yf7ytuhttopUD3lvf6ThM95I2SsX20Tz5UXUkIHMvEUwkiyLww1Y7lHLgPLamVgzzrDt9fYq
-        fpg8LyY+HXCPuc+m5seNIMP6THmXjEpPrwBk+domuzL5vo/nJyqtYtFUTbuonua5YFS70T17/tsyO
-        Pgfwb6Z8/wqY9TNBk0i3thENlVQAP5CwlZXcgv5Mc/wTHtjxESXLnXBUgGBRbumCU/gpb5+oRv96h
-        HcTc43gYK3lYYuIjoveMt+N0WHXfbSbT3dVPExe0nM5REk4BP4aZAir/OaylNhLOLqVjDfa7vIHRS
-        cLi8EOWQ==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1ncUMI-002BBf-HJ; Thu, 07 Apr 2022 09:47:43 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1ncUMF-00022U-JJ; Thu, 07 Apr 2022 09:47:39 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu,  7 Apr 2022 09:47:17 -0600
-Message-Id: <20220407154717.7695-22-logang@deltatee.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220407154717.7695-1-logang@deltatee.com>
-References: <20220407154717.7695-1-logang@deltatee.com>
+        with ESMTP id S231684AbiDGQnh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Apr 2022 12:43:37 -0400
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 959C3195D97;
+        Thu,  7 Apr 2022 09:41:36 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id l36so10513989ybj.12;
+        Thu, 07 Apr 2022 09:41:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ag3ZPrDaG7eymU9bbXcPlL6ed5F1nvkJ2snTyLrGnXs=;
+        b=CukGAeIT43xM17pCPytcQyhT370asJLMKxD1G9ALDllv6I6Rd669Do8qgvq+QygIuN
+         Hxo7ghI6dKZzSAph4osOml+Wkf70N5bCpgBxvb43p7jVL0stg4RR6wTTe3SLwNoICBEG
+         n5LRZ9uD+Na4ElubNJPiax/so7/1vNezIAuqTzQZPNGbmDK5cjt0tCkr0+k8ARP0YUFV
+         TYpB4U37Oj2Wha7PWbWQttTJjENuA/LbIg2UMA4xk1J7a7xWW/AgWCR3m+UAyOd/m2IA
+         /zVyQBo/Pfqt817qd6YERWrN7a7SuvCwp/e56OWnsAuSC45dezzMOBkJKkiVjc53exMA
+         95xQ==
+X-Gm-Message-State: AOAM533p5tXleLMDRy7XioiEVmArbS7PDQyeJpc4hiICWo6pOtwtdqL1
+        9OgbfOvCauo8vajNcfs6TArNBnrAor1U7SfVcEc=
+X-Google-Smtp-Source: ABdhPJwWQD4BFr0N61om2oTZkMiWX4Rr2YEQ3mpLAc2fGixxeUMxNh9UrphFjXkRcH94v9AOqW3Qm14l5jYbhkvU+LY=
+X-Received: by 2002:a25:8409:0:b0:63c:bea7:30af with SMTP id
+ u9-20020a258409000000b0063cbea730afmr9874223ybk.633.1649349695694; Thu, 07
+ Apr 2022 09:41:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, jhubbard@nvidia.com, rcampbell@nvidia.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
+References: <20220407131602.14727-1-yangyicong@hisilicon.com> <20220407154257.GA235990@bhelgaas>
+In-Reply-To: <20220407154257.GA235990@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 7 Apr 2022 18:41:24 +0200
+Message-ID: <CAJZ5v0gWzDsh8VWY+EzO6WxyO6Fe1GcRzVfABVOaO0ywJegLwA@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ACPI: Decouple the negotiation of ASPM and other PCIe services
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Yicong Yang <yangyicong@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: [PATCH v6 21/21] nvme-pci: allow mmaping the CMB in userspace
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Allow userspace to obtain CMB memory by mmaping the controller's
-char device. The mmap call allocates and returns a hunk of CMB memory,
-(the offset is ignored) so userspace does not have control over the
-address within the CMB.
+On Thu, Apr 7, 2022 at 5:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Rafael]
+>
+> On Thu, Apr 07, 2022 at 09:16:02PM +0800, Yicong Yang wrote:
+> > Currently we regard ASPM as a necessary PCIe service and if it's disabled
+> > by pcie_aspm=off we cannot enable other services like AER and hotplug.
+> > However the ASPM is just one of the PCIe services and other services
+> > mentioned no dependency on this. So this patch decouples the negotiation
+> > of ASPM and other PCIe services, then we can make use of other services
+> > in the absence of ASPM.
+>
+> Why do you want to boot with "pcie_aspm=off"?  If we have to use a
+> PCI-related parameter to boot, something is already wrong, so if
+> there's a problem that requires ASPM to be disabled, we should fix
+> that first.
+>
+> If there's a known hardware or firmware issue with ASPM, we should
+> quirk it so users don't have to discover this parameter.
+>
+> > Aaron Sierra tried to fix this originally:
+> > https://lore.kernel.org/linux-pci/20190702201318.GC128603@google.com/
+>
+> Yes.  My question from that review is still open:
+>
+>   But Rafael added ACPI_PCIE_REQ_SUPPORT with 415e12b23792 ("PCI/ACPI:
+>   Request _OSC control once for each root bridge (v3)") [1], apparently
+>   related to a bug [2].  I assume there was some reason for requiring
+>   all those things together, so I'd really like his comments.
 
-A VMA allocated in this way will only be usable by drivers that set
-FOLL_PCI_P2PDMA when calling GUP. And inter-device support will be
-checked the first time the pages are mapped for DMA.
+Well, it was quite a few years ago.
 
-Currently this is only supported by O_DIRECT to an PCI NVMe device
-or through the NVMe passthrough IOCTL.
+>   [1] https://git.kernel.org/linus/415e12b23792
+>   [2] https://bugzilla.kernel.org/show_bug.cgi?id=20232
+>
+> Rafael clearly said in [1] that we need to:
+>
+>   ... check if all of the requisite _OSC support bits are set before
+>   calling acpi_pci_osc_control_set() for a given root complex.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/host/core.c | 15 +++++++++++++++
- drivers/nvme/host/nvme.h |  2 ++
- drivers/nvme/host/pci.c  | 17 +++++++++++++++++
- 3 files changed, 34 insertions(+)
+IIRC, the idea was to avoid requesting native control of anything PCIe
+if those bits were not set in the mask, because otherwise we wouldn't
+be able to get PME and native hotplug control which were not
+configurable at that time.  [PME is still not configurable and
+potentially related to hotplug, because they may use the same MSI IRQ
+in principle, but the native hotplug is configurable now anyway.]
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index bbc276dda49f..1fd3372c2c18 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3114,6 +3114,10 @@ static int nvme_dev_open(struct inode *inode, struct file *file)
- 	}
- 
- 	file->private_data = ctrl;
-+
-+	if (ctrl->ops->cdev_file_open)
-+		ctrl->ops->cdev_file_open(ctrl, file);
-+
- 	return 0;
- }
- 
-@@ -3127,12 +3131,23 @@ static int nvme_dev_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
-+static int nvme_dev_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct nvme_ctrl *ctrl = file->private_data;
-+
-+	if (!ctrl->ops->mmap_cmb)
-+		return -ENODEV;
-+
-+	return ctrl->ops->mmap_cmb(ctrl, vma);
-+}
-+
- static const struct file_operations nvme_dev_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= nvme_dev_open,
- 	.release	= nvme_dev_release,
- 	.unlocked_ioctl	= nvme_dev_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
-+	.mmap		= nvme_dev_mmap,
- };
- 
- static ssize_t nvme_sysfs_reset(struct device *dev,
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 7d97bfb2a9e2..24fbcd274c64 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -497,6 +497,8 @@ struct nvme_ctrl_ops {
- 	void (*delete_ctrl)(struct nvme_ctrl *ctrl);
- 	int (*get_address)(struct nvme_ctrl *ctrl, char *buf, int size);
- 	bool (*supports_pci_p2pdma)(struct nvme_ctrl *ctrl);
-+	void (*cdev_file_open)(struct nvme_ctrl *ctrl, struct file *file);
-+	int (*mmap_cmb)(struct nvme_ctrl *ctrl, struct vm_area_struct *vma);
- };
- 
- /*
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 07412116d4d1..5946244e0295 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2965,6 +2965,21 @@ static bool nvme_pci_supports_pci_p2pdma(struct nvme_ctrl *ctrl)
- 	return dma_pci_p2pdma_supported(dev->dev);
- }
- 
-+static void nvme_pci_cdev_file_open(struct nvme_ctrl *ctrl, struct file *file)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	pci_p2pdma_file_open(pdev, file);
-+}
-+
-+static int nvme_pci_mmap_cmb(struct nvme_ctrl *ctrl,
-+			     struct vm_area_struct *vma)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	return pci_mmap_p2pmem(pdev, vma);
-+}
-+
- static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.name			= "pcie",
- 	.module			= THIS_MODULE,
-@@ -2976,6 +2991,8 @@ static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.submit_async_event	= nvme_pci_submit_async_event,
- 	.get_address		= nvme_pci_get_address,
- 	.supports_pci_p2pdma	= nvme_pci_supports_pci_p2pdma,
-+	.cdev_file_open		= nvme_pci_cdev_file_open,
-+	.mmap_cmb		= nvme_pci_mmap_cmb,
- };
- 
- static int nvme_dev_map(struct nvme_dev *dev)
--- 
-2.30.2
+> We would still need to explain why Rafael thought all these _OSC
+> support bits were required, but now they're not.
+>
+> _OSC does not negotiate directly for control of ASPM (though of course
+> it *does* negotiate for control of the PCIe Capability, which contains
+> the ASPM control bits), but the PCI Firmware spec, r3.3, sec 4.5.3, has
+> this comment in a sample _OSC implementation:
+>
+>   // Only allow native hot plug control if the OS supports:
+>   // * ASPM
+>   // * Clock PM
+>   // * MSI/MSI-X
+>
+> which matches the current ACPI_PCIE_REQ_SUPPORT.
+>
+> So I think I would approach this by reworking the _OSC negotiation so
+> we always advertise "OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT"
+> if CONFIG_PCIEASPM=y.
 
+That'd be reasonable IMO.
+
+> Advertising support for ASPM doesn't mean Linux has to actually
+> *enable* it, so we could make a different mechanism to prevent use of
+> ASPM if we have a device or platform quirk or we're booting with
+> "pcie_aspm=off".
+
+Right.
+
+Note that if we don't request the native control of a PCIe feature,
+this basically gives the BIOS a licence to scribble on the related
+device registers and some of the features are not independent, so we
+may need to advertise support for two features in order to get control
+of just one of them.
