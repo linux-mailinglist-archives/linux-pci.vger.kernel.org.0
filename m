@@ -2,76 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 530104F6F56
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Apr 2022 02:51:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CE514F7186
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Apr 2022 03:32:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232528AbiDGAxO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Apr 2022 20:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
+        id S236139AbiDGBdt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Apr 2022 21:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230120AbiDGAxN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 20:53:13 -0400
+        with ESMTP id S240671AbiDGBaM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Apr 2022 21:30:12 -0400
 Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 365BCAACAF;
-        Wed,  6 Apr 2022 17:51:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E9C2E18A7A6;
+        Wed,  6 Apr 2022 18:22:46 -0700 (PDT)
 Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 07 Apr 2022 09:51:10 +0900
+  by mx.socionext.com with ESMTP; 07 Apr 2022 10:22:46 +0900
 Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 2C9832058B50;
-        Thu,  7 Apr 2022 09:51:10 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 7 Apr 2022 09:51:10 +0900
-Received: from [10.212.181.247] (unknown [10.212.181.247])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 66CDFB62B7;
-        Thu,  7 Apr 2022 09:51:09 +0900 (JST)
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: designware-ep: Increase maxItems of
- reg and reg-names
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 262652058B50;
+        Thu,  7 Apr 2022 10:22:46 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 7 Apr 2022 10:22:46 +0900
+Received: from plum.e01.socionext.com (unknown [10.212.243.119])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id A10E7B62B7;
+        Thu,  7 Apr 2022 10:22:45 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1649145062-29833-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1649145062-29833-2-git-send-email-hayashi.kunihiko@socionext.com>
- <Yk3YaAWPJ0bpLTHK@robh.at.kernel.org>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <b7cd4fe0-5d61-322a-b42a-d239ee23b201@socionext.com>
-Date:   Thu, 7 Apr 2022 09:51:09 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <Yk3YaAWPJ0bpLTHK@robh.at.kernel.org>
-Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 0/3] dt-bindings: PCI: uniphier: Fix endpoint descriptions
+Date:   Thu,  7 Apr 2022 10:22:30 +0900
+Message-Id: <1649294553-17310-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
-Thank you for pointing out.
+This series fixes dt-schema descriptions for PCI endpoint controller
+implemented in UniPhier SoCs.
 
-On 2022/04/07 3:14, Rob Herring wrote:
-> On Tue, Apr 05, 2022 at 04:51:00PM +0900, Kunihiko Hayashi wrote:
->> UniPhier PCIe EP controller has 5 register mappings (dbi, dbi2, link,
->> config and atu), so maxItems of "reg" and "reg-names" should allow 5.
-> 
-> Shouldn't that be 'addr_space' rather than 'config'? IIRC, 'config' is
-> only for the host.
+Changes since v1:
+- Fix "config" in the Patch 1 commit message to "addr_space"
 
-Yes. I made a mistake in the comment.
-UniPhier EP controller has also "addr_space", not "config".
-I'll fix it next.
+Kunihiko Hayashi (3):
+  dt-bindings: PCI: designware-ep: Increase maxItems of reg and
+    reg-names
+  dt-bindings: PCI: uniphier-ep: Clean up reg, clocks, resets, and their
+    names using compatible string
+  ARM: dts: uniphier: Remove compatible "snps,dw-pcie-ep" from Pro5
+    pcie-ep node
 
-Thank you,
+ .../bindings/pci/snps,dw-pcie-ep.yaml         |  4 +-
+ .../pci/socionext,uniphier-pcie-ep.yaml       | 84 ++++++++++++-------
+ arch/arm/boot/dts/uniphier-pro5.dtsi          |  3 +-
+ 3 files changed, 59 insertions(+), 32 deletions(-)
 
----
-Best Regards
-Kunihiko Hayashi
+-- 
+2.25.1
+
