@@ -2,269 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 107EE4F8DC3
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 08:25:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E057E4F8DBC
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 08:25:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234356AbiDHEy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Apr 2022 00:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43304 "EHLO
+        id S233886AbiDHFIa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Apr 2022 01:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234346AbiDHEyZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 00:54:25 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD886ABF53
-        for <linux-pci@vger.kernel.org>; Thu,  7 Apr 2022 21:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649393542; x=1680929542;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zEszkAVb21nsmB3ybAWb2zTpCLXHkLqsVRlhqG3dgxE=;
-  b=Ex5S+FvPXSJSYTed6kN3xyjLOCiRId3vQJ/cUm5lpK3oDzT8HWwXF1Cn
-   YItjOgKer7xBf1iRuKS4HFg1oL3m7mS1NvFgsbpbwjsN6tRNkG1G3uaom
-   n4vxIHVaNUu7CLGEUe6H55Wb9UQwQt+MrTmgv63T9VlsdiyfIk8flQtD6
-   bluuXgT8hnjzwZrAErVnJ8hwjvimBJ2KTUtwppbY4WZvx9dIFp+rcfMpQ
-   i/oVCmx9/C3tjV4I4/OLogWqtpKZI4OXfYdl9TaHPupzC0c17Qd5TUJgr
-   RyOn6+T+fjfRNcKxWkHEpreaeFLp3Kfm0Hches0Bl7fsOe2+PwKlIbzLH
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10310"; a="243642202"
-X-IronPort-AV: E=Sophos;i="5.90,244,1643702400"; 
-   d="scan'208";a="243642202"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2022 21:52:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,244,1643702400"; 
-   d="scan'208";a="621504728"
-Received: from lkp-server02.sh.intel.com (HELO a44fdfb70b94) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 07 Apr 2022 21:52:20 -0700
-Received: from kbuild by a44fdfb70b94 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1ncgbb-00062e-IS;
-        Fri, 08 Apr 2022 04:52:19 +0000
-Date:   Fri, 08 Apr 2022 12:51:49 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/pm] BUILD REGRESSION
- 53b3488879cff3b3a238e3e9651c2e2879f422cf
-Message-ID: <624fbf65.aaszBFyNDncqqRDo%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234513AbiDHFI3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 01:08:29 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D5823ACAB
+        for <linux-pci@vger.kernel.org>; Thu,  7 Apr 2022 22:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cXUBuSdF16Cxg0z/JVxUXrcFxI8IVJk9GQSpNi9s5kE=; b=FibP+p3MFxZX3XCvwsDeNTnnjC
+        vwet8FGSy2xv6IKibBziSIdnASssREA6BAxFWVH/WCm2GhIINhtBslqAwfQQqquFKGPCjm7IH50G4
+        FDZWJNSQc1+f1Q+aOgtCdeyBn1psN5CQ/tndA0xpSF5tNaMlFb3qz4EcT9v7YLCIi1WTzsWFm+sUW
+        uiW4tEY+I4yEQDCFxE5fAKfU9NYFw5Mc5POF3MPPY1pag7+Q8fqnJS1/aeLt1FzkUGtg/Vsg01al7
+        273ON7tRUYAuV2dnjTTC5YuXuZ0ShOei3TsMndjYUCPR0jkkYcy/KMgTtLIO9nan6VX0NjI7l4mgR
+        z+1oQTUg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1ncgp3-00F0ia-Pb; Fri, 08 Apr 2022 05:06:13 +0000
+Date:   Thu, 7 Apr 2022 22:06:13 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Wangseok Lee <wangseok.lee@samsung.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Alexander Lobakin <alexandr.lobakin@intel.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kernel@axis.com" <kernel@axis.com>,
+        Moon-Ki Jun <moonki.jun@samsung.com>
+Subject: Re: [PATCH] PCI: dwc: Modify the check about MSI DMA mask 32-bit
+Message-ID: <Yk/CxUxR/iRb9j8l@infradead.org>
+References: <20220331053422epcms2p7baddf4e5c80b6ebbd5e6aa9447fa221f@epcms2p7>
+ <YkR7G/V8E+NKBA2h@infradead.org>
+ <20220328143228.1902883-1-alexandr.lobakin@intel.com>
+ <20220328023009epcms2p309a5dfc2ff29d0a9945f65799963193c@epcms2p3>
+ <20220330035203epcms2p8fb560f4f953c5a2c8fff020432adc9bd@epcms2p8>
+ <20220330093526.2728238-1-alexandr.lobakin@intel.com>
+ <CGME20220328143454epcas2p27a340d09e9f4e74af1eaa44559e372a5@epcms2p4>
+ <20220408023401epcms2p41024174e7e09d475e0186fbdb954ec7c@epcms2p4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220408023401epcms2p41024174e7e09d475e0186fbdb954ec7c@epcms2p4>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm
-branch HEAD: 53b3488879cff3b3a238e3e9651c2e2879f422cf  PCI/PM: Power up all devices during runtime resume
+On Fri, Apr 08, 2022 at 11:34:01AM +0900, Wangseok Lee wrote:
+> Hi,
+> 
+> Could you please review this patch in the context of the following patch?
+> 
+> https://patchwork.ozlabs.org/project/linux-pci/patch/20220328023009epcms2p309a5dfc2ff29d0a9945f65799963193c@epcms2p
 
-Error/Warning reports:
-
-https://lore.kernel.org/linux-pci/202204080225.iXDZAkO2-lkp@intel.com
-
-Error/Warning: (recently discovered and may have been fixed)
-
-drivers/pci/pci-driver.c:1315:9: error: implicit declaration of function 'pci_pm_default_resume_early'; did you mean 'pci_pm_default_resume'? [-Werror=implicit-function-declaration]
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- arc-randconfig-r043-20220407
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- arm64-randconfig-r031-20220407
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- i386-randconfig-a014
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- i386-randconfig-c001
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- ia64-allmodconfig
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- ia64-allyesconfig
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- ia64-buildonly-randconfig-r001-20220406
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- ia64-buildonly-randconfig-r001-20220407
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- ia64-randconfig-r006-20220407
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- ia64-randconfig-r013-20220407
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- ia64-randconfig-r031-20220406
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- ia64-randconfig-r036-20220406
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- powerpc-randconfig-p002-20220406
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- riscv-allmodconfig
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- riscv-allyesconfig
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- riscv-defconfig
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- riscv-rv32_defconfig
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- sparc64-buildonly-randconfig-r006-20220407
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- x86_64-randconfig-a015
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-|-- x86_64-randconfig-c022
-|   `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-`-- xtensa-allyesconfig
-    `-- drivers-pci-pci-driver.c:error:implicit-declaration-of-function-pci_pm_default_resume_early
-
-elapsed time: 730m
-
-configs tested: 134
-configs skipped: 3
-
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-arm                           h5000_defconfig
-sh                         apsh4a3a_defconfig
-arm                        shmobile_defconfig
-sh                          rsk7201_defconfig
-powerpc                     asp8347_defconfig
-powerpc                      bamboo_defconfig
-sh                           se7722_defconfig
-arm                          iop32x_defconfig
-arc                            hsdk_defconfig
-powerpc                      ep88xc_defconfig
-powerpc                      ppc6xx_defconfig
-sh                           se7780_defconfig
-sparc64                          alldefconfig
-ia64                          tiger_defconfig
-sparc64                             defconfig
-arm                             ezx_defconfig
-powerpc                 mpc834x_itx_defconfig
-arm                        clps711x_defconfig
-sh                   sh7770_generic_defconfig
-ia64                            zx1_defconfig
-arm                             pxa_defconfig
-sparc                               defconfig
-powerpc                      pcm030_defconfig
-arc                        vdk_hs38_defconfig
-sh                ecovec24-romimage_defconfig
-riscv                               defconfig
-powerpc                     stx_gp3_defconfig
-powerpc                       ppc64_defconfig
-xtensa                          iss_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220406
-arm                  randconfig-c002-20220407
-arm                  randconfig-c002-20220408
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-sparc                            allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-arc                  randconfig-r043-20220406
-arc                  randconfig-r043-20220407
-arc                  randconfig-r043-20220408
-s390                 randconfig-r044-20220408
-s390                 randconfig-r044-20220406
-riscv                randconfig-r042-20220406
-riscv                randconfig-r042-20220408
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-riscv                    nommu_k210_defconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
-
-clang tested configs:
-x86_64                        randconfig-c007
-i386                          randconfig-c001
-s390                 randconfig-c005-20220406
-s390                 randconfig-c005-20220407
-powerpc              randconfig-c003-20220407
-powerpc              randconfig-c003-20220406
-riscv                randconfig-c006-20220407
-riscv                randconfig-c006-20220406
-mips                 randconfig-c004-20220407
-mips                 randconfig-c004-20220406
-arm                  randconfig-c002-20220406
-arm                  randconfig-c002-20220407
-arm                       aspeed_g4_defconfig
-arm                     davinci_all_defconfig
-powerpc                 mpc832x_rdb_defconfig
-arm                  colibri_pxa270_defconfig
-arm                             mxs_defconfig
-arm                            dove_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-x86_64                        randconfig-a014
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r041-20220406
-hexagon              randconfig-r045-20220408
-hexagon              randconfig-r045-20220406
-hexagon              randconfig-r041-20220407
-hexagon              randconfig-r041-20220408
-hexagon              randconfig-r045-20220407
-s390                 randconfig-r044-20220407
-riscv                randconfig-r042-20220407
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Isn't that the same (broken) patch?
