@@ -2,125 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCBCA4F9E48
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 22:38:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFC344F9FB4
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Apr 2022 00:46:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234014AbiDHUkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Apr 2022 16:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49358 "EHLO
+        id S229541AbiDHWrX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Apr 2022 18:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233905AbiDHUko (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 16:40:44 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4610B10FAFF;
-        Fri,  8 Apr 2022 13:38:39 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id bg10so19555650ejb.4;
-        Fri, 08 Apr 2022 13:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HhNBGBXII9hPPc9k14Zm8Zip5qNjp4bRcFbfG43K/cE=;
-        b=btoiSM3bmnF7t/t+vaZsE5sdTYe66QVDfUep5N+ibzP9941+XaDjG4PYlvZHEKqxW/
-         kYsG2Ba7DA36xgKQ6fngtKxl/itsetf5Tnnkfgo7+wKWlcdCG418U2FqU6EnVfOUCRhq
-         Ku+IwbLLsv60D46CNpn1SfNS/8fR+rtd7GdMtmfJwNLD1hZ1qVK1cIvmdfY24D33Gkjx
-         SRmFmnyFWtBt0wtsTcDkp6sdOcdfaIW4b/qIML4uZ1h2drgIWtRgMh/qIgIesNkSaXKw
-         qLOhnUFA6e5TErwMNP3474/ZlElGUniKWU7rdtxiGcmPQrFuIlDT7U73c3rGeg72YpD3
-         Jejw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HhNBGBXII9hPPc9k14Zm8Zip5qNjp4bRcFbfG43K/cE=;
-        b=KQbMlMD6uWorXnpsFxmOwyp5lkiZiAXNAacexEKwxmoG42jXiFOPRnuRsejgc6zOT5
-         klv0piotLp5hetEeAGLaZdKdxD7/z32gxmBi9a2Qb/mB/hTZbLEGlmL4eMkiUNGYg8l3
-         g/MkdRLBD+k+9diekej6cRcrsh6/OsAiicKLmKws6WbY3/aV93hdrr5JOQfzoe9lixcz
-         AqiCqBkUAwrdUPXLhqutsKzYlca6trspa5+3e4MQvlu7Dsq4Cqj+BTOv0t1ChUk2XRBP
-         lxnOe9p8y/JYBlZs5DYSNn4vv/wSXjYyP0hcu+8c0EjwuLZiQ8aWSm/LL9q5Me1wD6XR
-         sOLA==
-X-Gm-Message-State: AOAM5338erdmK3snC9pUpKQ+ohDtoNPR4iT2PS7EzGKyQDML91XHqPHk
-        RpKVNEJeshA9eW90yHoyfIg=
-X-Google-Smtp-Source: ABdhPJwI6KYt1e4dC+pOihLjVKdfpXzvTVPpC3/KQRo5Y6Q7ZrD/v9ERhKHh+cSNkkhLqMjWUP5hOQ==
-X-Received: by 2002:a17:906:d54e:b0:6db:b241:c0e2 with SMTP id cr14-20020a170906d54e00b006dbb241c0e2mr19730016ejc.724.1649450317632;
-        Fri, 08 Apr 2022 13:38:37 -0700 (PDT)
-Received: from anparri (host-87-11-75-174.retail.telecomitalia.it. [87.11.75.174])
-        by smtp.gmail.com with ESMTPSA id kx5-20020a170907774500b006e1382b8192sm9158553ejc.147.2022.04.08.13.38.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Apr 2022 13:38:36 -0700 (PDT)
-Date:   Fri, 8 Apr 2022 22:38:28 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/6] Drivers: hv: vmbus: Introduce
- vmbus_request_addr_match()
-Message-ID: <20220408203828.GA305168@anparri>
-References: <20220407043028.379534-1-parri.andrea@gmail.com>
- <20220407043028.379534-5-parri.andrea@gmail.com>
- <PH0PR21MB3025D745B0F3FA8893B32B39D7E99@PH0PR21MB3025.namprd21.prod.outlook.com>
- <20220408164717.GA206777@anparri>
- <PH0PR21MB30258AE4C3CD9674E953C765D7E99@PH0PR21MB3025.namprd21.prod.outlook.com>
+        with ESMTP id S230439AbiDHWrW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 18:47:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73737114B;
+        Fri,  8 Apr 2022 15:45:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1777362100;
+        Fri,  8 Apr 2022 22:45:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C72C385A3;
+        Fri,  8 Apr 2022 22:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649457916;
+        bh=RY4LlTaIHI+Gt4S1FZe8//DTJqSqTADK8QF8Y/5p1M0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HeQg39pUKAiyD/yzmF/QklSoTW72IMlo/n6VcxsTdY2N/naNNXbbNb0Xqi0BBA9xj
+         sZ6fPa96E9Z2ar4ReajWZHpwKAwmVz6tKtas8CtIQkcFAZoHvBwJ/1gclKcySeU3ze
+         3i/KGY7HGom8/x6Gj4qWRRsONvbF0LnhM8ZqLEENzRad+ebnQtkPYa915EGSwQiK/T
+         kKvigZs/5foY4bI1st6UDXJGROOQrG9E9QpjSFh8Rqr8xlO1aSYuLQWBnpa8ljyF+0
+         8tNo+TZwGcnciYyIqprZnzp6TmE7qNjT9XC9BhCkHBBMPoYv4B99PGWKcqoLhBd5oS
+         h5Da3HWycuTiA==
+Date:   Fri, 8 Apr 2022 17:45:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH RESEND 1/2] PCI: Extend isolated function probing to s390
+Message-ID: <20220408224514.GA353445@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PH0PR21MB30258AE4C3CD9674E953C765D7E99@PH0PR21MB3025.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220404095346.2324666-1-schnelle@linux.ibm.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> > > In the case where a specific match is required, and trans_id is
-> > > valid but the addr's do not match, it looks like this function will
-> > > return the addr that didn't match, without removing the entry.
-> > 
-> > Yes, that is consistent with the description on vmbus_request_addr_match():
-> > 
-> >   Returns the memory address stored at @trans_id, or VMBUS_RQST_ERROR if
-> >   @trans_id is not contained in the requestor.
-> > 
-> > 
-> > > Shouldn't it return VMBUS_RQST_ERROR in that case?
-> > 
-> > Can certainly be done, although I'm not sure to follow your concerns.  Can
-> > you elaborate?
-> > 
+On Mon, Apr 04, 2022 at 11:53:45AM +0200, Niklas Schnelle wrote:
+> Like the jailhouse hypervisor s390's PCI architecture allows passing
+> isolated PCI functions to an OS instance. As of now this is was not
+> utilized even with multi-function support as the s390 PCI code makes
+> sure that only virtual PCI busses including a function with devfn 0 are
+> presented to the PCI subsystem. A subsequent change will remove this
+> restriction.
 > 
-> Having the function return "success" when it failed to match is unexpected
-> for me.  There's only one invocation where we care about matching
-> (in hv_compose_msi_msg).  In that invocation the purpose for matching is to
-> not remove the wrong entry, and the return value is ignored.  So I think
-> it all works correctly.
+> Allow probing such functions by replacing the existing check for
+> jailhouse_paravirt() with a new hypervisor_isolated_pci_functions()
+> helper.
+> 
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
-You're reading it wrongly: the point is that there's nothing wrong in *not
-removing the "wrong entry" (or in failing to match).  In the mentioned use,
-that means the channel callback has already processed "our" request, and
-that we don't have to worry about the ID.  (Otherwise, i.e. if we do match,
-the callback will eventually scream "Invalid transaction".)
+I'm OK with the idea of generalizing this Jailhouse test, but I wonder
+if this check should be in pci_scan_slot() rather than in
+pci_scan_child_bus_extend().
+
+I think the idea is that pci_scan_slot() should find all the functions
+of a device (a.k.a. "slot"), so it's a little weird to have a loop
+calling pci_scan_single_device() for each function in both places.
+
+Currently we never call pcie_aspm_init_link_state() for these
+Jailhouse or s390 functions.  Maybe that's OK (and I think
+pci_scan_slot() is the wrong place to initialize ASPM anyway) but if
+we could move the Jailhouse/s390 checking to pci_scan_slot(), it would
+at least remove the inconsistency.
+
+I'm thinking something along the lines of the patch below.  I'm sure
+Jan considered this originally, so maybe there's some reason this
+won't work.
+
+Bjorn
+
+> ---
+>  drivers/pci/probe.c        | 4 ++--
+>  include/linux/hypervisor.h | 9 +++++++++
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 17a969942d37..e8fd89a1f984 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2869,11 +2869,11 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>  		nr_devs = pci_scan_slot(bus, devfn);
+>  
+>  		/*
+> -		 * The Jailhouse hypervisor may pass individual functions of a
+> +		 * Some hypervisors may pass individual functions of a
+>  		 * multi-function device to a guest without passing function 0.
+>  		 * Look for them as well.
+>  		 */
+> -		if (jailhouse_paravirt() && nr_devs == 0) {
+> +		if (hypervisor_isolated_pci_functions() && nr_devs == 0) {
+>  			for (fn = 1; fn < 8; fn++) {
+>  				dev = pci_scan_single_device(bus, devfn + fn);
+>  				if (dev)
+> diff --git a/include/linux/hypervisor.h b/include/linux/hypervisor.h
+> index fc08b433c856..52abd459f9a3 100644
+> --- a/include/linux/hypervisor.h
+> +++ b/include/linux/hypervisor.h
+> @@ -32,4 +32,13 @@ static inline bool jailhouse_paravirt(void)
+>  
+>  #endif /* !CONFIG_X86 */
+>  
+> +static inline bool hypervisor_isolated_pci_functions(void)
+> +{
+> +	if (IS_ENABLED(CONFIG_S390))
+> +		return true;
+> +	else
+> +		return jailhouse_paravirt();
+> +}
+> +
+> +
+>  #endif /* __LINUX_HYPEVISOR_H */
+> -- 
+> 2.32.0
+> 
 
 
-> Just thinking out loud, maybe vmbus_request_addr_match() should be
-> renamed to vmbus_request_addr_remove(), and not have a return value?
-
-Mmh.  We have vmbus_request_addr() that (always) removes the ID; it seems
-a _remove() would just add to the confusion.  And removing the return value
-would mean duplicating most of vmbus_request_addr() in the "new" function.
-So, I'm not convinced that's the right thing to do.  I'm inclined to leave
-this patch as is (and, as usual, happy to be proven wrong).
-
-Thanks,
-  Andrea
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 17a969942d37..83e4885e0698 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2650,9 +2650,9 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
+ 		return 0; /* Already scanned the entire slot */
+ 
+ 	dev = pci_scan_single_device(bus, devfn);
+-	if (!dev)
++	if (!dev && !jailhouse_paravirt())
+ 		return 0;
+-	if (!pci_dev_is_added(dev))
++	if (dev && !pci_dev_is_added(dev))
+ 		nr++;
+ 
+ 	for (fn = next_fn(bus, dev, 0); fn > 0; fn = next_fn(bus, dev, fn)) {
+@@ -2858,30 +2858,16 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+ {
+ 	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+ 	unsigned int start = bus->busn_res.start;
+-	unsigned int devfn, fn, cmax, max = start;
++	unsigned int devfn, cmax, max = start;
+ 	struct pci_dev *dev;
+ 	int nr_devs;
+ 
+ 	dev_dbg(&bus->dev, "scanning bus\n");
+ 
+ 	/* Go find them, Rover! */
+-	for (devfn = 0; devfn < 256; devfn += 8) {
++	for (devfn = 0; devfn < 256; devfn += 8)
+ 		nr_devs = pci_scan_slot(bus, devfn);
+ 
+-		/*
+-		 * The Jailhouse hypervisor may pass individual functions of a
+-		 * multi-function device to a guest without passing function 0.
+-		 * Look for them as well.
+-		 */
+-		if (jailhouse_paravirt() && nr_devs == 0) {
+-			for (fn = 1; fn < 8; fn++) {
+-				dev = pci_scan_single_device(bus, devfn + fn);
+-				if (dev)
+-					dev->multifunction = 1;
+-			}
+-		}
+-	}
+-
+ 	/* Reserve buses for SR-IOV capability */
+ 	used_buses = pci_iov_bus_range(bus);
+ 	max += used_buses;
