@@ -2,60 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FB904F9722
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 15:44:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE9F4F9786
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 16:01:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236444AbiDHNpz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Apr 2022 09:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42394 "EHLO
+        id S236677AbiDHODH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Apr 2022 10:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236434AbiDHNpy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 09:45:54 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E90ED49925;
-        Fri,  8 Apr 2022 06:43:50 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC2CE113E;
-        Fri,  8 Apr 2022 06:43:50 -0700 (PDT)
-Received: from e123427-lin.arm.com (unknown [10.57.11.200])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52F193F5A1;
-        Fri,  8 Apr 2022 06:43:48 -0700 (PDT)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        kernel-janitors@vger.kernel.org, linux-pci@vger.kernel.org,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-rockchip@lists.infradead.org, Rob Herring <robh@kernel.org>,
+        with ESMTP id S236712AbiDHOCi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 10:02:38 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311C13A5C5;
+        Fri,  8 Apr 2022 07:00:35 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 3256C1E9; Fri,  8 Apr 2022 16:00:33 +0200 (CEST)
+Date:   Fri, 8 Apr 2022 16:00:31 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] PCI: rockchip: fix find_first_zero_bit() limit
-Date:   Fri,  8 Apr 2022 14:43:43 +0100
-Message-Id: <164942539812.30278.5716796264039659479.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20220315065944.GB13572@kili>
-References: <20220315065944.GB13572@kili>
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/11] Fix BUG_ON in vfio_iommu_group_notifier()
+Message-ID: <YlA//+zdOqgaFkUc@8bytes.org>
+References: <20220308054421.847385-1-baolu.lu@linux.intel.com>
+ <20220315002125.GU11336@nvidia.com>
+ <Yk/q1BGN8pC5HVZp@8bytes.org>
+ <1033ebe4-fa92-c9bd-a04b-8b28b21e25ea@linux.intel.com>
+ <20220408122352.GW2120790@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220408122352.GW2120790@nvidia.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 15 Mar 2022 09:59:44 +0300, Dan Carpenter wrote:
-> The ep->ob_region_map bitmap is a long and it has BITS_PER_LONG bits.
-> 
-> 
+On Fri, Apr 08, 2022 at 09:23:52AM -0300, Jason Gunthorpe wrote:
+> Why rc3? It has been 4 weeks now with no futher comments.
 
-Applied to pci/rockchip, thanks!
+Because I start applying new code to branches based on -rc3. In the past
+I used different -rc's for the topic branches (usually the latest -rc
+available when I started applying to that branch), but that caused silly
+merge conflicts from time to time. So I am now basing every topic branch
+on the same -rc, which is usually -rc3. Rationale is that by -rc3 time
+the kernel should have reasonably stabilized after the merge window.
 
-[1/1] PCI: rockchip: fix find_first_zero_bit() limit
-      https://git.kernel.org/lpieralisi/pci/c/096950e230
+Regards,
 
-Thanks,
-Lorenzo
+	Joerg
