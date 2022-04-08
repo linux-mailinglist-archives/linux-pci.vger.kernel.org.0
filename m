@@ -2,190 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34E7D4F9994
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 17:33:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 277974F99A1
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 17:37:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237644AbiDHPfM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Apr 2022 11:35:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55792 "EHLO
+        id S232692AbiDHPj0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Apr 2022 11:39:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237640AbiDHPfI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 11:35:08 -0400
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D833329240;
-        Fri,  8 Apr 2022 08:32:59 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 672C741DC4;
-        Fri,  8 Apr 2022 15:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1649431977;
-        bh=MnhRgeQEal2lOKifhRiXmc8x4Chl0YZYFn2hkFpTXqs=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version;
-        b=RTFeNcxJyiR/5mCM1Q9pM7LWIBn/ZhyWzBUT0fO+lP8iFerIvzN1qXQzzmT5utOil
-         h+1K7ljy5rEA9D45v3THRV/FZxVrnKj3SUBvWZJK7zPL5V2ER7kVgPi84ecWa0RkOe
-         3jmODJ4razCd9RIjDBR0IWw2GRIa3rz7sUwzxU8qb/G3bvltsi/fL2ggpyOxUUAC49
-         vyjSwLIyqe/l7MzdB3KX/shG4Rc1/+S7Ojj3ijQczViqQR+X1O3hgM50ZfSjgFTWPv
-         1ME4aELvRyRFG1sFentlVWAdli7mcCBAvUn8YZMKOJs0DPJWRUiPFjTGUfbBjDp1PA
-         4whoXiZwDTa5g==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com
-Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
-        baolu.lu@linux.intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Russell Currey <ruscur@russell.cc>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] PCI/DPC: Disable DPC service when link is in L2/L3 ready, L2 and L3 state
-Date:   Fri,  8 Apr 2022 23:31:59 +0800
-Message-Id: <20220408153159.106741-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220408153159.106741-1-kai.heng.feng@canonical.com>
-References: <20220408153159.106741-1-kai.heng.feng@canonical.com>
+        with ESMTP id S232719AbiDHPjY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 11:39:24 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7B1335E4D;
+        Fri,  8 Apr 2022 08:37:20 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 2C05D1E9; Fri,  8 Apr 2022 17:37:18 +0200 (CEST)
+Date:   Fri, 8 Apr 2022 17:37:16 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/11] Fix BUG_ON in vfio_iommu_group_notifier()
+Message-ID: <YlBWrE7kxX9vraOD@8bytes.org>
+References: <20220308054421.847385-1-baolu.lu@linux.intel.com>
+ <20220315002125.GU11336@nvidia.com>
+ <Yk/q1BGN8pC5HVZp@8bytes.org>
+ <1033ebe4-fa92-c9bd-a04b-8b28b21e25ea@linux.intel.com>
+ <20220408122352.GW2120790@nvidia.com>
+ <YlA//+zdOqgaFkUc@8bytes.org>
+ <20220408141747.GZ2120790@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220408141747.GZ2120790@nvidia.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Intel Alder Lake platforms, Thunderbolt entering D3cold can cause
-some errors reported by AER:
-[   30.100211] pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
-[   30.100251] pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-[   30.100256] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
-[   30.100262] pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-[   30.100267] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-[   30.100372] thunderbolt 0000:0a:00.0: AER: can't recover (no error_detected callback)
-[   30.100401] xhci_hcd 0000:3e:00.0: AER: can't recover (no error_detected callback)
-[   30.100427] pcieport 0000:00:1d.0: AER: device recovery failed
+On Fri, Apr 08, 2022 at 11:17:47AM -0300, Jason Gunthorpe wrote:
+> You might consider using a linear tree instead of the topic branches,
+> topics are tricky and I'm not sure it helps a small subsystem so much.
+> Conflicts between topics are a PITA for everyone, and it makes
+> handling conflicts with rc much harder than it needs to be.
 
-Since AER is disabled in previous patch for a Link in L2/L3 Ready, L2
-and L3, also disable DPC here as DPC depends on AER to work.
+I like the concept of a branch per driver, because with that I can just
+exclude that branch from my next-merge when there are issues with it.
+Conflicts between branches happen too, but they are quite manageable
+when the branches have the same base.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v4:
- - Wording change.
+Overall I am thinking of reorganizing the IOMMU tree, but it will likely
+not end up to be a single-branch tree, although the number of patches
+per cycle _could_ just be carried in a single branch.
 
-v3:
- - Wording change to make the patch more clear.
+> At least I haven't felt a need for topics while running larger trees,
+> and would find it stressful to try and squeeze the entire patch flow
+> into only 3 weeks out of the 7 week cycle.
 
-v2:
- - Wording change.
- - Empty line dropped.
+Yeah, so it is 4 weeks in an 9 weeks cycle :) The merge window is 2
+weeks and not a lot happens. The 2 weeks after are for stabilization and
+I usually only pick up fixes. Then come the 4 weeks were new code gets
+into the tree. In the last week everything gets testing in linux-next to
+be ready for the merge window. I will pickup fixes in that week, of
+course.
 
- drivers/pci/pcie/dpc.c | 60 +++++++++++++++++++++++++++++++-----------
- 1 file changed, 44 insertions(+), 16 deletions(-)
+> In any event, I'd like this on a branch so Alex can pull it too, I
+> guess it means Alex has to merge rc3 to VFIO as well?
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 3e9afee02e8d1..414258967f08e 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -343,13 +343,33 @@ void pci_dpc_init(struct pci_dev *pdev)
- 	}
- }
- 
-+static void dpc_enable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	u16 ctl;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-+	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+}
-+
-+static void dpc_disable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	u16 ctl;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-+	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+}
-+
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
- 	struct device *device = &dev->device;
- 	int status;
--	u16 ctl, cap;
-+	u16 cap;
- 
- 	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
-@@ -364,10 +384,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	}
- 
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--
--	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+	dpc_enable(dev);
- 	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
- 
- 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-@@ -380,22 +397,33 @@ static int dpc_probe(struct pcie_device *dev)
- 	return status;
- }
- 
--static void dpc_remove(struct pcie_device *dev)
-+static int dpc_suspend(struct pcie_device *dev)
- {
--	struct pci_dev *pdev = dev->port;
--	u16 ctl;
-+	dpc_disable(dev);
-+	return 0;
-+}
- 
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+static int dpc_resume(struct pcie_device *dev)
-+{
-+	dpc_enable(dev);
-+	return 0;
-+}
-+
-+static void dpc_remove(struct pcie_device *dev)
-+{
-+	dpc_disable(dev);
- }
- 
- static struct pcie_port_service_driver dpcdriver = {
--	.name		= "dpc",
--	.port_type	= PCIE_ANY_PORT,
--	.service	= PCIE_PORT_SERVICE_DPC,
--	.probe		= dpc_probe,
--	.remove		= dpc_remove,
-+	.name			= "dpc",
-+	.port_type		= PCIE_ANY_PORT,
-+	.service		= PCIE_PORT_SERVICE_DPC,
-+	.probe			= dpc_probe,
-+	.suspend		= dpc_suspend,
-+	.resume			= dpc_resume,
-+	.runtime_suspend	= dpc_suspend,
-+	.runtime_resume		= dpc_resume,
-+	.remove			= dpc_remove,
- };
- 
- int __init pcie_dpc_init(void)
--- 
-2.34.1
+Sure, I can put these patches in a separate branch for Alex to pull into
+the VFIO tree.
 
+Regards,
+
+	Joerg
