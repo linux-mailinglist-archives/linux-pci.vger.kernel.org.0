@@ -2,234 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A5ED4F9968
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 17:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B83284F9977
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 17:29:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235890AbiDHP36 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Apr 2022 11:29:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36062 "EHLO
+        id S237606AbiDHPax (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Apr 2022 11:30:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235776AbiDHP36 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 11:29:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D063981B;
-        Fri,  8 Apr 2022 08:27:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A775961FB8;
-        Fri,  8 Apr 2022 15:27:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C8FC385A1;
-        Fri,  8 Apr 2022 15:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649431672;
-        bh=spbvvLexuDlNOPAlzsWxyFyJy2c3S3c/xnyxDLTAJKs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=s3T+UM3bbC990eRqsi6NhvUT6CFbXbUzlJJ7VAxn07ZBhzQG+29cnyImFqJ3u727w
-         pZEJ8O19sk/acW3gVNyv6AW5ROMaWOvbxBWslRzWb4LsTYFLl1A74/eY13LTuYBW0H
-         LKbHb/t/fq6qI9uQDXerF3hB2GuwbykX3lAax31pCM380YN3KO75K9fkEul73+/cge
-         4IuvRaeP31LFPmQo1jOBvS2it/GgVn88HwAt40v24EBVYTRGoqdKWIuaJNAmFl7xXD
-         mnUaCEJL6geLSL3bGHQbqjYjrB24GZZNBIhraFJa4bnwy5dhrBYDLMdZ6e9Yo/q3mv
-         b17lE59IperfQ==
-Date:   Fri, 8 Apr 2022 10:27:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] PCI: Add function for parsing
- 'slot-power-limit-milliwatt' DT property
-Message-ID: <20220408152750.GA306189@bhelgaas>
+        with ESMTP id S237576AbiDHPao (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 11:30:44 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11021020.outbound.protection.outlook.com [52.101.62.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA73411175C;
+        Fri,  8 Apr 2022 08:28:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fDXvJJvU63t/WePcJq0h+av9XwKgsmY26ZuCFdQCgfIFkq18GnATUB+AV8upiEQYqCXTNjvmefMDbTcz7u9hXL/5u0TqdtZBXNli2GrpwqVPn8h5MtDzFM4d/rw9zqSUw0HW742AesoHA6z6w/W9EoTv/abk8VGpItFjoFUu3YCU6/xoE5hQHi2c0hAf4i3IhrYp8WIJb7ZGfh/lCEAWebm09SZtKrCKgQvx/MdrBhmddrEVaEWytAB8FjvtRsOuTMb+fpMEBCz9RohtdgVdNQYqHXrvCgr+J4mKd3goZTbDK23CmWOhKwWEXdKnmlO/dSbJ9kJRTDqvmvIX14F/zA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EsdmyXyo1Bg9f3smknFQX92dd6oGufTYPcOniHCnEmE=;
+ b=hyBX6M2lESoHucrVzDcpVtTMLGuDKniXpzsUAyJazp6dCCcYCAlsTeWWcDFr85nqeq3UCT6cjDyKFw302bYANX0w3hqtZWQkh23tew9FYpzxpwpAL+HXm4j9SsWVNXsjPv16s9PgnVYLr8CD8TrPn25UnuaUFa1XVV6J56bNaK49uEn01a9C5hpXv/FS6FnSNqU/S/w6pOs25FruTazAVlLUKtaDPaVIK0/jZHafk+asWGVaeRtCqr0K0Gbn22w5fa6yCbJXXbgmA6CQRZRcuRhCFZIUahqZdRkk5xnAOVTE3O6LrU3RxZFftSeVNvHfDobx781k9T5l549C5Ycu+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EsdmyXyo1Bg9f3smknFQX92dd6oGufTYPcOniHCnEmE=;
+ b=Eb2yoJeqBEhJYB0Im3KnYcI1273NIL4vEs14EU6c2ZqH6s9fxi4a3V3aeVcnDMvNgDy2T1vO8aypta2yq2ryMhJW4H3GpH5S5PIX/R7q2sLFjUEizClukxBDudzW3+y0OLK4RzVwqnNC8ARTae/3C/yZceveGMbhaKCBhommscg=
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
+ by DM5PR21MB1749.namprd21.prod.outlook.com (2603:10b6:4:9f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.8; Fri, 8 Apr
+ 2022 15:28:37 +0000
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::ac09:6e1b:de72:2b2f]) by PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::ac09:6e1b:de72:2b2f%7]) with mapi id 15.20.5164.012; Fri, 8 Apr 2022
+ 15:28:37 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 5/6] Drivers: hv: vmbus: Introduce
+ {lock,unlock}_requestor()
+Thread-Topic: [PATCH 5/6] Drivers: hv: vmbus: Introduce
+ {lock,unlock}_requestor()
+Thread-Index: AQHYSjh6DFUxGtO8e0m5GrS3S88ooKzmJXDg
+Date:   Fri, 8 Apr 2022 15:28:37 +0000
+Message-ID: <PH0PR21MB3025A16C9E729ADE4A3F2258D7E99@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <20220407043028.379534-1-parri.andrea@gmail.com>
+ <20220407043028.379534-6-parri.andrea@gmail.com>
+In-Reply-To: <20220407043028.379534-6-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3fef8be5-2602-4b49-ada6-41968e288a44;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-04-08T15:25:55Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 546a150b-3b1f-4d46-6de7-08da19747399
+x-ms-traffictypediagnostic: DM5PR21MB1749:EE_
+x-ms-exchange-atpmessageproperties: SA|SL
+x-microsoft-antispam-prvs: <DM5PR21MB1749A47EC2C3A56338B716A8D7E99@DM5PR21MB1749.namprd21.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5l/MTVoKr7UTdfWzL67ziLcO6LOr2YznR0ePdMU28jW79M3rn7ZBBptdjcFM2QsK70e8u/MyZQS+ndVPXTlri608k+yrNzmDrmJk6R27NUzztTRCa0Rr6Wct0EaB/CnbKpJ6BbAzI2js1qC0P1S+rwRhFJ0HIr7hnkAZv8v3msYXb8ub2FqVu+LG9nBAuSFhA7i/J1zwZED5VTvxcU3y1lTovHw8XtWKT1+G4908aVz8SJ52cBsq6KGtG7nCtF9aC/+Fb7KiEtPziNZVmb4yr8AvTgDwmUv74rtCzaE4PARvofnA3myMf2+nuB7sJvt/PyVT/KkdqkOhUgwkgZQY/+EqwUqTjwBNEfVfHmxIpDO24Q3Ef7eSJnjJVTUkLvNbCiK7UlG+fEef8Uj30KplyxtkJt84m1vU01IBv9D5grgl0xeyKrTN9K31PBz7XGUYIz40Oo5vnkyw6Wa8lVOz7NIdvIjtf4ME7yeen3i9qpLaOThmFSgw3/0ZzT0co8mUx+8Cd3xu0UA66sJJ/xvD/Ir7zurJQGRnh9G+mszETZ8SqfaD8N1eD0BnzuECQ6OHBVlkUqCyE2WCb6ya7rbf/Rz6WGdyWA5ZHl43I998Lo/Ym1gipwtCLxtvJFNilFuEJ9BQySCY4xBr/ClewBCqvUKPhj85hlqMo3Leze+95mihW98iTWp5a1nfgne7PZXA6m49adL2TbwCugAzL/vsyunwYPlHqJSFZUqYnGZNVRiQvlJZ0ou/YtIX2VqWw2CUZ2kI1W1Ll9Zd8Jd7M0Yh6w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(76116006)(4326008)(52536014)(33656002)(122000001)(8936002)(66556008)(66446008)(64756008)(2906002)(66946007)(8676002)(508600001)(186003)(26005)(8990500004)(86362001)(71200400001)(7696005)(6506007)(5660300002)(54906003)(38100700002)(316002)(10290500003)(82950400001)(110136005)(55016003)(921005)(82960400001)(38070700005)(83380400001)(66476007)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?x3WbiR2Pme+U5GAWBdh/6cnbNryMPz3uKViyC5sCHKEPG6pNPdmsKM0JoQ8x?=
+ =?us-ascii?Q?xZ8vn02K2l3mA2Bth8GmJhqqkHf7Dm/91tJcNcIdI8+Pc6KU6xnqvopETCZJ?=
+ =?us-ascii?Q?j6FOaj9Orf5czyA/NJTxe+xiCLDPu9qfC7sG5CnWvxsU6MK9RgQXvgXQJJSW?=
+ =?us-ascii?Q?ZpN+t+RbPwcWt2e+QKR6xdFvSCpC6WU+CGCfu7yOWt6TH1TDiNsxWk8Q90Oh?=
+ =?us-ascii?Q?XANRdi9Ux/J6NuDCpbMK5GqusHSVbfSinBdx0Hrw+4rbhT+Lra8LUCy2fTSL?=
+ =?us-ascii?Q?khy8xQrSINzSZQfQrC8ZMsK7lkuI7htworSD+WPVd3ca7f2CXWeO5tFGEo62?=
+ =?us-ascii?Q?2Osjbwyb+9uhoFLH40LQ3X+ILmJ5Fj8Ll2I0lm7qqmAWCyU+c66qRFuV0dZh?=
+ =?us-ascii?Q?5U5Flk08SVZeBpCTt6+hyd6eIBW2RCjkzvQlcvcuhyGcaWN+S64uUoZ/HmbS?=
+ =?us-ascii?Q?7RIyrntctgChdN0DKgSrPe/uD6viZpmS/SxaSsai3o9zFBTeb1Oyzv10YxVt?=
+ =?us-ascii?Q?bB+2MCnXAdEjqXvDhqwUDEyk/b8ZmObnWsfLlvP63bCZWxAnSmJpnnaCX0hu?=
+ =?us-ascii?Q?NTEa5efrBunjAlNRkOECjhWY6z7UMEC+8lIUpZIwu7dvuK9WpIcJd2yyLsLj?=
+ =?us-ascii?Q?voakPIfNejzGiW71es19NmzPyvR5TSOKvOgvjRK61Ji5LWUxkraAJMXiqhRm?=
+ =?us-ascii?Q?F0WeetihppB62fdp+OTjGPwNM+rJYZ8EhnES8FgMFxp6IyIRnJKuvEdo+9qo?=
+ =?us-ascii?Q?tXyMskr+csJRC64ncpktUOAm6HGfMMOkc+bptauGA75LaynkJApp9WlgPL4w?=
+ =?us-ascii?Q?cXGuGk9ZwY/TiXFUy5c9XrJyvR+Qyoo05MwKFYWLnajxZNxL/jcdcjmY+1zn?=
+ =?us-ascii?Q?9GYl4A2GutI+XYjT3ctn3hUC+YwW1cRHZke/rgCr2vyx/IV6o3zX7JJxJy8G?=
+ =?us-ascii?Q?dbTVnPh3bNEJwISkMgBajakY2A3Zi54ehYz63yUDeMT3xGKBhq67CHab492p?=
+ =?us-ascii?Q?gfjhuUHOphoZWln2aGxWCG+gJ0QAMWyDClghT4C9Y6Np+bEHyLvRpmAu8zBz?=
+ =?us-ascii?Q?ds4OkAlbSnoJcvBTAsKgNj3pKOKtdhSb4ByGU03Rp+lD0gPudbLA4a56gGBC?=
+ =?us-ascii?Q?YNI3G17vznrRTrKDPhJ57u5YkU68vjRw4Pb/H8qFjpCh1w08pIvzq4jN/Yul?=
+ =?us-ascii?Q?UgYIcrNOLUmLBIirGVyEE76FMLT3K+J1N+GJOilkRRTfe9XSLco5mHXO94JW?=
+ =?us-ascii?Q?AR/imc17Fh1o51hXDJOgJX5ZWvDNLPDfn4e62Z475B2ORCbdW9GREY/EkI11?=
+ =?us-ascii?Q?saKw+Sd/tT8BOSsyM05iZibPBmhFyb+gqqTuEt48A4dZxhtGi3kG0KToV5KP?=
+ =?us-ascii?Q?Fhe3qeoE0uUs7I7y4q2jZ/F1vUKfIympk95KA++TWeVvDq2e1WqmjQkuq9n5?=
+ =?us-ascii?Q?jkzqSByQpvvjjvQToM+lcflAABuBEFS7V1xbHSTno9cgF0CjX2lSUwLkAa2m?=
+ =?us-ascii?Q?Q0OdM63ZUatXWwxAStm/FZdDbkBAuXQyjhvFr2Y5MTijIywSVeNUc0/xK4V6?=
+ =?us-ascii?Q?A4wJn83XNGYuhJbcC9w2o4HXENlM33GA2esRGgf9shOF6YWs79kzghnBjdl+?=
+ =?us-ascii?Q?hAnt58ku296fpw18NndnAmjnQbWrKobgCP0fJS/3NFwvbMYZMnR4KkOHW7oA?=
+ =?us-ascii?Q?5NM0RzYisGls/zBW94kXf4ZV3LyBnk0J9k7bF5GlNMvO2Wji17XH31F+T2iq?=
+ =?us-ascii?Q?unmP4ftwXd4vn3+tOzKCJzCFUqFfsxY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220325093827.4983-4-pali@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 546a150b-3b1f-4d46-6de7-08da19747399
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2022 15:28:37.0282
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DEqFe/sYQ3UoXRHwmTvjV/NTHrYYK1n/790YqNIzs93X1GvK7UQOoTFL+3nJ5DzMhLuVlTsWf13d5XLu54UJB1FgVpeKYhy5/3zrC2+d/Bw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB1749
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 25, 2022 at 10:38:26AM +0100, Pali Rohár wrote:
-> Add function of_pci_get_slot_power_limit(), which parses the
-> 'slot-power-limit-milliwatt' DT property, returning the value in
-> milliwatts and in format ready for the PCIe Slot Capabilities Register.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Wednesday, Ap=
+ril 6, 2022 9:30 PM
+>=20
+> To abtract the lock and unlock operations on the requestor spin lock.
+> The helpers will come in handy in hv_pci.
+>=20
+> No functional change.
+>=20
+> Suggested-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > ---
-> Changes in v3:
-> * Set 600 W when DT slot-power-limit-milliwatt > 600 W
-> Changes in v2:
-> * Added support for PCIe 6.0 slot power limit encodings
-> * Round down slot power limit value
-> ---
->  drivers/pci/of.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h | 15 +++++++++++
->  2 files changed, 79 insertions(+)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index cb2e8351c2cc..5ebff26edd41 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -633,3 +633,67 @@ int of_pci_get_max_link_speed(struct device_node *node)
->  	return max_link_speed;
+>  drivers/hv/channel.c   | 11 +++++------
+>  include/linux/hyperv.h | 15 +++++++++++++++
+>  2 files changed, 20 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> index 49f10a603a091..56f7e06c673e4 100644
+> --- a/drivers/hv/channel.c
+> +++ b/drivers/hv/channel.c
+> @@ -1252,12 +1252,12 @@ u64 vmbus_next_request_id(struct vmbus_channel
+> *channel, u64 rqst_addr)
+>  	if (!channel->rqstor_size)
+>  		return VMBUS_NO_RQSTOR;
+>=20
+> -	spin_lock_irqsave(&rqstor->req_lock, flags);
+> +	lock_requestor(channel, flags);
+>  	current_id =3D rqstor->next_request_id;
+>=20
+>  	/* Requestor array is full */
+>  	if (current_id >=3D rqstor->size) {
+> -		spin_unlock_irqrestore(&rqstor->req_lock, flags);
+> +		unlock_requestor(channel, flags);
+>  		return VMBUS_RQST_ERROR;
+>  	}
+>=20
+> @@ -1267,7 +1267,7 @@ u64 vmbus_next_request_id(struct vmbus_channel
+> *channel, u64 rqst_addr)
+>  	/* The already held spin lock provides atomicity */
+>  	bitmap_set(rqstor->req_bitmap, current_id, 1);
+>=20
+> -	spin_unlock_irqrestore(&rqstor->req_lock, flags);
+> +	unlock_requestor(channel, flags);
+>=20
+>  	/*
+>  	 * Cannot return an ID of 0, which is reserved for an unsolicited
+> @@ -1327,13 +1327,12 @@ EXPORT_SYMBOL_GPL(__vmbus_request_addr_match);
+>  u64 vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id=
+,
+>  			     u64 rqst_addr)
+>  {
+> -	struct vmbus_requestor *rqstor =3D &channel->requestor;
+>  	unsigned long flags;
+>  	u64 req_addr;
+>=20
+> -	spin_lock_irqsave(&rqstor->req_lock, flags);
+> +	lock_requestor(channel, flags);
+>  	req_addr =3D __vmbus_request_addr_match(channel, trans_id, rqst_addr);
+> -	spin_unlock_irqrestore(&rqstor->req_lock, flags);
+> +	unlock_requestor(channel, flags);
+>=20
+>  	return req_addr;
 >  }
->  EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index c77d78f34b96a..015e4ceb43029 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -1042,6 +1042,21 @@ struct vmbus_channel {
+>  	u32 max_pkt_size;
+>  };
+>=20
+> +#define lock_requestor(channel, flags)					\
+> +do {									\
+> +	struct vmbus_requestor *rqstor =3D &(channel)->requestor;		\
+> +									\
+> +	spin_lock_irqsave(&rqstor->req_lock, flags);			\
+> +} while (0)
 > +
-> +/**
-> + * of_pci_get_slot_power_limit - Parses the "slot-power-limit-milliwatt"
-> + *				 property.
-> + *
-> + * @node: device tree node with the slot power limit information
-> + * @slot_power_limit_value: pointer where the value should be stored in PCIe
-> + *			    Slot Capabilities Register format
-> + * @slot_power_limit_scale: pointer where the scale should be stored in PCIe
-> + *			    Slot Capabilities Register format
-> + *
-> + * Returns the slot power limit in milliwatts and if @slot_power_limit_value
-> + * and @slot_power_limit_scale pointers are non-NULL, fills in the value and
-> + * scale in format used by PCIe Slot Capabilities Register.
-> + *
-> + * If the property is not found or is invalid, returns 0.
-> + */
-> +u32 of_pci_get_slot_power_limit(struct device_node *node,
-> +				u8 *slot_power_limit_value,
-> +				u8 *slot_power_limit_scale)
+> +static __always_inline void unlock_requestor(struct vmbus_channel *chann=
+el,
+> +					     unsigned long flags)
 > +{
-> +	u32 slot_power_limit_mw;
-> +	u8 value, scale;
+> +	struct vmbus_requestor *rqstor =3D &channel->requestor;
 > +
-> +	if (of_property_read_u32(node, "slot-power-limit-milliwatt",
-> +				 &slot_power_limit_mw))
-> +		slot_power_limit_mw = 0;
-> +
-> +	/* Calculate Slot Power Limit Value and Slot Power Limit Scale */
-> +	if (slot_power_limit_mw == 0) {
-> +		value = 0x00;
-> +		scale = 0;
-> +	} else if (slot_power_limit_mw <= 255) {
-> +		value = slot_power_limit_mw;
-> +		scale = 3;
-> +	} else if (slot_power_limit_mw <= 255*10) {
-> +		value = slot_power_limit_mw / 10;
-> +		scale = 2;
-> +	} else if (slot_power_limit_mw <= 255*100) {
-> +		value = slot_power_limit_mw / 100;
-> +		scale = 1;
-> +	} else if (slot_power_limit_mw <= 239*1000) {
-> +		value = slot_power_limit_mw / 1000;
-> +		scale = 0;
-> +	} else if (slot_power_limit_mw <= 250*1000) {
-> +		value = 0xF0;
-> +		scale = 0;
-
-I think the spec is poorly worded here.  PCIe r6.0, sec 7.5.3.9, says:
-
-  F0h   > 239 W and <= 250 W Slot Power Limit
-
-I don't think it's meaningful for the spec to include a range here.
-The amount of power the slot can supply has a single maximum.  I
-suspect the *intent* of F0h/00b is that a device in the slot may
-consume up to 250W.
-
-Your code above would mean that slot_power_limit_mw == 245,000 would
-cause the slot to advertise F0h/00b (250W), which seems wrong.
-
-I think we should do something like this instead:
-
-  scale = 0;
-  if (slot_power_limit_mw >= 600*1000) {
-    value = 0xFE;
-    slot_power_limit_mw = 600*1000;
-  } else if (slot_power_limit_mw >= 575*1000) {
-    value = 0xFD;
-    slot_power_limit_mw = 575*1000;
-  } ...
-
-I raised an issue with the PCI SIG about this.
-
-> +	} else if (slot_power_limit_mw <= 600*1000) {
-> +		value = 0xF0 + (slot_power_limit_mw / 1000 - 250) / 25;
-> +		scale = 0;
-> +	} else {
-> +		value = 0xFE;
-> +		scale = 0;
-> +	}
-> +
-> +	if (slot_power_limit_value)
-> +		*slot_power_limit_value = value;
-> +
-> +	if (slot_power_limit_scale)
-> +		*slot_power_limit_scale = scale;
-> +
-> +	return slot_power_limit_mw;
-
-If the DT tells us 800W is available, we'll store (FEh/00b), which
-means the slot can advertise to a downstream device that 600W is
-available.  I think that's correct, since the current spec doesn't
-provide a way to encode any value larger than 600W.
-
-But the function still returns 800,000 mW, which means the next patch will
-print:
-
-  %s: Slot power limit 800.0W
-
-even though it programs Slot Capabilities to advertise 600W.
-That's why I suggested setting slot_power_limit_mw = 600*1000 above.
-
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 3d60cabde1a1..e10cdec6c56e 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -627,6 +627,9 @@ struct device_node;
->  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
->  int of_get_pci_domain_nr(struct device_node *node);
->  int of_pci_get_max_link_speed(struct device_node *node);
-> +u32 of_pci_get_slot_power_limit(struct device_node *node,
-> +				u8 *slot_power_limit_value,
-> +				u8 *slot_power_limit_scale);
->  void pci_set_of_node(struct pci_dev *dev);
->  void pci_release_of_node(struct pci_dev *dev);
->  void pci_set_bus_of_node(struct pci_bus *bus);
-> @@ -653,6 +656,18 @@ of_pci_get_max_link_speed(struct device_node *node)
->  	return -EINVAL;
->  }
->  
-> +static inline u32
-> +of_pci_get_slot_power_limit(struct device_node *node,
-> +			    u8 *slot_power_limit_value,
-> +			    u8 *slot_power_limit_scale)
-> +{
-> +	if (slot_power_limit_value)
-> +		*slot_power_limit_value = 0;
-> +	if (slot_power_limit_scale)
-> +		*slot_power_limit_scale = 0;
-> +	return 0;
+> +	spin_unlock_irqrestore(&rqstor->req_lock, flags);
 > +}
 > +
->  static inline void pci_set_of_node(struct pci_dev *dev) { }
->  static inline void pci_release_of_node(struct pci_dev *dev) { }
->  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr);
+>  u64 __vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_=
+id,
+>  			       u64 rqst_addr);
+> --
+> 2.25.1
+
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+
