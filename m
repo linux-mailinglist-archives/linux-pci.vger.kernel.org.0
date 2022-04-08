@@ -2,56 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1D2D4F907E
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 10:13:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D0394F9248
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 11:52:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231290AbiDHIPR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Apr 2022 04:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
+        id S233058AbiDHJyo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Apr 2022 05:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231293AbiDHIPN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 04:15:13 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABFC65D1A3
-        for <linux-pci@vger.kernel.org>; Fri,  8 Apr 2022 01:13:05 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1ncjjg-0007iG-8O; Fri, 08 Apr 2022 10:12:52 +0200
-Message-ID: <4f8f93c51fedc84d94534e962bc7c68c4a4e5616.camel@pengutronix.de>
-Subject: Re: [PATCH v2 0/7] Add the iMX8MP PCIe support
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>,
-        "tharvey@gateworks.com" <tharvey@gateworks.com>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Date:   Fri, 08 Apr 2022 10:12:49 +0200
-In-Reply-To: <AS8PR04MB86766041887E97E22B0AC8C48CE99@AS8PR04MB8676.eurprd04.prod.outlook.com>
-References: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
-         <CAJ+vNU0McZxj_74DC0wCUyHq-NaT14URnvUP+kvudz7YLQq7fg@mail.gmail.com>
-         <AS8PR04MB86766041887E97E22B0AC8C48CE99@AS8PR04MB8676.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        with ESMTP id S229698AbiDHJyn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 05:54:43 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 68E65255C21;
+        Fri,  8 Apr 2022 02:52:40 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EA0811FB;
+        Fri,  8 Apr 2022 02:52:40 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.11.200])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B98073F73B;
+        Fri,  8 Apr 2022 02:52:38 -0700 (PDT)
+Date:   Fri, 8 Apr 2022 10:52:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     bjorn.andersson@linaro.org, bhelgaas@google.com,
+        svarbanov@mm-sol.com, robh@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Add support for handling MSIs from 8 endpoints
+Message-ID: <20220408095204.GA14699@lpieralisi>
+References: <20211214101319.25258-1-manivannan.sadhasivam@linaro.org>
+ <20220223100145.GA26873@lpieralisi>
+ <20220328142012.GB17663@thinkpad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220328142012.GB17663@thinkpad>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,43 +45,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Freitag, dem 08.04.2022 um 03:14 +0000 schrieb Hongxing Zhu:
+On Mon, Mar 28, 2022 at 07:50:12PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Feb 23, 2022 at 10:01:45AM +0000, Lorenzo Pieralisi wrote:
+> > On Tue, Dec 14, 2021 at 03:43:19PM +0530, Manivannan Sadhasivam wrote:
+> > > The DWC controller used in the Qcom Platforms are capable of addressing the
+> > > MSIs generated from 8 different endpoints each with 32 vectors (256 in
+> > > total). Currently the driver is using the default value of addressing the
+> > > MSIs from 1 endpoint only. Extend it by passing the MAX_MSI_IRQS to the
+> > > num_vectors field of pcie_port structure.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+> > >  1 file changed, 1 insertion(+)
 > > 
-[...]
-> > Richard,
+> > Need an ACK from qcom maintainers.
 > > 
-> > Thanks for working on this!
-> > 
-> > Do you plan on submitting another version soon? I've tried to test this with an
-> > imx8mp board I'm bringing up and while the host controller enumerates I fail
-> > to get a link to a device. It's very likely I am missing something as this series
-> > depends on the IMX8MP blk-ctrl and gpc series which I also can't cleanly apply.
-> > Lucas just submitted a 'consolidated i.MX8MP HSIO/MEDIA/HDMI blk-ctrl
-> > series' [1] yet I can't find a repo/branch that applies to either.
-> > 
-> > Perhaps you have a git repo somewhere I can look at while we wait for
-> > imx8mp blk-ctl/gpc to settle and you to submit a v3?
-> Hi Tim:
-> Thanks for your kindly help to do the tests.
-> I had listed the dependencies in the cover-letter log.
-> Alexander and I used to test this series commits based on the V5.17 kernel.
 > 
-> Lucas had provided some review comments and suggestions about the PLL bits
->  manipulations of HSIOMIX in i.MX8MP PCIe PHY driver #3 of this series.
-> And he suggested to let the HSIOMIX blk-ctrl make this PLL as a real clock,
->  and used by i.MX8MP PCIe PHY driver later.
-> 
-> Although I have some confusions, it's better let's wating for the blk-ctrl
-> settle down and get clear discussion with Lucas later.
-> How do you think about that?
+> Looks like this patch was not applied eventhough the Acks were received.
+> Please let me know if I need to resubmit it for next cycle.
 
-Just to let you know my plans: I was quite busy with getting the
-i.MX8MP HDMI part to work. Now that this is at least in a state where
-it can collect some feedback from upstream I have some time to circle
-back to this topic. I can't commit to do it immediately, but I'll get
-around to looking at the PCIe series a bit more in-depth and apply my
-HSIO PLL suggestion to the blk-ctrl driver during the next week.
+There is no Acked-by tag on the latest version you posted:
 
-Regards,
-Lucas
+https://lore.kernel.org/linux-pci/20220210144745.135721-1-manivannan.sadhasivam@linaro.org
 
+it looks like the tags were given after v2 was posted, hence the
+confusion.
+
+I will apply the tags myself this time but what matters for me
+is always the latest version posted, I archive the previous ones.
+
+Lorenzo
