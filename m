@@ -2,102 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 277974F99A1
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 17:37:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA45E4F99D7
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Apr 2022 17:47:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232692AbiDHPj0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Apr 2022 11:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42904 "EHLO
+        id S237783AbiDHPts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Apr 2022 11:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232719AbiDHPjY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 11:39:24 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7B1335E4D;
-        Fri,  8 Apr 2022 08:37:20 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2C05D1E9; Fri,  8 Apr 2022 17:37:18 +0200 (CEST)
-Date:   Fri, 8 Apr 2022 17:37:16 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 00/11] Fix BUG_ON in vfio_iommu_group_notifier()
-Message-ID: <YlBWrE7kxX9vraOD@8bytes.org>
-References: <20220308054421.847385-1-baolu.lu@linux.intel.com>
- <20220315002125.GU11336@nvidia.com>
- <Yk/q1BGN8pC5HVZp@8bytes.org>
- <1033ebe4-fa92-c9bd-a04b-8b28b21e25ea@linux.intel.com>
- <20220408122352.GW2120790@nvidia.com>
- <YlA//+zdOqgaFkUc@8bytes.org>
- <20220408141747.GZ2120790@nvidia.com>
+        with ESMTP id S234530AbiDHPts (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Apr 2022 11:49:48 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B861D10F8
+        for <linux-pci@vger.kernel.org>; Fri,  8 Apr 2022 08:47:43 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2491C113E;
+        Fri,  8 Apr 2022 08:47:43 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.11.200])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 272B83F73B;
+        Fri,  8 Apr 2022 08:47:39 -0700 (PDT)
+Date:   Fri, 8 Apr 2022 16:47:42 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Wangseok Lee <wangseok.lee@samsung.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Alexander Lobakin <alexandr.lobakin@intel.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kernel@axis.com" <kernel@axis.com>,
+        Moon-Ki Jun <moonki.jun@samsung.com>
+Subject: Re: [PATCH] PCI: dwc: Modify the check about MSI DMA mask 32-bit
+Message-ID: <YlBZHj29zCRlITpR@lpieralisi>
+References: <Yk/CxUxR/iRb9j8l@infradead.org>
+ <20220331053422epcms2p7baddf4e5c80b6ebbd5e6aa9447fa221f@epcms2p7>
+ <YkR7G/V8E+NKBA2h@infradead.org>
+ <20220328143228.1902883-1-alexandr.lobakin@intel.com>
+ <20220328023009epcms2p309a5dfc2ff29d0a9945f65799963193c@epcms2p3>
+ <20220330035203epcms2p8fb560f4f953c5a2c8fff020432adc9bd@epcms2p8>
+ <20220330093526.2728238-1-alexandr.lobakin@intel.com>
+ <20220408023401epcms2p41024174e7e09d475e0186fbdb954ec7c@epcms2p4>
+ <CGME20220328143454epcas2p27a340d09e9f4e74af1eaa44559e372a5@epcms2p7>
+ <20220408053246epcms2p73d79512797c778a320394fe12e07edc6@epcms2p7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220408141747.GZ2120790@nvidia.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220408053246epcms2p73d79512797c778a320394fe12e07edc6@epcms2p7>
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 08, 2022 at 11:17:47AM -0300, Jason Gunthorpe wrote:
-> You might consider using a linear tree instead of the topic branches,
-> topics are tricky and I'm not sure it helps a small subsystem so much.
-> Conflicts between topics are a PITA for everyone, and it makes
-> handling conflicts with rc much harder than it needs to be.
+On Fri, Apr 08, 2022 at 02:32:46PM +0900, Wangseok Lee wrote:
+> > --------- Original Message ---------
+> > Sender : Christoph Hellwig <hch@infradead.org>
+> > Date : 2022-04-08 14:06 (GMT+9)
+> > Title : Re: [PATCH] PCI: dwc: Modify the check about MSI DMA mask 32-bit
+> > 
+> > On Fri, Apr 08, 2022 at 11:34:01AM +0900, Wangseok Lee wrote:
+> >> Hi,
+> >> 
+> >> Could you please review this patch in the context of the following patch?
+> >> 
+> >> https://protect2.fireeye.com/v1/url?k=dff16c49-806a5556-dff0e706-000babdfecba-c817c3fb701d2897&q=1&e=5862d6bb-abdb-4e80-b515-8bc024accd0c&u=https%3A%2F%2Fpatchwork.ozlabs.org%2Fproject%2Flinux-pci%2Fpatch%2F20220328023009epcms2p309a5dfc2ff29d0a9945f65799963193c%40epcms2p
+> > 
+> > Isn't that the same (broken) patch?
+> 
+> yes, The same patch that was reviewing.
+> I would like to continue reviewing the pcie-designware-host.c patch below.
+> https://lore.kernel.org/all/20220328023009epcms2p309a5dfc2ff29d0a9945f65799963193c@epcms2p3/
 
-I like the concept of a branch per driver, because with that I can just
-exclude that branch from my next-merge when there are issues with it.
-Conflicts between branches happen too, but they are quite manageable
-when the branches have the same base.
+Would you please instead provide call stack (full) details of the
+problem you are trying to fix ? You received feedback already on the
+information you provided - to understand where the problem is I would
+ask you please the full call stack leading to the failure (inclusive of
+kernel version, platform, firmware and whether you are using a vanilla
+kernel or out of tree patches on top - in which case we can't really
+help), it is impossible to comment further otherwise.
 
-Overall I am thinking of reorganizing the IOMMU tree, but it will likely
-not end up to be a single-branch tree, although the number of patches
-per cycle _could_ just be carried in a single branch.
-
-> At least I haven't felt a need for topics while running larger trees,
-> and would find it stressful to try and squeeze the entire patch flow
-> into only 3 weeks out of the 7 week cycle.
-
-Yeah, so it is 4 weeks in an 9 weeks cycle :) The merge window is 2
-weeks and not a lot happens. The 2 weeks after are for stabilization and
-I usually only pick up fixes. Then come the 4 weeks were new code gets
-into the tree. In the last week everything gets testing in linux-next to
-be ready for the merge window. I will pickup fixes in that week, of
-course.
-
-> In any event, I'd like this on a branch so Alex can pull it too, I
-> guess it means Alex has to merge rc3 to VFIO as well?
-
-Sure, I can put these patches in a separate branch for Alex to pull into
-the VFIO tree.
-
-Regards,
-
-	Joerg
+Thanks,
+Lorenzo
