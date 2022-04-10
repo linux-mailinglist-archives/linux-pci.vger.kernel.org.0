@@ -2,198 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC6D44FAD07
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Apr 2022 11:16:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 107E44FAD7A
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Apr 2022 12:52:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236120AbiDJJTD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 10 Apr 2022 05:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52214 "EHLO
+        id S231721AbiDJKyb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 10 Apr 2022 06:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236116AbiDJJTD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Apr 2022 05:19:03 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4837E644E7;
-        Sun, 10 Apr 2022 02:16:52 -0700 (PDT)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1ndTgg-0004FQ-IP; Sun, 10 Apr 2022 11:16:50 +0200
-Message-ID: <b24daa29-ae7c-6e24-ebdc-2fe8e0576a9d@leemhuis.info>
-Date:   Sun, 10 Apr 2022 11:16:50 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] PCI: PM: Quirk bridge D3 on Elo i2
-Content-Language: en-US
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Stefan Gottwald <gottwald@igel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <CAJZ5v0g9cg=nJ0yr5-a_phNnJLiU74KrfsULsAEsWBKeRr7HCQ@mail.gmail.com>
- <20220408195342.GA339430@bhelgaas>
- <CAJZ5v0g6ahvQrCKPXTgQANiUYJNByDUvJZ8Zsp7anqeM7EBAXw@mail.gmail.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAJZ5v0g6ahvQrCKPXTgQANiUYJNByDUvJZ8Zsp7anqeM7EBAXw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649582212;bf5f48ec;
-X-HE-SMSGID: 1ndTgg-0004FQ-IP
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230073AbiDJKya (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Apr 2022 06:54:30 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD3D532DB;
+        Sun, 10 Apr 2022 03:52:19 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id w4so18933558wrg.12;
+        Sun, 10 Apr 2022 03:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=llW7B1Y8UIDWugQLg5yHg6HiFsiJYRF+SBU4WWXD+G8=;
+        b=G/dS4LyukZp8n9RVmx72lelpZ3SEp0b35k0GgH3ZdLBH7wXfS5mfd37PLtjwRmCdhf
+         ruo82X4Vl00/0jTd2sAdjQPQiD+/HMU6mBft13MpGr0afxLg6p6uhRFP1J5rNbzPs0zY
+         kvJ68y1JGTvw35K4a6nL7rKKfL0J/q1tlcmd2wYcO+NiKKKTrv3OJfJhWqjb9dGGQouK
+         +cmzPtFu5eXRKst12VgNUzRrgGfCApLh13zEzunDE1LMoi7i9Bk70vAUMQ8fZRaiLMcS
+         ay8IxA8HcyvWvi9qQhj8urd8/MoYFpKQ+eaPBS+GuFNZPpgatg1ved4xPcXogpPA/iER
+         bVfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=llW7B1Y8UIDWugQLg5yHg6HiFsiJYRF+SBU4WWXD+G8=;
+        b=iysxh9KIJttZ7K+SPrtDa/xawjqY+lZIvgQvMvhmMCSrfYtuAn+3TRlBteve7az3VD
+         D4CjK6gA8l3+oIKMIQmx6ggYN4mJbg0jvqWCfl5p/5kVbNtLpIYiV7Vt7q7BFrjy9YJx
+         lqmOgLBL8VndXqluJ1TwCUCFjdBmh5a05FmsnJqJbITPRlulIWyDE+wSvndlw/6lEKas
+         XN814jgs7uK/8b3VsZNGQ1RxjX9VP96Tkde+035bpUtdNaMqOvFK96HF0ccUqEjJdafu
+         cieTZDeJ9FSRg3W7IVIfHsXMciGTLVuFNsN4bCC4xHMR4TpQcP4Bp0g31ANid6Zp5TqZ
+         LGUA==
+X-Gm-Message-State: AOAM530KuJecup7Iy/s8OUtwh7viCB/nXB4xnwp4Wsg06z3jT2fnBJ6x
+        d+jSS17JNBAgCkii3MgYeYmh4CEpG68=
+X-Google-Smtp-Source: ABdhPJwOpNT65O6BbSHz3h2v6wRqe+hMG44eZU1wuU5+FPHLUbzesu1wSW5pQZnYSlOSlvHXJpni0Q==
+X-Received: by 2002:a5d:6607:0:b0:207:97e1:86a with SMTP id n7-20020a5d6607000000b0020797e1086amr8809286wru.603.1649587938073;
+        Sun, 10 Apr 2022 03:52:18 -0700 (PDT)
+Received: from Dev-shlomop.pliops.ent (bzq-219-32-62.isdn.bezeqint.net. [62.219.32.62])
+        by smtp.googlemail.com with ESMTPSA id j9-20020a5d4529000000b00207a5b7f613sm666740wra.69.2022.04.10.03.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Apr 2022 03:52:16 -0700 (PDT)
+From:   Shlomo Pongratz <shlomopongratz@gmail.com>
+X-Google-Original-From: Shlomo Pongratz <shlomop@pliops.com>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andrew.maier@eideticom.com,
+        logang@deltatee.com, bhelgaas@google.com, jgg@nvidia.com,
+        helgaas@kernel.org, Shlomo Pongratz <shlomop@pliops.com>
+Subject: [PATCH V7 0/1] Intel Sky Lake-E host root ports check.
+Date:   Sun, 10 Apr 2022 13:52:12 +0300
+Message-Id: <20220410105213.690-1-shlomop@pliops.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 09.04.22 15:35, Rafael J. Wysocki wrote:
-> On Fri, Apr 8, 2022 at 9:53 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->> On Mon, Apr 04, 2022 at 04:46:14PM +0200, Rafael J. Wysocki wrote:
->>> On Fri, Apr 1, 2022 at 1:34 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->>>> On Thu, Mar 31, 2022 at 11:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>>> On Thu, Mar 31, 2022 at 07:38:51PM +0200, Rafael J. Wysocki wrote:
->>>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>>>
->>>>>> If one of the PCIe root ports on Elo i2 is put into D3cold and then
->>>>>> back into D0, the downstream device becomes permanently inaccessible,
->>>>>> so add a bridge D3 DMI quirk for that system.
->>>>>>
->>>>>> This was exposed by commit 14858dcc3b35 ("PCI: Use
->>>>>> pci_update_current_state() in pci_enable_device_flags()"), but before
->>>>>> that commit the root port in question had never been put into D3cold
->>>>>> for real due to a mismatch between its power state retrieved from the
->>>>>> PCI_PM_CTRL register (which was accessible even though the platform
->>>>>> firmware indicated that the port was in D3cold) and the state of an
->>>>>> ACPI power resource involved in its power management.
->>>>>
->>>>> In the bug report you suspect a firmware issue.  Any idea what that
->>>>> might be?  It looks like a Gemini Lake Root Port, so I wouldn't think
->>>>> it would be a hardware issue.
->>>>
->>>> The _ON method of the ACPI power resource associated with the root
->>>> port doesn't work correctly.
->>>>
->>>>> Weird how things come in clumps.  Was just looking at Mario's patch,
->>>>> which also has to do with bridges and D3.
->>>>>
->>>>> Do we need a Fixes line?  E.g.,
->>>>>
->>>>>   Fixes: 14858dcc3b35 ("PCI: Use pci_update_current_state() in pci_enable_device_flags()")
->>>>
->>>> Strictly speaking, it is not a fix for the above commit.
->>>>
->>>> It is a workaround for a firmware issue uncovered by it which wasn't
->>>> visible, because power management was not used correctly on the
->>>> affected system because of another firmware problem addressed by
->>>> 14858dcc3b35.  It wouldn't have worked anyway had it been attempted
->>>> AFAICS.
->>>>
->>>> I was thinking about CCing this change to -stable instead.
->>
->> Makes sense, thanks.
->>
->>>>>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215715
->>>>>> Reported-by: Stefan Gottwald <gottwald@igel.com>
->>>>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>>> ---
->>>>>>  drivers/pci/pci.c |   10 ++++++++++
->>>>>>  1 file changed, 10 insertions(+)
->>>>>>
->>>>>> Index: linux-pm/drivers/pci/pci.c
->>>>>> ===================================================================
->>>>>> --- linux-pm.orig/drivers/pci/pci.c
->>>>>> +++ linux-pm/drivers/pci/pci.c
->>>>>> @@ -2920,6 +2920,16 @@ static const struct dmi_system_id bridge
->>>>>>                       DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
->>>>>>                       DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
->>>>>>               },
->>>>>> +             /*
->>>>>> +              * Downstream device is not accessible after putting a root port
->>>>>> +              * into D3cold and back into D0 on Elo i2.
->>>>>> +              */
->>>>>> +             .ident = "Elo i2",
->>>>>> +             .matches = {
->>>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "Elo Touch Solutions"),
->>>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "Elo i2"),
->>>>>> +                     DMI_MATCH(DMI_PRODUCT_VERSION, "RevB"),
->>>>>> +             },
->>>>>
->>>>> Is this bridge_d3_blacklist[] similar to the PCI_DEV_FLAGS_NO_D3 bit?
->>>>
->>>> Not really.  The former applies to the entire platform and not to an
->>>> individual device.
->>>>
->>>>> Could they be folded together?  We have a lot of bits that seem
->>>>> similar but maybe not exactly the same (dev->bridge_d3,
->>>>> dev->no_d3cold, dev->d3cold_allowed, dev->runtime_d3cold,
->>>>> PCI_DEV_FLAGS_NO_D3, pci_bridge_d3_force, etc.)  Ugh.
->>>>
->>>> Yes, I agree that this needs to be cleaned up.
->>>>
->>>>> bridge_d3_blacklist[] itself was added by 85b0cae89d52 ("PCI:
->>>>> Blacklist power management of Gigabyte X299 DESIGNARE EX PCIe ports"),
->>>>> which honestly looks kind of random, i.e., it doesn't seem to be
->>>>> working around a hardware or even a firmware defect.
->>>>>
->>>>> Apparently the X299 issue is that 00:1c.4 is connected to a
->>>>> Thunderbolt controller, and the BIOS keeps the Thunderbolt controller
->>>>> powered off unless something is attached to it?  At least, 00:1c.4
->>>>> leads to bus 05, and in the dmesg log attached to [1] shows no devices
->>>>> on bus 05.
->>>>>
->>>>> It also says the platform doesn't support PCIe native hotplug, which
->>>>> matches what Mika said about it using ACPI hotplug.  If a system is
->>>>> using ACPI hotplug, it seems like maybe *that* should prevent us from
->>>>> putting things in D3cold?  How can we know whether ACPI hotplug
->>>>> depends on a certain power state?
->>>>
->>>> We have this check in pci_bridge_d3_possible():
->>>>
->>>> if (bridge->is_hotplug_bridge && !pciehp_is_native(bridge))
->>>>             return false;
->>>>
->>>> but this only applies to the case when the particular bridge itself is
->>>> a hotplug one using ACPI hotplug.
->>>>
->>>> If ACPI hotplug is used, it generally is unsafe to put PCIe ports into
->>>> D3cold, because in that case it is unclear what the platform
->>>> firmware's assumptions regarding control of the config space are.
->>>>
->>>> However, I'm not sure how this is related to the patch at hand.
->>>
->>> So I'm not sure how you want to proceed here.
->>>
->>> The platform is quirky, so the quirk for it will need to be added this
->>> way or another.  The $subject patch adds it using the existing
->>> mechanism, which is the least intrusive way.
->>>
->>> You seem to be thinking that the existing mechanism may not be
->>> adequate, but I'm not sure for what reason and anyway I think that it
->>> can be adjusted after adding the quirk.
->>>
->>> Please let me know what you think.
->>
->> I don't understand all that's going on here, but I applied it to
->> pci/pm for v5.19, thanks!
-> Thank you!
+Changes in v7:
 
-Sorry, but this made me wonder: why v5.19? It's a regression exposed in
-v5.15, so it afaics would be good to get this in this cycle -- and also
-backported to v5.15.y, but it seem a tag to take care of that is
-missing. :-/
+Apply Bjorn Helgaas suggestion to avoid negative logic.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+Changes in v6:
 
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
+Address Bjorn Helgaas comments, e.g. commit line length and using both
+"Sky Lake-E" and "SkyLake-E" in comments.
+The comments in the code now use Skylake.
+However the patch subject still refers to "Sky Lake-E" since
+Andrew Maier's original patch used that name.
 
+Changes in v5:
+
+Address Logan Gunthorpe, Jason Gunthorpe and Bjorn Helgaas comments.
+Fix indentation.
+Update comments.
+
+Changes in v4:
+
+Address Bjorn Helgaas and Jason Gunthorpe comments.
+Replace the implementation of pci_is_root_port with a simple check
+pci_pcie_type(root) != PCI_EXP_TYPE_ROOT_PORT and remove the added
+IS_ROOT_PORT flag.
+Update patch text.
+
+Changes in v3:
+
+Use Jason Gunthorpe suggestion, that is add a flag 'IS_ROOT_PORT'
+instead of 'port' and then just ignore the slot number entirely for root
+ports.
+
+Changes in v2:
+
+Change comment and description based on Logan Gunthorpe comments.
+
+v1:
+
+In commit 7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C,
+D to the whitelist")
+Andrew Maier added the Sky Lake-E additional devices
+2031, 2032 and 2033 root ports to the already existing 2030 device.
+
+The Intel devices 2030, 2031, 2032 and 2033 which are root ports A, B, C
+and D, respectively and if all exist they will occupy slots 0 till 3 in
+that order.
+
+The original code handled only the case where the devices in the whitelist
+are  host bridges and assumed that they will be found on slot 0.
+
+Since this assumption doesn't hold for root ports, add a test to cover this
+case.
+
+Shlomo Pongratz (1):
+  Intel Sky Lake-E host root ports check.
+
+ drivers/pci/p2pdma.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
+
+-- 
+2.17.1
 
