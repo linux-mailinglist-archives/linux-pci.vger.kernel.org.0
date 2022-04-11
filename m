@@ -2,56 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06F614FC47B
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 21:01:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D27F4FC480
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 21:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349303AbiDKTDj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 15:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
+        id S233599AbiDKTEd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 15:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349300AbiDKTDi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 15:03:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF2E32074;
-        Mon, 11 Apr 2022 12:01:22 -0700 (PDT)
+        with ESMTP id S229764AbiDKTEd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 15:04:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8263299A;
+        Mon, 11 Apr 2022 12:02:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 49B92B8186E;
-        Mon, 11 Apr 2022 19:01:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B67E4C385A3;
-        Mon, 11 Apr 2022 19:01:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ED6036140D;
+        Mon, 11 Apr 2022 19:02:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 074E9C385A3;
+        Mon, 11 Apr 2022 19:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649703680;
-        bh=5YHL3Hjh0AaP8CgfCJ3QGpsdMmryF5kIFHovdhn9HfY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MEN0upl3gefvglj04rR/Z42Ixd7YZPRTqaUyQbzo6QWV4KiRlzDCAYhbF+nuIUaYq
-         NCDV8edSYRVWsaNmFpcHnm+itf5BFO4m2qauSI2CTZLYnxTWAbBIZt6lzdsxORoT+b
-         2WWOHd3Sab8tvK5yFv2uA2FdZtVqWubDV6VFaDHXLCSzwcuFHUpErMPIzybLXoVLNd
-         UJNRt5vDAZ/u6nVWwgmuPkRONCXgigpqAcvDzT7DwPPOtrMsiMnq4TaBllTmzo1QJ4
-         94UIboeWyitqPRZXdEIXxV6/6gopUr9C64eGMXWmpUD5BYUXS/eYSr5wcst7A0WaSo
-         km/K4otPbl5PA==
+        s=k20201202; t=1649703737;
+        bh=+tmcTmEhf/OADWe19T62/vDLGlq6GTerOSnvHZpMSKU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IpA0H2qTdjOmqQitGP/Gq/2QUre3o1/dPOUDz0kikY9X/7cVtTlNThddTnJcRO/0F
+         w0kIapxpyP4R8YJmW9hHeJN9L4n+HoWGWScA15BqG0ff//JMbhbrz/edmKuCYaScg8
+         ovKLiGr9o9PSHcXbk9SOnCVeZ+wD8vvseJgQ12BkBhRyii1RQfXFp320llmkGQTQgK
+         ynOA6djmKYHjhu5xq4c1VMPBGU+3wF2jq0PxW/jK0uz5s9Ei0m2WuvWTYO0PQLCt2G
+         DGLPE/lQ69qztf3iS3Ojq/5qvi5IHRxghIlTywOdn0rU1KAfAxpSDRxNq2mC1BXLYs
+         djtlrTDmF6N5w==
 Received: by pali.im (Postfix)
-        id 6D882947; Mon, 11 Apr 2022 21:01:19 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id B261A947; Mon, 11 Apr 2022 21:02:14 +0200 (CEST)
+Date:   Mon, 11 Apr 2022 21:02:14 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] PCI: mvebu: Add support for sending Set_Slot_Power_Limit message
-Date:   Mon, 11 Apr 2022 20:58:59 +0200
-Message-Id: <20220411185859.32722-5-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220411185859.32722-1-pali@kernel.org>
-References: <20220411185859.32722-1-pali@kernel.org>
+Subject: Re: [PATCH v3 3/4] PCI: Add function for parsing
+ 'slot-power-limit-milliwatt' DT property
+Message-ID: <20220411190214.hmeau774tnrnbcod@pali>
+References: <20220325093827.4983-4-pali@kernel.org>
+ <20220408152750.GA306189@bhelgaas>
+ <20220411111407.7ycuoldxjvqnkoo4@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220411111407.7ycuoldxjvqnkoo4@pali>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -62,210 +67,199 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If DT supplies the 'slot-power-limit-milliwatt' property, program
-the value in the Slot Power Limit in the Slot Capabilities register
-and program the Root Port to send a Set_Slot_Power_Limit Message
-when the Link transitions to DL_Up.
+On Monday 11 April 2022 13:14:07 Pali Rohár wrote:
+> On Friday 08 April 2022 10:27:50 Bjorn Helgaas wrote:
+> > On Fri, Mar 25, 2022 at 10:38:26AM +0100, Pali Rohár wrote:
+> > > Add function of_pci_get_slot_power_limit(), which parses the
+> > > 'slot-power-limit-milliwatt' DT property, returning the value in
+> > > milliwatts and in format ready for the PCIe Slot Capabilities Register.
+> > > 
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Changes in v3:
+> > > * Set 600 W when DT slot-power-limit-milliwatt > 600 W
+> > > Changes in v2:
+> > > * Added support for PCIe 6.0 slot power limit encodings
+> > > * Round down slot power limit value
+> > > ---
+> > >  drivers/pci/of.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+> > >  drivers/pci/pci.h | 15 +++++++++++
+> > >  2 files changed, 79 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > index cb2e8351c2cc..5ebff26edd41 100644
+> > > --- a/drivers/pci/of.c
+> > > +++ b/drivers/pci/of.c
+> > > @@ -633,3 +633,67 @@ int of_pci_get_max_link_speed(struct device_node *node)
+> > >  	return max_link_speed;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> > > +
+> > > +/**
+> > > + * of_pci_get_slot_power_limit - Parses the "slot-power-limit-milliwatt"
+> > > + *				 property.
+> > > + *
+> > > + * @node: device tree node with the slot power limit information
+> > > + * @slot_power_limit_value: pointer where the value should be stored in PCIe
+> > > + *			    Slot Capabilities Register format
+> > > + * @slot_power_limit_scale: pointer where the scale should be stored in PCIe
+> > > + *			    Slot Capabilities Register format
+> > > + *
+> > > + * Returns the slot power limit in milliwatts and if @slot_power_limit_value
+> > > + * and @slot_power_limit_scale pointers are non-NULL, fills in the value and
+> > > + * scale in format used by PCIe Slot Capabilities Register.
+> > > + *
+> > > + * If the property is not found or is invalid, returns 0.
+> > > + */
+> > > +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > > +				u8 *slot_power_limit_value,
+> > > +				u8 *slot_power_limit_scale)
+> > > +{
+> > > +	u32 slot_power_limit_mw;
+> > > +	u8 value, scale;
+> > > +
+> > > +	if (of_property_read_u32(node, "slot-power-limit-milliwatt",
+> > > +				 &slot_power_limit_mw))
+> > > +		slot_power_limit_mw = 0;
+> > > +
+> > > +	/* Calculate Slot Power Limit Value and Slot Power Limit Scale */
+> > > +	if (slot_power_limit_mw == 0) {
+> > > +		value = 0x00;
+> > > +		scale = 0;
+> > > +	} else if (slot_power_limit_mw <= 255) {
+> > > +		value = slot_power_limit_mw;
+> > > +		scale = 3;
+> > > +	} else if (slot_power_limit_mw <= 255*10) {
+> > > +		value = slot_power_limit_mw / 10;
+> > > +		scale = 2;
+> > > +	} else if (slot_power_limit_mw <= 255*100) {
+> > > +		value = slot_power_limit_mw / 100;
+> > > +		scale = 1;
+> > > +	} else if (slot_power_limit_mw <= 239*1000) {
+> > > +		value = slot_power_limit_mw / 1000;
+> > > +		scale = 0;
+> > > +	} else if (slot_power_limit_mw <= 250*1000) {
+> > > +		value = 0xF0;
+> > > +		scale = 0;
+> > 
+> > I think the spec is poorly worded here.  PCIe r6.0, sec 7.5.3.9, says:
+> > 
+> >   F0h   > 239 W and <= 250 W Slot Power Limit
+> > 
+> > I don't think it's meaningful for the spec to include a range here.
+> > The amount of power the slot can supply has a single maximum.  I
+> > suspect the *intent* of F0h/00b is that a device in the slot may
+> > consume up to 250W.
+> > 
+> > Your code above would mean that slot_power_limit_mw == 245,000 would
+> > cause the slot to advertise F0h/00b (250W), which seems wrong.
+> 
+> So for slot_power_limit_mw == 245 W we should set following values?
+> 
+>   slot_power_limit_mw = 239 W
+>   value = 0xF0
+>   scale = 0
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes in v2:
-* Fix handling of slot power limit with scale x1.0 (0x00 value)
-* Use FIELD_PREP instead of _SHIFT macros
-* Changed commit message to Bjorn's suggestion
-* Changed comments in the code to match PCIe spec
-* Preserve user settings of PCI_EXP_SLTCTL_ASPL_DISABLE bit
----
- drivers/pci/controller/pci-mvebu.c | 96 ++++++++++++++++++++++++++++--
- 1 file changed, 91 insertions(+), 5 deletions(-)
+I changed it in v4
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index a75d2b9196f9..26ae7c29fece 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio.h>
-@@ -66,6 +67,12 @@
- #define  PCIE_STAT_BUS                  0xff00
- #define  PCIE_STAT_DEV                  0x1f0000
- #define  PCIE_STAT_LINK_DOWN		BIT(0)
-+#define PCIE_SSPL_OFF		0x1a0c
-+#define  PCIE_SSPL_VALUE_SHIFT		0
-+#define  PCIE_SSPL_VALUE_MASK		GENMASK(7, 0)
-+#define  PCIE_SSPL_SCALE_SHIFT		8
-+#define  PCIE_SSPL_SCALE_MASK		GENMASK(9, 8)
-+#define  PCIE_SSPL_ENABLE		BIT(16)
- #define PCIE_RC_RTSTA		0x1a14
- #define PCIE_DEBUG_CTRL         0x1a60
- #define  PCIE_DEBUG_SOFT_RESET		BIT(20)
-@@ -111,6 +118,8 @@ struct mvebu_pcie_port {
- 	struct mvebu_pcie_window iowin;
- 	u32 saved_pcie_stat;
- 	struct resource regs;
-+	u8 slot_power_limit_value;
-+	u8 slot_power_limit_scale;
- 	struct irq_domain *intx_irq_domain;
- 	raw_spinlock_t irq_lock;
- 	int intx_irq;
-@@ -239,7 +248,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
- 
- static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
- {
--	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
-+	u32 ctrl, lnkcap, cmd, dev_rev, unmask, sspl;
- 
- 	/* Setup PCIe controller to Root Complex mode. */
- 	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
-@@ -292,6 +301,20 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
- 	/* Point PCIe unit MBUS decode windows to DRAM space. */
- 	mvebu_pcie_setup_wins(port);
- 
-+	/*
-+	 * Program Root Port to automatically send Set_Slot_Power_Limit
-+	 * PCIe Message when changing status from Dl_Down to Dl_Up and valid
-+	 * slot power limit was specified.
-+	 */
-+	sspl = mvebu_readl(port, PCIE_SSPL_OFF);
-+	sspl &= ~(PCIE_SSPL_VALUE_MASK | PCIE_SSPL_SCALE_MASK | PCIE_SSPL_ENABLE);
-+	if (port->slot_power_limit_value) {
-+		sspl |= port->slot_power_limit_value << PCIE_SSPL_VALUE_SHIFT;
-+		sspl |= port->slot_power_limit_scale << PCIE_SSPL_SCALE_SHIFT;
-+		sspl |= PCIE_SSPL_ENABLE;
-+	}
-+	mvebu_writel(port, sspl, PCIE_SSPL_OFF);
-+
- 	/* Mask all interrupt sources. */
- 	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
- 
-@@ -628,9 +651,23 @@ mvebu_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
- 			  (PCI_EXP_LNKSTA_DLLLA << 16) : 0);
- 		break;
- 
--	case PCI_EXP_SLTCTL:
--		*value = PCI_EXP_SLTSTA_PDS << 16;
-+	case PCI_EXP_SLTCTL: {
-+		u16 slotsta = le16_to_cpu(bridge->pcie_conf.slotsta);
-+		u32 val = 0;
-+		/*
-+		 * When slot power limit was not specified in DT then
-+		 * ASPL_DISABLE bit is stored only in emulated config space.
-+		 * Otherwise reflect status of PCIE_SSPL_ENABLE bit in HW.
-+		 */
-+		if (!port->slot_power_limit_value)
-+			val |= slotctl & PCI_EXP_SLTCTL_ASPL_DISABLE;
-+		else if (!(mvebu_readl(port, PCIE_SSPL_OFF) & PCIE_SSPL_ENABLE))
-+			val |= PCI_EXP_SLTCTL_ASPL_DISABLE;
-+		/* This callback is 32-bit and in high bits is slot status. */
-+		val |= slotsta << 16;
-+		*value = val;
- 		break;
-+	}
- 
- 	case PCI_EXP_RTSTA:
- 		*value = mvebu_readl(port, PCIE_RC_RTSTA);
-@@ -774,6 +811,22 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 		mvebu_writel(port, new, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL);
- 		break;
- 
-+	case PCI_EXP_SLTCTL:
-+		/*
-+		 * Allow to change PCIE_SSPL_ENABLE bit only when slot power
-+		 * limit was specified in DT and configured into HW.
-+		 */
-+		if ((mask & PCI_EXP_SLTCTL_ASPL_DISABLE) &&
-+		    port->slot_power_limit_value) {
-+			u32 sspl = mvebu_readl(port, PCIE_SSPL_OFF);
-+			if (new & PCI_EXP_SLTCTL_ASPL_DISABLE)
-+				sspl &= ~PCIE_SSPL_ENABLE;
-+			else
-+				sspl |= PCIE_SSPL_ENABLE;
-+			mvebu_writel(port, sspl, PCIE_SSPL_OFF);
-+		}
-+		break;
-+
- 	case PCI_EXP_RTSTA:
- 		/*
- 		 * PME Status bit in Root Status Register (PCIE_RC_RTSTA)
-@@ -868,8 +921,26 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
- 	/*
- 	 * Older mvebu hardware provides PCIe Capability structure only in
- 	 * version 1. New hardware provides it in version 2.
-+	 * Enable slot support which is emulated.
- 	 */
--	bridge->pcie_conf.cap = cpu_to_le16(pcie_cap_ver);
-+	bridge->pcie_conf.cap = cpu_to_le16(pcie_cap_ver | PCI_EXP_FLAGS_SLOT);
-+
-+	/*
-+	 * Set Presence Detect State bit permanently as there is no support for
-+	 * unplugging PCIe card from the slot. Assume that PCIe card is always
-+	 * connected in slot.
-+	 *
-+	 * Set physical slot number to port+1 as mvebu ports are indexed from
-+	 * zero and zero value is reserved for ports within the same silicon
-+	 * as Root Port which is not mvebu case.
-+	 *
-+	 * Also set correct slot power limit.
-+	 */
-+	bridge->pcie_conf.slotcap = cpu_to_le32(
-+		FIELD_PREP(PCI_EXP_SLTCAP_SPLV, port->slot_power_limit_value) |
-+		FIELD_PREP(PCI_EXP_SLTCAP_SPLS, port->slot_power_limit_scale) |
-+		FIELD_PREP(PCI_EXP_SLTCAP_PSN, port->port+1));
-+	bridge->pcie_conf.slotsta = cpu_to_le16(PCI_EXP_SLTSTA_PDS);
- 
- 	bridge->subsystem_vendor_id = ssdev_id & 0xffff;
- 	bridge->subsystem_id = ssdev_id >> 16;
-@@ -1191,6 +1262,7 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
- {
- 	struct device *dev = &pcie->pdev->dev;
- 	enum of_gpio_flags flags;
-+	u32 slot_power_limit;
- 	int reset_gpio, ret;
- 	u32 num_lanes;
- 
-@@ -1291,6 +1363,15 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
- 		port->reset_gpio = gpio_to_desc(reset_gpio);
- 	}
- 
-+	slot_power_limit = of_pci_get_slot_power_limit(child,
-+				&port->slot_power_limit_value,
-+				&port->slot_power_limit_scale);
-+	if (slot_power_limit)
-+		dev_info(dev, "%s: Slot power limit %u.%uW\n",
-+			 port->name,
-+			 slot_power_limit / 1000,
-+			 (slot_power_limit / 100) % 10);
-+
- 	port->clk = of_clk_get_by_name(child, NULL);
- 	if (IS_ERR(port->clk)) {
- 		dev_err(dev, "%s: cannot get clock\n", port->name);
-@@ -1587,7 +1668,7 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
- {
- 	struct mvebu_pcie *pcie = platform_get_drvdata(pdev);
- 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
--	u32 cmd;
-+	u32 cmd, sspl;
- 	int i;
- 
- 	/* Remove PCI bus with all devices. */
-@@ -1624,6 +1705,11 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
- 		/* Free config space for emulated root bridge. */
- 		pci_bridge_emul_cleanup(&port->bridge);
- 
-+		/* Disable sending Set_Slot_Power_Limit PCIe Message. */
-+		sspl = mvebu_readl(port, PCIE_SSPL_OFF);
-+		sspl &= ~(PCIE_SSPL_VALUE_MASK | PCIE_SSPL_SCALE_MASK | PCIE_SSPL_ENABLE);
-+		mvebu_writel(port, sspl, PCIE_SSPL_OFF);
-+
- 		/* Disable and clear BARs and windows. */
- 		mvebu_pcie_disable_wins(port);
- 
--- 
-2.20.1
+> > I think we should do something like this instead:
+> > 
+> >   scale = 0;
+> >   if (slot_power_limit_mw >= 600*1000) {
+> >     value = 0xFE;
+> >     slot_power_limit_mw = 600*1000;
+> >   } else if (slot_power_limit_mw >= 575*1000) {
+> >     value = 0xFD;
+> >     slot_power_limit_mw = 575*1000;
+> >   } ...
+> 
+> This is already implemented in branch:
+> 
+>   } else if (slot_power_limit_mw <= 600*1000) {
+>   	value = 0xF0 + (slot_power_limit_mw / 1000 - 250) / 25;
+>   	scale = 0;
+> 
+> I will just add reducing of final slot_power_limit_mw value.
+> 
+> > I raised an issue with the PCI SIG about this.
+> > 
+> > > +	} else if (slot_power_limit_mw <= 600*1000) {
+> > > +		value = 0xF0 + (slot_power_limit_mw / 1000 - 250) / 25;
+> > > +		scale = 0;
+> > > +	} else {
+> > > +		value = 0xFE;
+> > > +		scale = 0;
+> > > +	}
+> > > +
+> > > +	if (slot_power_limit_value)
+> > > +		*slot_power_limit_value = value;
+> > > +
+> > > +	if (slot_power_limit_scale)
+> > > +		*slot_power_limit_scale = scale;
+> > > +
+> > > +	return slot_power_limit_mw;
+> > 
+> > If the DT tells us 800W is available, we'll store (FEh/00b), which
+> > means the slot can advertise to a downstream device that 600W is
+> > available.  I think that's correct, since the current spec doesn't
+> > provide a way to encode any value larger than 600W.
+> > 
+> > But the function still returns 800,000 mW, which means the next patch will
+> > print:
+> > 
+> >   %s: Slot power limit 800.0W
+> > 
+> > even though it programs Slot Capabilities to advertise 600W.
+> > That's why I suggested setting slot_power_limit_mw = 600*1000 above.
+> 
+> Ok, I will update slot_power_limit_mw value in next patch version.
 
+And also fixed this in v4.
+
+Please review v4 if is is OK now.
+
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > index 3d60cabde1a1..e10cdec6c56e 100644
+> > > --- a/drivers/pci/pci.h
+> > > +++ b/drivers/pci/pci.h
+> > > @@ -627,6 +627,9 @@ struct device_node;
+> > >  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
+> > >  int of_get_pci_domain_nr(struct device_node *node);
+> > >  int of_pci_get_max_link_speed(struct device_node *node);
+> > > +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > > +				u8 *slot_power_limit_value,
+> > > +				u8 *slot_power_limit_scale);
+> > >  void pci_set_of_node(struct pci_dev *dev);
+> > >  void pci_release_of_node(struct pci_dev *dev);
+> > >  void pci_set_bus_of_node(struct pci_bus *bus);
+> > > @@ -653,6 +656,18 @@ of_pci_get_max_link_speed(struct device_node *node)
+> > >  	return -EINVAL;
+> > >  }
+> > >  
+> > > +static inline u32
+> > > +of_pci_get_slot_power_limit(struct device_node *node,
+> > > +			    u8 *slot_power_limit_value,
+> > > +			    u8 *slot_power_limit_scale)
+> > > +{
+> > > +	if (slot_power_limit_value)
+> > > +		*slot_power_limit_value = 0;
+> > > +	if (slot_power_limit_scale)
+> > > +		*slot_power_limit_scale = 0;
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static inline void pci_set_of_node(struct pci_dev *dev) { }
+> > >  static inline void pci_release_of_node(struct pci_dev *dev) { }
+> > >  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
+> > > -- 
+> > > 2.20.1
+> > > 
+> > > 
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
