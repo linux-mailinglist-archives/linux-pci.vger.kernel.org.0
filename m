@@ -2,108 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C204FB464
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 09:10:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E192C4FB644
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 10:44:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236025AbiDKHNH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 03:13:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49922 "EHLO
+        id S1343940AbiDKIqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 04:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241772AbiDKHNE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 03:13:04 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEF8338A5
-        for <linux-pci@vger.kernel.org>; Mon, 11 Apr 2022 00:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rBuxwzxQIbthZlKAcn8KUpHgWMDCkmQwbU2oEHBu130=; b=xAAjE8mUqsV4Dh4AImo1zAxiuw
-        KFcysolygvbOpWZf8j36QMPVK8AM75Pn4YwzAZldX+LqXt+FgjUXQ6rOqX6xQ/7LNXDK/4WLrQf+h
-        0qcv5T613rOe38moyxmS9MnHMM+ostPX+YPXjELmjUZz0Hw/vqJYkoaTnYv1X+r+TT8ktsZmeNolP
-        cfSBubOZsrPqdxzOab3vOe1W0fIpQgj9KIxC7MU7Si/2xznNx8VO34xJ/seQU4gt6wydv3royi9WA
-        uQXAM/9iL1OawoF6PR24lrpYsjJvtsz46u0DRo2KpwFgayYRYHaJGWaDKbkqTwLeRVLbuWWqUM2u9
-        4HwLTqVg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ndoCB-0077bx-AJ; Mon, 11 Apr 2022 07:10:43 +0000
-Date:   Mon, 11 Apr 2022 00:10:43 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Wangseok Lee <wangseok.lee@samsung.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kernel@axis.com" <kernel@axis.com>,
-        Moon-Ki Jun <moonki.jun@samsung.com>
-Subject: Re: [PATCH] PCI: dwc: Modify the check about MSI DMA mask 32-bit
-Message-ID: <YlPUc5qzqu4wcxX0@infradead.org>
-References: <20220331053422epcms2p7baddf4e5c80b6ebbd5e6aa9447fa221f@epcms2p7>
- <YkR7G/V8E+NKBA2h@infradead.org>
- <20220328143228.1902883-1-alexandr.lobakin@intel.com>
- <20220328023009epcms2p309a5dfc2ff29d0a9945f65799963193c@epcms2p3>
- <20220330035203epcms2p8fb560f4f953c5a2c8fff020432adc9bd@epcms2p8>
- <20220330093526.2728238-1-alexandr.lobakin@intel.com>
- <20220408023401epcms2p41024174e7e09d475e0186fbdb954ec7c@epcms2p4>
- <20220408053246epcms2p73d79512797c778a320394fe12e07edc6@epcms2p7>
- <CGME20220328143454epcas2p27a340d09e9f4e74af1eaa44559e372a5@epcms2p5>
- <20220411065905epcms2p56ee71c0142258494afb80ce26dc04039@epcms2p5>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220411065905epcms2p56ee71c0142258494afb80ce26dc04039@epcms2p5>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S1343941AbiDKIqf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 04:46:35 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6475F55;
+        Mon, 11 Apr 2022 01:44:19 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23B8cx1N037982;
+        Mon, 11 Apr 2022 08:44:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version; s=pp1; bh=lZg6/NDrtfcKNrz+a4Ul9FSLuVpiXTuAV75sUdv+6eY=;
+ b=G7fVx5XmAHBpaMfPbiBMG8gpIPtpjDZfLqTrv0QQocLscJZyRd0sQojB6D4cEUrKojqk
+ 44F4Q1BGewyudW3hvJoi8x+LZSxX/lw48yH1Kw2ymMvGVxWSJnpWuefgmuqPdthdeAEF
+ aXBFx/LBQLiWk+UTOHEKVFjZgv7hayMukh+8wey2/3maVMRG0TMF7prGX5ps/EzXvx7G
+ lYOWMogQGN7KKJ+fJ9jEXKO0i2937PURPaBiF2z492S+Wxbkjz7Go6CHdpsHTt+ydY1y
+ AR5cDRSOc4KRhBkVHGMLgFBhOuuohXvCFsxp2+O/DZRZ+vstWwj1Vw5tBs4oqNgJ6CS1 GA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fbkm0pkc4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Apr 2022 08:44:10 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23B8Wmav016915;
+        Mon, 11 Apr 2022 08:44:10 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fbkm0pkbk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Apr 2022 08:44:10 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23B8hnve020038;
+        Mon, 11 Apr 2022 08:44:07 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03fra.de.ibm.com with ESMTP id 3fb1s8j5vq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Apr 2022 08:44:07 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23B8i4ap36176156
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Apr 2022 08:44:04 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A54DCAE056;
+        Mon, 11 Apr 2022 08:44:04 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2956CAE04D;
+        Mon, 11 Apr 2022 08:44:04 +0000 (GMT)
+Received: from sig-9-145-41-213.uk.ibm.com (unknown [9.145.41.213])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 11 Apr 2022 08:44:04 +0000 (GMT)
+Message-ID: <e565547113567e9fd6cacce333bc28d2af088b72.camel@linux.ibm.com>
+Subject: Re: [PATCH RESEND 1/2] PCI: Extend isolated function probing to s390
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+Date:   Mon, 11 Apr 2022 10:43:56 +0200
+In-Reply-To: <20220408224514.GA353445@bhelgaas>
+References: <20220408224514.GA353445@bhelgaas>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-PbxZJLOD/wIhH9K18RJQ"
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RUsjhSnWXNUrpam3jyZ26HQdZ0XhRKRf
+X-Proofpoint-ORIG-GUID: frveAZjDjPJZtCjxpt5nb76WcOKP632S
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-04-11_02,2022-04-08_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxscore=0 phishscore=0
+ adultscore=0 mlxlogscore=907 spamscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2204110045
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 03:59:05PM +0900, Wangseok Lee wrote:
-> driver_init() ->
-> -> platform_dma_configure() / platform.c
->   |-> of_dma_configure() 
->      |-> of_dma_configure_id()
->         :Here, set dma of 33+ address.
->          dma_set_mask(0xf`ffff`ffff), bus_dma_limit(0xf`ffff`ffff)
 
-Where do we set a large than 32-bit dma mask here?  I can't find the
-code, and if there is we need to fix it.  In Linux devices to come
-up with 32-bit DMA masks for historical reasons (they really should
-with a zero dma mask, but it is probably to lte to fix it).
+--=-PbxZJLOD/wIhH9K18RJQ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> -> artpec8_pcie_probe() / artpec-8 pcie driver code
->   |-> dw_pcie_host_init() / pcie-designware-host.c
->      |-> dma_set_mask(32)
->          : Here, set the dma mask of 32 addresses.
->      |-> dma_map_single_attrs() 
->         |-> dma_map_page_attrs()
->            |-> dma_direct_map_page()
->               : Error return occurs here.
->                 dma address has 33+ address and 
->                 dma bus limit is 33+. 
->                 However, this is because the mask value 
->                 has 32 addresses.
+On Fri, 2022-04-08 at 17:45 -0500, Bjorn Helgaas wrote:
+> On Mon, Apr 04, 2022 at 11:53:45AM +0200, Niklas Schnelle wrote:
+> > Like the jailhouse hypervisor s390's PCI architecture allows passing
+> > isolated PCI functions to an OS instance. As of now this is was not
+> > utilized even with multi-function support as the s390 PCI code makes
+> > sure that only virtual PCI busses including a function with devfn 0 are
+> > presented to the PCI subsystem. A subsequent change will remove this
+> > restriction.
+> >=20
+> > Allow probing such functions by replacing the existing check for
+> > jailhouse_paravirt() with a new hypervisor_isolated_pci_functions()
+> > helper.
+> >=20
+> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+>=20
+> I'm OK with the idea of generalizing this Jailhouse test, but I wonder
+> if this check should be in pci_scan_slot() rather than in
+> pci_scan_child_bus_extend().
+>=20
+> I think the idea is that pci_scan_slot() should find all the functions
+> of a device (a.k.a. "slot"), so it's a little weird to have a loop
+> calling pci_scan_single_device() for each function in both places.
 
-If the dma_mask is set to 32-bits, we should never generate a
-large dma address, but bounce if it would othewise generate a
-larger address.
+Yeah, I agree.
+>=20
+> Currently we never call pcie_aspm_init_link_state() for these
+> Jailhouse or s390 functions.  Maybe that's OK (and I think
+> pci_scan_slot() is the wrong place to initialize ASPM anyway) but if
+> we could move the Jailhouse/s390 checking to pci_scan_slot(), it would
+> at least remove the inconsistency.
+>=20
+> I'm thinking something along the lines of the patch below.  I'm sure
+> Jan considered this originally, so maybe there's some reason this
+> won't work.
 
-That being said I think this code would be much better off using
-dma_alloc_coherent anyway.
+One thing I already noticed is that I think next_fn() may need to be
+changed. If pci_ari_enabled(bus) is true, then it immediately returns 0
+on dev =3D=3D NULL while if it is false there is an extra check for non-
+contiguous multifunction devices. Even then I think on jailhouse() dev-
+>multifunction might not be set at that point. This is in contrast to
+s390 where we set dev->multifunction based on information provided by
+the platform before scanning the bus. So I'll have to be careful not to
+create a state where this works on s390 but might not work for
+jailhouse.
 
-> Therefore, the dma_set_mask(32)(in dw_pcie_host_init())
-> was modified to be performed only when
-> the dev-dma_mask is not set larger than 32 bits.
+I also do wonder what the role of the PCI_SCAN_ALL_PCIE_DEVS flag
+should be here. At least the comment in only_one_child() sounds a lot
+like that flag kind of indicates the same thing.
 
-So what sets dev->dma_mask to a larger than 32-bit value here?
-We need to find and fix that.
+I'll do some more investigation and testing and report back. I do agree
+that there seems to be some potential for cleanup here.
+
+--=-PbxZJLOD/wIhH9K18RJQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSiikNOrnCUNbxSj4j7H22hwInkVgUCYlPqTAAKCRD7H22hwInk
+VgRWAP4qwiQe4aUTA4vPUfo5NKahyffwtI33Q201iJaHeS9qaQEAlN2biMrJEtwz
+bf48i7vJiJe4mtQqZevG3yBFlUbvwgY=
+=Zl25
+-----END PGP SIGNATURE-----
+
+--=-PbxZJLOD/wIhH9K18RJQ--
+
