@@ -2,49 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91DB74FC500
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 21:23:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD5AC4FC554
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 21:54:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349207AbiDKTZd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 15:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47018 "EHLO
+        id S232307AbiDKT44 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 15:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230124AbiDKTZc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 15:25:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC5B1098;
-        Mon, 11 Apr 2022 12:23:17 -0700 (PDT)
+        with ESMTP id S238175AbiDKT4z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 15:56:55 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A6171DA43;
+        Mon, 11 Apr 2022 12:54:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D9D43614FF;
-        Mon, 11 Apr 2022 19:23:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83187C385A3;
-        Mon, 11 Apr 2022 19:23:15 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6253BB81896;
+        Mon, 11 Apr 2022 19:54:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C01EBC385A3;
+        Mon, 11 Apr 2022 19:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649704996;
-        bh=tmSDuqNUHvsaWRtzIyZ9WnDFsd3xmPFiXXja+DVu69Y=;
+        s=k20201202; t=1649706876;
+        bh=bOc/33Z7+1jn2eHnVDtC0HCa/hvdIrrV1vtEJE1e728=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=h7IiUkYwyvxf6ZTBMQd3QpnzSnpFttxpxvzmlbDd9YCu2cRI+AS63mfYFqZYKBGhk
-         zdfZ7C+sXry6672QSiR019M2rqoRE+uqZDm5ruICOTK3aDXo471jcx7HVX1U5gOxE8
-         DekdlN4Cp6d1enkdclHFaYBDYh7b/6830XADdrpO33h3v+hYLlFaYibkCoh6V6mdC7
-         4nFIDRGCt5RSTV7q0lZ11Fn8D3thi7tYNb4dar0NxDC1YmMQer6XnRhSJ6ptiQpPZ9
-         tNk9QQv4WQHGd9NU2+MgCf6+3Co/NFKyv8BV+nQ+t7eO8A9lEtRS0dhnegew/uiR0d
-         5tJzQf9aHjaaA==
-Date:   Mon, 11 Apr 2022 14:23:12 -0500
+        b=V6+ZhQQJ0FpA3JTLhfNdMXpuSewBXjtopDEltHhlXbZSpO78QxEP1ZcpA53xrUGsh
+         JZIgs+nnioj5B5rZ6ZYyOhb7PDCoD7KmnK/a9wN3yFN+gEevKq5C7FKAGKVSdCXq5Y
+         OyOxDtW+tcvHx+oApyxc1n3O0GdcPQcKVQnC4aO+t4AYiy/7D5M4rDnBXkLUpIdGcF
+         Mn1DGUs5kOloLRJHvN8s17W01fSA3P9CNLtNXxfP1Wp5sxhX29Q5fOgOnp+bAuGyJV
+         H1WckifF0+jHHfVPXfJsIFHHTscgId3sxp4qkX7Zoj7qKahszAXlbLGHQ5S4ktxgJV
+         SPyfAAuKNR0Sw==
+Date:   Mon, 11 Apr 2022 14:54:34 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH RESEND 1/2] PCI: Extend isolated function probing to s390
-Message-ID: <20220411192312.GA531449@bhelgaas>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] PCI: Add function for parsing
+ 'slot-power-limit-milliwatt' DT property
+Message-ID: <20220411195434.GA531670@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <e565547113567e9fd6cacce333bc28d2af088b72.camel@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220411111407.7ycuoldxjvqnkoo4@pali>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,58 +61,127 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 10:43:56AM +0200, Niklas Schnelle wrote:
-> On Fri, 2022-04-08 at 17:45 -0500, Bjorn Helgaas wrote:
-> > On Mon, Apr 04, 2022 at 11:53:45AM +0200, Niklas Schnelle wrote:
-> > > Like the jailhouse hypervisor s390's PCI architecture allows passing
-> > > isolated PCI functions to an OS instance. As of now this is was not
-> > > utilized even with multi-function support as the s390 PCI code makes
-> > > sure that only virtual PCI busses including a function with devfn 0 are
-> > > presented to the PCI subsystem. A subsequent change will remove this
-> > > restriction.
+On Mon, Apr 11, 2022 at 01:14:07PM +0200, Pali Rohár wrote:
+> On Friday 08 April 2022 10:27:50 Bjorn Helgaas wrote:
+> > On Fri, Mar 25, 2022 at 10:38:26AM +0100, Pali Rohár wrote:
+> > > Add function of_pci_get_slot_power_limit(), which parses the
+> > > 'slot-power-limit-milliwatt' DT property, returning the value in
+> > > milliwatts and in format ready for the PCIe Slot Capabilities Register.
 > > > 
-> > > Allow probing such functions by replacing the existing check for
-> > > jailhouse_paravirt() with a new hypervisor_isolated_pci_functions()
-> > > helper.
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Changes in v3:
+> > > * Set 600 W when DT slot-power-limit-milliwatt > 600 W
+> > > Changes in v2:
+> > > * Added support for PCIe 6.0 slot power limit encodings
+> > > * Round down slot power limit value
+> > > ---
+> > >  drivers/pci/of.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+> > >  drivers/pci/pci.h | 15 +++++++++++
+> > >  2 files changed, 79 insertions(+)
 > > > 
-> > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > index cb2e8351c2cc..5ebff26edd41 100644
+> > > --- a/drivers/pci/of.c
+> > > +++ b/drivers/pci/of.c
+> > > @@ -633,3 +633,67 @@ int of_pci_get_max_link_speed(struct device_node *node)
+> > >  	return max_link_speed;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> > > +
+> > > +/**
+> > > + * of_pci_get_slot_power_limit - Parses the "slot-power-limit-milliwatt"
+> > > + *				 property.
+> > > + *
+> > > + * @node: device tree node with the slot power limit information
+> > > + * @slot_power_limit_value: pointer where the value should be stored in PCIe
+> > > + *			    Slot Capabilities Register format
+> > > + * @slot_power_limit_scale: pointer where the scale should be stored in PCIe
+> > > + *			    Slot Capabilities Register format
+> > > + *
+> > > + * Returns the slot power limit in milliwatts and if @slot_power_limit_value
+> > > + * and @slot_power_limit_scale pointers are non-NULL, fills in the value and
+> > > + * scale in format used by PCIe Slot Capabilities Register.
+> > > + *
+> > > + * If the property is not found or is invalid, returns 0.
+> > > + */
+> > > +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > > +				u8 *slot_power_limit_value,
+> > > +				u8 *slot_power_limit_scale)
+> > > +{
+> > > +	u32 slot_power_limit_mw;
+> > > +	u8 value, scale;
+> > > +
+> > > +	if (of_property_read_u32(node, "slot-power-limit-milliwatt",
+> > > +				 &slot_power_limit_mw))
+> > > +		slot_power_limit_mw = 0;
+> > > +
+> > > +	/* Calculate Slot Power Limit Value and Slot Power Limit Scale */
+> > > +	if (slot_power_limit_mw == 0) {
+> > > +		value = 0x00;
+> > > +		scale = 0;
+> > > +	} else if (slot_power_limit_mw <= 255) {
+> > > +		value = slot_power_limit_mw;
+> > > +		scale = 3;
+> > > +	} else if (slot_power_limit_mw <= 255*10) {
+> > > +		value = slot_power_limit_mw / 10;
+> > > +		scale = 2;
+> > > +	} else if (slot_power_limit_mw <= 255*100) {
+> > > +		value = slot_power_limit_mw / 100;
+> > > +		scale = 1;
+> > > +	} else if (slot_power_limit_mw <= 239*1000) {
+> > > +		value = slot_power_limit_mw / 1000;
+> > > +		scale = 0;
+> > > +	} else if (slot_power_limit_mw <= 250*1000) {
+> > > +		value = 0xF0;
+> > > +		scale = 0;
 > > 
-> > I'm OK with the idea of generalizing this Jailhouse test, but I wonder
-> > if this check should be in pci_scan_slot() rather than in
-> > pci_scan_child_bus_extend().
+> > I think the spec is poorly worded here.  PCIe r6.0, sec 7.5.3.9, says:
 > > 
-> > I think the idea is that pci_scan_slot() should find all the functions
-> > of a device (a.k.a. "slot"), so it's a little weird to have a loop
-> > calling pci_scan_single_device() for each function in both places.
+> >   F0h   > 239 W and <= 250 W Slot Power Limit
+> > 
+> > I don't think it's meaningful for the spec to include a range here.
+> > The amount of power the slot can supply has a single maximum.  I
+> > suspect the *intent* of F0h/00b is that a device in the slot may
+> > consume up to 250W.
+> > 
+> > Your code above would mean that slot_power_limit_mw == 245,000 would
+> > cause the slot to advertise F0h/00b (250W), which seems wrong.
 > 
-> Yeah, I agree.
-> > 
-> > Currently we never call pcie_aspm_init_link_state() for these
-> > Jailhouse or s390 functions.  Maybe that's OK (and I think
-> > pci_scan_slot() is the wrong place to initialize ASPM anyway) but if
-> > we could move the Jailhouse/s390 checking to pci_scan_slot(), it would
-> > at least remove the inconsistency.
-> > 
-> > I'm thinking something along the lines of the patch below.  I'm sure
-> > Jan considered this originally, so maybe there's some reason this
-> > won't work.
+> So for slot_power_limit_mw == 245 W we should set following values?
 > 
-> One thing I already noticed is that I think next_fn() may need to be
-> changed. If pci_ari_enabled(bus) is true, then it immediately returns 0
-> on dev == NULL while if it is false there is an extra check for non-
-> contiguous multifunction devices. Even then I think on jailhouse() dev-
-> >multifunction might not be set at that point. This is in contrast to
-> s390 where we set dev->multifunction based on information provided by
-> the platform before scanning the bus. So I'll have to be careful not to
-> create a state where this works on s390 but might not work for
-> jailhouse.
-> 
-> I also do wonder what the role of the PCI_SCAN_ALL_PCIE_DEVS flag
-> should be here. At least the comment in only_one_child() sounds a lot
-> like that flag kind of indicates the same thing.
+>   slot_power_limit_mw = 239 W
+>   value = 0xF0
+>   scale = 0
 
-I looked at PCI_SCAN_ALL_PCIE_DEVS, too, but I think that's for a
-slightly different situation; see
-https://git.kernel.org/linus/284f5f9dbac1
+I think Slot Cap should never advertise more power than the slot can
+supply.  So if the DT tells us the slot can supply 245 W, I don't
+think Slot Cap should advertise that it can supply 250 W.  I think we
+should drop down to the next lower possible value, which is 239 W
+(value 0xEF, scale 0).  I think this is what your v4 does.
+
+> > I think we should do something like this instead:
+> > 
+> >   scale = 0;
+> >   if (slot_power_limit_mw >= 600*1000) {
+> >     value = 0xFE;
+> >     slot_power_limit_mw = 600*1000;
+> >   } else if (slot_power_limit_mw >= 575*1000) {
+> >     value = 0xFD;
+> >     slot_power_limit_mw = 575*1000;
+> >   } ...
+> 
+> This is already implemented in branch:
+> 
+>   } else if (slot_power_limit_mw <= 600*1000) {
+>   	value = 0xF0 + (slot_power_limit_mw / 1000 - 250) / 25;
+>   	scale = 0;
+
+OK, I was thinking there was a hole here, but I guess not.  I think do
+think it's easier to read and verify if it's structured as "the slot
+can supply at least X, so advertise X", as opposed to "the slot can
+supply X or less, so advertise Y".
 
 Bjorn
