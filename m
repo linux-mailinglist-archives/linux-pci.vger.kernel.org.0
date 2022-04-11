@@ -2,166 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E192C4FB644
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 10:44:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB1304FB786
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 11:30:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343940AbiDKIqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 04:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60854 "EHLO
+        id S1344423AbiDKJcz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 05:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343941AbiDKIqf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 04:46:35 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6475F55;
-        Mon, 11 Apr 2022 01:44:19 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23B8cx1N037982;
-        Mon, 11 Apr 2022 08:44:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version; s=pp1; bh=lZg6/NDrtfcKNrz+a4Ul9FSLuVpiXTuAV75sUdv+6eY=;
- b=G7fVx5XmAHBpaMfPbiBMG8gpIPtpjDZfLqTrv0QQocLscJZyRd0sQojB6D4cEUrKojqk
- 44F4Q1BGewyudW3hvJoi8x+LZSxX/lw48yH1Kw2ymMvGVxWSJnpWuefgmuqPdthdeAEF
- aXBFx/LBQLiWk+UTOHEKVFjZgv7hayMukh+8wey2/3maVMRG0TMF7prGX5ps/EzXvx7G
- lYOWMogQGN7KKJ+fJ9jEXKO0i2937PURPaBiF2z492S+Wxbkjz7Go6CHdpsHTt+ydY1y
- AR5cDRSOc4KRhBkVHGMLgFBhOuuohXvCFsxp2+O/DZRZ+vstWwj1Vw5tBs4oqNgJ6CS1 GA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fbkm0pkc4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Apr 2022 08:44:10 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23B8Wmav016915;
-        Mon, 11 Apr 2022 08:44:10 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fbkm0pkbk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Apr 2022 08:44:10 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23B8hnve020038;
-        Mon, 11 Apr 2022 08:44:07 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 3fb1s8j5vq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Apr 2022 08:44:07 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23B8i4ap36176156
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Apr 2022 08:44:04 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A54DCAE056;
-        Mon, 11 Apr 2022 08:44:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2956CAE04D;
-        Mon, 11 Apr 2022 08:44:04 +0000 (GMT)
-Received: from sig-9-145-41-213.uk.ibm.com (unknown [9.145.41.213])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Apr 2022 08:44:04 +0000 (GMT)
-Message-ID: <e565547113567e9fd6cacce333bc28d2af088b72.camel@linux.ibm.com>
-Subject: Re: [PATCH RESEND 1/2] PCI: Extend isolated function probing to s390
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Mon, 11 Apr 2022 10:43:56 +0200
-In-Reply-To: <20220408224514.GA353445@bhelgaas>
-References: <20220408224514.GA353445@bhelgaas>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-PbxZJLOD/wIhH9K18RJQ"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: RUsjhSnWXNUrpam3jyZ26HQdZ0XhRKRf
-X-Proofpoint-ORIG-GUID: frveAZjDjPJZtCjxpt5nb76WcOKP632S
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-04-11_02,2022-04-08_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxscore=0 phishscore=0
- adultscore=0 mlxlogscore=907 spamscore=0 suspectscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204110045
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1344484AbiDKJcx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 05:32:53 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70929DF3B;
+        Mon, 11 Apr 2022 02:30:37 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KcNqZ4gJZz1HBN2;
+        Mon, 11 Apr 2022 17:30:02 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 11 Apr 2022 17:30:35 +0800
+CC:     <yangyicong@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] PCI/ACPI: Decouple the negotiation of ASPM and other PCIe
+ services
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20220407131602.14727-1-yangyicong@hisilicon.com>
+ <20220407154257.GA235990@bhelgaas>
+ <CAJZ5v0gWzDsh8VWY+EzO6WxyO6Fe1GcRzVfABVOaO0ywJegLwA@mail.gmail.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <21430f77-3a68-150a-5b66-9ceb00945c8b@huawei.com>
+Date:   Mon, 11 Apr 2022 17:30:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
+MIME-Version: 1.0
+In-Reply-To: <CAJZ5v0gWzDsh8VWY+EzO6WxyO6Fe1GcRzVfABVOaO0ywJegLwA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Bjorn, Rafael,
 
---=-PbxZJLOD/wIhH9K18RJQ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 2022/4/8 0:41, Rafael J. Wysocki wrote:
+> On Thu, Apr 7, 2022 at 5:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>> [+cc Rafael]
+>>
+>> On Thu, Apr 07, 2022 at 09:16:02PM +0800, Yicong Yang wrote:
+>>> Currently we regard ASPM as a necessary PCIe service and if it's disabled
+>>> by pcie_aspm=off we cannot enable other services like AER and hotplug.
+>>> However the ASPM is just one of the PCIe services and other services
+>>> mentioned no dependency on this. So this patch decouples the negotiation
+>>> of ASPM and other PCIe services, then we can make use of other services
+>>> in the absence of ASPM.
+>>
+>> Why do you want to boot with "pcie_aspm=off"?  If we have to use a
+>> PCI-related parameter to boot, something is already wrong, so if
+>> there's a problem that requires ASPM to be disabled, we should fix
+>> that first.
+>>
 
-On Fri, 2022-04-08 at 17:45 -0500, Bjorn Helgaas wrote:
-> On Mon, Apr 04, 2022 at 11:53:45AM +0200, Niklas Schnelle wrote:
-> > Like the jailhouse hypervisor s390's PCI architecture allows passing
-> > isolated PCI functions to an OS instance. As of now this is was not
-> > utilized even with multi-function support as the s390 PCI code makes
-> > sure that only virtual PCI busses including a function with devfn 0 are
-> > presented to the PCI subsystem. A subsequent change will remove this
-> > restriction.
-> >=20
-> > Allow probing such functions by replacing the existing check for
-> > jailhouse_paravirt() with a new hypervisor_isolated_pci_functions()
-> > helper.
-> >=20
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->=20
-> I'm OK with the idea of generalizing this Jailhouse test, but I wonder
-> if this check should be in pci_scan_slot() rather than in
-> pci_scan_child_bus_extend().
->=20
-> I think the idea is that pci_scan_slot() should find all the functions
-> of a device (a.k.a. "slot"), so it's a little weird to have a loop
-> calling pci_scan_single_device() for each function in both places.
+We found this when testing the functions of AER and hotplug. The pcie_aspm=off
+is added by the tester who found it affect the function and it makes us think
+that it maybe not reasonable to couple these 3 services together.
 
-Yeah, I agree.
->=20
-> Currently we never call pcie_aspm_init_link_state() for these
-> Jailhouse or s390 functions.  Maybe that's OK (and I think
-> pci_scan_slot() is the wrong place to initialize ASPM anyway) but if
-> we could move the Jailhouse/s390 checking to pci_scan_slot(), it would
-> at least remove the inconsistency.
->=20
-> I'm thinking something along the lines of the patch below.  I'm sure
-> Jan considered this originally, so maybe there's some reason this
-> won't work.
+>> If there's a known hardware or firmware issue with ASPM, we should
+>> quirk it so users don't have to discover this parameter.
+>>
+>>> Aaron Sierra tried to fix this originally:
+>>> https://lore.kernel.org/linux-pci/20190702201318.GC128603@google.com/
+>>
+>> Yes.  My question from that review is still open:
+>>
+>>   But Rafael added ACPI_PCIE_REQ_SUPPORT with 415e12b23792 ("PCI/ACPI:
+>>   Request _OSC control once for each root bridge (v3)") [1], apparently
+>>   related to a bug [2].  I assume there was some reason for requiring
+>>   all those things together, so I'd really like his comments.
+> 
+> Well, it was quite a few years ago.
+> 
+>>   [1] https://git.kernel.org/linus/415e12b23792
+>>   [2] https://bugzilla.kernel.org/show_bug.cgi?id=20232
+>>
+>> Rafael clearly said in [1] that we need to:
+>>
+>>   ... check if all of the requisite _OSC support bits are set before
+>>   calling acpi_pci_osc_control_set() for a given root complex.
+> 
+> IIRC, the idea was to avoid requesting native control of anything PCIe
+> if those bits were not set in the mask, because otherwise we wouldn't
+> be able to get PME and native hotplug control which were not
+> configurable at that time.  [PME is still not configurable and
+> potentially related to hotplug, because they may use the same MSI IRQ
+> in principle, but the native hotplug is configurable now anyway.]
+> 
 
-One thing I already noticed is that I think next_fn() may need to be
-changed. If pci_ari_enabled(bus) is true, then it immediately returns 0
-on dev =3D=3D NULL while if it is false there is an extra check for non-
-contiguous multifunction devices. Even then I think on jailhouse() dev-
->multifunction might not be set at that point. This is in contrast to
-s390 where we set dev->multifunction based on information provided by
-the platform before scanning the bus. So I'll have to be careful not to
-create a state where this works on s390 but might not work for
-jailhouse.
+I'm a bit confused about the 'configurable' here, is it only about PME
+and hotplug share the same interrupt? Currently the PME and hotplug
+interrupt is allocated by the pcie port driver and PME can get the irq
+if the interrupt is allocated successfully.
 
-I also do wonder what the role of the PCI_SCAN_ALL_PCIE_DEVS flag
-should be here. At least the comment in only_one_child() sounds a lot
-like that flag kind of indicates the same thing.
+>> We would still need to explain why Rafael thought all these _OSC
+>> support bits were required, but now they're not.
+>>
+>> _OSC does not negotiate directly for control of ASPM (though of course
+>> it *does* negotiate for control of the PCIe Capability, which contains
+>> the ASPM control bits), but the PCI Firmware spec, r3.3, sec 4.5.3, has
+>> this comment in a sample _OSC implementation:
+>>
+>>   // Only allow native hot plug control if the OS supports:
+>>   // * ASPM
+>>   // * Clock PM
+>>   // * MSI/MSI-X
+>>
+>> which matches the current ACPI_PCIE_REQ_SUPPORT.
+>>
 
-I'll do some more investigation and testing and report back. I do agree
-that there seems to be some potential for cleanup here.
+thanks for the reference. So it indicates that native hotplug depends
+on ASPM? But maybe not AER or PME, as commented following above sample
+in the spec:
 
---=-PbxZJLOD/wIhH9K18RJQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+// Always allow native PME, AER (no dependencies)
 
------BEGIN PGP SIGNATURE-----
+So the AER should work on pcie_aspm=off, does it make sense?
 
-iHUEABYIAB0WIQSiikNOrnCUNbxSj4j7H22hwInkVgUCYlPqTAAKCRD7H22hwInk
-VgRWAP4qwiQe4aUTA4vPUfo5NKahyffwtI33Q201iJaHeS9qaQEAlN2biMrJEtwz
-bf48i7vJiJe4mtQqZevG3yBFlUbvwgY=
-=Zl25
------END PGP SIGNATURE-----
+>> So I think I would approach this by reworking the _OSC negotiation so
+>> we always advertise "OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT"
+>> if CONFIG_PCIEASPM=y.
+> 
+> That'd be reasonable IMO.
+> 
+>> Advertising support for ASPM doesn't mean Linux has to actually
+>> *enable* it, so we could make a different mechanism to prevent use of
+>> ASPM if we have a device or platform quirk or we're booting with
+>> "pcie_aspm=off".
+> 
 
---=-PbxZJLOD/wIhH9K18RJQ--
+I agree on this and I think this approach can resolve the condition here.
+If os got the ASPM control but user sepcified pcie_aspm=off, I think we
+can stop the ASPM link configuring to avoid enable the ASPM function.
 
+> Right.
+> 
+> Note that if we don't request the native control of a PCIe feature,
+> this basically gives the BIOS a licence to scribble on the related
+> device registers and some of the features are not independent, so we
+> may need to advertise support for two features in order to get control
+> of just one of them.
+> .
+> 
+
+ok. thanks for the note.
+
+Regards,
+Yicong
