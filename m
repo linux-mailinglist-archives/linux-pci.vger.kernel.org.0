@@ -2,52 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ABBA4FC228
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 18:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B31FC4FC2B7
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 18:50:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241402AbiDKQZD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 12:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48664 "EHLO
+        id S237797AbiDKQxH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 12:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234414AbiDKQZD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 12:25:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E247930560;
-        Mon, 11 Apr 2022 09:22:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 80896616E2;
-        Mon, 11 Apr 2022 16:22:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FBF9C385A4;
-        Mon, 11 Apr 2022 16:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649694167;
-        bh=etgszlvRZe6jojRqGriaxOztspw5uhvdBS80CxJB4SE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DRwqaBaSdxFQPkzjCeJI8eG2gb9bLFdGYzApUjcRzrefej9I+JDefq+Z257Xoq/Gy
-         I3DuZpWqrikk/H693LqgH5bEK7stEfmszvlFO3t+5hk58k7Ir+LaXzuIBwT/KMU8Rf
-         ku+OY/D3ZleeOzkc+LeYswSL7WLyV0bo5XgdLB66DdZS/4ij5lsNOIlt2ej2CFQBxF
-         ZhQKGbdT8lwj8+AKrjMr4ZLz+GLX8MHxvW5g0DfBodzYeJ6FHQBHQYimZaZUweqIUt
-         Q4UI7i7TQP7AdaJ9lOl+mRak/VKhFNlLakve0Str0CpestWRzaWmF5d7SaX/QNISqb
-         8sfQT4VqeTD0w==
-Date:   Mon, 11 Apr 2022 11:22:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thorsten Leemhuis <regressions@leemhuis.info>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Stefan Gottwald <gottwald@igel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: PM: Quirk bridge D3 on Elo i2
-Message-ID: <20220411162246.GA519922@bhelgaas>
+        with ESMTP id S235426AbiDKQxG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 12:53:06 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E487C33E96
+        for <linux-pci@vger.kernel.org>; Mon, 11 Apr 2022 09:50:51 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 596481424;
+        Mon, 11 Apr 2022 09:50:51 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.6.174])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 121613F73B;
+        Mon, 11 Apr 2022 09:50:47 -0700 (PDT)
+Date:   Mon, 11 Apr 2022 17:50:41 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Francesco Dolcini <francesco.dolcini@toradex.com>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, pali@kernel.org
+Subject: Re: [PATCH v3] PCI: imx6: Fix PERST# start-up sequence
+Message-ID: <20220411165031.GA28780@lpieralisi>
+References: <20220404081509.94356-1-francesco.dolcini@toradex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2d6981fd-c75a-ccb0-9299-65625963a9e3@leemhuis.info>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <20220404081509.94356-1-francesco.dolcini@toradex.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,42 +51,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 02:10:30PM +0200, Thorsten Leemhuis wrote:
-> 
-> 
-> On 11.04.22 13:35, Rafael J. Wysocki wrote:
-> > On Sun, Apr 10, 2022 at 11:16 AM Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> >>
-> >> On 09.04.22 15:35, Rafael J. Wysocki wrote:
-> >>> On Fri, Apr 8, 2022 at 9:53 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>>>
-> >>>> On Mon, Apr 04, 2022 at 04:46:14PM +0200, Rafael J. Wysocki wrote:
-> >>>>> On Fri, Apr 1, 2022 at 1:34 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >>>>>> On Thu, Mar 31, 2022 at 11:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>>>>>> On Thu, Mar 31, 2022 at 07:38:51PM +0200, Rafael J. Wysocki wrote:
-> >>>>>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>>>>>>
-> >>>>>>>> If one of the PCIe root ports on Elo i2 is put into D3cold and then
-> >>>>>>>> back into D0, the downstream device becomes permanently inaccessible,
-> >>>>>>>> so add a bridge D3 DMI quirk for that system.
-> >>>>>>>>
-> >>>>>>>> This was exposed by commit 14858dcc3b35 ("PCI: Use
-> >>>>>>>> pci_update_current_state() in pci_enable_device_flags()"), but before
-> >>>>>>>> that commit the root port in question had never been put into D3cold
-> >>>>>>>> for real due to a mismatch between its power state retrieved from the
-> >>>>>>>> PCI_PM_CTRL register (which was accessible even though the platform
-> >>>>>>>> firmware indicated that the port was in D3cold) and the state of an
-> >>>>>>>> ACPI power resource involved in its power management.
-> >>>>>>>> ...
+[CC'ed Pali, who is working on PERST consolidation]
 
-> >>>> I don't understand all that's going on here, but I applied it to
-> >>>> pci/pm for v5.19, thanks!
-> >>> Thank you!
-> >>
-> >> Sorry, but this made me wonder: why v5.19? It's a regression exposed in
-> >> v5.15, so it afaics would be good to get this in this cycle -- and also
-> >> backported to v5.15.y, but it seem a tag to take care of that is
-> >> missing. :-/
-
-I moved it to for-linus for v5.18 and added a stable tag for v5.15+.
+On Mon, Apr 04, 2022 at 10:15:09AM +0200, Francesco Dolcini wrote:
+> According to the PCIe standard the PERST# signal (reset-gpio in
+> fsl,imx* compatible dts) should be kept asserted for at least 100 usec
+> before the PCIe refclock is stable, should be kept asserted for at
+> least 100 msec after the power rails are stable and the host should wait
+> at least 100 msec after it is de-asserted before accessing the
+> configuration space of any attached device.
+> 
+> From PCIe CEM r2.0, sec 2.6.2
+> 
+>   T-PVPERL: Power stable to PERST# inactive - 100 msec
+>   T-PERST-CLK: REFCLK stable before PERST# inactive - 100 usec.
+> 
+> From PCIe r5.0, sec 6.6.1
+> 
+>   With a Downstream Port that does not support Link speeds greater than
+>   5.0 GT/s, software must wait a minimum of 100 ms before sending a
+>   Configuration Request to the device immediately below that Port.
+> 
+> Failure to do so could prevent PCIe devices to be working correctly,
+> and this was experienced with real devices.
+> 
+> Move reset assert to imx6_pcie_assert_core_reset(), this way we ensure
+> that PERST# is asserted before enabling any clock, move de-assert to the
+> end of imx6_pcie_deassert_core_reset() after the clock is enabled and
+> deemed stable and add a new delay of 100 msec just afterward.
+> 
+> Link: https://lore.kernel.org/all/20220211152550.286821-1-francesco.dolcini@toradex.com
+> Fixes: bb38919ec56e ("PCI: imx6: Add support for i.MX6 PCIe controller")
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
+> 
+> ---
+> v3: Add Acked-by: Richard Zhu
+> v2: Add complete reference to the PCIe standards, s/PCI-E/PCIe/g
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 6619e3caffe2..7a285fb0f619 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -408,6 +408,11 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  			dev_err(dev, "failed to disable vpcie regulator: %d\n",
+>  				ret);
+>  	}
+> +
+> +	/* Some boards don't have PCIe reset GPIO. */
+> +	if (gpio_is_valid(imx6_pcie->reset_gpio))
+> +		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> +					imx6_pcie->gpio_active_high);
+>  }
+>  
+>  static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
+> @@ -540,15 +545,6 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  	/* allow the clocks to stabilize */
+>  	usleep_range(200, 500);
+>  
+> -	/* Some boards don't have PCIe reset GPIO. */
+> -	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+> -		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> -					imx6_pcie->gpio_active_high);
+> -		msleep(100);
+> -		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> -					!imx6_pcie->gpio_active_high);
+> -	}
+> -
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX8MQ:
+>  		reset_control_deassert(imx6_pcie->pciephy_reset);
+> @@ -595,6 +591,15 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  		break;
+>  	}
+>  
+> +	/* Some boards don't have PCIe reset GPIO. */
+> +	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+> +		msleep(100);
+> +		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> +					!imx6_pcie->gpio_active_high);
+> +		/* Wait for 100ms after PERST# deassertion (PCIe r5.0, 6.6.1) */
+> +		msleep(100);
+> +	}
+> +
+>  	return;
+>  
+>  err_ref_clk:
+> -- 
+> 2.25.1
+> 
