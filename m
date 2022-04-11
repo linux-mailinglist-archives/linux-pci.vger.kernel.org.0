@@ -2,43 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6200A4FC0A0
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 17:26:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45D584FC0FF
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 17:36:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347906AbiDKP2H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 11:28:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
+        id S245738AbiDKPjB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 11:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348363AbiDKP2A (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 11:28:00 -0400
+        with ESMTP id S1348078AbiDKPi6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 11:38:58 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 95E3F18E2B;
-        Mon, 11 Apr 2022 08:25:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C2CE3A706
+        for <linux-pci@vger.kernel.org>; Mon, 11 Apr 2022 08:36:41 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 613B01570;
-        Mon, 11 Apr 2022 08:25:00 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 591281570;
+        Mon, 11 Apr 2022 08:36:41 -0700 (PDT)
 Received: from lpieralisi (unknown [10.57.6.174])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46CAE3F73B;
-        Mon, 11 Apr 2022 08:24:57 -0700 (PDT)
-Date:   Mon, 11 Apr 2022 16:25:01 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D07A3F73B;
+        Mon, 11 Apr 2022 08:36:39 -0700 (PDT)
+Date:   Mon, 11 Apr 2022 16:36:43 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>
-Cc:     l.stach@pengutronix.de, hongxing.zhu@nxp.com, robh@kernel.org,
-        bhelgaas@google.com, helgaas@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marc Zyngier <maz@kernel.org>, pali@kernel.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH v3] PCI: imx6: Replace legacy gpio interface for gpiod
- interface
-Message-ID: <YlRITQq650DCWg75@lpieralisi>
-References: <YYCOTx68LXu1Tn1i@fedora>
- <YlBFa46v5NtWxGLt@lpieralisi>
- <YlBKyBtbxMpvauLv@fedora>
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH 00/18] PCI: aardvark controller changes BATCH 5
+Message-ID: <YlRLC/WlHzUUugr8@lpieralisi>
+References: <20220220193346.23789-1-kabel@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YlBKyBtbxMpvauLv@fedora>
+In-Reply-To: <20220220193346.23789-1-kabel@kernel.org>
 X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -48,38 +45,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+Linus]
-
-On Fri, Apr 08, 2022 at 11:46:32AM -0300, Maíra Canal wrote:
-> On Fri, Apr 08, 2022 at 03:23:39PM +0100, Lorenzo Pieralisi wrote:
-> > On Mon, Nov 01, 2021 at 10:03:11PM -0300, Maíra Canal wrote:
-> > > Considering the current transition of the GPIO subsystem, remove all
-> > > dependencies of the legacy GPIO interface (linux/gpio.h and linux
-> > > /of_gpio.h) and replace it with the descriptor-based GPIO approach.
-> > > 
-> > > Signed-off-by: Maíra Canal <maira.canal@usp.br>
-> > > ---
-> > > V1 -> V2: Rewrite commit log and subject line to match PCI subsystem standard
-> > > V2 -> v3: Change gpiod_set_value_cansleep for gpiod_set_raw_value_cansleep
-> > > ---
-> > >  drivers/pci/controller/dwc/pci-imx6.c | 30 +++++++++------------------
-> > >  1 file changed, 10 insertions(+), 20 deletions(-)
-> > 
-> > Maira, Lucas,
-> > 
-> > what's this patch status ? Please let me know.
+On Sun, Feb 20, 2022 at 08:33:28PM +0100, Marek Behún wrote:
+> Hello Lorenzo, Krzysztof,
 > 
+> here comes batch 5 of changes for Aardvark PCIe controller.
 > 
-> Lorenzo,
+> This batch
+> - adds support for AER
+> - adds support for DLLSC and hotplug interrupt
+> - adds support for sending slot power limit message
+> - adds enabling/disabling PCIe clock
+> - adds suspend support
+> - optimizes link training by adding it into separate worker
+> - optimizes GPIO resetting by asserting it only if it wasn't asserted
+>   already
 > 
-> Thank you for the feedback. Since I sent v3, I didn't get any feedback from the community.
-> 
-> If you have any feedback, I would gladly work on it.
+> Marek
 
-I would ask Linus to have a look please given that it is GPIO code.
+Hi Marek,
 
-Original thread:
-https://lore.kernel.org/linux-pci/YYCOTx68LXu1Tn1i@fedora
+I noticed Pali posted patches [9,11] separately:
 
-Thanks,
+https://lore.kernel.org/linux-pci/20220325093827.4983-1-pali@kernel.org
+
+I will review the rest of the series - when it comes to merging patches
+we will handle how to apply them.
+
 Lorenzo
+
+> Marek Behún (1):
+>   arm64: dts: marvell: armada-37xx: Add clock to PCIe node
+> 
+> Miquel Raynal (2):
+>   PCI: aardvark: Add clock support
+>   PCI: aardvark: Add suspend to RAM support
+> 
+> Pali Rohár (13):
+>   PCI: aardvark: Add support for AER registers on emulated bridge
+>   PCI: Add PCI_EXP_SLTCAP_*_SHIFT macros
+>   PCI: aardvark: Fix reporting Slot capabilities on emulated bridge
+>   PCI: pciehp: Enable DLLSC interrupt only if supported
+>   PCI: pciehp: Enable Command Completed Interrupt only if supported
+>   PCI: aardvark: Add support for DLLSC and hotplug interrupt
+>   PCI: Add PCI_EXP_SLTCTL_ASPL_DISABLE macro
+>   PCI: Add function for parsing `slot-power-limit-milliwatt` DT property
+>   dt-bindings: PCI: aardvark: Describe slot-power-limit-milliwatt
+>   PCI: aardvark: Send Set_Slot_Power_Limit message
+>   arm64: dts: armada-3720-turris-mox: Define slot-power-limit-milliwatt
+>     for PCIe
+>   PCI: aardvark: Run link training in separate worker
+>   PCI: aardvark: Optimize PCIe card reset via GPIO
+> 
+> Russell King (2):
+>   PCI: pci-bridge-emul: Re-arrange register tests
+>   PCI: pci-bridge-emul: Add support for PCIe extended capabilities
+> 
+>  .../devicetree/bindings/pci/aardvark-pci.txt  |   2 +
+>  .../dts/marvell/armada-3720-turris-mox.dts    |   1 +
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   1 +
+>  drivers/pci/controller/pci-aardvark.c         | 380 ++++++++++++++++--
+>  drivers/pci/hotplug/pciehp_hpc.c              |  34 +-
+>  drivers/pci/hotplug/pnv_php.c                 |  13 +-
+>  drivers/pci/of.c                              |  64 +++
+>  drivers/pci/pci-bridge-emul.c                 | 130 +++---
+>  drivers/pci/pci-bridge-emul.h                 |  15 +
+>  drivers/pci/pci.h                             |  15 +
+>  include/uapi/linux/pci_regs.h                 |   4 +
+>  11 files changed, 565 insertions(+), 94 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
