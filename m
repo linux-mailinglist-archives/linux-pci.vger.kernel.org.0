@@ -2,76 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3101D4FC788
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 00:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40E684FC7D0
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 00:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350411AbiDKWVF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 18:21:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41938 "EHLO
+        id S230475AbiDKWsh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 18:48:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348407AbiDKWVF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 18:21:05 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CACE25297
-        for <linux-pci@vger.kernel.org>; Mon, 11 Apr 2022 15:18:49 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id u2so108499pgq.10
-        for <linux-pci@vger.kernel.org>; Mon, 11 Apr 2022 15:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2okWBbdd+GCs1sDsnu9Mv4+fwXILXXZWcR79ZDoHwQU=;
-        b=biqaWyePuAawU6jsYMqM8KuJsCVep6+RaaiKpRwaLecLEq0UdoYKojzKiE8Ii9zaqx
-         BkqUEDg182qKNnBLFHBJbN+zAiAlN32U9IhDU8Frw489GSQGtyHawxpKHI4JfYYyTTqX
-         uI/1UQrGlmaU2KhdCMFVBFpXmmmVUDvPxcu4odFK5W/BCgVr2iWxFmOLfD+1cHmM21Rq
-         fCVIbHGUWR6vcnfdpY2RMQfc59qXjWEH2dWUHuSXhEH+7pe1bPl7iITmQYc+9OaqN2c0
-         Oz7kQe6mHVMzj/W3uxAm+6gaD3vmsVe6CjAiO87gLcFvCQ4rJeUxaHVQGJ06N2Eege4V
-         Ym/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2okWBbdd+GCs1sDsnu9Mv4+fwXILXXZWcR79ZDoHwQU=;
-        b=eAMZnd0YxJjgIgedKBP0N4kJpYe6tKg40989KPFry/MZtSw8QRgimN2XuJIZdQgUEK
-         8W1Y30wWzwYo6g6utdwxXpwxvWBgdS2dcMZFPWHBdeaLOAULjaE79ImokLWkz4b1OJtO
-         pg7+oezP8CLjta7a9p59zNqzu2QVuyebuPZ9Y9vLHOmFxAtlcIQfbrqID/jU9QqfWCps
-         E0X0gEETwOok3x2lTU2C13BMrQxoHwDfshrhVMW5Q8ykZb8KHijcP1cX7VQ3IBBrjHi8
-         kADPbbVrQB1kNwy9zleOUXKBxsJgRWg37dACHBfjPtYyMgJKgp9ZKMnXd8L05u5jr6f8
-         wYLQ==
-X-Gm-Message-State: AOAM530vH4VcjeAsecQ4LSzphusVGCieMuCGXST/RsvySA3yf6tXews0
-        a2c++moY4POzzbbxKRxnMXPK46E/8TDslmNBYeoLEg==
-X-Google-Smtp-Source: ABdhPJzhNxZba8YXbYkY7VjRyY1TXOTWFfxQZBtgQ1b2sZYIp64yuu8OX+YzhonvjuA8EmIzXjHFX2DfMKubrejWNE0=
-X-Received: by 2002:a63:6d06:0:b0:39d:6cba:9058 with SMTP id
- i6-20020a636d06000000b0039d6cba9058mr3574443pgc.440.1649715528764; Mon, 11
- Apr 2022 15:18:48 -0700 (PDT)
+        with ESMTP id S234169AbiDKWsh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 18:48:37 -0400
+X-Greylist: delayed 433 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Apr 2022 15:46:10 PDT
+Received: from mail.toke.dk (mail.toke.dk [IPv6:2a0c:4d80:42:2001::664])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C7A2ED73;
+        Mon, 11 Apr 2022 15:46:10 -0700 (PDT)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
+        t=1649716733; bh=eHIYved+gls8iq5JSt/1c0VpMtou2nqFl3j4XieDeA4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EYSSdfnN8IrceqDNsN4P1BsqR7NU/29OV0MjYcVR60E4+kKe6Zv8nbouy7SVyjSG0
+         Uv4G+GIMhWdnB8fea1SZHnDP2nNhEezw8BSBvX7ilJveim5IR1mnpulZ1OfKfZz6QV
+         h/oEmfFNunfdHjDLlwsmKBhBs9UtssszdzspHR6Y4bmtDis+eW0ESowUq+g6GJ6UUq
+         GCnEM/iO3fr5XR1N8QGvsnCA2FFE5dtqq195UfsA7jMjE9HYCyriM/8WYxRK2vnE/Y
+         FmVU4PodMMz3hu2ctQtkRJ8d3JjlqROaUMmnloscjTHNoktbVVuezV8bTFe9BQhKPQ
+         AAiaGoBU6gnVQ==
+To:     wendy.wang@intel.com, david.e.box@intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org
+Subject: PCIE ASPM-related trouble with S0ix on Thinkpad X1 (NVME-related?)
+Date:   Tue, 12 Apr 2022 00:38:52 +0200
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <87k0bvutxf.fsf@toke.dk>
 MIME-Version: 1.0
-References: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
- <CAJ+vNU0McZxj_74DC0wCUyHq-NaT14URnvUP+kvudz7YLQq7fg@mail.gmail.com> <AS8PR04MB86766041887E97E22B0AC8C48CE99@AS8PR04MB8676.eurprd04.prod.outlook.com>
-In-Reply-To: <AS8PR04MB86766041887E97E22B0AC8C48CE99@AS8PR04MB8676.eurprd04.prod.outlook.com>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Mon, 11 Apr 2022 15:18:37 -0700
-Message-ID: <CAJ+vNU3urzdR3i-VTWGfmJdW78guyG3EoHMcdNHn8kKjrFkZXA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] Add the iMX8MP PCIe support
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,272 +45,228 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 7, 2022 at 8:14 PM Hongxing Zhu <hongxing.zhu@nxp.com> wrote:
->
->
-> > -----Original Message-----
-> > From: Tim Harvey <tharvey@gateworks.com>
-> > Sent: 2022=E5=B9=B44=E6=9C=888=E6=97=A5 4:42
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>; Lucas Stach
-> > <l.stach@pengutronix.de>
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>; bhelgaas@google.com; Lorenz=
-o
-> > Pieralisi <lorenzo.pieralisi@arm.com>; Rob Herring <robh@kernel.org>; S=
-hawn
-> > Guo <shawnguo@kernel.org>; Vinod Koul <vkoul@kernel.org>; Alexander Ste=
-in
-> > <alexander.stein@ew.tq-group.com>; linux-phy@lists.infradead.org; Devic=
-e
-> > Tree Mailing List <devicetree@vger.kernel.org>; linux-pci@vger.kernel.o=
-rg;
-> > Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>; open lis=
-t
-> > <linux-kernel@vger.kernel.org>; Sascha Hauer <kernel@pengutronix.de>;
-> > dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH v2 0/7] Add the iMX8MP PCIe support
-> >
-> > On Mon, Mar 7, 2022 at 1:18 AM Richard Zhu <hongxing.zhu@nxp.com>
-> > wrote:
-> > >
-> > > Based on the i.MX8MP GPC and blk-ctrl patch-set[1] issued by Lucas an=
-d
-> > > the following commits.
-> > >   - one codes refine patch-set[5].
-> > >   - two Fixes[2],[3].
-> > >   - one binding commit[4].
-> > >   - some dts changes in Shawn's git if you want to test PCIe on i.MX8=
-MM
-> > EVK.
-> > >     b4d36c10bf17 arm64: dts: imx8mm-evk: Add the pcie support on
-> > imx8mm evk board
-> > >     aaeba6a8e226 arm64: dts: imx8mm: Add the pcie support
-> > >     cfc5078432ca arm64: dts: imx8mm: Add the pcie phy support
-> > >
-> > > Sorry about that there may be some conflictions when do the codes mer=
-ge.
-> > > I'm waiting for the ack now, and will re-base them in a proper sequen=
-ce later.
-> > >
-> > > This series patches add the i.MX8MP PCIe support and tested on i.MX8M=
-M
-> > > EVK and i.MX8MP EVk boards. The PCIe NVME works fine on both boards.
-> > >
-> > > - i.MX8MP PCIe PHY has two resets refer to the i.MX8MM PCIe PHY.
-> > >   Add one more PHY reset for i.MX8MP PCIe PHY accordingly.
-> > > - Add the i.MX8MP PCIe PHY support in the i.MX8M PCIe PHY driver.
-> > >   And share as much as possible codes with i.MX8MM PCIe PHY.
-> > > - Add the i.MX8MP PCIe support in binding document, DTS files, and PC=
-Ie
-> > >   driver.
-> > >
-> > > Main changes v1-->v2:
-> > > - It's my fault forget including Vinod, re-send v2 after include Vino=
-d
-> > >   and linux-phy@lists.infradead.org.
-> > > - List the basements of this patch-set. The branch, codes changes and=
- so on.
-> > > - Clean up some useless register and bit definitions in #3 patch.
-> > >
-> > > [1]https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
-2Fp
-> > >
-> > atchwork.kernel.org%2Fproject%2Flinux-arm-kernel%2Fcover%2F2022022820
-> > 1
-> > >
-> > 731.3330192-1-l.stach%40pengutronix.de%2F&amp;data=3D04%7C01%7Chongx
-> > ing.
-> > >
-> > zhu%40nxp.com%7C19e85ae119bc47d3397e08da18d71007%7C686ea1d3bc
-> > 2b4c6fa92
-> > >
-> > cd99c5c301635%7C0%7C1%7C637849609225124527%7CUnknown%7CTWF
-> > pbGZsb3d8eyJ
-> > >
-> > WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7
-> > C3000
-> > >
-> > &amp;sdata=3DnamjBp1ZpawS9s25%2FwS8aOnd2A7rHTK2rQRwG4V0Dt8%3D&
-> > amp;reserv
-> > > ed=3D0
-> > > [2]https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
-2Fp
-> > >
-> > atchwork.ozlabs.org%2Fproject%2Flinux-pci%2Fpatch%2F1646289275-17813-
-> > 1
-> > >
-> > -git-send-email-hongxing.zhu%40nxp.com%2F&amp;data=3D04%7C01%7Chongxi
-> > ng.
-> > >
-> > zhu%40nxp.com%7C19e85ae119bc47d3397e08da18d71007%7C686ea1d3bc
-> > 2b4c6fa92
-> > >
-> > cd99c5c301635%7C0%7C1%7C637849609225124527%7CUnknown%7CTWF
-> > pbGZsb3d8eyJ
-> > >
-> > WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7
-> > C3000
-> > >
-> > &amp;sdata=3DdWr1ui7eIc92iWzvo8VKPXTkNel3NR9yNxD5CyHIuV0%3D&amp;r
-> > eserved
-> > > =3D0
-> > > [3]https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
-2Fp
-> > >
-> > atchwork.ozlabs.org%2Fproject%2Flinux-pci%2Fpatch%2F1645672013-8949-1
-> > -
-> > >
-> > git-send-email-hongxing.zhu%40nxp.com%2F&amp;data=3D04%7C01%7Chongxi
-> > ng.z
-> > >
-> > hu%40nxp.com%7C19e85ae119bc47d3397e08da18d71007%7C686ea1d3bc2
-> > b4c6fa92c
-> > >
-> > d99c5c301635%7C0%7C1%7C637849609225124527%7CUnknown%7CTWFp
-> > bGZsb3d8eyJW
-> > >
-> > IjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3
-> > 000&
-> > >
-> > amp;sdata=3DFCis4KE9KZqS8Ou6I0KTQu%2FayWSm%2Ftj%2Bcrd68EThsNs%3D
-> > &amp;res
-> > > erved=3D0
-> > > [4]https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
-2Fp
-> > >
-> > atchwork.ozlabs.org%2Fproject%2Flinux-pci%2Fpatch%2F1646293805-18248-
-> > 1
-> > >
-> > -git-send-email-hongxing.zhu%40nxp.com%2F&amp;data=3D04%7C01%7Chongxi
-> > ng.
-> > >
-> > zhu%40nxp.com%7C19e85ae119bc47d3397e08da18d71007%7C686ea1d3bc
-> > 2b4c6fa92
-> > >
-> > cd99c5c301635%7C0%7C1%7C637849609225124527%7CUnknown%7CTWF
-> > pbGZsb3d8eyJ
-> > >
-> > WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7
-> > C3000
-> > >
-> > &amp;sdata=3DsbYuLpfBFUImVi7YLe%2FCYvQNxleK2tnHKfr%2FByoAJsA%3D&am
-> > p;rese
-> > > rved=3D0
-> > > [5]https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
-2Fp
-> > >
-> > atchwork.ozlabs.org%2Fproject%2Flinux-pci%2Fcover%2F1645760667-10510-
-> > 1
-> > >
-> > -git-send-email-hongxing.zhu%40nxp.com%2F&amp;data=3D04%7C01%7Chongxi
-> > ng.
-> > >
-> > zhu%40nxp.com%7C19e85ae119bc47d3397e08da18d71007%7C686ea1d3bc
-> > 2b4c6fa92
-> > >
-> > cd99c5c301635%7C0%7C1%7C637849609225124527%7CUnknown%7CTWF
-> > pbGZsb3d8eyJ
-> > >
-> > WIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7
-> > C3000
-> > >
-> > &amp;sdata=3DtRZQBUN4CleGFFbxqNn4W1kUwCgATERggfa8qEQyc9E%3D&am
-> > p;reserved
-> > > =3D0
-> > >
-> > > NOTE:
-> > > Based git
-> > > <git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git>
-> > > Based branch <pci/imx6>
-> > >
-> > > Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml    |   1 +
-> > > Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |   4 +-
-> > > arch/arm64/boot/dts/freescale/imx8mp-evk.dts                 |  55
-> > ++++++++++++++++++++++
-> > > arch/arm64/boot/dts/freescale/imx8mp.dtsi                    |  46
-> > ++++++++++++++++++-
-> > > drivers/pci/controller/dwc/pci-imx6.c                        |  19
-> > +++++++-
-> > > drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   | 205
-> > +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > ++++-----------------
-> > > drivers/reset/reset-imx7.c                                   |   1 +
-> > > 7 files changed, 286 insertions(+), 45 deletions(-)
-> > >
-> > > [PATCH v2 1/7] reset: imx7: Add the iMX8MP PCIe PHY PERST support
-> > > [PATCH v2 2/7] dt-binding: phy: Add iMX8MP PCIe PHY binding [PATCH v2
-> > > 3/7] phy: freescale: imx8m-pcie: Add iMX8MP PCIe PHY [PATCH v2 4/7]
-> > > dt-bindings: imx6q-pcie: Add iMX8MP PCIe compatible [PATCH v2 5/7]
-> > > arm64: dts: imx8mp: add the iMX8MP PCIe support [PATCH v2 6/7] arm64:
-> > > dts: imx8mp-evk: Add PCIe support [PATCH v2 7/7] PCI: imx6: Add the
-> > > iMX8MP PCIe support
-> > >
-> >
-> > Richard,
-> >
-> > Thanks for working on this!
-> >
-> > Do you plan on submitting another version soon? I've tried to test this=
- with an
-> > imx8mp board I'm bringing up and while the host controller enumerates I=
- fail
-> > to get a link to a device. It's very likely I am missing something as t=
-his series
-> > depends on the IMX8MP blk-ctrl and gpc series which I also can't cleanl=
-y apply.
-> > Lucas just submitted a 'consolidated i.MX8MP HSIO/MEDIA/HDMI blk-ctrl
-> > series' [1] yet I can't find a repo/branch that applies to either.
-> >
+Hi folks
 
-Richard,
+I'm trying to get S0ix idle to work properly on my Thinkpad X1 (9th
+gen), and am having some trouble which leads to high battery usage on
+suspend. I've been using the S0ixSelftestTool[0] which is telling me
+that it's related to PCI ASPM, so I'm hoping to reach some people who
+might be able to help me debug this.
 
-I found that I had an issue with PERST# on my board which was causing
-the link failure so I was able to get this series to work after
-figuring out which patches were needed.
+Specifically, the selftest script is telling me that:
 
-> > Perhaps you have a git repo somewhere I can look at while we wait for
-> > imx8mp blk-ctl/gpc to settle and you to submit a v3?
-> Hi Tim:
-> Thanks for your kindly help to do the tests.
-> I had listed the dependencies in the cover-letter log.
-> Alexander and I used to test this series commits based on the V5.17 kerne=
-l.
->
-> Lucas had provided some review comments and suggestions about the PLL bit=
-s
->  manipulations of HSIOMIX in i.MX8MP PCIe PHY driver #3 of this series.
-> And he suggested to let the HSIOMIX blk-ctrl make this PLL as a real cloc=
-k,
->  and used by i.MX8MP PCIe PHY driver later.
->
-> Although I have some confusions, it's better let's wating for the blk-ctr=
-l
-> settle down and get clear discussion with Lucas later.
-> How do you think about that?
->
+"The pcieroot port 0000:00:06.0 ASPM setting is Enabled, its D state and
+Link PM are not expected."
 
-Yes, I agree.
+This appears to be the slot my NVME is in:
 
-Please Cc me on your next submission and I can test with the
-imx8mp-venice-gw74xx board which uses an external REFCLK and does not
-support CLKREQ.
+Checking PCI Devices tree diagram:
+-[0000:00]-+-00.0  Intel Corporation 11th Gen Core Processor Host Bridge/DR=
+AM Registers
+           +-02.0  Intel Corporation TigerLake-LP GT2 [Iris Xe Graphics]
+           +-04.0  Intel Corporation TigerLake-LP Dynamic Tuning Processor =
+Participant
+           +-06.0-[04]----00.0  Seagate Technology PLC FireCuda 530 SSD
 
-Best Regards,
+[snip - full output below]
 
-Tim
+According to the manufacturer[1], the NVME device in question should
+support suspending to L1.2. The S0ix troubleshooting guide[2] mentions
+that the 5.3 kernel added special handling for NVME devices, but I'm
+trying this on a 5.17 kernel, so that should already be there?
 
-> Best Regards
-> Richard Zhu
-> >
-> > Best Regards,
-> >
-> > Tim
-> > [1]
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpat=
-chw
-> > ork.kernel.org%2Fproject%2Flinux-arm-kernel%2Flist%2F%3Fseries%3D62958
-> > 6&amp;data=3D04%7C01%7Chongxing.zhu%40nxp.com%7C19e85ae119bc47d3
-> > 397e08da18d71007%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7
-> > C637849609225124527%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAw
-> > MDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sda
-> > ta=3DSUCCWtnCtTSCONfSoixOPgpMO4dnsBTW20x9qRdw4Fw%3D&amp;reserve
-> > d=3D0
+Anyone has any ideas and/or more things to try? I'm including the full
+output of the s0ixSelftestTool below.
+
+-Toke
+
+[0] https://github.com/intel/S0ixSelftestTool
+[1] https://www.seagate.com/files/www-content/datasheets/pdfs/firecuda-530-=
+ssd-DS2059-3-2112GB-en_GB.pdf
+[2] https://01.org/blogs/qwang59/2020/linux-s0ix-troubleshooting
+
+
+---Check S2idle path S0ix Residency---:
+
+The system OS Kernel version is:
+Linux alrua-x1 5.17.1-arch1-1 #1 SMP PREEMPT Mon, 28 Mar 2022 20:55:33 +000=
+0 x86_64 GNU/Linux
+
+---Check whether your system supports S0ix or not---:
+
+Low Power S0 Idle is:1
+Your system supports low power S0 idle capability.
+
+
+
+---Check whether intel_pmc_core sysfs files exit---:
+
+The pmc_core debug sysfs files are OK on your system.
+
+
+
+---Judge PC10, S0ix residency available status---:
+
+Test system supports S0ix.y substate
+
+S0ix substate before S2idle:
+  S0i2.0 S0i3.0
+
+S0ix substate residency before S2idle:
+  0 0
+
+Turbostat output:=20
+16.006725 sec
+CPU%c1	CPU%c6	CPU%c7	GFX%rc6	Pkg%pc2	Pkg%pc3	Pkg%pc6	Pkg%pc7	Pkg%pc8	Pkg%pc=
+9	Pk%pc10	SYS%LPI
+2.41	0.00	96.53	15717.64	21.13	71.28	0.00	0.00	0.00	0.00	0.00	0.00
+2.44	0.00	96.99	15717.57	21.13	71.28	0.00	0.00	0.00	0.00	0.00	0.00
+2.47
+2.13	0.00	95.57
+2.89
+2.86	0.00	96.09
+3.27
+1.64	0.00	97.46
+1.59
+
+CPU Core C7 residency after S2idle is: 96.53
+GFX RC6 residency after S2idle is: 15717.64
+CPU Package C-state 2 residency after S2idle is: 21.13
+CPU Package C-state 3 residency after S2idle is: 71.28
+CPU Package C-state 8 residency after S2idle is: 0.00
+CPU Package C-state 9 residency after S2idle is: 0.00
+CPU Package C-state 10 residency after S2idle is: 0.00
+S0ix residency after S2idle is: 0.00
+
+Your system achieved PC3 residency: 71.28, but no PC8 residency during S2id=
+le: 0.00
+
+---Debug no PC8 residency scenario---:
+
+Turbostat output:=20
+
+turbostat: cpu3 jitter 1232 6150
+16.634450 sec
+CPU%c1	CPU%c6	CPU%c7	GFX%rc6	Pkg%pc2	Pkg%pc3	Pkg%pc6	Pkg%pc7	Pkg%pc8	Pkg%pc=
+9	Pk%pc10	SYS%LPI
+1.61	0.00	97.51	15283.84	21.80	71.84	0.00	0.00	0.00	0.00	0.00	0.00
+1.44	0.00	98.09	15283.74	21.80	71.84	0.00	0.00	0.00	0.00	0.00	0.00
+1.43
+1.04	0.00	96.83
+2.50
+1.45	0.00	97.95
+1.52
+1.22	0.00	97.16
+2.29
+
+Your CPU Core C7 residency is available: 97.51
+
+Your system Intel graphics RC6 residency is available:15283.84
+
+Checking PCIe Device D state and Bridge Link state:
+
+
+The PCIe bridge link power management state is:
+0000:00:06.0 Link is in L0
+
+The link power management state of PCIe bridge: 0000:00:06.0 is not expecte=
+d.=20
+which is expected to be L1.1 or L1.2, or user would run this script again.
+
+
+The L1SubCap of the failed 0000:00:06.0 is:
+		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+
+The L1SubCtl1 of the failed 0000:00:06.0 is:
+		L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
+
+
+Checking PCI Devices tree diagram:
+-[0000:00]-+-00.0  Intel Corporation 11th Gen Core Processor Host Bridge/DR=
+AM Registers
+           +-02.0  Intel Corporation TigerLake-LP GT2 [Iris Xe Graphics]
+           +-04.0  Intel Corporation TigerLake-LP Dynamic Tuning Processor =
+Participant
+           +-06.0-[04]----00.0  Seagate Technology PLC FireCuda 530 SSD
+           +-07.0-[20-49]--
+           +-07.2-[50-79]--
+           +-08.0  Intel Corporation GNA Scoring Accelerator module
+           +-0a.0  Intel Corporation Tigerlake Telemetry Aggregator Driver
+           +-0d.0  Intel Corporation Tiger Lake-LP Thunderbolt 4 USB Contro=
+ller
+           +-0d.2  Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #0
+           +-0d.3  Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #1
+           +-14.0  Intel Corporation Tiger Lake-LP USB 3.2 Gen 2x1 xHCI Hos=
+t Controller
+           +-14.2  Intel Corporation Tiger Lake-LP Shared SRAM
+           +-14.3  Intel Corporation Wi-Fi 6 AX201
+           +-15.0  Intel Corporation Tiger Lake-LP Serial IO I2C Controller=
+ #0
+           +-16.0  Intel Corporation Tiger Lake-LP Management Engine Interf=
+ace
+           +-1f.0  Intel Corporation Tiger Lake-LP LPC Controller
+           +-1f.3  Intel Corporation Tiger Lake-LP Smart Sound Technology A=
+udio Controller
+           +-1f.4  Intel Corporation Tiger Lake-LP SMBus Controller
+           \-1f.5  Intel Corporation Tiger Lake-LP SPI Controller
+
+
+Checking PCI Devices D3 States:
+[36580.351015] sof-audio-pci-intel-tgl 0000:00:1f.3: PCI PM: Suspend power =
+state: D3hot
+[36580.366546] i801_smbus 0000:00:1f.4: PCI PM: Suspend power state: D0
+[36580.366614] i801_smbus 0000:00:1f.4: PCI PM: Skipped
+[36580.369308] i915 0000:00:02.0: PCI PM: Suspend power state: D3hot
+[36580.383006] mei_me 0000:00:16.0: PCI PM: Suspend power state: D3hot
+[36580.384120] intel-lpss 0000:00:15.0: PCI PM: Suspend power state: D3hot
+[36580.386213] proc_thermal 0000:00:04.0: PCI PM: Suspend power state: D3hot
+[36580.387549] nvme 0000:04:00.0: PCI PM: Suspend power state: D3hot
+[36580.387843] xhci_hcd 0000:00:14.0: PCI PM: Suspend power state: D3hot
+[36580.388168] iwlwifi 0000:00:14.3: PCI PM: Suspend power state: D3hot
+[36580.388210] pcieport 0000:00:06.0: PCI PM: Suspend power state: D0
+[36580.388215] pcieport 0000:00:06.0: PCI PM: Skipped
+[36580.389618] xhci_hcd 0000:00:0d.0: PCI PM: Suspend power state: D3cold
+[36580.406682] thunderbolt 0000:00:0d.2: PCI PM: Suspend power state: D3cold
+[36580.411535] thunderbolt 0000:00:0d.3: PCI PM: Suspend power state: D3cold
+
+
+Checking PCI Devices tree diagram:
+-[0000:00]-+-00.0  Intel Corporation 11th Gen Core Processor Host Bridge/DR=
+AM Registers
+           +-02.0  Intel Corporation TigerLake-LP GT2 [Iris Xe Graphics]
+           +-04.0  Intel Corporation TigerLake-LP Dynamic Tuning Processor =
+Participant
+           +-06.0-[04]----00.0  Seagate Technology PLC FireCuda 530 SSD
+           +-07.0-[20-49]--
+           +-07.2-[50-79]--
+           +-08.0  Intel Corporation GNA Scoring Accelerator module
+           +-0a.0  Intel Corporation Tigerlake Telemetry Aggregator Driver
+           +-0d.0  Intel Corporation Tiger Lake-LP Thunderbolt 4 USB Contro=
+ller
+           +-0d.2  Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #0
+           +-0d.3  Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #1
+           +-14.0  Intel Corporation Tiger Lake-LP USB 3.2 Gen 2x1 xHCI Hos=
+t Controller
+           +-14.2  Intel Corporation Tiger Lake-LP Shared SRAM
+           +-14.3  Intel Corporation Wi-Fi 6 AX201
+           +-15.0  Intel Corporation Tiger Lake-LP Serial IO I2C Controller=
+ #0
+           +-16.0  Intel Corporation Tiger Lake-LP Management Engine Interf=
+ace
+           +-1f.0  Intel Corporation Tiger Lake-LP LPC Controller
+           +-1f.3  Intel Corporation Tiger Lake-LP Smart Sound Technology A=
+udio Controller
+           +-1f.4  Intel Corporation Tiger Lake-LP SMBus Controller
+           \-1f.5  Intel Corporation Tiger Lake-LP SPI Controller
+
+The pcieport 0000:00:06.0 ASPM enable status:
+		LnkCtl:	ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+
+
+Pcieport is not in D3cold=EF=BC=9A=20=20=20=20
+m0000:00:06.0
+
+
+The pcieroot port 0000:00:06.0 ASPM setting is Enabled, its D state and Lin=
+k PM are not expected,
+please investigate or report a bug.
+
