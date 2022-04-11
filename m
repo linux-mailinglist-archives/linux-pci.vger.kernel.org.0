@@ -2,155 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEC3A4FBB7A
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 13:59:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D0104FBBBE
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 14:10:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245093AbiDKMBp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 08:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33986 "EHLO
+        id S229768AbiDKMNG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 08:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231547AbiDKMBn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 08:01:43 -0400
-Received: from CHE01-GV0-obe.outbound.protection.outlook.com (mail-gv0che01on2138.outbound.protection.outlook.com [40.107.23.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8CB1B7A6;
-        Mon, 11 Apr 2022 04:59:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oSu7rbp72hQlFDdvxaLPoI47hxLdL7cvBnZH54c/ap0s7HWgfv5lvuGjBkCPuBddHUeFHpg1s7ffvgqQ9T4xvIB2yae6P42WvlxVJ2DWwGrp+7UAS7r8eCsRz2rnmEubT6vEjSayjFtoZURLKq3d+sYuqRMHnsLHkuGV0qp9bqsLRegV0lzv+gXi2NoNXto2sNPcuE1Onwp7pAdNIcS7wAMfFqRG2Ak1WTJQr6MYgPX/FamnqhvIaHygMaWh36oAdQouJotu15aOcmB51EUbR146NWoCJKdbedKcbx713Uh7lIAibuUWaHIyCSsR5dH3p5+djqCdXsAgOQKfPhNF5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RCjUSQxKMr/2JUyBkpnOinXGIH/plX7A0sTuqyfJkPY=;
- b=OEZk0gFRcJOx1R//inKLfZrQzdDbjd2vtUIBGggsqYc2Pn31q4Dppt8nbrTH9wGvpDfcFk5+jFmvtFHV/r1udZmQR9hGCPPRt0+Hwsi9GWg2tP2uVtWt2Ouek3cko0EWrX6gt2Ri0oeKEZhxikP6XmGFb28vy+HTpdxgZPqht5SZFTaxOt6KRxc21nk0VgCaD8Cn2FUfmyWi4GS+a1umPRKvbSHDf/FCc28DnFDADpazTtY7l/QPIQtFpDYl8zHIQ+zJM7U7vslXlOKXEcv7+kdatoSuqjtaUPVauDgwl0OW4sxT23oiUshsJnQlZ1AnBHaVy8o2b8DZi+q2+sk0zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RCjUSQxKMr/2JUyBkpnOinXGIH/plX7A0sTuqyfJkPY=;
- b=jHGpRk9HqDxq3Sgig8UIVfsQ/iswXx++K4yOJFUFADvCvsQzMwASLleIOzUcTVdpHymFlSV9SeJLqqwxXBD72hykynW/+3+weXBDtOvf0q6XPGn7y7nzwi44D6aKxf9aqTNC3MJZQvWQMRd0J8LWe+QnaiaCt/dGnMQm2Ni2Htc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=toradex.com;
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2e::8) by
- ZR0P278MB0249.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:30::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5144.29; Mon, 11 Apr 2022 11:59:27 +0000
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::f465:3051:c795:3c2]) by ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::f465:3051:c795:3c2%7]) with mapi id 15.20.5144.029; Mon, 11 Apr 2022
- 11:59:27 +0000
-Date:   Mon, 11 Apr 2022 13:59:26 +0200
-From:   Francesco Dolcini <francesco.dolcini@toradex.com>
-To:     =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        l.stach@pengutronix.de, hongxing.zhu@nxp.com, robh@kernel.org,
-        bhelgaas@google.com, helgaas@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: imx6: Replace legacy gpio interface for gpiod
- interface
-Message-ID: <20220411115926.GA20890@francesco-nb.int.toradex.com>
-References: <YYCOTx68LXu1Tn1i@fedora>
- <YlBFa46v5NtWxGLt@lpieralisi>
- <YlBKyBtbxMpvauLv@fedora>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YlBKyBtbxMpvauLv@fedora>
-X-ClientProxiedBy: ZR0P278CA0017.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:16::27) To ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:2e::8)
+        with ESMTP id S1346046AbiDKMMr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 08:12:47 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D77E6429;
+        Mon, 11 Apr 2022 05:10:32 -0700 (PDT)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1ndssI-0005vc-NE; Mon, 11 Apr 2022 14:10:30 +0200
+Message-ID: <2d6981fd-c75a-ccb0-9299-65625963a9e3@leemhuis.info>
+Date:   Mon, 11 Apr 2022 14:10:30 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7b619175-3808-4c36-da4c-08da1bb2ba3b
-X-MS-TrafficTypeDiagnostic: ZR0P278MB0249:EE_
-X-Microsoft-Antispam-PRVS: <ZR0P278MB02492FB27A9758DD8D70038EE2EA9@ZR0P278MB0249.CHEP278.PROD.OUTLOOK.COM>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kKlrSTfF6NXd8NBJHbcj6G7pWB0RhXKkOGRPLTw5zeC6S+wqJ4FlmrdBTXhT9sw+8BsITmidPqFbChMaoq1wyj85FAq0frcyT5A9lHuxxBX9yBtt9jeiEbNKYTbl/OoNBObtO/KA1HBLAzhI9Fb9/8vx5wbu3tX9M3qK6Pg/hcD/IymfmZ5q5fTR3eh3gqzVZqjAgNb7Ub/g/vbQLfSXJg5zD+pL68X7doKK+KT6BSKVWdiF5G80cR6Nix+3qPnM2dr99r3XN401q+vYM4IMPfiROiFYuJJLtatr70jFnFtomyB4e4iaWh+jeKQFI/+0GYY0E4d/6JQhiMLyhVn448xx3fVdPKd3QBy0sern5vUl6+s4huD4sY2K5Fsq5Q9b/wVlFdHyGnzVUkybGcgVk8Rdru/RHvBnqsnq8JAH4eyFLNnqZ0T9tEgwzLAjQE3sR8GC5U9baoWz/xPvXGd6sfaqsuniJnwJsYjn2OFusnFyNhbPDCOJC75sPc4qanbLAiN5vxytp5VjMnyH1mil/rndJmT6ynyBhdMqYWLq5nmlm9u7Xy267y/olKx6q60zY1y3Om7Fqxv9rpcz0Bb75L69jWG9PW0pHg+orjbZnvoqtlE42Sa57q7sFsY9wd8lyXkb8nar+f9YsoPJvHvLEH6H3irEZpF/2bYptlgVsOpLNqC/8ANtoFSWzvWhzzsLWpwxKiTRU5uu9+o2lRcU+MBzxlAyn1CMyyKqWf/WOGhM25oam1/8qUZc0esXI3hTj58e3IwoECG4JKk9gknWn7CoRSQ4iJAxpDQXLlAJZtrGXUt0ZVy6QyFfs0fSIfnc
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(39850400004)(366004)(396003)(346002)(376002)(136003)(2906002)(52116002)(6506007)(5660300002)(44832011)(6512007)(186003)(7416002)(83380400001)(26005)(316002)(86362001)(8676002)(966005)(508600001)(66946007)(6486002)(1076003)(4326008)(38350700002)(38100700002)(66476007)(66556008)(6916009)(33656002)(8936002)(354624002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?GQhxQYha2X4fLK27stc2Zpza1QqYQ/0O/tt381M5/VkCZg08/OySqQaDmS?=
- =?iso-8859-1?Q?SozfN0o7PE0ag03RJI5MIsAd0dSLr2dXxDDJ6LpAFqbYjNxnmEx9WqaLsQ?=
- =?iso-8859-1?Q?rI0/XKi7I0bMLybI85VYn2vVLOYJhs/kOl1XGvR6iOEmRdaXzajm28LjVi?=
- =?iso-8859-1?Q?g+GAbSG3XUX7M/WZlrlBXrpGwbvB9HsL5/HLfnG0kgWu+BZlAvIKBnnrL6?=
- =?iso-8859-1?Q?VJJURPl1HwCIir8EOEanNnPHl1hmrxzc/x2jCpilxZTmH0aAKGk4UbiJaq?=
- =?iso-8859-1?Q?TJDhZ+eu0gdvMZGla3pZHLToHFpKBIV82erusoJb5kPgmYjDJFzW7pwATR?=
- =?iso-8859-1?Q?rkRuo1F7Ns6hmUC8MRwK0f+NDRE8/hJkTFeSbrbvCjNZ5WdPveC62vZpbo?=
- =?iso-8859-1?Q?7Dt2FeywC/OS4X96SRquxf7bw4ozAuQMdiBX3O+Z7zYDQUy6oG4fE+S4er?=
- =?iso-8859-1?Q?n3MaM6pVXspJkGznWC8R3eC1Hvmp+jEmligZ7tqb1SQJ7A4pJnzrOjlPuG?=
- =?iso-8859-1?Q?13Zw8EfG5iGi5iLm3MLK4hbbA/N6vmP7K8GRjKB397MtwpDMH1hSqVi5cr?=
- =?iso-8859-1?Q?xusz36JDPVTlZNyhr49EVkhYa5MD3YlsUHaxoPZDkX+k5WOe36jGhApnV7?=
- =?iso-8859-1?Q?c8C3NhAgs4SbGdnkR6BE4pxpvSbrFrFkRq3UFQ3YQPjIbbhMVY4NLCPqTr?=
- =?iso-8859-1?Q?cUbim209Dycp2dkiBdpxNmrdUHLXzXDYbouPQnJpI4p8t2q36gTkYhk7QS?=
- =?iso-8859-1?Q?xOr2xghyY3dQJCOLbUQghXkhwm39+cpamczVjw5S60BX/IG/EFmG7i1G8E?=
- =?iso-8859-1?Q?WzWg2qJu8v3ljEgmuDNo+HwXCcs1NesKnZwkEEfvmQGZOdcu/iNUAMpO0e?=
- =?iso-8859-1?Q?moOcV1C4ZNNtRMrIFU8xbhaAEYqmcQXEc5c/xTEc5CHtCMmxWbtJ5Kp6rm?=
- =?iso-8859-1?Q?wxieUW8O0QFm0tnSCwnoZ9/1wMAXKdT4sofK0f/7L/idhISXvkSwWH1vfM?=
- =?iso-8859-1?Q?r4lpq7tnB95V3u5/heAqAePw+FWqQ69ktD9n452V7CzMSqiNjiOowjnlCs?=
- =?iso-8859-1?Q?vVNW3V8187BBlCOYSdwZy1mQ349eqH3u2xQ2Yx1kkW4HdEOIzu64xlRT5s?=
- =?iso-8859-1?Q?mkKod5jbscldNLO1awqcUFk0rFGkBNG8RutXL7mcwiaB+tcdjCZl0N+m25?=
- =?iso-8859-1?Q?FlkCIvB4sRgQ+XO6Q7lGEpRZxI9u1jsaCxVXAnFBighwQDY/qE4nzD/PwD?=
- =?iso-8859-1?Q?BKhDnIzmhv+tSOWqFDjSCsf9TZY2IQ/iAjnfmmVQN7Y56ZVCIUvUksE4kz?=
- =?iso-8859-1?Q?R/PFHe/s+++MiFRYw/XTv/mPDlWmVDeTnGWs/HkZwUdom3Wv4sFSfEnR0M?=
- =?iso-8859-1?Q?dR0sWIWFNmAFvkKZZedVyFJHRP5eDB/UpE/l2XW17Qv6slxEoVi4cx0OxP?=
- =?iso-8859-1?Q?OhY3n3OZzPu7gm++4RP/9Z8nd3Yxt/0zQ/BvtXI0o90dpjvxjkgTsJakNA?=
- =?iso-8859-1?Q?k3NwW5IeupyPfA6fv40LislOcSwwL0id9UbiqQZuYZjGQcIl0x6P5ZdLVv?=
- =?iso-8859-1?Q?Z5VH0XpcwbyBtjLh0yLSmhVIa4lftrO7LeHQi2hMAJ2hFpK4n7o6nIrHWq?=
- =?iso-8859-1?Q?EXy2AJGN4YM/OXlL2cooD6rdFGeIeP5sbgdayY8OYmYWjacCC6/bJA5Zr+?=
- =?iso-8859-1?Q?y0r+MwKIK4BO/DmnfVJMRe/EE6UvvIEGyMnlOmY1tAkel7Lq6lFBvnrTOE?=
- =?iso-8859-1?Q?HCrBKkH3ePcemb0Zd6JBxIKVN+Wl2eXlL0NbYH1cGpz0npz7LWsUB+Q/bz?=
- =?iso-8859-1?Q?Jk1mRBEiPVb/pZwYZanKXdp8Ojs2UMqhkpSV1FmF3bsn/aiDC3xS?=
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b619175-3808-4c36-da4c-08da1bb2ba3b
-X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2022 11:59:26.9740
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wwRq4eG4sDx9SA8bWCT1LELHaYynoXdEgfsBaaNXUGJJ1E/yrLX4cON016gD8jH/Ow1ovsPKO39hVohuE6FGXn69IPsz0JsNHHPraOuMA+c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR0P278MB0249
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH] PCI: PM: Quirk bridge D3 on Elo i2
+Content-Language: en-US
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Stefan Gottwald <gottwald@igel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAJZ5v0g9cg=nJ0yr5-a_phNnJLiU74KrfsULsAEsWBKeRr7HCQ@mail.gmail.com>
+ <20220408195342.GA339430@bhelgaas>
+ <CAJZ5v0g6ahvQrCKPXTgQANiUYJNByDUvJZ8Zsp7anqeM7EBAXw@mail.gmail.com>
+ <b24daa29-ae7c-6e24-ebdc-2fe8e0576a9d@leemhuis.info>
+ <CAJZ5v0j=WVOAZQ=nR32OQLtMd4gpWhX0T2M-su+dNdOJ0KgbZw@mail.gmail.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAJZ5v0j=WVOAZQ=nR32OQLtMd4gpWhX0T2M-su+dNdOJ0KgbZw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649679032;092a9564;
+X-HE-SMSGID: 1ndssI-0005vc-NE
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 08, 2022 at 11:46:32AM -0300, Maíra Canal wrote:
-> On Fri, Apr 08, 2022 at 03:23:39PM +0100, Lorenzo Pieralisi wrote:
-> > On Mon, Nov 01, 2021 at 10:03:11PM -0300, Maíra Canal wrote:
-> > > Considering the current transition of the GPIO subsystem, remove all
-> > > dependencies of the legacy GPIO interface (linux/gpio.h and linux
-> > > /of_gpio.h) and replace it with the descriptor-based GPIO approach.
-> > > 
-> > > Signed-off-by: Maíra Canal <maira.canal@usp.br>
-> > > ---
-> > > V1 -> V2: Rewrite commit log and subject line to match PCI subsystem standard
-> > > V2 -> v3: Change gpiod_set_value_cansleep for gpiod_set_raw_value_cansleep
-> > > ---
-> > >  drivers/pci/controller/dwc/pci-imx6.c | 30 +++++++++------------------
-> > >  1 file changed, 10 insertions(+), 20 deletions(-)
-> > 
-> > Maira, Lucas,
-> > 
-> > what's this patch status ? Please let me know.
+
+
+On 11.04.22 13:35, Rafael J. Wysocki wrote:
+> On Sun, Apr 10, 2022 at 11:16 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>>
+>> On 09.04.22 15:35, Rafael J. Wysocki wrote:
+>>> On Fri, Apr 8, 2022 at 9:53 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>
+>>>> On Mon, Apr 04, 2022 at 04:46:14PM +0200, Rafael J. Wysocki wrote:
+>>>>> On Fri, Apr 1, 2022 at 1:34 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>>>>> On Thu, Mar 31, 2022 at 11:57 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>>> On Thu, Mar 31, 2022 at 07:38:51PM +0200, Rafael J. Wysocki wrote:
+>>>>>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>>>>>>
+>>>>>>>> If one of the PCIe root ports on Elo i2 is put into D3cold and then
+>>>>>>>> back into D0, the downstream device becomes permanently inaccessible,
+>>>>>>>> so add a bridge D3 DMI quirk for that system.
+>>>>>>>>
+>>>>>>>> This was exposed by commit 14858dcc3b35 ("PCI: Use
+>>>>>>>> pci_update_current_state() in pci_enable_device_flags()"), but before
+>>>>>>>> that commit the root port in question had never been put into D3cold
+>>>>>>>> for real due to a mismatch between its power state retrieved from the
+>>>>>>>> PCI_PM_CTRL register (which was accessible even though the platform
+>>>>>>>> firmware indicated that the port was in D3cold) and the state of an
+>>>>>>>> ACPI power resource involved in its power management.
+>>>>>>>
+>>>>>>> In the bug report you suspect a firmware issue.  Any idea what that
+>>>>>>> might be?  It looks like a Gemini Lake Root Port, so I wouldn't think
+>>>>>>> it would be a hardware issue.
+>>>>>>
+>>>>>> The _ON method of the ACPI power resource associated with the root
+>>>>>> port doesn't work correctly.
+>>>>>>
+>>>>>>> Weird how things come in clumps.  Was just looking at Mario's patch,
+>>>>>>> which also has to do with bridges and D3.
+>>>>>>>
+>>>>>>> Do we need a Fixes line?  E.g.,
+>>>>>>>
+>>>>>>>   Fixes: 14858dcc3b35 ("PCI: Use pci_update_current_state() in pci_enable_device_flags()")
+>>>>>>
+>>>>>> Strictly speaking, it is not a fix for the above commit.
+>>>>>>
+>>>>>> It is a workaround for a firmware issue uncovered by it which wasn't
+>>>>>> visible, because power management was not used correctly on the
+>>>>>> affected system because of another firmware problem addressed by
+>>>>>> 14858dcc3b35.  It wouldn't have worked anyway had it been attempted
+>>>>>> AFAICS.
+>>>>>>
+>>>>>> I was thinking about CCing this change to -stable instead.
+>>>>
+>>>> Makes sense, thanks.
+>>>>
+>>>>>>>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215715
+>>>>>>>> Reported-by: Stefan Gottwald <gottwald@igel.com>
+>>>>>>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>>>>>> ---
+>>>>>>>>  drivers/pci/pci.c |   10 ++++++++++
+>>>>>>>>  1 file changed, 10 insertions(+)
+>>>>>>>>
+>>>>>>>> Index: linux-pm/drivers/pci/pci.c
+>>>>>>>> ===================================================================
+>>>>>>>> --- linux-pm.orig/drivers/pci/pci.c
+>>>>>>>> +++ linux-pm/drivers/pci/pci.c
+>>>>>>>> @@ -2920,6 +2920,16 @@ static const struct dmi_system_id bridge
+>>>>>>>>                       DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
+>>>>>>>>                       DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
+>>>>>>>>               },
+>>>>>>>> +             /*
+>>>>>>>> +              * Downstream device is not accessible after putting a root port
+>>>>>>>> +              * into D3cold and back into D0 on Elo i2.
+>>>>>>>> +              */
+>>>>>>>> +             .ident = "Elo i2",
+>>>>>>>> +             .matches = {
+>>>>>>>> +                     DMI_MATCH(DMI_SYS_VENDOR, "Elo Touch Solutions"),
+>>>>>>>> +                     DMI_MATCH(DMI_PRODUCT_NAME, "Elo i2"),
+>>>>>>>> +                     DMI_MATCH(DMI_PRODUCT_VERSION, "RevB"),
+>>>>>>>> +             },
+>>>>>>>
+>>>>>>> Is this bridge_d3_blacklist[] similar to the PCI_DEV_FLAGS_NO_D3 bit?
+>>>>>>
+>>>>>> Not really.  The former applies to the entire platform and not to an
+>>>>>> individual device.
+>>>>>>
+>>>>>>> Could they be folded together?  We have a lot of bits that seem
+>>>>>>> similar but maybe not exactly the same (dev->bridge_d3,
+>>>>>>> dev->no_d3cold, dev->d3cold_allowed, dev->runtime_d3cold,
+>>>>>>> PCI_DEV_FLAGS_NO_D3, pci_bridge_d3_force, etc.)  Ugh.
+>>>>>>
+>>>>>> Yes, I agree that this needs to be cleaned up.
+>>>>>>
+>>>>>>> bridge_d3_blacklist[] itself was added by 85b0cae89d52 ("PCI:
+>>>>>>> Blacklist power management of Gigabyte X299 DESIGNARE EX PCIe ports"),
+>>>>>>> which honestly looks kind of random, i.e., it doesn't seem to be
+>>>>>>> working around a hardware or even a firmware defect.
+>>>>>>>
+>>>>>>> Apparently the X299 issue is that 00:1c.4 is connected to a
+>>>>>>> Thunderbolt controller, and the BIOS keeps the Thunderbolt controller
+>>>>>>> powered off unless something is attached to it?  At least, 00:1c.4
+>>>>>>> leads to bus 05, and in the dmesg log attached to [1] shows no devices
+>>>>>>> on bus 05.
+>>>>>>>
+>>>>>>> It also says the platform doesn't support PCIe native hotplug, which
+>>>>>>> matches what Mika said about it using ACPI hotplug.  If a system is
+>>>>>>> using ACPI hotplug, it seems like maybe *that* should prevent us from
+>>>>>>> putting things in D3cold?  How can we know whether ACPI hotplug
+>>>>>>> depends on a certain power state?
+>>>>>>
+>>>>>> We have this check in pci_bridge_d3_possible():
+>>>>>>
+>>>>>> if (bridge->is_hotplug_bridge && !pciehp_is_native(bridge))
+>>>>>>             return false;
+>>>>>>
+>>>>>> but this only applies to the case when the particular bridge itself is
+>>>>>> a hotplug one using ACPI hotplug.
+>>>>>>
+>>>>>> If ACPI hotplug is used, it generally is unsafe to put PCIe ports into
+>>>>>> D3cold, because in that case it is unclear what the platform
+>>>>>> firmware's assumptions regarding control of the config space are.
+>>>>>>
+>>>>>> However, I'm not sure how this is related to the patch at hand.
+>>>>>
+>>>>> So I'm not sure how you want to proceed here.
+>>>>>
+>>>>> The platform is quirky, so the quirk for it will need to be added this
+>>>>> way or another.  The $subject patch adds it using the existing
+>>>>> mechanism, which is the least intrusive way.
+>>>>>
+>>>>> You seem to be thinking that the existing mechanism may not be
+>>>>> adequate, but I'm not sure for what reason and anyway I think that it
+>>>>> can be adjusted after adding the quirk.
+>>>>>
+>>>>> Please let me know what you think.
+>>>>
+>>>> I don't understand all that's going on here, but I applied it to
+>>>> pci/pm for v5.19, thanks!
+>>> Thank you!
+>>
+>> Sorry, but this made me wonder: why v5.19? It's a regression exposed in
+>> v5.15, so it afaics would be good to get this in this cycle -- and also
+>> backported to v5.15.y, but it seem a tag to take care of that is
+>> missing. :-/
 > 
-> Thank you for the feedback. Since I sent v3, I didn't get any feedback from the community.
-> 
-> If you have any feedback, I would gladly work on it.
+> Well, the patch is out there for everyone needing it.
 
-Just for you to know that it will likely conflict with
-'PCI: imx6: Fix PERST# start-up sequence' [0] that is also still waiting
-for some additional feedback.
+IOW: only those that are able to debug the issue, find the patch, and
+capable & willing to patch & compile a kernel.
 
-Francesco
+>  The question is
+> how urgent it is to get it into the mainline and -stable, which boils
+> down to the question how many systems out there can be affected by it.
 
-[0] https://lore.kernel.org/all/20220404081509.94356-1-francesco.dolcini@toradex.com/
+If it was a risky patch I'd agree, but for such a simple quirk? What's
+the benefit of waiting? Sure, every change bears risks, but waiting can
+makes life harder for people.
+
+Thing is: I noticed a lot of maintainer wait way to long with applying
+regression fixes (even for regressions that affect multiple users),
+which contributes to the huge pile of changes that go into early stable
+kernel (like 5.17.2 recently with 1000+ changes). That's why the new
+document on handling regressions (disclaimer: written by yours truly)
+has a section encouraging maintainer to merge things more quickly:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/handling-regressions.rst#n131
+
+> Since it is a firmware defect exposed, hopefully not too many.
+I guess so, but it's always hard to tell.
+
+Ciao, Thorsten
