@@ -2,84 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 118434FBF22
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 16:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6200A4FC0A0
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 17:26:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347320AbiDKOgQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 10:36:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
+        id S1347906AbiDKP2H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 11:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347292AbiDKOgP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 10:36:15 -0400
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FEBF3B2A3;
-        Mon, 11 Apr 2022 07:33:59 -0700 (PDT)
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
- id 048c88d2ce66b26f; Mon, 11 Apr 2022 16:33:57 +0200
-Received: from kreacher.localnet (unknown [213.134.175.113])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id CF32266BDED;
-        Mon, 11 Apr 2022 16:33:56 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 0/9] PCI/PM: Improvements related to device transitions into D0
-Date:   Mon, 11 Apr 2022 16:33:44 +0200
-Message-ID: <8108357.NyiUUSuA9g@kreacher>
-In-Reply-To: <11975904.O9o76ZdvQC@kreacher>
-References: <4419002.LvFx2qVVIh@kreacher> <11975904.O9o76ZdvQC@kreacher>
+        with ESMTP id S1348363AbiDKP2A (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 11:28:00 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 95E3F18E2B;
+        Mon, 11 Apr 2022 08:25:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 613B01570;
+        Mon, 11 Apr 2022 08:25:00 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.6.174])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46CAE3F73B;
+        Mon, 11 Apr 2022 08:24:57 -0700 (PDT)
+Date:   Mon, 11 Apr 2022 16:25:01 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     =?iso-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>
+Cc:     l.stach@pengutronix.de, hongxing.zhu@nxp.com, robh@kernel.org,
+        bhelgaas@google.com, helgaas@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH v3] PCI: imx6: Replace legacy gpio interface for gpiod
+ interface
+Message-ID: <YlRITQq650DCWg75@lpieralisi>
+References: <YYCOTx68LXu1Tn1i@fedora>
+ <YlBFa46v5NtWxGLt@lpieralisi>
+ <YlBKyBtbxMpvauLv@fedora>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 213.134.175.113
-X-CLIENT-HOSTNAME: 213.134.175.113
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvvddrudekiedgjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeetgefgleetgeduheeugeeikeevudelueelvdeufeejfeffgeefjedugfetfeehhfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvudefrddufeegrddujeehrdduudefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddufedrudefgedrudejhedruddufedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohephedprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvlhhgrggrshes
- khgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YlBKyBtbxMpvauLv@fedora>
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday, April 11, 2022 4:17:41 PM CEST Rafael J. Wysocki wrote:
-> Hi All,
-> 
-> On Saturday, April 9, 2022 3:03:14 PM CEST Rafael J. Wysocki wrote:
-> > Hi All,
+[+Linus]
+
+On Fri, Apr 08, 2022 at 11:46:32AM -0300, Maíra Canal wrote:
+> On Fri, Apr 08, 2022 at 03:23:39PM +0100, Lorenzo Pieralisi wrote:
+> > On Mon, Nov 01, 2021 at 10:03:11PM -0300, Maíra Canal wrote:
+> > > Considering the current transition of the GPIO subsystem, remove all
+> > > dependencies of the legacy GPIO interface (linux/gpio.h and linux
+> > > /of_gpio.h) and replace it with the descriptor-based GPIO approach.
+> > > 
+> > > Signed-off-by: Maíra Canal <maira.canal@usp.br>
+> > > ---
+> > > V1 -> V2: Rewrite commit log and subject line to match PCI subsystem standard
+> > > V2 -> v3: Change gpiod_set_value_cansleep for gpiod_set_raw_value_cansleep
+> > > ---
+> > >  drivers/pci/controller/dwc/pci-imx6.c | 30 +++++++++------------------
+> > >  1 file changed, 10 insertions(+), 20 deletions(-)
 > > 
-> > This series supersedes the one at
+> > Maira, Lucas,
 > > 
-> > https://lore.kernel.org/linux-pm/4198163.ejJDZkT8p0@kreacher
-> > 
-> > It addresses some potential issues related to PCI device transitions from
-> > low-power states into D0 and makes the related code more straightforward
-> > and so easier to follow.
-> > 
-> > Please refer to the patch changelogs for details.
+> > what's this patch status ? Please let me know.
 > 
-> Here's a v2 of this patch series which is being sent, because I realized that
-> one of the checks in pci_power_up()
-
-This should be pci_set_low_power_state(), sorry for the confusion.
-
-> added by patch [4/7] in v1 was redundant
-> and can be dropped, but that affected the last 3 patches in the series and
-> then I noticed that more improvements were possible and hence the new patches
-> [2/9].
 > 
-> Thanks!
+> Lorenzo,
 > 
+> Thank you for the feedback. Since I sent v3, I didn't get any feedback from the community.
+> 
+> If you have any feedback, I would gladly work on it.
 
+I would ask Linus to have a look please given that it is GPIO code.
 
+Original thread:
+https://lore.kernel.org/linux-pci/YYCOTx68LXu1Tn1i@fedora
 
+Thanks,
+Lorenzo
