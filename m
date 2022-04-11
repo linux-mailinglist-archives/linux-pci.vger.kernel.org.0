@@ -2,41 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45D584FC0FF
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 17:36:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DAFD4FC1BF
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Apr 2022 18:00:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245738AbiDKPjB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Apr 2022 11:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58004 "EHLO
+        id S1348393AbiDKQCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Apr 2022 12:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348078AbiDKPi6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 11:38:58 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C2CE3A706
-        for <linux-pci@vger.kernel.org>; Mon, 11 Apr 2022 08:36:41 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 591281570;
-        Mon, 11 Apr 2022 08:36:41 -0700 (PDT)
-Received: from lpieralisi (unknown [10.57.6.174])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D07A3F73B;
-        Mon, 11 Apr 2022 08:36:39 -0700 (PDT)
-Date:   Mon, 11 Apr 2022 16:36:43 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marc Zyngier <maz@kernel.org>, pali@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 00/18] PCI: aardvark controller changes BATCH 5
-Message-ID: <YlRLC/WlHzUUugr8@lpieralisi>
-References: <20220220193346.23789-1-kabel@kernel.org>
+        with ESMTP id S1348371AbiDKQCv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Apr 2022 12:02:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761E627FDC
+        for <linux-pci@vger.kernel.org>; Mon, 11 Apr 2022 09:00:36 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1ndwSh-00082j-JG; Mon, 11 Apr 2022 18:00:19 +0200
+Message-ID: <8e4825444d3972fcce083f03500b8595013391be.camel@pengutronix.de>
+Subject: Re: [PATCH v3] PCI: imx6: Fix PERST# start-up sequence
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Francesco Dolcini <francesco.dolcini@toradex.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Mon, 11 Apr 2022 18:00:15 +0200
+In-Reply-To: <20220404081509.94356-1-francesco.dolcini@toradex.com>
+References: <20220404081509.94356-1-francesco.dolcini@toradex.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220220193346.23789-1-kabel@kernel.org>
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -45,74 +54,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 20, 2022 at 08:33:28PM +0100, Marek Behún wrote:
-> Hello Lorenzo, Krzysztof,
+Am Montag, dem 04.04.2022 um 10:15 +0200 schrieb Francesco Dolcini:
+> According to the PCIe standard the PERST# signal (reset-gpio in
+> fsl,imx* compatible dts) should be kept asserted for at least 100 usec
+> before the PCIe refclock is stable, should be kept asserted for at
+> least 100 msec after the power rails are stable and the host should wait
+> at least 100 msec after it is de-asserted before accessing the
+> configuration space of any attached device.
 > 
-> here comes batch 5 of changes for Aardvark PCIe controller.
+> From PCIe CEM r2.0, sec 2.6.2
 > 
-> This batch
-> - adds support for AER
-> - adds support for DLLSC and hotplug interrupt
-> - adds support for sending slot power limit message
-> - adds enabling/disabling PCIe clock
-> - adds suspend support
-> - optimizes link training by adding it into separate worker
-> - optimizes GPIO resetting by asserting it only if it wasn't asserted
->   already
+>   T-PVPERL: Power stable to PERST# inactive - 100 msec
+>   T-PERST-CLK: REFCLK stable before PERST# inactive - 100 usec.
 > 
-> Marek
+> From PCIe r5.0, sec 6.6.1
+> 
+>   With a Downstream Port that does not support Link speeds greater than
+>   5.0 GT/s, software must wait a minimum of 100 ms before sending a
+>   Configuration Request to the device immediately below that Port.
+> 
+> Failure to do so could prevent PCIe devices to be working correctly,
+> and this was experienced with real devices.
+> 
+> Move reset assert to imx6_pcie_assert_core_reset(), this way we ensure
+> that PERST# is asserted before enabling any clock, move de-assert to the
+> end of imx6_pcie_deassert_core_reset() after the clock is enabled and
+> deemed stable and add a new delay of 100 msec just afterward.
+> 
+> Link: https://lore.kernel.org/all/20220211152550.286821-1-francesco.dolcini@toradex.com
+> Fixes: bb38919ec56e ("PCI: imx6: Add support for i.MX6 PCIe controller")
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
 
-Hi Marek,
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-I noticed Pali posted patches [9,11] separately:
+> 
+> ---
+> v3: Add Acked-by: Richard Zhu
+> v2: Add complete reference to the PCIe standards, s/PCI-E/PCIe/g
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 6619e3caffe2..7a285fb0f619 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -408,6 +408,11 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  			dev_err(dev, "failed to disable vpcie regulator: %d\n",
+>  				ret);
+>  	}
+> +
+> +	/* Some boards don't have PCIe reset GPIO. */
+> +	if (gpio_is_valid(imx6_pcie->reset_gpio))
+> +		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> +					imx6_pcie->gpio_active_high);
+>  }
+>  
+>  static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
+> @@ -540,15 +545,6 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  	/* allow the clocks to stabilize */
+>  	usleep_range(200, 500);
+>  
+> -	/* Some boards don't have PCIe reset GPIO. */
+> -	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+> -		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> -					imx6_pcie->gpio_active_high);
+> -		msleep(100);
+> -		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> -					!imx6_pcie->gpio_active_high);
+> -	}
+> -
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX8MQ:
+>  		reset_control_deassert(imx6_pcie->pciephy_reset);
+> @@ -595,6 +591,15 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  		break;
+>  	}
+>  
+> +	/* Some boards don't have PCIe reset GPIO. */
+> +	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+> +		msleep(100);
+> +		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> +					!imx6_pcie->gpio_active_high);
+> +		/* Wait for 100ms after PERST# deassertion (PCIe r5.0, 6.6.1) */
+> +		msleep(100);
+> +	}
+> +
+>  	return;
+>  
+>  err_ref_clk:
 
-https://lore.kernel.org/linux-pci/20220325093827.4983-1-pali@kernel.org
 
-I will review the rest of the series - when it comes to merging patches
-we will handle how to apply them.
-
-Lorenzo
-
-> Marek Behún (1):
->   arm64: dts: marvell: armada-37xx: Add clock to PCIe node
-> 
-> Miquel Raynal (2):
->   PCI: aardvark: Add clock support
->   PCI: aardvark: Add suspend to RAM support
-> 
-> Pali Rohár (13):
->   PCI: aardvark: Add support for AER registers on emulated bridge
->   PCI: Add PCI_EXP_SLTCAP_*_SHIFT macros
->   PCI: aardvark: Fix reporting Slot capabilities on emulated bridge
->   PCI: pciehp: Enable DLLSC interrupt only if supported
->   PCI: pciehp: Enable Command Completed Interrupt only if supported
->   PCI: aardvark: Add support for DLLSC and hotplug interrupt
->   PCI: Add PCI_EXP_SLTCTL_ASPL_DISABLE macro
->   PCI: Add function for parsing `slot-power-limit-milliwatt` DT property
->   dt-bindings: PCI: aardvark: Describe slot-power-limit-milliwatt
->   PCI: aardvark: Send Set_Slot_Power_Limit message
->   arm64: dts: armada-3720-turris-mox: Define slot-power-limit-milliwatt
->     for PCIe
->   PCI: aardvark: Run link training in separate worker
->   PCI: aardvark: Optimize PCIe card reset via GPIO
-> 
-> Russell King (2):
->   PCI: pci-bridge-emul: Re-arrange register tests
->   PCI: pci-bridge-emul: Add support for PCIe extended capabilities
-> 
->  .../devicetree/bindings/pci/aardvark-pci.txt  |   2 +
->  .../dts/marvell/armada-3720-turris-mox.dts    |   1 +
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   1 +
->  drivers/pci/controller/pci-aardvark.c         | 380 ++++++++++++++++--
->  drivers/pci/hotplug/pciehp_hpc.c              |  34 +-
->  drivers/pci/hotplug/pnv_php.c                 |  13 +-
->  drivers/pci/of.c                              |  64 +++
->  drivers/pci/pci-bridge-emul.c                 | 130 +++---
->  drivers/pci/pci-bridge-emul.h                 |  15 +
->  drivers/pci/pci.h                             |  15 +
->  include/uapi/linux/pci_regs.h                 |   4 +
->  11 files changed, 565 insertions(+), 94 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
