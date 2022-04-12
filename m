@@ -2,217 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FDFA4FEA3D
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 01:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E5804FEB7F
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 01:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229474AbiDLXSY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 19:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50906 "EHLO
+        id S229966AbiDLXZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 19:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiDLXSU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 19:18:20 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4761605FF;
-        Tue, 12 Apr 2022 15:05:49 -0700 (PDT)
-Received: by mail-oi1-f177.google.com with SMTP id k13so197818oiw.1;
-        Tue, 12 Apr 2022 15:05:49 -0700 (PDT)
+        with ESMTP id S229783AbiDLXY3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 19:24:29 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196897CDCF
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 15:43:56 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z15-20020a25bb0f000000b00613388c7d99so276367ybg.8
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 15:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=AMvt99Ex3LWgVMSklCg5XNF3Fu8kmLTfCLQjqVndY6w=;
+        b=RazfDvaD5aj8XVU4guL9lnFicByqFFYKMKgI9ETIiiTeEWVsXQiUmC4r9d+KA7NlGz
+         SMpX/oUt8RqMU0SPyZhXdqUQDx8LQQUHQ6iD3GKz8/G7FOVI0743NRajKeuQyq4Oxk4W
+         eFksHyrtSZwa3mmURayx+lMlxJJVuTmYVWEbV46ZNxN8Mx+pyDt8lkTgCjOVXGBWGHCm
+         yHyM2NQPx3xwEvLMhtxV4Jxn4NYyIPvlfVHF1PJ8ypg4N4dqW624dI5Z07Dr/nvsczuy
+         CXbA2dXFHKpoD+vUdHIKSREFJjDiBl/oozVwp9T6RVdmqMsulQamDI0WhVn3V2vcxJvy
+         OjsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qiLhy5En6qOrIdw1hARFp7ZQvamsIP/5dzhc1+Si6fI=;
-        b=j75vQXUcUtvIy9dkQc5F49qHb2qyMhzcL0x30FDZve8m16FQu7XYdFsjf86cirO8a1
-         jmCXud2aDG+j7ipCz2WNqCxj3hi3oInw4yX2BMLwBcHb8yNdJhSjgHlwMOQ+7Q/rpEOk
-         ftqahx928UQZANHPCtFVJW1kb0SfQC/Uc+rKIX6lBlfhBFYny2tYWULw/Q+9/+YqdUjm
-         PsqJMgAz+UU62C55M+UcDMpWrwIxrRS0tC1Y01p1AaHLoLD9GsVYXDoELf9BiQmCXJ1V
-         L0DF6/Y92fpHPufZA8B7MgOqV1E9ypqiHnd9MvnGfNRntMYd6hbFpjdrSdQ131I0+Elb
-         OqVw==
-X-Gm-Message-State: AOAM5330TAppQbNgZNs86R+37llgBlzMa4U9ENHiXbuHvmEw04R7W4Wx
-        +qb1/6aWYcDfSJ7ApuwkrmkyzWPXKw==
-X-Google-Smtp-Source: ABdhPJzipANd7lS/ByWMtonoDdO+pJ9I111+w80YFq0oVtDRmvTMiuTaB2NXYLveW1Q+1PGg3bMB9w==
-X-Received: by 2002:a05:6808:238a:b0:2f7:22df:1d58 with SMTP id bp10-20020a056808238a00b002f722df1d58mr2655257oib.10.1649801148672;
-        Tue, 12 Apr 2022 15:05:48 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id j16-20020a056808057000b002fa638813acsm608665oig.36.2022.04.12.15.05.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 15:05:48 -0700 (PDT)
-Received: (nullmailer pid 1026559 invoked by uid 1000);
-        Tue, 12 Apr 2022 22:05:47 -0000
-Date:   Tue, 12 Apr 2022 17:05:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: uniphier-ep: Clean up reg,
- clocks, resets, and their names using compatible string
-Message-ID: <YlX3uxZzmnb1nM/R@robh.at.kernel.org>
-References: <1649294553-17310-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1649294553-17310-3-git-send-email-hayashi.kunihiko@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1649294553-17310-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=AMvt99Ex3LWgVMSklCg5XNF3Fu8kmLTfCLQjqVndY6w=;
+        b=2z5JJES7Ylfpq7K/szxVQ0sZIGfMBhQOkInf2pKRPv+uwn5Ppx7uZvI2z7qHk76xSk
+         zMfkcUilOAlJ+GonULE4U/mN7yBC0jqRsUxqW0RHCs8qguy+TGLN2G7IVnoIMmnlt8OG
+         67lqZV50v6GEjn8XjDKvWjAeqXZyvhBUsNhdfjc200z74z2qK9GKm+cWm72RPmsf19QB
+         AZzscyxZSxRG1I9uGWKnCxoacXlw/CB4S96sw614GI9mS1K54DIrRNaFuk5PBDizFzma
+         J1/q15/mFVq64804gPug0HgoJ/TMf/l9UE4YKZfOR9n9+MISKfGNPfSkZCXBYvt6+fX+
+         7+TQ==
+X-Gm-Message-State: AOAM531/So7dOs0rqf6mNaFnVFZS4foiDWPQLMhAIjYVWjbPQmlqtqPP
+        PWGZdQrEwHC3vjADjcfQQIceQVU4I3yIwyk=
+X-Google-Smtp-Source: ABdhPJxCd0bNO7tLDwtDjUMz0mlBl45zHQLJLdIutO0p8cCHIr5/4Sb9YUXg6f/qhNMrRWACrr9iOa0pZYfPhJM=
+X-Received: from tansuresh.svl.corp.google.com ([2620:15c:2c5:13:8573:aa64:c3e8:ebc])
+ (user=tansuresh job=sendgmr) by 2002:a25:d34f:0:b0:641:3dcc:c2de with SMTP id
+ e76-20020a25d34f000000b006413dccc2demr11259325ybf.547.1649803435313; Tue, 12
+ Apr 2022 15:43:55 -0700 (PDT)
+Date:   Tue, 12 Apr 2022 15:43:45 -0700
+Message-Id: <20220412224348.1038613-1-tansuresh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
+Subject: [PATCH v2 0/3] Asynchronous shutdown interface and example implementation
+From:   Tanjore Suresh <tansuresh@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, Tanjore Suresh <tansuresh@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 07, 2022 at 10:22:32AM +0900, Kunihiko Hayashi wrote:
-> Instead of "oneOf:" choices, use "allOf:" and "if:" to define reg, clocks,
-> resets, and their names that can be taken by the compatible string.
-> 
-> The order of their names doesn't change here.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../pci/socionext,uniphier-pcie-ep.yaml       | 84 ++++++++++++-------
->  1 file changed, 56 insertions(+), 28 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-> index 437e61618d06..49a5b2ca266c 100644
-> --- a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-> @@ -15,9 +15,6 @@ description: |
->  maintainers:
->    - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->  
-> -allOf:
-> -  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-> -
->  properties:
->    compatible:
->      enum:
-> @@ -28,41 +25,19 @@ properties:
->      minItems: 4
->      maxItems: 5
->  
-> -  reg-names:
-> -    oneOf:
-> -      - items:
-> -          - const: dbi
-> -          - const: dbi2
-> -          - const: link
-> -          - const: addr_space
-> -      - items:
-> -          - const: dbi
-> -          - const: dbi2
-> -          - const: link
-> -          - const: addr_space
-> -          - const: atu
+Problem:
 
-This could be just:
+Some of our machines are configured with  many NVMe devices and
+are validated for strict shutdown time requirements. Each NVMe
+device plugged into the system, typicaly takes about 4.5 secs
+to shutdown. A system with 16 such NVMe devices will takes
+approximately 80 secs to shutdown and go through reboot.
 
-      minItems: 4
-      items:
-        - const: dbi
-        - const: dbi2
-        - const: link
-        - const: addr_space
-        - const: atu
+The current shutdown APIs as defined at bus level is defined to be
+synchronous. Therefore, more devices are in the system the greater
+the time it takes to shutdown. This shutdown time significantly
+contributes the machine reboot time.
 
-Then the if/then can have just 'minItems: 5' or 'maxItems: 4' for each 
-case. I prefer the if/then schemas to be minimal.
+Solution:
 
-> +  reg-names: true
->  
->    clocks:
->      minItems: 1
->      maxItems: 2
->  
-> -  clock-names:
-> -    oneOf:
-> -      - items:              # for Pro5
-> -          - const: gio
-> -          - const: link
-> -      - const: link         # for NX1
-> +  clock-names: true
->  
->    resets:
->      minItems: 1
->      maxItems: 2
->  
-> -  reset-names:
-> -    oneOf:
-> -      - items:              # for Pro5
-> -          - const: gio
-> -          - const: link
-> -      - const: link         # for NX1
-> +  reset-names: true
->  
->    num-ib-windows:
->      const: 16
-> @@ -78,6 +53,59 @@ properties:
->    phy-names:
->      const: pcie-phy
->  
-> +allOf:
-> +  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: socionext,uniphier-pro5-pcie-ep
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 4
-> +          maxItems: 4
-> +        reg-names:
-> +          items:
-> +            - const: dbi
-> +            - const: dbi2
-> +            - const: link
-> +            - const: addr_space
-> +        clocks:
-> +          minItems: 2
-> +          maxItems: 2
-> +        clock-names:
-> +          items:
-> +            - const: gio
-> +            - const: link
-> +        resets:
-> +          minItems: 2
-> +          maxItems: 2
-> +        reset-names:
-> +          items:
-> +            - const: gio
-> +            - const: link
-> +    else:
-> +      properties:
-> +        reg:
-> +          minItems: 4
-> +          maxItems: 5
-> +        reg-names:
-> +          items:
-> +            - const: dbi
-> +            - const: dbi2
-> +            - const: link
-> +            - const: addr_space
-> +            - const: atu
-> +        clocks:
-> +          maxItems: 1
-> +        clock-names:
-> +          const: link
-> +        resets:
-> +          maxItems: 1
-> +        reset-names:
-> +          const: link
-> +
->  required:
->    - compatible
->    - reg
-> -- 
-> 2.25.1
-> 
-> 
+This patch set proposes an asynchronous shutdown interface at bus level,
+modifies the core driver, device shutdown routine to exploit the
+new interface while maintaining backward compatibility with synchronous
+implementation already existing (Patch 1 of 3) and exploits new interface
+to enable all PCI-E based devices to use asynchronous interface semantics
+if necessary (Patch 2 of 3). The implementation at PCI-E level also works
+in a backward compatible way, to allow exiting device implementation
+to work with current synchronous semantics. Only show cases an example
+implementation for NVMe device to exploit this asynchronous shutdown
+interface. (Patch 3 of 3).
+
+Changelog:
+
+v2: - Replaced the shutdown_pre & shutdown_post entry point names with the
+      recommended names (async_shutdown_start and asynch_shutdown_end).
+
+    - Comment about ordering requirements between bridge shutdown versus
+      leaf/endpoint shutdown was agreed to be different when calling
+      async_shutdown_start and async_shutdown_end. Now this implements the
+      same order of calling both start and end entry points.
+
+Tanjore Suresh (3):
+  driver core: Support asynchronous driver shutdown
+  PCI: Support asynchronous shutdown
+  nvme: Add async shutdown support
+
+ drivers/base/core.c        | 38 +++++++++++++++++-
+ drivers/nvme/host/core.c   | 28 +++++++++----
+ drivers/nvme/host/nvme.h   |  8 ++++
+ drivers/nvme/host/pci.c    | 80 ++++++++++++++++++++++++--------------
+ drivers/pci/pci-driver.c   | 20 ++++++++--
+ include/linux/device/bus.h | 12 ++++++
+ include/linux/pci.h        |  4 ++
+ 7 files changed, 149 insertions(+), 41 deletions(-)
+
+-- 
+2.36.0.rc0.470.gd361397f0d-goog
+
