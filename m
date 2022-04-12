@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E92D4FDD4B
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 13:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5FA54FDD51
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 13:09:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242628AbiDLLC2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 07:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
+        id S243822AbiDLLCc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 07:02:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235614AbiDLLAV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 07:00:21 -0400
+        with ESMTP id S231740AbiDLLAU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 07:00:20 -0400
 Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD70A90CFE;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD3646542F;
         Tue, 12 Apr 2022 02:50:57 -0700 (PDT)
-Received: from relay2-d.mail.gandi.net (unknown [217.70.183.194])
-        by mslow1.mail.gandi.net (Postfix) with ESMTP id A0498CE2A8;
-        Tue, 12 Apr 2022 09:41:07 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::222])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id 79D4CC9AAC;
+        Tue, 12 Apr 2022 09:41:08 +0000 (UTC)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id 2E7B44001B;
-        Tue, 12 Apr 2022 09:40:59 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPA id 8860940013;
+        Tue, 12 Apr 2022 09:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1649756460;
+        t=1649756463;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=72EU7fqyLNwo7dQx4SfOnbogRdsZnfhW6yqgprEWLGg=;
-        b=Q06giUglgqEzDNBY0DNHDOs++180sMNPSvECIwcUmDqN8fpohNonBEyKYr9TPgSDHIoLAt
-        1+kW0ENLCOpGDQ9e+ioDoWnwz0WIM+e1KAbNEd7TupgUddA0fwwbbTyioQe8ugQ03kY2RY
-        TJdj+q+NWinL+SQCWFZyEiIxT8vUnufxePY/SSXEh960KotZEEtD7v/bxKv4FjPf5olLFI
-        T8gX/bM66YzLkCZ0WZa57gnAJ2E8WRssq3uvyzHrnaeGINyqPW3bffzlt80M2CqSa4satC
-        NtYZlBGlZezOyYX5SeT09ZLZDOuVOdS+2rH5eKUbaTUK1FEcKkr4vcgB4/RS+A==
+        bh=MfannK3QOQ45mUCEGsLWIr5LFWwkEtDChoSFbRDqcCo=;
+        b=nc6lkIMczs77x6m+MswMNTcy1CeSWqYj4JhTACTtyEHOS9ku7ltpbUdRsUQ+yVGUKhVDuK
+        tX88DBIYt00l91GqKhUl5N3hzRwVoIEVWJE0UVsPs39dWRBfEqnu/RjdP069GzfBF2pKV8
+        wxBbogplR9Aw1JQqKZHodPJw9HDJWePovdRqVAIHVDIcMZKkUF2hobbeBrX/2/Pl2uSNsg
+        Ps5zCBtvg8pNjYM9xItyYnEjc2zWAHa3s6HaMPfSzu3/ZmmAvA9XBvf1025dx2qrocNSTv
+        4LWol6kAGlICIiq3tGs3CxLxMBKqGxylPNypSwbQsFRDGDXc6qxsfUVpAzr2GA==
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -49,9 +49,9 @@ Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH 3/6] PCI: rcar-gen2: Add R9A06G032 support
-Date:   Tue, 12 Apr 2022 11:40:26 +0200
-Message-Id: <20220412094029.287562-4-herve.codina@bootlin.com>
+Subject: [PATCH 4/6] ARM: dts: r9a06g032: Add internal PCI bridge node
+Date:   Tue, 12 Apr 2022 11:40:27 +0200
+Message-Id: <20220412094029.287562-5-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220412094029.287562-1-herve.codina@bootlin.com>
 References: <20220412094029.287562-1-herve.codina@bootlin.com>
@@ -67,29 +67,52 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Renesas R9A06G032 SoC support to the Renesas R-Car gen2 PCI
-bridge driver.
-The Renesas RZ/N1D (R9A06G032) internal PCI bridge is compatible
-with the one available in the R-Car Gen2 family.
+Add the device node for the r9a06g032 internal PCI bridge device.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/pci/controller/pci-rcar-gen2.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/r9a06g032.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
-index 528bc3780e01..586e4785a57f 100644
---- a/drivers/pci/controller/pci-rcar-gen2.c
-+++ b/drivers/pci/controller/pci-rcar-gen2.c
-@@ -352,6 +352,8 @@ static const struct of_device_id rcar_pci_of_match[] = {
- 	{ .compatible = "renesas,pci-r8a7791", },
- 	{ .compatible = "renesas,pci-r8a7794", },
- 	{ .compatible = "renesas,pci-rcar-gen2", },
-+	{ .compatible = "renesas,pci-r9a06g032", },
-+	{ .compatible = "renesas,pci-rzn1", },
- 	{ },
- };
+diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
+index 636a6ab31c58..c6a99b2a8fb3 100644
+--- a/arch/arm/boot/dts/r9a06g032.dtsi
++++ b/arch/arm/boot/dts/r9a06g032.dtsi
+@@ -211,6 +211,34 @@ gic: interrupt-controller@44101000 {
+ 			interrupts =
+ 				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
++
++		pci_usb: pci@40030000 {
++			compatible = "renesas,pci-r9a06g032", "renesas,pci-rzn1";
++			device_type = "pci";
++			clocks = <&sysctrl R9A06G032_HCLK_USBH>,
++				 <&sysctrl R9A06G032_HCLK_USBPM>,
++				 <&sysctrl R9A06G032_CLK_PCI_USB>;
++			clock-names = "hclk_usbh", "hclk_usbpm", "clk_pci_usb";
++			reg = <0x40030000 0xc00>,
++			      <0x40020000 0x1100>;
++			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++
++			bus-range = <0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges = <0x02000000 0 0x40020000 0x40020000 0 0x00010000>;
++			/* Should map all possible DDR as inbound ranges, but
++			 * the IP only supports a 256MB, 512MB, or 1GB window.
++			 * flags, PCI addr (64-bit), CPU addr, PCI size (64-bit)
++			 */
++			dma-ranges = <0x42000000 0 0x80000000 0x80000000 0 0x40000000>;
++			interrupt-map-mask = <0xff00 0 0 0x7>;
++			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
++					 0x0800 0 0 1 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
++					 0x1000 0 0 2 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
  
+ 	timer {
 -- 
 2.35.1
 
