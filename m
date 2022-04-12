@@ -2,65 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63D334FE571
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 17:55:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44C424FE599
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 18:13:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348933AbiDLP5T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 11:57:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
+        id S1354832AbiDLQPR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 12:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357510AbiDLP5N (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 11:57:13 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE051C928;
-        Tue, 12 Apr 2022 08:54:19 -0700 (PDT)
-Received: by mail-oi1-f171.google.com with SMTP id a19so14954129oie.7;
-        Tue, 12 Apr 2022 08:54:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D0GRUR+vVvtF2S/3CkHhGwTpe4mfomdQb7oA/XlL1lo=;
-        b=mzbMSE/Pic5wWupL61AookTwylS9JypyYY95ahUmDZkELhj675LKoDl8mvbBz7gi+L
-         5iOmhcS3juSyo0ItBXs8G8qQpFTOiF1SzYDhpcN6GRdB3Uclq07GQ2FtWi88WynroC+u
-         q9ynM4tkg1UqCys+s4aPog57pHsq7yejANxzC+GMlaV2i0Rf33ChVrfAP38RmbXat9u/
-         nqeI2bBjRmcFXuP5vknKuS4qd4chLvJf1nN9RJAoZ/4MjNjUI9etCK0sraDpPTmGKYZy
-         /6yYjzXR49xnUoj8dhuOgo1CwbAe4za4xtnEgQgSLjU3tfBEAWFWilhVsdLkcjWS/HhA
-         QiAA==
-X-Gm-Message-State: AOAM531/HWcz0a9HNJCuYjyrOx27tTNE6FjXNhe3h4guT5mYjOAD81XY
-        1PFlydEfHMiliUYaHGFf8YFdE93W5g==
-X-Google-Smtp-Source: ABdhPJzq3SNk83P0TvMM+kOrjCziIl36Dzd/H3+CNa2g9jUoHR8FWOALhYIxzxPSYs89XzeYkROZug==
-X-Received: by 2002:a05:6808:2005:b0:2f9:4e60:9a6e with SMTP id q5-20020a056808200500b002f94e609a6emr2112474oiw.77.1649778858453;
-        Tue, 12 Apr 2022 08:54:18 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id v17-20020a4a6951000000b00329d8b23f0dsm664629oof.5.2022.04.12.08.54.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 08:54:18 -0700 (PDT)
-Received: (nullmailer pid 354373 invoked by uid 1000);
-        Tue, 12 Apr 2022 15:54:17 -0000
-Date:   Tue, 12 Apr 2022 10:54:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
+        with ESMTP id S238419AbiDLQPR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 12:15:17 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1D2074EA24;
+        Tue, 12 Apr 2022 09:12:59 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF6421424;
+        Tue, 12 Apr 2022 09:12:58 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.8.134])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23AE93F5A1;
+        Tue, 12 Apr 2022 09:12:54 -0700 (PDT)
+Date:   Tue, 12 Apr 2022 17:12:59 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Baruch Siach <baruch@tkos.co.il>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: pci: qcom: Document additional PCI MSI
- interrupts
-Message-ID: <YlWgqd3bhZPCxbji@robh.at.kernel.org>
-References: <20220411114926.1975363-1-dmitry.baryshkov@linaro.org>
- <20220411114926.1975363-3-dmitry.baryshkov@linaro.org>
+        Andy Gross <agross@kernel.org>
+Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v6 0/3] PCI: IPQ6018 platform support
+Message-ID: <20220412161259.GA7109@lpieralisi>
+References: <cover.1644234441.git.baruch@tkos.co.il>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220411114926.1975363-3-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <cover.1644234441.git.baruch@tkos.co.il>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,34 +54,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 02:49:24PM +0300, Dmitry Baryshkov wrote:
-> On Qualcomm platforms each group of MSI interrupts is routed to the
-> separate GIC interrupt. Document mapping of additional interrupts.
+On Mon, Feb 07, 2022 at 04:51:23PM +0200, Baruch Siach wrote:
+> This series adds support for the single PCIe lane on IPQ6018 SoCs. The code is 
+> ported from downstream Codeaurora v5.4 kernel. The main difference from 
+> downstream code is the split of PCIe registers configuration from .init to 
+> .post_init, since it requires phy_power_on().
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Tested on IPQ6010 based hardware.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 0adb56d5645e..64632f3e4334 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -57,12 +57,14 @@
->  - interrupts:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> -	Definition: MSI interrupt
-> +	Definition: MSI interrupt(s)
->  
->  - interrupt-names:
->  	Usage: required
->  	Value type: <stringlist>
->  	Definition: Should contain "msi"
-> +		    May also contains "msi2", "msi3"... up to "msi8"
-> +		    if the platform supports additional MSI interrupts.
+> Changes in v6:
+> 
+>   * Drop DT patch applied to the qcom tree
+> 
+>   * Normalize driver changes subject line
+> 
+>   * Add a preparatory patch to rename PCIE_CAP_LINK1_VAL to PCIE_CAP_SLOT_VAL,
+>     and define it using PCI_EXP_SLTCAP_* macros
+> 
+>   * Drop a vague comment about ASPM configuration
+> 
+>   * Add a comment about the source of delay periods
+> 
+> Changes in v5:
+> 
+>   * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
+> 
+> Changes in v4:
+> 
+>   * Drop applied DT bits
+> 
+>   * Add max-link-speed that was missing from the applied v2 patch
+> 
+>   * Rebase the driver on v5.16-rc3
+> 
+> Changes in v3:
+> 
+>   * Drop applied patches
+> 
+>   * Rely on generic code for speed setup
+> 
+>   * Drop unused macros
+> 
+>   * Formatting fixes
+> 
+> Changes in v2:
+> 
+>   * Add patch moving GEN3_RELATED macros to a common header
+> 
+>   * Drop ATU configuration from pcie-qcom
+> 
+>   * Remove local definition of common registers
+> 
+>   * Use bulk clk and reset APIs
+> 
+>   * Remove msi-parent from device-tree
+> 
+> Baruch Siach (2):
+>   PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
+>   PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
+> 
+> Selvam Sathappan Periakaruppan (1):
+>   PCI: qcom: Add IPQ60xx support
+> 
+>  drivers/pci/controller/dwc/pcie-designware.h |   7 +
+>  drivers/pci/controller/dwc/pcie-qcom.c       | 155 ++++++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-tegra194.c   |   6 -
+>  3 files changed, 160 insertions(+), 8 deletions(-)
 
-This binding seems to see lots of small changes frequently. Please 
-convert it to schema. (Maybe I already asked for that?)
+Hi Bjorn, Andy,
 
-Rob
+any feedback on this series please ?
+
+Thanks,
+Lorenzo
