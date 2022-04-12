@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5F4C4FDD3A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 13:08:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A2B64FDD3E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 13:08:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240657AbiDLLCF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 07:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55260 "EHLO
+        id S241179AbiDLLCJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 07:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234907AbiDLLAD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 07:00:03 -0400
+        with ESMTP id S237083AbiDLLAI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 07:00:08 -0400
 Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D8B0652DD;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DAB365406;
         Tue, 12 Apr 2022 02:50:57 -0700 (PDT)
-Received: from relay2-d.mail.gandi.net (unknown [217.70.183.194])
-        by mslow1.mail.gandi.net (Postfix) with ESMTP id AD279C953C;
-        Tue, 12 Apr 2022 09:41:04 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::222])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id 75E75CE289;
+        Tue, 12 Apr 2022 09:41:06 +0000 (UTC)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id D013B4000C;
-        Tue, 12 Apr 2022 09:40:54 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPA id 1001D40005;
+        Tue, 12 Apr 2022 09:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1649756456;
+        t=1649756458;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=WLMGN8W4KzuVPgqbnvRFLH6IcEpJsrhI1QCKS4t1hsA=;
-        b=CFoXbTCP8qW+mBf6EviV28hbHNhNM0yDmlj6OgshmaDq+VJ9fH6ho67hSEohJZ+NV6TmHG
-        qTWY6scDoR7TI1uLaEPrNBnDbzPmN73e8J6n3yXX4Wk9WAbCmz3qof01Q5/pzrNOHHSmCb
-        Tm7IxRiB6Z8qbySVOPAAKuSDsKjWt4sIjxw2XraM0Ogui2ot9tkwpzNXy7VWD+OlfChZqu
-        dktUZ7ixvUHaa8h+YpZM2THvKJ024WAwDgEyB1w/UbDaXR3aH8daa81uNUPCtJndQrG7Ro
-        apd6c270L+B4YIhG3+lcfiH/TLxQjKNsUKX+pf4q/n2Vkpl2uFc+5h0OPiGlkQ==
+        bh=Xc7elETUhx4Ylc8cUvJvfmJyb8bpXLKnBKj1vDU7LOQ=;
+        b=UAqUgyzAD5RDK5aUtx8RhEHu5pV/ZosSkZZ9QbAentA8pU2q0I6B1QxgWtu66bB37VuRmq
+        /ApiySh5muMEsucwjUgknODrJ6ejhlX3POD2nBfRln2Cc7D+zlMHdzTHYtpI1NDRQSGE7y
+        G2iF/wa5LEH4oWmJ6pZ6G7SegecdiJPRrDo1yoOq2pSKcc7yQJcpgJF2GkclPfhKzZxvUA
+        arWxwRTsR1aL7dyvKjhHu8QmPrSZJHLGR4ljkNUd7B1gWvyf/CzCLinzp6V29prOWlWZtj
+        L4Tkmr0QPeOMWp5ZyMMMAZDoE87iXmi8gHzsnsdTGqqopdkMjsxMeiexVu764A==
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -49,9 +49,9 @@ Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH 1/6] PCI: rcar-gen2: Add support for clocks
-Date:   Tue, 12 Apr 2022 11:40:24 +0200
-Message-Id: <20220412094029.287562-2-herve.codina@bootlin.com>
+Subject: [PATCH 2/6] dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r9a06g032
+Date:   Tue, 12 Apr 2022 11:40:25 +0200
+Message-Id: <20220412094029.287562-3-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220412094029.287562-1-herve.codina@bootlin.com>
 References: <20220412094029.287562-1-herve.codina@bootlin.com>
@@ -67,92 +67,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI rcar-gen2 does not call any clk_prepare_enable().
-This lead to an access failure when the driver tries to access
-the IP (at least on a RZ/N1D platform).
-
-Prepare and enable clocks using the bulk version of
-clk_prepare_enable() in order to prepare and enable all clocks
-attached to this device.
+Add internal PCI bridge support for the r9a06g032 SoC. The Renesas
+RZ/N1D (R9A06G032) internal PCI bridge is compatible with the one
+present in the R-Car Gen2 family.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/pci/controller/pci-rcar-gen2.c | 28 ++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
-index 35804ea394fd..528bc3780e01 100644
---- a/drivers/pci/controller/pci-rcar-gen2.c
-+++ b/drivers/pci/controller/pci-rcar-gen2.c
-@@ -8,6 +8,7 @@
-  * Author: Valentine Barshak <valentine.barshak@cogentembedded.com>
-  */
+diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+index aeba38f0a387..098ea12e6c95 100644
+--- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
++++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+@@ -15,7 +15,9 @@ Required properties:
+ 	      "renesas,pci-r8a7793" for the R8A7793 SoC;
+ 	      "renesas,pci-r8a7794" for the R8A7794 SoC;
+ 	      "renesas,pci-rcar-gen2" for a generic R-Car Gen2 or
+-				      RZ/G1 compatible device.
++				      RZ/G1 compatible device;
++	      "renesas,pci-r9a06g032" for the R9A06G032 (RZ/N1D) SoC;
++	      "renesas,pci-rzn1" for a generic RZ/N1 compatible device.
  
-+#include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-@@ -99,6 +100,8 @@ struct rcar_pci {
- 	struct resource mem_res;
- 	struct resource *cfg_res;
- 	int irq;
-+	struct clk_bulk_data *clocks;
-+	int nclocks;
- };
  
- /* PCI configuration space operations */
-@@ -282,6 +285,7 @@ static int rcar_pci_probe(struct platform_device *pdev)
- 	struct rcar_pci *priv;
- 	struct pci_host_bridge *bridge;
- 	void __iomem *reg;
-+	int ret;
- 
- 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
- 	if (!bridge)
-@@ -305,13 +309,25 @@ static int rcar_pci_probe(struct platform_device *pdev)
- 	priv->mem_res = *mem_res;
- 	priv->cfg_res = cfg_res;
- 
-+	ret = devm_clk_bulk_get_all(dev, &priv->clocks);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get clocks %d\n", ret);
-+		return ret;
-+	}
-+	priv->nclocks = ret;
-+
-+	ret = clk_bulk_prepare_enable(priv->nclocks, priv->clocks);
-+	if (ret)
-+		return ret;
-+
- 	priv->irq = platform_get_irq(pdev, 0);
- 	priv->reg = reg;
- 	priv->dev = dev;
- 
- 	if (priv->irq < 0) {
- 		dev_err(dev, "no valid irq found\n");
--		return priv->irq;
-+		ret = priv->irq;
-+		goto disable_clocks;
- 	}
- 
- 	bridge->ops = &rcar_pci_ops;
-@@ -320,7 +336,15 @@ static int rcar_pci_probe(struct platform_device *pdev)
- 
- 	rcar_pci_setup(priv);
- 
--	return pci_host_probe(bridge);
-+	ret = pci_host_probe(bridge);
-+	if (ret < 0)
-+		goto disable_clocks;
-+
-+	return 0;
-+
-+disable_clocks:
-+	clk_bulk_disable_unprepare(priv->nclocks, priv->clocks);
-+	return ret;
- }
- 
- static const struct of_device_id rcar_pci_of_match[] = {
+ 	      When compatible with the generic version, nodes must list the
 -- 
 2.35.1
 
