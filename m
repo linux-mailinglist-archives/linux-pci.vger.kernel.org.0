@@ -2,102 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95B054FDD44
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 13:08:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA0B4FDD16
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 13:08:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238009AbiDLLCR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 07:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45540 "EHLO
+        id S1377505AbiDLK4j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 06:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240019AbiDLLAg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 07:00:36 -0400
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A52190FCF;
-        Tue, 12 Apr 2022 02:51:02 -0700 (PDT)
-Received: from relay2-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::222])
-        by mslow1.mail.gandi.net (Postfix) with ESMTP id 9803ACE944;
-        Tue, 12 Apr 2022 09:41:49 +0000 (UTC)
-Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id 394B14000C;
-        Tue, 12 Apr 2022 09:41:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1649756469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B8CDPPUOPXF9Ae/2eM03+qKM9N1UneWOPC2xfFm8SEc=;
-        b=G1P5G7Kq8YBZ/FoftXUVyLLB1A/8NyK9XCOGbGno9tjhtntJY/26ecGVLPfCM/WucLGGPB
-        hOar6H5tHnyUt8VKOxl4hYsJBPhtEbZW0AFQQo2l9fC3UUYyIb/GApnwC9R60gbTBgGRQL
-        aNPhYjzQPGa7ZnFVdrKv/UFYfZWL+dBPVYlYYLwXqIG/3VKfmITfbAPoLznduh/lPvMFKO
-        m+Rd1QpPal7nd0sWUX2zukgyFy3CtxcqKpBy7mUcn2Cd44jIT1Vg+7RrL0fUteP8x2b95E
-        dKEz6/pV2QT5dyDAQVj6q+yjCo7EvHhLNtGNVthigCTYYwE5hylzqr1ebSo87g==
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH 6/6] ARM: dts: r9a06g032: Link the PCI USB devices to the USB PHY
-Date:   Tue, 12 Apr 2022 11:40:29 +0200
-Message-Id: <20220412094029.287562-7-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220412094029.287562-1-herve.codina@bootlin.com>
-References: <20220412094029.287562-1-herve.codina@bootlin.com>
+        with ESMTP id S1356946AbiDLKpq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 06:45:46 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A89D659A67;
+        Tue, 12 Apr 2022 02:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649756593; x=1681292593;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=spVnMM+QgRSZn4l/UJxMcwljw0gQjm7dBFN3KL2Wmu8=;
+  b=BfLNBKW+Jcc1kgjbSGKCgzpa6M4ePK4vkyxGpKsttfXbFHfeldet2MJz
+   0tZtk4uMNgaoosGVD+X8slIPrLAXuBMGXblWAm60DXPQjuzcxnOFLOLox
+   xQJIYhKrFdaGm+4auynV+E/RUnbV968//oFVGN2KB2sTdOnahFjVuix2d
+   y3vWf4tadhqYdyLgFVXCJM3aX5HC+Y2bglXx45ULwW5O+JdRBnglB5+q1
+   U0l8JXNlv2s/gvCn36cQLQeFfoEq4tR3YLyJmHFe9F1GiEPdjmfMgSyvn
+   iVUjb+rJmMe81a54sreW7zn9IuEEZRbTS0kiAUsOoXEXwfaC8ZRatjpcf
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10314"; a="261771070"
+X-IronPort-AV: E=Sophos;i="5.90,253,1643702400"; 
+   d="scan'208";a="261771070"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 02:43:03 -0700
+X-IronPort-AV: E=Sophos;i="5.90,253,1643702400"; 
+   d="scan'208";a="572683971"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 02:43:01 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 12 Apr 2022 12:42:58 +0300
+Date:   Tue, 12 Apr 2022 12:42:58 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 3/9] PCI/PM: Rearrange pci_update_current_state()
+Message-ID: <YlVJorXPD1EoqVCB@lahna>
+References: <4419002.LvFx2qVVIh@kreacher>
+ <11975904.O9o76ZdvQC@kreacher>
+ <4721615.GXAFRqVoOG@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4721615.GXAFRqVoOG@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Describe the PCI USB devices that are behind the PCI bridge, adding
-necessary links to the USB PHY device.
-
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- arch/arm/boot/dts/r9a06g032.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-index c9336dc4888a..75e45fd6bedb 100644
---- a/arch/arm/boot/dts/r9a06g032.dtsi
-+++ b/arch/arm/boot/dts/r9a06g032.dtsi
-@@ -244,6 +244,18 @@ pci_usb: pci@40030000 {
- 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
- 					 0x0800 0 0 1 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
- 					 0x1000 0 0 2 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			usb@1,0 {
-+				reg = <0x800 0 0 0 0>;
-+				phys = <&usbphy 0>;
-+				phy-names = "usb";
-+			};
-+
-+			usb@2,0 {
-+				reg = <0x1000 0 0 0 0>;
-+				phys = <&usbphy 0>;
-+				phy-names = "usb";
-+			};
- 		};
- 	};
- 
--- 
-2.35.1
-
+On Mon, Apr 11, 2022 at 04:21:04PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Save one config space access in pci_update_current_state() by
+> testing the retireved PCI_PM_CTRL register value against
+              ^^^^^^^^^
+retrieved
