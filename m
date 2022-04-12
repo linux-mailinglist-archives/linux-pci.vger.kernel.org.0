@@ -2,52 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E5804FEB7F
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 01:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BC124FEA63
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 01:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229966AbiDLXZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 19:25:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
+        id S229774AbiDLXZU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 19:25:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229783AbiDLXY3 (ORCPT
+        with ESMTP id S229666AbiDLXY3 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 19:24:29 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196897CDCF
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 15:43:56 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id z15-20020a25bb0f000000b00613388c7d99so276367ybg.8
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 15:43:56 -0700 (PDT)
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5CE52F018
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 15:44:01 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2eb4f03f212so2959937b3.2
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 15:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=AMvt99Ex3LWgVMSklCg5XNF3Fu8kmLTfCLQjqVndY6w=;
-        b=RazfDvaD5aj8XVU4guL9lnFicByqFFYKMKgI9ETIiiTeEWVsXQiUmC4r9d+KA7NlGz
-         SMpX/oUt8RqMU0SPyZhXdqUQDx8LQQUHQ6iD3GKz8/G7FOVI0743NRajKeuQyq4Oxk4W
-         eFksHyrtSZwa3mmURayx+lMlxJJVuTmYVWEbV46ZNxN8Mx+pyDt8lkTgCjOVXGBWGHCm
-         yHyM2NQPx3xwEvLMhtxV4Jxn4NYyIPvlfVHF1PJ8ypg4N4dqW624dI5Z07Dr/nvsczuy
-         CXbA2dXFHKpoD+vUdHIKSREFJjDiBl/oozVwp9T6RVdmqMsulQamDI0WhVn3V2vcxJvy
-         OjsQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=vu+tbewZC1L8tNZcdnISH4xxfmEZ4vDTSNrfXZHLvPE=;
+        b=A+K8pYUBsHgL6smGFqlwdaGolyd1WSaLs2CJu781D2KugJNhkIcxatZ/BkJUcRGwsD
+         BmMWeCu8OCCkYzco2VjqflXFLm4AzUcmyxBs8n0TaTIOMdjnESI5O2EicQhFPqdp0NN7
+         fNiyrKG7UB9dFuczLb0Wysld+4bWa7aodWBsavyrCBP88t2S53hrfnrN7MzPLGFKXvHr
+         /YhN1rKHnO9BC7DT3iaP6/lwbF2qGlgqPA2iURWyhzsLr3eeV+hiMP26g5hWkgmt/66H
+         sKWrEKFx8HcrbShKcF+wKv41p4dD63z1a0Mbz7JP0apEU6pOYr5sI9IPmD2PxHm6FdIA
+         oUnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=AMvt99Ex3LWgVMSklCg5XNF3Fu8kmLTfCLQjqVndY6w=;
-        b=2z5JJES7Ylfpq7K/szxVQ0sZIGfMBhQOkInf2pKRPv+uwn5Ppx7uZvI2z7qHk76xSk
-         zMfkcUilOAlJ+GonULE4U/mN7yBC0jqRsUxqW0RHCs8qguy+TGLN2G7IVnoIMmnlt8OG
-         67lqZV50v6GEjn8XjDKvWjAeqXZyvhBUsNhdfjc200z74z2qK9GKm+cWm72RPmsf19QB
-         AZzscyxZSxRG1I9uGWKnCxoacXlw/CB4S96sw614GI9mS1K54DIrRNaFuk5PBDizFzma
-         J1/q15/mFVq64804gPug0HgoJ/TMf/l9UE4YKZfOR9n9+MISKfGNPfSkZCXBYvt6+fX+
-         7+TQ==
-X-Gm-Message-State: AOAM531/So7dOs0rqf6mNaFnVFZS4foiDWPQLMhAIjYVWjbPQmlqtqPP
-        PWGZdQrEwHC3vjADjcfQQIceQVU4I3yIwyk=
-X-Google-Smtp-Source: ABdhPJxCd0bNO7tLDwtDjUMz0mlBl45zHQLJLdIutO0p8cCHIr5/4Sb9YUXg6f/qhNMrRWACrr9iOa0pZYfPhJM=
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=vu+tbewZC1L8tNZcdnISH4xxfmEZ4vDTSNrfXZHLvPE=;
+        b=VIOqiVlir1A8cj5ojQwVjfEAWkyBPqk2/3UCCd2Ln8Ro+0pWQO3Cr1WRLOBPlKVBq1
+         HNfQG3hpULlaXZA4A+hkzzDAqblP2rWSNVuFgZ3X/Ebv448mNArMflk5VJYVHRYdCpeE
+         XYwoSOA2iiAAfK/cXYgWgLoO6x6OCAEUWda7XadzEVQSlJIydRuT7mJYFTl0nOQfUncK
+         NoY5zfDtmlrolssKQFUB10PntAXCVb464JKJ5o04PT7YjRURpWA1hJxSKRCaM/uo/5jQ
+         13GGVY4AK3A/qnQLKXEPC0SMJepaQdy2/cIK5EqsVE8exzNZNGW9kI0rm+7bCIEbRgkB
+         VBYg==
+X-Gm-Message-State: AOAM531jiD6mP8B3zk4K5dYzWE+0ktbqhytyDGEA6kMFq2Juf6olBdKL
+        Ob0z+EhWtV9Z40Q7h+Vmvu8c98b2S7j1IqE=
+X-Google-Smtp-Source: ABdhPJwYB6gmE/AnTTYvT4XgOL27Ob0XRx2o/4au0mtEC42h0VLwXwN0PWba0iF+eWL2UPJd2GUmprS1JHEoLq4=
 X-Received: from tansuresh.svl.corp.google.com ([2620:15c:2c5:13:8573:aa64:c3e8:ebc])
- (user=tansuresh job=sendgmr) by 2002:a25:d34f:0:b0:641:3dcc:c2de with SMTP id
- e76-20020a25d34f000000b006413dccc2demr11259325ybf.547.1649803435313; Tue, 12
- Apr 2022 15:43:55 -0700 (PDT)
-Date:   Tue, 12 Apr 2022 15:43:45 -0700
-Message-Id: <20220412224348.1038613-1-tansuresh@google.com>
+ (user=tansuresh job=sendgmr) by 2002:a81:1e42:0:b0:2ec:3343:6b3e with SMTP id
+ e63-20020a811e42000000b002ec33436b3emr9165499ywe.171.1649803441033; Tue, 12
+ Apr 2022 15:44:01 -0700 (PDT)
+Date:   Tue, 12 Apr 2022 15:43:46 -0700
+In-Reply-To: <20220412224348.1038613-1-tansuresh@google.com>
+Message-Id: <20220412224348.1038613-2-tansuresh@google.com>
 Mime-Version: 1.0
+References: <20220412224348.1038613-1-tansuresh@google.com>
 X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
-Subject: [PATCH v2 0/3] Asynchronous shutdown interface and example implementation
+Subject: [PATCH v2 1/3] driver core: Support asynchronous driver shutdown
 From:   Tanjore Suresh <tansuresh@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
@@ -67,56 +71,113 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Problem:
+This changes the bus driver interface with additional entry points
+to enable devices to implement asynchronous shutdown. The existing
+synchronous interface to shutdown is unmodified and retained for
+backward compatibility.
 
-Some of our machines are configured with  many NVMe devices and
-are validated for strict shutdown time requirements. Each NVMe
-device plugged into the system, typicaly takes about 4.5 secs
-to shutdown. A system with 16 such NVMe devices will takes
-approximately 80 secs to shutdown and go through reboot.
+This changes the common device shutdown code to enable devices to
+participate in asynchronous shutdown implementation.
 
-The current shutdown APIs as defined at bus level is defined to be
-synchronous. Therefore, more devices are in the system the greater
-the time it takes to shutdown. This shutdown time significantly
-contributes the machine reboot time.
+Signed-off-by: Tanjore Suresh <tansuresh@google.com>
+---
+ drivers/base/core.c        | 38 +++++++++++++++++++++++++++++++++++++-
+ include/linux/device/bus.h | 12 ++++++++++++
+ 2 files changed, 49 insertions(+), 1 deletion(-)
 
-Solution:
-
-This patch set proposes an asynchronous shutdown interface at bus level,
-modifies the core driver, device shutdown routine to exploit the
-new interface while maintaining backward compatibility with synchronous
-implementation already existing (Patch 1 of 3) and exploits new interface
-to enable all PCI-E based devices to use asynchronous interface semantics
-if necessary (Patch 2 of 3). The implementation at PCI-E level also works
-in a backward compatible way, to allow exiting device implementation
-to work with current synchronous semantics. Only show cases an example
-implementation for NVMe device to exploit this asynchronous shutdown
-interface. (Patch 3 of 3).
-
-Changelog:
-
-v2: - Replaced the shutdown_pre & shutdown_post entry point names with the
-      recommended names (async_shutdown_start and asynch_shutdown_end).
-
-    - Comment about ordering requirements between bridge shutdown versus
-      leaf/endpoint shutdown was agreed to be different when calling
-      async_shutdown_start and async_shutdown_end. Now this implements the
-      same order of calling both start and end entry points.
-
-Tanjore Suresh (3):
-  driver core: Support asynchronous driver shutdown
-  PCI: Support asynchronous shutdown
-  nvme: Add async shutdown support
-
- drivers/base/core.c        | 38 +++++++++++++++++-
- drivers/nvme/host/core.c   | 28 +++++++++----
- drivers/nvme/host/nvme.h   |  8 ++++
- drivers/nvme/host/pci.c    | 80 ++++++++++++++++++++++++--------------
- drivers/pci/pci-driver.c   | 20 ++++++++--
- include/linux/device/bus.h | 12 ++++++
- include/linux/pci.h        |  4 ++
- 7 files changed, 149 insertions(+), 41 deletions(-)
-
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 3d6430eb0c6a..ba267ae70a22 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -4479,6 +4479,7 @@ EXPORT_SYMBOL_GPL(device_change_owner);
+ void device_shutdown(void)
+ {
+ 	struct device *dev, *parent;
++	LIST_HEAD(async_shutdown_list);
+ 
+ 	wait_for_device_probe();
+ 	device_block_probing();
+@@ -4523,7 +4524,13 @@ void device_shutdown(void)
+ 				dev_info(dev, "shutdown_pre\n");
+ 			dev->class->shutdown_pre(dev);
+ 		}
+-		if (dev->bus && dev->bus->shutdown) {
++		if (dev->bus && dev->bus->async_shutdown_start) {
++			if (initcall_debug)
++				dev_info(dev, "async_shutdown_start\n");
++			dev->bus->async_shutdown_start(dev);
++			list_add_tail(&dev->kobj.entry,
++				&async_shutdown_list);
++		} else if (dev->bus && dev->bus->shutdown) {
+ 			if (initcall_debug)
+ 				dev_info(dev, "shutdown\n");
+ 			dev->bus->shutdown(dev);
+@@ -4543,6 +4550,35 @@ void device_shutdown(void)
+ 		spin_lock(&devices_kset->list_lock);
+ 	}
+ 	spin_unlock(&devices_kset->list_lock);
++
++	/*
++	 * Second pass spin for only devices, that have configured
++	 * Asynchronous shutdown.
++	 */
++	while (!list_empty(&async_shutdown_list)) {
++		dev = list_entry(async_shutdown_list.next, struct device,
++				kobj.entry);
++		parent = get_device(dev->parent);
++		get_device(dev);
++		/*
++		 * Make sure the device is off the  list
++		 */
++		list_del_init(&dev->kobj.entry);
++		if (parent)
++			device_lock(parent);
++		device_lock(dev);
++		if (dev->bus && dev->bus->async_shutdown_end) {
++			if (initcall_debug)
++				dev_info(dev,
++				"async_shutdown_end called\n");
++			dev->bus->async_shutdown_end(dev);
++		}
++		device_unlock(dev);
++		if (parent)
++			device_unlock(parent);
++		put_device(dev);
++		put_device(parent);
++	}
+ }
+ 
+ /*
+diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
+index a039ab809753..f582c9d21515 100644
+--- a/include/linux/device/bus.h
++++ b/include/linux/device/bus.h
+@@ -49,6 +49,16 @@ struct fwnode_handle;
+  *		will never get called until they do.
+  * @remove:	Called when a device removed from this bus.
+  * @shutdown:	Called at shut-down time to quiesce the device.
++ * @async_shutdown_start:	Called at the shutdown-time to start
++ *				the shutdown process on the device.
++ *				This entry point will be called only
++ *				when the bus driver has indicated it would
++ *				like to participate in asynchronous shutdown
++ *				completion.
++ * @async_shutdown_end:	Called at shutdown-time  to complete the shutdown
++ *			process of the device. This entry point will be called
++ *			only when the bus drive has indicated it would like to
++ *			participate in the asynchronous shutdown completion.
+  *
+  * @online:	Called to put the device back online (after offlining it).
+  * @offline:	Called to put the device offline for hot-removal. May fail.
+@@ -93,6 +103,8 @@ struct bus_type {
+ 	void (*sync_state)(struct device *dev);
+ 	void (*remove)(struct device *dev);
+ 	void (*shutdown)(struct device *dev);
++	void (*async_shutdown_start)(struct device *dev);
++	void (*async_shutdown_end)(struct device *dev);
+ 
+ 	int (*online)(struct device *dev);
+ 	int (*offline)(struct device *dev);
 -- 
 2.36.0.rc0.470.gd361397f0d-goog
 
