@@ -2,218 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 815B14FE401
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 16:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDAC94FE429
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 16:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347933AbiDLOnA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 10:43:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59478 "EHLO
+        id S1356757AbiDLOvg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 10:51:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234174AbiDLOm6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 10:42:58 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F3411155
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 07:40:41 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id q189so19191005oia.9
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 07:40:41 -0700 (PDT)
+        with ESMTP id S1356756AbiDLOvg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 10:51:36 -0400
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE6A18392
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 07:49:18 -0700 (PDT)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-de3ca1efbaso20991368fac.9
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 07:49:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=hEAbkH+fqKRUETCwi4mFn/Yo2FmpfQYB5VhKYBCoHH4=;
-        b=pqSG3Yn80KjDq/1EJj4KkoXtRMbN7IqP5m/K3p0cNTo3S5Ioc9SRIoQ/nNoAMxW/US
-         mPW2YsEybWGJc0YqCCnDPO0dH4w75fPR+JOB5XlXfvl3oKtLRf7+rlo5ArYdveQZZ04r
-         hcfyJjCZx50HqG7j/FAYUlkhRbB08Ar228SX6J2ofXuGL6v8EovFjBLCz+3mYNdQWGER
-         +Q5456JCneKl49mNyuj5d5hJ/LqOWR4E352zHKmm1Dl61ig6N8zcwyJ4/jHjErnv47R8
-         T8WYBslfgqhju+/OstXDY4oz6v26cA29ms/kKkQLElNGbQkwEJLUbEddx9BXLM+4CdZy
-         Lo1A==
-X-Gm-Message-State: AOAM532if5DPjs9vI/lLHPqZ5GPqRcm2Z3ubz4h7pqGQtBW0tyTPFWkr
-        3dvPhFMocdHemvVQsyRBp2+JrfmcAA==
-X-Google-Smtp-Source: ABdhPJwNfeudp2tlaoWTCceKkddoAOttN8aXcLXxUa3imnwOScRncGt5IKdZpGuYyLdgSolAUUcs/Q==
-X-Received: by 2002:a05:6808:208c:b0:2da:10e3:c70 with SMTP id s12-20020a056808208c00b002da10e30c70mr1924185oiw.42.1649774440426;
-        Tue, 12 Apr 2022 07:40:40 -0700 (PDT)
+        bh=MI/s8lMb+5u9jDXMESm67P3hh7kDpykXHC+Y/RJF84A=;
+        b=56O9tT1QRqtS08dRScUmWklBBdxwJ25OkqyFh8qKnW5Fd5lgxyqobGx2ABCl0NL/7u
+         HIzLW1WYYmrcI5TkI5vFUAeKM5vOKjUcRG/zTss7S/7U6g2QsyCog9AyIypK5onR+9Co
+         lAd7QWBhVaPwymffdH0nK0m1jD2DqnePvMvmvX6a0TsZwnJ0GxttYrpxM1rDXwh7SqSQ
+         +A501U2dMFezJ3DtH4oU7vrDTtjfC3P1kMZM4EnUHxw0yiPITd1sbx8BxWNz19sGqB49
+         5WR/TFVoHSw8BRn3Y31CZ1Bmza13958mrcrJJ8nANxaRQVAzfa7ZVVWuHbFOdxcXA1Sm
+         sl8Q==
+X-Gm-Message-State: AOAM532758AXem/WLliJBCs3zaNAwvleI8U7c1wPoBSsAh0Jkpc/nb6f
+        wdfgv0irMhP05prce2FPD7oJlWk5BA==
+X-Google-Smtp-Source: ABdhPJwUotTgf8IcQnbPpu0mkxdh8FumjKvhk7ToNcfcWBQX5t22KktLun3tNILU6iSaX8dNJpcArg==
+X-Received: by 2002:a05:6808:148:b0:2ec:f0e2:fc42 with SMTP id h8-20020a056808014800b002ecf0e2fc42mr1844690oie.84.1649774946984;
+        Tue, 12 Apr 2022 07:49:06 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id v17-20020a9d69d1000000b005b2319a08c4sm13399891oto.18.2022.04.12.07.40.39
+        by smtp.gmail.com with ESMTPSA id q18-20020a056830019200b005e6b8f3a819sm5653190ota.75.2022.04.12.07.49.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 07:40:40 -0700 (PDT)
-Received: (nullmailer pid 60097 invoked by uid 1000);
-        Tue, 12 Apr 2022 14:40:39 -0000
-Date:   Tue, 12 Apr 2022 09:40:39 -0500
+        Tue, 12 Apr 2022 07:49:06 -0700 (PDT)
+Received: (nullmailer pid 109670 invoked by uid 1000);
+        Tue, 12 Apr 2022 14:49:05 -0000
+Date:   Tue, 12 Apr 2022 09:49:05 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Huacai Chen <chenhuacai@loongson.cn>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Xuefeng Li <lixuefeng@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH V12 1/6] PCI: loongson: Use generic 8/16/32-bit config
- ops on LS2K/LS7A
-Message-ID: <YlWPZ3J408ncOujh@robh.at.kernel.org>
+Subject: Re: [PATCH V12 4/6] PCI: loongson: Improve the MRRS quirk for LS7A
+Message-ID: <YlWRYTuS6194hVjV@robh.at.kernel.org>
 References: <20220226104731.76776-1-chenhuacai@loongson.cn>
- <20220226104731.76776-2-chenhuacai@loongson.cn>
+ <20220226104731.76776-5-chenhuacai@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220226104731.76776-2-chenhuacai@loongson.cn>
+In-Reply-To: <20220226104731.76776-5-chenhuacai@loongson.cn>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 26, 2022 at 06:47:26PM +0800, Huacai Chen wrote:
-> LS2K/LS7A support 8/16/32-bits PCI config access operations via CFG1, so
-> we can disable CFG0 for them and safely use pci_generic_config_read()/
-> pci_generic_config_write() instead of pci_generic_config_read32()/pci_
-> generic_config_write32().
+On Sat, Feb 26, 2022 at 06:47:29PM +0800, Huacai Chen wrote:
+> In new revision of LS7A, some PCIe ports support larger value than 256,
+> but their maximum supported MRRS values are not detectable. Moreover,
+> the current loongson_mrrs_quirk() cannot avoid devices increasing its
+> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
+> will actually set a big value in its driver. So the only possible way
+> is configure MRRS of all devices in BIOS, and add a pci host bridge bit
+> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+> 
+> However, according to PCIe Spec, it is legal for an OS to program any
+> value for MRRS, and it is also legal for an endpoint to generate a Read
+> Request with any size up to its MRRS. As the hardware engineers say, the
+> root cause here is LS7A doesn't break up large read requests. In detail,
+> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
+> request with a size that's "too big" ("too big" means larger than the
+> PCIe ports can handle, which means 256 for some ports and 4096 for the
+> others, and of course this is a problem in the LS7A's hardware design).
 > 
 > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  drivers/pci/controller/pci-loongson.c | 65 +++++++++++++++++++--------
->  1 file changed, 46 insertions(+), 19 deletions(-)
+>  drivers/pci/controller/pci-loongson.c | 47 ++++++++++-----------------
+>  drivers/pci/pci.c                     |  6 ++++
+>  include/linux/pci.h                   |  1 +
+>  3 files changed, 25 insertions(+), 29 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 48169b1e3817..433261c5f34c 100644
+> index 48d9d283cb59..ba182f9d5718 100644
 > --- a/drivers/pci/controller/pci-loongson.c
 > +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -25,11 +25,16 @@
->  #define FLAG_CFG1	BIT(1)
->  #define FLAG_DEV_FIX	BIT(2)
+> @@ -67,37 +67,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>  			DEV_LS7A_LPC, system_bus_quirk);
 >  
-> +struct pci_controller_data {
-
-struct loongson_pci_data
-
-> +	u32 flags;
-> +	struct pci_ops *ops;
-
-const struct
-
-> +};
-> +
->  struct loongson_pci {
->  	void __iomem *cfg0_base;
->  	void __iomem *cfg1_base;
->  	struct platform_device *pdev;
-> -	u32 flags;
-> +	struct pci_controller_data *data;
->  };
->  
->  /* Fixup wrong class code in PCIe bridges */
-> @@ -126,8 +131,8 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
->  	 * Do not read more than one device on the bus other than
->  	 * the host bus. For our hardware the root bus is always bus 0.
->  	 */
-> -	if (priv->flags & FLAG_DEV_FIX && busnum != 0 &&
-> -		PCI_SLOT(devfn) > 0)
-> +	if (priv->data->flags & FLAG_DEV_FIX &&
-> +			busnum != 0 && PCI_SLOT(devfn) > 0)
-
-Are you sure you need all this? The default for PCIe (not PCI) is to 
-only scan device 0 on child buses.
-
-In any case, use pci_is_root_bus() rather than checking bus number 
-is/isn't 0.
-
-
->  		return NULL;
->  
->  	/* CFG0 can only access standard space */
-> @@ -159,20 +164,42 @@ static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
->  	return val;
->  }
->  
-> -/* H/w only accept 32-bit PCI operations */
-> +/* LS2K/LS7A accept 8/16/32-bit PCI config operations */
->  static struct pci_ops loongson_pci_ops = {
-> +	.map_bus = pci_loongson_map_bus,
-> +	.read	= pci_generic_config_read,
-> +	.write	= pci_generic_config_write,
-> +};
-> +
-> +/* RS780/SR5690 only accept 32-bit PCI config operations */
-> +static struct pci_ops loongson_pci_ops32 = {
->  	.map_bus = pci_loongson_map_bus,
->  	.read	= pci_generic_config_read32,
->  	.write	= pci_generic_config_write32,
->  };
->  
-> +static const struct pci_controller_data ls2k_pci_data = {
-> +	.flags = FLAG_CFG1 | FLAG_DEV_FIX,
-> +	.ops = &loongson_pci_ops,
-> +};
-> +
-> +static const struct pci_controller_data ls7a_pci_data = {
-> +	.flags = FLAG_CFG1 | FLAG_DEV_FIX,
-> +	.ops = &loongson_pci_ops,
-> +};
-> +
-> +static const struct pci_controller_data rs780e_pci_data = {
-> +	.flags = FLAG_CFG0,
-> +	.ops = &loongson_pci_ops32,
-> +};
-> +
->  static const struct of_device_id loongson_pci_of_match[] = {
->  	{ .compatible = "loongson,ls2k-pci",
-> -		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
-> +		.data = (void *)&ls2k_pci_data, },
-
-Don't need the cast IIRC.
-
->  	{ .compatible = "loongson,ls7a-pci",
-> -		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
-> +		.data = (void *)&ls7a_pci_data, },
->  	{ .compatible = "loongson,rs780e-pci",
-> -		.data = (void *)(FLAG_CFG0), },
-> +		.data = (void *)&rs780e_pci_data, },
->  	{}
->  };
->  
-> @@ -193,20 +220,20 @@ static int loongson_pci_probe(struct platform_device *pdev)
->  
->  	priv = pci_host_bridge_priv(bridge);
->  	priv->pdev = pdev;
-> -	priv->flags = (unsigned long)of_device_get_match_data(dev);
-> +	priv->data = (struct pci_controller_data *)of_device_get_match_data(dev);
->  
-> -	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!regs) {
-> -		dev_err(dev, "missing mem resources for cfg0\n");
-> -		return -EINVAL;
-> +	if (priv->data->flags & FLAG_CFG0) {
-> +		regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +		if (!regs)
-> +			dev_err(dev, "missing mem resources for cfg0\n");
-> +		else {
-> +			priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
-> +			if (IS_ERR(priv->cfg0_base))
-> +				return PTR_ERR(priv->cfg0_base);
-> +		}
->  	}
->  
-> -	priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
-> -	if (IS_ERR(priv->cfg0_base))
-> -		return PTR_ERR(priv->cfg0_base);
+> -static void loongson_mrrs_quirk(struct pci_dev *dev)
+> +static void loongson_mrrs_quirk(struct pci_dev *pdev)
+>  {
+> -	struct pci_bus *bus = dev->bus;
+> -	struct pci_dev *bridge;
+> -	static const struct pci_device_id bridge_devids[] = {
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+> -		{ 0, },
+> -	};
 > -
-> -	/* CFG1 is optional */
-> -	if (priv->flags & FLAG_CFG1) {
-> +	if (priv->data->flags & FLAG_CFG1) {
->  		regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->  		if (!regs)
->  			dev_info(dev, "missing mem resource for cfg1\n");
-> @@ -218,7 +245,7 @@ static int loongson_pci_probe(struct platform_device *pdev)
->  	}
+> -	/* look for the matching bridge */
+> -	while (!pci_is_root_bus(bus)) {
+> -		bridge = bus->self;
+> -		bus = bus->parent;
+> -		/*
+> -		 * Some Loongson PCIe ports have a h/w limitation of
+> -		 * 256 bytes maximum read request size. They can't handle
+> -		 * anything larger than this. So force this limit on
+> -		 * any devices attached under these ports.
+> -		 */
+> -		if (pci_match_id(bridge_devids, bridge)) {
+> -			if (pcie_get_readrq(dev) > 256) {
+> -				pci_info(dev, "limiting MRRS to 256\n");
+> -				pcie_set_readrq(dev, 256);
+> -			}
+> -			break;
+> -		}
+> -	}
+> +	/*
+> +	 * Some Loongson PCIe ports have h/w limitations of maximum read
+> +	 * request size. They can't handle anything larger than this. So
+> +	 * force this limit on any devices attached under these ports.
+> +	 */
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+> +
+> +	if (!bridge)
+
+Isn't this condition impossible? I'd drop and just let the NULL 
+dereference fault happen rather than continue on silently.
+
+> +		return;
+> +
+> +	bridge->no_inc_mrrs = 1;
+>  }
+> -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
 >  
->  	bridge->sysdata = priv;
-> -	bridge->ops = &loongson_pci_ops;
-> +	bridge->ops = priv->data->ops;
->  	bridge->map_irq = loongson_map_irq;
+>  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+>  {
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9ecce435fb3f..72a15bf9eee8 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5993,6 +5993,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>  {
+>  	u16 v;
+>  	int ret;
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
 >  
->  	return pci_host_probe(bridge);
+>  	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+>  		return -EINVAL;
+> @@ -6011,6 +6012,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>  
+>  	v = (ffs(rq) - 8) << 12;
+>  
+> +	if (bridge->no_inc_mrrs) {
+> +		if (rq > pcie_get_readrq(dev))
+> +			return -EINVAL;
+> +	}
+> +
+>  	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+>  						  PCI_EXP_DEVCTL_READRQ, v);
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 8253a5413d7c..01a464eb640a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -569,6 +569,7 @@ struct pci_host_bridge {
+>  	void		*release_data;
+>  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+>  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+> +	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
+>  	unsigned int	native_aer:1;		/* OS may use PCIe AER */
+>  	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
+>  	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
 > -- 
 > 2.27.0
 > 
