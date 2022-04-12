@@ -2,86 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1489C4FE3D3
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 16:30:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 815B14FE401
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 16:40:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356540AbiDLOdI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 10:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40634 "EHLO
+        id S1347933AbiDLOnA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 10:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350121AbiDLOdH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 10:33:07 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3E34A3DD;
-        Tue, 12 Apr 2022 07:30:49 -0700 (PDT)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23CDLtHn004757;
-        Tue, 12 Apr 2022 14:30:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=VKd5vFUiEKfuRcGuSWKwzFHHhQa5vtGA/lkq5v9/Zc8=;
- b=q2CdmhYEw6JfIYHrrcAXDQv6B0ZWYe4L7n1tluZmz0D2OQeq/vRi+iumffzYUZWSl04j
- QxYlB2bi7+1EGmoznaK3NGLgIfT8HkPMI9k2ptfBZT6f6TVb3ZW6ajdaD45+ojAG1ndI
- AGVVhPhb0dcyfmKRG8lMSUyZ/j8uVbb4xa9g0S5f9gnKis9Rw0kpiCIKRfjDvfScXFI8
- ql8nt5VHK9bMH9yDdqMegCIa6dof+2u+xMOk+nZ3oO2mGuBB64SGpsv4QNi20Rbw7cQE
- 8rfBqk2PdCeCiMvinF4/MUDY4zrPrQbP40rtxHq2+nNSilBW2z2qjuCGjope3DXYt1D9 HQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3fda8c1qkj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 14:30:46 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23CE7H4i026220;
-        Tue, 12 Apr 2022 14:30:46 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3fda8c1qjt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 14:30:46 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23CEDgTv019973;
-        Tue, 12 Apr 2022 14:30:44 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 3fb1dj52vn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 14:30:44 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23CEUf6G52036018
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Apr 2022 14:30:41 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7778952051;
-        Tue, 12 Apr 2022 14:30:41 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4053B5205F;
-        Tue, 12 Apr 2022 14:30:41 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v2 4/4] s390/pci: allow zPCI zbus without a function zero
-Date:   Tue, 12 Apr 2022 16:30:40 +0200
-Message-Id: <20220412143040.1882096-5-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220412143040.1882096-1-schnelle@linux.ibm.com>
-References: <20220412143040.1882096-1-schnelle@linux.ibm.com>
+        with ESMTP id S234174AbiDLOm6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 10:42:58 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F3411155
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 07:40:41 -0700 (PDT)
+Received: by mail-oi1-f169.google.com with SMTP id q189so19191005oia.9
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 07:40:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hEAbkH+fqKRUETCwi4mFn/Yo2FmpfQYB5VhKYBCoHH4=;
+        b=pqSG3Yn80KjDq/1EJj4KkoXtRMbN7IqP5m/K3p0cNTo3S5Ioc9SRIoQ/nNoAMxW/US
+         mPW2YsEybWGJc0YqCCnDPO0dH4w75fPR+JOB5XlXfvl3oKtLRf7+rlo5ArYdveQZZ04r
+         hcfyJjCZx50HqG7j/FAYUlkhRbB08Ar228SX6J2ofXuGL6v8EovFjBLCz+3mYNdQWGER
+         +Q5456JCneKl49mNyuj5d5hJ/LqOWR4E352zHKmm1Dl61ig6N8zcwyJ4/jHjErnv47R8
+         T8WYBslfgqhju+/OstXDY4oz6v26cA29ms/kKkQLElNGbQkwEJLUbEddx9BXLM+4CdZy
+         Lo1A==
+X-Gm-Message-State: AOAM532if5DPjs9vI/lLHPqZ5GPqRcm2Z3ubz4h7pqGQtBW0tyTPFWkr
+        3dvPhFMocdHemvVQsyRBp2+JrfmcAA==
+X-Google-Smtp-Source: ABdhPJwNfeudp2tlaoWTCceKkddoAOttN8aXcLXxUa3imnwOScRncGt5IKdZpGuYyLdgSolAUUcs/Q==
+X-Received: by 2002:a05:6808:208c:b0:2da:10e3:c70 with SMTP id s12-20020a056808208c00b002da10e30c70mr1924185oiw.42.1649774440426;
+        Tue, 12 Apr 2022 07:40:40 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id v17-20020a9d69d1000000b005b2319a08c4sm13399891oto.18.2022.04.12.07.40.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Apr 2022 07:40:40 -0700 (PDT)
+Received: (nullmailer pid 60097 invoked by uid 1000);
+        Tue, 12 Apr 2022 14:40:39 -0000
+Date:   Tue, 12 Apr 2022 09:40:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Huacai Chen <chenhuacai@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH V12 1/6] PCI: loongson: Use generic 8/16/32-bit config
+ ops on LS2K/LS7A
+Message-ID: <YlWPZ3J408ncOujh@robh.at.kernel.org>
+References: <20220226104731.76776-1-chenhuacai@loongson.cn>
+ <20220226104731.76776-2-chenhuacai@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: gR82woWY1iWKuP2WJGWaGCydUZ4ISc7u
-X-Proofpoint-GUID: 7vlTMEdvgHTZ11Y4uT6SrgPpyF46KlDn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-12_05,2022-04-12_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 malwarescore=0 lowpriorityscore=0 impostorscore=0
- clxscore=1015 adultscore=0 mlxscore=0 mlxlogscore=908 suspectscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204120068
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220226104731.76776-2-chenhuacai@loongson.cn>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,163 +65,155 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently the zPCI code block PCI bus creation and probing of a zPCI
-zbus unless there is a PCI function with devfn 0. This is always the
-case for the PCI functions with hidden RID but may keep PCI functions
-from a multi-function PCI device with RID information invisible until
-the function 0 becomes visible. Worse as a PCI bus is necessary to even
-present a PCI hotplug slot even that remains invisible.
+On Sat, Feb 26, 2022 at 06:47:26PM +0800, Huacai Chen wrote:
+> LS2K/LS7A support 8/16/32-bits PCI config access operations via CFG1, so
+> we can disable CFG0 for them and safely use pci_generic_config_read()/
+> pci_generic_config_write() instead of pci_generic_config_read32()/pci_
+> generic_config_write32().
+> 
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/pci/controller/pci-loongson.c | 65 +++++++++++++++++++--------
+>  1 file changed, 46 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> index 48169b1e3817..433261c5f34c 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -25,11 +25,16 @@
+>  #define FLAG_CFG1	BIT(1)
+>  #define FLAG_DEV_FIX	BIT(2)
+>  
+> +struct pci_controller_data {
 
-With the probing of these so called isolated PCI functions enabled for
-s390 in common code this restriction is no longer necessary. On network
-cards with multiple ports and a PF per port this also allows using each
-port on its own while still providing the physical PCI topology
-information in the devfn needed to associate VFs with their parent PF.
+struct loongson_pci_data
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- arch/s390/pci/pci_bus.c | 82 ++++++++++-------------------------------
- 1 file changed, 20 insertions(+), 62 deletions(-)
+> +	u32 flags;
+> +	struct pci_ops *ops;
 
-diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-index 5d77acbd1c87..6a8da1b742ae 100644
---- a/arch/s390/pci/pci_bus.c
-+++ b/arch/s390/pci/pci_bus.c
-@@ -145,9 +145,6 @@ int zpci_bus_scan_bus(struct zpci_bus *zbus)
- 	struct zpci_dev *zdev;
- 	int devfn, rc, ret = 0;
- 
--	if (!zbus->function[0])
--		return 0;
--
- 	for (devfn = 0; devfn < ZPCI_FUNCTIONS_PER_BUS; devfn++) {
- 		zdev = zbus->function[devfn];
- 		if (zdev && zdev->state == ZPCI_FN_STATE_CONFIGURED) {
-@@ -184,26 +181,26 @@ void zpci_bus_scan_busses(void)
- 
- /* zpci_bus_create_pci_bus - Create the PCI bus associated with this zbus
-  * @zbus: the zbus holding the zdevices
-- * @f0: function 0 of the bus
-+ * @fr: PCI root function that will determine the bus's domain, and bus speeed
-  * @ops: the pci operations
-  *
-- * Function zero is taken as a parameter as this is used to determine the
-- * domain, multifunction property and maximum bus speed of the entire bus.
-+ * The PCI function @fr determines the domain (its UID), multifunction property
-+ * and maximum bus speed of the entire bus.
-  *
-  * Return: 0 on success, an error code otherwise
-  */
--static int zpci_bus_create_pci_bus(struct zpci_bus *zbus, struct zpci_dev *f0, struct pci_ops *ops)
-+static int zpci_bus_create_pci_bus(struct zpci_bus *zbus, struct zpci_dev *fr, struct pci_ops *ops)
- {
- 	struct pci_bus *bus;
- 	int domain;
- 
--	domain = zpci_alloc_domain((u16)f0->uid);
-+	domain = zpci_alloc_domain((u16)fr->uid);
- 	if (domain < 0)
- 		return domain;
- 
- 	zbus->domain_nr = domain;
--	zbus->multifunction = f0->rid_available;
--	zbus->max_bus_speed = f0->max_bus_speed;
-+	zbus->multifunction = fr->rid_available;
-+	zbus->max_bus_speed = fr->max_bus_speed;
- 
- 	/*
- 	 * Note that the zbus->resources are taken over and zbus->resources
-@@ -303,47 +300,6 @@ void pcibios_bus_add_device(struct pci_dev *pdev)
- 	}
- }
- 
--/* zpci_bus_create_hotplug_slots - Add hotplug slot(s) for device added to bus
-- * @zdev: the zPCI device that was newly added
-- *
-- * Add the hotplug slot(s) for the newly added PCI function. Normally this is
-- * simply the slot for the function itself. If however we are adding the
-- * function 0 on a zbus, it might be that we already registered functions on
-- * that zbus but could not create their hotplug slots yet so add those now too.
-- *
-- * Return: 0 on success, an error code otherwise
-- */
--static int zpci_bus_create_hotplug_slots(struct zpci_dev *zdev)
--{
--	struct zpci_bus *zbus = zdev->zbus;
--	int devfn, rc = 0;
--
--	rc = zpci_init_slot(zdev);
--	if (rc)
--		return rc;
--	zdev->has_hp_slot = 1;
--
--	if (zdev->devfn == 0 && zbus->multifunction) {
--		/* Now that function 0 is there we can finally create the
--		 * hotplug slots for those functions with devfn != 0 that have
--		 * been parked in zbus->function[] waiting for us to be able to
--		 * create the PCI bus.
--		 */
--		for  (devfn = 1; devfn < ZPCI_FUNCTIONS_PER_BUS; devfn++) {
--			zdev = zbus->function[devfn];
--			if (zdev && !zdev->has_hp_slot) {
--				rc = zpci_init_slot(zdev);
--				if (rc)
--					return rc;
--				zdev->has_hp_slot = 1;
--			}
--		}
--
--	}
--
--	return rc;
--}
--
- static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
- {
- 	int rc = -EINVAL;
-@@ -352,21 +308,19 @@ static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
- 		pr_err("devfn %04x is already assigned\n", zdev->devfn);
- 		return rc;
- 	}
-+
- 	zdev->zbus = zbus;
- 	zbus->function[zdev->devfn] = zdev;
- 	zpci_nb_devices++;
- 
--	if (zbus->bus) {
--		if (zbus->multifunction && !zdev->rid_available) {
--			WARN_ONCE(1, "rid_available not set for multifunction\n");
--			goto error;
--		}
--
--		zpci_bus_create_hotplug_slots(zdev);
--	} else {
--		/* Hotplug slot will be created once function 0 appears */
--		zbus->multifunction = 1;
-+	if (zbus->multifunction && !zdev->rid_available) {
-+		WARN_ONCE(1, "rid_available not set for multifunction\n");
-+		goto error;
- 	}
-+	rc = zpci_init_slot(zdev);
-+	if (rc)
-+		goto error;
-+	zdev->has_hp_slot = 1;
- 
- 	return 0;
- 
-@@ -400,7 +354,11 @@ int zpci_bus_device_register(struct zpci_dev *zdev, struct pci_ops *ops)
- 			return -ENOMEM;
- 	}
- 
--	if (zdev->devfn == 0) {
-+	if (!zbus->bus) {
-+		/* The UID of the first PCI function registered with a zpci_bus
-+		 * is used as the domain number for that bus. Currently there
-+		 * is exactly one zpci_bus per domain.
-+		 */
- 		rc = zpci_bus_create_pci_bus(zbus, zdev, ops);
- 		if (rc)
- 			goto error;
--- 
-2.32.0
+const struct
 
+> +};
+> +
+>  struct loongson_pci {
+>  	void __iomem *cfg0_base;
+>  	void __iomem *cfg1_base;
+>  	struct platform_device *pdev;
+> -	u32 flags;
+> +	struct pci_controller_data *data;
+>  };
+>  
+>  /* Fixup wrong class code in PCIe bridges */
+> @@ -126,8 +131,8 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
+>  	 * Do not read more than one device on the bus other than
+>  	 * the host bus. For our hardware the root bus is always bus 0.
+>  	 */
+> -	if (priv->flags & FLAG_DEV_FIX && busnum != 0 &&
+> -		PCI_SLOT(devfn) > 0)
+> +	if (priv->data->flags & FLAG_DEV_FIX &&
+> +			busnum != 0 && PCI_SLOT(devfn) > 0)
+
+Are you sure you need all this? The default for PCIe (not PCI) is to 
+only scan device 0 on child buses.
+
+In any case, use pci_is_root_bus() rather than checking bus number 
+is/isn't 0.
+
+
+>  		return NULL;
+>  
+>  	/* CFG0 can only access standard space */
+> @@ -159,20 +164,42 @@ static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+>  	return val;
+>  }
+>  
+> -/* H/w only accept 32-bit PCI operations */
+> +/* LS2K/LS7A accept 8/16/32-bit PCI config operations */
+>  static struct pci_ops loongson_pci_ops = {
+> +	.map_bus = pci_loongson_map_bus,
+> +	.read	= pci_generic_config_read,
+> +	.write	= pci_generic_config_write,
+> +};
+> +
+> +/* RS780/SR5690 only accept 32-bit PCI config operations */
+> +static struct pci_ops loongson_pci_ops32 = {
+>  	.map_bus = pci_loongson_map_bus,
+>  	.read	= pci_generic_config_read32,
+>  	.write	= pci_generic_config_write32,
+>  };
+>  
+> +static const struct pci_controller_data ls2k_pci_data = {
+> +	.flags = FLAG_CFG1 | FLAG_DEV_FIX,
+> +	.ops = &loongson_pci_ops,
+> +};
+> +
+> +static const struct pci_controller_data ls7a_pci_data = {
+> +	.flags = FLAG_CFG1 | FLAG_DEV_FIX,
+> +	.ops = &loongson_pci_ops,
+> +};
+> +
+> +static const struct pci_controller_data rs780e_pci_data = {
+> +	.flags = FLAG_CFG0,
+> +	.ops = &loongson_pci_ops32,
+> +};
+> +
+>  static const struct of_device_id loongson_pci_of_match[] = {
+>  	{ .compatible = "loongson,ls2k-pci",
+> -		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> +		.data = (void *)&ls2k_pci_data, },
+
+Don't need the cast IIRC.
+
+>  	{ .compatible = "loongson,ls7a-pci",
+> -		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> +		.data = (void *)&ls7a_pci_data, },
+>  	{ .compatible = "loongson,rs780e-pci",
+> -		.data = (void *)(FLAG_CFG0), },
+> +		.data = (void *)&rs780e_pci_data, },
+>  	{}
+>  };
+>  
+> @@ -193,20 +220,20 @@ static int loongson_pci_probe(struct platform_device *pdev)
+>  
+>  	priv = pci_host_bridge_priv(bridge);
+>  	priv->pdev = pdev;
+> -	priv->flags = (unsigned long)of_device_get_match_data(dev);
+> +	priv->data = (struct pci_controller_data *)of_device_get_match_data(dev);
+>  
+> -	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!regs) {
+> -		dev_err(dev, "missing mem resources for cfg0\n");
+> -		return -EINVAL;
+> +	if (priv->data->flags & FLAG_CFG0) {
+> +		regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		if (!regs)
+> +			dev_err(dev, "missing mem resources for cfg0\n");
+> +		else {
+> +			priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
+> +			if (IS_ERR(priv->cfg0_base))
+> +				return PTR_ERR(priv->cfg0_base);
+> +		}
+>  	}
+>  
+> -	priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
+> -	if (IS_ERR(priv->cfg0_base))
+> -		return PTR_ERR(priv->cfg0_base);
+> -
+> -	/* CFG1 is optional */
+> -	if (priv->flags & FLAG_CFG1) {
+> +	if (priv->data->flags & FLAG_CFG1) {
+>  		regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>  		if (!regs)
+>  			dev_info(dev, "missing mem resource for cfg1\n");
+> @@ -218,7 +245,7 @@ static int loongson_pci_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	bridge->sysdata = priv;
+> -	bridge->ops = &loongson_pci_ops;
+> +	bridge->ops = priv->data->ops;
+>  	bridge->map_irq = loongson_map_irq;
+>  
+>  	return pci_host_probe(bridge);
+> -- 
+> 2.27.0
+> 
