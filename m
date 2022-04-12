@@ -2,226 +2,465 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE05B4FE072
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 14:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55D0E4FE197
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 15:07:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353218AbiDLMke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 08:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37282 "EHLO
+        id S1355300AbiDLNGL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 09:06:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355163AbiDLMjA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 08:39:00 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3EAC5DA1A;
-        Tue, 12 Apr 2022 04:59:25 -0700 (PDT)
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23CBBsTA003228;
-        Tue, 12 Apr 2022 11:59:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version; s=pp1; bh=yHu1YiMcXBjBiYCzq1CRcs/NYWRxbRqI7csqw43nT/E=;
- b=gtvJUdIoEG7Dtqpo4Y2aupeGoyhQm9qX3OF/eisKWwypGhYoraNOoM0N60QX1jUh0apB
- sLw8c8EPctwjvGtMATUpMsS/2WyDjA85uAY/5RdhnhFEpBcSQMvVpzeu2tCIwvR+Mqj9
- ntH1DxSEVdO4y3sTzs5jHjiakF6d0Np5zza/z9p4wKSb5vWjc9NG1gXDMpTQFfMcrRmC
- JfhWoZ7gh9tdiv+R1x/mgQeWx3mTsi2MdadNNZZqfq3SOmjpcAZQqpPNihglzMcQySLq
- GxgxCpdGLUGSy12Y+iBdHtvN+6Xt6166Al30Nc4rcvXRSMtEF7/ePBevUt6T11Uj9E8H wA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fd8b611wq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 11:59:20 +0000
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23CBi6GN028860;
-        Tue, 12 Apr 2022 11:59:19 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fd8b611w1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 11:59:19 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23CBbwfw007739;
-        Tue, 12 Apr 2022 11:59:17 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 3fb1s8vty9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Apr 2022 11:59:17 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23CBxEG638666662
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Apr 2022 11:59:14 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3ABA42041;
-        Tue, 12 Apr 2022 11:59:13 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78C734203F;
-        Tue, 12 Apr 2022 11:59:13 +0000 (GMT)
-Received: from sig-9-145-31-85.uk.ibm.com (unknown [9.145.31.85])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Apr 2022 11:59:13 +0000 (GMT)
-Message-ID: <d4c7aca9c662c3d99886abfd948e5c8590e43ab6.camel@linux.ibm.com>
-Subject: Re: [PATCH RESEND 1/2] PCI: Extend isolated function probing to s390
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Tue, 12 Apr 2022 13:59:06 +0200
-In-Reply-To: <20220411192312.GA531449@bhelgaas>
-References: <20220411192312.GA531449@bhelgaas>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1ip2eaNreskyjKOkjE3X"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Y2WKxO9Mx-nRK3GWErvugW2hRsJJdE7M
-X-Proofpoint-ORIG-GUID: Muh2p9oWtiuthkmbn0CcLwTFVfptA2YQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-12_03,2022-04-12_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 spamscore=0 phishscore=0
- clxscore=1015 malwarescore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204120053
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1355132AbiDLNFp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 09:05:45 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F178FE6;
+        Tue, 12 Apr 2022 05:52:31 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Kd5Dc3LfTzgYWT;
+        Tue, 12 Apr 2022 20:50:40 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 12 Apr 2022 20:52:28 +0800
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v7 2/7] hwtracing: Add trace function support for
+ HiSilicon PCIe Tune and Trace device
+To:     John Garry <john.garry@huawei.com>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+References: <20220407125841.3678-1-yangyicong@hisilicon.com>
+ <20220407125841.3678-3-yangyicong@hisilicon.com>
+ <36eea2f6-3461-72ad-05c4-953484197911@huawei.com>
+ <60159327-7b6c-38cc-97a9-bb4c594b494f@huawei.com>
+ <49b24812-dafc-4ff9-a79b-07d1e2c6364b@huawei.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <edd2721d-5f84-4831-2a0f-f3238ac362c9@huawei.com>
+Date:   Tue, 12 Apr 2022 20:52:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
+MIME-Version: 1.0
+In-Reply-To: <49b24812-dafc-4ff9-a79b-07d1e2c6364b@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 2022/4/12 16:39, John Garry wrote:
+>>>> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
+>>>> +{
+>>>> +    struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>>>> +    struct device *dev = &hisi_ptt->pdev->dev;
+>>>> +    int i;
+>>>> +
+>>>> +    hisi_ptt->trace_ctrl.buf_index = 0;
+>>>> +
+>>>> +    /* If the trace buffer has already been allocated, zero it. */
+>>>
+>>> I am not sure why this is not called from the probe
+>>>
+>>
+>> The buffer allocation is done when necessary as driver will probe the device on booting but
+>> the user may never use it. In this condition it's a waste of memory if we allocate the buffers
+>> in probe. Currently we'll allocate 16M memory for 4 buffers.
+>>
+> 
+> But that's just not how we do things. We setup the driver fully to be used in the probe. If the user cannot really afford the memory then he/she should not load the driver.
+> 
 
---=-1ip2eaNreskyjKOkjE3X
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I think in most time user don't need to manually load the driver because of udev.
 
-On Mon, 2022-04-11 at 14:23 -0500, Bjorn Helgaas wrote:
-> On Mon, Apr 11, 2022 at 10:43:56AM +0200, Niklas Schnelle wrote:
-> > On Fri, 2022-04-08 at 17:45 -0500, Bjorn Helgaas wrote:
-> > > On Mon, Apr 04, 2022 at 11:53:45AM +0200, Niklas Schnelle wrote:
-> > > > Like the jailhouse hypervisor s390's PCI architecture allows passin=
-g
-> > > > isolated PCI functions to an OS instance. As of now this is was not
-> > > > utilized even with multi-function support as the s390 PCI code make=
-s
-> > > > sure that only virtual PCI busses including a function with devfn 0=
- are
-> > > > presented to the PCI subsystem. A subsequent change will remove thi=
-s
-> > > > restriction.
-> > > >=20
-> > > > Allow probing such functions by replacing the existing check for
-> > > > jailhouse_paravirt() with a new hypervisor_isolated_pci_functions()
-> > > > helper.
-> > > >=20
-> > > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > >=20
-> > > I'm OK with the idea of generalizing this Jailhouse test, but I wonde=
-r
-> > > if this check should be in pci_scan_slot() rather than in
-> > > pci_scan_child_bus_extend().
-> > >=20
-> > > I think the idea is that pci_scan_slot() should find all the function=
-s
-> > > of a device (a.k.a. "slot"), so it's a little weird to have a loop
-> > > calling pci_scan_single_device() for each function in both places.
-> >=20
-> > Yeah, I agree.
-> > > Currently we never call pcie_aspm_init_link_state() for these
-> > > Jailhouse or s390 functions.  Maybe that's OK (and I think
-> > > pci_scan_slot() is the wrong place to initialize ASPM anyway) but if
-> > > we could move the Jailhouse/s390 checking to pci_scan_slot(), it woul=
-d
-> > > at least remove the inconsistency.
-> > >=20
-> > > I'm thinking something along the lines of the patch below.  I'm sure
-> > > Jan considered this originally, so maybe there's some reason this
-> > > won't work.
-> >=20
-> > One thing I already noticed is that I think next_fn() may need to be
-> > changed. If pci_ari_enabled(bus) is true, then it immediately returns 0
-> > on dev =3D=3D NULL while if it is false there is an extra check for non=
--
-> > contiguous multifunction devices. Even then I think on jailhouse() dev-
-> > > multifunction might not be set at that point. This is in contrast to
-> > s390 where we set dev->multifunction based on information provided by
-> > the platform before scanning the bus. So I'll have to be careful not to
-> > create a state where this works on s390 but might not work for
-> > jailhouse.
-> >=20
-> > I also do wonder what the role of the PCI_SCAN_ALL_PCIE_DEVS flag
-> > should be here. At least the comment in only_one_child() sounds a lot
-> > like that flag kind of indicates the same thing.
->=20
-> I looked at PCI_SCAN_ALL_PCIE_DEVS, too, but I think that's for a
-> slightly different situation; see
-> https://git.kernel.org/linus/284f5f9dbac1
->=20
-> Bjorn
+> In addition, this driver would be used in a machine which will have gigbytes of memory, so I think that the memory mentioned here is relatively insignificant.
+> 
 
-Thanks for the link. I did some more investigating and testing. I think
-I understand it now but I have to say I did struggle a little with the
-whole pci_scan_slot()/next_fn() logic.
+ok, yes it'll be used in the server so the memory will be enough in most time. considering this maybe it's proper to move the buffer allocation and the configuration to the driver probe then.
 
-The most interesting to me is how I think the following check in
-next_fn() actually has multiple uses that weren't clear to me on first
-glance:
+>> So this function is called every time before we start trace. In the first time it will allocate
+>> the DMA buffers and it the other times it just zero the buffers to clear the data of last time.
+>>
+>>>> +    if (ctrl->trace_buf) {
+>>>> +        for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
+>>>> +            memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
+>>>> +        return 0;
+>>>> +    }
+>>>> +
+>>>> +    ctrl->trace_buf = devm_kcalloc(dev, HISI_PTT_TRACE_BUF_CNT,
+>>>> +                       sizeof(struct hisi_ptt_dma_buffer), GFP_KERNEL);
+>>>
+>>> sizeof(*ctrl->trace_buf) may be better
+>>>
+>>
+>> ok.
+>>
+>>>> +    if (!ctrl->trace_buf)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
+>>>> +        ctrl->trace_buf[i].addr = dmam_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+>>>> +                                 &ctrl->trace_buf[i].dma,
+>>>> +                                 GFP_KERNEL);
+>>>> +        if (!ctrl->trace_buf[i].addr) {
+>>>> +            hisi_ptt_free_trace_buf(hisi_ptt);
+>>>> +            return -ENOMEM;
+>>>> +        }
+>>>> +    }
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+>>>> +{
+>>>> +    writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>>>> +    hisi_ptt->trace_ctrl.started = false;
+>>>> +}
+>>>> +
+>>>> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+>>>> +{
+>>>> +    struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+>>>> +    u32 val;
+>>>> +    int i;
+>>>> +
+>>>> +    /* Check device idle before start trace */
+>>>> +    if (!hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
+>>>> +        pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy\n");
+>>>> +        return -EBUSY;
+>>>> +    }
+>>>> +
+>>>> +    ctrl->started = true;
+>>>> +
+>>>> +    /* Reset the DMA before start tracing */
+>>>> +    val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>>>> +    val |= HISI_PTT_TRACE_CTRL_RST;
+>>>> +    writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>>>> +
+>>>> +    hisi_ptt_wait_dma_reset_done(hisi_ptt);
+>>>> +
+>>>> +    val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>>>> +    val &= ~HISI_PTT_TRACE_CTRL_RST;
+>>>> +    writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+>>>> +
+>>>> +    /* Clear the interrupt status */
+>>>> +    writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+>>>> +    writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
+>>>> +
+>>>> +    /* Configure the trace DMA buffer */
+>>>
+>>> I am not sure why this sort of thing is done outside probing
+>>>
+> 
+> ...
+> 
+>>>> +
+>>>> +    val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+>>>> +    ret = hisi_ptt_trace_valid_config_onehot(val, hisi_ptt_trace_available_direction,
+>>>
+>>> how about put all those arrays in hisi_ptt_trace_valid_config_onehot() and pass some flag to say which array you want to use? Or something like that. Passing the arrays in this fashion is messy
+>>>
+>>
+>> Since there are 3 configs (type, direction, format) with different available range and setting method (onehot, non-onehot),
+>> moving the arrays into the valid checking function means we need to recognize the config types (passed by the caller but need
+>> to know the available value array) and the checking method together. That may make the code more complex than now: 1st picking
+>> up the right array and judge wich checking method this array applied and 2nd do the checking.
+>>
+>> Currently it's designed to decouple the checking method and the available value array. The hisi_ptt_trace_valid_config{_onehot}()
+>> won't care about which array to use since caller take responsibilty for this. So perhaps current approach is simple and clear
+>> enough.
+> 
+> 
+> A couple of points:
+> - hisi_ptt_trace_valid_config_type() only has 1x caller so can make it dedicated for that caller
+> - there is not much code in hisi_ptt_trace_valid_config_onshot(), so ok to duplicate if makes overall code look better
+> 
+> So I think dedicated functions make the code simpler, easier to follow, and maintain:
+> 
 
-	/* dev may be NULL for non-contiguous multifunction devices */
-	if (!dev || dev->multifunction)
-		return (fn + 1) % 8;
+ok then it won't make it more complex. I thought you mean something like hisi_ptt_trace_config(u32 val, enum CONFIG_TYPE type, bool onehot)
+as mentioned as "pass some flag to say which array you want to use". The implementation of that will be more complex. Thanks for the great
+snippet!
 
-First it does cover the case mentioned in the comment where a=20
-multifunction device has some functions missing making it non-
-contiguous. As I understand it this case is also triggered on s390 when
-we "powered off" some of the VFs of a SR-IOV device where both the PFs
-and VFs are under the control of Linux but enumeration is done by
-firmware and that can hide some of the VFs.
+> static int hisi_ptt_trace_valid_config_dir(u32 val)
+> {
+>     int i;
+>     /*
+>      * The supported value of the direction parameter. See hisi_ptt.rst
+>      * documentation for more details.
+>      */
+>     static const u32 hisi_ptt_trace_available_direction[] = {
+>         0,
+>         1,
+>         2,
+>         3,
+>     };
+> 
+>     for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_available_direction); i++)
+>         if (val == hisi_ptt_trace_available_direction[i])
+>             return 0;
+> 
+>     return -EINVAL;
+> }
+> 
+> static int hisi_ptt_trace_valid_config_format(u32 val)
+> {
+>     int i;
+>     static const u32 hisi_ptt_trace_availble_format[] = {
+>         0,    /* 4DW */
+>         1,    /* 8DW */
+>     };
+> 
+>     for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_availble_format); i++)
+>         if (val == hisi_ptt_trace_availble_format[i])
+>             return 0;
+> 
+>     return -EINVAL;
+> }
+> 
+> static int hisi_ptt_trace_valid_config_type(u32 val)
+> {
+>     int i;
+>     /* Different types can be set simultaneously */
+>     static const u32 hisi_ptt_trace_available_type[] = {
+>         1,    /* posted_request */
+>         2,    /* non-posted_request */
+>         4,    /* completion */
+>     };
+> 
+>     for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_available_type); i++)
+>         val &= ~hisi_ptt_trace_available_type[i];
+> 
+>     if (val)
+>         return -EINVAL;
+>     return 0;
+> }
+> 
+> ...
+> 
+> static int hisi_ptt_pmu_event_init(struct perf_event *event)
+> {
+> 
+> ...
+> 
+>     val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+>     ret = hisi_ptt_trace_valid_config_dir(val);
+>     if (ret < 0)
+>         goto out;
+>     ctrl->direction = val;
+> 
+>     val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+>     ret = hisi_ptt_trace_valid_config_type(val);
+>     if (ret < 0)
+>         goto out;
+>     ctrl->type = val;
+> 
+>     val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+>     ret = hisi_ptt_trace_valid_config_format(val);
+>     if (ret < 0)
+>         goto out;
+>     ctrl->format = val;
+> 
+>     ...
+> }
+>>
+>>>
+>>>> +                         ARRAY_SIZE(hisi_ptt_trace_available_direction));
+>>>> +    if (ret < 0)
+>>>> +        goto out;
+>>>> +    ctrl->direction = val;
+>>>> +
+>>>> +    val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+>>>> +    ret = hisi_ptt_trace_valid_config(val, hisi_ptt_trace_available_type,
+>>>> +                      ARRAY_SIZE(hisi_ptt_trace_available_type));
+>>>> +    if (ret < 0)
+>>>> +        goto out;
+>>>> +    ctrl->type = val;
+>>>> +
+>>>> +    val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+>>>> +    ret = hisi_ptt_trace_valid_config_onehot(val, hisi_ptt_trace_availble_format,
+>>>> +                         ARRAY_SIZE(hisi_ptt_trace_availble_format));
+>>>> +    if (ret < 0)
+>>>> +        goto out;
+>>>> +    ctrl->format = val;
+>>>> +
+>>>> +out:
+>>>> +    mutex_unlock(&hisi_ptt->mutex);
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static void *hisi_ptt_pmu_setup_aux(struct perf_event *event, void **pages,
+>>>> +                    int nr_pages, bool overwrite)
+>>>> +{
+>>>> +    struct hisi_ptt_pmu_buf *buf;
+>>>> +    struct page **pagelist;
+>>>> +    int i;
+>>>> +
+>>>> +    if (overwrite) {
+>>>> +        dev_warn(event->pmu->dev, "Overwrite mode is not supported\n");
+>>>> +        return NULL;
+>>>> +    }
+>>>> +
+>>>> +    /* If the pages size less than buffers, we cannot start trace */
+>>>> +    if (nr_pages < HISI_PTT_TRACE_TOTAL_BUF_SIZE / PAGE_SIZE)
+>>>> +        return NULL;
+>>>> +
+>>>> +    buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+>>>> +    if (!buf)
+>>>> +        return NULL;
+>>>> +
+>>>> +    pagelist = kcalloc(nr_pages, sizeof(*pagelist), GFP_KERNEL);
+>>>> +    if (!pagelist) {
+>>>> +        kfree(buf);
+>>>> +        return NULL;
+>>>> +    }
+>>>> +
+>>>> +    for (i = 0; i < nr_pages; i++)
+>>>> +        pagelist[i] = virt_to_page(pages[i]);
+>>>> +
+>>>> +    buf->base = vmap(pagelist, nr_pages, VM_MAP, PAGE_KERNEL);
+>>>> +    if (!buf->base) {
+>>>> +        kfree(pagelist);
+>>>> +        kfree(buf);
+>>>> +        return NULL;
+>>>> +    }
+>>>> +
+>>>> +    buf->nr_pages = nr_pages;
+>>>> +    buf->length = nr_pages * PAGE_SIZE;
+>>>> +    buf->pos = 0;
+>>>> +
+>>>> +    kfree(pagelist);
+>>>> +    return buf;
+>>>> +}
+>>>> +
+>>>> +static void hisi_ptt_pmu_free_aux(void *aux)
+>>>> +{
+>>>> +    struct hisi_ptt_pmu_buf *buf = aux;
+>>>> +
+>>>> +    vunmap(buf->base);
+>>>> +    kfree(buf);
+>>>> +}
+>>>> +
+>>>> +static void hisi_ptt_pmu_start(struct perf_event *event, int flags)
+>>>> +{
+>>>> +    struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+>>>> +    struct perf_output_handle *handle = &hisi_ptt->trace_ctrl.handle;
+>>>> +    struct hw_perf_event *hwc = &event->hw;
+>>>> +    struct hisi_ptt_pmu_buf *buf;
+>>>> +    int cpu = event->cpu;
+>>>> +    int ret;
+>>>> +
+>>>> +    hwc->state = 0;
+>>>> +    mutex_lock(&hisi_ptt->mutex);
+>>>> +    if (hisi_ptt->trace_ctrl.started) {
+>>>> +        pci_dbg(hisi_ptt->pdev, "trace has already started\n");
+>>>
+>>> doesn't perf core guard against this sort of thing?
+>>>
+>>
+>> Maybe not as tested. The perf core will start the events 1)on the cpus user specified or
+>> 2)on all the cpus, but the PTT trace is intended to start once on one cpu.
+>>
+>> For the 2) case, the driver will make default cpu to start the trace and block others
+>> in pmu::add(). For the 1) case we'll met the condition here. So the started status is
+>> test here to avoid a second start.
+> 
+> if this is a realistic and sensible usecase then it would be nice to handle in core perf code at some stage
+> 
 
-Secondly assuming we have a call of pci_scan_slot(bus, 0) and no ARI
-this check also makes sure that the next_fn(bus, dev, 0) call that
-initializes fn in the loop returns 0 unless dev->multifunction is set
-so we only enter the loop and look for more functions if the devfn 0
-device is multifunction. I found this a bit non obvious. Also I
-personally don't like that next_fn() returns 0 which is a valid fn to
-indicate no more functions and that the handling of the first function
-duplicates the code in the loop for the other functions.
+I think at least PTT trace meet this condition but seems we're the only uncore tracing PMU now, so
+maybe it's still not common.
 
-The first point also means that your proposal of allowing
-dev =3D=3D NULL for the first function if jailhouse_paravirt() respectively
-hypervisor_isolated_pci_functions() is set indeed works as far as I can
-tell from the s390 case. That made me wonder though. If we instead
-unconditionally allow the first function to be missing (dev =3D=3D NULL)
-then we don't even need the extra chek for isolated PCI functions. I'm
-assuming though we can't do that as we would then waste time scanning
-all function of empty downstream ports?
+>>
+>>>> +        goto stop;
+>>>> +    }
+>>>> +
+>>>> +    if (cpu == -1)
+>>>> +        cpu = hisi_ptt->trace_ctrl.default_cpu;
+>>>> +
+>>>> +    /*
+>>>> +     * Handle the interrupt on the same cpu which starts the trace to avoid
+>>>> +     * context mismatch. Otherwise we'll trigger the WARN from the perf
+>>>> +     * core in event_function_local().
+>>>> +     */
+>>>> +    WARN_ON(irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+>>>> +                 cpumask_of(cpu)));
+>>>> +
+>>>> +    ret = hisi_ptt_alloc_trace_buf(hisi_ptt);
+>>>> +    if (ret) {
+>>>> +        pci_dbg(hisi_ptt->pdev, "alloc trace buf failed, ret = %d\n", ret);
+>>>> +        goto stop;
+>>>> +    }
+>>>> +
+>>>> +    buf = perf_aux_output_begin(handle, event);
+>>>> +    if (!buf) {
+>>>> +        pci_dbg(hisi_ptt->pdev, "aux output begin failed\n");
+>>>> +        goto stop;
+>>>> +    }
+>>>> +
+>>>> +    buf->pos = handle->head % buf->length;
+>>>> +
+>>>> +    ret = hisi_ptt_trace_start(hisi_ptt);
+>>>> +    if (ret) {
+>>>> +        pci_dbg(hisi_ptt->pdev, "trace start failed, ret = %d\n", ret);
+>>>> +        perf_aux_output_end(handle, 0);
+>>>> +        goto stop;
+>>>> +    }
+>>>> +
+>>>> +    mutex_unlock(&hisi_ptt->mutex);
+>>>> +    return;
+>>>> +stop:
+>>>> +    event->hw.state |= PERF_HES_STOPPED;
+>>>> +    mutex_unlock(&hisi_ptt->mutex);
+>>>> +}
+[...]
+>>>> +
+>>>> +static void hisi_ptt_remove(struct pci_dev *pdev)
+>>>> +{
+>>>> +    struct hisi_ptt *hisi_ptt = pci_get_drvdata(pdev);
+>>>> +
+>>>> +    /*
+>>>> +     * We have to manually unregister the PMU device rather than make it
+>>>> +     * devres managed to keep order that the PMU device's unregistration
+>>>> +     * is prior to the release of DMA buffers. As the DMA buffers are
+>>>> +     * devm allocated when necessary which is after the registration of
+>>>> +     * the PMU device.
+>>>> +     */
+>>>
+>>> do you really need to mention all this?
+>>>
+>>
+>> I think yes. Otherwise people may ask why not register PMU device in managed
+>> way as well.
+> 
+> I expect devres work to be done after hisi_ptt_remove() so I would know this...
+> 
 
-It's a bit of a larger cleanup but I think I will send a patch to
-propose changing things around such that the first function is handled
-in the loop of pci_scan_slot() too and that next_fn() returns -ENODEV
-if there are no more functions. That will also make things more
-readable (to me) and commented the cases where we know that we're done
-looking. Then a second patch can pull the jailhouse/s390 special case
-into pci_scan_slot().
+yes, but the problem is that the buffers are devm allocated outside probe so the
+order is not obvious and maybe a bit hard to understand.
+
+But as suggested to allocate the buffers in the probe stage we can get rid of it
+and make PMU registration devres managed as well.
 
 Thanks,
-Niklas
+Yicong
 
---=-1ip2eaNreskyjKOkjE3X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSiikNOrnCUNbxSj4j7H22hwInkVgUCYlVpigAKCRD7H22hwInk
-Vr9VAQCW2W/D94YrYhOitc7fmElPM7yxyJJnNRpzdiawAVhIPQD/RYYotOrlXumS
-YKoN3Qgf2vjZF7G4gv453E/2wT66SgY=
-=Y6rV
------END PGP SIGNATURE-----
-
---=-1ip2eaNreskyjKOkjE3X--
 
