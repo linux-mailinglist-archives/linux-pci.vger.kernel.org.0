@@ -2,193 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDAC94FE429
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 16:49:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 962674FE4B0
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 17:24:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356757AbiDLOvg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 10:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44192 "EHLO
+        id S1350391AbiDLP07 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 11:26:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356756AbiDLOvg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 10:51:36 -0400
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE6A18392
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 07:49:18 -0700 (PDT)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-de3ca1efbaso20991368fac.9
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 07:49:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MI/s8lMb+5u9jDXMESm67P3hh7kDpykXHC+Y/RJF84A=;
-        b=56O9tT1QRqtS08dRScUmWklBBdxwJ25OkqyFh8qKnW5Fd5lgxyqobGx2ABCl0NL/7u
-         HIzLW1WYYmrcI5TkI5vFUAeKM5vOKjUcRG/zTss7S/7U6g2QsyCog9AyIypK5onR+9Co
-         lAd7QWBhVaPwymffdH0nK0m1jD2DqnePvMvmvX6a0TsZwnJ0GxttYrpxM1rDXwh7SqSQ
-         +A501U2dMFezJ3DtH4oU7vrDTtjfC3P1kMZM4EnUHxw0yiPITd1sbx8BxWNz19sGqB49
-         5WR/TFVoHSw8BRn3Y31CZ1Bmza13958mrcrJJ8nANxaRQVAzfa7ZVVWuHbFOdxcXA1Sm
-         sl8Q==
-X-Gm-Message-State: AOAM532758AXem/WLliJBCs3zaNAwvleI8U7c1wPoBSsAh0Jkpc/nb6f
-        wdfgv0irMhP05prce2FPD7oJlWk5BA==
-X-Google-Smtp-Source: ABdhPJwUotTgf8IcQnbPpu0mkxdh8FumjKvhk7ToNcfcWBQX5t22KktLun3tNILU6iSaX8dNJpcArg==
-X-Received: by 2002:a05:6808:148:b0:2ec:f0e2:fc42 with SMTP id h8-20020a056808014800b002ecf0e2fc42mr1844690oie.84.1649774946984;
-        Tue, 12 Apr 2022 07:49:06 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id q18-20020a056830019200b005e6b8f3a819sm5653190ota.75.2022.04.12.07.49.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 07:49:06 -0700 (PDT)
-Received: (nullmailer pid 109670 invoked by uid 1000);
-        Tue, 12 Apr 2022 14:49:05 -0000
-Date:   Tue, 12 Apr 2022 09:49:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Huacai Chen <chenhuacai@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH V12 4/6] PCI: loongson: Improve the MRRS quirk for LS7A
-Message-ID: <YlWRYTuS6194hVjV@robh.at.kernel.org>
-References: <20220226104731.76776-1-chenhuacai@loongson.cn>
- <20220226104731.76776-5-chenhuacai@loongson.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220226104731.76776-5-chenhuacai@loongson.cn>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S1346458AbiDLP06 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 11:26:58 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B80F813F86;
+        Tue, 12 Apr 2022 08:24:40 -0700 (PDT)
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23CEn5t3001448;
+        Tue, 12 Apr 2022 15:24:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=aOkAaRJ9/o0OIEzV/8mYAPmTpT2SVzZsDbDkXsifi04=;
+ b=Ur9P9piuFVERhKHfUsgUBuqwEkkQlPSNFEXeiEdDD8/BF/DMpPgC6V72SiQq0MCfzaIK
+ KcVNXKkrQWUa31lXzyHFSMh73+7HOd2g3/jysY/WhqMPb15GcFAJZsA89EKpfWYgWaYp
+ icxV9CXjgTQfInDfHrfbupo0lpU73sRzikbvQYoRJe4fjcLZDHLtefzX56CeEYA5XBDZ
+ f6fEC+GrAtHgq1aYPR7gG29PSBVqwhgaaE/2ohXgww6EBZ7Gmeue7fQmA2lKxbsd7pGa
+ ATwFDv1sROcWfV+T99SmZWfIzJ0sJY7Gs1I5jK0K7BTYOr35bmfMgaGebAXzek8gWAQX +g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3fd7k972sm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 15:24:36 +0000
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23CEnPXk002595;
+        Tue, 12 Apr 2022 15:24:36 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3fd7k972s4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 15:24:36 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23CFHUiK017874;
+        Tue, 12 Apr 2022 15:24:34 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06fra.de.ibm.com with ESMTP id 3fbsj032jx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 15:24:34 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23CFOVMx53608862
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Apr 2022 15:24:31 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3AF724C044;
+        Tue, 12 Apr 2022 15:24:31 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D54234C040;
+        Tue, 12 Apr 2022 15:24:30 +0000 (GMT)
+Received: from sig-9-145-31-85.uk.ibm.com (unknown [9.145.31.85])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Apr 2022 15:24:30 +0000 (GMT)
+Message-ID: <a9520a3d46aa993145e6af59c6699809e21549ca.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/4] PCI: Clean up pci_scan_slot()
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+Date:   Tue, 12 Apr 2022 17:24:30 +0200
+In-Reply-To: <20220412143040.1882096-2-schnelle@linux.ibm.com>
+References: <20220412143040.1882096-1-schnelle@linux.ibm.com>
+         <20220412143040.1882096-2-schnelle@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TmTHQZLhk0gOvkTKMRf7cdjCLjY-dQSF
+X-Proofpoint-GUID: hyieiNt5oIAee7loC5B3STqbro1kEcWz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-12_05,2022-04-12_02,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 spamscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204120073
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 26, 2022 at 06:47:29PM +0800, Huacai Chen wrote:
-> In new revision of LS7A, some PCIe ports support larger value than 256,
-> but their maximum supported MRRS values are not detectable. Moreover,
-> the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> will actually set a big value in its driver. So the only possible way
-> is configure MRRS of all devices in BIOS, and add a pci host bridge bit
-> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+On Tue, 2022-04-12 at 16:30 +0200, Niklas Schnelle wrote:
+> While determining the next PCI function is factored out of
+> pci_scan_slot() into next_fn() the former still handles the first
+> function as a special case duplicating the code from the scan loop and
+> splitting the condition that the first function exits from it being
+> multifunction which is tested in next_fn().
 > 
-> However, according to PCIe Spec, it is legal for an OS to program any
-> value for MRRS, and it is also legal for an endpoint to generate a Read
-> Request with any size up to its MRRS. As the hardware engineers say, the
-> root cause here is LS7A doesn't break up large read requests. In detail,
-> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
-> request with a size that's "too big" ("too big" means larger than the
-> PCIe ports can handle, which means 256 for some ports and 4096 for the
-> others, and of course this is a problem in the LS7A's hardware design).
+> Furthermore the non ARI branch of next_fn() mixes the case that
+> multifunction devices may have non-contiguous function ranges and dev
+> may thus be NULL with the multifunction requirement. It also signals
+> that no further functions need to be scanned by returning 0 which is
+> a valid function number.
 > 
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Improve upon this by moving all conditions for having to scan for more
+> functions into next_fn() and make them obvious and commented.
+> 
+> By changing next_fn() to return -ENODEV instead of 0 when there is no
+> next function we can then handle the initial function inside the loop
+> and deduplicate the shared handling.
+> 
+> No functional change is intended.
+> 
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > ---
->  drivers/pci/controller/pci-loongson.c | 47 ++++++++++-----------------
->  drivers/pci/pci.c                     |  6 ++++
->  include/linux/pci.h                   |  1 +
->  3 files changed, 25 insertions(+), 29 deletions(-)
+>  drivers/pci/probe.c | 41 +++++++++++++++++++----------------------
+>  1 file changed, 19 insertions(+), 22 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 48d9d283cb59..ba182f9d5718 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -67,37 +67,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_LS7A_LPC, system_bus_quirk);
->  
-> -static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +static void loongson_mrrs_quirk(struct pci_dev *pdev)
->  {
-> -	struct pci_bus *bus = dev->bus;
-> -	struct pci_dev *bridge;
-> -	static const struct pci_device_id bridge_devids[] = {
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> -		{ 0, },
-> -	};
-> -
-> -	/* look for the matching bridge */
-> -	while (!pci_is_root_bus(bus)) {
-> -		bridge = bus->self;
-> -		bus = bus->parent;
-> -		/*
-> -		 * Some Loongson PCIe ports have a h/w limitation of
-> -		 * 256 bytes maximum read request size. They can't handle
-> -		 * anything larger than this. So force this limit on
-> -		 * any devices attached under these ports.
-> -		 */
-> -		if (pci_match_id(bridge_devids, bridge)) {
-> -			if (pcie_get_readrq(dev) > 256) {
-> -				pci_info(dev, "limiting MRRS to 256\n");
-> -				pcie_set_readrq(dev, 256);
-> -			}
-> -			break;
-> -		}
-> -	}
-> +	/*
-> +	 * Some Loongson PCIe ports have h/w limitations of maximum read
-> +	 * request size. They can't handle anything larger than this. So
-> +	 * force this limit on any devices attached under these ports.
-> +	 */
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-> +
-> +	if (!bridge)
-
-Isn't this condition impossible? I'd drop and just let the NULL 
-dereference fault happen rather than continue on silently.
-
-> +		return;
-> +
-> +	bridge->no_inc_mrrs = 1;
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 17a969942d37..389aa1f9cb2c 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2579,33 +2579,35 @@ struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
 >  }
-> -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
+>  EXPORT_SYMBOL(pci_scan_single_device);
 >  
->  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+> -static unsigned int next_fn(struct pci_bus *bus, struct pci_dev *dev,
+> -			    unsigned int fn)
+> +static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
 >  {
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9ecce435fb3f..72a15bf9eee8 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5993,6 +5993,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  {
->  	u16 v;
->  	int ret;
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>  	int pos;
+>  	u16 cap = 0;
+>  	unsigned int next_fn;
 >  
->  	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
->  		return -EINVAL;
-> @@ -6011,6 +6012,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+> -	if (pci_ari_enabled(bus)) {
+> -		if (!dev)
+> -			return 0;
+
+This part here theoretically changes the behavior slightly. If the ARI
+information is wrong/lands us in a "hole" we may look for more
+functions via the non-ARI path. Not sure if that is relevant though as
+in the worst case we might find functions that we otherwise wouldn't
+have seen. Seems rather obsure to me but I might be wrong, we currently
+don't see the ARI capability in Linux on IBM Z so I have less
+experience with this. I did of course boot test on my x86_64
+workstation.
+
+> +	if (dev && pci_ari_enabled(bus)) {
+>  		pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI);
+>  		if (!pos)
+> -			return 0;
+> +			return -ENODEV;
 >  
->  	v = (ffs(rq) - 8) << 12;
+>  		pci_read_config_word(dev, pos + PCI_ARI_CAP, &cap);
+>  		next_fn = PCI_ARI_CAP_NFN(cap);
+>  		if (next_fn <= fn)
+> -			return 0;	/* protect against malformed list */
+> +			return -ENODEV;	/* protect against malformed list */
 >  
-> +	if (bridge->no_inc_mrrs) {
-> +		if (rq > pcie_get_readrq(dev))
-> +			return -EINVAL;
-> +	}
-> +
->  	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
->  						  PCI_EXP_DEVCTL_READRQ, v);
+>  		return next_fn;
+>  	}
 >  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 8253a5413d7c..01a464eb640a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -569,6 +569,7 @@ struct pci_host_bridge {
->  	void		*release_data;
->  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
->  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-> +	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
->  	unsigned int	native_aer:1;		/* OS may use PCIe AER */
->  	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
->  	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
-> -- 
-> 2.27.0
+> -	/* dev may be NULL for non-contiguous multifunction devices */
+> -	if (!dev || dev->multifunction)
+> -		return (fn + 1) % 8;
+> -
+> -	return 0;
+> +	/* only multifunction devices may have more functions */
+> +	if (dev && !dev->multifunction)
+> +		return -ENODEV;
+> +	/*
+> +	 * A function 0 is required but multifunction devices may
+> +	 * be non-contiguous so dev can be NULL otherwise.
+> +	 */
+> +	if (!fn && !dev)
+> +		return -ENODEV;
+> +	return (fn <= 6) ? fn + 1 : -ENODEV;
+>  }
+>  
 > 
+---8<---
+
+
