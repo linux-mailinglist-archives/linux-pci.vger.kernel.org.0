@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54DB24FDD2E
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 13:08:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA33D4FDD30
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 13:08:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241262AbiDLK6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 06:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44900 "EHLO
+        id S231945AbiDLK6z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 06:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377246AbiDLK43 (ORCPT
+        with ESMTP id S1377249AbiDLK43 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 06:56:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6936D8FE4B;
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693B18FE4C;
         Tue, 12 Apr 2022 02:50:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 03B0361864;
-        Tue, 12 Apr 2022 09:50:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D1FDC385AB;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F035C60BC8;
+        Tue, 12 Apr 2022 09:50:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39744C385A8;
         Tue, 12 Apr 2022 09:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1649757030;
-        bh=big4IiYwCUrp5tFic5/ifdQ2CpsrM8sTB+lb/TU8tAw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=P2QjXjkTYafeccqtUTLaoYUtvLkYeVp5QaSleN+WSHm6miGw4Q6TmrfOldma4PHDa
-         9106N9V3OFyhaU7NSYvzBgUMvmmhFv54V6qRHKzVcyUCUp+2NHrUl5mTMlD1FeM4Fa
-         r/R5uyKZGHVFGJnox/Iki6u8Ob6fB8jTknKmusMRCU+oPWx7glvlhQfqxO2t2w8itw
-         AitupK+oP+zt0aD8z0RuyA/OS0YHOZ7gjnoNeCg6jcEwpWwqEEDR5eRL5vTudD1MbW
-         sRmn0bDAGeM2ycKVMJq1a+2MSMoePkMS5lUd7wwLINsG7D0XVTEEAVBRvBqEJeut+u
-         25NKDyAX0atQA==
+        bh=vzWBAbR4Oux6P/RO30qmN2wLxTgTR+gOm30Ed6V+lZE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IlSS1wmFKrWzkfJi4hldavcKISvxjfNC+VXxqhdNioR67UER5LhU1AAwVB0tbvlvq
+         mnj+pv5tER0pKEBnvdr6hFBBBmW1I1Z8QnlISWvKeiVybuabAYtcnxWYy+oq1h4GhF
+         Sg+FA+pB1xRO4S5fUfp7NKll8iY3fCfurs+ji78M+NbH9rdTb2PRlmgCmCL7wdi1rv
+         F3OaMOm9BFdhM07XH5oQe4QkOp5vgnrr5oXAg+6yOSpF5f72B5y/YOHAhsgUIn/chz
+         UnklEes3OVA89erBB/kCg9Dnp6+JDv1XHVlA+JGLDlsD67sgI+oePSR94CzXbEHxmL
+         4IqDnvutV1j9g==
 Received: by pali.im (Postfix)
-        id 7BB9DA75; Tue, 12 Apr 2022 11:50:27 +0200 (CEST)
+        id D3C492AB2; Tue, 12 Apr 2022 11:50:27 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -43,10 +43,12 @@ To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Russell King <rmk+kernel@armlinux.org.uk>
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/4] PCI: mvebu: Slot support
-Date:   Tue, 12 Apr 2022 11:49:42 +0200
-Message-Id: <20220412094946.27069-1-pali@kernel.org>
+Subject: [PATCH v5 1/4] PCI: Add PCI_EXP_SLTCTL_ASPL_DISABLE macro
+Date:   Tue, 12 Apr 2022 11:49:43 +0200
+Message-Id: <20220412094946.27069-2-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220412094946.27069-1-pali@kernel.org>
+References: <20220412094946.27069-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,42 +62,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch series add slot support to pci-mvebu.c driver.
+Add macro defining Auto Slot Power Limit Disable bit in Slot Control
+Register.
 
-Changes in v5:
-* Fix compile error due to wrong patch rebasing
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ include/uapi/linux/pci_regs.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v4:
-* Set 239 W when DT slot-power-limit-milliwatt is between 239 W and 250 W
-* Fix returning power limit value
-
-Changes in v3:
-* Set 600 W when DT slot-power-limit-milliwatt > 600 W
-
-Changes in v2:
-* Dropped patch with PCI_EXP_SLTCAP_*_SHIFT macros as it is not needed anymore
-* Dropped patch "ARM: dts: turris-omnia: Set PCIe slot-power-limit-milliwatt properties" which was applied
-* Added support for PCIe 6.0 slot power limit encodings
-* Round down slot power limit value
-* Fix handling of slot power limit with scale x1.0 (0x00 value)
-* Use FIELD_PREP instead of _SHIFT macros
-* Changed commit message to Bjorn's suggestion
-* Changed comments in the code to match PCIe spec
-* Preserve user settings of PCI_EXP_SLTCTL_ASPL_DISABLE bit
-
-Pali Rohár (4):
-  PCI: Add PCI_EXP_SLTCTL_ASPL_DISABLE macro
-  dt-bindings: Add 'slot-power-limit-milliwatt' PCIe port property
-  PCI: Add function for parsing 'slot-power-limit-milliwatt' DT property
-  PCI: mvebu: Add support for sending Set_Slot_Power_Limit message
-
- Documentation/devicetree/bindings/pci/pci.txt |  6 ++
- drivers/pci/controller/pci-mvebu.c            | 97 ++++++++++++++++++-
- drivers/pci/of.c                              | 70 +++++++++++++
- drivers/pci/pci.h                             | 15 +++
- include/uapi/linux/pci_regs.h                 |  1 +
- 5 files changed, 184 insertions(+), 5 deletions(-)
-
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index bee1a9ed6e66..108f8523fa04 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -616,6 +616,7 @@
+ #define  PCI_EXP_SLTCTL_PWR_OFF        0x0400 /* Power Off */
+ #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
+ #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
++#define  PCI_EXP_SLTCTL_ASPL_DISABLE	0x2000 /* Auto Slot Power Limit Disable */
+ #define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
+ #define PCI_EXP_SLTSTA		0x1a	/* Slot Status */
+ #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
 -- 
 2.20.1
 
