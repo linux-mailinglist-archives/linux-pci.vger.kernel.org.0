@@ -2,284 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2AE84FDFD8
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 14:30:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE05B4FE072
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 14:39:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244319AbiDLMaL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 08:30:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43084 "EHLO
+        id S1353218AbiDLMke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 08:40:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353443AbiDLM2I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 08:28:08 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA15B267;
-        Tue, 12 Apr 2022 04:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649763495; x=1681299495;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m72jmhgC7YfsqgqgAoeS8Cl15fMwSujr/+aPK65oKdA=;
-  b=gKZJI3sKvlkv8dHzMjaH12CysDbctMcZ/5semIIrcJ/5T48k42Se4f9l
-   gFu1ALfRNEFzQIxa0sqCI8ZIwDa7XybGiWOY4z0O6GKgsROJJo4L2mvl6
-   MfBIAywEBhCvBMcjFu2IOIUO1iZaMTahuYOhHgnFfDTKbhjZcTonvmN6l
-   bU5lmsxtWt1i+AwUeukJENMP/Pl4m9JTo3Bh8ysWVziTYuxBhE/z8kEGl
-   GeueLADaQOqhPIh2HOhgXGgol7RrCDQ5cIOlQL1NPVCQZ5PX+TGt8tyMV
-   zLOZOGLgrSOjxYsIsPOez/LL84tE3Cx8BUfHewjL6CMQovPa95iYozNUx
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10314"; a="287371255"
-X-IronPort-AV: E=Sophos;i="5.90,253,1643702400"; 
-   d="scan'208";a="287371255"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 04:38:15 -0700
-X-IronPort-AV: E=Sophos;i="5.90,253,1643702400"; 
-   d="scan'208";a="526006766"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 04:38:12 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 12 Apr 2022 14:38:10 +0300
-Date:   Tue, 12 Apr 2022 14:38:10 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 4/9] PCI/PM: Rework changing power states of PCI
- devices
-Message-ID: <YlVkojhMtirzzlFy@lahna>
-References: <4419002.LvFx2qVVIh@kreacher>
- <11975904.O9o76ZdvQC@kreacher>
- <13011315.uLZWGnKmhe@kreacher>
- <YlVNzZRHW58QRD3c@lahna>
- <CAJZ5v0iKnzHZnx-96CBaeMvz29ezoCBH=F60gM7uAkoBazUzFA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iKnzHZnx-96CBaeMvz29ezoCBH=F60gM7uAkoBazUzFA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1355163AbiDLMjA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 08:39:00 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3EAC5DA1A;
+        Tue, 12 Apr 2022 04:59:25 -0700 (PDT)
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23CBBsTA003228;
+        Tue, 12 Apr 2022 11:59:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version; s=pp1; bh=yHu1YiMcXBjBiYCzq1CRcs/NYWRxbRqI7csqw43nT/E=;
+ b=gtvJUdIoEG7Dtqpo4Y2aupeGoyhQm9qX3OF/eisKWwypGhYoraNOoM0N60QX1jUh0apB
+ sLw8c8EPctwjvGtMATUpMsS/2WyDjA85uAY/5RdhnhFEpBcSQMvVpzeu2tCIwvR+Mqj9
+ ntH1DxSEVdO4y3sTzs5jHjiakF6d0Np5zza/z9p4wKSb5vWjc9NG1gXDMpTQFfMcrRmC
+ JfhWoZ7gh9tdiv+R1x/mgQeWx3mTsi2MdadNNZZqfq3SOmjpcAZQqpPNihglzMcQySLq
+ GxgxCpdGLUGSy12Y+iBdHtvN+6Xt6166Al30Nc4rcvXRSMtEF7/ePBevUt6T11Uj9E8H wA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fd8b611wq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 11:59:20 +0000
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23CBi6GN028860;
+        Tue, 12 Apr 2022 11:59:19 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fd8b611w1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 11:59:19 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23CBbwfw007739;
+        Tue, 12 Apr 2022 11:59:17 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 3fb1s8vty9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 11:59:17 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23CBxEG638666662
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Apr 2022 11:59:14 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3ABA42041;
+        Tue, 12 Apr 2022 11:59:13 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78C734203F;
+        Tue, 12 Apr 2022 11:59:13 +0000 (GMT)
+Received: from sig-9-145-31-85.uk.ibm.com (unknown [9.145.31.85])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Apr 2022 11:59:13 +0000 (GMT)
+Message-ID: <d4c7aca9c662c3d99886abfd948e5c8590e43ab6.camel@linux.ibm.com>
+Subject: Re: [PATCH RESEND 1/2] PCI: Extend isolated function probing to s390
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+Date:   Tue, 12 Apr 2022 13:59:06 +0200
+In-Reply-To: <20220411192312.GA531449@bhelgaas>
+References: <20220411192312.GA531449@bhelgaas>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-1ip2eaNreskyjKOkjE3X"
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Y2WKxO9Mx-nRK3GWErvugW2hRsJJdE7M
+X-Proofpoint-ORIG-GUID: Muh2p9oWtiuthkmbn0CcLwTFVfptA2YQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-12_03,2022-04-12_02,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 adultscore=0 spamscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2204120053
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-On Tue, Apr 12, 2022 at 01:31:57PM +0200, Rafael J. Wysocki wrote:
-> On Tue, Apr 12, 2022 at 1:17 PM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Mon, Apr 11, 2022 at 04:25:12PM +0200, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > There are some issues related to changing power states of PCI
-> > > devices, mostly related to carrying out unnecessary actions in some
-> > > places, and the code is generally hard to follow.
-> > >
-> > >  1. pci_power_up() has two callers, pci_set_power_state() and
-> > >     pci_pm_default_resume_early().  The latter updates the current
-> > >     power state of the device right after calling pci_power_up()
-> > >     and it restores the entire config space of the device right
-> > >     after that, so pci_power_up() itself need not read the
-> > >     PCI_PM_CTRL register or restore the BARs after programming the
-> > >     device into D0 in that case.
-> > >
-> > >  2. It is generally hard to get a clear view of the pci_power_up()
-> > >     code flow, especially in some corner cases, due to all of the
-> > >     involved PCI_PM_CTRL register reads and writes occurring in
-> > >     pci_platform_power_transition() and in pci_raw_set_power_state(),
-> > >     some of which are redundant.
-> > >
-> > >  3. The transitions from low-power states to D0 and the other way
-> > >     around are unnecessarily tangled in pci_raw_set_power_state()
-> > >     which causes it to use a redundant local variable and makes it
-> > >     rather hard to follow.
-> > >
-> > > To address the above shortcomings, make the following changes:
-> > >
-> > >  a. Remove the code handling transitions into D0
-> >
-> > Should this be D3?
-> 
-> No.  Transitions into D0 will be handled by pci_power_up() directly,
-> so they need not be handled by pci_raw_set_power_state().
+--=-1ip2eaNreskyjKOkjE3X
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-OK.
+On Mon, 2022-04-11 at 14:23 -0500, Bjorn Helgaas wrote:
+> On Mon, Apr 11, 2022 at 10:43:56AM +0200, Niklas Schnelle wrote:
+> > On Fri, 2022-04-08 at 17:45 -0500, Bjorn Helgaas wrote:
+> > > On Mon, Apr 04, 2022 at 11:53:45AM +0200, Niklas Schnelle wrote:
+> > > > Like the jailhouse hypervisor s390's PCI architecture allows passin=
+g
+> > > > isolated PCI functions to an OS instance. As of now this is was not
+> > > > utilized even with multi-function support as the s390 PCI code make=
+s
+> > > > sure that only virtual PCI busses including a function with devfn 0=
+ are
+> > > > presented to the PCI subsystem. A subsequent change will remove thi=
+s
+> > > > restriction.
+> > > >=20
+> > > > Allow probing such functions by replacing the existing check for
+> > > > jailhouse_paravirt() with a new hypervisor_isolated_pci_functions()
+> > > > helper.
+> > > >=20
+> > > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > >=20
+> > > I'm OK with the idea of generalizing this Jailhouse test, but I wonde=
+r
+> > > if this check should be in pci_scan_slot() rather than in
+> > > pci_scan_child_bus_extend().
+> > >=20
+> > > I think the idea is that pci_scan_slot() should find all the function=
+s
+> > > of a device (a.k.a. "slot"), so it's a little weird to have a loop
+> > > calling pci_scan_single_device() for each function in both places.
+> >=20
+> > Yeah, I agree.
+> > > Currently we never call pcie_aspm_init_link_state() for these
+> > > Jailhouse or s390 functions.  Maybe that's OK (and I think
+> > > pci_scan_slot() is the wrong place to initialize ASPM anyway) but if
+> > > we could move the Jailhouse/s390 checking to pci_scan_slot(), it woul=
+d
+> > > at least remove the inconsistency.
+> > >=20
+> > > I'm thinking something along the lines of the patch below.  I'm sure
+> > > Jan considered this originally, so maybe there's some reason this
+> > > won't work.
+> >=20
+> > One thing I already noticed is that I think next_fn() may need to be
+> > changed. If pci_ari_enabled(bus) is true, then it immediately returns 0
+> > on dev =3D=3D NULL while if it is false there is an extra check for non=
+-
+> > contiguous multifunction devices. Even then I think on jailhouse() dev-
+> > > multifunction might not be set at that point. This is in contrast to
+> > s390 where we set dev->multifunction based on information provided by
+> > the platform before scanning the bus. So I'll have to be careful not to
+> > create a state where this works on s390 but might not work for
+> > jailhouse.
+> >=20
+> > I also do wonder what the role of the PCI_SCAN_ALL_PCIE_DEVS flag
+> > should be here. At least the comment in only_one_child() sounds a lot
+> > like that flag kind of indicates the same thing.
+>=20
+> I looked at PCI_SCAN_ALL_PCIE_DEVS, too, but I think that's for a
+> slightly different situation; see
+> https://git.kernel.org/linus/284f5f9dbac1
+>=20
+> Bjorn
 
-> > >     from pci_raw_set_power_state() and rename it as
-> > >     pci_set_low_power_state().
-> > >
-> > >  b. Add the code handling transitions into D0 directly
-> > >     to pci_power_up() and to a new wrapper function
-> > >     pci_set_full_power_state() calling it internally that is
-> > >     only used in pci_set_power_state().
-> > >
-> > >  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
-> > >     and make it work in the same way for transitions from any
-> > >     low-power states (transitions from D1 and D2 are handled
-> > >     slightly differently before the change).
-> > >
-> > >  d. Put the restoration of the BARs and the PCI_PM_CTRL
-> > >     register read confirming the power state change into
-> > >     pci_set_full_power_state() to avoid doing that in
-> > >     pci_pm_default_resume_early() unnecessarily.
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >
-> > > v1 -> v2:
-> > >    * Do not add a redundant check to pci_set_low_power_state().
-> > >
-> > > ---
-> > >  drivers/pci/pci.c |  154 +++++++++++++++++++++++++++++++++++-------------------
-> > >  1 file changed, 101 insertions(+), 53 deletions(-)
-> > >
-> > > Index: linux-pm/drivers/pci/pci.c
-> > > ===================================================================
-> > > --- linux-pm.orig/drivers/pci/pci.c
-> > > +++ linux-pm/drivers/pci/pci.c
-> > > @@ -1068,10 +1068,9 @@ static inline bool platform_pci_bridge_d
-> > >  }
-> > >
-> > >  /**
-> > > - * pci_raw_set_power_state - Use PCI PM registers to set the power state of
-> > > - *                        given PCI device
-> > > + * pci_set_low_power_state - Program the given device into a low-power state
-> > >   * @dev: PCI device to handle.
-> > > - * @state: PCI power state (D0, D1, D2, D3hot) to put the device into.
-> > > + * @state: PCI power state (D1, D2, D3hot) to put the device into.
-> > >   *
-> > >   * RETURN VALUE:
-> > >   * -EINVAL if the requested state is invalid.
-> > > @@ -1080,10 +1079,9 @@ static inline bool platform_pci_bridge_d
-> > >   * 0 if device already is in the requested state.
-> > >   * 0 if device's power state has been successfully changed.
-> > >   */
-> > > -static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
-> > > +static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state)
-> > >  {
-> > >       u16 pmcsr;
-> > > -     bool need_restore = false;
-> > >
-> > >       /* Check if we're already there */
-> > >       if (dev->current_state == state)
-> > > @@ -1092,7 +1090,7 @@ static int pci_raw_set_power_state(struc
-> > >       if (!dev->pm_cap)
-> > >               return -EIO;
-> > >
-> > > -     if (state < PCI_D0 || state > PCI_D3hot)
-> > > +     if (state < PCI_D1 || state > PCI_D3hot)
-> > >               return -EINVAL;
-> > >
-> > >       /*
-> > > @@ -1101,8 +1099,7 @@ static int pci_raw_set_power_state(struc
-> > >        * we can go from D1 to D3, but we can't go directly from D3 to D1;
-> > >        * we'd have to go from D3 to D0, then to D1.
-> > >        */
-> > > -     if (state != PCI_D0 && dev->current_state <= PCI_D3cold
-> > > -         && dev->current_state > state) {
-> > > +     if (dev->current_state <= PCI_D3cold && dev->current_state > state) {
-> > >               pci_err(dev, "invalid power transition (from %s to %s)\n",
-> > >                       pci_power_name(dev->current_state),
-> > >                       pci_power_name(state));
-> > > @@ -1122,29 +1119,8 @@ static int pci_raw_set_power_state(struc
-> > >               return -EIO;
-> > >       }
-> > >
-> > > -     /*
-> > > -      * If we're (effectively) in D3, force entire word to 0.
-> > > -      * This doesn't affect PME_Status, disables PME_En, and
-> > > -      * sets PowerState to 0.
-> > > -      */
-> > > -     switch (dev->current_state) {
-> > > -     case PCI_D0:
-> > > -     case PCI_D1:
-> > > -     case PCI_D2:
-> > > -             pmcsr &= ~PCI_PM_CTRL_STATE_MASK;
-> > > -             pmcsr |= state;
-> > > -             break;
-> > > -     case PCI_D3hot:
-> > > -     case PCI_D3cold:
-> > > -     case PCI_UNKNOWN: /* Boot-up */
-> > > -             if ((pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D3hot
-> > > -              && !(pmcsr & PCI_PM_CTRL_NO_SOFT_RESET))
-> > > -                     need_restore = true;
-> > > -             fallthrough;    /* force to D0 */
-> > > -     default:
-> > > -             pmcsr = 0;
-> > > -             break;
-> > > -     }
-> > > +     pmcsr &= ~PCI_PM_CTRL_STATE_MASK;
-> > > +     pmcsr |= state;
-> > >
-> > >       /* Enter specified state */
-> > >       pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, pmcsr);
-> > > @@ -1153,9 +1129,9 @@ static int pci_raw_set_power_state(struc
-> > >        * Mandatory power management transition delays; see PCI PM 1.1
-> > >        * 5.6.1 table 18
-> > >        */
-> > > -     if (state == PCI_D3hot || dev->current_state == PCI_D3hot)
-> > > +     if (state == PCI_D3hot)
-> > >               pci_dev_d3_sleep(dev);
-> > > -     else if (state == PCI_D2 || dev->current_state == PCI_D2)
-> > > +     else if (state == PCI_D2)
-> > >               udelay(PCI_PM_D2_DELAY);
-> > >
-> > >       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > > @@ -1165,22 +1141,6 @@ static int pci_raw_set_power_state(struc
-> > >                        pci_power_name(dev->current_state),
-> > >                        pci_power_name(state));
-> > >
-> > > -     /*
-> > > -      * According to section 5.4.1 of the "PCI BUS POWER MANAGEMENT
-> > > -      * INTERFACE SPECIFICATION, REV. 1.2", a device transitioning
-> > > -      * from D3hot to D0 _may_ perform an internal reset, thereby
-> > > -      * going to "D0 Uninitialized" rather than "D0 Initialized".
-> > > -      * For example, at least some versions of the 3c905B and the
-> > > -      * 3c556B exhibit this behaviour.
-> > > -      *
-> > > -      * At least some laptop BIOSen (e.g. the Thinkpad T21) leave
-> > > -      * devices in a D3hot state at boot.  Consequently, we need to
-> > > -      * restore at least the BARs so that the device will be
-> > > -      * accessible to its driver.
-> > > -      */
-> > > -     if (need_restore)
-> > > -             pci_restore_bars(dev);
-> > > -
-> > >       if (dev->bus->self)
-> > >               pcie_aspm_pm_state_change(dev->bus->self);
-> > >
-> > > @@ -1312,8 +1272,54 @@ static int pci_dev_wait(struct pci_dev *
-> > >   */
-> > >  int pci_power_up(struct pci_dev *dev)
-> > >  {
-> > > -     pci_platform_power_transition(dev, PCI_D0);
-> > > -     return pci_raw_set_power_state(dev, PCI_D0);
-> > > +     int ret;
-> > > +
-> > > +     ret = pci_platform_power_transition(dev, PCI_D0);
-> > > +     if (ret) {
-> >
-> > Here pci_platform_power_transition() returned an error so we go and read
-> > back the PM_CTRL to check in which power state the device is in? Perhaps
-> > add a comment here explaining why we need to do this?
-> 
-> That's the comment below, but I gather it is insufficient as is.
-> Please let me know if rephrasing it this way would help:
-> 
-> "Since pci_platform_power_transition() has returned an error, the
-> PCI_PM_CTRL register has not been read by it and the current power
-> state of the device is unknown. Read the PCI_PM_CTRL register now and
-> bail out if that fails."
+Thanks for the link. I did some more investigating and testing. I think
+I understand it now but I have to say I did struggle a little with the
+whole pci_scan_slot()/next_fn() logic.
 
-Yes, that's better, thanks!
+The most interesting to me is how I think the following check in
+next_fn() actually has multiple uses that weren't clear to me on first
+glance:
 
-> And I've just realized that pm_cap should be checked here, because it
-> is not guaranteed to be set.
+	/* dev may be NULL for non-contiguous multifunction devices */
+	if (!dev || dev->multifunction)
+		return (fn + 1) % 8;
 
-Good point.
+First it does cover the case mentioned in the comment where a=20
+multifunction device has some functions missing making it non-
+contiguous. As I understand it this case is also triggered on s390 when
+we "powered off" some of the VFs of a SR-IOV device where both the PFs
+and VFs are under the control of Linux but enumeration is done by
+firmware and that can hide some of the VFs.
+
+Secondly assuming we have a call of pci_scan_slot(bus, 0) and no ARI
+this check also makes sure that the next_fn(bus, dev, 0) call that
+initializes fn in the loop returns 0 unless dev->multifunction is set
+so we only enter the loop and look for more functions if the devfn 0
+device is multifunction. I found this a bit non obvious. Also I
+personally don't like that next_fn() returns 0 which is a valid fn to
+indicate no more functions and that the handling of the first function
+duplicates the code in the loop for the other functions.
+
+The first point also means that your proposal of allowing
+dev =3D=3D NULL for the first function if jailhouse_paravirt() respectively
+hypervisor_isolated_pci_functions() is set indeed works as far as I can
+tell from the s390 case. That made me wonder though. If we instead
+unconditionally allow the first function to be missing (dev =3D=3D NULL)
+then we don't even need the extra chek for isolated PCI functions. I'm
+assuming though we can't do that as we would then waste time scanning
+all function of empty downstream ports?
+
+It's a bit of a larger cleanup but I think I will send a patch to
+propose changing things around such that the first function is handled
+in the loop of pci_scan_slot() too and that next_fn() returns -ENODEV
+if there are no more functions. That will also make things more
+readable (to me) and commented the cases where we know that we're done
+looking. Then a second patch can pull the jailhouse/s390 special case
+into pci_scan_slot().
+
+Thanks,
+Niklas
+
+--=-1ip2eaNreskyjKOkjE3X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSiikNOrnCUNbxSj4j7H22hwInkVgUCYlVpigAKCRD7H22hwInk
+Vr9VAQCW2W/D94YrYhOitc7fmElPM7yxyJJnNRpzdiawAVhIPQD/RYYotOrlXumS
+YKoN3Qgf2vjZF7G4gv453E/2wT66SgY=
+=Y6rV
+-----END PGP SIGNATURE-----
+
+--=-1ip2eaNreskyjKOkjE3X--
+
