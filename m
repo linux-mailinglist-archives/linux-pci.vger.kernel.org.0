@@ -2,245 +2,347 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06B4D4FE5F8
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 18:37:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE4E14FE66D
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 19:00:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351032AbiDLQjv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 12:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47678 "EHLO
+        id S1357916AbiDLRCu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 13:02:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234647AbiDLQju (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 12:39:50 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2858D1BEAE;
-        Tue, 12 Apr 2022 09:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649781452; x=1681317452;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wj0yrMFXTVEP2FQ3yo1uRXtjbGOZh1hRn5IaONNHOKY=;
-  b=iDsMBCyprQZapmfQFZ6MXDTEj1gjASnDZMMGdWsugUeZluMEjXuhKISA
-   bCcJiGqaYHwq4510OobNV3QSmj8MXLd1k7U61waT0P98v7gRSGb9p0yEq
-   cWPY8znIfY0oAIAC8JrtqtmQNhTS0etfEAMNVobJ2r0rVQf5pRpRxVMlE
-   L/5BUiueoY/URQI+2rMjOyXusAZ0lPdJy58Nndv3vVKiDu9yb7zMnl74n
-   OBu9ut5Xv4b77EI8ggXasoppU0yl0YAXJOLzuX4K4RSWma4oaTFs9WnTP
-   7WI2Mv0KfkzocuQaXspJpaHpgvBA/dWz0+Md3PvPIxkWVzF0eK0cmjzSt
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10315"; a="249715223"
-X-IronPort-AV: E=Sophos;i="5.90,254,1643702400"; 
-   d="scan'208";a="249715223"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 09:29:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,254,1643702400"; 
-   d="scan'208";a="854434666"
-Received: from lkp-server02.sh.intel.com (HELO d3fc50ef50de) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Apr 2022 09:29:27 -0700
-Received: from kbuild by d3fc50ef50de with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1neJOR-0002zn-2b;
-        Tue, 12 Apr 2022 16:29:27 +0000
-Date:   Wed, 13 Apr 2022 00:28:47 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kbuild-all@lists.01.org, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] PCI: Move jailhouse's isolated function handling
- to pci_scan_slot()
-Message-ID: <202204130045.AeSigvk8-lkp@intel.com>
-References: <20220412143040.1882096-3-schnelle@linux.ibm.com>
+        with ESMTP id S1357921AbiDLRC2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 13:02:28 -0400
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9006B5838F;
+        Tue, 12 Apr 2022 10:00:10 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id e71so19639708ybf.8;
+        Tue, 12 Apr 2022 10:00:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QoNzj6JltxdBE+xCmFYXsJ790kmGGoanw6/SwGUhwR0=;
+        b=BMuedhh9R8jKGMIJsKZAxKrIgFyDETuRND8egmncxguWsID5K1Sg+H7P544awyB+tD
+         yq7JnDMUCfSU3vgwIa1hEcC/TzwsFuNKAMbHVTxBG+AhaefWZ+KlLHE81FjwVkmcOzXw
+         oTtTrflZWKuiLdQS9YRkD5MDuk086b+YvzXoxPkNfGBCCZQve8IRhLHAg14yoW7Jtg8C
+         cp0hbZuQWVHPs9AwyxnKTKM4xlEdo9yBP49i8x/feXX6XACnC/9h/DQ8/DN9HqhQr5Ya
+         RpxopBBi+4eRBFcIDvdUOi/Otnnwbpf8yEnSFXQT9o9znJ4sJEZMXMc9Y+t8PPPhsJlZ
+         JoyA==
+X-Gm-Message-State: AOAM530VDJ64mSEmH/D3xJjgw00sdALXShcGgQ+WehicmKZuSMpFzzDt
+        eA9l9TZM3qNF9O4VBuJoJs/qilGydNP3TCyqHOU=
+X-Google-Smtp-Source: ABdhPJxBpLM8jR+58ieQDxFm1si+rDMwEEBaifUnwDUtdyXaDJL9+Ps5f3e37GlVCNzvjj6/ZnOMR+8yEULfqbvkbSo=
+X-Received: by 2002:a25:e082:0:b0:641:cf5:b91f with SMTP id
+ x124-20020a25e082000000b006410cf5b91fmr14645646ybg.482.1649782808799; Tue, 12
+ Apr 2022 10:00:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220412143040.1882096-3-schnelle@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164918880566.2022733.9710638662231385597.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164918880566.2022733.9710638662231385597.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 12 Apr 2022 18:59:57 +0200
+Message-ID: <CAJZ5v0h8eOWf6fPzBtns-Nxh1jxA931uFQpPwgE_T3yeOoP3rA@mail.gmail.com>
+Subject: Re: [PATCH v2] PM: CXL: Disable suspend
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Niklas,
+On Tue, Apr 5, 2022 at 10:00 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> The CXL specification claims S3 support at a hardware level, but at a
+> system software level there are some missing pieces. Section 9.4 (CXL
+> 2.0) rightly claims that "CXL mem adapters may need aux power to retain
+> memory context across S3", but there is no enumeration mechanism for the
+> OS to determine if a given adapter has that support. Moreover the save
+> state and resume image for the system may inadvertantly end up in a CXL
+> device that needs to be restored before the save state is recoverable.
+> I.e. a circular dependency that is not resolvable without a third party
+> save-area.
+>
+> Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
+> allows for suspend, but requires unbinding all CXL memory devices before
+> the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
+> flow is intended to also tear down all CXL memory regions associated
+> with a given cxl_memdev.
+>
+> It is reasonable to assume that any device participating in a System RAM
+> range published in the EFI memory map is covered by aux power and
+> save-area outside the device itself. So this restriction can be
+> minimized in the future once pre-existing region enumeration support
+> arrives, and perhaps a spec update to clarify if the EFI memory map is
+> sufficent for determining the range of devices managed by
+> platform-firmware for S3 support.
+>
+> Per Rafael, if the CXL configuration prevents suspend then it should
+> fail early before tasks are frozen, and mem_sleep should stop showing
+> 'mem' as an option [1]. Effectively CXL augments the platform suspend
+> ->valid() op since, for example, the ACPI ops are not aware of the CXL /
+> PCI dependencies. Given the split role of platform firmware vs OS
+> provisioned CXL memory it is up to the cxl_mem driver to determine if
+> the CXL configuration has elements that platform firmware may not be
+> prepared to restore.
+>
+> Link: https://lore.kernel.org/r/CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com [1]
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-I love your patch! Perhaps something to improve:
+The majority of the changes are in the CXL code, so
 
-[auto build test WARNING on helgaas-pci/next]
-[also build test WARNING on s390/features tip/x86/core v5.18-rc2 next-20220412]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Niklas-Schnelle/PCI-Rework-pci_scan_slot-and-isolated-PCI-functions/20220412-223307
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-config: alpha-defconfig (https://download.01.org/0day-ci/archive/20220413/202204130045.AeSigvk8-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 11.2.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/5cac6729750b7434ff5d6ae99469e9e54bc9fb6e
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Niklas-Schnelle/PCI-Rework-pci_scan_slot-and-isolated-PCI-functions/20220412-223307
-        git checkout 5cac6729750b7434ff5d6ae99469e9e54bc9fb6e
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=alpha SHELL=/bin/bash drivers/pci/
+or please let me know if you want me to take this.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+Thanks!
 
-All warnings (new ones prefixed by >>):
-
-   drivers/pci/probe.c: In function 'pci_scan_child_bus_extend':
->> drivers/pci/probe.c:2861:13: warning: variable 'nr_devs' set but not used [-Wunused-but-set-variable]
-    2861 |         int nr_devs;
-         |             ^~~~~~~
-
-
-vim +/nr_devs +2861 drivers/pci/probe.c
-
-bccf90d6e063d2 Palmer Dabbelt  2017-06-23  2841  
-1c02ea81006548 Mika Westerberg 2017-10-13  2842  /**
-1c02ea81006548 Mika Westerberg 2017-10-13  2843   * pci_scan_child_bus_extend() - Scan devices below a bus
-1c02ea81006548 Mika Westerberg 2017-10-13  2844   * @bus: Bus to scan for devices
-1c02ea81006548 Mika Westerberg 2017-10-13  2845   * @available_buses: Total number of buses available (%0 does not try to
-1c02ea81006548 Mika Westerberg 2017-10-13  2846   *		     extend beyond the minimal)
-1c02ea81006548 Mika Westerberg 2017-10-13  2847   *
-1c02ea81006548 Mika Westerberg 2017-10-13  2848   * Scans devices below @bus including subordinate buses. Returns new
-1c02ea81006548 Mika Westerberg 2017-10-13  2849   * subordinate number including all the found devices. Passing
-1c02ea81006548 Mika Westerberg 2017-10-13  2850   * @available_buses causes the remaining bus space to be distributed
-1c02ea81006548 Mika Westerberg 2017-10-13  2851   * equally between hotplug-capable bridges to allow future extension of the
-1c02ea81006548 Mika Westerberg 2017-10-13  2852   * hierarchy.
-1c02ea81006548 Mika Westerberg 2017-10-13  2853   */
-1c02ea81006548 Mika Westerberg 2017-10-13  2854  static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
-1c02ea81006548 Mika Westerberg 2017-10-13  2855  					      unsigned int available_buses)
-1c02ea81006548 Mika Westerberg 2017-10-13  2856  {
-1c02ea81006548 Mika Westerberg 2017-10-13  2857  	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
-1c02ea81006548 Mika Westerberg 2017-10-13  2858  	unsigned int start = bus->busn_res.start;
-5cac6729750b74 Niklas Schnelle 2022-04-12  2859  	unsigned int devfn, cmax, max = start;
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2860  	struct pci_dev *dev;
-690f4304104f37 Jan Kiszka      2018-03-07 @2861  	int nr_devs;
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2862  
-0207c356ef0e2b Bjorn Helgaas   2009-11-04  2863  	dev_dbg(&bus->dev, "scanning bus\n");
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2864  
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2865  	/* Go find them, Rover! */
-5cac6729750b74 Niklas Schnelle 2022-04-12  2866  	for (devfn = 0; devfn < 256; devfn += 8)
-690f4304104f37 Jan Kiszka      2018-03-07  2867  		nr_devs = pci_scan_slot(bus, devfn);
-690f4304104f37 Jan Kiszka      2018-03-07  2868  
-3e466e2d3a04c7 Bjorn Helgaas   2017-11-30  2869  	/* Reserve buses for SR-IOV capability */
-1c02ea81006548 Mika Westerberg 2017-10-13  2870  	used_buses = pci_iov_bus_range(bus);
-1c02ea81006548 Mika Westerberg 2017-10-13  2871  	max += used_buses;
-a28724b0fb909d Yu Zhao         2009-03-20  2872  
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2873  	/*
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2874  	 * After performing arch-dependent fixup of the bus, look behind
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2875  	 * all PCI-to-PCI bridges on this bus.
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2876  	 */
-74710ded8e16fc Alex Chiang     2009-03-20  2877  	if (!bus->is_added) {
-0207c356ef0e2b Bjorn Helgaas   2009-11-04  2878  		dev_dbg(&bus->dev, "fixups for bus\n");
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2879  		pcibios_fixup_bus(bus);
-74710ded8e16fc Alex Chiang     2009-03-20  2880  		bus->is_added = 1;
-74710ded8e16fc Alex Chiang     2009-03-20  2881  	}
-74710ded8e16fc Alex Chiang     2009-03-20  2882  
-1c02ea81006548 Mika Westerberg 2017-10-13  2883  	/*
-1c02ea81006548 Mika Westerberg 2017-10-13  2884  	 * Calculate how many hotplug bridges and normal bridges there
-1c02ea81006548 Mika Westerberg 2017-10-13  2885  	 * are on this bus. We will distribute the additional available
-1c02ea81006548 Mika Westerberg 2017-10-13  2886  	 * buses between hotplug bridges.
-1c02ea81006548 Mika Westerberg 2017-10-13  2887  	 */
-1c02ea81006548 Mika Westerberg 2017-10-13  2888  	for_each_pci_bridge(dev, bus) {
-1c02ea81006548 Mika Westerberg 2017-10-13  2889  		if (dev->is_hotplug_bridge)
-1c02ea81006548 Mika Westerberg 2017-10-13  2890  			hotplug_bridges++;
-1c02ea81006548 Mika Westerberg 2017-10-13  2891  		else
-1c02ea81006548 Mika Westerberg 2017-10-13  2892  			normal_bridges++;
-1c02ea81006548 Mika Westerberg 2017-10-13  2893  	}
-1c02ea81006548 Mika Westerberg 2017-10-13  2894  
-4147c2fd9b12ae Mika Westerberg 2017-10-13  2895  	/*
-4147c2fd9b12ae Mika Westerberg 2017-10-13  2896  	 * Scan bridges that are already configured. We don't touch them
-4147c2fd9b12ae Mika Westerberg 2017-10-13  2897  	 * unless they are misconfigured (which will be done in the second
-4147c2fd9b12ae Mika Westerberg 2017-10-13  2898  	 * scan below).
-4147c2fd9b12ae Mika Westerberg 2017-10-13  2899  	 */
-1c02ea81006548 Mika Westerberg 2017-10-13  2900  	for_each_pci_bridge(dev, bus) {
-1c02ea81006548 Mika Westerberg 2017-10-13  2901  		cmax = max;
-1c02ea81006548 Mika Westerberg 2017-10-13  2902  		max = pci_scan_bridge_extend(bus, dev, max, 0, 0);
-3374c545c27c53 Mika Westerberg 2018-05-28  2903  
-3374c545c27c53 Mika Westerberg 2018-05-28  2904  		/*
-3374c545c27c53 Mika Westerberg 2018-05-28  2905  		 * Reserve one bus for each bridge now to avoid extending
-3374c545c27c53 Mika Westerberg 2018-05-28  2906  		 * hotplug bridges too much during the second scan below.
-3374c545c27c53 Mika Westerberg 2018-05-28  2907  		 */
-3374c545c27c53 Mika Westerberg 2018-05-28  2908  		used_buses++;
-3374c545c27c53 Mika Westerberg 2018-05-28  2909  		if (cmax - max > 1)
-3374c545c27c53 Mika Westerberg 2018-05-28  2910  			used_buses += cmax - max - 1;
-1c02ea81006548 Mika Westerberg 2017-10-13  2911  	}
-4147c2fd9b12ae Mika Westerberg 2017-10-13  2912  
-4147c2fd9b12ae Mika Westerberg 2017-10-13  2913  	/* Scan bridges that need to be reconfigured */
-1c02ea81006548 Mika Westerberg 2017-10-13  2914  	for_each_pci_bridge(dev, bus) {
-1c02ea81006548 Mika Westerberg 2017-10-13  2915  		unsigned int buses = 0;
-1c02ea81006548 Mika Westerberg 2017-10-13  2916  
-1c02ea81006548 Mika Westerberg 2017-10-13  2917  		if (!hotplug_bridges && normal_bridges == 1) {
-3e466e2d3a04c7 Bjorn Helgaas   2017-11-30  2918  
-1c02ea81006548 Mika Westerberg 2017-10-13  2919  			/*
-1c02ea81006548 Mika Westerberg 2017-10-13  2920  			 * There is only one bridge on the bus (upstream
-1c02ea81006548 Mika Westerberg 2017-10-13  2921  			 * port) so it gets all available buses which it
-1c02ea81006548 Mika Westerberg 2017-10-13  2922  			 * can then distribute to the possible hotplug
-1c02ea81006548 Mika Westerberg 2017-10-13  2923  			 * bridges below.
-1c02ea81006548 Mika Westerberg 2017-10-13  2924  			 */
-1c02ea81006548 Mika Westerberg 2017-10-13  2925  			buses = available_buses;
-1c02ea81006548 Mika Westerberg 2017-10-13  2926  		} else if (dev->is_hotplug_bridge) {
-3e466e2d3a04c7 Bjorn Helgaas   2017-11-30  2927  
-1c02ea81006548 Mika Westerberg 2017-10-13  2928  			/*
-1c02ea81006548 Mika Westerberg 2017-10-13  2929  			 * Distribute the extra buses between hotplug
-1c02ea81006548 Mika Westerberg 2017-10-13  2930  			 * bridges if any.
-1c02ea81006548 Mika Westerberg 2017-10-13  2931  			 */
-1c02ea81006548 Mika Westerberg 2017-10-13  2932  			buses = available_buses / hotplug_bridges;
-3374c545c27c53 Mika Westerberg 2018-05-28  2933  			buses = min(buses, available_buses - used_buses + 1);
-1c02ea81006548 Mika Westerberg 2017-10-13  2934  		}
-1c02ea81006548 Mika Westerberg 2017-10-13  2935  
-1c02ea81006548 Mika Westerberg 2017-10-13  2936  		cmax = max;
-1c02ea81006548 Mika Westerberg 2017-10-13  2937  		max = pci_scan_bridge_extend(bus, dev, cmax, buses, 1);
-3374c545c27c53 Mika Westerberg 2018-05-28  2938  		/* One bus is already accounted so don't add it again */
-3374c545c27c53 Mika Westerberg 2018-05-28  2939  		if (max - cmax > 1)
-3374c545c27c53 Mika Westerberg 2018-05-28  2940  			used_buses += max - cmax - 1;
-1c02ea81006548 Mika Westerberg 2017-10-13  2941  	}
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2942  
-e16b46605960bd Keith Busch     2016-07-21  2943  	/*
-e16b46605960bd Keith Busch     2016-07-21  2944  	 * Make sure a hotplug bridge has at least the minimum requested
-1c02ea81006548 Mika Westerberg 2017-10-13  2945  	 * number of buses but allow it to grow up to the maximum available
-1c02ea81006548 Mika Westerberg 2017-10-13  2946  	 * bus number of there is room.
-e16b46605960bd Keith Busch     2016-07-21  2947  	 */
-1c02ea81006548 Mika Westerberg 2017-10-13  2948  	if (bus->self && bus->self->is_hotplug_bridge) {
-1c02ea81006548 Mika Westerberg 2017-10-13  2949  		used_buses = max_t(unsigned int, available_buses,
-1c02ea81006548 Mika Westerberg 2017-10-13  2950  				   pci_hotplug_bus_size - 1);
-1c02ea81006548 Mika Westerberg 2017-10-13  2951  		if (max - start < used_buses) {
-1c02ea81006548 Mika Westerberg 2017-10-13  2952  			max = start + used_buses;
-a20c7f36bd3d20 Mika Westerberg 2017-10-13  2953  
-a20c7f36bd3d20 Mika Westerberg 2017-10-13  2954  			/* Do not allocate more buses than we have room left */
-a20c7f36bd3d20 Mika Westerberg 2017-10-13  2955  			if (max > bus->busn_res.end)
-a20c7f36bd3d20 Mika Westerberg 2017-10-13  2956  				max = bus->busn_res.end;
-1c02ea81006548 Mika Westerberg 2017-10-13  2957  
-1c02ea81006548 Mika Westerberg 2017-10-13  2958  			dev_dbg(&bus->dev, "%pR extended by %#02x\n",
-1c02ea81006548 Mika Westerberg 2017-10-13  2959  				&bus->busn_res, max - start);
-1c02ea81006548 Mika Westerberg 2017-10-13  2960  		}
-e16b46605960bd Keith Busch     2016-07-21  2961  	}
-e16b46605960bd Keith Busch     2016-07-21  2962  
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2963  	/*
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2964  	 * We've scanned the bus and so we know all about what's on
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2965  	 * the other side of any bridges that may be on this bus plus
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2966  	 * any devices.
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2967  	 *
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2968  	 * Return how far we've got finding sub-buses.
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2969  	 */
-0207c356ef0e2b Bjorn Helgaas   2009-11-04  2970  	dev_dbg(&bus->dev, "bus scan returning with max=%02x\n", max);
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2971  	return max;
-^1da177e4c3f41 Linus Torvalds  2005-04-16  2972  }
-1c02ea81006548 Mika Westerberg 2017-10-13  2973  
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> ---
+>  drivers/Makefile           |    2 +-
+>  drivers/cxl/Kconfig        |    4 ++++
+>  drivers/cxl/Makefile       |    2 +-
+>  drivers/cxl/core/Makefile  |    1 +
+>  drivers/cxl/core/memdev.c  |    1 -
+>  drivers/cxl/core/suspend.c |   23 +++++++++++++++++++++++
+>  drivers/cxl/cxlmem.h       |   11 +++++++++++
+>  drivers/cxl/mem.c          |   22 +++++++++++++++++++++-
+>  include/linux/pm.h         |    9 +++++++++
+>  kernel/power/hibernate.c   |    2 +-
+>  kernel/power/main.c        |    5 ++++-
+>  kernel/power/suspend.c     |    3 ++-
+>  12 files changed, 78 insertions(+), 7 deletions(-)
+>  create mode 100644 drivers/cxl/core/suspend.c
+>
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index 020780b6b4d2..f735c4955143 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -72,9 +72,9 @@ obj-$(CONFIG_PARPORT)         += parport/
+>  obj-y                          += base/ block/ misc/ mfd/ nfc/
+>  obj-$(CONFIG_LIBNVDIMM)                += nvdimm/
+>  obj-$(CONFIG_DAX)              += dax/
+> -obj-$(CONFIG_CXL_BUS)          += cxl/
+>  obj-$(CONFIG_DMA_SHARED_BUFFER) += dma-buf/
+>  obj-$(CONFIG_NUBUS)            += nubus/
+> +obj-y                          += cxl/
+>  obj-y                          += macintosh/
+>  obj-y                          += scsi/
+>  obj-y                          += nvme/
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index b88ab956bb7c..f64e3984689f 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -98,4 +98,8 @@ config CXL_PORT
+>         default CXL_BUS
+>         tristate
+>
+> +config CXL_SUSPEND
+> +       def_bool y
+> +       depends on SUSPEND && CXL_MEM
+> +
+>  endif
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index ce267ef11d93..a78270794150 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_CXL_BUS) += core/
+> +obj-y += core/
+>  obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+>  obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+>  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index 6d37cd78b151..9d35085d25af 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_CXL_BUS) += cxl_core.o
+> +obj-$(CONFIG_CXL_SUSPEND) += suspend.o
+>
+>  ccflags-y += -I$(srctree)/drivers/cxl
+>  cxl_core-y := port.o
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 1f76b28f9826..efe4d2e9bfef 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>         dev->bus = &cxl_bus_type;
+>         dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+>         dev->type = &cxl_memdev_type;
+> -       device_set_pm_not_required(dev);
+>         INIT_WORK(&cxlmd->detach_work, detach_memdev);
+>
+>         cdev = &cxlmd->cdev;
+> diff --git a/drivers/cxl/core/suspend.c b/drivers/cxl/core/suspend.c
+> new file mode 100644
+> index 000000000000..88bdbe30a1df
+> --- /dev/null
+> +++ b/drivers/cxl/core/suspend.c
+> @@ -0,0 +1,23 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +#include <linux/atomic.h>
+> +#include <linux/export.h>
+> +
+> +static atomic_t mem_active;
+> +
+> +bool cxl_mem_active(void)
+> +{
+> +       return atomic_read(&mem_active) != 0;
+> +}
+> +
+> +void cxl_mem_active_inc(void)
+> +{
+> +       atomic_inc(&mem_active);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_active_inc, CXL);
+> +
+> +void cxl_mem_active_dec(void)
+> +{
+> +       atomic_dec(&mem_active);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_active_dec, CXL);
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 243dd86a8b46..7235d2f976e5 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -353,6 +353,17 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
+>  struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
+>  void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+>  void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+> +#ifdef CONFIG_CXL_SUSPEND
+> +void cxl_mem_active_inc(void);
+> +void cxl_mem_active_dec(void);
+> +#else
+> +static inline void cxl_mem_active_inc(void)
+> +{
+> +}
+> +static inline void cxl_mem_active_dec(void)
+> +{
+> +}
+> +#endif
+>
+>  struct cxl_hdm {
+>         struct cxl_component_regs regs;
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 49a4b1c47299..0576d2d3df07 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -129,6 +129,11 @@ __mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
+>         return do_hdm_init;
+>  }
+>
+> +static void enable_suspend(void *data)
+> +{
+> +       cxl_mem_active_dec();
+> +}
+> +
+>  static int cxl_mem_probe(struct device *dev)
+>  {
+>         struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> @@ -207,7 +212,22 @@ static int cxl_mem_probe(struct device *dev)
+>  out:
+>         cxl_device_unlock(&parent_port->dev);
+>         put_device(&parent_port->dev);
+> -       return rc;
+> +
+> +       /*
+> +        * The kernel may be operating out of CXL memory on this device,
+> +        * there is no spec defined way to determine whether this device
+> +        * preserves contents over suspend, and there is no simple way
+> +        * to arrange for the suspend image to avoid CXL memory which
+> +        * would setup a circular dependency between PCI resume and save
+> +        * state restoration.
+> +        *
+> +        * TODO: support suspend when all the regions this device is
+> +        * hosting are locked and covered by the system address map,
+> +        * i.e. platform firmware owns restoring the HDM configuration
+> +        * that it locked.
+> +        */
+> +       cxl_mem_active_inc();
+> +       return devm_add_action_or_reset(dev, enable_suspend, NULL);
+>  }
+>
+>  static struct cxl_driver cxl_mem_driver = {
+> diff --git a/include/linux/pm.h b/include/linux/pm.h
+> index e65b3ab28377..7911c4c9a7be 100644
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -36,6 +36,15 @@ static inline void pm_vt_switch_unregister(struct device *dev)
+>  }
+>  #endif /* CONFIG_VT_CONSOLE_SLEEP */
+>
+> +#ifdef CONFIG_CXL_SUSPEND
+> +bool cxl_mem_active(void);
+> +#else
+> +static inline bool cxl_mem_active(void)
+> +{
+> +       return false;
+> +}
+> +#endif
+> +
+>  /*
+>   * Device power management
+>   */
+> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+> index 938d5c78b421..20a66bf9f465 100644
+> --- a/kernel/power/hibernate.c
+> +++ b/kernel/power/hibernate.c
+> @@ -83,7 +83,7 @@ bool hibernation_available(void)
+>  {
+>         return nohibernate == 0 &&
+>                 !security_locked_down(LOCKDOWN_HIBERNATION) &&
+> -               !secretmem_active();
+> +               !secretmem_active() && !cxl_mem_active();
+>  }
+>
+>  /**
+> diff --git a/kernel/power/main.c b/kernel/power/main.c
+> index 7e646079fbeb..3e6be1c33e0b 100644
+> --- a/kernel/power/main.c
+> +++ b/kernel/power/main.c
+> @@ -127,7 +127,9 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
+>         char *s = buf;
+>         suspend_state_t i;
+>
+> -       for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++)
+> +       for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++) {
+> +               if (i >= PM_SUSPEND_MEM && cxl_mem_active())
+> +                       continue;
+>                 if (mem_sleep_states[i]) {
+>                         const char *label = mem_sleep_states[i];
+>
+> @@ -136,6 +138,7 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
+>                         else
+>                                 s += sprintf(s, "%s ", label);
+>                 }
+> +       }
+>
+>         /* Convert the last space to a newline if needed. */
+>         if (s != buf)
+> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> index 6fcdee7e87a5..827075944d28 100644
+> --- a/kernel/power/suspend.c
+> +++ b/kernel/power/suspend.c
+> @@ -236,7 +236,8 @@ EXPORT_SYMBOL_GPL(suspend_valid_only_mem);
+>
+>  static bool sleep_state_supported(suspend_state_t state)
+>  {
+> -       return state == PM_SUSPEND_TO_IDLE || valid_state(state);
+> +       return state == PM_SUSPEND_TO_IDLE ||
+> +              (valid_state(state) && !cxl_mem_active());
+>  }
+>
+>  static int platform_suspend_prepare(suspend_state_t state)
+>
