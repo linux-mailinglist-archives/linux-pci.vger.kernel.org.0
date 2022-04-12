@@ -2,66 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C33F54FE8AC
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 21:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 938B34FE8BE
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Apr 2022 21:38:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351592AbiDLTew (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 15:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40790 "EHLO
+        id S242521AbiDLTlJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 15:41:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244085AbiDLTev (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 15:34:51 -0400
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EC4549CAE;
-        Tue, 12 Apr 2022 12:32:33 -0700 (PDT)
+        with ESMTP id S244404AbiDLTlC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 15:41:02 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D06E231909
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 12:38:42 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id c15so25355939ljr.9
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 12:38:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1649791953; x=1681327953;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yqoB7cYv0kxyD6VAhUk1RPiQtFKpfEZtLhAhhc5teB0=;
-  b=FuGpmisN04XO933OU7s1BefVJB6ugr0n1G+gr6dF+Tf/7Hvg2u6heSxh
-   lpQknFuxibrUn3t1H1n/5FNfE/+69LyJfC8VH7rEIq3ySL5tjbWVIRqgg
-   iuq4ZjWKiF/h0DwXHAg2YWvy+x3ZS07jqXH8oFWAgg4533RhdufX/lp/L
-   4=;
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 12 Apr 2022 12:32:33 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 12:32:32 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Tue, 12 Apr 2022 12:32:32 -0700
-Received: from [10.226.58.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Tue, 12 Apr
- 2022 12:32:30 -0700
-Message-ID: <98bee89c-608b-79a2-d796-4a2b260cf927@quicinc.com>
-Date:   Tue, 12 Apr 2022 13:32:29 -0600
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hqu6eAZOv/0nY4/2E8PkxtI6T+4ystHMKkpUp7lC3C0=;
+        b=XHsCN+I4AgLmBeL2xDoqMBiTUGmY3NQjUuhHerNGty+o7UMhH3XGZ5Iz6EO2NcRheM
+         MvsnEpFFVZ0x4lvwKCOH6oUPQVKPYHTVvMMlnns4W10iGD+lmNZX2w6cQ5bBbBs3HmyH
+         BNIei8URxwktpA5DY1cCSPNuYoSuoTTb0RIfkysDu9zTsyAQoSW6X86VtJUUgtvTLRa4
+         olxT/+ogLvCtxcr/O7maKHTuLLZF+oqnpluLLwcqIVS6LEJakQzW8AtUEURX2lN5nDDQ
+         Zb2E155nY8/0ua5w05jId5TzldA8kQbl+TPfVr2UVe0n/CmGHBDiKgvzQ6cRVf6qrpM0
+         5ZfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hqu6eAZOv/0nY4/2E8PkxtI6T+4ystHMKkpUp7lC3C0=;
+        b=VK+M+SSyiSjt+n0QEbuu0N4DRtl2gsxrPLObZZlF3oX2FWcccm714jSDqfpxa+Apkt
+         6MKjvcPyxw3SCTgu7wdaVBLf5I0JQvjgZbZRzff3YqJiAcbimB7f93a1MBhTGtIVw1Sv
+         zORu4jY7Sp3mtHReths1zb6ttDbk7dGw5FjslVZMKtY2QmTUVzlrm+dSrrMmTeKhs2Va
+         zth7nVWFNNT0YVHr2EIOD93Bzneb9lwyJ0qduGaBCoyniKKhqH+EiZ0CMO3fnmu76Ro8
+         filUoatj2JclFYfVVNxWHqbVSsndyPJ2qxyx4+AdcFFN8lu6zIgQWKMCFVs4WN59487a
+         7mKQ==
+X-Gm-Message-State: AOAM532kS+inSwqa+ZWGncHKf/eySXSfSCkKqDjIFiEapJXJTrNh4SiM
+        iGLQDNHphofGH/9FeODshwz9yA==
+X-Google-Smtp-Source: ABdhPJx9AKnMLIscdowX0J4qLobuLHtqvJqroM938IbGqWulHbWHf9hTd0+Calb1jJyzMksKhev2Jw==
+X-Received: by 2002:a05:651c:10a5:b0:24b:4c15:2741 with SMTP id k5-20020a05651c10a500b0024b4c152741mr15475965ljn.510.1649792321135;
+        Tue, 12 Apr 2022 12:38:41 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id m4-20020a0565120a8400b00450abeb42b3sm2731641lfu.235.2022.04.12.12.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Apr 2022 12:38:40 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v2 0/5] PCI: qcom: rework pipe_clk/pipe_clk_src handling
+Date:   Tue, 12 Apr 2022 22:38:34 +0300
+Message-Id: <20220412193839.2545814-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH] PCI: hv: Fix multi-MSI to allow more than one MSI vector
-Content-Language: en-US
-To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
-        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-        <jakeo@microsoft.com>
-CC:     <bjorn.andersson@linaro.org>, <linux-hyperv@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1649772991-10285-1-git-send-email-quic_jhugo@quicinc.com>
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <1649772991-10285-1-git-send-email-quic_jhugo@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,55 +75,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/12/2022 8:16 AM, Jeffrey Hugo wrote:
-> If the allocation of multiple MSI vectors for multi-MSI fails in the core
-> PCI framework, the framework will retry the allocation as a single MSI
-> vector, assuming that meets the min_vecs specified by the requesting
-> driver.
-> 
-> Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
-> domain to implement that for x86.  The VECTOR domain does not support
-> multi-MSI, so the alloc will always fail and fallback to a single MSI
-> allocation.
-> 
-> In short, Hyper-V advertises a capability it does not implement.
-> 
-> Hyper-V can support multi-MSI because it coordinates with the hypervisor
-> to map the MSIs in the IOMMU's interrupt remapper, which is something the
-> VECTOR domain does not have.  Therefore the fix is simple - copy what the
-> x86 IOMMU drivers (AMD/Intel-IR) do by removing
-> X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
-> pci_msi_prepare().
-> 
-> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-> ---
->   drivers/pci/controller/pci-hyperv.c | 11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index d270a204..41be63e 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -614,7 +614,16 @@ static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
->   static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
->   			  int nvec, msi_alloc_info_t *info)
->   {
-> -	return pci_msi_prepare(domain, dev, nvec, info);
-> +	int ret = pci_msi_prepare(domain, dev, nvec, info);
-> +
-> +	/*
-> +	 * By using the interrupt remapper in the hypervisor IOMMU, contiguous
-> +	 * CPU vectors in not needed for multi-MSI
+PCIe pipe clk (and some other clocks) must be parked to the "safe"
+source (bi_tcxo) when corresponding GDSC is turned off and on again.
+Currently this is handcoded in the PCIe driver by reparenting the
+gcc_pipe_N_clk_src clock.
 
-I just noticed that "in" should be "is".
+Instead of doing it manually, follow the approach used by
+clk_rcg2_shared_ops and implement this parking in the enable() and
+disable() clock operations for respective pipe clocks.
 
-> +	 */
-> +	if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI)
-> +		info->flags &= ~X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
-> +
-> +	return ret;
->   }
->   
->   /**
+PCIe part depends on [1].
+
+Changes since v1:
+ - Rebased on top of [1].
+ - Removed erroneous Fixes tag from the patch 4.
+
+Changes since RFC:
+ - Rework clk-regmap-mux fields. Specify safe parent as P_* value rather
+   than specifying the register value directly
+ - Expand commit message to the first patch to specially mention that
+   it is required only on newer generations of Qualcomm chipsets.
+
+Dmitry Baryshkov (5):
+  clk: qcom: regmap-mux: add pipe clk implementation
+  clk: qcom: gcc-sm8450: use new clk_regmap_mux_safe_ops for PCIe pipe
+    clocks
+  clk: qcom: gcc-sc7280: use new clk_regmap_mux_safe_ops for PCIe pipe
+    clocks
+  PCI: qcom: Remove unnecessary pipe_clk handling
+  PCI: qcom: Drop manual pipe_clk_src handling
+
+ drivers/clk/qcom/clk-regmap-mux.c      | 78 +++++++++++++++++++++++++
+ drivers/clk/qcom/clk-regmap-mux.h      |  3 +
+ drivers/clk/qcom/gcc-sc7280.c          |  6 +-
+ drivers/clk/qcom/gcc-sm8450.c          |  6 +-
+ drivers/pci/controller/dwc/pcie-qcom.c | 81 +-------------------------
+ 5 files changed, 92 insertions(+), 82 deletions(-)
+
+base-commit: 3123109284176b1532874591f7c81f3837bbdc17
+prerequisite-patch-id: 71e4b5b7ff5d87f2407735cc6a3074812cde3697
+-- 
+2.35.1
 
