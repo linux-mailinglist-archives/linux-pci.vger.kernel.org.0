@@ -2,416 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4411A4FEA89
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 01:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDDC34FEAC9
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 01:47:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230022AbiDLXZd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 19:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38554 "EHLO
+        id S229909AbiDLXYZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 19:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229977AbiDLXYb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 19:24:31 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB281CB26
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 15:44:12 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id b12-20020a056902030c00b0061d720e274aso236318ybs.20
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 15:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=j+uFg3UvBPSpe9z7EjPoimwDUI3tSTdqXoWzVBlT8YA=;
-        b=HwHLzedYjS+IUQlGju+jlS6RAWdrjLVCflB7Xg274v3cbLF+QlAtwn7wjvHLdSDhqN
-         79sVvq9GJAKECcvYiEUbpfCo7qi4m2Py1AIn+EqIDAKohghe0dJsBHFSvlcEa5eItEev
-         kOgkGWC9oEjNEfxmCkZDiys1r5J3xDmZhpxRvWqbXbbUtViAFPWehEyFU4Jv/Mq+jsaN
-         4/N1m8Ce4geOGMsUa+kbjt4EzQpw1xL7JrpF9vsOZUrwMy5DnelCHza15FNsTzM0+LGK
-         ia2ZBL5PjqiQiavZ8ITilA0jznoXtTbJ0/OJmQUUw4c5tEVk73kZuMCaUfrccOAZj4ur
-         6vPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=j+uFg3UvBPSpe9z7EjPoimwDUI3tSTdqXoWzVBlT8YA=;
-        b=gIiKvFFiMHtQLIp6OMxxy32ic0ThiMQkkuKzc+J03tALmczf6O8YRjJa8NCQXTCUd1
-         CekP7VogzeasPIdBxP8Jh29j5cbb6ngjJAqMptwQ6s+91fvBzqB+hHCRsgdRL78mZopZ
-         2TaXvCcSYaDlrMKO+tRgHQxcjapiCf4jmfhuk+UfBKY9gfJqAQk7qiRXqNbXy3qPgn/S
-         WFIK6nGqMLJgzJvwNM+BiCl20PMCIk0p1ZB1QGEdm2Eep3N/YtaznqS+/GUSwmOP/f1+
-         ebyl/0j1iQlO1CqwYzA7C70B7KR82l7JvhgKVojUu2EQ6zwP3EJUNWfxe11GrNGatAeX
-         XFYg==
-X-Gm-Message-State: AOAM533kaYPNBnUpjls+7KqbQzby5VuPlyrsHMlDYeUWg5RlZot3JtD6
-        k2sL97RwBVMXJ8ihrdOISy7hkS+cFAstruI=
-X-Google-Smtp-Source: ABdhPJxmaX4f7eR9NYtp3dHD+Hth17rj4XFauB+9rp80Ol/yYeoj7tX+cNd/8JowOkjsiHpI5vVGwiL3Gc6cx14=
-X-Received: from tansuresh.svl.corp.google.com ([2620:15c:2c5:13:8573:aa64:c3e8:ebc])
- (user=tansuresh job=sendgmr) by 2002:a81:2fd1:0:b0:2e5:d8d8:f60 with SMTP id
- v200-20020a812fd1000000b002e5d8d80f60mr31882457ywv.164.1649803452193; Tue, 12
- Apr 2022 15:44:12 -0700 (PDT)
-Date:   Tue, 12 Apr 2022 15:43:48 -0700
-In-Reply-To: <20220412224348.1038613-3-tansuresh@google.com>
-Message-Id: <20220412224348.1038613-4-tansuresh@google.com>
-Mime-Version: 1.0
-References: <20220412224348.1038613-1-tansuresh@google.com>
- <20220412224348.1038613-2-tansuresh@google.com> <20220412224348.1038613-3-tansuresh@google.com>
-X-Mailer: git-send-email 2.36.0.rc0.470.gd361397f0d-goog
-Subject: [PATCH v2 3/3] nvme: Add async shutdown support
-From:   Tanjore Suresh <tansuresh@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, Tanjore Suresh <tansuresh@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S229900AbiDLXYK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 19:24:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D59C2A8EEB;
+        Tue, 12 Apr 2022 15:46:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 90F5AB82050;
+        Tue, 12 Apr 2022 22:46:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C897DC385A1;
+        Tue, 12 Apr 2022 22:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649803609;
+        bh=ffZYKwatNc5nZJyZ3dD5dRgf2cNxyz6TOXNBsJ+l5EE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jlyaLcuIIGFUt/+a3KrMJBXgJ5vFHdz1jIZgvJP/jtrm24Idy+ad2Wp1E2RgdFkjf
+         JjZ4eSQy92doGD8tiWLYBiCNGYnSvKlt9nbObLDbJtI3VykyUCnLTfh/S6F4e95xAX
+         N0xEgS18DuWSzyqLgNCX8SHooE7keCmHfrqdTODH4D4jlpfR0zHgaZZQ6C63q+hXJz
+         UsluBF4mqLNc3pR2gw46PmJewRrMODQD3O7L7boPy03byZZHPD5T0ppH9CEF0/9BFD
+         XStz96DwmJe2W3yqTBqRQHdLZ8HSApZxOS3zRfoFeCoUHzrWOGvx+EA0HvEjfnu9XO
+         Uchx1ty/MLoGg==
+Date:   Tue, 12 Apr 2022 17:46:47 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Prasad Malisetty <quic_pmaliset@quicinc.com>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajatja@google.com, refactormyself@gmail.com,
+        quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "Kenneth R. Crudup" <kenny@panix.com>
+Subject: Re: [PATCH v2] [RFC PATCH] PCI: Update LTR threshold based on LTRME
+ bit
+Message-ID: <20220412224647.GA639905@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1646679549-12494-1-git-send-email-quic_pmaliset@quicinc.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This works with the asynchronous shutdown mechanism setup for the PCI
-drivers and participates to provide both pre and post shutdown
-routines at pci_driver structure level.
+[+cc Vidya, Kenny]
 
-The shutdown_pre routine starts the shutdown and does not wait for the
-shutdown to complete.  The shutdown_post routine waits for the shutdown
-to complete on individual controllers that this driver instance
-controls. This mechanism optimizes to speed up the shutdown in a
-system which host many controllers.
+On Tue, Mar 08, 2022 at 12:29:09AM +0530, Prasad Malisetty wrote:
+> Update LTR threshold scale and value based on LTRME (Latency
+> Tolenrance Reporting Mechanism) from device capabilities.
+> 
+> In ASPM driver, LTR threshold scale and value is updating
+> based on tcommon_mode and t_poweron values. In kioxia NVMe,
+> L1.2 is failing due to LTR threshold scale and value is
+> greater values than max snoop/non snoop value.
+> 
+> In general, updated LTR threshold scale and value should be
+> less than max snoop/non snoop value to enter the device
+> into L1.2 state.
 
-Signed-off-by: Tanjore Suresh <tansuresh@google.com>
----
- drivers/nvme/host/core.c | 28 ++++++++++----
- drivers/nvme/host/nvme.h |  8 ++++
- drivers/nvme/host/pci.c  | 80 +++++++++++++++++++++++++---------------
- 3 files changed, 80 insertions(+), 36 deletions(-)
+Interesting that you mention an L1.2 issue on a KIOXIA NVMe device.
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 677fa4bf76d3..24b08789fd34 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2173,16 +2173,30 @@ EXPORT_SYMBOL_GPL(nvme_enable_ctrl);
- 
- int nvme_shutdown_ctrl(struct nvme_ctrl *ctrl)
- {
--	unsigned long timeout = jiffies + (ctrl->shutdown_timeout * HZ);
--	u32 csts;
- 	int ret;
- 
-+	ret = nvme_shutdown_ctrl_start(ctrl);
-+	if (ret)
-+		return ret;
-+	return nvme_wait_for_shutdown_cmpl(ctrl);
-+}
-+EXPORT_SYMBOL_GPL(nvme_shutdown_ctrl);
-+
-+int nvme_shutdown_ctrl_start(struct nvme_ctrl *ctrl)
-+{
-+
- 	ctrl->ctrl_config &= ~NVME_CC_SHN_MASK;
- 	ctrl->ctrl_config |= NVME_CC_SHN_NORMAL;
- 
--	ret = ctrl->ops->reg_write32(ctrl, NVME_REG_CC, ctrl->ctrl_config);
--	if (ret)
--		return ret;
-+	return ctrl->ops->reg_write32(ctrl, NVME_REG_CC, ctrl->ctrl_config);
-+}
-+EXPORT_SYMBOL_GPL(nvme_shutdown_ctrl_start);
-+
-+int nvme_wait_for_shutdown_cmpl(struct nvme_ctrl *ctrl)
-+{
-+	unsigned long deadline = jiffies + (ctrl->shutdown_timeout * HZ);
-+	u32 csts;
-+	int ret;
- 
- 	while ((ret = ctrl->ops->reg_read32(ctrl, NVME_REG_CSTS, &csts)) == 0) {
- 		if ((csts & NVME_CSTS_SHST_MASK) == NVME_CSTS_SHST_CMPLT)
-@@ -2191,7 +2205,7 @@ int nvme_shutdown_ctrl(struct nvme_ctrl *ctrl)
- 		msleep(100);
- 		if (fatal_signal_pending(current))
- 			return -EINTR;
--		if (time_after(jiffies, timeout)) {
-+		if (time_after(jiffies, deadline)) {
- 			dev_err(ctrl->device,
- 				"Device shutdown incomplete; abort shutdown\n");
- 			return -ENODEV;
-@@ -2200,7 +2214,7 @@ int nvme_shutdown_ctrl(struct nvme_ctrl *ctrl)
- 
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(nvme_shutdown_ctrl);
-+EXPORT_SYMBOL_GPL(nvme_wait_for_shutdown_cmpl);
- 
- static int nvme_configure_timestamp(struct nvme_ctrl *ctrl)
- {
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index f4b674a8ce20..87f5803ef577 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -170,6 +170,12 @@ enum {
- 	NVME_REQ_USERCMD		= (1 << 1),
- };
- 
-+enum shutdown_type {
-+	DO_NOT_SHUTDOWN = 0,
-+	SHUTDOWN_TYPE_SYNC = 1,
-+	SHUTDOWN_TYPE_ASYNC = 2,
-+};
-+
- static inline struct nvme_request *nvme_req(struct request *req)
- {
- 	return blk_mq_rq_to_pdu(req);
-@@ -672,6 +678,8 @@ bool nvme_wait_reset(struct nvme_ctrl *ctrl);
- int nvme_disable_ctrl(struct nvme_ctrl *ctrl);
- int nvme_enable_ctrl(struct nvme_ctrl *ctrl);
- int nvme_shutdown_ctrl(struct nvme_ctrl *ctrl);
-+int nvme_shutdown_ctrl_start(struct nvme_ctrl *ctrl);
-+int nvme_wait_for_shutdown_cmpl(struct nvme_ctrl *ctrl);
- int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- 		const struct nvme_ctrl_ops *ops, unsigned long quirks);
- void nvme_uninit_ctrl(struct nvme_ctrl *ctrl);
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 2e98ac3f3ad6..e812509462e8 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -107,7 +107,7 @@ MODULE_PARM_DESC(noacpi, "disable acpi bios quirks");
- struct nvme_dev;
- struct nvme_queue;
- 
--static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown);
-+static void nvme_dev_disable(struct nvme_dev *dev, int shutdown_type);
- static bool __nvme_disable_io_queues(struct nvme_dev *dev, u8 opcode);
- 
- /*
-@@ -1357,7 +1357,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 	 */
- 	if (nvme_should_reset(dev, csts)) {
- 		nvme_warn_reset(dev, csts);
--		nvme_dev_disable(dev, false);
-+		nvme_dev_disable(dev, DO_NOT_SHUTDOWN);
- 		nvme_reset_ctrl(&dev->ctrl);
- 		return BLK_EH_DONE;
- 	}
-@@ -1392,7 +1392,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 			 "I/O %d QID %d timeout, disable controller\n",
- 			 req->tag, nvmeq->qid);
- 		nvme_req(req)->flags |= NVME_REQ_CANCELLED;
--		nvme_dev_disable(dev, true);
-+		nvme_dev_disable(dev, SHUTDOWN_TYPE_SYNC);
- 		return BLK_EH_DONE;
- 	case NVME_CTRL_RESETTING:
- 		return BLK_EH_RESET_TIMER;
-@@ -1410,7 +1410,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 			 "I/O %d QID %d timeout, reset controller\n",
- 			 req->tag, nvmeq->qid);
- 		nvme_req(req)->flags |= NVME_REQ_CANCELLED;
--		nvme_dev_disable(dev, false);
-+		nvme_dev_disable(dev, DO_NOT_SHUTDOWN);
- 		nvme_reset_ctrl(&dev->ctrl);
- 
- 		return BLK_EH_DONE;
-@@ -1503,11 +1503,13 @@ static void nvme_suspend_io_queues(struct nvme_dev *dev)
- 		nvme_suspend_queue(&dev->queues[i]);
- }
- 
--static void nvme_disable_admin_queue(struct nvme_dev *dev, bool shutdown)
-+static void nvme_disable_admin_queue(struct nvme_dev *dev, int shutdown_type)
- {
- 	struct nvme_queue *nvmeq = &dev->queues[0];
- 
--	if (shutdown)
-+	if (shutdown_type == SHUTDOWN_TYPE_ASYNC)
-+		nvme_shutdown_ctrl_start(&dev->ctrl);
-+	else if (shutdown_type == SHUTDOWN_TYPE_SYNC)
- 		nvme_shutdown_ctrl(&dev->ctrl);
- 	else
- 		nvme_disable_ctrl(&dev->ctrl);
-@@ -2669,7 +2671,7 @@ static void nvme_pci_disable(struct nvme_dev *dev)
- 	}
- }
- 
--static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
-+static void nvme_dev_disable(struct nvme_dev *dev, int shutdown_type)
- {
- 	bool dead = true, freeze = false;
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
-@@ -2691,14 +2693,14 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	 * Give the controller a chance to complete all entered requests if
- 	 * doing a safe shutdown.
- 	 */
--	if (!dead && shutdown && freeze)
-+	if (!dead && (shutdown_type != DO_NOT_SHUTDOWN) && freeze)
- 		nvme_wait_freeze_timeout(&dev->ctrl, NVME_IO_TIMEOUT);
- 
- 	nvme_stop_queues(&dev->ctrl);
- 
- 	if (!dead && dev->ctrl.queue_count > 0) {
- 		nvme_disable_io_queues(dev);
--		nvme_disable_admin_queue(dev, shutdown);
-+		nvme_disable_admin_queue(dev, shutdown_type);
- 	}
- 	nvme_suspend_io_queues(dev);
- 	nvme_suspend_queue(&dev->queues[0]);
-@@ -2710,12 +2712,12 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	blk_mq_tagset_wait_completed_request(&dev->tagset);
- 	blk_mq_tagset_wait_completed_request(&dev->admin_tagset);
- 
--	/*
--	 * The driver will not be starting up queues again if shutting down so
--	 * must flush all entered requests to their failed completion to avoid
--	 * deadlocking blk-mq hot-cpu notifier.
--	 */
--	if (shutdown) {
-+	if (shutdown_type == SHUTDOWN_TYPE_SYNC) {
-+		/*
-+		 * The driver will not be starting up queues again if shutting down so
-+		 * must flush all entered requests to their failed completion to avoid
-+		 * deadlocking blk-mq hot-cpu notifier.
-+		 */
- 		nvme_start_queues(&dev->ctrl);
- 		if (dev->ctrl.admin_q && !blk_queue_dying(dev->ctrl.admin_q))
- 			nvme_start_admin_queue(&dev->ctrl);
-@@ -2723,11 +2725,11 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	mutex_unlock(&dev->shutdown_lock);
- }
- 
--static int nvme_disable_prepare_reset(struct nvme_dev *dev, bool shutdown)
-+static int nvme_disable_prepare_reset(struct nvme_dev *dev, int type)
- {
- 	if (!nvme_wait_reset(&dev->ctrl))
- 		return -EBUSY;
--	nvme_dev_disable(dev, shutdown);
-+	nvme_dev_disable(dev, type);
- 	return 0;
- }
- 
-@@ -2785,7 +2787,7 @@ static void nvme_remove_dead_ctrl(struct nvme_dev *dev)
- 	 */
- 	nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_DELETING);
- 	nvme_get_ctrl(&dev->ctrl);
--	nvme_dev_disable(dev, false);
-+	nvme_dev_disable(dev, DO_NOT_SHUTDOWN);
- 	nvme_kill_queues(&dev->ctrl);
- 	if (!queue_work(nvme_wq, &dev->remove_work))
- 		nvme_put_ctrl(&dev->ctrl);
-@@ -2810,7 +2812,7 @@ static void nvme_reset_work(struct work_struct *work)
- 	 * moving on.
- 	 */
- 	if (dev->ctrl.ctrl_config & NVME_CC_ENABLE)
--		nvme_dev_disable(dev, false);
-+		nvme_dev_disable(dev, DO_NOT_SHUTDOWN);
- 	nvme_sync_queues(&dev->ctrl);
- 
- 	mutex_lock(&dev->shutdown_lock);
-@@ -3151,7 +3153,7 @@ static void nvme_reset_prepare(struct pci_dev *pdev)
- 	 * state as pci_dev device lock is held, making it impossible to race
- 	 * with ->remove().
- 	 */
--	nvme_disable_prepare_reset(dev, false);
-+	nvme_disable_prepare_reset(dev, DO_NOT_SHUTDOWN);
- 	nvme_sync_queues(&dev->ctrl);
- }
- 
-@@ -3163,13 +3165,32 @@ static void nvme_reset_done(struct pci_dev *pdev)
- 		flush_work(&dev->ctrl.reset_work);
- }
- 
--static void nvme_shutdown(struct pci_dev *pdev)
-+static void nvme_async_shutdown_start(struct pci_dev *pdev)
- {
- 	struct nvme_dev *dev = pci_get_drvdata(pdev);
- 
--	nvme_disable_prepare_reset(dev, true);
-+	nvme_disable_prepare_reset(dev, SHUTDOWN_TYPE_ASYNC);
- }
- 
-+static void nvme_async_shutdown_end(struct pci_dev *pdev)
-+{
-+	struct nvme_dev *dev = pci_get_drvdata(pdev);
-+
-+	mutex_lock(&dev->shutdown_lock);
-+	nvme_wait_for_shutdown_cmpl(&dev->ctrl);
-+
-+	/*
-+	 * The driver will not be starting up queues again if shutting down so
-+	 * must flush all entered requests to their failed completion to avoid
-+	 * deadlocking blk-mq hot-cpu notifier.
-+	 */
-+	nvme_start_queues(&dev->ctrl);
-+	if (dev->ctrl.admin_q && !blk_queue_dying(dev->ctrl.admin_q))
-+		nvme_start_admin_queue(&dev->ctrl);
-+
-+	mutex_unlock(&dev->shutdown_lock);
-+
-+}
- static void nvme_remove_attrs(struct nvme_dev *dev)
- {
- 	if (dev->attrs_added)
-@@ -3191,13 +3212,13 @@ static void nvme_remove(struct pci_dev *pdev)
- 
- 	if (!pci_device_is_present(pdev)) {
- 		nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_DEAD);
--		nvme_dev_disable(dev, true);
-+		nvme_dev_disable(dev, SHUTDOWN_TYPE_SYNC);
- 	}
- 
- 	flush_work(&dev->ctrl.reset_work);
- 	nvme_stop_ctrl(&dev->ctrl);
- 	nvme_remove_namespaces(&dev->ctrl);
--	nvme_dev_disable(dev, true);
-+	nvme_dev_disable(dev, SHUTDOWN_TYPE_SYNC);
- 	nvme_remove_attrs(dev);
- 	nvme_free_host_mem(dev);
- 	nvme_dev_remove_admin(dev);
-@@ -3259,7 +3280,7 @@ static int nvme_suspend(struct device *dev)
- 	if (pm_suspend_via_firmware() || !ctrl->npss ||
- 	    !pcie_aspm_enabled(pdev) ||
- 	    (ndev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND))
--		return nvme_disable_prepare_reset(ndev, true);
-+		return nvme_disable_prepare_reset(ndev, SHUTDOWN_TYPE_SYNC);
- 
- 	nvme_start_freeze(ctrl);
- 	nvme_wait_freeze(ctrl);
-@@ -3302,7 +3323,7 @@ static int nvme_suspend(struct device *dev)
- 		 * Clearing npss forces a controller reset on resume. The
- 		 * correct value will be rediscovered then.
- 		 */
--		ret = nvme_disable_prepare_reset(ndev, true);
-+		ret = nvme_disable_prepare_reset(ndev, SHUTDOWN_TYPE_SYNC);
- 		ctrl->npss = 0;
- 	}
- unfreeze:
-@@ -3314,7 +3335,7 @@ static int nvme_simple_suspend(struct device *dev)
- {
- 	struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
- 
--	return nvme_disable_prepare_reset(ndev, true);
-+	return nvme_disable_prepare_reset(ndev, SHUTDOWN_TYPE_SYNC);
- }
- 
- static int nvme_simple_resume(struct device *dev)
-@@ -3351,7 +3372,7 @@ static pci_ers_result_t nvme_error_detected(struct pci_dev *pdev,
- 	case pci_channel_io_frozen:
- 		dev_warn(dev->ctrl.device,
- 			"frozen state error detected, reset controller\n");
--		nvme_dev_disable(dev, false);
-+		nvme_dev_disable(dev, DO_NOT_SHUTDOWN);
- 		return PCI_ERS_RESULT_NEED_RESET;
- 	case pci_channel_io_perm_failure:
- 		dev_warn(dev->ctrl.device,
-@@ -3478,7 +3499,8 @@ static struct pci_driver nvme_driver = {
- 	.id_table	= nvme_id_table,
- 	.probe		= nvme_probe,
- 	.remove		= nvme_remove,
--	.shutdown	= nvme_shutdown,
-+	.async_shutdown_start   = nvme_async_shutdown_start,
-+	.async_shutdown_end  = nvme_async_shutdown_end,
- #ifdef CONFIG_PM_SLEEP
- 	.driver		= {
- 		.pm	= &nvme_dev_pm_ops,
--- 
-2.36.0.rc0.470.gd361397f0d-goog
+Kenny also reported an L1 Substates issue related to a KIOXIA NVMe
+device at [1].  That issue happened when saving/restoring the L1 SS
+state for suspend/resume.
 
+We ended up reverting 4257f7e008ea to avoid the problem, but when he
+tested that commit later, the issue did not occur [2].
+
+I don't know if there's a connection here, so this is just a heads-up
+in case there is.
+
+[1] https://lore.kernel.org/r/20201228040513.GA611645@bjorn-Precision-5520
+[2] https://lore.kernel.org/r/3ca14a7-b726-8430-fe61-a3ac183a1088@panix.com
+
+> Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
+> 
+> ---
+> Changes since v1:
+> 	- Added missing variable declaration in v1 patch.
+> ---
+>  drivers/pci/pcie/aspm.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index a96b742..a67746c 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -463,6 +463,7 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+>  	u32 val1, val2, scale1, scale2;
+>  	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+>  	u32 ctl1 = 0, ctl2 = 0;
+> +	u32 cap;
+>  	u32 pctl1, pctl2, cctl1, cctl2;
+>  	u32 pl1_2_enables, cl1_2_enables;
+>  
+> @@ -499,9 +500,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+>  	 * Table 5-11.  T(POWER_OFF) is at most 2us and T(L1.2) is at
+>  	 * least 4us.
+>  	 */
+> -	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+> -	encode_l12_threshold(l1_2_threshold, &scale, &value);
+> -	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
+> +	pcie_capability_read_dword(child, PCI_EXP_DEVCAP2, &cap);
+> +	if (!(cap & PCI_EXP_DEVCAP2_LTR)) {
+> +		l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+> +		encode_l12_threshold(l1_2_threshold, &scale, &value);
+> +		ctl1 |= scale << 29 | value << 16;
+> +	}
+> +
+> +	ctl1 |= t_common_mode;
+>  
+>  	/* Some broken devices only support dword access to L1 SS */
+>  	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
