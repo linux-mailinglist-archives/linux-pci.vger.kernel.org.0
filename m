@@ -2,62 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 235364FF32E
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 11:16:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ACE84FF331
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 11:16:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234329AbiDMJSB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Apr 2022 05:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
+        id S233734AbiDMJS0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Apr 2022 05:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234324AbiDMJSA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 05:18:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD971245B6;
-        Wed, 13 Apr 2022 02:15:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3721861B65;
-        Wed, 13 Apr 2022 09:15:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF9CC385AD;
-        Wed, 13 Apr 2022 09:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649841338;
-        bh=7gv8n9sZbHEBMpYf/WaXUD9WERbNzyDJPUSPAwT/RuM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jzdcG2M40kGlN6MyPAc/+Z2k5q7V4Ox8Dgk8+YiEHGyNoUfl3Hmvb4o2HSDwEa+Fr
-         AiYAFgzGOrbR/8SIauuOJk7jAq8G/oQswgzqElT+bZdMylkL2epIsxZn+6RKG6Ht51
-         1sa6AoIuFsXanpYF5Pc9hOADkuXODTs/hx5O8nsDeBpNeyxxpMoh+PgqdYcMSa5H6H
-         rxqPRcy1wVDgk2gEXYShBkqLLES0U4xv/RKd2QORF9kZ8aDhYTV6+9hLa/c2/D69O4
-         VBplZT373Yts54JLo73Uu7JZDkRo8/8XJGVrVANPDlhCDc9IxDU29ZoHJJbh05qKs3
-         jYXpuNgfm3T6g==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1neZ64-0005OB-CF; Wed, 13 Apr 2022 11:15:33 +0200
-Date:   Wed, 13 Apr 2022 11:15:32 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        with ESMTP id S234350AbiDMJSY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 05:18:24 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6260C51300
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 02:16:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D45A113D5;
+        Wed, 13 Apr 2022 02:15:59 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.8.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C47CC3F5A1;
+        Wed, 13 Apr 2022 02:15:57 -0700 (PDT)
+Date:   Wed, 13 Apr 2022 10:16:03 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] clk: qcom: regmap-mux: add pipe clk implementation
-Message-ID: <YlaUtCuMZZL4bM2U@hovoldconsulting.com>
-References: <20220412193839.2545814-1-dmitry.baryshkov@linaro.org>
- <20220412193839.2545814-2-dmitry.baryshkov@linaro.org>
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH 17/18] PCI: aardvark: Run link training in separate worker
+Message-ID: <20220413091603.GA19821@lpieralisi>
+References: <20220220193346.23789-1-kabel@kernel.org>
+ <20220220193346.23789-18-kabel@kernel.org>
+ <20220412152524.GB20749@lpieralisi>
+ <20220412175541.gnrynogn3s2llari@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220412193839.2545814-2-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220412175541.gnrynogn3s2llari@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -66,177 +50,152 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 10:38:35PM +0300, Dmitry Baryshkov wrote:
-> On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
-> muxes which must be parked to the "safe" source (bi_tcxo) when
-> corresponding GDSC is turned off and on again. Currently this is
-> handcoded in the PCIe driver by reparenting the gcc_pipe_N_clk_src
-> clock. However the same code sequence should be applied in the
-> pcie-qcom endpoint, USB3 and UFS drivers.
-
-I'm starting to think this really belongs in the PHY driver which is the
-provider of the pipe clock. Moving it there would also allow the code to
-be shared between PCIe, USB, and UFS.
-
-The PHY driver enables the pipe clock by starting the PHY and before
-doing so there's no point in updating the mux. Similarly, the PHY driver
-can restore the "safe" source after disabling the pipe clock.
-
-That way there's no magic happening behind scenes, the clock framework
-always reports the actual state of the tree, and the reason for all of
-this can be documented in the QMP PHY driver once and for all.
-
-The only change to the bindings compared to what this series proposes is
-that the PHY driver also needs a reference to bi_tcxo.
-
-Also note that updating the mux separately from starting the PHY as this
-series allows for, doesn't really make the pipe clock any safer to use.
-
-Either way, there are also some problems with this safe-mux
-implementation that I point out below.
-
-> Rather than copying this sequence over and over again, follow the
-> example of clk_rcg2_shared_ops and implement this parking in the
-> enable() and disable() clock operations. As we are changing the parent
-> behind the back of the clock framework, also implement custom
-> set_parent() and get_parent() operations behaving accroding to the clock
-> framework expectations (cache the new parent if the clock is in disabled
-> state, return cached parent).
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/clk/qcom/clk-regmap-mux.c | 78 +++++++++++++++++++++++++++++++
->  drivers/clk/qcom/clk-regmap-mux.h |  3 ++
->  2 files changed, 81 insertions(+)
+On Tue, Apr 12, 2022 at 07:55:41PM +0200, Pali Rohár wrote:
+> On Tuesday 12 April 2022 16:25:24 Lorenzo Pieralisi wrote:
+> > On Sun, Feb 20, 2022 at 08:33:45PM +0100, Marek Behún wrote:
+> > > From: Pali Rohár <pali@kernel.org>
+> > > 
+> > > Link training and PCIe card reset routines in Aardvark contain several
+> > > delays, resulting in rather slow PCIe card probing. The worst case is
+> > > when there is no card connected: the driver tries link training at all
+> > > possible speeds and waits until all timers expire.
+> > > 
+> > > Since probe methods for all system devices are called sequentially, this
+> > > results in noticeably longer boot time.
+> > > 
+> > > Move card reset and link training code from driver probe function into
+> > > a separate worker, so that kernel can do something different while the
+> > > driver is waiting during reset or training.
+> > > 
+> > > On ESPRESSObin and Turris MOX this decreases boot time by 0.4s with
+> > > plugged PCIe card and by 2.2s if no card is connected.
+> > 
+> > I believe this is what the PROBE_PREFER_ASYNCHRONOUS flag in
+> > struct device_driver.probe_type flag is there for unless I am
+> > missing something obvious here.
+> > 
+> > Can you give it a try and report back please ?
 > 
-> diff --git a/drivers/clk/qcom/clk-regmap-mux.c b/drivers/clk/qcom/clk-regmap-mux.c
-> index 45d9cca28064..c39ee783ee83 100644
-> --- a/drivers/clk/qcom/clk-regmap-mux.c
-> +++ b/drivers/clk/qcom/clk-regmap-mux.c
-> @@ -49,9 +49,87 @@ static int mux_set_parent(struct clk_hw *hw, u8 index)
->  	return regmap_update_bits(clkr->regmap, mux->reg, mask, val);
->  }
->  
-> +static u8 mux_safe_get_parent(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap_mux *mux = to_clk_regmap_mux(hw);
-> +	unsigned int val;
-> +
-> +	if (clk_hw_is_enabled(hw))
-> +		return mux_get_parent(hw);
-> +
-> +	val = mux->stored_parent_cfg;
-> +
-> +	if (mux->parent_map)
-> +		return qcom_find_cfg_index(hw, mux->parent_map, val);
-> +
-> +	return val;
-> +}
-> +
-> +static int mux_safe_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +	struct clk_regmap_mux *mux = to_clk_regmap_mux(hw);
-> +
-> +	if (clk_hw_is_enabled(hw))
-> +		return mux_set_parent(hw, index);
-> +
-> +	if (mux->parent_map)
-> +		index = mux->parent_map[index].cfg;
-> +
-> +	mux->stored_parent_cfg = index;
-> +
-> +	return 0;
-> +}
-> +
-> +static void mux_safe_disable(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap_mux *mux = to_clk_regmap_mux(hw);
-> +	struct clk_regmap *clkr = to_clk_regmap(hw);
-> +	unsigned int mask = GENMASK(mux->width + mux->shift - 1, mux->shift);
-> +	unsigned int val;
-> +
-> +	regmap_read(clkr->regmap, mux->reg, &val);
-> +
-> +	mux->stored_parent_cfg = (val & mask) >> mux->shift;
-> +
-> +	val = mux->safe_src_parent;
-> +	if (mux->parent_map) {
-> +		int index = qcom_find_src_index(hw, mux->parent_map, val);
-> +
-> +		if (WARN_ON(index < 0))
-> +			return;
-> +
-> +		val = mux->parent_map[index].cfg;
-> +	}
-> +	val <<= mux->shift;
-> +
-> +	regmap_update_bits(clkr->regmap, mux->reg, mask, val);
-> +}
-> +
-> +static int mux_safe_enable(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap_mux *mux = to_clk_regmap_mux(hw);
-> +	struct clk_regmap *clkr = to_clk_regmap(hw);
-> +	unsigned int mask = GENMASK(mux->width + mux->shift - 1, mux->shift);
-> +	unsigned int val;
-> +
-> +	val = mux->stored_parent_cfg;
-> +	val <<= mux->shift;
-> +
-> +	return regmap_update_bits(clkr->regmap, mux->reg, mask, val);
-> +}
+> Hello Lorenzo.
+> 
+> During testing patches 17 and 18 I saw that following race condition
+> https://lore.kernel.org/linux-pci/20210407144146.rl7x2h5l2cc3escy@pali/
+> (which cause kernel oops) was triggered more often.
+> 
+> I'm not sure if above race condition was fully fixed by the last
+> Krzysztof's patches or there is also other issue which cause oops.
+> 
+> As both patches 17 and 18 are just optimizations, I would suggest to
+> skip it for now, until all these issues are resolved or verified that
+> they are not triggered anymore.
+> 
+> I guess that at this time we can look at PROBE_PREFER_ASYNCHRONOUS flag
+> and decide how to implement this optimization.
+> 
+> Do you agree, or do you have other opinion?
 
-The caching of the parent is broken since set_parent() is typically not
-called before enabling the clock.
+It is fine by me - I will consider other patches in the series.
 
-This means that the above code will set the mux to its zero-initialised
-value, which currently only works by chance as the pipe clock config
-value happens to be zero.
+Lorenzo
 
-For this to work generally, you'd also need to define also the
-(default/initial) non-safe parent for each mux. Handling handover from
-the bootloader might also be tricky.
-
-Furthermore, the current implementation appears to ignore locking and
-doesn't handle the case where set_parent() races with enable(). The
-former is protected by the prepare mutex and the latter by the enable
-spinlock and a driver that needs to serialise the two needs to handle
-that itself.
-
-> +
->  const struct clk_ops clk_regmap_mux_closest_ops = {
->  	.get_parent = mux_get_parent,
->  	.set_parent = mux_set_parent,
->  	.determine_rate = __clk_mux_determine_rate_closest,
->  };
->  EXPORT_SYMBOL_GPL(clk_regmap_mux_closest_ops);
-> +
-> +const struct clk_ops clk_regmap_mux_safe_ops = {
-> +	.enable = mux_safe_enable,
-> +	.disable = mux_safe_disable,
-> +	.get_parent = mux_safe_get_parent,
-> +	.set_parent = mux_safe_set_parent,
-> +	.determine_rate = __clk_mux_determine_rate_closest,
-> +};
-> +EXPORT_SYMBOL_GPL(clk_regmap_mux_safe_ops);
-> diff --git a/drivers/clk/qcom/clk-regmap-mux.h b/drivers/clk/qcom/clk-regmap-mux.h
-> index db6f4cdd9586..f86c674ce139 100644
-> --- a/drivers/clk/qcom/clk-regmap-mux.h
-> +++ b/drivers/clk/qcom/clk-regmap-mux.h
-> @@ -14,10 +14,13 @@ struct clk_regmap_mux {
->  	u32			reg;
->  	u32			shift;
->  	u32			width;
-> +	u8			safe_src_parent;
-> +	u8			stored_parent_cfg;
->  	const struct parent_map	*parent_map;
->  	struct clk_regmap	clkr;
->  };
->  
->  extern const struct clk_ops clk_regmap_mux_closest_ops;
-> +extern const struct clk_ops clk_regmap_mux_safe_ops;
->  
->  #endif
-
-Johan
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > > ---
+> > >  drivers/pci/controller/pci-aardvark.c | 42 ++++++++++++++++++---------
+> > >  1 file changed, 28 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > index 8c9ac7766ac7..056f49d0e3a4 100644
+> > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > @@ -26,6 +26,7 @@
+> > >  #include <linux/of_gpio.h>
+> > >  #include <linux/of_pci.h>
+> > >  #include <linux/timer.h>
+> > > +#include <linux/workqueue.h>
+> > >  
+> > >  #include "../pci.h"
+> > >  #include "../pci-bridge-emul.h"
+> > > @@ -296,6 +297,8 @@ struct advk_pcie {
+> > >  	int link_gen;
+> > >  	bool link_was_up;
+> > >  	struct timer_list link_irq_timer;
+> > > +	struct delayed_work probe_card_work;
+> > > +	bool host_bridge_probed;
+> > >  	struct pci_bridge_emul bridge;
+> > >  	struct gpio_desc *reset_gpio;
+> > >  	struct clk *clk;
+> > > @@ -497,6 +500,21 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
+> > >  		dev_err(dev, "link never came up\n");
+> > >  }
+> > >  
+> > > +static void advk_pcie_probe_card_work(struct work_struct *work)
+> > > +{
+> > > +	struct delayed_work *dwork = container_of(work, struct delayed_work,
+> > > +						  work);
+> > > +	struct advk_pcie *pcie = container_of(dwork, struct advk_pcie,
+> > > +					      probe_card_work);
+> > > +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> > > +	int ret;
+> > > +
+> > > +	advk_pcie_train_link(pcie);
+> > > +	ret = pci_host_probe(bridge);
+> > > +	if (!ret)
+> > > +		pcie->host_bridge_probed = true;
+> > > +}
+> > > +
+> > >  /*
+> > >   * Set PCIe address window register which could be used for memory
+> > >   * mapping.
+> > > @@ -701,8 +719,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> > >  	/* Disable remaining PCIe outbound windows */
+> > >  	for (i = pcie->wins_count; i < OB_WIN_COUNT; i++)
+> > >  		advk_pcie_disable_ob_win(pcie, i);
+> > > -
+> > > -	advk_pcie_train_link(pcie);
+> > >  }
+> > >  
+> > >  static int advk_pcie_check_pio_status(struct advk_pcie *pcie, bool allow_crs, u32 *val)
+> > > @@ -2112,14 +2128,8 @@ static int advk_pcie_probe(struct platform_device *pdev)
+> > >  	bridge->ops = &advk_pcie_ops;
+> > >  	bridge->map_irq = advk_pcie_map_irq;
+> > >  
+> > > -	ret = pci_host_probe(bridge);
+> > > -	if (ret < 0) {
+> > > -		irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> > > -		advk_pcie_remove_rp_irq_domain(pcie);
+> > > -		advk_pcie_remove_msi_irq_domain(pcie);
+> > > -		advk_pcie_remove_irq_domain(pcie);
+> > > -		return ret;
+> > > -	}
+> > > +	INIT_DELAYED_WORK(&pcie->probe_card_work, advk_pcie_probe_card_work);
+> > > +	schedule_delayed_work(&pcie->probe_card_work, 1);
+> > >  
+> > >  	return 0;
+> > >  }
+> > > @@ -2131,11 +2141,15 @@ static int advk_pcie_remove(struct platform_device *pdev)
+> > >  	u32 val;
+> > >  	int i;
+> > >  
+> > > +	cancel_delayed_work_sync(&pcie->probe_card_work);
+> > > +
+> > >  	/* Remove PCI bus with all devices */
+> > > -	pci_lock_rescan_remove();
+> > > -	pci_stop_root_bus(bridge->bus);
+> > > -	pci_remove_root_bus(bridge->bus);
+> > > -	pci_unlock_rescan_remove();
+> > > +	if (pcie->host_bridge_probed) {
+> > > +		pci_lock_rescan_remove();
+> > > +		pci_stop_root_bus(bridge->bus);
+> > > +		pci_remove_root_bus(bridge->bus);
+> > > +		pci_unlock_rescan_remove();
+> > > +	}
+> > >  
+> > >  	/* Disable Root Bridge I/O space, memory space and bus mastering */
+> > >  	val = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+> > > -- 
+> > > 2.34.1
+> > > 
