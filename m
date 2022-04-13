@@ -2,122 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 254854FF7BC
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 15:37:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F41C4FF7C3
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 15:38:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235782AbiDMNjZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Apr 2022 09:39:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47386 "EHLO
+        id S233850AbiDMNkV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Apr 2022 09:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231599AbiDMNjX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 09:39:23 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC0C5F240;
-        Wed, 13 Apr 2022 06:37:01 -0700 (PDT)
+        with ESMTP id S231553AbiDMNkU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 09:40:20 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 823F55F240;
+        Wed, 13 Apr 2022 06:37:59 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id 75so1391046qkk.8;
+        Wed, 13 Apr 2022 06:37:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1649857021; x=1681393021;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Vl6SQiy5vu9EZTWkVBhNnZBEyiT+stKz3fv32aZTWs0=;
-  b=bxlBvB6nfaS2ovpRpaIxWlnyRshBBWJ/KzHkAUPjJYrxr55A6b8yhfX/
-   QFQDXuFBjkTGEqpSEgbC+j9t2q9GvUsjzX+1cvfMS9dmgluqxb9CvM5W0
-   PHiWu+Vi4zoZDgrthNFqyvaytqB3DDlf/5EPkTARUV5bxGXtu412oC4Qp
-   I=;
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 13 Apr 2022 06:37:01 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 06:37:01 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 13 Apr 2022 06:36:40 -0700
-Received: from jhugo-lnx.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 13 Apr 2022 06:36:39 -0700
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
-        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-        <jakeo@microsoft.com>
-CC:     <bjorn.andersson@linaro.org>, <linux-hyperv@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <quic_jhugo@quicinc.com>
-Subject: [PATCH v2] PCI: hv: Fix multi-MSI to allow more than one MSI vector
-Date:   Wed, 13 Apr 2022 07:36:21 -0600
-Message-ID: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=obH3d/S2lYaSS3WRVgxjm06UjcTOK/XeI/fbZ8tvhu0=;
+        b=p0rEdTVHqEwUjYkBCxSFHcimffPFsmL7M+fvAGh4R/FEqKk184GdIfe4UKgalRYNo3
+         YVdI+ZOyOgZDfikqiwW0SfsWDA4Xc+n2iIufyo9ucCztXMJmXTq5CJS4y08rR4aWw4WB
+         lfDAO8XL8mjMO/pSvRwKBmpt2aQJmC7JkeigeC6BAwhYX6UDJYMeDzF7mtiKXdKaabcJ
+         brhRCPFfYP3YCPTMor8G3FsOliN6954u6kvYZ1pYL0rggFF0b+KR010tuFhsD2xp/ak8
+         0+XAt6fronujGCN9wBx7fcVzGvokG9bobJkG/0o2IUs5qVXC6b3jYmMbwka9Ld6/+VLV
+         5KqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=obH3d/S2lYaSS3WRVgxjm06UjcTOK/XeI/fbZ8tvhu0=;
+        b=DWOC0wKJcZhZFcRPD1yMbCVOW4Lot9tIwxuhQFY2iO0DLxkIIeVBS1Ve7YO/tT9w5P
+         KzLoloHIzeo0ObbZu0N+4mFbRIYSdr3UOztUEQbY0EAWO96CWV+1w6Cwh3qa3VL3QrEC
+         T2JqIN8JyzqRxhDPVhh8ESa9ai2IjF+03Mx20njcUmKh2sFPQpGrp9CVn+Hd633aGYTe
+         qWBXBDhV58mzghwLA+GWqrBk0GOiOOsSjEffvwRwwAAfo9BmJL0EPfNZlL7Br7JcUR+5
+         71dr11u4ow32NEQ+gsQHBWpu2ZXcHO8LEYAQc7LLfpJ6BQjreeQy1WCPCx+L8QI43h1S
+         mliw==
+X-Gm-Message-State: AOAM531oeu1fCjvTyVYnNMgBfY/s5HvwC8JRRzk+BzwMpcbZioYd7nYX
+        ghlJuFrQfQTR2gRWRYZbFxQ=
+X-Google-Smtp-Source: ABdhPJwoNltjyMwmDwC9a/qTbbRk6RRmZyCNXPt32NI15GQs+mxl++8piNnzqINFOdcavlai9Lgx/Q==
+X-Received: by 2002:a37:614c:0:b0:69a:d30:e936 with SMTP id v73-20020a37614c000000b0069a0d30e936mr6632280qkb.667.1649857078596;
+        Wed, 13 Apr 2022 06:37:58 -0700 (PDT)
+Received: from master-x64.sparksnet ([2601:153:980:85b1::10])
+        by smtp.gmail.com with ESMTPSA id 143-20020a370795000000b0069c59e1b8eesm790584qkh.10.2022.04.13.06.37.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Apr 2022 06:37:58 -0700 (PDT)
+From:   Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-rockchip@lists.infradead.org, heiko@sntech.de,
+        Peter Geis <pgwipeout@gmail.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] Enable rk356x PCIe controller
+Date:   Wed, 13 Apr 2022 09:37:27 -0400
+Message-Id: <20220413133731.242870-1-pgwipeout@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If the allocation of multiple MSI vectors for multi-MSI fails in the core
-PCI framework, the framework will retry the allocation as a single MSI
-vector, assuming that meets the min_vecs specified by the requesting
-driver.
+This series enables the DesignWare based PCIe controller on the rk356x
+series of chips.
+We drop the fallback to the core driver due to compatibility issues.
+We add support for legacy interrupts for cards that lack MSI support
+(which is partially broken currently).
+We then add the device tree nodes to enable PCIe on the Quartz64 Model
+A.
 
-Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
-domain to implement that for x86.  The VECTOR domain does not support
-multi-MSI, so the alloc will always fail and fallback to a single MSI
-allocation.
+Patch 1 drops the snps,dw,pcie fallback from the dt-binding
+Patch 2 adds legacy interrupt support to the driver
+Patch 3 adds the device tree binding to the rk356x.dtsi
+Patch 4 enables the PCIe controller on the Quartz64-A
 
-In short, Hyper-V advertises a capability it does not implement.
-
-Hyper-V can support multi-MSI because it coordinates with the hypervisor
-to map the MSIs in the IOMMU's interrupt remapper, which is something the
-VECTOR domain does not have.  Therefore the fix is simple - copy what the
-x86 IOMMU drivers (AMD/Intel-IR) do by removing
-X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
-pci_msi_prepare().
-
-Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
----
-
+Changelog:
 v2:
--Fix grammatical mistake in added comment
+- Define PCIE_CLIENT_INTR_STATUS_LEGACY
+- Fix PCIE_LEGACY_INT_ENABLE to only enable the RC interrupts
+- Add legacy interrupt enable/disable support
 
- drivers/pci/controller/pci-hyperv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Peter Geis (4):
+  dt-bindings: pci: remove fallback from Rockchip DesignWare binding
+  PCI: dwc: rockchip: add legacy interrupt support
+  arm64: dts: rockchip: add rk3568 pcie2x1 controller
+  arm64: dts: rockchip: enable pcie controller on quartz64-a
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index d270a204..1cbe24b 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -614,7 +614,16 @@ static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
- static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
- 			  int nvec, msi_alloc_info_t *info)
- {
--	return pci_msi_prepare(domain, dev, nvec, info);
-+	int ret = pci_msi_prepare(domain, dev, nvec, info);
-+
-+	/*
-+	 * By using the interrupt remapper in the hypervisor IOMMU, contiguous
-+	 * CPU vectors is not needed for multi-MSI
-+	 */
-+	if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI)
-+		info->flags &= ~X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
-+
-+	return ret;
- }
- 
- /**
+ .../bindings/pci/rockchip-dw-pcie.yaml        |   3 +-
+ .../boot/dts/rockchip/rk3566-quartz64-a.dts   |  34 +++++
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi      |  68 +++++++++-
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 123 +++++++++++++++++-
+ 4 files changed, 221 insertions(+), 7 deletions(-)
+
 -- 
-2.7.4
+2.25.1
 
