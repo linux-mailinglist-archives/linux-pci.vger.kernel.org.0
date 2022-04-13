@@ -2,140 +2,240 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6BDB4FF00F
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 08:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E40EF4FF049
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 09:03:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233035AbiDMGrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Apr 2022 02:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37694 "EHLO
+        id S230440AbiDMHFa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Apr 2022 03:05:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231713AbiDMGrb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 02:47:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C76362FC;
-        Tue, 12 Apr 2022 23:45:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C1C461D26;
-        Wed, 13 Apr 2022 06:45:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A9FEC385A3;
-        Wed, 13 Apr 2022 06:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649832306;
-        bh=r2vW3ZbHso9uGN1E9szsNGXBN90bOBs2BYM7Wg9/Kng=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oG2beXM740vxSU2IPV+mku2PjnBvJPvVqKyXuUXoCiEmPAYxA7EMCHKd09m1LVyz+
-         2QT0QDL5NAApHR+hRBJFcIrd+++CnbdyHoZckTtM2wY6D3VWMXGkYRg3zLP337P0rO
-         C9zv7j0uCmoSnwx5KDmfgpDic4HVRJZ4e8UORwsf/k1WaWHkTfh9IM+twvyW/izMwF
-         Iv0H0d36WzRPZ5jsePA2vY5o5hprUGuh/jcqv5WDh+l5LcqkRhH6G2oRfI/OP3tXxZ
-         ex2Qqd5i0WbRRCZL4pMg2VIXSwPfSYwYQrYCZujxkz0zrnSWpYv1xEdA2JWu/6VBpv
-         jSj8pbdep6ePQ==
-Date:   Wed, 13 Apr 2022 12:15:01 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     wangseok.lee@samsung.com,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
-        "lars.persson@axis.com" <lars.persson@axis.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        "kernel@axis.com" <kernel@axis.com>,
-        =?utf-8?B?7KCE66y46riw?= <moonki.jun@samsung.com>
-Subject: Re: [PATCH 0/5] Add support for Axis, ARTPEC-8 PCIe driver
-Message-ID: <YlZxbXI77vSbKNsY@matsya>
-References: <564c7092-d6a3-7766-d83f-9762075d055f@kernel.org>
- <0716d9e4-24e1-d16c-162c-00a8664296e1@kernel.org>
- <20220328014430epcms2p7063834feb0abdf2f38a62723c96c9ff1@epcms2p7>
- <20220328090200epcms2p8637d2a2e09a3a627be776586b80c8adf@epcms2p8>
- <CGME20220328014430epcms2p7063834feb0abdf2f38a62723c96c9ff1@epcms2p4>
- <20220328112918epcms2p44bfdd6ef74c14f04bae6a475054860b6@epcms2p4>
- <fd3478ba-ebb9-c1bf-1823-dc03de80b76e@kernel.org>
+        with ESMTP id S229689AbiDMHF3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 03:05:29 -0400
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF6C2DAA7
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 00:03:08 -0700 (PDT)
+Received: by mail-vk1-xa2d.google.com with SMTP id o14so420344vkf.13
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 00:03:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xHWxs4+FkL4U36vmbJ4hsJqcs6mcA0G++wV/NoGaumE=;
+        b=GtrgtsLKn3UYes2HyU+WQrjNsfiLQR7vatuxTGQUhfgaeSjmN7WMcl7XcjogPa+6N4
+         HbKcE7F244WQHa9C4eUdvMmHj7FYPfDn4tNnFqBxSvXZ3cg8xw0iaGrO5ICDISAczi8o
+         HqVHX29L5d5yao9009M2rmI1v9+xdr5L27xVI976oEs75lGSF2biDRTMsFHvabm+LQ1L
+         bg5uBMo4pDd/xw89FmKtH09XNPAEpPladqpCeqyNj9MWA+Eb8qVep900sJjK7Tq+RD+6
+         yjSDo+BMIHDaRp+xMdKwDaXTSvfBA991ecZcsXKFUfRiV+ngaQKV+TJAjD7oMt/bpRpQ
+         s9uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xHWxs4+FkL4U36vmbJ4hsJqcs6mcA0G++wV/NoGaumE=;
+        b=NmGOgllEUb0E8sU3Zxg+SBNaa9gnWd0cIMtLqZgtfK0ADTnLySKq6ricBXCg8Z1n1C
+         jLWOeZ+XxIDdG1qumy3Khpjsw/+a9rmCg+w/TQkCoyidA7EKB87Au88gee8Phxp+se8J
+         wEVohLooSBiiS8ZdTMl3CmsZ37qa5KMHA5V28UD2V1jtK5h8t91dJxz3/L/982cjM1/I
+         bU/AiODGljHHYNdaxrv7lxwxvIrj33A+WO6BtKrfePDcQYTNs4lHe+R2REoVGk3fp8BE
+         1BNcVIAlcDLnhvjqib0BsKBHUMPW6cUbuuZ3NkCb/WeClKa5weyHL2rLesZgp+mla0Df
+         lfXw==
+X-Gm-Message-State: AOAM530/sYgh1dhAinU8cnaepEjt4al8pQYaLOc50WtsULxoJvZTp1FB
+        v0mpyOoQgB5/rs9YGheL69msbpFJ7oyOXkf3iNpPO+nAmzD9tA==
+X-Google-Smtp-Source: ABdhPJy8VWrWIJzWp4KWfd0EJ5+KE6g6v6e+AF3yiI6VZ9//br2PoPaDUjekKH2KfOMbRQOi18A5X92MAkW4m8yVofk=
+X-Received: by 2002:a05:6122:169a:b0:345:6ed2:93ad with SMTP id
+ 26-20020a056122169a00b003456ed293admr5601992vkl.30.1649833387952; Wed, 13 Apr
+ 2022 00:03:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fd3478ba-ebb9-c1bf-1823-dc03de80b76e@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220226104731.76776-1-chenhuacai@loongson.cn>
+ <20220226104731.76776-2-chenhuacai@loongson.cn> <YlWPZ3J408ncOujh@robh.at.kernel.org>
+In-Reply-To: <YlWPZ3J408ncOujh@robh.at.kernel.org>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Wed, 13 Apr 2022 15:02:56 +0800
+Message-ID: <CAAhV-H5B0cMBrgY5PfAZRvVmoEW5+m0cbw1t7m2igLuuoond4w@mail.gmail.com>
+Subject: Re: [PATCH V12 1/6] PCI: loongson: Use generic 8/16/32-bit config ops
+ on LS2K/LS7A
+To:     Rob Herring <robh@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28-03-22, 13:40, Krzysztof Kozlowski wrote:
-> On 28/03/2022 13:29, 이왕석 wrote:
-> >> --------- Original Message ---------
-> >> Sender : Krzysztof Kozlowski <krzk@kernel.org>
-> >> Date : 2022-03-28 18:38 (GMT+9)
-> >> Title : Re: [PATCH 0/5] Add support for Axis, ARTPEC-8 PCIe driver
-> >>
-> >> On 28/03/2022 11:02, 이왕석 wrote:
-> >>>>  --------- Original Message ---------
-> >>>>  Sender : Krzysztof Kozlowski <krzk@kernel.org>
-> >>>>  Date : 2022-03-28 16:12 (GMT+9)
-> >>>>  Title : Re: [PATCH 0/5] Add support for Axis, ARTPEC-8 PCIe driver
-> >>>>
-> >>>>  On 28/03/2022 03:44, 이왕석 wrote:
-> >>>>>   This series patches include newly PCIe support for Axis ARTPEC-8 SoC.
-> >>>>>   ARTPEC-8 is the SoC platform of Axis Communications.
-> >>>>>   PCIe controller driver and phy driver have been newly added.
-> >>>>>   There is also a new MAINTAINER in the addition of phy driver.
-> >>>>>   PCIe controller is designed based on Design-Ware PCIe controller IP
-> >>>>>   and PCIe phy is desinged based on SAMSUNG PHY IP.
-> >>>>>   It also includes modifications to the Design-Ware controller driver to 
-> >>>>>   run the 64bit-based ARTPEC-8 PCIe controller driver.
-> >>>>>   It consists of 6 patches in total.
-> >>>>>   
-> >>>>>   This series has been tested on AXIS SW bring-up board 
-> >>>>>   with ARTPEC-8 chipset.
-> >>>>
-> >>>>  You lost mail threading. This makes reading this difficult for us. Plus
-> >>>>  you sent something non-applicable (patch #2), so please resend.
-> >>>>
-> >>>>  Knowing recent Samsung reluctance to extend existing drivers and always
-> >>>>  duplicate, please provide description/analysis why this driver cannot be
-> >>>>  combined with existing driver. The answer like: we need several syscon
-> >>>>  because we do not implement other frameworks (like interconnect) are not
-> >>>>  valid.
-> >>>>
-> >>>>  Best regards,
-> >>>>  Krzysztof
-> >>>  
-> >>>  Hello, Krzysztof
-> >>>  Thanks for your review.
-> >>>  
-> >>>  patch#2 was sent to the wrong format so sent again.
-> >>>  Sorry for causing confusion.
-> >>  
-> >> The first sending was HTML. Second was broken text, so still not working.
-> >>
-> >> Please resend everything with proper threading.
-> > 
-> > Hello, Krzysztof
-> > 
-> > I sent patch#2 three times.
-> > due to the influence of the email system,
-> > there was something wrong with the first and second mails.
-> > Sorry for causing confusion.
-> > Did you receive the third patch i sent you?
-> 
-> Maybe, I don't know. It's not threaded so it's difficult to find it
-> among other 100 emails...
+Hi, Rob,
 
-Correct, this is spread over whole list, please resend the whole series
-in a single shot without threading being broken
+On Tue, Apr 12, 2022 at 10:40 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, Feb 26, 2022 at 06:47:26PM +0800, Huacai Chen wrote:
+> > LS2K/LS7A support 8/16/32-bits PCI config access operations via CFG1, so
+> > we can disable CFG0 for them and safely use pci_generic_config_read()/
+> > pci_generic_config_write() instead of pci_generic_config_read32()/pci_
+> > generic_config_write32().
+> >
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  drivers/pci/controller/pci-loongson.c | 65 +++++++++++++++++++--------
+> >  1 file changed, 46 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> > index 48169b1e3817..433261c5f34c 100644
+> > --- a/drivers/pci/controller/pci-loongson.c
+> > +++ b/drivers/pci/controller/pci-loongson.c
+> > @@ -25,11 +25,16 @@
+> >  #define FLAG_CFG1    BIT(1)
+> >  #define FLAG_DEV_FIX BIT(2)
+> >
+> > +struct pci_controller_data {
+>
+> struct loongson_pci_data
+OK, thanks.
 
--- 
-~Vinod
+>
+> > +     u32 flags;
+> > +     struct pci_ops *ops;
+>
+> const struct
+Must we do this? This cause a build warning in the later bridge->ops =
+priv->data->ops;
+
+>
+> > +};
+> > +
+> >  struct loongson_pci {
+> >       void __iomem *cfg0_base;
+> >       void __iomem *cfg1_base;
+> >       struct platform_device *pdev;
+> > -     u32 flags;
+> > +     struct pci_controller_data *data;
+> >  };
+> >
+> >  /* Fixup wrong class code in PCIe bridges */
+> > @@ -126,8 +131,8 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
+> >        * Do not read more than one device on the bus other than
+> >        * the host bus. For our hardware the root bus is always bus 0.
+> >        */
+> > -     if (priv->flags & FLAG_DEV_FIX && busnum != 0 &&
+> > -             PCI_SLOT(devfn) > 0)
+> > +     if (priv->data->flags & FLAG_DEV_FIX &&
+> > +                     busnum != 0 && PCI_SLOT(devfn) > 0)
+>
+> Are you sure you need all this? The default for PCIe (not PCI) is to
+> only scan device 0 on child buses.
+Yes, current LS7A has a hardware flaw, we may enumerate duplicated
+devices under pcie-to-pcie bridges.
+
+>
+> In any case, use pci_is_root_bus() rather than checking bus number
+> is/isn't 0.
+OK, thanks.
+
+>
+>
+> >               return NULL;
+> >
+> >       /* CFG0 can only access standard space */
+> > @@ -159,20 +164,42 @@ static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> >       return val;
+> >  }
+> >
+> > -/* H/w only accept 32-bit PCI operations */
+> > +/* LS2K/LS7A accept 8/16/32-bit PCI config operations */
+> >  static struct pci_ops loongson_pci_ops = {
+> > +     .map_bus = pci_loongson_map_bus,
+> > +     .read   = pci_generic_config_read,
+> > +     .write  = pci_generic_config_write,
+> > +};
+> > +
+> > +/* RS780/SR5690 only accept 32-bit PCI config operations */
+> > +static struct pci_ops loongson_pci_ops32 = {
+> >       .map_bus = pci_loongson_map_bus,
+> >       .read   = pci_generic_config_read32,
+> >       .write  = pci_generic_config_write32,
+> >  };
+> >
+> > +static const struct pci_controller_data ls2k_pci_data = {
+> > +     .flags = FLAG_CFG1 | FLAG_DEV_FIX,
+> > +     .ops = &loongson_pci_ops,
+> > +};
+> > +
+> > +static const struct pci_controller_data ls7a_pci_data = {
+> > +     .flags = FLAG_CFG1 | FLAG_DEV_FIX,
+> > +     .ops = &loongson_pci_ops,
+> > +};
+> > +
+> > +static const struct pci_controller_data rs780e_pci_data = {
+> > +     .flags = FLAG_CFG0,
+> > +     .ops = &loongson_pci_ops32,
+> > +};
+> > +
+> >  static const struct of_device_id loongson_pci_of_match[] = {
+> >       { .compatible = "loongson,ls2k-pci",
+> > -             .data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> > +             .data = (void *)&ls2k_pci_data, },
+>
+> Don't need the cast IIRC.
+OK, thanks.
+
+Huacai
+>
+> >       { .compatible = "loongson,ls7a-pci",
+> > -             .data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> > +             .data = (void *)&ls7a_pci_data, },
+> >       { .compatible = "loongson,rs780e-pci",
+> > -             .data = (void *)(FLAG_CFG0), },
+> > +             .data = (void *)&rs780e_pci_data, },
+> >       {}
+> >  };
+> >
+> > @@ -193,20 +220,20 @@ static int loongson_pci_probe(struct platform_device *pdev)
+> >
+> >       priv = pci_host_bridge_priv(bridge);
+> >       priv->pdev = pdev;
+> > -     priv->flags = (unsigned long)of_device_get_match_data(dev);
+> > +     priv->data = (struct pci_controller_data *)of_device_get_match_data(dev);
+> >
+> > -     regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -     if (!regs) {
+> > -             dev_err(dev, "missing mem resources for cfg0\n");
+> > -             return -EINVAL;
+> > +     if (priv->data->flags & FLAG_CFG0) {
+> > +             regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +             if (!regs)
+> > +                     dev_err(dev, "missing mem resources for cfg0\n");
+> > +             else {
+> > +                     priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
+> > +                     if (IS_ERR(priv->cfg0_base))
+> > +                             return PTR_ERR(priv->cfg0_base);
+> > +             }
+> >       }
+> >
+> > -     priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
+> > -     if (IS_ERR(priv->cfg0_base))
+> > -             return PTR_ERR(priv->cfg0_base);
+> > -
+> > -     /* CFG1 is optional */
+> > -     if (priv->flags & FLAG_CFG1) {
+> > +     if (priv->data->flags & FLAG_CFG1) {
+> >               regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> >               if (!regs)
+> >                       dev_info(dev, "missing mem resource for cfg1\n");
+> > @@ -218,7 +245,7 @@ static int loongson_pci_probe(struct platform_device *pdev)
+> >       }
+> >
+> >       bridge->sysdata = priv;
+> > -     bridge->ops = &loongson_pci_ops;
+> > +     bridge->ops = priv->data->ops;
+> >       bridge->map_irq = loongson_map_irq;
+> >
+> >       return pci_host_probe(bridge);
+> > --
+> > 2.27.0
+> >
