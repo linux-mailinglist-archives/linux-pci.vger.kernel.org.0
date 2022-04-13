@@ -2,365 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7B3E4FEB23
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 01:47:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 910224FEBE7
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 02:19:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229727AbiDLXoD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Apr 2022 19:44:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
+        id S230298AbiDMAWG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Apr 2022 20:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232234AbiDLXnk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 19:43:40 -0400
-Received: from mail-oo1-xc33.google.com (mail-oo1-xc33.google.com [IPv6:2607:f8b0:4864:20::c33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DAF475C02
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 16:28:05 -0700 (PDT)
-Received: by mail-oo1-xc33.google.com with SMTP id w20-20020a4ae9f4000000b003243aa2c71aso83966ooc.0
-        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 16:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7qLgda0jl4fJo9a34Ft6PXSCgDo4MN7cC6u6Bn0fN1s=;
-        b=JxXCDUG6dz8qCfbXlUwEz0x6omM87fluBjEhu5leFU7xXd9jvsDk75FYWHaiHZ9UsZ
-         H+sR30OLjTqB5vFJeXDpZJtW1GVX6zutCiA+PXaA9g1pXvngdXEoi4p2Nt+zYfhIjL54
-         V2LHmR2kAtKlGJe+fbUkRW/cKZm47mBCHS+ZjsNMAizJgqGC3O4a0ApkOrYiyMFoUuoq
-         Qx0LZ3qDrXKZvuKB0OCct5WPq+3ZQQx7eTN5xUum/kejkEV/oz84iJ3MPTqd3jXEjSfY
-         meGxtIGx6AbfBCeGXUkw47d1RgTGuwM6MFp52umiKHxewHrSgRwinliEY5epmZmuvqt9
-         v8Nw==
+        with ESMTP id S230480AbiDMAWF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Apr 2022 20:22:05 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB26443383
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 17:19:43 -0700 (PDT)
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 7BA423F6FE
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 00:19:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1649809180;
+        bh=Av2vidYT+scYaugnqXMT68dvLkZMawKIoL93FWxX1Aw=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=a4n9gNLkVuKLgIiJhf06YNCCX7asFTx00SiVj+ju9Fm8co+CgfQMpRUGQbjIF4yyq
+         DMvrdoP+yLfnGoluulMeV8c0zUdYWU4ZalXClq45VkKR+2s5fq6zo/baKdq0Z3MiMs
+         IPO74Jn3Xxa57Eq9Hgf369Ia3PCC19tSxAzCoW6hB31Cn97K6k6R2rbCVZYzIYEK1W
+         lKCqrAt5KWuGVZz1h97u5wrbsbPgMjC4pc8VMZiJSMFRFGfy4/n40I7XKSjaOuKV5g
+         Z4QJyXq91yj1qH82UCGKl53sAkIe4Qr/Zi2RthyCkjcst43UWAvy1sSNBvaCxKPl4I
+         TAOPDT7RdpYrw==
+Received: by mail-oo1-f69.google.com with SMTP id z25-20020a4a6559000000b003247904266fso306967oog.1
+        for <linux-pci@vger.kernel.org>; Tue, 12 Apr 2022 17:19:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7qLgda0jl4fJo9a34Ft6PXSCgDo4MN7cC6u6Bn0fN1s=;
-        b=jrMALkIoVcgdVgHoa8t0LfSDJ7BQX/ms30WDtLvHbC7UJU1Ia1f2IDAl+d295YyhAF
-         vXyH9K125n/55lTPJJVdo8+osuWAiyCJQpWa/PSqqLr5GxobKQLImOuTQVD1rsFxAMA3
-         n0yYHTOqqtoXNVKDllhahoajxMEA0MMFdwMFMVESDNeLjffT66NH5hl4fiMz+oDAarYS
-         qghnZcoczUyJZMNieD5Xmx6Sq2Q1967pgDMva3Yrdu+tqj76JWUBq0jsaUIeTDBvbGUB
-         Ctz9ZzQqSTQziRLtWPwnFH+sXakIJQFarUk2HXU2536+FQ4P2gMBd6Jq3cEV9cVQSrPR
-         ojcw==
-X-Gm-Message-State: AOAM5318ZH6/MdZ8QKf5X5/TVWyx92qEQgOd0E1gGfsfjyTRV3jJ+qjk
-        S+d1ZKEk1wRTUsP0p8R6SsoUwKg5MwHIEMGYrH9GiryLFsTdwA==
-X-Google-Smtp-Source: ABdhPJz9qAenM3p6XtIsB/evarsB6OBVUfdWRWrKwr3f5WJ4zQt3PeKiwqGQnC63657TxKrWmufKmENRqwYVOQ3gCxs=
-X-Received: by 2002:a4a:e4c7:0:b0:329:afad:cb2d with SMTP id
- w7-20020a4ae4c7000000b00329afadcb2dmr6831830oov.77.1649806084283; Tue, 12 Apr
- 2022 16:28:04 -0700 (PDT)
+        bh=Av2vidYT+scYaugnqXMT68dvLkZMawKIoL93FWxX1Aw=;
+        b=IrZh3VkGG0a1CqR+ErcpCV0JqIRFJnAm6FT+JvybI2S0NyUlHb3rw5BDAI25e1/g35
+         d5UPDrcX6ftLBMauXL/rbHM6oQFc4tNKJaJZPvpvRo0XLDsV0NalonSsBXsuejNeuQhL
+         cZnD8LlBa28AqLS0jtpTudl4iYSRh/lwgPxlXHA6bt3x5sRJuxjGRqB0jCuAOepRp1JR
+         FQGjC5gnCtfcG2Iw6FagWg9O1fg8MgKTnniU10aPK3H3VFPxrgdwRegOH28ElSDKz/Ga
+         teQyzM9ehc3dQNS37l7LiTKBO8mWQBNRNB39LQeANcTYTIApahk8pnPkPHPsbpYTxwKf
+         tMqA==
+X-Gm-Message-State: AOAM530zkmObkzgPiHZ4FL1tlTj60EBM8yVpbzSumB80N5sEBYOC0wEE
+        nzx88eBpDYIULaot+6Jyh9wAt8ZPOci+rrMaF8Ue0qQ77fdFIXW7sH8mkU8xL2GMPlRtYOGeJMN
+        g0RdIpVWAELGRgCqyJoTu0iXLlA3g7TE3r99etqGn8HZGn3auYiNQ9g==
+X-Received: by 2002:aca:2b0d:0:b0:2d9:dc99:38a2 with SMTP id i13-20020aca2b0d000000b002d9dc9938a2mr2815433oik.198.1649809179143;
+        Tue, 12 Apr 2022 17:19:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwsF5IH7sAR4VoxIIVUUP1QoENI3Xj6hxHJCDmxv5qwsYdCK85Gr2XEbOINsjnAOr7vSlvpFgwBGbvnnfQUWXU=
+X-Received: by 2002:aca:2b0d:0:b0:2d9:dc99:38a2 with SMTP id
+ i13-20020aca2b0d000000b002d9dc9938a2mr2815409oik.198.1649809178769; Tue, 12
+ Apr 2022 17:19:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <164894751774.951952.9428402449668442020.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164918880566.2022733.9710638662231385597.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0h8eOWf6fPzBtns-Nxh1jxA931uFQpPwgE_T3yeOoP3rA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0h8eOWf6fPzBtns-Nxh1jxA931uFQpPwgE_T3yeOoP3rA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Apr 2022 16:27:53 -0700
-Message-ID: <CAPcyv4j6NoLvbL9rGdbkJX8uV9ZzeCt5rOczsUo1fU8xUX_x9A@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: CXL: Disable suspend
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-cxl@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
+References: <0d8cc8c0-31a1-0290-5aa5-0c7b16db1edb@nvidia.com> <20220412225047.GA627910@bhelgaas>
+In-Reply-To: <20220412225047.GA627910@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Wed, 13 Apr 2022 08:19:26 +0800
+Message-ID: <CAAd53p4r1v_sN=8kv_fOx_VEb3k=4rU9iw52LfmEHO1crnms=g@mail.gmail.com>
+Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for suspend/resume
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        "Kenneth R. Crudup" <kenny@panix.com>, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, hkallweit1@gmail.com,
+        wangxiongfeng2@huawei.com, mika.westerberg@linux.intel.com,
+        chris.packham@alliedtelesis.co.nz, yangyicong@hisilicon.com,
+        treding@nvidia.com, jonathanh@nvidia.com, abhsahu@nvidia.com,
+        sagupta@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Ricky Wu <ricky_wu@realtek.com>,
+        Rajat Jain <rajatja@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Victor Ding <victording@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 10:02 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Wed, Apr 13, 2022 at 6:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Tue, Apr 5, 2022 at 10:00 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > The CXL specification claims S3 support at a hardware level, but at a
-> > system software level there are some missing pieces. Section 9.4 (CXL
-> > 2.0) rightly claims that "CXL mem adapters may need aux power to retain
-> > memory context across S3", but there is no enumeration mechanism for the
-> > OS to determine if a given adapter has that support. Moreover the save
-> > state and resume image for the system may inadvertantly end up in a CXL
-> > device that needs to be restored before the save state is recoverable.
-> > I.e. a circular dependency that is not resolvable without a third party
-> > save-area.
-> >
-> > Arrange for the cxl_mem driver to fail S3 attempts. This still nominaly
-> > allows for suspend, but requires unbinding all CXL memory devices before
-> > the suspend to ensure the typical DRAM flow is taken. The cxl_mem unbind
-> > flow is intended to also tear down all CXL memory regions associated
-> > with a given cxl_memdev.
-> >
-> > It is reasonable to assume that any device participating in a System RAM
-> > range published in the EFI memory map is covered by aux power and
-> > save-area outside the device itself. So this restriction can be
-> > minimized in the future once pre-existing region enumeration support
-> > arrives, and perhaps a spec update to clarify if the EFI memory map is
-> > sufficent for determining the range of devices managed by
-> > platform-firmware for S3 support.
-> >
-> > Per Rafael, if the CXL configuration prevents suspend then it should
-> > fail early before tasks are frozen, and mem_sleep should stop showing
-> > 'mem' as an option [1]. Effectively CXL augments the platform suspend
-> > ->valid() op since, for example, the ACPI ops are not aware of the CXL /
-> > PCI dependencies. Given the split role of platform firmware vs OS
-> > provisioned CXL memory it is up to the cxl_mem driver to determine if
-> > the CXL configuration has elements that platform firmware may not be
-> > prepared to restore.
-> >
-> > Link: https://lore.kernel.org/r/CAJZ5v0hGVN_=3iU8OLpHY3Ak35T5+JcBM-qs8SbojKrpd0VXsA@mail.gmail.com [1]
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Len Brown <len.brown@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> [+cc Ricky for rtsx_pci ASPM behavior, Rajat, Prasad for L1 SS stuff,
+> Victor for interest in disabling ASPM during save/restore]
 >
-> The majority of the changes are in the CXL code, so
+> On Wed, Feb 16, 2022 at 06:41:39PM +0530, Vidya Sagar wrote:
+> > On 2/16/2022 11:30 AM, Kenneth R. Crudup wrote:
+> > > On Wed, 16 Feb 2022, Vidya Sagar wrote:
+> > >
+> > > > I see that the ASPM-L1 state of Realtek NIC which was in
+> > > > disabled state before hibernate got enabled after hibernate.
+> > >
+> > > That's actually my SD-Card reader; there's a good chance the BIOS
+> > > does "something" to it at boot time, as it's possible to boot from
+> > > SD-Card on my laptop.
+> > >
+> > > > This patch doesn't do anything to LnkCtl register which has
+> > > > control for ASPM L1 state.
+> > >
+> > > > Could you please check why ASPM L1 got enabled post hibernation?
+> > >
+> > > I wouldn't know how to do that; if you're still interested in that
+> > > let me know what to do to determine that.
 >
-> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > I would like Bjorn to take a call on it.
+> > At this point, there are contradictions in observations.
 >
-> or please let me know if you want me to take this.
+> Remind me what contradictions you see?  I know Kenny saw NVMe errors
+> on a kernel that included 4257f7e008ea ("PCI/ASPM: Save/restore L1SS
+> Capability for suspend/resume") in December 2020 [1], and that he did
+> *not* see those errors on 4257f7e008ea in February 2022 [2].  Is that
+> what you mean?
+>
+> > Just to summarize,
+> > - The root ports in your laptop don't have support for L1SS
+> > - With the same old code base with which the errors were observed plus my
+> > patch on top of it, I see that ASPM-L1 state getting enabled for one of the
+> > endpoints (Realtek SD-Card reader) after system comes out of hibernation
+> > even though ASPM-L1 was disabled before the system enter into hibernation.
+> > No errors are reported now.
+>
+> I assume you refer to [2], where on 4257f7e008ea ("PCI/ASPM:
+> Save/restore L1SS Capability for suspend/resume"), Kenny saw ASPM L1
+> disabled before hibernate and enabled afterwards:
+>
+>   --- pre-hibernate
+>   +++ post-hibernate
+>     00:1d.7 PCI bridge [0604]: Intel [8086:34b7]
+>       Bus: primary=00, secondary=58, subordinate=58
+>         LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+>     58:00.0 RTS525A PCI Express Card Reader [10ec:525a]
+>   -     LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
+>   -             ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>   +     LnkCtl: ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk-
+>   +             ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt-
+>
+> Per PCIe r6.0, sec 7.5.3.7, "ASPM L1 must be enabled by software in
+> the Upstream component on a Link prior to enabling ASPM L1 in the
+> Downstream component on that Link," so this definitely seems broken,
+> but wouldn't explain the NVMe issue.
+>
+> The PCI core (pcie_config_aspm_link()) always enables L1 in the
+> upstream component before the downstream one, but 58:00.0 uses the
+> rtsx_pci driver, which does a lot of its own ASPM fiddling, so my
+> guess is that it's doing something wrong here.
+>
+> > - With the linux-next top of the tree plus my patch, no change in the ASPM
+> > states and no errors also reported.
+>
+> I don't know which report this refers to.
+>
+> > This points to BIOS being buggy (both old and new with new one being less
+> > problematic)
+>
+> I agree that a BIOS change between [1] and [2] seems plausible, but I
+> don't think we can prove that yet.  I'm slightly queasy because while
+> Kenny may have updated his BIOS, most people will not have.
+>
+> I think we should try this patch again with some changes and maybe
+> some debug logging:
+>
+>   - I wonder if we should integrate the LTR, L1 SS, and Link Control
+>     ASPM restore instead of having them spread around through
+>     pci_restore_ltr_state(), pci_restore_aspm_l1ss_state(), and
+>     pci_restore_pcie_state().  Maybe a new pci_restore_aspm() that
+>     would be called from pci_restore_pcie_state()?
+>
+>   - For L1 PM Substates configuration, sec 5.5.4 says that both ports
+>     must be configured while ASPM L1 is disabled, but I don't think we
+>     currently guarantee this: we restore all the upstream component
+>     state first, and we don't know the ASPM state of the downstream
+>     one.  Maybe we need to:
+>
+>       * When restoring upstream component,
+>           + disable its ASPM
+>
+>       * When restoring downstream component,
+>           + disable its ASPM
+>           + restore upstream component's LTR, L1SS
+>           + restore downstream component's LTR, L1SS
+>           + restore upstream component's ASPM
+>           + restore downstream component's ASPM
 
-Thanks Rafael, I'll do one more update to return the call to
-device_set_pm_not_required() since with this new scheme the CXL
-dev_pm_ops are not used. I'll take this through cxl.git.
+Right now L1SS isn't reprogrammed after S3, and that causes WD NVMe
+starts to spew lots of AER errors.
+So yes please restore L1SS upon resume. Meanwhile I am asking vendor
+_why_ restoring L1SS is crucial for it to work.
+
+I also wonder what's the purpose of pcie_aspm_pm_state_change()? Can't
+we just restore ASPM bits like other configs?
+
+Kai-Heng
 
 >
-> Thanks!
+>       This seems pretty messy, but seems like what the spec requires.
 >
-> > ---
-> >  drivers/Makefile           |    2 +-
-> >  drivers/cxl/Kconfig        |    4 ++++
-> >  drivers/cxl/Makefile       |    2 +-
-> >  drivers/cxl/core/Makefile  |    1 +
-> >  drivers/cxl/core/memdev.c  |    1 -
-> >  drivers/cxl/core/suspend.c |   23 +++++++++++++++++++++++
-> >  drivers/cxl/cxlmem.h       |   11 +++++++++++
-> >  drivers/cxl/mem.c          |   22 +++++++++++++++++++++-
-> >  include/linux/pm.h         |    9 +++++++++
-> >  kernel/power/hibernate.c   |    2 +-
-> >  kernel/power/main.c        |    5 ++++-
-> >  kernel/power/suspend.c     |    3 ++-
-> >  12 files changed, 78 insertions(+), 7 deletions(-)
-> >  create mode 100644 drivers/cxl/core/suspend.c
-> >
-> > diff --git a/drivers/Makefile b/drivers/Makefile
-> > index 020780b6b4d2..f735c4955143 100644
-> > --- a/drivers/Makefile
-> > +++ b/drivers/Makefile
-> > @@ -72,9 +72,9 @@ obj-$(CONFIG_PARPORT)         += parport/
-> >  obj-y                          += base/ block/ misc/ mfd/ nfc/
-> >  obj-$(CONFIG_LIBNVDIMM)                += nvdimm/
-> >  obj-$(CONFIG_DAX)              += dax/
-> > -obj-$(CONFIG_CXL_BUS)          += cxl/
-> >  obj-$(CONFIG_DMA_SHARED_BUFFER) += dma-buf/
-> >  obj-$(CONFIG_NUBUS)            += nubus/
-> > +obj-y                          += cxl/
-> >  obj-y                          += macintosh/
-> >  obj-y                          += scsi/
-> >  obj-y                          += nvme/
-> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > index b88ab956bb7c..f64e3984689f 100644
-> > --- a/drivers/cxl/Kconfig
-> > +++ b/drivers/cxl/Kconfig
-> > @@ -98,4 +98,8 @@ config CXL_PORT
-> >         default CXL_BUS
-> >         tristate
-> >
-> > +config CXL_SUSPEND
-> > +       def_bool y
-> > +       depends on SUSPEND && CXL_MEM
-> > +
-> >  endif
-> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> > index ce267ef11d93..a78270794150 100644
-> > --- a/drivers/cxl/Makefile
-> > +++ b/drivers/cxl/Makefile
-> > @@ -1,5 +1,5 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > -obj-$(CONFIG_CXL_BUS) += core/
-> > +obj-y += core/
-> >  obj-$(CONFIG_CXL_PCI) += cxl_pci.o
-> >  obj-$(CONFIG_CXL_MEM) += cxl_mem.o
-> >  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> > index 6d37cd78b151..9d35085d25af 100644
-> > --- a/drivers/cxl/core/Makefile
-> > +++ b/drivers/cxl/core/Makefile
-> > @@ -1,5 +1,6 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> > +obj-$(CONFIG_CXL_SUSPEND) += suspend.o
-> >
-> >  ccflags-y += -I$(srctree)/drivers/cxl
-> >  cxl_core-y := port.o
-> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > index 1f76b28f9826..efe4d2e9bfef 100644
-> > --- a/drivers/cxl/core/memdev.c
-> > +++ b/drivers/cxl/core/memdev.c
-> > @@ -251,7 +251,6 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
-> >         dev->bus = &cxl_bus_type;
-> >         dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
-> >         dev->type = &cxl_memdev_type;
-> > -       device_set_pm_not_required(dev);
-> >         INIT_WORK(&cxlmd->detach_work, detach_memdev);
-> >
-> >         cdev = &cxlmd->cdev;
-> > diff --git a/drivers/cxl/core/suspend.c b/drivers/cxl/core/suspend.c
-> > new file mode 100644
-> > index 000000000000..88bdbe30a1df
-> > --- /dev/null
-> > +++ b/drivers/cxl/core/suspend.c
-> > @@ -0,0 +1,23 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-> > +#include <linux/atomic.h>
-> > +#include <linux/export.h>
-> > +
-> > +static atomic_t mem_active;
-> > +
-> > +bool cxl_mem_active(void)
-> > +{
-> > +       return atomic_read(&mem_active) != 0;
-> > +}
-> > +
-> > +void cxl_mem_active_inc(void)
-> > +{
-> > +       atomic_inc(&mem_active);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(cxl_mem_active_inc, CXL);
-> > +
-> > +void cxl_mem_active_dec(void)
-> > +{
-> > +       atomic_dec(&mem_active);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(cxl_mem_active_dec, CXL);
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 243dd86a8b46..7235d2f976e5 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -353,6 +353,17 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
-> >  struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
-> >  void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
-> >  void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
-> > +#ifdef CONFIG_CXL_SUSPEND
-> > +void cxl_mem_active_inc(void);
-> > +void cxl_mem_active_dec(void);
-> > +#else
-> > +static inline void cxl_mem_active_inc(void)
-> > +{
-> > +}
-> > +static inline void cxl_mem_active_dec(void)
-> > +{
-> > +}
-> > +#endif
-> >
-> >  struct cxl_hdm {
-> >         struct cxl_component_regs regs;
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index 49a4b1c47299..0576d2d3df07 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -129,6 +129,11 @@ __mock bool cxl_dvsec_decode_init(struct cxl_dev_state *cxlds)
-> >         return do_hdm_init;
-> >  }
-> >
-> > +static void enable_suspend(void *data)
-> > +{
-> > +       cxl_mem_active_dec();
-> > +}
-> > +
-> >  static int cxl_mem_probe(struct device *dev)
-> >  {
-> >         struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > @@ -207,7 +212,22 @@ static int cxl_mem_probe(struct device *dev)
-> >  out:
-> >         cxl_device_unlock(&parent_port->dev);
-> >         put_device(&parent_port->dev);
-> > -       return rc;
-> > +
-> > +       /*
-> > +        * The kernel may be operating out of CXL memory on this device,
-> > +        * there is no spec defined way to determine whether this device
-> > +        * preserves contents over suspend, and there is no simple way
-> > +        * to arrange for the suspend image to avoid CXL memory which
-> > +        * would setup a circular dependency between PCI resume and save
-> > +        * state restoration.
-> > +        *
-> > +        * TODO: support suspend when all the regions this device is
-> > +        * hosting are locked and covered by the system address map,
-> > +        * i.e. platform firmware owns restoring the HDM configuration
-> > +        * that it locked.
-> > +        */
-> > +       cxl_mem_active_inc();
-> > +       return devm_add_action_or_reset(dev, enable_suspend, NULL);
-> >  }
-> >
-> >  static struct cxl_driver cxl_mem_driver = {
-> > diff --git a/include/linux/pm.h b/include/linux/pm.h
-> > index e65b3ab28377..7911c4c9a7be 100644
-> > --- a/include/linux/pm.h
-> > +++ b/include/linux/pm.h
-> > @@ -36,6 +36,15 @@ static inline void pm_vt_switch_unregister(struct device *dev)
-> >  }
-> >  #endif /* CONFIG_VT_CONSOLE_SLEEP */
-> >
-> > +#ifdef CONFIG_CXL_SUSPEND
-> > +bool cxl_mem_active(void);
-> > +#else
-> > +static inline bool cxl_mem_active(void)
-> > +{
-> > +       return false;
-> > +}
-> > +#endif
-> > +
-> >  /*
-> >   * Device power management
-> >   */
-> > diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-> > index 938d5c78b421..20a66bf9f465 100644
-> > --- a/kernel/power/hibernate.c
-> > +++ b/kernel/power/hibernate.c
-> > @@ -83,7 +83,7 @@ bool hibernation_available(void)
-> >  {
-> >         return nohibernate == 0 &&
-> >                 !security_locked_down(LOCKDOWN_HIBERNATION) &&
-> > -               !secretmem_active();
-> > +               !secretmem_active() && !cxl_mem_active();
-> >  }
-> >
-> >  /**
-> > diff --git a/kernel/power/main.c b/kernel/power/main.c
-> > index 7e646079fbeb..3e6be1c33e0b 100644
-> > --- a/kernel/power/main.c
-> > +++ b/kernel/power/main.c
-> > @@ -127,7 +127,9 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
-> >         char *s = buf;
-> >         suspend_state_t i;
-> >
-> > -       for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++)
-> > +       for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++) {
-> > +               if (i >= PM_SUSPEND_MEM && cxl_mem_active())
-> > +                       continue;
-> >                 if (mem_sleep_states[i]) {
-> >                         const char *label = mem_sleep_states[i];
-> >
-> > @@ -136,6 +138,7 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
-> >                         else
-> >                                 s += sprintf(s, "%s ", label);
-> >                 }
-> > +       }
-> >
-> >         /* Convert the last space to a newline if needed. */
-> >         if (s != buf)
-> > diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-> > index 6fcdee7e87a5..827075944d28 100644
-> > --- a/kernel/power/suspend.c
-> > +++ b/kernel/power/suspend.c
-> > @@ -236,7 +236,8 @@ EXPORT_SYMBOL_GPL(suspend_valid_only_mem);
-> >
-> >  static bool sleep_state_supported(suspend_state_t state)
-> >  {
-> > -       return state == PM_SUSPEND_TO_IDLE || valid_state(state);
-> > +       return state == PM_SUSPEND_TO_IDLE ||
-> > +              (valid_state(state) && !cxl_mem_active());
-> >  }
-> >
-> >  static int platform_suspend_prepare(suspend_state_t state)
-> >
+>     - Add some pci_dbg() logging of all these save/restore values to
+>       help debug any issues.
+>
+> Bjorn
+>
+> [1] https://lore.kernel.org/r/20201228040513.GA611645@bjorn-Precision-5520
+> [2] https://lore.kernel.org/r/3ca14a7-b726-8430-fe61-a3ac183a1088@panix.com
