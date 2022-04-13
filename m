@@ -2,65 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD9274FF198
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 10:17:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F92B4FF240
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 10:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233153AbiDMISe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Apr 2022 04:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38962 "EHLO
+        id S233875AbiDMIng (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Apr 2022 04:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233717AbiDMISd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 04:18:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 958E14D638;
-        Wed, 13 Apr 2022 01:16:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 30AA0616E9;
-        Wed, 13 Apr 2022 08:16:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 916F3C385A4;
-        Wed, 13 Apr 2022 08:16:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649837771;
-        bh=GhcEljhJaIb/OxxUFW2Jzk8YnvwDp3+oEU/cfGhkCrI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GpiM1ipI3ArXH6FtHRsnv8TZhjzuYegG2Sgnh7avQ8h07s1O/+Rk2SNxD4xXdJwVP
-         T9pr49kfrZUeKtXmmyHD1XOSENGzYEamufE91g6I/lHuHaWXl7nIB2R7LdWRUQ7Olq
-         8Up6Z+3TMYFO0qXE/mYDhciznf+gmj8MNyR68WeWyY6rMkvwRw8OkEcPuIjtZ4vwq/
-         UNR6tDYVLGy9KBfepHxW5wxkyvF7Ns0sOmRSxAEfOPRo5oIImNtaK5EYcVtTactE4X
-         5zHoPWWS7JpV2Fri3vghn65OBOqyLi0hH/RVy7RDe+fi2d/ohXfMXryO053jlHkLVe
-         5OJC0LNkC0i8A==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1neYAX-0004ym-7y; Wed, 13 Apr 2022 10:16:05 +0200
-Date:   Wed, 13 Apr 2022 10:16:05 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 1/5] clk: qcom: regmap-mux: add pipe clk implementation
-Message-ID: <YlaGxQLeXKIZjXy+@hovoldconsulting.com>
-References: <20220323085010.1753493-1-dmitry.baryshkov@linaro.org>
- <20220323085010.1753493-2-dmitry.baryshkov@linaro.org>
- <YlAZVrDXwdIItyTy@lpieralisi>
- <YlXI0fg21XZPXwf4@builder.lan>
+        with ESMTP id S234494AbiDMInZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 04:43:25 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D30B4738A
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 01:41:00 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id s25so1014349edi.13
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 01:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=vnyM2Iiv5ssFwZ+YfhSIPkTVc84CfyYTFaqlrMujJwU=;
+        b=JIbqyng6xlRV93M1Iu4dTb27ybe+M5EN2beeOTia2QovfKwHZWLGjr66cUx0YdX3/v
+         8nbu5XWVqbuUMx1VHW7Jp0LjTMIRW/JvtKlPAPwmC12IguAK8nAZjvST8nPijS6soEVz
+         lCEGXpJKRGImWyHRDfmKyn0IwmzTivzO/Vs8MDv+1cJ+MoZ5YxwAJ+kc5wqtfsrfRjlw
+         dl24/2CzxrUZbd2CgYUV995GGUYyvDMWOghjruTd1pRrJ7LcOsA6BV8p7XbkZUzO9Tat
+         9Hf6SigjF0nx23JEKIGKUT0nPYsQzEA7bWg8dt6IDJV7Ni9PpqpqRJKKkXLn7s8NY1Kj
+         Fn2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=vnyM2Iiv5ssFwZ+YfhSIPkTVc84CfyYTFaqlrMujJwU=;
+        b=dYNhODVhR+JNVkBOojZMIaECxr3ZjA5P1pMTDDJHc/1I7us8cb1maIkHQIY3SPjGvw
+         hjOgmNan8b33zgnIANwYYjT42zSupdSr+GC04BnJhQH3x9qKein8JqOeGPz/Lj90Qk3W
+         2acwuz77f/NjKtq0qCGcFho17dn5VR6Q8N9GAeSVi8wA2D8NFE4AEgMOgbelFy6sP+hn
+         N90si4AEgWgzRnXXQ6OF4Q040zg2j1dDiw5C3Rk//dydU9BDgbiep8HyeL5NGfa0tlo6
+         YX7clcBXluSniO9P2fZ9YJE4BKLEk3zXlleMsYOBsG5WuKozED3w4aL65PtYeNmk6NWi
+         4Btw==
+X-Gm-Message-State: AOAM533RZC0SLmtCItFDVO5zZF6bZMeXe5bTNTBWhgrTvZQT9Zg8YwwZ
+        3t0gbQTAPjeKmlGpahRQxb4rRQ==
+X-Google-Smtp-Source: ABdhPJwtqQ40ij3I2sXCRUOzsMpUdkisZ2t9soK7OyZx79O22lSzuKtXAWN17iTj1ggfo92pAD3X0Q==
+X-Received: by 2002:aa7:c40b:0:b0:41d:9886:90a0 with SMTP id j11-20020aa7c40b000000b0041d988690a0mr5089328edq.275.1649839258932;
+        Wed, 13 Apr 2022 01:40:58 -0700 (PDT)
+Received: from [192.168.0.202] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
+        by smtp.gmail.com with ESMTPSA id o15-20020a50d80f000000b0041cc1f4f5e0sm902910edj.62.2022.04.13.01.40.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Apr 2022 01:40:58 -0700 (PDT)
+Message-ID: <f967f1b2-80a2-8418-d5e8-1e2ac41730a6@linaro.org>
+Date:   Wed, 13 Apr 2022 10:40:57 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YlXI0fg21XZPXwf4@builder.lan>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v6 12/12] rpmsg: Fix kfree() of static memory on setting
+ driver_override
+Content-Language: en-US
+To:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Stuart Yoder <stuyoder@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20220403183758.192236-1-krzysztof.kozlowski@linaro.org>
+ <20220403183758.192236-13-krzysztof.kozlowski@linaro.org>
+ <OS0PR01MB59226666C2C6805C86304BE586ED9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <OS0PR01MB59226666C2C6805C86304BE586ED9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,45 +109,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 01:45:37PM -0500, Bjorn Andersson wrote:
-> On Fri 08 Apr 06:15 CDT 2022, Lorenzo Pieralisi wrote:
+On 12/04/2022 16:10, Biju Das wrote:
+> Hi Krzysztof Kozlowski,
 > 
-> > On Wed, Mar 23, 2022 at 11:50:06AM +0300, Dmitry Baryshkov wrote:
-> > > On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
-> > > muxes which must be parked to the "safe" source (bi_tcxo) when
-> > > corresponding GDSC is turned off and on again. Currently this is
-> > > handcoded in the PCIe driver by reparenting the gcc_pipe_N_clk_src
-> > > clock. However the same code sequence should be applied in the
-> > > pcie-qcom endpoint, USB3 and UFS drivers.
-> > > 
-> > > Rather than copying this sequence over and over again, follow the
-> > > example of clk_rcg2_shared_ops and implement this parking in the
-> > > enable() and disable() clock operations. As we are changing the parent
-> > > behind the back of the clock framework, also implement custom
-> > > set_parent() and get_parent() operations behaving accroding to the clock
-> > > framework expectations (cache the new parent if the clock is in disabled
-> > > state, return cached parent).
-> > > 
-> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > ---
-> > >  drivers/clk/qcom/clk-regmap-mux.c | 78 +++++++++++++++++++++++++++++++
-> > >  drivers/clk/qcom/clk-regmap-mux.h |  3 ++
-> > >  2 files changed, 81 insertions(+)
-> > 
-> > Need BjornA's ACK on this patch and I can pull the series then.
-> > 
+> Thanks for the patch.
 > 
-> It seems I have a few more clock patches in the queue which depends on
-> top of this, so I picked up the three clock branches and pushed a tag
-> for you to pick up, Lorenzo.
+>> Subject: [PATCH v6 12/12] rpmsg: Fix kfree() of static memory on setting
+>> driver_override
+>>
+>> The driver_override field from platform driver should not be initialized
+>> from static memory (string literal) because the core later kfree() it, for
+>> example when driver_override is set via sysfs.
+>>
+>> Use dedicated helper to set driver_override properly.
+>>
+>> Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
+>> Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>>  drivers/rpmsg/rpmsg_internal.h | 13 +++++++++++--
+>>  drivers/rpmsg/rpmsg_ns.c       | 14 ++++++++++++--
+>>  include/linux/rpmsg.h          |  6 ++++--
+>>  3 files changed, 27 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/rpmsg/rpmsg_internal.h
+>> b/drivers/rpmsg/rpmsg_internal.h index d4b23fd019a8..1a2fb8edf5d3 100644
+>> --- a/drivers/rpmsg/rpmsg_internal.h
+>> +++ b/drivers/rpmsg/rpmsg_internal.h
+>> @@ -94,10 +94,19 @@ int rpmsg_release_channel(struct rpmsg_device *rpdev,
+>>   */
+>>  static inline int rpmsg_ctrldev_register_device(struct rpmsg_device
+>> *rpdev)  {
+>> +	int ret;
+>> +
+>>  	strcpy(rpdev->id.name, "rpmsg_ctrl");
+>> -	rpdev->driver_override = "rpmsg_ctrl";
+>> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
+>> +				  "rpmsg_ctrl", strlen("rpmsg_ctrl"));
+> 
+> Is it not possible to use rpdev->id.name instead of "rpmsg_ctrl" ?
+> rpdev->id.name has "rpmsg_ctrl" from strcpy(rpdev->id.name, "rpmsg_ctrl");
+> 
+> Same for "rpmsg_ns" as well
 
-I've found a few issues with these clock patches and I'm starting to
-think we should consider handling the muxing in the PHY driver instead.
+It's possible. I kept the pattern of duplicating the string literal
+because original code had it, but I don't mind to change it. In the
+output assembler that might be additional instruction - need to
+dereference the rpdev pointer - but that does not matter much.
 
-Dmitry just posted a v2, which I'll comment on:
 
-	https://lore.kernel.org/all/20220412193839.2545814-1-dmitry.baryshkov@linaro.org/
-
-Please take a look at that before merging the clock changes.
-
-Johan
+Best regards,
+Krzysztof
