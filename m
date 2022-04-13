@@ -2,135 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C67AB4FF058
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 09:06:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AEC54FF05D
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 09:06:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233249AbiDMHIS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Apr 2022 03:08:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
+        id S229894AbiDMHI7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Apr 2022 03:08:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233190AbiDMHIN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 03:08:13 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85ED2ED5D
-        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 00:05:52 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id r66so985098pgr.3
-        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 00:05:52 -0700 (PDT)
+        with ESMTP id S232641AbiDMHI7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 03:08:59 -0400
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE3B81C901
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 00:06:38 -0700 (PDT)
+Received: by mail-vs1-xe2c.google.com with SMTP id i186so741581vsc.9
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 00:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wA/XhN+liF7FNQdYD63xlSjmBiv/wnn45LKu56yG8aw=;
-        b=AreLMy3LsZ/2P+aighUoU5gjlgpeBV8R7aO4E6ZmNrH9sPFlHDYfXCQ9dsaQSKUUDZ
-         jV695MA6AjTW9RaVAKwYYDjPOSnx5VhKZBhY+t+VOpMmHsvuvmUO3uevsu7U4SoQZX/Q
-         hKY670Ht3+qDXUL6ihxfD4vmxjl3ro3ScX1SDiJ3bn9yNvTvyI5Jk5d9mYgm8hoPX7qr
-         1+qPrlrepeFD1qFKz+Inw4HQwj7zVmeaIa1RIZvKj+dElNrFnhxT76DSr9HnuNU6qNNj
-         CDAr/V+AXPW6hm65wKobzJCFQHpgmZ/HCfP68ZL1bibg1imj6sYE0SrrHqGdYcyfLpKZ
-         /IFQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tZdyjOi7z4KK2aBnHBLowY/dv/i24VdQBUn22Y2ZH60=;
+        b=UCgsy8yChAMPVpXRqWPmj0CMm3bK9sK5pFogrcsLuEuOKPZp2tnu4kswTn4drPUVJZ
+         m+rYMPGtEeM5Gf8TWbq8wUamb9Keb1SlWUTTRYDf/Mlf1CNgBGloy4nMIyvT/0mPizk6
+         A8QppKRjNdK/Wu6Oi96ZYPjkkSiI1yRDvyWtoPmnGTGW5M6UZHHDCS4G+/xFEEXTq2lF
+         rHYh5xDFbJ+E2lmkB6YdewR29bgnD2vz0R+QL31BdtmR2NV1s3ByS0/yDXosK5gWSrsm
+         07iOPxJnY6iw/vAq4JZGnIHmGLg8jQT7wWsNXX3AC24JOtt0fH0MLzw23jvOQP2BNJLx
+         Luaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wA/XhN+liF7FNQdYD63xlSjmBiv/wnn45LKu56yG8aw=;
-        b=Ou4ivI8Bzzxc/4JxNFrP/3lJGWJlyB1OPhFTj5PZylKwea6cQChxUqLwei9s2LRjrC
-         vNRcJqcSvJI9nXc1onEFV9GSPn9GlOasSrzuV1msq1W0iHilNOdvmuS0hpe8pffp23hw
-         WlA2I5Lnr6xjWvKHARWs2ckx6jEqzX0UyKQK5BzD4GbVKfQMvADHJ73emQu+8FnSS/WH
-         YbDLVaNFmVYhmxo40AHmBTLAqY5w1ahkoqzD7KldpZGU3Km5cW7cC0aPQfslVr0juLqI
-         dX6lVazMo/nQMvkLDdNzEPtIBLaTPaX7stdtJXOwKb9JphgjbTZtJlaxw0GlT10MnEB7
-         64dA==
-X-Gm-Message-State: AOAM530UqjsgoIcucO6SCCJmEoc3Lg0pIa8/dinoP0djlQyUnbF+Ovcm
-        dLZ3beOJrAJ0vWW6d84Ak6rL
-X-Google-Smtp-Source: ABdhPJzozXDajJ1TNHGEamoE5ZZSxjlxIF5/046swX9Uyn7xnV9vkvwlcsjXH3KBZ12ieR4vKeneWw==
-X-Received: by 2002:a05:6a00:10cc:b0:505:ada6:e03e with SMTP id d12-20020a056a0010cc00b00505ada6e03emr17405824pfu.45.1649833552212;
-        Wed, 13 Apr 2022 00:05:52 -0700 (PDT)
-Received: from thinkpad ([117.207.28.99])
-        by smtp.gmail.com with ESMTPSA id t15-20020a63b70f000000b00381510608e9sm5035307pgf.14.2022.04.13.00.05.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Apr 2022 00:05:51 -0700 (PDT)
-Date:   Wed, 13 Apr 2022 12:35:42 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Kalle Valo <kvalo@kernel.org>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rajatja@google.com, refactormyself@gmail.com,
-        quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-        swboyd@chromium.org, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org
-Subject: Re: [PATCH v4] PCI: qcom: Add system PM support
-Message-ID: <20220413070542.GB2015@thinkpad>
-References: <1646679306-4768-1-git-send-email-quic_pmaliset@quicinc.com>
- <20220412060144.GA41348@thinkpad>
- <87k0buoa9j.fsf@kernel.org>
- <20220413054904.GA2015@thinkpad>
- <CAA8EJprcQtVFvjL_WsMoDxvPSAqaRMS90ZuTsD_cDuujtr83Xw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tZdyjOi7z4KK2aBnHBLowY/dv/i24VdQBUn22Y2ZH60=;
+        b=2NeJ110OyA2XzaBBdVPuXKUDgrKgeqGr/qh3l+Pv2/79pMqdkX3/0GEPRfzXGM4xlL
+         QbtwxI3aYntsMDg/dzjc+MR+HcO/H3RaFD68STciKl2jGuUKXI6tY/+0BeLfbJSXb2wT
+         jJecSWPe5oCfTPmSBeIb6eTc9PoMlj2gzHgRcJ+5r8KcChCAF6Y9LUiQNeUZm1RHZKVe
+         WPAk/xWnF0M6MFT02xbeBm13Yg6cnHqxjfkWEFs3SI+HTRgN6eldFlmlH/gbtaSM1fWZ
+         Nw6o3nb5ZMuyUhHK+HoFvM6HRPhzdEW4qzg442qhmNpv15IvPInhiyTnwDtyfUHChxIz
+         0Yqw==
+X-Gm-Message-State: AOAM533+ejqh7I5OKgkpd5P4TjKPA6gu2CWIQclxZzW7mvmqkSkGI94i
+        6e8V50tcxCGlguTLkUKaAMByQMxZX1l3VPRPXDXdHuqB/aqIjQ==
+X-Google-Smtp-Source: ABdhPJwjAtQ/rYDqmv2lwTewqiJBTxmeM21Anjy5qq9ZAvNgvynZHye8vuBir3owpOrIYaNUotgBv2G8AH+YZpbfpDM=
+X-Received: by 2002:a67:ea4f:0:b0:328:1db4:d85c with SMTP id
+ r15-20020a67ea4f000000b003281db4d85cmr8517368vso.20.1649833598055; Wed, 13
+ Apr 2022 00:06:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJprcQtVFvjL_WsMoDxvPSAqaRMS90ZuTsD_cDuujtr83Xw@mail.gmail.com>
+References: <20220226104731.76776-1-chenhuacai@loongson.cn>
+ <20220226104731.76776-5-chenhuacai@loongson.cn> <YlWRYTuS6194hVjV@robh.at.kernel.org>
+In-Reply-To: <YlWRYTuS6194hVjV@robh.at.kernel.org>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Wed, 13 Apr 2022 15:06:26 +0800
+Message-ID: <CAAhV-H7+KMqzcMFRBtoBtg2eCbxArs8o=9CnBV98pU9MjRkGaQ@mail.gmail.com>
+Subject: Re: [PATCH V12 4/6] PCI: loongson: Improve the MRRS quirk for LS7A
+To:     Rob Herring <robh@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 09:36:30AM +0300, Dmitry Baryshkov wrote:
-> On Wed, 13 Apr 2022 at 08:49, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
+Hi, Rob,
+
+On Tue, Apr 12, 2022 at 10:49 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, Feb 26, 2022 at 06:47:29PM +0800, Huacai Chen wrote:
+> > In new revision of LS7A, some PCIe ports support larger value than 256,
+> > but their maximum supported MRRS values are not detectable. Moreover,
+> > the current loongson_mrrs_quirk() cannot avoid devices increasing its
+> > MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
+> > will actually set a big value in its driver. So the only possible way
+> > is configure MRRS of all devices in BIOS, and add a pci host bridge bit
+> > flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
 > >
-> > On Tue, Apr 12, 2022 at 01:40:08PM +0300, Kalle Valo wrote:
-> > > + ath11k
-> > >
-> > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
-> > >
-> > > > +Kalle, linux-wireless
-> > > >
-> > > > On Tue, Mar 08, 2022 at 12:25:06AM +0530, Prasad Malisetty wrote:
-> > > >> Add suspend_noirq and resume_noirq callbacks to handle
-> > > >> system suspend and resume in dwc PCIe controller driver.
-> > > >>
-> > > >> When system suspends, send PME turnoff message to enter
-> > > >> link into L2 state. Along with powerdown the PHY, disable
-> > > >> pipe clock, switch gcc_pcie_1_pipe_clk_src to XO if mux is
-> > > >> supported and disable the pcie clocks, regulators.
-> > > >>
-> > > >
-> > > > Kalle, is this behaviour appropriate for WLAN devices as well? The devices
-> > > > will be put into poweroff state (assuming no Vaux provided in D3cold) during
-> > > > system suspend.
-> > >
-> > > ath11k leaves the firmware running during suspend. I don't fully
-> > > understand what the patch is doing, but if it cuts the power from the
-> > > WLAN chip during suspend that will break ath11k.
-> > >
+> > However, according to PCIe Spec, it is legal for an OS to program any
+> > value for MRRS, and it is also legal for an endpoint to generate a Read
+> > Request with any size up to its MRRS. As the hardware engineers say, the
+> > root cause here is LS7A doesn't break up large read requests. In detail,
+> > LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
+> > request with a size that's "too big" ("too big" means larger than the
+> > PCIe ports can handle, which means 256 for some ports and 4096 for the
+> > others, and of course this is a problem in the LS7A's hardware design).
 > >
-> > Thanks Kalle for the confirmation. Yes the device will be put into D3cold state
-> > and that will most likely equal to poweroff state.
-> 
-> Just to remind that ath11k on Qualcomm boards has a separate power
-> supply, not directly tied to the PCIe power supply.
-> 
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  drivers/pci/controller/pci-loongson.c | 47 ++++++++++-----------------
+> >  drivers/pci/pci.c                     |  6 ++++
+> >  include/linux/pci.h                   |  1 +
+> >  3 files changed, 25 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> > index 48d9d283cb59..ba182f9d5718 100644
+> > --- a/drivers/pci/controller/pci-loongson.c
+> > +++ b/drivers/pci/controller/pci-loongson.c
+> > @@ -67,37 +67,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >                       DEV_LS7A_LPC, system_bus_quirk);
+> >
+> > -static void loongson_mrrs_quirk(struct pci_dev *dev)
+> > +static void loongson_mrrs_quirk(struct pci_dev *pdev)
+> >  {
+> > -     struct pci_bus *bus = dev->bus;
+> > -     struct pci_dev *bridge;
+> > -     static const struct pci_device_id bridge_devids[] = {
+> > -             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> > -             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> > -             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+> > -             { 0, },
+> > -     };
+> > -
+> > -     /* look for the matching bridge */
+> > -     while (!pci_is_root_bus(bus)) {
+> > -             bridge = bus->self;
+> > -             bus = bus->parent;
+> > -             /*
+> > -              * Some Loongson PCIe ports have a h/w limitation of
+> > -              * 256 bytes maximum read request size. They can't handle
+> > -              * anything larger than this. So force this limit on
+> > -              * any devices attached under these ports.
+> > -              */
+> > -             if (pci_match_id(bridge_devids, bridge)) {
+> > -                     if (pcie_get_readrq(dev) > 256) {
+> > -                             pci_info(dev, "limiting MRRS to 256\n");
+> > -                             pcie_set_readrq(dev, 256);
+> > -                     }
+> > -                     break;
+> > -             }
+> > -     }
+> > +     /*
+> > +      * Some Loongson PCIe ports have h/w limitations of maximum read
+> > +      * request size. They can't handle anything larger than this. So
+> > +      * force this limit on any devices attached under these ports.
+> > +      */
+> > +     struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+> > +
+> > +     if (!bridge)
+>
+> Isn't this condition impossible? I'd drop and just let the NULL
+> dereference fault happen rather than continue on silently.
+This is copied from quirk_no_ext_tags(), and it seems can be removed, thanks.
 
-It may change in the future or on a different OEM setup. Irrespective of that,
-this patch sends the PME_Turn_Off event to the ep devices. The devices in turn
-will shutdown the internal resources for poweroff/refclk removal. Therefore the
-device state shall be lost.
-
-Thanks,
-Mani
-
-> > Prasad, you should try to just turn off the host resources like clocks and
-> > regulators (not refclk) and let the device be in the default state
-> > (D3hot/L{0/1}?) during suspend.
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+Huacai
+>
+> > +             return;
+> > +
+> > +     bridge->no_inc_mrrs = 1;
+> >  }
+> > -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> > +                     DEV_PCIE_PORT_0, loongson_mrrs_quirk);
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> > +                     DEV_PCIE_PORT_1, loongson_mrrs_quirk);
+> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> > +                     DEV_PCIE_PORT_2, loongson_mrrs_quirk);
+> >
+> >  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+> >  {
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 9ecce435fb3f..72a15bf9eee8 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -5993,6 +5993,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+> >  {
+> >       u16 v;
+> >       int ret;
+> > +     struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+> >
+> >       if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+> >               return -EINVAL;
+> > @@ -6011,6 +6012,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+> >
+> >       v = (ffs(rq) - 8) << 12;
+> >
+> > +     if (bridge->no_inc_mrrs) {
+> > +             if (rq > pcie_get_readrq(dev))
+> > +                     return -EINVAL;
+> > +     }
+> > +
+> >       ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+> >                                                 PCI_EXP_DEVCTL_READRQ, v);
+> >
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 8253a5413d7c..01a464eb640a 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -569,6 +569,7 @@ struct pci_host_bridge {
+> >       void            *release_data;
+> >       unsigned int    ignore_reset_delay:1;   /* For entire hierarchy */
+> >       unsigned int    no_ext_tags:1;          /* No Extended Tags */
+> > +     unsigned int    no_inc_mrrs:1;          /* No Increase MRRS */
+> >       unsigned int    native_aer:1;           /* OS may use PCIe AER */
+> >       unsigned int    native_pcie_hotplug:1;  /* OS may use PCIe hotplug */
+> >       unsigned int    native_shpc_hotplug:1;  /* OS may use SHPC hotplug */
+> > --
+> > 2.27.0
+> >
