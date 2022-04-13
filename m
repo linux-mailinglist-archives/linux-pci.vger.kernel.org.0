@@ -2,118 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8198D4FF675
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 14:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DEAD4FF724
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 14:53:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232724AbiDMMMO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Apr 2022 08:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58214 "EHLO
+        id S233328AbiDMMzY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Apr 2022 08:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235463AbiDMMMN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 08:12:13 -0400
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96CF73F8B4;
-        Wed, 13 Apr 2022 05:09:48 -0700 (PDT)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-2eba37104a2so20206037b3.0;
-        Wed, 13 Apr 2022 05:09:48 -0700 (PDT)
+        with ESMTP id S232993AbiDMMzX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 08:55:23 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0567554AF
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 05:53:00 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id bv19so3740616ejb.6
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 05:53:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uHgjRJ5n7gxa3U8bHk8ZxYgUPiikIG3e7D0EHXtK/WI=;
-        b=Bu0b0Y/KrqMGaQ4XJKkH1snEUiP5tOPA+/pDExEqKjnvrtenziyOmLtOByO8yMXuLz
-         vPf6g56ZQ4o6xcz7/UTrb6IvkeJIhqpA7ATKqKSPVVqO/k33/xFJ4Aed/FocWMs2WUN2
-         0xXheoOV9fn4KwKnhOc3foPFRav+bDee4afUyrIyRksibz+ruSPBSV5AbpzjtlqrMzZR
-         2xB5e8PvEx6vA3cAEDbuAViP/fmX07uF+XyZTZ31Ij0vssvoggpeuX6Z2JEuNeJkMrn4
-         a2aKUJ2/jXxmFnQw0+1zMapR577dUDxf0G9Kem3oDSZquoK9lNXdGMO405vjkV39C+Fm
-         J7/g==
+        d=citymesh-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language
+         :from:to:cc:references:in-reply-to:content-transfer-encoding;
+        bh=rFOS/YEtLTZTs3XK8yDit+vtofEO5aVtPZCCQ6IQw8I=;
+        b=G6mvPzPI+QdIOqo+VYv/p+nCyqq+tAdC/wMXqCeZncqy2ddvPeNP+6T37RdsQcK1A0
+         07yGip5Nu23NDeYdAL/sgPpoq2ZZOpZGm8vEYX1X22+4WPP8w8rMs5sHFDmguV7Ttu+j
+         Rg8swcismTypgyA2IqKcvu8yc8KEHLMM9gOjIF4OcFa7hfETv9eq9r8YB32/cKI4g6A3
+         /06tyyB9+m8wcSslUriQwO03ELxravLqBMrTpnvtIw9cvpGVObSFbiTYcJW2/D/ZKs36
+         re1fpPaY/CTYfcJN9mOmyOcoStPt/SA24PKVyRmQHAyWH+QpYQNk6dikipmoqPmT0ppX
+         AMyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uHgjRJ5n7gxa3U8bHk8ZxYgUPiikIG3e7D0EHXtK/WI=;
-        b=koVKMEpVqm+bEnMMj9wZ2aUm8f+cZUkBGdN6IAg4MNXXooQnJmV2E4gPrJClsUltXX
-         rNk8SdY9XubDCCPBU85nzuIrXplkZ/t9NbIhzXg9mqI8SVvnd2j3WZy/8trp/jsiXvpd
-         0txAPY84KKdVLdkDUMBgI3Ayz1eWynboxlDKWUCNxnToiMLuqVWJB8NNGA+xoUSTHw23
-         PPOdcJKYqqjAyQpbmZulSuKyPgvdDEFhGDlzK8dv31d5yPPI3dF7+jVtVUkXHHrRZVxi
-         79G14g4muwY3t4KYjJngUN2HZjkQGK4PX6QipAhMr/dY6+wPRvhNARD1XMDd44AWe15n
-         p7Mw==
-X-Gm-Message-State: AOAM533nxEPOLztRHscrGNVGsR0BmAWaUWVi6/MkbDMs5BqBtyhgLCrq
-        9N6JKf0rjmb2/gGrmSsWnF5WmezMvxXOh91yjVE=
-X-Google-Smtp-Source: ABdhPJwMJK0m2bHfAT/ZqxMVu8kycGcqPLvMYcqzO9MiUl1ZsR/O2Xc/2lRjo9G2u4vlQIt0yFuVlD/CuSh3WZ381yg=
-X-Received: by 2002:a81:578c:0:b0:2e6:2488:7ef8 with SMTP id
- l134-20020a81578c000000b002e624887ef8mr34012300ywb.519.1649851787737; Wed, 13
- Apr 2022 05:09:47 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:cc:references:in-reply-to
+         :content-transfer-encoding;
+        bh=rFOS/YEtLTZTs3XK8yDit+vtofEO5aVtPZCCQ6IQw8I=;
+        b=6LyJXI8ViAYL/2sm9cSu/DVXh/a7BGG8dpCeHpIVuWuHUx55Hdc8wth82lMQfXJpQn
+         aRn4UYhvjG7IyC3xJbB6dGYrPWl2qqsstya6lMUugE490erbgWpkVGlm9/BIyrz6yojh
+         7GfGZ2Lbwi9dfk14BTtLoeTots01cOCh98D4c3FqbQAJWSFUlUlnu9BtYVbzIKA8BlGB
+         prxNfT5VuJq5aNR/BhbFqH+X63OECq7Kd7Aozg/TrzQetSxZWcmQK8dXwIrq647Kwneu
+         Yq0SqKly4JdWQXLqW5op3/UahLrYwnyfIxog9zLbQTOZxHz4GTQ+P0jr03Kg9NtSrD7g
+         SM8g==
+X-Gm-Message-State: AOAM533iYbnOEmTdt0WlvRFB1SVTgyJdUyiBV/sBysWva387O+QSc/5g
+        dejmb0iZzLloD5t2EqESAjz2/g==
+X-Google-Smtp-Source: ABdhPJza/BKaw96pPtHS6TkEzygBE95yc9sVcnWMfkYr0fvTC1gw4NlPK214LqNeY0A3srRlwLUMKQ==
+X-Received: by 2002:a17:907:8a15:b0:6e8:d28e:83d7 with SMTP id sc21-20020a1709078a1500b006e8d28e83d7mr1295827ejc.640.1649854379336;
+        Wed, 13 Apr 2022 05:52:59 -0700 (PDT)
+Received: from [10.202.0.7] ([31.31.140.89])
+        by smtp.gmail.com with ESMTPSA id m3-20020a17090679c300b006cf9ce53354sm14146420ejo.190.2022.04.13.05.52.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Apr 2022 05:52:58 -0700 (PDT)
+Message-ID: <1945c8da-99f8-8d87-343d-ff66c02df6de@citymesh.com>
+Date:   Wed, 13 Apr 2022 14:52:55 +0200
 MIME-Version: 1.0
-References: <20220412185751.124783-1-pgwipeout@gmail.com> <20220412185751.124783-3-pgwipeout@gmail.com>
- <0cf83ec0-29d3-fbde-0b7d-9d58d210f0a4@rock-chips.com>
-In-Reply-To: <0cf83ec0-29d3-fbde-0b7d-9d58d210f0a4@rock-chips.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Wed, 13 Apr 2022 08:09:36 -0400
-Message-ID: <CAMdYzYoX=4a_nMfNJ++nVTm18896g6jDngPrq36mRs8e2kj7tA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] PCI: dwc: rockchip: add legacy interrupt support
-To:     Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
+Content-Language: en-US
+From:   Koen Vandeputte <koen.vandeputte@citymesh.com>
+To:     =?UTF-8?Q?Krzysztof_Ha=c5=82asa?= <khalasa@piap.pl>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Dexuan Cui <dexuan.linux@gmail.com>,
+        =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>,
+        Piotr Dymacz <pepe2k@gmail.com>
+References: <20220208234023.GA505306@bhelgaas> <m3czjovdqn.fsf@t19.piap.pl>
+ <46ae7788-dade-3ff4-a353-985544f12c19@citymesh.com>
+ <7873617a-b2ab-1f26-55ac-d98229aa4485@citymesh.com>
+In-Reply-To: <7873617a-b2ab-1f26-55ac-d98229aa4485@citymesh.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 10:54 PM Shawn Lin <shawn.lin@rock-chips.com> wrote=
-:
->
-> Hi Peter,
->
-> =E5=9C=A8 2022/4/13 2:57, Peter Geis =E5=86=99=E9=81=93:
-> > The legacy interrupts on the rk356x pcie controller are handled by a
-> > single muxed interrupt. Add irq domain support to the pcie-dw-rockchip =
->
-> > +static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
-> > +{
-> > +     struct irq_chip *chip =3D irq_desc_get_chip(desc);
-> > +     struct rockchip_pcie *rockchip =3D irq_desc_get_handler_data(desc=
-);
-> > +     struct device *dev =3D rockchip->pci.dev;
-> > +     u32 reg;
-> > +     u32 hwirq;
-> > +     u32 virq;
-> > +
-> > +     chained_irq_enter(chip, desc);
-> > +
-> > +     reg =3D rockchip_pcie_readl_apb(rockchip, 0x8);
-> > +
->
->
-> Overall it looks good except that 0x8 has a name,
-> PCIE_CLIENT_INTR_STATUS_LEGACY. BTW, If you consider adding more support
-> to it, for instance, enable/disable/affinity?  The downstream kernel
-> finished these for better fitting for function driver usage.
 
-Good catch, thanks.
+On 06.04.22 16:08, Koen Vandeputte wrote:
+>
+> On 01.04.22 15:50, Koen Vandeputte wrote:
+>>
+>> On 15.02.22 07:35, Krzysztof Hałasa wrote:
+>>> Hi Bjorn,
+>>>
+>>> Bjorn Helgaas <helgaas@kernel.org> writes:
+>>>
+>>>> Koen collected some interesting logs at
+>>>> https://lore.kernel.org/all/cd4812f0-1de3-0582-936c-ba30906595af@citymesh.com/ 
+>>>>
+>>>> They're from v5.10, which was before all of Krzysztof W's nice work
+>>>> converting to static attributes, but Koen's log shows the error
+>>>> happening in the pci_sysfs_init() initcall, which is *after*
+>>>> imx6_pcie_probe():
+>>>>
+>>>>    imx6_pcie_probe                # probably device initcall (level 6)
+>>>>      ...
+>>>>        pci_create_sysfs_dev_files
+>>>>
+>>>>    pci_sysfs_init                 # late initcall (level 7)
+>>>>      pci_create_sysfs_dev_files
+>>>>        "sysfs: cannot create duplicate filename"
+>>> Well, imx6_pcie_probe() is called indirectly by
+>>> platform_driver_register(). I guess it doesn't know about the initcall
+>>> ordering, after it's registered.
+>>>
+>>> It looks like the problem is the imx6_pcie_probe() (via
+>>> dw_pcie_host_init() -> pci_host_probe()) is interfering with
+>>> pci_sysfs_init(). This may eventually cause some invalid memory access
+>>> as well.
+>>>
+>>> BTW I thought for a moment that maybe 5.14 is free from this. I was
+>>> wrong. The problem doesn't manifest itself on my custom i.MX6 device
+>>> (using Tinyrex CPU module from Voipac/Fedevel, perhaps because I don't
+>>> use any PCI devices there). It does on Ventana SBC from Gateworks,
+>>> though. BTW the above (and below) is v5.16.
+>>>
+>>> It goes like this:
+>>> [0.096212] do_initcall_level: 6
+>>> [0.105625] imx6_pcie_init
+>>> [0.106106] imx6_pcie_probe <<<<<<<<<<<<<<<<<<<<<
+>>> [0.106412] imx6q-pcie 1ffc000.pcie: host bridge /soc/pcie@1ffc000 
+>>> ranges:
+>>>
+>>> [0.322613] imx6q-pcie 1ffc000.pcie: Link up
+>>> [0.322776] imx6q-pcie 1ffc000.pcie: PCI host bridge to bus 0000:00
+>>> [0.322790] pci_bus 0000:00: root bus resource [bus 00-ff]
+>>>
+>>> [0.405251] do_initcall_level: 6 ENDs but imx6_pcie_probe() still active
+>>> [0.405262] do_initcall_level: 7
+>>>
+>>> [0.410393] pci_sysfs_init <<<<<<<<<<<<<<<<<<<<<
+>>> [0.410423] pci 0000:00:00.0: pci_create_sysfs_dev_files
+>>>
+>>> [0.410532] [<8068091c>] (pci_create_sysfs_dev_files)
+>>> [0.410551] [<80918710>] (pci_sysfs_init)
+>>> [0.410568] [<8010166c>] (do_one_initcall)
+>>>
+>>> [0.410717] pci_sysfs_init END <<<<<<<<<<<<<<<<<<<<<
+>>>
+>>> [0.533843] [<803f1c74>] (pci_bus_add_devices)
+>>> [0.533862] [<803f574c>] (pci_host_probe)
+>>> [0.533879] [<80414310>] (dw_pcie_host_init)
+>>> [0.533895] [<80681ac8>] (imx6_pcie_probe)
+>>> [0.533915] [<8045e9e4>] (platform_probe)
+>>> (Repeats multiple times, I guess for each PCI device)
+>>>
+>>> [0.543893] imx6_pcie_probe END <<<<<<<<<<<<<<<<<<<<<
+>>>
+>>> [0.692244] do_initcall_level: 7 END
+>>
+>>
+>> Hi all,
+>>
+>> Any update on this topic?
+>> I just tested kernel 5.15 on imx6 (gateworks Ventana 5200) and as 
+>> soon as I connect a pcie device on one of the ports,
+>>
+>> following happens:
+>>
+>> https://pastebin.com/raw/mgfSvTRB
+>>
+>> Any idea if this is related?
+>>
+>>
+>> Thanks,
+>>
+>> Koen
+>>
+> Hi all,
+>
+> I tested a bit more today and simply let the board reboot all day long.
+> After roughly 20 reboots, it suddenly booted once stable without any 
+> errors/warnings.
+>
+> Looks like a race condition ..
+>
+> Any idea?
+>
+> Thanks,
+>
+> Koen
+>
+As an additional addendum:
 
-This patch has remained largely unchanged from when I first created it
-prior to asking for Rockchip to include support for it in the initial
-series.
-I would have left it out based on the original counter arguments,
-except in testing we have discovered two issues:
-A surprising number of cards do not support MSIs.
-The current MSI implementation has poor compatibility.
+This issue is seen on a Gateworks Ventana gw5200 which has a PLX bridge.
+I also have a GW5100 which is identical but without the PLX bridge, and 
+it works fine every time.
 
-I will look at the downstream implementation and consider possible
-changes, but for the time being this does the job.
+So when a PCI device is sitting behind a bridge, the issue is triggered.
+
+
+Hope this helps to easily reproduce.
+
+Koen
+
