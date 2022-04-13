@@ -2,151 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E164A4FF7CA
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 15:39:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AAC04FF980
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Apr 2022 16:56:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235829AbiDMNk0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Apr 2022 09:40:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48184 "EHLO
+        id S236318AbiDMO6P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Apr 2022 10:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235818AbiDMNkY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 09:40:24 -0400
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FE605F261;
-        Wed, 13 Apr 2022 06:38:03 -0700 (PDT)
-Received: by mail-qv1-xf32.google.com with SMTP id d9so1605547qvm.4;
-        Wed, 13 Apr 2022 06:38:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IqOtlYyePRN/r4aPym/C6r8euVVGX9fSqK0zMFP5Scg=;
-        b=QVWku54j+UAXoEMpnZ1vv7gQuCMEln37OGTReSXY+KDFySd2yXriskDocWaYYDoi16
-         R1DEchhdtrw58TIj16nF4Dake/0VNdzRAcLysRzLCKefxLPM+NTyY1AnatI3Z8J6kf6P
-         nzAdeh7SEeO5UvvljFB+hk7xxCTMbx6F15dTzaYRd9NzML2taBWSDbEao2JJ2VQxwufs
-         +sq/41Pb95oMjpJ11dOfj9VP7pD4a21gDC7qdQIEYIPfyUQwAzWOWkE1AMOmowxi0lPh
-         FSUGLYWqw6tZQDkzeuReqlLMOoqQUaRqXJx1vlfO71j0EoccWOCwE6Cu8pOSnqBKDcaL
-         lGVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IqOtlYyePRN/r4aPym/C6r8euVVGX9fSqK0zMFP5Scg=;
-        b=Xa9LBvrrT47OcL0fCzyN2jh/O/XAV41/n33t/tKvx6DQwrHdQzmroVPHc0F1GoCfjO
-         m0OsVvWw1IUT8TvYqLNpsSFlmtriK1QfElBOCb8DKOu5mbB6EpWELi+B5yfvJ9P0pODX
-         qVtjgc0sC/BNyWgBs4OkBdeTwCJZwacjAg6JCyyLroBSGsT0j2qHuuluN4naLJSxqLNV
-         bSTjiOQL89QOZ38yNOCIeEmLAklYaj28z6pUSloWO+gMog9Q5TJLX/pmO33QRZRB1Hib
-         x7F1yrH6XcLNgK2ZOoJPYhOEW/IqVAs8nKe6ZN597ItWPqlFTJd9sW2fA0WeMSnt6J17
-         U51g==
-X-Gm-Message-State: AOAM533jzABwSlqyq3e+kfCbh/z02525YpTuyfwHJJ5L0S/RBA7Ssktp
-        UCZ9BeqrVoSxsSIX8Fb4liIQyY/v76sHH8Cp
-X-Google-Smtp-Source: ABdhPJxvhXF0hMoO3IPsR9ctAISTuf1qYFUU0vcqTreM1lIvwx2wqzJSVw45r9E3LRkANSxrLVws9Q==
-X-Received: by 2002:a05:6214:e4f:b0:442:88d4:ecc0 with SMTP id o15-20020a0562140e4f00b0044288d4ecc0mr35807143qvc.47.1649857082566;
-        Wed, 13 Apr 2022 06:38:02 -0700 (PDT)
-Received: from master-x64.sparksnet ([2601:153:980:85b1::10])
-        by smtp.gmail.com with ESMTPSA id 143-20020a370795000000b0069c59e1b8eesm790584qkh.10.2022.04.13.06.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Apr 2022 06:38:02 -0700 (PDT)
-From:   Peter Geis <pgwipeout@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S235966AbiDMO6M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 10:58:12 -0400
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD37E0DD;
+        Wed, 13 Apr 2022 07:55:49 -0700 (PDT)
+Received: from relay2-d.mail.gandi.net (unknown [217.70.183.194])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id C6935CE5A8;
+        Wed, 13 Apr 2022 14:50:05 +0000 (UTC)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 716D240009;
+        Wed, 13 Apr 2022 14:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1649861397;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l7gqjjhj0XbhASsT9yx1167D/NkqUVY3vj/OxIB/ROU=;
+        b=nhhCNspC0kHQKc6yGBP+mIyCoLG+cWyi075dvuNNmJpNn0lfozq6KB5nskGwe5Gi5QlQ+n
+        Unaeh9evR+5dHfSfUUrakEV1DZSrmcPDliXM4RF0pysUogHcq55xIPO+TD+48mJoii0RvE
+        vSb6C6jC3Di1zsaw31MZPHh0or52spHX8ICd0XYqd1CAZc4qphhWIrryj4udfFeFtEuSTv
+        KRq8EgccyQtQyViaPjWMA8UBDAj6zHrtdj12XHJDLXR35VU2kDHxp1lSc1i5iq/fuu5lr5
+        nLCU7DbxLoKBhNe+YlrLIDC06rxVDQDaqT6mqcONpqpFWY2J+7wiI5k9k9DzEg==
+Date:   Wed, 13 Apr 2022 16:49:54 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        Peter Geis <pgwipeout@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: enable pcie controller on quartz64-a
-Date:   Wed, 13 Apr 2022 09:37:31 -0400
-Message-Id: <20220413133731.242870-5-pgwipeout@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220413133731.242870-1-pgwipeout@gmail.com>
-References: <20220413133731.242870-1-pgwipeout@gmail.com>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRz?= =?UTF-8?B?a2k=?= 
+        <kw@linux.com>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 1/6] PCI: rcar-gen2: Add support for clocks
+Message-ID: <20220413164954.32365292@bootlin.com>
+In-Reply-To: <YlWfslEOdrf62KiP@robh.at.kernel.org>
+References: <20220412094029.287562-1-herve.codina@bootlin.com>
+        <20220412094029.287562-2-herve.codina@bootlin.com>
+        <YlWfslEOdrf62KiP@robh.at.kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the nodes to enable the pcie controller on the quartz64 model a
-board.
+Hi Rob,
 
-Signed-off-by: Peter Geis <pgwipeout@gmail.com>
----
- .../boot/dts/rockchip/rk3566-quartz64-a.dts   | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+On Tue, 12 Apr 2022 10:50:10 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-index 141a433429b5..85926d46337d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-@@ -125,6 +125,18 @@ vbus: vbus {
- 		vin-supply = <&vcc12v_dcin>;
- 	};
- 
-+	vcc3v3_pcie_p: vcc3v3_pcie_p {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pcie_enable_h>;
-+		regulator-name = "vcc3v3_pcie_p";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_3v3>;
-+	};
-+
- 	vcc5v0_usb: vcc5v0_usb {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc5v0_usb";
-@@ -201,6 +213,10 @@ &combphy1 {
- 	status = "okay";
- };
- 
-+&combphy2 {
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&vdd_cpu>;
- };
-@@ -509,6 +525,14 @@ rgmii_phy1: ethernet-phy@0 {
- 	};
- };
- 
-+&pcie2x1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_reset_h>;
-+	reset-gpios = <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+	vpcie3v3-supply = <&vcc3v3_pcie_p>;
-+};
-+
- &pinctrl {
- 	bt {
- 		bt_enable_h: bt-enable-h {
-@@ -534,6 +558,16 @@ diy_led_enable_h: diy-led-enable-h {
- 		};
- 	};
- 
-+	pcie {
-+		pcie_enable_h: pcie-enable-h {
-+			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		pcie_reset_h: pcie-reset-h {
-+			rockchip,pins = <1 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
--- 
-2.25.1
+> On Tue, Apr 12, 2022 at 11:40:24AM +0200, Herve Codina wrote:
+> > The PCI rcar-gen2 does not call any clk_prepare_enable().
+> > This lead to an access failure when the driver tries to access
+> > the IP (at least on a RZ/N1D platform).
+> >=20
+> > Prepare and enable clocks using the bulk version of
+> > clk_prepare_enable() in order to prepare and enable all clocks
+> > attached to this device. =20
+>=20
+> The binding says there is only a single clock, so it needs an update if=20
+> there are multiple clocks. (And ideally converted to DT schema format.)
 
+Indeed, I will convert to DT schema format and update the clocks property
+description.
+
+Regards,
+Herv=C3=A9
