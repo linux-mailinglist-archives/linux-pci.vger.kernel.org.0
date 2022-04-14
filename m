@@ -2,86 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C60605002EC
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 02:10:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C230500321
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 02:45:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237951AbiDNAM6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Apr 2022 20:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58174 "EHLO
+        id S238659AbiDNAsL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Apr 2022 20:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237281AbiDNAM5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 20:12:57 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9697115FEA;
-        Wed, 13 Apr 2022 17:10:34 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id AD3BA92009C; Thu, 14 Apr 2022 02:10:33 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 9E7F592009B;
-        Thu, 14 Apr 2022 01:10:33 +0100 (BST)
-Date:   Thu, 14 Apr 2022 01:10:33 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-cc:     Alexandre Ghiti <alex@ghiti.fr>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Neill Whillans <neill.whillans@codethink.co.uk>
-Subject: Re: [V3] PCI: fu740: Drop to 2.5GT/s to fix initial device probing
- on some boards
-In-Reply-To: <bded4b1e-3404-6bcd-3289-dc8d5b4d713a@codethink.co.uk>
-Message-ID: <alpine.DEB.2.21.2204140048460.9383@angie.orcam.me.uk>
-References: <20220318152430.526320-1-ben.dooks@codethink.co.uk> <2442936e-a53e-59bf-488f-95eac26d1252@ghiti.fr> <85e864fd-762e-0780-f829-bfbb178ab24e@ghiti.fr> <bded4b1e-3404-6bcd-3289-dc8d5b4d713a@codethink.co.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S237899AbiDNAsL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Apr 2022 20:48:11 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77FF22C136
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 17:45:48 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id v15so4402030edb.12
+        for <linux-pci@vger.kernel.org>; Wed, 13 Apr 2022 17:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=we9Txi2+echyX2V89cW/3QY237luayT2DX0RqtHgrdY=;
+        b=D34D3nDKXXUl8++Ga5pBAA8ROP7PLGeRuMch7JNJBwvB7ceYxS6YASJkLTbZIJHzq9
+         xHTvun5HcpJqPrJcklT4ksaKA6KkMp50TQfo+DdPqT6LJXmSUWz+TSigohaDH070hCXd
+         72p3UV0aiOwXXLmmf+GnoApqfeP4q7b0G9+DZG5z1WQsUxKaSBnBLGw6mq21zUMTT7dF
+         pfPqjz5xOo5iyK3msMvOURmguTn1/H9g0EACSH6Em/a0rQT7r2pph6eOCFMZI6QV/vGY
+         YsvKy7QTg05nW4VGT1MF22OQZJqmzL/bg4wLFIsmjQdx+GPY9p2W48sd7ld3FqQtClmp
+         bQqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=we9Txi2+echyX2V89cW/3QY237luayT2DX0RqtHgrdY=;
+        b=7UuLMXt33owvcTAD0n1lPrWhM2+k2CkFdJK6k7KSmBOsZyODrkP8yx1q6V8n1MEiJj
+         uwA6FcmhqSagk817ooShbWZH0iSOJeyP0KGFLXYS/dJMPZl5t3ea5r9mg4HTNEHPHIfZ
+         IDBSqxDN1UunFo2ByatANr8KS+XxY4OngGnV7Mvpw6+LrqRC1ycX8ns+gSDcg3+WAdS4
+         kh9keVgBn3Og3Mg8Qg2WpnWRM1aZ2lxlx3sJBXHBk/eI3NqCF9UEZDMc86uJODmscjnI
+         GSO0q0R53fgsfJJR05/ln7wiQNFbxjjn8dMf62hlgWip2GBZy64/zB/nZOUDfqHs62YV
+         PeVA==
+X-Gm-Message-State: AOAM530A+Q2LsCMEC2O7RWs2lMQNnGHjiIwZxBJL8u8hnYtsXGQsb45R
+        PY0ReBSR5P5s53gncWeWmsS4oLV70qdnaM96Ez8=
+X-Google-Smtp-Source: ABdhPJzpsjIqOnj3RgkkKt4GViOm3JfJc6sZhxsOff/k9ep6HrLFJDcCaeRND1w/Mwx19Y0KZojTdRtOPUsRU5/TBec=
+X-Received: by 2002:a05:6402:1112:b0:413:3d99:f2d7 with SMTP id
+ u18-20020a056402111200b004133d99f2d7mr256584edv.23.1649897147089; Wed, 13 Apr
+ 2022 17:45:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   J <jessicadave303@gmail.com>
+Date:   Thu, 14 Apr 2022 00:45:34 +0000
+Message-ID: <CALEbFpfht-vNGxd+aVECbCa12pkzKwKwkmsVPoB8RmdJT05TEw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 23 Mar 2022, Ben Dooks wrote:
+I'm Jessica Dave, from the Philippines, please I wish to communicate with you.
 
-> > FWIW, I have tested this and it solved my issue with nvme not being probed,
-> > so:
-> > 
-> > Tested-by: Alexandre Ghiti <alexandre.ghiti@canonical.com>
-> 
-> Ok, great. Our test rig seems to be still working with this.
+I wait for your reply.
 
- I ran simple verification of your change by interrupting U-Boot after a 
-power-up and issuing:
-
-=> setenv boot_pci_enum true
-
-at the command prompt before booting from the uSD card and curiously 
-enough the root port comes up with the Link Capabilities Register 
-reporting the lack of Link Bandwidth Notification Capability in this 
-scenario, while it reports its presence if booted undisturbed, i.e.:
-
-		LnkCap: Port #0, Speed 8GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <4us, L1 <4us
-			ClockPM- Surprise- LLActRep+ BwNot- ASPMOptComp+
-
-vs:
-
-		LnkCap: Port #0, Speed 8GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <4us, L1 <4us
-			ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-
-It is fully reproducible.
-
- Any idea what might be causing it?  I can't see it being explicitly set 
-or cleared anywhere, be it in U-Boot or Linux, so it must be done by the 
-device itself depending on something.  And the lack of this capability 
-seems to me like non-compliance for a multiple-lane, multiple-speed 
-device.
-
-  Maciej
+(Jessica)
