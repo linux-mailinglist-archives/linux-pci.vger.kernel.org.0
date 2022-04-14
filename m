@@ -2,136 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7471500C62
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 13:48:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26627500CE5
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 14:17:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239489AbiDNLvE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 14 Apr 2022 07:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56800 "EHLO
+        id S239493AbiDNMTj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 08:19:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230187AbiDNLvB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 07:51:01 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9125B6E55C;
-        Thu, 14 Apr 2022 04:48:36 -0700 (PDT)
-Received: by mail-qt1-f170.google.com with SMTP id s6so3339571qta.1;
-        Thu, 14 Apr 2022 04:48:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=u1n9GOW0yI2Xuk8uj5WutPFnUGPTBI0EWcn0eDo3zKI=;
-        b=4cWtk7WDrXtMx1JyYIuu65cF0EAkHh5dnddCcaJo7Z5A0YQb0QZVY91yABedymVPfk
-         nFhRuK882Lp7iWDQ31IRxMZl9lPk8zfNxgjBnW1tfi+RYO9WNHVHFKkGYrb6bKUcpJpB
-         PPi9tw+6i0O4PU3PW6Dzz7e0Fm6X9IbpI2sDaHhgF4wIQDORQKE8O0OK3LKHg20Weccb
-         qDNJ08TXCfQUFzk3dYMmCO/aUgEGTupIrJ5KRmIqwlHORhczTZ0ay+1GPmGJuYY8AeVQ
-         EC8jMbuED89XdiwCMtczJLNc6iRcW/W84haHYlZa+6DVnfZtxBKYmJdonjpUxC2iIzEu
-         E6KA==
-X-Gm-Message-State: AOAM5330TzT5VpFbivc96Pl2yCOCNPbtm/oQSIxEiryU/x9J2qiCjk/I
-        XucmtqykbUwUlkgL+pJGREnsVS+PSBn6iA==
-X-Google-Smtp-Source: ABdhPJz3kQMm7DHNw3fwdn/MIQDSdanb61P6+K6dJ3Cwlw1ivA1XR7XRtjhjiqre+jDKUCZ09pbg9A==
-X-Received: by 2002:a05:622a:1f8c:b0:2ef:9ec3:e176 with SMTP id cb12-20020a05622a1f8c00b002ef9ec3e176mr1345650qtb.39.1649936915392;
-        Thu, 14 Apr 2022 04:48:35 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id 64-20020a370743000000b0069a0cb6e4d5sm849676qkh.81.2022.04.14.04.48.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Apr 2022 04:48:34 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2ebebe631ccso52425077b3.4;
-        Thu, 14 Apr 2022 04:48:34 -0700 (PDT)
-X-Received: by 2002:a81:413:0:b0:2ec:31d7:7e60 with SMTP id
- 19-20020a810413000000b002ec31d77e60mr1650211ywe.62.1649936914141; Thu, 14 Apr
- 2022 04:48:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220414074011.500533-1-herve.codina@bootlin.com>
- <20220414074011.500533-2-herve.codina@bootlin.com> <CAMuHMdW8q5AjDtTE83yVPfmgnQy02UgLSns33z06WMFBUULWEw@mail.gmail.com>
- <20220414132534.35467781@bootlin.com>
-In-Reply-To: <20220414132534.35467781@bootlin.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Apr 2022 13:48:22 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUCvJ6rAwnV=w9iFqnm=c0U_BpGiYEw109shsrWAeUJCA@mail.gmail.com>
-Message-ID: <CAMuHMdUCvJ6rAwnV=w9iFqnm=c0U_BpGiYEw109shsrWAeUJCA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] PCI: rcar-gen2: Add support for clocks
-To:     Herve Codina <herve.codina@bootlin.com>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        with ESMTP id S231996AbiDNMTj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 08:19:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDCF95F8F0;
+        Thu, 14 Apr 2022 05:17:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6B36161ED4;
+        Thu, 14 Apr 2022 12:17:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDCCFC385A5;
+        Thu, 14 Apr 2022 12:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649938633;
+        bh=qmbesC0/Icw9+qiYiA7mFVyYz0+S7SQX+MroNisSWkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uXX9tSRGzz1beJZ8yex9mmqV4YesXnyLh+DB7Jjmr1W4J/dH/ssQOoq7x5wdiNoeY
+         q0/Tne4i2dibfZ7F42CXHJcLT/2hygd4qZ0g+rW8DgcvBkdLxAtvyxoAI9w9vl+TWt
+         qdKV0uANJl5pivFnsr7ymEHwo6JVkrt2DpI5eggxlxVTUSDJmthOegs1WcaRP6c+56
+         mDFxc5t8xKXJpFA4dRfaIvkgcf96rwB/AA5QunOuHDRonkw2iLsGwib9nK8ShJYfcV
+         NqjetuYa5cBpZiLL3cjx7ox2IEcGwy8NOnTVwpb576iQTb5nzCnav1ic3YaWBKuNil
+         R6IaNiPDc4B0g==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1neyPO-0006BB-Cw; Thu, 14 Apr 2022 14:17:10 +0200
+Date:   Thu, 14 Apr 2022 14:17:10 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] clk: qcom: regmap-mux: add pipe clk implementation
+Message-ID: <YlgQxrKNOMcvy4cd@hovoldconsulting.com>
+References: <20220412193839.2545814-1-dmitry.baryshkov@linaro.org>
+ <20220412193839.2545814-2-dmitry.baryshkov@linaro.org>
+ <YlaUtCuMZZL4bM2U@hovoldconsulting.com>
+ <bbf1386f-0902-75ff-bb61-f4ebbc82f174@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bbf1386f-0902-75ff-bb61-f4ebbc82f174@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Hervé,
+[ Please trim your replies. ]
 
-On Thu, Apr 14, 2022 at 1:29 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> On Thu, 14 Apr 2022 10:45:54 +0200
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Apr 14, 2022 at 9:40 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> > > The PCI rcar-gen2 does not call any clk_prepare_enable().
-> >
-> > Correct, this driver manages the clocks indirectly through Runtime PM.
-> >
-> > > This lead to an access failure when the driver tries to access
-> > > the IP (at least on a RZ/N1D platform).
-> >
-> > I expect adding
-> >
-> >     power-domans = <&sysctrl>;
-> >
-> > to the pci_usb node makes this patch redundant.
->
-> Seems not enough.
-> I tried what you suggest :
->  - Added 'power-domains = <&systrl>;' to the pci_usb node
->  - Added missing '#power-domain-cells = <0>;' to sysctrl node
->  - Reverted my patch.
->
-> The system crashed at boot:
+On Wed, Apr 13, 2022 at 08:57:47PM +0300, Dmitry Baryshkov wrote:
+> On 13/04/2022 12:15, Johan Hovold wrote:
+> > On Tue, Apr 12, 2022 at 10:38:35PM +0300, Dmitry Baryshkov wrote:
+> >> On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
+> >> muxes which must be parked to the "safe" source (bi_tcxo) when
+> >> corresponding GDSC is turned off and on again. Currently this is
+> >> handcoded in the PCIe driver by reparenting the gcc_pipe_N_clk_src
+> >> clock. However the same code sequence should be applied in the
+> >> pcie-qcom endpoint, USB3 and UFS drivers.
+> > 
+> > I'm starting to think this really belongs in the PHY driver which is the
+> > provider of the pipe clock. Moving it there would also allow the code to
+> > be shared between PCIe, USB, and UFS.
+> > 
+> > The PHY driver enables the pipe clock by starting the PHY and before
+> > doing so there's no point in updating the mux. Similarly, the PHY driver
+> > can restore the "safe" source after disabling the pipe clock.
+> 
+> I thought about this at some point. However it would still mean that the 
+> driver does the dance manually: disable pipe_clock, switch parent, 
+> sleep, switch the parent back, enable pipe clock. Switching parents is 
+> tied to disabling pipe_clock, so enforcing this link seems like a better 
+> option to me.
 
-> [    0.832958] Unhandled fault: external abort on non-linefetch (0x1008) at 0x90b5f848
+No, that's precisely my point. It is not tied to disabling (gating) the
+pipe clock, it is tied to powering down the PHY (i.e. disabling the pipe
+clock source). And that is under the control of the PHY driver.
 
-That's indeed a typical symptom of accessing a module's registers
-while the module's clock is disabled.
+In practise, once we've cleaned up the other users of the pipe clock,
+tying it to pipe clock disabling will work, but it doesn't prevent
+anyone from shooting themselves in the foot as the "safe-mux" name
+suggests (i.e. it is still possibly to enable the pipe clock while its
+source is disabled).
 
-> I also added a trace printk in r9a06g032-clocks.c and
-> r9a06g032_attach_dev() was never called.
->
-> Did I miss to set something ?
+> No to mention that it would complicate already overcomplicated QMP driver.
 
-Do you have CONFIG_PM and CONFIG_PM_GENERIC_DOMAINS
-enabled?
-Apparently ARCH_RZN1 does not select these options yet.
+That driver sure could use some love, but that's not a valid argument
+against adding things were they belong.
 
-Gr{oetje,eeting}s,
+And regarding complexity, I have a working prototype implementation here
+which is smaller than what you're proposing and very straight forward.
 
-                        Geert
+> > That way there's no magic happening behind scenes, the clock framework
+> > always reports the actual state of the tree, and the reason for all of
+> > this can be documented in the QMP PHY driver once and for all.
+> 
+> We already have such 'magic' for the RCG2 (clk_rcg2_shared_ops), with 
+> the very practical reason. If the clock is running from the tcxo, it is 
+> as good as disabled from the practical purpose.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+That implementation doesn't try to implement the caching you're
+proposing and hence doesn't suffer from the associated implementation
+issues.
+ 
+> > The only change to the bindings compared to what this series proposes is
+> > that the PHY driver also needs a reference to bi_tcxo.
+> 
+> And this looks as bad, as providing bi_tcxo to the PCI device. From the 
+> schematics/silicon point of view neither of them actually uses these 
+> parents. Neither of them uses the pipe_clock_src. What do they need is 
+> just the pipe_clock. The rest should be in the programming API.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+No, the PHY driver is both the provider of the source clock for the
+pipe clock and the consumer of the latter.
+
+That it may need to handle any muxes in between the two only makes
+sense.
+
+Hiding this away and spreading the implementation out over multiple
+clock drivers (i.e. every mux definition for each platform + the
+regmap-mux hack) only obscures things.
+
+Johan
