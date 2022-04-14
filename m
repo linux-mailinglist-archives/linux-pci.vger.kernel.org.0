@@ -2,108 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80AF95009AB
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 11:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67889500C2B
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 13:30:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241697AbiDNJZm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 05:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
+        id S242705AbiDNLcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 07:32:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241698AbiDNJZj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 05:25:39 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2067.outbound.protection.outlook.com [40.107.237.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96896EC71;
-        Thu, 14 Apr 2022 02:23:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jtrPFAaPIGRnJ7HXkh1ezmzHLxjGIO4DxGK1CzJG4siE/TrhNV2jJP8MylDh3dj0kmx25jpp/VyzYbY9xi0/C3dhgdVKcpgU0zgRF5bMcouptV1p9PTWRaL+/kci+zgrHFCDtu3/8qR9yT4hQc99um7AnfQYNDMAi8JlMHYroRaddz5d3k4zRJFjs9TpUuN6CszAKsChZ/poOW9LblwM8SDwEBLtJ3Bu/g+2POLZaMsXh9UM9v5JMU/t66dWu7p/1Jh8gpmthWbxWnaG+MsCpFxtR+jFzWjavFea4ccEF/MRSThfvIu22xlRtuKaZi4iPfa/gNNvIhIN2qnxZU+Qcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1z6AsS4oK/LQJhpZLMtqPdqAZn51YGn/cbV5LB61NJY=;
- b=erX/na49zv8HViApyPjSSRVbLbJ9MzX2s3KX66WnEd6xUn0bVEJrJ9YV/n4DnYSR915CWhCRmSzT7nAaD6dtroB7wjOn+J1Q9n0r7hASQ6LNOgeDoFlvzxqnK4bNMW4x17yAgE1GcC10QPCcIrx4+KZbZH09VeBy99/gtiwM+LDp3sU+inqlKjFgRdelSVhXgE3H8SfDyrkZlBbYkgzESXZxITobr60m1u3IbsGJgV0HDGgfTLOFMNpyEyfSY+KrOLPWSkjgPLm0mAO8aje+ZS7IXHVPT9nV2DTO1BaQMRDxrva8r89NdsqJvV/l+3BhU1ttf/o87Ujzgx7JQGqABQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1z6AsS4oK/LQJhpZLMtqPdqAZn51YGn/cbV5LB61NJY=;
- b=kTEeNg0n4yRkUbzv2j3vB46JlKbNU7lJ9rnrhlJr8oHhvMhfAtcueO5Tkl1ynepyNztNOhwlNR/lzb7EfzBct0x3YMVhNQCv+QLKlUQ+ccG3MBZdKugoCUqs/cdKCJdqs5SHoBG3cnkpLdFL4acSPyAxNOjBswA2R0YfweeoQ+k=
-Received: from SN7PR04CA0197.namprd04.prod.outlook.com (2603:10b6:806:126::22)
- by PH0PR02MB7126.namprd02.prod.outlook.com (2603:10b6:510:13::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.29; Thu, 14 Apr
- 2022 09:23:11 +0000
-Received: from SN1NAM02FT0041.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:126:cafe::44) by SN7PR04CA0197.outlook.office365.com
- (2603:10b6:806:126::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.18 via Frontend
- Transport; Thu, 14 Apr 2022 09:23:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0041.mail.protection.outlook.com (10.97.5.44) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5164.19 via Frontend Transport; Thu, 14 Apr 2022 09:23:11 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Thu, 14 Apr 2022 02:23:10 -0700
-Received: from smtp.xilinx.com (172.19.127.96) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Thu, 14 Apr 2022 02:23:10 -0700
-Envelope-to: linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org,
- lorenzo.pieralisi@arm.com,
- bhelgaas@google.com,
- robh@kernel.org
-Received: from [10.140.9.2] (port=38782 helo=xhdbharatku40.xilinx.com)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1nevgz-0008Tv-L2; Thu, 14 Apr 2022 02:23:10 -0700
-From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <michals@xilinx.com>, <robh@kernel.org>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH v1 3/3] dt-bindings: PCI: xilinx-cpm: Change reg property order
-Date:   Thu, 14 Apr 2022 14:52:52 +0530
-Message-ID: <20220414092252.12174-4-bharat.kumar.gogada@xilinx.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220414092252.12174-1-bharat.kumar.gogada@xilinx.com>
-References: <20220414092252.12174-1-bharat.kumar.gogada@xilinx.com>
+        with ESMTP id S242700AbiDNLcP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 07:32:15 -0400
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46DD637A94;
+        Thu, 14 Apr 2022 04:29:45 -0700 (PDT)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id E669440008;
+        Thu, 14 Apr 2022 11:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1649935784;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qRrX/8Jotzsy6iQLV5tj4FOuDifcieScWpPwj2D0dac=;
+        b=Ezoe77V7SQHGJDbVcnEt0HG8gxn+9iEz6lNCCthfy5D53f0EFtzsqwJd6xaEKLw9QePM/S
+        +/dkqi+0dtSzYL9yuYR0m/sUTqofMra1AxS+tSt5xu+yswTI47FnjzE2XkdZ6FMupgyWbO
+        5aHhklzsz6+jRFFnuWj4+H303C8WBiwiT70X6vwy+nBKZpNl1fNDP/Al97g0CHkfpw/9Du
+        fbupqg8hO7QjWBQOm3Z+Uvr+iN6oWiqeUwKSTy5sKv7hukSRRGOvXQIZ+3JxeJzzvtYCyw
+        nER4JqUUWhAdfgTbUfs1nwTMXyNLrf7JxbuORGjRKIlnDMqZPsyl7GmO+7d8qA==
+Date:   Thu, 14 Apr 2022 13:29:34 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 1/8] PCI: rcar-gen2: Add support for clocks
+Message-ID: <20220414132534.35467781@bootlin.com>
+In-Reply-To: <CAMuHMdW8q5AjDtTE83yVPfmgnQy02UgLSns33z06WMFBUULWEw@mail.gmail.com>
+References: <20220414074011.500533-1-herve.codina@bootlin.com>
+        <20220414074011.500533-2-herve.codina@bootlin.com>
+        <CAMuHMdW8q5AjDtTE83yVPfmgnQy02UgLSns33z06WMFBUULWEw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: df315099-f6e2-4af9-0580-08da1df86560
-X-MS-TrafficTypeDiagnostic: PH0PR02MB7126:EE_
-X-Microsoft-Antispam-PRVS: <PH0PR02MB7126903A3C7557CD7ED96D98A5EF9@PH0PR02MB7126.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MupmPpmc1fjW71HO34W0ZTAbetOYcmMGbMaJnZcitfPRt5wn+DvFZeIy1cT9O/PbORa5bTpF1ZI6QV4j9Xo6Wz7zfmyi/TBRl4SGX4snuSWc2+hGMDdzKvuSQktqKvDugpX7sOav6u8mJ8B/5tIAvgJIyDLBB2KLYagvv5IeBXWhFX97KQiIk4vv2HGxZhuHf/urt3MS9Fslp1LkZ7xjeDay9BGGQraFVY+iyOoilTF+8fxfgsvieX/7zttG8aCT1kWdj6RSEZ0V3R6eNeAPgP36VJ/Jlh+ESL0r+sStH98gCz9gYtWsuaK64knfs7y+2IK5eYftBpCFpGctwHBOvMWfmLP0rpmjaiFmpFTuZG8BucGKVCJQrkq1du86gzDiEDd2gVxQ71ys0I/Tgm3aO5TZUbuFCUfdQHnZb1+vDueakFMLZBRTpa/ZUrXVZlEr0uNoWzuIggD0prSkzku15BHFrps+g1pOVkL9MNJikVLlkmJeF1HJx8DPJiU+laWxRsxzGRdsiZa2wD0gRf/e58wgKSfN0d2DtOkmT9Bfy8FM0OT1PFqyDabSIrYEjQWtRW+E5PufWHMBfhzeyfdwfVUHAdgh6PNEBeJYOVosW8NYWEuzF4gE2hGsjfGv03eSRzR9MCN2N/zmxEn8DvYAiSHY4xs6esZm3f6+KMnrMLhq1hopBkFqhz6IVQovtJmuVpHYoqbGxFVRu+kLYilG2A==
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(36756003)(110136005)(83380400001)(54906003)(4326008)(8676002)(336012)(426003)(47076005)(1076003)(5660300002)(70206006)(508600001)(82310400005)(70586007)(6666004)(36860700001)(7696005)(2906002)(2616005)(107886003)(40460700003)(103116003)(356005)(7636003)(9786002)(8936002)(26005)(186003)(316002)(102446001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2022 09:23:11.5451
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: df315099-f6e2-4af9-0580-08da1df86560
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0041.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB7126
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -111,47 +72,81 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Describe cpm reg property name before cfg reg property to align with
-node name.
+Hi Geert,
 
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
----
- .../devicetree/bindings/pci/xilinx-versal-cpm.yaml     | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Thu, 14 Apr 2022 10:45:54 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-index 4ebcc838a1f6..a3bc6ed9cf95 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-+++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-@@ -18,13 +18,13 @@ properties:
- 
-   reg:
-     items:
--      - description: Configuration space region and bridge registers.
-       - description: CPM system level control and status registers.
-+      - description: Configuration space region and bridge registers.
- 
-   reg-names:
-     items:
--      - const: cfg
-       - const: cpm_slcr
-+      - const: cfg
- 
-   interrupts:
-     maxItems: 1
-@@ -86,9 +86,9 @@ examples:
-                        ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
-                                 <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
-                        msi-map = <0x0 &its_gic 0x0 0x10000>;
--                       reg = <0x6 0x00000000 0x0 0x10000000>,
--                             <0x0 0xfca10000 0x0 0x1000>;
--                       reg-names = "cfg", "cpm_slcr";
-+                       reg = <0x0 0xfca10000 0x0 0x1000>,
-+                             <0x6 0x00000000 0x0 0x10000000>;
-+                       reg-names = "cpm_slcr", "cfg";
-                        pcie_intc_0: interrupt-controller {
-                                #address-cells = <0>;
-                                #interrupt-cells = <1>;
--- 
-2.17.1
+> Hi Herv=C3=A9,
+>=20
+> Thanks for your patch!
+>=20
+> On Thu, Apr 14, 2022 at 9:40 AM Herve Codina <herve.codina@bootlin.com> w=
+rote:
+> > The PCI rcar-gen2 does not call any clk_prepare_enable(). =20
+>=20
+> Correct, this driver manages the clocks indirectly through Runtime PM.
+>=20
+> > This lead to an access failure when the driver tries to access
+> > the IP (at least on a RZ/N1D platform). =20
+>=20
+> I expect adding
+>=20
+>     power-domans =3D <&sysctrl>;
+>=20
+> to the pci_usb node makes this patch redundant.
 
+Seems not enough.
+I tried what you suggest :
+ - Added 'power-domains =3D <&systrl>;' to the pci_usb node
+ - Added missing '#power-domain-cells =3D <0>;' to sysctrl node
+ - Reverted my patch.
+
+The system crashed at boot:
+--- 8< ---
+...
+[    0.705309] loop: module loaded
+[    0.709597] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    0.716804] ehci-pci: EHCI PCI platform driver
+[    0.721716] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    0.728522] ohci-pci: OHCI PCI platform driver
+[    0.733581] usbcore: registered new interface driver usb-storage
+[    0.740458] ThumbEE CPU extension supported.
+[    0.745093] Registering SWP/SWPB emulation handler
+[    0.797518] rzn1-pinctrl 40067000.pinctrl: probed
+[    0.803311] pci-rcar-gen2 40030000.pci: host bridge /soc/pci@40030000 ra=
+nges:
+[    0.811255] pci-rcar-gen2 40030000.pci:      MEM 0x0040020000..0x004002f=
+fff -> 0x0040020000
+[    0.820373] pci-rcar-gen2 40030000.pci:   IB MEM 0x0080000000..0x00bffff=
+fff -> 0x0080000000
+[    0.829609] 8<--- cut here ---
+[    0.832958] Unhandled fault: external abort on non-linefetch (0x1008) at=
+ 0x90b5f848
+[    0.841259] [90b5f848] *pgd=3D82149811, *pte=3D40030653, *ppte=3D40030453
+[    0.848093] Internal error: : 1008 [#1] SMP ARM
+[    0.853024] Modules linked in:
+[    0.856398] CPU: 0 PID: 31 Comm: kworker/u4:1 Not tainted 5.18.0-rc2-000=
+09-g803ee9fd9fa5-dirty #5
+[    0.865998] Hardware name: Generic DT based system
+[    0.871176] Workqueue: events_unbound deferred_probe_work_func
+[    0.877539] PC is at rcar_pci_probe+0x15c/0x2f8
+[    0.882454] LR is at _raw_spin_unlock_irqrestore+0x24/0x2c
+[    0.888434] pc : [<803ea428>]    lr : [<804dc9b0>]    psr: 60000013
+[    0.895193] sp : 90aa5e40  ip : 8217c4e0  fp : 00000000
+[    0.900857] r10: 80e7bd30  r9 : 80000000  r8 : 40000000
+[    0.906532] r7 : 80000000  r6 : 8217c410  r5 : 821d3400  r4 : 90b5f000
+[    0.913580] r3 : 00000009  r2 : 5c120fb6  r1 : 60000013  r0 : 00000000
+[    0.920646] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment=
+ none
+[    0.928365] Control: 10c5387d  Table: 8000406a  DAC: 00000051
+...
+--- 8< ---
+
+I also added a trace printk in r9a06g032-clocks.c and
+r9a06g032_attach_dev() was never called.
+
+Did I miss to set something ?
+
+Regards,
+Herv=C3=A9
