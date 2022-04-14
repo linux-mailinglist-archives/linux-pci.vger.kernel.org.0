@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68C46501D08
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 23:03:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 079DB501D12
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 23:06:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238879AbiDNVFc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 17:05:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
+        id S1346747AbiDNVHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 17:07:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346709AbiDNVFb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 17:05:31 -0400
+        with ESMTP id S236725AbiDNVHS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 17:07:18 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD2AD8F44
-        for <linux-pci@vger.kernel.org>; Thu, 14 Apr 2022 14:03:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0EE40A36
+        for <linux-pci@vger.kernel.org>; Thu, 14 Apr 2022 14:04:51 -0700 (PDT)
 Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <l.stach@pengutronix.de>)
-        id 1nf6cA-0007a8-B6; Thu, 14 Apr 2022 23:02:54 +0200
-Message-ID: <fc2c6ddbf55723ac4c0f366e5a6131afafe546aa.camel@pengutronix.de>
-Subject: Re: [PATCH v2 5/7] arm64: dts: imx8mp: add the iMX8MP PCIe support
+        id 1nf6dq-0007gi-Kc; Thu, 14 Apr 2022 23:04:38 +0200
+Message-ID: <542969d58ad05c496ae19256f87ea217eb9b7642.camel@pengutronix.de>
+Subject: Re: [PATCH v2 6/7] arm64: dts: imx8mp-evk: Add PCIe support
 From:   Lucas Stach <l.stach@pengutronix.de>
 To:     Richard Zhu <hongxing.zhu@nxp.com>, p.zabel@pengutronix.de,
         bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
@@ -30,10 +30,10 @@ Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com
-Date:   Thu, 14 Apr 2022 23:02:53 +0200
-In-Reply-To: <1646644054-24421-6-git-send-email-hongxing.zhu@nxp.com>
+Date:   Thu, 14 Apr 2022 23:04:37 +0200
+In-Reply-To: <1646644054-24421-7-git-send-email-hongxing.zhu@nxp.com>
 References: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
-         <1646644054-24421-6-git-send-email-hongxing.zhu@nxp.com>
+         <1646644054-24421-7-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
@@ -52,97 +52,114 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Am Montag, dem 07.03.2022 um 17:07 +0800 schrieb Richard Zhu:
-> Add the i.MX8MP PCIe support.
+> Add PCIe support on i.MX8MP EVK board.
 > 
 > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 > ---
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 46 ++++++++++++++++++++++-
->  1 file changed, 45 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 55 ++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> index b40a5646f205..e7b3d8029e34 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+> index 2eb943210678..ed77455a3f73 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
 > @@ -5,6 +5,7 @@
 >  
->  #include <dt-bindings/clock/imx8mp-clock.h>
->  #include <dt-bindings/power/imx8mp-power.h>
-> +#include <dt-bindings/reset/imx8mp-reset.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> @@ -375,7 +376,8 @@ iomuxc: pinctrl@30330000 {
->  			};
+>  /dts-v1/;
 >  
->  			gpr: iomuxc-gpr@30340000 {
-> -				compatible = "fsl,imx8mp-iomuxc-gpr", "syscon";
-> +				compatible = "fsl,imx8mp-iomuxc-gpr",
-> +					     "fsl,imx6q-iomuxc-gpr", "syscon";
->  				reg = <0x30340000 0x10000>;
->  			};
+> +#include <dt-bindings/phy/phy-imx8-pcie.h>
+>  #include "imx8mp.dtsi"
 >  
-> @@ -965,6 +967,17 @@ aips4: bus@32c00000 {
->  			#size-cells = <1>;
->  			ranges;
+>  / {
+> @@ -33,6 +34,12 @@ memory@40000000 {
+>  		      <0x1 0x00000000 0 0xc0000000>;
+>  	};
 >  
-> +			pcie_phy: pcie-phy@32f00000 {
-> +				compatible = "fsl,imx8mp-pcie-phy";
-> +				reg = <0x32f00000 0x10000>;
-> +				resets = <&src IMX8MP_RESET_PCIEPHY>,
-> +					 <&src IMX8MP_RESET_PCIEPHY_PERST>;
-> +				reset-names = "pciephy", "perst";
-> +				power-domains = <&hsio_blk_ctrl IMX8MP_HSIOBLK_PD_PCIE_PHY>;
-> +				#phy-cells = <0>;
-> +				status = "disabled";
-> +			};
-> +	
->  			hsio_blk_ctrl: blk-ctrl@32f10000 {
->  				compatible = "fsl,imx8mp-hsio-blk-ctrl", "syscon";
->  				reg = <0x32f10000 0x24>;
-> @@ -980,6 +993,37 @@ hsio_blk_ctrl: blk-ctrl@32f10000 {
->  			};
->  		};
+> +	pcie0_refclk: pcie0-refclk {
+> +		compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <100000000>;
+> +	};
+> +
+>  	reg_can1_stby: regulator-can1-stby {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "can1-stby";
+> @@ -55,6 +62,17 @@ reg_can2_stby: regulator-can2-stby {
+>  		enable-active-high;
+>  	};
 >  
-> +		pcie: pcie@33800000 {
-> +			compatible = "fsl,imx8mp-pcie";
-> +			reg = <0x33800000 0x400000>, <0x1ff00000 0x80000>;
-> +			reg-names = "dbi", "config";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			bus-range = <0x00 0xff>;
-> +			ranges =  <0x81000000 0 0x00000000 0x1ff80000 0 0x00010000 /* downstream I/O 64KB */
-> +				   0x82000000 0 0x18000000 0x18000000 0 0x07f00000>; /* non-prefetchable memory */
-> +			num-lanes = <1>;
-> +			num-viewport = <4>;
-> +			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi";
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &gic GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 2 &gic GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 3 &gic GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 4 &gic GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-> +			fsl,max-link-speed = <3>;
+> +	reg_pcie0: regulator-pcie {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pcie0_reg>;
+> +		regulator-name = "MPCIE_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+>  	reg_usdhc2_vmmc: regulator-usdhc2 {
+>  		compatible = "regulator-fixed";
+>  		pinctrl-names = "default";
+> @@ -297,6 +315,30 @@ pca6416: gpio@20 {
+>  	};
+>  };
+>  
+> +&pcie_phy {
+> +	fsl,refclk-pad-mode = <IMX8_PCIE_REFCLK_PAD_INPUT>;
+> +	clocks = <&pcie0_refclk>;
+> +	clock-names = "ref";
+> +	status = "okay";
+> +};
+> +
+> +&pcie{
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pcie0>;
+> +	reset-gpio = <&gpio2 7 GPIO_ACTIVE_LOW>;
+> +	clocks = <&clk IMX8MP_CLK_HSIO_ROOT>,
+> +		 <&clk IMX8MP_CLK_PCIE_ROOT>,
+> +		 <&clk IMX8MP_CLK_HSIO_AXI>;
+> +	clock-names = "pcie", "pcie_aux", "pcie_bus";
+> +	assigned-clocks = <&clk IMX8MP_CLK_HSIO_AXI>,
+> +			  <&clk IMX8MP_CLK_PCIE_AUX>;
+> +	assigned-clock-rates = <500000000>, <10000000>;
+> +	assigned-clock-parents = <&clk IMX8MP_SYS_PLL2_500M>,
 
-I believe that imx6_pcie_start_link does not properly handle Gen3
-speeds.
+You don't need to set the IMX8MP_CLK_HSIO_AXI clock rate here, that's
+already don't by the power-domain, as it is keeping this bus clock
+active. Only need to set the PCIE_AUX rate here.
 
 Regards,
 Lucas
 
-> +			linux,pci-domain = <0>;
-> +			power-domains = <&hsio_blk_ctrl IMX8MP_HSIOBLK_PD_PCIE>;
-> +			resets = <&src IMX8MP_RESET_PCIE_CTRL_APPS_EN>,
-> +				 <&src IMX8MP_RESET_PCIE_CTRL_APPS_TURNOFF>;
-> +			reset-names = "apps", "turnoff";
-> +			phys = <&pcie_phy>;
-> +			phy-names = "pcie-phy";
-> +			status = "disabled";
-> +		};
+> +				 <&clk IMX8MP_SYS_PLL2_50M>;
+> +	vpcie-supply = <&reg_pcie0>;
+> +	status = "okay";
+> +};
 > +
->  		gpu3d: gpu@38000000 {
->  			compatible = "vivante,gc";
->  			reg = <0x38000000 0x8000>;
+>  &snvs_pwrkey {
+>  	status = "okay";
+>  };
+> @@ -442,6 +484,19 @@ MX8MP_IOMUXC_I2C3_SDA__I2C3_SDA		0x400001c3
+>  		>;
+>  	};
+>  
+> +	pinctrl_pcie0: pcie0grp {
+> +		fsl,pins = <
+> +			MX8MP_IOMUXC_I2C4_SCL__PCIE_CLKREQ_B	0x61 /* open drain, pull up */
+> +			MX8MP_IOMUXC_SD1_DATA5__GPIO2_IO07	0x41
+> +		>;
+> +	};
+> +
+> +	pinctrl_pcie0_reg: pcie0reggrp {
+> +		fsl,pins = <
+> +			MX8MP_IOMUXC_SD1_DATA4__GPIO2_IO06	0x41
+> +		>;
+> +	};
+> +
+>  	pinctrl_pmic: pmicgrp {
+>  		fsl,pins = <
+>  			MX8MP_IOMUXC_GPIO1_IO03__GPIO1_IO03	0x000001c0
 
 
