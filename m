@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2FEB500724
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 09:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F5F50072B
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 09:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240509AbiDNHnH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 03:43:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
+        id S240470AbiDNHnG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 03:43:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240541AbiDNHmr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 03:42:47 -0400
-X-Greylist: delayed 60624 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 14 Apr 2022 00:40:23 PDT
+        with ESMTP id S240553AbiDNHmv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 03:42:51 -0400
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0B840931;
-        Thu, 14 Apr 2022 00:40:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1277940931;
+        Thu, 14 Apr 2022 00:40:26 -0700 (PDT)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id 538A91C0005;
-        Thu, 14 Apr 2022 07:40:18 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPA id E6CC01C0015;
+        Thu, 14 Apr 2022 07:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1649922021;
+        t=1649922025;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Rq+ltxRhp3LsK2RX5rxuOzGtedDWpOrBc28SFp5i+i8=;
-        b=arTbcMZiBsjtNMjJGQQQJpwzV9vLsoSnNN8re9d33XbbwOjOmkNoxL/QYcVkZURGAq9URo
-        Ye4bZxAj9Aj/Iga+wCvi7vKED4twsZ3YtaeME3Sxk7u2fhX3n7RGxiH5fRbSA/CGipN2Lx
-        cvptcxz5wRrsULGIsffsBw4yoOKXwHjKB9Q2uKV2eLQseg6EirqdibK7DvD76Ldx7deIL2
-        HrqykM5KMQ31E54EmAG6vj0ob4wzZ6S0fn1qdyp6wppgSoEZRR0mOWaF1JmdeVWZ9XL0Ys
-        K9y//3XUNuMwAx5mekMrmyTXy8ix9RFVUkPVXwvoLpu0lyJtd+Zv5I/ZtW/Mbw==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WLMGN8W4KzuVPgqbnvRFLH6IcEpJsrhI1QCKS4t1hsA=;
+        b=EmAxXWkw4b+7SoVMA9NWRxnSwWeu8qw/PIJHX0OZ/TNgQHMimmtL2oZ1i0BcgJvhconYaB
+        bP/jD8JqfjWZTYq3rfZtEbd24xiekZ6NjVW9XvvJCdCTa4SXn+yJW/YikZejDibVM2tag7
+        A2bH/YdXxW5VQH9BNA1ytZ7r7ToUoMFTjHc9LEaj3aMjGx6IljT7LKoPdHgFSzDUwajti0
+        hf5TP4nqWzAGEXCsKfZZxMR6mBWavlnle454weujPXKlubPCCRSR9SoonQMKUbYNNpPq1Y
+        xKKZdU1MgDA3RfqEj+WbIgVkL7g726Qn3//M8LyyfiBf5dQ17TQLdV8TT2QXAg==
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -46,10 +46,12 @@ Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v2 0/8] RZN1 USB Host support
-Date:   Thu, 14 Apr 2022 09:40:03 +0200
-Message-Id: <20220414074011.500533-1-herve.codina@bootlin.com>
+Subject: [PATCH v2 1/8] PCI: rcar-gen2: Add support for clocks
+Date:   Thu, 14 Apr 2022 09:40:04 +0200
+Message-Id: <20220414074011.500533-2-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220414074011.500533-1-herve.codina@bootlin.com>
+References: <20220414074011.500533-1-herve.codina@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -62,41 +64,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+The PCI rcar-gen2 does not call any clk_prepare_enable().
+This lead to an access failure when the driver tries to access
+the IP (at least on a RZ/N1D platform).
 
-This series add support for the USB Host controllers available on
-RZN1 (r9a06g032) SOC.
+Prepare and enable clocks using the bulk version of
+clk_prepare_enable() in order to prepare and enable all clocks
+attached to this device.
 
-These USB Host controllers are PCI OHCI/EHCI controllers located
-behind a bridge.
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+---
+ drivers/pci/controller/pci-rcar-gen2.c | 28 ++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-Regards,
-Herve
-
-Changes v2:
-- Convert bindings to json-schema
-- Update clocks description
-- Remove unneeded '.compatible = "renesas,pci-r9a06g032"'
-
-Herve Codina (8):
-  PCI: rcar-gen2: Add support for clocks
-  dt-bindings: PCI: renesas-pci-usb: Convert bindings to json-schema
-  dt-bindings: PCI: renesas-pci-usb: Allow multiple clocks
-  dt-bindings: PCI: renesas-pci-usb: Add device tree support for
-    r9a06g032
-  PCI: rcar-gen2: Add R9A06G032 support
-  ARM: dts: r9a06g032: Add internal PCI bridge node
-  ARM: dts: r9a06g032: Add USB PHY DT support
-  ARM: dts: r9a06g032: Link the PCI USB devices to the USB PHY
-
- .../devicetree/bindings/pci/pci-rcar-gen2.txt |  84 -----------
- .../bindings/pci/renesas,pci-usb.yaml         | 139 ++++++++++++++++++
- arch/arm/boot/dts/r9a06g032.dtsi              |  46 ++++++
- drivers/pci/controller/pci-rcar-gen2.c        |  29 +++-
- 4 files changed, 212 insertions(+), 86 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
- create mode 100644 Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
-
+diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
+index 35804ea394fd..528bc3780e01 100644
+--- a/drivers/pci/controller/pci-rcar-gen2.c
++++ b/drivers/pci/controller/pci-rcar-gen2.c
+@@ -8,6 +8,7 @@
+  * Author: Valentine Barshak <valentine.barshak@cogentembedded.com>
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+@@ -99,6 +100,8 @@ struct rcar_pci {
+ 	struct resource mem_res;
+ 	struct resource *cfg_res;
+ 	int irq;
++	struct clk_bulk_data *clocks;
++	int nclocks;
+ };
+ 
+ /* PCI configuration space operations */
+@@ -282,6 +285,7 @@ static int rcar_pci_probe(struct platform_device *pdev)
+ 	struct rcar_pci *priv;
+ 	struct pci_host_bridge *bridge;
+ 	void __iomem *reg;
++	int ret;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
+ 	if (!bridge)
+@@ -305,13 +309,25 @@ static int rcar_pci_probe(struct platform_device *pdev)
+ 	priv->mem_res = *mem_res;
+ 	priv->cfg_res = cfg_res;
+ 
++	ret = devm_clk_bulk_get_all(dev, &priv->clocks);
++	if (ret < 0) {
++		dev_err(dev, "failed to get clocks %d\n", ret);
++		return ret;
++	}
++	priv->nclocks = ret;
++
++	ret = clk_bulk_prepare_enable(priv->nclocks, priv->clocks);
++	if (ret)
++		return ret;
++
+ 	priv->irq = platform_get_irq(pdev, 0);
+ 	priv->reg = reg;
+ 	priv->dev = dev;
+ 
+ 	if (priv->irq < 0) {
+ 		dev_err(dev, "no valid irq found\n");
+-		return priv->irq;
++		ret = priv->irq;
++		goto disable_clocks;
+ 	}
+ 
+ 	bridge->ops = &rcar_pci_ops;
+@@ -320,7 +336,15 @@ static int rcar_pci_probe(struct platform_device *pdev)
+ 
+ 	rcar_pci_setup(priv);
+ 
+-	return pci_host_probe(bridge);
++	ret = pci_host_probe(bridge);
++	if (ret < 0)
++		goto disable_clocks;
++
++	return 0;
++
++disable_clocks:
++	clk_bulk_disable_unprepare(priv->nclocks, priv->clocks);
++	return ret;
+ }
+ 
+ static const struct of_device_id rcar_pci_of_match[] = {
 -- 
 2.35.1
 
