@@ -2,61 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50207501CD6
+	by mail.lfdr.de (Postfix) with ESMTP id 97B1B501CD7
 	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 22:39:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346444AbiDNUfW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 16:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44254 "EHLO
+        id S1346530AbiDNUjJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 16:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346393AbiDNUfT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 16:35:19 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35AEB18AF;
-        Thu, 14 Apr 2022 13:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649968371; x=1681504371;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2Tybu43Q/AOkxQR4mWLkzoAsXHB7tKEYezKagE/IOBY=;
-  b=eQFNm0WHR7tB5jT1msTy/npSsTUAoXCKWZiW7kxZdE1AsGtS1Ze/yODS
-   W+bBaoYdwDTJi/p6vKRXlCStXT+CaIJLIQqRJuPD2TpJxYRN2Ap2rtAfM
-   OMXfV2JBZMyk8hM1dRhUShE9srbb0Xb0hN0gQcWS7PR5OspZNcJxeoY6o
-   CtLN+7pyB2RLllx8UuZQaU2Nu0XkBaIFe4qe524/sG71vWV76WjMyevGQ
-   8AY0zVBuRXcEIIhNkeIc8uY788zl4SuNuJWbg+KlOXnCAKutwOPHOEyvi
-   tSfw/X5wBP/LS0RrMX2+kBIbL17ZBWZE8NZOZVmXpufbyJbsG50D8QaIP
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10317"; a="262779242"
-X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
-   d="scan'208";a="262779242"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 13:32:51 -0700
-X-IronPort-AV: E=Sophos;i="5.90,260,1643702400"; 
-   d="scan'208";a="661507150"
-Received: from aimeehax-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.113.132])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2022 13:32:51 -0700
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH V8 10/10] cxl/port: Parse out DSMAS data from CDAT table
-Date:   Thu, 14 Apr 2022 13:32:37 -0700
-Message-Id: <20220414203237.2198665-11-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220414203237.2198665-1-ira.weiny@intel.com>
-References: <20220414203237.2198665-1-ira.weiny@intel.com>
+        with ESMTP id S239274AbiDNUjI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 16:39:08 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA85E2F72;
+        Thu, 14 Apr 2022 13:36:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C3BFAB8293E;
+        Thu, 14 Apr 2022 20:36:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573B5C385A1;
+        Thu, 14 Apr 2022 20:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649968599;
+        bh=0YOUcX1s+MakPztIpP6ZGkf5l+r7N3LY6huJ438u3gE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SFX8IfO7A6lIiz20UEEOHyavGrH//NtmZf0Ki54L0u4FBuu5DKoqH/kehrkh27AVX
+         98xok0tBD6AEAas5XX5Sgpdyk3twGgLijE02NDR2v592aVnwgTy8aLP4QqtXdA15KC
+         ERLxPe/ELkNJTC9Aa1SSSNi++YTHjPlHClLG4IGlEi6yA/MowGfDalYMPsFKSgv2UN
+         3/cTPrR5UFZqvgC5UVZZRD5n5EB9vOisR22/6vFU+N+R2/TAKkdsArjAvMuzD8kZaW
+         7b8YMnA/FL511ONoM+vvpFI2BCIFUY1YdTeS2wzh9+QjsZCGiaFgIVFBJYYyZFVGg/
+         ElBSRk35oOUsA==
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nf6Ci-004Phs-Sn; Thu, 14 Apr 2022 21:36:36 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Date:   Thu, 14 Apr 2022 21:36:36 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] PCI: dwc: rockchip: add legacy interrupt support
+In-Reply-To: <20220413133731.242870-3-pgwipeout@gmail.com>
+References: <20220413133731.242870-1-pgwipeout@gmail.com>
+ <20220413133731.242870-3-pgwipeout@gmail.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <c493261cef27714181a523545dab6d0e@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: pgwipeout@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,185 +72,218 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On 2022-04-13 14:37, Peter Geis wrote:
+> The legacy interrupts on the rk356x pcie controller are handled by a
+> single muxed interrupt. Add irq domain support to the pcie-dw-rockchip
+> driver to support the virtual domain.
+> 
+> Signed-off-by: Peter Geis <pgwipeout@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 123 +++++++++++++++++-
+>  1 file changed, 121 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index c9b341e55cbb..a8b1dc03d3cc 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -10,9 +10,12 @@
+> 
+>  #include <linux/clk.h>
+>  #include <linux/gpio/consumer.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> @@ -36,10 +39,13 @@
+>  #define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+>  #define PCIE_L0S_ENTRY			0x11
+>  #define PCIE_CLIENT_GENERAL_CONTROL	0x0
+> +#define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
+> +#define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
+>  #define PCIE_CLIENT_GENERAL_DEBUG	0x104
+> -#define PCIE_CLIENT_HOT_RESET_CTRL      0x180
+> +#define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>  #define PCIE_CLIENT_LTSSM_STATUS	0x300
+> -#define PCIE_LTSSM_ENABLE_ENHANCE       BIT(4)
+> +#define PCIE_LEGACY_INT_ENABLE		GENMASK(3, 0)
+> +#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+>  #define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
+> 
+>  struct rockchip_pcie {
+> @@ -51,6 +57,8 @@ struct rockchip_pcie {
+>  	struct reset_control		*rst;
+>  	struct gpio_desc		*rst_gpio;
+>  	struct regulator                *vpcie3v3;
+> +	struct irq_domain		*irq_domain;
+> +	raw_spinlock_t			irq_lock;
+>  };
+> 
+>  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
+> @@ -65,6 +73,105 @@ static void rockchip_pcie_writel_apb(struct
+> rockchip_pcie *rockchip,
+>  	writel_relaxed(val, rockchip->apb_base + reg);
+>  }
+> 
+> +static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct rockchip_pcie *rockchip = irq_desc_get_handler_data(desc);
+> +	struct device *dev = rockchip->pci.dev;
+> +	u32 reg;
+> +	u32 hwirq;
+> +	u32 virq;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	reg = rockchip_pcie_readl_apb(rockchip, 
+> PCIE_CLIENT_INTR_STATUS_LEGACY);
+> +
+> +	while (reg) {
+> +		hwirq = ffs(reg) - 1;
+> +		reg &= ~BIT(hwirq);
 
-CXL Ports with memory devices attached need the information from the
-Device Scoped Memory Affinity Structure (DSMAS).  This information is
-contained within the CDAT table buffer which is previously read and
-cached in the device state.
+The whole construct would be better served by for_each_set_bit().
 
-If CDAT data is available, parse and cache DSMAS data from the table.
-Store this data in unmarshaled struct dsmas data structures for ease of
-use.
+> +
+> +		virq = irq_find_mapping(rockchip->irq_domain, hwirq);
+> +		if (virq)
+> +			generic_handle_irq(virq);
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Please replace this with generic_handle_domain_irq().
 
----
-Changes from V7
-	Rebased on cxl-pending
+> +		else
+> +			dev_err(dev, "unexpected IRQ, INT%d\n", hwirq);
 
-Changes from V6
-	Move to port.c
-	It is not an error if no DSMAS data is found
+This hardly serves any purpose. At best, this is a debug statement.
+At worse, this is a DoS. In any case, please remove it.
 
-Changes from V5
-	Fix up sparse warnings
-	Split out cdat_hdr_valid()
-	Update cdat_hdr_valid()
-		Remove revision and cs field parsing
-			There is no point in these
-		Add seq check and debug print.
-	From Jonathan
-		Add spaces around '+' and '/'
-		use devm_krealloc() for dmas_ary
----
- drivers/cxl/cdat.h | 17 ++++++++++++
- drivers/cxl/cxl.h  |  6 +++++
- drivers/cxl/port.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 88 insertions(+)
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void rockchip_intx_mask(struct irq_data *data)
+> +{
+> +	struct rockchip_pcie *rockchip = irq_data_get_irq_chip_data(data);
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	/* disable legacy interrupts */
+> +	raw_spin_lock_irqsave(&rockchip->irq_lock, flags);
+> +	val = HIWORD_UPDATE_BIT(PCIE_LEGACY_INT_ENABLE);
+> +	val |= PCIE_LEGACY_INT_ENABLE;
+> +	rockchip_pcie_writel_apb(rockchip, val, 
+> PCIE_CLIENT_INTR_MASK_LEGACY);
+> +	raw_spin_unlock_irqrestore(&rockchip->irq_lock, flags);
+> +};
+> +
+> +static void rockchip_intx_unmask(struct irq_data *data)
+> +{
+> +	struct rockchip_pcie *rockchip = irq_data_get_irq_chip_data(data);
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	/* enable legacy interrupts */
+> +	raw_spin_lock_irqsave(&rockchip->irq_lock, flags);
+> +	val = HIWORD_UPDATE_BIT(PCIE_LEGACY_INT_ENABLE);
+> +	val &= ~PCIE_LEGACY_INT_ENABLE;
+> +	rockchip_pcie_writel_apb(rockchip, val, 
+> PCIE_CLIENT_INTR_MASK_LEGACY);
+> +	raw_spin_unlock_irqrestore(&rockchip->irq_lock, flags);
+> +};
+> +
+> +static struct irq_chip rockchip_intx_irq_chip = {
+> +	.flags			= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND,
+> +	.irq_mask		= rockchip_intx_mask,
+> +	.irq_unmask		= rockchip_intx_unmask,
+> +	.name			= "INTx",
 
-diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
-index a7725d26f2d2..66706b238bc9 100644
---- a/drivers/cxl/cdat.h
-+++ b/drivers/cxl/cdat.h
-@@ -83,6 +83,23 @@
- #define CDAT_SSLBIS_ENTRY_PORT_Y(entry, i) (((entry)[4 + (i) * 2] & 0xffff0000) >> 16)
- #define CDAT_SSLBIS_ENTRY_LAT_OR_BW(entry, i) ((entry)[4 + (i) * 2 + 1] & 0x0000ffff)
- 
-+/**
-+ * struct cxl_dsmas - host unmarshaled version of DSMAS data
-+ *
-+ * As defined in the Coherent Device Attribute Table (CDAT) specification this
-+ * represents a single DSMAS entry in that table.
-+ *
-+ * @dpa_base: The lowest Device Physical Address associated with this DSMAD
-+ * @length: Length in bytes of this DSMAD
-+ * @non_volatile: If set, the memory region represents Non-Volatile memory
-+ */
-+struct cxl_dsmas {
-+	u64 dpa_base;
-+	u64 length;
-+	/* Flags */
-+	u8 non_volatile:1;
-+};
-+
- /**
-  * struct cxl_cdat - CXL CDAT data
-  *
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 50817fd2c912..80fd39769a65 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -9,6 +9,8 @@
- #include <linux/bitops.h>
- #include <linux/io.h>
- 
-+#include "cdat.h"
-+
- /**
-  * DOC: cxl objects
-  *
-@@ -269,6 +271,8 @@ struct cxl_nvdimm {
-  * @component_reg_phys: component register capability base address (optional)
-  * @dead: last ep has been removed, force port re-creation
-  * @depth: How deep this port is relative to the root. depth 0 is the root.
-+ * @dsmas_ary: Array of DSMAS entries as parsed from the CDAT table
-+ * @nr_dsmas: Number of entries in dsmas_ary
-  */
- struct cxl_port {
- 	struct device dev;
-@@ -280,6 +284,8 @@ struct cxl_port {
- 	resource_size_t component_reg_phys;
- 	bool dead;
- 	unsigned int depth;
-+	struct cxl_dsmas *dsmas_ary;
-+	int nr_dsmas;
- };
- 
- /**
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index d420da5fc39c..2288432a27cd 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -30,6 +30,70 @@ static void schedule_detach(void *cxlmd)
- 	schedule_cxl_memdev_detach(cxlmd);
- }
- 
-+static void parse_dsmas(struct cxl_port *port, struct cxl_dev_state *cxlds)
-+{
-+	struct device *dev = &port->dev;
-+	struct cxl_dsmas *dsmas_ary = NULL;
-+	u32 *data = cxlds->cdat.table;
-+	int bytes_left = cxlds->cdat.length;
-+	int nr_dsmas = 0;
-+
-+	if (!data) {
-+		dev_info(dev, "No CDAT data available for DSMAS\n");
-+		return;
-+	}
-+
-+	/* Skip header */
-+	data += CDAT_HEADER_LENGTH_DW;
-+	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
-+
-+	while (bytes_left > 0) {
-+		u32 *cur_rec = data;
-+		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
-+		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
-+
-+		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
-+			struct cxl_dsmas *new_ary;
-+			u8 flags;
-+
-+			new_ary = devm_krealloc(dev, dsmas_ary,
-+					   sizeof(*dsmas_ary) * (nr_dsmas + 1),
-+					   GFP_KERNEL);
-+			if (!new_ary) {
-+				dev_err(dev,
-+					"Failed to allocate memory for DSMAS data (nr_dsmas %d)\n",
-+					nr_dsmas);
-+				return;
-+			}
-+			dsmas_ary = new_ary;
-+
-+			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
-+
-+			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
-+			dsmas_ary[nr_dsmas].length = CDAT_DSMAS_DPA_LEN(cur_rec);
-+			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
-+
-+			dev_dbg(dev, "DSMAS %d: %llx:%llx %s\n",
-+				nr_dsmas,
-+				dsmas_ary[nr_dsmas].dpa_base,
-+				dsmas_ary[nr_dsmas].dpa_base +
-+					dsmas_ary[nr_dsmas].length,
-+				(dsmas_ary[nr_dsmas].non_volatile ?
-+					"Persistent" : "Volatile")
-+				);
-+
-+			nr_dsmas++;
-+		}
-+
-+		data += (length / sizeof(u32));
-+		bytes_left -= length;
-+	}
-+
-+	dev_dbg(dev, "Found %d DSMAS entries\n", nr_dsmas);
-+	port->dsmas_ary = dsmas_ary;
-+	port->nr_dsmas = nr_dsmas;
-+}
-+
- static int cxl_port_probe(struct device *dev)
- {
- 	struct cxl_port *port = to_cxl_port(dev);
-@@ -43,6 +107,7 @@ static int cxl_port_probe(struct device *dev)
- 		rc = devm_add_action_or_reset(dev, schedule_detach, cxlmd);
- 		if (rc)
- 			return rc;
-+		parse_dsmas(port, cxlmd->cxlds);
- 	} else {
- 		rc = devm_cxl_port_enumerate_dports(port);
- 		if (rc < 0)
+For consistency, please place 'name' at the top, and 'flags' at the end.
+
+> +};
+> +
+> +static int rockchip_pcie_intx_map(struct irq_domain *domain, unsigned 
+> int irq,
+> +				  irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &rockchip_intx_irq_chip, 
+> handle_simple_irq);
+
+Why isn't this a *level* handler, as per the PCI spec?
+
+> +	irq_set_chip_data(irq, domain->host_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops intx_domain_ops = {
+> +	.map = rockchip_pcie_intx_map,
+> +};
+> +
+> +static int rockchip_pcie_init_irq_domain(struct rockchip_pcie 
+> *rockchip)
+> +{
+> +	struct device *dev = rockchip->pci.dev;
+> +	struct device_node *intc;
+> +
+> +	raw_spin_lock_init(&rockchip->irq_lock);
+> +
+> +	intc = of_get_child_by_name(dev->of_node, 
+> "legacy-interrupt-controller");
+> +	if (!intc) {
+> +		dev_err(dev, "missing child interrupt-controller node\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	rockchip->irq_domain = irq_domain_add_linear(intc, PCI_NUM_INTX,
+> +						    &intx_domain_ops, rockchip);
+> +	of_node_put(intc);
+> +	if (!rockchip->irq_domain) {
+> +		dev_err(dev, "failed to get a INTx IRQ domain\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
+>  {
+>  	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
+> @@ -111,7 +218,19 @@ static int rockchip_pcie_host_init(struct 
+> pcie_port *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+> +	struct device *dev = rockchip->pci.dev;
+>  	u32 val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
+> +	int irq, ret;
+> +
+> +	irq = of_irq_get_byname(dev->of_node, "legacy");
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	irq_set_chained_handler_and_data(irq,
+> rockchip_pcie_legacy_int_handler, rockchip);
+> +
+
+Installing the handler before the domain is instantiated is
+unlikely to end well if you have a pending interrupt...
+
+> +	ret = rockchip_pcie_init_irq_domain(rockchip);
+> +	if (ret < 0)
+> +		dev_err(dev, "failed to init irq domain\n");
+> 
+>  	/* LTSSM enable control mode */
+>  	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+
+Thanks,
+
+         M.
 -- 
-2.35.1
-
+Jazz is not dead. It just smells funny...
