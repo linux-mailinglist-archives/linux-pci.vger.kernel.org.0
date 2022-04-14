@@ -2,117 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BC69500D54
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 14:28:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33E35500DC1
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 14:40:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243264AbiDNMaM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 08:30:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41162 "EHLO
+        id S243505AbiDNMmc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 08:42:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243348AbiDNM3W (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 08:29:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B428D69A;
-        Thu, 14 Apr 2022 05:26:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8E958B82938;
-        Thu, 14 Apr 2022 12:26:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D033C385A1;
-        Thu, 14 Apr 2022 12:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649939215;
-        bh=Bm7Q2ZnByE6GSEUiZhqmxSzL/BKHsqE5oxAj9ul5+wo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZMwU4DE3YXocQcCgSia+UsHiXnrwjYJYgwMnuIBAp+K+WBbtipcU2L5g+Siej6Kxn
-         X7LofKt9QOyjnegvTaiY7/y53qp0tvUAGoiq2XQrYFVrKOdxI6HkMqjeOYgVbJEWz+
-         hdwe+nDMp4MXEqbRYYU3oZtMbhBMsBxfaBCZE3RGamOQ5qCDBjkYyOdOeFlyTZcXqZ
-         ub6uhlrGxEU7O7C480uM1DU851I8xYMfbgK/3WNwb46fuOleWBQ2wSA5YqS0FmgA3E
-         apmerTJ5rlH96vO2KBC/7IG1ZtfrZ5IUwyPFaB2ULabHW5uvkX/1GsmodWY7pypASk
-         w3XfZaa8NEL7Q==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1neyYl-0006Fo-3g; Thu, 14 Apr 2022 14:26:51 +0200
-Date:   Thu, 14 Apr 2022 14:26:51 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] clk: qcom: regmap-mux: add pipe clk implementation
-Message-ID: <YlgTC5RdDXC3abrI@hovoldconsulting.com>
-References: <20220412193839.2545814-1-dmitry.baryshkov@linaro.org>
- <20220412193839.2545814-2-dmitry.baryshkov@linaro.org>
- <YlaUtCuMZZL4bM2U@hovoldconsulting.com>
- <82c6813c-fcff-5097-56e0-0cb7aac2eac2@linaro.org>
+        with ESMTP id S235273AbiDNMmY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 08:42:24 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8BB3C73C;
+        Thu, 14 Apr 2022 05:39:58 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KfJsB50fTzgYp9;
+        Thu, 14 Apr 2022 20:38:06 +0800 (CST)
+Received: from localhost.localdomain (10.67.164.66) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 14 Apr 2022 20:39:56 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <prime.zeng@huawei.com>, Yicong Yang <yangyicong@hisilicon.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v3] PCI: Make sure the bus bridge powered on when scanning bus
+Date:   Thu, 14 Apr 2022 20:37:36 +0800
+Message-ID: <20220414123736.34150-1-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <82c6813c-fcff-5097-56e0-0cb7aac2eac2@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 01:21:29AM +0300, Dmitry Baryshkov wrote:
-> On 13/04/2022 12:15, Johan Hovold wrote:
-> > On Tue, Apr 12, 2022 at 10:38:35PM +0300, Dmitry Baryshkov wrote:
-> >> On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
-> >> muxes which must be parked to the "safe" source (bi_tcxo) when
-> >> corresponding GDSC is turned off and on again. Currently this is
-> >> handcoded in the PCIe driver by reparenting the gcc_pipe_N_clk_src
-> >> clock. However the same code sequence should be applied in the
-> >> pcie-qcom endpoint, USB3 and UFS drivers.
+When the bus bridge is runtime suspended, we'll fail to rescan
+the devices through sysfs as we cannot access the configuration
+space correctly when the bridge is in D3hot.
+It can be reproduced like:
 
-> > The caching of the parent is broken since set_parent() is typically not
-> > called before enabling the clock.
-> > 
-> > This means that the above code will set the mux to its zero-initialised
-> > value, which currently only works by chance as the pipe clock config
-> > value happens to be zero.
-> > 
-> > For this to work generally, you'd also need to define also the
-> > (default/initial) non-safe parent for each mux. Handling handover from
-> > the bootloader might also be tricky.
-> 
-> It's not tricky at all. We can set stored_parent_cfg from gcc probe from 
-> function. Or set statically from the config. I'll probably do the latter.
+$ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+$ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
 
-That means you're just ignoring the problem. How is hard coding the
-initial mux configuration in any way dealing with bootloader handover?
+0000:80:00.0 is root port and is runtime suspended and we cannot
+get 0000:81:00.1 after rescan.
+
+Make bridge powered on when scanning the child bus, by adding
+pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
+
+A similar issue is met and solved by
+d963f6512e15 ("PCI: Power on bridges before scanning new devices")
+which rescan the devices through /sys/bus/pci/devices/0000:80:00.0/rescan.
+The callstack is like:
+
+dev_rescan_restore()
+  pci_rescan_bus()
+    pci_scan_bridge_extend()
+      pci_scan_child_bus_extend() /* will wake up the bridge with this patch */
+
+With this patch the issue is also resolved, so let's remove the calls of
+pm_runtime_*() in pci_scan_bridge_extend().
+
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+Change since v2:
+- just rebase it on v5.18-rc2
+Link: https://lore.kernel.org/linux-pci/1601029386-4928-1-git-send-email-yangyicong@hisilicon.com/
+
+Change since v1:
+- use an intermediate variable *bridge as suggested
+- remove the pm_runtime_*() calls in pci_scan_bridge_extend()
+Link: https://lore.kernel.org/linux-pci/1596022223-4765-1-git-send-email-yangyicong@hisilicon.com/
+
+ drivers/pci/probe.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 17a969942d37..2ca6b4b708e3 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1257,12 +1257,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	u8 fixed_sec, fixed_sub;
+ 	int next_busnr;
  
-> > Furthermore, the current implementation appears to ignore locking and
-> > doesn't handle the case where set_parent() races with enable(). The
-> > former is protected by the prepare mutex and the latter by the enable
-> > spinlock and a driver that needs to serialise the two needs to handle
-> > that itself.
-> 
-> Since I'm trying to remove pipe_clk usage from pcie driver itself, there 
-> is just one user left - qmp phy. And while you are correct that there is 
-> a race, I think we can neglect that for now. Or shift enable/disable ops 
-> to prepare/unprepare, thus using the same mutex everywhere.
+-	/*
+-	 * Make sure the bridge is powered on to be able to access config
+-	 * space of devices below it.
+-	 */
+-	pm_runtime_get_sync(&dev->dev);
+-
+ 	pci_read_config_dword(dev, PCI_PRIMARY_BUS, &buses);
+ 	primary = buses & 0xFF;
+ 	secondary = (buses >> 8) & 0xFF;
+@@ -1464,8 +1458,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ out:
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+ 
+-	pm_runtime_put(&dev->dev);
+-
+ 	return max;
+ }
+ 
+@@ -2859,11 +2851,19 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+ 	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+ 	unsigned int start = bus->busn_res.start;
+ 	unsigned int devfn, fn, cmax, max = start;
+-	struct pci_dev *dev;
++	struct pci_dev *dev, *bridge = bus->self;
+ 	int nr_devs;
+ 
+ 	dev_dbg(&bus->dev, "scanning bus\n");
+ 
++	/*
++	 * Make sure the bus bridge is powered on, otherwise we may not be
++	 * able to scan the devices as we may fail to access the configuration
++	 * space of subordinates.
++	 */
++	if (bridge)
++		pm_runtime_get_sync(&bridge->dev);
++
+ 	/* Go find them, Rover! */
+ 	for (devfn = 0; devfn < 256; devfn += 8) {
+ 		nr_devs = pci_scan_slot(bus, devfn);
+@@ -2976,6 +2976,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+ 		}
+ 	}
+ 
++	if (bridge)
++		pm_runtime_put(&bridge->dev);
++
+ 	/*
+ 	 * We've scanned the bus and so we know all about what's on
+ 	 * the other side of any bridges that may be on this bus plus
+-- 
+2.24.0
 
-Let's not add known broken code. Correctness first.
-
-Handling the muxing the prepare/unprepare might work. I even considered
-using those callbacks to let CCF know about the reparenting so that for
-example debugfs continues to reflect the actual state of things.
-
-But I'm still leaning towards this being a misguided endeavour as I've
-explained elsewhere.
-
-Johan
