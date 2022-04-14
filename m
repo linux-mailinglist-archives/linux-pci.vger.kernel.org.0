@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31275501B05
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 20:23:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 208A1501AFE
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 20:23:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344511AbiDNSZg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 14:25:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
+        id S1344497AbiDNSZe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 14:25:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344166AbiDNSZ1 (ORCPT
+        with ESMTP id S1344112AbiDNSZ1 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 14:25:27 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF509E541F;
-        Thu, 14 Apr 2022 11:23:01 -0700 (PDT)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F27CE8877;
+        Thu, 14 Apr 2022 11:23:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 88D0CB82916;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C326061583;
+        Thu, 14 Apr 2022 18:23:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3DBC385A8;
         Thu, 14 Apr 2022 18:23:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A3DC385A5;
-        Thu, 14 Apr 2022 18:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649960579;
-        bh=i6fF8C2eeYGD1JMuZx5bmzgFvF7k9OE5JPcxR8RGGdY=;
+        s=k20201202; t=1649960581;
+        bh=wzKfWIAdPADCpFjCVLCfLjso3Q5ZNWCch4+FqEXQvNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XSnVsuM+uLPoTf/buzTKkiGpGVM+oIcmWXrUymeSuMYuBjrW3FXCRWlJIOHDfTn1B
-         MyUkkHS79P7vqC3VYB8JQYdnoY0sfSKbLNOoII3jveGgypmXpyX8bnHtfVz9TflHtf
-         K4uQoJIwNMg9lY2RHsOKGEumsKxlPTr4YCWCk5G46yGksJsfEd6ry8G11hSpZk8dZj
-         dbMklwo+e4izMZakiMEdPvnURGFvBace2YPzYvprUWyFTDGsQ1su2z/82llZWJDk+I
-         qnCArmnLq/UUwScSfF0j9Voi3RYcyJIuA4gDSxETwjDGyzgTKwpVQGucSQlueRg4zi
-         rNmyHTYYX2nEA==
+        b=fn9lTUugH69h82pZPlriHFauOMJvUbju/Ke6lCCX8NWk3xUjcq7agauQAKIydtV8O
+         pvfS5r6J+K7JamoFRg65p0lpVnJwpMwVAHAJCbbuPHqGHowgJV7HuDkcRndrXoeGUv
+         LsWA9wKR1nTwSCOVHl/PqKrS+fTizmeMV8M5pqE1PNMZQq6t/4PhJ5wO9QIplVk8mw
+         gjNm1hG9M10jzUIVpOfuHjuJXFoWljKVIREm/6EJoHT55sTaUCR1C8umvDKmUWMJMi
+         X6tPdc0eTQl5TNdnrQc2bq9lB/3AUeX7l7o6NxifmwSOt3Sqn0672oHNv8nQ9tjRnt
+         c1vOlvXx4UH/g==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Hans de Goede <hdegoede@redhat.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
@@ -45,11 +45,10 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>,
         linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
         x86@kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v2 1/3] x86/PCI: Eliminate remove_e820_regions() common subexpressions
-Date:   Thu, 14 Apr 2022 13:22:50 -0500
-Message-Id: <20220414182252.758742-2-helgaas@kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 2/3] x86: Log resource clipping for E820 regions
+Date:   Thu, 14 Apr 2022 13:22:51 -0500
+Message-Id: <20220414182252.758742-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220414182252.758742-1-helgaas@kernel.org>
 References: <20220414182252.758742-1-helgaas@kernel.org>
@@ -67,36 +66,42 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Add local variables to reduce repetition later.  No functional change
-intended.
+When remove_e820_regions() clips a resource because an E820 region overlaps
+it, log a note in dmesg to add in debugging.
 
-Link: https://lore.kernel.org/r/20220304035110.988712-2-helgaas@kernel.org
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- arch/x86/kernel/resource.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/kernel/resource.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-index 9b9fb7882c20..8ffe68437744 100644
+index 8ffe68437744..30d524adb012 100644
 --- a/arch/x86/kernel/resource.c
 +++ b/arch/x86/kernel/resource.c
-@@ -27,12 +27,14 @@ static void remove_e820_regions(struct resource *avail)
- {
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/ioport.h>
++#include <linux/printk.h>
+ #include <asm/e820/api.h>
+ 
+ static void resource_clip(struct resource *res, resource_size_t start,
+@@ -28,6 +29,7 @@ static void remove_e820_regions(struct resource *avail)
  	int i;
  	struct e820_entry *entry;
-+	u64 e820_start, e820_end;
+ 	u64 e820_start, e820_end;
++	struct resource orig = *avail;
  
  	for (i = 0; i < e820_table->nr_entries; i++) {
  		entry = &e820_table->entries[i];
-+		e820_start = entry->addr;
-+		e820_end = entry->addr + entry->size - 1;
+@@ -35,6 +37,11 @@ static void remove_e820_regions(struct resource *avail)
+ 		e820_end = entry->addr + entry->size - 1;
  
--		resource_clip(avail, entry->addr,
--			      entry->addr + entry->size - 1);
-+		resource_clip(avail, e820_start, e820_end);
+ 		resource_clip(avail, e820_start, e820_end);
++		if (orig.start != avail->start || orig.end != avail->end) {
++			pr_info("clipped %pR to %pR for e820 entry [mem %#010Lx-%#010Lx]\n",
++				 &orig, avail, e820_start, e820_end);
++			orig = *avail;
++		}
  	}
  }
  
