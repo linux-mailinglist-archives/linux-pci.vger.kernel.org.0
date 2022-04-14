@@ -2,136 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9438050123F
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 17:07:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF8D501975
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 19:01:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234396AbiDNOWe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 10:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58632 "EHLO
+        id S241085AbiDNREV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 13:04:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345131AbiDNNpL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 09:45:11 -0400
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 502D8140DE;
-        Thu, 14 Apr 2022 06:42:45 -0700 (PDT)
-Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 047581BF20C;
-        Thu, 14 Apr 2022 13:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1649943763;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uf/NUgWHuhWSypo4uHHoAgWnaBAtZS72tioBfXir5rw=;
-        b=RH9+J969PE/jWaLdsCV+Jg1ttNMgnWmL2DqDCmlGulbszBjD9NE52I2J8RVKtHvaLsECs9
-        S8j67gnG0CdrH/urV5Uw8cdGR4XfehozZgFSA6Eg7ukBmemeWcBtEsm45Q6wloI5KV7rbX
-        Fy1xTIHQyDpWpZ7/AthMJAEHBuy4ptwTA4uoeVdplikQzQx5jG5FeLj+uPWcStSohLc28N
-        KAAWjoFcxPN+HmjvfAAD+dE+5eo8GyyKzsL/4WqsfD4BjmhB6//KozDJPHWWWcoYawa3FI
-        wwZPzGot1uDZ4YL894ldPzkehTWSGlL7VU3yYbmpYpXogF/aXiFowNMKUC6JKQ==
-Date:   Thu, 14 Apr 2022 15:42:32 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 1/8] PCI: rcar-gen2: Add support for clocks
-Message-ID: <20220414154232.098a4451@bootlin.com>
-In-Reply-To: <CAMuHMdUCvJ6rAwnV=w9iFqnm=c0U_BpGiYEw109shsrWAeUJCA@mail.gmail.com>
-References: <20220414074011.500533-1-herve.codina@bootlin.com>
-        <20220414074011.500533-2-herve.codina@bootlin.com>
-        <CAMuHMdW8q5AjDtTE83yVPfmgnQy02UgLSns33z06WMFBUULWEw@mail.gmail.com>
-        <20220414132534.35467781@bootlin.com>
-        <CAMuHMdUCvJ6rAwnV=w9iFqnm=c0U_BpGiYEw109shsrWAeUJCA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
+        with ESMTP id S243665AbiDNREN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 13:04:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B23B9B7C54;
+        Thu, 14 Apr 2022 09:41:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D6146206E;
+        Thu, 14 Apr 2022 16:41:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62838C385A5;
+        Thu, 14 Apr 2022 16:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649954496;
+        bh=49nKOguN6hmCIr/dOmsf3k+fvl1CA8AutZRRIS585d4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Czsmm49U9rxGSLWubSu56gUZaJRqNUtxT0Ug5fBcjxAEZGMFImZakI+nJkNReePgE
+         Ppsjni6QGjOOe4lCjfvdhh49+vC7qIwmgOJh4VKuWncMuXm4xeLvXlmnqYUn80Zk+s
+         Qc1PwQhDkPNg1mNuIYs1tCRJrtqgLmxXLEOoVyedjY28EAy/Dx6HrQ+lpLbvnGV86K
+         yj9aazcnHEiVvaDOfydO7dj7O5KAMbmjQL7HsI5rLyOxj7gBjrf3PLV6/qCm19BwbP
+         U8SccJMN6xIS3mCx3zBjhroJW249unzy8LAyJU98DfixhBGCRijac25ndzI3FNde/6
+         q+cpGf2JLA3fA==
+Date:   Thu, 14 Apr 2022 11:41:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        "Kenneth R. Crudup" <kenny@panix.com>, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, hkallweit1@gmail.com,
+        wangxiongfeng2@huawei.com, mika.westerberg@linux.intel.com,
+        chris.packham@alliedtelesis.co.nz, yangyicong@hisilicon.com,
+        treding@nvidia.com, jonathanh@nvidia.com, abhsahu@nvidia.com,
+        sagupta@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Ricky Wu <ricky_wu@realtek.com>,
+        Rajat Jain <rajatja@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Victor Ding <victording@google.com>
+Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for
+ suspend/resume
+Message-ID: <20220414164134.GA751756@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAd53p4r1v_sN=8kv_fOx_VEb3k=4rU9iw52LfmEHO1crnms=g@mail.gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Geert,
+On Wed, Apr 13, 2022 at 08:19:26AM +0800, Kai-Heng Feng wrote:
+> On Wed, Apr 13, 2022 at 6:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > ...
 
-On Thu, 14 Apr 2022 13:48:22 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-
-> Hi Herv=C3=A9,
->=20
-> On Thu, Apr 14, 2022 at 1:29 PM Herve Codina <herve.codina@bootlin.com> w=
-rote:
-> > On Thu, 14 Apr 2022 10:45:54 +0200
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote: =20
-> > > On Thu, Apr 14, 2022 at 9:40 AM Herve Codina <herve.codina@bootlin.co=
-m> wrote: =20
-> > > > The PCI rcar-gen2 does not call any clk_prepare_enable(). =20
-> > >
-> > > Correct, this driver manages the clocks indirectly through Runtime PM.
-> > > =20
-> > > > This lead to an access failure when the driver tries to access
-> > > > the IP (at least on a RZ/N1D platform). =20
-> > >
-> > > I expect adding
-> > >
-> > >     power-domans =3D <&sysctrl>;
-> > >
-> > > to the pci_usb node makes this patch redundant. =20
+> >   - For L1 PM Substates configuration, sec 5.5.4 says that both ports
+> >     must be configured while ASPM L1 is disabled, but I don't think we
+> >     currently guarantee this: we restore all the upstream component
+> >     state first, and we don't know the ASPM state of the downstream
+> >     one.  Maybe we need to:
 > >
-> > Seems not enough.
-> > I tried what you suggest :
-> >  - Added 'power-domains =3D <&systrl>;' to the pci_usb node
-> >  - Added missing '#power-domain-cells =3D <0>;' to sysctrl node
-> >  - Reverted my patch.
+> >       * When restoring upstream component,
+> >           + disable its ASPM
 > >
-> > The system crashed at boot: =20
->=20
-> > [    0.832958] Unhandled fault: external abort on non-linefetch (0x1008=
-) at 0x90b5f848 =20
->=20
-> That's indeed a typical symptom of accessing a module's registers
-> while the module's clock is disabled.
->=20
-> > I also added a trace printk in r9a06g032-clocks.c and
-> > r9a06g032_attach_dev() was never called.
-> >
-> > Did I miss to set something ? =20
->=20
-> Do you have CONFIG_PM and CONFIG_PM_GENERIC_DOMAINS
-> enabled?
-> Apparently ARCH_RZN1 does not select these options yet.
->=20
+> >       * When restoring downstream component,
+> >           + disable its ASPM
+> >           + restore upstream component's LTR, L1SS
+> >           + restore downstream component's LTR, L1SS
+> >           + restore upstream component's ASPM
+> >           + restore downstream component's ASPM
+> 
+> Right now L1SS isn't reprogrammed after S3, and that causes WD NVMe
+> starts to spew lots of AER errors.
 
-Thanks a lot for pointing this.
+Right now we don't fully restore L1SS-related state after S3, so maybe
+there's some inconsistency that leads to the AER errors.
 
-I added select CONFIG_PM and CONFIG_PM_GENERIC_DOMAINS
-in ARCH_RZN1 and it works.
+Could you collect the "lspci -vv" state before and after S3 so we can
+compare them?
 
-I will remove my patch calling clk_bulk_prepare_enable() and
-add some new patches to enable power domains in the v3 series.
+> So yes please restore L1SS upon resume. Meanwhile I am asking vendor
+> _why_ restoring L1SS is crucial for it to work.
+> 
+> I also wonder what's the purpose of pcie_aspm_pm_state_change()? Can't
+> we just restore ASPM bits like other configs?
 
-Regards,
-Herv=C3=A9
+Good question.  What's the context?  This is in the
+pci_raw_set_power_state() path, not the pci_restore_state() path, so
+seems like a separate discussion.
 
+Bjorn
