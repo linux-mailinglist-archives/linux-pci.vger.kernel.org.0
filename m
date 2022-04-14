@@ -2,101 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B4DD50078A
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 09:49:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2FEB500724
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 09:40:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231375AbiDNHv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 03:51:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50754 "EHLO
+        id S240509AbiDNHnH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 03:43:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231676AbiDNHv5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 03:51:57 -0400
-X-Greylist: delayed 2305 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 14 Apr 2022 00:49:31 PDT
-Received: from imap3.hz.codethink.co.uk (imap3.hz.codethink.co.uk [176.9.8.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D0CA12602;
-        Thu, 14 Apr 2022 00:49:29 -0700 (PDT)
-Received: from cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net ([86.15.83.122] helo=[192.168.0.21])
-        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1netd6-0005jh-I9; Thu, 14 Apr 2022 08:11:00 +0100
-Message-ID: <3acd20b2-5882-7cc0-8a7b-7b406b768c1c@codethink.co.uk>
-Date:   Thu, 14 Apr 2022 08:11:00 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [V3] PCI: fu740: Drop to 2.5GT/s to fix initial device probing on
- some boards
-Content-Language: en-GB
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc:     Alexandre Ghiti <alex@ghiti.fr>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        with ESMTP id S240541AbiDNHmr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 03:42:47 -0400
+X-Greylist: delayed 60624 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 14 Apr 2022 00:40:23 PDT
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0B840931;
+        Thu, 14 Apr 2022 00:40:22 -0700 (PDT)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPA id 538A91C0005;
+        Thu, 14 Apr 2022 07:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1649922021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Rq+ltxRhp3LsK2RX5rxuOzGtedDWpOrBc28SFp5i+i8=;
+        b=arTbcMZiBsjtNMjJGQQQJpwzV9vLsoSnNN8re9d33XbbwOjOmkNoxL/QYcVkZURGAq9URo
+        Ye4bZxAj9Aj/Iga+wCvi7vKED4twsZ3YtaeME3Sxk7u2fhX3n7RGxiH5fRbSA/CGipN2Lx
+        cvptcxz5wRrsULGIsffsBw4yoOKXwHjKB9Q2uKV2eLQseg6EirqdibK7DvD76Ldx7deIL2
+        HrqykM5KMQ31E54EmAG6vj0ob4wzZ6S0fn1qdyp6wppgSoEZRR0mOWaF1JmdeVWZ9XL0Ys
+        K9y//3XUNuMwAx5mekMrmyTXy8ix9RFVUkPVXwvoLpu0lyJtd+Zv5I/ZtW/Mbw==
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Neill Whillans <neill.whillans@codethink.co.uk>
-References: <20220318152430.526320-1-ben.dooks@codethink.co.uk>
- <2442936e-a53e-59bf-488f-95eac26d1252@ghiti.fr>
- <85e864fd-762e-0780-f829-bfbb178ab24e@ghiti.fr>
- <bded4b1e-3404-6bcd-3289-dc8d5b4d713a@codethink.co.uk>
- <alpine.DEB.2.21.2204140048460.9383@angie.orcam.me.uk>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <alpine.DEB.2.21.2204140048460.9383@angie.orcam.me.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v2 0/8] RZN1 USB Host support
+Date:   Thu, 14 Apr 2022 09:40:03 +0200
+Message-Id: <20220414074011.500533-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 14/04/2022 01:10, Maciej W. Rozycki wrote:
-> On Wed, 23 Mar 2022, Ben Dooks wrote:
-> 
->>> FWIW, I have tested this and it solved my issue with nvme not being probed,
->>> so:
->>>
->>> Tested-by: Alexandre Ghiti <alexandre.ghiti@canonical.com>
->>
->> Ok, great. Our test rig seems to be still working with this.
-> 
->   I ran simple verification of your change by interrupting U-Boot after a
-> power-up and issuing:
-> 
-> => setenv boot_pci_enum true
-> 
-> at the command prompt before booting from the uSD card and curiously
-> enough the root port comes up with the Link Capabilities Register
-> reporting the lack of Link Bandwidth Notification Capability in this
-> scenario, while it reports its presence if booted undisturbed, i.e.:
-> 
-> 		LnkCap: Port #0, Speed 8GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <4us, L1 <4us
-> 			ClockPM- Surprise- LLActRep+ BwNot- ASPMOptComp+
-> 
-> vs:
-> 
-> 		LnkCap: Port #0, Speed 8GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <4us, L1 <4us
-> 			ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-> 
-> It is fully reproducible.
-> 
->   Any idea what might be causing it?  I can't see it being explicitly set
-> or cleared anywhere, be it in U-Boot or Linux, so it must be done by the
-> device itself depending on something.  And the lack of this capability
-> seems to me like non-compliance for a multiple-lane, multiple-speed
-> device.
+Hi,
 
-I'll see if we can reproduce this
+This series add support for the USB Host controllers available on
+RZN1 (r9a06g032) SOC.
 
+These USB Host controllers are PCI OHCI/EHCI controllers located
+behind a bridge.
+
+Regards,
+Herve
+
+Changes v2:
+- Convert bindings to json-schema
+- Update clocks description
+- Remove unneeded '.compatible = "renesas,pci-r9a06g032"'
+
+Herve Codina (8):
+  PCI: rcar-gen2: Add support for clocks
+  dt-bindings: PCI: renesas-pci-usb: Convert bindings to json-schema
+  dt-bindings: PCI: renesas-pci-usb: Allow multiple clocks
+  dt-bindings: PCI: renesas-pci-usb: Add device tree support for
+    r9a06g032
+  PCI: rcar-gen2: Add R9A06G032 support
+  ARM: dts: r9a06g032: Add internal PCI bridge node
+  ARM: dts: r9a06g032: Add USB PHY DT support
+  ARM: dts: r9a06g032: Link the PCI USB devices to the USB PHY
+
+ .../devicetree/bindings/pci/pci-rcar-gen2.txt |  84 -----------
+ .../bindings/pci/renesas,pci-usb.yaml         | 139 ++++++++++++++++++
+ arch/arm/boot/dts/r9a06g032.dtsi              |  46 ++++++
+ drivers/pci/controller/pci-rcar-gen2.c        |  29 +++-
+ 4 files changed, 212 insertions(+), 86 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
 
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+2.35.1
 
-https://www.codethink.co.uk/privacy.html
