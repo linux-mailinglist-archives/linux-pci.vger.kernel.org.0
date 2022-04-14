@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A1C6500F62
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 15:25:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7D24500F4F
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 15:24:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244380AbiDNN0q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Apr 2022 09:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49872 "EHLO
+        id S240518AbiDNN0j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Apr 2022 09:26:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244346AbiDNN0a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 09:26:30 -0400
+        with ESMTP id S244337AbiDNN0D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 09:26:03 -0400
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5999E9E1;
-        Thu, 14 Apr 2022 06:19:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658249D4F6;
+        Thu, 14 Apr 2022 06:19:53 -0700 (PDT)
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
- id 6ff0503fedc9cd83; Thu, 14 Apr 2022 15:19:55 +0200
+ id b72255e1ca56a71d; Thu, 14 Apr 2022 15:19:51 +0200
 Received: from kreacher.localnet (unknown [213.134.181.101])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 3DC4666BE86;
-        Thu, 14 Apr 2022 15:19:54 +0200 (CEST)
+        by v370.home.net.pl (Postfix) with ESMTPSA id 1980466BE8A;
+        Thu, 14 Apr 2022 15:19:48 +0200 (CEST)
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PCI <linux-pci@vger.kernel.org>
 Cc:     Linux PM <linux-pm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v3 6/9] PCI/PM: Clean up pci_set_low_power_state()
-Date:   Thu, 14 Apr 2022 15:15:31 +0200
-Message-ID: <1749771.VLH7GnMWUR@kreacher>
+Subject: [PATCH v3 7/9] PCI/PM: Rearrange pci_set_power_state()
+Date:   Thu, 14 Apr 2022 15:17:00 +0200
+Message-ID: <1936737.usQuhbGJ8B@kreacher>
 In-Reply-To: <5838942.lOV4Wx5bFT@kreacher>
 References: <4419002.LvFx2qVVIh@kreacher> <11975904.O9o76ZdvQC@kreacher> <5838942.lOV4Wx5bFT@kreacher>
 MIME-Version: 1.0
@@ -54,76 +54,69 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Make the following assorted non-essential changes in
-pci_set_low_power_state():
+The part of pci_set_power_state() related to transitions into
+low-power states is unnecessary convoluted, so clearly divide it
+into the D3cold special case and the general case covering all of
+the other states.
 
- 1. Drop two redundant checks from it (the caller takes care of these
-    conditions).
-
- 2. Modify error messages printed by it to make them more consistent
-    with the messages printed by pci_power_up() and
-    pci_set_full_power_state().
-
- 3. Change the log level of one of the messages to "debug", because
-    it only indicates a programming mistake.
-
- 4. Make it return -ENODEV (instead of -EIO) when the device is not
-    accessible.
+Also fix a potential issue with calling pci_bus_set_current_state()
+to set the current state of all devices on the subordinate bus to
+D3cold without checking if the power state of the parent bridge has
+really changed to D3cold.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
 
 v1 -> v3:
+   * Fixed typo in the changelog (missing word "bus").
    * Added R-by from Mika.
 
 ---
- drivers/pci/pci.c |   13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ drivers/pci/pci.c |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
 Index: linux-pm/drivers/pci/pci.c
 ===================================================================
 --- linux-pm.orig/drivers/pci/pci.c
 +++ linux-pm/drivers/pci/pci.c
-@@ -1345,16 +1345,9 @@ static int pci_set_low_power_state(struc
- {
- 	u16 pmcsr;
+@@ -1452,19 +1452,25 @@ int pci_set_power_state(struct pci_dev *
+ 	if (state >= PCI_D3hot && (dev->dev_flags & PCI_DEV_FLAGS_NO_D3))
+ 		return 0;
  
--	/* Check if we're already there */
--	if (dev->current_state == state)
--		return 0;
--
- 	if (!dev->pm_cap)
- 		return -EIO;
+-	/*
+-	 * To put device in D3cold, we put device into D3hot in native
+-	 * way, then put device into D3cold with platform ops
+-	 */
+-	error = pci_set_low_power_state(dev, state > PCI_D3hot ?
+-					PCI_D3hot : state);
++	if (state == PCI_D3cold) {
++		/*
++		 * To put the device in D3cold, put it into D3hot in the native
++		 * way, then put it into D3cold using platform ops.
++		 */
++		error = pci_set_low_power_state(dev, PCI_D3hot);
  
--	if (state < PCI_D1 || state > PCI_D3hot)
--		return -EINVAL;
--
- 	/*
- 	 * Validate transition: We can enter D0 from any state, but if
- 	 * we're already in a low-power state, we can only go deeper.  E.g.,
-@@ -1362,7 +1355,7 @@ static int pci_set_low_power_state(struc
- 	 * we'd have to go from D3 to D0, then to D1.
- 	 */
- 	if (dev->current_state <= PCI_D3cold && dev->current_state > state) {
--		pci_err(dev, "invalid power transition (from %s to %s)\n",
-+		pci_dbg(dev, "Invalid power transition (from %s to %s)\n",
- 			pci_power_name(dev->current_state),
- 			pci_power_name(state));
- 		return -EINVAL;
-@@ -1375,10 +1368,10 @@ static int pci_set_low_power_state(struc
+-	if (pci_platform_power_transition(dev, state))
+-		return error;
++		if (pci_platform_power_transition(dev, PCI_D3cold))
++			return error;
  
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	if (PCI_POSSIBLE_ERROR(pmcsr)) {
--		pci_err(dev, "can't change power state from %s to %s (config space inaccessible)\n",
-+		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
- 			pci_power_name(dev->current_state),
- 			pci_power_name(state));
--		return -EIO;
-+		return -ENODEV;
- 	}
+-	/* Powering off a bridge may power off the whole hierarchy */
+-	if (state == PCI_D3cold)
+-		pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
++		/* Powering off a bridge may power off the whole hierarchy */
++		if (dev->current_state == PCI_D3cold)
++			pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
++	} else {
++		error = pci_set_low_power_state(dev, state);
++
++		if (pci_platform_power_transition(dev, state))
++			return error;
++	}
  
- 	pmcsr &= ~PCI_PM_CTRL_STATE_MASK;
+ 	return 0;
+ }
 
 
 
