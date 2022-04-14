@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A943050085C
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 10:29:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4098C500877
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Apr 2022 10:35:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232514AbiDNIbZ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 14 Apr 2022 04:31:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38626 "EHLO
+        id S239484AbiDNIhw convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 14 Apr 2022 04:37:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbiDNIbY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 04:31:24 -0400
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5184A5F8F5;
-        Thu, 14 Apr 2022 01:29:00 -0700 (PDT)
-Received: by mail-qv1-f48.google.com with SMTP id i14so3469208qvk.13;
-        Thu, 14 Apr 2022 01:29:00 -0700 (PDT)
+        with ESMTP id S241040AbiDNIho (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Apr 2022 04:37:44 -0400
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4ED1D0D8;
+        Thu, 14 Apr 2022 01:35:20 -0700 (PDT)
+Received: by mail-qv1-f51.google.com with SMTP id b17so3513160qvp.6;
+        Thu, 14 Apr 2022 01:35:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K4jhu4FAbusiwXx4SNoJui+7n/4ZIgbjfyFZftFmys0=;
-        b=JrcpXosUGEQQVkkg7zGuv18azwIIm1RZrl8OIuzJ9kbcLPIDng9AEhg1pDrdvA7etV
-         w6g0vpJftJtP/M3UF21AlSJxXt6t1q9786eV6BMAlYCbk/r3dHgJqHv/Xd4g8gvqe2gR
-         /R4xD4QZSmfMexnJHbfY3fE/ZXqmGMGj8Gm93lm5pShGEeQVm7/Q0JBCINJD+QE2QKIN
-         9oZfy+aBN09kLJMzGUX1uJ2rNc7wXAgBiT2kG6l5jAzmm4ZxneNZTOnh7vF+fTEM/LAo
-         q3qnrtBjBcE4bmlLn+1TbeRIh0YYfNIql9ubgwn2Y64PAaDYsxv5jY0lYaM7bg2t7JAj
-         UObw==
-X-Gm-Message-State: AOAM533erq02vBBT5raJIDY/o57HdGr3v6kvZ2OemC35KrC7fYsb/LwM
-        jzaU8e7tRZG4Xfycb/qETcFSPWYSvL9v2w==
-X-Google-Smtp-Source: ABdhPJxF0bn1PAHoUKUoBadVoOG0HnPUZBjOTykhlucx9KNCLS1t5tBBdzcRNM9kM1iT4SsjPs2xjw==
-X-Received: by 2002:a05:6214:c48:b0:440:cded:f2ab with SMTP id r8-20020a0562140c4800b00440cdedf2abmr11685831qvj.18.1649924939228;
-        Thu, 14 Apr 2022 01:28:59 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id j188-20020a3755c5000000b0067d1c76a09fsm679326qkb.74.2022.04.14.01.28.58
+        bh=p4JDMOvhMVC+O6GBKDBlCsUXasEj3WV+5nDchlig3M8=;
+        b=2kfGsVicDD05YiP7NBTKcddSbwF0SgSV6JukDMd+jDQlhaQ8KQ0vr3c1kefvzoo6v8
+         sFhn64MfXMr1HMIi5HlaqpM2njwf1dBuuGp0EKlNxRt9Jql2fp7A3e6T2tlZDena02hJ
+         5tnhra3Gl9PA2RhaWNPQidA60V2cAQxG3intWqLTcXRBzGhLcsttNaIE29fcRv2lCYh1
+         K245zzRZovfnbC/SijjszuslUOam6hIHg/ZFouyFRoMqAQejQk4DzxHW6ag49u1tewG5
+         SPbj+CzxBljIbHaOD5PeLvqsjTi7DcJB1tpJHYnqpLliiVPVNc9uBzGnCON28OWC4Zls
+         SnLg==
+X-Gm-Message-State: AOAM5301qWL2iD+da5J5CMnf2EsNHjqsmL9QUb+tzh8SfLHvy5Sd2X0N
+        SkCaLnSfCQmgodl4aIBkByEGf9JpMUJY4Q==
+X-Google-Smtp-Source: ABdhPJy93A1TQ9FosSD9C4AO5zGxiH0i+N3o/Xp7FuNsUoaEwchGwx7Cf1kwdQ9nDRf6rHDpykMuQA==
+X-Received: by 2002:a0c:9064:0:b0:444:45a3:4b1d with SMTP id o91-20020a0c9064000000b0044445a34b1dmr2263970qvo.88.1649925319649;
+        Thu, 14 Apr 2022 01:35:19 -0700 (PDT)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
+        by smtp.gmail.com with ESMTPSA id t7-20020a05622a01c700b002e1b3555c2fsm832484qtw.26.2022.04.14.01.35.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Apr 2022 01:28:59 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-2ebf3746f87so47737447b3.6;
-        Thu, 14 Apr 2022 01:28:58 -0700 (PDT)
-X-Received: by 2002:a81:618b:0:b0:2db:d952:8a39 with SMTP id
- v133-20020a81618b000000b002dbd9528a39mr1106796ywb.132.1649924938578; Thu, 14
- Apr 2022 01:28:58 -0700 (PDT)
+        Thu, 14 Apr 2022 01:35:19 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id i20so8138816ybj.7;
+        Thu, 14 Apr 2022 01:35:18 -0700 (PDT)
+X-Received: by 2002:a05:6902:72b:b0:641:c2d1:d01a with SMTP id
+ l11-20020a056902072b00b00641c2d1d01amr1080702ybt.6.1649925318481; Thu, 14 Apr
+ 2022 01:35:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220414074011.500533-1-herve.codina@bootlin.com> <20220414074011.500533-3-herve.codina@bootlin.com>
-In-Reply-To: <20220414074011.500533-3-herve.codina@bootlin.com>
+References: <20220414074011.500533-1-herve.codina@bootlin.com> <20220414074011.500533-4-herve.codina@bootlin.com>
+In-Reply-To: <20220414074011.500533-4-herve.codina@bootlin.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Apr 2022 10:28:47 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUhr7emtsxoxGP5EH2EzNK=PM_7+-32cesecjQjoW1ryQ@mail.gmail.com>
-Message-ID: <CAMuHMdUhr7emtsxoxGP5EH2EzNK=PM_7+-32cesecjQjoW1ryQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: PCI: renesas-pci-usb: Convert
- bindings to json-schema
+Date:   Thu, 14 Apr 2022 10:35:07 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWZyuNQJhxkhzs5H8+8DFGDS95nvptrO-s9RC4QL5kibA@mail.gmail.com>
+Message-ID: <CAMuHMdWZyuNQJhxkhzs5H8+8DFGDS95nvptrO-s9RC4QL5kibA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: PCI: renesas-pci-usb: Allow multiple clocks
 To:     Herve Codina <herve.codina@bootlin.com>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -84,140 +84,33 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Hi Hervé,
 
 On Thu, Apr 14, 2022 at 9:40 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> Convert Renesas PCI bridge bindings documentation to json-schema.
-> Also name it 'renesas,pci-usb' as it is specifically used to
-> connect the PCI USB controllers to AHB bus.
+> Define that multiple clocks can be present at clocks property.
 >
 > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-Thanks a lot for tackling this DT binding file!
+Thanks for your patch!
 
-> --- /dev/null
+> --- a/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
 > +++ b/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
-> @@ -0,0 +1,134 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-scripts/checkpatch.pl says:
-WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
-
-> +  reg:
-> +    description: |
-> +      A list of physical regions to access the device. The first is
-> +      the operational registers for the OHCI/EHCI controllers and the
-> +      second is for the bridge configuration and control registers.
-> +    minItems: 2
-> +    maxItems: 2
-
-reg:
-  items:
-    - description: Operational registers for the OHCI/EHCI controllers.
-    - description: Bridge configuration and control registers.
-
-> +
-> +  interrupts:
-> +    description: Interrupt for the device.
-
-maxItems: 1
-
-The description is not needed.
-
-> +
-> +  interrupt-map:
-> +    description: |
-> +      Standard property used to define the mapping of the PCI interrupts
-> +      to the GIC interrupts.
-> +
-> +  interrupt-map-mask:
+> @@ -54,7 +54,8 @@ properties:
+>        Standard property that helps to define the interrupt mapping.
+>
+>    clocks:
+> -    description: The reference to the device clock.
 > +    description:
-> +      Standard property that helps to define the interrupt mapping.
-> +
-> +  clocks:
-> +    description: The reference to the device clock.
+> +      The references to the device clocks (several clocks can be referenced).
 
-maxItems: 1
+Please describe the clocks, and add the missing "clock-names" property.
 
-The description is not needed.
+>
+>    bus-range:
+>      description: |
 
-Missing "resets" and "power-domains" properties.
+I think it would be better to combine this with [PATCH v2 4/8], as the
+additional clocks are only present on RZ/N1.
 
-Missing description of the child nodes.
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +  - clocks
-
-Missing "resets" and "power-domains".
-
-> +  - bus-range
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - "#interrupt-cells"
-> +
-> +unevaluatedProperties: false
-
-Why doesn't "make dtbs_check" complain about the presence of
-e.g. "resets" in the actual DTS files?
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
-> +
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-
-I think you should drop this (and the corresponding high addresses
-below).
-
-> +
-> +        pci0: pci@ee090000  {
-> +            compatible = "renesas,pci-r8a7790", "renesas,pci-rcar-gen2";
-> +            device_type = "pci";
-> +            clocks = <&cpg CPG_MOD 703>;
-> +            reg = <0 0xee090000 0 0xc00>,
-> +                  <0 0xee080000 0 0x1100>;
-> +            interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-
-                        power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
-                        resets = <&cpg 703>;
-
-> +            status = "disabled";
-> +
-> +            bus-range = <0 0>;
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            #interrupt-cells = <1>;
-> +            ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
-> +            dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>;
-> +            interrupt-map-mask = <0xf800 0 0 0x7>;
-> +            interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-> +                            <0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-> +                            <0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +            usb@1,0 {
-> +                reg = <0x800 0 0 0 0>;
-> +                phys = <&usb0 0>;
-> +                phy-names = "usb";
-> +            };
-> +
-
-ERROR: trailing whitespace
-#249: FILE: Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml:127:
-+            $
-
-> +            usb@2,0 {
-> +                reg = <0x1000 0 0 0 0>;
-> +                phys = <&usb0 0>;
-> +                phy-names = "usb";
-> +            };
-> +        };
-> +    };
+Then you can easily add json-schema logic to enforce the correct
+number of clocks, depending on the compatible value.
 
 Gr{oetje,eeting}s,
 
