@@ -2,151 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6A7D503161
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 01:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5D4F503111
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 01:09:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354213AbiDOVJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Apr 2022 17:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41162 "EHLO
+        id S1354498AbiDOV3q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Apr 2022 17:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354221AbiDOVJA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 17:09:00 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904388B6CB;
-        Fri, 15 Apr 2022 14:06:31 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id ay4so6604132qtb.11;
-        Fri, 15 Apr 2022 14:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IqOtlYyePRN/r4aPym/C6r8euVVGX9fSqK0zMFP5Scg=;
-        b=VikkCoAUvLC1ubmrDIIV+nyiCkBGV9Pl/byIqsOybtzYPMcKNDPfx/XL181ahe2GIi
-         q46j8YpQ9t/zJURTqdBt2hI8XvgZ1/mMK/hSg2bSq3t7lI5GjUE2Eik8WvxT7gxpbeBq
-         UKwAYOl9Qcd6aoru5sB3ra5q3ni3kHiGNX/jcgC34JTsfs/kVHhdgeEITeC6AUrBVZnA
-         MhjHfeBPCOtFE5Q24iUeXQMjmXqwG6eUBEJ6B4GT9KJZXE4cCtMDZ6/HblPPVtE4t0sf
-         qjLIifQRvMJXAXJ417O6AX/VMfbW0jGpWbeCPP9ofc9IgQdREUVuMOFcdO2irK4loNbh
-         zD6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IqOtlYyePRN/r4aPym/C6r8euVVGX9fSqK0zMFP5Scg=;
-        b=W6GCTJ+N0COi1/ow2EtBtVJOKi1UVX+E+KOWTKtwcH1DEgk5tWGtlyn+vHBe1J6dsg
-         u21vepsE+Kd2VOZ9aVnK24mvg88zZ9ITwQsDViwmJdbEO0o/Awwtq5EMY4+OmXAsDi2K
-         8NVQry4xXlNimatT15IslfasjfGW9E3opYe02cHZ8VuIc89+1F6cnGINbmN2lu/nuL7G
-         uyAh6fpR+xCobQIXbPfX6jZmkFSEtKp+w1s0ZPiZmF4dl37EGKd4pZ7vz3+RUsujtyFK
-         MH+H8XEampzj6x3mypRf5/ZsLrj2LDe283+y4QPOStT30UxhbH7hfn1nujxmiEqgqwoT
-         1F0Q==
-X-Gm-Message-State: AOAM533mGB4T2y3jq34u3W8yskcPpJo4jY8rZDVJVn2MIQN+qlFCrR4a
-        D1dlKkcgDZB5RuDUnPauCU8=
-X-Google-Smtp-Source: ABdhPJzLedWnFnNqrv1TQhWt9BpMbdSJ/gRbFqSAse32530sbMvkDxImMfNQDN8aMJMLhl6YMWWjnw==
-X-Received: by 2002:ac8:7a8a:0:b0:2f1:de6a:c044 with SMTP id x10-20020ac87a8a000000b002f1de6ac044mr686043qtr.243.1650056790708;
-        Fri, 15 Apr 2022 14:06:30 -0700 (PDT)
-Received: from master-x64.sparksnet ([2601:153:980:85b1::10])
-        by smtp.gmail.com with ESMTPSA id w8-20020a05620a148800b0069c4884c990sm2838664qkj.108.2022.04.15.14.06.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Apr 2022 14:06:30 -0700 (PDT)
-From:   Peter Geis <pgwipeout@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        Peter Geis <pgwipeout@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] arm64: dts: rockchip: enable pcie controller on quartz64-a
-Date:   Fri, 15 Apr 2022 17:06:21 -0400
-Message-Id: <20220415210621.538109-5-pgwipeout@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220415210621.538109-1-pgwipeout@gmail.com>
-References: <20220415210621.538109-1-pgwipeout@gmail.com>
+        with ESMTP id S1355472AbiDOV25 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 17:28:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4E7DAFDE;
+        Fri, 15 Apr 2022 14:25:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BB6AD620BE;
+        Fri, 15 Apr 2022 21:25:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D654EC385A4;
+        Fri, 15 Apr 2022 21:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650057935;
+        bh=vwSHnKHKO3IOmpaR8ZgMY3Rm4mueE+R5d078hf6Pu6A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UPgphip03sbzXT0W362vRLwvBo87HGwgbf+Qs4PKqK+EUiZbVUXITL8h1+XZbUSM4
+         ucR+/iiXoUS1KdvQAmWHEE8IQPcG7NY+THUUKWzttQN1N8bYZfr0d6+WkSNdc/GY6D
+         e/BFs090rGQF6n+AXTBmV7xqdt9/T5F2A0FmlJ9ImQcuDkjp17Z2r+658ZaM8D6EaV
+         lQC45eOilvVFEYJ43XPRriG9Q5jxJW3RWex7H/cORwMAle213xWPxsIPlo/5oiYe3p
+         pKL4ubLHIsk5l9DX/VAF169crMRvqrGHSHv8io/gtKCB9wthiCwRlO/X6ZcfV6iNUx
+         qr+JP2DvJcXxQ==
+Date:   Fri, 15 Apr 2022 16:25:33 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        "Kenneth R. Crudup" <kenny@panix.com>, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, hkallweit1@gmail.com,
+        wangxiongfeng2@huawei.com, mika.westerberg@linux.intel.com,
+        chris.packham@alliedtelesis.co.nz, yangyicong@hisilicon.com,
+        treding@nvidia.com, jonathanh@nvidia.com, abhsahu@nvidia.com,
+        sagupta@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Ricky Wu <ricky_wu@realtek.com>,
+        Rajat Jain <rajatja@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Victor Ding <victording@google.com>
+Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for
+ suspend/resume
+Message-ID: <20220415212533.GA844147@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAd53p6DX2C7KVRV=uu_mmPTTjE7=RsXfNPxjbOBLRbf-pXi5A@mail.gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the nodes to enable the pcie controller on the quartz64 model a
-board.
+On Fri, Apr 15, 2022 at 10:26:19PM +0800, Kai-Heng Feng wrote:
+> On Fri, Apr 15, 2022 at 12:41 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Wed, Apr 13, 2022 at 08:19:26AM +0800, Kai-Heng Feng wrote:
+> > > On Wed, Apr 13, 2022 at 6:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > ...
+> >
+> > > >   - For L1 PM Substates configuration, sec 5.5.4 says that both ports
+> > > >     must be configured while ASPM L1 is disabled, but I don't think we
+> > > >     currently guarantee this: we restore all the upstream component
+> > > >     state first, and we don't know the ASPM state of the downstream
+> > > >     one.  Maybe we need to:
+> > > >
+> > > >       * When restoring upstream component,
+> > > >           + disable its ASPM
+> > > >
+> > > >       * When restoring downstream component,
+> > > >           + disable its ASPM
+> > > >           + restore upstream component's LTR, L1SS
+> > > >           + restore downstream component's LTR, L1SS
+> > > >           + restore upstream component's ASPM
+> > > >           + restore downstream component's ASPM
+> > >
+> > > Right now L1SS isn't reprogrammed after S3, and that causes WD NVMe
+> > > starts to spew lots of AER errors.
+> >
+> > Right now we don't fully restore L1SS-related state after S3, so maybe
+> > there's some inconsistency that leads to the AER errors.
 
-Signed-off-by: Peter Geis <pgwipeout@gmail.com>
----
- .../boot/dts/rockchip/rk3566-quartz64-a.dts   | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+> > Could you collect the "lspci -vv" state before and after S3 so we can
+> > compare them?
+> >
+> > > So yes please restore L1SS upon resume. Meanwhile I am asking vendor
+> > > _why_ restoring L1SS is crucial for it to work.
+> > >
+> > > I also wonder what's the purpose of pcie_aspm_pm_state_change()? Can't
+> > > we just restore ASPM bits like other configs?
+> >
+> > Good question.  What's the context?  This is in the
+> > pci_raw_set_power_state() path, not the pci_restore_state() path, so
+> > seems like a separate discussion.
+> 
+> Because this patch alone doesn't restore T_PwrOn and LTR1.2_Threshold.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-index 141a433429b5..85926d46337d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-a.dts
-@@ -125,6 +125,18 @@ vbus: vbus {
- 		vin-supply = <&vcc12v_dcin>;
- 	};
- 
-+	vcc3v3_pcie_p: vcc3v3_pcie_p {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pcie_enable_h>;
-+		regulator-name = "vcc3v3_pcie_p";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_3v3>;
-+	};
-+
- 	vcc5v0_usb: vcc5v0_usb {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc5v0_usb";
-@@ -201,6 +213,10 @@ &combphy1 {
- 	status = "okay";
- };
- 
-+&combphy2 {
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&vdd_cpu>;
- };
-@@ -509,6 +525,14 @@ rgmii_phy1: ethernet-phy@0 {
- 	};
- };
- 
-+&pcie2x1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_reset_h>;
-+	reset-gpios = <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+	vpcie3v3-supply = <&vcc3v3_pcie_p>;
-+};
-+
- &pinctrl {
- 	bt {
- 		bt_enable_h: bt-enable-h {
-@@ -534,6 +558,16 @@ diy_led_enable_h: diy-led-enable-h {
- 		};
- 	};
- 
-+	pcie {
-+		pcie_enable_h: pcie-enable-h {
-+			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		pcie_reset_h: pcie-reset-h {
-+			rockchip,pins = <1 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int_l: pmic-int-l {
- 			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
--- 
-2.25.1
+I assume the post-S3 path is basically this:
 
+  pci_pm_resume_noirq
+    pci_pm_default_resume_early
+      pci_power_up
+        pci_raw_set_power_state(D0)
+          pcie_aspm_pm_state_change
+            pcie_config_aspm_path
+              pcie_config_aspm_link
+                pcie_config_aspm_l1ss
+                  clear PCI_EXP_LNKCTL_ASPM_L1 etc
+                  set PCI_L1SS_CTL1_ASPM_L1_1 etc
+                pcie_config_aspm_dev
+                  set PCI_EXP_LNKCTL_ASPM_L1 etc
+      pci_restore_state
+        pci_restore_ltr_state
+        pci_restore_aspm_l1ss_state     # after this patch
+        pci_restore_pcie_state
+
+Hmm...  I think I see what you're saying.  pcie_aspm_pm_state_change()
+fiddles with ASPM and L1SS enable bits.  It likely disables L1,
+enables L1SS, enables L1, but never restores the LTR capability or the
+T_PwrOn and LTR1.2_Threshold bits you mention.
+
+Then we turn around and overwrite all that stuff (and the LTR cap) in
+pci_restore_state().  That all seems fairly broken, and I agree, I
+don't know why pcie_aspm_pm_state_change() exists.
+
+> So I forced the pcie_aspm_pm_state_change() calling path to eventually
+> call aspm_calc_l1ss_info() which solved the problem for me.
+
+This would update T_PwrOn and LTR1.2_Threshold, so I guess it makes
+sense that this would help.  But I think we need to figure out the
+reason why pcie_aspm_pm_state_change() exists and get rid of it or at
+least better integrate it with pci_restore_state().
+
+If we call pcie_aspm_pm_state_change() after D3cold or reset, things
+still aren't going to work because the LTR cap isn't restored or
+programmed.
