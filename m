@@ -2,181 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D401502C16
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Apr 2022 16:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82D9C502C87
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Apr 2022 17:22:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354626AbiDOOor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Apr 2022 10:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35054 "EHLO
+        id S1355008AbiDOPYC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Apr 2022 11:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354601AbiDOOoq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 10:44:46 -0400
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D0C84091B;
-        Fri, 15 Apr 2022 07:42:18 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id t67so14843280ybi.2;
-        Fri, 15 Apr 2022 07:42:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VQSHKKZVZ0Nt1UyzeBgM0+KthK67tcnYKJdeT0jg73Y=;
-        b=woSmk1w0v3r731HOfjLsGuCoC2uJuiiu6qrV6P45CFgQpo1T/NO6JYjp6UZDlNeIqz
-         ddRqRtzDx7ao7Tf1f4NmHT4roftQF+7aKknfCVvC7LFUoLM7+16+sC10zZ0u9bB2RGw7
-         rIx4oZWzRN6qO+c22GlPJOKTUVuujG26wC5Q62ASnRIV/wLmmk8nuHqZ0Ps7/i8XOcq4
-         7jcI3+iwzzTprxqcC9NujB9IsgG6sip3r+k9eJpSCIEyD+Z2rLzEJmwRkkxKX7JpyReM
-         wqkJO8PiOOAtDFSBx5wVi33KwSlsJbnUGX+7Khiiu85eVk4Fuqwu461OWtvYv+O+MFlM
-         7o3Q==
-X-Gm-Message-State: AOAM531e0OhLTWQTB4wPE2n12Udufywa78CA/pc8Tybbdklrl2rh2PTp
-        /TeR56wg8W+++qzDdGBApOmWNCCvHi6mXsxsiLc=
-X-Google-Smtp-Source: ABdhPJzHImZ6AlstLn7pVijrPVyShFWryTuDK7hJhgtHmoiyUY6jExoXezPsWwLknhi0wsShbmhDkbJ9zA8uv2Zpyuw=
-X-Received: by 2002:a25:230d:0:b0:641:375c:b5ad with SMTP id
- j13-20020a25230d000000b00641375cb5admr5695905ybj.137.1650033737467; Fri, 15
- Apr 2022 07:42:17 -0700 (PDT)
+        with ESMTP id S1354985AbiDOPX7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 11:23:59 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C81225EDCA
+        for <linux-pci@vger.kernel.org>; Fri, 15 Apr 2022 08:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650036075; x=1681572075;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oihyZRTh+6Bn/iu/zUgvjjXhE0BbqQaVdInjATi9jTw=;
+  b=CN/Ovb2nynjgRMtUqcQL3fs1LNOBk83FsY9k4KbpzCs2RYk+rl+hkKxV
+   USL6aAv6Pzsequ1MI15kehG+wsnz1decjJ4wUKgmXH++BB/JXD68JphSP
+   IR4cPkwzG25TL/rc67cCEBqcnEKlnq8NMY9JR3q3sbGg9MZlqjxi4xuLN
+   r61+UU/RiqbNuxWlzMYP3++tqKYmwcDX0fUA3UCtlv2L/0LtMnidcwRpt
+   ezcu4YsKVwnSNzMVYpltxAB/VKw7g9Omc24VlN0tjQ/FfQ4KzybohQsIz
+   QzBFKX3S1wRb8nMIGgHk2vTEiQNlRL+Cw1Tr49hMF8sSJW5GbGzre82q6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10318"; a="263345167"
+X-IronPort-AV: E=Sophos;i="5.90,262,1643702400"; 
+   d="scan'208";a="263345167"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2022 08:21:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,262,1643702400"; 
+   d="scan'208";a="527426004"
+Received: from lkp-server01.sh.intel.com (HELO 3abc53900bec) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 15 Apr 2022 08:21:13 -0700
+Received: from kbuild by 3abc53900bec with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nfNl2-00025G-O7;
+        Fri, 15 Apr 2022 15:21:12 +0000
+Date:   Fri, 15 Apr 2022 23:20:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ 89905ffa454593cf61ad907980146d42bd79c772
+Message-ID: <62598d32.tP8EYd4yIShHmWcS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20220412224348.1038613-1-tansuresh@google.com> <20220412224348.1038613-2-tansuresh@google.com>
-In-Reply-To: <20220412224348.1038613-2-tansuresh@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 15 Apr 2022 16:42:06 +0200
-Message-ID: <CAJZ5v0ivNq3aYCEcxPYMosLJCAyWiAnucwOCmRBzkM=sbyPWgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] driver core: Support asynchronous driver shutdown
-To:     Tanjore Suresh <tansuresh@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 13, 2022 at 12:44 AM Tanjore Suresh <tansuresh@google.com> wrote:
->
-> This changes the bus driver interface with additional entry points
-> to enable devices to implement asynchronous shutdown. The existing
-> synchronous interface to shutdown is unmodified and retained for
-> backward compatibility.
->
-> This changes the common device shutdown code to enable devices to
-> participate in asynchronous shutdown implementation.
->
-> Signed-off-by: Tanjore Suresh <tansuresh@google.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 89905ffa454593cf61ad907980146d42bd79c772  Merge branch 'remotes/lorenzo/pci/rockchip'
 
-Is there any specific reason why you didn't follow the design of, say,
-dpm_suspend(), where the "async" devices only need to have a flag set
-and the driver is not required to implement any new callbacks?
+elapsed time: 721m
 
-IMO having different driver interfaces for asynchronous suspend and
-shutdown would be quite confusing for driver developers, wouldn't it?
+configs tested: 110
+configs skipped: 3
 
-> ---
->  drivers/base/core.c        | 38 +++++++++++++++++++++++++++++++++++++-
->  include/linux/device/bus.h | 12 ++++++++++++
->  2 files changed, 49 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 3d6430eb0c6a..ba267ae70a22 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -4479,6 +4479,7 @@ EXPORT_SYMBOL_GPL(device_change_owner);
->  void device_shutdown(void)
->  {
->         struct device *dev, *parent;
-> +       LIST_HEAD(async_shutdown_list);
->
->         wait_for_device_probe();
->         device_block_probing();
-> @@ -4523,7 +4524,13 @@ void device_shutdown(void)
->                                 dev_info(dev, "shutdown_pre\n");
->                         dev->class->shutdown_pre(dev);
->                 }
-> -               if (dev->bus && dev->bus->shutdown) {
-> +               if (dev->bus && dev->bus->async_shutdown_start) {
-> +                       if (initcall_debug)
-> +                               dev_info(dev, "async_shutdown_start\n");
-> +                       dev->bus->async_shutdown_start(dev);
-> +                       list_add_tail(&dev->kobj.entry,
-> +                               &async_shutdown_list);
-> +               } else if (dev->bus && dev->bus->shutdown) {
->                         if (initcall_debug)
->                                 dev_info(dev, "shutdown\n");
->                         dev->bus->shutdown(dev);
-> @@ -4543,6 +4550,35 @@ void device_shutdown(void)
->                 spin_lock(&devices_kset->list_lock);
->         }
->         spin_unlock(&devices_kset->list_lock);
-> +
-> +       /*
-> +        * Second pass spin for only devices, that have configured
-> +        * Asynchronous shutdown.
-> +        */
-> +       while (!list_empty(&async_shutdown_list)) {
-> +               dev = list_entry(async_shutdown_list.next, struct device,
-> +                               kobj.entry);
-> +               parent = get_device(dev->parent);
-> +               get_device(dev);
-> +               /*
-> +                * Make sure the device is off the  list
-> +                */
-> +               list_del_init(&dev->kobj.entry);
-> +               if (parent)
-> +                       device_lock(parent);
-> +               device_lock(dev);
-> +               if (dev->bus && dev->bus->async_shutdown_end) {
-> +                       if (initcall_debug)
-> +                               dev_info(dev,
-> +                               "async_shutdown_end called\n");
-> +                       dev->bus->async_shutdown_end(dev);
-> +               }
-> +               device_unlock(dev);
-> +               if (parent)
-> +                       device_unlock(parent);
-> +               put_device(dev);
-> +               put_device(parent);
-> +       }
->  }
->
->  /*
-> diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-> index a039ab809753..f582c9d21515 100644
-> --- a/include/linux/device/bus.h
-> +++ b/include/linux/device/bus.h
-> @@ -49,6 +49,16 @@ struct fwnode_handle;
->   *             will never get called until they do.
->   * @remove:    Called when a device removed from this bus.
->   * @shutdown:  Called at shut-down time to quiesce the device.
-> + * @async_shutdown_start:      Called at the shutdown-time to start
-> + *                             the shutdown process on the device.
-> + *                             This entry point will be called only
-> + *                             when the bus driver has indicated it would
-> + *                             like to participate in asynchronous shutdown
-> + *                             completion.
-> + * @async_shutdown_end:        Called at shutdown-time  to complete the shutdown
-> + *                     process of the device. This entry point will be called
-> + *                     only when the bus drive has indicated it would like to
-> + *                     participate in the asynchronous shutdown completion.
->   *
->   * @online:    Called to put the device back online (after offlining it).
->   * @offline:   Called to put the device offline for hot-removal. May fail.
-> @@ -93,6 +103,8 @@ struct bus_type {
->         void (*sync_state)(struct device *dev);
->         void (*remove)(struct device *dev);
->         void (*shutdown)(struct device *dev);
-> +       void (*async_shutdown_start)(struct device *dev);
-> +       void (*async_shutdown_end)(struct device *dev);
->
->         int (*online)(struct device *dev);
->         int (*offline)(struct device *dev);
-> --
-> 2.36.0.rc0.470.gd361397f0d-goog
->
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+powerpc              randconfig-c003-20220414
+sh                   secureedge5410_defconfig
+powerpc                   motionpro_defconfig
+arc                     haps_hs_smp_defconfig
+arc                          axs103_defconfig
+m68k                        stmark2_defconfig
+powerpc64                           defconfig
+powerpc                      bamboo_defconfig
+microblaze                          defconfig
+sparc                            allyesconfig
+mips                     loongson1b_defconfig
+arm                          pxa910_defconfig
+powerpc                         wii_defconfig
+arc                        vdk_hs38_defconfig
+mips                           jazz_defconfig
+sh                           se7724_defconfig
+arm                           imxrt_defconfig
+arm                            mps2_defconfig
+mips                     decstation_defconfig
+s390                          debug_defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220414
+ia64                             allmodconfig
+ia64                             allyesconfig
+ia64                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+arc                  randconfig-r043-20220415
+s390                 randconfig-r044-20220415
+riscv                randconfig-r042-20220415
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
+
+clang tested configs:
+x86_64                        randconfig-c007
+powerpc              randconfig-c003-20220414
+arm                  randconfig-c002-20220414
+i386                          randconfig-c001
+riscv                randconfig-c006-20220414
+x86_64                           allyesconfig
+mips                           ip28_defconfig
+powerpc                     kmeter1_defconfig
+powerpc                      acadia_defconfig
+arm                       mainstone_defconfig
+mips                       rbtx49xx_defconfig
+arm                      tct_hammer_defconfig
+powerpc                     tqm5200_defconfig
+arm                        multi_v5_defconfig
+mips                           mtx1_defconfig
+arm                        spear3xx_defconfig
+arm                        vexpress_defconfig
+arm                          collie_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+hexagon              randconfig-r045-20220415
+hexagon              randconfig-r041-20220415
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
