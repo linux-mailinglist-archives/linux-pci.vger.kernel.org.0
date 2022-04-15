@@ -2,118 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39E60502B89
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Apr 2022 16:12:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7438C502BD9
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Apr 2022 16:27:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354309AbiDOOO7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Apr 2022 10:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32840 "EHLO
+        id S243424AbiDOO3N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Apr 2022 10:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354298AbiDOOO5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 10:14:57 -0400
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A175CD325;
-        Fri, 15 Apr 2022 07:12:29 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id x200so14622208ybe.13;
-        Fri, 15 Apr 2022 07:12:29 -0700 (PDT)
+        with ESMTP id S1351334AbiDOO3M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 10:29:12 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895D7193C2
+        for <linux-pci@vger.kernel.org>; Fri, 15 Apr 2022 07:26:44 -0700 (PDT)
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2C0393F1AB
+        for <linux-pci@vger.kernel.org>; Fri, 15 Apr 2022 14:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1650032803;
+        bh=e3RLpJj2erPmdXlxjGIy8hlcTxe8lmbZHUTfXz0Qd8w=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=pqnDApBLNjBlvriRkNuLL7OZCSPqMHXnAXCsDnlOQva/iprn86Er7vibaOMfID9I3
+         SgZm1ZbjnbNxs7McyXiA4z/LPPuZyZFiw/sGx3Te5vCzRz2o6UUBSRNLalWZXr6dka
+         Buf5Hj7sdSxVTmmm2Gg99758kSzqMXxbdvqbu6QlgSU5+UrBCPOl6W9q42d+/epLrR
+         +VU++NeYbMqJqmBqYTuBv6isVYsmEB+s/INhRTAelAa3saAd8XbP5rQ+JHNgnDzzaC
+         vBIPwAkjHaSPtr3WvERDEvVWf1vxas3YcovtGeSBhTkDIDYWeU61mWhx2WQMmhmqzm
+         1sgRRqNbUJhzg==
+Received: by mail-oo1-f69.google.com with SMTP id z5-20020a4a8705000000b00324936534b6so4355372ooh.9
+        for <linux-pci@vger.kernel.org>; Fri, 15 Apr 2022 07:26:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FNIfqj+FilLpI5MusateXTGV7hcgO7NoCnl8abYi8Lc=;
-        b=ORty+iZ8hGnRFb/jlvblwpHBARd5zBDkzWRYEhhDmyznyQPac6c9lyQ+t8FbwSwAJH
-         4B4PN59031qzWy2daYTwSBn78NNbj/sL4eb6xvuolRJ8+u1iRmfpknbfODg6Mdi2BKBw
-         0G+X+3vaV/Tf7ykjnSZeTKjyOfPkRl+HBoEkR8ub2BkZrBO2OL9YFlHNoV+wjk46idaU
-         KdmgxTsm0ghkPzQP6v10ewa36B0bt/75fNDXS0LJ9v0PKS6Af8VKWwYnpFCffVwWdPjI
-         0PRNRuI4UYqim6AJbo7Xtzj13P03K/+kItpWs2xOIqYOOhU/y3oF1jdqGoSch+DYx8ax
-         kQOw==
-X-Gm-Message-State: AOAM530MCV4nKkPhqtapzzMoXpztoywKABZ+iOwtZaDxS5w4b0Q1+ZfF
-        chaRgPXkveCrVmOsvZGJY3DgQE+TeG9tWFmbC70=
-X-Google-Smtp-Source: ABdhPJxUDZllKNP2WGWaTxv78JEwkLokI+kxAekGI2O+K6/T4FYQiu5n3+sYsE2W5s5+yvogSspzvVPXYTs+JmWcqtA=
-X-Received: by 2002:a25:ac9b:0:b0:641:3c32:bee7 with SMTP id
- x27-20020a25ac9b000000b006413c32bee7mr5123897ybi.633.1650031948177; Fri, 15
- Apr 2022 07:12:28 -0700 (PDT)
+        bh=e3RLpJj2erPmdXlxjGIy8hlcTxe8lmbZHUTfXz0Qd8w=;
+        b=2JGjs2a/nYurn/zhtkGD1bH+DBPo/pYf0c7vUP9/hpA7kEx2K05owmvDSMqlHrIEyd
+         QSUGClgRkVQDJFxKrzD0LrpaOFLxo85Q7SLsb3TO62PrL4/0PB9rEyM4m4rrgzrWjahq
+         V4w0r38+J+mtqQcpeoRt662l8S+MwP8lFsBNWgvHi39Xgz9F/oNXOQMASSo/izGG2/l8
+         /ss7n2Rw1BngihqHDBPhKl2j64qfZcitLKf+/LEtE7T0Ub0vQ9NNK43Z22Br6MtYWhDs
+         DTpr3Ia67s/IH5m/ybn/ekRFaiT2T8Uuv5XfuxlT3iawF9iwIGxiGVoTo6JWkNmESFrD
+         TbRA==
+X-Gm-Message-State: AOAM531DJSE2DBFHLMmeE0WqwiqAko0sJcy5B+X4e0Jn1axjJnr5UpZF
+        BxBlCnknaLqipia3iercfK+UL0aQW/7LGdXqhgcfN3p7enugoaXsXvdD+UHRUejhPnKTKmSmDnP
+        2S2avuOhEZex1XstV6I378Hum9osPKL+Osp+49I2kFr+ZXWSwztXStw==
+X-Received: by 2002:a05:6808:124c:b0:2f9:c7cf:146 with SMTP id o12-20020a056808124c00b002f9c7cf0146mr1655276oiv.54.1650032791020;
+        Fri, 15 Apr 2022 07:26:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzLRc42uKkOW9jRr8zGyO4TRYeWat9aikXqDx0Q0Pk1DISGwEXTIxuzl6vUfgU29zi70pptiplIF+LuV40c7wQ=
+X-Received: by 2002:a05:6808:124c:b0:2f9:c7cf:146 with SMTP id
+ o12-20020a056808124c00b002f9c7cf0146mr1655264oiv.54.1650032790778; Fri, 15
+ Apr 2022 07:26:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220414182252.758742-1-helgaas@kernel.org> <20220414182252.758742-3-helgaas@kernel.org>
-In-Reply-To: <20220414182252.758742-3-helgaas@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 15 Apr 2022 16:12:17 +0200
-Message-ID: <CAJZ5v0jZBOnwr2DoyzVbtucQu0_4+SDqG949gdzX+7LR5SuFKw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] x86: Log resource clipping for E820 regions
+References: <CAAd53p4r1v_sN=8kv_fOx_VEb3k=4rU9iw52LfmEHO1crnms=g@mail.gmail.com>
+ <20220414164134.GA751756@bhelgaas>
+In-Reply-To: <20220414164134.GA751756@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 15 Apr 2022 22:26:19 +0800
+Message-ID: <CAAd53p6DX2C7KVRV=uu_mmPTTjE7=RsXfNPxjbOBLRbf-pXi5A@mail.gmail.com>
+Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for suspend/resume
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        =?UTF-8?Q?Benoit_Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        "Kenneth R. Crudup" <kenny@panix.com>, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, hkallweit1@gmail.com,
+        wangxiongfeng2@huawei.com, mika.westerberg@linux.intel.com,
+        chris.packham@alliedtelesis.co.nz, yangyicong@hisilicon.com,
+        treding@nvidia.com, jonathanh@nvidia.com, abhsahu@nvidia.com,
+        sagupta@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Ricky Wu <ricky_wu@realtek.com>,
+        Rajat Jain <rajatja@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Victor Ding <victording@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 8:23 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Fri, Apr 15, 2022 at 12:41 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> From: Bjorn Helgaas <bhelgaas@google.com>
+> On Wed, Apr 13, 2022 at 08:19:26AM +0800, Kai-Heng Feng wrote:
+> > On Wed, Apr 13, 2022 at 6:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > ...
 >
-> When remove_e820_regions() clips a resource because an E820 region overlaps
-> it, log a note in dmesg to add in debugging.
+> > >   - For L1 PM Substates configuration, sec 5.5.4 says that both ports
+> > >     must be configured while ASPM L1 is disabled, but I don't think we
+> > >     currently guarantee this: we restore all the upstream component
+> > >     state first, and we don't know the ASPM state of the downstream
+> > >     one.  Maybe we need to:
+> > >
+> > >       * When restoring upstream component,
+> > >           + disable its ASPM
+> > >
+> > >       * When restoring downstream component,
+> > >           + disable its ASPM
+> > >           + restore upstream component's LTR, L1SS
+> > >           + restore downstream component's LTR, L1SS
+> > >           + restore upstream component's ASPM
+> > >           + restore downstream component's ASPM
+> >
+> > Right now L1SS isn't reprogrammed after S3, and that causes WD NVMe
+> > starts to spew lots of AER errors.
 >
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Right now we don't fully restore L1SS-related state after S3, so maybe
+> there's some inconsistency that leads to the AER errors.
+>
+> Could you collect the "lspci -vv" state before and after S3 so we can
+> compare them?
+>
+> > So yes please restore L1SS upon resume. Meanwhile I am asking vendor
+> > _why_ restoring L1SS is crucial for it to work.
+> >
+> > I also wonder what's the purpose of pcie_aspm_pm_state_change()? Can't
+> > we just restore ASPM bits like other configs?
+>
+> Good question.  What's the context?  This is in the
+> pci_raw_set_power_state() path, not the pci_restore_state() path, so
+> seems like a separate discussion.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Because this patch alone doesn't restore T_PwrOn and LTR1.2_Threshold.
 
-> ---
->  arch/x86/kernel/resource.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+So I forced the pcie_aspm_pm_state_change() calling path to eventually
+call aspm_calc_l1ss_info() which solved the problem for me.
+
+Let me investigate a bit further.
+
+Kai-Heng
+
 >
-> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-> index 8ffe68437744..30d524adb012 100644
-> --- a/arch/x86/kernel/resource.c
-> +++ b/arch/x86/kernel/resource.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/ioport.h>
-> +#include <linux/printk.h>
->  #include <asm/e820/api.h>
->
->  static void resource_clip(struct resource *res, resource_size_t start,
-> @@ -28,6 +29,7 @@ static void remove_e820_regions(struct resource *avail)
->         int i;
->         struct e820_entry *entry;
->         u64 e820_start, e820_end;
-> +       struct resource orig = *avail;
->
->         for (i = 0; i < e820_table->nr_entries; i++) {
->                 entry = &e820_table->entries[i];
-> @@ -35,6 +37,11 @@ static void remove_e820_regions(struct resource *avail)
->                 e820_end = entry->addr + entry->size - 1;
->
->                 resource_clip(avail, e820_start, e820_end);
-> +               if (orig.start != avail->start || orig.end != avail->end) {
-> +                       pr_info("clipped %pR to %pR for e820 entry [mem %#010Lx-%#010Lx]\n",
-> +                                &orig, avail, e820_start, e820_end);
-> +                       orig = *avail;
-> +               }
->         }
->  }
->
-> --
-> 2.25.1
->
+> Bjorn
