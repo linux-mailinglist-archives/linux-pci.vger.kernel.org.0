@@ -2,58 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5D4F503111
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 01:09:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0352B5030F5
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 01:09:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354498AbiDOV3q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Apr 2022 17:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
+        id S241323AbiDOWRl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Apr 2022 18:17:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355472AbiDOV25 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 17:28:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4E7DAFDE;
-        Fri, 15 Apr 2022 14:25:36 -0700 (PDT)
+        with ESMTP id S231145AbiDOWRl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 18:17:41 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F04A3A5CC;
+        Fri, 15 Apr 2022 15:15:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BB6AD620BE;
-        Fri, 15 Apr 2022 21:25:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D654EC385A4;
-        Fri, 15 Apr 2022 21:25:34 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id B03BECE31AC;
+        Fri, 15 Apr 2022 22:15:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDF39C385A4;
+        Fri, 15 Apr 2022 22:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650057935;
-        bh=vwSHnKHKO3IOmpaR8ZgMY3Rm4mueE+R5d078hf6Pu6A=;
+        s=k20201202; t=1650060908;
+        bh=s0Dk+7YpW8NELxA7hL4hxZKqgZ+VVInWF3zxwlrWQ8Y=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UPgphip03sbzXT0W362vRLwvBo87HGwgbf+Qs4PKqK+EUiZbVUXITL8h1+XZbUSM4
-         ucR+/iiXoUS1KdvQAmWHEE8IQPcG7NY+THUUKWzttQN1N8bYZfr0d6+WkSNdc/GY6D
-         e/BFs090rGQF6n+AXTBmV7xqdt9/T5F2A0FmlJ9ImQcuDkjp17Z2r+658ZaM8D6EaV
-         lQC45eOilvVFEYJ43XPRriG9Q5jxJW3RWex7H/cORwMAle213xWPxsIPlo/5oiYe3p
-         pKL4ubLHIsk5l9DX/VAF169crMRvqrGHSHv8io/gtKCB9wthiCwRlO/X6ZcfV6iNUx
-         qr+JP2DvJcXxQ==
-Date:   Fri, 15 Apr 2022 16:25:33 -0500
+        b=mWa9A5pSTPbpb4OH489eFDoOPOebYkSL0TyfWWeXqI9ObwL3QN4NooutjQhdqYfVA
+         P31YIk8uoXovQZ4uKieXMISW5jSTGLM32Xp/FF8AjRhIlBDCH+stwfaaxG70ULJGDW
+         Wnx/bccL5gl290yieW3KZvj9ou5IwY7CLkW6/mAnyL0gdnJGf1OZwOAL7l7Debe0nE
+         4kLZieNBHZALIEGeKkryhv4OgJtotVulutog5aOfM2UmXSRMDcekYDjVYgJ0Om8hRk
+         wdi1RQLssP7NH+ncNJsiiJPwJj3GswVYN+ztyfBGWMt30VK8HjFzaiZ3DD3dEpUems
+         jw9nHoAprKjWw==
+Date:   Fri, 15 Apr 2022 17:15:06 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        "Kenneth R. Crudup" <kenny@panix.com>, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, hkallweit1@gmail.com,
-        wangxiongfeng2@huawei.com, mika.westerberg@linux.intel.com,
-        chris.packham@alliedtelesis.co.nz, yangyicong@hisilicon.com,
-        treding@nvidia.com, jonathanh@nvidia.com, abhsahu@nvidia.com,
-        sagupta@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        Ricky Wu <ricky_wu@realtek.com>,
-        Rajat Jain <rajatja@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Victor Ding <victording@google.com>
-Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for
- suspend/resume
-Message-ID: <20220415212533.GA844147@bhelgaas>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pavel Machek <pavel@denx.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v5 1/2] PCI: ACPI: Support Microsoft's "DmaProperty"
+Message-ID: <20220415221506.GA851834@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAd53p6DX2C7KVRV=uu_mmPTTjE7=RsXfNPxjbOBLRbf-pXi5A@mail.gmail.com>
+In-Reply-To: <CACK8Z6Fy3L7vijVn4w+6HwRuuTtW5ePrWc04rUc8U8TPT0Re0w@mail.gmail.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -64,85 +65,96 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 15, 2022 at 10:26:19PM +0800, Kai-Heng Feng wrote:
-> On Fri, Apr 15, 2022 at 12:41 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Wed, Apr 13, 2022 at 08:19:26AM +0800, Kai-Heng Feng wrote:
-> > > On Wed, Apr 13, 2022 at 6:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > ...
-> >
-> > > >   - For L1 PM Substates configuration, sec 5.5.4 says that both ports
-> > > >     must be configured while ASPM L1 is disabled, but I don't think we
-> > > >     currently guarantee this: we restore all the upstream component
-> > > >     state first, and we don't know the ASPM state of the downstream
-> > > >     one.  Maybe we need to:
-> > > >
-> > > >       * When restoring upstream component,
-> > > >           + disable its ASPM
-> > > >
-> > > >       * When restoring downstream component,
-> > > >           + disable its ASPM
-> > > >           + restore upstream component's LTR, L1SS
-> > > >           + restore downstream component's LTR, L1SS
-> > > >           + restore upstream component's ASPM
-> > > >           + restore downstream component's ASPM
-> > >
-> > > Right now L1SS isn't reprogrammed after S3, and that causes WD NVMe
-> > > starts to spew lots of AER errors.
-> >
-> > Right now we don't fully restore L1SS-related state after S3, so maybe
-> > there's some inconsistency that leads to the AER errors.
+On Thu, Apr 14, 2022 at 04:15:47PM -0700, Rajat Jain via iommu wrote:
+> On Thu, Apr 7, 2022 at 12:17 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Mar 25, 2022 at 11:46:08AM -0700, Rajat Jain wrote:
 
-> > Could you collect the "lspci -vv" state before and after S3 so we can
-> > compare them?
+> > > Support the "DmaProperty" with the same semantics. This is useful for
+> > > internal PCI devices that do not hang off a PCIe rootport, but offer
+> > > an attack surface for DMA attacks (e.g. internal network devices).
 > >
-> > > So yes please restore L1SS upon resume. Meanwhile I am asking vendor
-> > > _why_ restoring L1SS is crucial for it to work.
-> > >
-> > > I also wonder what's the purpose of pcie_aspm_pm_state_change()? Can't
-> > > we just restore ASPM bits like other configs?
-> >
-> > Good question.  What's the context?  This is in the
-> > pci_raw_set_power_state() path, not the pci_restore_state() path, so
-> > seems like a separate discussion.
+> > Same semantics as what?
 > 
-> Because this patch alone doesn't restore T_PwrOn and LTR1.2_Threshold.
+> Er, I meant the same semantics as the "DmaProperty". Please also see below.
 
-I assume the post-S3 path is basically this:
+"Support the 'DmaProperty' with the same semantics as 'DmaProperty'"
+doesn't help much, so there must be a little more to the story :)
 
-  pci_pm_resume_noirq
-    pci_pm_default_resume_early
-      pci_power_up
-        pci_raw_set_power_state(D0)
-          pcie_aspm_pm_state_change
-            pcie_config_aspm_path
-              pcie_config_aspm_link
-                pcie_config_aspm_l1ss
-                  clear PCI_EXP_LNKCTL_ASPM_L1 etc
-                  set PCI_L1SS_CTL1_ASPM_L1_1 etc
-                pcie_config_aspm_dev
-                  set PCI_EXP_LNKCTL_ASPM_L1 etc
-      pci_restore_state
-        pci_restore_ltr_state
-        pci_restore_aspm_l1ss_state     # after this patch
-        pci_restore_pcie_state
+> > The MS description of "ExternalFacingPort" says:
+> >
+> >   This ACPI object enables the operating system to identify externally
+> >   exposed PCIe hierarchies, such as Thunderbolt.
+> 
+> No, my patch doesn't have to do with this one.
 
-Hmm...  I think I see what you're saying.  pcie_aspm_pm_state_change()
-fiddles with ASPM and L1SS enable bits.  It likely disables L1,
-enables L1SS, enables L1, but never restores the LTR capability or the
-T_PwrOn and LTR1.2_Threshold bits you mention.
+I know, but it's similar, and I'm just hoping we can deal with them
+consistently.
 
-Then we turn around and overwrite all that stuff (and the LTR cap) in
-pci_restore_state().  That all seems fairly broken, and I agree, I
-don't know why pcie_aspm_pm_state_change() exists.
+> > and "DmaProperty" says:
+> >
+> >   This ACPI object enables the operating system to identify internal
+> >   PCIe hierarchies that are easily accessible by users (such as,
+> >   Laptop M.2 PCIe slots accessible by way of a latch) and require
+> >   protection by the OS Kernel DMA Protection mechanism.
+> 
+> Yes, this is the property that my patch uses. Microsoft has agreed to
+> update this documentation (in a sideband thread that I also copied you
+> on), with the updated semantics that this property can be used to
+> identify any PCI devices that require Kernel DMA protection. i.e. the
+> property is not restricted to identify "internal PCIe hierarchies"
+> (starting at root port), but to "any PCI device".
+> 
+> > I don't really understand why they called out "laptop M.2 PCIe slots"
+> > here.  Is the idea that those are more accessible than a standard
+> > internal PCIe slot?  Seems like a pretty small distinction to me.
+> >
+> > I can understand your example of internal network devices adding an
+> > attack surface.  But I don't see how "DmaProperty" helps identify
+> > those.  Wouldn't a NIC in a standard internal PCIe slot add the same
+> > attack surface?
+> 
+> Yes it would. The attack surface is the same. They probably only
+> thought of devices external to the SoC (starting from a root port)
+> when designing this property and thus called out internal M.2 PCI
+> slots. But nowhave realized that this could be opened to any PCI
+> device.
 
-> So I forced the pcie_aspm_pm_state_change() calling path to eventually
-> call aspm_calc_l1ss_info() which solved the problem for me.
+> > > +      * Property also used by Microsoft Windows for same purpose,
+> > > +      * (to implement DMA protection from a device, using the IOMMU).
+> > > +      */
+> > > +     if (device_property_read_u8(&dev->dev, "DmaProperty", &val))
+> >
+> > The MS web page says a _DSD with this property must be implemented in
+> > the Root Port device scope, but we don't enforce that here.  We *do*
+> > enforce it in pci_acpi_set_untrusted().  Shouldn't we do the same
+> > here?
+> 
+> No, the whole point of doing this (please refer to the discussion on
+> the previous versions of this patch) was that we want to have a
+> property that is NOT limited to the root ports only. And we have
+> reached an agreement with Microsoft about that.
 
-This would update T_PwrOn and LTR1.2_Threshold, so I guess it makes
-sense that this would help.  But I think we need to figure out the
-reason why pcie_aspm_pm_state_change() exists and get rid of it or at
-least better integrate it with pci_restore_state().
+We need to either mention the fact that we're going beyond what the MS
+web page says or (ideally, as you are doing) get the page updated with
+the semantics you need.
 
-If we call pcie_aspm_pm_state_change() after D3cold or reset, things
-still aren't going to work because the LTR cap isn't restored or
-programmed.
+> > But IIUC, device_property_read_u8() works for either ACPI or DT
+> > properties, and maybe there is interest in using this for DT systems.
+> > None of these appear in any in-tree DTs, but maybe it is important to
+> > handle these in DTs?
+> >
+> > If that's the case, this code would no longer be specific to ACPI and
+> > should be moved to somewhere that's compiled even when CONFIG_ACPI
+> > isn't set.
+> 
+> I think unifying ACPI and GPIO systems to use the same code / function
+> to read the properties might be more work/investigation, because
+> reading the properties for ACPI system happens much later than DT
+> systems (For acpi systems, it happens in pci_acpi_setup() which is
+> called much later). Given that no one wants to use this for DT
+> systems, I'd prefer for this to be ACPI specific for now, and then we
+> can solve it for DT once someone needs it.
+
+I think it's OK to make it ACPI-specific for now.
+
+Bjorn
