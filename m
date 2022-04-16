@@ -2,92 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4EE15036E2
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 15:55:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78B84503704
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 16:09:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230055AbiDPN5v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Apr 2022 09:57:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59430 "EHLO
+        id S232240AbiDPOLg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Apr 2022 10:11:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232133AbiDPN5t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Apr 2022 09:57:49 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1D52A72B;
-        Sat, 16 Apr 2022 06:55:17 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id i27so19740100ejd.9;
-        Sat, 16 Apr 2022 06:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6SJ0gjuIReiuq6mKLxC15SlD0RAGcpMYYaigPzM4upQ=;
-        b=QStPKpSkC1LkjeyGv3bKHJYw9iXMBqJMz7A9O9udDbO2DfaYzQ9wEXayi6wYS1FfJs
-         h28pj3Tj1tzh8bKPIGh0uU0YpYp95FvbdVoGObTqp5lYF/qcBM7ASVkgfRxAyGZH29QP
-         AOkFOVLtMwSOXX0YzxG4NVXO9rH7OY40Xx7V8v/l/TnAw05i56w3mcUUb4nJpwosqmex
-         kZWOpcSvgAZHEj3ZvZOOxYMe8+YOixhHxBUdk19j9XUHZsuZSjUXxCgx7ooFkSzsXf/4
-         Xtz0jtZQW9YrhcljnoOnqbiNHmWsKlsO3BtCgdlOkuNeY5hKsFZOSZ9yAXm9j8Y00Su8
-         OW2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6SJ0gjuIReiuq6mKLxC15SlD0RAGcpMYYaigPzM4upQ=;
-        b=Z9AcGPHE3qCpiW/RpInJe9ANf4syV1qGD0fR8wyzSBaiYoJdloWYvZwB9ndmqerveu
-         40SdV6Gk5N0goCx7rzmDjfJB3SGo/t9FeecF1Tc1ufXjhdSItWf9PTRyO4ibBoHwPpi4
-         1A+AOaN0umPuvNJ6ySM5GEO4YagXyRC/TmejrMywjfJajTpya1Mcm5pgtB2uuAyvtcXa
-         LwgSvt5Whr0XjSeVRGuH2wGRkpxvABLG/NxIfEyp1pIrmts0mCDEJ1aDUXwjsLw7E/vf
-         pNsPumdBtHMR4elFCLlxpAasxphY2u1NQqLOdQO9AJQ9kOl8kNxnWiqCAoOIffQoEvuH
-         GcFg==
-X-Gm-Message-State: AOAM531/FRi8DMfVUPxWLX4kcMLS1sIFd2XZR7279aqpUviF3FEgz2fj
-        N9MZ9AfGBS1tMvDfXYe9QLW2wNJ0y3xJl7rEeoi3yVKRYLE=
-X-Google-Smtp-Source: ABdhPJxnrbadrn8LjtwLPpjps81ECEVthSYbNkd4qnaqH6ZLIhBCPTFttIxzMll+6jY4JmULrxZLxToMBGz+FwtbLOs=
-X-Received: by 2002:a17:906:6a08:b0:6e8:a871:b8d2 with SMTP id
- qw8-20020a1709066a0800b006e8a871b8d2mr2826295ejc.71.1650117315860; Sat, 16
- Apr 2022 06:55:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAH9NwWec6ovS1xQbuPsB5duskJdmK_qv4t+URTK6thCvGNST7w@mail.gmail.com>
- <20220323023714.GA1244184@bhelgaas>
-In-Reply-To: <20220323023714.GA1244184@bhelgaas>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Sat, 16 Apr 2022 15:55:04 +0200
-Message-ID: <CAH9NwWfZQWbfc6VJMT3isv2gmnWCoAOU4osDKQ7EBW_XsywGpg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: cadence: Enable Controller to respond to received
- PTM Requests
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        with ESMTP id S232233AbiDPOLf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Apr 2022 10:11:35 -0400
+Received: from mxout2.routing.net (mxout2.routing.net [IPv6:2a03:2900:1:a::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CCB15FED
+        for <linux-pci@vger.kernel.org>; Sat, 16 Apr 2022 07:09:03 -0700 (PDT)
+Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
+        by mxout2.routing.net (Postfix) with ESMTP id 536B65FB56;
+        Sat, 16 Apr 2022 13:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1650117331;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=c7cLwYkQx+UgcFCUSlE8PMzw+TTvuN7Xap07GmrtOwQ=;
+        b=td7K6Qu3lBEpcA31PRIpEJ/SDJbnn+2Fr8UO1kYI18UixmbBzbbi1z8+tliEaQbVoVY0EE
+        UA2BrAqn+8fORt9+Iv3kW5i+qz+yC1SCrjSvTxi4qRTxkRVqgmCV1nRIhFkwtilG7dQ9U5
+        DKCijIQ5eFeOEgrefYx1siXQgYwy0/k=
+Received: from localhost.localdomain (fttx-pool-217.61.150.108.bambit.de [217.61.150.108])
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id CA4D51005BA;
+        Sat, 16 Apr 2022 13:55:29 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-rockchip@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [RFC/RFT 0/6] RK3568 PCIe V3 support
+Date:   Sat, 16 Apr 2022 15:54:52 +0200
+Message-Id: <20220416135458.104048-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Mail-ID: b85ff0f6-efa2-44a0-8e44-ec2828455f06
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> > >
-> > > > This enables the Controller [RP] to automatically respond with
-> > > > Response/ResponseD messages if CDNS_PCIE_LM_TPM_CTRL_PTMRSEN
-> > > > and PCI_PTM_CTRL_ENABLE bits are both set.
-> > > >
-> > > > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
->
-> We're in the middle of the merge window right now, but I'm sure
-> Lorenzo will be able to look at it after -rc1.  This looks fine to me.
->
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Another gentle ping :(
+This series adds Rockchip PCIe V3 support found on rk3568 SOC.
+
+It is based on "Enable rk356x PCIe controller" series of Peter Geis
+v7: https://patchwork.kernel.org/project/linux-rockchip/cover/20220416110507.642398-1-pgwipeout@gmail.com/
+
+Compared to PCIeV2 which uses the Naneng combphy, pciev3
+uses a dedicated pci-phy.
+
+Frank Wunderlich (6):
+  dt-bindings: phy: rockchip: add pcie3 phy
+  dt-bindings: soc: grf: add pcie30-{phy,pipe}-grf
+  phy: rockchip: Support pcie v3
+  PCI: rockchip-dwc: add pcie bifurcation
+  arm64: dts: rockchip: rk3568: Add PCIe v3 nodes
+  arm64: dts: rockchip: Add PCIe v3 nodes to BPI-R2-Pro
+
+ .../bindings/phy/rockchip-pcie3-phy.yaml      |  77 +++++
+ .../devicetree/bindings/soc/rockchip/grf.yaml |   2 +
+ .../boot/dts/rockchip/rk3568-bpi-r2-pro.dts   |  79 +++++
+ arch/arm64/boot/dts/rockchip/rk3568.dtsi      | 122 ++++++++
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |  11 +
+ drivers/phy/rockchip/Kconfig                  |   9 +
+ drivers/phy/rockchip/Makefile                 |   1 +
+ .../phy/rockchip/phy-rockchip-snps-pcie3.c    | 278 ++++++++++++++++++
+ include/dt-bindings/phy/phy-snps-pcie3.h      |  21 ++
+ include/linux/phy/pcie.h                      |  12 +
+ 10 files changed, 612 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip-pcie3-phy.yaml
+ create mode 100644 drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+ create mode 100644 include/dt-bindings/phy/phy-snps-pcie3.h
+ create mode 100644 include/linux/phy/pcie.h
 
 -- 
-greets
---
-Christian Gmeiner, MSc
+2.25.1
 
-https://christian-gmeiner.info/privacypolicy
