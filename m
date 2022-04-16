@@ -2,159 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0352B5030F5
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 01:09:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E57C65034FD
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 09:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241323AbiDOWRl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Apr 2022 18:17:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
+        id S230304AbiDPHwa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Apr 2022 03:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231145AbiDOWRl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Apr 2022 18:17:41 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F04A3A5CC;
-        Fri, 15 Apr 2022 15:15:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id B03BECE31AC;
-        Fri, 15 Apr 2022 22:15:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDF39C385A4;
-        Fri, 15 Apr 2022 22:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650060908;
-        bh=s0Dk+7YpW8NELxA7hL4hxZKqgZ+VVInWF3zxwlrWQ8Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mWa9A5pSTPbpb4OH489eFDoOPOebYkSL0TyfWWeXqI9ObwL3QN4NooutjQhdqYfVA
-         P31YIk8uoXovQZ4uKieXMISW5jSTGLM32Xp/FF8AjRhIlBDCH+stwfaaxG70ULJGDW
-         Wnx/bccL5gl290yieW3KZvj9ou5IwY7CLkW6/mAnyL0gdnJGf1OZwOAL7l7Debe0nE
-         4kLZieNBHZALIEGeKkryhv4OgJtotVulutog5aOfM2UmXSRMDcekYDjVYgJ0Om8hRk
-         wdi1RQLssP7NH+ncNJsiiJPwJj3GswVYN+ztyfBGWMt30VK8HjFzaiZ3DD3dEpUems
-         jw9nHoAprKjWw==
-Date:   Fri, 15 Apr 2022 17:15:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pavel Machek <pavel@denx.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v5 1/2] PCI: ACPI: Support Microsoft's "DmaProperty"
-Message-ID: <20220415221506.GA851834@bhelgaas>
+        with ESMTP id S230237AbiDPHwZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Apr 2022 03:52:25 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C38100747
+        for <linux-pci@vger.kernel.org>; Sat, 16 Apr 2022 00:49:38 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 32so10098777pgl.4
+        for <linux-pci@vger.kernel.org>; Sat, 16 Apr 2022 00:49:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=bJd2DIgtyK+bZCVQpMa9XLiI7bVnFQgVFeGzbZ6bXamjrEFIUCNaIDR9YpvR5iTRQC
+         EoRjHn2hxdGgHpTmUXoJLhLdkz8kw8CpdMkf+RjOM2yxgJf0M2w5tnzpw0NiczM9cGQm
+         aTRY2J48j2+AVBVM6ZplapTERLwB7sqpQHn0KTPy+GATyEE1HlWbU25nZewZyTln9PiO
+         eb2iuPe3VcoLkYjZ6tmC44EeIcF1BzRiek/y+/+gg720T1wEvd/5m2iOgdTIUS3isI5Z
+         q2z1OdX/gYACU6OexrbNcXzEKBC+MKUq0Bm7V68HpmeyS3D5tFhEEP1iOfnkPKJo7x6w
+         XtNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=JeV5sMtotn6HaamZIDDqs9OjN+2P1+g1vgU4k5oTwGsAfErQJTMdWPbd0vK0wAXzsz
+         QQCKwe9dN/ufOtAyWY9HnwZBd96bnXwyzEI4HwXXZwtzodcg62VRbg3dib9qQjReEXIo
+         GCkrwqdWAKfQtMSuEancXxtRzc/c/w7c/oLEG/8n+LZFoQpu+TGZXQiHUcdqsbW5QlwO
+         A1+PbHYeB1UEKTrrfa5CnGyY0PIaRUoVAxDOw4GF1DuGamUY2rOpLV177K2y4AwOY/oS
+         dF2wJK3Zjt0wCb23s6Cr9yAHffOr5MXtKuPKJVpCFTgGRIgzn41qjt5RaATvYFnqEs/2
+         +t7w==
+X-Gm-Message-State: AOAM531sXHz/kdxqxVTaYj7o49SGShilANq2ZMBmdGZ6XuO6d0kTfavK
+        Oj4dck3kopd/PWHx33S2GgiSBLmCxs/oHQoKaF2ewDYMvtM=
+X-Google-Smtp-Source: ABdhPJzPQ782jxaaybf4v05kBQtFRTzv0MMrux20NcZ4Q10XmGrK6dnUIabFDBNBmBOv8fFyQY5zqzYAgf4Cnc3KaCc=
+X-Received: by 2002:a92:508:0:b0:2cb:ebd8:a76b with SMTP id
+ q8-20020a920508000000b002cbebd8a76bmr1009500ile.156.1650095366830; Sat, 16
+ Apr 2022 00:49:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACK8Z6Fy3L7vijVn4w+6HwRuuTtW5ePrWc04rUc8U8TPT0Re0w@mail.gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a05:6638:1309:0:0:0:0 with HTTP; Sat, 16 Apr 2022 00:49:26
+ -0700 (PDT)
+Reply-To: daniel.seyba@yahoo.com
+From:   Seyba Daniel <royhalton13@gmail.com>
+Date:   Sat, 16 Apr 2022 09:49:26 +0200
+Message-ID: <CALSxb2w9zQYotuLcRSCPns53ksvT9UrEMVx-1Cp1f8RE7er3cA@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:542 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [royhalton13[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [royhalton13[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 04:15:47PM -0700, Rajat Jain via iommu wrote:
-> On Thu, Apr 7, 2022 at 12:17 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Mar 25, 2022 at 11:46:08AM -0700, Rajat Jain wrote:
+Hello,
 
-> > > Support the "DmaProperty" with the same semantics. This is useful for
-> > > internal PCI devices that do not hang off a PCIe rootport, but offer
-> > > an attack surface for DMA attacks (e.g. internal network devices).
-> >
-> > Same semantics as what?
-> 
-> Er, I meant the same semantics as the "DmaProperty". Please also see below.
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
 
-"Support the 'DmaProperty' with the same semantics as 'DmaProperty'"
-doesn't help much, so there must be a little more to the story :)
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
 
-> > The MS description of "ExternalFacingPort" says:
-> >
-> >   This ACPI object enables the operating system to identify externally
-> >   exposed PCIe hierarchies, such as Thunderbolt.
-> 
-> No, my patch doesn't have to do with this one.
+So please confirm interest by responding back.
 
-I know, but it's similar, and I'm just hoping we can deal with them
-consistently.
+My dearest regards
 
-> > and "DmaProperty" says:
-> >
-> >   This ACPI object enables the operating system to identify internal
-> >   PCIe hierarchies that are easily accessible by users (such as,
-> >   Laptop M.2 PCIe slots accessible by way of a latch) and require
-> >   protection by the OS Kernel DMA Protection mechanism.
-> 
-> Yes, this is the property that my patch uses. Microsoft has agreed to
-> update this documentation (in a sideband thread that I also copied you
-> on), with the updated semantics that this property can be used to
-> identify any PCI devices that require Kernel DMA protection. i.e. the
-> property is not restricted to identify "internal PCIe hierarchies"
-> (starting at root port), but to "any PCI device".
-> 
-> > I don't really understand why they called out "laptop M.2 PCIe slots"
-> > here.  Is the idea that those are more accessible than a standard
-> > internal PCIe slot?  Seems like a pretty small distinction to me.
-> >
-> > I can understand your example of internal network devices adding an
-> > attack surface.  But I don't see how "DmaProperty" helps identify
-> > those.  Wouldn't a NIC in a standard internal PCIe slot add the same
-> > attack surface?
-> 
-> Yes it would. The attack surface is the same. They probably only
-> thought of devices external to the SoC (starting from a root port)
-> when designing this property and thus called out internal M.2 PCI
-> slots. But nowhave realized that this could be opened to any PCI
-> device.
-
-> > > +      * Property also used by Microsoft Windows for same purpose,
-> > > +      * (to implement DMA protection from a device, using the IOMMU).
-> > > +      */
-> > > +     if (device_property_read_u8(&dev->dev, "DmaProperty", &val))
-> >
-> > The MS web page says a _DSD with this property must be implemented in
-> > the Root Port device scope, but we don't enforce that here.  We *do*
-> > enforce it in pci_acpi_set_untrusted().  Shouldn't we do the same
-> > here?
-> 
-> No, the whole point of doing this (please refer to the discussion on
-> the previous versions of this patch) was that we want to have a
-> property that is NOT limited to the root ports only. And we have
-> reached an agreement with Microsoft about that.
-
-We need to either mention the fact that we're going beyond what the MS
-web page says or (ideally, as you are doing) get the page updated with
-the semantics you need.
-
-> > But IIUC, device_property_read_u8() works for either ACPI or DT
-> > properties, and maybe there is interest in using this for DT systems.
-> > None of these appear in any in-tree DTs, but maybe it is important to
-> > handle these in DTs?
-> >
-> > If that's the case, this code would no longer be specific to ACPI and
-> > should be moved to somewhere that's compiled even when CONFIG_ACPI
-> > isn't set.
-> 
-> I think unifying ACPI and GPIO systems to use the same code / function
-> to read the properties might be more work/investigation, because
-> reading the properties for ACPI system happens much later than DT
-> systems (For acpi systems, it happens in pci_acpi_setup() which is
-> called much later). Given that no one wants to use this for DT
-> systems, I'd prefer for this to be ACPI specific for now, and then we
-> can solve it for DT once someone needs it.
-
-I think it's OK to make it ACPI-specific for now.
-
-Bjorn
+Seyba Daniel
