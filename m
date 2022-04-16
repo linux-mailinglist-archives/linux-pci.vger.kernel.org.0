@@ -2,63 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C942503571
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 11:02:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F7EB50356E
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 11:02:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230481AbiDPJEh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Apr 2022 05:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46074 "EHLO
+        id S230497AbiDPJEj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Apr 2022 05:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230460AbiDPJEg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Apr 2022 05:04:36 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE00C1066E2;
-        Sat, 16 Apr 2022 02:02:04 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id d9so7850437qvm.4;
-        Sat, 16 Apr 2022 02:02:04 -0700 (PDT)
+        with ESMTP id S230478AbiDPJEh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Apr 2022 05:04:37 -0400
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B691066E3;
+        Sat, 16 Apr 2022 02:02:05 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id c1so7843543qvl.3;
+        Sat, 16 Apr 2022 02:02:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OHIHH7LBjO7n3w0TkyTvZ+CHhZPHMYRUZ96K/VbT0E0=;
-        b=iEN3ZCVaS/t/rWCo/X/zbmS+TjDfAMD6Cpvna9HLhP+x6o6ZYla5+H0GhKvSS5rkNP
-         8ikamagqu15rha3O9npox2er4Nlo0Hn7ck8poWqBP/q72eCOKEY/dfZt4n41DYaOXrMp
-         EDwEY8QW0e7FKJ8/isjurvCHIKVg+t8SYaanJRsQ2GTh/Xk7Tk9iTdHIqZ2hnCIihenU
-         q+gEjJfKEWbPvQw1Pk47xBBn46/Sof/bvznKDvCqWTND5RbtxfUHpVMZ9XA0YrWq9JBj
-         OR9G+IgS/PA/CTIH4SeRb1oG9054zyGVN9LGAXNtVnduvG9YGfhtywCIy+He6L9mMd9g
-         mbvQ==
+        bh=UMYeeN0iZUy6EfrHqDAGGWFWHi99PGIp7rnql4YH69k=;
+        b=SHRbg8x/2JHNnkBOV6/ilD2huqCqpDRTm3pEUP94q1dA2HF25/mbncfBO60ybBMK9J
+         CTgU1fn0th7wGA2m5qEt63IR+sdTKmR4Fz64scgnCymkfwelCNkxCGaf5V4GdM53zd09
+         FgGi/n1PomtpcTp4G5bYD6ssSTtgTdaBR1mN/Z6ZS8ECfqArA2cGVwnka/i5L7wKkkkK
+         nH1vc/EKfUo4oGpb9IdY++dxNtjznIvlxxy278jYriy2nKyQoXdZPsZjDDCrRXYcW7oB
+         PSySnvRbq96IZAGYk8zk22UMuFv3UU59NMJ+byluQF2trHHAShQ4twdxkcA3Axl1afk/
+         gJBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OHIHH7LBjO7n3w0TkyTvZ+CHhZPHMYRUZ96K/VbT0E0=;
-        b=Yygr/ux+MpKZ0QyThc9rYdSV7tTiZ4ZqA+WDLq7M1l3GkQcXoOZmhvQ57a9QNrxc+z
-         AzLJ2HlK0q40RWTulLT4JldJUv0Y/3FFHSmmaKhotrqa2oO110lwjeDefQ+JJhvuWHcy
-         h59GWcmoerUWnI6Cp3pYn3CE+Qn2Ira3xnwxlVdmfqT+5DMGwF87YocDPkeuQ8k9VQeM
-         RvZB/GDlKogNL27IuzIlwdBXHPsE20ANEKiQMCJlrgproxxe9T5D2LAXTwrqRI1/RsME
-         xDyGhpTiEzbCwupLYroDKyPQgNa5vtbkxlX8OlK8iqJaMIogQPn2WJ9shydp3fCiYaAE
-         Wu8A==
-X-Gm-Message-State: AOAM530W1KAQ1lwmeJBZGWbHM/c4tL9RxYXf6uPBNpEplZw/QAhRi4Ei
-        qHf8hD+RByC0ZWliHejqUzYpd0fYb6xg8Bcx
-X-Google-Smtp-Source: ABdhPJwpTvo4039/1P9AMC+MpCNIKVZR96KS8e9MCcSnpiwoRZMepeQPw0q+y1JNs/94Sh5JjUSMwQ==
-X-Received: by 2002:a05:6214:e4a:b0:444:28a7:9fb7 with SMTP id o10-20020a0562140e4a00b0044428a79fb7mr1733610qvc.30.1650099724058;
-        Sat, 16 Apr 2022 02:02:04 -0700 (PDT)
+        bh=UMYeeN0iZUy6EfrHqDAGGWFWHi99PGIp7rnql4YH69k=;
+        b=ltx2Ji2DhRTGIdOOx2oes2Um7qg3YD3x/j2DmZhYue0zqMX9sKoeV776H8nGjJqK+f
+         0xKNBcRmQUpO/YBVNTntqAtBzPw+rvGZq4HE4yy5mjCO+gF0v1xbxAh1+IVd1Zks7Fxz
+         n8DSDJZRB9hbkSWb+53qMVO3MuLOcg1HZP/adWnmvOJrLfO/nrJFYEG+aThRyxm61PcE
+         e3yYhaEGvJ1oiOGwH4kzvYLexKwi3MvvTOCN+n8ymE+6VwmxAtSy6tHcQQ+SRxPUbYw3
+         lbG7/+/pKv52L1g07UlHxM4JJrj+ZDchEVZtx5D9/sA93B91DPDvva1kwrqvrCu9sAyQ
+         I7Nw==
+X-Gm-Message-State: AOAM5320vmdXEuoln2Zc0+U0dFzEfcsUzrSbQc3YppXWSWTbEdxajdfQ
+        jfCWGtLODQy675m0iO9guCs=
+X-Google-Smtp-Source: ABdhPJx1fx5x1PI6xkhKtntIgNXtV21Yyi5CtpacqQpU+GXOKX3ivUyESARsPbkaWqdHt7I0HguTlg==
+X-Received: by 2002:a0c:d688:0:b0:42c:3cb0:3923 with SMTP id k8-20020a0cd688000000b0042c3cb03923mr1713298qvi.69.1650099725053;
+        Sat, 16 Apr 2022 02:02:05 -0700 (PDT)
 Received: from master-x64.sparksnet ([2601:153:980:85b1::10])
-        by smtp.gmail.com with ESMTPSA id o6-20020a05622a044600b002e1b9be8e6fsm4258085qtx.36.2022.04.16.02.02.03
+        by smtp.gmail.com with ESMTPSA id o6-20020a05622a044600b002e1b9be8e6fsm4258085qtx.36.2022.04.16.02.02.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Apr 2022 02:02:03 -0700 (PDT)
+        Sat, 16 Apr 2022 02:02:04 -0700 (PDT)
 From:   Peter Geis <pgwipeout@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>
 Cc:     linux-rockchip@lists.infradead.org,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v4 1/4] arm64: dts: rockchip: add usb3 support to rk3568-evb1-v10
-Date:   Sat, 16 Apr 2022 05:01:56 -0400
-Message-Id: <20220416090159.596930-2-pgwipeout@gmail.com>
+        Peter Geis <pgwipeout@gmail.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/4] dt-bindings: pci: remove fallback from Rockchip DesignWare binding
+Date:   Sat, 16 Apr 2022 05:01:57 -0400
+Message-Id: <20220416090159.596930-3-pgwipeout@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220416090159.596930-1-pgwipeout@gmail.com>
 References: <20220416090159.596930-1-pgwipeout@gmail.com>
@@ -74,104 +76,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Michael Riesch <michael.riesch@wolfvision.net>
+The snps,dw-pcie binds to a standalone driver.
+It is not fully compatible with the Rockchip implementation and causes a
+hang if it binds to the device.
 
-The Rockchip RK3568 EVB1 features one USB 3.0 device-only
-(USB 2.0 OTG) port and one USB 3.0 host-only port.
-Activate the USB 3.0 controller nodes and phy nodes in the
-device tree.
+Remove this binding as a valid fallback.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
+Signed-off-by: Peter Geis <pgwipeout@gmail.com>
 ---
- .../boot/dts/rockchip/rk3568-evb1-v10.dts     | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ .../devicetree/bindings/pci/rockchip-dw-pcie.yaml    | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3568-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3568-evb1-v10.dts
-index a794a0ea5c70..622be8be9813 100644
---- a/arch/arm64/boot/dts/rockchip/rk3568-evb1-v10.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3568-evb1-v10.dts
-@@ -103,6 +103,18 @@ vcc5v0_usb_host: vcc5v0-usb-host {
- 		vin-supply = <&vcc5v0_usb>;
- 	};
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+index 142bbe577763..bc0a9d1db750 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -19,20 +19,10 @@ description: |+
+ allOf:
+   - $ref: /schemas/pci/pci-bus.yaml#
  
-+	vcc5v0_usb_otg: vcc5v0-usb-otg {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc5v0_usb_otg_en>;
-+		regulator-name = "vcc5v0_usb_otg";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_usb>;
-+	};
-+
- 	vcc3v3_lcd0_n: vcc3v3-lcd0-n {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3_lcd0_n";
-@@ -136,6 +148,14 @@ regulator-state-mem {
- 	};
- };
+-# We need a select here so we don't match all nodes with 'snps,dw-pcie'
+-select:
+-  properties:
+-    compatible:
+-      contains:
+-        const: rockchip,rk3568-pcie
+-  required:
+-    - compatible
+-
+ properties:
+   compatible:
+     items:
+       - const: rockchip,rk3568-pcie
+-      - const: snps,dw-pcie
  
-+&combphy0 {
-+	status = "okay";
-+};
-+
-+&combphy1 {
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&vdd_cpu>;
- };
-@@ -507,6 +527,9 @@ usb {
- 		vcc5v0_usb_host_en: vcc5v0_usb_host_en {
- 			rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
-+		vcc5v0_usb_otg_en: vcc5v0_usb_otg_en {
-+			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
- 	};
- };
+   reg:
+     items:
+@@ -110,7 +100,7 @@ examples:
+         #size-cells = <2>;
  
-@@ -568,6 +591,11 @@ &usb_host0_ohci {
- 	status = "okay";
- };
- 
-+&usb_host0_xhci {
-+	extcon = <&usb2phy0>;
-+	status = "okay";
-+};
-+
- &usb_host1_ehci {
- 	status = "okay";
- };
-@@ -576,6 +604,24 @@ &usb_host1_ohci {
- 	status = "okay";
- };
- 
-+&usb_host1_xhci {
-+	status = "okay";
-+};
-+
-+&usb2phy0 {
-+	status = "okay";
-+};
-+
-+&usb2phy0_host {
-+	phy-supply = <&vcc5v0_usb_host>;
-+	status = "okay";
-+};
-+
-+&usb2phy0_otg {
-+	vbus-supply = <&vcc5v0_usb_otg>;
-+	status = "okay";
-+};
-+
- &usb2phy1 {
- 	status = "okay";
- };
+         pcie3x2: pcie@fe280000 {
+-            compatible = "rockchip,rk3568-pcie", "snps,dw-pcie";
++            compatible = "rockchip,rk3568-pcie";
+             reg = <0x3 0xc0800000 0x0 0x390000>,
+                   <0x0 0xfe280000 0x0 0x10000>,
+                   <0x3 0x80000000 0x0 0x100000>;
 -- 
 2.25.1
 
