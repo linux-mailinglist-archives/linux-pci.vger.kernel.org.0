@@ -2,158 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D76AF503514
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 10:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8843350356F
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Apr 2022 11:02:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbiDPIDu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Apr 2022 04:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42398 "EHLO
+        id S230492AbiDPJEi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Apr 2022 05:04:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbiDPIDs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Apr 2022 04:03:48 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A1B100E29;
-        Sat, 16 Apr 2022 01:01:15 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id k5so17041743lfg.9;
-        Sat, 16 Apr 2022 01:01:15 -0700 (PDT)
+        with ESMTP id S229704AbiDPJEg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Apr 2022 05:04:36 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA941066D9;
+        Sat, 16 Apr 2022 02:02:03 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id r25so7218558qtp.8;
+        Sat, 16 Apr 2022 02:02:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MXlAdpQLGQGUUo4/nFrsdLnsJFw/wYKXZIo/9dWMKPs=;
-        b=GlWDVh4mGOslT9x+9Cf/M39/Uru7iSzMMGf0MsIHsJOECxtBIQEKSiOhQ6d5pbdf4j
-         0Q4ZSqwrihtygT0jrukCM2I5zVYNwWIr+kQ9Vt/kp3uXZwNjlTgFSu1injKGGeDyIW7w
-         l1qnOjTfmeatmweRiq24gZCi7q6JE9tLgmNi0SvW/Up+I0yjZLEIR58qIBBomdv5S+On
-         o6HQSqmfwHSo2KYKzD3onll3iGoNhgFDBt+GBdRV0h5xCFZ7DjwqXq/3/TE9n4v7T1+2
-         1jE2ZhXcJvn5NewsRez8HY/igateUo1vk+AZ087w895RzKsn83MZsPgSNi2LQnx9IZo6
-         xO2w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q1UfUXhPrPxMteCJHhzwzwmpGBQkHn9blBEyoIzeJK0=;
+        b=jKEejKUggWKkDysTid4LHWwVCt73jIBp6T7U3fQzJ4tFuW3MQMsv/ri+jfDKomqMQq
+         laAN2GlIClZRq1l/QuwlPY+EHLm3ezoeISbE2z+iN01JHhn5aWC6LJRuOeNkTfdn9sCN
+         ChwEiYQkIejhqaW8qG/1PcD5WumV7x0UrdMXDLTlB8GEvnY45N0G1xQaywveqdqWBjVI
+         z9/pOr0oOWzlpqUXN85+Lll/cvA3zz4m3L0I9Y+Zit8cggh8ZRbwE2J2jdonR2me0nZm
+         Tft7JqzY6XcsYVzK/mlL61L6YQOgCWL22UuEQhpi9ZPM9sg3LlqL5hPuJ1pNLUCZb9Fh
+         RSew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MXlAdpQLGQGUUo4/nFrsdLnsJFw/wYKXZIo/9dWMKPs=;
-        b=3AjgWXLADfJDv+on13NN3zfZ47SZfUsp17pNBe7w//lEtWWxzNUgzz0VddMAXpb0HE
-         T0EK+G3fhpD9yZ+xYN8dOK1JWd3PubTEmmp0L3LypROMNIzFpck8EX4M8+K/fDxrGP6t
-         K1xJGRcHocCafbGOBNNjWS/fE5KFELlr1KqgozvnwQSkbpQf92G/FB5PsTATTLvYJpo5
-         /afb3mHAvEFGhAQW2I2gLEeR9m3Cf93yXZ2VRxSJNPuwCVmbybfYctNZPB44ukVfJOFo
-         ZLJQ+/WRQHsukEZ7nzMevMFXsuY8OhpYfxNE1pwq3Gls16C5tzScV9Bp9gjHtt0RQ/wk
-         sYyQ==
-X-Gm-Message-State: AOAM533FHeMdhLJw31EoD4cX2ivBL1srpuBbDxO8YuM2EJTLggq1LB2J
-        5Pq7JXUFwCBbNcbtKPSpNdgt99RgsR6fdA==
-X-Google-Smtp-Source: ABdhPJz6CVXoHDhAV9Gyik5pPZg9sjhX0loL8jq9bIV8r8fjCmT8MZhcpEDiC1lO6R2UIgUS5k4BJQ==
-X-Received: by 2002:a05:6512:3c87:b0:46c:fde0:5d2e with SMTP id h7-20020a0565123c8700b0046cfde05d2emr1683544lfv.525.1650096073460;
-        Sat, 16 Apr 2022 01:01:13 -0700 (PDT)
-Received: from mobilestation (ip1.ibrae.ac.ru. [91.238.191.1])
-        by smtp.gmail.com with ESMTPSA id t25-20020a19dc19000000b0044a16b068c7sm593375lfg.117.2022.04.16.01.01.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q1UfUXhPrPxMteCJHhzwzwmpGBQkHn9blBEyoIzeJK0=;
+        b=o8eKefPxpybzKrD7gh8l5+kz9at7ASz7ChiU1GYxgd8GmWOb3l7zTbjyCZ9/vMToa6
+         XbgyM9U9lAGCVJd9nTOtUJ+jf6jFjRsz1fTiHWvIhbTeK/V18fLiGPZAv0/XMzXGl3Vq
+         cTqdK34NWs3XsfZF2dRtHgd9VcolZ4+qC+Ap0psv+OhWDy+J3lPzuPMlQ1EhqqrE1HiR
+         IdNvfR/Uw8T0JlLmsHoG8R4WXw3Vi5uktU5FI7bZ7qRni8qCVyjTXHAmYIfZYir+MBUz
+         bcM5f99EDlHxppWvsiro6IgkdZapABUT7kStxVqnpitA2mJI00nPj4id4dBBJ4nPwMAE
+         ec/A==
+X-Gm-Message-State: AOAM531r8GQdXHH1z2fvXmvLZhQMwrGsI6Ue9r+zBy+cBCIeB6JYDayM
+        33HFAlW1M8I4ksxbHjFW6oM=
+X-Google-Smtp-Source: ABdhPJwyVMhIkaZ3RLVGBQpjhDuOBQJVaJlxNYNpMMOJuxN74a1MwpFwVxAwN4i9c47vDKvxBm5Zug==
+X-Received: by 2002:a05:622a:4083:b0:2ec:e9e3:1656 with SMTP id cg3-20020a05622a408300b002ece9e31656mr1695558qtb.529.1650099722999;
+        Sat, 16 Apr 2022 02:02:02 -0700 (PDT)
+Received: from master-x64.sparksnet ([2601:153:980:85b1::10])
+        by smtp.gmail.com with ESMTPSA id o6-20020a05622a044600b002e1b9be8e6fsm4258085qtx.36.2022.04.16.02.02.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Apr 2022 01:01:11 -0700 (PDT)
-Date:   Sat, 16 Apr 2022 11:01:09 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/16] PCI: dwc: Add more verbose link-up message
-Message-ID: <20220416080109.pqnuojor6lewltr3@mobilestation>
-References: <20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru>
- <20220324013734.18234-4-Sergey.Semin@baikalelectronics.ru>
- <8569d431ce4e1d64ae271f0498c7a0395d2c5c7e.camel@perches.com>
+        Sat, 16 Apr 2022 02:02:02 -0700 (PDT)
+From:   Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-rockchip@lists.infradead.org, heiko@sntech.de,
+        Peter Geis <pgwipeout@gmail.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] Enable rk356x PCIe controller
+Date:   Sat, 16 Apr 2022 05:01:55 -0400
+Message-Id: <20220416090159.596930-1-pgwipeout@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8569d431ce4e1d64ae271f0498c7a0395d2c5c7e.camel@perches.com>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 28, 2022 at 04:31:53PM -0700, Joe Perches wrote:
-> On Thu, 2022-03-24 at 04:37 +0300, Serge Semin wrote:
-> > Printing just "link up" isn't that much informative especially when it
-> > comes to working with the PCI Express bus. Even if the link is up, due to
-> > multiple reasons the bus performance can degrade to slower speeds or to
-> > narrower width than both Root Port and its partner is capable of. In that
-> > case it would be handy to know the link specifications as early as
-> > possible. So let's add a more verbose message to the busy-wait link-state
-> > method, which will contain the link speed generation and the PCIe bus
-> > width in case if the link up state is discovered. Otherwise an error will
-> > be printed to the system log.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 22 +++++++++++++++-----
-> >  1 file changed, 17 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> []
-> > @@ -528,14 +528,26 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> >  
-> >  	/* Check if the link is up or not */
-> >  	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-> > -		if (dw_pcie_link_up(pci)) {
-> > -			dev_info(pci->dev, "Link up\n");
-> > -			return 0;
-> > -		}
-> > +		if (dw_pcie_link_up(pci))
-> > +			break;
-> > +
-> >  		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-> >  	}
-> >  
-> > -	dev_info(pci->dev, "Phy link never came up\n");
-> > +	if (retries < LINK_WAIT_MAX_RETRIES) {
-> > +		u32 offset, val;
-> > +
-> > +		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > +		val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-> > +
-> > +		dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-> > +			 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-> > +			 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-> > +
-> > +		return 0;
-> > +	}
-> > +
-> > +	dev_err(pci->dev, "Phy link never came up\n");
-> >  
-> >  	return -ETIMEDOUT;
-> >  }
-> 
+This series enables the DesignWare based PCIe controller on the rk356x
+series of chips.
+We drop the fallback to the core driver due to compatibility issues.
+We add support for legacy interrupts for cards that lack MSI support
+(which is partially broken currently).
+We then add the device tree nodes to enable PCIe on the Quartz64 Model
+A.
 
-> IMO: it's generally bette to test the error condition and unindent
-> the typical return.
+Patch 1 drops the snps,dw,pcie fallback from the dt-binding
+Patch 2 adds legacy interrupt support to the driver
+Patch 3 adds the device tree binding to the rk356x.dtsi
+Patch 4 enables the PCIe controller on the Quartz64-A
 
-Absolutely right. Thanks for noticing that. No idea why I haven't done
-the way you said 'cause it seems neater, more maintainable than what I
-suggested here.
+Changelog:
+v4:
+- drop the ITS modification, poor compatibility is better than
+  completely broken
 
--Sergey
+v3:
+- drop select node from dt-binding
+- convert to for_each_set_bit
+- convert to generic_handle_domain_irq
+- drop unncessary dev_err
+- reorder irq_chip items
+- change to level_irq
+- install the handler after initializing the domain
 
-> 
-> 	if (retries >= LINK_WAIT_MAX_RETRIES) {
-> 		dev_err(pci->dev, "Phy link never came up\n");
-> 		return -ETIMEDOUT;
-> 	}
-> 
-> 	offset = ...
-> 	val = ...
-> 	dev_info(...)
-> 
-> 	return 0;
-> }
-> 
+v2:
+- Define PCIE_CLIENT_INTR_STATUS_LEGACY
+- Fix PCIE_LEGACY_INT_ENABLE to only enable the RC interrupts
+- Add legacy interrupt enable/disable support
+
+
+Michael Riesch (1):
+  arm64: dts: rockchip: add usb3 support to rk3568-evb1-v10
+
+Peter Geis (3):
+  dt-bindings: pci: remove fallback from Rockchip DesignWare binding
+  PCI: dwc: rockchip: add legacy interrupt support
+  arm64: dts: rockchip: add rk3568 pcie2x1 controller
+
+ .../bindings/pci/rockchip-dw-pcie.yaml        |  12 +-
+ .../boot/dts/rockchip/rk3568-evb1-v10.dts     |  46 +++++++
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi      |  55 +++++++++
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 112 +++++++++++++++++-
+ 4 files changed, 212 insertions(+), 13 deletions(-)
+
+-- 
+2.25.1
+
