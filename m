@@ -2,255 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D89C1504771
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Apr 2022 11:53:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54F1450477A
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Apr 2022 12:10:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233835AbiDQJ4Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 17 Apr 2022 05:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58554 "EHLO
+        id S233883AbiDQKMw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Apr 2022 06:12:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233831AbiDQJ4P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Apr 2022 05:56:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41073192A9;
-        Sun, 17 Apr 2022 02:53:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D5F56119F;
-        Sun, 17 Apr 2022 09:53:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD52C385A4;
-        Sun, 17 Apr 2022 09:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650189218;
-        bh=FPGOhka1OfYKDPNYUqhjOQxntwkCKuERgN9/gaL5oSg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HgDNqPoSVC6yUBvDb277MAk2tXdnzWa6RDRmSgAORvgkQfuPFpApvZ0sgp/RrpPPB
-         l/7G+BKz6qFBbS574Ug2iPK7+nZJkkIEtpSE0T9Syr+PnjYZTqrp0aQf9YGuw3Of+1
-         HKGD5zISkwWiOVzzSKG2+ENb9mxUY2QMNUDhxeXtTlEXlYdSAByXbS50tM7lRxwveW
-         vt4xYdCdD4OnBY4RTpySsDELcQJB2IrP2Ejm5285ueuY5SVixjUypbLldxZDLSIN5q
-         W+jqV12QHWnO5GKPMj/0S/0ebhdH2CPxFz9WRXh7tPSWbgmbsylbH5WCwuCWMUSiEP
-         EGzwP8E8UWf6A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1ng1b6-004qUr-8n; Sun, 17 Apr 2022 10:53:36 +0100
-Date:   Sun, 17 Apr 2022 10:53:35 +0100
-Message-ID: <87zgkk9gtc.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Peter Geis <pgwipeout@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        with ESMTP id S233873AbiDQKMu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Apr 2022 06:12:50 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 757BF10DB;
+        Sun, 17 Apr 2022 03:10:14 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id bq30so20372134lfb.3;
+        Sun, 17 Apr 2022 03:10:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JyEKlxjsw9MBn/UISVAKEEPgrY8QawzFShu9JRMeGwQ=;
+        b=Dd2WTYrEmdWrI/Ch/B3lPyU+k48p0oSCMIlQso7glgKua2/Ir2MsHcduEuKu8rmlzt
+         f+dQ8lbBnjSibaXpngaDnchUOCpMuvTW6udZaTfTxBZJtlurVLUQPWq+4gJ+ok+d6dqd
+         HTarm1ab0ho45JQlumQIGSuDcP3tBJpq6J493/7Y9LtkzbAT9wJhYdBid/BPVoaxC/RY
+         Vg+daN/RR2od0cq29T2vAAJBIY7B6ZYXebjcw9Y0zQ0aUvOzQq0nhv/qjQ1Qu+fwU0vd
+         G/hr6M3YXh10+Lc2XHgn6pAcox8PewbHDXZbgPF3+3eGxy09uHV9cN+acLjwRvbXKBzk
+         ZGSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JyEKlxjsw9MBn/UISVAKEEPgrY8QawzFShu9JRMeGwQ=;
+        b=5vGgiIBRBcIH910cIoXuE0sxo0F4bE/1RW4K1beQaz0TPu5ljvqEJfNVymsC+M0Zpr
+         u+QcFwnFy1L7HGeo3T8ePlPvypHsEMYsHNMboLwhz4ph/bxHSrMCaZEZ0regLxy145+8
+         OJ0j7w7jDDwV4VlfX9Y/Nsihm0sDYuqD4yGDINVoTFn9nJSq0x3rAZn1chUUBDT2uodO
+         YHyIpxuJj5PYlWfJJKKWh51ddvMOdzsBFXVd1mN4/gshPvGuot80JajVja2B51rUydWi
+         J/bvtULYkEMtl3yhWm49rYZq5O71AvxrG1R09s2pXYtBD5mT3QGF1rMlTSntJ1GwqVSu
+         iFMA==
+X-Gm-Message-State: AOAM531WVLkAwKVZL1/dD7FxLV/itSVWwj2XIMTrgQtsp8Fn0NDyCbOt
+        VQz6lZcazxW9qgnW9K2m2Nw=
+X-Google-Smtp-Source: ABdhPJwN+uBGqH6/qa/dRyBf5xHl8nIMP9BRM5gQWPcm+mRmO7ZZnMTQIuBbBp5aY6mKrSMUWubAZw==
+X-Received: by 2002:a05:6512:3095:b0:44a:6dcc:42df with SMTP id z21-20020a056512309500b0044a6dcc42dfmr4836926lfd.535.1650190212995;
+        Sun, 17 Apr 2022 03:10:12 -0700 (PDT)
+Received: from mobilestation (ip1.ibrae.ac.ru. [91.238.191.1])
+        by smtp.gmail.com with ESMTPSA id o26-20020a198c1a000000b0046bc20821f6sm913758lfd.115.2022.04.17.03.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Apr 2022 03:10:12 -0700 (PDT)
+Date:   Sun, 17 Apr 2022 13:10:09 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/4] PCI: dwc: rockchip: add legacy interrupt support
-In-Reply-To: <CAMdYzYo+YeAgT92baMOoWpra230wro_WynRcajL-__9RNkeE9Q@mail.gmail.com>
-References: <20220416110507.642398-1-pgwipeout@gmail.com>
-        <20220416110507.642398-3-pgwipeout@gmail.com>
-        <308e9c47197d4f7ae5a31cfcb5a10886@kernel.org>
-        <CAMdYzYo+YeAgT92baMOoWpra230wro_WynRcajL-__9RNkeE9Q@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: pgwipeout@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/16] PCI: dwc: Add more verbose link-up message
+Message-ID: <20220417101009.ib7o4geybtvkviuh@mobilestation>
+References: <20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324013734.18234-4-Sergey.Semin@baikalelectronics.ru>
+ <YkMb5lT91ZveLTgg@robh.at.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YkMb5lT91ZveLTgg@robh.at.kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 16 Apr 2022 14:24:26 +0100,
-Peter Geis <pgwipeout@gmail.com> wrote:
+On Tue, Mar 29, 2022 at 09:47:02AM -0500, Rob Herring wrote:
+> On Thu, Mar 24, 2022 at 04:37:21AM +0300, Serge Semin wrote:
+> > Printing just "link up" isn't that much informative especially when it
+> > comes to working with the PCI Express bus. Even if the link is up, due to
+> > multiple reasons the bus performance can degrade to slower speeds or to
+> > narrower width than both Root Port and its partner is capable of. In that
+> > case it would be handy to know the link specifications as early as
+> > possible. So let's add a more verbose message to the busy-wait link-state
+> > method, which will contain the link speed generation and the PCIe bus
+> > width in case if the link up state is discovered. Otherwise an error will
+> > be printed to the system log.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware.c | 22 +++++++++++++++-----
+> >  1 file changed, 17 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 6e81264fdfb4..f1693e25afcb 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -528,14 +528,26 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> >  
+> >  	/* Check if the link is up or not */
+> >  	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+> > -		if (dw_pcie_link_up(pci)) {
+> > -			dev_info(pci->dev, "Link up\n");
+> > -			return 0;
+> > -		}
+> > +		if (dw_pcie_link_up(pci))
+> > +			break;
+> > +
+> >  		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+> >  	}
+> >  
+> > -	dev_info(pci->dev, "Phy link never came up\n");
+> > +	if (retries < LINK_WAIT_MAX_RETRIES) {
+> > +		u32 offset, val;
+> > +
+> > +		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > +		val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+> > +
+> > +		dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
+> > +			 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
+> > +			 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
 > 
-> On Sat, Apr 16, 2022 at 8:54 AM Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > Peter,
-> >
-> > May I suggest that you slow down on the number of versions you send?
-> > This is the 7th in 5 days, the 3rd today.
-> >
-> > At this stage, this is entirely counterproductive.
-> 
-> Apologies, I'll be sure to be at least one cup of coffee in before
-> doing early morning code.
 
-Even with a steady intake of coffee, there is a pretty clear policy
-around the frequency of patch submission, see [1].
+> Given these are standard registers can we do this in the core code? The 
+> main issue I think is that the config space accessors don't work until 
+> you create the bus struct. That still should be early enough.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n337
-
-There is no hard enforcement of this process, but that should give you
-an idea of how to deal with it. In any case, 7 series in less than a
-week is a clear sign that this series should be *ignored*, as the
-author is likely to post yet another one in the next few hours.
-
-> 
-> >
-> > On 2022-04-16 12:05, Peter Geis wrote:
-> > > The legacy interrupts on the rk356x pcie controller are handled by a
-> > > single muxed interrupt. Add irq domain support to the pcie-dw-rockchip
-> > > driver to support the virtual domain.
-> > >
-> > > Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 112 +++++++++++++++++-
-> > >  1 file changed, 110 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > index c9b341e55cbb..863374604fb1 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > @@ -10,9 +10,12 @@
-> > >
-> > >  #include <linux/clk.h>
-> > >  #include <linux/gpio/consumer.h>
-> > > +#include <linux/irqchip/chained_irq.h>
-> > > +#include <linux/irqdomain.h>
-> > >  #include <linux/mfd/syscon.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/of_device.h>
-> > > +#include <linux/of_irq.h>
-> > >  #include <linux/phy/phy.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/regmap.h>
-> > > @@ -36,10 +39,13 @@
-> > >  #define PCIE_LINKUP                  (PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-> > >  #define PCIE_L0S_ENTRY                       0x11
-> > >  #define PCIE_CLIENT_GENERAL_CONTROL  0x0
-> > > +#define PCIE_CLIENT_INTR_STATUS_LEGACY       0x8
-> > > +#define PCIE_CLIENT_INTR_MASK_LEGACY 0x1c
-> > >  #define PCIE_CLIENT_GENERAL_DEBUG    0x104
-> > > -#define PCIE_CLIENT_HOT_RESET_CTRL      0x180
-> > > +#define PCIE_CLIENT_HOT_RESET_CTRL   0x180
-> > >  #define PCIE_CLIENT_LTSSM_STATUS     0x300
-> > > -#define PCIE_LTSSM_ENABLE_ENHANCE       BIT(4)
-> > > +#define PCIE_LEGACY_INT_ENABLE               GENMASK(3, 0)
-> > > +#define PCIE_LTSSM_ENABLE_ENHANCE    BIT(4)
-> > >  #define PCIE_LTSSM_STATUS_MASK               GENMASK(5, 0)
-> > >
-> > >  struct rockchip_pcie {
-> > > @@ -51,6 +57,8 @@ struct rockchip_pcie {
-> > >       struct reset_control            *rst;
-> > >       struct gpio_desc                *rst_gpio;
-> > >       struct regulator                *vpcie3v3;
-> > > +     struct irq_domain               *irq_domain;
-> > > +     raw_spinlock_t                  irq_lock;
-> > >  };
-> > >
-> > >  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
-> > > @@ -65,6 +73,94 @@ static void rockchip_pcie_writel_apb(struct
-> > > rockchip_pcie *rockchip,
-> > >       writel_relaxed(val, rockchip->apb_base + reg);
-> > >  }
-> > >
-> > > +static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
-> > > +{
-> > > +     struct irq_chip *chip = irq_desc_get_chip(desc);
-> > > +     struct rockchip_pcie *rockchip = irq_desc_get_handler_data(desc);
-> > > +     unsigned long reg, hwirq;
-> > > +
-> > > +     chained_irq_enter(chip, desc);
-> > > +
-> > > +     reg = rockchip_pcie_readl_apb(rockchip,
-> > > PCIE_CLIENT_INTR_STATUS_LEGACY);
-> > > +
-> > > +     for_each_set_bit(hwirq, &reg, 8)
-> >
-> > 8? And yet:
-> >
-> > #define PCI_NUM_INTX        4
-> >
-> > So whatever bits are set above bit 3, you are feeding garbage
-> > to the irqdomain code.
-> 
-> There are 8 bits in total, the top four are for the TX interrupts, for
-> which EP mode is not yet supported by the driver.
-
-So why aren't they excluded from the set of bits that you look at?
-
-> I can constrain this further and let it be expanded when that support
-> is added, if that works for you?
-
-Well, you can't have INTx interrupts in EP mode (that's a TLP going
-out of the device, and not something that is signalled *to* the
-CPU). So the two should be mutually exclusive.
+AFAICS there are generic methods in the core code to get and print the
+link status. See the __pcie_print_link_status() method implementation.
+But as you said they rely on having the bus struct instance created and
+properly initialized. It's created in the framework of the PCI Host bridge
+registration procedure:
+pci_host_probe()
++-> pci_scan_root_bus_bridge()
+    +-> pci_register_host_bridge()
+        +-> pci_alloc_bus(NULL); 
+        +-> ...
+As for me it would be more logical to have the PCIe link established
+(at least activated) and it' status logged before any of the denoted
+actions are made since further initialization rely on the PCIe bus
+transfers. Moreover the PCIe host probe procedure doesn't really
+perform any link up/down related activity, so there is no logical
+place to implement the link state checking except someplace at the
+traceback top position, but again the bus struct instance isn't
+available at that stage. Of course we could implement an alternative
+__pcie_print_HOST_link_status() method, which wouldn't need the bus
+struct passed. But that would have required some more modifications
+(and may cause some functionality duplication) than fixing a few lines
+of code and wasn't a subject of this patchset. As such I decided to
+stick with having the local link status logging procedure especially
+seeing it's done in the framework of the link-wait method, which is
+called right after the DW PCIe LTSSM is activated (at least for the DW
+PCIe Host controller).
 
 > 
-> >
-> > > +             generic_handle_domain_irq(rockchip->irq_domain, hwirq);
-> > > +
-> > > +     chained_irq_exit(chip, desc);
-> > > +}
-> > > +
-> > > +static void rockchip_intx_mask(struct irq_data *data)
-> > > +{
-> > > +     struct rockchip_pcie *rockchip = irq_data_get_irq_chip_data(data);
-> > > +     unsigned long flags;
-> > > +     u32 val;
-> > > +
-> > > +     /* disable legacy interrupts */
-> > > +     raw_spin_lock_irqsave(&rockchip->irq_lock, flags);
-> > > +     val = HIWORD_UPDATE_BIT(PCIE_LEGACY_INT_ENABLE);
-> > > +     val |= PCIE_LEGACY_INT_ENABLE;
-> > > +     rockchip_pcie_writel_apb(rockchip, val,
-> > > PCIE_CLIENT_INTR_MASK_LEGACY);
-> > > +     raw_spin_unlock_irqrestore(&rockchip->irq_lock, flags);
-> >
-> > This is completely busted. INTx lines must be controlled individually.
-> > If I disable one device's INTx output, I don't want to see the
-> > interrupt firing because another one has had its own enabled.
+> I think it is possible some implementations don't report the link state 
+> in these registers. Maybe we don't really need to care.
+
+I don't see a way to disable the PCIe capability in the DW PCIe
+controllers. So if some implementations lack of these registers
+reporting the link state, then either those implementations must have
+been broken or they violate the PCIe Base Specification [1]. IMO that
+must be considered as abnormal situation and needs to be specifically
+handled.
+
+[1] PCI Express® Base Specification Revision 5.0, p. 742.
+
+-Sergey
+
 > 
-> Okay, that makes sense. I'm hitting the entire block when it should be
-> the individual IRQ.
-> I also notice some drivers protect this with a spinlock while others
-> do not, how should this be handled?
-
-It obviously depends on how the HW. works. If this is a shared
-register using a RMW sequence, then you need some form of mutual
-exclusion in order to preserve the atomicity of the update.
-
-If the HW supports updating the masks using a set of hot bits (with
-separate clear/set registers), than there is no need for locking.  In
-your case PCIE_CLIENT_INTR_MASK_LEGACY seems to support this odd
-"write-enable" feature which can probably be used to implement a
-lockless access, something like:
-
-	void mask(struct irq_data *d)
-	{
-		u32 val = BIT(d->hwirq + 16) | BIT(d->hwirq);
-		writel_relaxed(val, ...);
-	}
-
-	void mask(struct irq_data *d)
-	{
-		u32 val = BIT(d->hwirq + 16);
-		writel_relaxed(val, ...);
-	}
-
-Another thing is that it is completely unclear to me what initialises
-these interrupts the first place (INTR_MASK_LEGACY, INTR_EN_LEGACY).
-Are you relying on the firmware to do that for you?
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> Rob
