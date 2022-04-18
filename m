@@ -2,105 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB042505B0E
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 17:30:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8ED5505B47
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 17:37:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344935AbiDRPcH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Apr 2022 11:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40854 "EHLO
+        id S244857AbiDRPkG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Apr 2022 11:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344940AbiDRPbV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 11:31:21 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FFA64E5;
-        Mon, 18 Apr 2022 07:44:19 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id u3so18830208wrg.3;
-        Mon, 18 Apr 2022 07:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U/BmndimxRUeGnhgbDunPyQq29ma5+SBfEP8BqMsdFU=;
-        b=ZLnqQm98G+ZMkFQXpLyGZSX7fecCPhjMaUZd1GrcqcdgaP6HD6TuQSlDJ3MYDJ6g7y
-         fjGPUCmal/HdSK6Joq1ZM5PJTvmmrMpUwmh9uy8kZyyOytxq4Fz91uEVLK/alpOxuHD+
-         hhKyyIWY6OZg4IaB8v/e30AnJ50CeXu34skkKWsH66GkjbeNa7HhkbRLzoYi5D01P4Gb
-         G5IiYD7NH9MxyhCdiPXFNJ0pIWeASI4bs01Vyn9WUV+AurAIfp9oIcZHa0DdeIQuZLEK
-         6dv3Howdcd6jr+QU19tVb12STIXLZaknW+Tm6Q12MyVCw1Mz9sQRQ7882olvihPcasSD
-         Z0nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U/BmndimxRUeGnhgbDunPyQq29ma5+SBfEP8BqMsdFU=;
-        b=m3i5mmN4b9dxY02Ht33enK1Is16KU5aNWitkytB6ggnDyZo0ZYPCo5YNpCxhXCJB/W
-         jf3A9erR8ysECSKBJXejD04Ju63CeH6nQcuAT6J5J/aYrRC7tvPYr7qsNC3dFfsfx3vT
-         p9HD/llAS2TnAx2sMdJAwWS/FMRCKZ4Jx54JOSlDSSlt7ZsomRqjjSMArd8BshsXAazw
-         z8HrCaBcw8w0TWg4Of+/r9v1gGoVaBVT8Cgn5+2nvEEYnr1GlgdMautntnrOwfSBLzPT
-         1+INy2LQDBJIlP17/QOdxncYbpRJCvQ/ZYkj4T5gYqgtHcXocmvJGX+VLBJWbCoDf26w
-         vyig==
-X-Gm-Message-State: AOAM533azVBcPXhL2mvdSWaw83vpux5ggO8a7FLT/mwdpOcbRamqhSqd
-        luEt3RK7FX9BMQtbm1WQvyc=
-X-Google-Smtp-Source: ABdhPJy6pPOJ+6VhwxYN/pnIzTHx+lgfuKlb7rqnPNvgzd2Y+LUnRXOI5h+9yUgPBmkfSXaE05jaAQ==
-X-Received: by 2002:a05:6000:1ace:b0:203:d465:1a83 with SMTP id i14-20020a0560001ace00b00203d4651a83mr8476727wry.26.1650293058002;
-        Mon, 18 Apr 2022 07:44:18 -0700 (PDT)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id d2-20020a056000186200b0020a7be3f1d2sm9107529wri.53.2022.04.18.07.44.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Apr 2022 07:44:17 -0700 (PDT)
-From:   Colin Ian King <colin.i.king@gmail.com>
-To:     Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: [PATCH] PCI: versatile: Remove redundant variable retval
-Date:   Mon, 18 Apr 2022 15:44:16 +0100
-Message-Id: <20220418144416.86121-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S244785AbiDRPj7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 11:39:59 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FDB13E1F;
+        Mon, 18 Apr 2022 08:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650294206; x=1681830206;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Mm1ye/WQVxQp/MY2hRmkn81yEIqLrJ2QUUa96JnW2oA=;
+  b=l4B8wogXd/3cWGZJpAo8plb5BY8xuC70Pk9IBneAJwVgeN13dafhxFjR
+   jRUN2qKVcw8XaeWact8fofvxf41syTsJ41ZvX1fegiewH7HJgV/Q6ruwe
+   IyzOH2XKlekSya/lN3esmq6elEJhbyo7eQLDEo7EVt+QkQv4ojc8QclMr
+   lG9oxaRAtRJkaelu9bbeN1tW5VR7Uy0sIyv5cOmzo+eyjG0W+0g/EFCzD
+   kYzobdnRt4dCA6xrox5S/99Ri9ZAWmKKjWawJj2v9oPak62ZTEYHx41oR
+   0V03IBCda/lmXFiomT6SqlPPfClzn/as9iNiJjSGQWE3BcLZZPolR7Zxb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10321"; a="263293880"
+X-IronPort-AV: E=Sophos;i="5.90,270,1643702400"; 
+   d="scan'208";a="263293880"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2022 08:03:07 -0700
+X-IronPort-AV: E=Sophos;i="5.90,270,1643702400"; 
+   d="scan'208";a="726670038"
+Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2022 08:03:07 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Oliver OHalloran <oohall@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v3] PCI/AER: Handle Multi UnCorrectable/Correctable errors properly
+Date:   Mon, 18 Apr 2022 15:02:37 +0000
+Message-Id: <20220418150237.1021519-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Variable retval is being assigned a value that is never read, the
-variable is redundant and can be removed.
+Currently the aer_irq() handler returns IRQ_NONE for cases without bits
+PCI_ERR_ROOT_UNCOR_RCV or PCI_ERR_ROOT_COR_RCV are set. But this
+assumption is incorrect.
 
-Cleans up clang scan build warning:
-drivers/pci/controller/pci-versatile.c:37:10: warning: Although the value
-stored to 'retval' is used in the enclosing expression, the value is never
-actually read from 'retval' [deadcode.DeadStores]
+Consider a scenario where aer_irq() is triggered for a correctable
+error, and while we process the error and before we clear the error
+status in "Root Error Status" register, if the same kind of error
+is triggered again, since aer_irq() only clears events it saw, the
+multi-bit error is left in tact. This will cause the interrupt to fire
+again, resulting in entering aer_irq() with just the multi-bit error
+logged in the "Root Error Status" register.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Repeated AER recovery test has revealed this condition does happen
+and this prevents any new interrupt from being triggered. Allow to
+process interrupt even if only multi-correctable (BIT 1) or
+multi-uncorrectable bit (BIT 3) is set.
+
+Also note that, for cases with only multi-bit error is set, since this
+is not the first occurrence of the error, PCI_ERR_ROOT_ERR_SRC may have
+zero or some junk value. So we cannot cleanly process this error
+information using aer_isr_one_error(). All we are attempting with this
+fix is to make sure error interrupt processing can continue in this
+scenario.
+
+This error can be reproduced by making following changes to the
+aer_irq() function and by executing the given test commands.
+
+ static irqreturn_t aer_irq(int irq, void *context)
+         struct aer_err_source e_src = {};
+
+         pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS,
+				&e_src.status);
+ +       pci_dbg(pdev->port, "Root Error Status: %04x\n",
+ +		e_src.status);
+         if (!(e_src.status & AER_ERR_STATUS_MASK))
+                 return IRQ_NONE;
+
+ +       mdelay(5000);
+
+ # Prep injection data for a correctable error.
+ $ cd /sys/kernel/debug/apei/einj
+ $ echo 0x00000040 > error_type
+ $ echo 0x4 > flags
+ $ echo 0x891000 > param4
+
+ # Root Error Status is initially clear
+ $ setpci -s <Dev ID> ECAP0001+0x30.w
+ 0000
+
+ # Inject one error
+ $ echo 1 > error_inject
+
+ # Interrupt received
+ pcieport <Dev ID>: AER: Root Error Status 0001
+
+ # Inject another error (within 5 seconds)
+ $ echo 1 > error_inject
+
+ # You will get a new IRQ with only multiple ERR_COR bit set
+ pcieport <Dev ID>: AER: Root Error Status 0002
+
+Currently, the above issue has been only reproduced in the ICL server
+platform.
+
+[Eric: proposed reproducing steps]
+Fixes: 4696b828ca37 ("PCI/AER: Hoist aerdrv.c, aer_inject.c up to drivers/pci/pcie/")
+Reported-by: Eric Badger <ebadger@purestorage.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/controller/pci-versatile.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
-index 653d5d0ecf81..7991d334e0f1 100644
---- a/drivers/pci/controller/pci-versatile.c
-+++ b/drivers/pci/controller/pci-versatile.c
-@@ -31,10 +31,9 @@ static u32 pci_slot_ignore;
+Changes since v2:
+ * Added more details to the commit log.
+ * Rebased on v5.18-rc1.
+
+Changes since v1:
+ * Added Fixes tag.
+ * Included reproducing steps proposed by Eric.
+
+ drivers/pci/pcie/aer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 9fa1f97e5b27..7952e5efd6cf 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -101,6 +101,11 @@ struct aer_stats {
+ #define ERR_COR_ID(d)			(d & 0xffff)
+ #define ERR_UNCOR_ID(d)			(d >> 16)
  
- static int __init versatile_pci_slot_ignore(char *str)
- {
--	int retval;
- 	int slot;
++#define AER_ERR_STATUS_MASK		(PCI_ERR_ROOT_UNCOR_RCV |	\
++					PCI_ERR_ROOT_COR_RCV |		\
++					PCI_ERR_ROOT_MULTI_COR_RCV |	\
++					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
++
+ static int pcie_aer_disable;
+ static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
  
--	while ((retval = get_option(&str, &slot))) {
-+	while (get_option(&str, &slot)) {
- 		if ((slot < 0) || (slot > 31))
- 			pr_err("Illegal slot value: %d\n", slot);
- 		else
+@@ -1196,7 +1201,7 @@ static irqreturn_t aer_irq(int irq, void *context)
+ 	struct aer_err_source e_src = {};
+ 
+ 	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS, &e_src.status);
+-	if (!(e_src.status & (PCI_ERR_ROOT_UNCOR_RCV|PCI_ERR_ROOT_COR_RCV)))
++	if (!(e_src.status & AER_ERR_STATUS_MASK))
+ 		return IRQ_NONE;
+ 
+ 	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_ERR_SRC, &e_src.id);
 -- 
-2.35.1
+2.25.1
 
