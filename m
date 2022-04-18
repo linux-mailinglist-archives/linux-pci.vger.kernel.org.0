@@ -2,69 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B70D1504F65
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 13:37:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12AF0504F68
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 13:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233791AbiDRLjv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Apr 2022 07:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
+        id S234771AbiDRLkA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Apr 2022 07:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231890AbiDRLju (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 07:39:50 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6311571C;
-        Mon, 18 Apr 2022 04:37:12 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id f38so25109667ybi.3;
-        Mon, 18 Apr 2022 04:37:12 -0700 (PDT)
+        with ESMTP id S231890AbiDRLj7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 07:39:59 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB991901B;
+        Mon, 18 Apr 2022 04:37:20 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id x17so23720127lfa.10;
+        Mon, 18 Apr 2022 04:37:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yxOfQqOYcLl8cOCQEWivZY+/nyIZibatv5HXiF7JBAE=;
-        b=AaXteUKTTWeEW2if3hZnkbvnrYbhoxpcbxkS2D80WdHvOFTry2qCM+xF4hf3QS4xWI
-         HHl7tZiHr4P1WUz+XtyHyiWBctVBWF6o2UYNfFBk1Z/TDShk0BXeV3LVOrMYHxXfiDQw
-         8ULCqTQMSxt7c512du6M+fQhahCuq+B4TPHKp73pzfbJhchgl28qjZF0w4EnD6bfu4vJ
-         dSsSWdUEJSCdCjulVsK2pJnUpjowmn4TxE4eEu3V8f9icvedZX8IhgnkEqV/gGdQDm7A
-         WE5At6SzV+BfP7MgpVfcJTxhHownscp7QECxZ8kmyB7/XqwQc+CLcUkWws6lIJ4TPZDH
-         YtNA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GwbdUJvNA5J7T0TOO8uErKoo51uQpGpYKXikXOcSBy0=;
+        b=CmNbCck93oWdcKbsUSIBh9gXujj7jzuAujEmbcF4gHmy4NIsybxLCSNaVi+aIsG6LC
+         c/GnGvHT0b+3iiXYk+uZ3yAxGCvHSnnS6HyMJHb+M9tKKfniaP6SuejhLg25Gmo1GsWP
+         F+9+eYFthxbc5baIdKeHT75cyOF0iFxYjX2JjJgh05CEx0xWT1Up378X9Ql6Hh41n92j
+         cBzNOOkDmilWtMfgUJP2LIX1U5cXVw0oHFmUnb00+uZ4T7Y5QPERivwRLOCHc95clOsA
+         /GaKlZAHl4kxPxa6YsORUAOx45pO8cOZK0eaWlzwV0QT+/IsfcgTWNn31WsGSmCI4VmH
+         RMAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yxOfQqOYcLl8cOCQEWivZY+/nyIZibatv5HXiF7JBAE=;
-        b=n+87hX5HwwgzIt0RHevnMkYSdyxuSikJ79PCMsjbiYTN+eUP93AoQq8Vv9idoBJgL9
-         dSaz7+pTn5ildtYmZcnopQc0MkGYmslsglVa12reBJ8FaVEL0sfAjswZgB8su1S9YUCR
-         9gC2PyojAqsabUgnIB17AOLlbhPuY7MsTbGh7OxJL6v3KKkOLSZwBv8Mf4UwnoYIatXI
-         F1ZT0I3cR6ZS/Ul3anSLUK9F8AnsqtqIX4nwu3GelXBrmB4vwm2ouInlI4OKAr629iu4
-         Mzj0IMtp2a/teI/00svMttqTS/hHlcPxMZN0jPfRn/oE/vDB+CTUXyLXkQnx8yzBwAf4
-         bqrw==
-X-Gm-Message-State: AOAM532XOfXvOaRD2omHktCwOrxQwqTQ6pf+4cjAk8Tc9MSmbE7F5t1L
-        H6N/oeUoHFZeTTm+lENNhbPNHMQ+cpqxKHq0RbA=
-X-Google-Smtp-Source: ABdhPJz7XgpmuAliwGrz6dX8K9sf8b6tP4Vmdc++R7UPxjfoDLnRZv/Maa7v/8Wp8HEDHI6F1JHHnZ8NLKE8n4k9IHk=
-X-Received: by 2002:a25:720b:0:b0:63c:d640:e292 with SMTP id
- n11-20020a25720b000000b0063cd640e292mr9594876ybc.173.1650281831283; Mon, 18
- Apr 2022 04:37:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220416110507.642398-1-pgwipeout@gmail.com> <20220416110507.642398-3-pgwipeout@gmail.com>
- <308e9c47197d4f7ae5a31cfcb5a10886@kernel.org> <CAMdYzYo+YeAgT92baMOoWpra230wro_WynRcajL-__9RNkeE9Q@mail.gmail.com>
- <87zgkk9gtc.wl-maz@kernel.org>
-In-Reply-To: <87zgkk9gtc.wl-maz@kernel.org>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Mon, 18 Apr 2022 07:37:00 -0400
-Message-ID: <CAMdYzYo_+7rakc=GCTueEZvH_F4Co6+=eKAUztJaafiDXSKKXQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/4] PCI: dwc: rockchip: add legacy interrupt support
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GwbdUJvNA5J7T0TOO8uErKoo51uQpGpYKXikXOcSBy0=;
+        b=tLz6I/LGBzsFV2c+UQaYDgNVMcDAGzpGmp6e0v3RTm3pu+78a21sgBN07RET03j66q
+         xyCJssCJnyztyh0uKlmnSGzM7JCLVQirLlwmBmrGJD74hYNWddPluQuVEe9+641J4kcc
+         gDjQNtcQSDo4Yc3REo8jVRW7htGdJQFqWy5uPqjPCAb7XC1x2Y1DzhCAjTsQs9lBjwto
+         0GAVMqVXLmC22XlLNCTygGR/GrSHnFtRBFw9YmhZtldehCF9bcnh8p9up0+ZHPExtc7n
+         oDW4JMyg5ncgMEsm611CyNMViT2AwfCzmJN0gRNrTxiQWDxZFZ4b7fca0ZdIs0fEhmji
+         PyBA==
+X-Gm-Message-State: AOAM530tpuMrQbzOQ5+N+WFLlZgvj5dcgjtpN2cGw0x5lH9Ef9A3eQbo
+        oQnpCJK9+N5qr/zVzALXuqY=
+X-Google-Smtp-Source: ABdhPJzcIspXqFwXv7tiyq3z/I8gZv/qLIzdZ91WDuXd3Gc6kgY4Xu0ABR+dv6IvOpBJUQRPyQ/GbA==
+X-Received: by 2002:a05:6512:15a6:b0:471:a0e1:7430 with SMTP id bp38-20020a05651215a600b00471a0e17430mr994017lfb.183.1650281838353;
+        Mon, 18 Apr 2022 04:37:18 -0700 (PDT)
+Received: from mobilestation ([95.79.134.149])
+        by smtp.gmail.com with ESMTPSA id x14-20020a056512046e00b0046d0d9bb454sm1190963lfd.41.2022.04.18.04.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Apr 2022 04:37:15 -0700 (PDT)
+Date:   Mon, 18 Apr 2022 14:37:13 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Frank Li <Frank.Li@nxp.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/25] dmaengine: dw-edma: Use non-atomic io-64 methods
+Message-ID: <20220418113713.65xtr4ed2c4gjddl@mobilestation>
+References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-21-Sergey.Semin@baikalelectronics.ru>
+ <20220325082840.GH4675@thinkpad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220325082840.GH4675@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -75,205 +82,208 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Apr 17, 2022 at 5:53 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> On Sat, 16 Apr 2022 14:24:26 +0100,
-> Peter Geis <pgwipeout@gmail.com> wrote:
-> >
-> > On Sat, Apr 16, 2022 at 8:54 AM Marc Zyngier <maz@kernel.org> wrote:
-> > >
-> > > Peter,
-> > >
-> > > May I suggest that you slow down on the number of versions you send?
-> > > This is the 7th in 5 days, the 3rd today.
-> > >
-> > > At this stage, this is entirely counterproductive.
-> >
-> > Apologies, I'll be sure to be at least one cup of coffee in before
-> > doing early morning code.
->
-> Even with a steady intake of coffee, there is a pretty clear policy
-> around the frequency of patch submission, see [1].
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n337
->
-> There is no hard enforcement of this process, but that should give you
-> an idea of how to deal with it. In any case, 7 series in less than a
-> week is a clear sign that this series should be *ignored*, as the
-> author is likely to post yet another one in the next few hours.
+On Fri, Mar 25, 2022 at 01:58:40PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Mar 24, 2022 at 04:48:31AM +0300, Serge Semin wrote:
+> > Instead of splitting the 64-bits IOs up into two 32-bits ones it's
+> > possible to use an available set of the non-atomic readq/writeq methods
+> > implemented exactly for such cases. They are defined in the dedicated
+> > header files io-64-nonatomic-lo-hi.h/io-64-nonatomic-hi-lo.h. So in case
+> > if the 64-bits readq/writeq methods are unavailable on some platforms at
+> > consideration, the corresponding drivers can have any of these headers
+> > included and stop locally re-implementing the 64-bits IO accessors taking
+> > into account the non-atomic nature of the included methods. Let's do that
+> > in the DW eDMA driver too. Note by doing so we can discard the
+> > CONFIG_64BIT config ifdefs from the code. Also note that if a platform
+> > doesn't support 64-bit DBI IOs then the corresponding accessors will just
+> > directly call the lo_hi_readq()/lo_hi_writeq() methods.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-v0-core.c | 71 +++++++++------------------
+> >  1 file changed, 24 insertions(+), 47 deletions(-)
+> > 
+> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > index 6b303d5a6b2a..ebb860e19c75 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > @@ -8,6 +8,8 @@
+> >  
+> >  #include <linux/bitfield.h>
+> >  
+> > +#include <linux/io-64-nonatomic-lo-hi.h>
+> > +
+> >  #include "dw-edma-core.h"
+> >  #include "dw-edma-v0-core.h"
+> >  #include "dw-edma-v0-regs.h"
+> > @@ -53,8 +55,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+> >  		SET_32(dw, rd_##name, value);		\
+> >  	} while (0)
+> >  
+> > -#ifdef CONFIG_64BIT
+> > -
+> >  #define SET_64(dw, name, value)				\
+> >  	writeq(value, &(__dw_regs(dw)->name))
+> >  
+> > @@ -80,8 +80,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+> >  		SET_64(dw, rd_##name, value);		\
+> >  	} while (0)
+> >  
+> > -#endif /* CONFIG_64BIT */
+> > -
+> >  #define SET_COMPAT(dw, name, value)			\
+> >  	writel(value, &(__dw_regs(dw)->type.unroll.name))
+> >  
+> > @@ -164,14 +162,13 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  #define SET_LL_32(ll, value) \
+> >  	writel(value, ll)
+> >  
+> > -#ifdef CONFIG_64BIT
+> > -
+> >  static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  			     u64 value, void __iomem *addr)
+> >  {
+> > +	unsigned long flags;
+> > +
+> >  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY) {
+> >  		u32 viewport_sel;
+> > -		unsigned long flags;
+> >  
+> >  		raw_spin_lock_irqsave(&dw->lock, flags);
+> >  
+> > @@ -181,22 +178,25 @@ static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  
+> >  		writel(viewport_sel,
+> >  		       &(__dw_regs(dw)->type.legacy.viewport_sel));
+> > +	}
+> > +
+> > +	if (dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI)
+> > +		lo_hi_writeq(value, addr);
+> > +	else
+> >  		writeq(value, addr);
+> >  
+> > +	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY)
+> >  		raw_spin_unlock_irqrestore(&dw->lock, flags);
+> > -	} else {
+> > -		writeq(value, addr);
+> > -	}
+> >  }
+> >  
+> >  static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  			   const void __iomem *addr)
+> >  {
+> > -	u32 value;
+> > +	unsigned long flags;
+> > +	u64 value;
+> >  
+> >  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY) {
+> >  		u32 viewport_sel;
+> > -		unsigned long flags;
+> >  
+> >  		raw_spin_lock_irqsave(&dw->lock, flags);
+> >  
+> > @@ -206,12 +206,15 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  
+> >  		writel(viewport_sel,
+> >  		       &(__dw_regs(dw)->type.legacy.viewport_sel));
+> > +	}
+> > +
+> > +	if (dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI)
+> > +		value = lo_hi_readq(addr);
+> > +	else
+> >  		value = readq(addr);
+> >  
+> > +	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY)
+> >  		raw_spin_unlock_irqrestore(&dw->lock, flags);
+> > -	} else {
+> > -		value = readq(addr);
+> > -	}
+> >  
+> >  	return value;
+> >  }
+> > @@ -225,8 +228,6 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  #define SET_LL_64(ll, value) \
+> >  	writeq(value, ll)
+> >  
+> > -#endif /* CONFIG_64BIT */
+> > -
+> >  /* eDMA management callbacks */
+> >  void dw_edma_v0_core_off(struct dw_edma *dw)
+> >  {
+> > @@ -325,19 +326,10 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> >  		/* Transfer size */
+> >  		SET_LL_32(&lli[i].transfer_size, child->sz);
+> >  		/* SAR */
+> > -		#ifdef CONFIG_64BIT
+> > -			SET_LL_64(&lli[i].sar.reg, child->sar);
+> > -		#else /* CONFIG_64BIT */
+> > -			SET_LL_32(&lli[i].sar.lsb, lower_32_bits(child->sar));
+> > -			SET_LL_32(&lli[i].sar.msb, upper_32_bits(child->sar));
+> > -		#endif /* CONFIG_64BIT */
+> > +		SET_LL_64(&lli[i].sar.reg, child->sar);
+> 
 
-Understood.
+> This macro still uses writeq(), that's not available on 32bit platforms.
+> Am I missing anything?
 
->
-> >
-> > >
-> > > On 2022-04-16 12:05, Peter Geis wrote:
-> > > > The legacy interrupts on the rk356x pcie controller are handled by a
-> > > > single muxed interrupt. Add irq domain support to the pcie-dw-rockchip
-> > > > driver to support the virtual domain.
-> > > >
-> > > > Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 112 +++++++++++++++++-
-> > > >  1 file changed, 110 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > index c9b341e55cbb..863374604fb1 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > @@ -10,9 +10,12 @@
-> > > >
-> > > >  #include <linux/clk.h>
-> > > >  #include <linux/gpio/consumer.h>
-> > > > +#include <linux/irqchip/chained_irq.h>
-> > > > +#include <linux/irqdomain.h>
-> > > >  #include <linux/mfd/syscon.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/of_device.h>
-> > > > +#include <linux/of_irq.h>
-> > > >  #include <linux/phy/phy.h>
-> > > >  #include <linux/platform_device.h>
-> > > >  #include <linux/regmap.h>
-> > > > @@ -36,10 +39,13 @@
-> > > >  #define PCIE_LINKUP                  (PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-> > > >  #define PCIE_L0S_ENTRY                       0x11
-> > > >  #define PCIE_CLIENT_GENERAL_CONTROL  0x0
-> > > > +#define PCIE_CLIENT_INTR_STATUS_LEGACY       0x8
-> > > > +#define PCIE_CLIENT_INTR_MASK_LEGACY 0x1c
-> > > >  #define PCIE_CLIENT_GENERAL_DEBUG    0x104
-> > > > -#define PCIE_CLIENT_HOT_RESET_CTRL      0x180
-> > > > +#define PCIE_CLIENT_HOT_RESET_CTRL   0x180
-> > > >  #define PCIE_CLIENT_LTSSM_STATUS     0x300
-> > > > -#define PCIE_LTSSM_ENABLE_ENHANCE       BIT(4)
-> > > > +#define PCIE_LEGACY_INT_ENABLE               GENMASK(3, 0)
-> > > > +#define PCIE_LTSSM_ENABLE_ENHANCE    BIT(4)
-> > > >  #define PCIE_LTSSM_STATUS_MASK               GENMASK(5, 0)
-> > > >
-> > > >  struct rockchip_pcie {
-> > > > @@ -51,6 +57,8 @@ struct rockchip_pcie {
-> > > >       struct reset_control            *rst;
-> > > >       struct gpio_desc                *rst_gpio;
-> > > >       struct regulator                *vpcie3v3;
-> > > > +     struct irq_domain               *irq_domain;
-> > > > +     raw_spinlock_t                  irq_lock;
-> > > >  };
-> > > >
-> > > >  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
-> > > > @@ -65,6 +73,94 @@ static void rockchip_pcie_writel_apb(struct
-> > > > rockchip_pcie *rockchip,
-> > > >       writel_relaxed(val, rockchip->apb_base + reg);
-> > > >  }
-> > > >
-> > > > +static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
-> > > > +{
-> > > > +     struct irq_chip *chip = irq_desc_get_chip(desc);
-> > > > +     struct rockchip_pcie *rockchip = irq_desc_get_handler_data(desc);
-> > > > +     unsigned long reg, hwirq;
-> > > > +
-> > > > +     chained_irq_enter(chip, desc);
-> > > > +
-> > > > +     reg = rockchip_pcie_readl_apb(rockchip,
-> > > > PCIE_CLIENT_INTR_STATUS_LEGACY);
-> > > > +
-> > > > +     for_each_set_bit(hwirq, &reg, 8)
-> > >
-> > > 8? And yet:
-> > >
-> > > #define PCI_NUM_INTX        4
-> > >
-> > > So whatever bits are set above bit 3, you are feeding garbage
-> > > to the irqdomain code.
-> >
-> > There are 8 bits in total, the top four are for the TX interrupts, for
-> > which EP mode is not yet supported by the driver.
->
-> So why aren't they excluded from the set of bits that you look at?
->
-> > I can constrain this further and let it be expanded when that support
-> > is added, if that works for you?
->
-> Well, you can't have INTx interrupts in EP mode (that's a TLP going
-> out of the device, and not something that is signalled *to* the
-> CPU). So the two should be mutually exclusive.
+Yes, the writeq/readq macro are defined in the
+include/linux/{io-64-nonatomic-lo-hi.h,io-64-nonatomic-hi-lo.h} files.
+If the platform doesn't provide its own 64-bit IOs implementation
+these macro are used and are unwrapped with the two writel/readl
+methods.
 
-Thank you for the explanation, I haven't messed about with EP mode, so
-my experience is solely with RC mode.
+-Sergey
 
->
-> >
-> > >
-> > > > +             generic_handle_domain_irq(rockchip->irq_domain, hwirq);
-> > > > +
-> > > > +     chained_irq_exit(chip, desc);
-> > > > +}
-> > > > +
-> > > > +static void rockchip_intx_mask(struct irq_data *data)
-> > > > +{
-> > > > +     struct rockchip_pcie *rockchip = irq_data_get_irq_chip_data(data);
-> > > > +     unsigned long flags;
-> > > > +     u32 val;
-> > > > +
-> > > > +     /* disable legacy interrupts */
-> > > > +     raw_spin_lock_irqsave(&rockchip->irq_lock, flags);
-> > > > +     val = HIWORD_UPDATE_BIT(PCIE_LEGACY_INT_ENABLE);
-> > > > +     val |= PCIE_LEGACY_INT_ENABLE;
-> > > > +     rockchip_pcie_writel_apb(rockchip, val,
-> > > > PCIE_CLIENT_INTR_MASK_LEGACY);
-> > > > +     raw_spin_unlock_irqrestore(&rockchip->irq_lock, flags);
-> > >
-> > > This is completely busted. INTx lines must be controlled individually.
-> > > If I disable one device's INTx output, I don't want to see the
-> > > interrupt firing because another one has had its own enabled.
-> >
-> > Okay, that makes sense. I'm hitting the entire block when it should be
-> > the individual IRQ.
-> > I also notice some drivers protect this with a spinlock while others
-> > do not, how should this be handled?
->
-> It obviously depends on how the HW. works. If this is a shared
-> register using a RMW sequence, then you need some form of mutual
-> exclusion in order to preserve the atomicity of the update.
->
-> If the HW supports updating the masks using a set of hot bits (with
-> separate clear/set registers), than there is no need for locking.  In
-> your case PCIE_CLIENT_INTR_MASK_LEGACY seems to support this odd
-> "write-enable" feature which can probably be used to implement a
-> lockless access, something like:
->
->         void mask(struct irq_data *d)
->         {
->                 u32 val = BIT(d->hwirq + 16) | BIT(d->hwirq);
-
-This is what HIWORD_UPDATE_BIT does, it's rather common in Rockchip code.
-I believe I can safely drop the spinlock when enabling/disabling
-individual interrupts.
-
->                 writel_relaxed(val, ...);
->         }
->
->         void mask(struct irq_data *d)
->         {
->                 u32 val = BIT(d->hwirq + 16);
->                 writel_relaxed(val, ...);
->         }
->
-> Another thing is that it is completely unclear to me what initialises
-> these interrupts the first place (INTR_MASK_LEGACY, INTR_EN_LEGACY).
-> Are you relying on the firmware to do that for you?
-
-There is no dedicated mask or enable/disable for the legacy interrupt
-line (unless it's undocumented).
-It appears to be enabled via an "or" function with the emulated interrupts.
-As far as I can tell this is common for dw-pcie, looking at the other drivers.
-
->
+> 
 > Thanks,
->
->         M.
->
-> --
-> Without deviation from the norm, progress is not possible.
-
-Thank you for your insight!
-Peter
+> Mani
+> 
+> >  		/* DAR */
+> > -		#ifdef CONFIG_64BIT
+> > -			SET_LL_64(&lli[i].dar.reg, child->dar);
+> > -		#else /* CONFIG_64BIT */
+> > -			SET_LL_32(&lli[i].dar.lsb, lower_32_bits(child->dar));
+> > -			SET_LL_32(&lli[i].dar.msb, upper_32_bits(child->dar));
+> > -		#endif /* CONFIG_64BIT */
+> > +		SET_LL_64(&lli[i].dar.reg, child->dar);
+> > +
+> >  		i++;
+> >  	}
+> >  
+> > @@ -349,12 +341,7 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> >  	/* Channel control */
+> >  	SET_LL_32(&llp->control, control);
+> >  	/* Linked list */
+> > -	#ifdef CONFIG_64BIT
+> > -		SET_LL_64(&llp->llp.reg, chunk->ll_region.paddr);
+> > -	#else /* CONFIG_64BIT */
+> > -		SET_LL_32(&llp->llp.lsb, lower_32_bits(chunk->ll_region.paddr));
+> > -		SET_LL_32(&llp->llp.msb, upper_32_bits(chunk->ll_region.paddr));
+> > -	#endif /* CONFIG_64BIT */
+> > +	SET_LL_64(&llp->llp.reg, chunk->ll_region.paddr);
+> >  }
+> >  
+> >  void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> > @@ -417,18 +404,8 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> >  		SET_CH_32(dw, chan->dir, chan->id, ch_control1,
+> >  			  (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
+> >  		/* Linked list */
+> > -		if ((chan->dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI) ||
+> > -		    !IS_ENABLED(CONFIG_64BIT)) {
+> > -			SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> > -				  lower_32_bits(chunk->ll_region.paddr));
+> > -			SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> > -				  upper_32_bits(chunk->ll_region.paddr));
+> > -		} else {
+> > -		#ifdef CONFIG_64BIT
+> > -			SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> > -				  chunk->ll_region.paddr);
+> > -		#endif
+> > -		}
+> > +		SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> > +			  chunk->ll_region.paddr);
+> >  	}
+> >  	/* Doorbell */
+> >  	SET_RW_32(dw, chan->dir, doorbell,
+> > -- 
+> > 2.35.1
+> > 
