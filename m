@@ -2,80 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3C19505C54
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 18:17:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27561505D23
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 18:55:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346060AbiDRQUY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Apr 2022 12:20:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51648 "EHLO
+        id S1346613AbiDRQ5M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Apr 2022 12:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346059AbiDRQUY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 12:20:24 -0400
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 457582CE2B;
-        Mon, 18 Apr 2022 09:17:44 -0700 (PDT)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-2f19fdba41fso18692317b3.3;
-        Mon, 18 Apr 2022 09:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mGWxv/qota/JshJiLK9mcfcLcUXUwT9NkI4w3aXnwsE=;
-        b=BRLJRAM6c4CTKa9943BLdzY274Da7Gk76ZH+uFpSX6pUtz6TPcxsEk/jNKjVOuMN+a
-         HcEP9XqzUKeT06kLFtfKlWdNwbU+wkAWwhFub0lyjCq9Opij8cKGZfczmS0M4uzEGLJF
-         +59kT9/fyltIEL1RVB9BW8W81FABIUsmVd9couP7iIcapJoY5P5Gh9jgvqIvOtr//bPk
-         7zvJfX4X7uyKiTRopzYzY4n/uwrjXG+DDsYNVvf7hnBs4br/ON6llX48ghv2JqmRtWpT
-         kOq71eBViGMD6nnTUISoAsAqmbCBxV/pbZriCXqo79zTuKs02sNMuKZYqENpYYCIAOML
-         zEHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mGWxv/qota/JshJiLK9mcfcLcUXUwT9NkI4w3aXnwsE=;
-        b=Rbdbsj5X3FOpEi/oLaFPAkNjTTRWBcICfDFkOdfNRxlq/qhbZ14ZUaV48Cj3j8rroV
-         I9LrYAX9+DhyRrXRKJFjn5aByM0oC1rmPeu1hEi/QollpsTSB6Rhd4hGj047E+aVz8OO
-         qbBJqP1B83hU7BYBMStT5WGoGwmuq0LdAdTmpGmd1r9TqubCdIWinXe8ot3zsg/EhEz4
-         uBGfaCC+is7CA8mLChpewKWMQu072Xc0fA/x5qOV9OKj6ZA2LyGjWVTq5+aiM5k8FBBO
-         kQuQx5xLURCxe98YdB769x7G27bpU7mYiTdzY0Pv9rTqd1hddUBT1W3/2XqUSEwyK1lF
-         XpBg==
-X-Gm-Message-State: AOAM530pe/RmrAA6j7vE+SvRVx0IDqKYNs64/FfW+9Ucw4bD6ouzd6lp
-        5Kky45+KmgL+Zvzn5bcoeHDkKp0/kvGzUJ7L9rU=
-X-Google-Smtp-Source: ABdhPJx2IFxxyKsz/E+/vX5yjPGTf8jxveTP2m6H/pqXXpMrMGVz4/s/MMOE1+sNXpE6i7CO0eSsyT8JQa0WRfWGhSc=
-X-Received: by 2002:a81:5904:0:b0:2eb:f900:882e with SMTP id
- n4-20020a815904000000b002ebf900882emr10602126ywb.281.1650298662641; Mon, 18
- Apr 2022 09:17:42 -0700 (PDT)
+        with ESMTP id S1346747AbiDRQ4t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 12:56:49 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E639433EB8;
+        Mon, 18 Apr 2022 09:52:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A10B3B8104C;
+        Mon, 18 Apr 2022 16:52:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A77EC385AB;
+        Mon, 18 Apr 2022 16:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650300747;
+        bh=FqA87CXgaTYslJKT4j5d//cmzCdvUZXSeGEszJTZZjk=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=MrkJSukFcEJ1Zk/lIRC80aIrInKZSSpKqmq0u5QlxlZaTrIQD21v5v5gzfcGmCjep
+         ct6C7k7YyDekrWeXPAPWEaTd5TpLHVNFCwo3/NBmqVf5G6baM2QNZCL9pRaK63cHR2
+         X8ZbexAFAFgFgzYYGNrk5TuH1uxiswgGzL02Zre2U2DEAQoRVZ7EdWNC3Rn8n2csaS
+         efFeAva1gSESCMNUSVVhLP7ZbK3dTXPIdrEfFWdHfvYCFc6b5b3WPBvjtHRVvXmYTl
+         5lFEitQ/UCkh4zgieGEr1NVM9/JvlDzpIyvziiZNerRVaEWxLssdJiH1ajii+02gki
+         uwvC9Jg/Oz0iw==
+Message-ID: <4a6dd90c-3f8e-ad18-0136-88b75f4d9cf9@kernel.org>
+Date:   Mon, 18 Apr 2022 18:52:18 +0200
 MIME-Version: 1.0
-References: <trinity-a220fd81-2ee9-474d-bd65-505b9ed904b2-1650186482865@3c-app-gmx-bs58>
- <20220418155313.GA1101563@bhelgaas>
-In-Reply-To: <20220418155313.GA1101563@bhelgaas>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Mon, 18 Apr 2022 12:17:31 -0400
-Message-ID: <CAMdYzYpydGyQZT2n9Tf+ccQMLHzfhOgoyamMgspQDcjzm3Umdg@mail.gmail.com>
-Subject: Re: Re: [RFC/RFT 4/6] PCI: rockchip-dwc: add pcie bifurcation
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Wunderlich <linux@fw-web.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH 0/5] Add support for Axis, ARTPEC-8 PCIe driver
+Content-Language: en-US
+To:     wangseok.lee@samsung.com, robh+dt <robh+dt@kernel.org>,
+        krzk+dt <krzk+dt@kernel.org>, kishon <kishon@ti.com>,
+        vkoul <vkoul@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "jesper.nilsson" <jesper.nilsson@axis.com>,
+        "lars.persson" <lars.persson@axis.com>
+Cc:     bhelgaas <bhelgaas@google.com>,
+        linux-phy <linux-phy@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        "lorenzo.pieralisi" <lorenzo.pieralisi@arm.com>, kw <kw@linux.com>,
+        linux-arm-kernel <linux-arm-kernel@axis.com>,
+        kernel <kernel@axis.com>, Moon-Ki Jun <moonki.jun@samsung.com>,
+        Dongjin Yang <dj76.yang@samsung.com>
+References: <CGME20220418072049epcms2p463a9f01d8ae3e29f75b746a0dce934f1@epcms2p4>
+ <20220418072049epcms2p463a9f01d8ae3e29f75b746a0dce934f1@epcms2p4>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20220418072049epcms2p463a9f01d8ae3e29f75b746a0dce934f1@epcms2p4>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-10.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,31 +68,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 18, 2022 at 11:53 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Sun, Apr 17, 2022 at 11:08:02AM +0200, Frank Wunderlich wrote:
-> > > On Sat, Apr 16, 2022 at 03:54:56PM +0200, Frank Wunderlich wrote:
-> > > > From: Frank Wunderlich <frank-w@public-files.de>
-> > > >
-> > > > PCIe Lanes can be split to 2 slots with bifurcation.
-> > > > Add support for this in existing pcie driver.
->
-> > > Is the "rockchip,bifurcation" DT property something that should be
-> > > generalized so it's not rockchip-specific?  Other controllers are
-> > > likely to support similar functionality.
-> >
-> > I do not know if other controllers support similar functionality,
-> > but i ack a property without vendor prefix is better. Should i use
-> > "bifurcation" as name or do you think about a different name which
-> > is more generic?
->
-> Really a question for Rob about what name would be good and where it
-> should go.
+On 18/04/2022 09:20, Wangseok Lee wrote:
+>>> Also, as you know,
+>>> exynos driver is designed according to exynos SoC platform,
+>>> so both function and variable names start with exynos.
+>>
+>> That's hardly a problem...
+>>
+>>> Compared to the existing exynos driver, 
+>>> you can see that the structure and type of function are different.
+>>
+>> No, I cannot see it. You coded the driver that way, you can code it in
+>> other way.
+>>
+>>> For this reason, it is difficult to use the existing exynos driver 
+>>> for artpec.
+>>
+>> Naming of functions and structures is not making it difficult. That's
+>> not the reason.
+>>
+>>> Our idea is to register a new PCIe driver for artpec-8 SoC platform 
+>>> and maintain it in the future.
+>>
+>> We also want to maintain Exynos PCIe driver in the future.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> Hi, 
+> Sorry for delay response.
 
-It might be good to define this as a lane map.
-In the Rockchip implementation it's only 2+0 or 1+1, but that isn't
-guaranteed if this is made into a standard definition.
-So perhaps:
-pcie-bifurcation-map = <0>, <1>;
-pcie-bifurcation-map = <1>;
-pcie-bifurcation-map = <4>, <5>, <6>, <7>;
+Sure, happens, but I don't remember the discussion, so replying that
+late will not help your cause.
+
+You know that if you (you as Samsung) worked with upstream, e.g. by
+extending the drivers and keeping them in shape, it would be much easier
+for you (again you as Samsung) to actually add new features? It's much
+better/effective approach than the path of pushing every time new driver
+with explanation like "we do not want to maintain older driver, so we
+want a new one"...
+
+> I have listed some parts that are different from exynos pcie driver.
+> 
+> PHY driver
+> PHY is different, so register map is also different.
+> Three reference clock options are available in ARTPEC-8.
+>   It operates by selecting one clock among XO, IO, and SOC PLL.
+>   However, the exynos phy driver sets one ref clk though sysreg.
+
+It usually trivial to code such difference in the driver.
+
+> The reset method and type of PHY for initialization are different.
+> The overall sysreg configuration is different
+
+Indeed.
+
+> Artpec-8 requires a separate sequence for phy tuning,
+> but it does not exist in exynos phy driver.
+> Artpec-8 requires pcs resources, but exynos phy driver does not exist.
+> 
+
+For the phy driver indeed it might require much effort to create one driver.
+
+> Controller driver
+> Sub controller is different, so register map is also different.
+> And it is different handles lane control, link control, PHY clocking,
+> reset, interrupt control. 
+> The number and type of clock resources used are different.
+> The overall sysreg configuration is different
+> 
+> Also artpec-8 is performed in dual mode that supports both RC and EP.
+> As described above, the PHY and sub ontroller are different
+> and the regiser map is different.
+> sysreg is also different. And there are differences such as reset.
+> The driver will be much more complicated if both hardwares should be
+> supported in the same driver.
+
+Maybe, quite probably. The reluctance to extend any existing code makes
+me doubting this, but I admit that there are many differences.
+
+> For these reasons, my opinion is that better to create
+> a phy, controller both driver with a new file.
+> Please let me know your opinion.
+
+At the end it's mostly the decision of PCIe and phy subsystem
+maintainers whether they want to have separate drivers for DWC PCIe
+blocks in ARMv8 Samsung SoCs.
+
+In any case, the driver code looks like copied-pasted from some vendor
+sources, so you need to bring it to shape.
+
+Best regards,
+Krzysztof
