@@ -2,173 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A025F504A28
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 02:18:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1EB6504A53
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 02:56:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235428AbiDRAVG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 17 Apr 2022 20:21:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50132 "EHLO
+        id S233907AbiDRA65 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Apr 2022 20:58:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235422AbiDRAVE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Apr 2022 20:21:04 -0400
+        with ESMTP id S232132AbiDRA65 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Apr 2022 20:58:57 -0400
 Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D4E90DECD;
-        Sun, 17 Apr 2022 17:18:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC9CC643A;
+        Sun, 17 Apr 2022 17:56:19 -0700 (PDT)
 Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 18 Apr 2022 09:18:24 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 5AF5A2058B50;
-        Mon, 18 Apr 2022 09:18:24 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 18 Apr 2022 09:18:24 +0900
-Received: from plum.e01.socionext.com (unknown [10.212.243.119])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id C41EFB6389;
-        Mon, 18 Apr 2022 09:18:23 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+  by mx.socionext.com with ESMTP; 18 Apr 2022 09:56:19 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 436FB2058B50;
+        Mon, 18 Apr 2022 09:56:19 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 18 Apr 2022 09:56:19 +0900
+Received: from [10.212.182.6] (unknown [10.212.182.6])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id 50D1DB62B7;
+        Mon, 18 Apr 2022 09:56:18 +0900 (JST)
+Subject: Re: [PATCH v2 2/2] arm64: dts: uniphier: Remove compatible
+ "snps,dw-pcie" from pcie node
+To:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+        Krzysztof Kozlowski <krzk+dt@kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 2/2] dt-bindings: PCI: uniphier-ep: Clean up reg, clocks, resets, and their names using compatible string
-Date:   Mon, 18 Apr 2022 09:18:20 +0900
-Message-Id: <1650241100-3606-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1650241100-3606-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1650241100-3606-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1648617814-9217-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1648617814-9217-3-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <b6bd1a3c-f9a4-7e2f-b8ac-0676b9873e08@socionext.com>
+Date:   Mon, 18 Apr 2022 09:56:18 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <1648617814-9217-3-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of "oneOf:" choices, use "allOf:" and "if:" to define reg, clocks,
-resets, and their names that can be taken by the compatible string.
+On 2022/03/30 14:23, Kunihiko Hayashi wrote:
+> UniPhier PCIe host controller doesn't use "snps,dw-pcie" compatible, so
+> this is no longer needed. Remove the compatible string from the pcie node
+> to fix the following warning.
+> 
+>    uniphier-ld20-akebi96.dtb: pcie@66000000: compatible:
+> ['socionext,uniphier-pcie', 'snps,dw-pcie'] is too long
+>        From schema:
+> Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>   arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 +-
+>   arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 
-The order of their names doesn't change here.
+This patch 2 is for the devicetree and patch 1 has already been merged,
+so I'll post it as a new patch series along with other devicetree patches.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Thank you,
+
 ---
- .../pci/socionext,uniphier-pcie-ep.yaml       | 76 ++++++++++++-------
- 1 file changed, 49 insertions(+), 27 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-index 437e61618d06..f0d8e486a07d 100644
---- a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-@@ -15,9 +15,6 @@ description: |
- maintainers:
-   - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
- 
--allOf:
--  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
--
- properties:
-   compatible:
-     enum:
-@@ -29,40 +26,25 @@ properties:
-     maxItems: 5
- 
-   reg-names:
--    oneOf:
--      - items:
--          - const: dbi
--          - const: dbi2
--          - const: link
--          - const: addr_space
--      - items:
--          - const: dbi
--          - const: dbi2
--          - const: link
--          - const: addr_space
--          - const: atu
-+    minItems: 4
-+    items:
-+      - const: dbi
-+      - const: dbi2
-+      - const: link
-+      - const: addr_space
-+      - const: atu
- 
-   clocks:
-     minItems: 1
-     maxItems: 2
- 
--  clock-names:
--    oneOf:
--      - items:              # for Pro5
--          - const: gio
--          - const: link
--      - const: link         # for NX1
-+  clock-names: true
- 
-   resets:
-     minItems: 1
-     maxItems: 2
- 
--  reset-names:
--    oneOf:
--      - items:              # for Pro5
--          - const: gio
--          - const: link
--      - const: link         # for NX1
-+  reset-names: true
- 
-   num-ib-windows:
-     const: 16
-@@ -78,6 +60,46 @@ properties:
-   phy-names:
-     const: pcie-phy
- 
-+allOf:
-+  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: socionext,uniphier-pro5-pcie-ep
-+    then:
-+      properties:
-+        reg:
-+          maxItems: 4
-+        reg-names:
-+          maxItems: 4
-+        clocks:
-+          minItems: 2
-+        clock-names:
-+          items:
-+            - const: gio
-+            - const: link
-+        resets:
-+          minItems: 2
-+        reset-names:
-+          items:
-+            - const: gio
-+            - const: link
-+    else:
-+      properties:
-+        reg:
-+          minItems: 5
-+        reg-names:
-+          minItems: 5
-+        clocks:
-+          maxItems: 1
-+        clock-names:
-+          const: link
-+        resets:
-+          maxItems: 1
-+        reset-names:
-+          const: link
-+
- required:
-   - compatible
-   - reg
--- 
-2.25.1
-
+Best Regards
+Kunihiko Hayashi
