@@ -2,260 +2,278 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BC09504EE0
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 12:39:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B70D1504F65
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 13:37:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237709AbiDRKll (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Apr 2022 06:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47950 "EHLO
+        id S233791AbiDRLjv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Apr 2022 07:39:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbiDRKlk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 06:41:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A363E15A31;
-        Mon, 18 Apr 2022 03:39:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2B272611F1;
-        Mon, 18 Apr 2022 10:39:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A89F3C385A8;
-        Mon, 18 Apr 2022 10:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650278340;
-        bh=kI59jYqj7rPLfRHyWTPL69LKjL3lZ4/Nnt35pCVLnBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jp7IJKFwT6c2TCPMTwuMO6BXKiO408/DU1GjgWcyArka9l8DEGMqGvJYSBQy9NUEx
-         4MmsgFzxTyWL+FcJIRdARmZh0u46tsirEFTy2pkjEPMD9SOYdFbBvnHVlKvjTxQJ02
-         XFqXCe/TB3NfBg+5+4GJzx2g9DXkO/l0NRke+PmWpNEFuJGLc3pufqwKuVZtWZgeNL
-         BYeTqAmpETJzWlnhKNI1mIbkf68xILN/r78GDb86ZzZq7GDzwt8eFMA4JsDW9vZIiC
-         NdP/FOCtjC7Qj+njg9e0x/zgZqhRIIaM4dalY2amSIb9kPBd6p+Za4pvdu6lAJTHhE
-         1KHdkNdia9Vxg==
-Date:   Mon, 18 Apr 2022 16:08:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Frank Wunderlich <linux@fw-web.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [RFC/RFT 3/6] phy: rockchip: Support pcie v3
-Message-ID: <Yl0/v2101wx6hy7B@matsya>
-References: <20220416135458.104048-1-linux@fw-web.de>
- <20220416135458.104048-4-linux@fw-web.de>
+        with ESMTP id S231890AbiDRLju (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 07:39:50 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6311571C;
+        Mon, 18 Apr 2022 04:37:12 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id f38so25109667ybi.3;
+        Mon, 18 Apr 2022 04:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yxOfQqOYcLl8cOCQEWivZY+/nyIZibatv5HXiF7JBAE=;
+        b=AaXteUKTTWeEW2if3hZnkbvnrYbhoxpcbxkS2D80WdHvOFTry2qCM+xF4hf3QS4xWI
+         HHl7tZiHr4P1WUz+XtyHyiWBctVBWF6o2UYNfFBk1Z/TDShk0BXeV3LVOrMYHxXfiDQw
+         8ULCqTQMSxt7c512du6M+fQhahCuq+B4TPHKp73pzfbJhchgl28qjZF0w4EnD6bfu4vJ
+         dSsSWdUEJSCdCjulVsK2pJnUpjowmn4TxE4eEu3V8f9icvedZX8IhgnkEqV/gGdQDm7A
+         WE5At6SzV+BfP7MgpVfcJTxhHownscp7QECxZ8kmyB7/XqwQc+CLcUkWws6lIJ4TPZDH
+         YtNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yxOfQqOYcLl8cOCQEWivZY+/nyIZibatv5HXiF7JBAE=;
+        b=n+87hX5HwwgzIt0RHevnMkYSdyxuSikJ79PCMsjbiYTN+eUP93AoQq8Vv9idoBJgL9
+         dSaz7+pTn5ildtYmZcnopQc0MkGYmslsglVa12reBJ8FaVEL0sfAjswZgB8su1S9YUCR
+         9gC2PyojAqsabUgnIB17AOLlbhPuY7MsTbGh7OxJL6v3KKkOLSZwBv8Mf4UwnoYIatXI
+         F1ZT0I3cR6ZS/Ul3anSLUK9F8AnsqtqIX4nwu3GelXBrmB4vwm2ouInlI4OKAr629iu4
+         Mzj0IMtp2a/teI/00svMttqTS/hHlcPxMZN0jPfRn/oE/vDB+CTUXyLXkQnx8yzBwAf4
+         bqrw==
+X-Gm-Message-State: AOAM532XOfXvOaRD2omHktCwOrxQwqTQ6pf+4cjAk8Tc9MSmbE7F5t1L
+        H6N/oeUoHFZeTTm+lENNhbPNHMQ+cpqxKHq0RbA=
+X-Google-Smtp-Source: ABdhPJz7XgpmuAliwGrz6dX8K9sf8b6tP4Vmdc++R7UPxjfoDLnRZv/Maa7v/8Wp8HEDHI6F1JHHnZ8NLKE8n4k9IHk=
+X-Received: by 2002:a25:720b:0:b0:63c:d640:e292 with SMTP id
+ n11-20020a25720b000000b0063cd640e292mr9594876ybc.173.1650281831283; Mon, 18
+ Apr 2022 04:37:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220416135458.104048-4-linux@fw-web.de>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220416110507.642398-1-pgwipeout@gmail.com> <20220416110507.642398-3-pgwipeout@gmail.com>
+ <308e9c47197d4f7ae5a31cfcb5a10886@kernel.org> <CAMdYzYo+YeAgT92baMOoWpra230wro_WynRcajL-__9RNkeE9Q@mail.gmail.com>
+ <87zgkk9gtc.wl-maz@kernel.org>
+In-Reply-To: <87zgkk9gtc.wl-maz@kernel.org>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Mon, 18 Apr 2022 07:37:00 -0400
+Message-ID: <CAMdYzYo_+7rakc=GCTueEZvH_F4Co6+=eKAUztJaafiDXSKKXQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/4] PCI: dwc: rockchip: add legacy interrupt support
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 16-04-22, 15:54, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> RK3568 supports PCIe v3 using not Combphy like PCIe v2 on rk3566.
-> It use a dedicated pcie-phy. Add support for this.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> driver was taken from linux 5.10 based on in
-> https://github.com/JeffyCN/mirrors
-> which now has disappeared
-> ---
->  drivers/phy/rockchip/Kconfig                  |   9 +
->  drivers/phy/rockchip/Makefile                 |   1 +
->  .../phy/rockchip/phy-rockchip-snps-pcie3.c    | 278 ++++++++++++++++++
->  include/dt-bindings/phy/phy-snps-pcie3.h      |  21 ++
->  include/linux/phy/pcie.h                      |  12 +
->  5 files changed, 321 insertions(+)
->  create mode 100644 drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
->  create mode 100644 include/dt-bindings/phy/phy-snps-pcie3.h
->  create mode 100644 include/linux/phy/pcie.h
-> 
-> diff --git a/drivers/phy/rockchip/Kconfig b/drivers/phy/rockchip/Kconfig
-> index 9022e395c056..94360fc96a6f 100644
-> --- a/drivers/phy/rockchip/Kconfig
-> +++ b/drivers/phy/rockchip/Kconfig
-> @@ -83,6 +83,15 @@ config PHY_ROCKCHIP_PCIE
->  	help
->  	  Enable this to support the Rockchip PCIe PHY.
->  
-> +config PHY_ROCKCHIP_SNPS_PCIE3
-> +	tristate "Rockchip Snps PCIe3 PHY Driver"
-> +	depends on (ARCH_ROCKCHIP && OF) || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	select GENERIC_PHY
-> +	select MFD_SYSCON
-> +	help
-> +	  Enable this to support the Rockchip snps PCIe3 PHY.
-> +
->  config PHY_ROCKCHIP_TYPEC
->  	tristate "Rockchip TYPEC PHY Driver"
->  	depends on OF && (ARCH_ROCKCHIP || COMPILE_TEST)
-> diff --git a/drivers/phy/rockchip/Makefile b/drivers/phy/rockchip/Makefile
-> index a5041efb5b8f..7eab129230d1 100644
-> --- a/drivers/phy/rockchip/Makefile
-> +++ b/drivers/phy/rockchip/Makefile
-> @@ -8,5 +8,6 @@ obj-$(CONFIG_PHY_ROCKCHIP_INNO_HDMI)	+= phy-rockchip-inno-hdmi.o
->  obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
->  obj-$(CONFIG_PHY_ROCKCHIP_NANENG_COMBO_PHY)	+= phy-rockchip-naneng-combphy.o
->  obj-$(CONFIG_PHY_ROCKCHIP_PCIE)		+= phy-rockchip-pcie.o
-> +obj-$(CONFIG_PHY_ROCKCHIP_SNPS_PCIE3)	+= phy-rockchip-snps-pcie3.o
->  obj-$(CONFIG_PHY_ROCKCHIP_TYPEC)	+= phy-rockchip-typec.o
->  obj-$(CONFIG_PHY_ROCKCHIP_USB)		+= phy-rockchip-usb.o
-> diff --git a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-> new file mode 100644
-> index 000000000000..992b9709a97a
-> --- /dev/null
-> +++ b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-> @@ -0,0 +1,278 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Rockchip PCIE3.0 phy driver
-> + *
-> + * Copyright (C) 2020 Rockchip Electronics Co., Ltd.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/phy/pcie.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <dt-bindings/phy/phy-snps-pcie3.h>
-> +
-> +/* Register for RK3568 */
-> +#define GRF_PCIE30PHY_CON1 0x4
-> +#define GRF_PCIE30PHY_CON6 0x18
-> +#define GRF_PCIE30PHY_CON9 0x24
-> +#define GRF_PCIE30PHY_STATUS0 0x80
-> +#define SRAM_INIT_DONE(reg) (reg & BIT(14))
-> +
-> +/* Register for RK3588 */
-> +#define PHP_GRF_PCIESEL_CON 0x100
-> +#define RK3588_PCIE3PHY_GRF_CMN_CON0 0x0
-> +#define RK3588_PCIE3PHY_GRF_PHY0_STATUS1 0x904
-> +#define RK3588_PCIE3PHY_GRF_PHY1_STATUS1 0xa04
-> +#define RK3588_SRAM_INIT_DONE(reg) (reg & BIT(0))
-> +
-> +struct rockchip_p3phy_ops;
-> +
-> +struct rockchip_p3phy_priv {
-> +	const struct rockchip_p3phy_ops *ops;
-> +	void __iomem *mmio;
-> +	/* mode: RC, EP */
-> +	int mode;
-> +	/* pcie30_phymode: Aggregation, Bifurcation */
-> +	int pcie30_phymode;
-> +	struct regmap *phy_grf;
-> +	struct regmap *pipe_grf;
-> +	struct reset_control *p30phy;
-> +	struct phy *phy;
-> +	struct clk_bulk_data *clks;
-> +	int num_clks;
-> +	bool is_bifurcation;
-> +};
-> +
-> +struct rockchip_p3phy_ops {
-> +	int (*phy_init)(struct rockchip_p3phy_priv *priv);
-> +};
-> +
-> +static int rockchip_p3phy_set_mode(struct phy *phy, enum phy_mode mode, int submode)
-> +{
-> +	struct rockchip_p3phy_priv *priv = phy_get_drvdata(phy);
-> +
-> +	/* Actually We don't care EP/RC mode, but just record it */
-> +	switch (submode) {
-> +	case PHY_MODE_PCIE_RC:
-> +		priv->mode = PHY_MODE_PCIE_RC;
-> +		break;
-> +	case PHY_MODE_PCIE_EP:
-> +		priv->mode = PHY_MODE_PCIE_EP;
-> +		break;
-> +	case PHY_MODE_PCIE_BIFURCATION:
-> +		priv->is_bifurcation = true;
-> +		break;
-> +	default:
-> +		pr_info("%s, invalid mode\n", __func__);
+On Sun, Apr 17, 2022 at 5:53 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Sat, 16 Apr 2022 14:24:26 +0100,
+> Peter Geis <pgwipeout@gmail.com> wrote:
+> >
+> > On Sat, Apr 16, 2022 at 8:54 AM Marc Zyngier <maz@kernel.org> wrote:
+> > >
+> > > Peter,
+> > >
+> > > May I suggest that you slow down on the number of versions you send?
+> > > This is the 7th in 5 days, the 3rd today.
+> > >
+> > > At this stage, this is entirely counterproductive.
+> >
+> > Apologies, I'll be sure to be at least one cup of coffee in before
+> > doing early morning code.
+>
+> Even with a steady intake of coffee, there is a pretty clear policy
+> around the frequency of patch submission, see [1].
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n337
+>
+> There is no hard enforcement of this process, but that should give you
+> an idea of how to deal with it. In any case, 7 series in less than a
+> week is a clear sign that this series should be *ignored*, as the
+> author is likely to post yet another one in the next few hours.
 
-this should be err log, also make it dev_err pls
+Understood.
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rockchip_p3phy_rk3568_init(struct rockchip_p3phy_priv *priv)
-> +{
-> +	int ret = 0;
+>
+> >
+> > >
+> > > On 2022-04-16 12:05, Peter Geis wrote:
+> > > > The legacy interrupts on the rk356x pcie controller are handled by a
+> > > > single muxed interrupt. Add irq domain support to the pcie-dw-rockchip
+> > > > driver to support the virtual domain.
+> > > >
+> > > > Signed-off-by: Peter Geis <pgwipeout@gmail.com>
+> > > > ---
+> > > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 112 +++++++++++++++++-
+> > > >  1 file changed, 110 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > index c9b341e55cbb..863374604fb1 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > @@ -10,9 +10,12 @@
+> > > >
+> > > >  #include <linux/clk.h>
+> > > >  #include <linux/gpio/consumer.h>
+> > > > +#include <linux/irqchip/chained_irq.h>
+> > > > +#include <linux/irqdomain.h>
+> > > >  #include <linux/mfd/syscon.h>
+> > > >  #include <linux/module.h>
+> > > >  #include <linux/of_device.h>
+> > > > +#include <linux/of_irq.h>
+> > > >  #include <linux/phy/phy.h>
+> > > >  #include <linux/platform_device.h>
+> > > >  #include <linux/regmap.h>
+> > > > @@ -36,10 +39,13 @@
+> > > >  #define PCIE_LINKUP                  (PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+> > > >  #define PCIE_L0S_ENTRY                       0x11
+> > > >  #define PCIE_CLIENT_GENERAL_CONTROL  0x0
+> > > > +#define PCIE_CLIENT_INTR_STATUS_LEGACY       0x8
+> > > > +#define PCIE_CLIENT_INTR_MASK_LEGACY 0x1c
+> > > >  #define PCIE_CLIENT_GENERAL_DEBUG    0x104
+> > > > -#define PCIE_CLIENT_HOT_RESET_CTRL      0x180
+> > > > +#define PCIE_CLIENT_HOT_RESET_CTRL   0x180
+> > > >  #define PCIE_CLIENT_LTSSM_STATUS     0x300
+> > > > -#define PCIE_LTSSM_ENABLE_ENHANCE       BIT(4)
+> > > > +#define PCIE_LEGACY_INT_ENABLE               GENMASK(3, 0)
+> > > > +#define PCIE_LTSSM_ENABLE_ENHANCE    BIT(4)
+> > > >  #define PCIE_LTSSM_STATUS_MASK               GENMASK(5, 0)
+> > > >
+> > > >  struct rockchip_pcie {
+> > > > @@ -51,6 +57,8 @@ struct rockchip_pcie {
+> > > >       struct reset_control            *rst;
+> > > >       struct gpio_desc                *rst_gpio;
+> > > >       struct regulator                *vpcie3v3;
+> > > > +     struct irq_domain               *irq_domain;
+> > > > +     raw_spinlock_t                  irq_lock;
+> > > >  };
+> > > >
+> > > >  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
+> > > > @@ -65,6 +73,94 @@ static void rockchip_pcie_writel_apb(struct
+> > > > rockchip_pcie *rockchip,
+> > > >       writel_relaxed(val, rockchip->apb_base + reg);
+> > > >  }
+> > > >
+> > > > +static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
+> > > > +{
+> > > > +     struct irq_chip *chip = irq_desc_get_chip(desc);
+> > > > +     struct rockchip_pcie *rockchip = irq_desc_get_handler_data(desc);
+> > > > +     unsigned long reg, hwirq;
+> > > > +
+> > > > +     chained_irq_enter(chip, desc);
+> > > > +
+> > > > +     reg = rockchip_pcie_readl_apb(rockchip,
+> > > > PCIE_CLIENT_INTR_STATUS_LEGACY);
+> > > > +
+> > > > +     for_each_set_bit(hwirq, &reg, 8)
+> > >
+> > > 8? And yet:
+> > >
+> > > #define PCI_NUM_INTX        4
+> > >
+> > > So whatever bits are set above bit 3, you are feeding garbage
+> > > to the irqdomain code.
+> >
+> > There are 8 bits in total, the top four are for the TX interrupts, for
+> > which EP mode is not yet supported by the driver.
+>
+> So why aren't they excluded from the set of bits that you look at?
+>
+> > I can constrain this further and let it be expanded when that support
+> > is added, if that works for you?
+>
+> Well, you can't have INTx interrupts in EP mode (that's a TLP going
+> out of the device, and not something that is signalled *to* the
+> CPU). So the two should be mutually exclusive.
 
-initialization seems superfluous
+Thank you for the explanation, I haven't messed about with EP mode, so
+my experience is solely with RC mode.
 
-> +	u32 reg;
-> +
-> +	/* Deassert PCIe PMA output clamp mode */
-> +	regmap_write(priv->phy_grf, GRF_PCIE30PHY_CON9,
-> +		     (0x1 << 15) | (0x1 << 31));
+>
+> >
+> > >
+> > > > +             generic_handle_domain_irq(rockchip->irq_domain, hwirq);
+> > > > +
+> > > > +     chained_irq_exit(chip, desc);
+> > > > +}
+> > > > +
+> > > > +static void rockchip_intx_mask(struct irq_data *data)
+> > > > +{
+> > > > +     struct rockchip_pcie *rockchip = irq_data_get_irq_chip_data(data);
+> > > > +     unsigned long flags;
+> > > > +     u32 val;
+> > > > +
+> > > > +     /* disable legacy interrupts */
+> > > > +     raw_spin_lock_irqsave(&rockchip->irq_lock, flags);
+> > > > +     val = HIWORD_UPDATE_BIT(PCIE_LEGACY_INT_ENABLE);
+> > > > +     val |= PCIE_LEGACY_INT_ENABLE;
+> > > > +     rockchip_pcie_writel_apb(rockchip, val,
+> > > > PCIE_CLIENT_INTR_MASK_LEGACY);
+> > > > +     raw_spin_unlock_irqrestore(&rockchip->irq_lock, flags);
+> > >
+> > > This is completely busted. INTx lines must be controlled individually.
+> > > If I disable one device's INTx output, I don't want to see the
+> > > interrupt firing because another one has had its own enabled.
+> >
+> > Okay, that makes sense. I'm hitting the entire block when it should be
+> > the individual IRQ.
+> > I also notice some drivers protect this with a spinlock while others
+> > do not, how should this be handled?
+>
+> It obviously depends on how the HW. works. If this is a shared
+> register using a RMW sequence, then you need some form of mutual
+> exclusion in order to preserve the atomicity of the update.
+>
+> If the HW supports updating the masks using a set of hot bits (with
+> separate clear/set registers), than there is no need for locking.  In
+> your case PCIE_CLIENT_INTR_MASK_LEGACY seems to support this odd
+> "write-enable" feature which can probably be used to implement a
+> lockless access, something like:
+>
+>         void mask(struct irq_data *d)
+>         {
+>                 u32 val = BIT(d->hwirq + 16) | BIT(d->hwirq);
 
-magic numbers.. sounds like BIT(15) and BIT(31)
+This is what HIWORD_UPDATE_BIT does, it's rather common in Rockchip code.
+I believe I can safely drop the spinlock when enabling/disabling
+individual interrupts.
 
+>                 writel_relaxed(val, ...);
+>         }
+>
+>         void mask(struct irq_data *d)
+>         {
+>                 u32 val = BIT(d->hwirq + 16);
+>                 writel_relaxed(val, ...);
+>         }
+>
+> Another thing is that it is completely unclear to me what initialises
+> these interrupts the first place (INTR_MASK_LEGACY, INTR_EN_LEGACY).
+> Are you relying on the firmware to do that for you?
 
-> +	/* Set bifurcation if needed, and it doesn't care RC/EP */
-> +	if (priv->is_bifurcation) {
-> +		regmap_write(priv->phy_grf, GRF_PCIE30PHY_CON6,
-> +			     0x1 | (0xf << 16));
-> +		regmap_write(priv->phy_grf, GRF_PCIE30PHY_CON1,
-> +			     (0x1 << 15) | (0x1 << 31));
-> +	}
-> +
-> +	reset_control_deassert(priv->p30phy);
-> +
-> +	ret = regmap_read_poll_timeout(priv->phy_grf,
-> +				       GRF_PCIE30PHY_STATUS0,
-> +				       reg, SRAM_INIT_DONE(reg),
-> +				       0, 500);
-> +	if (ret)
-> +		pr_err("%s: lock failed 0x%x, check input refclk and power supply\n",
-> +		       __func__, reg);
+There is no dedicated mask or enable/disable for the legacy interrupt
+line (unless it's undocumented).
+It appears to be enabled via an "or" function with the emulated interrupts.
+As far as I can tell this is common for dw-pcie, looking at the other drivers.
 
-dev_err() pls
+>
+> Thanks,
+>
+>         M.
+>
+> --
+> Without deviation from the norm, progress is not possible.
 
-> +	return ret;
-> +}
-> +
-> +static const struct rockchip_p3phy_ops rk3568_ops = {
-> +	.phy_init = rockchip_p3phy_rk3568_init,
-> +};
-> +
-> +static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
-> +{
-> +	int ret = 0;
-
-superfluous init again
--- 
-~Vinod
+Thank you for your insight!
+Peter
