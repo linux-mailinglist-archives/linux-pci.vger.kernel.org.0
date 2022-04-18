@@ -2,67 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C50E504F86
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 13:45:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2E49505028
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 14:19:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236863AbiDRLsD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Apr 2022 07:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
+        id S238435AbiDRMWJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Apr 2022 08:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236879AbiDRLrw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 07:47:52 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF04326ED;
-        Mon, 18 Apr 2022 04:45:13 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id v77so25039995ybi.12;
-        Mon, 18 Apr 2022 04:45:13 -0700 (PDT)
+        with ESMTP id S237370AbiDRMVb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 08:21:31 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C591E1D0DB;
+        Mon, 18 Apr 2022 05:17:32 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id bj36so10709323ljb.13;
+        Mon, 18 Apr 2022 05:17:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3QYWuVtVlC10CN/U+uRjoO+2nquc2+/bWq8BF83jGkg=;
-        b=jfQaZilDsjqziuXCg9rlesjzPfFiG3oIMyOIqq5lw8qAztwHtpWY4jtAArkSDne/hj
-         WHMReGX6BfrGLoQnV8WR5NKGH+wYTMucY49FMaoybLsVogUeG5UHNJB90L26is73oQ2a
-         HLEfKNtE1MPtZ0s2VfikMrbz7fcrUP/pZ7JNAwnlEcFoK33Mj/9Y7e/2CjMrd7ZeuZgy
-         pgf6YvEg8sa9VGkmZsUP1Tx72gvCoriVLtdKucG2AtMK1WjpswZgBVERLVq1qETCw6xu
-         aA9NlwqWySqcw07791GL/QEQWtHumXnMAHyu7bIBiQyNxqop33xJp5PvM1nnNFmAy6jK
-         RIzQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kHnbLPTYEwVnYoF1eArZeQYH5Pj76/3G5SiYikVll9w=;
+        b=jbpqdZoqwR4D4r4fMKzxzhrBt/Wqgr2sbvztY0dWatowOIRCrjg9R3NdU/WmdFuziD
+         EPV8lzAk1E91kiXFQSwW4A/8TaarCt2a7rLv3RRjIQNIjCZRxx0pLMpiRPQ49PYad7Ft
+         vdrzmozuDZNDm4wzbIudn/1Fv//fsqBxwSUezyrXVHyRRtwkT/Jdd7L4ZBqphvkQTFXk
+         qHGfsfnj9nfgqICnTlQwSg0LpVjTnLSciMjKxjOEhARZvQnps2FuOy6Wx91cL07D0sMy
+         lCYDkrLxsSzt4g3tvr8cHW2sATtwaGZYxCtByDEc8vAD0tCq79JWPLgOmeNhJXAks+j1
+         meHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3QYWuVtVlC10CN/U+uRjoO+2nquc2+/bWq8BF83jGkg=;
-        b=k+KBrApq9ITCj/owHBTmsgdSupHP5JlZRz1A9odfwC/R6o/C/XmZGP1/dITPylZUAA
-         yYbT1hN40IGlJTF6BsKeG00LisnYpz9v5n+YZMHdQvVdnalmp15qV3plKFYERlL2bA13
-         NV1h1kukaOYcaNB0q8ZCzuBmS9OuSbnHHbkZzsz55Ij4lUAcHov50abIVvn0kjP+Me/t
-         mqG8SuV9tHxCCmUTO5JTa8qbIJbgrvzzHjPtIWiGtNMUW8nZ3ZN+E85T1Ai5F+9jnL+s
-         BvcJfHBvBE8x29Q9hZlMGmSV9vdy66M1tKFRbgoR4+YU5QXB/7ZJ+Ttm+AJouBOR+BfV
-         BoYw==
-X-Gm-Message-State: AOAM530IgADmSwhb78/mF2/TkMppWpLt93Sm70BM30i+lUdLw4QvXxKT
-        dJMEbyyR1byZu56yuo5Hhlt1L2PGJR6znwyJbXBHXjL+5pQ=
-X-Google-Smtp-Source: ABdhPJw+jWAcmcfFZ237nXEhtG2xq0d8v20HKmocJKhYOlQFPTgC1WBVREyz/ckqjsxTm4JfzpWxDClmhqtXY0reNTw=
-X-Received: by 2002:a05:6902:1249:b0:644:d8bb:e741 with SMTP id
- t9-20020a056902124900b00644d8bbe741mr7161250ybu.585.1650282313075; Mon, 18
- Apr 2022 04:45:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kHnbLPTYEwVnYoF1eArZeQYH5Pj76/3G5SiYikVll9w=;
+        b=KJW8k1QWdgjsq6wwtlon2V+Fhi/yzjdQvRgP+a7YYDrVAnbYq/7bvV+JhbxJW2SeKD
+         lB2ycLi3xPdj4s0SwSwMsAumcswESL7zHBGL3wVv6+dA4I78/XtogQ5OkHXQR5cJfp/1
+         KGOcH6XtmcP5QdC73eSCPAHRJUZaWPKCkYmKKNNKTMO8M+9WrOkMok6neuV4QjhKHsRB
+         42ec0iB1WHBpcnV10+Zh5kju7zR29ChMMVty2+eq2wrL9IG0WfTN1OkaRMBKFp6/IHzR
+         wOZXQdOAu3kbbtYMFigCMz9q2/MgkaheSP9zm+EUu2i7kIs16PgCbpO6AZQ0Hfc5c2Bb
+         d4Hw==
+X-Gm-Message-State: AOAM533W/AcQzeB2lFwyAkINPNza8LJ4Mrenj90RlZo6MggXb6P0j2j9
+        xaFLYvOkhdHG0vIzGt7d9Lk=
+X-Google-Smtp-Source: ABdhPJwFqvtH3vF5qgEO8VCRMK6W6mZpdiK3/Fns3+bt9EuI/0T5o4DWUcvmcWh5lCU6fMV6W8YuIw==
+X-Received: by 2002:a2e:302:0:b0:24a:c997:d34c with SMTP id 2-20020a2e0302000000b0024ac997d34cmr7107060ljd.445.1650284250575;
+        Mon, 18 Apr 2022 05:17:30 -0700 (PDT)
+Received: from mobilestation ([95.79.134.149])
+        by smtp.gmail.com with ESMTPSA id u19-20020a197913000000b00448a1f20261sm1199338lfc.34.2022.04.18.05.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Apr 2022 05:17:29 -0700 (PDT)
+Date:   Mon, 18 Apr 2022 15:17:27 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/25] dmaengine: dw-edma: Replace chip ID number with
+ device name
+Message-ID: <20220418121727.ct6pyx6jdq46uvq7@mobilestation>
+References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-23-Sergey.Semin@baikalelectronics.ru>
+ <20220325100204.GJ4675@thinkpad>
 MIME-Version: 1.0
-References: <20220416100502.627289-1-pgwipeout@gmail.com> <20220416100502.627289-4-pgwipeout@gmail.com>
- <eadc4422-15bb-0b46-8235-db6e160e8d32@collabora.com> <CAMdYzYq=nQhwY_4+Y=PM9do_Dcrg1pD-jeD=q36D48ks=WDVgw@mail.gmail.com>
- <a8bb3ef6-8f37-709f-adfe-3608e5c1e11f@collabora.com>
-In-Reply-To: <a8bb3ef6-8f37-709f-adfe-3608e5c1e11f@collabora.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Mon, 18 Apr 2022 07:45:02 -0400
-Message-ID: <CAMdYzYrwGyxRnB8YU9vvgqXsKhi9fZ1a7UJhixCbC5mGm9aP8Q@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] arm64: dts: rockchip: add rk3568 pcie2x1 controller
-To:     Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220325100204.GJ4675@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -73,33 +83,101 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Apr 17, 2022 at 6:23 PM Dmitry Osipenko
-<dmitry.osipenko@collabora.com> wrote:
->
-> On 4/16/22 13:17, Peter Geis wrote:
-> > On Sat, Apr 16, 2022 at 6:08 AM Dmitry Osipenko
-> > <dmitry.osipenko@collabora.com> wrote:
-> >>
-> >> Hi Peter,
-> >>
-> >> On 4/16/22 13:05, Peter Geis wrote:
-> >>> +     pcie2x1: pcie@fe260000 {
-> >>> +             compatible = "rockchip,rk3568-pcie";
-> >>> +             #address-cells = <3>;
-> >>> +             #size-cells = <2>;
-> >>> +             bus-range = <0x0 0xf>;
-> >>> +             assigned-clocks = <&cru ACLK_PCIE20_MST>, <&cru ACLK_PCIE20_SLV>,
-> >>> +                      <&cru ACLK_PCIE20_DBI>, <&cru PCLK_PCIE20>,
-> >>> +                      <&cru CLK_PCIE20_AUX_NDFT>;
-> >>
-> >> Why these assigned-clocks are needed? I don't see anything assigned in
-> >> this patchset.
-> >
-> > Ah, those are remnants of early bringup when performance wasn't good
-> > and I was manually setting clock rates.
->
-> If it's not needed, should it be removed then? Otherwise it looks like
-> something is missing in the DT in regards to the assigned clocks.
+On Fri, Mar 25, 2022 at 03:32:04PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Mar 24, 2022 at 04:48:33AM +0300, Serge Semin wrote:
+> > Using some abstract number as the DW eDMA chip identifier isn't really
+> > practical. First of all there can be more than one DW eDMA controller on
+> > the platform some of them can be detected as the PCIe end-points, some of
+> > them can be embedded into the DW PCIe Root Port/End-point controllers.
+> > Seeing some abstract number in for instance IRQ handlers list doesn't give
+> > a notion regarding their reference to the particular DMA controller.
+> > Secondly current DW eDMA chip id implementation doesn't provide the
+> > multi-eDMA platforms support for same reason of possibly having eDMA
+> > detected on different system buses. At the same time re-implementing
+> > something ida-based won't give much benefits especially seeing the DW eDMA
+> > chip ID is only used in the IRQ request procedure. So to speak in order to
+> > preserve the code simplicity and get to have the multi-eDMA platforms
+> > support let's just use the parental device name to create the DW eDMA
+> > controller name.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-core.c | 3 ++-
+> >  drivers/dma/dw-edma/dw-edma-core.h | 2 +-
+> >  drivers/dma/dw-edma/dw-edma-pcie.c | 1 -
+> >  include/linux/dma/edma.h           | 1 -
+> >  4 files changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index dbe1119fd1d2..72a51970bfba 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -970,7 +970,8 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+> >  	if (!dw->chan)
+> >  		return -ENOMEM;
+> >  
+> > -	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%d", chip->id);
+> > +	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%s",
+> > +		 dev_name(chip->dev));
+> >  
+> >  	/* Disable eDMA, only to establish the ideal initial conditions */
+> >  	dw_edma_v0_core_off(dw);
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+> > index 980adb079182..dc25798d4ba9 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.h
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> > @@ -96,7 +96,7 @@ struct dw_edma_irq {
+> >  };
+> >  
+> >  struct dw_edma {
+> > -	char				name[20];
+> > +	char				name[30];
+> 
 
-Yes, it has been removed from the V7.
-Thanks!
+> I'm not sure if this length is sufficient. Other than this,
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+My calculations were based on the prefix+pci-device-name length. For
+instance, for the case of the remote eDMA the name length would be
+strlen("dw-edma-core:0000:00:00.0") = 25 + 1 (for '\0'). There's even
+some room left. Seeing the prefix is always used in the string there
+will be at most 16 chars for the unique part of the name. If you
+predict it to be greater than that I'll extend the length as you say.
+
+-Sergey
+
+> 
+> Thanks,
+> Mani
+> 
+> >  
+> >  	struct dma_device		dma;
+> >  
+> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > index f530bacfd716..3f9dadc73854 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > @@ -222,7 +222,6 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >  
+> >  	/* Data structure initialization */
+> >  	chip->dev = dev;
+> > -	chip->id = pdev->devfn;
+> >  
+> >  	chip->mf = vsec_data.mf;
+> >  	chip->nr_irqs = nr_irqs;
+> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > index 5cc87cfdd685..241c5a97ddf4 100644
+> > --- a/include/linux/dma/edma.h
+> > +++ b/include/linux/dma/edma.h
+> > @@ -73,7 +73,6 @@ enum dw_edma_map_format {
+> >   */
+> >  struct dw_edma_chip {
+> >  	struct device		*dev;
+> > -	int			id;
+> >  	int			nr_irqs;
+> >  	const struct dw_edma_core_ops   *ops;
+> >  	u32			flags;
+> > -- 
+> > 2.35.1
+> > 
