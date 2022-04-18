@@ -2,88 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3941E505D47
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Apr 2022 19:09:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFA34505FF2
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 00:53:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346831AbiDRRME (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Apr 2022 13:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56130 "EHLO
+        id S233158AbiDRW42 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Apr 2022 18:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245420AbiDRRLr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 13:11:47 -0400
-X-Greylist: delayed 330 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 18 Apr 2022 10:09:05 PDT
-Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B86201B7
-        for <linux-pci@vger.kernel.org>; Mon, 18 Apr 2022 10:09:05 -0700 (PDT)
-Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 2587)
-        id 893DC280BD5; Mon, 18 Apr 2022 19:03:32 +0200 (CEST)
-Date:   Mon, 18 Apr 2022 19:03:32 +0200
-From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-To:     Linux-PCI Mailing List <linux-pci@vger.kernel.org>
-Subject: pciutils-3.8.0 released
-Message-ID: <mj+md-20220418.170229.61471.nikam@ucw.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_50,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S233096AbiDRW41 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 18:56:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28DC2C648;
+        Mon, 18 Apr 2022 15:53:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 73D8D61183;
+        Mon, 18 Apr 2022 22:53:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C81B4C385A7;
+        Mon, 18 Apr 2022 22:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650322425;
+        bh=rWhmhUMtdpZrg81Duj60cEzYJ4LxtasGcSah4PuyDcQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BzGw5yGl8f86SHdpWaRO3N0W6Eu2t/rqO9J/315qJBr7UiglDnTrssBf1TdThb5BA
+         3uEcUiMlwCUXwnwlJ5B6/DqHxtHRfwzZqM7hOqT2mxRb9xMAsb6cA4HgFHlqSSvnE4
+         rNcDhyklS/+z3efqGfveFoPyPn3DMETucjW/ahr8Ai65uDxZsE4htcj98IOyDWD0vT
+         heFKO6ijGhKlH+zKYdP6J0txm+aoh92+rWp6D2sO9szMizMp4wdlmriLJ4991jkwfo
+         cz4IyCaWZxcHz/hpqr37uo3A5oqkocV3YlVkqzpXH179kXB1NLXjrKN2tasEe+/VP7
+         RtUc39pLpda/w==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=billy-the-mountain.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1ngaFb-005Aof-7r; Mon, 18 Apr 2022 23:53:43 +0100
+Date:   Mon, 18 Apr 2022 23:53:41 +0100
+Message-ID: <878rs2c8ay.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 2/4] PCI: dwc: rockchip: add legacy interrupt support
+In-Reply-To: <CAMdYzYouLoYX89EWjQTRAjd-1bvJEJtfYQa2KrtFH22Kp-4Efw@mail.gmail.com>
+References: <20220416110507.642398-1-pgwipeout@gmail.com>
+        <20220416110507.642398-3-pgwipeout@gmail.com>
+        <308e9c47197d4f7ae5a31cfcb5a10886@kernel.org>
+        <CAMdYzYo+YeAgT92baMOoWpra230wro_WynRcajL-__9RNkeE9Q@mail.gmail.com>
+        <87zgkk9gtc.wl-maz@kernel.org>
+        <CAMdYzYo_+7rakc=GCTueEZvH_F4Co6+=eKAUztJaafiDXSKKXQ@mail.gmail.com>
+        <87sfqaa7uv.wl-maz@kernel.org>
+        <CAMdYzYouLoYX89EWjQTRAjd-1bvJEJtfYQa2KrtFH22Kp-4Efw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: pgwipeout@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello, world!\n
+On Mon, 18 Apr 2022 16:13:39 +0100,
+Peter Geis <pgwipeout@gmail.com> wrote:
+> 
+> On Mon, Apr 18, 2022 at 8:34 AM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Mon, 18 Apr 2022 12:37:00 +0100,
+> > Peter Geis <pgwipeout@gmail.com> wrote:
+> > >
+> > > On Sun, Apr 17, 2022 at 5:53 AM Marc Zyngier <maz@kernel.org> wrote:
+> > > >
+> > > > On Sat, 16 Apr 2022 14:24:26 +0100,
+> > > > Peter Geis <pgwipeout@gmail.com> wrote:
+> > > > >
+> > > > > Okay, that makes sense. I'm hitting the entire block when it should be
+> > > > > the individual IRQ.
+> > > > > I also notice some drivers protect this with a spinlock while others
+> > > > > do not, how should this be handled?
+> > > >
+> > > > It obviously depends on how the HW. works. If this is a shared
+> > > > register using a RMW sequence, then you need some form of mutual
+> > > > exclusion in order to preserve the atomicity of the update.
+> > > >
+> > > > If the HW supports updating the masks using a set of hot bits (with
+> > > > separate clear/set registers), than there is no need for locking.  In
+> > > > your case PCIE_CLIENT_INTR_MASK_LEGACY seems to support this odd
+> > > > "write-enable" feature which can probably be used to implement a
+> > > > lockless access, something like:
+> > > >
+> > > >         void mask(struct irq_data *d)
+> > > >         {
+> > > >                 u32 val = BIT(d->hwirq + 16) | BIT(d->hwirq);
+> > >
+> > > This is what HIWORD_UPDATE_BIT does, it's rather common in Rockchip code.
+> > > I believe I can safely drop the spinlock when enabling/disabling
+> > > individual interrupts.
+> >
+> > Yes.
+> >
+> > >
+> > > >                 writel_relaxed(val, ...);
+> > > >         }
+> > > >
+> > > >         void mask(struct irq_data *d)
+> > > >         {
+> > > >                 u32 val = BIT(d->hwirq + 16);
+> > > >                 writel_relaxed(val, ...);
+> > > >         }
+> > > >
+> > > > Another thing is that it is completely unclear to me what initialises
+> > > > these interrupts the first place (INTR_MASK_LEGACY, INTR_EN_LEGACY).
+> > > > Are you relying on the firmware to do that for you?
+> > >
+> > > There is no dedicated mask or enable/disable for the legacy interrupt
+> > > line (unless it's undocumented).
+> >
+> > I'm talking about the INTR_MASK_LEGACY and INTR_EN_LEGACY registers,
+> > which control the INTx (although the latter seems to default to some
+> > reserved values). I don't see where you initialise them to a state
+> > where they are enabled and masked, which should be the initial state
+> > once this driver has probed. The output interrupt itself is obviously
+> > controlled by the GIC driver.
+> 
+> PCIE_CLIENT_INTR_MASK_LEGACY is the register I use here to mask/unmask
+> the interrupts.
+> It defaults to all masked on reset.
 
-A lot of minor features have accumulated since the last release of the
-pciutils, so I cooked a new release today.
+And? Are your really expecting that the firmware that runs before the
+kernel will preserve this register and not write anything silly to it
+because, oh wait, it wants to use interrupts? Or that nobody will
+kexec a secondary kernel from the first one after having used these
+interrupts?
 
-From the changelog:
+Rule #1: Initialise the HW to sensible values
+Rule #2: See Rule #1
 
-        * Released as 3.8.0.
+> The current rk3568 trm v1.1 does not reference an INTR_EN_LEGACY register.
 
-        * Filters can now match devices based on partially specified
-          class code and also on the programming interface.
+The TRM for RK3588 mentions it, and is the same IP.
 
-        * Reporting of link speeds, power limits, and virtual function tags
-          has been updated to the current PCIe specification.
+> >
+> > > It appears to be enabled via an "or" function with the emulated interrupts.
+> > > As far as I can tell this is common for dw-pcie, looking at the other drivers.
+> >
+> > I think we're talking past each other. I'm solely concerned with the
+> > initialisation of the input control registers, for which I see no code
+> > in this patch.
+> 
+> Downstream points to the mask/unmask functions for the enable/disable
+> functions, which would be superfluous here as mainline defaults to
+> that anyways if they are null.
 
-        * We decode the Data Object Exchange capability.
+Yeah, that's completely dumb. But there is no shortage of dumb stuff
+in the RK downstream code...
 
-        * Bus mapping mode works in non-zero domains.
+> 
+> I've double checked and downstream only uses the mask register, enable
+> and routing config appears to be left as is from reset.
 
-        * pci_fill_info() can fetch more fields: bridge bases, programming
-          interface, revision, subsystem vendor and device ID, OS driver,
-          and also parent bridge. Internally, the implementation was rewritten,
-          significantly reducing the number of corner cases to be handled.
+And that's a bug.
 
-        * The Windows port was revived and greatly improved by Pali Rohár.
-          It requires less magic to compile. More importantly, it runs on both
-          old and recent Windows systems (see README.Windows for details).
+> I'm rather concerned about the lack of any obvious way to control
+> routing, nor an ack mechanism for the irq.
 
-        * Added a new Windows back-end using the cfgmgr32 interface.
-          It does not provide direct access to the configuration space,
-          but basic information about the device is reported via pci_fill_info().
-          For back-ends of this type, we now provide an emulated read-only
-          config space.
+Which routing? Do you mean the affinity? You can't change it, as this
+would change the affinity of all interrupts at once.
 
-        * If the configuration space is not readable for some reason
-          (e.g., the cfgmgr32 back-end, but also badly implemented sleep mode
-          of some devices), lspci prints only information provided by the OS.
+> I see other implementations reference the core registers or vendor
+> defined registers for these functions.
+> Unfortunately the rk3568 trm does not include the core register
+> definitions, and the designware documentation appears to be behind a
+> paywall/nda.
 
-        * The Hurd back-end was greatly improved thanks to Joan Lledó.
+If you use a search engine, you'll find *CONFIDENTIAL* copies of the
+DW stuff. The whole thing is a laugh anyway.
 
-        * Various minor bug fixes and improvements.
+> 
+> I suspect most of the confusion here boils down to a lack of
+> documentation, but it's entirely possible I am simply not
+> understanding the question.
 
-        * We officially require a working C99 compiler. Sorry, MSVC.
+My only ask is that you properly initialise the HW. This will save
+countless amount of head-scratching once you have a decent firmware or
+kexec.
 
-        * As usually, updated pci.ids to the current snapshot of the database.
+	M.
 
-
-				Have a nice fortnight
 -- 
-Martin `MJ' Mareš                        <mj@ucw.cz>   http://mj.ucw.cz/
-United Computer Wizards, Prague, Czech Republic, Europe, Earth, Universe
+Without deviation from the norm, progress is not possible.
