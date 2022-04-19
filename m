@@ -2,135 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AA0C506567
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 09:11:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C52150667C
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 10:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349200AbiDSHOC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Apr 2022 03:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36504 "EHLO
+        id S240465AbiDSIIi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Apr 2022 04:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349195AbiDSHOC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Apr 2022 03:14:02 -0400
+        with ESMTP id S236973AbiDSIIh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Apr 2022 04:08:37 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3390531520;
-        Tue, 19 Apr 2022 00:11:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544921CB05;
+        Tue, 19 Apr 2022 01:05:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E1B81B8119F;
-        Tue, 19 Apr 2022 07:11:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934FBC385B4;
-        Tue, 19 Apr 2022 07:11:12 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0DDA6B810FD;
+        Tue, 19 Apr 2022 08:05:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9292C385A7;
+        Tue, 19 Apr 2022 08:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650352277;
-        bh=cRWiba3oQT1Wyx6PHg08VUtrSYo63vCoz8IqvjSghl8=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=TDKa+4Z1WMzdK5u/xQ+Vnl31+oUi/2esWVXHnj9mJYhfpZUf3tPdGm2vG7vlCU4Rp
-         NMCo5TgfXfIUhOU+LkrywC9d8CCgxc0+E448rG7x8CYyUF6pFEl2XIhUEwF+I2f+oY
-         pKzn51uXGuHrTWRnM1ZOBU9yW42hDuV7oXhx4JV5uu/rx/fmBY2iicETFi0vrWpcGE
-         /oX+6HjoPOlNiJqmZHEX/53RNnsB6w7V+hu6uy3r5pdbEjgnqv8CAq2ZM82edMowy/
-         jW5heVh7FFxyhYzYt0cv1tWhJzRfKdlI6LvUBMKddQKBA758CV6Ny++9496xkjDBNc
-         cT8HYCqZIC5YA==
-Message-ID: <62bbc2a6-92fb-ff2b-a43f-ecb402e8f90c@kernel.org>
-Date:   Tue, 19 Apr 2022 09:11:09 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
-Content-Language: en-US
-To:     wangseok.lee@samsung.com, robh+dt <robh+dt@kernel.org>,
-        krzk+dt <krzk+dt@kernel.org>, kishon <kishon@ti.com>,
-        vkoul <vkoul@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson" <jesper.nilsson@axis.com>,
-        "lars.persson" <lars.persson@axis.com>
-Cc:     bhelgaas <bhelgaas@google.com>,
-        linux-phy <linux-phy@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
+        s=k20201202; t=1650355552;
+        bh=uy5PsnK0LjX3h5KU565Xiqn4RBI19MrcfxohTC+2imw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JExSwVWVtC4u5B6tkqsibiY9RDlqofZAjhrIPunP/eWBnWS3b8Q/jaPiYM3g4hJfr
+         1jnIu19DwciEUjfLJp/Q1QinwHCmU4zca8916I1MHH7eErP2VjBy661vUksnvb47fg
+         xEzDXauhRLXeDcb35Apt7Kpldr39XqlXsj7LFo3qA10Ud+AbdamomNDW1PO8Hioh0D
+         vmL/VF1xTo9V9+AiOO+y9pkKIa4wolGhIgEDG99TkPTA3ZuEYyyzYie4MmcOkxxlwb
+         9uepJ9omG+5rG8cotmcu2FJGwqYLVpRKzk719U3lUuULflMw0OolN01CmwAHyKeC6U
+         PYjv9L0XopJQA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1ngiru-005GGn-B0; Tue, 19 Apr 2022 09:05:50 +0100
+Date:   Tue, 19 Apr 2022 09:05:50 +0100
+Message-ID: <87r15ta469.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi" <lorenzo.pieralisi@arm.com>, kw <kw@linux.com>,
-        linux-arm-kernel <linux-arm-kernel@axis.com>,
-        kernel <kernel@axis.com>, Moon-Ki Jun <moonki.jun@samsung.com>,
-        Dongjin Yang <dj76.yang@samsung.com>
-References: <CGME20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a@epcms2p7>
- <20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a@epcms2p7>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a@epcms2p7>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-10.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 2/4] PCI: dwc: rockchip: add legacy interrupt support
+In-Reply-To: <CAMdYzYqfitnPYSUEeeUB=x9=L9xzAu6o0SBmEdF8WKeb-+b6uQ@mail.gmail.com>
+References: <20220416110507.642398-1-pgwipeout@gmail.com>
+        <20220416110507.642398-3-pgwipeout@gmail.com>
+        <308e9c47197d4f7ae5a31cfcb5a10886@kernel.org>
+        <CAMdYzYo+YeAgT92baMOoWpra230wro_WynRcajL-__9RNkeE9Q@mail.gmail.com>
+        <87zgkk9gtc.wl-maz@kernel.org>
+        <CAMdYzYo_+7rakc=GCTueEZvH_F4Co6+=eKAUztJaafiDXSKKXQ@mail.gmail.com>
+        <87sfqaa7uv.wl-maz@kernel.org>
+        <CAMdYzYouLoYX89EWjQTRAjd-1bvJEJtfYQa2KrtFH22Kp-4Efw@mail.gmail.com>
+        <878rs2c8ay.wl-maz@kernel.org>
+        <CAMdYzYqfitnPYSUEeeUB=x9=L9xzAu6o0SBmEdF8WKeb-+b6uQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: pgwipeout@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 19/04/2022 02:07, Wangseok Lee wrote:
->> On 28/03/2022 04:14, 이왕석 wrote:
->>>  Add support Axis, ARTPEC-8 SoC.
->>>  ARTPEC-8 is the SoC platform of Axis Communications.
->>>  This is based on arm64 and support GEN4 & 2lane.
->>>  This PCIe controller is based on DesignWare Hardware core
->>>  and uses DesignWare core functions to implement the driver.
->>>  This is based on driver/pci/controller/dwc/pci-exynos.c
->>>  
->>>  Signed-off-by: Wangseok Lee 
->>> ---
->>>  drivers/pci/controller/dwc/Kconfig        |  31 +
->>>  drivers/pci/controller/dwc/Makefile       |   1 +
->>>  drivers/pci/controller/dwc/pcie-artpec8.c | 912 ++++++++++++++++++++++++++++++
->>>  3 files changed, 944 insertions(+)
->>>  create mode 100644 drivers/pci/controller/dwc/pcie-artpec8.c
->>>
->>
->> I took a look at the your driver and at existing PCIe Exynos driver.
->> Unfortunately PCIe Exynos driver is in poor shape, really poor. This
->> would explain that maybe it's better to have new driver instead of
->> merging them, especially that hardware is different. Although I am still
->> waiting for some description of these differences...
->>
->> I said that Exynos PCIe looks poor... but what is worse, it looks like
->> you based on it so you copied or some bad patterns it had.
->>
->> Except this the driver has several coding style issues, so please be
->> sure to run checkpatch, sparse and smatch before sending it.
->>
->> Please work on this driver to make it close to Linux coding style, so
->> there will be no need for us, reviewers, focus on basic stuff.
->>
->> Optionally, send all this to staging. :)
->>
->> Best regards,
->> Krzysztof
-> Hi,
+On Tue, 19 Apr 2022 01:23:23 +0100,
+Peter Geis <pgwipeout@gmail.com> wrote:
 > 
-> Thank you for your kindness review.
-> I will re-work again close to the linux coding style.
-> Addiltionaly, If you tell me what "bad patterns" you mentioned,
-> it will be very helpful for the work.
-> Could you please tell me that?
+> > My only ask is that you properly initialise the HW. This will save
+> > countless amount of head-scratching once you have a decent firmware or
+> > kexec.
+> 
+> The only way to ensure that in a sane way is to trigger the resets at
+> driver probe.
 
-Except the tools I mentioned before, the patterns are:
-1. debug messages for probe or other functions (we have ftrace and other
-tools for that).
-2. Inconsistent coding style (e.g. different indentation in structure
-members).
-3. Inconsistent code (e.g. artpec8_pcie_get_subsystem_resources() gets
-device from pdev and from pci so you have two same pointers; or
-artpec8_pcie_get_ep_mem_resources() stores dev as local variable but
-uses instead pdev->dev).
-4. Not using devm_platform_ioremap_resource().
-5. Wrappers over writel() and readl() which do nothing else than wrap
-one function.
-6. Printing messages in interrupt handlers.
-7. Several local/static structures or array are not const. Plus they are
-defined all through the code, instead of beginning of a file.
+If that can be done, that'd be great.
 
-Also - you have four clocks, so use clk bulk API.
+> Can that be safely done without causing other issues with an already
+> configured card or should I power cycle it as well?
 
+Well, you are already renegotiating the link anyway, so that's a very
+moot point.
 
-Best regards,
-Krzysztof
+> This is starting to feature creep from the original intention of this
+> series, since a pre-configured controller would affect more than just
+> interrupts.
+
+Configuring the HW is not exactly a feature creep. If your intention
+is to keep everything as it was left, then you don't have much of a
+driver, but instead a time bomb. And we can do without another one in
+the tree.
+
+> If you wish, as a compromise I can ensure all INTx interrupts are
+> masked at probe (which would hilariously be the opposite of
+> downstream).
+
+As far as I'm concerned, downstream doesn't exist. If someone wants
+the downstream code, they can use it directly and we don't need to
+merge this code.
+
+If, on the other hand, you want this driver to be useful and to be
+maintained upstream, initialising the interrupt mask is the absolute
+bare minimum.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
