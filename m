@@ -2,143 +2,246 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C458A50609E
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 02:07:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 423FC5060E3
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 02:23:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237695AbiDSAKW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Apr 2022 20:10:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34940 "EHLO
+        id S240227AbiDSA0S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Apr 2022 20:26:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237756AbiDSAKU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 20:10:20 -0400
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985563A7
-        for <linux-pci@vger.kernel.org>; Mon, 18 Apr 2022 17:07:39 -0700 (PDT)
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220419000733epoutp0177e34ba24cb5d580042bcfe2456fa201~nI4d-EnOY2377423774epoutp01u
-        for <linux-pci@vger.kernel.org>; Tue, 19 Apr 2022 00:07:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220419000733epoutp0177e34ba24cb5d580042bcfe2456fa201~nI4d-EnOY2377423774epoutp01u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1650326853;
-        bh=AChNfJQWMXjSwwKi12gVmv2Q77//iQk0dtbyPaoW1Ls=;
-        h=Subject:Reply-To:From:To:CC:Date:References:From;
-        b=Kgxtor4qALYW5tJjrytsesasDEb6okogLTiBAPEqKcE/Zv/7zZ+FIAeywTCPq423j
-         Url6N7Qa3RFbNHAeWSfT0f+nc71Sbgsvd+XI2cppeNSLEq5+9Y8E1bhRTEj4cHfFDH
-         3x+m4TbI4O3xQvMqW+DaaE4YLBE+lkBJTKQDDtOE=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20220419000732epcas2p1b9493d582a4b17b4ef6bdc5e24ef5ce3~nI4c_DA3O0349203492epcas2p1H;
-        Tue, 19 Apr 2022 00:07:32 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.68]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4Kj3yp6jvCz4x9Qb; Tue, 19 Apr
-        2022 00:07:30 +0000 (GMT)
-X-AuditID: b6c32a45-4fdff700000228cc-45-625dfd42be01
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C6.47.10444.24DFD526; Tue, 19 Apr 2022 09:07:30 +0900 (KST)
-Mime-Version: 1.0
-Subject: Re: [PATCH 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
-Reply-To: wangseok.lee@samsung.com
-Sender: Wangseok Lee <wangseok.lee@samsung.com>
-From:   Wangseok Lee <wangseok.lee@samsung.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        robh+dt <robh+dt@kernel.org>, krzk+dt <krzk+dt@kernel.org>,
-        kishon <kishon@ti.com>, vkoul <vkoul@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson" <jesper.nilsson@axis.com>,
-        "lars.persson" <lars.persson@axis.com>
-CC:     bhelgaas <bhelgaas@google.com>,
-        linux-phy <linux-phy@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
+        with ESMTP id S233195AbiDSA0R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 20:26:17 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1A01FA45;
+        Mon, 18 Apr 2022 17:23:35 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id r189so8575904ybr.6;
+        Mon, 18 Apr 2022 17:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kpIj5nFYZ+LCeIvaeVUxMdEu7PH6JH2Cp37sIzyz/0g=;
+        b=U2owpANdeEDN0xiL9wt3ENoKM3RY4lW+ZIANdqwZXqGIJWA7ke6HzcYQltDEQzOYp4
+         ZEYoFk7ByOQOY1lpj6CqdYvIsDHB4BZe6YGOtTPk6JV6LxIlesFQmyZ9f+OxpyCMate7
+         1iahfugDoknFmVNKPCHYrWJ+qFKBmitf5bvaik1T1HCjfetpaqYfob95IYCL8jk4JYl8
+         E6RtiaIhTI//Ovyt2qw6RvkzkRExJ8LIM1qvZuNWoh5O7+CEE/AXP9JgOo5XsqCFFZl1
+         he8GdK7emuOTY/FfDPsrE37AWS3ntjDbxUgjcmPXAkRnzy+IiRjmxTqTX6ZQRb1DWB9x
+         9E/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kpIj5nFYZ+LCeIvaeVUxMdEu7PH6JH2Cp37sIzyz/0g=;
+        b=0ZHAw7C+AtALNr8dRA75P+4TPnBcGfSDMBG9Fwask2x9uD54b5J5FQh568XCO+dXuO
+         oSd5gfP2Zl7VABBlctSbg+hU5Q2tzc9815/Hh8xLzKhCk7Su2jfi+x5CsiS+Oz9tAGqa
+         tyuQ8meTUlFGzSwvakCFH0t5YxtBh7v/Z4q1ecI0fai7dWrrLhRcO/DCpq1LQG7R0/DJ
+         PvDlE+g/T7/DvimFYEN+/8FClXdU7W4uiSM45CHLmLD0Z2kUNq65J4AFGSsW8frRpdiO
+         s2qpzNawVWnlE1gQgp1VkQeQ2QW1vBfPRa/MExNqf6p8s6oiSlqupfTD6Tu+3V2+oH39
+         rcCA==
+X-Gm-Message-State: AOAM532CH5Y6mLJauotAY0j6owemN4X4WKC3UnnFZjAbjWkzlEeHiC+b
+        FbwbWJUNna1j4c3bWHDhrjkjGiVDX/GSMT5DD2w=
+X-Google-Smtp-Source: ABdhPJwTgFI3+EQywY1+yIRoSPODiYFHNCFsej3qTaNq+T5Y/cSqagDgebDP3oRz4YO9Y2kPKZ8tEmcOZiERZSSwe3o=
+X-Received: by 2002:a05:6902:143:b0:628:7cf1:f2a9 with SMTP id
+ p3-20020a056902014300b006287cf1f2a9mr12121954ybh.51.1650327814809; Mon, 18
+ Apr 2022 17:23:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220416110507.642398-1-pgwipeout@gmail.com> <20220416110507.642398-3-pgwipeout@gmail.com>
+ <308e9c47197d4f7ae5a31cfcb5a10886@kernel.org> <CAMdYzYo+YeAgT92baMOoWpra230wro_WynRcajL-__9RNkeE9Q@mail.gmail.com>
+ <87zgkk9gtc.wl-maz@kernel.org> <CAMdYzYo_+7rakc=GCTueEZvH_F4Co6+=eKAUztJaafiDXSKKXQ@mail.gmail.com>
+ <87sfqaa7uv.wl-maz@kernel.org> <CAMdYzYouLoYX89EWjQTRAjd-1bvJEJtfYQa2KrtFH22Kp-4Efw@mail.gmail.com>
+ <878rs2c8ay.wl-maz@kernel.org>
+In-Reply-To: <878rs2c8ay.wl-maz@kernel.org>
+From:   Peter Geis <pgwipeout@gmail.com>
+Date:   Mon, 18 Apr 2022 20:23:23 -0400
+Message-ID: <CAMdYzYqfitnPYSUEeeUB=x9=L9xzAu6o0SBmEdF8WKeb-+b6uQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/4] PCI: dwc: rockchip: add legacy interrupt support
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi" <lorenzo.pieralisi@arm.com>, kw <kw@linux.com>,
-        linux-arm-kernel <linux-arm-kernel@axis.com>,
-        kernel <kernel@axis.com>, Moon-Ki Jun <moonki.jun@samsung.com>,
-        Dongjin Yang <dj76.yang@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a@epcms2p7>
-Date:   Tue, 19 Apr 2022 09:07:30 +0900
-X-CMS-MailID: 20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLJsWRmVeSWpSXmKPExsWy7bCmma7T39gkgzdt8hZLmjIsXh7StJh/
-        5Byrxe4Zy5ksnh+axWzxqUXV4sLTHjaLl7PusVmcP7+B3aKh5zerxZE3H5kt9h9fyWRxedcc
-        Nouz846zWUxY9Y3F4s3vF+wW5xZnWrTuPcJusfPOCWYHYY8189YwelxfF+CxYFOpx6ZVnWwe
-        T65MZ/LYvKTeo2/LKkaP4ze2M3l83iQXwBmVbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZg
-        qGtoaWGupJCXmJtqq+TiE6DrlpkD9I+SQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAl
-        p8C8QK84Mbe4NC9dLy+1xMrQwMDIFKgwITvjePs51oLNYhWzX31iamB8IdrFyMkhIWAicXta
-        IzOILSSwg1Fi2R32LkYODl4BQYm/O4RBwsIC7hKTmqayQ5QoSexYM48ZIq4vcX1FNyuIzSag
-        K/Fv8Uu2LkYuDhGBBUwS9+fOYAJxmAX+M0m8ajzGBrGMV2JG+1MWCFtaYvvyrYwQtobEj2W9
-        zBC2qMTN1W/ZYez3x+ZD1YhItN47C1UjKPHg526ouJTEgieHWCHsaon9f38zQdgNjBL991NB
-        npEAunTHdWOQMK+Ar0TnsQ9gJSwCqhKnn8yBOsdF4tHBWWAjmQW0JZYtfM0M0sosoCmxfpc+
-        xBRliSO3WGAeadj4mx2dzSzAJ9Fx+C9cfMe8J1DHqEnMW7mTGWKMjMTWl/4TGJVmIcJ5FpK1
-        sxDWLmBkXsUollpQnJueWmxUYAiP2eT83E2M4HSt5bqDcfLbD3qHGJk4GA8xSnAwK4nw9iyJ
-        ThLiTUmsrEotyo8vKs1JLT7EaAr08ERmKdHkfGDGyCuJNzSxNDAxMzM0NzI1MFcS5/VK2ZAo
-        JJCeWJKanZpakFoE08fEwSnVwNTtV1KZ9vDXG4NcxbA5CYwhegJd6n/rn9mH+vlIrGVlXOx+
-        4qKPHpuEQ9rpJRe25eX/ySzJr557rmdKnQaP8uMd3dukl+UsWHa+a2b5vuXenUX6Xp9cWWZ3
-        +wlWlU+P+O2w/6rDu8kc/Gpf7LdUnb83h02oLorp8tQXUtoprDP9uqLWp8nVtBiJ8zDtuur/
-        9eqqffLf3vGsr5oZsbL54M0mgfsClkE7iqytLaakNsV9vpmsxGY/sZrP0egMW00By8zKi/lM
-        UvOOM95qWDLNw9fvmebSNwVb6qTFL73pWJv2Z3vuruDVn+a42DtI8UtYV+zr2NB7++ZRway6
-        fWxZiVnGAe9c41/x/WxOfsCgxFKckWioxVxUnAgAgmXUsGAEAAA=
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a
-References: <CGME20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a@epcms2p7>
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> On=C2=A028/03/2022=C2=A004:14,=C2=A0=EC=9D=B4=EC=99=95=EC=84=9D=C2=A0wrot=
-e:=0D=0A>>=C2=A0Add=C2=A0support=C2=A0Axis,=C2=A0ARTPEC-8=C2=A0SoC.=0D=0A>>=
-=C2=A0ARTPEC-8=C2=A0is=C2=A0the=C2=A0SoC=C2=A0platform=C2=A0of=C2=A0Axis=C2=
-=A0Communications.=0D=0A>>=C2=A0This=C2=A0is=C2=A0based=C2=A0on=C2=A0arm64=
-=C2=A0and=C2=A0support=C2=A0GEN4=C2=A0&=C2=A02lane.=0D=0A>>=C2=A0This=C2=A0=
-PCIe=C2=A0controller=C2=A0is=C2=A0based=C2=A0on=C2=A0DesignWare=C2=A0Hardwa=
-re=C2=A0core=0D=0A>>=C2=A0and=C2=A0uses=C2=A0DesignWare=C2=A0core=C2=A0func=
-tions=C2=A0to=C2=A0implement=C2=A0the=C2=A0driver.=0D=0A>>=C2=A0This=C2=A0i=
-s=C2=A0based=C2=A0on=C2=A0driver/pci/controller/dwc/pci-exynos.c=0D=0A>>=C2=
-=A0=0D=0A>>=C2=A0Signed-off-by:=C2=A0Wangseok=C2=A0Lee=C2=A0=0D=0A>>=20---=
-=0D=0A>>=20=20drivers/pci/controller/dwc/Kconfig=20=20=20=20=20=20=20=20=7C=
-=20=2031=20+=0D=0A>>=20=20drivers/pci/controller/dwc/Makefile=20=20=20=20=
-=20=20=20=7C=20=20=201=20+=0D=0A>>=20=20drivers/pci/controller/dwc/pcie-art=
-pec8.c=20=7C=20912=20++++++++++++++++++++++++++++++=0D=0A>>=20=203=20files=
-=20changed,=20944=20insertions(+)=0D=0A>>=20=20create=20mode=20100644=20dri=
-vers/pci/controller/dwc/pcie-artpec8.c=0D=0A>>=20=0D=0A>=20=0D=0A>=20I=20to=
-ok=20a=20look=20at=20the=20your=20driver=20and=20at=20existing=20PCIe=20Exy=
-nos=20driver.=0D=0A>=20Unfortunately=20PCIe=20Exynos=20driver=20is=20in=20p=
-oor=20shape,=20really=20poor.=20This=0D=0A>=20would=20explain=20that=20mayb=
-e=20it's=20better=20to=20have=20new=20driver=20instead=20of=0D=0A>=20mergin=
-g=20them,=20especially=20that=20hardware=20is=20different.=20Although=20I=
-=20am=20still=0D=0A>=20waiting=20for=20some=20description=20of=20these=20di=
-fferences...=0D=0A>=20=0D=0A>=20I=20said=20that=20Exynos=20PCIe=20looks=20p=
-oor...=20but=20what=20is=20worse,=20it=20looks=20like=0D=0A>=20you=20based=
-=20on=20it=20so=20you=20copied=20or=20some=20bad=20patterns=20it=20had.=0D=
-=0A>=20=0D=0A>=20Except=20this=20the=20driver=20has=20several=20coding=20st=
-yle=20issues,=20so=20please=20be=0D=0A>=20sure=20to=20run=20checkpatch,=20s=
-parse=20and=20smatch=20before=20sending=20it.=0D=0A>=20=0D=0A>=20Please=20w=
-ork=20on=20this=20driver=20to=20make=20it=20close=20to=20Linux=20coding=20s=
-tyle,=20so=0D=0A>=20there=20will=20be=20no=20need=20for=20us,=20reviewers,=
-=20focus=20on=20basic=20stuff.=0D=0A>=20=0D=0A>=20Optionally,=20send=20all=
-=20this=20to=20staging.=20:)=0D=0A>=20=0D=0A>=20Best=20regards,=0D=0A>=20Kr=
-zysztof=0D=0AHi,=0D=0A=0D=0AThank=20you=20for=20your=20kindness=20review.=
-=0D=0AI=20will=20re-work=20again=20close=20to=20the=20linux=20coding=20styl=
-e.=0D=0AAddiltionaly,=20If=20you=20tell=20me=20what=20=22bad=20patterns=22=
-=20you=20mentioned,=0D=0Ait=20will=20be=20very=20helpful=20for=20the=20work=
-.=0D=0ACould=20you=20please=20tell=20me=20that?=0D=0A=0D=0AThank=20you.
+On Mon, Apr 18, 2022 at 6:53 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Mon, 18 Apr 2022 16:13:39 +0100,
+> Peter Geis <pgwipeout@gmail.com> wrote:
+> >
+> > On Mon, Apr 18, 2022 at 8:34 AM Marc Zyngier <maz@kernel.org> wrote:
+> > >
+> > > On Mon, 18 Apr 2022 12:37:00 +0100,
+> > > Peter Geis <pgwipeout@gmail.com> wrote:
+> > > >
+> > > > On Sun, Apr 17, 2022 at 5:53 AM Marc Zyngier <maz@kernel.org> wrote:
+> > > > >
+> > > > > On Sat, 16 Apr 2022 14:24:26 +0100,
+> > > > > Peter Geis <pgwipeout@gmail.com> wrote:
+> > > > > >
+> > > > > > Okay, that makes sense. I'm hitting the entire block when it should be
+> > > > > > the individual IRQ.
+> > > > > > I also notice some drivers protect this with a spinlock while others
+> > > > > > do not, how should this be handled?
+> > > > >
+> > > > > It obviously depends on how the HW. works. If this is a shared
+> > > > > register using a RMW sequence, then you need some form of mutual
+> > > > > exclusion in order to preserve the atomicity of the update.
+> > > > >
+> > > > > If the HW supports updating the masks using a set of hot bits (with
+> > > > > separate clear/set registers), than there is no need for locking.  In
+> > > > > your case PCIE_CLIENT_INTR_MASK_LEGACY seems to support this odd
+> > > > > "write-enable" feature which can probably be used to implement a
+> > > > > lockless access, something like:
+> > > > >
+> > > > >         void mask(struct irq_data *d)
+> > > > >         {
+> > > > >                 u32 val = BIT(d->hwirq + 16) | BIT(d->hwirq);
+> > > >
+> > > > This is what HIWORD_UPDATE_BIT does, it's rather common in Rockchip code.
+> > > > I believe I can safely drop the spinlock when enabling/disabling
+> > > > individual interrupts.
+> > >
+> > > Yes.
+> > >
+> > > >
+> > > > >                 writel_relaxed(val, ...);
+> > > > >         }
+> > > > >
+> > > > >         void mask(struct irq_data *d)
+> > > > >         {
+> > > > >                 u32 val = BIT(d->hwirq + 16);
+> > > > >                 writel_relaxed(val, ...);
+> > > > >         }
+> > > > >
+> > > > > Another thing is that it is completely unclear to me what initialises
+> > > > > these interrupts the first place (INTR_MASK_LEGACY, INTR_EN_LEGACY).
+> > > > > Are you relying on the firmware to do that for you?
+> > > >
+> > > > There is no dedicated mask or enable/disable for the legacy interrupt
+> > > > line (unless it's undocumented).
+> > >
+> > > I'm talking about the INTR_MASK_LEGACY and INTR_EN_LEGACY registers,
+> > > which control the INTx (although the latter seems to default to some
+> > > reserved values). I don't see where you initialise them to a state
+> > > where they are enabled and masked, which should be the initial state
+> > > once this driver has probed. The output interrupt itself is obviously
+> > > controlled by the GIC driver.
+> >
+> > PCIE_CLIENT_INTR_MASK_LEGACY is the register I use here to mask/unmask
+> > the interrupts.
+> > It defaults to all masked on reset.
+>
+> And? Are your really expecting that the firmware that runs before the
+> kernel will preserve this register and not write anything silly to it
+> because, oh wait, it wants to use interrupts? Or that nobody will
+> kexec a secondary kernel from the first one after having used these
+> interrupts?
+>
+> Rule #1: Initialise the HW to sensible values
+> Rule #2: See Rule #1
+
+I don't disagree here, there are plenty of examples of bugs that stem
+from this in Rockchip's code.
+Working on this series has given me ideas for improvements to the
+rk3399 controller as well.
+
+>
+> > The current rk3568 trm v1.1 does not reference an INTR_EN_LEGACY register.
+>
+> The TRM for RK3588 mentions it, and is the same IP.
+
+Unfortunately this assumption doesn't hold up to testing.
+On rk356x this entire register block is 0x0, which if it was
+implemented means legacy interrupts would not work, among other
+issues.
+Even in the rk3588 it's marked as "reserved" which means there's a
+good possibility it isn't fully implemented there either.
+A number of other blocks in the rk3588 trm are labeled as being
+available only after a specific hardware revision.
+We are seeing other bugs in the hardware implementation Rockchip has
+here, so making assumptions based on other implementations of the DW
+IP is unsafe.
+
+>
+> > >
+> > > > It appears to be enabled via an "or" function with the emulated interrupts.
+> > > > As far as I can tell this is common for dw-pcie, looking at the other drivers.
+> > >
+> > > I think we're talking past each other. I'm solely concerned with the
+> > > initialisation of the input control registers, for which I see no code
+> > > in this patch.
+> >
+> > Downstream points to the mask/unmask functions for the enable/disable
+> > functions, which would be superfluous here as mainline defaults to
+> > that anyways if they are null.
+>
+> Yeah, that's completely dumb. But there is no shortage of dumb stuff
+> in the RK downstream code...
+
+You'll find no argument from me here, I'm merely using it as an
+example of the vendor's implementation.
+The only resources I have available are the publically released
+documentation and the publically released downstream code.
+
+>
+> >
+> > I've double checked and downstream only uses the mask register, enable
+> > and routing config appears to be left as is from reset.
+>
+> And that's a bug.
+>
+> > I'm rather concerned about the lack of any obvious way to control
+> > routing, nor an ack mechanism for the irq.
+>
+> Which routing? Do you mean the affinity? You can't change it, as this
+> would change the affinity of all interrupts at once.
+>
+> > I see other implementations reference the core registers or vendor
+> > defined registers for these functions.
+> > Unfortunately the rk3568 trm does not include the core register
+> > definitions, and the designware documentation appears to be behind a
+> > paywall/nda.
+>
+> If you use a search engine, you'll find *CONFIDENTIAL* copies of the
+> DW stuff. The whole thing is a laugh anyway.
+>
+> >
+> > I suspect most of the confusion here boils down to a lack of
+> > documentation, but it's entirely possible I am simply not
+> > understanding the question.
+>
+> My only ask is that you properly initialise the HW. This will save
+> countless amount of head-scratching once you have a decent firmware or
+> kexec.
+
+The only way to ensure that in a sane way is to trigger the resets at
+driver probe.
+Can that be safely done without causing other issues with an already
+configured card or should I power cycle it as well?
+This is starting to feature creep from the original intention of this
+series, since a pre-configured controller would affect more than just
+interrupts.
+If you wish, as a compromise I can ensure all INTx interrupts are
+masked at probe (which would hilariously be the opposite of
+downstream).
+
+
+>
+>         M.
+>
+> --
+> Without deviation from the norm, progress is not possible.
