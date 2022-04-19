@@ -2,208 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFA34505FF2
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 00:53:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C458A50609E
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 02:07:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233158AbiDRW42 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Apr 2022 18:56:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43980 "EHLO
+        id S237695AbiDSAKW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Apr 2022 20:10:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233096AbiDRW41 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 18:56:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28DC2C648;
-        Mon, 18 Apr 2022 15:53:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 73D8D61183;
-        Mon, 18 Apr 2022 22:53:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C81B4C385A7;
-        Mon, 18 Apr 2022 22:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650322425;
-        bh=rWhmhUMtdpZrg81Duj60cEzYJ4LxtasGcSah4PuyDcQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BzGw5yGl8f86SHdpWaRO3N0W6Eu2t/rqO9J/315qJBr7UiglDnTrssBf1TdThb5BA
-         3uEcUiMlwCUXwnwlJ5B6/DqHxtHRfwzZqM7hOqT2mxRb9xMAsb6cA4HgFHlqSSvnE4
-         rNcDhyklS/+z3efqGfveFoPyPn3DMETucjW/ahr8Ai65uDxZsE4htcj98IOyDWD0vT
-         heFKO6ijGhKlH+zKYdP6J0txm+aoh92+rWp6D2sO9szMizMp4wdlmriLJ4991jkwfo
-         cz4IyCaWZxcHz/hpqr37uo3A5oqkocV3YlVkqzpXH179kXB1NLXjrKN2tasEe+/VP7
-         RtUc39pLpda/w==
-Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=billy-the-mountain.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1ngaFb-005Aof-7r; Mon, 18 Apr 2022 23:53:43 +0100
-Date:   Mon, 18 Apr 2022 23:53:41 +0100
-Message-ID: <878rs2c8ay.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Peter Geis <pgwipeout@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
+        with ESMTP id S237756AbiDSAKU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Apr 2022 20:10:20 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985563A7
+        for <linux-pci@vger.kernel.org>; Mon, 18 Apr 2022 17:07:39 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220419000733epoutp0177e34ba24cb5d580042bcfe2456fa201~nI4d-EnOY2377423774epoutp01u
+        for <linux-pci@vger.kernel.org>; Tue, 19 Apr 2022 00:07:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220419000733epoutp0177e34ba24cb5d580042bcfe2456fa201~nI4d-EnOY2377423774epoutp01u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1650326853;
+        bh=AChNfJQWMXjSwwKi12gVmv2Q77//iQk0dtbyPaoW1Ls=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=Kgxtor4qALYW5tJjrytsesasDEb6okogLTiBAPEqKcE/Zv/7zZ+FIAeywTCPq423j
+         Url6N7Qa3RFbNHAeWSfT0f+nc71Sbgsvd+XI2cppeNSLEq5+9Y8E1bhRTEj4cHfFDH
+         3x+m4TbI4O3xQvMqW+DaaE4YLBE+lkBJTKQDDtOE=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20220419000732epcas2p1b9493d582a4b17b4ef6bdc5e24ef5ce3~nI4c_DA3O0349203492epcas2p1H;
+        Tue, 19 Apr 2022 00:07:32 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.68]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4Kj3yp6jvCz4x9Qb; Tue, 19 Apr
+        2022 00:07:30 +0000 (GMT)
+X-AuditID: b6c32a45-4fdff700000228cc-45-625dfd42be01
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C6.47.10444.24DFD526; Tue, 19 Apr 2022 09:07:30 +0900 (KST)
+Mime-Version: 1.0
+Subject: Re: [PATCH 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
+Reply-To: wangseok.lee@samsung.com
+Sender: Wangseok Lee <wangseok.lee@samsung.com>
+From:   Wangseok Lee <wangseok.lee@samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        robh+dt <robh+dt@kernel.org>, krzk+dt <krzk+dt@kernel.org>,
+        kishon <kishon@ti.com>, vkoul <vkoul@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "jesper.nilsson" <jesper.nilsson@axis.com>,
+        "lars.persson" <lars.persson@axis.com>
+CC:     bhelgaas <bhelgaas@google.com>,
+        linux-phy <linux-phy@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/4] PCI: dwc: rockchip: add legacy interrupt support
-In-Reply-To: <CAMdYzYouLoYX89EWjQTRAjd-1bvJEJtfYQa2KrtFH22Kp-4Efw@mail.gmail.com>
-References: <20220416110507.642398-1-pgwipeout@gmail.com>
-        <20220416110507.642398-3-pgwipeout@gmail.com>
-        <308e9c47197d4f7ae5a31cfcb5a10886@kernel.org>
-        <CAMdYzYo+YeAgT92baMOoWpra230wro_WynRcajL-__9RNkeE9Q@mail.gmail.com>
-        <87zgkk9gtc.wl-maz@kernel.org>
-        <CAMdYzYo_+7rakc=GCTueEZvH_F4Co6+=eKAUztJaafiDXSKKXQ@mail.gmail.com>
-        <87sfqaa7uv.wl-maz@kernel.org>
-        <CAMdYzYouLoYX89EWjQTRAjd-1bvJEJtfYQa2KrtFH22Kp-4Efw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.104.136.29
-X-SA-Exim-Rcpt-To: pgwipeout@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        "lorenzo.pieralisi" <lorenzo.pieralisi@arm.com>, kw <kw@linux.com>,
+        linux-arm-kernel <linux-arm-kernel@axis.com>,
+        kernel <kernel@axis.com>, Moon-Ki Jun <moonki.jun@samsung.com>,
+        Dongjin Yang <dj76.yang@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a@epcms2p7>
+Date:   Tue, 19 Apr 2022 09:07:30 +0900
+X-CMS-MailID: 20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLJsWRmVeSWpSXmKPExsWy7bCmma7T39gkgzdt8hZLmjIsXh7StJh/
+        5Byrxe4Zy5ksnh+axWzxqUXV4sLTHjaLl7PusVmcP7+B3aKh5zerxZE3H5kt9h9fyWRxedcc
+        Nouz846zWUxY9Y3F4s3vF+wW5xZnWrTuPcJusfPOCWYHYY8189YwelxfF+CxYFOpx6ZVnWwe
+        T65MZ/LYvKTeo2/LKkaP4ze2M3l83iQXwBmVbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZg
+        qGtoaWGupJCXmJtqq+TiE6DrlpkD9I+SQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAl
+        p8C8QK84Mbe4NC9dLy+1xMrQwMDIFKgwITvjePs51oLNYhWzX31iamB8IdrFyMkhIWAicXta
+        IzOILSSwg1Fi2R32LkYODl4BQYm/O4RBwsIC7hKTmqayQ5QoSexYM48ZIq4vcX1FNyuIzSag
+        K/Fv8Uu2LkYuDhGBBUwS9+fOYAJxmAX+M0m8ajzGBrGMV2JG+1MWCFtaYvvyrYwQtobEj2W9
+        zBC2qMTN1W/ZYez3x+ZD1YhItN47C1UjKPHg526ouJTEgieHWCHsaon9f38zQdgNjBL991NB
+        npEAunTHdWOQMK+Ar0TnsQ9gJSwCqhKnn8yBOsdF4tHBWWAjmQW0JZYtfM0M0sosoCmxfpc+
+        xBRliSO3WGAeadj4mx2dzSzAJ9Fx+C9cfMe8J1DHqEnMW7mTGWKMjMTWl/4TGJVmIcJ5FpK1
+        sxDWLmBkXsUollpQnJueWmxUYAiP2eT83E2M4HSt5bqDcfLbD3qHGJk4GA8xSnAwK4nw9iyJ
+        ThLiTUmsrEotyo8vKs1JLT7EaAr08ERmKdHkfGDGyCuJNzSxNDAxMzM0NzI1MFcS5/VK2ZAo
+        JJCeWJKanZpakFoE08fEwSnVwNTtV1KZ9vDXG4NcxbA5CYwhegJd6n/rn9mH+vlIrGVlXOx+
+        4qKPHpuEQ9rpJRe25eX/ySzJr557rmdKnQaP8uMd3dukl+UsWHa+a2b5vuXenUX6Xp9cWWZ3
+        +wlWlU+P+O2w/6rDu8kc/Gpf7LdUnb83h02oLorp8tQXUtoprDP9uqLWp8nVtBiJ8zDtuur/
+        9eqqffLf3vGsr5oZsbL54M0mgfsClkE7iqytLaakNsV9vpmsxGY/sZrP0egMW00By8zKi/lM
+        UvOOM95qWDLNw9fvmebSNwVb6qTFL73pWJv2Z3vuruDVn+a42DtI8UtYV+zr2NB7++ZRway6
+        fWxZiVnGAe9c41/x/WxOfsCgxFKckWioxVxUnAgAgmXUsGAEAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a
+References: <CGME20220419000730epcms2p77c94d5e55db13ebf2f88b25d16b6ef7a@epcms2p7>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 18 Apr 2022 16:13:39 +0100,
-Peter Geis <pgwipeout@gmail.com> wrote:
-> 
-> On Mon, Apr 18, 2022 at 8:34 AM Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On Mon, 18 Apr 2022 12:37:00 +0100,
-> > Peter Geis <pgwipeout@gmail.com> wrote:
-> > >
-> > > On Sun, Apr 17, 2022 at 5:53 AM Marc Zyngier <maz@kernel.org> wrote:
-> > > >
-> > > > On Sat, 16 Apr 2022 14:24:26 +0100,
-> > > > Peter Geis <pgwipeout@gmail.com> wrote:
-> > > > >
-> > > > > Okay, that makes sense. I'm hitting the entire block when it should be
-> > > > > the individual IRQ.
-> > > > > I also notice some drivers protect this with a spinlock while others
-> > > > > do not, how should this be handled?
-> > > >
-> > > > It obviously depends on how the HW. works. If this is a shared
-> > > > register using a RMW sequence, then you need some form of mutual
-> > > > exclusion in order to preserve the atomicity of the update.
-> > > >
-> > > > If the HW supports updating the masks using a set of hot bits (with
-> > > > separate clear/set registers), than there is no need for locking.  In
-> > > > your case PCIE_CLIENT_INTR_MASK_LEGACY seems to support this odd
-> > > > "write-enable" feature which can probably be used to implement a
-> > > > lockless access, something like:
-> > > >
-> > > >         void mask(struct irq_data *d)
-> > > >         {
-> > > >                 u32 val = BIT(d->hwirq + 16) | BIT(d->hwirq);
-> > >
-> > > This is what HIWORD_UPDATE_BIT does, it's rather common in Rockchip code.
-> > > I believe I can safely drop the spinlock when enabling/disabling
-> > > individual interrupts.
-> >
-> > Yes.
-> >
-> > >
-> > > >                 writel_relaxed(val, ...);
-> > > >         }
-> > > >
-> > > >         void mask(struct irq_data *d)
-> > > >         {
-> > > >                 u32 val = BIT(d->hwirq + 16);
-> > > >                 writel_relaxed(val, ...);
-> > > >         }
-> > > >
-> > > > Another thing is that it is completely unclear to me what initialises
-> > > > these interrupts the first place (INTR_MASK_LEGACY, INTR_EN_LEGACY).
-> > > > Are you relying on the firmware to do that for you?
-> > >
-> > > There is no dedicated mask or enable/disable for the legacy interrupt
-> > > line (unless it's undocumented).
-> >
-> > I'm talking about the INTR_MASK_LEGACY and INTR_EN_LEGACY registers,
-> > which control the INTx (although the latter seems to default to some
-> > reserved values). I don't see where you initialise them to a state
-> > where they are enabled and masked, which should be the initial state
-> > once this driver has probed. The output interrupt itself is obviously
-> > controlled by the GIC driver.
-> 
-> PCIE_CLIENT_INTR_MASK_LEGACY is the register I use here to mask/unmask
-> the interrupts.
-> It defaults to all masked on reset.
-
-And? Are your really expecting that the firmware that runs before the
-kernel will preserve this register and not write anything silly to it
-because, oh wait, it wants to use interrupts? Or that nobody will
-kexec a secondary kernel from the first one after having used these
-interrupts?
-
-Rule #1: Initialise the HW to sensible values
-Rule #2: See Rule #1
-
-> The current rk3568 trm v1.1 does not reference an INTR_EN_LEGACY register.
-
-The TRM for RK3588 mentions it, and is the same IP.
-
-> >
-> > > It appears to be enabled via an "or" function with the emulated interrupts.
-> > > As far as I can tell this is common for dw-pcie, looking at the other drivers.
-> >
-> > I think we're talking past each other. I'm solely concerned with the
-> > initialisation of the input control registers, for which I see no code
-> > in this patch.
-> 
-> Downstream points to the mask/unmask functions for the enable/disable
-> functions, which would be superfluous here as mainline defaults to
-> that anyways if they are null.
-
-Yeah, that's completely dumb. But there is no shortage of dumb stuff
-in the RK downstream code...
-
-> 
-> I've double checked and downstream only uses the mask register, enable
-> and routing config appears to be left as is from reset.
-
-And that's a bug.
-
-> I'm rather concerned about the lack of any obvious way to control
-> routing, nor an ack mechanism for the irq.
-
-Which routing? Do you mean the affinity? You can't change it, as this
-would change the affinity of all interrupts at once.
-
-> I see other implementations reference the core registers or vendor
-> defined registers for these functions.
-> Unfortunately the rk3568 trm does not include the core register
-> definitions, and the designware documentation appears to be behind a
-> paywall/nda.
-
-If you use a search engine, you'll find *CONFIDENTIAL* copies of the
-DW stuff. The whole thing is a laugh anyway.
-
-> 
-> I suspect most of the confusion here boils down to a lack of
-> documentation, but it's entirely possible I am simply not
-> understanding the question.
-
-My only ask is that you properly initialise the HW. This will save
-countless amount of head-scratching once you have a decent firmware or
-kexec.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> On=C2=A028/03/2022=C2=A004:14,=C2=A0=EC=9D=B4=EC=99=95=EC=84=9D=C2=A0wrot=
+e:=0D=0A>>=C2=A0Add=C2=A0support=C2=A0Axis,=C2=A0ARTPEC-8=C2=A0SoC.=0D=0A>>=
+=C2=A0ARTPEC-8=C2=A0is=C2=A0the=C2=A0SoC=C2=A0platform=C2=A0of=C2=A0Axis=C2=
+=A0Communications.=0D=0A>>=C2=A0This=C2=A0is=C2=A0based=C2=A0on=C2=A0arm64=
+=C2=A0and=C2=A0support=C2=A0GEN4=C2=A0&=C2=A02lane.=0D=0A>>=C2=A0This=C2=A0=
+PCIe=C2=A0controller=C2=A0is=C2=A0based=C2=A0on=C2=A0DesignWare=C2=A0Hardwa=
+re=C2=A0core=0D=0A>>=C2=A0and=C2=A0uses=C2=A0DesignWare=C2=A0core=C2=A0func=
+tions=C2=A0to=C2=A0implement=C2=A0the=C2=A0driver.=0D=0A>>=C2=A0This=C2=A0i=
+s=C2=A0based=C2=A0on=C2=A0driver/pci/controller/dwc/pci-exynos.c=0D=0A>>=C2=
+=A0=0D=0A>>=C2=A0Signed-off-by:=C2=A0Wangseok=C2=A0Lee=C2=A0=0D=0A>>=20---=
+=0D=0A>>=20=20drivers/pci/controller/dwc/Kconfig=20=20=20=20=20=20=20=20=7C=
+=20=2031=20+=0D=0A>>=20=20drivers/pci/controller/dwc/Makefile=20=20=20=20=
+=20=20=20=7C=20=20=201=20+=0D=0A>>=20=20drivers/pci/controller/dwc/pcie-art=
+pec8.c=20=7C=20912=20++++++++++++++++++++++++++++++=0D=0A>>=20=203=20files=
+=20changed,=20944=20insertions(+)=0D=0A>>=20=20create=20mode=20100644=20dri=
+vers/pci/controller/dwc/pcie-artpec8.c=0D=0A>>=20=0D=0A>=20=0D=0A>=20I=20to=
+ok=20a=20look=20at=20the=20your=20driver=20and=20at=20existing=20PCIe=20Exy=
+nos=20driver.=0D=0A>=20Unfortunately=20PCIe=20Exynos=20driver=20is=20in=20p=
+oor=20shape,=20really=20poor.=20This=0D=0A>=20would=20explain=20that=20mayb=
+e=20it's=20better=20to=20have=20new=20driver=20instead=20of=0D=0A>=20mergin=
+g=20them,=20especially=20that=20hardware=20is=20different.=20Although=20I=
+=20am=20still=0D=0A>=20waiting=20for=20some=20description=20of=20these=20di=
+fferences...=0D=0A>=20=0D=0A>=20I=20said=20that=20Exynos=20PCIe=20looks=20p=
+oor...=20but=20what=20is=20worse,=20it=20looks=20like=0D=0A>=20you=20based=
+=20on=20it=20so=20you=20copied=20or=20some=20bad=20patterns=20it=20had.=0D=
+=0A>=20=0D=0A>=20Except=20this=20the=20driver=20has=20several=20coding=20st=
+yle=20issues,=20so=20please=20be=0D=0A>=20sure=20to=20run=20checkpatch,=20s=
+parse=20and=20smatch=20before=20sending=20it.=0D=0A>=20=0D=0A>=20Please=20w=
+ork=20on=20this=20driver=20to=20make=20it=20close=20to=20Linux=20coding=20s=
+tyle,=20so=0D=0A>=20there=20will=20be=20no=20need=20for=20us,=20reviewers,=
+=20focus=20on=20basic=20stuff.=0D=0A>=20=0D=0A>=20Optionally,=20send=20all=
+=20this=20to=20staging.=20:)=0D=0A>=20=0D=0A>=20Best=20regards,=0D=0A>=20Kr=
+zysztof=0D=0AHi,=0D=0A=0D=0AThank=20you=20for=20your=20kindness=20review.=
+=0D=0AI=20will=20re-work=20again=20close=20to=20the=20linux=20coding=20styl=
+e.=0D=0AAddiltionaly,=20If=20you=20tell=20me=20what=20=22bad=20patterns=22=
+=20you=20mentioned,=0D=0Ait=20will=20be=20very=20helpful=20for=20the=20work=
+.=0D=0ACould=20you=20please=20tell=20me=20that?=0D=0A=0D=0AThank=20you.
