@@ -2,66 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B597B50770F
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 20:07:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01503507A67
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 21:40:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353426AbiDSSJZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Apr 2022 14:09:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47318 "EHLO
+        id S1345599AbiDSTnU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Apr 2022 15:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347040AbiDSSJY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Apr 2022 14:09:24 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1213CA42
-        for <linux-pci@vger.kernel.org>; Tue, 19 Apr 2022 11:06:39 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-2ec05db3dfbso181349067b3.7
-        for <linux-pci@vger.kernel.org>; Tue, 19 Apr 2022 11:06:39 -0700 (PDT)
+        with ESMTP id S1345585AbiDSTnL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Apr 2022 15:43:11 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C010B4132A
+        for <linux-pci@vger.kernel.org>; Tue, 19 Apr 2022 12:40:27 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id t11so34977552eju.13
+        for <linux-pci@vger.kernel.org>; Tue, 19 Apr 2022 12:40:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LEwAzLgdo/J0IOG1epW97Y3lbB4M4tnpZ0RnWfy4qe8=;
-        b=aU24999xmL9jwFsyEgwMlT40a4Hj8UX0RRYOB9wmdIGrDMThR0Y/Aj4y1r99YzgJto
-         69ELrvTHJNUj5OSp5epUXdfPXgXSrW+ZoHZ/+jR3GV4EJSRsM+3obSlQisxNQPljSLxn
-         pmmNQzu+pt2ZoMWkRSNsQWGDnLsUcdat4L2Ols9OAWccvA/70g5n7T5dvkgu50R2aTwd
-         MR3CuqjK0NFffdchRl77AvWn7KAw16rtSj/AMKPMUVXGJCtxIHDf5r0PL7uzqHa6xviB
-         mumlA1Q+QmKRJnV1YVwaYKm5JEy1BVPzjEG5bY9qo+IodXgTjLE1j2pUNJo7fHnt4Ld1
-         q48A==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=QPOqgsEid6Wqxx1M40rGK1q2D5Xysrda2vwxz+DKUPc=;
+        b=Ov/14cWHpDKy5PQzUQZKB6HCjf/IXjwsbqJGUZ5ZgQSB0Nvi5HVGxGRPW0J73z29L7
+         cQAMtVhwFPyV4fsWvz9sin/nxOJ5nX76c3cwKLa7RU/Af+R+NwozF+GGqqmzhV/z7r+z
+         B6/hzWzcQzCs+P6k40mSURlW7eG0E9z/ZXS/qG2MiiseRag8zVEOM3tRGquuk+C7BC6T
+         SfQLe+ElfqVxf04HDySjhuEZdLIaexqei9P73XfigZ3VCeWoEJHdCl6rz0RNdxv/j9fR
+         JA1Log/TBQ8umsABpgUIR5JFXjU9Jmt98jqQmeZgCSnZDELufrTubTIFo1U7gBgDcoF0
+         LzoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LEwAzLgdo/J0IOG1epW97Y3lbB4M4tnpZ0RnWfy4qe8=;
-        b=aqBqUcvBgBsU2why0IQ+GnVCFfSOW+jG50UT97vXtyNR7t8yng1SbwvruHPhzjv/eg
-         0sNYvJFtLS7qL4BdKTjCTGOSMzLCfloFcT54Sm5eC8ws3J2hTHgvoxr7lsDGstK0zZrE
-         iQb56L6eCHXvsQRpJ3R7V941MBX64OiWRDWt4Ke7ITKfFwFwmKdkPPhLA5qql87ryD7f
-         LouF/qjKhNpNnhPaz37ORE38JNIsQj5h3pWRZLXhZDYmv7QHz/IYQX9EAIJ0kOAs8gAs
-         J7IOojoZ3geO1RPqK2dRgJxCxhuOPs4I0qDEiTC3WlGVZnyeZsh7oAq51uKJFva2gS1e
-         hHww==
-X-Gm-Message-State: AOAM531COiOy2OscXMg+ir1wGwot4MFXrnfD1pCQJennF0sosFVZF2Wv
-        tm0Au9ROiwp4v4x+L7EcKmViJqu6Bzx7xwpDA04TgZPEsQk=
-X-Google-Smtp-Source: ABdhPJy2MwoJhfJr2k71xTKAb1/QHb+m9Vt2pB0jt5uPZYsnwfUxO7eQefOdpcrbNS8yXY51GGPpHmeHyGx+tCM29cE=
-X-Received: by 2002:a81:324e:0:b0:2f1:d8f4:40df with SMTP id
- y75-20020a81324e000000b002f1d8f440dfmr2846060ywy.289.1650391598774; Tue, 19
- Apr 2022 11:06:38 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=QPOqgsEid6Wqxx1M40rGK1q2D5Xysrda2vwxz+DKUPc=;
+        b=oFcFG4aMigCOyNV74Wr5SsaDG9ECzMTJ9VhDUTI1gihrbVchG7ybMnPt0ZUG6Z86SI
+         tCvt4SQBNpFYuBzpan+r2yHLcMPOJW8noX6Vi0yeqRpjsTqetGjhizUjqzLJs7Um95Sf
+         89zogtcYwqjgNVaW99XcEu860uwQAC2alV2ptvOSO1O5G3Ive2QnUcW4d9E5Dn6bUgrx
+         6IdcwpCxlsiY+9tzyI4E90o3Sw7g9C7a3LfzGET955QwCQ7f9lTHYD9khvOMUEIx3k9D
+         DIiPWZ6CzBwAXupy2RTMEvAIs3eQ1CCVqFhZwRiaJ2KKuzMCkuz9UN46027y1VjHM8CP
+         g3GQ==
+X-Gm-Message-State: AOAM532f+7CLW8rBOuuxY5ewHL6Ne4nd6hxutr4mJUggxVITxoSxgEDK
+        yMFMQo8x8m9M0u70SM1qO3FMHw==
+X-Google-Smtp-Source: ABdhPJx6DouuY7dAxuX1ycupL8N+u0hCgEeKCHYUoIMUdZg7qUxXIXsBqnuYBYopZ2gDNL26oum7Kg==
+X-Received: by 2002:a17:907:6e92:b0:6e4:de0d:464 with SMTP id sh18-20020a1709076e9200b006e4de0d0464mr14986441ejc.348.1650397226276;
+        Tue, 19 Apr 2022 12:40:26 -0700 (PDT)
+Received: from [192.168.0.221] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id u6-20020a17090626c600b006e74ef7f092sm6012164ejc.176.2022.04.19.12.40.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Apr 2022 12:40:25 -0700 (PDT)
+Message-ID: <8b9ad0a6-acc0-aad9-c49d-e4a4b38374bb@linaro.org>
+Date:   Tue, 19 Apr 2022 21:40:24 +0200
 MIME-Version: 1.0
-References: <20220331013415.592748-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20220331013415.592748-1-bjorn.andersson@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Tue, 19 Apr 2022 21:06:27 +0300
-Message-ID: <CAA8EJpr9TvWHY8uMXzdmQbf8ynbkEJLKq0b4iEpp2Ji5nBXYzQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: qcom: Remove ddrss_sf_tbu clock from sc8180x
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: Aw: Re: [RFC/RFT 2/6] dt-bindings: soc: grf: add
+ pcie30-{phy,pipe}-grf
+Content-Language: en-US
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        linux-rockchip@lists.infradead.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20220416135458.104048-1-linux@fw-web.de>
+ <20220416135458.104048-3-linux@fw-web.de>
+ <02b3fe1c-12f9-8f96-a9b5-df44ca001825@linaro.org>
+ <trinity-c60358c4-ebd1-47bf-91e0-9ae0beefd39f-1650389348418@3c-app-gmx-bap70>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <trinity-c60358c4-ebd1-47bf-91e0-9ae0beefd39f-1650389348418@3c-app-gmx-bap70>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -70,54 +92,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 31 Mar 2022 at 04:31, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The Qualcomm SC8180X platform was piggy backing on the SM8250
-> qcom_pcie_cfg, but the platform doesn't have the ddrss_sf_tbu clock, so
-> it now fails to probe due to the missing clock.
->
-> Give SC8180X its own qcom_pcie_cfg, without the ddrss_sf_tbu flag set.
->
-> Fixes: 0614f98bbb9f ("PCI: qcom: Add ddrss_sf_tbu flag")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 19/04/2022 19:29, Frank Wunderlich wrote:
+>> Gesendet: Montag, 18. April 2022 um 17:54 Uhr
+>> Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+> 
+>>> --- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+>>> +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+>>> @@ -14,6 +14,8 @@ properties:
+>>>      oneOf:
+>>>        - items:
+>>>            - enum:
+>>> +              - rockchip,pcie30-phy-grf
+>>> +              - rockchip,pcie30-pipe-grf
+>>
+>> These are without SoC parts. Are these PCIe v3 General Register Files
+>> part of some PCIe spec?
+> 
+> imho they are shared across SoCs rk3568 and rk3588, but have only seen rk3568 implementation yet.
+> PCIe driver currently supports these 2 Soc (different offsets in the Phy-GRF), but can only test rk3568.
+> 
+> pipe-grf seems only be used for rk35688 (offset used in probe is defined for this SoC), which i cannot test.
+> 
+> so i have left them SoC independed.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 6ab90891801d..816028c0f6ed 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1550,6 +1550,11 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
->         .pipe_clk_need_muxing = true,
->  };
->
-> +static const struct qcom_pcie_cfg sc8180x_cfg = {
-> +       .ops = &ops_1_9_0,
-> +       .has_tbu_clk = true,
-> +};
-> +
->  static const struct dw_pcie_ops dw_pcie_ops = {
->         .link_up = qcom_pcie_link_up,
->         .start_link = qcom_pcie_start_link,
-> @@ -1656,7 +1661,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->         { .compatible = "qcom,pcie-qcs404", .data = &ipq4019_cfg },
->         { .compatible = "qcom,pcie-sdm845", .data = &sdm845_cfg },
->         { .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
-> -       { .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
-> +       { .compatible = "qcom,pcie-sc8180x", .data = &sc8180x_cfg },
->         { .compatible = "qcom,pcie-sm8450-pcie0", .data = &sm8450_pcie0_cfg },
->         { .compatible = "qcom,pcie-sm8450-pcie1", .data = &sm8450_pcie1_cfg },
->         { .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
-> --
-> 2.35.1
->
+Compatibles should be SoC dependent, with some exceptions. Lack of
+documentation or lack of possibility of testing is actually argument
+against any exception, so they should be SoC specific/dependent.
 
 
--- 
-With best wishes
-Dmitry
+Best regards,
+Krzysztof
