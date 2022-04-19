@@ -2,82 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05ABC5076CF
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 19:50:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B597B50770F
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 20:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345069AbiDSRwq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Apr 2022 13:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57870 "EHLO
+        id S1353426AbiDSSJZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Apr 2022 14:09:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356089AbiDSRwa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Apr 2022 13:52:30 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E50D9;
-        Tue, 19 Apr 2022 10:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1650390552;
-        bh=MDs+/hTTaszs+7phQ7fP55iuGTCGnxSxNB+AmfhvHuI=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=TnDZzT+t51BtIZ3ttWb8yCAiQ+bRXXd/u6G0viY+8w6Ni6c7lHcocNUuBZBnS4674
-         6WhQO0gk3GYZKK1EeXd9DNGPdu8vTbAeDU/gR+vtsnJYvfjdA+H3E5RicFlC3T2tAS
-         /Cabuc5TQs7rUXlCugCortddBqGUNVZKFqbOjqCc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.157.75] ([217.61.157.75]) by web-mail.gmx.net
- (3c-app-gmx-bap70.server.lan [172.19.172.170]) (via HTTP); Tue, 19 Apr 2022
- 19:49:12 +0200
+        with ESMTP id S1347040AbiDSSJY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Apr 2022 14:09:24 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1213CA42
+        for <linux-pci@vger.kernel.org>; Tue, 19 Apr 2022 11:06:39 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-2ec05db3dfbso181349067b3.7
+        for <linux-pci@vger.kernel.org>; Tue, 19 Apr 2022 11:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LEwAzLgdo/J0IOG1epW97Y3lbB4M4tnpZ0RnWfy4qe8=;
+        b=aU24999xmL9jwFsyEgwMlT40a4Hj8UX0RRYOB9wmdIGrDMThR0Y/Aj4y1r99YzgJto
+         69ELrvTHJNUj5OSp5epUXdfPXgXSrW+ZoHZ/+jR3GV4EJSRsM+3obSlQisxNQPljSLxn
+         pmmNQzu+pt2ZoMWkRSNsQWGDnLsUcdat4L2Ols9OAWccvA/70g5n7T5dvkgu50R2aTwd
+         MR3CuqjK0NFffdchRl77AvWn7KAw16rtSj/AMKPMUVXGJCtxIHDf5r0PL7uzqHa6xviB
+         mumlA1Q+QmKRJnV1YVwaYKm5JEy1BVPzjEG5bY9qo+IodXgTjLE1j2pUNJo7fHnt4Ld1
+         q48A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LEwAzLgdo/J0IOG1epW97Y3lbB4M4tnpZ0RnWfy4qe8=;
+        b=aqBqUcvBgBsU2why0IQ+GnVCFfSOW+jG50UT97vXtyNR7t8yng1SbwvruHPhzjv/eg
+         0sNYvJFtLS7qL4BdKTjCTGOSMzLCfloFcT54Sm5eC8ws3J2hTHgvoxr7lsDGstK0zZrE
+         iQb56L6eCHXvsQRpJ3R7V941MBX64OiWRDWt4Ke7ITKfFwFwmKdkPPhLA5qql87ryD7f
+         LouF/qjKhNpNnhPaz37ORE38JNIsQj5h3pWRZLXhZDYmv7QHz/IYQX9EAIJ0kOAs8gAs
+         J7IOojoZ3geO1RPqK2dRgJxCxhuOPs4I0qDEiTC3WlGVZnyeZsh7oAq51uKJFva2gS1e
+         hHww==
+X-Gm-Message-State: AOAM531COiOy2OscXMg+ir1wGwot4MFXrnfD1pCQJennF0sosFVZF2Wv
+        tm0Au9ROiwp4v4x+L7EcKmViJqu6Bzx7xwpDA04TgZPEsQk=
+X-Google-Smtp-Source: ABdhPJy2MwoJhfJr2k71xTKAb1/QHb+m9Vt2pB0jt5uPZYsnwfUxO7eQefOdpcrbNS8yXY51GGPpHmeHyGx+tCM29cE=
+X-Received: by 2002:a81:324e:0:b0:2f1:d8f4:40df with SMTP id
+ y75-20020a81324e000000b002f1d8f440dfmr2846060ywy.289.1650391598774; Tue, 19
+ Apr 2022 11:06:38 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <trinity-597cf8a3-2ad4-41e6-b3c9-b949f8610533-1650390552136@3c-app-gmx-bap70>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        linux-rockchip@lists.infradead.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+References: <20220331013415.592748-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20220331013415.592748-1-bjorn.andersson@linaro.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Tue, 19 Apr 2022 21:06:27 +0300
+Message-ID: <CAA8EJpr9TvWHY8uMXzdmQbf8ynbkEJLKq0b4iEpp2Ji5nBXYzQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: qcom: Remove ddrss_sf_tbu clock from sc8180x
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Aw: Re: [RFC/RFT 1/6] dt-bindings: phy: rockchip: add pcie3 phy
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 19 Apr 2022 19:49:12 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <38e60bb2-123b-09cf-d6ef-3a07c6984108@linaro.org>
-References: <20220416135458.104048-1-linux@fw-web.de>
- <20220416135458.104048-2-linux@fw-web.de>
- <38e60bb2-123b-09cf-d6ef-3a07c6984108@linaro.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:/NkW5UmqezUBTPZZjBz4iBJWrJkbhZBwHKWh0V8Jyr+1pKhoCegGDlCq58zKMqOdmW2O8
- qFWG3xBwI/JlRCsgKDIK8CQBYs6tKtGZZsYo934557XRhtF/eLBlrxHGW+UzzHL29Pk168fbvTc/
- OvR820AunbkK1yc3njh3Sx5eugb5TtM0ugLFARb7bmwQSMoEXbcDtNqwCs1HHLKMQGPDYWPxxyZl
- M74fV0GdY2s7Yh1BotHcRNi9nQgL9KwZxEVXJDSI7OKWmbxEcdT61wl+Hxv3VCTpwtjd+5o892Eg
- Sw=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aqAasQSxCdg=:Z5mk/vux6jXB0lRqbcp7Bk
- UJIJOWyt+bDd1jbTRt28lwBTb27anTGJNthdQC8F0KbTbeldXZ6uPBF1KXCOTiaQuMVtD1U+m
- hnQsLazT8r/MPjhmNW1sEOVKNNGDeRSSq1q6n94Hj5X0T3Csa9tBFfqn917kEsmJ0dz/X3MY6
- Pk7zvjDiDkn0d1KXq2xsqFbUbHykddiuEnvxe1/GsZObmeUy+WdaC1NKl7zG06q0r2nQpLC8P
- u9MSbcKFFnUX7XsXmriHLY0xsYTPQozZgqgyfc5ZM4ouiuPS668cC5jyfkzWDZQtpyytMeceW
- O+p4bn8kIgBzNqZzwkvk8daiwSRkvgl9QvojKWeUYZcxLhnbNOICkSniTGG9xdzr7WphdwgQZ
- V6X22tRIkLgQzxrDi9Iji0l25j0z9ytR+sg4tgNwCjPn6IWljebWjcwrBdqYdCjhOJ6Nu5piy
- vfaOouiSJYlKk03KU7CFw8yhUqkElk3b7fK2RO1KhvihNkcrFZNejEnXXYFur8E4j1+D/MIr2
- 4q6UlSWznMyEYZXRW9crGkCR00/85yNxGSLaryFgsnn63K1WLWJMVlKmtPF009fPe6dh0NS5Z
- f1N2k1OWEkQEyfujdvkJziA6iq9oT5quw2EoIIqx/7GTUPZAQ8ZmBS9d6CsKpjTyht8IS7tbJ
- WIN9nu4KWK6d56emVSrxgdtX+kIf7x/3uqMqDlzyEpH5zjL9xHGNVd2cJPFm53xFHgXE/geLu
- A5GmJR47U9xPnXwLPTlmwG7rjN79csWKr502balpYnJSX6BGb94rekgHxR9cQRdj5h2VI3ahs
- kd7tLPH
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -86,158 +70,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Gesendet: Montag, 18. April 2022 um 17:52 Uhr
-> Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-> > diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie3-phy.=
-yaml b/Documentation/devicetree/bindings/phy/rockchip-pcie3-phy.yaml
-> > new file mode 100644
-> > index 000000000000..58a8ce175f13
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/rockchip-pcie3-phy.yaml
+On Thu, 31 Mar 2022 at 04:31, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> Filename: vendor,hardware
-> so for example "rockchip,pcie3-phy" although Rob proposed recently for
-> other bindings using compatible as a base:
-> https://lore.kernel.org/linux-devicetree/YlhkwvGdcf4ozTzG@robh.at.kernel=
-.org/
-
-ok, i rename
-
-> > @@ -0,0 +1,77 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/phy/rockchip-pcie3-phy.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Rockchip PCIe v3 phy
-> > +
-> > +maintainers:
-> > +  - Heiko Stuebner <heiko@sntech.de>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - rockchip,rk3568-pcie3-phy
-> > +      - rockchip,rk3588-pcie3-phy
-> > +
-> > +  reg:
-> > +    maxItems: 2
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 3
-> > +
-> > +  clock-names:
-> > +    contains:
-> > +      anyOf:
-> > +        - enum: [ refclk_m, refclk_n, pclk ]
+> The Qualcomm SC8180X platform was piggy backing on the SM8250
+> qcom_pcie_cfg, but the platform doesn't have the ddrss_sf_tbu clock, so
+> it now fails to probe due to the missing clock.
 >
-> The list should be strictly ordered (defined), so:
->   items:
->     - const: ...
->     - const: ...
->     - const: ...
->   minItems: 1
+> Give SC8180X its own qcom_pcie_cfg, without the ddrss_sf_tbu flag set.
 >
-> However the question is - why the clocks have different amount? Is it
-> per different SoC implementation?
+> Fixes: 0614f98bbb9f ("PCI: qcom: Add ddrss_sf_tbu flag")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-i only know the rk3568, which needs the clocks defined here, don't know ab=
-out rk3588 yet.
-in rk3568 TPM i have the pcie-part seems missing (at least the specific re=
-gister definition), so i had used the driver as i got it from the downstre=
-am kernel.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-not yet looked if i find a rk3588 TPM and if this part is there as i canno=
-t test it (one of the reasons this is a rfc/rft).
-
-> > +
-> > +  "#phy-cells":
-> > +    const: 0
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  reset-names:
-> > +    const: phy
-> > +
-> > +  rockchip,phy-grf:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: phandle to the syscon managing the phy "general regi=
-ster files"
-> > +
-> > +  rockchip,pipe-grf:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: phandle to the syscon managing the pipe "general reg=
-ister files"
-> > +
-> > +  rockchip,pcie30-phymode:
-> > +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> > +    description: |
-> > +      use PHY_MODE_PCIE_AGGREGATION if not defined
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 >
-> I don't understand the description. Do you mean here a case when the
-> variable is missing?
-
-yes, if the property is not set, then value is PHY_MODE_PCIE_AGGREGATION =
-=3D 4
-
-> > +    minimum: 0x0
-> > +    maximum: 0x4
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 6ab90891801d..816028c0f6ed 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1550,6 +1550,11 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
+>         .pipe_clk_need_muxing = true,
+>  };
 >
-> Please explain these values. Register values should not be part of
-> bindings, but instead some logical behavior of hardware or its logic.
-
-it's a bitmask, so maybe
-
-    description: |
-      bit0: bifurcation for port 0
-      bit1: bifurcation for port 1
-      bit2: aggregation
-      use PHY_MODE_PCIE_AGGREGATION (4) as default
-
-> > +
-> > +
+> +static const struct qcom_pcie_cfg sc8180x_cfg = {
+> +       .ops = &ops_1_9_0,
+> +       .has_tbu_clk = true,
+> +};
+> +
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>         .link_up = qcom_pcie_link_up,
+>         .start_link = qcom_pcie_start_link,
+> @@ -1656,7 +1661,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>         { .compatible = "qcom,pcie-qcs404", .data = &ipq4019_cfg },
+>         { .compatible = "qcom,pcie-sdm845", .data = &sdm845_cfg },
+>         { .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
+> -       { .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
+> +       { .compatible = "qcom,pcie-sc8180x", .data = &sc8180x_cfg },
+>         { .compatible = "qcom,pcie-sm8450-pcie0", .data = &sm8450_pcie0_cfg },
+>         { .compatible = "qcom,pcie-sm8450-pcie1", .data = &sm8450_pcie1_cfg },
+>         { .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
+> --
+> 2.35.1
 >
-> Just one blank line.
->
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - rockchip,phy-grf
->
-> phy-cells as well
->
-> > +
-> > +additionalProperties: false
-> > +
-> > +unevaluatedProperties: false
->
-> Just one please, additionalProperties.
-ok
 
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/rk3568-cru.h>
-> > +    pcie30phy: phy@fe8c0000 {
-> > +      compatible =3D "rockchip,rk3568-pcie3-phy";
-> > +      reg =3D <0x0 0xfe8c0000 0x0 0x20000>;
-> > +      #phy-cells =3D <0>;
-> > +      clocks =3D <&pmucru CLK_PCIE30PHY_REF_M>, <&pmucru CLK_PCIE30PH=
-Y_REF_N>,
-> > +       <&cru PCLK_PCIE30PHY>;
->
-> Align the entry with opening '<'. Usually the most readable is one clock
-> per line.
 
-ok
-
-> > +      clock-names =3D "refclk_m", "refclk_n", "pclk";
-> > +      resets =3D <&cru SRST_PCIE30PHY>;
-> > +      reset-names =3D "phy";
-> > +      rockchip,phy-grf =3D <&pcie30_phy_grf>;
-> > +    };
-
-regards Frank
+-- 
+With best wishes
+Dmitry
