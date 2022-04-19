@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52B1C50767E
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 19:29:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05ABC5076CF
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Apr 2022 19:50:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355079AbiDSRc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Apr 2022 13:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33496 "EHLO
+        id S1345069AbiDSRwq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Apr 2022 13:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354598AbiDSRc2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Apr 2022 13:32:28 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B10EC56;
-        Tue, 19 Apr 2022 10:29:44 -0700 (PDT)
+        with ESMTP id S1356089AbiDSRwa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Apr 2022 13:52:30 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E50D9;
+        Tue, 19 Apr 2022 10:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1650389348;
-        bh=KwXzkV0B3f5e2tIrsLC+AOdAfv7m88ysNXObwXd6YFU=;
+        s=badeba3b8450; t=1650390552;
+        bh=MDs+/hTTaszs+7phQ7fP55iuGTCGnxSxNB+AmfhvHuI=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=C3r0DjATYEqweUN70N+KSWm8s2Civ07dEeM21QTrj5r1m5ZISvnKT7EL2fK8jKQcG
-         YCjlBNclMYyRmEK6ZfE9at59azUaeOCjiGBJ+iM3/boiWJlrweKhokDKsRGFHpVm44
-         syEqyK5OLmSSqMe8pekmtoe+yOUERDkEvLQKcVvs=
+        b=TnDZzT+t51BtIZ3ttWb8yCAiQ+bRXXd/u6G0viY+8w6Ni6c7lHcocNUuBZBnS4674
+         6WhQO0gk3GYZKK1EeXd9DNGPdu8vTbAeDU/gR+vtsnJYvfjdA+H3E5RicFlC3T2tAS
+         /Cabuc5TQs7rUXlCugCortddBqGUNVZKFqbOjqCc=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from [217.61.157.75] ([217.61.157.75]) by web-mail.gmx.net
  (3c-app-gmx-bap70.server.lan [172.19.172.170]) (via HTTP); Tue, 19 Apr 2022
- 19:29:08 +0200
+ 19:49:12 +0200
 MIME-Version: 1.0
-Message-ID: <trinity-c60358c4-ebd1-47bf-91e0-9ae0beefd39f-1650389348418@3c-app-gmx-bap70>
+Message-ID: <trinity-597cf8a3-2ad4-41e6-b3c9-b949f8610533-1650390552136@3c-app-gmx-bap70>
 From:   Frank Wunderlich <frank-w@public-files.de>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Frank Wunderlich <linux@fw-web.de>,
@@ -46,39 +46,38 @@ Cc:     Frank Wunderlich <linux@fw-web.de>,
         linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: Aw: Re: [RFC/RFT 2/6] dt-bindings: soc: grf: add
- pcie30-{phy,pipe}-grf
+Subject: Aw: Re: [RFC/RFT 1/6] dt-bindings: phy: rockchip: add pcie3 phy
 Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 19 Apr 2022 19:29:08 +0200
+Date:   Tue, 19 Apr 2022 19:49:12 +0200
 Importance: normal
 Sensitivity: Normal
-In-Reply-To: <02b3fe1c-12f9-8f96-a9b5-df44ca001825@linaro.org>
+In-Reply-To: <38e60bb2-123b-09cf-d6ef-3a07c6984108@linaro.org>
 References: <20220416135458.104048-1-linux@fw-web.de>
- <20220416135458.104048-3-linux@fw-web.de>
- <02b3fe1c-12f9-8f96-a9b5-df44ca001825@linaro.org>
+ <20220416135458.104048-2-linux@fw-web.de>
+ <38e60bb2-123b-09cf-d6ef-3a07c6984108@linaro.org>
 X-UI-Message-Type: mail
 X-Priority: 3
-X-Provags-ID: V03:K1:GSNIHIUWA/GRgjok62B+UG3JpReIUrnZJW4cJo6k+0piMPNyKFMYLVAFWEh1wrHmC12r3
- jNiJtMLDXSgz8acJ/aJzo+jHp/laJRu0OT7D+X3jpnmIx10ZRP1JqBS5CgsRVh/9IdoFFvDn3g/d
- rj15Lid9nt0dWx9ntE2Vb5tFhLn/8safPKxQPqCoi0HjiXWlBT+34uxmGYQ7RC1juT0PrxVRNTqc
- +QTAlJ8jBUmU1xE8ALgCLTfOHz6M+dTJ9/YjpIsyksZMR+MkqhSHhbwhX6bzXV0vtETyR9yddXOr
- u4=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5J5RBFRzPTA=:MMjlPLuedJCMlAG5z+h8Bd
- CK5NFPEE5BVigaDy2laiQ3hRh0HImsKvp9cX2T3LIVYqMkqSsdHqKNBebEb9780iJzIt8QM/K
- y9CLpFPNgTk0uM/rfb3lgNeOPYy+VVHhEX/pWsHHxtLSpMVOZ9kppKDncbHeK2pBCqzqbBABV
- 4Hq6qMPtbDPsmgM9C+lq8lfBsoCDZpGQltXuR+4tcZ0Da3h6jUHz2/UBW1FT1KHOA+laYVvMk
- Riyj53Nwe+OUPmsJs7mnYI2iLWL6L/tUaf5WEUva+1mUYPHoJRbRcCeHcRQJDSOCmqBrYAbYF
- +3s76mG4HUhtZ+cBaMiYRj3eeg8vHx0s6BybOeU3XzkVVYavGi/jCADVnpZYoCtxL4B66wO58
- gjuekbExgepHeqNRmYJS+H+5VFOiH3YJLw4pwg/Q9OAiLjfe7XWTtdNO4nAN8eI9Ed0RIRNkp
- gHPIBavKmNjNsvReK1OGzG2oGnejY7gC5GuhCvFYoAbLXF1/sndvItKF7jMz1MBMPBq8XWDD7
- 1cQLVwUR/fFS0cW9+ozbdCHKY3I/95TDHgeGdXd93tAoRhBryWoYjZkSr8yFglnePJThlEqwR
- 0pq235DHr7bdkoQieORurzxhhH4+Drw7BaTzq40uEnMMZMcPBhf26ZU45rosLjOpGUyJEJJM3
- YTRUlTdc5HFiT33FAqSB83j9MTWyHTmUZJVzHrHq6mSdnFZOm7XeSsY6ZzxfPpgLX1VvmxbNe
- 2z7dslB3GZNBFZ3wpYcTO44+RvZB9DlwXuzmx2QQVHRT5fbtdA1uaNeTflN5aK5nvUU03Wpe+
- L6o34tm
+X-Provags-ID: V03:K1:/NkW5UmqezUBTPZZjBz4iBJWrJkbhZBwHKWh0V8Jyr+1pKhoCegGDlCq58zKMqOdmW2O8
+ qFWG3xBwI/JlRCsgKDIK8CQBYs6tKtGZZsYo934557XRhtF/eLBlrxHGW+UzzHL29Pk168fbvTc/
+ OvR820AunbkK1yc3njh3Sx5eugb5TtM0ugLFARb7bmwQSMoEXbcDtNqwCs1HHLKMQGPDYWPxxyZl
+ M74fV0GdY2s7Yh1BotHcRNi9nQgL9KwZxEVXJDSI7OKWmbxEcdT61wl+Hxv3VCTpwtjd+5o892Eg
+ Sw=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aqAasQSxCdg=:Z5mk/vux6jXB0lRqbcp7Bk
+ UJIJOWyt+bDd1jbTRt28lwBTb27anTGJNthdQC8F0KbTbeldXZ6uPBF1KXCOTiaQuMVtD1U+m
+ hnQsLazT8r/MPjhmNW1sEOVKNNGDeRSSq1q6n94Hj5X0T3Csa9tBFfqn917kEsmJ0dz/X3MY6
+ Pk7zvjDiDkn0d1KXq2xsqFbUbHykddiuEnvxe1/GsZObmeUy+WdaC1NKl7zG06q0r2nQpLC8P
+ u9MSbcKFFnUX7XsXmriHLY0xsYTPQozZgqgyfc5ZM4ouiuPS668cC5jyfkzWDZQtpyytMeceW
+ O+p4bn8kIgBzNqZzwkvk8daiwSRkvgl9QvojKWeUYZcxLhnbNOICkSniTGG9xdzr7WphdwgQZ
+ V6X22tRIkLgQzxrDi9Iji0l25j0z9ytR+sg4tgNwCjPn6IWljebWjcwrBdqYdCjhOJ6Nu5piy
+ vfaOouiSJYlKk03KU7CFw8yhUqkElk3b7fK2RO1KhvihNkcrFZNejEnXXYFur8E4j1+D/MIr2
+ 4q6UlSWznMyEYZXRW9crGkCR00/85yNxGSLaryFgsnn63K1WLWJMVlKmtPF009fPe6dh0NS5Z
+ f1N2k1OWEkQEyfujdvkJziA6iq9oT5quw2EoIIqx/7GTUPZAQ8ZmBS9d6CsKpjTyht8IS7tbJ
+ WIN9nu4KWK6d56emVSrxgdtX+kIf7x/3uqMqDlzyEpH5zjL9xHGNVd2cJPFm53xFHgXE/geLu
+ A5GmJR47U9xPnXwLPTlmwG7rjN79csWKr502balpYnJSX6BGb94rekgHxR9cQRdj5h2VI3ahs
+ kd7tLPH
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        DKIM_VALID,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -87,33 +86,158 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Gesendet: Montag, 18. April 2022 um 17:54 Uhr
+> Gesendet: Montag, 18. April 2022 um 17:52 Uhr
 > Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-
-> > --- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-> > +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-> > @@ -14,6 +14,8 @@ properties:
-> >      oneOf:
-> >        - items:
-> >            - enum:
-> > +              - rockchip,pcie30-phy-grf
-> > +              - rockchip,pcie30-pipe-grf
+> > diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie3-phy.=
+yaml b/Documentation/devicetree/bindings/phy/rockchip-pcie3-phy.yaml
+> > new file mode 100644
+> > index 000000000000..58a8ce175f13
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/rockchip-pcie3-phy.yaml
 >
-> These are without SoC parts. Are these PCIe v3 General Register Files
-> part of some PCIe spec?
+> Filename: vendor,hardware
+> so for example "rockchip,pcie3-phy" although Rob proposed recently for
+> other bindings using compatible as a base:
+> https://lore.kernel.org/linux-devicetree/YlhkwvGdcf4ozTzG@robh.at.kernel=
+.org/
 
-imho they are shared across SoCs rk3568 and rk3588, but have only seen rk3=
-568 implementation yet.
-PCIe driver currently supports these 2 Soc (different offsets in the Phy-G=
-RF), but can only test rk3568.
+ok, i rename
 
-pipe-grf seems only be used for rk35688 (offset used in probe is defined f=
-or this SoC), which i cannot test.
+> > @@ -0,0 +1,77 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/rockchip-pcie3-phy.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Rockchip PCIe v3 phy
+> > +
+> > +maintainers:
+> > +  - Heiko Stuebner <heiko@sntech.de>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - rockchip,rk3568-pcie3-phy
+> > +      - rockchip,rk3588-pcie3-phy
+> > +
+> > +  reg:
+> > +    maxItems: 2
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 3
+> > +
+> > +  clock-names:
+> > +    contains:
+> > +      anyOf:
+> > +        - enum: [ refclk_m, refclk_n, pclk ]
+>
+> The list should be strictly ordered (defined), so:
+>   items:
+>     - const: ...
+>     - const: ...
+>     - const: ...
+>   minItems: 1
+>
+> However the question is - why the clocks have different amount? Is it
+> per different SoC implementation?
 
-so i have left them SoC independed.
+i only know the rk3568, which needs the clocks defined here, don't know ab=
+out rk3588 yet.
+in rk3568 TPM i have the pcie-part seems missing (at least the specific re=
+gister definition), so i had used the driver as i got it from the downstre=
+am kernel.
 
-> >                - rockchip,rk3288-sgrf
-> >                - rockchip,rk3566-pipe-grf
-> >                - rockchip,rk3568-usb2phy-grf
+not yet looked if i find a rk3588 TPM and if this part is there as i canno=
+t test it (one of the reasons this is a rfc/rft).
+
+> > +
+> > +  "#phy-cells":
+> > +    const: 0
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  reset-names:
+> > +    const: phy
+> > +
+> > +  rockchip,phy-grf:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle to the syscon managing the phy "general regi=
+ster files"
+> > +
+> > +  rockchip,pipe-grf:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle to the syscon managing the pipe "general reg=
+ister files"
+> > +
+> > +  rockchip,pcie30-phymode:
+> > +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> > +    description: |
+> > +      use PHY_MODE_PCIE_AGGREGATION if not defined
+>
+> I don't understand the description. Do you mean here a case when the
+> variable is missing?
+
+yes, if the property is not set, then value is PHY_MODE_PCIE_AGGREGATION =
+=3D 4
+
+> > +    minimum: 0x0
+> > +    maximum: 0x4
+>
+> Please explain these values. Register values should not be part of
+> bindings, but instead some logical behavior of hardware or its logic.
+
+it's a bitmask, so maybe
+
+    description: |
+      bit0: bifurcation for port 0
+      bit1: bifurcation for port 1
+      bit2: aggregation
+      use PHY_MODE_PCIE_AGGREGATION (4) as default
+
+> > +
+> > +
+>
+> Just one blank line.
+>
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - rockchip,phy-grf
+>
+> phy-cells as well
+>
+> > +
+> > +additionalProperties: false
+> > +
+> > +unevaluatedProperties: false
+>
+> Just one please, additionalProperties.
+ok
+
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/rk3568-cru.h>
+> > +    pcie30phy: phy@fe8c0000 {
+> > +      compatible =3D "rockchip,rk3568-pcie3-phy";
+> > +      reg =3D <0x0 0xfe8c0000 0x0 0x20000>;
+> > +      #phy-cells =3D <0>;
+> > +      clocks =3D <&pmucru CLK_PCIE30PHY_REF_M>, <&pmucru CLK_PCIE30PH=
+Y_REF_N>,
+> > +       <&cru PCLK_PCIE30PHY>;
+>
+> Align the entry with opening '<'. Usually the most readable is one clock
+> per line.
+
+ok
+
+> > +      clock-names =3D "refclk_m", "refclk_n", "pclk";
+> > +      resets =3D <&cru SRST_PCIE30PHY>;
+> > +      reset-names =3D "phy";
+> > +      rockchip,phy-grf =3D <&pcie30_phy_grf>;
+> > +    };
 
 regards Frank
