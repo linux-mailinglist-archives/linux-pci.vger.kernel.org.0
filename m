@@ -2,65 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 079C3508A7E
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 16:16:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6EA1508A84
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 16:16:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377538AbiDTOTL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1379331AbiDTOTL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 20 Apr 2022 10:19:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38458 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379989AbiDTOSY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 10:18:24 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9943E4A3E3
-        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 07:11:45 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id i27so3789229ejd.9
-        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 07:11:45 -0700 (PDT)
+        with ESMTP id S1380138AbiDTOSi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 10:18:38 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0BB443C7;
+        Wed, 20 Apr 2022 07:13:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D5oN6OjFAAM2Jtgw8cFuu+OC1yUTyBmH5VCH73tbJIs=;
-        b=J2QfDs++WjQJaTh2gO5bBcfx5DI5gjex5gZVeg3++RKOiNZuEDy53Jzn/3ocatbQX8
-         A9DP7bGr9pkjgTPyL7YhvA0JkMKR/iwU9fmDFHO5bhmg4ulHj7sGMmfaLGnM/ASvMM62
-         POEYYCtKbLWI+TrSTNW7SnA06O2HHLl79aJMhzRDTQe0LmL7ZV87QPRA/SyB7CW/beUS
-         +LGMgtjcSSj7aAiPP9a1mY3q8q/j4ueSRkS7/cTh0tsn4FMcK2rBiTL3m8CRIVq+x6Jf
-         7LPAjHO8EkIwIi2yjoAHGP/dgcaUxH5Sf1GWwlCTBAZXDLzBZ69jhBfJ+f1jVD+1Lbcz
-         KLmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D5oN6OjFAAM2Jtgw8cFuu+OC1yUTyBmH5VCH73tbJIs=;
-        b=4qTFNEZdxuHtvhgRlP6RF285UwvDq6HKeEe8OQOykWhLC922bgAsQ6lXuDKnizKDK+
-         JtmrYERaA25zxuUVxo5JHbSsuV0ujrJbDNDkIfhaxGJivzOAH9ZtF0f8rHbSBXs00BS8
-         sYVXfTpgjx0UcG7mtAwb4G+Snf575tqIFlLA7CIZAQXt2GJm4tea7BRUkdiXyLKISU2n
-         o0wmD0t2Dp8mEiCWKP6P7xB8cb8olQ4rAb1xOoQ7Y7uUtlpy0454hDX33ywdZtZbMiOM
-         xb25Adqhg+f5irsHkx3petaCD2HZlSMPt6AfTTKxUfEDwdzcOEzhRac0xj2+OixkhG48
-         YB+Q==
-X-Gm-Message-State: AOAM531fJ3wOhD50dnbFnsuTcGHtMUgxHlSgzlhbQO4W5SBzkYSTGF6b
-        lVwyxdQvXvNOxQ0cfByqhrVHYQ==
-X-Google-Smtp-Source: ABdhPJyB1OGo392CHMXgZTS9PN4elzbRaBcXavX/HTTNgufEwPnYzRC9k42BVq0grtwj+114Sr0j+w==
-X-Received: by 2002:a17:906:6a1d:b0:6ef:8745:bf91 with SMTP id qw29-20020a1709066a1d00b006ef8745bf91mr16669763ejc.76.1650463904199;
-        Wed, 20 Apr 2022 07:11:44 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id v7-20020a50d087000000b00424269f1c75sm387465edd.96.2022.04.20.07.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 07:11:43 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] PCI: fix unused pci_restore_standard_config without suspend/hibernate
-Date:   Wed, 20 Apr 2022 16:11:35 +0200
-Message-Id: <20220420141135.444820-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.32.0
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1650464005; x=1682000005;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xSVtxqfp4JLpW3WWMuvDsq9oB3gov9dYbIhWlNNxBEo=;
+  b=fGaX0bEOO3yLXFTRbq+fdgafIeGDFeJSRJ9m20mLf12anuDBZWeoG+og
+   QfEEp6aSbz2pKHDakxjmBfzwFh0s/avH/K+alifaEr0LCaeNlHyxOctpG
+   tIY8TBua3yeqAxX1pkTfuuQ9zVPinzSU+BoajTVh3oPALYm40g8WX2iOr
+   k=;
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 20 Apr 2022 07:13:25 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg02-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 07:13:24 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Wed, 20 Apr 2022 07:13:24 -0700
+Received: from [10.226.58.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 20 Apr
+ 2022 07:13:23 -0700
+Message-ID: <2100eed4-8081-6070-beaf-7c6ba65ad9be@quicinc.com>
+Date:   Wed, 20 Apr 2022 08:13:22 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH v2] PCI: hv: Fix multi-MSI to allow more than one MSI
+ vector
+Content-Language: en-US
+To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
+        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
+        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <jakeo@microsoft.com>
+CC:     <bjorn.andersson@linaro.org>, <linux-hyperv@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
+From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
+In-Reply-To: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-8.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,55 +69,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pci_restore_standard_config() is called only by functions within
-CONFIG_SUSPEND or CONFIG_HIBERNATION, so a configuration with only PM
-leads to a warning:
+On 4/13/2022 7:36 AM, Jeffrey Hugo wrote:
+> If the allocation of multiple MSI vectors for multi-MSI fails in the core
+> PCI framework, the framework will retry the allocation as a single MSI
+> vector, assuming that meets the min_vecs specified by the requesting
+> driver.
+> 
+> Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
+> domain to implement that for x86.  The VECTOR domain does not support
+> multi-MSI, so the alloc will always fail and fallback to a single MSI
+> allocation.
+> 
+> In short, Hyper-V advertises a capability it does not implement.
+> 
+> Hyper-V can support multi-MSI because it coordinates with the hypervisor
+> to map the MSIs in the IOMMU's interrupt remapper, which is something the
+> VECTOR domain does not have.  Therefore the fix is simple - copy what the
+> x86 IOMMU drivers (AMD/Intel-IR) do by removing
+> X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
+> pci_msi_prepare().
+> 
+> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> ---
 
-  drivers/pci/pci-driver.c:533:12: error: ‘pci_restore_standard_config’ defined but not used [-Werror=unused-function]
+Ping?
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pci/pci-driver.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+I don't see this in -next, nor have I seen any replies.  It is possible 
+I have missed some kind of update, but currently I'm wondering if this 
+change is progressing or not.  If there is some kind of process used in 
+this area, I'm not familiar with it, so I would appreciate an introduction.
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index dc18c1faf5e5..a2e6aabfa324 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -522,9 +522,9 @@ static void pci_device_shutdown(struct device *dev)
- 		pci_clear_master(pci_dev);
- }
- 
--#ifdef CONFIG_PM
-+#ifdef CONFIG_PM_SLEEP
- 
--/* Auxiliary functions used for system resume and run-time resume. */
-+/* Auxiliary functions used for system resume. */
- 
- /**
-  * pci_restore_standard_config - restore standard config registers of PCI device
-@@ -544,6 +544,11 @@ static int pci_restore_standard_config(struct pci_dev *pci_dev)
- 	pci_pme_restore(pci_dev);
- 	return 0;
- }
-+#endif /* CONFIG_PM_SLEEP */
-+
-+#ifdef CONFIG_PM
-+
-+/* Auxiliary functions used for system resume and run-time resume. */
- 
- static void pci_pm_default_resume(struct pci_dev *pci_dev)
- {
-@@ -558,8 +563,7 @@ static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
- 	pci_restore_state(pci_dev);
- 	pci_pme_restore(pci_dev);
- }
--
--#endif
-+#endif /* CONFIG_PM */
- 
- #ifdef CONFIG_PM_SLEEP
- 
--- 
-2.32.0
+Thanks
 
+-Jeff
