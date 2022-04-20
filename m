@@ -2,129 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F5E3508440
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 10:56:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD1375084CA
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 11:20:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351247AbiDTI6z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 04:58:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53950 "EHLO
+        id S1359423AbiDTJW6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 05:22:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351513AbiDTI62 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 04:58:28 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E2D5275F6;
-        Wed, 20 Apr 2022 01:55:43 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id w5so1139978lji.4;
-        Wed, 20 Apr 2022 01:55:42 -0700 (PDT)
+        with ESMTP id S1377115AbiDTJW4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 05:22:56 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086E4237CB
+        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 02:20:10 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id u15so2179845ejf.11
+        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 02:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TApnnOk49bznf7nS/pO6YXmwSrM65zNNRoE0LsS+6Cg=;
-        b=oJ16xqKIn/hdHrCjEfqcYSejmULG9AlbIt3z3/cM+gdZ1kK3T/Iwv9foQvcWWdS7tP
-         A+qccV40M4m8MzS+VFOttc1xqk2Pw6yBWnbo5L5YDTZ6Ex1MWIgnQkSOn6RmZspzWmn4
-         17P3Ace2/iYzIRErQ3XCNVnUUwp3lLmEfIJ/LV9isfOl6OfLYPO2fY8TAvgz3AB10Swx
-         erh7+01Smj+QYEulza67Nc39S5xUqEoFssbg1g0fJMFMFrtKt7OvbI0c+9k+LnXEN6Lu
-         XHCJzwcgzyWo5FTy4FoWIpp2KGNYcnij6j4lFvFNgJeUplDMGBArUqRGsyklzh9HG8Xk
-         gnJw==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=nAIc8jlNaoNP4j8LrfgKPUem0987eG/5mImWoVHHT10=;
+        b=rSRtnZiF0xfnneRi/FQEzgnTo4L29Yzksiymt9g7h909EamxwG1M03+cfLGJz2BCOj
+         30CAL0kYOBVzStPIrvYb0monKtCFSnzsD3kwCqSU+bWHouMJvSzgKzZ6TdGkdgNy2yzz
+         C01rq4MLEeIVrGL5bI2/gmeJphR7o7jGVzdRCQK8jV3eM/SIu9DarQScr8dPeApgsm4q
+         PVkvnWdJ0MciYcWlYYKEOAtj/lRtmYDnu4oNkN19u4GUIU3PjvK/cEdkwCiD73LdOoQg
+         xyjB1TqyC1taYNXURg86XIpc8UnubKhBcODOIH7ohGWzGoAIPK9A3eD02O9kuRE3/jfE
+         /lCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TApnnOk49bznf7nS/pO6YXmwSrM65zNNRoE0LsS+6Cg=;
-        b=18PKWqTutvRg1Lo4+UJBlkBqIUILLpraoaY6M0N0H/kBraoQBxteoXvN8fVJQJ+Scc
-         WfqHjfAazNfz2OV5scvBW0ADIprV0BA+hvMBSm/y+UcA/fZTloytG+UzPYaVzBO6XhOK
-         4kaxInYbnub20h/lD5pRZ3Em4GuKZE0wREY1f/M7hO8So0BiA9GmFzLrRMpaFyh+eOpM
-         39X06+UydjTqIHaosgVr3RS3eqPllVNnJex95zRBMgSyC+XfpEcitZb31qOc2aWBwQlQ
-         5TjEntieTNkoy8/HvMLysbS2Sd4KQ7z7XPI/hwZ+6H9m4Nm/iRlTzc0l3ZXNy6eAMlno
-         nUvA==
-X-Gm-Message-State: AOAM531WxC/GwW/WXTbGjaHVn2NLebQUfA9hXaH54jFx5UpttCySjA6M
-        3uAAl0MYzd7pi0E9yJP6dAw=
-X-Google-Smtp-Source: ABdhPJyKyJ+u2S17+IotOm0b/2FyzpxuQuznRj9JHVocQh8Ri+xRlCZkxkHJvQpRWZ2M1zZXo5kgvg==
-X-Received: by 2002:a2e:8811:0:b0:24d:c4ac:1249 with SMTP id x17-20020a2e8811000000b0024dc4ac1249mr5353893ljh.307.1650444941188;
-        Wed, 20 Apr 2022 01:55:41 -0700 (PDT)
-Received: from mobilestation ([95.79.134.149])
-        by smtp.gmail.com with ESMTPSA id a8-20020a19fc08000000b0046bc1c21ec5sm1757401lfi.1.2022.04.20.01.55.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 01:55:40 -0700 (PDT)
-Date:   Wed, 20 Apr 2022 11:55:38 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 03/25] dma-direct: take dma-ranges/offsets into account
- in resource mapping
-Message-ID: <20220420085538.imgibqcyupvvjpaj@mobilestation>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-4-Sergey.Semin@baikalelectronics.ru>
- <0baff803-b0ea-529f-095a-897398b4f63f@arm.com>
- <20220417224427.drwy3rchwplthelh@mobilestation>
- <20220420071217.GA5152@lst.de>
- <20220420083207.pd3hxbwezrm2ud6x@mobilestation>
- <20220420084746.GA11606@lst.de>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nAIc8jlNaoNP4j8LrfgKPUem0987eG/5mImWoVHHT10=;
+        b=DQxlrgKu/KzeJDY2GB5dPV/wl3kpS688DO+oVoMhTZHxdYOZOTxYk7zTvz7LEtS3St
+         Me6QovIRIkxoLpRD4GUiKlBezwDfszHkjlms5ehpvvbqicjYf57KKKrB8mYqy+BA3zbY
+         zUehcxW8kmhN8IGpjv4py2ucMcSmfG69lM0+HPyGg0zU9XppGlWXKlnt4g6QCR0V5/g0
+         FcRBb38rS3UyjYUlb98c8O0Ztn/jDlFzavqewiv8cQsU2m6tnnVcYSPXPottd3r5JDXH
+         vy481aLEaVEz8KGsv8NO56O08dElEgMkmmFc+5lrne1W0KQ068A6acLuMPYWjJ7NVzDN
+         QO4g==
+X-Gm-Message-State: AOAM530dsBMeN1Ju2fhz0ibNOE7WWQvkLEzFeRJXNH6h/9wmVw0QLA2n
+        DeKOAmwcOOaAHIQHx0UygodZEA==
+X-Google-Smtp-Source: ABdhPJzOe0WrGTYQeCapieJbroGE75Jk3m16hGQK/9UYOPl2KmErfi3BqssRPBI5BShzU5h2D40NFw==
+X-Received: by 2002:a17:906:7a51:b0:6e8:8e6c:f182 with SMTP id i17-20020a1709067a5100b006e88e6cf182mr17160922ejo.506.1650446408596;
+        Wed, 20 Apr 2022 02:20:08 -0700 (PDT)
+Received: from [192.168.0.223] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id kx5-20020a170907774500b006e1382b8192sm6643906ejc.147.2022.04.20.02.20.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Apr 2022 02:20:08 -0700 (PDT)
+Message-ID: <529de1fd-7e98-1634-c61e-0e69ddcd9e73@linaro.org>
+Date:   Wed, 20 Apr 2022 11:20:06 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220420084746.GA11606@lst.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v7 00/12] Fix broken usage of driver_override (and kfree
+ of static memory)
+Content-Language: en-US
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Stuart Yoder <stuyoder@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20220419113435.246203-1-krzysztof.kozlowski@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220419113435.246203-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 10:47:46AM +0200, Christoph Hellwig wrote:
-> I can't really comment on the dma-ranges exlcusion for P2P mappings,
-> as that predates my involvedment, however:
+On 19/04/2022 13:34, Krzysztof Kozlowski wrote:
 
-My example wasn't specific to the PCIe P2P transfers, but about PCIe
-devices reaching some platform devices over the system interconnect
-bus.
+Hi Greg, Rafael,
 
-> 
-> On Wed, Apr 20, 2022 at 11:32:07AM +0300, Serge Semin wrote:
-> > See, if I get to map a virtual memory address to be accessible by any
-> > PCIe peripheral device, then the dma_map_sg/dma_map_page/etc
-> > procedures will take the PCIe host controller dma-ranges into account.
-> > It will work as expected and the PCIe devices will see the memory what
-> > I specified. But if I get to pass the physical address of the same
-> > page or a physical address of some device of the DEVs space to the
-> > dma_map_resource(), then the PCIe dma-ranges won't be taken into
-> > account, and the result mapping will be incorrect. That's why the
-> > current dma_map_resource() implementation seems very confusing to me.
-> > As I see it phys_addr_t is the type of the Interconnect address space,
-> > meanwhile dma_addr_t describes the PCIe, DEVs address spaces.
-> > 
-> > Based on what I said here and in my previous email could you explain
-> > what do I get wrong?
-> 
+The patchset was for some time on the lists, got some reviews, some
+changes/feedback which I hope I applied/responded.
 
-> You simply must not use dma_map_resource for normal kernel memory.
-> So while the exclusion might be somewhat confusing, that confusion
-> really should not matter for any proper use of the API.
+Entire set depends on the driver core changes, so maybe you could pick
+up everything via drivers core tree?
 
-What if I get to have a physical address of a platform device and want
-have that device being accessed by a PCIe peripheral device? The
-dma_map_resource() seemed very much suitable for that. But considering
-what you say it isn't.
+> Dependencies (and stable):
+> ==========================
+> 1. All patches, including last three fixes, depend on the first patch
+>    introducing the helper.
+> 2. The last three commits - fixes - are probably not backportable
+>    directly, because of this dependency. I don't know how to express
+>    this dependency here, since stable-kernel-rules.rst mentions only commits as
+>    possible dependencies.
 
--Sergey
 
+Best regards,
+Krzysztof
