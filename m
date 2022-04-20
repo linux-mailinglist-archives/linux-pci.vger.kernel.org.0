@@ -2,66 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6EA1508A84
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 16:16:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76789508AF4
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 16:43:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379331AbiDTOTL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 10:19:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
+        id S235868AbiDTOqI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 10:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380138AbiDTOSi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 10:18:38 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0BB443C7;
-        Wed, 20 Apr 2022 07:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1650464005; x=1682000005;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xSVtxqfp4JLpW3WWMuvDsq9oB3gov9dYbIhWlNNxBEo=;
-  b=fGaX0bEOO3yLXFTRbq+fdgafIeGDFeJSRJ9m20mLf12anuDBZWeoG+og
-   QfEEp6aSbz2pKHDakxjmBfzwFh0s/avH/K+alifaEr0LCaeNlHyxOctpG
-   tIY8TBua3yeqAxX1pkTfuuQ9zVPinzSU+BoajTVh3oPALYm40g8WX2iOr
-   k=;
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 20 Apr 2022 07:13:25 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg02-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 07:13:24 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 20 Apr 2022 07:13:24 -0700
-Received: from [10.226.58.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 20 Apr
- 2022 07:13:23 -0700
-Message-ID: <2100eed4-8081-6070-beaf-7c6ba65ad9be@quicinc.com>
-Date:   Wed, 20 Apr 2022 08:13:22 -0600
+        with ESMTP id S1344885AbiDTOqH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 10:46:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F7742A30
+        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 07:43:20 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nhBY2-0004UR-5W; Wed, 20 Apr 2022 16:43:14 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nhBY0-004BRC-D3; Wed, 20 Apr 2022 16:43:10 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nhBXy-004Ura-Cr; Wed, 20 Apr 2022 16:43:10 +0200
+Date:   Wed, 20 Apr 2022 16:43:10 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-pci@vger.kernel.org, Ian Cowan <ian@linux.cowan.aero>,
+        kernel@pengutronix.de,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: microchip: Add a missing semicolon
+Message-ID: <20220420144310.nza6vvwbd57gr4z6@pengutronix.de>
+References: <20220420065832.14173-1-u.kleine-koenig@pengutronix.de>
+ <YmAKKcBVGuBHwhUb@robh.at.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH v2] PCI: hv: Fix multi-MSI to allow more than one MSI
- vector
-Content-Language: en-US
-To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
-        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-        <jakeo@microsoft.com>
-CC:     <bjorn.andersson@linaro.org>, <linux-hyperv@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-8.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="n2yfu2qawsewx23r"
+Content-Disposition: inline
+In-Reply-To: <YmAKKcBVGuBHwhUb@robh.at.kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,38 +57,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/13/2022 7:36 AM, Jeffrey Hugo wrote:
-> If the allocation of multiple MSI vectors for multi-MSI fails in the core
-> PCI framework, the framework will retry the allocation as a single MSI
-> vector, assuming that meets the min_vecs specified by the requesting
-> driver.
-> 
-> Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
-> domain to implement that for x86.  The VECTOR domain does not support
-> multi-MSI, so the alloc will always fail and fallback to a single MSI
-> allocation.
-> 
-> In short, Hyper-V advertises a capability it does not implement.
-> 
-> Hyper-V can support multi-MSI because it coordinates with the hypervisor
-> to map the MSIs in the IOMMU's interrupt remapper, which is something the
-> VECTOR domain does not have.  Therefore the fix is simple - copy what the
-> x86 IOMMU drivers (AMD/Intel-IR) do by removing
-> X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
-> pci_msi_prepare().
-> 
-> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> ---
 
-Ping?
+--n2yfu2qawsewx23r
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't see this in -next, nor have I seen any replies.  It is possible 
-I have missed some kind of update, but currently I'm wondering if this 
-change is progressing or not.  If there is some kind of process used in 
-this area, I'm not familiar with it, so I would appreciate an introduction.
+On Wed, Apr 20, 2022 at 08:27:05AM -0500, Rob Herring wrote:
+> On Wed, Apr 20, 2022 at 08:58:32AM +0200, Uwe Kleine-K=F6nig wrote:
+> > If the driver is configured as a module (after allowing this by changing
+> > PCIE_MICROCHIP_HOST from bool to tristate) the missing semicolon makes =
+the
+> > compiler very unhappy. While there isn't a real problem as
+> > MODULE_DEVICE_TABLE always evaluates to nothing for a built-in driver,
+> > do it right for consistency with other drivers.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Hello,
+> >=20
+> > I wonder if there is a technical reason to have PCIE_MICROCHIP_HOST (and
+> > some others) only bool. With this patch applied the driver compiles just
+> > fine with PCIE_MICROCHIP_HOST=3Dm.
+>=20
+> Historical copy-n-paste.
 
-Thanks
+For the record: I sent a patch to allow PCIE_MICROCHIP_HOST=3Dm:
 
--Jeff
+https://lore.kernel.org/linux-pci/20220420093449.38054-1-u.kleine-koenig@pe=
+ngutronix.de
+=20
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--n2yfu2qawsewx23r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmJgG/sACgkQwfwUeK3K
+7AnXsAf/fy26/vSTV6IQX1El1Ss/OwM7thbG5jbHU1pa6WGE7z18ahZI3yBhLl6l
+JECRZDYE3F36RgG2VaEGb9kATEGE0PAEVDkAYETt7OfRreRG3H/snpjllV8aIwDY
+kA1/YnMuQ3Jy2seeZB80C0WP0rLalMDgxpFAtNgMIGcQxJVeJU8T85r3tzF+wIL9
+XbjGPdvG2aSFmdG44NU65OcoVYqY0XgTsKDoWTxSTZ0EoUDDXlQmTjWBkszXqcsp
+sSKOxtN2wwAUA01JJNu+6n1zDyEbXpCUzfk/cO3G2jC5/39YD2WpXwwv4B3+3qAB
+sv7q/0rj9a2j6BA/pXOOE3oDLHgsrg==
+=v9gV
+-----END PGP SIGNATURE-----
+
+--n2yfu2qawsewx23r--
