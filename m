@@ -2,90 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B9B3508D53
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 18:29:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4D7C508D56
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 18:30:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379855AbiDTQbv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 12:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37968 "EHLO
+        id S1354147AbiDTQdV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 12:33:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380586AbiDTQbu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:31:50 -0400
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEBD42A30;
-        Wed, 20 Apr 2022 09:29:04 -0700 (PDT)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-2ebf4b91212so23965037b3.8;
-        Wed, 20 Apr 2022 09:29:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A3Rwr1wKI0dV8uR+EC2GDva6IlEZo2CoFLIp6LGb97I=;
-        b=sUYWJjzRy69A5yeZzYV9RdIpBwaeJYdNnX1jQyODO5JoZQ82xFQInqqeGjyPPo8/ML
-         ZBYIlV4qtjdJ9pvqJxeaY5ws/gq+KHA4Db2arAoDEMMzrq1AQbL5vmIbFnsUG6ukeq0f
-         AyHp6Il+7MZxneEMa+hIQ7IvIrLW7kO1yRWIDbX6n41lJseei4WZChSMkkGW1yo0hTyK
-         3L+WzTC6W80HIrabIYHp75BB5/BVhh0x5zofDOuvNBuswpWz/GADp9VMeDtaLu6BWVgE
-         2jn1ZtTL3gutKmeDAmmkgTuPUQMb23lLd/q+huGiUzcaPKZlYcCx6cNoX4X0x5rrGxqa
-         pbHQ==
-X-Gm-Message-State: AOAM533h3evCJXZep4q2xGL9FKJhg4GCoqoctpn3XINGSYH/GzwQ/AC3
-        NHWqSIoexnX3tJGLI7MwRCiYsinascjq+gOmk1Y=
-X-Google-Smtp-Source: ABdhPJwdoGEzdO7VSww9jXGLA2Y+/2mWcpCxkyRzV6TVO7t30wQQ5QQcOp/EyX8yf1SUkpF3HcndzTo8xp/ObvTdLmA=
-X-Received: by 2002:a81:1b97:0:b0:2db:640f:49d8 with SMTP id
- b145-20020a811b97000000b002db640f49d8mr21040616ywb.326.1650472143738; Wed, 20
- Apr 2022 09:29:03 -0700 (PDT)
+        with ESMTP id S1355756AbiDTQdR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:33:17 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F300B43EDC;
+        Wed, 20 Apr 2022 09:30:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B3AE4B82025;
+        Wed, 20 Apr 2022 16:30:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A5DFC385A1;
+        Wed, 20 Apr 2022 16:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650472228;
+        bh=ACQZOVB/l83rJdkIlMLCLxGx7mGxCiS0d0I8YudmpVw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=brZnXSwWtiJ4r2AyJ7L3IiEV0ri9GiNqNiSiZrKEpdtZwrxVxwZ+KbkbmowBew47w
+         jUEGCLr+G9LyYrkgZWHkA2nu7jBX2sWy3c/pf6TbmH1qWkRD0QNdLNjWnDJ4aOvuE7
+         1jbR2Uud7rDD7q8bnILGIcoO9IYv4/srR4cszLbu8x3FZtd/0RrsFOA4iZq5fd5KZD
+         WMY8X2MZpxrvFbLKkuA8IWC/ETp4ZoHefhFYEukbyrdq3dYyLhuqcLDwYXbRBqDeeq
+         SDAwvJO+s9noI8qztkm/ZmS+ejJM/sNWNMUyWFi/d8pDq97ItLeaHaPNBMOdjh5Bjz
+         ZnZMQ9eovHgOw==
+Date:   Wed, 20 Apr 2022 11:30:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     Rajvi Jingar <rajvi.jingar@intel.com>, bhelgaas@google.com,
+        david.e.box@linux.intel.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] PCI/PM: refactor pci_pm_suspend_noirq()
+Message-ID: <20220420163026.GA1304353@bhelgaas>
 MIME-Version: 1.0
-References: <5838942.lOV4Wx5bFT@kreacher> <20220420162514.GA1301392@bhelgaas>
-In-Reply-To: <20220420162514.GA1301392@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 20 Apr 2022 18:28:52 +0200
-Message-ID: <CAJZ5v0i9Qaad_17OsO0dqxZS4_UkRnAApRs1bG=Jey9voAXH9w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/9] PCI/PM: Improvements related to device transitions
- into D0
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb94e592-0fd8-3274-aeeb-49fbd6f74761@intel.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 6:25 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Apr 14, 2022 at 03:00:23PM +0200, Rafael J. Wysocki wrote:
-> > On Monday, April 11, 2022 4:17:41 PM CEST Rafael J. Wysocki wrote:
-> > > Hi All,
-> > >
-> > > On Saturday, April 9, 2022 3:03:14 PM CEST Rafael J. Wysocki wrote:
-> > > > Hi All,
-> > > >
-> > > > This series supersedes the one at
-> > > >
-> > > > https://lore.kernel.org/linux-pm/4198163.ejJDZkT8p0@kreacher
-> > > >
-> > > > It addresses some potential issues related to PCI device transitions from
-> > > > low-power states into D0 and makes the related code more straightforward
-> > > > and so easier to follow.
-> > > >
-> > > > Please refer to the patch changelogs for details.
-> > >
-> > > Here's a v2 of this patch series which is being sent, because I realized that
-> > > one of the checks in pci_power_up() added by patch [4/7] in v1 was redundant
-> > > and can be dropped, but that affected the last 3 patches in the series and
-> > > then I noticed that more improvements were possible and hence the new patches
-> > > [2/9].
-> >
-> > Here's a v3 of this series with some minor review comments addressed and R-by
-> > tags from Mika added.
->
-> Applied to pci/pm for v5.19, thanks, Rafael!
+On Thu, Apr 14, 2022 at 07:53:25PM +0200, Rafael J. Wysocki wrote:
+> On 3/25/2022 8:50 PM, Rajvi Jingar wrote:
+> > The state of the device is saved during pci_pm_suspend_noirq(), if it
+> > has not already been saved, regardless of the skip_bus_pm flag value. So
+> > skip_bus_pm check is removed before saving the device state.
+> > 
+> > Signed-off-by: Rajvi Jingar <rajvi.jingar@intel.com>
+> > Suggested-by: David E. Box <david.e.box@linux.intel.com>
+> 
+> Sorry for the delay here.
+> 
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Thank you!
+Rajvi, can you post these again?  It looks like they didn't make it to
+the linux-pci mailing list, and I can't find them in the lore archives:
+
+  https://lore.kernel.org/all/?q=f%3Arajvi.jingar
+
+Maybe some formatting issue that vger didn't like?  Some possible
+issues here:
+
+  http://vger.kernel.org/majordomo-info.html
+
+They should appear on the list so others can comment and so the lore
+URL can be included in the commit when applying.
+
+Please incorporate Rafael's reviewed-by when you repost.
+
+> > ---
+> >   v1 -> v2: add comments to the changes
+> >   v2 -> v3: move changelog after "---" marker
+> >   v3 -> v4: add "---" marker after changelog
+> > ---
+> >   drivers/pci/pci-driver.c | 18 ++++++------------
+> >   1 file changed, 6 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 4ceeb75fc899..8b55a90126a2 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -845,20 +845,14 @@ static int pci_pm_suspend_noirq(struct device *dev)
+> >   		}
+> >   	}
+> > -	if (pci_dev->skip_bus_pm) {
+> > +	if (!pci_dev->state_saved) {
+> > +		pci_save_state(pci_dev);
+> >   		/*
+> > -		 * Either the device is a bridge with a child in D0 below it, or
+> > -		 * the function is running for the second time in a row without
+> > -		 * going through full resume, which is possible only during
+> > -		 * suspend-to-idle in a spurious wakeup case.  The device should
+> > -		 * be in D0 at this point, but if it is a bridge, it may be
+> > -		 * necessary to save its state.
+> > +		 * If the device is a bridge with a child in D0 below it, it needs to
+> > +		 * stay in D0, so check skip_bus_pm to avoid putting it into a
+> > +		 * low-power state in that case.
+> >   		 */
+> > -		if (!pci_dev->state_saved)
+> > -			pci_save_state(pci_dev);
+> > -	} else if (!pci_dev->state_saved) {
+> > -		pci_save_state(pci_dev);
+> > -		if (pci_power_manageable(pci_dev))
+> > +		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+> >   			pci_prepare_to_sleep(pci_dev);
+> >   	}
+> 
+> 
