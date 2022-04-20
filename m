@@ -2,103 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AD2D508D84
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 18:41:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12358508D8B
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 18:43:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380691AbiDTQob (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 12:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
+        id S1354873AbiDTQp4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 12:45:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380697AbiDTQoa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:44:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BCC45508
-        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 09:41:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 12363619F3
-        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 16:41:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A1A3C385A1;
-        Wed, 20 Apr 2022 16:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650472902;
-        bh=sgv77QEGBy7O6TUJeEfmecJX/ahrF4if5cSjkO7hPx0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z/Zf8CDdpa4FkcJs9P5wjO040T83uGXRKLf6Pm0uBRPq6a/difV4W/52dPGFCFiWJ
-         43VbLYf5mzxbMklk8geIfQo6TRvnQTOQWq31TaxSus5A4x+bU9ISyXFqYvV69jRq6T
-         sEKkBLQ8cb06SlyDOGISPEWKNrX8pnK5rVeyAfAgRszXu6SI3s1hmU0JncHBMbW8JW
-         jCazbK57/sQhTcHX+fyKUleM0FWBuuZPgl1dc1v+BL5XhC/DdnkyS4K8dAzHnEOhMr
-         L6gwoDGd+S72lwGtSE3zq/epq1EYnGND36KIdBZCDSeAf8xSaPu8JCBcQ/yaaCgNGH
-         WTc+vKaiF5G8A==
-Received: by pali.im (Postfix)
-        id 44CDA395; Wed, 20 Apr 2022 18:41:39 +0200 (CEST)
-Date:   Wed, 20 Apr 2022 18:41:39 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, Ian Cowan <ian@linux.cowan.aero>,
-        kernel@pengutronix.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Conor.Dooley@microchip.com
-Subject: Re: [PATCH] PCI: microchip: Allow driver to be built as a module
-Message-ID: <20220420164139.k37fc3xixn4j7kug@pali>
-References: <20220420093449.38054-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1351187AbiDTQp4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:45:56 -0400
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E53AB4664D;
+        Wed, 20 Apr 2022 09:43:09 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-2f19fdba41fso24585827b3.3;
+        Wed, 20 Apr 2022 09:43:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N3fPv8pbsvbdnmwuFsfNg5pjCiBB7G4V4ZkZ1LyVVAk=;
+        b=WPPNboVxHsC72mWqGrSGIYy+ZCzHVDCSkBb6MObrs6ADUgTYpepaImgSf5nfvlAPFf
+         rQmA6JAQTHX3/PkolKvwYfwMW27tmS34udvJwRyyaamuwXlX6mxFoArQJmEAPfqM9DSm
+         PCmPK0G5fsDRPm7S4iphzzQs0jSLTXSCKnCCmfFLjdPGPSEFIEx2Xx74EslLxhKksCiB
+         +o3eiQKqPZlHI8Uc7ZwbPfkAr79xlFAPxFnEBJGCy+4ewOIsogNCUXYOPkN6DzIjX1cO
+         IL2ynnscfiWSJuzDb1pkIrnbW8mjLE34+0YhvUei9GL/m38t1QaJwUS7n68lF5XFe4Ra
+         N2XQ==
+X-Gm-Message-State: AOAM531K7izctXOiPOcDxLG3YZWyl09QFyKRiX4/HZ6XWSkmmuoPAfqO
+        0wEhxAT7I+JytDzk3QKlpoGZ9M7SqTH6cRAIRuu34fG2
+X-Google-Smtp-Source: ABdhPJx1MRoqevzR07uqcAORlypGWMMfnKJzm9Gux29mmz4s281MKa3K/SVjud1AOtVAAe0shAK9t5QDyfP62Wj/4n8=
+X-Received: by 2002:a81:b89:0:b0:2eb:e9e6:470a with SMTP id
+ 131-20020a810b89000000b002ebe9e6470amr22115304ywl.7.1650472989143; Wed, 20
+ Apr 2022 09:43:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220420093449.38054-1-u.kleine-koenig@pengutronix.de>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20220414123736.34150-1-yangyicong@hisilicon.com> <20220420163249.GA1305194@bhelgaas>
+In-Reply-To: <20220420163249.GA1305194@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 20 Apr 2022 18:42:58 +0200
+Message-ID: <CAJZ5v0jarkeaPsq6qPLotYVqfw9rZ_OdawxBN1-1=YhvVQAz9Q@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI: Make sure the bus bridge powered on when scanning bus
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Yicong Yang <yangyicong@hisilicon.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>, prime.zeng@huawei.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 20 April 2022 11:34:49 Uwe Kleine-König wrote:
-> There are no known reasons to not use this driver as a module,
+On Wed, Apr 20, 2022 at 6:32 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Rafael, linux-pm, since I'd really like his ack/review]
+>
+> On Thu, Apr 14, 2022 at 08:37:36PM +0800, Yicong Yang wrote:
+> > When the bus bridge is runtime suspended, we'll fail to rescan
+> > the devices through sysfs as we cannot access the configuration
+> > space correctly when the bridge is in D3hot.
+> > It can be reproduced like:
+> >
+> > $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+> > $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+> >
+> > 0000:80:00.0 is root port and is runtime suspended and we cannot
+> > get 0000:81:00.1 after rescan.
+> >
+> > Make bridge powered on when scanning the child bus, by adding
+> > pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
+> >
+> > A similar issue is met and solved by
+> > d963f6512e15 ("PCI: Power on bridges before scanning new devices")
+> > which rescan the devices through /sys/bus/pci/devices/0000:80:00.0/rescan.
+> > The callstack is like:
+> >
+> > dev_rescan_restore()
+> >   pci_rescan_bus()
+> >     pci_scan_bridge_extend()
+> >       pci_scan_child_bus_extend() /* will wake up the bridge with this patch */
+> >
+> > With this patch the issue is also resolved, so let's remove the calls of
+> > pm_runtime_*() in pci_scan_bridge_extend().
+> >
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> > ---
+> > Change since v2:
+> > - just rebase it on v5.18-rc2
+> > Link: https://lore.kernel.org/linux-pci/1601029386-4928-1-git-send-email-yangyicong@hisilicon.com/
+> >
+> > Change since v1:
+> > - use an intermediate variable *bridge as suggested
+> > - remove the pm_runtime_*() calls in pci_scan_bridge_extend()
+> > Link: https://lore.kernel.org/linux-pci/1596022223-4765-1-git-send-email-yangyicong@hisilicon.com/
+> >
+> >  drivers/pci/probe.c | 21 ++++++++++++---------
+> >  1 file changed, 12 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 17a969942d37..2ca6b4b708e3 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -1257,12 +1257,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >       u8 fixed_sec, fixed_sub;
+> >       int next_busnr;
+> >
+> > -     /*
+> > -      * Make sure the bridge is powered on to be able to access config
+> > -      * space of devices below it.
+> > -      */
+> > -     pm_runtime_get_sync(&dev->dev);
 
-Hello! I think that there are reasons. pcie-microchip-host.c driver uses
-builtin_platform_driver() and not module_platform_driver(); it does not
-implement .remove driver callback and also has set suppress_bind_attrs
-to true. I think that all these parts should be properly implemented
-otherwise it does not have sane reasons to use driver as loadable and
-unloadable module.
+I understand why this is added below, but I'm not sure why it is safe
+to remove it from here.
 
-Btw, I implemented proper module support for pci-mvebu.c driver
-recently, so you can take an inspiration. See:
-https://lore.kernel.org/linux-pci/20211126144307.7568-1-pali@kernel.org/t/#u
+Say the bridge is initially in D3cold and we are accessing its config
+space below.  Why is it not necessary to power it up in that case?
 
-> so allow to configure PCIE_MICROCHIP_HOST=m.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pci/controller/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index b8d96d38064d..6eae2289410a 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -301,7 +301,7 @@ config PCI_LOONGSON
->  	  Loongson systems.
->  
->  config PCIE_MICROCHIP_HOST
-> -	bool "Microchip AXI PCIe host bridge support"
-> +	tristate "Microchip AXI PCIe host bridge support"
->  	depends on PCI_MSI && OF
->  	select PCI_MSI_IRQ_DOMAIN
->  	select GENERIC_MSI_IRQ_DOMAIN
-> 
-> base-commit: 3123109284176b1532874591f7c81f3837bbdc17
-> prerequisite-patch-id: e8aad0ef8193038684bc2e10d387a7b74da1116a
-> -- 
-> 2.35.1
-> 
+> > -
+> >       pci_read_config_dword(dev, PCI_PRIMARY_BUS, &buses);
+> >       primary = buses & 0xFF;
+> >       secondary = (buses >> 8) & 0xFF;
+> > @@ -1464,8 +1458,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >  out:
+> >       pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+> >
+> > -     pm_runtime_put(&dev->dev);
+> > -
+> >       return max;
+> >  }
+> >
+> > @@ -2859,11 +2851,19 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+> >       unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+> >       unsigned int start = bus->busn_res.start;
+> >       unsigned int devfn, fn, cmax, max = start;
+> > -     struct pci_dev *dev;
+> > +     struct pci_dev *dev, *bridge = bus->self;
+
+I would initialize the new variable in a separate line.
+
+> >       int nr_devs;
+> >
+> >       dev_dbg(&bus->dev, "scanning bus\n");
+> >
+> > +     /*
+> > +      * Make sure the bus bridge is powered on, otherwise we may not be
+> > +      * able to scan the devices as we may fail to access the configuration
+> > +      * space of subordinates.
+> > +      */
+> > +     if (bridge)
+> > +             pm_runtime_get_sync(&bridge->dev);
+> > +
+> >       /* Go find them, Rover! */
+> >       for (devfn = 0; devfn < 256; devfn += 8) {
+> >               nr_devs = pci_scan_slot(bus, devfn);
+> > @@ -2976,6 +2976,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+> >               }
+> >       }
+> >
+> > +     if (bridge)
+> > +             pm_runtime_put(&bridge->dev);
+> > +
+> >       /*
+> >        * We've scanned the bus and so we know all about what's on
+> >        * the other side of any bridges that may be on this bus plus
+> > --
