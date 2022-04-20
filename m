@@ -2,199 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A9835088E8
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 15:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C12B508912
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 15:18:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345767AbiDTNK5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 09:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
+        id S1378892AbiDTNVj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 09:21:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235000AbiDTNK5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 09:10:57 -0400
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0831A3A7;
-        Wed, 20 Apr 2022 06:08:03 -0700 (PDT)
-Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 310E94000E;
-        Wed, 20 Apr 2022 13:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1650460081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yuk0DkDPEInPbO2/7/mEfOaFgM8OSF6LY257uIAIVYU=;
-        b=gVZD0Yq66dGtbd3tNLTW39EtL5QZSEA+tJfDOou3z24FIgHn7EWKkxiriGZLXKFlhJabzM
-        LYKitguMS9+J49ShBJNH4gDXPKjmRJ5e41XKskhTGH0hoDuZnWF9swiLtyZTVKj8IQKv1H
-        0EWXxgla8Mrm/dHHaXQ70G65oCcNjSA3KFJLiH7jyAERAK8v1tnuHvEtL6Wyjv2X8PFVsy
-        cQi88TkKlaTwTVHcot5kG/ti3/jJ2VvSB+j9BSKocIL43fubwY48Pn/WIhh2KS62dYpHNY
-        zowk7iRgXtsIOv8ENuZm3bvAA4Y3tkJ3AvCh9gKD9u6fIh2AGxAR7zHFfnF9dw==
-Date:   Wed, 20 Apr 2022 15:07:59 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
+        with ESMTP id S242970AbiDTNVi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 09:21:38 -0400
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C096342A03;
+        Wed, 20 Apr 2022 06:18:52 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-e5bdd14b59so1873459fac.11;
+        Wed, 20 Apr 2022 06:18:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B3CbAt4ZX/EEyH49jyAg9jAZpFJcJq4CEXfhKoE4EjY=;
+        b=BQ58M06eeS7/UfYa8nf7lS96baHMfKjTYrxmNuIn4Oy4/u9DkKNPSXlipQt3lbZ4pD
+         KiHPOtAzDEVxlRHBMaksP0dAkNcsMs6E7LLf1XJLMPB9pHwqM6MKS0LqIkm3n9AT6jMl
+         CUFGXfZlt6j2dT4U3NBw1u2lsAjCgwCZSob+bV8qdyq2PpKuGO02vYhhFEsrBG8y5ydd
+         +82XB0i6ZgeETvjhK/c5ZaXJwPURx0bQ94bV+dzIZymc7K9z/wu6cn2xoMwcA6oycpJK
+         XAhA7amK16MawkH5Y/IDvbZl4T/cm40d4SYxiX9V83LKcgQEfX3ZeFrLn2lARv4nWjaK
+         ob7Q==
+X-Gm-Message-State: AOAM531xW+7wBWPKUE9Ofn2wifzsCPmz/bKvZ1OQt5fAldqly3UjMJFx
+        V4tRmxUmuanaLZq5ciBU7g==
+X-Google-Smtp-Source: ABdhPJx2A5aMeqamW9lvDMpyT+zJ9u6tnpoQnlk5qYdgWXu62FfEJRvWdUGDP2ElX2LCKfRj2sQdZA==
+X-Received: by 2002:a05:6870:538f:b0:e1:def7:7640 with SMTP id h15-20020a056870538f00b000e1def77640mr1486007oan.34.1650460731982;
+        Wed, 20 Apr 2022 06:18:51 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id t83-20020aca5f56000000b00322b2a08b85sm2418869oib.19.2022.04.20.06.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 06:18:51 -0700 (PDT)
+Received: (nullmailer pid 1152994 invoked by uid 1000);
+        Wed, 20 Apr 2022 13:18:50 -0000
+Date:   Wed, 20 Apr 2022 08:18:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Herve Codina <herve.codina@bootlin.com>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sergey Shtylyov <s.shtylyov@omp.ru>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 3/8] dt-bindings: PCI: renesas-pci-usb: Allow
- multiple clocks
-Message-ID: <20220420150759.713fcd02@bootlin.com>
-In-Reply-To: <CAMuHMdWZyuNQJhxkhzs5H8+8DFGDS95nvptrO-s9RC4QL5kibA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] dt-bindings: PCI: renesas-pci-usb: Convert
+ bindings to json-schema
+Message-ID: <YmAIOt1vAEzHGvBP@robh.at.kernel.org>
 References: <20220414074011.500533-1-herve.codina@bootlin.com>
-        <20220414074011.500533-4-herve.codina@bootlin.com>
-        <CAMuHMdWZyuNQJhxkhzs5H8+8DFGDS95nvptrO-s9RC4QL5kibA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
+ <20220414074011.500533-3-herve.codina@bootlin.com>
+ <YlhkwvGdcf4ozTzG@robh.at.kernel.org>
+ <20220420144411.2d369b49@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220420144411.2d369b49@bootlin.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Geert, Rob,
+On Wed, Apr 20, 2022 at 02:44:11PM +0200, Herve Codina wrote:
+> Hi Rob,
+> 
+> On Thu, 14 Apr 2022 13:15:30 -0500
+> Rob Herring <robh@kernel.org> wrote:
+> 
+> > On Thu, Apr 14, 2022 at 09:40:05AM +0200, Herve Codina wrote:
+> > > Convert Renesas PCI bridge bindings documentation to json-schema.
+> > > Also name it 'renesas,pci-usb' as it is specifically used to
+> > > connect the PCI USB controllers to AHB bus.  
+> > 
+> > Please name it based on compatible strings. renesas,pci-rcar-gen2.yaml
+> 
+> Ok, renamed.
+> 
+> > 
+> > > 
+> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > > ---
+> > >  .../devicetree/bindings/pci/pci-rcar-gen2.txt |  84 -----------
+> > >  .../bindings/pci/renesas,pci-usb.yaml         | 134 ++++++++++++++++++
+> > >  2 files changed, 134 insertions(+), 84 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> > > deleted file mode 100644
+> ...
+> > > diff --git a/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml b/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
+> > > new file mode 100644
+> ...
+> > > index 000000000000..3f8d79b746c7
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
+> > > @@ -0,0 +1,134 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pci/renesas,pci-usb.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Renesas AHB to PCI bridge
+> > > +
+> > > +maintainers:
+> > > +  - Marek Vasut <marek.vasut+renesas@gmail.com>
+> > > +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > +
+> > > +description: |
+> > > +  This is the bridge used internally to connect the USB controllers to the
+> > > +  AHB. There is one bridge instance per USB port connected to the internal
+> > > +  OHCI and EHCI controllers.
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/pci/pci-bus.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - enum:
+> > > +              - renesas,pci-r8a7742      # RZ/G1H
+> > > +              - renesas,pci-r8a7743      # RZ/G1M
+> > > +              - renesas,pci-r8a7744      # RZ/G1N
+> > > +              - renesas,pci-r8a7745      # RZ/G1E
+> > > +              - renesas,pci-r8a7790      # R-Car H2
+> > > +              - renesas,pci-r8a7791      # R-Car M2-W
+> > > +              - renesas,pci-r8a7793      # R-Car M2-N
+> > > +              - renesas,pci-r8a7794      # R-Car E2
+> > > +          - const: renesas,pci-rcar-gen2 # R-Car Gen2 and RZ/G1
+> > > +
+> > > +  reg:
+> > > +    description: |
+> > > +      A list of physical regions to access the device. The first is
+> > > +      the operational registers for the OHCI/EHCI controllers and the
+> > > +      second is for the bridge configuration and control registers.
+> > > +    minItems: 2
+> > > +    maxItems: 2
+> > > +
+> > > +  interrupts:
+> > > +    description: Interrupt for the device.
+> > > +
+> > > +  interrupt-map:
+> > > +    description: |
+> > > +      Standard property used to define the mapping of the PCI interrupts
+> > > +      to the GIC interrupts.
+> > > +
+> > > +  interrupt-map-mask:
+> > > +    description:
+> > > +      Standard property that helps to define the interrupt mapping.
+> > > +
+> > > +  clocks:
+> > > +    description: The reference to the device clock.
+> > > +
+> > > +  bus-range:
+> > > +    description: |
+> > > +      The PCI bus number range; as this is a single bus, the range
+> > > +      should be specified as the same value twice.  
+> > 
+> > items:
+> >   const: 0
+> 
+> Well, some other values are present in some dtsi files such as
+> 'bus_range = <1 1>;' or 'bus_range = <2 2>;' in r8a7742.dtsi.
+> 
+> The constraint is to have the same value twice. Is there a way
+> to specify this constraint ?
 
-On Thu, 14 Apr 2022 10:35:07 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+Yes, but probably not worthwhile. Just drop it as pci-bus.yaml already 
+defines it.
 
-> Hi Herv=C3=A9,
->=20
-> On Thu, Apr 14, 2022 at 9:40 AM Herve Codina <herve.codina@bootlin.com> w=
-rote:
-> > Define that multiple clocks can be present at clocks property.
-> >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com> =20
->=20
-> Thanks for your patch!
->=20
-> > --- a/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
-> > @@ -54,7 +54,8 @@ properties:
-> >        Standard property that helps to define the interrupt mapping.
-> >
-> >    clocks:
-> > -    description: The reference to the device clock.
-> > +    description:
-> > +      The references to the device clocks (several clocks can be refer=
-enced). =20
->=20
-> Please describe the clocks, and add the missing "clock-names" property.
->=20
-> >
-> >    bus-range:
-> >      description: | =20
->=20
-> I think it would be better to combine this with [PATCH v2 4/8], as the
-> additional clocks are only present on RZ/N1.
->=20
-> Then you can easily add json-schema logic to enforce the correct
-> number of clocks, depending on the compatible value.
+> > > +
+> > > +  "#address-cells":
+> > > +    const: 3
+> > > +
+> > > +  "#size-cells":
+> > > +    const: 2
+> > > +
+> > > +  "#interrupt-cells":
+> > > +    const: 1  
+> > 
+> > All these are defined by pci-bus.yaml
+> 
+> Right.
+> Replaced by:
+> 
+> "#address-cells": true
+> "#size-cells": true
+> "#interrupt-cells": true
+> 
+> Is that correct ?
 
-Sure.
+You can just drop them completely.
 
-Is there a way to have the clocks description depending on the compatible v=
-alue.
-I mean something like:
---- 8< ---
-properties:
-  clocks:
-    maxItems: 1
-
-if:
-  properties:
-    compatible:
-      contains:
-        enum:
-          - renesas,pci-r9a06g032
-          - renesas,pci-rzn1
-
-then:
-  properties:
-    clocks:
-      items:
-        - description: Internal bus clock (AHB) for HOST
-        - description: Internal bus clock (AHB) Power Management
-        - description: PCI clock for USB subsystem
-      minItems: 3
-      maxItems: 3
-
-else:
-  properties:
-    items:
-       - description: Device clock
-    clocks:
-      minItems: 1
-      maxItems: 1
---- 8< ---
-
-In fact, I would like to describe the 3 clocks only for the r9a06g032 SOC
-and the rzn1 family and have an other description for the other 'compatible=
-'.
-
-I cannot succeed to do it.
-
-The only thing I can do is to leave the description of the 3 clocks out of =
-the
-conditional part. This leads to :
-
---- 8< ---
-properties:
-  clocks:
-    items:
-      - description: Internal bus clock (AHB) for HOST
-      - description: Internal bus clock (AHB) Power Management
-      - description: PCI clock for USB subsystem
-    minItems: 1
-
-if:
-  properties:
-    compatible:
-      contains:
-        enum:
-          - renesas,pci-r9a06g032
-          - renesas,pci-rzn1
-
-then:
-  properties:
-    clocks:
-      minItems: 3
-      maxItems: 3
-
-else:
-  properties:
-    clocks:
-      minItems: 1
-      maxItems: 1
---- 8< ---
-
-Also the clock-names items can be different depending on the
-compatible value.
-
-Regards,
-Herv=C3=A9
-
---=20
-Herv=C3=A9 Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Rob
