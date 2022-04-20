@@ -2,82 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95FAA508D34
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 18:25:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 908DF508D45
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 18:27:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355737AbiDTQ2I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 12:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35122 "EHLO
+        id S1380566AbiDTQag (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 12:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355207AbiDTQ2G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:28:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCD213EA6;
-        Wed, 20 Apr 2022 09:25:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A7E8DB81EB2;
-        Wed, 20 Apr 2022 16:25:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A5FC385A1;
-        Wed, 20 Apr 2022 16:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650471917;
-        bh=KRSXZmE7hCvpkyvfMj0ubOPyiELhK6uWuOp6vCc4fXs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pQTbSjplIUSJia1MVZnBiEVHxSrwdkaCx+zw9Rsr2MZnmGNZgoc1xTKQ2dnQPsANd
-         QcNVx1hfNw5tqF1p1FA1DDajLrvtYrMMgXa8qyznqG8BG53rfDD+30SmjOa5EPvbAX
-         1gIV7AaPhFKhJs7gYbzApeLCiKEpuSS3DpKq6MxnK+VAmXRJb6M1UHFUppk+eRl4lb
-         tVZc3qUs9LlTL9mUdwG6arH3TZ1OfBu8rjrVxzxQ+QJ1gCaGU9UMHw1si4LLgn6sc0
-         50toeWv9jX+XkslhvtqifYU+tbYtbpfstjQxNOl/Ono/gEuxVSCWDDXHUgQ53hx2qw
-         rw+VeoXKUuxfQ==
-Date:   Wed, 20 Apr 2022 11:25:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 0/9] PCI/PM: Improvements related to device
- transitions into D0
-Message-ID: <20220420162514.GA1301392@bhelgaas>
+        with ESMTP id S1379855AbiDTQaf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:30:35 -0400
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29253EB90;
+        Wed, 20 Apr 2022 09:27:48 -0700 (PDT)
+Received: by mail-oi1-f178.google.com with SMTP id r8so2626098oib.5;
+        Wed, 20 Apr 2022 09:27:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=s0Czcu6TCdRJh3Fx3ESiSoL0ZyRIITOPGEegqcioA0I=;
+        b=wGEC3QuW9wpsoJU4eXbH894zW4EBS2VXHTzkrwLWGlHk6JIQpgIMOiD2EsxdcXLW/v
+         316zvsYFblFCt+JvVXlwWegE25XDXzdwzKwwZ/HX2XxmrJ/+u9Q+U7kpXLKa/q9Z1J+j
+         AyRoUW86ia5kSLKohVz27fJVr+zqMO0BSBEAAl/Fh8PYN6gFbsldPh1xl442weRvIkg3
+         p1y+nyFrQP0uUWPzM359eDpDAspw62rgyLtQnB/oCRdafrrDkARciWhcmXEudn+UAECO
+         bZYIr4yOARsIMQjjcy3MgbbWhBg6+STbu9QySjoaCNfeD/hdB4lrZlYHxsm/n6jyMVat
+         XP8Q==
+X-Gm-Message-State: AOAM533Qv7UKra1UV3CywaTwRJStMDPszqubYtLTcs4Muw0nNkm7r6/g
+        7jMyb+Z5UuajNhFe+TIRc9MNUCWvUQ==
+X-Google-Smtp-Source: ABdhPJyRPm3dclqsf2iFh3UbCM9lc4G9rxreTjcEaDUvEUguNudR6cmXNyCdMlZBbXh2js1oF7+nyQ==
+X-Received: by 2002:a05:6808:3010:b0:2f7:3e71:88b2 with SMTP id ay16-20020a056808301000b002f73e7188b2mr2159525oib.102.1650472068176;
+        Wed, 20 Apr 2022 09:27:48 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id j5-20020a4a7505000000b0033a47bb6a74sm2123535ooc.47.2022.04.20.09.27.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 09:27:47 -0700 (PDT)
+Received: (nullmailer pid 1428607 invoked by uid 1000);
+        Wed, 20 Apr 2022 16:27:46 -0000
+Date:   Wed, 20 Apr 2022 11:27:46 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Simon Xue <xxm@rock-chips.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v7 1/4] dt-bindings: pci: remove fallback from Rockchip
+ DesignWare binding
+Message-ID: <YmA0gokzLKqX7dxP@robh.at.kernel.org>
+References: <20220416110507.642398-1-pgwipeout@gmail.com>
+ <20220416110507.642398-2-pgwipeout@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5838942.lOV4Wx5bFT@kreacher>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220416110507.642398-2-pgwipeout@gmail.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 03:00:23PM +0200, Rafael J. Wysocki wrote:
-> On Monday, April 11, 2022 4:17:41 PM CEST Rafael J. Wysocki wrote:
-> > Hi All,
-> > 
-> > On Saturday, April 9, 2022 3:03:14 PM CEST Rafael J. Wysocki wrote:
-> > > Hi All,
-> > > 
-> > > This series supersedes the one at
-> > > 
-> > > https://lore.kernel.org/linux-pm/4198163.ejJDZkT8p0@kreacher
-> > > 
-> > > It addresses some potential issues related to PCI device transitions from
-> > > low-power states into D0 and makes the related code more straightforward
-> > > and so easier to follow.
-> > > 
-> > > Please refer to the patch changelogs for details.
-> > 
-> > Here's a v2 of this patch series which is being sent, because I realized that
-> > one of the checks in pci_power_up() added by patch [4/7] in v1 was redundant
-> > and can be dropped, but that affected the last 3 patches in the series and
-> > then I noticed that more improvements were possible and hence the new patches
-> > [2/9].
+On Sat, 16 Apr 2022 07:05:03 -0400, Peter Geis wrote:
+> The snps,dw-pcie binds to a standalone driver.
+> It is not fully compatible with the Rockchip implementation and causes a
+> hang if it binds to the device.
 > 
-> Here's a v3 of this series with some minor review comments addressed and R-by
-> tags from Mika added.
+> Remove this binding as a valid fallback.
+> 
+> Signed-off-by: Peter Geis <pgwipeout@gmail.com>
+> ---
+>  .../devicetree/bindings/pci/rockchip-dw-pcie.yaml    | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
+> 
 
-Applied to pci/pm for v5.19, thanks, Rafael!
+Reviewed-by: Rob Herring <robh@kernel.org>
