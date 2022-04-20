@@ -2,136 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D3965088C1
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 15:05:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A9835088E8
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 15:08:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378745AbiDTNIE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 09:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46556 "EHLO
+        id S1345767AbiDTNK5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 09:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378746AbiDTNIB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 09:08:01 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECEB222AC;
-        Wed, 20 Apr 2022 06:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1650459879;
-        bh=wOmewmRrbd5TBpBZqdHt25VeQoHFPRad0GP83DFE/KA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=KnsycIGSKRyZ0zSYB26Acbmgps+aknmDjPdrIVk97n9wZCzqTb9JUdQPb+kLOgW9s
-         1eiGH1oOYrToBBcafHSbdNfR0kCycUlJ8Mltx4UTkg8M3VmXVzi+V0E9A3d0zyMJmy
-         6TXFZ+TQ3Lk+jyJLchu4+Lw+zbDqL7teMZ1oh1rs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.147.126] ([217.61.147.126]) by web-mail.gmx.net
- (3c-app-gmx-bap05.server.lan [172.19.172.75]) (via HTTP); Wed, 20 Apr 2022
- 15:04:38 +0200
-MIME-Version: 1.0
-Message-ID: <trinity-bf1af823-9e46-4da7-bec5-6e749a4dc2e3-1650459878842@3c-app-gmx-bap05>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        linux-rockchip@lists.infradead.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S235000AbiDTNK5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 09:10:57 -0400
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0831A3A7;
+        Wed, 20 Apr 2022 06:08:03 -0700 (PDT)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 310E94000E;
+        Wed, 20 Apr 2022 13:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1650460081;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Yuk0DkDPEInPbO2/7/mEfOaFgM8OSF6LY257uIAIVYU=;
+        b=gVZD0Yq66dGtbd3tNLTW39EtL5QZSEA+tJfDOou3z24FIgHn7EWKkxiriGZLXKFlhJabzM
+        LYKitguMS9+J49ShBJNH4gDXPKjmRJ5e41XKskhTGH0hoDuZnWF9swiLtyZTVKj8IQKv1H
+        0EWXxgla8Mrm/dHHaXQ70G65oCcNjSA3KFJLiH7jyAERAK8v1tnuHvEtL6Wyjv2X8PFVsy
+        cQi88TkKlaTwTVHcot5kG/ti3/jJ2VvSB+j9BSKocIL43fubwY48Pn/WIhh2KS62dYpHNY
+        zowk7iRgXtsIOv8ENuZm3bvAA4Y3tkJ3AvCh9gKD9u6fIh2AGxAR7zHFfnF9dw==
+Date:   Wed, 20 Apr 2022 15:07:59 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Aw: Re:  Re: [RFC/RFT 2/6] dt-bindings: soc: grf: add
- pcie30-{phy,pipe}-grf
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: PCI: renesas-pci-usb: Allow
+ multiple clocks
+Message-ID: <20220420150759.713fcd02@bootlin.com>
+In-Reply-To: <CAMuHMdWZyuNQJhxkhzs5H8+8DFGDS95nvptrO-s9RC4QL5kibA@mail.gmail.com>
+References: <20220414074011.500533-1-herve.codina@bootlin.com>
+        <20220414074011.500533-4-herve.codina@bootlin.com>
+        <CAMuHMdWZyuNQJhxkhzs5H8+8DFGDS95nvptrO-s9RC4QL5kibA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 20 Apr 2022 15:04:38 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <8b9ad0a6-acc0-aad9-c49d-e4a4b38374bb@linaro.org>
-References: <20220416135458.104048-1-linux@fw-web.de>
- <20220416135458.104048-3-linux@fw-web.de>
- <02b3fe1c-12f9-8f96-a9b5-df44ca001825@linaro.org>
- <trinity-c60358c4-ebd1-47bf-91e0-9ae0beefd39f-1650389348418@3c-app-gmx-bap70>
- <8b9ad0a6-acc0-aad9-c49d-e4a4b38374bb@linaro.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:9xmgXgx0V9zQ9oJQ2v4jyZ8k5GDOHaZWDau5uvMohn+mtj1rU3a888flYq5JkzAbi24mD
- FHd6jW/TzjLC2M3aDwNp3kInEFdlDMp+mq2ha/0uYCNocwhoVXzNtHCUDW7cXu16sKCUH7D36rOs
- Ew8bePdsiJqO5iuOwaJ7KZfa213xpuyDOaVzLGmQW0VEb7L3Qr3ka6J3KZZOLDxdbz0DTagUk4HL
- FwkqjHfbMegxDqz0IhXu0RQO3z9bvFV+F2dOOCG/bw04UaHRR/FCH+hlHTqequG6P/qVknBwxrSN
- Gs=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3yJGss0AXv8=:3z9IDXCNImRErPGVveLkWg
- 9FT2mUQ/uub+5d3eCaoGXd8z2JJQJ/cbe3gPEp1CpWlXoCK1YZu2z2vCf8SSfXIL1vfVKLsa9
- uZU/9l50P7Fzg+caJijuhBzryf2tfXTOUVtRuT/nxeYZbwOBle3xBUqNdyqqI975vBwyydTan
- BDBPMZm4975M4ANAAYxWJQ0XFVy9wdpSuE02aTa/9q96WzGnyTeiwkIV3pKE9btu+H1eidmcL
- NVYNXBWtRxfs/WMYzclPMAgrKHAqRyP9TcaUtEkCiaPG23o6UPHdlWj0sB8xSGYk0go2NPbH6
- 2npwGihW0ljkW+dulz39OoBpJmnAPzjJltc/9A8E42yXqB1N0qcATtrTE0BNTMQB0/R+5GyFP
- Gp/kgCGlpHQEw+kkHMXi9m9byjZu4qjgBlOR5KsHxgZv0pgI3yiwg2FSVQAgzQ7ADvqp3On+G
- 5pGfPsM0nZLXqHwjBEeOTSl/i3s5SNw1WiNnXEH3GesYaBvMRPWwzAIyPrJlAGPLaPyI14Izl
- +Q8adU+ytcdUVAtt9bFmjJqfHOg755J1UDNVsBOSeHMnopes1sP6LIkrcqQi7DNjKDVtTVgmi
- qs8w2EXFR/n5kqKO3AkdVso57wm/v3dxxGErPIQkuCEg3JE/52lrMITvVODGmWkewej5Y/jfX
- 3uBxui4FFo3Vv0RUVTD3k3/gj0hV4diJ5Zp4jCf5RyWfmssGdNL6/an0zz/sVu7wbNRBGjxzv
- FbDUW7w2OuiN+EVheyKLggtZM2QoweeZGeiUdz9rh8IAbHNuPgK5qxCt4tt6ogkiIeEj4jZ7C
- UBYIbbG
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Gesendet: Dienstag, 19. April 2022 um 21:40 Uhr
-> Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-> On 19/04/2022 19:29, Frank Wunderlich wrote:
-> >> Gesendet: Montag, 18. April 2022 um 17:54 Uhr
-> >> Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+Hi Geert, Rob,
+
+On Thu, 14 Apr 2022 10:35:07 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+
+> Hi Herv=C3=A9,
+>=20
+> On Thu, Apr 14, 2022 at 9:40 AM Herve Codina <herve.codina@bootlin.com> w=
+rote:
+> > Define that multiple clocks can be present at clocks property.
 > >
-> >>> --- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-> >>> +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-> >>> @@ -14,6 +14,8 @@ properties:
-> >>>      oneOf:
-> >>>        - items:
-> >>>            - enum:
-> >>> +              - rockchip,pcie30-phy-grf
-> >>> +              - rockchip,pcie30-pipe-grf
-> >>
-> >> These are without SoC parts. Are these PCIe v3 General Register Files
-> >> part of some PCIe spec?
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com> =20
+>=20
+> Thanks for your patch!
+>=20
+> > --- a/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/renesas,pci-usb.yaml
+> > @@ -54,7 +54,8 @@ properties:
+> >        Standard property that helps to define the interrupt mapping.
 > >
-> > imho they are shared across SoCs rk3568 and rk3588, but have only seen=
- rk3568 implementation yet.
-> > PCIe driver currently supports these 2 Soc (different offsets in the P=
-hy-GRF), but can only test rk3568.
+> >    clocks:
+> > -    description: The reference to the device clock.
+> > +    description:
+> > +      The references to the device clocks (several clocks can be refer=
+enced). =20
+>=20
+> Please describe the clocks, and add the missing "clock-names" property.
+>=20
 > >
-> > pipe-grf seems only be used for rk35688 (offset used in probe is defin=
-ed for this SoC), which i cannot test.
-> >
-> > so i have left them SoC independed.
->
-> Compatibles should be SoC dependent, with some exceptions. Lack of
-> documentation or lack of possibility of testing is actually argument
-> against any exception, so they should be SoC specific/dependent.
+> >    bus-range:
+> >      description: | =20
+>=20
+> I think it would be better to combine this with [PATCH v2 4/8], as the
+> additional clocks are only present on RZ/N1.
+>=20
+> Then you can easily add json-schema logic to enforce the correct
+> number of clocks, depending on the compatible value.
 
-so i will change to
+Sure.
 
-              - rockchip,rk3568-pcie30-phy-grf
-              - rockchip,rk3588-pcie30-pipe-grf
+Is there a way to have the clocks description depending on the compatible v=
+alue.
+I mean something like:
+--- 8< ---
+properties:
+  clocks:
+    maxItems: 1
 
-and maybe add
+if:
+  properties:
+    compatible:
+      contains:
+        enum:
+          - renesas,pci-r9a06g032
+          - renesas,pci-rzn1
 
-              - rockchip,rk3588-pcie30-phy-grf
+then:
+  properties:
+    clocks:
+      items:
+        - description: Internal bus clock (AHB) for HOST
+        - description: Internal bus clock (AHB) Power Management
+        - description: PCI clock for USB subsystem
+      minItems: 3
+      maxItems: 3
 
-these compatibles are not directly taken by any driver as the nodes be lin=
-ked via phandle (rockchip,phy-grf property) from the phy driver (rockchip,=
-rk3568-pcie3-phy / rockchip,rk3588-pcie3-phy). So these compatibles are on=
-ly in the yaml and dts present.
+else:
+  properties:
+    items:
+       - description: Device clock
+    clocks:
+      minItems: 1
+      maxItems: 1
+--- 8< ---
 
-regards Frank
+In fact, I would like to describe the 3 clocks only for the r9a06g032 SOC
+and the rzn1 family and have an other description for the other 'compatible=
+'.
+
+I cannot succeed to do it.
+
+The only thing I can do is to leave the description of the 3 clocks out of =
+the
+conditional part. This leads to :
+
+--- 8< ---
+properties:
+  clocks:
+    items:
+      - description: Internal bus clock (AHB) for HOST
+      - description: Internal bus clock (AHB) Power Management
+      - description: PCI clock for USB subsystem
+    minItems: 1
+
+if:
+  properties:
+    compatible:
+      contains:
+        enum:
+          - renesas,pci-r9a06g032
+          - renesas,pci-rzn1
+
+then:
+  properties:
+    clocks:
+      minItems: 3
+      maxItems: 3
+
+else:
+  properties:
+    clocks:
+      minItems: 1
+      maxItems: 1
+--- 8< ---
+
+Also the clock-names items can be different depending on the
+compatible value.
+
+Regards,
+Herv=C3=A9
+
+--=20
+Herv=C3=A9 Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
