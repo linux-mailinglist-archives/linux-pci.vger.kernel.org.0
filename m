@@ -2,154 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 783645089AB
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 15:46:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 079C3508A7E
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 16:16:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379129AbiDTNtF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 09:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39132 "EHLO
+        id S1377538AbiDTOTL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 10:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379127AbiDTNtD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 09:49:03 -0400
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::222])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09A421E0D;
-        Wed, 20 Apr 2022 06:46:15 -0700 (PDT)
-Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 930D14000D;
-        Wed, 20 Apr 2022 13:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1650462374;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Gu9XIPDQFJtF5X1LIwJgSFyBvY1NGDGQ+pRrZhn5KiY=;
-        b=GeLia+C9QE8jie0TY69D9ZmjKetBmS0vJX/CXbcYhUD/5S8pnohoodLfUas21s2Xk40UGB
-        GP8EODtmGOitGKtwEXC5VUGV1Hw8wTthv7zqLTZmQkMpPrc/v8tJwiwe7XLqcpA+ronfv/
-        ix3jrqhvJX1EBYP3aMTFTfn1xfqTh/lsWDY8OC/l8sarpeyA/MBTqDIChKcA+Q6p6xLTfX
-        vlGtYPICVNJMIivU0TS/QCDws6rUaUCvenJeqwx3H6Jwji9zmZ2isYF7w8IQBDAO58wi8p
-        Us0mcCq7cFLJPH8AC9ZGD2igjVA4R1KJ04bPpsM4CrNND5iacJT5+wEyucCyxQ==
-Date:   Wed, 20 Apr 2022 15:46:11 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRz?= =?UTF-8?B?a2k=?= 
-        <kw@linux.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: PCI: renesas-pci-usb: Convert
- bindings to json-schema
-Message-ID: <20220420154611.7dd34c24@bootlin.com>
-In-Reply-To: <YmAIOt1vAEzHGvBP@robh.at.kernel.org>
-References: <20220414074011.500533-1-herve.codina@bootlin.com>
-        <20220414074011.500533-3-herve.codina@bootlin.com>
-        <YlhkwvGdcf4ozTzG@robh.at.kernel.org>
-        <20220420144411.2d369b49@bootlin.com>
-        <YmAIOt1vAEzHGvBP@robh.at.kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
+        with ESMTP id S1379989AbiDTOSY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 10:18:24 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9943E4A3E3
+        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 07:11:45 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id i27so3789229ejd.9
+        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 07:11:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D5oN6OjFAAM2Jtgw8cFuu+OC1yUTyBmH5VCH73tbJIs=;
+        b=J2QfDs++WjQJaTh2gO5bBcfx5DI5gjex5gZVeg3++RKOiNZuEDy53Jzn/3ocatbQX8
+         A9DP7bGr9pkjgTPyL7YhvA0JkMKR/iwU9fmDFHO5bhmg4ulHj7sGMmfaLGnM/ASvMM62
+         POEYYCtKbLWI+TrSTNW7SnA06O2HHLl79aJMhzRDTQe0LmL7ZV87QPRA/SyB7CW/beUS
+         +LGMgtjcSSj7aAiPP9a1mY3q8q/j4ueSRkS7/cTh0tsn4FMcK2rBiTL3m8CRIVq+x6Jf
+         7LPAjHO8EkIwIi2yjoAHGP/dgcaUxH5Sf1GWwlCTBAZXDLzBZ69jhBfJ+f1jVD+1Lbcz
+         KLmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D5oN6OjFAAM2Jtgw8cFuu+OC1yUTyBmH5VCH73tbJIs=;
+        b=4qTFNEZdxuHtvhgRlP6RF285UwvDq6HKeEe8OQOykWhLC922bgAsQ6lXuDKnizKDK+
+         JtmrYERaA25zxuUVxo5JHbSsuV0ujrJbDNDkIfhaxGJivzOAH9ZtF0f8rHbSBXs00BS8
+         sYVXfTpgjx0UcG7mtAwb4G+Snf575tqIFlLA7CIZAQXt2GJm4tea7BRUkdiXyLKISU2n
+         o0wmD0t2Dp8mEiCWKP6P7xB8cb8olQ4rAb1xOoQ7Y7uUtlpy0454hDX33ywdZtZbMiOM
+         xb25Adqhg+f5irsHkx3petaCD2HZlSMPt6AfTTKxUfEDwdzcOEzhRac0xj2+OixkhG48
+         YB+Q==
+X-Gm-Message-State: AOAM531fJ3wOhD50dnbFnsuTcGHtMUgxHlSgzlhbQO4W5SBzkYSTGF6b
+        lVwyxdQvXvNOxQ0cfByqhrVHYQ==
+X-Google-Smtp-Source: ABdhPJyB1OGo392CHMXgZTS9PN4elzbRaBcXavX/HTTNgufEwPnYzRC9k42BVq0grtwj+114Sr0j+w==
+X-Received: by 2002:a17:906:6a1d:b0:6ef:8745:bf91 with SMTP id qw29-20020a1709066a1d00b006ef8745bf91mr16669763ejc.76.1650463904199;
+        Wed, 20 Apr 2022 07:11:44 -0700 (PDT)
+Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id v7-20020a50d087000000b00424269f1c75sm387465edd.96.2022.04.20.07.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 07:11:43 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] PCI: fix unused pci_restore_standard_config without suspend/hibernate
+Date:   Wed, 20 Apr 2022 16:11:35 +0200
+Message-Id: <20220420141135.444820-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+The pci_restore_standard_config() is called only by functions within
+CONFIG_SUSPEND or CONFIG_HIBERNATION, so a configuration with only PM
+leads to a warning:
 
-On Wed, 20 Apr 2022 08:18:50 -0500
-Rob Herring <robh@kernel.org> wrote:
+  drivers/pci/pci-driver.c:533:12: error: ‘pci_restore_standard_config’ defined but not used [-Werror=unused-function]
 
-...
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/pci/pci-driver.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-> > > > +  bus-range:
-> > > > +    description: |
-> > > > +      The PCI bus number range; as this is a single bus, the range
-> > > > +      should be specified as the same value twice.   =20
-> > >=20
-> > > items:
-> > >   const: 0 =20
-> >=20
-> > Well, some other values are present in some dtsi files such as
-> > 'bus_range =3D <1 1>;' or 'bus_range =3D <2 2>;' in r8a7742.dtsi.
-> >=20
-> > The constraint is to have the same value twice. Is there a way
-> > to specify this constraint ? =20
->=20
-> Yes, but probably not worthwhile. Just drop it as pci-bus.yaml already=20
-> defines it.
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index dc18c1faf5e5..a2e6aabfa324 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -522,9 +522,9 @@ static void pci_device_shutdown(struct device *dev)
+ 		pci_clear_master(pci_dev);
+ }
+ 
+-#ifdef CONFIG_PM
++#ifdef CONFIG_PM_SLEEP
+ 
+-/* Auxiliary functions used for system resume and run-time resume. */
++/* Auxiliary functions used for system resume. */
+ 
+ /**
+  * pci_restore_standard_config - restore standard config registers of PCI device
+@@ -544,6 +544,11 @@ static int pci_restore_standard_config(struct pci_dev *pci_dev)
+ 	pci_pme_restore(pci_dev);
+ 	return 0;
+ }
++#endif /* CONFIG_PM_SLEEP */
++
++#ifdef CONFIG_PM
++
++/* Auxiliary functions used for system resume and run-time resume. */
+ 
+ static void pci_pm_default_resume(struct pci_dev *pci_dev)
+ {
+@@ -558,8 +563,7 @@ static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
+ 	pci_restore_state(pci_dev);
+ 	pci_pme_restore(pci_dev);
+ }
+-
+-#endif
++#endif /* CONFIG_PM */
+ 
+ #ifdef CONFIG_PM_SLEEP
+ 
+-- 
+2.32.0
 
-Instead of fully dropping the property, don't you think that keeping
-the given description here can be a way to express that the same value
-is needed twice ?
-
->=20
-> > > > +
-> > > > +  "#address-cells":
-> > > > +    const: 3
-> > > > +
-> > > > +  "#size-cells":
-> > > > +    const: 2
-> > > > +
-> > > > +  "#interrupt-cells":
-> > > > +    const: 1   =20
-> > >=20
-> > > All these are defined by pci-bus.yaml =20
-> >=20
-> > Right.
-> > Replaced by:
-> >=20
-> > "#address-cells": true
-> > "#size-cells": true
-> > "#interrupt-cells": true
-> >=20
-> > Is that correct ? =20
->=20
-> You can just drop them completely.
-
-Ok for #address-cells and #size-cells but not for #interrupt-cells.
-
-Dropping #interrupt-cells makes 'make dtbindings_check' unhappy:
---- 8< ---
-$ make dt_binding_check DT_SCHEMA_FILES=3Drenesas,pci-rcar-gen2.yaml
-  LINT    Documentation/devicetree/bindings
-  CHKDT   Documentation/devicetree/bindings/processed-schema.json
-/home/hcodina/xxx/Documentation/devicetree/bindings/pci/renesas,pci-rcar-ge=
-n2.yaml: properties: '#interrupt-cells' is a dependency of 'interrupt-map'
-	from schema $id: http://devicetree.org/meta-schemas/interrupts.yaml#
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-/home/hcodina/xxx/Documentation/devicetree/bindings/pci/renesas,pci-rcar-ge=
-n2.yaml: ignoring, error in schema: properties
-  DTEX    Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.examp=
-le.dts
-  DTC     Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.examp=
-le.dtb
-  CHECK   Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.examp=
-le.dtb
-$=20
---- 8< ---
-
-So I keep=20
-"#interrupt-cells": true
-
-Regards,
-Herv=C3=A9
-
---=20
-Herv=C3=A9 Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
