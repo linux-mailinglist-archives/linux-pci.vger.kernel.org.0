@@ -2,84 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 908DF508D45
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 18:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B9B3508D53
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 18:29:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380566AbiDTQag (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 12:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37200 "EHLO
+        id S1379855AbiDTQbv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 12:31:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379855AbiDTQaf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:30:35 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29253EB90;
-        Wed, 20 Apr 2022 09:27:48 -0700 (PDT)
-Received: by mail-oi1-f178.google.com with SMTP id r8so2626098oib.5;
-        Wed, 20 Apr 2022 09:27:48 -0700 (PDT)
+        with ESMTP id S1380586AbiDTQbu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:31:50 -0400
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEBD42A30;
+        Wed, 20 Apr 2022 09:29:04 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-2ebf4b91212so23965037b3.8;
+        Wed, 20 Apr 2022 09:29:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=s0Czcu6TCdRJh3Fx3ESiSoL0ZyRIITOPGEegqcioA0I=;
-        b=wGEC3QuW9wpsoJU4eXbH894zW4EBS2VXHTzkrwLWGlHk6JIQpgIMOiD2EsxdcXLW/v
-         316zvsYFblFCt+JvVXlwWegE25XDXzdwzKwwZ/HX2XxmrJ/+u9Q+U7kpXLKa/q9Z1J+j
-         AyRoUW86ia5kSLKohVz27fJVr+zqMO0BSBEAAl/Fh8PYN6gFbsldPh1xl442weRvIkg3
-         p1y+nyFrQP0uUWPzM359eDpDAspw62rgyLtQnB/oCRdafrrDkARciWhcmXEudn+UAECO
-         bZYIr4yOARsIMQjjcy3MgbbWhBg6+STbu9QySjoaCNfeD/hdB4lrZlYHxsm/n6jyMVat
-         XP8Q==
-X-Gm-Message-State: AOAM533Qv7UKra1UV3CywaTwRJStMDPszqubYtLTcs4Muw0nNkm7r6/g
-        7jMyb+Z5UuajNhFe+TIRc9MNUCWvUQ==
-X-Google-Smtp-Source: ABdhPJyRPm3dclqsf2iFh3UbCM9lc4G9rxreTjcEaDUvEUguNudR6cmXNyCdMlZBbXh2js1oF7+nyQ==
-X-Received: by 2002:a05:6808:3010:b0:2f7:3e71:88b2 with SMTP id ay16-20020a056808301000b002f73e7188b2mr2159525oib.102.1650472068176;
-        Wed, 20 Apr 2022 09:27:48 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id j5-20020a4a7505000000b0033a47bb6a74sm2123535ooc.47.2022.04.20.09.27.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 09:27:47 -0700 (PDT)
-Received: (nullmailer pid 1428607 invoked by uid 1000);
-        Wed, 20 Apr 2022 16:27:46 -0000
-Date:   Wed, 20 Apr 2022 11:27:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Geis <pgwipeout@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Simon Xue <xxm@rock-chips.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v7 1/4] dt-bindings: pci: remove fallback from Rockchip
- DesignWare binding
-Message-ID: <YmA0gokzLKqX7dxP@robh.at.kernel.org>
-References: <20220416110507.642398-1-pgwipeout@gmail.com>
- <20220416110507.642398-2-pgwipeout@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A3Rwr1wKI0dV8uR+EC2GDva6IlEZo2CoFLIp6LGb97I=;
+        b=sUYWJjzRy69A5yeZzYV9RdIpBwaeJYdNnX1jQyODO5JoZQ82xFQInqqeGjyPPo8/ML
+         ZBYIlV4qtjdJ9pvqJxeaY5ws/gq+KHA4Db2arAoDEMMzrq1AQbL5vmIbFnsUG6ukeq0f
+         AyHp6Il+7MZxneEMa+hIQ7IvIrLW7kO1yRWIDbX6n41lJseei4WZChSMkkGW1yo0hTyK
+         3L+WzTC6W80HIrabIYHp75BB5/BVhh0x5zofDOuvNBuswpWz/GADp9VMeDtaLu6BWVgE
+         2jn1ZtTL3gutKmeDAmmkgTuPUQMb23lLd/q+huGiUzcaPKZlYcCx6cNoX4X0x5rrGxqa
+         pbHQ==
+X-Gm-Message-State: AOAM533h3evCJXZep4q2xGL9FKJhg4GCoqoctpn3XINGSYH/GzwQ/AC3
+        NHWqSIoexnX3tJGLI7MwRCiYsinascjq+gOmk1Y=
+X-Google-Smtp-Source: ABdhPJwdoGEzdO7VSww9jXGLA2Y+/2mWcpCxkyRzV6TVO7t30wQQ5QQcOp/EyX8yf1SUkpF3HcndzTo8xp/ObvTdLmA=
+X-Received: by 2002:a81:1b97:0:b0:2db:640f:49d8 with SMTP id
+ b145-20020a811b97000000b002db640f49d8mr21040616ywb.326.1650472143738; Wed, 20
+ Apr 2022 09:29:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220416110507.642398-2-pgwipeout@gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <5838942.lOV4Wx5bFT@kreacher> <20220420162514.GA1301392@bhelgaas>
+In-Reply-To: <20220420162514.GA1301392@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 20 Apr 2022 18:28:52 +0200
+Message-ID: <CAJZ5v0i9Qaad_17OsO0dqxZS4_UkRnAApRs1bG=Jey9voAXH9w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] PCI/PM: Improvements related to device transitions
+ into D0
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 16 Apr 2022 07:05:03 -0400, Peter Geis wrote:
-> The snps,dw-pcie binds to a standalone driver.
-> It is not fully compatible with the Rockchip implementation and causes a
-> hang if it binds to the device.
-> 
-> Remove this binding as a valid fallback.
-> 
-> Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-> ---
->  .../devicetree/bindings/pci/rockchip-dw-pcie.yaml    | 12 +-----------
->  1 file changed, 1 insertion(+), 11 deletions(-)
-> 
+On Wed, Apr 20, 2022 at 6:25 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Apr 14, 2022 at 03:00:23PM +0200, Rafael J. Wysocki wrote:
+> > On Monday, April 11, 2022 4:17:41 PM CEST Rafael J. Wysocki wrote:
+> > > Hi All,
+> > >
+> > > On Saturday, April 9, 2022 3:03:14 PM CEST Rafael J. Wysocki wrote:
+> > > > Hi All,
+> > > >
+> > > > This series supersedes the one at
+> > > >
+> > > > https://lore.kernel.org/linux-pm/4198163.ejJDZkT8p0@kreacher
+> > > >
+> > > > It addresses some potential issues related to PCI device transitions from
+> > > > low-power states into D0 and makes the related code more straightforward
+> > > > and so easier to follow.
+> > > >
+> > > > Please refer to the patch changelogs for details.
+> > >
+> > > Here's a v2 of this patch series which is being sent, because I realized that
+> > > one of the checks in pci_power_up() added by patch [4/7] in v1 was redundant
+> > > and can be dropped, but that affected the last 3 patches in the series and
+> > > then I noticed that more improvements were possible and hence the new patches
+> > > [2/9].
+> >
+> > Here's a v3 of this series with some minor review comments addressed and R-by
+> > tags from Mika added.
+>
+> Applied to pci/pm for v5.19, thanks, Rafael!
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thank you!
