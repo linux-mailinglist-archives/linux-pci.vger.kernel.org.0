@@ -2,126 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62AE2508BB3
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 17:10:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 603DF508CA1
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 17:58:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379992AbiDTPNQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 11:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
+        id S240486AbiDTQBQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 12:01:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380098AbiDTPMt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 11:12:49 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC963E5F7;
-        Wed, 20 Apr 2022 08:10:03 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S232100AbiDTQBP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 12:01:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAA7326D6;
+        Wed, 20 Apr 2022 08:58:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id B143321600;
-        Wed, 20 Apr 2022 15:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1650467401; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4w7uCrVXVTwZfPuB483vIPp5pLFfFRyBD4Y2IYXR2Yk=;
-        b=fz0rlO1XMdB4BddZo8c4Teth0+zAy8QaParWZU14wrqXGD6EySljVo6Vq6kBi9HXKi0Rga
-        xuTZhtvj50WWZimNnLTKwBftHtnnForaUNyo7J+NGQQPcb/KSOCH4nn4iVfeQ4OCTkaQVZ
-        j32mZDbE44Ahb1h++ngv8o4nT0tLPzw=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7A52A13AD5;
-        Wed, 20 Apr 2022 15:10:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id mMS4HEkiYGJILQAAMHmgww
-        (envelope-from <jgross@suse.com>); Wed, 20 Apr 2022 15:10:01 +0000
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 14/18] xen/pcifront: use xenbus_setup_ring() and xenbus_teardown_ring()
-Date:   Wed, 20 Apr 2022 17:09:38 +0200
-Message-Id: <20220420150942.31235-15-jgross@suse.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220420150942.31235-1-jgross@suse.com>
-References: <20220420150942.31235-1-jgross@suse.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 769D8618FA;
+        Wed, 20 Apr 2022 15:58:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A839EC385A1;
+        Wed, 20 Apr 2022 15:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650470307;
+        bh=VvLMFQx+kyGUgqKbI5QdNFQWU8MFY2kgwwVYHLQ1fjg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Al1tKU0PVMhdgvBzcru+cjod1p0+mweJT3K9CV5c+C9Pgfz7Tw4QPaGjXyVYsWtB5
+         xgTwiHh8kHcD+FpxZzTx2vwEo5iT6Yv9fZ7FFQZNzCmpcdoTOU3gEjy2sQjt+TVYGc
+         befJfu4gftHbZdludJ669rTmJI7BxUpySPFzHaOe8sytcI+fiNZO520CFnkXMYAKy8
+         6eh/A7Jal0X353b3UX8SloBkNA9/8RFhVa24aU/acM4gS4Hp1UKlGMQVbf1z8Cb7Vp
+         QSQEoqfY6a56IoidVgyfwm9nEDJNjKc29U6SoAfoZ+/b5LvUK8q+QLGtcfqj4SirZl
+         KUP7qEn+kzh0g==
+Date:   Wed, 20 Apr 2022 10:58:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] PCI: fix unused pci_restore_standard_config without
+ suspend/hibernate
+Message-ID: <20220420155825.GA1298368@bhelgaas>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220420141135.444820-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Simplify pcifront's shared page creation and removal via
-xenbus_setup_ring() and xenbus_teardown_ring().
+On Wed, Apr 20, 2022 at 04:11:35PM +0200, Krzysztof Kozlowski wrote:
+> The pci_restore_standard_config() is called only by functions within
+> CONFIG_SUSPEND or CONFIG_HIBERNATION, so a configuration with only PM
+> leads to a warning:
+> 
+>   drivers/pci/pci-driver.c:533:12: error: ‘pci_restore_standard_config’ defined but not used [-Werror=unused-function]
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/pci/xen-pcifront.c | 19 +++----------------
- 1 file changed, 3 insertions(+), 16 deletions(-)
+Applied to pci/pm for v5.19, thanks!
 
-diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
-index 3edc1565a27c..689271c4245c 100644
---- a/drivers/pci/xen-pcifront.c
-+++ b/drivers/pci/xen-pcifront.c
-@@ -709,9 +709,8 @@ static struct pcifront_device *alloc_pdev(struct xenbus_device *xdev)
- 	if (pdev == NULL)
- 		goto out;
- 
--	pdev->sh_info =
--	    (struct xen_pci_sharedinfo *)__get_free_page(GFP_KERNEL);
--	if (pdev->sh_info == NULL) {
-+	if (xenbus_setup_ring(xdev, GFP_KERNEL, (void **)&pdev->sh_info, 1,
-+			      &pdev->gnt_ref)) {
- 		kfree(pdev);
- 		pdev = NULL;
- 		goto out;
-@@ -729,7 +728,6 @@ static struct pcifront_device *alloc_pdev(struct xenbus_device *xdev)
- 	spin_lock_init(&pdev->sh_info_lock);
- 
- 	pdev->evtchn = INVALID_EVTCHN;
--	pdev->gnt_ref = INVALID_GRANT_REF;
- 	pdev->irq = -1;
- 
- 	INIT_WORK(&pdev->op_work, pcifront_do_aer);
-@@ -754,11 +752,7 @@ static void free_pdev(struct pcifront_device *pdev)
- 	if (pdev->evtchn != INVALID_EVTCHN)
- 		xenbus_free_evtchn(pdev->xdev, pdev->evtchn);
- 
--	if (pdev->gnt_ref != INVALID_GRANT_REF)
--		gnttab_end_foreign_access(pdev->gnt_ref,
--					  (unsigned long)pdev->sh_info);
--	else
--		free_page((unsigned long)pdev->sh_info);
-+	xenbus_teardown_ring((void **)&pdev->sh_info, 1, &pdev->gnt_ref);
- 
- 	dev_set_drvdata(&pdev->xdev->dev, NULL);
- 
-@@ -769,13 +763,6 @@ static int pcifront_publish_info(struct pcifront_device *pdev)
- {
- 	int err = 0;
- 	struct xenbus_transaction trans;
--	grant_ref_t gref;
--
--	err = xenbus_grant_ring(pdev->xdev, pdev->sh_info, 1, &gref);
--	if (err < 0)
--		goto out;
--
--	pdev->gnt_ref = gref;
- 
- 	err = xenbus_alloc_evtchn(pdev->xdev, &pdev->evtchn);
- 	if (err)
--- 
-2.34.1
-
+> ---
+>  drivers/pci/pci-driver.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index dc18c1faf5e5..a2e6aabfa324 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -522,9 +522,9 @@ static void pci_device_shutdown(struct device *dev)
+>  		pci_clear_master(pci_dev);
+>  }
+>  
+> -#ifdef CONFIG_PM
+> +#ifdef CONFIG_PM_SLEEP
+>  
+> -/* Auxiliary functions used for system resume and run-time resume. */
+> +/* Auxiliary functions used for system resume. */
+>  
+>  /**
+>   * pci_restore_standard_config - restore standard config registers of PCI device
+> @@ -544,6 +544,11 @@ static int pci_restore_standard_config(struct pci_dev *pci_dev)
+>  	pci_pme_restore(pci_dev);
+>  	return 0;
+>  }
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +#ifdef CONFIG_PM
+> +
+> +/* Auxiliary functions used for system resume and run-time resume. */
+>  
+>  static void pci_pm_default_resume(struct pci_dev *pci_dev)
+>  {
+> @@ -558,8 +563,7 @@ static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
+>  	pci_restore_state(pci_dev);
+>  	pci_pme_restore(pci_dev);
+>  }
+> -
+> -#endif
+> +#endif /* CONFIG_PM */
+>  
+>  #ifdef CONFIG_PM_SLEEP
+>  
+> -- 
+> 2.32.0
+> 
