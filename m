@@ -2,134 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A43B25090E2
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 21:57:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60F3B509157
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Apr 2022 22:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381974AbiDTUAP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Apr 2022 16:00:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
+        id S1382080AbiDTUZO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Apr 2022 16:25:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382005AbiDTUAH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 16:00:07 -0400
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117B648E5A;
-        Wed, 20 Apr 2022 12:56:38 -0700 (PDT)
-Received: by mail-oi1-f179.google.com with SMTP id b188so3247533oia.13;
-        Wed, 20 Apr 2022 12:56:37 -0700 (PDT)
+        with ESMTP id S1350611AbiDTUZN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Apr 2022 16:25:13 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649D42E9D2
+        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 13:22:26 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id y10so5811776ejw.8
+        for <linux-pci@vger.kernel.org>; Wed, 20 Apr 2022 13:22:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0DTChLKEaC7rwwyVknKc61wzteWf9dysaz/otxFJdEo=;
+        b=nlnwYMIWIY1162rct070pJaOPuL+lJ7s4NorIyWqdxUWSADGDtJANx7E/Z3zF0pxsI
+         zM12/StJqfntZbmSWjn4bmwHDuLAMOkr7gRxn3wxCo5UYrW/xDT95I8E+PCmhUXN1paR
+         n7G4rAqlarMu5Dx1t4COKmbYiYSeiw8HfTqk8f0sBQTlOfwp3ggAiMO40uzy3ZoTVG+Z
+         wmQ8GBvhPI45RXEvS1YsrzhjGVVzEHY0RByM3J9DM8pr/mH7PjJaAYS0W0sOJE1u+NQ1
+         BqHv9fh/lFsjI2mPOySbh8NjyjwY7AdSX1hYWrazdajanzlwIzh+ZUG5OYIbT7vDzlEf
+         UGAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OyeWgb/U4rnVtnxBVHnhz7nKAu2v5/SnAMiyr6yT0DY=;
-        b=lIBAUr6lUBTbGfhbxt/8RBCVnrfZL7OV6XAwZ6IffIpZ677jVTtE5lFs5RjxsZe1G3
-         eHmzf22tfIQDaQoz34rhqWiphw5vl5tr+gtNqQjmJfaOfdOzZ91kOGk5Th/0UiesO2kZ
-         uj4xp1/Gti0JgWIdX1gIUtsWo3LkrLsNX+aQWj9IHBDEKO2Zdn0VCoWZYXKMbCnlq3ab
-         QWgNWghUYOPieusND/CmLYKJuzC0f0oFg+mq5WHzvUoNMAqitiGK9R5vGW3DJEUOdBM6
-         cePt9o48dDfcfRsPg5eumtToTvLW+jKQh+K79kyHZdKzqQ8kUQEE7ZupEMDXAxIq5pTD
-         9CYA==
-X-Gm-Message-State: AOAM531Y6oIlXYmq+hWUsMZGOGaeEJRj29QLvcIwwFCdVcTcIFh0zpE5
-        Eh3AnDF6hk2QwQJ6hV7f0w==
-X-Google-Smtp-Source: ABdhPJyj+vjWS3Xi9zNx7tqjswIgQJkTRSUgANyjKvQv0BOw6vDI4yXWSqcqH1OdfMHyl2Mgrf0rbw==
-X-Received: by 2002:aca:1811:0:b0:2ef:3c0f:f169 with SMTP id h17-20020aca1811000000b002ef3c0ff169mr2523761oih.61.1650484597182;
-        Wed, 20 Apr 2022 12:56:37 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id x2-20020a4a2a42000000b0033a3c4392c3sm4066899oox.26.2022.04.20.12.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 12:56:36 -0700 (PDT)
-Received: (nullmailer pid 1749528 invoked by uid 1000);
-        Wed, 20 Apr 2022 19:56:35 -0000
-Date:   Wed, 20 Apr 2022 14:56:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc:     Herve Codina <herve.codina@bootlin.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 6/8] ARM: dts: r9a06g032: Add internal PCI bridge node
-Message-ID: <YmBlc7e69INL4bfI@robh.at.kernel.org>
-References: <20220414074011.500533-1-herve.codina@bootlin.com>
- <20220414074011.500533-7-herve.codina@bootlin.com>
- <05c96b4d-313b-1aad-0ee5-61e54672765e@omp.ru>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0DTChLKEaC7rwwyVknKc61wzteWf9dysaz/otxFJdEo=;
+        b=ym5YE+vrI0d+G5PFKUznisfL+joOx0uxRb/iItTqKfHuEiMkjvqdunlLZtXz+2CwND
+         gnJkopdQAB8jP6hJc3+u/vBYhayMRsYLjwfTm7UjGKH5GqpB3hMh82OPIAq38Ef5xr3Y
+         QcOK3yd1CmnOgj5MGEv7HB28vUDGifBY0+VIegRN1Nqn5S4Z0G/GOp1iH9PVd9rSpOAa
+         oA78G6UEtZPscWyI8fLJW0XgHz0SJ9bvyQXPQwD3vEZyFGoA188WHsol9CX82QP/0q8q
+         fVCDO/2p+Vw4TG5DCYfTiwdUA7FW4JDmH1hFmUaxQWWqjQdFC6Vz1I2UmvM3iyhOS6lP
+         8EiA==
+X-Gm-Message-State: AOAM5327krASHe70lpLDTJjWeDLSckDPtcet9YOb8PuKaRshLHzLA+xL
+        jRmcEg4b83wo4EFxVPWQLZcp+n7vnYA7kTNA58I=
+X-Google-Smtp-Source: ABdhPJwf/RFXfv0Y0A+3eeyY+r7FdklUkgenlRxTrG32uYUqU+oaXIrYaJVA9TRKvTVnRFPEYVC0Gaj2CQeTZrAUnp4=
+X-Received: by 2002:a17:906:6a1c:b0:6eb:d76c:e835 with SMTP id
+ qw28-20020a1709066a1c00b006ebd76ce835mr21142939ejc.15.1650486144778; Wed, 20
+ Apr 2022 13:22:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05c96b4d-313b-1aad-0ee5-61e54672765e@omp.ru>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20220222162355.32369-1-Frank.Li@nxp.com> <fa2ab3cf-1508-bbeb-47af-8b2d47904b20@ti.com>
+ <CAHrpEqT2zwWiiiTUDAu9JNPXmzP1zELF7YDERWjdOohGMFRBnA@mail.gmail.com>
+In-Reply-To: <CAHrpEqT2zwWiiiTUDAu9JNPXmzP1zELF7YDERWjdOohGMFRBnA@mail.gmail.com>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Wed, 20 Apr 2022 15:22:13 -0500
+Message-ID: <CAHrpEqSceNNQNAzCwbfiJc2Zk9fYCo5KqKmLZqHAG-7teSqF0Q@mail.gmail.com>
+Subject: Re: [PATCH V2 0/4] NTB function for PCIe RC to EP connection
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Frank Li <Frank.Li@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>,
+        lorenzo.pieralisi@arm.com, kw@linux.com,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 18, 2022 at 12:02:52PM +0300, Sergey Shtylyov wrote:
-> Hello!
-> 
-> On 4/14/22 10:40 AM, Herve Codina wrote:
-> 
-> > Add the device node for the r9a06g032 internal PCI bridge device.
-> > 
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > ---
-> >  arch/arm/boot/dts/r9a06g032.dtsi | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-> > index 636a6ab31c58..848dc034bb8c 100644
-> > --- a/arch/arm/boot/dts/r9a06g032.dtsi
-> > +++ b/arch/arm/boot/dts/r9a06g032.dtsi
-> > @@ -211,6 +211,34 @@ gic: interrupt-controller@44101000 {
-> >  			interrupts =
-> >  				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> >  		};
-> > +
-> > +		pci_usb: pci@40030000 {
-> > +			compatible = "renesas,pci-r9a06g032", "renesas,pci-rzn1";
-> > +			device_type = "pci";
-> > +			clocks = <&sysctrl R9A06G032_HCLK_USBH>,
-> > +				 <&sysctrl R9A06G032_HCLK_USBPM>,
-> > +				 <&sysctrl R9A06G032_CLK_PCI_USB>;
-> > +			clock-names = "hclk_usbh", "hclk_usbpm", "clk_pci_usb";
-> > +			reg = <0x40030000 0xc00>,
-> > +			      <0x40020000 0x1100>;
-> > +			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-> > +			status = "disabled";
-> > +
-> > +			bus-range = <0 0>;
-> > +			#address-cells = <3>;
-> > +			#size-cells = <2>;
-> > +			#interrupt-cells = <1>;
-> 
->    Really? I don't think this PCI bridge is also an interrupt controller...
-
-'interrupt-map' depends on '#interrupt-cells'.
-
-> 
-> > +			ranges = <0x02000000 0 0x40020000 0x40020000 0 0x00010000>;
-> > +			/* Should map all possible DDR as inbound ranges, but
-> > +			 * the IP only supports a 256MB, 512MB, or 1GB window.
-> > +			 * flags, PCI addr (64-bit), CPU addr, PCI size (64-bit)
-> > +			 */
-> > +			dma-ranges = <0x42000000 0 0x80000000 0x80000000 0 0x40000000>;
-> > +			interrupt-map-mask = <0xf800 0 0 0x7>;
-> > +			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
-> > +					 0x0800 0 0 1 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
-> > +					 0x1000 0 0 2 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-> > +		};
-> >  	};
-> >  
-> >  	timer {
-> 
-> MBR, Sergey
+T24gVHVlLCBBcHIgNSwgMjAyMiBhdCAxMDozNSBBTSBaaGkgTGkgPGx6bnVhYUBnbWFpbC5jb20+
+IHdyb3RlOg0KPg0KPiBPbiBUdWUsIEFwciA1LCAyMDIyIGF0IDU6MzQgQU0gS2lzaG9uIFZpamF5
+IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBGcmFuayBMaSwN
+Cj4gPg0KPiA+IE9uIDIyLzAyLzIyIDk6NTMgcG0sIEZyYW5rIExpIHdyb3RlOg0KPiA+ID4gVGhp
+cyBpbXBsZW1lbnQgTlRCIGZ1bmN0aW9uIGZvciBQQ0llIEVQIHRvIFJDIGNvbm5lY3Rpb25zLg0K
+PiA+ID4gVGhlIGV4aXN0ZWQgbnRiIGVwZiBuZWVkIHR3byBQQ0kgRVBzIGFuZCB0d28gUENJIEhv
+c3QuDQo+ID4NCj4gPiBBcyBJIGhhZCBlYXJsaWVyIG1lbnRpb25lZCBpbiBbMV0sIElNSE8gaWRl
+YWwgc29sdXRpb24gd291bGQgYmUgYnVpbGQgb24gdmlydGlvDQo+ID4gbGF5ZXIgaW5zdGVhZCBv
+ZiB0cnlpbmcgdG8gYnVpbGQgb24gTlRCIGxheWVyICh3aGljaCBpcyBzcGVjaWZpYyB0byBSQzwt
+PlJDDQo+ID4gY29tbXVuaWNhdGlvbikuDQo+ID4NCj4gPiBBcmUgdGhlcmUgYW55IHNwZWNpZmlj
+IHJlYXNvbnMgZm9yIG5vdCB0YWtpbmcgdGhhdCBwYXRoPw0KPg0KPiAxLiBFUCBzaWRlIHdvcmsg
+YXMgdkhPU1QgbW9kZS4gIHZIb3N0IHN1cHBvc2UgYWNjZXNzIGFsbCBtZW1vcnkgb2YgdmlydHVh
+bCBpby4NCj4gQnV0IHRoZXJlIGFyZSBvbmx5IG1hcCB3aW5kb3dzIG9uIHRoZSBFUCBzaWRlIHRv
+IGFjY2VzcyBSQyBzaWRlDQo+IG1lbW9yeS4gWW91IGhhdmUgdG8gbW92ZQ0KPiBtYXAgd2luZG93
+cyBmb3IgZWFjaCBhY2Nlc3MuICBJdCBpcyBxdWl0ZSBsb3cgZWZmaWNpZW5jeS4NCj4NCj4gMi4g
+U28gZmFyIGFzIEkga25vdywgdmlydGlvIGlzIHN0aWxsIG5vdCBETUEgeWV0LiAgQ1BVIGFjY2Vz
+cyBQQ0kNCj4gY2FuJ3QgZ2VuZXJhdGUgbG9uZ2VyIFBDSSBUTFAsDQo+IFNvIHRoZSBzcGVlZCBp
+cyBxdWl0ZSBzbG93LiAgTlRCIGFscmVhZHkgaGFzIERNQSBzdXBwb3J0LiAgSWYgeW91IHVzZQ0K
+PiBzeXN0ZW0gbGV2ZWwgRE1BLA0KPiBubyBjaGFuZ2UgaXMgbmVlZGVkIGF0IE5UQiBsZXZlbC4g
+IElmIHdlIHdhbnQgdG8gdXNlIGEgUENJIGNvbnRyb2xsZXINCj4gZW1iZWRkZWQgRE1BLCAgc29t
+ZSBzbWFsbA0KPiBjaGFuZ2VzIG5lZWQgaWYgYmFzZWQgb24gbXkgb3RoZXIgRGVzaWdud2FyZSBQ
+Q0kgZURNQSBwYXRjaGVzLCB3aGljaA0KPiBhcmUgdW5kZXIgcmV2aWV3Lg0KPg0KPiAzLiBBbGwg
+dGhlIG1ham9yIGRhdGEgdHJhbnNmZXIgb2YgTlRCIGlzIHVzaW5nIHdyaXRlLiAgQmVjYXVzZSBU
+TFANCj4gd3JpdGUgbmVlZG4ndCB3YWl0IGZvciBjb21wbGV0ZSwgIHdyaXRlDQo+IHBlcmZvcm1h
+bmNlIGlzIGJldHRlciB0aGFuIHJlYWRpbmcuICBPbiBvdXIgcGxhdGZvcm0sICB3cml0ZQ0KPiBw
+ZXJmb3JtYW5jZSBpcyBhYm91dCAxMCUgYmV0dGVyIHRoYW4gIHJlYWQuDQo+DQo+IEZyYW5rDQoN
+CkFueSBDb21tZW50cyBvciByZWplY3Rpb24/IEBLaXNob24gVmlqYXkgQWJyYWhhbSBJDQoNCmJl
+c3QgcmVnYXJkcw0KRnJhbmsgTGkNCg0KPg0KPiA+DQo+ID4gVGhhbmtzLA0KPiA+IEtpc2hvbg0K
+PiA+DQo+ID4gWzFdIC0+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvNDU5NzQ1ZDEtOWZlNy1l
+NzkyLTM1MzItMzNlZTk1NTJiYzRkQHRpLmNvbQ0KPiA+ID4NCj4gPiA+IFRoaXMganVzdCBuZWVk
+IEVQIHRvIFJDIGNvbm5lY3Rpb25zLg0KPiA+ID4NCj4gPiA+ICAgICDilIzilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilJAgICAgICAgICDilIzilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJANCj4gPiA+ICAgICDilIIgICAg
+ICAgICAgICDilIIgICAgICAgICDilIIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAg4pSCDQo+ID4gPiAgICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSkICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAgICAgIOKUjOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpA0KPiA+ID4gICAgIOKUgiBOVEIgICAgICAgIOKU
+giAgICAgICAgIOKUgiAgICAgICAgICAgICAgICAgICAgICDilIIgTlRCICAgICAgICAgIOKUgg0K
+PiA+ID4gICAgIOKUgiBOZXREZXYgICAgIOKUgiAgICAgICAgIOKUgiAgICAgICAgICAgICAgICAg
+ICAgICDilIIgTmV0RGV2ICAgICAgIOKUgg0KPiA+ID4gICAgIOKUnOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUpCAgICAgICAgIOKUgiAgICAgICAgICAgICAgICAgICAgICDi
+lJzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilKQNCj4gPiA+ICAg
+ICDilIIgTlRCICAgICAgICDilIIgICAgICAgICDilIIgICAgICAgICAgICAgICAgICAgICAg4pSC
+IE5UQiAgICAgICAgICDilIINCj4gPiA+ICAgICDilIIgVHJhbnNmZXIgICDilIIgICAgICAgICDi
+lIIgICAgICAgICAgICAgICAgICAgICAg4pSCIFRyYW5zZmVyICAgICDilIINCj4gPiA+ICAgICDi
+lJzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilKQgICAgICAgICDilIIgICAg
+ICAgICAgICAgICAgICAgICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSkDQo+ID4gPiAgICAg4pSCICAgICAgICAgICAg4pSCICAgICAgICAg4pSCICAgICAg
+ICAgICAgICAgICAgICAgIOKUgiAgICAgICAgICAgICAg4pSCDQo+ID4gPiAgICAg4pSCICBQQ0kg
+TlRCICAg4pSCICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAgICAgIOKUgiAgICAgICAgICAg
+ICAg4pSCDQo+ID4gPiAgICAg4pSCICAgIEVQRiAgICAg4pSCICAgICAgICAg4pSCICAgICAgICAg
+ICAgICAgICAgICAgIOKUgiAgICAgICAgICAgICAg4pSCDQo+ID4gPiAgICAg4pSCICAgRHJpdmVy
+ICAg4pSCICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAgICAgIOKUgiBQQ0kgVmlydHVhbCAg
+4pSCDQo+ID4gPiAgICAg4pSCICAgICAgICAgICAg4pSCICAgICAgICAg4pSc4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSQICAgICAg4pSCIE5UQiBEcml2ZXIg
+ICDilIINCj4gPiA+ICAgICDilIIgICAgICAgICAgICDilIIgICAgICAgICDilIIgUENJIEVQIE5U
+QiAgICDilILil4TilIDilIDilIDilIDilrrilIIgICAgICAgICAgICAgIOKUgg0KPiA+ID4gICAg
+IOKUgiAgICAgICAgICAgIOKUgiAgICAgICAgIOKUgiAgRk4gRHJpdmVyICAgIOKUgiAgICAgIOKU
+giAgICAgICAgICAgICAg4pSCDQo+ID4gPiAgICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSkICAgICAgICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSkICAgICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSkDQo+ID4gPiAgICAg4pSCICAgICAgICAgICAg4pSCICAgICAgICAg4pSC
+ICAgICAgICAgICAgICAg4pSCICAgICAg4pSCICAgICAgICAgICAgICDilIINCj4gPiA+ICAgICDi
+lIIgIFBDSSBCVVMgICDilIIg4peE4pSA4pSA4pSA4pSA4pSA4pa6IOKUgiAgUENJIEVQIEJVUyAg
+IOKUgiAgICAgIOKUgiAgVmlydHVhbCBQQ0kg4pSCDQo+ID4gPiAgICAg4pSCICAgICAgICAgICAg
+4pSCICBQQ0kgICAg4pSCICAgICAgICAgICAgICAg4pSCICAgICAg4pSCICAgICBCVVMgICAgICDi
+lIINCj4gPiA+ICAgICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJgg
+ICAgICAgICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lLTilIDilIDilIDilIDilIDilIDilLTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilJgNCj4gPiA+ICAgICAgICAgUENJIFJDICAgICAgICAgICAgICAgICAgICAgICAg
+UENJIEVQDQo+ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiBGcmFuayBMaSAoNCk6DQo+ID4gPiAg
+IFBDSTogZGVzaWdud2FyZS1lcDogQWxsb3cgcGNpX2VwY19zZXRfYmFyKCkgdXBkYXRlIGluYm91
+bmQgbWFwIGFkZHJlc3MNCj4gPiA+ICAgTlRCOiBlcGY6IEFsbG93IG1vcmUgZmxleGliaWxpdHkg
+aW4gdGhlIG1lbW9yeSBCQVIgbWFwIG1ldGhvZA0KPiA+ID4gICBQQ0k6IGVuZHBvaW50OiBTdXBw
+b3J0IE5UQiB0cmFuc2ZlciBiZXR3ZWVuIFJDIGFuZCBFUA0KPiA+ID4gICBEb2N1bWVudGF0aW9u
+OiBQQ0k6IEFkZCBzcGVjaWZpY2F0aW9uIGZvciB0aGUgUENJIHZOVEIgZnVuY3Rpb24gZGV2aWNl
+DQo+ID4gPg0KPiA+ID4gIERvY3VtZW50YXRpb24vUENJL2VuZHBvaW50L2luZGV4LnJzdCAgICAg
+ICAgICB8ICAgIDIgKw0KPiA+ID4gIC4uLi9QQ0kvZW5kcG9pbnQvcGNpLXZudGItZnVuY3Rpb24u
+cnN0ICAgICAgICB8ICAxMjYgKysNCj4gPiA+ICBEb2N1bWVudGF0aW9uL1BDSS9lbmRwb2ludC9w
+Y2ktdm50Yi1ob3d0by5yc3QgfCAgMTY3ICsrDQo+ID4gPiAgZHJpdmVycy9udGIvaHcvZXBmL250
+Yl9od19lcGYuYyAgICAgICAgICAgICAgIHwgICA0OCArLQ0KPiA+ID4gIC4uLi9wY2kvY29udHJv
+bGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWVwLmMgICB8ICAgMTAgKy0NCj4gPiA+ICBkcml2ZXJz
+L3BjaS9lbmRwb2ludC9mdW5jdGlvbnMvS2NvbmZpZyAgICAgICAgfCAgIDExICsNCj4gPiA+ICBk
+cml2ZXJzL3BjaS9lbmRwb2ludC9mdW5jdGlvbnMvTWFrZWZpbGUgICAgICAgfCAgICAxICsNCj4g
+PiA+ICBkcml2ZXJzL3BjaS9lbmRwb2ludC9mdW5jdGlvbnMvcGNpLWVwZi12bnRiLmMgfCAxNDI0
+ICsrKysrKysrKysrKysrKysrDQo+ID4gPiAgOCBmaWxlcyBjaGFuZ2VkLCAxNzc1IGluc2VydGlv
+bnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL1BDSS9lbmRwb2ludC9wY2ktdm50Yi1mdW5jdGlvbi5yc3QNCj4gPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9QQ0kvZW5kcG9pbnQvcGNpLXZudGItaG93dG8ucnN0
+DQo+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2VuZHBvaW50L2Z1bmN0aW9u
+cy9wY2ktZXBmLXZudGIuYw0KPiA+ID4NCg==
