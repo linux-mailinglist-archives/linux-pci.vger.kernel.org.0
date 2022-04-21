@@ -2,183 +2,257 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBBC9509E8D
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 13:31:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C1E2509EA1
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 13:36:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1388780AbiDULeO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Apr 2022 07:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60122 "EHLO
+        id S1388821AbiDULjB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Apr 2022 07:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231705AbiDULeL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 07:34:11 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97ACC140D0
-        for <linux-pci@vger.kernel.org>; Thu, 21 Apr 2022 04:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1650540682; x=1682076682;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=fQDL1PW/muE1k28auM9kBVjajY+V89lkBuNWETGqENo=;
-  b=I6IRtblJs4YAod8I4xonm+GQNdt6t5YRBKgYbrwq8lXRzERgx72uSwUZ
-   s+8ImP4wC+4qJElTIvdNGz2COj6GIrwWSUXgzReBcrtu5Tx/4jVft3mU3
-   lS5BUUBxmaE3mCMleXqiGfdSd7D+ZxA7ucnCrMQnMPs0ALlY/FMwEelBn
-   xwDi39/RUP6+8pucCPxpalBjWZlARDB/2/jpXNeTbwoeuhDOOXInP5T21
-   arT4s/UoZaNPb9n88hB6mvZ1VHpzPG1Tc8qmeNCuzCESRUjJtauqAWbYA
-   HVec5pXUlKJ5U/Uj+U5QvgcUd0H6YFlqlhgW4BYgA9yNBG0nw/SPBfX7r
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.90,278,1643698800"; 
-   d="scan'208";a="93089959"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Apr 2022 04:31:21 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Thu, 21 Apr 2022 04:31:21 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17 via Frontend
- Transport; Thu, 21 Apr 2022 04:31:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EoyYTwc0bActIyM4K1YWJhBMbPF7cDtNchWmFCuHkpp+VDzXMyTFMJDpvPjc2XM8vqrDDKX3xrgqpGiRCwGOaMVrHFpYgpmKNTZXiQRKgQhbVfD+Nh1cXWynfva8bfP3R86WwH3KZItbs+Jx8jtucOr/FEY5SEZWmfVLJaX1sR/GE51p7cPSwi+uqUy4TdOzaIpYPJrWDgDe4Eh1rTJKri5ATsN6cWi5fB7g2TVb/B/Zkb0Va31D6rbqnRF5wDfmQ4rpTRHh8iSDlkSKoxF0TDH9kAu9/giFEBI4GMMFGOneMRYdsRNkBK4DFrPdWmXh27FwFJ6qgmGVoEAJ5zmTzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fQDL1PW/muE1k28auM9kBVjajY+V89lkBuNWETGqENo=;
- b=Q/C3D+8yZUIux3YISQE7c+XGN/sFRJPQxRK7AZaHzI3N8zjhigrjGuL7Ja2wKnyfXF5gdo5dMBeLXjs+c7wu267dk3p+DbYBsk2WFjvbR0xq6EzNPhaufs3Rng+uLT8fk5FPbBo886YjBMR33p1ugoFxhfS2558Suz2YwyOb0AnRjFFgfOxxJ62hEE2m70fq360eArbzHo1L1xctSJEz3MpldEDGmyW3WEDjvLjc61X8O0dx+Ag5ieovYX+Arrpb9hYiJnW8OiQwBxgC3CAUFA7VQaz7VVArxnW34d4r2hF/HlGVN6Qi7P5okA66nL52/Paro0Jq5iwwFrXBbwfxBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        with ESMTP id S1388816AbiDULjB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 07:39:01 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D3EC21274
+        for <linux-pci@vger.kernel.org>; Thu, 21 Apr 2022 04:36:10 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id x17so8157902lfa.10
+        for <linux-pci@vger.kernel.org>; Thu, 21 Apr 2022 04:36:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fQDL1PW/muE1k28auM9kBVjajY+V89lkBuNWETGqENo=;
- b=sQJZrCnWP51lJuaqytu74SzUKA3RyocQfCV1j0kyVkcd4nTO/SjbcELDxGRB+x0SWih4StDk62CJfYKnoFDCt16qaQGRN+ro5WWmACKyfqbjpFK1SRUVoChCbmHPxKbhr/NNlaaGXaP776PH1bbhz4nU/Gl80WvmSXRdDr9eFXs=
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:95::7)
- by SN6PR11MB3293.namprd11.prod.outlook.com (2603:10b6:805:be::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Thu, 21 Apr
- 2022 11:31:16 +0000
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::fcd4:8f8a:f0e9:8b18]) by CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::fcd4:8f8a:f0e9:8b18%7]) with mapi id 15.20.5186.014; Thu, 21 Apr 2022
- 11:31:16 +0000
-From:   <Conor.Dooley@microchip.com>
-To:     <pali@kernel.org>, <u.kleine-koenig@pengutronix.de>
-CC:     <Daire.McNamara@microchip.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <kw@linux.com>, <linux-pci@vger.kernel.org>,
-        <ian@linux.cowan.aero>, <kernel@pengutronix.de>,
-        <gregkh@linuxfoundation.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: microchip: Allow driver to be built as a module
-Thread-Topic: [PATCH] PCI: microchip: Allow driver to be built as a module
-Thread-Index: AQHYVJn7sorTKwljF0ixBpG4IvND9Kz5Ac+AgAE7hoA=
-Date:   Thu, 21 Apr 2022 11:31:16 +0000
-Message-ID: <bad31f90-f853-fdff-c91c-1a695ff162d1@microchip.com>
-References: <20220420093449.38054-1-u.kleine-koenig@pengutronix.de>
- <20220420164139.k37fc3xixn4j7kug@pali>
-In-Reply-To: <20220420164139.k37fc3xixn4j7kug@pali>
-Accept-Language: en-IE, en-US
-Content-Language: en-IE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 45019729-0d84-41a8-15f8-08da238a72b5
-x-ms-traffictypediagnostic: SN6PR11MB3293:EE_
-x-microsoft-antispam-prvs: <SN6PR11MB3293C8C6D1420225FE2F344398F49@SN6PR11MB3293.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1GJhiLocluRUE1miLm+UMIkpz9QPxhA9aK7et7Hxoy6jAHocsqMErHgBeq0YaBIcMltTkkIkQvkLNIWepHh6u9e323LnjBGNHPji5e973mGFikvAAR/MaABA9NLHkZn7ceVDwgcYVhj3eOZ8m+eVF3XxoJ1ZN/7K4z9AH7X/J0ODOORRYg06FXrcG0kzoszqSMW2r4XTxFfyFiCFl/raigpkUt/8MTK6OaBKBF6KZvRoNBrrG/vczJA3fjz3HBnNgViWenWSHp/L22kJKvd9JkF5WUUP6/9hwOWCi9brX457GSLDUvUuv/EkdaBXcsEnhe8E5oaquk27bg2TkKD0vPCoHwbFEnmNafpEy0aHEr3rYjz4qwP9FP/RWwcdxq/Sk9VEzbr79kmDhdOdh9wFsIQxyDLBiyTPc1xee6n+Y3UePOMJ6CUMeB+kiIjETWJeiqyzC0P4kVRmVxzt7OnZ8crpVdeABebk5KwGmg5ycVEcEn36XQEXd/gYo6x1RNOCBhBh65BgDUFHZQJEPhmglfHx62VUz4syidvJqx9YmNmp1MZUwpcJ3xGGEu9Mps9Qv8Gmb/Jo0/V68mEsKhad6l4i9RGS+XnEL6yJcaOShpIpBaeaYdp4bc2kgycL64U10FgnxuRbYGsdvVhNGE9/wH9rNZPalF9sLRCxpFGdgXwsuCZ9pgLeQoJlKuUXPO6YkR0AMxYSG5C5PGlZx7HF8z3y0OI2L3f6Irxx/UoIdsuffLK/r5Dbu6n50KPzcaKQmus/ZNVtX63CWqWJgiVyszzzODzpF3m+XMo0vFcnnDMnVmXfGONvhvDQDyybatFiiKC2bhZYnn7PAvYEMv5JiJmsbsfqoL8Dnc/c2gtbvRY=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6486002)(966005)(508600001)(7416002)(54906003)(5660300002)(2906002)(38070700005)(38100700002)(8936002)(122000001)(31696002)(86362001)(316002)(71200400001)(91956017)(66556008)(66446008)(66946007)(8676002)(66476007)(64756008)(4326008)(76116006)(6506007)(110136005)(53546011)(186003)(83380400001)(6512007)(2616005)(26005)(36756003)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QWg0THdSZ0JQMUYzU29vU0hVYVpqU3ZHM1dFcXBTSHExQTFBdDQ1RVFSYmtF?=
- =?utf-8?B?KzJvZlEvQ3JPZnJVUm4wQVJUSS9wOHNnbERmZkpLUnFnekhNbmFnanJia0tL?=
- =?utf-8?B?UE1CY0ZrWGV4VVB4T29DZU90bnIydUVnajVJeVYzS1dsZXZWUldPNEJwWWhH?=
- =?utf-8?B?dHlYWWcvNlcraVk2cG91NnFOejF2b0xrTjNCS05vOXhCZ3ptT1JESGwzZitT?=
- =?utf-8?B?VDRZdUMvakpNQisweUVWMzhYVHl2UExtekpqK1NGdHQ3VDVzNmNaTk80Y3I2?=
- =?utf-8?B?aTVObXEzTjlFd1FwMDVpQW9pSWZVdVp1akFTS2pwMWFldnBmeWY3azdzd3hN?=
- =?utf-8?B?cm5TVDVsc2prK3ptYlNEeVdJNDNJbVhjSENiSXprbEU5b1Q5MnRsNWFoYVI5?=
- =?utf-8?B?WEcxMEdMM29UdEJjbG5JTjJ0UkV2bEFoUTdjQk54RkdaL2xLbFlTc1liL3RJ?=
- =?utf-8?B?VVNMZjVPZE85L0JVWm01RE9XREFlMEtSZTA5RlBqY1E1OXB3OHJYT0xZaXBQ?=
- =?utf-8?B?UGI1Z0RXaEE3YkhUNE5FemJ2MjIrRHUzaThKN3BsWTJ5YnhRYnV3SWNhdnY1?=
- =?utf-8?B?YVJhUmg0TlpVeDQ1b1MrZDh1Znk5U0ZCOFRoVTZRUmI2SjdXTnpnZFc2d1BJ?=
- =?utf-8?B?M0RJa1hjWHRlSjd5SXJYVDdMR2JSRXRRQyswVUZGS0hGL3J4a2FRTDRVQUFz?=
- =?utf-8?B?OUVsYnRFOFRJdDNaS0ZaL0N1TzBzRjJ1SDgrK0VxRmF0d2ZkQTZsWTVBcm5D?=
- =?utf-8?B?Vm9mU3JuNFhXRUpzNGd1aC9WYmM3eFFiWGVQZTljUmxVT3ZmejlId044dW5D?=
- =?utf-8?B?VlRhWE12Tk1OQlpNMjBFU0UvWTluMmI4OUVxMi91bWNOOHk1ZjBJdVNVRkxQ?=
- =?utf-8?B?ajRpYlBQTGJIVERrWkVnOGR2MlNlem5EN0p3dmQ4OUQ5Y0wrQi9sS3JhUEpI?=
- =?utf-8?B?QytrM1JhajhVSXRmdVR4Q0p2c3cxSWRtaXRTcHVUVVdGVlprOU5FbS93UHc0?=
- =?utf-8?B?VUlqbzJoV0JsRHFNc1NNR0NiZ2lZaDdEQzB1aUtEK1gxa1FEUXN6Q1JwQnZW?=
- =?utf-8?B?VmZraWdyMG1IM2FvNExHU0RTbUZqVXA5REwvZkljNEVSemlpOVJjUEJDemJP?=
- =?utf-8?B?Q1lRQ2p3andzblEvQXgvWDE4T2t3bzhLN1EvQU5uZE9RUjUxYWhUdEZpRDAr?=
- =?utf-8?B?U3RYSzRtb2Zac1JUL2NIbFRxOHJZUDZTRGkvWFkyek1PeW1FdFNNK2R2TFVo?=
- =?utf-8?B?V0lGaGx2S0lzOWx3dENMeXZLbkVpS0NEdXB6M2xucWNQZWFab0xvR3VXdEl3?=
- =?utf-8?B?RUNSZmxwUzVVZEdxQUJ1bHVtUTVmbVQ5ZThKUEF2citqRzN6OHVXaDlQNk9v?=
- =?utf-8?B?ejc3V25kQmcvYk53cndFWmYvdWFUZitMTDJ5QTJyMnlveFlBSEdOc2Z6Zm13?=
- =?utf-8?B?OEJNZHJlRXdlclpIRHppYkp6ZVg0SGZtbkxpN3g1SzZacTVXUTZMZzNSK0tU?=
- =?utf-8?B?Q0pVbmdxcFNmOFZSbmNWd2ViYVVEM1JNMXFHbTdRNkduYkM5cTd0QjYyMXBG?=
- =?utf-8?B?bHlwblJsdE03SXhKb1BZa2dpeWFtUkc1YTJ4UXRON1FIRjhyR3BlQnpudTZT?=
- =?utf-8?B?dVN0L0xsL0dSMkczaUhVc01RdnFKdGtaRnRnaWQ0VEtLQVlBc3FaZ1R6Z256?=
- =?utf-8?B?K3FtQ1lnMnpzazdaaXV4ZG5Ya2wzZ29GalVjOUNWNmRqeFF6RkJRUHZGdWZa?=
- =?utf-8?B?UHZkbjZ1N1JyWFZPbDUzZVlLaEtJLzY4UTlldVNjWHRIN2p3blc3MVJ3U0xh?=
- =?utf-8?B?NHFxL2p3azRwc1NpVnVnU3hpeVNXOTQyU2JudllMMTJvckZ0L0NYTm1JS0kv?=
- =?utf-8?B?MlhzUHdxUVVGMUFlTWpkeWZ5NVBLU08vVEE0TC9MMW4wT3hLazNjT1I5aFYz?=
- =?utf-8?B?R2MxMk1OWmZMNEZWQ1l3NndQNUUvVzg5dUp6NFVzN2lrb2ZsV3VSWCtCN0ND?=
- =?utf-8?B?UXVCVXBCazU2MUcxSEhucXlleXBEc0VRVko5NHJXc1VBbmdMQmhjNjBvcWpZ?=
- =?utf-8?B?MzU0NG5CZFhJbmt3dm1zaVRZS3R3V1BNYmlyVFZGRU83cVZDdzNZeTQyVUx4?=
- =?utf-8?B?S2FZT0ZBZW9MQktEZi9tejVVTFllTzA2VTk0bzVUSHFyU081TTYwNExoV1hj?=
- =?utf-8?B?MVVObWRmN09Ba05vcUFyOG1kdmNraUcwRFBzZVFRZFRBNkpLN0hQVUdySHBN?=
- =?utf-8?B?QmlBMUZOTk1nSW5MWTdpeXZtRjNTRHFqcG1iaktFWWVzZWQ3WDIyeGV4MG5L?=
- =?utf-8?B?cXdjaDFuRTJrdnY5KzFQOWUveGNsWmNXemJsRlJ4eXp4STlGZmtWZz09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <550F8B46A939C94DB293C1834564C462@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=nhxnVej2CIUMLhdNzrsZoPwHkHCS1xzrTTmqvH/njl8=;
+        b=JlgcvbzqGUzAWxfa2H0VDGBAue1ylSoHDEeaowQLuS7QB3U10bKI92k3Pnhi1se7Ud
+         wpwpruPBzEMnxiE7eHnnKLc66ErVKGoZvKUyfHQ2vPJhU1DGoELOMXZmjnpVGu6K6jkr
+         eQvTqyvE30q2iQHVz9GJyPhs2GKEs38GL4BSLyh8P1Pl+q+2RW3pOHYHHh1Ll4mPBsMD
+         aBq8q69v28bV2iMJXb3jOCDDkM6LwDUWlwjZ8a7i0MJHAgnsylmaKSI4jTWoq7NPFlb+
+         XNHQvFIl7FDBe/E6Z+H7VyGrw9afFBEfOGHZTU/IqrWwNR3zv0NhSPTjHMe1czKyWxds
+         Jynw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nhxnVej2CIUMLhdNzrsZoPwHkHCS1xzrTTmqvH/njl8=;
+        b=RTeaOh1eF2OykkzLH/bgQDew+A2nYkACyaOAdRBsSmOATT72jroDw2b2581Z7XLjFJ
+         Qwhe1W0iZoTb5CgkOMVY0KfLqR9rKAqTNc7SeEIRyuFD1YOq0HowvjZsQuBxlY1mNy4q
+         fmEMPSu1oXMBQlFYUCZRoe0I2Yt+YU4FhKULJ7L80APK1sddRFPMxKyAICcc2EIt1mB9
+         06VQG/Po/Tu5UErP+VI0ceOOommEaGhCAYvyRNYFq7gH8UjEfq+eKdJCV6QQpXE3mtVO
+         mWxbQBB6jSXWbUqKgtwf75PkkQrsSqDxxj7fJ4EZuukAFmeWQuxO1auqcTpXSiJ7/9Hc
+         SjbA==
+X-Gm-Message-State: AOAM532OYOlQ+W/B4F7aCXu3WPD9JVuMPQ+wWzA3/lOHmGvJpd8oscka
+        +fZegrElsr3MMtXq9px/e9N7Gw==
+X-Google-Smtp-Source: ABdhPJzUhkWLfAN2qyBuzif4rSkuHafqFixxn6fwtjaFjUpPSgYzT8HvoUwrlPrV9m9YTT0Id8YCBA==
+X-Received: by 2002:ac2:5339:0:b0:46b:c20a:b5f9 with SMTP id f25-20020ac25339000000b0046bc20ab5f9mr17943098lfh.105.1650540968641;
+        Thu, 21 Apr 2022 04:36:08 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id h6-20020a2e5306000000b00247e893075asm2007916ljb.37.2022.04.21.04.36.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Apr 2022 04:36:08 -0700 (PDT)
+Message-ID: <f4cfc1b3-2a85-f948-ff2c-27588cbe2210@linaro.org>
+Date:   Thu, 21 Apr 2022 14:36:05 +0300
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45019729-0d84-41a8-15f8-08da238a72b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2022 11:31:16.2807
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tywH5YJc3VYKlHh1Br4vr41I+j0KrhxsfriYAmHppz0sk03HkBgU+Cq0Eg+E48pIoBG0iZkL2DYu/rCrVCqX5SHT6VKiETGYBxGwZAiznbQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3293
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH RFC 1/5] phy: qcom-qmp: add support for pipe clock muxing
+Content-Language: en-GB
+To:     Johan Hovold <johan+linaro@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org
+References: <20220421102041.17345-1-johan+linaro@kernel.org>
+ <20220421102041.17345-2-johan+linaro@kernel.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220421102041.17345-2-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gMjAvMDQvMjAyMiAxNjo0MSwgUGFsaSBSb2jDoXIgd3JvdGU6DQo+IEVYVEVSTkFMIEVNQUlM
-OiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGtub3cg
-dGhlIGNvbnRlbnQgaXMgc2FmZQ0KPiANCj4gT24gV2VkbmVzZGF5IDIwIEFwcmlsIDIwMjIgMTE6
-MzQ6NDkgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+PiBUaGVyZSBhcmUgbm8ga25vd24gcmVh
-c29ucyB0byBub3QgdXNlIHRoaXMgZHJpdmVyIGFzIGEgbW9kdWxlLA0KPiANCj4gSGVsbG8hIEkg
-dGhpbmsgdGhhdCB0aGVyZSBhcmUgcmVhc29ucy4gcGNpZS1taWNyb2NoaXAtaG9zdC5jIGRyaXZl
-ciB1c2VzDQo+IGJ1aWx0aW5fcGxhdGZvcm1fZHJpdmVyKCkgYW5kIG5vdCBtb2R1bGVfcGxhdGZv
-cm1fZHJpdmVyKCk7IGl0IGRvZXMgbm90DQo+IGltcGxlbWVudCAucmVtb3ZlIGRyaXZlciBjYWxs
-YmFjayBhbmQgYWxzbyBoYXMgc2V0IHN1cHByZXNzX2JpbmRfYXR0cnMNCj4gdG8gdHJ1ZS4gSSB0
-aGluayB0aGF0IGFsbCB0aGVzZSBwYXJ0cyBzaG91bGQgYmUgcHJvcGVybHkgaW1wbGVtZW50ZWQN
-Cj4gb3RoZXJ3aXNlIGl0IGRvZXMgbm90IGhhdmUgc2FuZSByZWFzb25zIHRvIHVzZSBkcml2ZXIg
-YXMgbG9hZGFibGUgYW5kDQo+IHVubG9hZGFibGUgbW9kdWxlLg0KPiANCj4gQnR3LCBJIGltcGxl
-bWVudGVkIHByb3BlciBtb2R1bGUgc3VwcG9ydCBmb3IgcGNpLW12ZWJ1LmMgZHJpdmVyDQo+IHJl
-Y2VudGx5LCBzbyB5b3UgY2FuIHRha2UgYW4gaW5zcGlyYXRpb24uIFNlZToNCj4gaHR0cHM6Ly9s
-b3JlLmtlcm5lbC5vcmcvbGludXgtcGNpLzIwMjExMTI2MTQ0MzA3Ljc1NjgtMS1wYWxpQGtlcm5l
-bC5vcmcvdC8jdQ0KDQpIbW0sIHNvIHdoYXQgaXMgdGhlIHdheSBmb3J3YXJkIGhlcmUsIGFyZSB5
-b3UgaGFwcHkgdG8gZG8gaXQgeW91cnNlbGYNCm9yIGRvIHlvdSBub3QgaGF2ZSB0aGUgaGFyZHdh
-cmUvd291bGQgcmF0aGVyIHRoYXQgd2UgZGlkIGl0Pw0KDQpJZiB5b3UnZCBwcmVmZXIgdGhhdCB3
-ZSBkaWQgaXQsIGRvIHdlIGNoYW5nZSB0aGUgZHJpdmVyICYgc3VibWl0IHRoYXQNCmFzIGEgc2Vy
-aWVzIHdpdGggdGhpcyBwYXRjaCBhcyBwYXRjaCAyLzI/IE9yIHNob3VsZCBpdCBiZSBhIHNpbmds
-ZQ0KcGF0Y2ggd2l0aCB5b3VyIHN1Z2dlc3RlZC1ieT8NCk5vdCBxdWl0ZSBzdXJlIHdoYXQgdGhl
-IGV4cGVjdGF0aW9uIGlzIHdpdGggYXR0ZXN0YXRpb24gZm9yIHNvbWV0aGluZw0KbGlrZSB0aGlz
-Lg0KDQpUaGFua3MsDQpDb25vcg0K
+On 21/04/2022 13:20, Johan Hovold wrote:
+> Some QMP PHYs need to remux to their pipe clock input to the pipe clock
+> output generated by the PHY before powering on the PHY and restore the
+> default source during power down.
+> 
+> Add support for an optional pipe clock mux which will be reparented to
+> the generated pipe clock before powering on the PHY and restored to the
+> default reference source on power off.
+> 
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>   drivers/phy/qualcomm/phy-qcom-qmp.c | 71 ++++++++++++++++++++++++++---
+>   1 file changed, 65 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 7d2d1ab061f7..bc6db9670291 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -3292,6 +3292,8 @@ struct qmp_phy_combo_cfg {
+>    * @rx2: iomapped memory space for second lane's rx (in dual lane PHYs)
+>    * @pcs_misc: iomapped memory space for lane's pcs_misc
+>    * @pipe_clk: pipe clock
+> + * @pipemux_clk: pipe clock source mux
+> + * @piperef_clk: pipe clock default reference source
+>    * @index: lane index
+>    * @qmp: QMP phy to which this lane belongs
+>    * @lane_rst: lane's reset controller
+> @@ -3311,6 +3313,8 @@ struct qmp_phy {
+>   	void __iomem *rx2;
+>   	void __iomem *pcs_misc;
+>   	struct clk *pipe_clk;
+> +	struct clk *pipemux_clk;
+> +	struct clk *piperef_clk;
+>   	unsigned int index;
+>   	struct qcom_qmp *qmp;
+>   	struct reset_control *lane_rst;
+> @@ -3346,6 +3350,7 @@ struct qcom_qmp {
+>   	void __iomem *dp_com;
+>   
+>   	struct clk_bulk_data *clks;
+> +	struct clk *pipe_clksrc;
+>   	struct reset_control **resets;
+>   	struct regulator_bulk_data *vregs;
+>   
+> @@ -5355,6 +5360,42 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>   	return 0;
+>   }
+>   
+> +static int qcom_qmp_phy_pipe_clk_enable(struct qmp_phy *qphy)
+> +{
+> +	struct qcom_qmp *qmp = qphy->qmp;
+> +	int ret;
+> +
+> +	ret = clk_set_parent(qphy->pipemux_clk, qmp->pipe_clksrc);
+> +	if (ret)
+> +		dev_err(qmp->dev, "failed to reparent pipe clock: %d\n", ret);
+> +
+> +
+> +	ret = clk_prepare_enable(qphy->pipe_clk);
+> +	if (ret) {
+> +		dev_err(qmp->dev, "failed to enable pipe clock: %d\n", ret);
+> +		goto err_restore_parent;
+> +	}
+
+So, what you do here is you manually set the parent of 
+GCC_PCIE_1_PIPE_CLK_SRC to PHY pipe clock right before enabling 
+GCC_PCIE_1_PIPE_CLK and set it back to XO after disabling 
+GCC_PCIE_1_PIPE_CLK.
+
+My proposal is doing exactly the same, but doing that automatically 
+through the clock infrastructure. After removing pipe_clock handling 
+from pcie driver itself, we can be sure that nobody is playing dirty 
+tricks around the pipe_clock.
+
+> +
+> +	return 0;
+> +
+> +err_restore_parent:
+> +	clk_set_parent(qphy->pipemux_clk, qphy->piperef_clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static void qcom_qmp_phy_pipe_clk_disable(struct qmp_phy *qphy)
+> +{
+> +	struct qcom_qmp *qmp = qphy->qmp;
+> +	int ret;
+> +
+> +	clk_disable_unprepare(qphy->pipe_clk);
+> +
+> +	ret = clk_set_parent(qphy->pipemux_clk, qphy->piperef_clk);
+> +	if (ret)
+> +		dev_err(qmp->dev, "failed to reparent pipe clock: %d\n", ret);
+> +}
+> +
+>   static int qcom_qmp_phy_power_on(struct phy *phy)
+>   {
+>   	struct qmp_phy *qphy = phy_get_drvdata(phy);
+> @@ -5379,11 +5420,9 @@ static int qcom_qmp_phy_power_on(struct phy *phy)
+>   		}
+>   	}
+>   
+> -	ret = clk_prepare_enable(qphy->pipe_clk);
+> -	if (ret) {
+> -		dev_err(qmp->dev, "pipe_clk enable failed err=%d\n", ret);
+> +	ret = qcom_qmp_phy_pipe_clk_enable(qphy);
+> +	if (ret)
+>   		goto err_reset_lane;
+> -	}
+>   
+>   	/* Tx, Rx, and PCS configurations */
+>   	qcom_qmp_phy_configure_lane(tx, cfg->regs,
+> @@ -5478,7 +5517,7 @@ static int qcom_qmp_phy_power_on(struct phy *phy)
+>   	return 0;
+>   
+>   err_disable_pipe_clk:
+> -	clk_disable_unprepare(qphy->pipe_clk);
+> +	qcom_qmp_phy_pipe_clk_disable(qphy);
+>   err_reset_lane:
+>   	if (cfg->has_lane_rst)
+>   		reset_control_assert(qphy->lane_rst);
+> @@ -5491,7 +5530,7 @@ static int qcom_qmp_phy_power_off(struct phy *phy)
+>   	struct qmp_phy *qphy = phy_get_drvdata(phy);
+>   	const struct qmp_phy_cfg *cfg = qphy->cfg;
+>   
+> -	clk_disable_unprepare(qphy->pipe_clk);
+> +	qcom_qmp_phy_pipe_clk_disable(qphy);
+>   
+>   	if (cfg->type == PHY_TYPE_DP) {
+>   		/* Assert DP PHY power down */
+> @@ -5777,6 +5816,8 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
+>   	if (ret)
+>   		return ret;
+>   
+> +	qmp->pipe_clksrc = fixed->hw.clk;
+> +
+>   	ret = of_clk_add_hw_provider(np, of_clk_hw_simple_get, &fixed->hw);
+>   	if (ret)
+>   		return ret;
+> @@ -6091,6 +6132,24 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id,
+>   		qphy->pipe_clk = NULL;
+>   	}
+>   
+> +	/* Get optional pipe clock mux and default reference source clock. */
+> +	qphy->pipemux_clk = of_clk_get_by_name(np, "mux");
+> +	if (IS_ERR(qphy->pipemux_clk)) {
+> +		ret = PTR_ERR(qphy->pipemux_clk);
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +
+> +		qphy->pipemux_clk = NULL;
+> +	} else {
+> +		qphy->piperef_clk = of_clk_get_by_name(np, "ref");
+> +		if (IS_ERR(qphy->piperef_clk)) {
+> +			ret = PTR_ERR(qphy->piperef_clk);
+> +			return dev_err_probe(dev, ret,
+> +					     "failed to get lane%d piperef_clk\n",
+> +					     id);
+> +		}
+> +	}
+> +
+>   	/* Get lane reset, if any */
+>   	if (cfg->has_lane_rst) {
+>   		snprintf(prop_name, sizeof(prop_name), "lane%d", id);
+
+
+-- 
+With best wishes
+Dmitry
