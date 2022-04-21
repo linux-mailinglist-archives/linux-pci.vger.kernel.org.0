@@ -2,147 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E9FC50AA57
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 22:51:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D557750AA7A
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 23:11:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1392568AbiDUUyd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Apr 2022 16:54:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
+        id S233067AbiDUVOA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Apr 2022 17:14:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1392565AbiDUUyd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 16:54:33 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5B8CF4D26F;
-        Thu, 21 Apr 2022 13:51:42 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDBE31477;
-        Thu, 21 Apr 2022 13:51:41 -0700 (PDT)
-Received: from [10.57.80.98] (unknown [10.57.80.98])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B30B3F5A1;
-        Thu, 21 Apr 2022 13:51:38 -0700 (PDT)
-Message-ID: <f238af77-be5e-43cc-6a8c-338408c1667e@arm.com>
-Date:   Thu, 21 Apr 2022 21:51:31 +0100
+        with ESMTP id S233035AbiDUVN7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 17:13:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9A148E74;
+        Thu, 21 Apr 2022 14:11:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 01930B82939;
+        Thu, 21 Apr 2022 21:11:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7194CC385A7;
+        Thu, 21 Apr 2022 21:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650575465;
+        bh=Z/8IJwNR5HI9ZzJwsHxg/Nx1x76tQDZbLuZtg/Z3b3M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=H/IByQTNQn69lKp+psedf4aIechOeR0j915REYKGr86wvc57eSLTAW3rWcnsKiN7l
+         pM2INXuN4N4L8l78M+00xNpNRsuYpxbdfCTYLxf0REFBET1QBNcGuky6YcpUeABQtI
+         3LoM5/4Bgqhc5bVK7BpsJQehCMuFsKDtrTLrrrmfTmMTov4Mx8hvTgZIVyweXqaVUR
+         juwtmhYNGgFDQG63Mc1Y6CvCSyHh+fodKj56aAEdas9m3mlgqavBYnnkFxU6QrJtjS
+         e9L1Xfl1Yr9KdsJS4TqcsX7xMLUMf62hM+uiHpncEtn+QfsM76lVd1vNm/vhXF3vDY
+         Zq+58zDgQFVDw==
+Date:   Thu, 21 Apr 2022 16:11:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kenneth R. Crudup" <kenny@panix.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, hkallweit1@gmail.com,
+        wangxiongfeng2@huawei.com, mika.westerberg@linux.intel.com,
+        chris.packham@alliedtelesis.co.nz, yangyicong@hisilicon.com,
+        treding@nvidia.com, jonathanh@nvidia.com, abhsahu@nvidia.com,
+        sagupta@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Ricky Wu <ricky_wu@realtek.com>,
+        Rajat Jain <rajatja@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Victor Ding <victording@google.com>
+Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for
+ suspend/resume
+Message-ID: <20220421211103.GA1426981@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH 03/25] dma-direct: take dma-ranges/offsets into account in
- resource mapping
-Content-Language: en-GB
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Rob Herring <robh@kernel.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-4-Sergey.Semin@baikalelectronics.ru>
- <0baff803-b0ea-529f-095a-897398b4f63f@arm.com>
- <20220417224427.drwy3rchwplthelh@mobilestation>
- <20220420071217.GA5152@lst.de>
- <20220420083207.pd3hxbwezrm2ud6x@mobilestation>
- <20220420084746.GA11606@lst.de>
- <20220420085538.imgibqcyupvvjpaj@mobilestation>
- <20220421144536.GA23289@lst.de>
- <20220421173523.ig62jtvj7qbno6q7@mobilestation>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20220421173523.ig62jtvj7qbno6q7@mobilestation>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-10.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42f9a28-e67-ec2a-f6-9a8b58edd84d@panix.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-04-21 18:35, Serge Semin wrote:
-> On Thu, Apr 21, 2022 at 04:45:36PM +0200, Christoph Hellwig wrote:
->> On Wed, Apr 20, 2022 at 11:55:38AM +0300, Serge Semin wrote:
->>> On Wed, Apr 20, 2022 at 10:47:46AM +0200, Christoph Hellwig wrote:
->>>> I can't really comment on the dma-ranges exlcusion for P2P mappings,
->>>> as that predates my involvedment, however:
->>>
->>> My example wasn't specific to the PCIe P2P transfers, but about PCIe
->>> devices reaching some platform devices over the system interconnect
->>> bus.
->>
->> So strike PCIe, but this our definition of Peer to Peer accesses.
->>
->>> What if I get to have a physical address of a platform device and want
->>> have that device being accessed by a PCIe peripheral device? The
->>> dma_map_resource() seemed very much suitable for that. But considering
->>> what you say it isn't.
->>
+On Thu, Apr 21, 2022 at 01:40:02PM -0700, Kenneth R. Crudup wrote:
+> On Thu, 21 Apr 2022, Kai-Heng Feng wrote:
 > 
->> dma_map_resource is the right thing for that.  But the physical address
->> of MMIO ranges in the platform device should not have struct pages
->> allocated for it, and thus the other dma_map_* APIs should not work on
->> it to start with.
+> > I went through the whole discussion again, maybe Kenneth's case is
+> > also the result of pcie_aspm_pm_state_change()?
 > 
-> The problem is that the dma_map_resource() won't work for that, but
-> presumably the dma_map_sg()-like methods will (after some hacking with
-> the phys address, but anyway). Consider the system diagram in my
-> previous email. Here is what I would do to initialize a DMA
-> transaction between a platform device and a PCIe peripheral device:
+> > Since Kenneth is using TLP to switch ASPM between performance and
+> > powersaving/powersupersaving, that means 'aspm_disabled' is false.
+> > Hence the KOXIA NVMe stops working post suspend and Realtek card
+> > reader toggles L1ss post hibernation.
 > 
-> 1) struct resource *rsc = platform_get_resource(plat_dev, IORESOURCE_MEM, 0);
+> > Kenneth, can you please see if removing pcie_aspm_pm_state_change()
+> > from pci_raw_set_power_state() helps?
+> > Anyway, this can be easier to spot if dmesg was attached.
 > 
-> 2) dma_addr_t dar = dma_map_resource(&pci_dev->dev, rsc->start, rsc->end - rsc->start + 1,
->                                        DMA_FROM_DEVICE, 0);
-> 
-> 3) dma_addr_t sar;
->     void *tmp = dma_alloc_coherent(&pci_dev->dev, PAGE_SIZE, &sar, GFP_KERNEL);
->     memset(tmp, 0xaa, PAGE_SIZE);
-> 
-> 4) PCIe device: DMA.DAR=dar, DMA.SAR=sar. RUN.
-> 
-> If there is no dma-ranges specified in the PCIe Host controller
-> DT-node, the PCIe peripheral devices will see the rest of the system
-> memory as is (no offsets and remappings). But if there is dma-ranges
-> with some specific system settings it may affect the PCIe MRd/MWr TLPs
-> address translation including the addresses targeted to the MMIO
-> space. In that case the mapping performed on step 2) will return a
-> wrong DMA-address since the corresponding dma_direct_map_resource()
-> just returns the passed physical address missing the
-> 'pci_dev->dma_range_map'-based mapping performed in
-> translate_phys_to_dma().
-> 
-> Note the mapping on step 3) works correctly because it calls the
-> translate_phys_to_dma() of the direct DMA interface thus taking the
-> PCie dma-ranges into account.
-> 
-> To sum up as I see it either restricting dma_map_resource() to map
-> just the intra-bus addresses was wrong or there must be some
-> additional mapping infrastructure for the denoted systems. Though I
-> don't see a way the dma_map_resource() could be fixed to be suitable
-> for each considered cases.
+> Well, I haven't had an issue with resume/return from hibernate for quite some
+> time, and the patch I'd reported a long time ago is now in the Linus' master
+> I've been running. I believe a BIOS change from Dell fixed it up for me.
 
-FWIW the current semantics of dma_map_resource() are basically just to 
-insert IOMMU awareness where dmaengine drivers were previously just 
-casting phys_addr_t to dma_addr_t (or u32, or whatever else they put 
-into their descriptor/register/etc.) IIRC there was a bit of a question 
-whether it really belonged in the DMA API at all, since it's not really 
-a "DMA" operation in the conventional sense, and convenience was the 
-only real deciding argument. The relevant drivers at the time were not 
-taking dma_pfn_offset into account when consuming physical addresses 
-directly, so the new API didn't either.
+Which patch are you referring to?
 
-That's just how things got to where they are today. Once again, I'm not 
-saying that what we have now is necessarily right, or that your change 
-is necessarily wrong, I just really want to understand specifically 
-*why* you need to make it, so we can evaluate the risk of possible 
-breakage either way. Theoretical "if"s aren't really enough.
+Vidya's original patch [1] is not upstream, at least AFAIK.  Well, it
+*was* merged as 4257f7e008ea [2] in v5.11-rc1, but then reverted by
+40fb68c7725a [3] in v5.11-rc7.
 
-Robin.
+[1] https://lore.kernel.org/r/20220201123536.12962-1-vidyas@nvidia.com
+[2] https://git.kernel.org/linus/4257f7e008ea
+[3] https://git.kernel.org/linus/40fb68c7725a
