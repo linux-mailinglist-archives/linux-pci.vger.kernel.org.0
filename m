@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93115509D94
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 12:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B8BC509D85
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 12:24:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1388343AbiDUK0d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Apr 2022 06:26:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51014 "EHLO
+        id S1388299AbiDUK0Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Apr 2022 06:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1388298AbiDUK0Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 06:26:25 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F4D622509;
-        Thu, 21 Apr 2022 03:23:36 -0700 (PDT)
+        with ESMTP id S1388282AbiDUK0Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 06:26:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43CA15710;
+        Thu, 21 Apr 2022 03:23:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1ABF3B823E5;
-        Thu, 21 Apr 2022 10:23:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3918C385AC;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5ADC661A14;
+        Thu, 21 Apr 2022 10:23:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A53C7C385A1;
         Thu, 21 Apr 2022 10:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1650536613;
-        bh=mHz5AgVnSrTaGOXojcB9hqQaqAnullRbzrWC0LxA+34=;
+        bh=7GtaheXDo0Wz45oqsEBVEP7Qvw6FlqTw7YTi2BpvukQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kf4bONYIYSzcRnbOsffSWTKg0KeT6uacWY5b7ltg3atcuxm8YaZbk3QeXhQMtW3QJ
-         VzAGHV1kO03iO43dr9ete/OH+Dbq9rl54qLBZQ5Tbx5uTJWWcCiZaSz7KNTzrCq0Jm
-         sFec/tTzfFT3zYvOWqaV4TgZDfPPYUgrAF5FanPFBY4+CFJpedG3GpDtRx/HlkncWw
-         +Nex6h1hUgDbKNgexjx8VJjtBHLdjcdAWf1tBAD6jMPRLMpcT4ZXyPnnv0s9g/59M+
-         W115TExH4IGGSKrQAQdARgPSwCYKDKfJuz5HTt0dTFBcNQKlU5e4JCjpex28Sl8mAW
-         onPCbXwZCe28g==
+        b=DgodGQmB62XI0kG3Z+hJsbIUpXQxppBmzHlQezGqeNDA39jYkelcUjFxqSr3WKd6K
+         75pVa95DjrWIdQ8DRHN5P3LJ0C37uKFnZ1rG4NNeOojx2dzc1K0nPbA/CYrN3OnktH
+         Bz2q84RGOwD8fghdDfKM9mlCh+SggDJol+JRUa2sRcJlKWQsvcbE7zkgtPvc5pvyH6
+         PEUO+2KDSvaADGy6i/5GqQZp1P51Zs+xoNG5O+aF2Qxn+gnMQ4niLZAZzOYbXgph76
+         0Cc2S8VeMJnQak7q6/LhXCWcSERc9V3If/o9firUGi8Rmk64efPs3GCANR6/6sl/MJ
+         kovzwkFcKpI7w==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1nhTyB-0004Xg-D9; Thu, 21 Apr 2022 12:23:27 +0200
+        id 1nhTyB-0004Xi-Fj; Thu, 21 Apr 2022 12:23:27 +0200
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -52,9 +52,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-phy@lists.infradead.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH RFC 2/5] arm64: dts: qcom: sc7280: move pipe mux handling to phy
-Date:   Thu, 21 Apr 2022 12:20:38 +0200
-Message-Id: <20220421102041.17345-3-johan+linaro@kernel.org>
+Subject: [PATCH RFC 3/5] PCI: qcom: Remove unnecessary pipe_clk handling
+Date:   Thu, 21 Apr 2022 12:20:39 +0200
+Message-Id: <20220421102041.17345-4-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220421102041.17345-1-johan+linaro@kernel.org>
 References: <20220421102041.17345-1-johan+linaro@kernel.org>
@@ -69,59 +69,138 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The QMP PHY pipe clock remuxing is part of the PHY, which is both the
-producer and the consumer of the pipe clock.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Update the PCIe controller and PHY node to reflect the new binding.
+QMP PHY driver already does clk_prepare_enable()/_disable() pipe_clk.
+Remove extra calls to enable/disable this clock from the PCIe driver, so
+that the PHY driver can manage the clock on its own.
 
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 44 ++------------------------
+ 1 file changed, 3 insertions(+), 41 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index c07765df9303..b3a9630262dc 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -1837,11 +1837,7 @@ pcie1: pci@1c08000 {
- 					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>,
- 					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 774d486bf2f7..6e6e40fbfc13 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -128,7 +128,6 @@ struct qcom_pcie_resources_2_3_2 {
+ 	struct clk *master_clk;
+ 	struct clk *slave_clk;
+ 	struct clk *cfg_clk;
+-	struct clk *pipe_clk;
+ 	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
+ };
  
--			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
--				 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
--				 <&pcie1_lane 0>,
--				 <&rpmhcc RPMH_CXO_CLK>,
--				 <&gcc GCC_PCIE_1_AUX_CLK>,
-+			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
- 				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
- 				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
- 				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-@@ -1849,11 +1845,7 @@ pcie1: pci@1c08000 {
- 				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
- 				 <&gcc GCC_DDRSS_PCIE_SF_CLK>;
+@@ -165,7 +164,6 @@ struct qcom_pcie_resources_2_7_0 {
+ 	int num_clks;
+ 	struct regulator_bulk_data supplies[2];
+ 	struct reset_control *pci_reset;
+-	struct clk *pipe_clk;
+ 	struct clk *pipe_clk_src;
+ 	struct clk *phy_pipe_clk;
+ 	struct clk *ref_clk_src;
+@@ -597,8 +595,7 @@ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
+ 	if (IS_ERR(res->slave_clk))
+ 		return PTR_ERR(res->slave_clk);
  
--			clock-names = "pipe",
--				      "pipe_mux",
--				      "phy_pipe",
--				      "ref",
--				      "aux",
-+			clock-names = "aux",
- 				      "cfg",
- 				      "bus_master",
- 				      "bus_slave",
-@@ -1910,8 +1902,10 @@ pcie1_lane: lanes@1c0e200 {
- 				      <0 0x01c0e600 0 0x170>,
- 				      <0 0x01c0e800 0 0x200>,
- 				      <0 0x01c0ee00 0 0xf4>;
--				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
--				clock-names = "pipe0";
-+				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-+					 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
-+					 <&rpmhcc RPMH_CXO_CLK>;
-+				clock-names = "pipe0", "mux", "ref";
+-	res->pipe_clk = devm_clk_get(dev, "pipe");
+-	return PTR_ERR_OR_ZERO(res->pipe_clk);
++	return 0;
+ }
  
- 				#phy-cells = <0>;
- 				#clock-cells = <1>;
+ static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
+@@ -613,13 +610,6 @@ static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+ }
+ 
+-static void qcom_pcie_post_deinit_2_3_2(struct qcom_pcie *pcie)
+-{
+-	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+-
+-	clk_disable_unprepare(res->pipe_clk);
+-}
+-
+ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+ {
+ 	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+@@ -694,22 +684,6 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+ 	return ret;
+ }
+ 
+-static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+-{
+-	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+-	struct dw_pcie *pci = pcie->pci;
+-	struct device *dev = pci->dev;
+-	int ret;
+-
+-	ret = clk_prepare_enable(res->pipe_clk);
+-	if (ret) {
+-		dev_err(dev, "cannot prepare/enable pipe clock\n");
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+ {
+ 	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+@@ -1198,8 +1172,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+ 			return PTR_ERR(res->ref_clk_src);
+ 	}
+ 
+-	res->pipe_clk = devm_clk_get(dev, "pipe");
+-	return PTR_ERR_OR_ZERO(res->pipe_clk);
++	return 0;
+ }
+ 
+ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+@@ -1292,14 +1265,7 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+ 	if (pcie->cfg->pipe_clk_need_muxing)
+ 		clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
+ 
+-	return clk_prepare_enable(res->pipe_clk);
+-}
+-
+-static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
+-{
+-	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+-
+-	clk_disable_unprepare(res->pipe_clk);
++	return 0;
+ }
+ 
+ static int qcom_pcie_link_up(struct dw_pcie *pci)
+@@ -1449,9 +1415,7 @@ static const struct qcom_pcie_ops ops_1_0_0 = {
+ static const struct qcom_pcie_ops ops_2_3_2 = {
+ 	.get_resources = qcom_pcie_get_resources_2_3_2,
+ 	.init = qcom_pcie_init_2_3_2,
+-	.post_init = qcom_pcie_post_init_2_3_2,
+ 	.deinit = qcom_pcie_deinit_2_3_2,
+-	.post_deinit = qcom_pcie_post_deinit_2_3_2,
+ 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+ };
+ 
+@@ -1478,7 +1442,6 @@ static const struct qcom_pcie_ops ops_2_7_0 = {
+ 	.deinit = qcom_pcie_deinit_2_7_0,
+ 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+ 	.post_init = qcom_pcie_post_init_2_7_0,
+-	.post_deinit = qcom_pcie_post_deinit_2_7_0,
+ };
+ 
+ /* Qcom IP rev.: 1.9.0 */
+@@ -1488,7 +1451,6 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+ 	.deinit = qcom_pcie_deinit_2_7_0,
+ 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+ 	.post_init = qcom_pcie_post_init_2_7_0,
+-	.post_deinit = qcom_pcie_post_deinit_2_7_0,
+ 	.config_sid = qcom_pcie_config_sid_sm8250,
+ };
+ 
 -- 
 2.35.1
 
