@@ -2,112 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21D7D509EC0
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 13:38:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6202509FEE
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 14:46:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1388259AbiDULkj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Apr 2022 07:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34728 "EHLO
+        id S1385524AbiDUMtd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Apr 2022 08:49:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230212AbiDULki (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 07:40:38 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5947B22B0C
-        for <linux-pci@vger.kernel.org>; Thu, 21 Apr 2022 04:37:49 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id p10so8156401lfa.12
-        for <linux-pci@vger.kernel.org>; Thu, 21 Apr 2022 04:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=RsyMZ+3bz7iZqyG5PUvCw9htX6TYzgOo4J4yh71zpuI=;
-        b=gWpk+C7Y8yNeYTzGrteWODT0Ty2/cOa1ye8rnWxX4nOhjdnewnRTUZGfVSel4vVzqv
-         pfYaIcB0TRT8aqF3BGout/T/WgXUlORDXq8z/7s293Oo7Yc++V+MykeR26utUSXcZo2h
-         ZwhIvnZ1LDuwEt6+gpwhWAsx3PbMp2YTi1QwmkteTFukC4xX4c9/amqr/8U0CvxEAaeC
-         9g1uySEn6uDleNGwI6zm7y4v+nEA5VrUlmkNW5LB2kRtboaAhOuUGWuqdSeSPPpPoAWv
-         2UtTaqDGzRHqJGOXVRMu4UbOG1JYsk1JUXqFStKhosXJ5zmtLO0dLFgMOACCk5m0eI5O
-         nEHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=RsyMZ+3bz7iZqyG5PUvCw9htX6TYzgOo4J4yh71zpuI=;
-        b=41HtSQXeQIbiyl29+eA/eiZfu6HotghFNHoPpoAB8Gj9gea4wtrdYc13WNliMAsZZk
-         tCP2KrTZ3j4TYJGUEr7Td9hPBZd4VgzI6Y/j0eJpV4ebwLhNa8sFJ7djh0jfwdK3oqAt
-         SjVyYLYhNh1IHkV9cN9uV9ZmYIIT8v2Zh9lTD51jkI6i1ywOa7J5C40ANZNP2VXlX0/3
-         cg9+kyiDUbBlNBYtWPoNCEHbk5SKFEc96FbCR2LMr/DsYKvce6VLV8/y2IT+03k6U9R1
-         JSP8otxP1x+gRHVP488kRLjd+fTRqadCeDhX5iir9tXs+40dHWzp9c71D/GzlHWSAdbB
-         tf8g==
-X-Gm-Message-State: AOAM531IDA7bFEIY11z0hHIqf3mAn+fQCnxoT6fwAokPXlrm7DsA4gLN
-        UiwwOEPdH/Rl78IjTag36DTwMw==
-X-Google-Smtp-Source: ABdhPJwoyEHiKGX2LHWti1yU+tp0BLmD36xMlD41AnkPLxpFfYI0J8MsaCAhBWjLpF7+Wu5WGVLvug==
-X-Received: by 2002:ac2:410b:0:b0:448:58a8:3e8a with SMTP id b11-20020ac2410b000000b0044858a83e8amr17874063lfi.258.1650541067634;
-        Thu, 21 Apr 2022 04:37:47 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id n17-20020a2e8791000000b0024db2d87102sm1518618lji.64.2022.04.21.04.37.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Apr 2022 04:37:47 -0700 (PDT)
-Message-ID: <4642b8dd-a638-79c6-c0c6-d72eca41d900@linaro.org>
-Date:   Thu, 21 Apr 2022 14:37:46 +0300
+        with ESMTP id S241750AbiDUMtc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 08:49:32 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA51326D6;
+        Thu, 21 Apr 2022 05:46:42 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Kkcfw3M6BzFq0j;
+        Thu, 21 Apr 2022 20:44:08 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 21 Apr 2022 20:46:40 +0800
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>, <prime.zeng@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI: Make sure the bus bridge powered on when scanning
+ bus
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Yicong Yang <yangyicong@hisilicon.com>
+References: <20220414123736.34150-1-yangyicong@hisilicon.com>
+ <20220420163249.GA1305194@bhelgaas>
+ <CAJZ5v0jarkeaPsq6qPLotYVqfw9rZ_OdawxBN1-1=YhvVQAz9Q@mail.gmail.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <1a9ab733-2377-4fd2-6a3b-eade26cdf9d3@huawei.com>
+Date:   Thu, 21 Apr 2022 20:46:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v3 0/6] PCI: qcom: rework pipe_clk/pipe_clk_src handling
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20220413233144.275926-1-dmitry.baryshkov@linaro.org>
- <YmEx5JPcDucjDiho@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <YmEx5JPcDucjDiho@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <CAJZ5v0jarkeaPsq6qPLotYVqfw9rZ_OdawxBN1-1=YhvVQAz9Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/04/2022 13:28, Johan Hovold wrote:
-> On Thu, Apr 14, 2022 at 02:31:38AM +0300, Dmitry Baryshkov wrote:
->> PCIe pipe clk (and some other clocks) must be parked to the "safe"
->> source (bi_tcxo) when corresponding GDSC is turned off and on again.
->> Currently this is handcoded in the PCIe driver by reparenting the
->> gcc_pipe_N_clk_src clock.
+On 2022/4/21 0:42, Rafael J. Wysocki wrote:
+> On Wed, Apr 20, 2022 at 6:32 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >>
->> Instead of doing it manually, follow the approach used by
->> clk_rcg2_shared_ops and implement this parking in the enable() and
->> disable() clock operations for respective pipe clocks.
+>> [+cc Rafael, linux-pm, since I'd really like his ack/review]
+>>
+>> On Thu, Apr 14, 2022 at 08:37:36PM +0800, Yicong Yang wrote:
+>>> When the bus bridge is runtime suspended, we'll fail to rescan
+>>> the devices through sysfs as we cannot access the configuration
+>>> space correctly when the bridge is in D3hot.
+>>> It can be reproduced like:
+>>>
+>>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+>>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+>>>
+>>> 0000:80:00.0 is root port and is runtime suspended and we cannot
+>>> get 0000:81:00.1 after rescan.
+>>>
+>>> Make bridge powered on when scanning the child bus, by adding
+>>> pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
+>>>
+>>> A similar issue is met and solved by
+>>> d963f6512e15 ("PCI: Power on bridges before scanning new devices")
+>>> which rescan the devices through /sys/bus/pci/devices/0000:80:00.0/rescan.
+>>> The callstack is like:
+>>>
+>>> dev_rescan_restore()
+>>>   pci_rescan_bus()
+>>>     pci_scan_bridge_extend()
+>>>       pci_scan_child_bus_extend() /* will wake up the bridge with this patch */
+>>>
+>>> With this patch the issue is also resolved, so let's remove the calls of
+>>> pm_runtime_*() in pci_scan_bridge_extend().
+>>>
+>>> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>>> ---
+>>> Change since v2:
+>>> - just rebase it on v5.18-rc2
+>>> Link: https://lore.kernel.org/linux-pci/1601029386-4928-1-git-send-email-yangyicong@hisilicon.com/
+>>>
+>>> Change since v1:
+>>> - use an intermediate variable *bridge as suggested
+>>> - remove the pm_runtime_*() calls in pci_scan_bridge_extend()
+>>> Link: https://lore.kernel.org/linux-pci/1596022223-4765-1-git-send-email-yangyicong@hisilicon.com/
+>>>
+>>>  drivers/pci/probe.c | 21 ++++++++++++---------
+>>>  1 file changed, 12 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>>> index 17a969942d37..2ca6b4b708e3 100644
+>>> --- a/drivers/pci/probe.c
+>>> +++ b/drivers/pci/probe.c
+>>> @@ -1257,12 +1257,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>>>       u8 fixed_sec, fixed_sub;
+>>>       int next_busnr;
+>>>
+>>> -     /*
+>>> -      * Make sure the bridge is powered on to be able to access config
+>>> -      * space of devices below it.
+>>> -      */
+>>> -     pm_runtime_get_sync(&dev->dev);
 > 
-> Please take a look at the alternative approach of moving the pipe clock
-> muxing into the PHY driver:
+> I understand why this is added below, but I'm not sure why it is safe
+> to remove it from here.
 > 
-> 	https://lore.kernel.org/all/20220421102041.17345-1-johan+linaro@kernel.org/
+> Say the bridge is initially in D3cold and we are accessing its config
+> space below.  Why is it not necessary to power it up in that case?
 > 
-> The implementation is more straight forward and I believe it is also
-> more conceptually sound as it ties the muxing to when the PHY is powered
-> on so that the GCC pipe clock always has a valid source.
 
-I still have a slight preference for the automated variant:
-  - Your code is manually doing exactly the same thing. Remuxing the 
-clocks in connection to the GCC_PIPE_n_CLOCK enabling/disabling
-  - DTS compatibility is preserved
+For the bridge in runtime D3cold we still need to power it up. I considered and tested this on the platform
+supported D3hot only. Under D3hot state the configuration space is still accessible and the brigde will be
+powered up when scanning children, but under D3cold we'll fail to read the bus number here. Will fix it.
 
+>>> -
+>>>       pci_read_config_dword(dev, PCI_PRIMARY_BUS, &buses);
+>>>       primary = buses & 0xFF;
+>>>       secondary = (buses >> 8) & 0xFF;
+>>> @@ -1464,8 +1458,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>>>  out:
+>>>       pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+>>>
+>>> -     pm_runtime_put(&dev->dev);
+>>> -
+>>>       return max;
+>>>  }
+>>>
+>>> @@ -2859,11 +2851,19 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>>>       unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+>>>       unsigned int start = bus->busn_res.start;
+>>>       unsigned int devfn, fn, cmax, max = start;
+>>> -     struct pci_dev *dev;
+>>> +     struct pci_dev *dev, *bridge = bus->self;
+> 
+> I would initialize the new variable in a separate line.
+> 
 
--- 
-With best wishes
-Dmitry
+will separate them.
+
+Thanks.
+
+>>>       int nr_devs;
+>>>
+>>>       dev_dbg(&bus->dev, "scanning bus\n");
+>>>
+>>> +     /*
+>>> +      * Make sure the bus bridge is powered on, otherwise we may not be
+>>> +      * able to scan the devices as we may fail to access the configuration
+>>> +      * space of subordinates.
+>>> +      */
+>>> +     if (bridge)
+>>> +             pm_runtime_get_sync(&bridge->dev);
+>>> +
+>>>       /* Go find them, Rover! */
+>>>       for (devfn = 0; devfn < 256; devfn += 8) {
+>>>               nr_devs = pci_scan_slot(bus, devfn);
+>>> @@ -2976,6 +2976,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>>>               }
+>>>       }
+>>>
+>>> +     if (bridge)
+>>> +             pm_runtime_put(&bridge->dev);
+>>> +
+>>>       /*
+>>>        * We've scanned the bus and so we know all about what's on
+>>>        * the other side of any bridges that may be on this bus plus
+>>> --
+> .
+> 
