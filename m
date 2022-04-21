@@ -2,148 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E378450A48B
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 17:43:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC17F50A550
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Apr 2022 18:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1390316AbiDUPp7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Apr 2022 11:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42928 "EHLO
+        id S230052AbiDUQ1t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Apr 2022 12:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390317AbiDUPpm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 11:45:42 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484794927A;
-        Thu, 21 Apr 2022 08:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1650555699;
-        bh=qO7WWncsu8pqavraYehTZbqYkoK5x7r8ZxY5T97XoXw=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=b+ULn39b+bj0QXQCBw1ebteDuTea9undETS0F3wjN4eLKsi4JB2YQXogVfc83LBez
-         yKNmLOcb21RK7yGdjB5m6CjS2/vj+M6UcAbEkV7RpYjgtYRIZWuVVONj+tsRzKG1F3
-         prFeyU+w5t492/e8TZXuRN8Tb0BY4Vy5259dV3Uc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [80.245.79.123] ([80.245.79.123]) by web-mail.gmx.net
- (3c-app-gmx-bap38.server.lan [172.19.172.108]) (via HTTP); Thu, 21 Apr 2022
- 17:41:39 +0200
+        with ESMTP id S232222AbiDUQVg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Apr 2022 12:21:36 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D51D3879C
+        for <linux-pci@vger.kernel.org>; Thu, 21 Apr 2022 09:18:44 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nhZVl-0000VX-VH; Thu, 21 Apr 2022 18:18:30 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nhZVl-004OZ9-1k; Thu, 21 Apr 2022 18:18:27 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nhZVi-004jEg-QT; Thu, 21 Apr 2022 18:18:26 +0200
+Date:   Thu, 21 Apr 2022 18:18:23 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Conor.Dooley@microchip.com
+Cc:     pali@kernel.org, robh@kernel.org, lorenzo.pieralisi@arm.com,
+        kw@linux.com, Daire.McNamara@microchip.com,
+        linux-pci@vger.kernel.org, gregkh@linuxfoundation.org,
+        ian@linux.cowan.aero, kernel@pengutronix.de, bhelgaas@google.com
+Subject: Re: [PATCH] PCI: microchip: Allow driver to be built as a module
+Message-ID: <20220421161823.btbuktvz62jgn43a@pengutronix.de>
+References: <20220420093449.38054-1-u.kleine-koenig@pengutronix.de>
+ <20220420164139.k37fc3xixn4j7kug@pali>
+ <bad31f90-f853-fdff-c91c-1a695ff162d1@microchip.com>
+ <20220421134121.pnhlwm74yzd5bdrs@pali>
+ <787e21f9-9db6-8c20-4983-17ff59b4e045@microchip.com>
 MIME-Version: 1.0
-Message-ID: <trinity-1c858470-8354-4ecd-ace7-a6e437cb5923-1650555699148@3c-app-gmx-bap38>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Peter Geis <pgwipeout@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Wunderlich <linux@fw-web.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Subject: Aw: Re: Re: [RFC/RFT 4/6] PCI: rockchip-dwc: add pcie bifurcation
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 21 Apr 2022 17:41:39 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <CAMdYzYpydGyQZT2n9Tf+ccQMLHzfhOgoyamMgspQDcjzm3Umdg@mail.gmail.com>
-References: <trinity-a220fd81-2ee9-474d-bd65-505b9ed904b2-1650186482865@3c-app-gmx-bs58>
- <20220418155313.GA1101563@bhelgaas>
- <CAMdYzYpydGyQZT2n9Tf+ccQMLHzfhOgoyamMgspQDcjzm3Umdg@mail.gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:fMhCkXFkWk6jz1YC+ACHfChGGaYlwtUgwWcAnA0jyPbYw+1++3n2PWOoruUedVEe3O/nQ
- hDXeXjlmBChv+exHvKh31aXoT2WMSGUsSsGWqskuolAgm32mb16s6bTyLBSYtyP5Sg25cf0JPmXJ
- 1pePEo7O+SI/2Uh8PWKiMger7oxtNy0YJJqYI+mBRs1lneD0he6ep57APIq3Euail8eSb3oQ1N1t
- QJ0n5Muonbp6RS4DYQMXP774RwDlOzQRQsjzLD/mjxpPK7b1IV/OtbmUTj8gaCQgDDN5tUv+dMym
- H4=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2nkMVzuz8fg=:WjCZA2rE/qwwh+MU3sEN/r
- je5+6b+/RRLEZWWlafKstjYHv9f42eqbK6znP181CwuscNFSZjPl+ZR0HKMM7EydWaRcZe/ll
- BCl+krEEXdZUBXvWxN7pl11y0YtJRF/i6dPA75W2WcZOp3+4A65+kN9+ny41jIuUEDMs74lhH
- mlr1cKsf35glpeo45jO6pK6jJcuXVlctuuf0NAvA2rMuAzjHtYFAbYULFQ4NMMKgwDzge1yo8
- j4Lyb7g1uK+V0PwRFsRsWTFrrgK7r3KeHAoy0yjxVTw10wa9hQaRqyS6AYEBnA9MKhCECi6BF
- IooRgAAog8qUceYmla24ULXMV52boFDwi50i7zQFDUn2JUCVw2wJIli0TtSDY76YvVfG16Rqe
- kRZ7vXEtrSLD0eBvjy9o1qoZ+XuRbzMvLC2uxvGwG4uKTT6R1jd59YbrosallEcZqsmO5+Kr5
- xi3NoAXZsdYMYVWQoOFYguVwJlJ05EaBIgoUYtmUx1SDO4JLZhypXT2uoKccQlEIwOS4KlvZO
- 9HfdqR+WKJAllWAbVUtSrhGjQ+yaNXPWNmSv8K+1dqKdbXF65ccZxnET97oWwubt3p67rR0jQ
- affk8sssrapLyMlQ6zJ5CA2iC7h6xRXYxkwV0nYiaobtjCYLLwMOSvupflLa4xyk9lrgEXZt4
- aHim3uq8km4fyBx7FG4mygswCimCKLaiNJWINxGFUzliPO1i23YRcWaZKKUA7LGnEBdO0lazI
- V+/cc0pXMdiZYEG0k/hxV4sGCzUUphJ4RWxS+GvuKGrOQCGk+otFOoyS2Ncv4BdrqvmOOdXuh
- ALV1zmu
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kst6joue5ym25znx"
+Content-Disposition: inline
+In-Reply-To: <787e21f9-9db6-8c20-4983-17ff59b4e045@microchip.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Gesendet: Montag, 18. April 2022 um 18:17 Uhr
-> Von: "Peter Geis" <pgwipeout@gmail.com>
-> > On Sun, Apr 17, 2022 at 11:08:02AM +0200, Frank Wunderlich wrote:
-> > > > On Sat, Apr 16, 2022 at 03:54:56PM +0200, Frank Wunderlich wrote:
-> > > > > From: Frank Wunderlich <frank-w@public-files.de>
-> > > > >
-> > > > > PCIe Lanes can be split to 2 slots with bifurcation.
-> > > > > Add support for this in existing pcie driver.
-> >
-> > > > Is the "rockchip,bifurcation" DT property something that should be
-> > > > generalized so it's not rockchip-specific?  Other controllers are
-> > > > likely to support similar functionality.
-> > >
-> > > I do not know if other controllers support similar functionality,
-> > > but i ack a property without vendor prefix is better. Should i use
-> > > "bifurcation" as name or do you think about a different name which
-> > > is more generic?
-> >
-> > Really a question for Rob about what name would be good and where it
-> > should go.
->
-> It might be good to define this as a lane map.
-> In the Rockchip implementation it's only 2+0 or 1+1, but that isn't
-> guaranteed if this is made into a standard definition.
-> So perhaps:
-> pcie-bifurcation-map =3D <0>, <1>;
-> pcie-bifurcation-map =3D <1>;
-> pcie-bifurcation-map =3D <4>, <5>, <6>, <7>;
 
-how about a lane-map like this (from controllers point of view):
+--kst6joue5ym25znx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-rockchip with only 2 lanes (like rk3568):
+On Thu, Apr 21, 2022 at 01:55:01PM +0000, Conor.Dooley@microchip.com wrote:
+> On 21/04/2022 13:41, Pali Roh=E1r wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know =
+the content is safe
+> >=20
+> > On Thursday 21 April 2022 11:31:16 Conor.Dooley@microchip.com wrote:
+> >> On 20/04/2022 16:41, Pali Roh=E1r wrote:
+> >>> EXTERNAL EMAIL: Do not click links or open attachments unless you kno=
+w the content is safe
+> >>>
+> >>> On Wednesday 20 April 2022 11:34:49 Uwe Kleine-K=F6nig wrote:
+> >>>> There are no known reasons to not use this driver as a module,
+> >>>
+> >>> Hello! I think that there are reasons. pcie-microchip-host.c driver u=
+ses
+> >>> builtin_platform_driver() and not module_platform_driver(); it does n=
+ot
+> >>> implement .remove driver callback and also has set suppress_bind_attrs
+> >>> to true. I think that all these parts should be properly implemented
+> >>> otherwise it does not have sane reasons to use driver as loadable and
+> >>> unloadable module.
+> >>>
+> >>> Btw, I implemented proper module support for pci-mvebu.c driver
+> >>> recently, so you can take an inspiration. See:
+> >>> https://lore.kernel.org/linux-pci/20211126144307.7568-1-pali@kernel.o=
+rg/t/#u
+> >>
+> >> Hmm, so what is the way forward here, are you happy to do it yourself
+> >> or do you not have the hardware/would rather that we did it?
+> >=20
+> > Hello! It would be needed to implement remove callback. But I do not
+> > have hardware for doing and testing it, so I do not feel that I can do
+> > it. I think that somebody with hardware and documentation should look at
+> > it and decide what is required to do in remove/cleanup procedure.
+> >=20
+> > Also it would be needed to investigate if something more is needed to
+> > change builtin_platform_driver() to module_platform_driver(). If there
+> > are not some other steps which needs to be done in correct sequence and
+> > usage of builtin_platform_driver() currently ensures it.
+>=20
+> Was more wondering if this was something Uwe had hardware for than
+> yourself, since he was poking around at the driver. But (assuming he
+> doesnt either) I'll add this to our todo :)
 
-controller 1:
-lane-map =3D <1 0>;
+FTR: I don't have the hardware, I just touched the driver because I
+found that missing ; that didn't hurt with the driver =3Dy. Wondering why
+it was bool was just the obvious next thought.
 
-controller 2:
-lane-map =3D <0 1>;
+Best regards
+Uwe
 
-here bifurcation is set if a controller does not aquire all lanes.Afaik rk=
-3568 cannot select specific lanes so i end up with bifurcation =3D true/fa=
-lse (an aggregation-mode on phy) again. but it makes dts-property more usa=
-ble for other devices/SoC.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-this contains the maximum of lanes and as mask the lanes to take by the cu=
-rrent controller. It is scalable to support more pcie-lanes (x2 x4 x8)
+--kst6joue5ym25znx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-example for 2 controllers with PCIe x4 (with 8 lanes available):
+-----BEGIN PGP SIGNATURE-----
 
-lane-map=3D<0 0 0 0 1 1 1 1>;
-lane-map=3D<1 1 1 1 0 0 0 0>;
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmJhg8wACgkQwfwUeK3K
+7AlcrQf/fpDv5hRmub/lY8nt361Jl+CW1q66Upw6uqqJwBYp7o26wAweDR/aGlge
+PxgL9Y90hUqU+E0/WFAX8Qy0p4F7JrFV274OnXPnZ1+Q6u8HPmpY8zt5R0eDFxPX
+RdDg+8enClpCHca+qlJ9NgVz+apad7/UX29Vi5Ef5M1rqbP3mjVljygRkeaN+yi1
+qinmmCMw5cLh7S0vdnghQRm/f+znYNMYYQt24zyv1ikAtAB/K3s64JRyWPNbpsp5
+pOYcCMedQZ1+YD1NuSGI3Pkh83KWH460WuUnibjCeftKS+ttpUHFFi3ukgIGg45a
+Az3wqnC/HnbbsOXjkZ9s2GNSnoboMw==
+=GuDg
+-----END PGP SIGNATURE-----
 
-of course they can be mixed, if driver supports this.
-
-lane-map=3D<0 1 0 1 0 1 0 1>;
-lane-map=3D<1 0 1 0 1 0 1 0>;
-
-such lane-map is more flexible
-
-regards Frank
+--kst6joue5ym25znx--
