@@ -2,91 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 750B950B89D
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 15:35:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F298450BA45
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 16:37:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356589AbiDVNiW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Apr 2022 09:38:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38176 "EHLO
+        id S1448508AbiDVOj6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Apr 2022 10:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237165AbiDVNiU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 09:38:20 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 113B44A93F;
-        Fri, 22 Apr 2022 06:35:27 -0700 (PDT)
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23MCmtew008621;
-        Fri, 22 Apr 2022 13:35:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version; s=pp1; bh=Zcc0JtPRzC+pKr8++TBAJL5YNRPeYJc/FYOB64+6btE=;
- b=AmFwLcoI3tVKKINXxOxlp3AnwyUB1m2zkOvxgDvqYJIqHVGa77iRWtgy5IQRbCGtl052
- r/3MTho75Zygv7CEL7isQteaH/2fEQ/zFB1m5c3uGigwL9c8Oh16ytP9CjiN6Az5sN0b
- p8BPi+0Fx9GYhFSsO/7aRAYoqAhhJrGPxEz19s8IjOwYVneM7lPt6sTbUwu1ZswQIpWR
- T1apMP1nIj3AQDhBos5N9ZOtSfiH9XNVbPPVgy3N91PeWVj4qQb7zdN9w7hyeJMM3QQI
- 7iSsXIDM6u8le+rC5g+xam6+3nZMb3LA95IPt70+dJtvQ7f9yttv4KlhqyrQE1ABZSq+ 6g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fjyk5j1sa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 13:35:23 +0000
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23MDL28n009338;
-        Fri, 22 Apr 2022 13:35:23 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fjyk5j1rf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 13:35:23 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23MDMbop007852;
-        Fri, 22 Apr 2022 13:35:20 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 3ffn2j1fce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 13:35:20 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23MDZHXQ47382996
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Apr 2022 13:35:17 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7FE7C11C04A;
-        Fri, 22 Apr 2022 13:35:17 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0531911C04C;
-        Fri, 22 Apr 2022 13:35:17 +0000 (GMT)
-Received: from sig-9-145-175-158.de.ibm.com (unknown [9.145.175.158])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 22 Apr 2022 13:35:16 +0000 (GMT)
-Message-ID: <19ea2a8ff04c24708a6504924f7a91c1045308d0.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 1/4] PCI: Clean up pci_scan_slot()
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-Date:   Fri, 22 Apr 2022 15:35:07 +0200
-In-Reply-To: <20220422132858.1213022-2-schnelle@linux.ibm.com>
-References: <20220422132858.1213022-1-schnelle@linux.ibm.com>
-         <20220422132858.1213022-2-schnelle@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+5TQTceV7kwkEleY1vza"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 0WaMBypyLUjSk87yGeJ1ASs6lTTjZ5xt
-X-Proofpoint-GUID: FVqF75_czQd9DiAeaJToju48fGU_wdNy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-22_03,2022-04-22_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- phishscore=0 mlxscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 impostorscore=0 mlxlogscore=907 spamscore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204220059
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S1444104AbiDVOj5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 10:39:57 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60069.outbound.protection.outlook.com [40.107.6.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A805BD2C;
+        Fri, 22 Apr 2022 07:37:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ogRZ1gE915+viPaVlLfcy3B/TaALTpO2CGihjsI29UtV5ZpZODWqa6e9O+LqoDvBLfTUJYcPKfkV+siu/cTbr6hTU8mXaNgPWpiAvtNOYXdQgOxQEdkIXfBNXo+8YrDeIM5d+7OKGacaEdfXdvtE73TPS9ee+14gcoc8YBwWePaaoWZtfFfYA04WvV9Oa4kaLx7mEsa8anWRa8Tof7ZhzzuC6yy1HbSVMsLmeTG9tWCJ0hlmJZJmxSqCziKu30a9OMpJV+ZArtC2ifGxoIPtKXfrBmhs0j8KAGBZUdL0vMLsuEdCku6Yv7IEzYCUOM/TON9eFd/qUFq/fNZ94i2SXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9H/7xYM/rKpdCsna6cwr9fmXA8doZRq71tAbpP5CJKU=;
+ b=A6A8PTW6UptpGZqiyX+1AkAD2RSsDB+j7HgWc0id/1VEY083+SR6QvTXd12pI80K+Iu9dUBrzjtFToP6OSnhBF5dzYOIdSzxfy3Sh3ERVxNckffAOwKHHJwzYYwUC/ithOfIfgkyXvr2QTH7NSLZtFOeRLV3/GhqeqCJsQdybu2qRjPAG/YQj47qsYbzUSBfVT/jKoXmmrEj4jAZksPxa6DQ99LSgKstd1M9BU9oY9G5g5kwKClZDkGoQS6YqolvCvYIJh0JyYkNzvnudVHzEZOqLQyqlcfFyoSxGvp9emtbStmDVYONOrfRgzMIEY9eWL/W1mNwOuw1hAY/QtKXWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9H/7xYM/rKpdCsna6cwr9fmXA8doZRq71tAbpP5CJKU=;
+ b=JdLWg7eJkYlG1PRkpvEEbWLaBAoLccMGEHZef6w6iaQx6475NrojCxcT5ZcprauSxo+mI3+VHStcXU4TI/mHNxaem0+M2XqwF61DCBPtEot8i6YG5380ffarUw0nN8OoVtSfDSsCtb4tx3RT03OYucqZAGgy1ROGVNSV5zsKZVk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by DB7PR04MB5449.eurprd04.prod.outlook.com (2603:10a6:10:8d::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Fri, 22 Apr
+ 2022 14:37:01 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::adc5:45f8:fa40:1b8a]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::adc5:45f8:fa40:1b8a%7]) with mapi id 15.20.5186.014; Fri, 22 Apr 2022
+ 14:37:01 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        fancer.lancer@gmail.com, lznuaa@gmail.com, helgaas@kernel.org
+Cc:     vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com,
+        manivannan.sadhasivam@linaro.org, Sergey.Semin@baikalelectronics.ru
+Subject: [PATCH v9 0/9] Enable designware PCI EP EDMA locally
+Date:   Fri, 22 Apr 2022 09:36:34 -0500
+Message-Id: <20220422143643.727871-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.35.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SN7PR04CA0063.namprd04.prod.outlook.com
+ (2603:10b6:806:121::8) To PAXPR04MB9186.eurprd04.prod.outlook.com
+ (2603:10a6:102:232::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f98e0aff-bf1f-458c-d261-08da246d901c
+X-MS-TrafficTypeDiagnostic: DB7PR04MB5449:EE_
+X-Microsoft-Antispam-PRVS: <DB7PR04MB544977BE03CD42025F8FB9DB88F79@DB7PR04MB5449.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qFRYcgBkyEKrfqYo49TdZvH9btZdcXB0LONKTx6rIZqC0VwGT6MIu4/t2hR1JB3ORn+kt4q8+h3wHqODNDIRO2DRA5ZDHwH93GivNU88/lb56QWDjDUe389xJEOTwRG6sbDV2sOmhPeQfMmeoTw/NR9k3S2urQNSWbtDJzOgaDfUqBPpsNr5pyY4WlVBoPibSrORivsXNhripYDX0i5Feyc8ICf6wX57yj9CxYYHBLkDsCoA0FjCp+2fp8PYXnG5uXgf4+n476Y4Z7An0RmciPMcquNq3B6dwDnWL4nfqqKuQLCNUMRL0DqV0SXzZPgkgsIZxLr0yB7nvLzULHXra+gD4Uchll6sK1f3/IV/7gM8g7csEmPw0Bn7qKki0GISiyie564IkUDyZq8Hsv5uoR+wBhIqfBFqmI8Sbrne9IORzQ4IW74ZDDUryZUza1//QWyZK4OMS9veWFmT/HKuig9Mxv9b1+F3Sv1cZ3f8vP4PqN2oCs1P1PKUIUIvlIUAtqj7dQ8IhtFo/ZcUc+X5eH4ipAnNLiTVecaVtqR7ROwPvrZzQ8PtdeBjDjlEWihqLElsQGvQYUkvUfJkSD45iNZ0X2pxIGdl1R5WSGrk3ZXnx2m12u0S8KEhkI19pOBL3gax6wYc6hhQX/lNA0wclng60xx7HzYOgoLs1m3AexssEYWYX9Dp2FgFn7LCJ26MicrdAz+Tz3Am/i9CBWcx+MJd5AN7urIhuF9iOpDPYnfOiXD6SgnubHjSu1SUCjmRCL+PuXi7P5tGH0riKg3SVixa6m6INkcnoGI7SbnEcss=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(1076003)(4326008)(8676002)(66476007)(508600001)(316002)(2616005)(6666004)(6506007)(52116002)(26005)(6512007)(8936002)(38100700002)(66946007)(966005)(6486002)(86362001)(66556008)(38350700002)(83380400001)(2906002)(36756003)(186003)(5660300002)(7416002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2adikAhGV8oxe0ZiURm5i/Gn0mHnHdUf/zC5MU65y01ggqYPioN77dmVNwB7?=
+ =?us-ascii?Q?bMOKe10Q0dim13n9Sh4DWG0oY6co2pehNLAFG2MvRpVU0rNkdVDHxWf/K8hl?=
+ =?us-ascii?Q?zcYoePZLl+nyXw/H2gWRbLmPElTT15mPAcuZsOM8zFEaBJ/30oxRd609e7/q?=
+ =?us-ascii?Q?8n3018vGdBbSF6/54LE8h5Q7j+E6cjCE1dTtGaN03ItQ1XY3QD9NH+eoPif2?=
+ =?us-ascii?Q?fQ89szLrRu7dqSvAiIHsmDmZ2m5QrrFp1tl7IYnLbd6XnsXi4HsfRr612Qx6?=
+ =?us-ascii?Q?CyxKsq8XlPgFOa72k4Ig1Eo5ox369eSz5EnH1YPn+8GWEdyvul2zsPX5TtiA?=
+ =?us-ascii?Q?eJllEY4i+o6ESYHxIe9NDSWNDAC/nbN0oY0F5vSqfVt78tywYCp/MlOFF7oQ?=
+ =?us-ascii?Q?Pwo8htzsp9mo0Qj4WtpJcTo86YJnvsUDRbMZC59MLBH+b+Ys5i6+Cyx+X92Y?=
+ =?us-ascii?Q?xZVau1l4d/1m2x3L9J78WgkPvuLu+Pn6P+4esp5pL/0nwTshPn+D2dA9scBv?=
+ =?us-ascii?Q?r4hBYkSHNLu/Xwzoy1lG7wMZsMmqOZOky4z3guUOxZmFEMSeliSFRfLxzqwF?=
+ =?us-ascii?Q?ha9SnkqSdqTca+bJknvWzrA3puaRY3Iz0JsiRME6NO2i/gCfA7V1gO1dOXC0?=
+ =?us-ascii?Q?4IcxKfiH1eYgvkSjcTt6arWl1Y0wHx4qUKj5T8uK04Bvq0ZT3OHd1c23s8Ig?=
+ =?us-ascii?Q?pQf1DJkdKxllqwJRlzgseaJh+YrztOVQdk7Jd9sm3p/k0ln4MQkWUr6yfOKv?=
+ =?us-ascii?Q?TKd5jeipnjwBozlgy51PTcsVKfPq9AW9gX4nwwcJXqGg7ghCSgbtAKco1O4J?=
+ =?us-ascii?Q?Rg5qv9o9Zg+gN+DWC2eahkXx3V4PN4QGwqpSXOeaXL6ewU6KDMy3kUrssQtl?=
+ =?us-ascii?Q?130kCKOpeJlo4vALFtmFzG4j53jY5sOkSigCj8W5sSi214+4Wvu+WBL38vVw?=
+ =?us-ascii?Q?hFmWSUJPDw4/xG9G5FHh4znjSM/+tvxHPdmQPyMbMkrvyP9L+jOd2yO/dnxZ?=
+ =?us-ascii?Q?rF+k/2TZVgn8ympRnbl4vM8R0+I/4wLNPryJkC1TZ1Z1h7ufFHOpkuYXRv2+?=
+ =?us-ascii?Q?Fyl6qOY/xqdzv7EarvHnli+Y+UwPfAo36maziaSf5u6d2eV9kJ2RCbKZm5cD?=
+ =?us-ascii?Q?GXBMiY7mZ84yrhNUbKW1yjLBoMs+fdYUUexUHbeVQioS5U9L9JHFLGbgxQW+?=
+ =?us-ascii?Q?Y0sPSPtZpUytkco5QYUIIa8C94p8+SHShagHEUwOaU7nVLwznDS2flqWSKgE?=
+ =?us-ascii?Q?I6cGDWATc2pVxki3ypEpdIQ3h0fyNdYXvNylVj6xNRxUBH5u/fVXI0hhSKCc?=
+ =?us-ascii?Q?AsN9Y43Su9QmOsNwIZL5hVps3RZobZjK50h4KIuEWatzS1uLZbMidrSJbhW2?=
+ =?us-ascii?Q?pWb3w7rpv+I3h8rquSNZMwDrLpa9tUIHq0ePzZQKveMxR2bya8G51dbrMmE3?=
+ =?us-ascii?Q?9zYilKEd4JqJY2bvy27J1YTtUpW68+OJtoBP2iKlnVuTaSPJZUNqm6vnERKb?=
+ =?us-ascii?Q?xkHHBD0kBU9uL6CalCZyrMPC/XRYgS4qRLBQytwrGgvRiRLeN0k6gnCEBHdz?=
+ =?us-ascii?Q?ySU0+3vcY7UQrbWyOurCqI8TlKxBbIbgjcwXo+26yoJDF11MvJlCiI0xL1p+?=
+ =?us-ascii?Q?RqmnyadqMo2uck/6AlL3wbz1SHV/FfDMGb5/3zfXl4vomJtmHmwjhz6NnWMo?=
+ =?us-ascii?Q?5lMVe56xTqn9QWWRwSey7T3lDLR4UFbE+fIHJemdKsu6Njo0bJ6M0B4IjrFQ?=
+ =?us-ascii?Q?dOFkkE/jOQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f98e0aff-bf1f-458c-d261-08da246d901c
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2022 14:37:01.5595
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +ced83iNzAHPDynkA4kYUIB8syqQrNj1H67pzSR1CC7EPmSVpuVuAwgpegFfVFq4O4O6Zz1Qshx6Xyc5akjJDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5449
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -94,78 +118,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Default Designware EDMA just probe remotely at host side.
+This patch allow EDMA driver can probe at EP side.
 
---=-+5TQTceV7kwkEleY1vza
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+1. Clean up patch
+   dmaengine: dw-edma: Detach the private data and chip info structures
+   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+   dmaengine: dw-edma: Change rg_region to reg_base in struct
+   dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
 
-On Fri, 2022-04-22 at 15:28 +0200, Niklas Schnelle wrote:
-> While determining the next PCI function is factored out of
-> pci_scan_slot() into next_fn() the former still handles the first
-> function as a special case. This duplicates the code from the scan loop.
->=20
-> Furthermore the non ARI branch of next_fn() is generally hard to
-> understand and especially the check for multifunction devices is hidden
-> in the handling of NULL devices for non-contiguous multifunction. It
-> also signals that no further functions need to be scanned by returning
-> 0 via wraparound and this is a valid function number.
->=20
-> Improve upon this by transforming the conditions in next_fn() to be
-> easier to understand.
->=20
-> By changing next_fn() to return -ENODEV instead of 0 when there is no
-> next function we can then handle the initial function inside the loop
-> and deduplicate the shared handling. This also makes it more explicit
-> that only function 0 must exist.
->=20
-> No functional change is intended.
->=20
-> Cc: Jan Kiszka <jan.kiszka@siemens.com>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
->  drivers/pci/probe.c | 39 ++++++++++++++++++++-------------------
->  1 file changed, 20 insertions(+), 19 deletions(-)
->=20
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 17a969942d37..2000e9858f12 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2579,8 +2579,7 @@ struct pci_dev *pci_scan_single_device(struct pci_b=
-us *bus, int devfn)
->  }
->  EXPORT_SYMBOL(pci_scan_single_device);
-> =20
-> -static unsigned int next_fn(struct pci_bus *bus, struct pci_dev *dev,
-> -			    unsigned int fn)
-> +static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
->  {
->  	int pos;
->  	u16 cap =3D 0;
-> @@ -2588,24 +2587,27 @@ static unsigned int next_fn(struct pci_bus *bus, =
-struct pci_dev *dev,
-> =20
->  	if (pci_ari_enabled(bus)) {
->  		if (!dev)
-> -			return 0;
-> +			return -ENODEV;
-> +
->=20
+2. Enhance EDMA driver to allow prode eDMA at EP side
+   dmaengine: dw-edma: Add support for chip specific flags
+   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
 
-Sorry the whitespace damage was of course not intended, fixed locally.
+3. Bugs fix at EDMA driver when probe eDMA at EP side
+   dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+   dmaengine: dw-edma: Don't rely on the deprecated "direction" member
 
+4. change pci-epf-test to use EDMA driver to transfer data.
+   PCI: endpoint: Add embedded DMA controller test
 
---=-+5TQTceV7kwkEleY1vza
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+5. Using imx8dxl to do test, but some EP functions still have not
+upstream yet. So below patch show how probe eDMA driver at EP
+controller driver.
+https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
 
------BEGIN PGP SIGNATURE-----
+Frank Li (7):
+  dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+  dmaengine: dw-edma: Detach the private data and chip info structures
+  dmaengine: dw-edma: Change rg_region to reg_base in struct
+    dw_edma_chip
+  dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+    dw_edma_chip
+  dmaengine: dw-edma: Add support for chip specific flags
+  dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+  PCI: endpoint: Add embedded DMA controller test
 
-iHUEABYIAB0WIQSiikNOrnCUNbxSj4j7H22hwInkVgUCYmKvCwAKCRD7H22hwInk
-VuHsAP4kfYFxmlqA+DTbxpABv2slW9y+gv3ZVfhol3ARhACQTAEA7eHZ1cfNp120
-EPzOHKOZgvgB4WoqBZ3lks5BKp7bhQg=
-=esXt
------END PGP SIGNATURE-----
+Serge Semin (2):
+  dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+  dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
+    semantics
 
---=-+5TQTceV7kwkEleY1vza--
+ drivers/dma/dw-edma/dw-edma-core.c            | 139 +++++++++++-------
+ drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
+ drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+ drivers/dma/dw-edma/dw-edma-v0-core.c         |  54 ++++---
+ drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  10 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++--
+ include/linux/dma/edma.h                      |  59 +++++++-
+ 8 files changed, 312 insertions(+), 176 deletions(-)
+
+-- 
+2.35.1
 
