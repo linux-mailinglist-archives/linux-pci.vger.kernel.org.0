@@ -2,79 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43B4F50C073
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 21:37:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E1E650C2A4
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Apr 2022 01:09:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbiDVTcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Apr 2022 15:32:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38170 "EHLO
+        id S232349AbiDVWT2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Apr 2022 18:19:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiDVTcC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 15:32:02 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A3EE1A4326
-        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 12:10:03 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id bu29so15962490lfb.0
-        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 12:10:03 -0700 (PDT)
+        with ESMTP id S233134AbiDVWSY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 18:18:24 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C0E24E904
+        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 14:10:06 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id q22so11054992ljh.10
+        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 14:10:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=YQMZQSjIRuMSjHIc47XNM/07efC1fXHqPz8fJtRCS8k=;
-        b=pbP0vqcqSJiqmC4EYHX7dALEr5BtFi716773PS0DgBtSAuqEuztcUXbhQuQUrGRW4q
-         k1JYxfVNuOnwPKgTh2Nc33FVB5uI8DszrysHizrS9MYjPyEEVRI9FYwQOZ2fmC878Snl
-         eqdq9nX/Lmw9cMk8u3dE7irQIPpQGFu6FQPmFEmbsUAvr6qMetZ5JlHf8jsMAQEWrfDE
-         Yrh8XZUEJzD3fNWMXHFD97J62U9PtbVNx/YT/BChrzlWf9LcgHAP/eLVBcyp0q2kdcSI
-         70Wq1YoXzZI7G5I1ya+pXND99kLNM5kNGdzhl7kIatcY8QQgmzD6hjpU5zjuCLE3nIWe
-         Azkg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4gfbcYi90VHSh39P/bZzk6rssopLYBjtF7uMGAekry8=;
+        b=kmyYVf+hNaqkYZIdCB9r+E6Ffly6R3kC5X/i4Rp2F5t+42EplGPh+eFoyhQwIMHBWk
+         g5oIJuU/OxwalyZBaxh+tioQFgodAfCR+B7oXMca7NfZPUtRzIMq80R2bLiFyKpHRFjY
+         Fg3FF+mFSFOupfzQf30iAj2GmvGwug+zGPywpiDJ/DpVMnzn/KGfSMZMXSqlzEfRo3Km
+         RJFwVvZb5+rI8PyR0plijIU56k812T+utXiBGyveWQwFHIK+MR/aQd8y01B106iBcMwo
+         px2URkrtswH65ZE5YxxyGPVDUE49rpXLSRGC5j+vic8+HFpadGAhAM1Iit5gLiI5DEb3
+         W85Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YQMZQSjIRuMSjHIc47XNM/07efC1fXHqPz8fJtRCS8k=;
-        b=Sgysm6roEg3DeUQ4oj/XDEf0fUtJgf+Ys2l7Wsag3tKG+gy8mmpNZMM/Seqst6T1pr
-         jnoZr0iE8OjZATCSMht2XRJNdZsmCre0SiRAg7pwXiSX2MYvOiHQGKy8IQs3KUnjUZhy
-         EwxlLCZpbaY6W95XwxMdC/RV5YughRWAd8diDVesR/7S774Ja8ZNdIJl6xniDnd7NBrD
-         uujbLB7XNIwIr9D2U0SLPeCIf0xm9+yhP08BnbAVTcpxVmkn0BqGvoXri2TSWfwlmLCs
-         9UXzjnFLXWk+w2/7spxNmXioi0AXvfbSxU11xI9GADGT/T0sZ54scgDx9p6x81ENLP9b
-         hNYQ==
-X-Gm-Message-State: AOAM533a02hL2X86sX6hNs43lVRRlihnmDOb40v1XabM/hiREAqtdoXT
-        VvvVxyaPFhhvsy10HkVYpoPFQw==
-X-Google-Smtp-Source: ABdhPJwFcetF4SV9iA/ayn0H1FWGhLflhOmEFb0amIvByiecthv5UJbDfEhiTZ1cBU0B7Yy5uizseQ==
-X-Received: by 2002:a05:6512:3b9b:b0:471:8e54:2ecf with SMTP id g27-20020a0565123b9b00b004718e542ecfmr4071398lfv.286.1650654573572;
-        Fri, 22 Apr 2022 12:09:33 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id r4-20020a2e5744000000b0024d9e106768sm305118ljd.89.2022.04.22.12.09.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Apr 2022 12:09:32 -0700 (PDT)
-Message-ID: <5149ef96-0cdd-64cc-091f-bc97c04e7835@linaro.org>
-Date:   Fri, 22 Apr 2022 22:09:32 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 3/6] dt-bindings: pci/qcom-pcie: specify reg-names
- explicitly
-Content-Language: en-GB
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
+        bh=4gfbcYi90VHSh39P/bZzk6rssopLYBjtF7uMGAekry8=;
+        b=xDQLkzyJdU2sIMC/Vlj8BrvAdgzAQ41eupNItGtj9bzK0pPk4h8/MKk3MY5GBFYdP8
+         2GtzhfUPUF66CzCU7rR1zEqBViFjO9pC65DCKOQpvouqzjpZAZ898PBwGzgMqFPNUxcZ
+         tjicDl2Et8a+CGNi1KzmtUjBJSQlQUoIPHSlq+46M5NFTHPCJMF75sMChKmuVvRq4yiI
+         vp1b8tpco4T1mwgUzUwXlUxNQgfto7/nTFbwlHpn/x9Hk/KXjNj0izQo3mKnBVgs1D1J
+         RANwsOo6A3zW7ZfIKGhYofLOGfiwrt7NTGImgAtM1zLGj0rea4Sl76FFWjSjuuhZj+zz
+         EA4Q==
+X-Gm-Message-State: AOAM533qqaQI2K6aDeFWfEal8Yha7dplo0r3VQ6T54eBwtb9+//xGZul
+        zDFprm4Q4sI8JymsCiyYOqylNQ==
+X-Google-Smtp-Source: ABdhPJxSfkHVJ07KB73M5FjvXpYMsfOskLEEeoTTneKBUKR2b5pgjXJTWVhoXxyiVJSdh4X/o0t/rg==
+X-Received: by 2002:a2e:94ce:0:b0:24b:3811:b242 with SMTP id r14-20020a2e94ce000000b0024b3811b242mr3898143ljh.197.1650661804677;
+        Fri, 22 Apr 2022 14:10:04 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id 6-20020ac24d46000000b0046bb728b873sm351240lfp.252.2022.04.22.14.10.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Apr 2022 14:10:04 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-References: <20220422114841.1854138-1-dmitry.baryshkov@linaro.org>
- <20220422114841.1854138-4-dmitry.baryshkov@linaro.org>
- <fe9c5691-caa1-79b4-666b-daac8913b546@linaro.org>
- <CAA8EJpr=XE-8fo+99+KjTEffS1jmBibQnbN1T4ZcgkhWCDucpg@mail.gmail.com>
- <338344c8-1812-de27-80f2-df4c2dc3c17b@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <338344c8-1812-de27-80f2-df4c2dc3c17b@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 0/7]  dt-bindings: YAMLify pci/qcom,pcie schema
+Date:   Sat, 23 Apr 2022 00:09:55 +0300
+Message-Id: <20220422211002.2012070-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,74 +71,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22/04/2022 18:51, Krzysztof Kozlowski wrote:
-> On 22/04/2022 17:47, Dmitry Baryshkov wrote:
->> On Fri, 22 Apr 2022 at 15:55, Krzysztof Kozlowski
->> <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>> On 22/04/2022 13:48, Dmitry Baryshkov wrote:
->>>> Instead of specifying the enum of possible reg-names, specify them
->>>> explicitly. This allows us to specify which chipsets need the "atu"
->>>> regions, which do not. Also it clearly describes which platforms
->>>> enumerate PCIe cores using the dbi region and which use parf region for
->>>> that.
->>>>
->>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>> ---
->>>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 96 ++++++++++++++++---
->>>>   1 file changed, 81 insertions(+), 15 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> index 7210057d1511..e78e63ea4b25 100644
->>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> @@ -35,21 +35,6 @@ properties:
->>>>             - qcom,pcie-ipq6018
->>>>         - const: snps,dw-pcie
->>>>
->>>> -  reg:
->>>> -    minItems: 4
->>>> -    maxItems: 5
->>>
->>> This should stay.
->>>
->>>> -
->>>> -  reg-names:
->>>> -    minItems: 4
->>>> -    maxItems: 5
->>>> -    items:
->>>> -      enum:
->>>> -        - parf # Qualcomm specific registers
->>>> -        - dbi # DesignWare PCIe registers
->>>> -        - elbi # External local bus interface registers
->>>> -        - config # PCIe configuration space
->>>> -        - atu # ATU address space (optional)
->>>
->>> Move one of your lists for specific compatibles here and name last
->>> element optional (minItems: 4).
->>>
->>> You will need to fix the order of regs in DTS to match the one defined here.
->>
->> I see your idea. I wanted to be explicit, which platforms need atu and
->> which do not. You'd prefer not to.
-> 
-> Opposite, I wish platforms to be specific, which need atu which not.
-> However I wish the strictly defined, same order for everyone because it
-> looks possible.
+Convert pci/qcom,pcie schema to YAML description. The first patch
+introduces several warnings which are fixed by the other patches in the
+series.
 
-Well, the same order is not possible, since for some devices the first, 
-address-defining reg is "parf", for others it is "dbi". So, there will 
-be two "families" of the devices. Unless we want to change the DT 
-address of the unit.
+Note regarding the snps,dw-pcie compatibility. The Qualcomm PCIe
+controller uses Synopsys PCIe IP core. However it is not just fused to
+the address space. Accessing PCIe registers requires several clocks and
+regulators to be powered up. Thus it can be assumed that the qcom,pcie
+bindings are not fully compatible with the snps,dw-pcie schema.
 
->> Let's probably drop this for now. The bindings proposed in patch 1
->> work for now. I will work on updating reg-names later.
-> 
-> 
-> Best regards,
-> Krzysztof
+Changes since v1 (all kudos to Krzyshtof):
+ - Dropped the reg-names patch. It will be handled separately
+ - Squashed the snps,dw-pcie removal (from schema) into the first patch
+ - Replaced deprecated perst-gpio and wake-gpio with perst-gpios and
+   wake-gpios in the examples and in DT files
+ - Moved common clocks/clock-names, resets/reset-names and power-domains
+   properties to the top level of the schema, leaving only platform
+   specifics in the conditional branches
+ - Dropped iommu-map/iommu-map-mask for now
+ - Added (missed) interrupt-cells, clocks, clock-names, resets,
+   reset-names properties to the required list (resets/reset-names are
+   removed in the next patch, as they are not used on msm8996)
+ - Fixed IRQ flags in the examples
+ - Merged apq8064/ipq8064 into the single condition statement
+ - Added extra empty lines
 
+
+Dmitry Baryshkov (7):
+  dt-bindings: pci/qcom,pcie: convert to YAML
+  dt-bindings: pci/qcom,pcie: resets are not defined for msm8996
+  dt-bindings: pci/qcom,pcie: add schema for sc7280 chipset
+  arm64: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom-*: replace deprecated perst-gpio with perst-gpios
+  arm64: dts: qcom: replace deprecated perst-gpio with perst-gpios
+
+ .../devicetree/bindings/pci/qcom,pcie.txt     | 397 -----------
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 634 ++++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts   |   2 +-
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts    |   2 +-
+ arch/arm/boot/dts/qcom-apq8064.dtsi           |   2 +-
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi |   2 +-
+ .../boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts    |   2 +-
+ arch/arm/boot/dts/qcom-ipq4019.dtsi           |   2 +-
+ arch/arm/boot/dts/qcom-ipq8064.dtsi           |   6 +-
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts   |   6 +-
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts     |   4 +-
+ arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi    |   4 +-
+ .../dts/qcom/msm8996-sony-xperia-tone.dtsi    |   4 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |   6 +-
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |   2 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |   2 +-
+ .../arm64/boot/dts/qcom/sc7280-herobrine.dtsi |   2 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi      |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    |   4 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   4 +-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |   6 +-
+ 21 files changed, 666 insertions(+), 429 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 
 -- 
-With best wishes
-Dmitry
+2.35.1
+
