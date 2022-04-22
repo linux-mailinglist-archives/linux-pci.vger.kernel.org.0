@@ -2,117 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0FCA50B684
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 13:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF54850B6DF
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 14:09:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1447177AbiDVLvr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Apr 2022 07:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52148 "EHLO
+        id S1447312AbiDVML4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Apr 2022 08:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377515AbiDVLvq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 07:51:46 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E7C56411
-        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 04:48:52 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id bq30so13853096lfb.3
-        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 04:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eKXTtjYFcEQgI7OAk+AWDIKyBY3JD30G/f2vgibUKRc=;
-        b=G1RmDSwcEXWaf6CLdiuS25imj1oTo1y3LajZ9q5tiLycYgie5G43xpSReOQXuv6vA7
-         Ys5+PszyP9TnQNtRyAHCozPPuVuX5/LS1ZaU57WDtRIopEJQA0CEs3MHMdNVT1HhxjmC
-         Wm7M50uzjUtoYYHgrKqf/+xiX5LC4YJp8kPG4wOKd6UnQWVlcJw60XWWD8bJW9OM8e3y
-         Qa4+Mm98DBXbqLJiPZPvaw/pAwvn1efJz1rpd4oHw4ojZ/fTyGvDOJQrFOdV1DZ+sb5N
-         bCWOb31kQAgFLCugJqi7IkUOhGzy4oPAUsInDJAuR5HZGCpZQTMXy2hVJbFWxm8SsykR
-         BuHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eKXTtjYFcEQgI7OAk+AWDIKyBY3JD30G/f2vgibUKRc=;
-        b=Sr8wRjrtZEXcyfDizDkH9nw/SxZRqFKob7xZfEy65RLsolI78naWpYqqOT/X4Dan6G
-         +pQl7VrfV7UZfoENhye0iQwKEtmxDXpEa8bcmGhZxoA6O+RzUSnAGsIy4bM7+gj7h+AC
-         QtYIpd/E1WH3xy1/lwD9GsknzKWIRcRAqsY3T3BDX+Uj8bhTkEB06QA9aQRskF3t0Wd2
-         Zwypkz5bRcCbRkLRLqOX9sD9/SOpZJYr38XMtEFRdzMaqAcDc0BBUACF+Hx3vlhq1VtG
-         3ahFkK9gcRGSPfJG5MO5vVtxXjLX7kqx1gDqbxHrObdTmWw1BO290leIsr+xOvoVLOo+
-         axiw==
-X-Gm-Message-State: AOAM532m0Oq13dEHvb2M53N+cGRMKD3us+buPw47Rhm1mYj16QFQyEGV
-        xFt4kOXjtic2naNcqGc9xmpQLw==
-X-Google-Smtp-Source: ABdhPJxJlRycBOH0SGbmLkwM5l8/ghLzeYkLfMVbvmWZHm1gzTpFRsw31SkpUA29oEEGuocfYdwLUA==
-X-Received: by 2002:a05:6512:b08:b0:46b:a876:3009 with SMTP id w8-20020a0565120b0800b0046ba8763009mr2795050lfu.378.1650628130825;
-        Fri, 22 Apr 2022 04:48:50 -0700 (PDT)
-Received: from eriador.lumag.spb.ru ([188.162.65.189])
-        by smtp.gmail.com with ESMTPSA id h7-20020a19ca47000000b0047014ca10f2sm200695lfj.8.2022.04.22.04.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 04:48:50 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        with ESMTP id S1447303AbiDVMLz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 08:11:55 -0400
+Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [IPv6:2001:4b98:dc4:8::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F94F56439;
+        Fri, 22 Apr 2022 05:09:01 -0700 (PDT)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPA id EEDEE24000B;
+        Fri, 22 Apr 2022 12:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1650629336;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pmL6z+0b94SN7KtUORnpGXczTLqkiQjmgEiGXpj9g8g=;
+        b=knEreIWuP1Cz+14fMaLukrcRIyaxiCWzce/e+wImyHspCtNkYkiHxNRU27kQPxMSIGbeqx
+        MXSb6Zfu38otkoMW1qYCDDk+vCK84RcyDHbs5NNpxt4Ly1/yUrmtyo+6qsn4hDYHs62j5y
+        IpV8/b/QGfXyp9bCXA1JUvdcFImIiezMZpK8MthKEvKm93aWalg9IGBNJkQxpQ5yaf8cT8
+        HARCz3Fqy7PrI/wUIxqdtlfiqGxjkVAJC9/y/cQFdBu4/91Mu86qPx8kiaFQYN4Z357gUB
+        ZjxKI+4RZt4RpFDfsE5cJuD5MPjw4sOgqZz/VcBRKs5R3NztM55t8M14/AzUFQ==
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 6/6] arm: dts: qcom: stop using snps,dw-pcie falback
-Date:   Fri, 22 Apr 2022 14:48:41 +0300
-Message-Id: <20220422114841.1854138-7-dmitry.baryshkov@linaro.org>
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v3 0/8] RZN1 USB Host support
+Date:   Fri, 22 Apr 2022 14:08:42 +0200
+Message-Id: <20220422120850.769480-1-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220422114841.1854138-1-dmitry.baryshkov@linaro.org>
-References: <20220422114841.1854138-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Qualcomm PCIe devices are not really compatible with the snps,dw-pcie.
-Unlike the generic IP core, they have special requirements regarding
-enabling clocks, toggling resets, using the PHY, etc.
+Hi,
 
-This is not to mention that platform snps-dw-pcie driver expects to find
-two IRQs declared, while Qualcomm platforms use just one.
+This series add support for the USB Host controllers available on
+RZN1 (r9a06g032) SOC.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8064.dtsi | 2 +-
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+These USB Host controllers are PCI OHCI/EHCI controllers located
+behind a bridge.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index a1c8ae516d21..ec2f98671a8c 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -1370,7 +1370,7 @@ gfx3d1: iommu@7d00000 {
- 		};
- 
- 		pcie: pci@1b500000 {
--			compatible = "qcom,pcie-apq8064", "snps,dw-pcie";
-+			compatible = "qcom,pcie-apq8064";
- 			reg = <0x1b500000 0x1000>,
- 			      <0x1b502000 0x80>,
- 			      <0x1b600000 0x100>,
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index a9d0566a3190..1e814dbe135e 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -412,7 +412,7 @@ restart@4ab000 {
- 		};
- 
- 		pcie0: pci@40000000 {
--			compatible = "qcom,pcie-ipq4019", "snps,dw-pcie";
-+			compatible = "qcom,pcie-ipq4019";
- 			reg =  <0x40000000 0xf1d
- 				0x40000f20 0xa8
- 				0x80000 0x2000
+Regards,
+Herve
+
+Changes v2:
+- Convert bindings to json-schema
+- Update clocks description
+- Remove unneeded '.compatible = "renesas,pci-r9a06g032"'
+
+Changes v3:
+- Remove the unneeded patch that calls clk_bulk_prepare_enable()
+- Rework the device tree binding (conversion from .txt and RZ/N1 support)
+- Use the RZ/N1 SOCs family only in the driver match compatible string.
+- Enable PM and PM_GENERIC_DOMAIN for RZ/N1 and add the missing
+  '#power-domain-cells' in sysctrl node.
+
+Herve Codina (8):
+  dt-bindings: PCI: pci-rcar-gen2: Convert bindings to json-schema
+  dt-bindings: PCI: renesas,pci-rcar-gen2: Add device tree support for
+    r9a06g032
+  PCI: rcar-gen2: Add RZ/N1 SOCs support
+  soc: renesas: rzn1: Select PM and PM_GENERIC_DOMAINS configs
+  ARM: dts: r9a06g032: Add missing '#power-domain-cells'
+  ARM: dts: r9a06g032: Add internal PCI bridge node
+  ARM: dts: r9a06g032: Add USB PHY DT support
+  ARM: dts: r9a06g032: Link the PCI USB devices to the USB PHY
+
+ .../devicetree/bindings/pci/pci-rcar-gen2.txt |  84 --------
+ .../bindings/pci/renesas,pci-rcar-gen2.yaml   | 187 ++++++++++++++++++
+ arch/arm/boot/dts/r9a06g032.dtsi              |  48 +++++
+ drivers/pci/controller/pci-rcar-gen2.c        |   1 +
+ drivers/soc/renesas/Kconfig                   |   2 +
+ 5 files changed, 238 insertions(+), 84 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
+
 -- 
 2.35.1
 
