@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89D4A50B6E5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 14:10:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DEB850B6F1
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 14:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1447409AbiDVMM0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Apr 2022 08:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35258 "EHLO
+        id S1447422AbiDVMM2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Apr 2022 08:12:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1447352AbiDVMMT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 08:12:19 -0400
+        with ESMTP id S1447376AbiDVMMU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 08:12:20 -0400
 Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [IPv6:2001:4b98:dc4:8::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D0556748;
-        Fri, 22 Apr 2022 05:09:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C6D156764;
+        Fri, 22 Apr 2022 05:09:19 -0700 (PDT)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id 917A324000D;
-        Fri, 22 Apr 2022 12:09:14 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPA id 26BAA240008;
+        Fri, 22 Apr 2022 12:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1650629356;
+        t=1650629358;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XbK44txh6IJgMhR0iqajJG2j4qqD92+Fo56+QPX8QcE=;
-        b=KECf+/7Wd1/QIsrDcWeboFzTAPhA3ftm+NTasE4Z5fSj6+sINRsYvSrGWR6RixDs8/XM70
-        3IaF5z9Oufi02jpY30BefsYFEfIBgCuUoL2gp80ome4RqOAM71HSc6YC4m+uT5t8gtHReH
-        2hEPq4n/zzQSUQXvKglbpa0RDf4N/DN9o0ND4h1eCw0Bm4hKTcqyNtJTchjG0WP3mJOPAK
-        c8A2dpMQzklTBaGb2ULx/WqaN8BEHHBrDe6aJLpBXuF64LoyUsdAgD/EMiOI+QCjbgdAPT
-        OlmD0eRyytrjYmf4cy9KGUWe9TsVuDCxMAS3KaFAsuf6fPJ+imNJGBkksEc7+w==
+        bh=eAmUY6poiqDINT9jc4YZdKTXBn0uAtKS+NvA7rwB+54=;
+        b=Z0EW5dCQBO22vHZW458iiLO0S0MdG8ZN4GIV0lExa601vVH9/ukxpHAh3umnFRV1l6KGk9
+        x/PxtEGspIXKgKcS5hC/tyGXAGr37IblUqTRu8Pjvgc9D1Es30PZ5kE8N3P4Hs/W5FvnjP
+        or83R5yOpRzNlJ/mSBSA23jACwtVYdQE2ZNrqAuUsmdPloHB2Jn9/VZg5cf0Ozk3dwTHIa
+        iAf1ZV0bY/EHU3XlS+oT9aABtXo/2AS4PwTrX7LytkErOPAgj5RyIhsSiDeJ8x35HmkagU
+        6Uchj8i62D3uzAumFl61Q7HAEtGkRS6uPl9AjsJSyuxFhn8SBf7aJ/NfNFOLUA==
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -46,9 +46,9 @@ Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v3 7/8] ARM: dts: r9a06g032: Add USB PHY DT support
-Date:   Fri, 22 Apr 2022 14:08:49 +0200
-Message-Id: <20220422120850.769480-8-herve.codina@bootlin.com>
+Subject: [PATCH v3 8/8] ARM: dts: r9a06g032: Link the PCI USB devices to the USB PHY
+Date:   Fri, 22 Apr 2022 14:08:50 +0200
+Message-Id: <20220422120850.769480-9-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220422120850.769480-1-herve.codina@bootlin.com>
 References: <20220422120850.769480-1-herve.codina@bootlin.com>
@@ -63,30 +63,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Define the r9a06g032 generic part of the USB PHY device node.
+Describe the PCI USB devices that are behind the PCI bridge, adding
+necessary links to the USB PHY device.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- arch/arm/boot/dts/r9a06g032.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/r9a06g032.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-index 33581f0c55c4..58af07eb75c9 100644
+index 58af07eb75c9..8dc50c09ac65 100644
 --- a/arch/arm/boot/dts/r9a06g032.dtsi
 +++ b/arch/arm/boot/dts/r9a06g032.dtsi
-@@ -59,6 +59,12 @@ ext_rtc_clk: extrtcclk {
- 		clock-frequency = <0>;
+@@ -246,6 +246,18 @@ pci_usb: pci@40030000 {
+ 			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
+ 					 0x0800 0 0 1 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
+ 					 0x1000 0 0 2 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
++
++			usb@1,0 {
++				reg = <0x800 0 0 0 0>;
++				phys = <&usbphy>;
++				phy-names = "usb";
++			};
++
++			usb@2,0 {
++				reg = <0x1000 0 0 0 0>;
++				phys = <&usbphy>;
++				phy-names = "usb";
++			};
+ 		};
  	};
  
-+	usbphy: usbphy {
-+		#phy-cells = <0>;
-+		compatible = "usb-nop-xceiv";
-+		status = "disabled";
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
 -- 
 2.35.1
 
