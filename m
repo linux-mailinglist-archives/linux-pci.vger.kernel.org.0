@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D774250B4AC
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 12:07:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2941F50B4E3
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 12:21:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356967AbiDVKKL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Apr 2022 06:10:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46786 "EHLO
+        id S1446496AbiDVKXt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Apr 2022 06:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233539AbiDVKKK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 06:10:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391B053737;
-        Fri, 22 Apr 2022 03:07:18 -0700 (PDT)
+        with ESMTP id S235156AbiDVKXt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 06:23:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E4C387BB;
+        Fri, 22 Apr 2022 03:20:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D1B3061E0C;
-        Fri, 22 Apr 2022 10:07:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34217C385A0;
-        Fri, 22 Apr 2022 10:07:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 26ED061E6E;
+        Fri, 22 Apr 2022 10:20:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78215C385A4;
+        Fri, 22 Apr 2022 10:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650622037;
-        bh=0yawq57opbcFXdcIH0roNewMtfcjckMA1vUB5NwgbJU=;
+        s=k20201202; t=1650622855;
+        bh=l8DMuJMxhFg3oWj3P06LfAZsH8ZofBIGfJ+Zsxq3M3c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ahfXL6IIYcRZR0IorZG5eaC6uXloOgECvMsnb33CugSy6kgDAezyHUi+CMUqRBmyk
-         tnS0YM+XdWiHR0vlO1GtvOBczW1aZreIFNJHlBuwwlzRf2Hj28M/Iy+Wo0Dzh120zS
-         fye4SQOST9LaV+NK9zQwmAwG7x29nDCG6rHHElggozoDy/nPstosu52kGykPBpSf04
-         664MwKKMK40tOU3zv2qLfByYqTQRYUL18MXMaVNt+OThd+oXWZUqLsoGbJ45H9q2EV
-         bVJvSp/B9tKvn1dU1Lm8BvGttHm59bVT/u1gHygiOTsMFqIrpiM55gAPbaKo376GoK
-         rnDVPvmnFeq8g==
+        b=tXz8dnNMqZa1305TV+OZTAXZYU1mQErY7qQwDOrLEGInkAMbEIzqrG3b+N/MezYx+
+         nltOcc4WCszV0jlGsgS1jSmOpfo+zKsVzo3QSZyQ+n4wkjVgoZgzp6Ak5D7/TmmJ2X
+         OqlL4P+FUNqoeKRzqD69pPyT0SP9R1wxn9ZML6uohJbjy12uHgUFabDfUL5BAu+U+I
+         3zZf2YNJh6naLmWslpXXKwp13wozl37QHGEhPsNnvVmppbSUoKH9TTGIzMJMBK5JKR
+         ToquwwGVQQmCB9ufrgASyzefmiULPiVKvutwkGXcCs2etHqxKwQ7ihzemQ8w0C2IDF
+         FgVInoYZe6cag==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan@kernel.org>)
-        id 1nhqBy-0002JI-J5; Fri, 22 Apr 2022 12:07:10 +0200
-Date:   Fri, 22 Apr 2022 12:07:10 +0200
+        id 1nhqPA-0002Om-Fm; Fri, 22 Apr 2022 12:20:49 +0200
+Date:   Fri, 22 Apr 2022 12:20:48 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Johan Hovold <johan+linaro@kernel.org>,
@@ -53,16 +53,15 @@ Cc:     Johan Hovold <johan+linaro@kernel.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-phy@lists.infradead.org
-Subject: Re: [PATCH RFC 2/5] arm64: dts: qcom: sc7280: move pipe mux handling
- to phy
-Message-ID: <YmJ+Ti81el2MzsHG@hovoldconsulting.com>
+Subject: Re: [PATCH RFC 1/5] phy: qcom-qmp: add support for pipe clock muxing
+Message-ID: <YmKBgGHtfDcO1Mkg@hovoldconsulting.com>
 References: <20220421102041.17345-1-johan+linaro@kernel.org>
- <20220421102041.17345-3-johan+linaro@kernel.org>
- <55d6e32b-9cf4-384c-1036-1adfb867ece8@linaro.org>
+ <20220421102041.17345-2-johan+linaro@kernel.org>
+ <de4f9514-5132-f208-d43f-4c50afcda203@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <55d6e32b-9cf4-384c-1036-1adfb867ece8@linaro.org>
+In-Reply-To: <de4f9514-5132-f208-d43f-4c50afcda203@linaro.org>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -72,73 +71,100 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 01:59:04PM +0300, Dmitry Baryshkov wrote:
+On Thu, Apr 21, 2022 at 02:08:27PM +0300, Dmitry Baryshkov wrote:
 > On 21/04/2022 13:20, Johan Hovold wrote:
-> > The QMP PHY pipe clock remuxing is part of the PHY, which is both the
-> > producer and the consumer of the pipe clock.
+> > Some QMP PHYs need to remux to their pipe clock input to the pipe clock
+> > output generated by the PHY before powering on the PHY and restore the
+> > default source during power down.
 > > 
-> > Update the PCIe controller and PHY node to reflect the new binding.
+> > Add support for an optional pipe clock mux which will be reparented to
+> > the generated pipe clock before powering on the PHY and restored to the
+> > default reference source on power off.
 > > 
 > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > > ---
-> >   arch/arm64/boot/dts/qcom/sc7280.dtsi | 18 ++++++------------
-> >   1 file changed, 6 insertions(+), 12 deletions(-)
+> >   drivers/phy/qualcomm/phy-qcom-qmp.c | 71 ++++++++++++++++++++++++++---
+> >   1 file changed, 65 insertions(+), 6 deletions(-)
 > > 
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> > index c07765df9303..b3a9630262dc 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> > @@ -1837,11 +1837,7 @@ pcie1: pci@1c08000 {
-> >   					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>,
-> >   					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>;
+> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > index 7d2d1ab061f7..bc6db9670291 100644
+> > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > @@ -3292,6 +3292,8 @@ struct qmp_phy_combo_cfg {
+> >    * @rx2: iomapped memory space for second lane's rx (in dual lane PHYs)
+> >    * @pcs_misc: iomapped memory space for lane's pcs_misc
+> >    * @pipe_clk: pipe clock
+> > + * @pipemux_clk: pipe clock source mux
+> > + * @piperef_clk: pipe clock default reference source
+> >    * @index: lane index
+> >    * @qmp: QMP phy to which this lane belongs
+> >    * @lane_rst: lane's reset controller
+> > @@ -3311,6 +3313,8 @@ struct qmp_phy {
+> >   	void __iomem *rx2;
+> >   	void __iomem *pcs_misc;
+> >   	struct clk *pipe_clk;
+> > +	struct clk *pipemux_clk;
+> > +	struct clk *piperef_clk;
+> >   	unsigned int index;
+> >   	struct qcom_qmp *qmp;
+> >   	struct reset_control *lane_rst;
+> > @@ -3346,6 +3350,7 @@ struct qcom_qmp {
+> >   	void __iomem *dp_com;
 > >   
-> > -			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-> > -				 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
-> > -				 <&pcie1_lane 0>,
-> > -				 <&rpmhcc RPMH_CXO_CLK>,
-> > -				 <&gcc GCC_PCIE_1_AUX_CLK>,
-> > +			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
-> >   				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-> >   				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-> >   				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-> > @@ -1849,11 +1845,7 @@ pcie1: pci@1c08000 {
-> >   				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
-> >   				 <&gcc GCC_DDRSS_PCIE_SF_CLK>;
-> >   
-> > -			clock-names = "pipe",
-> > -				      "pipe_mux",
-> > -				      "phy_pipe",
-> > -				      "ref",
-> > -				      "aux",
-> > +			clock-names = "aux",
-> >   				      "cfg",
-> >   				      "bus_master",
-> >   				      "bus_slave",
-> > @@ -1910,8 +1902,10 @@ pcie1_lane: lanes@1c0e200 {
-> >   				      <0 0x01c0e600 0 0x170>,
-> >   				      <0 0x01c0e800 0 0x200>,
-> >   				      <0 0x01c0ee00 0 0xf4>;
-> > -				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
-> > -				clock-names = "pipe0";
-> > +				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-> > +					 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
-> > +					 <&rpmhcc RPMH_CXO_CLK>;
-> > +				clock-names = "pipe0", "mux", "ref";
+> >   	struct clk_bulk_data *clks;
+> > +	struct clk *pipe_clksrc;
 > 
-> This will not be compatible with earlier DTB files, which was a problem 
-> up to now.
+> Please move this to qmp_phy too.
 
-That depends. The above wasn't added until 5.16 so we may still be able
-to fix it.
+Ok.
+ 
+> > +	/* Get optional pipe clock mux and default reference source clock. */
+> > +	qphy->pipemux_clk = of_clk_get_by_name(np, "mux");
+> > +	if (IS_ERR(qphy->pipemux_clk)) {
+> > +		ret = PTR_ERR(qphy->pipemux_clk);
+> > +		if (ret == -EPROBE_DEFER)
+> > +			return ret;
+> > +
+> > +		qphy->pipemux_clk = NULL;
+> 
+> This makes the driver ignore every possible erorr except -EPROBE_DEFER. 
+> However the driver should behave in quite the oppposite way. Please use 
+> devm_clk_get_optional() instead. It would do that in better way.
 
-The NAK you got from Rob earlier was when you removed clocks that have
-been in the devicetree for several years:
+We'd need to add an optional version of devm_get_clk_from_child() for
+that due to the questionable "lane" child nodes this driver uses.
 
-	https://lore.kernel.org/all/YgQ+tGhLqwUCsTUo@robh.at.kernel.org/
+The above works for an RFC, but testing for -EINVAL and -ENOENT handles
+a few more theoretical errnos until an optional helper is in place.
 
-and would still be needed by older kernels.
+> Not to mention that this code leaks a refcount on the clock.
 
-Worst case, we need to keep both sets for sc7280 (i.e. like we need to
-do with the pipe clocks that have been around for years).
+True, just like the driver has been doing with the pipe clock and lane
+reset since it was merged. I'll fix that up.
+
+> > +	} else {
+> > +		qphy->piperef_clk = of_clk_get_by_name(np, "ref");
+> > +		if (IS_ERR(qphy->piperef_clk)) {
+> > +			ret = PTR_ERR(qphy->piperef_clk);
+> > +			return dev_err_probe(dev, ret,
+> > +					     "failed to get lane%d piperef_clk\n",
+> > +					     id);
+> > +		}
+> > +	}
+> > +
+> 
+> As a second thought.
+> This needs to be more explicit. If the chipset requires the pipe clock 
+> remuxing, we must fail if the clocks were not provided. So depending on 
+> the qmp instance/property the driver should either use devm_clk_get() 
+> (instead of _optional) or skip this block completely.
+
+No, the kernel is not a DT validator (and we have the YAML bindings for
+that now).
+
+> But this will not work with earlier DTS files.
+
+So this is not a problem (but if we really wanted to have the driver
+validate the DT it can be done by updating the compatible strings).
 
 Johan
