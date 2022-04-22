@@ -2,150 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9286450B630
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 13:32:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7155F50B676
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 13:48:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1447073AbiDVLfD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Apr 2022 07:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44440 "EHLO
+        id S1447165AbiDVLvj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Apr 2022 07:51:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232054AbiDVLfD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 07:35:03 -0400
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A7065522E;
-        Fri, 22 Apr 2022 04:32:09 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-2f7b815ac06so6033637b3.3;
-        Fri, 22 Apr 2022 04:32:09 -0700 (PDT)
+        with ESMTP id S1447158AbiDVLvi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 07:51:38 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3767C41FAA
+        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 04:48:45 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id q22so9275099ljh.10
+        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 04:48:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UZT/TykfMBCVk8d3xWr6e8o/MGP9L3Bc57oie76TSkw=;
+        b=W+7yNPwJBCf6O8jxaNp7vTbIrZfvI98OqXcx6TEPsRsqoUsSvp7CrYdAChOPhlCWYw
+         bs6f80ubE3uyH2iKZ0OHKc6iW2cDWLMydzMgJXP1vnoN/QCsEU41UUdCzIK1rawryw0Z
+         VMPcpI4JRVvKEYZ2FUJZHJjOmhmBWvd2TCOQ68P9d1gGHZJfnyX81dKOrX27eYCw0CaD
+         c+e2mLEV/4AK3BstUPbMc3iXkGxMbdwq4XFQMUeeb7DWEIXZ7d/GJYsZy9RBnehEc9m3
+         1qpaxPGcWa3uGaKExa962sH+ZE8DXFPB5A4laq/NZh1Hhwhcf/pn1m2DYgePofeGX/9f
+         kNaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w+N4ZWpI0+PQOfLRjSNdx0PsiQia2QU6bx7J+BbT/zk=;
-        b=lfsNhW4PDKf6BcH/hEM7rRAbiSVnY6Mn6VcWf8U4R8Iv0Jl1I6JSUFdiu0OKi3rrid
-         ugx/1hCPm4vNLUU7fn7/RYZMDSQ9Xfj8pFrPqi7zNHBU7yTiD23y7z/PmZKC++Xeo+/k
-         Ir7dQds8D4OOrEpF8XtYnqcCocO5STLh5+YQqQ3RQbWO9fZdDbJJJBhNIBxINntOF3T4
-         /Xz+gvOVA+eIeJ5iw+wXbUUrmxc5SLbiYlS+SjXQyXfNeEeYoLY9EEBBwrfNNc7ZDYxn
-         n7oY1rFlNlA8AGgXTDDupBKaAfMAgZU6Okp0es+fghHy/hbJ90qItlkIazPq6CB0AEI7
-         c8pw==
-X-Gm-Message-State: AOAM533U2oTl/yCCa4Ua68gESPkVE/m8inv/j+WiiIkfkcAjwR8DiV0f
-        k0sCjvaGeqXftTWyjoGesQ3xlJekRlkDWNpouKc=
-X-Google-Smtp-Source: ABdhPJzhcfd5/sMJ5Hx7nUCRnhMQ1D+lKwdLXzcaE+X5qIcAiNtBqdVjCkuSjmzCcvuBib7Y7rrJT9Xfqt+pbsGl0fA=
-X-Received: by 2002:a81:8843:0:b0:2f1:502c:def2 with SMTP id
- y64-20020a818843000000b002f1502cdef2mr4192351ywf.515.1650627128910; Fri, 22
- Apr 2022 04:32:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UZT/TykfMBCVk8d3xWr6e8o/MGP9L3Bc57oie76TSkw=;
+        b=5Mj9HZYFe1z0zIaeb96Nw2Tvat9CDHAui8ROmZop7L2oicAo5aZElWiyGYUX1otwr/
+         8Vzd+8aQxEWorrqQXgVHpAQEWjQ1WyIJZgrmhomfzCpZP4ZyA6vQgmsWDrv7/pUOxpVl
+         lPWI+KVZeHzQ2S1PGhQipVmgb64HDUpbgfT7qmbuyf2uQD2ob9ur2yqckLUpKfcp0Cgl
+         ylcv8yF4Bci+HucBnvMQmVBNSdPzq6wBcdBpEXs8nd1XTM94XyNvg3m5RbKC+tAp74sO
+         /B2dnQmqsA2L1WETEqVACXRf7IJMiIG1YFGP6rn6Sl5wCsawXiVyvheyGUYJeuPbe220
+         ninw==
+X-Gm-Message-State: AOAM5308u6d3oZrQxY+aziwoI88HJ8cfDm3ClzF9W/jMD8GF7tOVDoXZ
+        cnQhnmjhcP8v13yapxbfXKhFlQ==
+X-Google-Smtp-Source: ABdhPJyppi8DNcV45XTcmBLpWWHvYlql+hZLlqy8Nnn2S80SviDVAFF4inFYXqNrUenHR2Sg97ArUA==
+X-Received: by 2002:a2e:8e93:0:b0:24d:ab45:4053 with SMTP id z19-20020a2e8e93000000b0024dab454053mr2487282ljk.231.1650628123482;
+        Fri, 22 Apr 2022 04:48:43 -0700 (PDT)
+Received: from eriador.lumag.spb.ru ([188.162.65.189])
+        by smtp.gmail.com with ESMTPSA id h7-20020a19ca47000000b0047014ca10f2sm200695lfj.8.2022.04.22.04.48.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Apr 2022 04:48:43 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/6] dt-bindings: YAMLify pci/qcom,pcie schema
+Date:   Fri, 22 Apr 2022 14:48:35 +0300
+Message-Id: <20220422114841.1854138-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220422080404.27724-1-yangyicong@hisilicon.com>
-In-Reply-To: <20220422080404.27724-1-yangyicong@hisilicon.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 22 Apr 2022 13:31:56 +0200
-Message-ID: <CAJZ5v0hMxaVPsy9=w1nKhw1PbN0_8FnpJr5wPM24YZKy=--j9Q@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Make sure the bus bridge powered on when scanning bus
-To:     Yicong Yang <yangyicong@hisilicon.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 10:06 AM Yicong Yang <yangyicong@hisilicon.com> wrote:
->
-> When the bus bridge is runtime suspended, we'll fail to rescan
-> the devices through sysfs as we cannot access the configuration
-> space correctly when the bridge is in D3hot.
-> It can be reproduced like:
->
-> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
-> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
->
-> 0000:80:00.0 is root port and is runtime suspended and we cannot
-> get 0000:81:00.1 after rescan.
+Convert pci/qcom,pcie schema to YAML description. The first patch
+introduces several warnings which are fixed by the other patches in the
+series.
 
-I would rephrase this in the following way:
+Note regarding the snps,dw-pcie compatibility. The Qualcomm PCIe
+controller uses Synopsys PCIe IP core. However it is not just fused to
+the address space. Accessing PCIe registers requires several clocks and
+regulators to be powered up. Thus it can be assumed that the qcom,pcie
+bindings are not fully compatible with the snps,dw-pcie schema.
 
-0000:80:00.0 is a Root Port and it is runtime-suspended, so
-0000:81:00.1 is unreachable after a rescan.
+Dmitry Baryshkov (6):
+  dt-bindings: pci/qcom,pcie: convert to YAML
+  dt-bindings: pci/qcom,pcie: add schema for sc7280 chipset
+  dt-bindings: pci/qcom-pcie: specify reg-names explicitly
+  dt-bindings: pci/qcom,pcie: stop using snps,dw-pcie fallback
+  arm64: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom: stop using snps,dw-pcie falback
 
->
-> Make bridge powered on when scanning the child bus, by adding
+ .../devicetree/bindings/pci/qcom,pcie.txt     | 397 ----------
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 701 ++++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi           |   2 +-
+ arch/arm/boot/dts/qcom-ipq4019.dtsi           |   2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |   6 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   4 +-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |   6 +-
+ 8 files changed, 712 insertions(+), 408 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 
-"Power up the bridge when scanning the child bus and allow it to
-suspend again by adding ..."
+-- 
+2.35.1
 
-> pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
->
-> Cc: Rafael J. Wysocki <rafael@kernel.org>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-
-With the above addressed, please feel free to add
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
-> Change since v3:
-> - retain the pm_runtime_*() calls in pci_scan_bridge_extend() as Rafael points
->   out that it's necessary when the brigde is in D3cold
-> Link: https://lore.kernel.org/linux-pci/20220414123736.34150-1-yangyicong@hisilicon.com/
->
-> Change since v2:
-> - just rebase it on v5.18-rc2
-> Link: https://lore.kernel.org/linux-pci/1601029386-4928-1-git-send-email-yangyicong@hisilicon.com/
->
-> Change since v1:
-> - use an intermediate variable *bridge as suggested
-> - remove the pm_runtime_*() calls in pci_scan_bridge_extend()
-> Link: https://lore.kernel.org/linux-pci/1596022223-4765-1-git-send-email-yangyicong@hisilicon.com/
->
->  drivers/pci/probe.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 17a969942d37..b108e72b6586 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2859,11 +2859,20 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->         unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
->         unsigned int start = bus->busn_res.start;
->         unsigned int devfn, fn, cmax, max = start;
-> +       struct pci_dev *bridge = bus->self;
->         struct pci_dev *dev;
->         int nr_devs;
->
->         dev_dbg(&bus->dev, "scanning bus\n");
->
-> +       /*
-> +        * Make sure the bus bridge is powered on, otherwise we may not be
-> +        * able to scan the devices as we may fail to access the configuration
-> +        * space of subordinates.
-> +        */
-> +       if (bridge)
-> +               pm_runtime_get_sync(&bridge->dev);
-> +
->         /* Go find them, Rover! */
->         for (devfn = 0; devfn < 256; devfn += 8) {
->                 nr_devs = pci_scan_slot(bus, devfn);
-> @@ -2976,6 +2985,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->                 }
->         }
->
-> +       if (bridge)
-> +               pm_runtime_put(&bridge->dev);
-> +
->         /*
->          * We've scanned the bus and so we know all about what's on
->          * the other side of any bridges that may be on this bus plus
-> --
-> 2.24.0
->
