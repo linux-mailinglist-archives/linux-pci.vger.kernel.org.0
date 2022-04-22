@@ -2,59 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF55B50B54A
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 12:38:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3F2C50B566
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 12:41:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1446688AbiDVKjm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Apr 2022 06:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35654 "EHLO
+        id S1446579AbiDVKog (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Apr 2022 06:44:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1446767AbiDVKji (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 06:39:38 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B5D755209
-        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 03:36:39 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id p65so13687252ybp.9
-        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 03:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4zcLXpCy7SBjHdgWPDMiVMAfSv9GgL9PPHTJHm95g50=;
-        b=TlZWQKiYpTuDxECbeXwF6tJvJGze7xTFNWlQD4B2jRWUPyNtSO32rIHpFbOH95KpZM
-         s26ARO9kRKdZUXaE9W+5GAk4Biz6ra37er4NWm9KQgbRawLZiJ4N62G0EB9Mm35+FIPt
-         VE0ppUmp9NOUmWczcYULL7OuU3fw+9RKxiZaP87uqLCwucSFLVBH5/tryhvBmqajwmoC
-         dy7swc3bCfD7Q+nwTUg1K9U7fgliOrmqEuFIfYXlrNb6gziSxffXs9/Ac4SEgpIBkQwS
-         hko+HrFRO72KcUP7tdIswvVyCkaDPDTJTQ4qtmZ3iuoFZRelgls7PmWUdYDm57FAvOFe
-         jd8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4zcLXpCy7SBjHdgWPDMiVMAfSv9GgL9PPHTJHm95g50=;
-        b=RP0ePV4zpNjc7ImiDQXVtfH1QDNPvVgDS2NOuGVDKhpueA6amBv9D8G9ZwCFKv0JuU
-         E1wBgAPFHmi5ZrrJC/CB2oO6lAmJimrsxIPB4Xb4xZTS+LQp8cMa2KUNUJnMyaf8VGon
-         WEoDt8u3sYINpzuGBprZMYiDGNilKCdLeWPSR9gne7VYxADCOiYjt338MOPoaI9FOKet
-         sa9/AdtgfMxZToYhK5G5nTBQDn2OopvduIvzclqIW5Fbjr5efuuYxWgJf7sOjWIWBK+D
-         6/5S6YcIG/Wlpk9MU3BBOFk2Q55yCPAs5DFwiWVV/ZE8w2rRVA1VXcoNFX3TUviqt+md
-         WxUw==
-X-Gm-Message-State: AOAM533El+duGFP5fPwvobFvjghtGX0YxKMt9gcqkskg6YqmLMbXPedH
-        KZ+PatK8E6/pFm7h6ZiIQMa3WsLVkaaxAlPOzxAweQ==
-X-Google-Smtp-Source: ABdhPJz/ZFLFWoRZflZmG53V5oTsUDnKFJ76SRaHRYdcW5SRnzL6Jxlv23hnpEE1sIZLnoSq3Xe3/OdvM8uV/u46Xk0=
-X-Received: by 2002:a25:84c1:0:b0:63e:7733:f95a with SMTP id
- x1-20020a2584c1000000b0063e7733f95amr3370991ybm.234.1650623798744; Fri, 22
- Apr 2022 03:36:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220421102041.17345-1-johan+linaro@kernel.org>
- <20220421102041.17345-3-johan+linaro@kernel.org> <55d6e32b-9cf4-384c-1036-1adfb867ece8@linaro.org>
- <YmJ+Ti81el2MzsHG@hovoldconsulting.com>
-In-Reply-To: <YmJ+Ti81el2MzsHG@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Fri, 22 Apr 2022 13:36:27 +0300
-Message-ID: <CAA8EJpq25Oi8scffT_u9kGN5CYM7nK4Wxh0Kep+eRFg8xngiHg@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/5] arm64: dts: qcom: sc7280: move pipe mux handling
- to phy
-To:     Johan Hovold <johan@kernel.org>
+        with ESMTP id S1446674AbiDVKod (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 06:44:33 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A1A0F4F;
+        Fri, 22 Apr 2022 03:41:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C11A8B82C14;
+        Fri, 22 Apr 2022 10:41:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535B0C385A0;
+        Fri, 22 Apr 2022 10:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650624090;
+        bh=XgeHDscq4XiMKn3nikqVv26WbVAc1uoCYL9IXMXzt9U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U7rO0t94WUjIwU5upicuh6PLMNXEsvt+bhoOcdH63t/Tzz6noC7mBAFjt9F4SVCPC
+         zhPYMjy8XQTXW3nUsCL5rB3dO0Fg6kXiv8NHCiVx0ypj1bfN+V8tQ2rtU1f/zIIjfD
+         vMmhwAZFoLdjZ4Y/NzHy7a56lvCVySO8qfe1tEYlwUdHBK84jbKWYuBlFhyv0S/+Mw
+         3nchJRG4qQh3OUWbPpyMB/EQf2PDXJqXgnz2QALSevvdK3MAySn+EDH665betUemdD
+         8xQGZ2ykaOUOY3DPT/OQt2LmksyDnzOHePeNILOiIA4N/OEK+3UTj2DkmazxBDSmx4
+         qCfJo4EmMsRBw==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1nhqj6-0002YD-2f; Fri, 22 Apr 2022 12:41:24 +0200
+Date:   Fri, 22 Apr 2022 12:41:24 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Johan Hovold <johan+linaro@kernel.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -65,15 +47,23 @@ Cc:     Johan Hovold <johan+linaro@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Stanimir Varbanov <svarbanov@mm-sol.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Prasad Malisetty <quic_pmaliset@quicinc.com>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-phy@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Subject: Re: [PATCH RFC 1/5] phy: qcom-qmp: add support for pipe clock muxing
+Message-ID: <YmKGVP5T/ijPvV+g@hovoldconsulting.com>
+References: <20220421102041.17345-1-johan+linaro@kernel.org>
+ <20220421102041.17345-2-johan+linaro@kernel.org>
+ <f4cfc1b3-2a85-f948-ff2c-27588cbe2210@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4cfc1b3-2a85-f948-ff2c-27588cbe2210@linaro.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,85 +71,82 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 22 Apr 2022 at 13:07, Johan Hovold <johan@kernel.org> wrote:
->
-> On Thu, Apr 21, 2022 at 01:59:04PM +0300, Dmitry Baryshkov wrote:
-> > On 21/04/2022 13:20, Johan Hovold wrote:
-> > > The QMP PHY pipe clock remuxing is part of the PHY, which is both the
-> > > producer and the consumer of the pipe clock.
-> > >
-> > > Update the PCIe controller and PHY node to reflect the new binding.
-> > >
-> > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > > ---
-> > >   arch/arm64/boot/dts/qcom/sc7280.dtsi | 18 ++++++------------
-> > >   1 file changed, 6 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> > > index c07765df9303..b3a9630262dc 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> > > @@ -1837,11 +1837,7 @@ pcie1: pci@1c08000 {
-> > >                                     <0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>,
-> > >                                     <0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>;
-> > >
-> > > -                   clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-> > > -                            <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
-> > > -                            <&pcie1_lane 0>,
-> > > -                            <&rpmhcc RPMH_CXO_CLK>,
-> > > -                            <&gcc GCC_PCIE_1_AUX_CLK>,
-> > > +                   clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
-> > >                              <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-> > >                              <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-> > >                              <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-> > > @@ -1849,11 +1845,7 @@ pcie1: pci@1c08000 {
-> > >                              <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
-> > >                              <&gcc GCC_DDRSS_PCIE_SF_CLK>;
-> > >
-> > > -                   clock-names = "pipe",
-> > > -                                 "pipe_mux",
-> > > -                                 "phy_pipe",
-> > > -                                 "ref",
-> > > -                                 "aux",
-> > > +                   clock-names = "aux",
-> > >                                   "cfg",
-> > >                                   "bus_master",
-> > >                                   "bus_slave",
-> > > @@ -1910,8 +1902,10 @@ pcie1_lane: lanes@1c0e200 {
-> > >                                   <0 0x01c0e600 0 0x170>,
-> > >                                   <0 0x01c0e800 0 0x200>,
-> > >                                   <0 0x01c0ee00 0 0xf4>;
-> > > -                           clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
-> > > -                           clock-names = "pipe0";
-> > > +                           clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-> > > +                                    <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
-> > > +                                    <&rpmhcc RPMH_CXO_CLK>;
-> > > +                           clock-names = "pipe0", "mux", "ref";
-> >
-> > This will not be compatible with earlier DTB files, which was a problem
-> > up to now.
->
-> That depends. The above wasn't added until 5.16 so we may still be able
-> to fix it.
+On Thu, Apr 21, 2022 at 02:36:05PM +0300, Dmitry Baryshkov wrote:
+> On 21/04/2022 13:20, Johan Hovold wrote:
+> > Some QMP PHYs need to remux to their pipe clock input to the pipe clock
+> > output generated by the PHY before powering on the PHY and restore the
+> > default source during power down.
+> > 
+> > Add support for an optional pipe clock mux which will be reparented to
+> > the generated pipe clock before powering on the PHY and restored to the
+> > default reference source on power off.
+> > 
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
+ 
+> > +static int qcom_qmp_phy_pipe_clk_enable(struct qmp_phy *qphy)
+> > +{
+> > +	struct qcom_qmp *qmp = qphy->qmp;
+> > +	int ret;
+> > +
+> > +	ret = clk_set_parent(qphy->pipemux_clk, qmp->pipe_clksrc);
+> > +	if (ret)
+> > +		dev_err(qmp->dev, "failed to reparent pipe clock: %d\n", ret);
+> > +
+> > +
+> > +	ret = clk_prepare_enable(qphy->pipe_clk);
+> > +	if (ret) {
+> > +		dev_err(qmp->dev, "failed to enable pipe clock: %d\n", ret);
+> > +		goto err_restore_parent;
+> > +	}
+> 
+> So, what you do here is you manually set the parent of 
+> GCC_PCIE_1_PIPE_CLK_SRC to PHY pipe clock right before enabling 
+> GCC_PCIE_1_PIPE_CLK and set it back to XO after disabling 
+> GCC_PCIE_1_PIPE_CLK.
+> 
+> My proposal is doing exactly the same, but doing that automatically 
+> through the clock infrastructure. After removing pipe_clock handling 
+> from pcie driver itself, we can be sure that nobody is playing dirty 
+> tricks around the pipe_clock.
 
-That would depend on Rob/Krzyshtof. But the whole process should be described.
-The driver can nod depend on the clocks being there.
+Yes, the end result is similar, but I believe handling it explicitly in
+the driver is preferred for a number of reasons that I've already
+mentioned. Not least because the mux needs to be updated when the PHY is
+powered on, not when the GCC pipe clock is ungated.
 
->
-> The NAK you got from Rob earlier was when you removed clocks that have
-> been in the devicetree for several years:
->
->         https://lore.kernel.org/all/YgQ+tGhLqwUCsTUo@robh.at.kernel.org/
->
-> and would still be needed by older kernels.
->
-> Worst case, we need to keep both sets for sc7280 (i.e. like we need to
-> do with the pipe clocks that have been around for years).
->
-> Johan
+In practise, powering on the PHY and ungating the clock happen to
+coincide in time because only the PHY driver will use the GCC pipe
+clock, but conceptually they are unrelated (and as the GDSC hang shows,
+something in the system appears to be ungating the clock while the PHY
+is powered off).
 
+The QMP PHY driver implementation is much more straight forward and
+easier to reason about than having the mux implementation spread out
+over multiple clock drivers where it's not clear at all what is really
+going on or why (and even debugfs will give you a false view of the
+clock tree state).
 
+> > +
+> > +	return 0;
+> > +
+> > +err_restore_parent:
+> > +	clk_set_parent(qphy->pipemux_clk, qphy->piperef_clk);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void qcom_qmp_phy_pipe_clk_disable(struct qmp_phy *qphy)
+> > +{
+> > +	struct qcom_qmp *qmp = qphy->qmp;
+> > +	int ret;
+> > +
+> > +	clk_disable_unprepare(qphy->pipe_clk);
+> > +
+> > +	ret = clk_set_parent(qphy->pipemux_clk, qphy->piperef_clk);
+> > +	if (ret)
+> > +		dev_err(qmp->dev, "failed to reparent pipe clock: %d\n", ret);
+> > +}
+> > +
 
--- 
-With best wishes
-Dmitry
+Johan
