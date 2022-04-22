@@ -2,49 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 167F650B4A5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 12:06:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D774250B4AC
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Apr 2022 12:07:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1446196AbiDVKJK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Apr 2022 06:09:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46360 "EHLO
+        id S1356967AbiDVKKL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Apr 2022 06:10:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1446197AbiDVKJF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 06:09:05 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5882853737;
-        Fri, 22 Apr 2022 03:06:12 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06DF01477;
-        Fri, 22 Apr 2022 03:06:12 -0700 (PDT)
-Received: from lpieralisi (unknown [10.57.12.153])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50E6B3F766;
-        Fri, 22 Apr 2022 03:06:10 -0700 (PDT)
-Date:   Fri, 22 Apr 2022 11:06:04 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        with ESMTP id S233539AbiDVKKK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Apr 2022 06:10:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391B053737;
+        Fri, 22 Apr 2022 03:07:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D1B3061E0C;
+        Fri, 22 Apr 2022 10:07:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34217C385A0;
+        Fri, 22 Apr 2022 10:07:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650622037;
+        bh=0yawq57opbcFXdcIH0roNewMtfcjckMA1vUB5NwgbJU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ahfXL6IIYcRZR0IorZG5eaC6uXloOgECvMsnb33CugSy6kgDAezyHUi+CMUqRBmyk
+         tnS0YM+XdWiHR0vlO1GtvOBczW1aZreIFNJHlBuwwlzRf2Hj28M/Iy+Wo0Dzh120zS
+         fye4SQOST9LaV+NK9zQwmAwG7x29nDCG6rHHElggozoDy/nPstosu52kGykPBpSf04
+         664MwKKMK40tOU3zv2qLfByYqTQRYUL18MXMaVNt+OThd+oXWZUqLsoGbJ45H9q2EV
+         bVJvSp/B9tKvn1dU1Lm8BvGttHm59bVT/u1gHygiOTsMFqIrpiM55gAPbaKo376GoK
+         rnDVPvmnFeq8g==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1nhqBy-0002JI-J5; Fri, 22 Apr 2022 12:07:10 +0200
+Date:   Fri, 22 Apr 2022 12:07:10 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] PCI: Add function for parsing
- 'slot-power-limit-milliwatt' DT property
-Message-ID: <20220422100604.GA500@lpieralisi>
-References: <20220412094946.27069-4-pali@kernel.org>
- <20220413202433.GA688099@bhelgaas>
- <20220421201413.hwpfby4i5tvhwxqv@pali>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: Re: [PATCH RFC 2/5] arm64: dts: qcom: sc7280: move pipe mux handling
+ to phy
+Message-ID: <YmJ+Ti81el2MzsHG@hovoldconsulting.com>
+References: <20220421102041.17345-1-johan+linaro@kernel.org>
+ <20220421102041.17345-3-johan+linaro@kernel.org>
+ <55d6e32b-9cf4-384c-1036-1adfb867ece8@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220421201413.hwpfby4i5tvhwxqv@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+In-Reply-To: <55d6e32b-9cf4-384c-1036-1adfb867ece8@linaro.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,162 +72,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 10:14:13PM +0200, Pali Rohár wrote:
-> On Wednesday 13 April 2022 15:24:33 Bjorn Helgaas wrote:
-> > On Tue, Apr 12, 2022 at 11:49:45AM +0200, Pali Rohár wrote:
-> > > Add function of_pci_get_slot_power_limit(), which parses the
-> > > 'slot-power-limit-milliwatt' DT property, returning the value in
-> > > milliwatts and in format ready for the PCIe Slot Capabilities Register.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > Signed-off-by: Marek Behún <kabel@kernel.org>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
+On Thu, Apr 21, 2022 at 01:59:04PM +0300, Dmitry Baryshkov wrote:
+> On 21/04/2022 13:20, Johan Hovold wrote:
+> > The QMP PHY pipe clock remuxing is part of the PHY, which is both the
+> > producer and the consumer of the pipe clock.
 > > 
-> > Looks good to me!  Thank you!
+> > Update the PCIe controller and PHY node to reflect the new binding.
 > > 
-> > Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
+> >   arch/arm64/boot/dts/qcom/sc7280.dtsi | 18 ++++++------------
+> >   1 file changed, 6 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> > index c07765df9303..b3a9630262dc 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> > @@ -1837,11 +1837,7 @@ pcie1: pci@1c08000 {
+> >   					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>,
+> >   					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>;
+> >   
+> > -			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
+> > -				 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
+> > -				 <&pcie1_lane 0>,
+> > -				 <&rpmhcc RPMH_CXO_CLK>,
+> > -				 <&gcc GCC_PCIE_1_AUX_CLK>,
+> > +			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
+> >   				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+> >   				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
+> >   				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
+> > @@ -1849,11 +1845,7 @@ pcie1: pci@1c08000 {
+> >   				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
+> >   				 <&gcc GCC_DDRSS_PCIE_SF_CLK>;
+> >   
+> > -			clock-names = "pipe",
+> > -				      "pipe_mux",
+> > -				      "phy_pipe",
+> > -				      "ref",
+> > -				      "aux",
+> > +			clock-names = "aux",
+> >   				      "cfg",
+> >   				      "bus_master",
+> >   				      "bus_slave",
+> > @@ -1910,8 +1902,10 @@ pcie1_lane: lanes@1c0e200 {
+> >   				      <0 0x01c0e600 0 0x170>,
+> >   				      <0 0x01c0e800 0 0x200>,
+> >   				      <0 0x01c0ee00 0 0xf4>;
+> > -				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
+> > -				clock-names = "pipe0";
+> > +				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
+> > +					 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
+> > +					 <&rpmhcc RPMH_CXO_CLK>;
+> > +				clock-names = "pipe0", "mux", "ref";
 > 
-> Perfect!
-> 
-> Lorenzo, is this patch series OK now for merging?
+> This will not be compatible with earlier DTB files, which was a problem 
+> up to now.
 
-Yes it is. I have a related question (ie how to check whether a binding
-has been accepted into the DT schema) but I will sort that out with
-Rob.
+That depends. The above wasn't added until 5.16 so we may still be able
+to fix it.
 
-Thanks,
-Lorenzo
+The NAK you got from Rob earlier was when you removed clocks that have
+been in the devicetree for several years:
 
-> > > ---
-> > > Changes in v4:
-> > > * Set 239 W when DT slot-power-limit-milliwatt is between 239 W and 250 W
-> > > * Fix returning power limit value
-> > > Changes in v3:
-> > > * Set 600 W when DT slot-power-limit-milliwatt > 600 W
-> > > Changes in v2:
-> > > * Added support for PCIe 6.0 slot power limit encodings
-> > > * Round down slot power limit value
-> > > ---
-> > >  drivers/pci/of.c  | 70 +++++++++++++++++++++++++++++++++++++++++++++++
-> > >  drivers/pci/pci.h | 15 ++++++++++
-> > >  2 files changed, 85 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > index cb2e8351c2cc..6c1b81304665 100644
-> > > --- a/drivers/pci/of.c
-> > > +++ b/drivers/pci/of.c
-> > > @@ -633,3 +633,73 @@ int of_pci_get_max_link_speed(struct device_node *node)
-> > >  	return max_link_speed;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
-> > > +
-> > > +/**
-> > > + * of_pci_get_slot_power_limit - Parses the "slot-power-limit-milliwatt"
-> > > + *				 property.
-> > > + *
-> > > + * @node: device tree node with the slot power limit information
-> > > + * @slot_power_limit_value: pointer where the value should be stored in PCIe
-> > > + *			    Slot Capabilities Register format
-> > > + * @slot_power_limit_scale: pointer where the scale should be stored in PCIe
-> > > + *			    Slot Capabilities Register format
-> > > + *
-> > > + * Returns the slot power limit in milliwatts and if @slot_power_limit_value
-> > > + * and @slot_power_limit_scale pointers are non-NULL, fills in the value and
-> > > + * scale in format used by PCIe Slot Capabilities Register.
-> > > + *
-> > > + * If the property is not found or is invalid, returns 0.
-> > > + */
-> > > +u32 of_pci_get_slot_power_limit(struct device_node *node,
-> > > +				u8 *slot_power_limit_value,
-> > > +				u8 *slot_power_limit_scale)
-> > > +{
-> > > +	u32 slot_power_limit_mw;
-> > > +	u8 value, scale;
-> > > +
-> > > +	if (of_property_read_u32(node, "slot-power-limit-milliwatt",
-> > > +				 &slot_power_limit_mw))
-> > > +		slot_power_limit_mw = 0;
-> > > +
-> > > +	/* Calculate Slot Power Limit Value and Slot Power Limit Scale */
-> > > +	if (slot_power_limit_mw == 0) {
-> > > +		value = 0x00;
-> > > +		scale = 0;
-> > > +	} else if (slot_power_limit_mw <= 255) {
-> > > +		value = slot_power_limit_mw;
-> > > +		scale = 3;
-> > > +	} else if (slot_power_limit_mw <= 255*10) {
-> > > +		value = slot_power_limit_mw / 10;
-> > > +		scale = 2;
-> > > +		slot_power_limit_mw = slot_power_limit_mw / 10 * 10;
-> > > +	} else if (slot_power_limit_mw <= 255*100) {
-> > > +		value = slot_power_limit_mw / 100;
-> > > +		scale = 1;
-> > > +		slot_power_limit_mw = slot_power_limit_mw / 100 * 100;
-> > > +	} else if (slot_power_limit_mw <= 239*1000) {
-> > > +		value = slot_power_limit_mw / 1000;
-> > > +		scale = 0;
-> > > +		slot_power_limit_mw = slot_power_limit_mw / 1000 * 1000;
-> > > +	} else if (slot_power_limit_mw < 250*1000) {
-> > > +		value = 0xEF;
-> > > +		scale = 0;
-> > > +		slot_power_limit_mw = 239*1000;
-> > > +	} else if (slot_power_limit_mw <= 600*1000) {
-> > > +		value = 0xF0 + (slot_power_limit_mw / 1000 - 250) / 25;
-> > > +		scale = 0;
-> > > +		slot_power_limit_mw = slot_power_limit_mw / (1000*25) * (1000*25);
-> > > +	} else {
-> > > +		value = 0xFE;
-> > > +		scale = 0;
-> > > +		slot_power_limit_mw = 600*1000;
-> > > +	}
-> > > +
-> > > +	if (slot_power_limit_value)
-> > > +		*slot_power_limit_value = value;
-> > > +
-> > > +	if (slot_power_limit_scale)
-> > > +		*slot_power_limit_scale = scale;
-> > > +
-> > > +	return slot_power_limit_mw;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > index 3d60cabde1a1..e10cdec6c56e 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -627,6 +627,9 @@ struct device_node;
-> > >  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
-> > >  int of_get_pci_domain_nr(struct device_node *node);
-> > >  int of_pci_get_max_link_speed(struct device_node *node);
-> > > +u32 of_pci_get_slot_power_limit(struct device_node *node,
-> > > +				u8 *slot_power_limit_value,
-> > > +				u8 *slot_power_limit_scale);
-> > >  void pci_set_of_node(struct pci_dev *dev);
-> > >  void pci_release_of_node(struct pci_dev *dev);
-> > >  void pci_set_bus_of_node(struct pci_bus *bus);
-> > > @@ -653,6 +656,18 @@ of_pci_get_max_link_speed(struct device_node *node)
-> > >  	return -EINVAL;
-> > >  }
-> > >  
-> > > +static inline u32
-> > > +of_pci_get_slot_power_limit(struct device_node *node,
-> > > +			    u8 *slot_power_limit_value,
-> > > +			    u8 *slot_power_limit_scale)
-> > > +{
-> > > +	if (slot_power_limit_value)
-> > > +		*slot_power_limit_value = 0;
-> > > +	if (slot_power_limit_scale)
-> > > +		*slot_power_limit_scale = 0;
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static inline void pci_set_of_node(struct pci_dev *dev) { }
-> > >  static inline void pci_release_of_node(struct pci_dev *dev) { }
-> > >  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
-> > > -- 
-> > > 2.20.1
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+	https://lore.kernel.org/all/YgQ+tGhLqwUCsTUo@robh.at.kernel.org/
+
+and would still be needed by older kernels.
+
+Worst case, we need to keep both sets for sc7280 (i.e. like we need to
+do with the pipe clocks that have been around for years).
+
+Johan
