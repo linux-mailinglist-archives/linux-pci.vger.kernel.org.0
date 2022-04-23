@@ -2,66 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88BF550CBB8
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Apr 2022 17:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 244F150CBBA
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Apr 2022 17:24:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233168AbiDWP1G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 23 Apr 2022 11:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52736 "EHLO
+        id S233376AbiDWP1I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 23 Apr 2022 11:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233080AbiDWP1F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Apr 2022 11:27:05 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8790B35AA0;
-        Sat, 23 Apr 2022 08:24:08 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id fu34so7552340qtb.8;
-        Sat, 23 Apr 2022 08:24:08 -0700 (PDT)
+        with ESMTP id S233127AbiDWP1G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Apr 2022 11:27:06 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F8435DDF;
+        Sat, 23 Apr 2022 08:24:09 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id v2so889476qto.6;
+        Sat, 23 Apr 2022 08:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qApPth3uca4YCOXE8IxpOrj2EUsmdDr5GnAY2ojHbqA=;
-        b=jT5T19XUlZImZsxepXMQHfoKPuZVtaOZC/R5qD2iqW3XVATpJ9hsq6eIygV3lhEhgq
-         xAmYd4uuERjXV9meMpHb1qL2ng2BQlK4VX6mhACH8fOp/d0sv5BN7VUusVSdWv7OPkb/
-         b5kwiCVUq+dxY9757TW6UYXDFaBG9Mxaq2pHanAdp2l0NbJrOb8VKCv8K/KZOmI+pS6V
-         tM/ESZFs7eMoOLii5BwCk0eZmYFyOl7GOl5KjFBgkCPJDBmoD3U5U8Q4Dos7QDHPZ9Fv
-         klLZkg8oXEQ9WQeQfFuib8PnyY6J6BKsSK2+ibHx+BdDWVLZpN2HTIe/cukwchmImI//
-         vMcw==
+        bh=/vlE3jklwJQd6ueFtiorc64wDSZ8+k3Jyqs3OwGaYUY=;
+        b=UBnggtjfHwcWpvPs+QnS6XEae3Sasnm+H/xeBR9JPKtayJ7uYgzHfKAbKmnXOfFTn2
+         PvdCdS64Odc13wkddhNe/6CK3a46xT5ijDkvTYm93iNk6S0EQL0Ckke6ySZFfbFVWq3h
+         JB2fRQi0Cp6+d5Dc2jxelEfpT/CB6edvOKmOMS8FravcHZbPanbqRwKUN0AiqOuq14eA
+         zV3fClSKFlBMRoDogHA+qWthT4EACXfTqAy2oWcecvDJQxQBluqi6+zlGV36ox6Gk6bG
+         SE25zfwhunBWVHoJPWO2olCyF/D9Z6Jt+IuQ4ImwCnau5gdQi5XicLqecSvazd8scrvU
+         AaqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qApPth3uca4YCOXE8IxpOrj2EUsmdDr5GnAY2ojHbqA=;
-        b=omhrPJXrUbz67sIWN9RzzTjJVDaCdM0ezDAlu3fD9c1RJb5d7kaM0o5VmDoxInJ7VC
-         hztcMcD6JcJsB6Zw6TCOysuuFwDBJ1i9ilw8ZCm/Z5zRyGK78IY3JQuch6vwhdPoo/64
-         E+oOJQImJQ/XbYAj/ExPPov5woau6ZlFNsOU02m1HBL8eQ9vKFDC3JqqvROpDkWh+b3E
-         FoMUU2vsw3rAYpRR4CnC8Yj+dN5VCx0QOGf3LIBEV53vOix7CuiRVtYewoKwsfzAuxm3
-         pQ117ymRF1Q+Y3JHTd6WQxxTF/2yoLKjkBbITdY7NbW/oSVBMfjUjx6X8s0+GtHu033T
-         L0Jw==
-X-Gm-Message-State: AOAM5330nbD1fvgB/Wx2OpPfRUIw200/JN/IkcFtRYAJOKK1RpEKD8KW
-        OgKqryPNPzg93qbt7ojypPs=
-X-Google-Smtp-Source: ABdhPJysNVDryTlHRk1oqkOTgUVFuZHGVHZHhjbXCXeLJ74+14HrNmnrWXj5OMA7eI7vuyYCsyd9RQ==
-X-Received: by 2002:ac8:5fd5:0:b0:2f3:610c:ca02 with SMTP id k21-20020ac85fd5000000b002f3610cca02mr1943412qta.74.1650727447713;
-        Sat, 23 Apr 2022 08:24:07 -0700 (PDT)
+        bh=/vlE3jklwJQd6ueFtiorc64wDSZ8+k3Jyqs3OwGaYUY=;
+        b=gCOte/PVunxQCJbCot8sW+gpsTNJoJhXWuYhB0bYKERqXVmjT1uFNmCvB617F4SOAD
+         d2XnliryPOqUvxARVv1oueoQjkgq351pGESh5iP3h7WGDicj72V5jiYiJwFLDHdRUZtR
+         4VuK8E75BQ1KVgI8/Wy0b+FxhdbvpuFjTpPjU9d6kOzNNgrabCEe1gpIfx/iSYTKoP0t
+         yqqP6mKK9t6OrayyP3Xp7MBs/2KJe12TC8YcsdWCDJyIvrRU5ebzQFlKOBB7C0IlGyA9
+         qCTk66nhPWDzO1Xg52Zj5K2xs7tn2ADMTAi8AmQ+ZNT/xgNj9g8Mc7ibxUngRPUsn4zL
+         hQew==
+X-Gm-Message-State: AOAM532Y0VJM8bKwQIjPBZyRwBqOctocYeLJurWkRTONXoJXr5zJXihg
+        +HztWCfmJUNQOvYX0DQzpMo=
+X-Google-Smtp-Source: ABdhPJy33XCCwrH6FQYKtkPcqctQEtJ/D+MhJRTW/U1KLGtthMgsWI0Tpo3VWe07SZePvCe/6l4sZg==
+X-Received: by 2002:ac8:598b:0:b0:2f3:371f:7c2 with SMTP id e11-20020ac8598b000000b002f3371f07c2mr6644462qte.485.1650727448784;
+        Sat, 23 Apr 2022 08:24:08 -0700 (PDT)
 Received: from master-x64.sparksnet ([2601:153:980:85b1::10])
-        by smtp.gmail.com with ESMTPSA id y6-20020a05622a004600b002f33ba280cbsm3184165qtw.8.2022.04.23.08.24.07
+        by smtp.gmail.com with ESMTPSA id y6-20020a05622a004600b002f33ba280cbsm3184165qtw.8.2022.04.23.08.24.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Apr 2022 08:24:07 -0700 (PDT)
+        Sat, 23 Apr 2022 08:24:08 -0700 (PDT)
 From:   Peter Geis <pgwipeout@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>
+        Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     linux-rockchip@lists.infradead.org,
         Peter Geis <pgwipeout@gmail.com>,
         Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: [PATCH v8 1/5] dt-bindings: pci: remove fallback from Rockchip DesignWare binding
-Date:   Sat, 23 Apr 2022 11:23:59 -0400
-Message-Id: <20220423152403.1681222-2-pgwipeout@gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 2/5] PCI: dwc: rockchip: reset core at driver probe
+Date:   Sat, 23 Apr 2022 11:24:00 -0400
+Message-Id: <20220423152403.1681222-3-pgwipeout@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220423152403.1681222-1-pgwipeout@gmail.com>
 References: <20220423152403.1681222-1-pgwipeout@gmail.com>
@@ -77,52 +77,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The snps,dw-pcie binds to a standalone driver.
-It is not fully compatible with the Rockchip implementation and causes a
-hang if it binds to the device.
+The PCIe controller is in an unknown state at driver probe. This can
+lead to undesireable effects when the driver attempts to configure the
+controller.
 
-Remove this binding as a valid fallback.
+Prevent issues in the future by resetting the core during probe.
 
 Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/pci/rockchip-dw-pcie.yaml    | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 22 +++++++------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 142bbe577763..bc0a9d1db750 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -19,20 +19,10 @@ description: |+
- allOf:
-   - $ref: /schemas/pci/pci-bus.yaml#
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index c9b341e55cbb..d67ed811e752 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -152,7 +152,13 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
+ 	if (IS_ERR(rockchip->rst_gpio))
+ 		return PTR_ERR(rockchip->rst_gpio);
  
--# We need a select here so we don't match all nodes with 'snps,dw-pcie'
--select:
--  properties:
--    compatible:
--      contains:
--        const: rockchip,rk3568-pcie
--  required:
--    - compatible
+-	return 0;
++	rockchip->rst = devm_reset_control_array_get_exclusive(&pdev->dev);
++	if (IS_ERR(rockchip->rst))
++		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
++				     "failed to get reset lines\n");
++
++	return reset_control_assert(rockchip->rst);
++
+ }
+ 
+ static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
+@@ -182,18 +188,6 @@ static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
+ 	phy_power_off(rockchip->phy);
+ }
+ 
+-static int rockchip_pcie_reset_control_release(struct rockchip_pcie *rockchip)
+-{
+-	struct device *dev = rockchip->pci.dev;
 -
- properties:
-   compatible:
-     items:
-       - const: rockchip,rk3568-pcie
--      - const: snps,dw-pcie
+-	rockchip->rst = devm_reset_control_array_get_exclusive(dev);
+-	if (IS_ERR(rockchip->rst))
+-		return dev_err_probe(dev, PTR_ERR(rockchip->rst),
+-				     "failed to get reset lines\n");
+-
+-	return reset_control_deassert(rockchip->rst);
+-}
+-
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.link_up = rockchip_pcie_link_up,
+ 	.start_link = rockchip_pcie_start_link,
+@@ -241,7 +235,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto disable_regulator;
  
-   reg:
-     items:
-@@ -110,7 +100,7 @@ examples:
-         #size-cells = <2>;
+-	ret = rockchip_pcie_reset_control_release(rockchip);
++	ret = reset_control_deassert(rockchip->rst);
+ 	if (ret)
+ 		goto deinit_phy;
  
-         pcie3x2: pcie@fe280000 {
--            compatible = "rockchip,rk3568-pcie", "snps,dw-pcie";
-+            compatible = "rockchip,rk3568-pcie";
-             reg = <0x3 0xc0800000 0x0 0x390000>,
-                   <0x0 0xfe280000 0x0 0x10000>,
-                   <0x3 0x80000000 0x0 0x100000>;
 -- 
 2.25.1
 
