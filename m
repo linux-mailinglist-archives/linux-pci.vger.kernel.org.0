@@ -2,63 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F12E450C7A8
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Apr 2022 07:43:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5695350C7B4
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Apr 2022 07:49:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232060AbiDWFqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 23 Apr 2022 01:46:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55346 "EHLO
+        id S233444AbiDWFwu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 23 Apr 2022 01:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230025AbiDWFqd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Apr 2022 01:46:33 -0400
+        with ESMTP id S233500AbiDWFwi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Apr 2022 01:52:38 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6D864716;
-        Fri, 22 Apr 2022 22:43:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE6923E3E4
+        for <linux-pci@vger.kernel.org>; Fri, 22 Apr 2022 22:49:42 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 7331568AFE; Sat, 23 Apr 2022 07:43:32 +0200 (CEST)
-Date:   Sat, 23 Apr 2022 07:43:31 +0200
+        id 5A9EE68AFE; Sat, 23 Apr 2022 07:49:38 +0200 (CEST)
+Date:   Sat, 23 Apr 2022 07:49:38 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     "brookxu.cn" <brookxu.cn@gmail.com>
-Cc:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, tglx@linutronix.de, frederic@kernel.org
-Subject: Re: [RFC PATCH] nvme-pci: allowed to modify IRQ affinity in
- latency sensitive scenarios
-Message-ID: <20220423054331.GA17823@lst.de>
-References: <1650625106-30272-1-git-send-email-brookxu.cn@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     hch@lst.de, linux-nvme@lists.infradead.org, sagi@grimberg.me,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>, kbusch@kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] nvme/pci: default to simple suspend
+Message-ID: <20220423054938.GA17945@lst.de>
+References: <20220201165006.3074615-1-kbusch@kernel.org> <20220411135850.GA42637@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1650625106-30272-1-git-send-email-brookxu.cn@gmail.com>
+In-Reply-To: <20220411135850.GA42637@thinkpad>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 06:58:26PM +0800, brookxu.cn wrote:
-> From: Chunguang Xu <brookxu@tencent.com>
-> 
-> In most cases, setting the affinity through managed IRQ is a better
-> choice. But in some scenarios that use isolcpus, such as DPDK, because
-> managed IRQ does not distinguish between housekeeping CPU and isolated
-> CPU when selecting CPU, this will cause IO interrupts triggered by
-> housekeeping CPU to be routed to isolated CPU, which will affect the
-> tasks running on isolated CPU. commit 11ea68f553e2 ("genirq,
-> sched/isolation: Isolate from handling managed interrupts") tries to
-> fix this in a best effort way. However, in a real production environment,
-> latency-sensitive business needs more of a deterministic result. So,
-> similar to the mpt3sas driver, we might can add a module parameter
-> smp_affinity_enable to the Nvme driver.
+On Mon, Apr 11, 2022 at 07:28:50PM +0530, Manivannan Sadhasivam wrote:
+> PCI core only accepts the quirks for the host devices that could be passed onto
+> the PCI device drivers like this one. In this case, this is not a quirk but
+> actually an aggressive power saving feature (atleast on the Qcom platforms).
+> Moreover, adding a flag to the PCI bus will make it applicable to all the
+> child devices of the RC/bridge and that would be wrong.
 
-This kind of boilerplate code in random drivers is not sustainable.
+As you correctly state it is not a device quirk.  It describes the
+power management applied by the platform.  So we do need to communicate
+it through the core PM and/or PCI code.  Please work with the relevant
+maintainers.
 
-I really think we need to handle this whole housekeeping CPU case in
-common code.  That is designed CPUs as housekeeping vs non-housekeeping
-and let the generic affinity assignment code deal with it and solve
-it for all drivers using the proper affinity masks instead of having
-random slighty overrides in all drivers anyone ever wants to use in
-such a system.
+> In our case, the same power saving feature is not applicable to all PCI devices
+> like WLAN for an example.
+
+This doesn't make sense.  Your plaform can't know what device is connected
+to a given root port / slot.  So you might have different policies per
+slot, but that has nothing to do with the Linux drivers for given devices.
