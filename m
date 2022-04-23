@@ -2,327 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F09A50C9DC
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Apr 2022 14:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BAAA50CA10
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Apr 2022 14:49:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235398AbiDWMXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 23 Apr 2022 08:23:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44958 "EHLO
+        id S235460AbiDWMwG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 23 Apr 2022 08:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235352AbiDWMXp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Apr 2022 08:23:45 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB2181A07F
-        for <linux-pci@vger.kernel.org>; Sat, 23 Apr 2022 05:20:48 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id p8so10452281pfh.8
-        for <linux-pci@vger.kernel.org>; Sat, 23 Apr 2022 05:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oslXbqre1NW7GvGLD8bXnKIy4kjgtTw6N3s1B3zv7HA=;
-        b=EVo+WGGNHQGy2OiX6psv2OUAKpNn948+u8q1efdf8UTJpUHSqQ3T1N1KnmUZmMn0Fu
-         OUztqeZWM5EKB4ySY3R2G72n0iJuv87In61ay70TQCHWYL/KkRwomtcx3fHYLonjMknm
-         GJQuUEvC6MAXq//yehKO1l20anlCwrerYC2Uq44fnWY/kDBJ8cimWOVhw8/g1NOhLP1z
-         BURxvoniQ+pd3CbC9jv6o+XhLrxtZbj8ExtVUNRbIKIV/1dlxJ8ORlg/h6vL5ZCZN5Uw
-         A2VOCYU2AmuSEA1HYgs6fF16vsBCciRFiRksDwUMDSjEjJcqbv46p7kIvJO+DAnTxIkD
-         rWXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oslXbqre1NW7GvGLD8bXnKIy4kjgtTw6N3s1B3zv7HA=;
-        b=Yw1K4IPs6Pe6v2K2tk4xODDRqIB1Y8tZRU9RFTpNmG4j/qI+JvW7g7oEDttHIwClkI
-         np7M5A+TzSSIkvABiSEQhFpPdOBywadXh360lEEPnaWlKPt7oQP6M2m2zjkJbQfFCU+s
-         xxt6rnFDrNaB1gXK+ZPnzDfHYgjdpQQwnAgiSxi7+sVIztFun6idcvohY0NisbUeV+4f
-         iEYg4/uimujfP7K18uXuojA9qvBwD+Sav+AdHpAlwhuPWpMkxNRQVVU+plnIBMgJkPqf
-         0NfdxWbZeYjZiXbsVZeYYGC4YirWdqU/cgw9uVTRMwgUAZ/jCkdcahbmVCdWv+YZuWDC
-         IloA==
-X-Gm-Message-State: AOAM532chzQ5RaPbFc8OPA/ojp6qYnQ9mWAr9jawMVAS0gSl8CHSRd/Q
-        3byjQPkbumZuFukCpQM9vMeM
-X-Google-Smtp-Source: ABdhPJxWqne99UgUcPKGXFc6v3kvhqe4IdEhMMI4ljBLdpxARwu5b8pBz02EfACxzMTar+f5G1fhkw==
-X-Received: by 2002:a63:d44c:0:b0:380:8c48:e040 with SMTP id i12-20020a63d44c000000b003808c48e040mr8036600pgj.14.1650716448075;
-        Sat, 23 Apr 2022 05:20:48 -0700 (PDT)
-Received: from thinkpad ([117.207.28.196])
-        by smtp.gmail.com with ESMTPSA id bb1-20020a17090b008100b001cd4989feb9sm2197270pjb.5.2022.04.23.05.20.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Apr 2022 05:20:47 -0700 (PDT)
-Date:   Sat, 23 Apr 2022 17:50:40 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        fancer.lancer@gmail.com, lznuaa@gmail.com, helgaas@kernel.org,
-        vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com,
-        Sergey.Semin@baikalelectronics.ru
-Subject: Re: [PATCH v9 9/9] PCI: endpoint: Add embedded DMA controller test
-Message-ID: <20220423122040.GJ374560@thinkpad>
-References: <20220422143643.727871-1-Frank.Li@nxp.com>
- <20220422143643.727871-10-Frank.Li@nxp.com>
+        with ESMTP id S234974AbiDWMwF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Apr 2022 08:52:05 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2081.outbound.protection.outlook.com [40.107.244.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D384F1A82D;
+        Sat, 23 Apr 2022 05:49:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R330jNaAtkZ6WpvIVfXh/8qvdexOEp9PkaqYxliVvpEzLMEwzmzSdYsPWQMhSlxbv/lpoAhwDUWOvRNgaOjl8Pl3FXcHCSxn8wha93InlYDcmL2yKwGTUfGI4NsfkNIRDBLi4o1d+wfEE6Ns/W3QH2vWvttcXQCWYBh10EuY0PMjJUCb+wgpaMRJFgvBybRtBBHyv1M9MqGLzwcQk+rKFsd3HMxnwOSYv0GRUkVtEmxfj8FnFBGNuDZKILWOwF0i2RC1hjRrkMgeD42pO7wAeseU6PRfIInnZBd9r/E2SV7TmGPYViR/IrkkFyDLDUl0LGRi4xQ89IXALLK9QEVZfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZTSc/AQ+PQCUuR104LNTU5MGKut8AGJpqoDYM65l76A=;
+ b=f8mQclWBznbDXBlMRMTbO1Rc0+cHauO7CeyjiUALLiLwq70ILAbRPPcZW0vRkaOq1vzJihB3SFsklwh3GbJDm0rkXB8E9xiKH9Xg43dTuGr+zoOZX6j4vSKcfHf72kwd6PoVR10P2czCOH/pdCQdqlL0SPeQifgrOG7Tcgw9Ymobbt8mP3eQey+T27CKmF80QdYFS3t/2mKf4yFv89JE/MRP2h6wjsjbzpTMZ/Z69WmutYHW3ufoX7cFrO1mkT0JA6YLNISyuwIz7URlFG5XiKiWa/RahB+hwKNvAp/U4P3NjtPKNeL2Wc7yCqYoXOfNxIZYnlWdnP+oILWm4Jf4vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.236) smtp.rcpttodomain=ti.com smtp.mailfrom=nvidia.com; dmarc=pass
+ (p=reject sp=reject pct=100) action=none header.from=nvidia.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZTSc/AQ+PQCUuR104LNTU5MGKut8AGJpqoDYM65l76A=;
+ b=OJNu1e3kgWe0JbVCZz9ERHJRsZ9phSys0IjXpug6Iio0irHcSN7yJ9g3Qq1XZkT0rMCZL53FdQRDta5GwOIm65hplyI/JXOi+hcIu+z4KJRUyVjkWydban5vt1MQiVdNR22QhfAxKxURgkbg+tyy5/+bG88qYR4+6Vn/fG+fP7cUfb8rfiZkuwF5z7KTFIN5WW4QhDuigTfYCS6vjQDeOXeycQwiwjEBigdMSFh4BOfPfVv6mPMt6mXAI1qmGASrdQreSE9+Q44OQ7RTesgOZ8YDxLGoxIEibCf6v4GeV7GppPm+fsm8kqWbVpxeap7RlZs4y77KdDN3A9f+THzIgg==
+Received: from BN9P221CA0004.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::12)
+ by DM8PR12MB5493.namprd12.prod.outlook.com (2603:10b6:8:3d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Sat, 23 Apr
+ 2022 12:49:07 +0000
+Received: from BN8NAM11FT050.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:10a:cafe::1a) by BN9P221CA0004.outlook.office365.com
+ (2603:10b6:408:10a::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.13 via Frontend
+ Transport; Sat, 23 Apr 2022 12:49:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.236)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.236 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.236; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (12.22.5.236) by
+ BN8NAM11FT050.mail.protection.outlook.com (10.13.177.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.5186.14 via Frontend Transport; Sat, 23 Apr 2022 12:49:06 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ DRHQMAIL109.nvidia.com (10.27.9.19) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.32; Sat, 23 Apr 2022 12:49:06 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Sat, 23 Apr 2022 05:49:05 -0700
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.986.22 via Frontend
+ Transport; Sat, 23 Apr 2022 05:49:00 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>
+CC:     <kishon@ti.com>, <vkoul@kernel.org>, <kw@linux.com>,
+        <krzk@kernel.org>, <p.zabel@pengutronix.de>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V2 0/8] PCI: tegra: Add Tegra234 PCIe support
+Date:   Sat, 23 Apr 2022 18:18:50 +0530
+Message-ID: <20220423124858.25946-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220422143643.727871-10-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 477b2588-ff8d-4561-6e45-08da2527a783
+X-MS-TrafficTypeDiagnostic: DM8PR12MB5493:EE_
+X-Microsoft-Antispam-PRVS: <DM8PR12MB549396645C1AA0DA5E1DC2A8B8F69@DM8PR12MB5493.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: W4gmupU7LbknwZEcHYdDCkrX2Sf8F71j2c+3uuOi6c9U3Nbf8gcnLA9lFdV2pjQJNyih7XMVarjTOg/p6/+idQW+t6cvUVtcqfWLuELuL4zZTWZqfkeAYdO6rBiZtoIDR9lWVfh2yPii3AUhG56kCCOJR6ms64K091UubVBn38bvhDYQx661EXtyqXJirnanlJizag5tuFydubIKoQiFWPXJUbUUTl+4S066NLP+UguFRBpGp+VNUnfuIgsLj/pQpA7wIOBSRGMD0ud8qhUishfV/SpwNz5pZXps38Dsoi3Oqbs4Iw7TTHJOHjbRIsgepoVg4PxF5XCWnRKcumlxv9fdMpmDvZObStxEIKwgJ7JyCePS5/mhxrFCGVf1aLO3SdXpFlt5Dp1ARg5pebxo/C6qoUcGoNO+duWeeMOiydjmmDqP32I+Pix4dF47UgD2i45+yla6EwhdTQsNz1hj+Vp0vSYA0BKABk6jBs4qjYXnwVX/RHKFu/lCWzw2PTs9z8nIjlN9rAYjudyRfB5pG/M5RxLOe/zYkDhKDhqC9lqd8UdtUBrk3wAQEeiPA9bIhjQpM1F3v42EqTnATfpOjau7M/1ACDbVmX14DU0vR/PkSBLYCxw8vC7V6mXM/RsaFz5TrjsZmmpVuh9Ug2KuVPqpv1DRsDI1m7NkT8NXOKK9oTEBMNG420PFlU0YbM+lijRWUD4rOOTdEjV+lnZYbg==
+X-Forefront-Antispam-Report: CIP:12.22.5.236;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(36860700001)(356005)(81166007)(5660300002)(40460700003)(6636002)(54906003)(110136005)(8936002)(508600001)(7416002)(4326008)(336012)(8676002)(70206006)(70586007)(316002)(26005)(186003)(2906002)(1076003)(2616005)(83380400001)(426003)(47076005)(6666004)(7696005)(82310400005)(86362001)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2022 12:49:06.8988
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 477b2588-ff8d-4561-6e45-08da2527a783
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.236];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT050.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR12MB5493
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 09:36:43AM -0500, Frank Li wrote:
-> Designware provided eDMA support in controller. This enabled use
-> this eDMA controller to transfer data.
-> 
-> The whole flow align with standard DMA usage module
-> 
-> 1. Using dma_request_channel() and filter function to find correct
-> RX and TX Channel.
-> 2. dmaengine_slave_config() config remote side physcial address.
-> 3. using dmaengine_prep_slave_single() create transfer descriptor
-> 4. tx_submit();
-> 5. dma_async_issue_pending();
-> 
-> Tested at i.MX8DXL platform.
-> 
-> root@imx8qmmek:~# /usr/bin/pcitest -d -w
-> WRITE ( 102400 bytes):          OKAY
-> root@imx8qmmek:~# /usr/bin/pcitest -d -r
-> READ ( 102400 bytes):           OKAY
-> 
-> WRITE => Size: 102400 bytes DMA: YES  Time: 0.000180145 seconds Rate: 555108 KB/s
-> READ => Size: 102400 bytes  DMA: YES  Time: 0.000194397 seconds Rate: 514411 KB/s
-> 
-> READ => Size: 102400 bytes  DMA: NO   Time: 0.013532597 seconds Rate: 7389 KB/s
-> WRITE => Size: 102400 bytes DMA: NO   Time: 0.000857090 seconds Rate: 116673 KB/s
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Tegra234 has a total of 11 PCIe controllers based on Synopsys DesignWare core.
+There are three Universal PHY (UPHY) blocks (viz. HSIO, NVHS and GBE) with
+each block supporting 8 lanes respectively. Controllers:0~4 use UPHY lanes
+from HSIO block, Controllers:5,6 use UPHY lanes from NVHS block and
+Controllers:7~10 use UPHY lanes from GBE block. Lane mapping in each block
+is controlled in XBAR module by BPMP-FW. Since PCIe core has PIPE interface,
+a glue module called PIPE-to-UPHY (P2U) is used to connect each UPHY lane
+(applicable to all three UPHY bricks i.e. HSIO/NVHS/GBE) to PCIe controller.
+This patch series
+- Adds support for Tegra234 in the existing P2U PHY driver
+- Adds support for Tegra234 in the existing PCIe platform controller driver
+- Adds device tree nodes for all PCIe controllers
+- Enables nodes applicable to P3737-0000 platform
 
-Patch looks good to me but I cannot test it on my platform. So,
+Testing done on P3737-0000 platform
+- PCIe link is up with on-board Broadcom WiFi controller
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+- PCIe link is up with an NVMe drive connected to M.2 Key-M slot and its
+  functionality is verified
 
-Thanks,
-Mani
+- PCIe link is up with a variety of cards (NICs and USB3.0 add-on cards)
+  connected to CEM slot and their functionality is verified
 
-> ---
-> Change from v6 to v9:
->  - none
-> Change from v5 to v6:
->  - change subject
-> Change from v4 to v5:
->  - none
-> Change from v3 to v4:
->  - reverse Xmas tree order
->  - local -> dma_local
->  - change error message
->  - IS_ERR -> IS_ERR_OR_NULL
->  - check return value of dmaengine_slave_config()
-> Change from v1 to v2:
->  - none
-> 
->  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
->  1 file changed, 98 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 90d84d3bc868f..f26afd02f3a86 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -52,9 +52,11 @@ struct pci_epf_test {
->  	enum pci_barno		test_reg_bar;
->  	size_t			msix_table_offset;
->  	struct delayed_work	cmd_handler;
-> -	struct dma_chan		*dma_chan;
-> +	struct dma_chan		*dma_chan_tx;
-> +	struct dma_chan		*dma_chan_rx;
->  	struct completion	transfer_complete;
->  	bool			dma_supported;
-> +	bool			dma_private;
->  	const struct pci_epc_features *epc_features;
->  };
->  
-> @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
->   */
->  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  				      dma_addr_t dma_dst, dma_addr_t dma_src,
-> -				      size_t len)
-> +				      size_t len, dma_addr_t dma_remote,
-> +				      enum dma_transfer_direction dir)
->  {
-> +	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> +	dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
->  	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> -	struct dma_chan *chan = epf_test->dma_chan;
->  	struct pci_epf *epf = epf_test->epf;
->  	struct dma_async_tx_descriptor *tx;
-> +	struct dma_slave_config sconf = {};
->  	struct device *dev = &epf->dev;
->  	dma_cookie_t cookie;
->  	int ret;
-> @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  		return -EINVAL;
->  	}
->  
-> -	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +	if (epf_test->dma_private) {
-> +		sconf.direction = dir;
-> +		if (dir == DMA_MEM_TO_DEV)
-> +			sconf.dst_addr = dma_remote;
-> +		else
-> +			sconf.src_addr = dma_remote;
-> +
-> +		if (dmaengine_slave_config(chan, &sconf)) {
-> +			dev_err(dev, "DMA slave config fail\n");
-> +			return -EIO;
-> +		}
-> +		tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> +	} else {
-> +		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +	}
-> +
->  	if (!tx) {
->  		dev_err(dev, "Failed to prepare DMA memcpy\n");
->  		return -EIO;
-> @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  	return 0;
->  }
->  
-> +struct epf_dma_filter {
-> +	struct device *dev;
-> +	u32 dma_mask;
-> +};
-> +
-> +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> +{
-> +	struct epf_dma_filter *filter = node;
-> +	struct dma_slave_caps caps;
-> +
-> +	memset(&caps, 0, sizeof(caps));
-> +	dma_get_slave_caps(chan, &caps);
-> +
-> +	return chan->device->dev == filter->dev
-> +		&& (filter->dma_mask & caps.directions);
-> +}
-> +
->  /**
->   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
->   * @epf_test: the EPF test device that performs data transfer operation
-> @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->  {
->  	struct pci_epf *epf = epf_test->epf;
->  	struct device *dev = &epf->dev;
-> +	struct epf_dma_filter filter;
->  	struct dma_chan *dma_chan;
->  	dma_cap_mask_t mask;
->  	int ret;
->  
-> +	filter.dev = epf->epc->dev.parent;
-> +	filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> +
-> +	dma_cap_zero(mask);
-> +	dma_cap_set(DMA_SLAVE, mask);
-> +	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +	if (IS_ERR_OR_NULL(dma_chan)) {
-> +		dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> +		goto fail_back_tx;
-> +	}
-> +
-> +	epf_test->dma_chan_rx = dma_chan;
-> +
-> +	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> +	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +
-> +	if (IS_ERR(dma_chan)) {
-> +		dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> +		goto fail_back_rx;
-> +	}
-> +
-> +	epf_test->dma_chan_tx = dma_chan;
-> +	epf_test->dma_private = true;
-> +
-> +	init_completion(&epf_test->transfer_complete);
-> +
-> +	return 0;
-> +
-> +fail_back_rx:
-> +	dma_release_channel(epf_test->dma_chan_rx);
-> +	epf_test->dma_chan_tx = NULL;
-> +
-> +fail_back_tx:
->  	dma_cap_zero(mask);
->  	dma_cap_set(DMA_MEMCPY, mask);
->  
-> @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->  	}
->  	init_completion(&epf_test->transfer_complete);
->  
-> -	epf_test->dma_chan = dma_chan;
-> +	epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
->  
->  	return 0;
->  }
-> @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
->  	if (!epf_test->dma_supported)
->  		return;
->  
-> -	dma_release_channel(epf_test->dma_chan);
-> -	epf_test->dma_chan = NULL;
-> +	dma_release_channel(epf_test->dma_chan_tx);
-> +	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +		epf_test->dma_chan_tx = NULL;
-> +		epf_test->dma_chan_rx = NULL;
-> +		return;
-> +	}
-> +
-> +	dma_release_channel(epf_test->dma_chan_rx);
-> +	epf_test->dma_chan_rx = NULL;
-> +
-> +	return;
->  }
->  
->  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->  			goto err_map_addr;
->  		}
->  
-> +		if (epf_test->dma_private) {
-> +			dev_err(dev, "Cannot transfer data using DMA\n");
-> +			ret = -EINVAL;
-> +			goto err_map_addr;
-> +		}
-> +
->  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -						 src_phys_addr, reg->size);
-> +						 src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  	} else {
-> @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
->  
->  		ktime_get_ts64(&start);
->  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -						 phys_addr, reg->size);
-> +						 phys_addr, reg->size,
-> +						 reg->src_addr, DMA_DEV_TO_MEM);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  		ktime_get_ts64(&end);
-> @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
->  		}
->  
->  		ktime_get_ts64(&start);
-> +
->  		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> -						 src_phys_addr, reg->size);
-> +						 src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  		ktime_get_ts64(&end);
-> -- 
-> 2.35.1
-> 
+V2:
+* Dropped 3 patches that add clocks & resets IDs, power-domain IDs and
+  memory IDs for PCIe controllers as the patches are already available
+  in linux-next
+* Based on Bjorn's review comment, reverted the commit b57256918399 ("PCI:
+  tegra194: Rename tegra_pcie_dw to tegra194_pcie") and pushed it as a
+  separate patch before adding support for T234 in the existing driver
+* Addressed review comments from Rob for the other changes
+
+Vidya Sagar (8):
+  dt-bindings: PHY: P2U: Add support for Tegra234 P2U block
+  dt-bindings: PCI: tegra: Add device tree support for Tegra234
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra234 DT
+  arm64: tegra: Enable PCIe slots in P3737-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support for Tegra234
+  PCI: Disable MSI for Tegra234 root ports
+  Revert "PCI: tegra194: Rename tegra_pcie_dw to tegra194_pcie"
+  PCI: tegra: Add Tegra234 PCIe support
+
+ .../bindings/pci/nvidia,tegra194-pcie.txt     | 104 ++-
+ .../bindings/phy/phy-tegra194-p2u.yaml        |  17 +-
+ .../nvidia/tegra234-p3737-0000+p3701-0000.dts |  25 +
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi      | 775 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 622 +++++++++-----
+ drivers/pci/quirks.c                          |  13 +-
+ drivers/phy/tegra/phy-tegra194-p2u.c          |  48 +-
+ 7 files changed, 1396 insertions(+), 208 deletions(-)
+
+-- 
+2.17.1
+
