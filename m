@@ -2,220 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AAD450CDD9
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Apr 2022 23:48:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3237C50CE58
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Apr 2022 04:09:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237232AbiDWVvB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 23 Apr 2022 17:51:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
+        id S237574AbiDXCMH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 23 Apr 2022 22:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231400AbiDWVvB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Apr 2022 17:51:01 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5177F49CB2;
-        Sat, 23 Apr 2022 14:48:03 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d15so4171268plh.2;
-        Sat, 23 Apr 2022 14:48:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K4NfFwngIGFN34es3zHoUzHbcKpJBQTkkPjZbDshugo=;
-        b=OlfmOL4nL28ljfEtqqNToCj5Qx4pbIor+ftAFwvDzzR4eygBhiamdl53NWx393n6IW
-         V9O5hsB6XMIQBXkjBLRURzDkKhXXRHyEuA0k0BMxqSBxuh+k2SZncWho3X7LQdqS/s2w
-         gPGNbSdnSMi0W2SwQsR0TEcYgdrd1gVh/SLjCIrVnT9nbtT8+W1C7UkjiQaFyZZp1ccz
-         JWTkZDEfy27W4Cozh27c5iOC5Hoxhyl+LJG/d2ThMRgPWSYf24/JeoJYA0Pbl1zBImbj
-         pQJFVCrK7qW5O39SlO38vBE6m2fwGQwaXnTECNbT39FCDuu2R5Zi/B8Zmu1UeBmEjkdJ
-         /QfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K4NfFwngIGFN34es3zHoUzHbcKpJBQTkkPjZbDshugo=;
-        b=t6EucL65+wdKS8COLIqqyF6EdHtVrrQZccM/LakfsIRZXg//b/bup7zGM5Y75XwR3Q
-         wwCfoo6bp6+7DW0zKxwGaETB+BBg09Y9ee+cOVz6zO7HceRpupVpQhYe2z4C1N0uTm6p
-         Tnlpa6dePqLPQpEM7XO+H4j0/L1HrtCOd2gUOIZiIUxEfVMHbJHB2awruz21SOH/TrSi
-         5De9wNd3j8YoZhnmszuerSni+pzfNC5prjHEwflFakEO1BxFM3l8cOVH9XLR2cB/mliT
-         Hz74W26xV2LxjIeHggD64+ZSeGOFFJ454cQjM5AoM8GBjOyJ//nV2x8QJWnEsuw7OiUp
-         crXQ==
-X-Gm-Message-State: AOAM5330OKEo/QutsjwsvRng4//snq6wk8clNV9uB3thgGq4U6fNZe4P
-        f3HUCRsQQqhuPh2lqH01Pk8V2ADeCc7sryF5EqJJibQjGkLu38f6
-X-Google-Smtp-Source: ABdhPJyTyUvU2jsaC1ExZ35msqlQfYImbcQfls3Z9c3VxpKTWwWr74xmMnsove/jZcJDUJYwdRVCRmxjAMX0coVDQnA=
-X-Received: by 2002:a17:902:e881:b0:159:828:b6dd with SMTP id
- w1-20020a170902e88100b001590828b6ddmr11260002plg.127.1650750482655; Sat, 23
- Apr 2022 14:48:02 -0700 (PDT)
+        with ESMTP id S237375AbiDXCMG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Apr 2022 22:12:06 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A50ED1AAB70;
+        Sat, 23 Apr 2022 19:09:05 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4KmBKZ15BgzCs1t;
+        Sun, 24 Apr 2022 10:04:34 +0800 (CST)
+Received: from localhost.localdomain (10.67.164.66) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sun, 24 Apr 2022 10:09:03 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <yangyicong@hisilicon.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v5] PCI: Make sure the bus bridge powered on when scanning bus
+Date:   Sun, 24 Apr 2022 10:07:10 +0800
+Message-ID: <20220424020710.17589-1-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-References: <20220422143643.727871-1-Frank.Li@nxp.com> <20220422143643.727871-5-Frank.Li@nxp.com>
- <20220423121218.GG374560@thinkpad>
-In-Reply-To: <20220423121218.GG374560@thinkpad>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Sat, 23 Apr 2022 16:47:51 -0500
-Message-ID: <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
-Subject: Re: [PATCH v9 4/9] dmaengine: dw-edma: Rename wr(rd)_ch_cnt to
- ll_wr(rd)_cnt in struct dw_edma_chip
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 23, 2022 at 7:12 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Fri, Apr 22, 2022 at 09:36:38AM -0500, Frank Li wrote:
-> > There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
-> > write(read) channel number from register, then save these into dw_edma.
-> > Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
-> > are available in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
-> > ll_wr(rd)_cnt to indicate actual usage.
-> >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
->
-> One minor comment below,
->
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> > ---
-> > Change from v6 to v9
-> >  - none
-> > Change from v5 to v6
-> >  - s/rename/Rename/ at subject
-> > new patch at v4
-> >
-> >  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
-> >  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
-> >  include/linux/dma/edma.h           |  8 ++++----
-> >  3 files changed, 12 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > index 435e4f2ab6575..1a0a98f6c5515 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > @@ -919,11 +919,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
-> >
-> >       raw_spin_lock_init(&dw->lock);
-> >
-> > -     dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
-> > +     dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
-> >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
-> >       dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
-> >
-> > -     dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
-> > +     dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
-> >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
-> >       dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
-> >
-> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > index ae42bad24dd5a..7732537f96086 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> >       chip->nr_irqs = nr_irqs;
-> >       chip->ops = &dw_edma_pcie_core_ops;
-> >
-> > -     chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
-> > -     chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
-> > +     chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
-> > +     chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
-> >
-> >       chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-> >       if (!chip->reg_base)
-> >               return -ENOMEM;
-> >
-> > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
-> > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
-> >               struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
-> >               struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
-> >               struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
-> > @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> >               dt_region->sz = dt_block->sz;
-> >       }
-> >
-> > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
-> > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
-> >               struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
-> >               struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
-> >               struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
-> > @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> >               chip->reg_base);
-> >
-> >
-> > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
-> > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
-> >               pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> >                       i, vsec_data.ll_wr[i].bar,
-> >                       vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
-> > @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> >                       chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
-> >       }
-> >
-> > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
-> > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
-> >               pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> >                       i, vsec_data.ll_rd[i].bar,
-> >                       vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
-> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> > index e9ce652b88233..c2039246fc08c 100644
-> > --- a/include/linux/dma/edma.h
-> > +++ b/include/linux/dma/edma.h
-> > @@ -40,8 +40,8 @@ enum dw_edma_map_format {
-> >   * @nr_irqs:          total dma irq number
-> >   * @ops                       DMA channel to IRQ number mapping
-> >   * @reg_base          DMA register base address
-> > - * @wr_ch_cnt                 DMA write channel number
-> > - * @rd_ch_cnt                 DMA read channel number
-> > + * @ll_wr_cnt                 DMA write link list number
-> > + * @ll_rd_cnt                 DMA read link list number
->
-> DMA linked list write/read memory regions?
+When the bus bridge is runtime suspended, we'll fail to rescan
+the devices through sysfs as we cannot access the configuration
+space correctly when the bridge is in D3hot.
+It can be reproduced like:
 
-ll_wr_cnt is the counter of the DMA listed list.
+$ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+$ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
 
-Do you means
+0000:80:00.0 is a Root Port and it is runtime-suspended, so
+0000:81:00.1 is unreachable after a rescan.
 
-@ll_region_wr        DMA linked list write memory regions
+Power up the bridge when scanning the child bus and allow it to
+suspend again by adding pm_runtime_get_sync()/pm_runtime_put()
+in pci_scan_child_bus_extend().
 
-best regards
-Frank Li
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+Change since v4:
+- rephrase the commit suggested by Rafael
+Link: https://lore.kernel.org/lkml/20220422080404.27724-1-yangyicong@hisilicon.com/
 
+Change since v3:
+- retain the pm_runtime_*() calls in pci_scan_bridge_extend() as Rafael points
+  out that it's necessary when the brigde is in D3cold
+Link: https://lore.kernel.org/linux-pci/20220414123736.34150-1-yangyicong@hisilicon.com/
 
->
-> Thanks,
-> Mani
->
-> >   * @rg_region                 DMA register region
-> >   * @ll_region_wr      DMA descriptor link list memory for write channel
-> >   * @ll_region_rd      DMA descriptor link list memory for read channel
-> > @@ -56,8 +56,8 @@ struct dw_edma_chip {
-> >
-> >       void __iomem            *reg_base;
-> >
-> > -     u16                     wr_ch_cnt;
-> > -     u16                     rd_ch_cnt;
-> > +     u16                     ll_wr_cnt;
-> > +     u16                     ll_rd_cnt;
-> >       /* link list address */
-> >       struct dw_edma_region   ll_region_wr[EDMA_MAX_WR_CH];
-> >       struct dw_edma_region   ll_region_rd[EDMA_MAX_RD_CH];
-> > --
-> > 2.35.1
-> >
+Change since v2:
+- just rebase it on v5.18-rc2
+Link: https://lore.kernel.org/linux-pci/1601029386-4928-1-git-send-email-yangyicong@hisilicon.com/
+
+Change since v1:
+- use an intermediate variable *bridge as suggested
+- remove the pm_runtime_*() calls in pci_scan_bridge_extend()
+Link: https://lore.kernel.org/linux-pci/1596022223-4765-1-git-send-email-yangyicong@hisilicon.com/
+
+ drivers/pci/probe.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 17a969942d37..b108e72b6586 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2859,11 +2859,20 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+ 	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+ 	unsigned int start = bus->busn_res.start;
+ 	unsigned int devfn, fn, cmax, max = start;
++	struct pci_dev *bridge = bus->self;
+ 	struct pci_dev *dev;
+ 	int nr_devs;
+ 
+ 	dev_dbg(&bus->dev, "scanning bus\n");
+ 
++	/*
++	 * Make sure the bus bridge is powered on, otherwise we may not be
++	 * able to scan the devices as we may fail to access the configuration
++	 * space of subordinates.
++	 */
++	if (bridge)
++		pm_runtime_get_sync(&bridge->dev);
++
+ 	/* Go find them, Rover! */
+ 	for (devfn = 0; devfn < 256; devfn += 8) {
+ 		nr_devs = pci_scan_slot(bus, devfn);
+@@ -2976,6 +2985,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+ 		}
+ 	}
+ 
++	if (bridge)
++		pm_runtime_put(&bridge->dev);
++
+ 	/*
+ 	 * We've scanned the bus and so we know all about what's on
+ 	 * the other side of any bridges that may be on this bus plus
+-- 
+2.24.0
+
