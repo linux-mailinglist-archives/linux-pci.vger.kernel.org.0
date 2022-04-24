@@ -2,88 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D3C50D556
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Apr 2022 23:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C9A50D59E
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 00:15:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239625AbiDXVuE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Apr 2022 17:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44394 "EHLO
+        id S236241AbiDXWSh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 24 Apr 2022 18:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235710AbiDXVuC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Apr 2022 17:50:02 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A00644DF;
-        Sun, 24 Apr 2022 14:46:59 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id bu29so23195746lfb.0;
-        Sun, 24 Apr 2022 14:46:59 -0700 (PDT)
+        with ESMTP id S229486AbiDXWSg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Apr 2022 18:18:36 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C570E644F1
+        for <linux-pci@vger.kernel.org>; Sun, 24 Apr 2022 15:15:34 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id b15so13190939pfm.5
+        for <linux-pci@vger.kernel.org>; Sun, 24 Apr 2022 15:15:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=O4TlWAQTGna1HLPkbwNGfYip8R7dhlaXVZwPwiVBy7I=;
-        b=UlSSti4Gm4qX+QRhOj+j+pgM3p+/451e5FFrO24ItSZzGf09wrm+Q7aExA773zXOex
-         tJVHSLYUKeagNc5STZSmtACkjhwgUK2vd4Pkv5YtEsnPfyRDMnUDHOwx5eY6VfkwQ9Dj
-         aqDdPK3ys/rf3e7FbqpWvSrlBqB+2WfT+i3xAZ+LD3W1Ke2jDCWt185vFyVMtGDhbtsd
-         tEQsrEnUusJI1p1MW5sg/DFInDAPJXTeZNMK7RGEJA/8FPo8EcMlIzfR5i1YRz1MztDz
-         Xy1owQqn/r5E+JLMNOQo2DAChV9RWNo/H7Suagq+YDxfBRgbbVvt9wFkpRHOE070RDW0
-         URsA==
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a94ygyO51sV1vySNBgzFK1fAmeNRwkA40gE431DNjw0=;
+        b=qCnGnBRIvOsy3+kYvqTJIWtB5AGeFFiyAB41IHuR0+F7NTytPaH0U1xbjI0A8Ylagu
+         UoiXr5Wllahjoy4iUFJ8yKQMEsjWh6bJS/caztgTOz3JWCo8n1Xgsk+eV4LzelEDLwnJ
+         zG7XApy80RYgeTZh8PyxWpx+R3wQW7oYkL7jc6bdFqAjbvxt8HlJ406di1/nFAvGLBGP
+         qj8lkeqaokvfXWTznRm/cK1eco0vgroO4o+f9bsp2NVsBIjnok7nSE3dCxMCDTbXxkl4
+         HhJWsbaBGxz2rPnDheLASc1X9uAfjz6jWPSob+tJmyrmTCyTnwOcxVWYLrmXTV3Hr1j5
+         QaRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O4TlWAQTGna1HLPkbwNGfYip8R7dhlaXVZwPwiVBy7I=;
-        b=hmEM6W0u8dmBJUakBgW8FVaDU7vFvIZw/vi5k4L+R6D6vfSqQMuEIJRPVOczyIVB3+
-         eGY6Sq0oRvDBNP3pXN8Jdk8rVKnIfbTgnIpykui2TTsVIe53oiutWbjal9UWypkGjmJl
-         zg0dmo9v/GeuVU0rRNQbTt/+fG4EjhNe+tgAVoDH9y3GZnbWMDhGSHgQFSLcxoF/U28f
-         heXv9jE09rkmbfvZ8YBjUgw8mKDT7NgN8vMsSVxln+7q4lKyhdZh+BwrASZdHRKezdUe
-         9YDo6jx8D+DFcB5mXYFxpa52wBzeiOBzy/l7rkkNlDcYkd7nirZZ1oxZeZybn91g4HsI
-         IdbQ==
-X-Gm-Message-State: AOAM533ne+/sq108ANGFgqGsOS2Ex7NO2fD/UMaOW/hN9veRKDV5GRZB
-        CYHJ0riHZBkPgj58fI4tvY/THdIlwvxYow==
-X-Google-Smtp-Source: ABdhPJzXdDxrhX4Vc85ccNr29jeZJ973N9zfir+519pEyy1H/jYBWoVgnoUIbo6sVuzS8PxTClQuEQ==
-X-Received: by 2002:ac2:5581:0:b0:471:6c00:ba6e with SMTP id v1-20020ac25581000000b004716c00ba6emr11353806lfg.482.1650836817827;
-        Sun, 24 Apr 2022 14:46:57 -0700 (PDT)
-Received: from mobilestation ([95.79.183.147])
-        by smtp.gmail.com with ESMTPSA id t27-20020a192d5b000000b00470880c1abcsm1150711lft.217.2022.04.24.14.46.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Apr 2022 14:46:57 -0700 (PDT)
-Date:   Mon, 25 Apr 2022 00:46:54 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Rob Herring <robh@kernel.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 03/25] dma-direct: take dma-ranges/offsets into account
- in resource mapping
-Message-ID: <20220424214654.d53jbthts53g755p@mobilestation>
-References: <20220324014836.19149-4-Sergey.Semin@baikalelectronics.ru>
- <0baff803-b0ea-529f-095a-897398b4f63f@arm.com>
- <20220417224427.drwy3rchwplthelh@mobilestation>
- <20220420071217.GA5152@lst.de>
- <20220420083207.pd3hxbwezrm2ud6x@mobilestation>
- <20220420084746.GA11606@lst.de>
- <20220420085538.imgibqcyupvvjpaj@mobilestation>
- <20220421144536.GA23289@lst.de>
- <20220421173523.ig62jtvj7qbno6q7@mobilestation>
- <f238af77-be5e-43cc-6a8c-338408c1667e@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a94ygyO51sV1vySNBgzFK1fAmeNRwkA40gE431DNjw0=;
+        b=qeAGNOWNspLS2KFCeaUbwF19unLYoWRvJOZVzs+lexbwBTO/Ln+5y8clvqsw8YWYv0
+         qiSQ/JqxdNHwgOrIPHy4dB0698ObL9V/2VJy0z/rfgg5Mg55P5PabOxpv9RzRFHAhvkD
+         l6eijlImRQQ4pSi3NQZ10q7NnABvh6WwgwZVuQQRp8e18CQywfaOPk7tJe+8uXSA0zjw
+         ypfTR/dkiJdoCh/uIwiJ8wEbUONvx1Ro6KxWmCCH1FzGLXvc7beGd0Sx2nI5rKkjOv2C
+         oRV0zTo/UVfAmSlwDu8s0pYSCVST1OQq3Aru2Q/PSs8Lrlr30W9EyZ60yoPklUmy5HWv
+         onGA==
+X-Gm-Message-State: AOAM533UJaVhF5TcpBDaBzas56aahPlGMEXu06lrTb/4eQhvhWBHjJ0M
+        hDK/L2QUpa3UY98w+tulo+AD2lRVS3j+y/Xy1UbrSQ==
+X-Google-Smtp-Source: ABdhPJzV6moQD8qbpX8+5uEd53juTovRQ747gv7hTJDyB4u4ZUygoiLmPGd+WCvoFOwIi97ILxMqtCnNrEHgw+fCgA8=
+X-Received: by 2002:a05:6a00:8c5:b0:4fe:134d:30d3 with SMTP id
+ s5-20020a056a0008c500b004fe134d30d3mr15819477pfu.3.1650838534294; Sun, 24 Apr
+ 2022 15:15:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f238af77-be5e-43cc-6a8c-338408c1667e@arm.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <e9de480061ad425e9603cf71db5c610d@huawei.com>
+In-Reply-To: <e9de480061ad425e9603cf71db5c610d@huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sun, 24 Apr 2022 15:15:23 -0700
+Message-ID: <CAPcyv4i5vseE1+bDYYa33AcHs6r=b380hUKC5u_=NEpX8bR1SA@mail.gmail.com>
+Subject: Re: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "ben.widawsky@intel.com" <ben.widawsky@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,133 +71,274 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 09:51:31PM +0100, Robin Murphy wrote:
-> On 2022-04-21 18:35, Serge Semin wrote:
-> > On Thu, Apr 21, 2022 at 04:45:36PM +0200, Christoph Hellwig wrote:
-> > > On Wed, Apr 20, 2022 at 11:55:38AM +0300, Serge Semin wrote:
-> > > > On Wed, Apr 20, 2022 at 10:47:46AM +0200, Christoph Hellwig wrote:
-> > > > > I can't really comment on the dma-ranges exlcusion for P2P mappings,
-> > > > > as that predates my involvedment, however:
-> > > > 
-> > > > My example wasn't specific to the PCIe P2P transfers, but about PCIe
-> > > > devices reaching some platform devices over the system interconnect
-> > > > bus.
-> > > 
-> > > So strike PCIe, but this our definition of Peer to Peer accesses.
-> > > 
-> > > > What if I get to have a physical address of a platform device and want
-> > > > have that device being accessed by a PCIe peripheral device? The
-> > > > dma_map_resource() seemed very much suitable for that. But considering
-> > > > what you say it isn't.
-> > > 
-> > 
-> > > dma_map_resource is the right thing for that.  But the physical address
-> > > of MMIO ranges in the platform device should not have struct pages
-> > > allocated for it, and thus the other dma_map_* APIs should not work on
-> > > it to start with.
-> > 
-> > The problem is that the dma_map_resource() won't work for that, but
-> > presumably the dma_map_sg()-like methods will (after some hacking with
-> > the phys address, but anyway). Consider the system diagram in my
-> > previous email. Here is what I would do to initialize a DMA
-> > transaction between a platform device and a PCIe peripheral device:
-> > 
-> > 1) struct resource *rsc = platform_get_resource(plat_dev, IORESOURCE_MEM, 0);
-> > 
-> > 2) dma_addr_t dar = dma_map_resource(&pci_dev->dev, rsc->start, rsc->end - rsc->start + 1,
-> >                                        DMA_FROM_DEVICE, 0);
-> > 
-> > 3) dma_addr_t sar;
-> >     void *tmp = dma_alloc_coherent(&pci_dev->dev, PAGE_SIZE, &sar, GFP_KERNEL);
-> >     memset(tmp, 0xaa, PAGE_SIZE);
-> > 
-> > 4) PCIe device: DMA.DAR=dar, DMA.SAR=sar. RUN.
-> > 
-> > If there is no dma-ranges specified in the PCIe Host controller
-> > DT-node, the PCIe peripheral devices will see the rest of the system
-> > memory as is (no offsets and remappings). But if there is dma-ranges
-> > with some specific system settings it may affect the PCIe MRd/MWr TLPs
-> > address translation including the addresses targeted to the MMIO
-> > space. In that case the mapping performed on step 2) will return a
-> > wrong DMA-address since the corresponding dma_direct_map_resource()
-> > just returns the passed physical address missing the
-> > 'pci_dev->dma_range_map'-based mapping performed in
-> > translate_phys_to_dma().
-> > 
-> > Note the mapping on step 3) works correctly because it calls the
-> > translate_phys_to_dma() of the direct DMA interface thus taking the
-> > PCie dma-ranges into account.
-> > 
-> > To sum up as I see it either restricting dma_map_resource() to map
-> > just the intra-bus addresses was wrong or there must be some
-> > additional mapping infrastructure for the denoted systems. Though I
-> > don't see a way the dma_map_resource() could be fixed to be suitable
-> > for each considered cases.
-> 
+On Fri, Mar 18, 2022 at 2:42 AM Shiju Jose <shiju.jose@huawei.com> wrote:
+>
+> Hi Dan,
 
-> FWIW the current semantics of dma_map_resource() are basically just to
-> insert IOMMU awareness where dmaengine drivers were previously just casting
-> phys_addr_t to dma_addr_t (or u32, or whatever else they put into their
-> descriptor/register/etc.) IIRC there was a bit of a question whether it
-> really belonged in the DMA API at all, since it's not really a "DMA"
-> operation in the conventional sense, and convenience was the only real
-> deciding argument. The relevant drivers at the time were not taking
-> dma_pfn_offset into account when consuming physical addresses directly, so
-> the new API didn't either.
-> 
-> That's just how things got to where they are today. 
+Hi, thanks for taking a look at this.
 
-I see. Thanks for the clarification. Right, IOMMU is the only reason
-to have the current dma_map_resource() implementation.
+>
+> >-----Original Message-----
+> >From: Dan Williams <dan.j.williams@intel.com>
+> >Sent: 16 March 2022 04:14
+> >To: linux-cxl@vger.kernel.org
+> >Cc: ben.widawsky@intel.com; vishal.l.verma@intel.com;
+> >alison.schofield@intel.com; Jonathan Cameron
+> ><jonathan.cameron@huawei.com>; ira.weiny@intel.com; linux-
+> >pci@vger.kernel.org
+> >Subject: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
+> >
+> >Add nominal error handling that tears down CXL.mem in response to error
+> >notifications that imply a device reset. Given some CXL.mem may be
+> >operating as System RAM, there is a high likelihood that these error events
+> >are fatal. However, if the system survives the notification the expectation is
+> >that the driver behavior is equivalent to a hot-unplug and re-plug of an
+> >endpoint.
+> >
+> >Note that this does not change the mask values from the default. That awaits
+> >CXL _OSC support to determine whether platform firmware is in control of the
+> >mask registers.
+> >
+> >Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> >---
+> > drivers/cxl/core/memdev.c |    1
+> > drivers/cxl/cxlmem.h      |    2 +
+> > drivers/cxl/pci.c         |  109
+> >+++++++++++++++++++++++++++++++++++++++++++++
+> > 3 files changed, 112 insertions(+)
+> >
+> >diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c index
+> >1f76b28f9826..223d512790e1 100644
+> >--- a/drivers/cxl/core/memdev.c
+> >+++ b/drivers/cxl/core/memdev.c
+> >@@ -341,6 +341,7 @@ struct cxl_memdev *devm_cxl_add_memdev(struct
+> >cxl_dev_state *cxlds)
+> >        * needed as this is ordered with cdev_add() publishing the device.
+> >        */
+> >       cxlmd->cxlds = cxlds;
+> >+      cxlds->cxlmd = cxlmd;
+> >
+> >       cdev = &cxlmd->cdev;
+> >       rc = cdev_device_add(cdev, dev);
+> >diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h index
+> >5d33ce24fe09..f58e16951414 100644
+> >--- a/drivers/cxl/cxlmem.h
+> >+++ b/drivers/cxl/cxlmem.h
+> >@@ -117,6 +117,7 @@ struct cxl_endpoint_dvsec_info {
+> >  * Currently only memory devices are represented.
+> >  *
+> >  * @dev: The device associated with this CXL state
+> >+ * @cxlmd: The device representing the CXL.mem capabilities of @dev
+> >  * @regs: Parsed register blocks
+> >  * @cxl_dvsec: Offset to the PCIe device DVSEC
+> >  * @payload_size: Size of space for payload @@ -148,6 +149,7 @@ struct
+> >cxl_endpoint_dvsec_info {
+> >  */
+> > struct cxl_dev_state {
+> >       struct device *dev;
+> >+      struct cxl_memdev *cxlmd;
+> >
+> >       struct cxl_regs regs;
+> >       int cxl_dvsec;
+> >diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c index
+> >bde8929450f0..823cbfa093fa 100644
+> >--- a/drivers/cxl/pci.c
+> >+++ b/drivers/cxl/pci.c
+> >@@ -8,6 +8,7 @@
+> > #include <linux/mutex.h>
+> > #include <linux/list.h>
+> > #include <linux/pci.h>
+> >+#include <linux/aer.h>
+> > #include <linux/io.h>
+> > #include "cxlmem.h"
+> > #include "cxlpci.h"
+> >@@ -533,6 +534,11 @@ static void cxl_dvsec_ranges(struct cxl_dev_state
+> >*cxlds)
+> >       info->ranges = __cxl_dvsec_ranges(cxlds, info);  }
+> >
+> >+static void disable_aer(void *pdev)
+> >+{
+> >+      pci_disable_pcie_error_reporting(pdev);
+> >+}
+> >+
+> > static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >{
+> >       struct cxl_register_map map;
+> >@@ -554,6 +560,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const
+> >struct pci_device_id *id)
+> >       cxlds = cxl_dev_state_create(&pdev->dev);
+> >       if (IS_ERR(cxlds))
+> >               return PTR_ERR(cxlds);
+> >+      pci_set_drvdata(pdev, cxlds);
+> >
+> >       cxlds->serial = pci_get_dsn(pdev);
+> >       cxlds->cxl_dvsec = pci_find_dvsec_capability( @@ -610,6 +617,14 @@
+> >static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >       if (IS_ERR(cxlmd))
+> >               return PTR_ERR(cxlmd);
+> >
+> >+      if (cxlds->regs.ras) {
+> >+              pci_enable_pcie_error_reporting(pdev);
+> >+              rc = devm_add_action_or_reset(&pdev->dev, disable_aer,
+> >pdev);
+> >+              if (rc)
+> >+                      return rc;
+> >+      }
+> >+      pci_save_state(pdev);
+> >+
+> >       if (range_len(&cxlds->pmem_range) &&
+> >IS_ENABLED(CONFIG_CXL_PMEM))
+> >               rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
+> >
+> >@@ -623,10 +638,104 @@ static const struct pci_device_id cxl_mem_pci_tbl[]
+> >= {  };  MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
+> >
+> >+/*
+> >+ * Log the state of the RAS status registers and prepare them to log
+> >+the
+> >+ * next error status.
+> >+ */
+> >+static void cxl_report_and_clear(struct cxl_dev_state *cxlds) {
+> >+      struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> >+      struct device *dev = &cxlmd->dev;
+> >+      void __iomem *addr;
+> >+      u32 status;
+> >+
+> >+      if (!cxlds->regs.ras)
+> >+              return;
+> In the cxl_error_detected () may need to return PCI_ERS_RESULT_NONE
+> for the following cases, if exist,
+> 1. if (!cxlds->regs.ras),
 
-> Once again, I'm not
-> saying that what we have now is necessarily right, or that your change is
-> necessarily wrong, I just really want to understand specifically *why* you
-> need to make it, so we can evaluate the risk of possible breakage either
-> way. Theoretical "if"s aren't really enough.
+Yes, but given that the RAS capability is mandatory for CXL devices
+then I think the driver should just fail to register altogether if the
+RAS register are not found / mapped.
 
-As I already said our SoC has the next structure (obviously the
-diagram is very simplified, but the gist is the same):
-              +-----+
-              | DDR |
-              +--+--+
-                 |
-  +-----+ +------+-------+ +---------+
-  | CPU +-+ Interconnect +-+ DEVs... |
-  +-----+ +-----^-+------+ +---------+
-     dma-ranges-| |-ranges
-              +-+-v-+
-              | PCI |
-              +-----+
-The PCIe peripheral devices are connected to the rest of the system
-via the DW PCIe Host controller. If the controller has the inbound
-iATU configured to re-map the system memory (RAM, IOMEM) in a
-non-one-to-one way (using the dma-ranges DT property of the PCIe host
-controller), then all the PCIe bus MRd/MWr TLP addresses will be
-accordingly translated on a way to all the connected to the
-interconnect slave devices including the MMIO devices. The kernel DMA
-API at this moment provides the only methods to get the PCIe-bus
-visible RAM addresses, while the physical addresses (for instance of
-the MMIO devices) can't be correctly translated for such case. I
-thought that dma_map_resource() could do the trick, but it turned out
-it didn't get the dma-ranges mapping into account.
+> 2. if any errors would be reported during the dev initialization.
 
-To be fully honest currently we don't really have any platform which
-would have had the strong requirement of doing DMA from the PCIe
-peripheral devices to the platform devices. But since the PCIe bus is
-the extendable bus (cold and hot pluggable) then such requirement may
-arise in the practice for instance on a platform with the PCIe NTB
-device attached to the PCIe bus and configured to access the system
-MMIO devices via the bridge. That part I find potentially problematic
-seeing the practical usecase is unsupported just due to the incomplete
-API. Moreover the dma_direct_map_resource() method semantic being
-different from the rest of the direct DMA mapping methods doesn't seem
-right from the usability point of view. Finally as you can see having
-the dma_direct_map_resource() defined as MMIO-specific doesn't
-mean that the dma_pfn_offset-based mapping isn't supposed to be taken
-into account.
+This can't happen. The err_handler callback process takes the
+device_lock() which ensures that any initialization that has started
+completes before the callback is invoked.
 
--Sergey
+>
+> >+
+> >+      addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+> >+      status = readl(addr);
+> >+      if (status & CXL_RAS_UNCORRECTABLE_STATUS_MASK) {
+> >+              dev_warn(cxlds->dev, "%s: uncorrectable status: %#08x\n",
+> >+                       dev_name(dev), status);
+> >+              writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK,
+> >addr);
+> >+      }
+> For the uncorrectable non-fatal errors, if any, may need to return PCI_ERS_RESULT_NEED_RESET
+> to trigger the slot reset to prevent more serious issues later. For this case the state would be
+> "pci_channel_io_normal".
+>
 
-> 
-> Robin.
+Ah true, some pci_channel_io_normal recovery conditions still result
+in reset, will fix.
+
+> >+
+> >+      addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+> >+      status = readl(addr);
+> >+      if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+> >+              dev_warn(cxlds->dev, "%s: correctable status: %#08x\n",
+> >+                       dev_name(dev), status);
+> >+              writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK,
+> >addr);
+> >+      }
+> >+}
+> >+
+> >+static pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+> >+                                         pci_channel_state_t state)
+> >+{
+> >+      struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> >+      struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> >+      struct device *dev = &cxlmd->dev;
+> >+
+> >+      /*
+> >+       * A frozen channel indicates an impending reset which is fatal to
+> >+       * CXL.mem operation, and will likely crash the system. On the off
+> >+       * chance the situation is recoverable dump the status of the RAS
+> >+       * capability registers and bounce the active state of the memdev.
+> >+       */
+> >+      cxl_report_and_clear(cxlds);
+> >+
+> >+      switch (state) {
+> >+      case pci_channel_io_normal:
+> >+              return PCI_ERS_RESULT_CAN_RECOVER;
+> >+      case pci_channel_io_frozen:
+> >+              dev_warn(&pdev->dev,
+> >+                       "%s: frozen state error detected, disable
+> >CXL.mem\n",
+> >+                       dev_name(dev));
+> >+              device_release_driver(dev);
+> >+              return PCI_ERS_RESULT_NEED_RESET;
+> >+      case pci_channel_io_perm_failure:
+> >+              dev_warn(&pdev->dev,
+> >+                       "failure state error detected, request disconnect\n");
+> >+              return PCI_ERS_RESULT_DISCONNECT;
+> >+      }
+> >+      return PCI_ERS_RESULT_NEED_RESET;
+> >+}
+> >+
+> >+static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev) {
+> >+      struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> >+      struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> >+      struct device *dev = &cxlmd->dev;
+> >+
+> >+      dev_info(&pdev->dev, "%s: restart CXL.mem after slot reset\n",
+> >+               dev_name(dev));
+> >+      pci_restore_state(pdev);
+> 1. Do we need to call pci_save_state(pdev) here after the reset? though pci_save_state(pdev) is being invoked in the
+> cxl_pci_probe().
+
+The save state after probe is sufficient, it does not need to be
+snapshotted again as far as I can see.
+
+>
+> >+      if (device_attach(dev) <= 0)
+> >+              return PCI_ERS_RESULT_DISCONNECT;
+> My understanding is that pci_disable_pcie_error_reporting(pdev) would be called
+> in the disable_aer () in the reset,
+> pci_enable_pcie_error_reporting(pdev) may need to call here after the reset?
+
+After the device is disconnected the driver needs to be reloaded to
+recover AER operation.
+
+>
+> >+      return PCI_ERS_RESULT_RECOVERED;
+> >+}
+> >+
+> >+static void cxl_error_resume(struct pci_dev *pdev) {
+> >+      struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> >+      struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> >+      struct device *dev = &cxlmd->dev;
+> >+
+> >+      dev_info(&pdev->dev, "%s: error resume %s\n", dev_name(dev),
+> >+               dev->driver ? "successful" : "failed"); }
+> >+
+> >+static const struct pci_error_handlers cxl_error_handlers = {
+> >+      .error_detected = cxl_error_detected,
+> >+      .slot_reset     = cxl_slot_reset,
+> >+      .resume         = cxl_error_resume,
+> If the FLR (Function level reset) supported, please add the corresponding callback functions
+> reset_prepare(..) and reset_done(..).
+
+No, FLR does not recover any of the errors reported via AER.
+
+>
+> >+};
+> >+
+> > static struct pci_driver cxl_pci_driver = {
+> >       .name                   = KBUILD_MODNAME,
+> >       .id_table               = cxl_mem_pci_tbl,
+> >       .probe                  = cxl_pci_probe,
+> >+      .err_handler            = &cxl_error_handlers,
+> >       .driver = {
+> >               .probe_type     = PROBE_PREFER_ASYNCHRONOUS,
+> >       },
+>
+>
+> Thanks,
+> Shiju
