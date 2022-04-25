@@ -2,47 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 320CF50DFAF
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 14:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D67650E100
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 15:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232495AbiDYMLZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Apr 2022 08:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45096 "EHLO
+        id S239535AbiDYNF4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Apr 2022 09:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240126AbiDYMLS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 08:11:18 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE255AA52
-        for <linux-pci@vger.kernel.org>; Mon, 25 Apr 2022 05:08:07 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1nixVU-0000PM-KI; Mon, 25 Apr 2022 14:07:56 +0200
-Message-ID: <56052bc6e3b6cab6bfdfc5f706ec9984bea16bba.camel@pengutronix.de>
-Subject: Re: [PATCH v3] PCI: imx6: Replace legacy gpio interface for gpiod
- interface
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        =?ISO-8859-1?Q?Ma=EDra?= Canal <maira.canal@usp.br>
-Cc:     hongxing.zhu@nxp.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, helgaas@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 25 Apr 2022 14:07:53 +0200
-In-Reply-To: <CACRpkdYmw4yBm3Y1P42TcRs4fFNEiy3LXxmO_j=zeTv_usDR+g@mail.gmail.com>
-References: <YYCOTx68LXu1Tn1i@fedora>
-         <CACRpkdYmw4yBm3Y1P42TcRs4fFNEiy3LXxmO_j=zeTv_usDR+g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        with ESMTP id S234498AbiDYNFz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 09:05:55 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 064DB13D76
+        for <linux-pci@vger.kernel.org>; Mon, 25 Apr 2022 06:02:51 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A72491FB;
+        Mon, 25 Apr 2022 06:02:51 -0700 (PDT)
+Received: from e123427-lin.arm.com (unknown [10.57.11.200])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A095F3F774;
+        Mon, 25 Apr 2022 06:02:49 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Daire McNamara <daire.mcnamara@microchip.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Cowan <ian@linux.cowan.aero>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, kernel@pengutronix.de
+Subject: Re: [PATCH] PCI: microchip: Add a missing semicolon
+Date:   Mon, 25 Apr 2022 14:02:44 +0100
+Message-Id: <165089168857.6741.3890068275128497733.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220420065832.14173-1-u.kleine-koenig@pengutronix.de>
+References: <20220420065832.14173-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,35 +47,20 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Linus,
+On Wed, 20 Apr 2022 08:58:32 +0200, Uwe Kleine-König wrote:
+> If the driver is configured as a module (after allowing this by changing
+> PCIE_MICROCHIP_HOST from bool to tristate) the missing semicolon makes the
+> compiler very unhappy. While there isn't a real problem as
+> MODULE_DEVICE_TABLE always evaluates to nothing for a built-in driver,
+> do it right for consistency with other drivers.
+> 
+> 
+> [...]
 
-Am Donnerstag, dem 21.04.2022 um 01:24 +0200 schrieb Linus Walleij:
-> Hi Maira and sorry for being slow on reviews.
-> 
-> On Tue, Nov 2, 2021 at 2:04 AM Maíra Canal <maira.canal@usp.br> wrote:
-> 
-> > -               gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-> > +               gpiod_set_raw_value_cansleep(imx6_pcie->reset_gpio,
-> >                                         !imx6_pcie->gpio_active_high);
-> 
-> Hm I see you got advised to use the raw api. I'm not so sure about
-> that I like v1 better.
-> 
-> > +       imx6_pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-> > +                       imx6_pcie->gpio_active_high ?  GPIOD_OUT_HIGH : GPIOD_OUT_LOW);
-> > +       if (IS_ERR(imx6_pcie->reset_gpio))
-> > +               return dev_err_probe(dev, PTR_ERR(imx6_pcie->reset_gpio),
-> > +                               "unable to get reset gpio\n");
-> 
-> Where is this descriptor coming from? Device trees? Can't we just fix the
-> DTS file(s) in that case given how wrong they are if they don't set
-> GPIO_ACTIVE_LOW flag on this IRQ.
+Applied to pci/microchip, thanks!
 
-The binding explicitly describes the GPIO as not polarity aware and has
-a separate property "reset-gpio-active-high" to avoid breaking old
-DTBs. I don't think it's helpful to dismiss this explicit backward
-compat just because the driver code looks nicer that way.
+[1/1] PCI: microchip: Add a missing semicolon
+      https://git.kernel.org/lpieralisi/pci/c/c049b4b376
 
-Regards,
-Lucas
-
+Thanks,
+Lorenzo
