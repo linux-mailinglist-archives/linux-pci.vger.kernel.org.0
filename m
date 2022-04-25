@@ -2,101 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6FC150E210
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 15:41:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0464950E47C
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 17:33:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236348AbiDYNoA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Apr 2022 09:44:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
+        id S240947AbiDYPgw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Apr 2022 11:36:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236516AbiDYNn7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 09:43:59 -0400
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CDC84926F
-        for <linux-pci@vger.kernel.org>; Mon, 25 Apr 2022 06:40:55 -0700 (PDT)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-2ec42eae76bso148301887b3.10
-        for <linux-pci@vger.kernel.org>; Mon, 25 Apr 2022 06:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0iW0lfnOAQF5cFI1vUpJrSs+pwJtGVWKWvpMUuWdKzw=;
-        b=a+4h19FIk30YOSOnT/EZ40c6x1uajSyiYVz5RRsTKaKN1eJGtIyF+2r5q+eNdqyBBl
-         XIQoID+tBiBPNrscesCiG4KqQt0dg0KP03zgfjtqy8IXImQPeYwJTvXtbhdA9/9YKgVa
-         za6lWLnHoXo+B9bQTRCOygkqQD8Uzd9Gvvxg45OueC7y69tCefIlMbj0v7FaR/0VXpqJ
-         SRSU1QAVzrqhVDWYqVcpTwWWxpXq0DAaGj9oJyWbE8h6Ru6nmgFRoZUV5vtHrXZs0DYh
-         Nz8aN0NZaESQOyygNvXnoDRbUCvTEuQ0xFVpJxPQpuloFRUaXbhytj2y2xhHlkWmyNu1
-         nNNA==
+        with ESMTP id S230098AbiDYPgv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 11:36:51 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B299243380;
+        Mon, 25 Apr 2022 08:33:47 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id t6so17992354wra.4;
+        Mon, 25 Apr 2022 08:33:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0iW0lfnOAQF5cFI1vUpJrSs+pwJtGVWKWvpMUuWdKzw=;
-        b=jeZSroJ8LQK5/rmspWda3pZ170E8joW7yQAY2Edu3PlZdl9GNersNApcg3UPIxCIjv
-         bNnD+rp/q7NIHykXxP0zUA2xc6oJ6kWQIvLtahaohc7L0EmdQmk+Rgi2O7RnoOGQt66j
-         0FR+Dwf7qHR8k+OTLNOtQBdZ8zgeKJDrNz3za2JIpSpb6qrS848WZk1nYcxI7wsdGa7G
-         EdgVi54Wanmem28BzykvBYQJe4aKh6/MVJEVO/o73z9wTdB1rCH8iUQ8QavHPXj3RsJY
-         GkkpOjRzLEgAu2VlFb6EkoDbXizTOohtfKHXqvvdZZJfS4AcRIa718xuKrJqrc93BsEG
-         UK1g==
-X-Gm-Message-State: AOAM530QeacArAGcjXQGupBqkrt2DpU0+dw/04Smriohstu7eN/PWJo8
-        9ni4Ti0UdIgiCnTlp3mw0a5bucVx7kYidbKIP/NMVA==
-X-Google-Smtp-Source: ABdhPJyLGPhTNmwcVKp/aPjOE6zhKyC+wcn0ap56Z0HIRwG+0xlW9MTQtYt2TvyL34lPTJFEh5UsTwcwn5RaRNHPmiQ=
-X-Received: by 2002:a0d:c4c2:0:b0:2f1:6c00:9eb4 with SMTP id
- g185-20020a0dc4c2000000b002f16c009eb4mr17318800ywd.448.1650894054719; Mon, 25
- Apr 2022 06:40:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <YYCOTx68LXu1Tn1i@fedora> <CACRpkdYmw4yBm3Y1P42TcRs4fFNEiy3LXxmO_j=zeTv_usDR+g@mail.gmail.com>
- <56052bc6e3b6cab6bfdfc5f706ec9984bea16bba.camel@pengutronix.de>
-In-Reply-To: <56052bc6e3b6cab6bfdfc5f706ec9984bea16bba.camel@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 Apr 2022 15:40:43 +0200
-Message-ID: <CACRpkdZYgym8f0o00EU7QKOUzkzOJZMeZYmQL6XoNLP6V7rz3g@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: imx6: Replace legacy gpio interface for gpiod interface
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     =?UTF-8?B?TWHDrXJhIENhbmFs?= <maira.canal@usp.br>,
-        hongxing.zhu@nxp.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, helgaas@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+OQDcwFgZu/P9vx+VQN8SgQh5Ecb0LyT6OAUuz0M6w4=;
+        b=4ejo69psq47xfRafXKT+ybqY29uqxJ4p476g4qUM+YXu2lYqbq/Gs5co6aFO/lcxd/
+         qOU3HFYTMaua9Mnh9Lb4rkg6XModqPwp4vN74kfwi144vnzqc/53UmFIKQGMgPAcxNyQ
+         TreDyzBofHA5PYepMmGRCwHythQMlH1TUgsipqUkyHwku5JMZIWs3PJjJCCCpPw9yMrl
+         /Q0rlKYU9oRSRviI5tnP+xcojBuT2bJOUu5qiJEQL8CanvAw20jrI/1JN9IM8Dpr4BTj
+         mT93VJnssFyoig4H4/pk0CZl5Fkt7NKPl3hV0AFnjsHGRtvFSZ1TBw3kx7YeVKbr7BBh
+         1eOg==
+X-Gm-Message-State: AOAM530FNG2b0VrX5crGfTH4vor7cjshMYkGqAFgXndbdvcP5RXkUwJU
+        c8Am8HTM+Rf8dMC9Gm3QcXw=
+X-Google-Smtp-Source: ABdhPJy33w5nmyRINYX7dcYjstdfIFot4qy6wHNJDM5nuqJqkpo7RIQBW60m1pDN7gGh2dmpAaArFw==
+X-Received: by 2002:adf:f64b:0:b0:20a:c685:89ee with SMTP id x11-20020adff64b000000b0020ac68589eemr13797875wrp.366.1650900826224;
+        Mon, 25 Apr 2022 08:33:46 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id i27-20020a1c541b000000b003928e866d32sm12212227wmb.37.2022.04.25.08.33.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Apr 2022 08:33:45 -0700 (PDT)
+Date:   Mon, 25 Apr 2022 15:33:44 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        jakeo@microsoft.com, bjorn.andersson@linaro.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v2] PCI: hv: Fix multi-MSI to allow more than one MSI
+ vector
+Message-ID: <20220425153344.lgo3kdnrbef75jcq@liuwe-devbox-debian-v2>
+References: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
+ <2100eed4-8081-6070-beaf-7c6ba65ad9be@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2100eed4-8081-6070-beaf-7c6ba65ad9be@quicinc.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 2:07 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+On Wed, Apr 20, 2022 at 08:13:22AM -0600, Jeffrey Hugo wrote:
+> On 4/13/2022 7:36 AM, Jeffrey Hugo wrote:
+> > If the allocation of multiple MSI vectors for multi-MSI fails in the core
+> > PCI framework, the framework will retry the allocation as a single MSI
+> > vector, assuming that meets the min_vecs specified by the requesting
+> > driver.
+> > 
+> > Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
+> > domain to implement that for x86.  The VECTOR domain does not support
+> > multi-MSI, so the alloc will always fail and fallback to a single MSI
+> > allocation.
+> > 
+> > In short, Hyper-V advertises a capability it does not implement.
+> > 
+> > Hyper-V can support multi-MSI because it coordinates with the hypervisor
+> > to map the MSIs in the IOMMU's interrupt remapper, which is something the
+> > VECTOR domain does not have.  Therefore the fix is simple - copy what the
+> > x86 IOMMU drivers (AMD/Intel-IR) do by removing
+> > X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
+> > pci_msi_prepare().
+> > 
+> > Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+> > Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> > Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> > ---
+> 
+> Ping?
+> 
+> I don't see this in -next, nor have I seen any replies.  It is possible I
+> have missed some kind of update, but currently I'm wondering if this change
+> is progressing or not.  If there is some kind of process used in this area,
+> I'm not familiar with it, so I would appreciate an introduction.
 
-> The binding explicitly describes the GPIO as not polarity aware and has
-> a separate property "reset-gpio-active-high" to avoid breaking old
-> DTBs. I don't think it's helpful to dismiss this explicit backward
-> compat just because the driver code looks nicer that way.
+I expect the PCI maintainers to pick this up. If I don't see this picked
+up in this week I will apply it to hyperv-next.
 
-I see. We handle such things a specific way.
+Thanks,
+Wei.
 
-Look in drivers/gpio/gpiolib-of.c, especially the function
-of_gpio_flags_quirks().
-
-Here we special-case all bindings which for some reason introduced
-something necessary custom, like in this case not using the proper
-polarity flag.
-
-Add code to this file in the proper place to handle and hide the
-old style DTBs using "reset-gpio-active-high" as active high flag
-and assuming active low otherwise in this file.
-
-I imagine it begins with
-
-if (IS_ENABLED(CONFIG_PCI_IMX6)) { ... }
-
-Then modify the code in drivers/pci/controller/dwc/pci-imx6.c
-to act as if gpiolib handles polarity inversion. Include all changes
-to all files in the same patch so this is changed in tandem (one technical
-step).
-
-Yours,
-Linus Walleij
+> 
+> Thanks
+> 
+> -Jeff
