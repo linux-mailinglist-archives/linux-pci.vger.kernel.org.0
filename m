@@ -2,120 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3D9850E63A
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 18:53:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B0A750E79F
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 19:58:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237665AbiDYQzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Apr 2022 12:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
+        id S234185AbiDYSAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Apr 2022 14:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234895AbiDYQzm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 12:55:42 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22E781A046;
-        Mon, 25 Apr 2022 09:52:37 -0700 (PDT)
+        with ESMTP id S236650AbiDYSAj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 14:00:39 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3641827FFD;
+        Mon, 25 Apr 2022 10:57:34 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id gh6so7084839ejb.0;
+        Mon, 25 Apr 2022 10:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1650905558; x=1682441558;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=AgfX5/2iQb8JHqqi1XJskglaQs20L2PujAVkMJ7391c=;
-  b=guWduVqxNNHNPcsGXutz/B8Ub9xwwyo2Sccrj5VhQuDSIEdxxC7hBc1G
-   DP17e8T3ZAR4w4Ch5pWNGxBiWz1NQNszGgxs11z/DsRCZTuiPxyndOPVZ
-   gxl/d67L3iUxrGrmk3RJepjVK+MEkDiuie5Uise8hp/07Tez6Vfutgi/1
-   o=;
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 25 Apr 2022 09:52:37 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg03-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2022 09:52:28 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Mon, 25 Apr 2022 09:52:28 -0700
-Received: from [10.226.58.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Mon, 25 Apr
- 2022 09:52:27 -0700
-Message-ID: <adbcd493-3821-b0d7-c4e4-4fcd92dd5a14@quicinc.com>
-Date:   Mon, 25 Apr 2022 10:52:26 -0600
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nCw5SiyH02JYEtCbJEBk5eKSQGGhic3V110ywY3fNdE=;
+        b=laUNwVSZ14D4dL8jv9hcIJQmdV2MZ5C/1j+xNDSueiDVLc/zGrThozVnvtFxmiAqU3
+         Fy74Su/eNRAMUZU3Yw20DnjRLNQo/d65U14GHnmCKD27CVX+DsWXtrlE4EX9X6TMb211
+         kBycbitLRlwMUncCkjRCVyKJW71MAbUblN4P5OJInVXNmrMLOqMpmJCpb6Rt5x68V0br
+         RVkYgNMOxtLGs/698/87Lrp3sAG865o20WEegFs/YKKqhkMPHGadMANh1X6Vy9xlKTZj
+         FScb86cgpqELLsqrioqI3Ye4BpJ34CgydzsrhfVcTfET1OdcuuhCzMmPlGyLpqDMduTr
+         3VEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nCw5SiyH02JYEtCbJEBk5eKSQGGhic3V110ywY3fNdE=;
+        b=ClK+U958U1WA5cq0QxnDzv6YHmw5mdf9SuVt/yminuQrd5doH8C8+cnYPqXkhXaM7Y
+         kmeg95w1kjRs756jtRutcPOs9MEXJT8M988sPTwgkiP87g44pxCgibu4GzUU09ryrhnx
+         r8WCp8UEjHmwGHMONg8vbLnWrfHX1rafLnZkZHJ8I2XcrC/PBjICszBEoC2gKuKFzhZm
+         IJUd5dNWQqRZX/k/M0i5iDagKrNY5ZgBvcX/pXl43v+qR+oMT2Fd5k0A2SJBvlkUqUA7
+         rSqLonNGXhqP0ztvqlUYn2Du1x3QBWb9kiaGjXNdtUKfnFPoj2Vj5rX04zzb4tGjsSLv
+         CjZg==
+X-Gm-Message-State: AOAM533/04HvSxg3QyCPGy3BtIZQnLspnTyBL50UXZDdcT8rINKHChXe
+        AFqpiGjMkVF5wxEgNttxWkc=
+X-Google-Smtp-Source: ABdhPJwgJPQ7Pdur7c3zxCEHWM7f4+KFEQ4/hAEDbTEc9ljH71+UuCZocMgoM7FbMdmeIkp+TyXYoA==
+X-Received: by 2002:a17:907:7287:b0:6f3:8414:74f1 with SMTP id dt7-20020a170907728700b006f3841474f1mr9343687ejc.123.1650909452587;
+        Mon, 25 Apr 2022 10:57:32 -0700 (PDT)
+Received: from fedora.robimarko.hr (cpe-94-253-165-91.zg.cable.xnet.hr. [94.253.165.91])
+        by smtp.googlemail.com with ESMTPSA id e22-20020a170906505600b006da7d71f25csm3853198ejk.41.2022.04.25.10.57.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Apr 2022 10:57:32 -0700 (PDT)
+From:   Robert Marko <robimarko@gmail.com>
+To:     svarbanov@mm-sol.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        p.zabel@pengutronix.de, jingoohan1@gmail.com,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Robert Marko <robimarko@gmail.com>
+Subject: [PATCH] PCI: qcom: fix IPQ8074 Gen2 support
+Date:   Mon, 25 Apr 2022 19:57:27 +0200
+Message-Id: <20220425175727.2704430-1-robimarko@gmail.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH v2] PCI: hv: Fix multi-MSI to allow more than one MSI
- vector
-Content-Language: en-US
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <decui@microsoft.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <jakeo@microsoft.com>,
-        <bjorn.andersson@linaro.org>, <linux-hyperv@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
- <2100eed4-8081-6070-beaf-7c6ba65ad9be@quicinc.com>
- <20220425153344.lgo3kdnrbef75jcq@liuwe-devbox-debian-v2>
- <20220425154955.2glxbfeln47m4cin@liuwe-devbox-debian-v2>
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20220425154955.2glxbfeln47m4cin@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/25/2022 9:49 AM, Wei Liu wrote:
-> On Mon, Apr 25, 2022 at 03:33:44PM +0000, Wei Liu wrote:
->> On Wed, Apr 20, 2022 at 08:13:22AM -0600, Jeffrey Hugo wrote:
->>> On 4/13/2022 7:36 AM, Jeffrey Hugo wrote:
->>>> If the allocation of multiple MSI vectors for multi-MSI fails in the core
->>>> PCI framework, the framework will retry the allocation as a single MSI
->>>> vector, assuming that meets the min_vecs specified by the requesting
->>>> driver.
->>>>
->>>> Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
->>>> domain to implement that for x86.  The VECTOR domain does not support
->>>> multi-MSI, so the alloc will always fail and fallback to a single MSI
->>>> allocation.
->>>>
->>>> In short, Hyper-V advertises a capability it does not implement.
->>>>
->>>> Hyper-V can support multi-MSI because it coordinates with the hypervisor
->>>> to map the MSIs in the IOMMU's interrupt remapper, which is something the
->>>> VECTOR domain does not have.  Therefore the fix is simple - copy what the
->>>> x86 IOMMU drivers (AMD/Intel-IR) do by removing
->>>> X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
->>>> pci_msi_prepare().
->>>>
->>>> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
->>>> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
->>>> Reviewed-by: Dexuan Cui <decui@microsoft.com>
->>>> ---
->>>
->>> Ping?
->>>
->>> I don't see this in -next, nor have I seen any replies.  It is possible I
->>> have missed some kind of update, but currently I'm wondering if this change
->>> is progressing or not.  If there is some kind of process used in this area,
->>> I'm not familiar with it, so I would appreciate an introduction.
->>
->> I expect the PCI maintainers to pick this up. If I don't see this picked
->> up in this week I will apply it to hyperv-next.
-> 
-> Actually I will pick this up via hyperv-next, because there is another
-> series which will also touch this driver but at the some time depend on
-> vmbus changes. I can fix up any potential conflicts easily.
+IPQ8074 has one Gen2 and one Gen3 port, currently the Gen2 port will
+cause the system to hang as its using DBI registers in the .init
+and those are only accesible after phy_power_on().
 
-Sounds good to me.  Let me know if you do run into conflicts, and I can 
-help.
+So solve this by splitting the DBI read/writes to .post_init.
 
--Jeff
+Fixes: a0fd361db8e5 ("PCI: dwc: Move "dbi", "dbi2", and "addr_space" resource setup into common code")
+Signed-off-by: Robert Marko <robimarko@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 9419b5d9d482..ed261d84d2b4 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1059,9 +1059,7 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+ 	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+-	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+ 	int i, ret;
+-	u32 val;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
+ 		ret = reset_control_assert(res->rst[i]);
+@@ -1118,6 +1116,33 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+ 		goto err_clk_aux;
+ 	}
+ 
++	return 0;
++
++err_clk_aux:
++	clk_disable_unprepare(res->ahb_clk);
++err_clk_ahb:
++	clk_disable_unprepare(res->axi_s_clk);
++err_clk_axi_s:
++	clk_disable_unprepare(res->axi_m_clk);
++err_clk_axi_m:
++	clk_disable_unprepare(res->iface);
++err_clk_iface:
++	/*
++	 * Not checking for failure, will anyway return
++	 * the original failure in 'ret'.
++	 */
++	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
++		reset_control_assert(res->rst[i]);
++
++	return ret;
++}
++
++static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
++{
++	struct dw_pcie *pci = pcie->pci;
++	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
++	u32 val;
++
+ 	writel(SLV_ADDR_SPACE_SZ,
+ 		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
+ 
+@@ -1145,24 +1170,6 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+ 		PCI_EXP_DEVCTL2);
+ 
+ 	return 0;
+-
+-err_clk_aux:
+-	clk_disable_unprepare(res->ahb_clk);
+-err_clk_ahb:
+-	clk_disable_unprepare(res->axi_s_clk);
+-err_clk_axi_s:
+-	clk_disable_unprepare(res->axi_m_clk);
+-err_clk_axi_m:
+-	clk_disable_unprepare(res->iface);
+-err_clk_iface:
+-	/*
+-	 * Not checking for failure, will anyway return
+-	 * the original failure in 'ret'.
+-	 */
+-	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
+-		reset_control_assert(res->rst[i]);
+-
+-	return ret;
+ }
+ 
+ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+@@ -1612,6 +1619,7 @@ static const struct qcom_pcie_ops ops_2_4_0 = {
+ static const struct qcom_pcie_ops ops_2_3_3 = {
+ 	.get_resources = qcom_pcie_get_resources_2_3_3,
+ 	.init = qcom_pcie_init_2_3_3,
++	.post_init = qcom_pcie_post_init_2_3_3,
+ 	.deinit = qcom_pcie_deinit_2_3_3,
+ 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+ };
+-- 
+2.35.1
 
