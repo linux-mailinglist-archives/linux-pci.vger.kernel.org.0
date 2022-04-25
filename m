@@ -2,136 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3739750D6BB
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 03:50:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7088C50D8C7
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 07:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239727AbiDYBxt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Apr 2022 21:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57170 "EHLO
+        id S241240AbiDYFZt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Apr 2022 01:25:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240251AbiDYBxs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Apr 2022 21:53:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 241EE6458;
-        Sun, 24 Apr 2022 18:50:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DAE126149E;
-        Mon, 25 Apr 2022 01:50:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DEDC385A9;
-        Mon, 25 Apr 2022 01:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650851440;
-        bh=A+IkgleLx5GpYaRe8XgG8WBa7kh9cTf9GNEyRineIbQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HLzwfKf8aWJjQvJFi64XmqmEotQ7wdDf+Plzmipv4qqh7a4ldhUwheEfX8PzJdxhn
-         5oPvKJOk4Q5uZqvERPwIAWGAm8xbckez7Ux6KzOh9GvXVfulc+iZOK6wkU8DcFkvp7
-         t3GXfYgvB496nc5isCNdDWV/F79VpBWujCMn5ovQROgEd28cctv3oScU8+n6vGH/Ob
-         151fat9emLRcHXUUDrt8JNmYRyd9Ov/Dpoh1T2+h/Lal1W0UfU8HY2m6kgH8qO72CL
-         eA1qn1cbWjilygyH4HUkWuuq/g3PBpNJ/aqopPmEdo6tAXbYQmeasdSM9hN7x2BL5x
-         um5Of0HHfgGSg==
-Date:   Sun, 24 Apr 2022 20:50:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        with ESMTP id S241237AbiDYFZt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 01:25:49 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E52BF940
+        for <linux-pci@vger.kernel.org>; Sun, 24 Apr 2022 22:22:45 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id bg9so12467035pgb.9
+        for <linux-pci@vger.kernel.org>; Sun, 24 Apr 2022 22:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7UM6DPyHOQq3FgqfTuePB73/Nb2FwKrg0jImby5eM5c=;
+        b=DoGMBBcDebYjX7MkBKm4T9g0BwwvOpC3qFrJETTa5OVm92Dv5XUVuona8ulNEZj5BV
+         f/ICaRIsdUi63tbWXzWOVqIio3oC/RWDlS5bBDdLTlNyG3UETXWabHcOk2dRny+qnRmP
+         KXVma1BtJHvDybsneiVdIBYVjcN5M8O/jWJAdmDHks7tu14YPMaEM2LOSYMX9iLTgo1+
+         zHB+jWzGcGDheGtQomNwJ1Y82lz2kYP1xGXooQheqWhWdFIIEvX7UewLm5NpWN1niwae
+         tc2s5Ei7g8kq55sU93SLeJeHKaKvS5viOuwhzDiwyHq/eVjc6TtrFYAjgxxZ0TSbsfIY
+         MN7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7UM6DPyHOQq3FgqfTuePB73/Nb2FwKrg0jImby5eM5c=;
+        b=b65inkucaOov0HPomSRe5WwD78EqtFNQd0aR69g3MxQbASYnuSH5cgGdBMHMJS2Ao7
+         /TjOEvjZ15lXZAEkc2rBeVKUG9RF/Ov4Hyg9d8FqJhp2chjXuJtE84I+fU5t6gqLg32E
+         NmJmGy8pB/iscS7534TXS0v1gxeoaMZn3b73JSNQ2p/8uwf3LkSdxK7YIdCeWndgj5Mc
+         DYOZZKFSGTHdCE20tqVfi/qTYne1yhwNj5oLOfVxSOp9QBC558TwAedgoau7ufgQtt0w
+         7KVw29K5F3rpFHXMW6WHwNa76Wp8LTAVFmbmOd7HH0zOpPnVB8tzrFIH37ErY9FztAP/
+         5oFQ==
+X-Gm-Message-State: AOAM5323KyijTVefRPz2QFaCVVC3QAJHN2oO+NV0sy4dTuxjL+wlyF4u
+        lNJHx5h20h/hQLE+6GnJn0kN
+X-Google-Smtp-Source: ABdhPJwujy4Eu9iaaqDg9ObZQzlv51k9+KSWAQ0IObR7HlLdlWitH02y4OEmLfb1fYc0JSSFi70byw==
+X-Received: by 2002:aa7:999e:0:b0:50d:3db0:a3a6 with SMTP id k30-20020aa7999e000000b0050d3db0a3a6mr3919799pfh.7.1650864164510;
+        Sun, 24 Apr 2022 22:22:44 -0700 (PDT)
+Received: from thinkpad ([117.193.215.110])
+        by smtp.gmail.com with ESMTPSA id n20-20020a634d54000000b0039d18bf7864sm8306243pgl.20.2022.04.24.22.22.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Apr 2022 22:22:43 -0700 (PDT)
+Date:   Mon, 25 Apr 2022 10:52:36 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] PCI: dwc: Teach dwc core to parse additional MSI
- interrupts
-Message-ID: <20220425015037.GA1611231@bhelgaas>
+        Frank Li <Frank.Li@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 25/25] PCI: dwc: Add DW eDMA engine support
+Message-ID: <20220425052236.GA5587@thinkpad>
+References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-26-Sergey.Semin@baikalelectronics.ru>
+ <20220328141521.GA17663@thinkpad>
+ <20220419205403.hdtp67mwoyrl6b6q@mobilestation>
+ <20220423144055.GR374560@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220423133939.2123449-3-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220423144055.GR374560@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 23, 2022 at 04:39:36PM +0300, Dmitry Baryshkov wrote:
-> DWC driver parses a single "msi" interrupt which gets fired when the EP
-> sends an MSI interrupt, however for some devices (Qualcomm) devies MSI
-> vectors are handled in groups of 32 vectors. Add support for parsing
-> "split" MSI interrupts.
+On Sat, Apr 23, 2022 at 08:10:55PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Apr 19, 2022 at 11:54:03PM +0300, Serge Semin wrote:
+> > On Mon, Mar 28, 2022 at 07:45:21PM +0530, Manivannan Sadhasivam wrote:
+> > > On Thu, Mar 24, 2022 at 04:48:36AM +0300, Serge Semin wrote:
+> > > > Since the DW eDMA driver now supports eDMA controllers embedded into the
+> > > > locally accessible DW PCIe Root Ports and End-points, we can use the
+> > > > updated interface to register DW eDMA as DMA engine device if it's
+> > > > available. In order to successfully do that the DW PCIe core driver need
+> > > > to perform some preparations first. First of all it needs to find out the
+> > > > eDMA controller CSRs base address, whether they are accessible over the
+> > > > Port Logic or iATU unrolled space. Afterwards it can try to auto-detect
+> > > > the eDMA controller availability and number of it's read/write channels.
+> > > > If none was found the procedure will just silently halt with no error
+> > > > returned. Secondly the platform is supposed to provide either combined or
+> > > > per-channel IRQ signals. If no valid IRQs set is found the procedure will
+> > > > also halt with no error returned so to be backward compatible with
+> > > > platforms where DW PCIe controllers have eDMA embedded but lack of the
+> > > > IRQs defined for them. Finally before actually probing the eDMA device we
+> > > > need to allocate LLP items buffers. After that the DW eDMA can be
+> > > > registered. If registration is successful the info-message regarding the
+> > > > number of detected Read/Write eDMA channels will be printed to the system
+> > > > log in the same way as it's done for iATU settings.
+> > > > 
+> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > ---
+> > > >  .../pci/controller/dwc/pcie-designware-ep.c   |   4 +
+> > > >  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
+> > > >  drivers/pci/controller/dwc/pcie-designware.c  | 188 ++++++++++++++++++
+> > > >  drivers/pci/controller/dwc/pcie-designware.h  |  23 ++-
+> > > >  4 files changed, 225 insertions(+), 3 deletions(-)
+> > > > 
 
-devies?  Maybe spurious?
+[...]
 
-> In addition to the "msi" interrupt, the code will lookup the "msi2",
-> "msi3", etc. IRQs and use them for the MSI group interrupts. For
-> backwards compatibility with existing DTS files, the code will not error
-> out if any of these interrupts is missing. Instead it will limit itself
-> to the amount of MSI group IRQs declared in the DT file.
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > index 4a95a7b112e9..dbe39a7ecb71 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+
+[...]
+
+> > > Should we introduce a new Kconfig option for enabling eDMA? My concern here is,
+> > > if eDMA is really needed for an usecase and if the platform support is broken
+> > > somehow (DT issues?), then we'll just simply go ahead without probe failure and
+> > > it may break somewhere else.
+> > > 
+> > > And we are returning errors if something wrong happens during eDMA probe. This
+> > > might annoy the existing users who don't care about eDMA but turning those
+> > > errors to debug will affect the real users of eDMA.
+> > > 
+> > > For these reasons, I think it'd be better to probe eDMA only if the Kconfig
+> > > option is enabled (which would be disabled by default). And properly return the
+> > > failure.
+> > 
+> > I don't see a need in introducing of a new parametrization. Neither
+> > there is a point in dropping the eDMA support on all the platforms for
+> > the sake of some hypothetically malfunction hardware.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  .../pci/controller/dwc/pcie-designware-host.c | 23 +++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 5d90009a0f73..ce7071095006 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -382,6 +382,29 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  				pp->msi_irq[0] = irq;
->  			}
->  
-> +			if (pp->has_split_msi_irq) {
-> +				char irq_name[] = "msiXXX";
-> +				int irq;
-> +
-> +				for (ctrl = 1; ctrl < num_ctrls; ctrl++) {
-> +					if (pp->msi_irq[ctrl])
-> +						continue;
-> +
-> +					snprintf(irq_name, sizeof(irq_name), "msi%d", ctrl + 1);
-> +					irq = platform_get_irq_byname_optional(pdev, irq_name);
-> +					if (irq == -ENXIO) {
-> +						num_ctrls = ctrl;
-> +						pp->num_vectors = num_ctrls * MAX_MSI_IRQS_PER_CTRL;
-> +						dev_warn(dev, "Limiting amount of MSI irqs to %d\n", pp->num_vectors);
-> +						break;
-> +					}
-> +					if (irq < 0)
-> +						return irq;
-> +
-> +					pp->msi_irq[ctrl] = irq;
-> +				}
-> +			}
+> I'm not talking about "hypothetically malfunction hardware" but real customized
+> ones like all Qcom platforms supporting PCIe.
 
-This is getting pretty deeply nested, which means it's impractical to
-fit in 80 columns like the rest of the file, which means it's ripe for
-refactoring to reduce the indentation.
+Correction: It is not "all Qcom platforms" but some like SM8250, SM8450 etc...
 
-s/amount of/number of/
-s/MSI irqs/MSI IRQs/
-
->  			pp->msi_irq_chip = &dw_pci_msi_bottom_irq_chip;
->  
->  			ret = dw_pcie_allocate_domains(pp);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 9c1a38b0a6b3..3aa840a5b19c 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -179,6 +179,7 @@ struct dw_pcie_host_ops {
->  
->  struct pcie_port {
->  	bool			has_msi_ctrl:1;
-> +	bool			has_split_msi_irq:1;
->  	u64			cfg0_base;
->  	void __iomem		*va_cfg0_base;
->  	u32			cfg0_size;
-> -- 
-> 2.35.1
-> 
+Thanks,
+Mani
