@@ -2,150 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7088C50D8C7
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 07:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CFC950D9E8
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Apr 2022 09:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241240AbiDYFZt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Apr 2022 01:25:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43926 "EHLO
+        id S232958AbiDYHLu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Apr 2022 03:11:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241237AbiDYFZt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 01:25:49 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E52BF940
-        for <linux-pci@vger.kernel.org>; Sun, 24 Apr 2022 22:22:45 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id bg9so12467035pgb.9
-        for <linux-pci@vger.kernel.org>; Sun, 24 Apr 2022 22:22:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7UM6DPyHOQq3FgqfTuePB73/Nb2FwKrg0jImby5eM5c=;
-        b=DoGMBBcDebYjX7MkBKm4T9g0BwwvOpC3qFrJETTa5OVm92Dv5XUVuona8ulNEZj5BV
-         f/ICaRIsdUi63tbWXzWOVqIio3oC/RWDlS5bBDdLTlNyG3UETXWabHcOk2dRny+qnRmP
-         KXVma1BtJHvDybsneiVdIBYVjcN5M8O/jWJAdmDHks7tu14YPMaEM2LOSYMX9iLTgo1+
-         zHB+jWzGcGDheGtQomNwJ1Y82lz2kYP1xGXooQheqWhWdFIIEvX7UewLm5NpWN1niwae
-         tc2s5Ei7g8kq55sU93SLeJeHKaKvS5viOuwhzDiwyHq/eVjc6TtrFYAjgxxZ0TSbsfIY
-         MN7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7UM6DPyHOQq3FgqfTuePB73/Nb2FwKrg0jImby5eM5c=;
-        b=b65inkucaOov0HPomSRe5WwD78EqtFNQd0aR69g3MxQbASYnuSH5cgGdBMHMJS2Ao7
-         /TjOEvjZ15lXZAEkc2rBeVKUG9RF/Ov4Hyg9d8FqJhp2chjXuJtE84I+fU5t6gqLg32E
-         NmJmGy8pB/iscS7534TXS0v1gxeoaMZn3b73JSNQ2p/8uwf3LkSdxK7YIdCeWndgj5Mc
-         DYOZZKFSGTHdCE20tqVfi/qTYne1yhwNj5oLOfVxSOp9QBC558TwAedgoau7ufgQtt0w
-         7KVw29K5F3rpFHXMW6WHwNa76Wp8LTAVFmbmOd7HH0zOpPnVB8tzrFIH37ErY9FztAP/
-         5oFQ==
-X-Gm-Message-State: AOAM5323KyijTVefRPz2QFaCVVC3QAJHN2oO+NV0sy4dTuxjL+wlyF4u
-        lNJHx5h20h/hQLE+6GnJn0kN
-X-Google-Smtp-Source: ABdhPJwujy4Eu9iaaqDg9ObZQzlv51k9+KSWAQ0IObR7HlLdlWitH02y4OEmLfb1fYc0JSSFi70byw==
-X-Received: by 2002:aa7:999e:0:b0:50d:3db0:a3a6 with SMTP id k30-20020aa7999e000000b0050d3db0a3a6mr3919799pfh.7.1650864164510;
-        Sun, 24 Apr 2022 22:22:44 -0700 (PDT)
-Received: from thinkpad ([117.193.215.110])
-        by smtp.gmail.com with ESMTPSA id n20-20020a634d54000000b0039d18bf7864sm8306243pgl.20.2022.04.24.22.22.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Apr 2022 22:22:43 -0700 (PDT)
-Date:   Mon, 25 Apr 2022 10:52:36 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 25/25] PCI: dwc: Add DW eDMA engine support
-Message-ID: <20220425052236.GA5587@thinkpad>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-26-Sergey.Semin@baikalelectronics.ru>
- <20220328141521.GA17663@thinkpad>
- <20220419205403.hdtp67mwoyrl6b6q@mobilestation>
- <20220423144055.GR374560@thinkpad>
+        with ESMTP id S231663AbiDYHLt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 03:11:49 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6211C13D0A;
+        Mon, 25 Apr 2022 00:08:45 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Kmwyk0JrjzGpLq;
+        Mon, 25 Apr 2022 15:05:50 +0800 (CST)
+Received: from localhost.localdomain (10.67.164.66) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 25 Apr 2022 15:08:24 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+CC:     <lenb@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yangyicong@hisilicon.com>, <linuxarm@huawei.com>
+Subject: [PATCH] PCI/ACPI: Always advertise ASPM support if CONFIG_PCIEASPM=y
+Date:   Mon, 25 Apr 2022 15:06:34 +0800
+Message-ID: <20220425070634.28227-1-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220423144055.GR374560@thinkpad>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 23, 2022 at 08:10:55PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Apr 19, 2022 at 11:54:03PM +0300, Serge Semin wrote:
-> > On Mon, Mar 28, 2022 at 07:45:21PM +0530, Manivannan Sadhasivam wrote:
-> > > On Thu, Mar 24, 2022 at 04:48:36AM +0300, Serge Semin wrote:
-> > > > Since the DW eDMA driver now supports eDMA controllers embedded into the
-> > > > locally accessible DW PCIe Root Ports and End-points, we can use the
-> > > > updated interface to register DW eDMA as DMA engine device if it's
-> > > > available. In order to successfully do that the DW PCIe core driver need
-> > > > to perform some preparations first. First of all it needs to find out the
-> > > > eDMA controller CSRs base address, whether they are accessible over the
-> > > > Port Logic or iATU unrolled space. Afterwards it can try to auto-detect
-> > > > the eDMA controller availability and number of it's read/write channels.
-> > > > If none was found the procedure will just silently halt with no error
-> > > > returned. Secondly the platform is supposed to provide either combined or
-> > > > per-channel IRQ signals. If no valid IRQs set is found the procedure will
-> > > > also halt with no error returned so to be backward compatible with
-> > > > platforms where DW PCIe controllers have eDMA embedded but lack of the
-> > > > IRQs defined for them. Finally before actually probing the eDMA device we
-> > > > need to allocate LLP items buffers. After that the DW eDMA can be
-> > > > registered. If registration is successful the info-message regarding the
-> > > > number of detected Read/Write eDMA channels will be printed to the system
-> > > > log in the same way as it's done for iATU settings.
-> > > > 
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > ---
-> > > >  .../pci/controller/dwc/pcie-designware-ep.c   |   4 +
-> > > >  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
-> > > >  drivers/pci/controller/dwc/pcie-designware.c  | 188 ++++++++++++++++++
-> > > >  drivers/pci/controller/dwc/pcie-designware.h  |  23 ++-
-> > > >  4 files changed, 225 insertions(+), 3 deletions(-)
-> > > > 
+When we have CONFIG_PCIEASPM enabled it means OS can always support ASPM no
+matter user have disabled it through pcie_aspm=off or not. But currently we
+won't advertise ASPM support in _OSC negotiation if user disables it, which
+doesn't match the fact. This will also have side effects that other PCIe
+services like AER and hotplug will be disabled as ASPM support is required
+and we won't negotiate other services if ASPM support is absent.
 
-[...]
+So this patch makes OS always advertising ASPM support if CONFIG_PCIEASPM=y.
+It intends no functional change to pcie_aspm=off as it will still mark
+aspm_disabled=1 and aspm_support_enabled=false, driver will check these
+status before configuring ASPM.
 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > index 4a95a7b112e9..dbe39a7ecb71 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+Tested this patch with pcie_aspm=off:
+estuary:/$ dmesg | egrep -i "aspm|osc"
+[    0.000000] PCIe ASPM is disabled
+[    8.706961] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM
+ClockPM Segments MSI EDR HPX-Type3]
+[    8.726032] acpi PNP0A08:00: _OSC: platform does not support [LTR]
+[    8.742818] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME
+AER PCIeCapability DPC]
+estuary:/sys/module/pcie_aspm/parameters$ cat policy
+[default] performance powersave powersupersave
+estuary:/sys/module/pcie_aspm/parameters$ echo powersave > policy
+bash: echo: write error: Operation not permitted
 
-[...]
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+[https://lore.kernel.org/linux-pci/20220407154257.GA235990@bhelgaas/]
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ drivers/acpi/pci_root.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > > Should we introduce a new Kconfig option for enabling eDMA? My concern here is,
-> > > if eDMA is really needed for an usecase and if the platform support is broken
-> > > somehow (DT issues?), then we'll just simply go ahead without probe failure and
-> > > it may break somewhere else.
-> > > 
-> > > And we are returning errors if something wrong happens during eDMA probe. This
-> > > might annoy the existing users who don't care about eDMA but turning those
-> > > errors to debug will affect the real users of eDMA.
-> > > 
-> > > For these reasons, I think it'd be better to probe eDMA only if the Kconfig
-> > > option is enabled (which would be disabled by default). And properly return the
-> > > failure.
-> > 
-> > I don't see a need in introducing of a new parametrization. Neither
-> > there is a point in dropping the eDMA support on all the platforms for
-> > the sake of some hypothetically malfunction hardware.
-> 
-> I'm not talking about "hypothetically malfunction hardware" but real customized
-> ones like all Qcom platforms supporting PCIe.
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 6f9e75d14808..17e78582e633 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -393,7 +393,7 @@ static u32 calculate_support(void)
+ 	support |= OSC_PCI_HPX_TYPE_3_SUPPORT;
+ 	if (pci_ext_cfg_avail())
+ 		support |= OSC_PCI_EXT_CONFIG_SUPPORT;
+-	if (pcie_aspm_support_enabled())
++	if (IS_ENABLED(CONFIG_PCIEASPM))
+ 		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
+ 	if (pci_msi_enabled())
+ 		support |= OSC_PCI_MSI_SUPPORT;
+-- 
+2.24.0
 
-Correction: It is not "all Qcom platforms" but some like SM8250, SM8450 etc...
-
-Thanks,
-Mani
