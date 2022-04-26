@@ -2,71 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0781450FCC7
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Apr 2022 14:19:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4415050FEC2
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Apr 2022 15:22:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349984AbiDZMVx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Apr 2022 08:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43576 "EHLO
+        id S1350853AbiDZNZH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Apr 2022 09:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349947AbiDZMVo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Apr 2022 08:21:44 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F53C2D1FB;
-        Tue, 26 Apr 2022 05:17:39 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id j2so32669328ybu.0;
-        Tue, 26 Apr 2022 05:17:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D8bMngWVr0tdDN5yiWTr4GCLxeSgF3V3y+tGLoxVCwE=;
-        b=PRM6gHAykZCXpCQH5Wk8cGO282pG77Ww8omQDxG+iNICtf6Y583Iv1oDHwR5jgWxlv
-         hAiVerTzW/WBglfZmwOJeATGGNFIGUeSBqNrcr1+yyGzL+Piy9ke9uKErf72U57iZpfB
-         ajJOW7YzJzLMQxtZiYmfusltKmmh23XSC/j6g0WP7/Xh7aIB6BHo6cqwSSnGcoOO1y+D
-         rjxcH30lURrv6o3dnfN8aydhCKNWBXPMjlg4Kjk+r59/we0DKUZGfhBqhOBpL62mLNDZ
-         VcE0iElzzWysREq918Ia6i8+mbxC9Vc36Lo72l1Q51v6XPgU/C/fZjbh78GsiSqTgAls
-         i+qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D8bMngWVr0tdDN5yiWTr4GCLxeSgF3V3y+tGLoxVCwE=;
-        b=Epzf7ddvFQ8bmt0gkaZsuPYNWgmaoTFY7vnKNZfgr5TDfgsMGsdKPcGKeIgNJ49Ocm
-         /1WlpnJHXuL0Cw6Me1iWQQcgnvF5dbj+g8lpUM16QrgU2nhbqmzJDVv/BPUpj09Nr69n
-         Ns9j2nxt7/ODq5QCFAwLn0Kxip+YAJt1VEyKOZ256NM231ESAOERnmHOlAlIB3RUZg3H
-         3FjpxPQ7k1ozqxBMrw262F/tAO29rtki7SVlCpYOt42UePPD4eB2d+YYrxgKimZghSBS
-         0f+20cyVq1kEKSw6joUkLMH3+fK9arVW7Rq/vREakhlQ7MrSD5ve0VS7w2vN14UphAvl
-         IBiQ==
-X-Gm-Message-State: AOAM530ybCMvcf6q+BlsGD2iU1G0Jamr5Bj2CVDIrTB5YZHs9wNrHlco
-        NS9nfySUlJih/9OOKDsQm5S4wKSCiawIoUU9Lso=
-X-Google-Smtp-Source: ABdhPJx0rpcQBG6rCBtHajN61Ati9nYNIN0fnUTzxWuvy/zu9z0hhhANAao1ToRixhOUAakqrY5Nme82QpTApzdY0j0=
-X-Received: by 2002:a05:6902:143:b0:628:7cf1:f2a9 with SMTP id
- p3-20020a056902014300b006287cf1f2a9mr19922108ybh.51.1650975458538; Tue, 26
- Apr 2022 05:17:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220423152403.1681222-1-pgwipeout@gmail.com> <20220423152403.1681222-3-pgwipeout@gmail.com>
- <25fbf4763c28af4c73162dec254af6111e05461b.camel@pengutronix.de>
-In-Reply-To: <25fbf4763c28af4c73162dec254af6111e05461b.camel@pengutronix.de>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Tue, 26 Apr 2022 08:17:26 -0400
-Message-ID: <CAMdYzYpw-vUFTM=pmnASNrWvi0X4mM0hFKX7TRLHhJyehfuHkw@mail.gmail.com>
-Subject: Re: [PATCH v8 2/5] PCI: dwc: rockchip: reset core at driver probe
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S1350844AbiDZNZF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Apr 2022 09:25:05 -0400
+Received: from mxout2.routing.net (mxout2.routing.net [IPv6:2a03:2900:1:a::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB0F15737;
+        Tue, 26 Apr 2022 06:21:57 -0700 (PDT)
+Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
+        by mxout2.routing.net (Postfix) with ESMTP id EFACD5FBBE;
+        Tue, 26 Apr 2022 13:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1650979315;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3MPG+xGmR4VMjoWP9SmdGX2PEI83rfYf+MZ3I3FUJrI=;
+        b=gDHOiM3w+YaLFxLLc1F70fyqbPq93DIDUQzzsn/TEwBbqKfZc2s1wlBSzwaR28BRe1qmSb
+        hUBPgzGEpH+idDN1yKP5VTHdpm1l5ck2rlPlaldXQ/DtKoExmkubxJQ5WK4rBCog0ewUO0
+        6iRf3wiGhn+7BCRnZAASp/VZNDIJYQQ=
+Received: from localhost.localdomain (fttx-pool-80.245.77.37.bambit.de [80.245.77.37])
+        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id B7B49401C9;
+        Tue, 26 Apr 2022 13:21:53 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-rockchip@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: [RFC/RFT v2 00/11] RK3568 PCIe V3 support
+Date:   Tue, 26 Apr 2022 15:21:28 +0200
+Message-Id: <20220426132139.26761-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Mail-ID: 6ee0f1ac-3381-46d2-9e26-38a02835f5ee
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,48 +63,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 5:20 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
->
-> Hi Peter,
->
-> On Sa, 2022-04-23 at 11:24 -0400, Peter Geis wrote:
-> > The PCIe controller is in an unknown state at driver probe. This can
-> > lead to undesireable effects when the driver attempts to configure the
-> > controller.
-> >
-> > Prevent issues in the future by resetting the core during probe.
-> >
-> > Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 22 +++++++------------
-> >  1 file changed, 8 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > index c9b341e55cbb..d67ed811e752 100644
-> > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > @@ -152,7 +152,13 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
-> >       if (IS_ERR(rockchip->rst_gpio))
-> >               return PTR_ERR(rockchip->rst_gpio);
-> >
-> > -     return 0;
-> > +     rockchip->rst = devm_reset_control_array_get_exclusive(&pdev->dev);
-> > +     if (IS_ERR(rockchip->rst))
-> > +             return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
-> > +                                  "failed to get reset lines\n");
-> > +
-> > +     return reset_control_assert(rockchip->rst);
->
-> This makes "rockchip_pcie_resource_get" a bit of a misnomer, maybe move
-> this out into rockchip_pcie_probe()?
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Ah, yes that does make sense, thanks.
+This series adds Rockchip PCIe V3 support found on rk3568 SOC.
 
->
-> > +
->
-> Superfluous whitespace.
->
-> regards
-> Philipp
->
+It is based on "Enable rk356x PCIe controller" series of Peter Geis
+v8: https://patchwork.kernel.org/project/linux-rockchip/list/?series=634925
+
+Compared to PCIeV2 which uses the Naneng combphy, pciev3
+uses a dedicated pci-phy.
+
+This Version is still an RFC/RFT because i cannot only test PCIe-slot on R2Pro
+as the other is a M.2 Key-E where i don't have any Hardware.
+
+last 3 Patches show a replacement for bifurcation setting to make it more
+useful for vendor-indepent lane-mapping.
+
+Frank Wunderlich (11):
+  dt-bindings: phy: rockchip: add PCIe v3 phy
+  dt-bindings: soc: grf: add pcie30-{phy,pipe}-grf
+  dt-bindings: phy: rockchip: add PCIe v3 constants
+  phy: rockchip: Support PCIe v3
+  dt-bindings: pci: add bifurcation option to Rockchip DesignWare
+    binding
+  PCI: rockchip-dwc: add PCIe bifurcation
+  arm64: dts: rockchip: rk3568: Add PCIe v3 nodes
+  arm64: dts: rockchip: Add PCIe v3 nodes to BPI-R2-Pro
+  dt-bindings: pci: add lane-map to rockchip PCIe binding
+  PCI: rockchip: add a lane-map to rockchip pcie driver
+  arm64: dts: rockchip: add basic lane-map and drop bifurcation from
+    r2pro
+
+ .../bindings/pci/rockchip-dw-pcie.yaml        |   3 +
+ .../bindings/phy/rockchip,pcie3-phy.yaml      |  84 ++++++
+ .../devicetree/bindings/soc/rockchip/grf.yaml |   3 +
+ .../boot/dts/rockchip/rk3568-bpi-r2-pro.dts   |  79 +++++
+ arch/arm64/boot/dts/rockchip/rk3568.dtsi      | 122 ++++++++
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |  22 ++
+ drivers/phy/rockchip/Kconfig                  |   9 +
+ drivers/phy/rockchip/Makefile                 |   1 +
+ .../phy/rockchip/phy-rockchip-snps-pcie3.c    | 278 ++++++++++++++++++
+ include/dt-bindings/phy/phy-rockchip-pcie3.h  |  21 ++
+ include/linux/phy/pcie.h                      |  12 +
+ 11 files changed, 634 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml
+ create mode 100644 drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+ create mode 100644 include/dt-bindings/phy/phy-rockchip-pcie3.h
+ create mode 100644 include/linux/phy/pcie.h
+
+-- 
+2.25.1
+
