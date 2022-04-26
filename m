@@ -2,91 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97D8650EDCA
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Apr 2022 02:46:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E761450EDD2
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Apr 2022 02:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240444AbiDZAtU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Apr 2022 20:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35966 "EHLO
+        id S240526AbiDZAub (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Apr 2022 20:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240439AbiDZAtT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 20:49:19 -0400
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6889678928;
-        Mon, 25 Apr 2022 17:46:14 -0700 (PDT)
-Received: by mail-oi1-f173.google.com with SMTP id r85so19060789oie.7;
-        Mon, 25 Apr 2022 17:46:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EDE0zD5BIndqKa2VaNIh8yBysMv4iwF5V38pzI4Vei0=;
-        b=SGdEtzoVoVRstNbnwdge07vtDx+1y9buzKR6Dszlrs35wqO1vEK9X8U0iybGqaI8V9
-         vmI+Ee5AkKBT/IqIulQajJ9npzmw952sSU1ZFOqhpaWtg7yAgolRu09LT1Hpq4VCEgRS
-         wh70zyigTlAjhDOkv76ME1SJaHIq7At4qUu78oS56m7AXvX5o61nTY5Yz8Qefl1s16DR
-         oYv7BZi6sHDvJuXD6v/uDgKywTBznxQmi3assOfBJ+xmRe20xQLuVMXTx8E+ItmQaYAg
-         wwQLnuqM42ONDLR8LCjjAuEG9Cf0WrhYSnhfG68yVOXnbFN2KmHZ105qCUu7kcPTB2oe
-         GJig==
-X-Gm-Message-State: AOAM532SJI+oNTDoOxg11WoUd0e2JSJ76k6RfZ/AC1/LUfE1FCo8HYB5
-        24+3AksWrO0RYYaQ76thOA==
-X-Google-Smtp-Source: ABdhPJzR8mwCyNyhyHr/Jc9mlShXCzj+vYEWMu1KDZnGEnVmg5pj0FEOIjRtUs8ugQTXQ2OrrAoxuQ==
-X-Received: by 2002:a54:4d9b:0:b0:324:f014:80d5 with SMTP id y27-20020a544d9b000000b00324f01480d5mr8256923oix.110.1650933973691;
-        Mon, 25 Apr 2022 17:46:13 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id 30-20020a9d0ba1000000b005e95b29b95dsm4313812oth.5.2022.04.25.17.46.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Apr 2022 17:46:13 -0700 (PDT)
-Received: (nullmailer pid 643080 invoked by uid 1000);
-        Tue, 26 Apr 2022 00:46:12 -0000
-Date:   Mon, 25 Apr 2022 19:46:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Herve Codina <herve.codina@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/8] dt-bindings: PCI: renesas,pci-rcar-gen2: Add
- device tree support for r9a06g032
-Message-ID: <YmdA1O+3PgL9Eep3@robh.at.kernel.org>
-References: <20220422120850.769480-1-herve.codina@bootlin.com>
- <20220422120850.769480-3-herve.codina@bootlin.com>
+        with ESMTP id S240562AbiDZAua (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Apr 2022 20:50:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E86A88233F;
+        Mon, 25 Apr 2022 17:47:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AB226B81BBD;
+        Tue, 26 Apr 2022 00:47:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C00CC385BC;
+        Tue, 26 Apr 2022 00:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650934041;
+        bh=kLamuQx/TZ/sNoIRw/5TAxBjveCbRpEZboY1GBz+FsU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ff3YbpHMajkkkQd7iGBvfo0jDfSl0+Es3gn64y/jL/MpVBIfCrSI2ej1Bb1CX9Cyj
+         C/wyYFVOu8n8PmRIrl/23O/Sqdm3lKb5PugMl0sQYHUsO9rSI15ZUG7GJaonc3kfpw
+         0lfX/waaN/3oLyl59rSWdx1VNwSYmRTsKnXYLStxl/SwhQMSIl/f5LLu/JUk//sAhw
+         EL3RV3VwvrFpC85bQVAmoptp6PTvBCiNpoJvr+g7mEL9dVA6NyodDhPornLJEk2EYj
+         8AootvLdDgj55S7H5PnBAArXtXwPDGUN7F0Ll0htf4vBlMHmB4/m9n04J2DpOHwBX8
+         cYUyVp+VbqaRA==
+Received: by mail-pf1-f171.google.com with SMTP id y38so673365pfa.6;
+        Mon, 25 Apr 2022 17:47:21 -0700 (PDT)
+X-Gm-Message-State: AOAM531Vmxo9QAMLDi691J+p+9N/T/L4YS1zyFweoVCs8drCdPfx81F9
+        3U2g+HVvZC/+X+g9PabnuwqQl2oi5jIOv25m4Q==
+X-Google-Smtp-Source: ABdhPJycsc7NBLBhkO+uQw3aVqYzcavGPUv3sesqoIz5RMiNfznfUgjgBNTclu+0EbdqOtljNB8bkZ9ZkyhqfqI73qY=
+X-Received: by 2002:a05:6a00:10d0:b0:4f7:5af4:47b6 with SMTP id
+ d16-20020a056a0010d000b004f75af447b6mr21383086pfu.6.1650934040893; Mon, 25
+ Apr 2022 17:47:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220422120850.769480-3-herve.codina@bootlin.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20220422120850.769480-1-herve.codina@bootlin.com>
+ <20220422120850.769480-2-herve.codina@bootlin.com> <YmdAqGyl5pyjvwX+@robh.at.kernel.org>
+In-Reply-To: <YmdAqGyl5pyjvwX+@robh.at.kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 25 Apr 2022 19:47:08 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+CZs_0X5R19R86Vck3BeMKYqhNUeZnvZ_YSwuA8ZH3Eg@mail.gmail.com>
+Message-ID: <CAL_Jsq+CZs_0X5R19R86Vck3BeMKYqhNUeZnvZ_YSwuA8ZH3Eg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/8] dt-bindings: PCI: pci-rcar-gen2: Convert bindings
+ to json-schema
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 22 Apr 2022 14:08:44 +0200, Herve Codina wrote:
-> Add internal PCI bridge support for the r9a06g032 SOC. The Renesas
-> RZ/N1D (R9A06G032) internal PCI bridge is compatible with the one
-> present in the R-Car Gen2 family.
-> Compared to the R-Car Gen2 family, it needs three clocks instead of
-> one.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  .../bindings/pci/renesas,pci-rcar-gen2.yaml   | 43 ++++++++++++++++---
->  1 file changed, 37 insertions(+), 6 deletions(-)
-> 
+On Mon, Apr 25, 2022 at 7:45 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Apr 22, 2022 at 02:08:43PM +0200, Herve Codina wrote:
+> > Convert Renesas PCI bridge bindings documentation to json-schema.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > ---
+> >  .../devicetree/bindings/pci/pci-rcar-gen2.txt |  84 ----------
+> >  .../bindings/pci/renesas,pci-rcar-gen2.yaml   | 156 ++++++++++++++++++
+> >  2 files changed, 156 insertions(+), 84 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
+>
+> > diff --git a/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml b/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
+> > new file mode 100644
+> > index 000000000000..494eb975c146
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
+> > @@ -0,0 +1,156 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pci/renesas,pci-rcar-gen2.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Renesas AHB to PCI bridge
+> > +
+> > +maintainers:
+> > +  - Marek Vasut <marek.vasut+renesas@gmail.com>
+> > +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > +
+> > +description: |
+> > +  This is the bridge used internally to connect the USB controllers to the
+> > +  AHB. There is one bridge instance per USB port connected to the internal
+> > +  OHCI and EHCI controllers.
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/pci/pci-bus.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+>
+> Don't need oneOf with only 1 entry. Otherwise,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Nevermind, I see you need it in the next patch.
+
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> > +          - enum:
+> > +              - renesas,pci-r8a7742      # RZ/G1H
+> > +              - renesas,pci-r8a7743      # RZ/G1M
+> > +              - renesas,pci-r8a7744      # RZ/G1N
+> > +              - renesas,pci-r8a7745      # RZ/G1E
+> > +              - renesas,pci-r8a7790      # R-Car H2
+> > +              - renesas,pci-r8a7791      # R-Car M2-W
+> > +              - renesas,pci-r8a7793      # R-Car M2-N
+> > +              - renesas,pci-r8a7794      # R-Car E2
+> > +          - const: renesas,pci-rcar-gen2 # R-Car Gen2 and RZ/G1
+> > +
