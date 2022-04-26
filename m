@@ -2,81 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EE16510542
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Apr 2022 19:21:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8BFD510567
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Apr 2022 19:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242156AbiDZRYZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Apr 2022 13:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38360 "EHLO
+        id S245068AbiDZRbU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Apr 2022 13:31:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347550AbiDZRYV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Apr 2022 13:24:21 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF0E23AA6B
-        for <linux-pci@vger.kernel.org>; Tue, 26 Apr 2022 10:21:12 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id d22-20020a25add6000000b00645d796034fso10283043ybe.2
-        for <linux-pci@vger.kernel.org>; Tue, 26 Apr 2022 10:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=PI6P4hVmL5VSlNStDa8yoRCKf8zCtm5J26ICwUjLazU=;
-        b=nmszqekbq0eqmAOrxhoxhpOUtjONopanoK4BLzf6Y7SO0MdbDpxoPMN7TldeHuYxU1
-         FAcxQslQWcISEhOLRyXucSQvrVGbNevk/n9eGT7cC0ffdZLPqDnqWVJIe+Li9DrIsc65
-         Ip3Upkx2bX5Bn8uFUpWeoJklm9//BrntC9OYtGHiowTnSikOduUyBEq67k2Pdfdd3hrW
-         +JSXGuRf1XPyXek3iJppsuE/1YIxw+L9FcPhOf6A9WZGIkG+vwrYyMyP5udv4FKGosh2
-         d5Ve8EwwsNt7sA1X4j0zlzgBiI5lO1ZC4ydpfkbf8CtwIMqSFXtPfocTcYO4s4ezzpbW
-         VlWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=PI6P4hVmL5VSlNStDa8yoRCKf8zCtm5J26ICwUjLazU=;
-        b=hgqESzSTAp8pnv+CM8IIZnOuyTA0xAJf0MWe9GVRIDCjqduP30jthS9PYkKOYM7uUM
-         bw5OfBsXv0OC34bCsUA7Ckqlcr2ISlKxqt4Zo+vfmP3muL0sA1ShxgucdG0J8U85ZTjJ
-         OUD3gBBIAVocJeM3plqtySSNKi3LLJ0RrkvcyeSyfQzSfc5O+n/40keuvsKp/UBYr2HL
-         9hw6mHv4mBeEsTiRAzL2aHcUCsSujag1T+22ljoHpzNxR5M6GP8y6YlKn8P3cnv8UZZc
-         yo1bNNVMsvTfAbv3zrO9uJfNQLzoh0POxltYFbD0sJpsaRDpWB+vnbO8XTYcziEmu25T
-         eqJg==
-X-Gm-Message-State: AOAM531+F7Nu+AEFZSrXN2fQXRJSlvkA3iLXHSR3ZkQ1uIteJGsaeape
-        J5B+tohRah+tD7/RezgeQvw396eRBDeh
-X-Google-Smtp-Source: ABdhPJxATiLz5ywsTWoQ7JirGS+mZuGjN5/d7L930okabHwvzFCdATmA+VcGAs6znkMpr/Vyp7vGVBotprXt
-X-Received: from rajat2.mtv.corp.google.com ([2620:15c:202:201:ce74:273e:a60f:b750])
- (user=rajatja job=sendgmr) by 2002:a81:2305:0:b0:2f7:dadb:2162 with SMTP id
- j5-20020a812305000000b002f7dadb2162mr11938019ywj.42.1650993671724; Tue, 26
- Apr 2022 10:21:11 -0700 (PDT)
-Date:   Tue, 26 Apr 2022 10:21:05 -0700
-In-Reply-To: <20220426172105.3663170-1-rajatja@google.com>
-Message-Id: <20220426172105.3663170-2-rajatja@google.com>
-Mime-Version: 1.0
-References: <20220426172105.3663170-1-rajatja@google.com>
-X-Mailer: git-send-email 2.36.0.rc2.479.g8af0fa9b8e-goog
-Subject: [PATCH v7 2/2] PCI: Rename pci_dev->untrusted to pci_dev->untrusted_dma
-From:   Rajat Jain <rajatja@google.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        with ESMTP id S238782AbiDZRbT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Apr 2022 13:31:19 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1A7E6F499;
+        Tue, 26 Apr 2022 10:28:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1650994054;
+        bh=Ji+YlFlgCJoaZr9s7YJfnFKefy+/b9Uqn2Dl6qplgqs=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=PvlYceu8Uw36m7FLf8OmUfJ0plYzd9gG4Vk1xj7VhqKa7DiQ6hYZaAaT9vt1Ac4jQ
+         MkAhYUu6CK2oXBB2uAW/jFJZW+IFXkCdTm1RqzMwWKUw+Ib4cdGWeAhk3h2lU/oQkK
+         mc4+eIpkQbEQXmNYd/H6M0lEEq5Fshz0mt1/ucnc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [80.245.77.37] ([80.245.77.37]) by web-mail.gmx.net
+ (3c-app-gmx-bs69.server.lan [172.19.170.214]) (via HTTP); Tue, 26 Apr 2022
+ 19:27:34 +0200
+MIME-Version: 1.0
+Message-ID: <trinity-645b0d5b-4366-492c-9cdb-71d9e8664d31-1650994054170@3c-app-gmx-bs69>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        linux-rockchip@lists.infradead.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Pavel Machek <pavel@denx.de>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org
-Cc:     Rajat Jain <rajatja@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: Aw: Re: [RFC/RFT v2 09/11] dt-bindings: pci: add lane-map to
+ rockchip PCIe binding
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 26 Apr 2022 19:27:34 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20220426160409.GA1731042@bhelgaas>
+References: <20220426132139.26761-10-linux@fw-web.de>
+ <20220426160409.GA1731042@bhelgaas>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:1rhhhhwJUPynO1hGrbADbceOZiAPFPYXAkcyO4s521P1UX6wtPdRfIHJy4WiMKxdAl9Ga
+ GZ036BRlqUZgnEmkKqpDYX10GXbjs7L7gj77aheAhHIJ4WhJQAEKJqna8qKGVMGnDu9UDoumdOQT
+ jjis+uJsD/gDlM3RfgRLoo6M+sFc8wmx0Gvy2QV84L4tYdvHno4qokH1GLC1vMM0XIJka0HR8wlS
+ 7+fTOSkAPhiU4QTyr4LuIZmXLg0SIlDvdIe5iqorZl41D5rOBZTYkdzBbAAWoSSyOFfjDiqtaMwq
+ jY=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ojw4Vv6ZXVk=:EcxcpbnZ5B5Qr+pY1IynEG
+ HH4mjHal3oseLf72R3WAZEcL/SuJ/yx8lZpb86KWRYFS9a5rxZVjLU6LKBqVGv5ox2CIn1f01
+ zdpazMYqLhnAWqlezZj9eyhc2THUi1xpIZ3UNgg8tIlSGA8WVYjfzTyq6FbElu5nDhN+OQR2T
+ lNoCp4oy5jb7QKDtcjL4b2RKbHkzw0di4mzCalljbLq41w3xuANAd9s+bjd4mXsjCRYywZKke
+ ZXdQ2MAbfdRZubwuqVgBCE+gIeTMZZmFGZhVHuZtorufufPF1mOjsVCpYuBvezvy9eEUR1z5r
+ gDJofj9bBKvlK9VKZCDgYyZwBQ3Q14wdEF4SLcl6kxZIpNtQN/ZlCgqqlwhxN+94HtB8X3QyN
+ ZQKTVn3FxCGyKY7tt8AY2PSvtNxL0FWSOY7z9INBhnaTIy3Ul0o2F0YgH+dxhcpAnLr8qEmET
+ rnp1BV762m7kZJhzPyJl35gWC+bmHTEZhOE83O2a30DBmt64E/RS9dUbg/9QE4VJxbXEBVi9q
+ Be1w1LHwPJwJgKGxYsaLQRQt1J8zz84p0IuGU0vzkLcINXeytxDsA1cmQXeBahH/CdosgylEw
+ OLia6Xzw52zK+uwGm4Ri3/3Lbt5N4s8w6b5h0mm902JHSj1F6jrTUfdK3wQZrCno/H2AyP2R4
+ //pXv6VwHSLc0Nr0h8n3OscVtmrTC+wrCx/jffY5fv+b/DMRB/3BQ7o4zawD2qlTAAqKrONLh
+ sgACckEnTD4Mcjdn+2UoLcdYbC+S8aoaHUtbjJL11j5Sh5L5g1VK/yNdez9R9F7sT34Kz+STn
+ KI/Arl9
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,188 +85,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Rename the field to make it more clear, that the device can execute DMA
-attacks on the system, and thus the system may need protection from
-such attacks from this device.
+Hi,
 
-No functional change intended.
+> Gesendet: Dienstag, 26. April 2022 um 18:04 Uhr
+> Von: "Bjorn Helgaas" <helgaas@kernel.org>
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-v7: Added Lu Baolu's "Reviewed by" tag.
-v6: No change in this patch, rebased on top of changes in other patch.
-v5: Use "untrusted_dma" as property name, based on feedback.
-    Reorder the patches in the series.
-v4: Initial version, created based on comments on other patch
+> > -  bifurcation: true
+> > -
+>
+> Why are you adding "bifurcation" earlier in the series, then
+> immediately removing it?  Why not just add "lane-map" directly and
+> never mention "bifurcation" in the DT at all?
 
- drivers/iommu/dma-iommu.c   | 6 +++---
- drivers/iommu/intel/iommu.c | 2 +-
- drivers/iommu/iommu.c       | 2 +-
- drivers/pci/ats.c           | 2 +-
- drivers/pci/pci-acpi.c      | 2 +-
- drivers/pci/pci.c           | 2 +-
- drivers/pci/probe.c         | 8 ++++----
- drivers/pci/quirks.c        | 2 +-
- include/linux/pci.h         | 5 +++--
- 9 files changed, 16 insertions(+), 15 deletions(-)
+The original driver used the bifurcation property with vendor prefix which=
+ i have dropped.
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 09f6e1c0f9c0..aeee4be7614d 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -497,14 +497,14 @@ static int iova_reserve_iommu_regions(struct device *dev,
- 	return ret;
- }
- 
--static bool dev_is_untrusted(struct device *dev)
-+static bool dev_has_untrusted_dma(struct device *dev)
- {
--	return dev_is_pci(dev) && to_pci_dev(dev)->untrusted;
-+	return dev_is_pci(dev) && to_pci_dev(dev)->untrusted_dma;
- }
- 
- static bool dev_use_swiotlb(struct device *dev)
- {
--	return IS_ENABLED(CONFIG_SWIOTLB) && dev_is_untrusted(dev);
-+	return IS_ENABLED(CONFIG_SWIOTLB) && dev_has_untrusted_dma(dev);
- }
- 
- /**
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index df5c62ecf942..b88f47391140 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4843,7 +4843,7 @@ static bool intel_iommu_is_attach_deferred(struct device *dev)
-  */
- static bool risky_device(struct pci_dev *pdev)
- {
--	if (pdev->untrusted) {
-+	if (pdev->untrusted_dma) {
- 		pci_info(pdev,
- 			 "Skipping IOMMU quirk for dev [%04X:%04X] on untrusted PCI link\n",
- 			 pdev->vendor, pdev->device);
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index f2c45b85b9fc..d8d3133e2947 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1525,7 +1525,7 @@ static int iommu_get_def_domain_type(struct device *dev)
- {
- 	const struct iommu_ops *ops = dev_iommu_ops(dev);
- 
--	if (dev_is_pci(dev) && to_pci_dev(dev)->untrusted)
-+	if (dev_is_pci(dev) && to_pci_dev(dev)->untrusted_dma)
- 		return IOMMU_DOMAIN_DMA;
- 
- 	if (ops->def_domain_type)
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index c967ad6e2626..477c16ba9341 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -42,7 +42,7 @@ bool pci_ats_supported(struct pci_dev *dev)
- 	if (!dev->ats_cap)
- 		return false;
- 
--	return (dev->untrusted == 0);
-+	return (dev->untrusted_dma == 0);
- }
- EXPORT_SYMBOL_GPL(pci_ats_supported);
- 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 8cb4725d41fa..bf04e873c96a 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -1396,7 +1396,7 @@ void pci_acpi_setup(struct device *dev, struct acpi_device *adev)
- 
- 	pci_acpi_optimize_delay(pci_dev, adev->handle);
- 	pci_acpi_set_external_facing(pci_dev);
--	pci_dev->untrusted |= pci_dev_has_dma_property(pci_dev);
-+	pci_dev->untrusted_dma |= pci_dev_has_dma_property(pci_dev);
- 	pci_acpi_add_edr_notifier(pci_dev);
- 
- 	pci_acpi_add_pm_notifier(adev, pci_dev);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9ecce435fb3f..1fb0eb8646c8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -958,7 +958,7 @@ static void pci_std_enable_acs(struct pci_dev *dev)
- 	ctrl |= (cap & PCI_ACS_UF);
- 
- 	/* Enable Translation Blocking for external devices and noats */
--	if (pci_ats_disabled() || dev->external_facing || dev->untrusted)
-+	if (pci_ats_disabled() || dev->external_facing || dev->untrusted_dma)
- 		ctrl |= (cap & PCI_ACS_TB);
- 
- 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 17a969942d37..d2a9b26fcede 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1587,7 +1587,7 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
- 		dev->is_thunderbolt = 1;
- }
- 
--static void set_pcie_untrusted(struct pci_dev *dev)
-+static void pci_set_untrusted_dma(struct pci_dev *dev)
- {
- 	struct pci_dev *parent;
- 
-@@ -1596,8 +1596,8 @@ static void set_pcie_untrusted(struct pci_dev *dev)
- 	 * untrusted as well.
- 	 */
- 	parent = pci_upstream_bridge(dev);
--	if (parent && (parent->untrusted || parent->external_facing))
--		dev->untrusted = true;
-+	if (parent && (parent->untrusted_dma || parent->external_facing))
-+		dev->untrusted_dma = true;
- }
- 
- static void pci_set_removable(struct pci_dev *dev)
-@@ -1862,7 +1862,7 @@ int pci_setup_device(struct pci_dev *dev)
- 	/* Need to have dev->cfg_size ready */
- 	set_pcie_thunderbolt(dev);
- 
--	set_pcie_untrusted(dev);
-+	pci_set_untrusted_dma(dev);
- 
- 	/* "Unknown power state" */
- 	dev->current_state = PCI_UNKNOWN;
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 41aeaa235132..583d35968413 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5135,7 +5135,7 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
- 	ctrl |= (cap & PCI_ACS_CR);
- 	ctrl |= (cap & PCI_ACS_UF);
- 
--	if (pci_ats_disabled() || dev->external_facing || dev->untrusted)
-+	if (pci_ats_disabled() || dev->external_facing || dev->untrusted_dma)
- 		ctrl |= (cap & PCI_ACS_TB);
- 
- 	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 60adf42460ab..2453a794bdb2 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -444,13 +444,14 @@ struct pci_dev {
- 	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
- 	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
- 	/*
--	 * Devices marked being untrusted are the ones that can potentially
-+	 * Devices marked with untrusted_dma are the ones that can potentially
- 	 * execute DMA attacks and similar. They are typically connected
- 	 * through external ports such as Thunderbolt but not limited to
- 	 * that. When an IOMMU is enabled they should be getting full
- 	 * mappings to make sure they cannot access arbitrary memory.
- 	 */
--	unsigned int	untrusted:1;
-+	unsigned int	untrusted_dma:1;
-+
- 	/*
- 	 * Info from the platform, e.g., ACPI or device tree, may mark a
- 	 * device as "external-facing".  An external-facing device is
--- 
-2.36.0.rc2.479.g8af0fa9b8e-goog
+In v1 there was an Idea to replace this bifurcation setting by something m=
+ore
+generic supporting more that just true/false. So i added lane-map to start
+discussion if this is the right way or if i should leave the bifurcation p=
+roperty.
 
+if the lane-map is right, i squash the commits before the commits should l=
+and in linux...
+this is one cause i tagged the series as RFC.
+
+regards Frank
