@@ -2,105 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F4DD50FEE3
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Apr 2022 15:23:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 394B4510025
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Apr 2022 16:14:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350908AbiDZNZR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Apr 2022 09:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57622 "EHLO
+        id S1348969AbiDZORO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Apr 2022 10:17:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350844AbiDZNZO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Apr 2022 09:25:14 -0400
-Received: from mxout2.routing.net (mxout2.routing.net [IPv6:2a03:2900:1:a::b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DA715045D;
-        Tue, 26 Apr 2022 06:22:07 -0700 (PDT)
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
-        by mxout2.routing.net (Postfix) with ESMTP id CE8E1615D8;
-        Tue, 26 Apr 2022 13:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1650979325;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+PqOAHHD5Ke/d891B5zhwO1Haizd/LoBpwF8/ijmhnc=;
-        b=KAgrYqHCHmGjb56eabZZY/0kH2URSzS+1Iyy32AoENGlppkXWjuMkLjjJwabq3wAXflkLB
-        n5v3i074u2gai9tBxQ/Y7ZBrnm9XUz3VaYBrMhhyNeOrUi6EF1pb9EvEWWgh4lHcFpJLkg
-        AU6HlL6u+TA8XmH65AkDdavhXbJj198=
-Received: from localhost.localdomain (fttx-pool-80.245.77.37.bambit.de [80.245.77.37])
-        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id C83704059D;
-        Tue, 26 Apr 2022 13:22:04 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-rockchip@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org
-Subject: [RFC/RFT v2 11/11] arm64: dts: rockchip: add basic lane-map and drop bifurcation from r2pro
-Date:   Tue, 26 Apr 2022 15:21:39 +0200
-Message-Id: <20220426132139.26761-12-linux@fw-web.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220426132139.26761-1-linux@fw-web.de>
-References: <20220426132139.26761-1-linux@fw-web.de>
+        with ESMTP id S1347711AbiDZORO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Apr 2022 10:17:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E945218E3B;
+        Tue, 26 Apr 2022 07:14:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 828E2617A1;
+        Tue, 26 Apr 2022 14:14:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3670C385AA;
+        Tue, 26 Apr 2022 14:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650982445;
+        bh=vIR/I/WOOXwUWDTjzFU2wGyQYvRoYeEp7ly2vdSZ6O4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sx18sAHN6xtgoLtYNmnTs1Rj6iwG7aHsyGqrxqCC8/AL+ICJeYvXbJxSP7wc194FU
+         rjh5rVpDJ2wl+mqqCoTNsVP6vEubQelHsJA3uNEm711NWLCjUYXJ4oIJJK1iH80Ddx
+         ZxeyANsNGnIOtnu12u+kdjdS7KZuIQflZhUNt5L2H5PJD2OYgQO5P9At0vJSnrMBCS
+         GOvFuUXoHl+NxXKs6g/jlTeeHbZ9zoxIUFdjMRFlJUYZN+fAfB8n5kWrcfv5jXfZ3o
+         7gAmRnr/8bKFANdFtm3TQoKc+3rZjQ52ESo9kECxpAZ73nT3yet5U6draFHvyNGQWp
+         k7/OqCpxHc4IA==
+Date:   Tue, 26 Apr 2022 09:14:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Abhishek Sahu <abhsahu@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, kbuild-all@lists.01.org,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] vfio/pci: Invalidate mmaps and block the access
+ in D3hot power state
+Message-ID: <20220426141403.GA1723756@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 684376ed-9bc4-4c48-93b3-5deaca47720a
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202204260928.TsUAxMD3-lkp@intel.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
+On Tue, Apr 26, 2022 at 09:42:45AM +0800, kernel test robot wrote:
+> ...
 
-Change DTS-Property from bifurcation to the new lane-map.
-The lane-map is more generic but PCIe controller driver
-converts it back to the bifurcation-bool.
+> sparse warnings: (new ones prefixed by >>)
+> >> drivers/vfio/pci/vfio_pci_config.c:703:13: sparse: sparse: restricted pci_power_t degrades to integer
+>    drivers/vfio/pci/vfio_pci_config.c:703:22: sparse: sparse: restricted pci_power_t degrades to integer
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-changes in v2:
-- new patch
----
- arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I dunno what Alex thinks, but we have several of these warnings in
+drivers/pci/.  I'd like to get rid of them, but we haven't figured out
+a good way yet.  So this might be something we just live with for now.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts b/arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts
-index 86506d7896c6..9acd85db3a3a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts
-@@ -477,14 +477,14 @@ &pcie30phy {
- };
- 
- &pcie3x1 {
--	bifurcation;
-+	lane-map = <0 1>;
- 	reset-gpios = <&gpio3 RK_PA1 GPIO_ACTIVE_HIGH>;
- 	vpcie3v3-supply = <&vcc3v3_ngff>;
- 	status = "okay";
- };
- 
- &pcie3x2 {
--	bifurcation;
-+	lane-map = <1 0>;
- 	reset-gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
- 	vpcie3v3-supply = <&vcc3v3_minipcie>;
- 	status = "okay";
--- 
-2.25.1
-
+> vim +703 drivers/vfio/pci/vfio_pci_config.c
+> 
+>    694	
+>    695	/*
+>    696	 * It takes all the required locks to protect the access of power related
+>    697	 * variables and then invokes vfio_pci_set_power_state().
+>    698	 */
+>    699	static void
+>    700	vfio_lock_and_set_power_state(struct vfio_pci_core_device *vdev,
+>    701				      pci_power_t state)
+>    702	{
+>  > 703		if (state >= PCI_D3hot)
+>    704			vfio_pci_zap_and_down_write_memory_lock(vdev);
+>    705		else
+>    706			down_write(&vdev->memory_lock);
+>    707	
+>    708		vfio_pci_set_power_state(vdev, state);
+>    709		up_write(&vdev->memory_lock);
+>    710	}
+>    711	
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://01.org/lkp
