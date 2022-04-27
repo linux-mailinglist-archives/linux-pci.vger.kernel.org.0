@@ -2,116 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 768C751176A
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 14:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E28EE511A45
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 16:56:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233692AbiD0MUO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 08:20:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49332 "EHLO
+        id S237205AbiD0OLM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 10:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233700AbiD0MUN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 08:20:13 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F95A4EA33
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 05:17:01 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 4so2338294ljw.11
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 05:17:01 -0700 (PDT)
+        with ESMTP id S237258AbiD0OLK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 10:11:10 -0400
+Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA70E4EA29;
+        Wed, 27 Apr 2022 07:07:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ga1FXFUoff60uV1gZjfSxxZrosbrRhkS2aF6jySEeu8=;
-        b=IcljhcOdPTP29vZlW5X6ro/FUMEN8BihPCMjQ4DLD17n66EQMN3ngucpWlHM/1adsk
-         zJOOSqbDVUtln5M8uXceQPT/9IJop7SWDuLHhQgHRXry6Mv52rZvxaj8FcDWjkkFOWIA
-         OwKFt/UkKddYIlAxdNzXZisw3D8MTb4reAK7fdGijT+pOXIqp75xVLzK+XQh4+MMKxk8
-         SYKMdHh5oDfToYb+vHFJ2QEjWT42q3fAQUUsolFPimdQ107oJfsCMuKz+wH2JBt/hz26
-         8+83hfCjLp3+d2l4sGxgdll5iV4aTlCfffJXiwIdDdKVtcI9lSXFhxPaEN7n9duq9FkP
-         MWKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ga1FXFUoff60uV1gZjfSxxZrosbrRhkS2aF6jySEeu8=;
-        b=RYADBO0kM0wbnVG0W69ja1jDC+JIevTgBxh93JBRBdsIggOVNMdsvUFkYseN7GUFmf
-         SzZjqs33+c2vMS83QNxZ7vomrtWyMV8TSj0LjbHA0ItgYRyL3ZzYCmWyN+ZCPHxt/bh6
-         sdBUeFnfXWF3k7PthYfNY6uI1UqiC25sOKEdi5KpphnhX0mjuTIyTbmVR6xjtQ8twFrJ
-         hN2IlNTXx97SmJ24UykHjmnOi/TpbtJgAu878L8TouGQKQ+d8Ks9OD0VGW/745pTFIiF
-         2hDzcxIESLQkE98yZD9X7s8C61XU4xcZfRzTPdjnDFbPf2hvkhLWeHW7v+cGczRPZfE/
-         Jlhw==
-X-Gm-Message-State: AOAM5308XFscxlmemEGML5/clv10X09NgNXgawqFwcDWWnWINEuyeTT2
-        kEp2vwcaiculzvakDQAIJJiIrA==
-X-Google-Smtp-Source: ABdhPJzzpKoE3lHAYhI7agfuzEbxveMnjFO6GHr912Gvl7Gw/JzYOQtHj9siquDy56l3ZF0qn9fusA==
-X-Received: by 2002:a2e:9e50:0:b0:24f:14e0:6a25 with SMTP id g16-20020a2e9e50000000b0024f14e06a25mr7994316ljk.121.1651061819670;
-        Wed, 27 Apr 2022 05:16:59 -0700 (PDT)
-Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id y1-20020a0565123f0100b0044584339e5dsm2043388lfa.190.2022.04.27.05.16.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 05:16:59 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 5/5] arm64: dts: qcom: sm8250: provide additional MSI interrupts
-Date:   Wed, 27 Apr 2022 15:16:53 +0300
-Message-Id: <20220427121653.3158569-6-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220427121653.3158569-1-dmitry.baryshkov@linaro.org>
-References: <20220427121653.3158569-1-dmitry.baryshkov@linaro.org>
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1651068474; x=1682604474;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cblFLWU9Obld6XdJ/tWy2TbBqCQ/EgkBLiVDV/EwnE8=;
+  b=BCyogB2zQwYVpaI4Wyg/ClTnpnRTZnT7H4OgDKJ3+osds0vYTK7z7c6P
+   gQz4UN74uVemaXzrPpSfpv/CZ1V9O+FH9zZZiyp0heb2IkS5gIqmBYTrk
+   W6ExBO5Z1HVx/QuuSgSRvzMw0ULWIyCD10ZAMWfm46EIHp3MYWswnEfkV
+   o=;
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 27 Apr 2022 07:07:53 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 07:07:52 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Wed, 27 Apr 2022 07:07:52 -0700
+Received: from jhugo-lnx.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Wed, 27 Apr 2022 07:07:51 -0700
+From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
+To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
+        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
+        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>
+CC:     <bjorn.andersson@linaro.org>, <linux-hyperv@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <quic_jhugo@quicinc.com>
+Subject: [PATCH] PCI: hv: Fix hv_arch_irq_unmask() for multi-MSI
+Date:   Wed, 27 Apr 2022 08:07:33 -0600
+Message-ID: <1651068453-29588-1-git-send-email-quic_jhugo@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On SM8250 each group of MSI interrupts is mapped to the separate host
-interrupt. Describe each of interrupts in the device tree for PCIe0
-host.
+In the multi-MSI case, hv_arch_irq_unmask() will only operate on the first
+MSI of the N allocated.  This is because only the first msi_desc is cached
+and it is shared by all the MSIs of the multi-MSI block.  This means that
+hv_arch_irq_unmask() gets the correct address, but the wrong data (always
+0).
 
-Tested on Qualcomm RB5 platform with first group of MSI interrupts being
-used by the PME and attached ath11k WiFi chip using second group of MSI
-interrupts.
+This can break MSIs.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Lets assume MSI0 is vector 34 on CPU0, and MSI1 is vector 33 on CPU0.
+
+hv_arch_irq_unmask() is called on MSI0.  It uses a hypercall to configure
+the MSI address and data (0) to vector 34 of CPU0.  This is correct.  Then
+hv_arch_irq_unmask is called on MSI1.  It uses another hypercall to
+configure the MSI address and data (0) to vector 33 of CPU0.  This is
+wrong, and results in both MSI0 and MSI1 being routed to vector 33.  Linux
+will observe extra instances of MSI1 and no instances of MSI0 despite the
+endpoint device behaving correctly.
+
+For the multi-MSI case, we need unique address and data info for each MSI,
+but the cached msi_desc does not provide that.  However, that information
+can be gotten from the int_desc cached in the chip_data by
+compose_msi_msg().  Fix the multi-MSI case to use that cached information
+instead.  Since hv_set_msi_entry_from_desc() is no longer applicable,
+remove it.
+
+Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pci-hyperv.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 410272a1e19b..0659ac45c651 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -1807,8 +1807,15 @@ pcie0: pci@1c00000 {
- 			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
- 				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 5800ecf..7aea0b7 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -611,13 +611,6 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+ 	return cfg->vector;
+ }
  
--			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "msi";
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi", "msi2", "msi3", "msi4", "msi5", "msi6", "msi7", "msi8";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
- 			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+-				       struct msi_desc *msi_desc)
+-{
+-	msi_entry->address.as_uint32 = msi_desc->msg.address_lo;
+-	msi_entry->data.as_uint32 = msi_desc->msg.data;
+-}
+-
+ static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+ 			  int nvec, msi_alloc_info_t *info)
+ {
+@@ -647,6 +640,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+ {
+ 	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+ 	struct hv_retarget_device_interrupt *params;
++	struct tran_int_desc *int_desc;
+ 	struct hv_pcibus_device *hbus;
+ 	struct cpumask *dest;
+ 	cpumask_var_t tmp;
+@@ -661,6 +655,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+ 	pdev = msi_desc_to_pci_dev(msi_desc);
+ 	pbus = pdev->bus;
+ 	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
++	int_desc = data->chip_data;
+ 
+ 	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
+ 
+@@ -668,7 +663,8 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+ 	memset(params, 0, sizeof(*params));
+ 	params->partition_id = HV_PARTITION_ID_SELF;
+ 	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
+-	hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
++	params->int_entry.msi_entry.address.as_uint32 = int_desc->address & 0xffffffff;
++	params->int_entry.msi_entry.data.as_uint32 = int_desc->data;
+ 	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
+ 			   (hbus->hdev->dev_instance.b[4] << 16) |
+ 			   (hbus->hdev->dev_instance.b[7] << 8) |
 -- 
-2.35.1
+2.7.4
 
