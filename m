@@ -2,278 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4624D511F9E
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:38:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 140B0511E7C
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:37:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239422AbiD0PWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 11:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33982 "EHLO
+        id S243400AbiD0QtR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 12:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239392AbiD0PWP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 11:22:15 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8225D2E4ED8
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 08:19:03 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1njjRG-0008Jr-Tv; Wed, 27 Apr 2022 17:18:47 +0200
-Message-ID: <87c9d9a3905f68bbf5be25558fe769ae314c46b2.camel@pengutronix.de>
-Subject: Re: [PATCH v2 3/7] phy: freescale: imx8m-pcie: Add iMX8MP PCIe PHY
- support
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "alexander.stein@ew.tq-group.com" <alexander.stein@ew.tq-group.com>
-Cc:     "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Date:   Wed, 27 Apr 2022 17:18:45 +0200
-In-Reply-To: <AS8PR04MB8676020964A9A0322AD543FA8CF39@AS8PR04MB8676.eurprd04.prod.outlook.com>
-References: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
-         <1646644054-24421-4-git-send-email-hongxing.zhu@nxp.com>
-         <fb1cb6eebdb95def2d48b38ddc3b95398fde99d4.camel@pengutronix.de>
-         <AS8PR04MB8676020964A9A0322AD543FA8CF39@AS8PR04MB8676.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        with ESMTP id S243409AbiD0QtP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 12:49:15 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55CC225177B;
+        Wed, 27 Apr 2022 09:46:00 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id bg9so1874073pgb.9;
+        Wed, 27 Apr 2022 09:46:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CfLIi7M0ejRLlXUml3mWuBYY98Ras26Ry9ezyo7ncFc=;
+        b=FDpWXld8ui8/puEY7U7ErD4M81vuJpVjax5m/Aq1X7KF002IDFsgLJesdzx66/Rs67
+         u2tzI5YiHPC2yeE00C3GdVv0zy9LLzOC64UaMM/66VdyvBNokmugFxzVcSaSp65chYA2
+         DI/nUhaKdN4qaXuLM+/+WfITLad6tJqCd06i1fx8JQx5//51aWbg1VRn4Flim/v0VjsV
+         j0tf2oGoXGSnzTS4iXXtorRykWufq3ybIqkXOtNP7L5DVf4NwIMv+PDJ9tQuG8cBsEcq
+         1Z4wqC2Y3OxVhSiDER45Xt84EowUp5TdXeF9+e98u/kj1x+5MyCMAi60B6HPsBDYpQIr
+         OENg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CfLIi7M0ejRLlXUml3mWuBYY98Ras26Ry9ezyo7ncFc=;
+        b=DtG+ksOu8GYU4aRbAZBE1GwgHFw0Qe2h/Jrnbw3K1F427fCkTuLaCsKqA0Cuyp1NAw
+         R7UBCQbeZ1Od7qydcjTar2hcKXNKiE2pTPVO9FNbbme/c1QCxvDryl8vGovfyQT4DYOp
+         60jpSf7h7ZKKc6hxAySqdWCZgtS3merqXKzcYISTVUcOxXqSOicy+DBbDEDgtQusypnw
+         JQYj+p8vkNJUWH9xX4Dhsg0aw8nKdNXWt0+OcVz/6WUlbpjECZL2znvLvOIjazMCOPfg
+         yvnjRMEw4jELvYMGN1QSgIZRpzWQIism9XQuJmNZpt5twV6PoPqqDK7j91yjOOhlsmIe
+         5DDQ==
+X-Gm-Message-State: AOAM533YlkXZBA4+UBU12i7j2ROD/PT4YD2EECdDS8Na6pPQNQ2+bT2a
+        rwlvrt7v8OxM+HneHRFZtfekQKMucGsCIzkMheY=
+X-Google-Smtp-Source: ABdhPJwuVL6Ugbvkz+KkYh0ppItIip4wos/clMe1ziK1/Ds2eesN0oDrXeUx1ln693n+3RChFxvjF1WRBogwp5XIIq8=
+X-Received: by 2002:a63:c22:0:b0:39d:a9ed:ebc6 with SMTP id
+ b34-20020a630c22000000b0039da9edebc6mr24790713pgl.350.1651077959652; Wed, 27
+ Apr 2022 09:45:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220422143643.727871-1-Frank.Li@nxp.com> <20220422143643.727871-5-Frank.Li@nxp.com>
+ <20220423121218.GG374560@thinkpad> <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
+In-Reply-To: <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Wed, 27 Apr 2022 11:45:48 -0500
+Message-ID: <CAHrpEqSHyoQe+vASQB3+igGh74HgTBAKfKLynoEuV17a6yijxQ@mail.gmail.com>
+Subject: Re: [PATCH v9 4/9] dmaengine: dw-edma: Rename wr(rd)_ch_cnt to
+ ll_wr(rd)_cnt in struct dw_edma_chip
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Richard,
-
-Am Montag, dem 18.04.2022 um 04:55 +0000 schrieb Hongxing Zhu:
-> > -----Original Message-----
-> > From: Lucas Stach <l.stach@pengutronix.de>
-> > Sent: 2022年4月15日 4:59
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>; p.zabel@pengutronix.de;
-> > bhelgaas@google.com; lorenzo.pieralisi@arm.com; robh@kernel.org;
-> > shawnguo@kernel.org; vkoul@kernel.org; alexander.stein@ew.tq-group.com
-> > Cc: linux-phy@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; kernel@pengutronix.de; dl-linux-imx
-> > <linux-imx@nxp.com>
-> > Subject: Re: [PATCH v2 3/7] phy: freescale: imx8m-pcie: Add iMX8MP PCIe PHY
-> > support
-> > 
-> > Am Montag, dem 07.03.2022 um 17:07 +0800 schrieb Richard Zhu:
-> > > Add the i.MX8MP PCIe PHY support
-> > > 
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+On Sat, Apr 23, 2022 at 4:47 PM Zhi Li <lznuaa@gmail.com> wrote:
+>
+> On Sat, Apr 23, 2022 at 7:12 AM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Fri, Apr 22, 2022 at 09:36:38AM -0500, Frank Li wrote:
+> > > There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
+> > > write(read) channel number from register, then save these into dw_edma.
+> > > Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
+> > > are available in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
+> > > ll_wr(rd)_cnt to indicate actual usage.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> >
+> > One minor comment below,
+> >
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >
+> > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 > > > ---
-> > >  drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 205
-> > > ++++++++++++++++-----
-> > >  1 file changed, 163 insertions(+), 42 deletions(-)
-> > > 
-> > > diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> > > b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> > > index 04b1aafb29f4..3d01da4323a6 100644
-> > > --- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> > > +++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-> > > @@ -11,6 +11,8 @@
-> > >  #include <linux/mfd/syscon.h>
-> > >  #include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
-> > >  #include <linux/module.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/of_device.h>
-> > >  #include <linux/phy/phy.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/regmap.h>
-> > > @@ -30,12 +32,10 @@
-> > >  #define IMX8MM_PCIE_PHY_CMN_REG065	0x194
-> > >  #define  ANA_AUX_RX_TERM		(BIT(7) | BIT(4))
-> > >  #define  ANA_AUX_TX_LVL			GENMASK(3, 0)
-> > > -#define IMX8MM_PCIE_PHY_CMN_REG75	0x1D4
-> > > -#define  PCIE_PHY_CMN_REG75_PLL_DONE	0x3
-> > > +#define IMX8MM_PCIE_PHY_CMN_REG075	0x1D4
-> > > +#define  ANA_PLL_DONE			0x3
-> > 
-> > Why do you drop the register prefix from the name here?
-> To prevent the codes from exceeding the 80 columns and align with the other
->  bit definitions, drop the prefix and keep the bit definitions as short as
->  possible.
-> 
-> > 
-> > >  #define PCIE_PHY_TRSV_REG5		0x414
-> > > -#define  PCIE_PHY_TRSV_REG5_GEN1_DEEMP	0x2D
-> > >  #define PCIE_PHY_TRSV_REG6		0x418
-> > > -#define  PCIE_PHY_TRSV_REG6_GEN2_DEEMP	0xF
-> > > 
-> > >  #define IMX8MM_GPR_PCIE_REF_CLK_SEL	GENMASK(25, 24)
-> > >  #define IMX8MM_GPR_PCIE_REF_CLK_PLL
-> > 	FIELD_PREP(IMX8MM_GPR_PCIE_REF_CLK_SEL, 0x3)
-> > > @@ -46,16 +46,43 @@
-> > >  #define IMX8MM_GPR_PCIE_SSC_EN		BIT(16)
-> > >  #define IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE	BIT(9)
-> > > 
-> > > +#define IMX8MP_GPR_REG0			0x0
-> > > +#define IMX8MP_GPR_CLK_MOD_EN		BIT(0)
-> > > +#define IMX8MP_GPR_PHY_APB_RST		BIT(4)
-> > > +#define IMX8MP_GPR_PHY_INIT_RST		BIT(5)
-> > > +#define IMX8MP_GPR_REG1			0x4
-> > > +#define IMX8MP_GPR_PM_EN_CORE_CLK	BIT(0)
-> > > +#define IMX8MP_GPR_PLL_LOCK		BIT(13)
-> > > +#define IMX8MP_GPR_REG2			0x8
-> > > +#define IMX8MP_GPR_P_PLL_MASK		GENMASK(5, 0)
-> > > +#define IMX8MP_GPR_M_PLL_MASK		GENMASK(15, 6)
-> > > +#define IMX8MP_GPR_S_PLL_MASK		GENMASK(18, 16)
-> > > +#define IMX8MP_GPR_P_PLL		(0xc << 0)
-> > > +#define IMX8MP_GPR_M_PLL		(0x320 << 6)
-> > > +#define IMX8MP_GPR_S_PLL		(0x4 << 16)
-> > > +#define IMX8MP_GPR_REG3			0xc
-> > > +#define IMX8MP_GPR_PLL_CKE		BIT(17)
-> > > +#define IMX8MP_GPR_PLL_RST		BIT(31)
-> > > +
-> > > +enum imx8_pcie_phy_type {
-> > > +	IMX8MM,
-> > > +	IMX8MP,
-> > > +};
-> > > +
-> > >  struct imx8_pcie_phy {
-> > >  	void __iomem		*base;
-> > > +	struct device		*dev;
-> > >  	struct clk		*clk;
-> > >  	struct phy		*phy;
-> > > +	struct regmap		*hsio_blk_ctrl;
-> > >  	struct regmap		*iomuxc_gpr;
-> > >  	struct reset_control	*reset;
-> > > +	struct reset_control	*perst;
-> > >  	u32			refclk_pad_mode;
-> > >  	u32			tx_deemph_gen1;
-> > >  	u32			tx_deemph_gen2;
-> > >  	bool			clkreq_unused;
-> > > +	enum imx8_pcie_phy_type	variant;
-> > >  };
-> > > 
-> > >  static int imx8_pcie_phy_init(struct phy *phy) @@ -67,6 +94,87 @@
-> > > static int imx8_pcie_phy_init(struct phy *phy)
-> > >  	reset_control_assert(imx8_phy->reset);
-> > > 
-> > >  	pad_mode = imx8_phy->refclk_pad_mode;
-> > > +	switch (imx8_phy->variant) {
-> > > +	case IMX8MM:
-> > > +		/* Tune PHY de-emphasis setting to pass PCIe compliance. */
-> > > +		if (imx8_phy->tx_deemph_gen1)
-> > > +			writel(imx8_phy->tx_deemph_gen1,
-> > > +			       imx8_phy->base + PCIE_PHY_TRSV_REG5);
-> > > +		if (imx8_phy->tx_deemph_gen2)
-> > > +			writel(imx8_phy->tx_deemph_gen2,
-> > > +			       imx8_phy->base + PCIE_PHY_TRSV_REG6);
-> > > +		break;
-> > > +	case IMX8MP:
-> > > +		reset_control_assert(imx8_phy->perst);
-> > 
-> > Could you tell us something more about this reset. What exactly is it resetting.
-> > Do we really need to assert it before starting the HSIO PLL?
-> Yes, this reset should be asserted, otherwise, the PCIe wouldn't work.
-> I'm asking more details of this reset bit from design team, and would update
->  later after I get the response.
-> 
-> > AFAICS the PLL should be pretty much independent of the PHY.
-> Agree.
-> 
-> > 
-> > Do we need to enable this PLL when the PHY gets an external refclock? I
-> > couldn't test it yet, but I suspect that the HSIO PLL is only needed as an
-> > internal reference, when the i.MX8MP is the refclock source, either through
-> > the PHY pads or via a clkout from the PLL.
-> > 
-> Refer to my experience, the HSIO PLL should be enabled firstly.
-> 
-> > > +		/* Set P=12,M=800,S=4 and must set ICP=2'b01. */
-> > > +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG2,
-> > > +				   IMX8MP_GPR_P_PLL_MASK |
-> > > +				   IMX8MP_GPR_M_PLL_MASK |
-> > > +				   IMX8MP_GPR_S_PLL_MASK,
-> > > +				   IMX8MP_GPR_P_PLL |
-> > > +				   IMX8MP_GPR_M_PLL |
-> > > +				   IMX8MP_GPR_S_PLL);
-> > > +		/* wait greater than 1/F_FREF =1/2MHZ=0.5us */
-> > > +		udelay(1);
-> > > +
-> > > +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG3,
-> > > +				   IMX8MP_GPR_PLL_RST,
-> > > +				   IMX8MP_GPR_PLL_RST);
-> > > +		udelay(10);
-> > > +
-> > > +		/* Set 1 to pll_cke of GPR_REG3 */
-> > > +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG3,
-> > > +				   IMX8MP_GPR_PLL_CKE,
-> > > +				   IMX8MP_GPR_PLL_CKE);
-> > > +
-> > > +		/* Lock time should be greater than 300cycle=300*0.5us=150us */
-> > > +		ret = regmap_read_poll_timeout(imx8_phy->hsio_blk_ctrl,
-> > > +					     IMX8MP_GPR_REG1, val,
-> > > +					     val & IMX8MP_GPR_PLL_LOCK,
-> > > +					     10, 1000);
-> > > +		if (ret) {
-> > > +			dev_err(imx8_phy->dev, "PCIe PLL lock timeout\n");
-> > > +			return ret;
-> > > +		}
-> > > +
-> > > +		/* pcie_clock_module_en */
-> > > +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG0,
-> > > +				   IMX8MP_GPR_CLK_MOD_EN,
-> > > +				   IMX8MP_GPR_CLK_MOD_EN);
-> > 
-> > You shouldn't need to touch this bit. The HSIO blk-ctrl already enables this bit
-> > when the PCIe power-domain is powered up.
-> Okay, got that.
-> 
-> > 
-> > > +		udelay(10);
-> > > +
-> > > +		reset_control_deassert(imx8_phy->reset);
-> > > +		reset_control_deassert(imx8_phy->perst);
-> > > +
-> > > +		/* release pcie_phy_apb_reset and pcie_phy_init_resetn */
-> > > +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG0,
-> > > +				   IMX8MP_GPR_PHY_APB_RST |
-> > > +				   IMX8MP_GPR_PHY_INIT_RST,
-> > > +				   IMX8MP_GPR_PHY_APB_RST |
-> > > +				   IMX8MP_GPR_PHY_INIT_RST);
-> > 
-> > Not sure about those yet. We might want to toggle them via a virtual PD in the
-> > HSIO blk-ctrl.
-> Refer to my understand, these reset should be a part of power-up sequence of
->  the PHY. It's reasonable to toggle them via a PD.
+> > > Change from v6 to v9
+> > >  - none
+> > > Change from v5 to v6
+> > >  - s/rename/Rename/ at subject
+> > > new patch at v4
+> > >
+> > >  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
+> > >  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
+> > >  include/linux/dma/edma.h           |  8 ++++----
+> > >  3 files changed, 12 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > > index 435e4f2ab6575..1a0a98f6c5515 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > @@ -919,11 +919,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+> > >
+> > >       raw_spin_lock_init(&dw->lock);
+> > >
+> > > -     dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
+> > > +     dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
+> > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
+> > >       dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
+> > >
+> > > -     dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
+> > > +     dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
+> > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
+> > >       dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
+> > >
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > index ae42bad24dd5a..7732537f96086 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> > >       chip->nr_irqs = nr_irqs;
+> > >       chip->ops = &dw_edma_pcie_core_ops;
+> > >
+> > > -     chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
+> > > -     chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
+> > > +     chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+> > > +     chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+> > >
+> > >       chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
+> > >       if (!chip->reg_base)
+> > >               return -ENOMEM;
+> > >
+> > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
+> > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
+> > >               struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+> > >               struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+> > >               struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+> > > @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> > >               dt_region->sz = dt_block->sz;
+> > >       }
+> > >
+> > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
+> > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
+> > >               struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+> > >               struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+> > >               struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
+> > > @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> > >               chip->reg_base);
+> > >
+> > >
+> > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
+> > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
+> > >               pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> > >                       i, vsec_data.ll_wr[i].bar,
+> > >                       vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
+> > > @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> > >                       chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
+> > >       }
+> > >
+> > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
+> > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
+> > >               pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> > >                       i, vsec_data.ll_rd[i].bar,
+> > >                       vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
+> > > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > > index e9ce652b88233..c2039246fc08c 100644
+> > > --- a/include/linux/dma/edma.h
+> > > +++ b/include/linux/dma/edma.h
+> > > @@ -40,8 +40,8 @@ enum dw_edma_map_format {
+> > >   * @nr_irqs:          total dma irq number
+> > >   * @ops                       DMA channel to IRQ number mapping
+> > >   * @reg_base          DMA register base address
+> > > - * @wr_ch_cnt                 DMA write channel number
+> > > - * @rd_ch_cnt                 DMA read channel number
+> > > + * @ll_wr_cnt                 DMA write link list number
+> > > + * @ll_rd_cnt                 DMA read link list number
+> >
+> > DMA linked list write/read memory regions?
+>
+> ll_wr_cnt is the counter of the DMA listed list.
+>
+> Do you means
+>
+> @ll_region_wr        DMA linked list write memory regions
+>
+> best regards
+> Frank Li
 
-So I had a chance to look into why this series isn't working for me
-some more.
+Ping @Manivannan Sadhasivam
 
-It seems the full PHY initialization fails, as the complete PHY MMIO
-region reads back as 0xff. This hints at either a missing clock, or
-(more likely) the register interface of the PHY being held in reset.
-Note that I'm running upstream TF-A and the Barebox bootloader, so this
-might be a missing initialization somewhere, that is done by downstream
-TF-A or U-Boot.
 
-Sadly the above bits are also not documented in the RM, but are marked
-as reserved. By chance, do you know about any other secondary
-clocks/resets that may have an impact on PCIe?
-
-Regards,
-Lucas
-
+>
+>
+> >
+> > Thanks,
+> > Mani
+> >
+> > >   * @rg_region                 DMA register region
+> > >   * @ll_region_wr      DMA descriptor link list memory for write channel
+> > >   * @ll_region_rd      DMA descriptor link list memory for read channel
+> > > @@ -56,8 +56,8 @@ struct dw_edma_chip {
+> > >
+> > >       void __iomem            *reg_base;
+> > >
+> > > -     u16                     wr_ch_cnt;
+> > > -     u16                     rd_ch_cnt;
+> > > +     u16                     ll_wr_cnt;
+> > > +     u16                     ll_rd_cnt;
+> > >       /* link list address */
+> > >       struct dw_edma_region   ll_region_wr[EDMA_MAX_WR_CH];
+> > >       struct dw_edma_region   ll_region_rd[EDMA_MAX_RD_CH];
+> > > --
+> > > 2.35.1
+> > >
