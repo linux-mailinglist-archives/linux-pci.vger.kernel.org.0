@@ -2,53 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9157F51207F
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:39:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C6F7511DFC
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:36:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237157AbiD0PCa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 11:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38588 "EHLO
+        id S238881AbiD0PIc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 11:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236491AbiD0PCa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 11:02:30 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF411EAE8;
-        Wed, 27 Apr 2022 07:59:19 -0700 (PDT)
-Received: by mail-qt1-f171.google.com with SMTP id bz24so1311784qtb.2;
-        Wed, 27 Apr 2022 07:59:19 -0700 (PDT)
+        with ESMTP id S236491AbiD0PIc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 11:08:32 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE93CE0F0;
+        Wed, 27 Apr 2022 08:05:20 -0700 (PDT)
+Received: by mail-qt1-f178.google.com with SMTP id f14so1328515qtq.1;
+        Wed, 27 Apr 2022 08:05:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/rjfxN9qB9dIcjWXWDFpJ6l3gGV6ETIlBiCqMU15AUo=;
-        b=fOuHLcjNDoZZ2jEryAT69GRTzRBajcz+IjVP9HKMublpvapjTsa2zSh9lr9GeJHUQL
-         DLsQiyp2txQG3ycGcLzpg+f7oQ+JDx3+TH23qnQYV6HpkhUbdLtpRltmdiaAnv0LB3VT
-         cciTms0+2FbHpwuUK4+rkSCm1Q6Sy+rhpKxVQK4OPFSOdHEdY4yY9aE2+IgTfOnMdLA3
-         9ZlCrV28EZij62Y+2KN66QzP6ebUW3YEksYO3ZwjHXpfaQalZQHTKtpzei1NYn2LB/3m
-         TAB6SN0ePc0T8dSv2TIqpvecC52nW7aMefJf2AcH2SNCDU0Uv+rjgpcabcRhES3kmMQy
-         8VRA==
-X-Gm-Message-State: AOAM5314r1lqkR0zlr2gaKnTgu/7YBuBIy2vRD+kU/yEu+R4Ik9VfCI2
-        zE0/ZJX9jXOXWIeiTYxNk+lyKQlD5aqOaA==
-X-Google-Smtp-Source: ABdhPJz92bamSk3aLumZyq4/tocbRsNQp500v0eKEBspexYkUSC3ndxqnTV2mKx7Kvtd/OWJFfM0uQ==
-X-Received: by 2002:ac8:7e88:0:b0:2f1:f942:80bd with SMTP id w8-20020ac87e88000000b002f1f94280bdmr19032346qtj.554.1651071558065;
-        Wed, 27 Apr 2022 07:59:18 -0700 (PDT)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
-        by smtp.gmail.com with ESMTPSA id t186-20020a372dc3000000b0069ec8a9254esm8280614qkh.73.2022.04.27.07.59.17
+        bh=agafgRIcyKU96KX9arNKc39rksJmBWgsdHHVPeJSabE=;
+        b=uG55K86Ebxit2/XpbwBAahXZpgZX4byNpCDUtn6K1R6w/2u+Mt8neOoF+sS3+zEciS
+         syGPDX2KrABwtmFUlSmBYT8cQ0WGkby6uQTedBW33y5cee6GSx4y2CY0CVnlszwbfagb
+         jfWPGwz/fCb6otop9yBxXnmS8H071Vc0Zv9U0JXwv/SuVbvgciFcRHNJrMXWX24v4L6U
+         pVAVm+b6Ic/VTh4bgRnPn7JVky8LzAL3ytbsWIWVzBO7Hf7xXm6cc6UwbfRNW9o5ncoG
+         8HC6vbH7K5GnjnJHIvscKxdEbqR9rxSqzL34f0Z4glvfrblQ9d8U8HwxZLPmE3pPt8Mx
+         jG7g==
+X-Gm-Message-State: AOAM531yFzOhinldpEXF54TCxgOVe+LWG1zVyHQ3/huiDeqbUrb5wYNl
+        FFE53VoVCL+Iq4Rg15y8PiNsjIy71E8f1w==
+X-Google-Smtp-Source: ABdhPJywoYYJlCD0rNO39LCYyn49J4PvQ/tUMmDdSANKZwOSr0eX0hJwhsA9rtF9qxOVJrum/ZwF8Q==
+X-Received: by 2002:a05:622a:608c:b0:2f1:e3fa:b603 with SMTP id hf12-20020a05622a608c00b002f1e3fab603mr19200084qtb.48.1651071919469;
+        Wed, 27 Apr 2022 08:05:19 -0700 (PDT)
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
+        by smtp.gmail.com with ESMTPSA id r83-20020a37a856000000b0069ed4436a49sm8194957qke.87.2022.04.27.08.05.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Apr 2022 07:59:17 -0700 (PDT)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-2ec42eae76bso21698427b3.10;
-        Wed, 27 Apr 2022 07:59:17 -0700 (PDT)
-X-Received: by 2002:a81:4782:0:b0:2eb:1cb1:5441 with SMTP id
- u124-20020a814782000000b002eb1cb15441mr26143387ywa.479.1651071557084; Wed, 27
- Apr 2022 07:59:17 -0700 (PDT)
+        Wed, 27 Apr 2022 08:05:19 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id d12so3917920ybc.4;
+        Wed, 27 Apr 2022 08:05:18 -0700 (PDT)
+X-Received: by 2002:a5b:984:0:b0:63f:8c38:676c with SMTP id
+ c4-20020a5b0984000000b0063f8c38676cmr26972135ybq.393.1651071918482; Wed, 27
+ Apr 2022 08:05:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220422120850.769480-1-herve.codina@bootlin.com> <20220422120850.769480-6-herve.codina@bootlin.com>
-In-Reply-To: <20220422120850.769480-6-herve.codina@bootlin.com>
+References: <20220422120850.769480-1-herve.codina@bootlin.com> <20220422120850.769480-2-herve.codina@bootlin.com>
+In-Reply-To: <20220422120850.769480-2-herve.codina@bootlin.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Apr 2022 16:59:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV35uR2qHdmsQVxQuU716h-kkDfLs1bLfCGjedW_Bb3fQ@mail.gmail.com>
-Message-ID: <CAMuHMdV35uR2qHdmsQVxQuU716h-kkDfLs1bLfCGjedW_Bb3fQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/8] ARM: dts: r9a06g032: Add missing '#power-domain-cells'
+Date:   Wed, 27 Apr 2022 17:05:06 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVk-UkFqqFEeUn+ZqrdSy7u+S6Mz2GeDmx=mr33khzO6A@mail.gmail.com>
+Message-ID: <CAMuHMdVk-UkFqqFEeUn+ZqrdSy7u+S6Mz2GeDmx=mr33khzO6A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/8] dt-bindings: PCI: pci-rcar-gen2: Convert bindings
+ to json-schema
 To:     Herve Codina <herve.codina@bootlin.com>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -71,8 +72,8 @@ Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -80,16 +81,11 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri, Apr 22, 2022 at 2:09 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> Without '#power-domain-cells' property, power-domains cannot
-> be used. This property is noted required in the device-tree
-> binding.
->
-> Add '#power-domain-cells' as needed.
+> Convert Renesas PCI bridge bindings documentation to json-schema.
 >
 > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.19.
 
 Gr{oetje,eeting}s,
 
