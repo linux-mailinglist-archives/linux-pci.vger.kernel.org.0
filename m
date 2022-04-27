@@ -2,358 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2752511FCE
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:38:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6AAA511EA7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243700AbiD0RFH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 13:05:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56144 "EHLO
+        id S243903AbiD0RO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 13:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243766AbiD0RFG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:05:06 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 552472649;
-        Wed, 27 Apr 2022 10:01:53 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id x52so527583pfu.11;
-        Wed, 27 Apr 2022 10:01:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vcgfc5u4bDFWxNJaAqHPlJFUprPyui+gsBymYYXpejg=;
-        b=n+ONCgeyEWbWj6JImS9mr3BHBgu98M4V5V8CwY5eamLGOQEtSpo57Z9EhtUKrApzfI
-         5LR/Xnn0HB/vfxqC3hKuAiC+5xa7ZHql5ly67byduD4fD39DgNEcTk74ZHPeL0Syowwc
-         aFrg1sR+T7bG/V21xKzDEHzFhycy1+M9dBmTP900A+keoEPPxTaYwZZL3U1Cc8e7ySAr
-         miSvb1M3x48j1sR6TgqbrMViq5du62oxu3eZTi4G0AfJjjmWCClsDpH5fex73Hfg/RGB
-         RVt3p/4ukpE0lSUP//AzXWaNDVUxzT2cTraA5XsP6MZANr2Hn7zChQY+u45WHNMAUwsl
-         hPTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vcgfc5u4bDFWxNJaAqHPlJFUprPyui+gsBymYYXpejg=;
-        b=ICyVA0YS/yGLe5Azkz1X9/Z6kHckpAmugh99KF2/ewxG3v/R4TUw+3PKvwvqh2QZEF
-         mc0DUSOz7uAlI/4v78Im6h2J2a8OJn5BgqLunoLwXeAd8aaKH4oSZaWxWrcW7mJzEsal
-         4+iRJQfbQZi8qu+WhOaxEdiFC1yVL5fgG9d47i9tHN/EGeqvUbyhxwWye+xbVkcNLMd8
-         zXgFXvmFjH8cE8zCPOHrTl52WKnpAuwuy3dBTSfIBpMSGd+b+pP/XqsqnJNJ/lcguGYd
-         5O2jEYr/9gRIj/VNVmjDeLMzYatKdLLCGw9clAzCsxe4erBXztNMO+xsZWXQtUNczBr4
-         r8Rg==
-X-Gm-Message-State: AOAM533MvvFo+b/mffds1odXv+TckoYxdRk9vg8zh9o9bI+rgAHb4Iu1
-        8ZdcOtx6kzaq/vxC6LEi3uEFn9piybVPTJ1/8rs=
-X-Google-Smtp-Source: ABdhPJyBOGwjSQJWr8Ex4AIiWgUsaTgtQpXJN2H+3rqDcu+ad5aOpw3PQtidiKq7r+FqqclS0YQi93Bl/SUIo5T7kQY=
-X-Received: by 2002:a63:fd04:0:b0:3aa:6473:1859 with SMTP id
- d4-20020a63fd04000000b003aa64731859mr24989439pgh.151.1651078912721; Wed, 27
- Apr 2022 10:01:52 -0700 (PDT)
+        with ESMTP id S243812AbiD0RO5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:14:57 -0400
+Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.57.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52192424AC;
+        Wed, 27 Apr 2022 10:11:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hTRylH5VXQwwEsmBPTNrRdgaSy31vWSw07yl4J1wq4frybqNDxzXEvr5kRsdyhTYK9XW0XZ7blC/ai+ZtUv9oKBsp3js1FXKSH06jgtaRUUNxDQujQTBaVY69GIncAXlVLgQVNpZoBL3ydsEq/N/SnGcTM4R5Hsl0Cc8zSmtbJ+eentSUTu+kWXFTWFNmh2ef8bDG1/5/nPnRLO7Bq1LLEijU1xNr9UJ5ckMRdv28cLj/xdGVJr0zE7eydMuV1uOi9Yh7pXRXTnAyn/2RUgUu0EqhYz/0LFI4QtfsMvyFmw/sZhya/SNLytFDSa/xXB7JTquJf769TUvOG9IkoJRrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ozd8pjXfaoCZxjyOB0IwWIV7iyEj994q/Awoytb5huQ=;
+ b=iZP/BkxNh7XMt+XCOcU0jD1D/04LuTgfeDRSEDdcKZ8vGVqAN15Hw5MkW0bXU8Xdle9vTDQnN9blHB07nNYhOl9lo5aMd1hQqSZR/DSbsv4yILX6bQgv7uWMaZLEBHlhLz8kTLdei2jX5vlV79dHZcFI7HXJ6iKL5yVvAytpKO3Qw7uODio5pvFPA0HVl3asRn9ckJF6UWrqThmhxp4LbfCt8qPfAF3z7ykv0ofLBG0WvNEXMQhhLlHHFH0GpxG0/OE0y9lTlTD9l4MZ0ZJ6Dguxawxje2sZ/tYdyRXVCjEkgH9ZdlPCmaMdF0/m0yuXC5TmiIgPh1z0N/0o+TQtjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ozd8pjXfaoCZxjyOB0IwWIV7iyEj994q/Awoytb5huQ=;
+ b=hWbrdruoPTibT6au9ApskpVfnDTFtYM3w7fyx5O/MUwMsHbSywDmfTTIxU4gZoXp/2GW0QwHQruDtFuMXIzuUICSsbhqEzVwAnWailLq8zztvXgB+pI4e9brAocanCOFeZZEvYbzaTgdS78A9HOSUDiTLt15Mmw7VWAMWMqZNz0=
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
+ by DM6PR21MB1372.namprd21.prod.outlook.com (2603:10b6:5:16e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.6; Wed, 27 Apr
+ 2022 17:11:39 +0000
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::dd77:2d4d:329e:87df]) by PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::dd77:2d4d:329e:87df%6]) with mapi id 15.20.5227.006; Wed, 27 Apr 2022
+ 17:11:39 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Jeffrey Hugo <quic_jhugo@quicinc.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: Fix hv_arch_irq_unmask() for multi-MSI
+Thread-Topic: [PATCH] PCI: hv: Fix hv_arch_irq_unmask() for multi-MSI
+Thread-Index: AQHYWkCLItunHPw0GEyDVf3jcez6pa0D/dPQ
+Date:   Wed, 27 Apr 2022 17:11:39 +0000
+Message-ID: <PH0PR21MB3025DB8EAB4714E059CAC326D7FA9@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <1651068453-29588-1-git-send-email-quic_jhugo@quicinc.com>
+In-Reply-To: <1651068453-29588-1-git-send-email-quic_jhugo@quicinc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5ce671b0-15ed-4848-b89f-4e90f4dd17a2;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-04-27T17:06:41Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cd5bb9f5-df25-4012-91bb-08da2870fe7f
+x-ms-traffictypediagnostic: DM6PR21MB1372:EE_
+x-microsoft-antispam-prvs: <DM6PR21MB1372D8C6F05BD5987CF8AA18D7FA9@DM6PR21MB1372.namprd21.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sdeZWveRQ+16svLlYMpeQUpOeRqPeYWRPajQ5O/cngLKX1y+DtgKOqbELgrhmqL5kAhANJ5eXQcmAE8q5VFMzhF3TYzM62VUlhB+8+u2XrBPtCXe1ZeT1v7KD6gF3wNKgOl993F3brgNcg5Ec5ckO8FHJpXMib+MnS8xDKmFHmOO6W5iIAYOhkkj0iNJ1/ESdg2YOXlFY3dkzJv31quMF3RgUm02m1C3Vgrq8YKP0vfWRM8KlRIV85ydvBf72u3PdbG6o3DfSNxeQYf9JmovUFLrb6cXQT4+dB83DvdJhf0k53Ut2eWVbMxJ+E2tL+2Otb21ursuLl4fZcJtwk03fC1tRi1UQLI1RH3YtaQOlbrOGY11QmfuQhg+V0HRKx5Pgt+5KR/WxghHLLYyWWnbDLPb4VCFWWILVmragAuMwjsiYURo/9vzIOoiFelMhXPZ8mRVc9Zzr3mx/7R6WfvMsuTpNKP0Au4+Gzvhn8kUkhExPfv1hOwh3l8odbm2pHMvmIwCusQMdo5QUkLr81gD0d09o+Q2K3ajcZfDyrGzSRxBtYoQza40dRVIrjqrUKI+ePko6QkvfoXb1eFuQqqwT5zx0PU1xFlKt61UCBnRFSpnFYcIRUQN99ShxRQFhDFwC34zc4ddp+XCBUSgQs/YVU8A42X1O5uAPXt+oqqoxW+SGlVWz8co0rNS6l7YgMxdr4JXGmidHkyEgC4v4P3sc8coVLOPH9N0+BM0o72OyuiQi37R1Qb95VdZZIYc+Dk0CF5P5FHYacr4RhStqzVFMw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(508600001)(33656002)(82960400001)(6506007)(52536014)(83380400001)(122000001)(82950400001)(2906002)(7416002)(921005)(76116006)(5660300002)(8936002)(66946007)(66476007)(66556008)(38070700005)(8676002)(7696005)(10290500003)(71200400001)(64756008)(38100700002)(110136005)(9686003)(86362001)(54906003)(55016003)(186003)(316002)(66446008)(4326008)(8990500004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 2
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?pfYytGPMCWUDCQ3kSrjeUxpuafgPzaCpk9+fCpD9QMfEmOEOK8S7gw2jR9o5?=
+ =?us-ascii?Q?JiJhRZ/s8bntu4pwFnDyolcyoOHmU/zorKZXDbFfd6/3+zVyxIi6Kj2eH5eV?=
+ =?us-ascii?Q?Hzp4U94WnV8lL0eIf4IHCX/FR2wK8GQhRDJQmPhqH4T1gwoIQkEHnn4zMTj8?=
+ =?us-ascii?Q?eemkBF94U96W9gqrmJfRvNb4hI4kmsX+FdV5UBMo0KLHTqm5ANR7asl6/oV0?=
+ =?us-ascii?Q?MOFJqN55QVYWx4t8L+6mDhrS9X/wLFZ2+KfWf5IO51PONbqfOmztcF1MjDQy?=
+ =?us-ascii?Q?adBdjownhzyZCdPt0AZdrlkdKXvSExxjerg0CimuileT0K9ui5jroYaJjUKt?=
+ =?us-ascii?Q?ca1m5LmVlubAx+2JC7Y6MmSSBcWlfu7UoUWK+ckRLGCMgICwKyeFLhV4Im1y?=
+ =?us-ascii?Q?gDwVeGrlwAS5E0/N5sFzJC1gNeBbpUoR4UA4fLcJ9PNi2YRBk9vDyWfrGdGh?=
+ =?us-ascii?Q?hAFi1mUm2nVr7I5DuNd6qdGihaNU0A0nV0VBmYAQ3/k5Kw+Zy0nTnsb+idjR?=
+ =?us-ascii?Q?96F1evRfU6TOkn3KXSIUTSrFnp5QnlVQj0xvxpsvpgVlLOb+C7oWc1ZarDY7?=
+ =?us-ascii?Q?N6isjJ4tE3wO2ES3OTiGhi01WgJdVZRifJpCd7u9t94feQ8qyGmMqXUDkS1P?=
+ =?us-ascii?Q?xlBGTmhODR2hozqFo/NpeXMpGk1HlWLFPy0DiS77Ot3hJEmq94bks5G7oZPC?=
+ =?us-ascii?Q?XJoLKfgpfHCqT1HD30h844ePshd+IQ98fxGAsZst3hQXSU2/W/puwYFFkfqu?=
+ =?us-ascii?Q?HuEf6G50lVmdczOgAWy3o56iHf49rLAnn0jec72bWSyVHHzq6HsuRBv+cpsE?=
+ =?us-ascii?Q?FjM98JjhJk8CqXwYhvm/9MnKHoBb0c20lGjoScM4FrqgeNvjqXfELU6Z0JEM?=
+ =?us-ascii?Q?p0H/NBWuwiCSwtLypxybuHVURRSeCvwHeFvSzgVFSdkwLc0CN+n8Ak2GU1vm?=
+ =?us-ascii?Q?giUZtwfyFvprpv0DykI4L4KdZY7SlTV5KNP36PBAQCKsePKtAdGyhZhRHUkR?=
+ =?us-ascii?Q?ILZwwmHvVazua8Bt5ox8G6WhkF8cnMh9LZhsdelW2l6P7SmtDu9gj+Qgy2Rs?=
+ =?us-ascii?Q?VJOVn3xfrbGXU7gr5ozs9np1YguQfXHv3KkU2PnoNYr6p4km/cD2HhfOHwML?=
+ =?us-ascii?Q?XAPKAo6kbY1HjLam64eF9pjgbX3quKMgBvXw7KDT3UxKHDhdmUudffaGNuTQ?=
+ =?us-ascii?Q?eJGcIuBoALjevk1I8bkMxdqiEVtBxIbiPW2hlxsOkmAmWZaLT4KOwICcNRRZ?=
+ =?us-ascii?Q?q2dMdCRAZNSID/djn8JL0ALxN3nbpj7rULS6EGAn8iRTtoO5bj0nKCe9K7m5?=
+ =?us-ascii?Q?WcfUm1VlVMzq358okNCBRHnYnKb/PbIfxuqL2ADqMjOlydF39EzQ9P4Nj2Yc?=
+ =?us-ascii?Q?itIqtjE91nt60Cjetjl8bHLoJzoI208qfTajCqmj68hmtZVi5cw1eCVXazTt?=
+ =?us-ascii?Q?q18M1qwIRm5yY5UCSdJVdKwdUtzuxv+VdBkiLgvf0DCZjkGNmGwWcBaP9Exi?=
+ =?us-ascii?Q?6U7RN8Kp016GNxCp59xEAu83qGVCb4ZRu5TUY0ZRAh12w9Zo4Hqtn1K5bM32?=
+ =?us-ascii?Q?QrRgqjZJJswSXaXd5Q3KABVgEjHuhmB1g3X72vS0aRpUUBRi57sQf/FSPDF1?=
+ =?us-ascii?Q?0pGshj7KMhSRSuR0rUMhNwxG4MQ961Zi691SadAgW9V2tMi9hXR8UxRegvfh?=
+ =?us-ascii?Q?PK2xivmaluryXC8050qp6GzbIBy/02CTl6UGJCljuokPR+HS5VV3dX7s/8v3?=
+ =?us-ascii?Q?itJDiQXM8cIliVlGn10PI+gJD/RXduj4vugMgjTXhJnjZA5bEhK4EhsLmzvn?=
+x-ms-exchange-antispam-messagedata-1: zKBQkmfmPxn3cNjCG1DBGOAYVYd5OdJGjcU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20220422143643.727871-1-Frank.Li@nxp.com> <20220422143643.727871-10-Frank.Li@nxp.com>
- <YmkNRnkKo/UQT5uX@lpieralisi>
-In-Reply-To: <YmkNRnkKo/UQT5uX@lpieralisi>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Wed, 27 Apr 2022 12:01:40 -0500
-Message-ID: <CAHrpEqTp6BrUSGqaRZ6wMxHsGttLrqrd+yVKm2xghnQ0RZG0oA@mail.gmail.com>
-Subject: Re: [PATCH v9 9/9] PCI: endpoint: Add embedded DMA controller test
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd5bb9f5-df25-4012-91bb-08da2870fe7f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2022 17:11:39.7267
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C03ZidqhIwXAI24xVeYs5QBDn2/wLGubeLBBxoRLVhrUQ8TSvaDw0SOnOzro8fDW/S/P4VEGdAosRo5TrbzzGXVeYavpr/c4M4nYp0HBSJc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1372
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 4:30 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Fri, Apr 22, 2022 at 09:36:43AM -0500, Frank Li wrote:
-> > Designware provided eDMA support in controller. This enabled use
-> > this eDMA controller to transfer data.
-> >
-> > The whole flow align with standard DMA usage module
-> >
-> > 1. Using dma_request_channel() and filter function to find correct
-> > RX and TX Channel.
-> > 2. dmaengine_slave_config() config remote side physcial address.
-> > 3. using dmaengine_prep_slave_single() create transfer descriptor
-> > 4. tx_submit();
-> > 5. dma_async_issue_pending();
-> >
-> > Tested at i.MX8DXL platform.
-> >
-> > root@imx8qmmek:~# /usr/bin/pcitest -d -w
-> > WRITE ( 102400 bytes):          OKAY
-> > root@imx8qmmek:~# /usr/bin/pcitest -d -r
-> > READ ( 102400 bytes):           OKAY
-> >
-> > WRITE => Size: 102400 bytes DMA: YES  Time: 0.000180145 seconds Rate: 555108 KB/s
-> > READ => Size: 102400 bytes  DMA: YES  Time: 0.000194397 seconds Rate: 514411 KB/s
-> >
-> > READ => Size: 102400 bytes  DMA: NO   Time: 0.013532597 seconds Rate: 7389 KB/s
-> > WRITE => Size: 102400 bytes DMA: NO   Time: 0.000857090 seconds Rate: 116673 KB/s
-> >
->
-> You should rewrite this commit log.
->
-> 1) this is not Designware specific
-> 2) On what platforms you tested is information for a cover letter but
->    not very useful for a commit log
-> 3) The commit log describes why you need the patch and what the patch
->    does.
->    It can be a one liner: "Enable DMA controller tests for endpoints with
->    DMA capabilities". Or something along those lines.
+From: Jeffrey Hugo <quic_jhugo@quicinc.com> Sent: Wednesday, April 27, 2022=
+ 7:08 AM
+>=20
+> In the multi-MSI case, hv_arch_irq_unmask() will only operate on the firs=
+t
+> MSI of the N allocated.  This is because only the first msi_desc is cache=
+d
+> and it is shared by all the MSIs of the multi-MSI block.  This means that
+> hv_arch_irq_unmask() gets the correct address, but the wrong data (always
+> 0).
+>=20
+> This can break MSIs.
+>=20
+> Lets assume MSI0 is vector 34 on CPU0, and MSI1 is vector 33 on CPU0.
+>=20
+> hv_arch_irq_unmask() is called on MSI0.  It uses a hypercall to configure
+> the MSI address and data (0) to vector 34 of CPU0.  This is correct.  The=
+n
+> hv_arch_irq_unmask is called on MSI1.  It uses another hypercall to
+> configure the MSI address and data (0) to vector 33 of CPU0.  This is
+> wrong, and results in both MSI0 and MSI1 being routed to vector 33.  Linu=
+x
+> will observe extra instances of MSI1 and no instances of MSI0 despite the
+> endpoint device behaving correctly.
+>=20
+> For the multi-MSI case, we need unique address and data info for each MSI=
+,
+> but the cached msi_desc does not provide that.  However, that information
+> can be gotten from the int_desc cached in the chip_data by
+> compose_msi_msg().  Fix the multi-MSI case to use that cached information
+> instead.  Since hv_set_msi_entry_from_desc() is no longer applicable,
+> remove it.
+>=20
+> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index 5800ecf..7aea0b7 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -611,13 +611,6 @@ static unsigned int hv_msi_get_int_vector(struct irq=
+_data
+> *data)
+>  	return cfg->vector;
+>  }
+>=20
+> -static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> -				       struct msi_desc *msi_desc)
+> -{
+> -	msi_entry->address.as_uint32 =3D msi_desc->msg.address_lo;
+> -	msi_entry->data.as_uint32 =3D msi_desc->msg.data;
+> -}
+> -
+>  static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+>  			  int nvec, msi_alloc_info_t *info)
+>  {
+> @@ -647,6 +640,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+>  {
+>  	struct msi_desc *msi_desc =3D irq_data_get_msi_desc(data);
+>  	struct hv_retarget_device_interrupt *params;
+> +	struct tran_int_desc *int_desc;
+>  	struct hv_pcibus_device *hbus;
+>  	struct cpumask *dest;
+>  	cpumask_var_t tmp;
+> @@ -661,6 +655,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+>  	pdev =3D msi_desc_to_pci_dev(msi_desc);
+>  	pbus =3D pdev->bus;
+>  	hbus =3D container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
+> +	int_desc =3D data->chip_data;
+>=20
+>  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
+>=20
+> @@ -668,7 +663,8 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+>  	memset(params, 0, sizeof(*params));
+>  	params->partition_id =3D HV_PARTITION_ID_SELF;
+>  	params->int_entry.source =3D HV_INTERRUPT_SOURCE_MSI;
+> -	hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
+> +	params->int_entry.msi_entry.address.as_uint32 =3D int_desc->address &
+> 0xffffffff;
+> +	params->int_entry.msi_entry.data.as_uint32 =3D int_desc->data;
+>  	params->device_id =3D (hbus->hdev->dev_instance.b[5] << 24) |
+>  			   (hbus->hdev->dev_instance.b[4] << 16) |
+>  			   (hbus->hdev->dev_instance.b[7] << 8) |
+> --
+> 2.7.4
 
-How about write as below
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-PCI: endpoint: Enable DMA controller tests for endpoints with DMA capabilities
-
-Some Endpoints controllers have DMA capabilities.  This DMA controller has more
-efficiency then a general external DMA controller.  And this DMA
-controller can bypass
-outbound memory address translation unit.
-
-The whole flow use standard DMA usage module
-
-1. Using dma_request_channel() and filter function to find correct
- RX and TX Channel. if not exist,  failure back to try allocate
-general DMA controller
-channel.
- 2. dmaengine_slave_config() config remote side physcial address.
- 3. using dmaengine_prep_slave_single() create transfer descriptor
- 4. tx_submit();
- 5. dma_async_issue_pending();
- .
-best regards
-Frank Li
->
-> Lorenzo
->
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > Change from v6 to v9:
-> >  - none
-> > Change from v5 to v6:
-> >  - change subject
-> > Change from v4 to v5:
-> >  - none
-> > Change from v3 to v4:
-> >  - reverse Xmas tree order
-> >  - local -> dma_local
-> >  - change error message
-> >  - IS_ERR -> IS_ERR_OR_NULL
-> >  - check return value of dmaengine_slave_config()
-> > Change from v1 to v2:
-> >  - none
-> >
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
-> >  1 file changed, 98 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > index 90d84d3bc868f..f26afd02f3a86 100644
-> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > @@ -52,9 +52,11 @@ struct pci_epf_test {
-> >       enum pci_barno          test_reg_bar;
-> >       size_t                  msix_table_offset;
-> >       struct delayed_work     cmd_handler;
-> > -     struct dma_chan         *dma_chan;
-> > +     struct dma_chan         *dma_chan_tx;
-> > +     struct dma_chan         *dma_chan_rx;
-> >       struct completion       transfer_complete;
-> >       bool                    dma_supported;
-> > +     bool                    dma_private;
-> >       const struct pci_epc_features *epc_features;
-> >  };
-> >
-> > @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
-> >   */
-> >  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >                                     dma_addr_t dma_dst, dma_addr_t dma_src,
-> > -                                   size_t len)
-> > +                                   size_t len, dma_addr_t dma_remote,
-> > +                                   enum dma_transfer_direction dir)
-> >  {
-> > +     struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> > +     dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
-> >       enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> > -     struct dma_chan *chan = epf_test->dma_chan;
-> >       struct pci_epf *epf = epf_test->epf;
-> >       struct dma_async_tx_descriptor *tx;
-> > +     struct dma_slave_config sconf = {};
-> >       struct device *dev = &epf->dev;
-> >       dma_cookie_t cookie;
-> >       int ret;
-> > @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >               return -EINVAL;
-> >       }
-> >
-> > -     tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > +     if (epf_test->dma_private) {
-> > +             sconf.direction = dir;
-> > +             if (dir == DMA_MEM_TO_DEV)
-> > +                     sconf.dst_addr = dma_remote;
-> > +             else
-> > +                     sconf.src_addr = dma_remote;
-> > +
-> > +             if (dmaengine_slave_config(chan, &sconf)) {
-> > +                     dev_err(dev, "DMA slave config fail\n");
-> > +                     return -EIO;
-> > +             }
-> > +             tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> > +     } else {
-> > +             tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > +     }
-> > +
-> >       if (!tx) {
-> >               dev_err(dev, "Failed to prepare DMA memcpy\n");
-> >               return -EIO;
-> > @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >       return 0;
-> >  }
-> >
-> > +struct epf_dma_filter {
-> > +     struct device *dev;
-> > +     u32 dma_mask;
-> > +};
-> > +
-> > +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> > +{
-> > +     struct epf_dma_filter *filter = node;
-> > +     struct dma_slave_caps caps;
-> > +
-> > +     memset(&caps, 0, sizeof(caps));
-> > +     dma_get_slave_caps(chan, &caps);
-> > +
-> > +     return chan->device->dev == filter->dev
-> > +             && (filter->dma_mask & caps.directions);
-> > +}
-> > +
-> >  /**
-> >   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-> >   * @epf_test: the EPF test device that performs data transfer operation
-> > @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> >  {
-> >       struct pci_epf *epf = epf_test->epf;
-> >       struct device *dev = &epf->dev;
-> > +     struct epf_dma_filter filter;
-> >       struct dma_chan *dma_chan;
-> >       dma_cap_mask_t mask;
-> >       int ret;
-> >
-> > +     filter.dev = epf->epc->dev.parent;
-> > +     filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> > +
-> > +     dma_cap_zero(mask);
-> > +     dma_cap_set(DMA_SLAVE, mask);
-> > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > +     if (IS_ERR_OR_NULL(dma_chan)) {
-> > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > +             goto fail_back_tx;
-> > +     }
-> > +
-> > +     epf_test->dma_chan_rx = dma_chan;
-> > +
-> > +     filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > +
-> > +     if (IS_ERR(dma_chan)) {
-> > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > +             goto fail_back_rx;
-> > +     }
-> > +
-> > +     epf_test->dma_chan_tx = dma_chan;
-> > +     epf_test->dma_private = true;
-> > +
-> > +     init_completion(&epf_test->transfer_complete);
-> > +
-> > +     return 0;
-> > +
-> > +fail_back_rx:
-> > +     dma_release_channel(epf_test->dma_chan_rx);
-> > +     epf_test->dma_chan_tx = NULL;
-> > +
-> > +fail_back_tx:
-> >       dma_cap_zero(mask);
-> >       dma_cap_set(DMA_MEMCPY, mask);
-> >
-> > @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> >       }
-> >       init_completion(&epf_test->transfer_complete);
-> >
-> > -     epf_test->dma_chan = dma_chan;
-> > +     epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
-> >
-> >       return 0;
-> >  }
-> > @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
-> >       if (!epf_test->dma_supported)
-> >               return;
-> >
-> > -     dma_release_channel(epf_test->dma_chan);
-> > -     epf_test->dma_chan = NULL;
-> > +     dma_release_channel(epf_test->dma_chan_tx);
-> > +     if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> > +             epf_test->dma_chan_tx = NULL;
-> > +             epf_test->dma_chan_rx = NULL;
-> > +             return;
-> > +     }
-> > +
-> > +     dma_release_channel(epf_test->dma_chan_rx);
-> > +     epf_test->dma_chan_rx = NULL;
-> > +
-> > +     return;
-> >  }
-> >
-> >  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> > @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
-> >                       goto err_map_addr;
-> >               }
-> >
-> > +             if (epf_test->dma_private) {
-> > +                     dev_err(dev, "Cannot transfer data using DMA\n");
-> > +                     ret = -EINVAL;
-> > +                     goto err_map_addr;
-> > +             }
-> > +
-> >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > -                                              src_phys_addr, reg->size);
-> > +                                              src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >       } else {
-> > @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
-> >
-> >               ktime_get_ts64(&start);
-> >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > -                                              phys_addr, reg->size);
-> > +                                              phys_addr, reg->size,
-> > +                                              reg->src_addr, DMA_DEV_TO_MEM);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >               ktime_get_ts64(&end);
-> > @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
-> >               }
-> >
-> >               ktime_get_ts64(&start);
-> > +
-> >               ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> > -                                              src_phys_addr, reg->size);
-> > +                                              src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >               ktime_get_ts64(&end);
-> > --
-> > 2.35.1
-> >
