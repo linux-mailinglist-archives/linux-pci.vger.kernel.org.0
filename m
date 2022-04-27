@@ -2,239 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A98D511D58
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:34:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B1CD51252D
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 00:18:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244584AbiD0SE3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 14:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39694 "EHLO
+        id S229730AbiD0WV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 18:21:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244542AbiD0SE2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 14:04:28 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D2D37CEBB;
-        Wed, 27 Apr 2022 11:01:16 -0700 (PDT)
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpRKL4s2cz67gQT;
-        Thu, 28 Apr 2022 01:57:10 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 27 Apr 2022 20:01:14 +0200
-Received: from localhost (10.81.200.74) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 27 Apr
- 2022 19:01:13 +0100
-Date:   Wed, 27 Apr 2022 19:01:11 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V8 10/10] cxl/port: Parse out DSMAS data from CDAT table
-Message-ID: <20220427190111.0000785e@Huawei.com>
-In-Reply-To: <20220414203237.2198665-11-ira.weiny@intel.com>
-References: <20220414203237.2198665-1-ira.weiny@intel.com>
-        <20220414203237.2198665-11-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S232672AbiD0WVZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 18:21:25 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AEEEC496A8;
+        Wed, 27 Apr 2022 15:18:13 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id E8A0892009E; Thu, 28 Apr 2022 00:18:12 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id E401D92009D;
+        Wed, 27 Apr 2022 23:18:12 +0100 (BST)
+Date:   Wed, 27 Apr 2022 23:18:12 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Avoid handing out address 0 to devices
+In-Reply-To: <20220419033752.GA1101844@bhelgaas>
+Message-ID: <alpine.DEB.2.21.2204192214310.9383@angie.orcam.me.uk>
+References: <20220419033752.GA1101844@bhelgaas>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.200.74]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 Apr 2022 13:32:37 -0700
-ira.weiny@intel.com wrote:
+On Mon, 18 Apr 2022, Bjorn Helgaas wrote:
 
-> From: Ira Weiny <ira.weiny@intel.com>
+> > Yes, just bumping up PCIBIOS_MIN_IO was my first thought and the
+> > path of least resistance.  However with the strictly hierarchical
+> > topology of PCIe systems the limit of 16 ranges feels so
+> > frighteningly low to me already as to make me rather unwilling to
+> > reduce it even further for a system that is free from PC legacy junk
+> > (no southbridge let alone ISA) and therefore does not require it.
+> > So I've reconsidered my initial approach and came up with this
+> > proposal instead.  I think it is a good compromise.
 > 
-> CXL Ports with memory devices attached need the information from the
-> Device Scoped Memory Affinity Structure (DSMAS).  This information is
-> contained within the CDAT table buffer which is previously read and
-> cached in the device state.
-> 
-> If CDAT data is available, parse and cache DSMAS data from the table.
-> Store this data in unmarshaled struct dsmas data structures for ease of
-> use.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Sorry for being dense here, I think it's finally sinking in.
 
-You could hold off on this patch and having it in the series that uses
-the data.
+ No worries, I'm glad we're on the same page now.
 
-Patch itself looks fine - it's just a bit random to parse one particular
-record and do nothing with it beyond some debug prints :)
+> The problem is that making PCIBIOS_MIN_IO greater than zero would keep
+> us from assigning a [io 0x0000- ] window, so instead of 16 I/O bridge
+> windows, we could only have 15 (unless bridges support 32-bit I/O
+> windows).  Right?
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ Yes, that's been my concern.
 
-> 
-> ---
-> Changes from V7
-> 	Rebased on cxl-pending
-> 
-> Changes from V6
-> 	Move to port.c
-> 	It is not an error if no DSMAS data is found
-> 
-> Changes from V5
-> 	Fix up sparse warnings
-> 	Split out cdat_hdr_valid()
-> 	Update cdat_hdr_valid()
-> 		Remove revision and cs field parsing
-> 			There is no point in these
-> 		Add seq check and debug print.
-> 	From Jonathan
-> 		Add spaces around '+' and '/'
-> 		use devm_krealloc() for dmas_ary
-> ---
->  drivers/cxl/cdat.h | 17 ++++++++++++
->  drivers/cxl/cxl.h  |  6 +++++
->  drivers/cxl/port.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 88 insertions(+)
-> 
-> diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
-> index a7725d26f2d2..66706b238bc9 100644
-> --- a/drivers/cxl/cdat.h
-> +++ b/drivers/cxl/cdat.h
-> @@ -83,6 +83,23 @@
->  #define CDAT_SSLBIS_ENTRY_PORT_Y(entry, i) (((entry)[4 + (i) * 2] & 0xffff0000) >> 16)
->  #define CDAT_SSLBIS_ENTRY_LAT_OR_BW(entry, i) ((entry)[4 + (i) * 2 + 1] & 0x0000ffff)
->  
-> +/**
-> + * struct cxl_dsmas - host unmarshaled version of DSMAS data
-> + *
-> + * As defined in the Coherent Device Attribute Table (CDAT) specification this
-> + * represents a single DSMAS entry in that table.
-> + *
-> + * @dpa_base: The lowest Device Physical Address associated with this DSMAD
-> + * @length: Length in bytes of this DSMAD
-> + * @non_volatile: If set, the memory region represents Non-Volatile memory
-> + */
-> +struct cxl_dsmas {
-> +	u64 dpa_base;
-> +	u64 length;
-> +	/* Flags */
-> +	u8 non_volatile:1;
-> +};
-> +
->  /**
->   * struct cxl_cdat - CXL CDAT data
->   *
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 50817fd2c912..80fd39769a65 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -9,6 +9,8 @@
->  #include <linux/bitops.h>
->  #include <linux/io.h>
->  
-> +#include "cdat.h"
-> +
->  /**
->   * DOC: cxl objects
->   *
-> @@ -269,6 +271,8 @@ struct cxl_nvdimm {
->   * @component_reg_phys: component register capability base address (optional)
->   * @dead: last ep has been removed, force port re-creation
->   * @depth: How deep this port is relative to the root. depth 0 is the root.
-> + * @dsmas_ary: Array of DSMAS entries as parsed from the CDAT table
-> + * @nr_dsmas: Number of entries in dsmas_ary
->   */
->  struct cxl_port {
->  	struct device dev;
-> @@ -280,6 +284,8 @@ struct cxl_port {
->  	resource_size_t component_reg_phys;
->  	bool dead;
->  	unsigned int depth;
-> +	struct cxl_dsmas *dsmas_ary;
-> +	int nr_dsmas;
->  };
->  
->  /**
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index d420da5fc39c..2288432a27cd 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -30,6 +30,70 @@ static void schedule_detach(void *cxlmd)
->  	schedule_cxl_memdev_detach(cxlmd);
->  }
->  
-> +static void parse_dsmas(struct cxl_port *port, struct cxl_dev_state *cxlds)
-> +{
-> +	struct device *dev = &port->dev;
-> +	struct cxl_dsmas *dsmas_ary = NULL;
-> +	u32 *data = cxlds->cdat.table;
-> +	int bytes_left = cxlds->cdat.length;
-> +	int nr_dsmas = 0;
-> +
-> +	if (!data) {
-> +		dev_info(dev, "No CDAT data available for DSMAS\n");
-> +		return;
-> +	}
-> +
-> +	/* Skip header */
-> +	data += CDAT_HEADER_LENGTH_DW;
-> +	bytes_left -= CDAT_HEADER_LENGTH_BYTES;
-> +
-> +	while (bytes_left > 0) {
-> +		u32 *cur_rec = data;
-> +		u8 type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, cur_rec[0]);
-> +		u16 length = FIELD_GET(CDAT_STRUCTURE_DW0_LENGTH, cur_rec[0]);
-> +
-> +		if (type == CDAT_STRUCTURE_DW0_TYPE_DSMAS) {
-> +			struct cxl_dsmas *new_ary;
-> +			u8 flags;
-> +
-> +			new_ary = devm_krealloc(dev, dsmas_ary,
-> +					   sizeof(*dsmas_ary) * (nr_dsmas + 1),
-> +					   GFP_KERNEL);
-> +			if (!new_ary) {
-> +				dev_err(dev,
-> +					"Failed to allocate memory for DSMAS data (nr_dsmas %d)\n",
-> +					nr_dsmas);
-> +				return;
-> +			}
-> +			dsmas_ary = new_ary;
-> +
-> +			flags = FIELD_GET(CDAT_DSMAS_DW1_FLAGS, cur_rec[1]);
-> +
-> +			dsmas_ary[nr_dsmas].dpa_base = CDAT_DSMAS_DPA_OFFSET(cur_rec);
-> +			dsmas_ary[nr_dsmas].length = CDAT_DSMAS_DPA_LEN(cur_rec);
-> +			dsmas_ary[nr_dsmas].non_volatile = CDAT_DSMAS_NON_VOLATILE(flags);
-> +
-> +			dev_dbg(dev, "DSMAS %d: %llx:%llx %s\n",
-> +				nr_dsmas,
-> +				dsmas_ary[nr_dsmas].dpa_base,
-> +				dsmas_ary[nr_dsmas].dpa_base +
-> +					dsmas_ary[nr_dsmas].length,
-> +				(dsmas_ary[nr_dsmas].non_volatile ?
-> +					"Persistent" : "Volatile")
-> +				);
-> +
-> +			nr_dsmas++;
-> +		}
-> +
-> +		data += (length / sizeof(u32));
-> +		bytes_left -= length;
-> +	}
-> +
-> +	dev_dbg(dev, "Found %d DSMAS entries\n", nr_dsmas);
-> +	port->dsmas_ary = dsmas_ary;
-> +	port->nr_dsmas = nr_dsmas;
-> +}
-> +
+> Are you running into that limit?  Most devices don't need I/O port
+> space, and almost all other arches define PCIBIOS_MIN_IO, so they live
+> without that window today.
 
+ I haven't run into this limit, but then whoever runs into it is likely 
+not going to be someone who's able to come up with a solution like this 
+proposed here or possibly understanding it.  Granted, it's only one extra 
+range, but still IMHO an unnecessary extra limitation beyond one built 
+into hardware.
+
+ Also there are devices out there that have alternative MMIO and port I/O 
+BARs available for mapping their CSRs, and while our drivers tend to use 
+MMIO in that case those devices still claim a port I/O address range.  If 
+you are unlucky they will get an allocation and a device that actually 
+needs port I/O to work won't.
+
+ Such unexpected quirks can be very frustrating to IT folk.
+
+> Sparc uses the MMIO I/O port address directly in the struct resource,
+> so it will never try to allocate [io 0x0000], and there's no problem
+> with using PCI I/O port 0:
+> 
+>   pci_bus 0000:00: root bus resource [io  0x804000000000-0x80400fffffff] (bus address [0x0000-0xfffffff])
+>   mpt2sas0: ioport(0x0000804000001000), size(256)
+> 
+> The sparc ioport interfaces are basically:
+> 
+>   ioport_map(port)  { return port; }
+>   ioread8(addr)     { return readb(addr); }
+>   inb(addr)         { return readb(addr); }
+> 
+> RISC-V uses the generic ones, i.e.,
+> 
+>   ioport_map(port)  { return PIO_OFFSET + port; }
+>   ioread8(addr)     { if (addr) >= PIO_RESERVED)
+>                         return readb(addr);
+>                       else
+>                         return inb(addr & PIO_MASK); }
+>   inb(addr)         { return __raw_readb(PCI_IOBASE + addr); }
+> 
+> Obviously RISC-V gives you prettier I/O port addresses, but at the
+> cost of having PCI I/O port 0 be 0 in the struct resource as well,
+> which makes it basically unusable.  Is it worth it?
+
+ Well, the SPARC port may be able to get away with that, but overall I 
+think using PCI bus addresses for port I/O resources is the only sane 
+thing to do.  In fact I think for MMIO resources we probably ought to do 
+the same, though it may be actually more difficult to implement, because 
+it's more likely there are systems out there with multiple per-bus MMIO 
+address spaces.
+
+ The reason why I think using bus addresses here is the right thing to do 
+is that systems may have multiple decode windows exposed to the CPU(s) 
+mapping to the same I/O bus addresses, often for specific purposes.  E.g. 
+Alpha has the sparse and the dense address space and some systems (I have 
+one with a MIPS CPU) have spaces with different endianness swap policies 
+(for matching either bit or byte lanes) wired in the bus logic hardware.  
+So the same port I/O location can be mapped at different MMIO addresses 
+simultaneously in one system.
+
+ I did some further experimentation with a parallel port option card now, 
+and it seems to operate just fine at address 0, likely because plain port 
+I/O accessors (`inb', `outb', and friends) have no special intepretation 
+for address 0, unlike the iomap handlers:
+
+parport_pc 0000:07:00.0: enabling device (0000 -> 0001)
+PCI parallel port detected: 1415:c118, I/O at 0x0(0x8), IRQ 38
+parport0: PC-style at 0x0 (0x8), irq 38, using FIFO [PCSPP,TRISTATE,COMPAT,EPP,ECP]
+lp0: using parport0 (interrupt-driven).
+
+So it seems we're quite inconsistent already.
+
+ Since we need a way to move forward and we have a real issue with PCI BAR 
+allocations that cause devices to break I have now posted a fix for RISC-V 
+systems only which solves the problem at hand, however wasting one whole 
+4KiB I/O address range.  If we ever have a better generic solution, either 
+one proposed here or an alternative one, then we can revert the RISC-V 
+change.  Cf. 
+<https://lore.kernel.org/r/alpine.DEB.2.21.2204271207590.9383@angie.orcam.me.uk>.
+
+  Maciej
