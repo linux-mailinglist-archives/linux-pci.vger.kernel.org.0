@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73CD65117A5
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 14:46:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 768C751176A
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 14:46:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233739AbiD0MUN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 08:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49250 "EHLO
+        id S233692AbiD0MUO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 08:20:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233762AbiD0MUM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 08:20:12 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB2ED4EA23
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 05:17:00 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id y32so2804726lfa.6
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 05:17:00 -0700 (PDT)
+        with ESMTP id S233700AbiD0MUN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 08:20:13 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F95A4EA33
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 05:17:01 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 4so2338294ljw.11
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 05:17:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cLYJ0GysdHluMMr2clkUv2N03QTSVxRZN8GILwf5WB4=;
-        b=jnLB1M/Z1nnafctw7GO8Q909Mae3PoL/DfRgh0yP+tVrcbYUoj4tHZ0weWrluv893u
-         k79ZQk4xO/TaL656AFqFg7i2UaO4siI72QG93iio0T1v1ZYpm7rfN69i5+t6KQDc3xtq
-         EA4GDbLJbXPKD5KXmUI4PawbaMWVVyjg2z76IxyxIwkGILLCDnAQpFRUkPIOMUCZc1Mu
-         aVaG5NeQI9H1IemN+1H/izixpqz1jKp3LZTM0bSFAVJRrmghDNsMG2FVYfz6lH5xmUJb
-         seJK9gmf/qNcfXlsORVhsRFUBnLCUhwThWn4MX/5joApCc0OFbLpxbXrmL/KI5cAi3yT
-         Ikbw==
+        bh=Ga1FXFUoff60uV1gZjfSxxZrosbrRhkS2aF6jySEeu8=;
+        b=IcljhcOdPTP29vZlW5X6ro/FUMEN8BihPCMjQ4DLD17n66EQMN3ngucpWlHM/1adsk
+         zJOOSqbDVUtln5M8uXceQPT/9IJop7SWDuLHhQgHRXry6Mv52rZvxaj8FcDWjkkFOWIA
+         OwKFt/UkKddYIlAxdNzXZisw3D8MTb4reAK7fdGijT+pOXIqp75xVLzK+XQh4+MMKxk8
+         SYKMdHh5oDfToYb+vHFJ2QEjWT42q3fAQUUsolFPimdQ107oJfsCMuKz+wH2JBt/hz26
+         8+83hfCjLp3+d2l4sGxgdll5iV4aTlCfffJXiwIdDdKVtcI9lSXFhxPaEN7n9duq9FkP
+         MWKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cLYJ0GysdHluMMr2clkUv2N03QTSVxRZN8GILwf5WB4=;
-        b=FLrf42NLg2Y+P3uPoSDRwtooIm6+dIIbB462Kl0o58rFJWQNBPv8f+oVDDnPtqfupg
-         wm8mPlhmvD5KbhHtWEUbGNtZptRoIfvqIQyPtqZlD2nsKzO9ZyJtmwtxkh2az7pr4Hho
-         Cv0dTf/5s28i3CeIZBYLxOxvozeg+Q1TtUA00Uo6xn7m37sAGOCY84Q8L35DLiNmcCnl
-         gFNTPxFxY7imhXG+UNPRiWJaxUPNKtpyGkzm3oVvW4MB5B2QLB1cuLUm1dTn3TnVZK2H
-         aHzZ/eX1VBAQ6/1SnAsaTFL2stCpQMzNbuzqaa8Mu87kn5N6XARe2nXciLVauvG1vnzW
-         2BUQ==
-X-Gm-Message-State: AOAM533xJjPxyK3jngOCwKnpgZZxeLy5Ia5vYqQpeaQ4U4bni1BzwYNX
-        dGa/QPi8uMCy19fMDVeDqs83ow==
-X-Google-Smtp-Source: ABdhPJw58095SdUUdrJzp7HdEZXP2UF/S+ebEQUHfPVJLoauSNg2gxYOevOxfcP8s5q1QrG0LNoKoQ==
-X-Received: by 2002:a05:6512:3da1:b0:472:28c9:851b with SMTP id k33-20020a0565123da100b0047228c9851bmr2606638lfv.359.1651061818840;
-        Wed, 27 Apr 2022 05:16:58 -0700 (PDT)
+        bh=Ga1FXFUoff60uV1gZjfSxxZrosbrRhkS2aF6jySEeu8=;
+        b=RYADBO0kM0wbnVG0W69ja1jDC+JIevTgBxh93JBRBdsIggOVNMdsvUFkYseN7GUFmf
+         SzZjqs33+c2vMS83QNxZ7vomrtWyMV8TSj0LjbHA0ItgYRyL3ZzYCmWyN+ZCPHxt/bh6
+         sdBUeFnfXWF3k7PthYfNY6uI1UqiC25sOKEdi5KpphnhX0mjuTIyTbmVR6xjtQ8twFrJ
+         hN2IlNTXx97SmJ24UykHjmnOi/TpbtJgAu878L8TouGQKQ+d8Ks9OD0VGW/745pTFIiF
+         2hDzcxIESLQkE98yZD9X7s8C61XU4xcZfRzTPdjnDFbPf2hvkhLWeHW7v+cGczRPZfE/
+         Jlhw==
+X-Gm-Message-State: AOAM5308XFscxlmemEGML5/clv10X09NgNXgawqFwcDWWnWINEuyeTT2
+        kEp2vwcaiculzvakDQAIJJiIrA==
+X-Google-Smtp-Source: ABdhPJzzpKoE3lHAYhI7agfuzEbxveMnjFO6GHr912Gvl7Gw/JzYOQtHj9siquDy56l3ZF0qn9fusA==
+X-Received: by 2002:a2e:9e50:0:b0:24f:14e0:6a25 with SMTP id g16-20020a2e9e50000000b0024f14e06a25mr7994316ljk.121.1651061819670;
+        Wed, 27 Apr 2022 05:16:59 -0700 (PDT)
 Received: from eriador.lan ([37.153.55.125])
         by smtp.gmail.com with ESMTPSA id y1-20020a0565123f0100b0044584339e5dsm2043388lfa.190.2022.04.27.05.16.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 05:16:58 -0700 (PDT)
+        Wed, 27 Apr 2022 05:16:59 -0700 (PDT)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -60,9 +60,9 @@ To:     Andy Gross <agross@kernel.org>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 4/5] dt-bindings: pci/qcom,pcie: support additional MSI interrupts
-Date:   Wed, 27 Apr 2022 15:16:52 +0300
-Message-Id: <20220427121653.3158569-5-dmitry.baryshkov@linaro.org>
+Subject: [PATCH v3 5/5] arm64: dts: qcom: sm8250: provide additional MSI interrupts
+Date:   Wed, 27 Apr 2022 15:16:53 +0300
+Message-Id: <20220427121653.3158569-6-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220427121653.3158569-1-dmitry.baryshkov@linaro.org>
 References: <20220427121653.3158569-1-dmitry.baryshkov@linaro.org>
@@ -70,49 +70,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Qualcomm platforms each group of 32 MSI vectors is routed to the
-separate GIC interrupt. Document mapping of additional interrupts.
+On SM8250 each group of MSI interrupts is mapped to the separate host
+interrupt. Describe each of interrupts in the device tree for PCIe0
+host.
+
+Tested on Qualcomm RB5 platform with first group of MSI interrupts being
+used by the PME and attached ath11k WiFi chip using second group of MSI
+interrupts.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 48d56b073564..8447076bef97 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -42,11 +42,21 @@ properties:
-     maxItems: 5
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 410272a1e19b..0659ac45c651 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -1807,8 +1807,15 @@ pcie0: pci@1c00000 {
+ 			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
+ 				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
  
-   interrupts:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 8
- 
-   interrupt-names:
-+    minItems: 1
-+    maxItems: 8
-     items:
-       - const: msi
-+      - const: msi2
-+      - const: msi3
-+      - const: msi4
-+      - const: msi5
-+      - const: msi6
-+      - const: msi7
-+      - const: msi8
- 
-   # Common definitions for clocks, clock-names and reset.
-   # Platform constraints are described later.
+-			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "msi";
++			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi", "msi2", "msi3", "msi4", "msi5", "msi6", "msi7", "msi8";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+ 			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
 -- 
 2.35.1
 
