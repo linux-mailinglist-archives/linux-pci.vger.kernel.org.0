@@ -2,405 +2,285 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ECF8511E3A
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:37:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E146E512088
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:39:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233588AbiD0Rrp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 13:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54218 "EHLO
+        id S244467AbiD0RwI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 13:52:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244320AbiD0RrF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:47:05 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2782C103;
-        Wed, 27 Apr 2022 10:43:51 -0700 (PDT)
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpQyz74xhz685K1;
-        Thu, 28 Apr 2022 01:41:15 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Wed, 27 Apr 2022 19:43:48 +0200
-Received: from localhost (10.81.200.74) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 27 Apr
- 2022 18:43:47 +0100
-Date:   Wed, 27 Apr 2022 18:43:45 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V8 05/10] cxl/pci: Create DOE auxiliary driver
-Message-ID: <20220427184345.000076b1@Huawei.com>
-In-Reply-To: <20220414203237.2198665-6-ira.weiny@intel.com>
-References: <20220414203237.2198665-1-ira.weiny@intel.com>
-        <20220414203237.2198665-6-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S232138AbiD0Rv7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:51:59 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2FC044A27;
+        Wed, 27 Apr 2022 10:48:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651081727; x=1682617727;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xBAq5Piq6zlH26AVb2ZRSlxIH2G6Cn1Xw2pn1sMDNSQ=;
+  b=a4X1S4lk2XBDuLY2pUrWJj/mrxcsB3DCWoSOdmCyuPIx6n9QOL6S9dgk
+   FTO+mPQyYq1uFceIKNcxd7P2Dm4K/6/UYu03bhUY1TZqo7sffUg/lS3Iu
+   JSGfm9V/RcwCVKsIExKOqRrt3R2xa9SnYQtNUh1g3FgejyOgWkqE2Wfra
+   wvQjqUrkwdTMccQqwn1Ue9cq8sTSfSrTo4AXBASEgQPLCuwqsT0GEn/wy
+   PR+s5/XGBNqJDyMk0pC11endH5qookT1L8i+6dVQRWYutZ5AURS9bwIgC
+   8QLbSBE55X90FFm4SCtf3gbp/VHBd9L+3Lvlgo3DWkxk3DH9P6LVz5GfJ
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="352451559"
+X-IronPort-AV: E=Sophos;i="5.90,293,1643702400"; 
+   d="scan'208";a="352451559"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 10:48:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,293,1643702400"; 
+   d="scan'208";a="533345178"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2022 10:48:41 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1njlmK-0004pk-E2;
+        Wed, 27 Apr 2022 17:48:40 +0000
+Date:   Thu, 28 Apr 2022 01:47:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     kbuild-all@lists.01.org,
+        =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>,
+        Allan Nielsen <allan.nielsen@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Thomas Petazzoni <thomas.petazonni@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/3] PCI: of: create DT nodes for PCI devices if they do
+ not exists
+Message-ID: <202204280126.T5VOPZdN-lkp@intel.com>
+References: <20220427094502.456111-3-clement.leger@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.200.74]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220427094502.456111-3-clement.leger@bootlin.com>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 Apr 2022 13:32:32 -0700
-ira.weiny@intel.com wrote:
+Hi "Clément,
 
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> CXL kernel drivers optionally need to access DOE mailbox capabilities.
-> Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
-> the kernel while other access is designed towards user space usage.  An
-> example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
-> Compliance Mode DOE) which offers a mechanism to set different test
-> modes for a device.
-> 
-> There is no anticipated need for the kernel to share an individual
-> mailbox with user space.  Thus developing an interface to marshal access
-> between the kernel and user space for a single mailbox is unnecessary
-> overhead.  However, having the kernel relinquish some mailboxes to be
-> controlled by user space is a reasonable compromise to share access to
-> the device.
-> 
-> The auxiliary bus provides an elegant solution for this.  Each DOE
-> capability is given its own auxiliary device.  This device is controlled
-> by a kernel driver by default which restricts access to the mailbox.
-> Unbinding the driver from a single auxiliary device (DOE mailbox
-> capability) frees the mailbox for user space access.  This architecture
-> also allows a clear picture on which mailboxes are kernel controlled vs
-> not.
-> 
-> Create a driver for the DOE auxiliary devices.  The driver uses the PCI
-> DOE core to manage the mailbox.
-> 
-> User space must be prevented from unbinding the driver state when the
-> DOE auxiliary driver is being accessed by the kernel.  Add a read write
-> lock to the DOE auxiliary device to protect the driver data portion.
-> 
-> Finally, flag the driver module to be preloaded by device creation to
-> ensure the driver is attached when iterating the DOE capabilities.
-> 
-> User space access can be obtained by unbinding the driver from that
-> device.  For example:
-> 
-> $ ls -l /sys/bus/auxiliary/drivers
-> total 0
-> drwxr-xr-x 2 root root 0 Mar 24 10:45 cxl_doe.cxl_doe_drv
-> 
-> $ ls -l /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci*
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.0 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.1 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.2 -> ../../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.4
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.5 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.6 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.7 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
-> 
-> $ echo "cxl_pci.doe.4" > /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/unbind
-> 
-> $ ls -l /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci*
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.0 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.1 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.2 -> ../../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.5 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.6 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
-> lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.7 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+I love your patch! Yet something to improve:
 
-Hi Ira,
+[auto build test ERROR on helgaas-pci/next]
+[also build test ERROR on v5.18-rc4 next-20220427]
+[cannot apply to robh/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-A few minor comments inline.
-With those cleaned up
+url:    https://github.com/intel-lab-lkp/linux/commits/Cl-ment-L-ger/add-dynamic-PCI-device-of_node-creation-for-overlay/20220427-190828
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+config: sparc64-buildonly-randconfig-r003-20220427 (https://download.01.org/0day-ci/archive/20220428/202204280126.T5VOPZdN-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/787f8567f04db060522e198fbdc55a805e99b922
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Cl-ment-L-ger/add-dynamic-PCI-device-of_node-creation-for-overlay/20220427-190828
+        git checkout 787f8567f04db060522e198fbdc55a805e99b922
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=sparc64 SHELL=/bin/bash drivers/pci/
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-> 
-> ---
-> Changes from V7:
-> 	Now need to select PCI_DOE
-> 	Change MODULE_LICENSE to 'GPL' instead of old 'GPL v2'
-> 
-> Changes from V6:
-> 	The CXL layer now contains the driver for these auxiliary
-> 	devices.
-> 
-> Changes from V5:
-> 	Split the CXL specific stuff off from the PCI DOE create
-> 	auxiliary device code.
-> ---
->  drivers/cxl/Kconfig           | 13 +++++
->  drivers/cxl/Makefile          |  2 +
->  drivers/cxl/cxlpci.h          | 13 +++++
->  drivers/cxl/doe.c             | 90 +++++++++++++++++++++++++++++++++++
->  drivers/cxl/pci.c             | 20 ++++++++
->  include/uapi/linux/pci_regs.h |  1 +
->  6 files changed, 139 insertions(+)
->  create mode 100644 drivers/cxl/doe.c
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index ac0f5ca95431..82f3908fa5cc 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -103,4 +103,17 @@ config CXL_SUSPEND
->  	def_bool y
->  	depends on SUSPEND && CXL_MEM
->  
-> +config CXL_PCI_DOE
-> +      tristate "CXL PCI Data Object Exchange (DOE) support"
-> +      depends on CXL_PCI
+All errors (new ones prefixed by >>):
 
-Should be leading tabs not spaces.
+   drivers/pci/of.c: In function 'of_pci_add_property':
+>> drivers/pci/of.c:54:15: error: implicit declaration of function 'of_changeset_add_property'; did you mean 'of_pci_add_property'? [-Werror=implicit-function-declaration]
+      54 |         ret = of_changeset_add_property(ocs, np, prop);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~~
+         |               of_pci_add_property
+   drivers/pci/of.c: In function 'of_pci_make_dev_node':
+>> drivers/pci/of.c:129:9: error: implicit declaration of function 'of_changeset_init' [-Werror=implicit-function-declaration]
+     129 |         of_changeset_init(&cs);
+         |         ^~~~~~~~~~~~~~~~~
+>> drivers/pci/of.c:147:15: error: implicit declaration of function 'of_changeset_attach_node' [-Werror=implicit-function-declaration]
+     147 |         ret = of_changeset_attach_node(&cs, node);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pci/of.c:151:15: error: implicit declaration of function 'of_changeset_apply' [-Werror=implicit-function-declaration]
+     151 |         ret = of_changeset_apply(&cs);
+         |               ^~~~~~~~~~~~~~~~~~
+>> drivers/pci/of.c:160:9: error: implicit declaration of function 'of_changeset_destroy' [-Werror=implicit-function-declaration]
+     160 |         of_changeset_destroy(&cs);
+         |         ^~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-> +      default CXL_BUS
-> +      select PCI_DOE
-> +      help
-> +        Driver for DOE auxiliary devices.
-> +
-> +	The DOE capabilities provides a simple mailbox in PCI config space that
-> +	is used for a number of different protocols useful to CXL.  The CXL PCI
-> +	subsystem creates auxiliary devices for each DOE mailbox capability
-> +	found.  This driver is required for the kernel to use these devices.
-> +
->  endif
-> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> index a78270794150..c71b7a6345fb 100644
-> --- a/drivers/cxl/Makefile
-> +++ b/drivers/cxl/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-y += core/
->  obj-$(CONFIG_CXL_PCI) += cxl_pci.o
-> +obj-$(CONFIG_CXL_PCI_DOE) += cxl_doe.o
->  obj-$(CONFIG_CXL_MEM) += cxl_mem.o
->  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
->  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
-> @@ -8,6 +9,7 @@ obj-$(CONFIG_CXL_PORT) += cxl_port.o
->  
->  cxl_mem-y := mem.o
->  cxl_pci-y := pci.o
-> +cxl_doe-y := doe.o
->  cxl_acpi-y := acpi.o
->  cxl_pmem-y := pmem.o
->  cxl_port-y := port.o
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 2ad8715173ce..821fe05e8289 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -79,6 +79,7 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->   *
->   * @adev: Auxiliary bus device
->   * @pdev: PCI device this belongs to
-> + * @driver_access: Lock the driver during access
->   * @cap_offset: Capability offset
->   * @use_irq: Set if IRQs are to be used with this mailbox
->   *
-> @@ -88,9 +89,21 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->  struct cxl_doe_dev {
->  	struct auxiliary_device adev;
->  	struct pci_dev *pdev;
-> +	struct rw_semaphore driver_access;
->  	int cap_offset;
->  	bool use_irq;
->  };
->  #define DOE_DEV_NAME "doe"
->  
-> +/**
-> + * struct cxl_doe_drv_state - state of the DOE Aux driver
-> + *
-> + * @doe_dev: The Auxiliary DOE device
 
-As far as I can tell no one actually uses the doe_dev from here for anything
-so do we need it at all?
+vim +54 drivers/pci/of.c
 
-> + * @doe_mb: PCI DOE mailbox state
-> + */
-> +struct cxl_doe_drv_state {
-> +	struct cxl_doe_dev *doe_dev;
-> +	struct pci_doe_mb *doe_mb;
-> +};
-> +
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/doe.c b/drivers/cxl/doe.c
-> new file mode 100644
-> index 000000000000..1d3a24a77002
-> --- /dev/null
-> +++ b/drivers/cxl/doe.c
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/pci-doe.h>
+    17	
+    18	#ifdef CONFIG_PCI
+    19	static int of_pci_add_property(struct of_changeset *ocs, struct device_node *np,
+    20				       const char *name, const void *value, int length)
+    21	{
+    22		struct property *prop;
+    23		int ret = -ENOMEM;
+    24	
+    25		prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+    26		if (!prop)
+    27			return -ENOMEM;
+    28	
+    29		prop->name = kstrdup(name, GFP_KERNEL);
+    30		if (!prop->name)
+    31			goto out_err;
+    32	
+    33		if (value) {
+    34			prop->value = kmemdup(value, length, GFP_KERNEL);
+    35			if (!prop->value)
+    36				goto out_err;
+    37		} else {
+    38			/*
+    39			 * Even if the property has no value, it must be set to a
+    40			 * non-null value since of_get_property() is used to check
+    41			 * some values that might or not have a values (ranges for
+    42			 * instance). Moreover, when the node is released, prop->value
+    43			 * is kfreed so the memory must come from kmalloc.
+    44			 */
+    45			prop->value = kmalloc(1, GFP_KERNEL);
+    46			if (!prop->value)
+    47				goto out_err;
+    48		}
+    49	
+    50		of_property_set_flag(prop, OF_DYNAMIC);
+    51	
+    52		prop->length = length;
+    53	
+  > 54		ret = of_changeset_add_property(ocs, np, prop);
+    55		if (!ret)
+    56			return 0;
+    57	
+    58	out_err:
+    59		kfree(prop->value);
+    60		kfree(prop->name);
+    61		kfree(prop);
+    62	
+    63		return ret;
+    64	}
+    65	
+    66	static struct device_node *of_pci_make_node(void)
+    67	{
+    68		struct device_node *node;
+    69	
+    70		node = kzalloc(sizeof(*node), GFP_KERNEL);
+    71		if (!node)
+    72			return NULL;
+    73	
+    74		of_node_set_flag(node, OF_DYNAMIC);
+    75		of_node_set_flag(node, OF_DETACHED);
+    76		of_node_init(node);
+    77	
+    78		return node;
+    79	}
+    80	
+    81	static int of_pci_add_cells_props(struct device_node *node,
+    82					  struct of_changeset *cs, int n_addr_cells,
+    83					  int n_size_cells)
+    84	{
+    85		__be32 val;
+    86		int ret;
+    87	
+    88		ret = of_pci_add_property(cs, node, "ranges", NULL, 0);
+    89		if (ret)
+    90			return ret;
+    91	
+    92		val = __cpu_to_be32(n_addr_cells);
+    93		ret = of_pci_add_property(cs, node, "#address-cells", &val,
+    94					  sizeof(__be32));
+    95		if (ret)
+    96			return ret;
+    97	
+    98		val = __cpu_to_be32(n_size_cells);
+    99		return of_pci_add_property(cs, node, "#size-cells", &val,
+   100					   sizeof(__be32));
+   101	}
+   102	
+   103	static int of_pci_add_pci_bus_props(struct device_node *node,
+   104					    struct of_changeset *cs)
+   105	{
+   106		int ret;
+   107	
+   108		ret = of_pci_add_property(cs, node, "device_type", "pci",
+   109					  strlen("pci") + 1);
+   110		if (ret)
+   111			return ret;
+   112	
+   113		return of_pci_add_cells_props(node, cs, 3, 2);
+   114	}
+   115	
+   116	static void of_pci_make_dev_node(struct pci_dev *dev)
+   117	{
+   118		static struct of_changeset cs;
+   119		const char *pci_type = "dev";
+   120		struct device_node *node;
+   121		__be32 val[5] = {0};
+   122		int ret;
+   123	
+   124		node = of_pci_make_node();
+   125		if (!node)
+   126			return;
+   127	
+   128		node->parent = dev->bus->dev.of_node;
+ > 129		of_changeset_init(&cs);
+   130	
+   131		if (pci_is_bridge(dev)) {
+   132			ret = of_pci_add_pci_bus_props(node, &cs);
+   133			if (ret)
+   134				goto changeset_destroy;
+   135			pci_type = "pci";
+   136		}
+   137	
+   138		node->full_name = kasprintf(GFP_KERNEL, "%s@%x,%x", pci_type,
+   139					    PCI_SLOT(dev->devfn), PCI_FUNC(dev->devfn));
+   140	
+   141		val[0] = __cpu_to_be32(dev->devfn << 8);
+   142		val[4] = __cpu_to_be32(SZ_4K);
+   143		ret = of_pci_add_property(&cs, node, "reg", val, 5 * sizeof(__be32));
+   144		if (ret)
+   145			goto changeset_destroy;
+   146	
+ > 147		ret = of_changeset_attach_node(&cs, node);
+   148		if (ret)
+   149			goto changeset_destroy;
+   150	
+ > 151		ret = of_changeset_apply(&cs);
+   152		if (ret)
+   153			goto changeset_destroy;
+   154	
+   155		dev->dev.of_node = node;
+   156	
+   157		return;
+   158	
+   159	changeset_destroy:
+ > 160		of_changeset_destroy(&cs);
+   161		kfree(node);
+   162	}
+   163	
 
-Rather sparse include list given what is going on in here.
-We shouldn't rely too heavily on what comes indirectly except
-where it's really standard headers.
-
-Probably mod_devicetable.h and some headers for auxiliary devices
-and rwsem.h at least?  
-
-> +
-> +#include "cxlpci.h"
-> +
-> +static void doe_destroy_mb(void *ds)
-> +{
-> +	struct cxl_doe_drv_state *doe_ds = ds;
-> +
-> +	pci_doe_destroy_mb(doe_ds->doe_mb);
-> +}
-> +
-> +static int cxl_pci_doe_probe(struct auxiliary_device *aux_dev,
-> +			     const struct auxiliary_device_id *id)
-> +{
-> +	struct cxl_doe_dev *doe_dev = container_of(aux_dev, struct cxl_doe_dev,
-> +						   adev);
-> +	struct device *dev = &aux_dev->dev;
-> +	struct cxl_doe_drv_state *doe_ds;
-> +	struct pci_doe_mb *doe_mb;
-> +
-> +	doe_ds = devm_kzalloc(dev, sizeof(*doe_ds), GFP_KERNEL);
-> +	if (!doe_ds)
-> +		return -ENOMEM;
-> +
-> +	doe_mb = pci_doe_create_mb(doe_dev->pdev, doe_dev->cap_offset,
-> +				   doe_dev->use_irq);
-> +	if (IS_ERR(doe_mb)) {
-> +		dev_err(dev, "Failed to create the DOE mailbox state machine\n");
-
-You could use dev_err_probe() here to tidy this up a little bit.
-
-> +		return PTR_ERR(doe_mb);
-
-> +	}
-> +
-> +	doe_ds->doe_mb = doe_mb;
-> +	devm_add_action_or_reset(dev, doe_destroy_mb, doe_ds);
-> +
-> +	down_write(&doe_dev->driver_access);
-> +	auxiliary_set_drvdata(aux_dev, doe_ds);
-> +	up_write(&doe_dev->driver_access);
-> +
-> +	return 0;
-> +}
-> +
-> +static void cxl_pci_doe_remove(struct auxiliary_device *aux_dev)
-> +{
-> +	struct cxl_doe_dev *doe_dev = container_of(aux_dev, struct cxl_doe_dev,
-> +						   adev);
-> +
-> +	down_write(&doe_dev->driver_access);
-> +	auxiliary_set_drvdata(aux_dev, NULL);
-
-This confused me for a bit.  I 'think' you are doing this to be able to use
-it as a flag for whether the driver is still bound. If so, a comment would
-be useful.
-
-> +	up_write(&doe_dev->driver_access);
-> +}
-> +
-> +static const struct auxiliary_device_id cxl_pci_doe_auxiliary_id_table[] = {
-> +	{.name = "cxl_pci." DOE_DEV_NAME, },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(auxiliary, cxl_pci_doe_auxiliary_id_table);
-> +
-> +struct auxiliary_driver cxl_pci_doe_auxiliary_drv = {
-> +	.name = "cxl_doe_drv",
-> +	.id_table = cxl_pci_doe_auxiliary_id_table,
-> +	.probe = cxl_pci_doe_probe,
-> +	.remove = cxl_pci_doe_remove,
-> +};
-> +
-> +static int __init cxl_pci_doe_init_module(void)
-> +{
-> +	int ret;
-> +
-> +	ret = auxiliary_driver_register(&cxl_pci_doe_auxiliary_drv);
-> +	if (ret) {
-> +		pr_err("Failed cxl_pci_doe auxiliary_driver_register() ret=%d\n",
-> +		       ret);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void __exit cxl_pci_doe_exit_module(void)
-> +{
-> +	auxiliary_driver_unregister(&cxl_pci_doe_auxiliary_drv);
-> +}
-> +
-> +module_init(cxl_pci_doe_init_module);
-> +module_exit(cxl_pci_doe_exit_module);
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 41a6f3eb0a5c..0dec1f1a3f38 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -590,6 +590,17 @@ static void cxl_pci_doe_destroy_device(void *ad)
->  	auxiliary_device_uninit(ad);
->  }
->  
-> +static struct cxl_doe_drv_state *cxl_pci_doe_get_drv(struct cxl_doe_dev *doe_dev)
-> +{
-> +	down_read(&doe_dev->driver_access);
-> +	return auxiliary_get_drvdata(&doe_dev->adev);
-> +}
-> +
-> +static void cxl_pci_doe_put_drv(struct cxl_doe_dev *doe_dev)
-> +{
-> +	up_read(&doe_dev->driver_access);
-> +}
-> +
->  /**
->   * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
->   *				mailboxes found
-> @@ -652,6 +663,7 @@ static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
->  			return -ENOMEM;
->  
->  		new_dev->pdev = pdev;
-> +		init_rwsem(&new_dev->driver_access);
->  		new_dev->cap_offset = off;
->  		new_dev->use_irq = use_irq;
->  
-> @@ -682,6 +694,13 @@ static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
->  					      adev);
->  		if (rc)
->  			return rc;
-> +
-> +		if (device_attach(&adev->dev) != 1) {
-> +			dev_err(&adev->dev,
-> +				"Failed to attach a driver to DOE device %d\n",
-> +				adev->id);
-> +			return -ENODEV;
-> +		}
-
-Can you add a comment on why this has to be the case at this point.  Why can't
-the driver come along later?
-
->  	}
->  
->  	return 0;
-> @@ -785,6 +804,7 @@ static struct pci_driver cxl_pci_driver = {
->  	},
->  };
-
-...
-
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
