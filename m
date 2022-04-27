@@ -2,233 +2,345 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61CF0511CF9
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A4D2511DDD
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:36:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232632AbiD0RVv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 13:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33990 "EHLO
+        id S243965AbiD0RXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 13:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231210AbiD0RVu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:21:50 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B928E4349D
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 10:18:34 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id h12so2105627plf.12
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 10:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZNzLVb6IYQOQv9U2eS6LqWegFjblxsHIEuJynYwzEGc=;
-        b=aCqN21episAYOq2l82EB/yHcNnat6tZvY04o7oNbYHLafKqkBN61WjW970RUu7zqkn
-         nNFUca/Nc1Kg8XpNSBtDYjHvVMBPrbBw3GM/WRJEZBXmqwvHxi9VvpCFI3q6Jgh71rhw
-         vVXh1PH50/g65qGVAfHxdZFkGrcX75L/7RElLrLyZDCiKK4xkyzNMW/OgsAac+m57Ico
-         pMGMuALK3wujfzkL/GftiCTr3aA845ytnKwrcrdBjKjBFvcR7+eunnmsOr3mnz7prpIu
-         i/xoAOuiezzOcNtFnOi1wAjbOqPE2gDzFFcMNOeLs9Dd3+TtpQDLzb70hq7/B1judgYK
-         qecg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZNzLVb6IYQOQv9U2eS6LqWegFjblxsHIEuJynYwzEGc=;
-        b=VLXKBCH0TRXNz7Igm2XCnw+l+l68ZpGOR1q/O5dsRMugk68BjTgft/eGpUYhziZa5g
-         kvCqSZwK5cABItgDLJJ9B4lHp3ePL/b0rfEiAfpdI58uc4/9b2dwSUnNnzrbhKXlKk/d
-         s5r3CKxMsa+cOkdtaWIg3aN27quROyLUoXGktpUM5SekQLSm24wCWzJ9q58m/VXTxBn7
-         nEc/s98Jrjgfvn7fUZMUOjxvEHXzHxKWkgu/EcIUEBPKkONQaVs4PGvaVqPF4r8dxRGa
-         gMM/LGrFiHfsNYGumW+HKc1qdPTH5V8aCyPOO4+VTn1SYFj2UVh42YBPLpozYrNXribv
-         XLVg==
-X-Gm-Message-State: AOAM5324s8ANZ6lcGcIvs86cPB/G+LgLavND8xT46V1w5SjVh4GDro3q
-        KE/EbIG9G6yhgI/AHP8PFsAyqwZSMEfZ
-X-Google-Smtp-Source: ABdhPJyYSL0q24w6bSBRKVpoN2yZQbpWZLnjfnjWLPUv3F65PWgqqpx4Vv0kdJYzyrA3HfKXiIhD5A==
-X-Received: by 2002:a17:90b:110a:b0:1d2:bde4:e277 with SMTP id gi10-20020a17090b110a00b001d2bde4e277mr33552950pjb.188.1651079914148;
-        Wed, 27 Apr 2022 10:18:34 -0700 (PDT)
-Received: from thinkpad ([27.111.75.179])
-        by smtp.gmail.com with ESMTPSA id v1-20020a62c301000000b00505bc0b970dsm20234632pfg.178.2022.04.27.10.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 10:18:33 -0700 (PDT)
-Date:   Wed, 27 Apr 2022 22:48:27 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Zhi Li <lznuaa@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S236975AbiD0RXA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:23:00 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A274744745;
+        Wed, 27 Apr 2022 10:19:47 -0700 (PDT)
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KpQRD4GX0z685K1;
+        Thu, 28 Apr 2022 01:17:12 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 27 Apr 2022 19:19:45 +0200
+Received: from localhost (10.81.200.74) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 27 Apr
+ 2022 18:19:44 +0100
+Date:   Wed, 27 Apr 2022 18:19:42 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v9 4/9] dmaengine: dw-edma: Rename wr(rd)_ch_cnt to
- ll_wr(rd)_cnt in struct dw_edma_chip
-Message-ID: <20220427171827.GD4161@thinkpad>
-References: <20220422143643.727871-1-Frank.Li@nxp.com>
- <20220422143643.727871-5-Frank.Li@nxp.com>
- <20220423121218.GG374560@thinkpad>
- <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE
+ mailbox
+Message-ID: <20220427181942.00003492@Huawei.com>
+In-Reply-To: <20220414203237.2198665-5-ira.weiny@intel.com>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+        <20220414203237.2198665-5-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.200.74]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 23, 2022 at 04:47:51PM -0500, Zhi Li wrote:
-> On Sat, Apr 23, 2022 at 7:12 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Fri, Apr 22, 2022 at 09:36:38AM -0500, Frank Li wrote:
-> > > There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
-> > > write(read) channel number from register, then save these into dw_edma.
-> > > Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
-> > > are available in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
-> > > ll_wr(rd)_cnt to indicate actual usage.
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> >
-> > One minor comment below,
-> >
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >
-> > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> > > ---
-> > > Change from v6 to v9
-> > >  - none
-> > > Change from v5 to v6
-> > >  - s/rename/Rename/ at subject
-> > > new patch at v4
-> > >
-> > >  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
-> > >  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
-> > >  include/linux/dma/edma.h           |  8 ++++----
-> > >  3 files changed, 12 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > index 435e4f2ab6575..1a0a98f6c5515 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > @@ -919,11 +919,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
-> > >
-> > >       raw_spin_lock_init(&dw->lock);
-> > >
-> > > -     dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
-> > > +     dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
-> > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
-> > >       dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
-> > >
-> > > -     dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
-> > > +     dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
-> > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
-> > >       dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
-> > >
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > index ae42bad24dd5a..7732537f96086 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > >       chip->nr_irqs = nr_irqs;
-> > >       chip->ops = &dw_edma_pcie_core_ops;
-> > >
-> > > -     chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
-> > > -     chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
-> > > +     chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
-> > > +     chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
-> > >
-> > >       chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-> > >       if (!chip->reg_base)
-> > >               return -ENOMEM;
-> > >
-> > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
-> > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
-> > >               struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
-> > >               struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
-> > >               struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
-> > > @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > >               dt_region->sz = dt_block->sz;
-> > >       }
-> > >
-> > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
-> > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
-> > >               struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
-> > >               struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
-> > >               struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
-> > > @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > >               chip->reg_base);
-> > >
-> > >
-> > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
-> > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
-> > >               pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> > >                       i, vsec_data.ll_wr[i].bar,
-> > >                       vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
-> > > @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > >                       chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
-> > >       }
-> > >
-> > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
-> > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
-> > >               pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> > >                       i, vsec_data.ll_rd[i].bar,
-> > >                       vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
-> > > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> > > index e9ce652b88233..c2039246fc08c 100644
-> > > --- a/include/linux/dma/edma.h
-> > > +++ b/include/linux/dma/edma.h
-> > > @@ -40,8 +40,8 @@ enum dw_edma_map_format {
-> > >   * @nr_irqs:          total dma irq number
-> > >   * @ops                       DMA channel to IRQ number mapping
-> > >   * @reg_base          DMA register base address
-> > > - * @wr_ch_cnt                 DMA write channel number
-> > > - * @rd_ch_cnt                 DMA read channel number
-> > > + * @ll_wr_cnt                 DMA write link list number
-> > > + * @ll_rd_cnt                 DMA read link list number
-> >
-> > DMA linked list write/read memory regions?
-> 
-> ll_wr_cnt is the counter of the DMA listed list.
-> 
-> Do you means
-> 
-> @ll_region_wr        DMA linked list write memory regions
-> 
+On Thu, 14 Apr 2022 13:32:31 -0700
+ira.weiny@intel.com wrote:
 
-Sorry, I confused the terms here. But can you use "count" instead of "number"?
-
-Thanks,
-Mani
-
-> best regards
-> Frank Li
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
+> CXL kernel drivers optionally need to access DOE mailbox capabilities.
+> Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
+> the kernel while other access is designed towards user space usage.  An
+> example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
+> Compliance Mode DOE) which offers a mechanism to set different test
+> modes for a device.
 > 
-> >
-> > Thanks,
-> > Mani
-> >
-> > >   * @rg_region                 DMA register region
-> > >   * @ll_region_wr      DMA descriptor link list memory for write channel
-> > >   * @ll_region_rd      DMA descriptor link list memory for read channel
-> > > @@ -56,8 +56,8 @@ struct dw_edma_chip {
-> > >
-> > >       void __iomem            *reg_base;
-> > >
-> > > -     u16                     wr_ch_cnt;
-> > > -     u16                     rd_ch_cnt;
-> > > +     u16                     ll_wr_cnt;
-> > > +     u16                     ll_rd_cnt;
-> > >       /* link list address */
-> > >       struct dw_edma_region   ll_region_wr[EDMA_MAX_WR_CH];
-> > >       struct dw_edma_region   ll_region_rd[EDMA_MAX_RD_CH];
-> > > --
-> > > 2.35.1
-> > >
+> There is no anticipated need for the kernel to share an individual
+> mailbox with user space.  Thus developing an interface to marshal access
+> between the kernel and user space for a single mailbox is unnecessary
+> overhead.  However, having the kernel relinquish some mailboxes to be
+> controlled by user space is a reasonable compromise to share access to
+> the device.
+> 
+> The auxiliary bus provides an elegant solution for this.  Each DOE
+> capability is given its own auxiliary device.  This device is controlled
+> by a kernel driver by default which restricts access to the mailbox.
+> Unbinding the driver from a single auxiliary device (DOE mailbox
+> capability) frees the mailbox for user space access.  This architecture
+> also allows a clear picture on which mailboxes are kernel controlled vs
+> not.
+> 
+> Iterate each DOE mailbox capability and create auxiliary bus devices.
+> Follow on patches will define a driver for the newly created devices.
+> 
+> sysfs shows the devices.
+> 
+> $ ls -l /sys/bus/auxiliary/devices/
+> total 0
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.0 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.1 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.2 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.3 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.4 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.4
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.5 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.6 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
+> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+I'm not 100% happy with effectively having one solution for CXL
+and probably a different one for DOEs on switch ports
+(which I just hacked into a port service driver to convince
+myself there was at least one plausible way of doing that) but if
+this effectively separates the two discussions then I guess I can
+live with it for now ;)
+
+Once this is merged we can start the discussion about how to
+handle switch ports with DOEs both for CDAT and SPDM.
+
+I'll send out an RFC that is so hideous it will get people to
+suggestion how to do it better!  Currently it starts and
+stops the mailbox 3 times in the registration path and I think
+it's more luck than judgement that is landing me with the right
+MSI.
+
+Anyhow, this looks good to me.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+> 
+> ---
+> Changes from V7:
+> 	Minor code clean ups
+> 	Rebased on cxl-pending
+> 
+> Changes from V6:
+> 	Move all the auxiliary device stuff to the CXL layer
+> 
+> Changes from V5:
+> 	Split the CXL specific stuff off from the PCI DOE create
+> 	auxiliary device code.
+> ---
+>  drivers/cxl/Kconfig  |   1 +
+>  drivers/cxl/cxlpci.h |  21 +++++++
+>  drivers/cxl/pci.c    | 127 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 149 insertions(+)
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index f64e3984689f..ac0f5ca95431 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -16,6 +16,7 @@ if CXL_BUS
+>  config CXL_PCI
+>  	tristate "PCI manageability"
+>  	default CXL_BUS
+> +	select AUXILIARY_BUS
+>  	help
+>  	  The CXL specification defines a "CXL memory device" sub-class in the
+>  	  PCI "memory controller" base class of devices. Device's identified by
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 329e7ea3f36a..2ad8715173ce 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -2,6 +2,7 @@
+>  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+>  #ifndef __CXL_PCI_H__
+>  #define __CXL_PCI_H__
+> +#include <linux/auxiliary_bus.h>
+>  #include <linux/pci.h>
+>  #include "cxl.h"
+>  
+> @@ -72,4 +73,24 @@ static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
+>  }
+>  
+>  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+> +
+> +/**
+> + * struct cxl_doe_dev - CXL DOE auxiliary bus device
+> + *
+> + * @adev: Auxiliary bus device
+> + * @pdev: PCI device this belongs to
+> + * @cap_offset: Capability offset
+> + * @use_irq: Set if IRQs are to be used with this mailbox
+> + *
+> + * This represents a single DOE mailbox device.  CXL devices should create this
+> + * device and register it on the Auxiliary bus for the CXL DOE driver to drive.
+> + */
+> +struct cxl_doe_dev {
+> +	struct auxiliary_device adev;
+> +	struct pci_dev *pdev;
+> +	int cap_offset;
+> +	bool use_irq;
+> +};
+> +#define DOE_DEV_NAME "doe"
+> +
+>  #endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index e7ab9a34d718..41a6f3eb0a5c 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/io.h>
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+> @@ -564,6 +565,128 @@ static void cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
+>  	info->ranges = __cxl_dvsec_ranges(cxlds, info);
+>  }
+>  
+> +static void cxl_pci_free_irq_vectors(void *data)
+> +{
+> +	pci_free_irq_vectors(data);
+> +}
+> +
+> +static DEFINE_IDA(pci_doe_adev_ida);
+> +
+> +static void cxl_pci_doe_dev_release(struct device *dev)
+> +{
+> +	struct auxiliary_device *adev = container_of(dev,
+> +						struct auxiliary_device,
+> +						dev);
+> +	struct cxl_doe_dev *doe_dev = container_of(adev, struct cxl_doe_dev,
+> +						   adev);
+> +
+> +	ida_free(&pci_doe_adev_ida, adev->id);
+> +	kfree(doe_dev);
+> +}
+> +
+> +static void cxl_pci_doe_destroy_device(void *ad)
+> +{
+> +	auxiliary_device_delete(ad);
+> +	auxiliary_device_uninit(ad);
+> +}
+> +
+> +/**
+> + * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
+> + *				mailboxes found
+> + *
+> + * @pci_dev: The PCI device to scan for DOE mailboxes
+> + *
+> + * There is no coresponding destroy of these devices.  This function associates
+> + * the DOE auxiliary devices created with the pci_dev passed in.  That
+> + * association is device managed (devm_*) such that the DOE auxiliary device
+> + * lifetime is always less than or equal to the lifetime of the pci_dev.
+> + *
+> + * RETURNS: 0 on success -ERRNO on failure.
+> + */
+> +static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	bool use_irq = true;
+> +	int irqs = 0;
+> +	u16 off = 0;
+> +	int rc;
+> +
+> +	pci_doe_for_each_off(pdev, off)
+> +		irqs++;
+> +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
+> +
+> +	/*
+> +	 * Allocate enough vectors for the DOE's
+> +	 */
+> +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
+> +						     PCI_IRQ_MSIX);
+> +	if (rc != irqs) {
+> +		pci_err(pdev,
+> +			"Not enough interrupts for all the DOEs; use polling\n");
+> +		use_irq = false;
+> +		/* Some got allocated; clean them up */
+> +		if (rc > 0)
+> +			cxl_pci_free_irq_vectors(pdev);
+> +	} else {
+> +		/*
+> +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
+> +		 * done later within the DOE initialization, but as it
+> +		 * potentially has other impacts keep it here when setting up
+> +		 * the IRQ's.
+> +		 */
+> +		pci_set_master(pdev);
+> +		rc = devm_add_action_or_reset(dev,
+> +					      cxl_pci_free_irq_vectors,
+> +					      pdev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	pci_doe_for_each_off(pdev, off) {
+> +		struct auxiliary_device *adev;
+> +		struct cxl_doe_dev *new_dev;
+> +		int id;
+> +
+> +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
+> +		if (!new_dev)
+> +			return -ENOMEM;
+> +
+> +		new_dev->pdev = pdev;
+> +		new_dev->cap_offset = off;
+> +		new_dev->use_irq = use_irq;
+> +
+> +		/* Set up struct auxiliary_device */
+> +		adev = &new_dev->adev;
+> +		id = ida_alloc(&pci_doe_adev_ida, GFP_KERNEL);
+> +		if (id < 0) {
+> +			kfree(new_dev);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		adev->id = id;
+> +		adev->name = DOE_DEV_NAME;
+> +		adev->dev.release = cxl_pci_doe_dev_release;
+> +		adev->dev.parent = dev;
+> +
+> +		if (auxiliary_device_init(adev)) {
+> +			cxl_pci_doe_dev_release(&adev->dev);
+> +			return -EIO;
+> +		}
+> +
+> +		if (auxiliary_device_add(adev)) {
+> +			auxiliary_device_uninit(adev);
+> +			return -EIO;
+> +		}
+> +
+> +		rc = devm_add_action_or_reset(dev, cxl_pci_doe_destroy_device,
+> +					      adev);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct cxl_register_map map;
+> @@ -630,6 +753,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	rc = cxl_pci_create_doe_devices(pdev);
+> +	if (rc)
+> +		return rc;
+> +
+>  	cxl_dvsec_ranges(cxlds);
+>  
+>  	cxlmd = devm_cxl_add_memdev(cxlds);
+
