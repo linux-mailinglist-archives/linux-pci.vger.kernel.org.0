@@ -2,144 +2,232 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B1CD51252D
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 00:18:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E252C512566
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 00:41:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbiD0WV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 18:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60682 "EHLO
+        id S233410AbiD0WpI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 18:45:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232672AbiD0WVZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 18:21:25 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AEEEC496A8;
-        Wed, 27 Apr 2022 15:18:13 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id E8A0892009E; Thu, 28 Apr 2022 00:18:12 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id E401D92009D;
-        Wed, 27 Apr 2022 23:18:12 +0100 (BST)
-Date:   Wed, 27 Apr 2022 23:18:12 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Avoid handing out address 0 to devices
-In-Reply-To: <20220419033752.GA1101844@bhelgaas>
-Message-ID: <alpine.DEB.2.21.2204192214310.9383@angie.orcam.me.uk>
-References: <20220419033752.GA1101844@bhelgaas>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S233175AbiD0WpH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 18:45:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B7E711E3F8
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 15:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651099313;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4Q6+PayGphb3zKZnUdKR+LTCV+SuNJxanUj+aw0RLUU=;
+        b=UxF5gWUaAuLNEvjPKnBYxq7OOyaukxfjyjXQZzuFWx0ffGej5o8HBYmOECRzvGPmFHjwFf
+        CzIDnbvFXHP8cdoSkim7p0LMcL86obgSwiFVV6G88t/Zlaz9MDBrHpK9GR1ZyThnRKtb9t
+        RzzS5Tw1WVaf7uvPLlzENSdDkj3QbGc=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-458-Ku5PSIhEMhmfoMpEg4OHcQ-1; Wed, 27 Apr 2022 18:41:52 -0400
+X-MC-Unique: Ku5PSIhEMhmfoMpEg4OHcQ-1
+Received: by mail-il1-f200.google.com with SMTP id h28-20020a056e021d9c00b002cc403e851aso759309ila.12
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 15:41:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=4Q6+PayGphb3zKZnUdKR+LTCV+SuNJxanUj+aw0RLUU=;
+        b=A1SjB2e5ENjkSPO+4mkj7adPCWXA07z1l02WQy1qb+rK8bJRpFUbdTUzL5cruEk8Jd
+         vM1M0AichOX6w3zPpVVUxM1uDGxcQZ/PPH/RoNm3b5OCYt5v6PVqOMH25VnI7Ap5HVLR
+         QTejaFXhikEJL5hMtc6picEVJy8Hod74fla+uUIzQIqgql1te2BM21I3zYv9H7FhbfSL
+         wnrTOuX58GTAgdalm0oBmQg4XSskah1PE3OwE2gxmOuCgLanOuXHjAWG0XP4k49YfNOL
+         cFaj4LU7msiZE+wIsLo7RLlQbM3LHlc2af7k0r8tPPeLSWfrcz6xw1gn6d4vlM8bQrBK
+         vGyA==
+X-Gm-Message-State: AOAM531OLr2WlpmWXTEpfPxEoMXkeBm1O6e0t54fhSV2H/Ydb60xXpKs
+        GWly60ceq+O/hgyUmCgWwUqcHy8b7fMvzYGBFaPigiCBVsRBE73/hqGSwrkYANPQrk3euZUQzRv
+        4We0rdBLK9QfKBZV0kBxm
+X-Received: by 2002:a05:6602:1211:b0:654:94db:fa48 with SMTP id y17-20020a056602121100b0065494dbfa48mr12622910iot.48.1651099311095;
+        Wed, 27 Apr 2022 15:41:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxxWQb90mvXltObvc4vVxwPkTBtgpQEpfxBIyrAqvOvyNj0f9DUNqMXetDikuTEcPJOCq9Hsw==
+X-Received: by 2002:a05:6602:1211:b0:654:94db:fa48 with SMTP id y17-20020a056602121100b0065494dbfa48mr12622885iot.48.1651099310872;
+        Wed, 27 Apr 2022 15:41:50 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id g5-20020a5d8c85000000b0065726e18c0csm12223712ion.22.2022.04.27.15.41.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Apr 2022 15:41:50 -0700 (PDT)
+Date:   Wed, 27 Apr 2022 16:41:47 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jake Oshins <jakeo@microsoft.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce VM
+ boot time
+Message-ID: <20220427164147.330a0bc8.alex.williamson@redhat.com>
+In-Reply-To: <SN4PR2101MB0878E466880C047D3A0D0C92ABFB9@SN4PR2101MB0878.namprd21.prod.outlook.com>
+References: <BYAPR21MB12705103ED8F2B7024A22438BFF49@BYAPR21MB1270.namprd21.prod.outlook.com>
+        <YmgheiPOApuiLcK6@lpieralisi>
+        <BYAPR21MB127041D9BF1A4708B620BA30BFFB9@BYAPR21MB1270.namprd21.prod.outlook.com>
+        <SN4PR2101MB0878E466880C047D3A0D0C92ABFB9@SN4PR2101MB0878.namprd21.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 18 Apr 2022, Bjorn Helgaas wrote:
+On Tue, 26 Apr 2022 19:25:43 +0000
+Jake Oshins <jakeo@microsoft.com> wrote:
 
-> > Yes, just bumping up PCIBIOS_MIN_IO was my first thought and the
-> > path of least resistance.  However with the strictly hierarchical
-> > topology of PCIe systems the limit of 16 ranges feels so
-> > frighteningly low to me already as to make me rather unwilling to
-> > reduce it even further for a system that is free from PC legacy junk
-> > (no southbridge let alone ISA) and therefore does not require it.
-> > So I've reconsidered my initial approach and came up with this
-> > proposal instead.  I think it is a good compromise.
+> > -----Original Message-----
+> > From: Dexuan Cui <decui@microsoft.com>
+> > Sent: Tuesday, April 26, 2022 11:32 AM
+> > To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Jake Oshins <jakeo@microsoft.com>; Bjorn Helgaas <helgaas@kernel.org>;
+> > bhelgaas@google.com; Alex Williamson <alex.williamson@redhat.com>;
+> > wei.liu@kernel.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> > linux-hyperv@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Michael Kelley (LINUX) <mikelley@microsoft.com>;
+> > robh@kernel.org; kw@linux.com; kvm@vger.kernel.org
+> > Subject: RE: [PATCH] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce
+> > VM boot time
+> >   
+> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Sent: Tuesday, April 26, 2022 9:45 AM  
+> > > > ...
+> > > > Sorry I don't quite follow. pci-hyperv allocates MMIO for the bridge
+> > > > window in hv_pci_allocate_bridge_windows() and registers the MMIO
+> > > > ranges to the core PCI driver via pci_add_resource(), and later the
+> > > > core PCI driver probes the bus/device(s), validates the BAR sizes
+> > > > and the pre-initialized BAR values, and uses the BAR configuration.
+> > > > IMO the whole process doesn't require the bit PCI_COMMAND_MEMORY to
+> > > > be pre-set, and there should be no issue to delay setting the bit to
+> > > > a PCI device device's .probe() -> pci_enable_device().  
+> > >
+> > > IIUC you want to bootstrap devices with PCI_COMMAND_MEMORY clear
+> > > (otherwise PCI core would toggle it on and off for eg BAR sizing).
+> > >
+> > > Is that correct ?  
+> > 
+> > Yes, that's the exact purpose of this patch.
+> > 
+> > Do you see any potential architectural issue with the patch?
+> > From my reading of the core PCI code, it looks like this should be safe.
+> > 
+> > Jake has some concerns that I don't quite follow.
+> > @Jake, could you please explain the concerns with more details?
+> >   
 > 
-> Sorry for being dense here, I think it's finally sinking in.
-
- No worries, I'm glad we're on the same page now.
-
-> The problem is that making PCIBIOS_MIN_IO greater than zero would keep
-> us from assigning a [io 0x0000- ] window, so instead of 16 I/O bridge
-> windows, we could only have 15 (unless bridges support 32-bit I/O
-> windows).  Right?
-
- Yes, that's been my concern.
-
-> Are you running into that limit?  Most devices don't need I/O port
-> space, and almost all other arches define PCIBIOS_MIN_IO, so they live
-> without that window today.
-
- I haven't run into this limit, but then whoever runs into it is likely 
-not going to be someone who's able to come up with a solution like this 
-proposed here or possibly understanding it.  Granted, it's only one extra 
-range, but still IMHO an unnecessary extra limitation beyond one built 
-into hardware.
-
- Also there are devices out there that have alternative MMIO and port I/O 
-BARs available for mapping their CSRs, and while our drivers tend to use 
-MMIO in that case those devices still claim a port I/O address range.  If 
-you are unlucky they will get an allocation and a device that actually 
-needs port I/O to work won't.
-
- Such unexpected quirks can be very frustrating to IT folk.
-
-> Sparc uses the MMIO I/O port address directly in the struct resource,
-> so it will never try to allocate [io 0x0000], and there's no problem
-> with using PCI I/O port 0:
+> First, let me say that I really don't know whether this is an issue.
+> I know it's an issue with other operating system kernels.  I'm
+> curious whether the Linux kernel / Linux PCI driver would behave in a
+> way that has an issue here.
 > 
->   pci_bus 0000:00: root bus resource [io  0x804000000000-0x80400fffffff] (bus address [0x0000-0xfffffff])
->   mpt2sas0: ioport(0x0000804000001000), size(256)
+> The VM has a window of address space into which it chooses to put PCI
+> device's BARs.  The guest OS will generally pick the value that is
+> within the BAR, by default, but it can theoretically place the device
+> in any free address space.  The subset of the VM's memory address
+> space which can be populated by devices' BARs is finite, and
+> generally not particularly large.
+
+AIUI, if the firmware has programmed the BAR addresses, Linux will
+generally try to leave them alone, it's only unprogrammed devices or
+when using the pci=realloc option that we'll try to shuffle things
+around.
+
+If you talk to bare metal system firmware developers, you might find
+disagreement regarding whether the OS or system firmware owns the
+device address space, which I believe also factors into our handling of
+the memory space enable bit of the command register.  Minimally, system
+firmware is required to allocate resources and enable boot devices, and
+often these are left enabled after the hand-off to the OS.  This might
+include some peripherals, for instance legacy emulation on a USB
+keyboard might leave the USB host controller enabled.  There are also
+more devious use cases, where there might be device monitoring running
+across the bus under the OS, perhaps via SMI or other means, where if
+we start moving devices around, that could theoretically break.
+
+However, I don't really see any obvious problems with your proposal
+that we simply leave the memory enable bit in the hand-off state.
+
+> Imagine a VM that is configured with 25 NVMe controllers, each of
+> which requires 64KiB of address space.  (This is just an example.)
+> At first boot, all of these NVMe controllers are packed into address
+> space, one after the other.
 > 
-> The sparc ioport interfaces are basically:
+> While that VM is running, one of the 25 NVMe controllers fails and is
+> replaced with an NVMe controller from a separate manufacturer, but
+> this one requires 128KiB of memory, for some reason.  Perhaps it
+> implements the "controller buffer" feature of NVMe.  It doesn't fit
+> in the hole that was vacated by the failed NVMe controller, so it
+> needs to be placed somewhere else in address space.  This process
+> continues over months, with several more failures and replacements.
+> Eventually, the address space is very fragmented.
 > 
->   ioport_map(port)  { return port; }
->   ioread8(addr)     { return readb(addr); }
->   inb(addr)         { return readb(addr); }
+> At some point, there is an attempt to place an NVMe controller into
+> the VM but there is no contiguous block of address space free which
+> would allow that NVMe controller to operate.  There is, however,
+> enough total address space if the other, currently functioning, NVMe
+> controllers are moved from the address space that they are using to
+> other ranges, consolidating their usage and reducing fragmentation.
+> Let's call this a rebalancing of memory resources.
 > 
-> RISC-V uses the generic ones, i.e.,
+> When the NVMe controllers are moved, a new value is written into
+> their BAR.  In general, the PCI spec would require that you clear the
+> memory enable bit in the command register (PCI_COMMAND_MEMORY) during
+> this move operation, both so that there's never a moment when two
+> devices are occupying the same address space and because writing a
+> 64-bit BAR atomically isn't possible.  This is the reason that I
+> originally wrote the code in this driver to unmap the device from the
+> VM's address space when the memory enable bit is cleared.
 > 
->   ioport_map(port)  { return PIO_OFFSET + port; }
->   ioread8(addr)     { if (addr) >= PIO_RESERVED)
->                         return readb(addr);
->                       else
->                         return inb(addr & PIO_MASK); }
->   inb(addr)         { return __raw_readb(PCI_IOBASE + addr); }
-> 
-> Obviously RISC-V gives you prettier I/O port addresses, but at the
-> cost of having PCI I/O port 0 be 0 in the struct resource as well,
-> which makes it basically unusable.  Is it worth it?
+> What I don't know is whether this sequence of operations can ever
+> happen in Linux, or perhaps in a VM running Linux.  Will it rebalance
+> resources in order to consolidate address space?  If it will, will
+> this involve clearing the memory enable bit to ensure that two
+> devices never overlap?
 
- Well, the SPARC port may be able to get away with that, but overall I 
-think using PCI bus addresses for port I/O resources is the only sane 
-thing to do.  In fact I think for MMIO resources we probably ought to do 
-the same, though it may be actually more difficult to implement, because 
-it's more likely there are systems out there with multiple per-bus MMIO 
-address spaces.
+Once the OS is running and drivers are attached to devices, any
+reshuffling of resources for those devices would require coordination
+of the driver to release the resources and reprogram them.  Even if an
+atomic update of the BAR were possible, that can't account for possible
+in-flight use cases, such as p2p DMA.
 
- The reason why I think using bus addresses here is the right thing to do 
-is that systems may have multiple decode windows exposed to the CPU(s) 
-mapping to the same I/O bus addresses, often for specific purposes.  E.g. 
-Alpha has the sparse and the dense address space and some systems (I have 
-one with a MIPS CPU) have spaces with different endianness swap policies 
-(for matching either bit or byte lanes) wired in the bus logic hardware.  
-So the same port I/O location can be mapped at different MMIO addresses 
-simultaneously in one system.
+There were a couple sessions from the 2019 Linux Plumbers conference
+that might be useful to review regarding these issues.  IIRC the
+first[1] was specifically looking at whether we could do partial BAR
+allocations for NVMe devices, where we might have functionality but
+reduced performance or features with a partial mapping.  In your
+example, perhaps we're replacing a device with one that has twice the
+BAR space, but is functional with only half that, so we can slide it
+into the same slot as the previous device.  This would likely mean
+enlightening the PCI core with device or class specific information.
+I've not followed whether anything occurred here.
 
- I did some further experimentation with a parallel port option card now, 
-and it seems to operate just fine at address 0, likely because plain port 
-I/O accessors (`inb', `outb', and friends) have no special intepretation 
-for address 0, unlike the iomap handlers:
+The second[2] (next session, same recording) discusses problems around
+resource allocation and dynamic reallocation.  Again, I haven't
+followed further discussions here, but I don't expect much has changed.
+Thanks,
 
-parport_pc 0000:07:00.0: enabling device (0000 -> 0001)
-PCI parallel port detected: 1415:c118, I/O at 0x0(0x8), IRQ 38
-parport0: PC-style at 0x0 (0x8), irq 38, using FIFO [PCSPP,TRISTATE,COMPAT,EPP,ECP]
-lp0: using parport0 (interrupt-driven).
+Alex
 
-So it seems we're quite inconsistent already.
+[1]https://youtu.be/ozlQ1XQreac?list=PLVsQ_xZBEyN1PDehCCAiztGf45K_D6txS&t=6481
+[2]https://youtu.be/ozlQ1XQreac?list=PLVsQ_xZBEyN1PDehCCAiztGf45K_D6txS&t=7980
 
- Since we need a way to move forward and we have a real issue with PCI BAR 
-allocations that cause devices to break I have now posted a fix for RISC-V 
-systems only which solves the problem at hand, however wasting one whole 
-4KiB I/O address range.  If we ever have a better generic solution, either 
-one proposed here or an alternative one, then we can revert the RISC-V 
-change.  Cf. 
-<https://lore.kernel.org/r/alpine.DEB.2.21.2204271207590.9383@angie.orcam.me.uk>.
-
-  Maciej
