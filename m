@@ -2,226 +2,267 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 140B0511E7C
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:37:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 234C751200A
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:38:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243400AbiD0QtR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 12:49:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
+        id S243708AbiD0RDT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 13:03:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243409AbiD0QtP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 12:49:15 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55CC225177B;
-        Wed, 27 Apr 2022 09:46:00 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id bg9so1874073pgb.9;
-        Wed, 27 Apr 2022 09:46:00 -0700 (PDT)
+        with ESMTP id S243741AbiD0RDP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:03:15 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90345640A
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 10:00:00 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id s27so3499473ljd.2
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 10:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CfLIi7M0ejRLlXUml3mWuBYY98Ras26Ry9ezyo7ncFc=;
-        b=FDpWXld8ui8/puEY7U7ErD4M81vuJpVjax5m/Aq1X7KF002IDFsgLJesdzx66/Rs67
-         u2tzI5YiHPC2yeE00C3GdVv0zy9LLzOC64UaMM/66VdyvBNokmugFxzVcSaSp65chYA2
-         DI/nUhaKdN4qaXuLM+/+WfITLad6tJqCd06i1fx8JQx5//51aWbg1VRn4Flim/v0VjsV
-         j0tf2oGoXGSnzTS4iXXtorRykWufq3ybIqkXOtNP7L5DVf4NwIMv+PDJ9tQuG8cBsEcq
-         1Z4wqC2Y3OxVhSiDER45Xt84EowUp5TdXeF9+e98u/kj1x+5MyCMAi60B6HPsBDYpQIr
-         OENg==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=4FZ9hDjEcrk8be9d2zNWEXFxSZgfw87crWXMioTKU1A=;
+        b=EJP/VS7885RHBzli5b87Pgg7bycneG9Dwxm0Wn3nIHgtxFq8I5f0D/S2PSrNi/AbI2
+         haTMVZ+kMsJr5jpDQwG6AeGOmaoXDWJzpOKbk/pPZpVFLznvxat1OIP+blqYTAcQSHDn
+         X+X8Dlmnlz1Vwm9lXrC1nVns3MjQtqiuNg/f1P2RCbqqo6+jJPTeQYA8ezXqIKfN2k35
+         X21Nk1irP3/8eI1zS83Ilu5EQpEjRrZA2SuOPg0XrC9Do4/U4WayBOBwM2vqVnocsSVw
+         SD4Lb0qOFQFg3+cT34W2b2O54Zib1Kw0dd51KK+dMzutAQGAtpGCE7OFO8Q+9GNpdDaG
+         cWHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CfLIi7M0ejRLlXUml3mWuBYY98Ras26Ry9ezyo7ncFc=;
-        b=DtG+ksOu8GYU4aRbAZBE1GwgHFw0Qe2h/Jrnbw3K1F427fCkTuLaCsKqA0Cuyp1NAw
-         R7UBCQbeZ1Od7qydcjTar2hcKXNKiE2pTPVO9FNbbme/c1QCxvDryl8vGovfyQT4DYOp
-         60jpSf7h7ZKKc6hxAySqdWCZgtS3merqXKzcYISTVUcOxXqSOicy+DBbDEDgtQusypnw
-         JQYj+p8vkNJUWH9xX4Dhsg0aw8nKdNXWt0+OcVz/6WUlbpjECZL2znvLvOIjazMCOPfg
-         yvnjRMEw4jELvYMGN1QSgIZRpzWQIism9XQuJmNZpt5twV6PoPqqDK7j91yjOOhlsmIe
-         5DDQ==
-X-Gm-Message-State: AOAM533YlkXZBA4+UBU12i7j2ROD/PT4YD2EECdDS8Na6pPQNQ2+bT2a
-        rwlvrt7v8OxM+HneHRFZtfekQKMucGsCIzkMheY=
-X-Google-Smtp-Source: ABdhPJwuVL6Ugbvkz+KkYh0ppItIip4wos/clMe1ziK1/Ds2eesN0oDrXeUx1ln693n+3RChFxvjF1WRBogwp5XIIq8=
-X-Received: by 2002:a63:c22:0:b0:39d:a9ed:ebc6 with SMTP id
- b34-20020a630c22000000b0039da9edebc6mr24790713pgl.350.1651077959652; Wed, 27
- Apr 2022 09:45:59 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=4FZ9hDjEcrk8be9d2zNWEXFxSZgfw87crWXMioTKU1A=;
+        b=deoL0/5GVmuu7GMZDlHQaK3k57ZVawzfgbPV9oWUcMGTE2sLvt0prUbLGuIv3Eeo/n
+         CtZ0+5itCTvFP8yW4klbD655g3NCYs/W+LKdfQaUi6nEsTi4K8chPo78Us2vggdFUbcw
+         CzRSmJGA1OGiEgOJ6mswP66M19IkIs6CWD9tOw8yyFpEceWPFWeIomAG9sDGgW5jW9YE
+         F+lhZ8YyGKVaDzIGIOrHojerhTRsrJuuiCWe1l0UQ1S/fOoM6a+lhMECJTMF89OlwHwh
+         ctFNRltGCc+4lGlkyp9+0dW+scb0v7J95PcMJWJsXLzROg7i7Yw1AEubTZDlUbR+hlgU
+         7z2g==
+X-Gm-Message-State: AOAM533W9R6duzVdzb9oapakya0DznIVFKIZ1kwbxpSXoH+dYtw6hr7a
+        bZxWFY9WRfkgPHE33rKxtbfjNw==
+X-Google-Smtp-Source: ABdhPJwyqcNvcyyhVnLvWPxCOWHgdrKf4PO/5x8I28DFcbLJlvVw5CiJMw5DQ4dGrELBoamgx15zAw==
+X-Received: by 2002:a2e:a786:0:b0:24f:2db0:b16f with SMTP id c6-20020a2ea786000000b0024f2db0b16fmr789013ljf.416.1651078799095;
+        Wed, 27 Apr 2022 09:59:59 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id z9-20020a196509000000b0046b8cab5b9esm2102598lfb.293.2022.04.27.09.59.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Apr 2022 09:59:58 -0700 (PDT)
+Message-ID: <b9d81916-10e6-94f9-78b2-b2198620e66a@linaro.org>
+Date:   Wed, 27 Apr 2022 19:59:57 +0300
 MIME-Version: 1.0
-References: <20220422143643.727871-1-Frank.Li@nxp.com> <20220422143643.727871-5-Frank.Li@nxp.com>
- <20220423121218.GG374560@thinkpad> <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
-In-Reply-To: <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Wed, 27 Apr 2022 11:45:48 -0500
-Message-ID: <CAHrpEqSHyoQe+vASQB3+igGh74HgTBAKfKLynoEuV17a6yijxQ@mail.gmail.com>
-Subject: Re: [PATCH v9 4/9] dmaengine: dw-edma: Rename wr(rd)_ch_cnt to
- ll_wr(rd)_cnt in struct dw_edma_chip
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v3 1/5] PCI: dwc: Convert msi_irq to the array
+Content-Language: en-GB
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Frank Li <Frank.Li@nxp.com>,
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+References: <20220427121653.3158569-1-dmitry.baryshkov@linaro.org>
+ <20220427121653.3158569-2-dmitry.baryshkov@linaro.org>
+ <20220427141329.GA4161@thinkpad>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220427141329.GA4161@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 23, 2022 at 4:47 PM Zhi Li <lznuaa@gmail.com> wrote:
->
-> On Sat, Apr 23, 2022 at 7:12 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Fri, Apr 22, 2022 at 09:36:38AM -0500, Frank Li wrote:
-> > > There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
-> > > write(read) channel number from register, then save these into dw_edma.
-> > > Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
-> > > are available in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
-> > > ll_wr(rd)_cnt to indicate actual usage.
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> >
-> > One minor comment below,
-> >
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >
-> > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> > > ---
-> > > Change from v6 to v9
-> > >  - none
-> > > Change from v5 to v6
-> > >  - s/rename/Rename/ at subject
-> > > new patch at v4
-> > >
-> > >  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
-> > >  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
-> > >  include/linux/dma/edma.h           |  8 ++++----
-> > >  3 files changed, 12 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > index 435e4f2ab6575..1a0a98f6c5515 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > @@ -919,11 +919,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
-> > >
-> > >       raw_spin_lock_init(&dw->lock);
-> > >
-> > > -     dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
-> > > +     dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
-> > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
-> > >       dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
-> > >
-> > > -     dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
-> > > +     dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
-> > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
-> > >       dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
-> > >
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > index ae42bad24dd5a..7732537f96086 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > >       chip->nr_irqs = nr_irqs;
-> > >       chip->ops = &dw_edma_pcie_core_ops;
-> > >
-> > > -     chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
-> > > -     chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
-> > > +     chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
-> > > +     chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
-> > >
-> > >       chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-> > >       if (!chip->reg_base)
-> > >               return -ENOMEM;
-> > >
-> > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
-> > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
-> > >               struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
-> > >               struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
-> > >               struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
-> > > @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > >               dt_region->sz = dt_block->sz;
-> > >       }
-> > >
-> > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
-> > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
-> > >               struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
-> > >               struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
-> > >               struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
-> > > @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > >               chip->reg_base);
-> > >
-> > >
-> > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
-> > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
-> > >               pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> > >                       i, vsec_data.ll_wr[i].bar,
-> > >                       vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
-> > > @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > >                       chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
-> > >       }
-> > >
-> > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
-> > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
-> > >               pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> > >                       i, vsec_data.ll_rd[i].bar,
-> > >                       vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
-> > > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> > > index e9ce652b88233..c2039246fc08c 100644
-> > > --- a/include/linux/dma/edma.h
-> > > +++ b/include/linux/dma/edma.h
-> > > @@ -40,8 +40,8 @@ enum dw_edma_map_format {
-> > >   * @nr_irqs:          total dma irq number
-> > >   * @ops                       DMA channel to IRQ number mapping
-> > >   * @reg_base          DMA register base address
-> > > - * @wr_ch_cnt                 DMA write channel number
-> > > - * @rd_ch_cnt                 DMA read channel number
-> > > + * @ll_wr_cnt                 DMA write link list number
-> > > + * @ll_rd_cnt                 DMA read link list number
-> >
-> > DMA linked list write/read memory regions?
->
-> ll_wr_cnt is the counter of the DMA listed list.
->
-> Do you means
->
-> @ll_region_wr        DMA linked list write memory regions
->
-> best regards
-> Frank Li
+On 27/04/2022 17:13, Manivannan Sadhasivam wrote:
+> On Wed, Apr 27, 2022 at 03:16:49PM +0300, Dmitry Baryshkov wrote:
+>> Qualcomm version of DWC PCIe controller supports more than 32 MSI
+>> interrupts, but they are routed to separate interrupts in groups of 32
+>> vectors. To support such configuration, change the msi_irq field into an
+>> array. Let the DWC core handle all interrupts that were set in this
+>> array.
+>>
+> 
+> Instead of defining it as an array, can we allocate it dynamically in the
+> controller drivers instead? This has two benefits:
+> 
+> 1. There is no need of using a dedicated flag.
+> 2. Controller drivers that don't support MSIs can pass NULL and in the core we
+> can use platform_get_irq_byname_optional() to get supported number of MSIs from
+> devicetree.
 
-Ping @Manivannan Sadhasivam
+I think using dynamic allocation would make code worse. It would add 
+additional checks here and there.
+
+If you don't like this design. I have an alternative suggestion: export 
+the dw_chained_msi_irq() and move allocation of all MSIs to the 
+pcie-qcom code. Would that be better? I'm not sure whether this 
+multi-host-IRQ design is used on other DWC platforms or not.
+
+> 
+> Thanks,
+> Mani
+> 
+>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>> ---
+>>   drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
+>>   drivers/pci/controller/dwc/pci-exynos.c       |  2 +-
+>>   .../pci/controller/dwc/pcie-designware-host.c | 30 +++++++++++--------
+>>   drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
+>>   drivers/pci/controller/dwc/pcie-keembay.c     |  2 +-
+>>   drivers/pci/controller/dwc/pcie-spear13xx.c   |  2 +-
+>>   drivers/pci/controller/dwc/pcie-tegra194.c    |  2 +-
+>>   7 files changed, 24 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+>> index dfcdeb432dc8..0919c96dcdbd 100644
+>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+>> @@ -483,7 +483,7 @@ static int dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>>   		return pp->irq;
+>>   
+>>   	/* MSI IRQ is muxed */
+>> -	pp->msi_irq = -ENODEV;
+>> +	pp->msi_irq[0] = -ENODEV;
+>>   
+>>   	ret = dra7xx_pcie_init_irq_domain(pp);
+>>   	if (ret < 0)
+>> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+>> index 467c8d1cd7e4..4f2010bd9cd7 100644
+>> --- a/drivers/pci/controller/dwc/pci-exynos.c
+>> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+>> @@ -292,7 +292,7 @@ static int exynos_add_pcie_port(struct exynos_pcie *ep,
+>>   	}
+>>   
+>>   	pp->ops = &exynos_pcie_host_ops;
+>> -	pp->msi_irq = -ENODEV;
+>> +	pp->msi_irq[0] = -ENODEV;
+>>   
+>>   	ret = dw_pcie_host_init(pp);
+>>   	if (ret) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index 2fa86f32d964..5d90009a0f73 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -257,8 +257,11 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+>>   
+>>   static void dw_pcie_free_msi(struct pcie_port *pp)
+>>   {
+>> -	if (pp->msi_irq)
+>> -		irq_set_chained_handler_and_data(pp->msi_irq, NULL, NULL);
+>> +	u32 ctrl;
+>> +
+>> +	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
+>> +		if (pp->msi_irq[ctrl])
+>> +			irq_set_chained_handler_and_data(pp->msi_irq[ctrl], NULL, NULL);
+>>   
+>>   	irq_domain_remove(pp->msi_domain);
+>>   	irq_domain_remove(pp->irq_domain);
+>> @@ -368,13 +371,15 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>   			for (ctrl = 0; ctrl < num_ctrls; ctrl++)
+>>   				pp->irq_mask[ctrl] = ~0;
+>>   
+>> -			if (!pp->msi_irq) {
+>> -				pp->msi_irq = platform_get_irq_byname_optional(pdev, "msi");
+>> -				if (pp->msi_irq < 0) {
+>> -					pp->msi_irq = platform_get_irq(pdev, 0);
+>> -					if (pp->msi_irq < 0)
+>> -						return pp->msi_irq;
+>> +			if (!pp->msi_irq[0]) {
+>> +				int irq = platform_get_irq_byname_optional(pdev, "msi");
+>> +
+>> +				if (irq < 0) {
+>> +					irq = platform_get_irq(pdev, 0);
+>> +					if (irq < 0)
+>> +						return irq;
+>>   				}
+>> +				pp->msi_irq[0] = irq;
+>>   			}
+>>   
+>>   			pp->msi_irq_chip = &dw_pci_msi_bottom_irq_chip;
+>> @@ -383,10 +388,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>   			if (ret)
+>>   				return ret;
+>>   
+>> -			if (pp->msi_irq > 0)
+>> -				irq_set_chained_handler_and_data(pp->msi_irq,
+>> -							    dw_chained_msi_isr,
+>> -							    pp);
+>> +			for (ctrl = 0; ctrl < num_ctrls; ctrl++)
+>> +				if (pp->msi_irq[ctrl] > 0)
+>> +					irq_set_chained_handler_and_data(pp->msi_irq[ctrl],
+>> +									 dw_chained_msi_isr,
+>> +									 pp);
+>>   
+>>   			ret = dma_set_mask(pci->dev, DMA_BIT_MASK(32));
+>>   			if (ret)
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 7d6e9b7576be..9c1a38b0a6b3 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -187,7 +187,7 @@ struct pcie_port {
+>>   	u32			io_size;
+>>   	int			irq;
+>>   	const struct dw_pcie_host_ops *ops;
+>> -	int			msi_irq;
+>> +	int			msi_irq[MAX_MSI_CTRLS];
+>>   	struct irq_domain	*irq_domain;
+>>   	struct irq_domain	*msi_domain;
+>>   	u16			msi_msg;
+>> diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
+>> index 1ac29a6eef22..297e6e926c00 100644
+>> --- a/drivers/pci/controller/dwc/pcie-keembay.c
+>> +++ b/drivers/pci/controller/dwc/pcie-keembay.c
+>> @@ -338,7 +338,7 @@ static int keembay_pcie_add_pcie_port(struct keembay_pcie *pcie,
+>>   	int ret;
+>>   
+>>   	pp->ops = &keembay_pcie_host_ops;
+>> -	pp->msi_irq = -ENODEV;
+>> +	pp->msi_irq[0] = -ENODEV;
+>>   
+>>   	ret = keembay_pcie_setup_msi_irq(pcie);
+>>   	if (ret)
+>> diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
+>> index 1569e82b5568..cc7776833810 100644
+>> --- a/drivers/pci/controller/dwc/pcie-spear13xx.c
+>> +++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
+>> @@ -172,7 +172,7 @@ static int spear13xx_add_pcie_port(struct spear13xx_pcie *spear13xx_pcie,
+>>   	}
+>>   
+>>   	pp->ops = &spear13xx_pcie_host_ops;
+>> -	pp->msi_irq = -ENODEV;
+>> +	pp->msi_irq[0] = -ENODEV;
+>>   
+>>   	ret = dw_pcie_host_init(pp);
+>>   	if (ret) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> index b1b5f836a806..e75712db85b0 100644
+>> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+>> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> @@ -2271,7 +2271,7 @@ static void tegra194_pcie_shutdown(struct platform_device *pdev)
+>>   
+>>   	disable_irq(pcie->pci.pp.irq);
+>>   	if (IS_ENABLED(CONFIG_PCI_MSI))
+>> -		disable_irq(pcie->pci.pp.msi_irq);
+>> +		disable_irq(pcie->pci.pp.msi_irq[0]);
+>>   
+>>   	tegra194_pcie_pme_turnoff(pcie);
+>>   	tegra_pcie_unconfig_controller(pcie);
+>> -- 
+>> 2.35.1
+>>
 
 
->
->
-> >
-> > Thanks,
-> > Mani
-> >
-> > >   * @rg_region                 DMA register region
-> > >   * @ll_region_wr      DMA descriptor link list memory for write channel
-> > >   * @ll_region_rd      DMA descriptor link list memory for read channel
-> > > @@ -56,8 +56,8 @@ struct dw_edma_chip {
-> > >
-> > >       void __iomem            *reg_base;
-> > >
-> > > -     u16                     wr_ch_cnt;
-> > > -     u16                     rd_ch_cnt;
-> > > +     u16                     ll_wr_cnt;
-> > > +     u16                     ll_rd_cnt;
-> > >       /* link list address */
-> > >       struct dw_edma_region   ll_region_wr[EDMA_MAX_WR_CH];
-> > >       struct dw_edma_region   ll_region_rd[EDMA_MAX_RD_CH];
-> > > --
-> > > 2.35.1
-> > >
+-- 
+With best wishes
+Dmitry
