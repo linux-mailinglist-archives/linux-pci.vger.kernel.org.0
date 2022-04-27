@@ -2,222 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6AAA511EA7
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:37:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61CF0511CF9
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Apr 2022 20:33:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243903AbiD0RO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Apr 2022 13:14:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36118 "EHLO
+        id S232632AbiD0RVv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Apr 2022 13:21:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243812AbiD0RO5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:14:57 -0400
-Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.57.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52192424AC;
-        Wed, 27 Apr 2022 10:11:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hTRylH5VXQwwEsmBPTNrRdgaSy31vWSw07yl4J1wq4frybqNDxzXEvr5kRsdyhTYK9XW0XZ7blC/ai+ZtUv9oKBsp3js1FXKSH06jgtaRUUNxDQujQTBaVY69GIncAXlVLgQVNpZoBL3ydsEq/N/SnGcTM4R5Hsl0Cc8zSmtbJ+eentSUTu+kWXFTWFNmh2ef8bDG1/5/nPnRLO7Bq1LLEijU1xNr9UJ5ckMRdv28cLj/xdGVJr0zE7eydMuV1uOi9Yh7pXRXTnAyn/2RUgUu0EqhYz/0LFI4QtfsMvyFmw/sZhya/SNLytFDSa/xXB7JTquJf769TUvOG9IkoJRrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ozd8pjXfaoCZxjyOB0IwWIV7iyEj994q/Awoytb5huQ=;
- b=iZP/BkxNh7XMt+XCOcU0jD1D/04LuTgfeDRSEDdcKZ8vGVqAN15Hw5MkW0bXU8Xdle9vTDQnN9blHB07nNYhOl9lo5aMd1hQqSZR/DSbsv4yILX6bQgv7uWMaZLEBHlhLz8kTLdei2jX5vlV79dHZcFI7HXJ6iKL5yVvAytpKO3Qw7uODio5pvFPA0HVl3asRn9ckJF6UWrqThmhxp4LbfCt8qPfAF3z7ykv0ofLBG0WvNEXMQhhLlHHFH0GpxG0/OE0y9lTlTD9l4MZ0ZJ6Dguxawxje2sZ/tYdyRXVCjEkgH9ZdlPCmaMdF0/m0yuXC5TmiIgPh1z0N/0o+TQtjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ozd8pjXfaoCZxjyOB0IwWIV7iyEj994q/Awoytb5huQ=;
- b=hWbrdruoPTibT6au9ApskpVfnDTFtYM3w7fyx5O/MUwMsHbSywDmfTTIxU4gZoXp/2GW0QwHQruDtFuMXIzuUICSsbhqEzVwAnWailLq8zztvXgB+pI4e9brAocanCOFeZZEvYbzaTgdS78A9HOSUDiTLt15Mmw7VWAMWMqZNz0=
-Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
- by DM6PR21MB1372.namprd21.prod.outlook.com (2603:10b6:5:16e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.6; Wed, 27 Apr
- 2022 17:11:39 +0000
-Received: from PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::dd77:2d4d:329e:87df]) by PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::dd77:2d4d:329e:87df%6]) with mapi id 15.20.5227.006; Wed, 27 Apr 2022
- 17:11:39 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Jeffrey Hugo <quic_jhugo@quicinc.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-CC:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] PCI: hv: Fix hv_arch_irq_unmask() for multi-MSI
-Thread-Topic: [PATCH] PCI: hv: Fix hv_arch_irq_unmask() for multi-MSI
-Thread-Index: AQHYWkCLItunHPw0GEyDVf3jcez6pa0D/dPQ
-Date:   Wed, 27 Apr 2022 17:11:39 +0000
-Message-ID: <PH0PR21MB3025DB8EAB4714E059CAC326D7FA9@PH0PR21MB3025.namprd21.prod.outlook.com>
-References: <1651068453-29588-1-git-send-email-quic_jhugo@quicinc.com>
-In-Reply-To: <1651068453-29588-1-git-send-email-quic_jhugo@quicinc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5ce671b0-15ed-4848-b89f-4e90f4dd17a2;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-04-27T17:06:41Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cd5bb9f5-df25-4012-91bb-08da2870fe7f
-x-ms-traffictypediagnostic: DM6PR21MB1372:EE_
-x-microsoft-antispam-prvs: <DM6PR21MB1372D8C6F05BD5987CF8AA18D7FA9@DM6PR21MB1372.namprd21.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sdeZWveRQ+16svLlYMpeQUpOeRqPeYWRPajQ5O/cngLKX1y+DtgKOqbELgrhmqL5kAhANJ5eXQcmAE8q5VFMzhF3TYzM62VUlhB+8+u2XrBPtCXe1ZeT1v7KD6gF3wNKgOl993F3brgNcg5Ec5ckO8FHJpXMib+MnS8xDKmFHmOO6W5iIAYOhkkj0iNJ1/ESdg2YOXlFY3dkzJv31quMF3RgUm02m1C3Vgrq8YKP0vfWRM8KlRIV85ydvBf72u3PdbG6o3DfSNxeQYf9JmovUFLrb6cXQT4+dB83DvdJhf0k53Ut2eWVbMxJ+E2tL+2Otb21ursuLl4fZcJtwk03fC1tRi1UQLI1RH3YtaQOlbrOGY11QmfuQhg+V0HRKx5Pgt+5KR/WxghHLLYyWWnbDLPb4VCFWWILVmragAuMwjsiYURo/9vzIOoiFelMhXPZ8mRVc9Zzr3mx/7R6WfvMsuTpNKP0Au4+Gzvhn8kUkhExPfv1hOwh3l8odbm2pHMvmIwCusQMdo5QUkLr81gD0d09o+Q2K3ajcZfDyrGzSRxBtYoQza40dRVIrjqrUKI+ePko6QkvfoXb1eFuQqqwT5zx0PU1xFlKt61UCBnRFSpnFYcIRUQN99ShxRQFhDFwC34zc4ddp+XCBUSgQs/YVU8A42X1O5uAPXt+oqqoxW+SGlVWz8co0rNS6l7YgMxdr4JXGmidHkyEgC4v4P3sc8coVLOPH9N0+BM0o72OyuiQi37R1Qb95VdZZIYc+Dk0CF5P5FHYacr4RhStqzVFMw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(508600001)(33656002)(82960400001)(6506007)(52536014)(83380400001)(122000001)(82950400001)(2906002)(7416002)(921005)(76116006)(5660300002)(8936002)(66946007)(66476007)(66556008)(38070700005)(8676002)(7696005)(10290500003)(71200400001)(64756008)(38100700002)(110136005)(9686003)(86362001)(54906003)(55016003)(186003)(316002)(66446008)(4326008)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 2
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?pfYytGPMCWUDCQ3kSrjeUxpuafgPzaCpk9+fCpD9QMfEmOEOK8S7gw2jR9o5?=
- =?us-ascii?Q?JiJhRZ/s8bntu4pwFnDyolcyoOHmU/zorKZXDbFfd6/3+zVyxIi6Kj2eH5eV?=
- =?us-ascii?Q?Hzp4U94WnV8lL0eIf4IHCX/FR2wK8GQhRDJQmPhqH4T1gwoIQkEHnn4zMTj8?=
- =?us-ascii?Q?eemkBF94U96W9gqrmJfRvNb4hI4kmsX+FdV5UBMo0KLHTqm5ANR7asl6/oV0?=
- =?us-ascii?Q?MOFJqN55QVYWx4t8L+6mDhrS9X/wLFZ2+KfWf5IO51PONbqfOmztcF1MjDQy?=
- =?us-ascii?Q?adBdjownhzyZCdPt0AZdrlkdKXvSExxjerg0CimuileT0K9ui5jroYaJjUKt?=
- =?us-ascii?Q?ca1m5LmVlubAx+2JC7Y6MmSSBcWlfu7UoUWK+ckRLGCMgICwKyeFLhV4Im1y?=
- =?us-ascii?Q?gDwVeGrlwAS5E0/N5sFzJC1gNeBbpUoR4UA4fLcJ9PNi2YRBk9vDyWfrGdGh?=
- =?us-ascii?Q?hAFi1mUm2nVr7I5DuNd6qdGihaNU0A0nV0VBmYAQ3/k5Kw+Zy0nTnsb+idjR?=
- =?us-ascii?Q?96F1evRfU6TOkn3KXSIUTSrFnp5QnlVQj0xvxpsvpgVlLOb+C7oWc1ZarDY7?=
- =?us-ascii?Q?N6isjJ4tE3wO2ES3OTiGhi01WgJdVZRifJpCd7u9t94feQ8qyGmMqXUDkS1P?=
- =?us-ascii?Q?xlBGTmhODR2hozqFo/NpeXMpGk1HlWLFPy0DiS77Ot3hJEmq94bks5G7oZPC?=
- =?us-ascii?Q?XJoLKfgpfHCqT1HD30h844ePshd+IQ98fxGAsZst3hQXSU2/W/puwYFFkfqu?=
- =?us-ascii?Q?HuEf6G50lVmdczOgAWy3o56iHf49rLAnn0jec72bWSyVHHzq6HsuRBv+cpsE?=
- =?us-ascii?Q?FjM98JjhJk8CqXwYhvm/9MnKHoBb0c20lGjoScM4FrqgeNvjqXfELU6Z0JEM?=
- =?us-ascii?Q?p0H/NBWuwiCSwtLypxybuHVURRSeCvwHeFvSzgVFSdkwLc0CN+n8Ak2GU1vm?=
- =?us-ascii?Q?giUZtwfyFvprpv0DykI4L4KdZY7SlTV5KNP36PBAQCKsePKtAdGyhZhRHUkR?=
- =?us-ascii?Q?ILZwwmHvVazua8Bt5ox8G6WhkF8cnMh9LZhsdelW2l6P7SmtDu9gj+Qgy2Rs?=
- =?us-ascii?Q?VJOVn3xfrbGXU7gr5ozs9np1YguQfXHv3KkU2PnoNYr6p4km/cD2HhfOHwML?=
- =?us-ascii?Q?XAPKAo6kbY1HjLam64eF9pjgbX3quKMgBvXw7KDT3UxKHDhdmUudffaGNuTQ?=
- =?us-ascii?Q?eJGcIuBoALjevk1I8bkMxdqiEVtBxIbiPW2hlxsOkmAmWZaLT4KOwICcNRRZ?=
- =?us-ascii?Q?q2dMdCRAZNSID/djn8JL0ALxN3nbpj7rULS6EGAn8iRTtoO5bj0nKCe9K7m5?=
- =?us-ascii?Q?WcfUm1VlVMzq358okNCBRHnYnKb/PbIfxuqL2ADqMjOlydF39EzQ9P4Nj2Yc?=
- =?us-ascii?Q?itIqtjE91nt60Cjetjl8bHLoJzoI208qfTajCqmj68hmtZVi5cw1eCVXazTt?=
- =?us-ascii?Q?q18M1qwIRm5yY5UCSdJVdKwdUtzuxv+VdBkiLgvf0DCZjkGNmGwWcBaP9Exi?=
- =?us-ascii?Q?6U7RN8Kp016GNxCp59xEAu83qGVCb4ZRu5TUY0ZRAh12w9Zo4Hqtn1K5bM32?=
- =?us-ascii?Q?QrRgqjZJJswSXaXd5Q3KABVgEjHuhmB1g3X72vS0aRpUUBRi57sQf/FSPDF1?=
- =?us-ascii?Q?0pGshj7KMhSRSuR0rUMhNwxG4MQ961Zi691SadAgW9V2tMi9hXR8UxRegvfh?=
- =?us-ascii?Q?PK2xivmaluryXC8050qp6GzbIBy/02CTl6UGJCljuokPR+HS5VV3dX7s/8v3?=
- =?us-ascii?Q?itJDiQXM8cIliVlGn10PI+gJD/RXduj4vugMgjTXhJnjZA5bEhK4EhsLmzvn?=
-x-ms-exchange-antispam-messagedata-1: zKBQkmfmPxn3cNjCG1DBGOAYVYd5OdJGjcU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231210AbiD0RVu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Apr 2022 13:21:50 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B928E4349D
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 10:18:34 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id h12so2105627plf.12
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 10:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZNzLVb6IYQOQv9U2eS6LqWegFjblxsHIEuJynYwzEGc=;
+        b=aCqN21episAYOq2l82EB/yHcNnat6tZvY04o7oNbYHLafKqkBN61WjW970RUu7zqkn
+         nNFUca/Nc1Kg8XpNSBtDYjHvVMBPrbBw3GM/WRJEZBXmqwvHxi9VvpCFI3q6Jgh71rhw
+         vVXh1PH50/g65qGVAfHxdZFkGrcX75L/7RElLrLyZDCiKK4xkyzNMW/OgsAac+m57Ico
+         pMGMuALK3wujfzkL/GftiCTr3aA845ytnKwrcrdBjKjBFvcR7+eunnmsOr3mnz7prpIu
+         i/xoAOuiezzOcNtFnOi1wAjbOqPE2gDzFFcMNOeLs9Dd3+TtpQDLzb70hq7/B1judgYK
+         qecg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZNzLVb6IYQOQv9U2eS6LqWegFjblxsHIEuJynYwzEGc=;
+        b=VLXKBCH0TRXNz7Igm2XCnw+l+l68ZpGOR1q/O5dsRMugk68BjTgft/eGpUYhziZa5g
+         kvCqSZwK5cABItgDLJJ9B4lHp3ePL/b0rfEiAfpdI58uc4/9b2dwSUnNnzrbhKXlKk/d
+         s5r3CKxMsa+cOkdtaWIg3aN27quROyLUoXGktpUM5SekQLSm24wCWzJ9q58m/VXTxBn7
+         nEc/s98Jrjgfvn7fUZMUOjxvEHXzHxKWkgu/EcIUEBPKkONQaVs4PGvaVqPF4r8dxRGa
+         gMM/LGrFiHfsNYGumW+HKc1qdPTH5V8aCyPOO4+VTn1SYFj2UVh42YBPLpozYrNXribv
+         XLVg==
+X-Gm-Message-State: AOAM5324s8ANZ6lcGcIvs86cPB/G+LgLavND8xT46V1w5SjVh4GDro3q
+        KE/EbIG9G6yhgI/AHP8PFsAyqwZSMEfZ
+X-Google-Smtp-Source: ABdhPJyYSL0q24w6bSBRKVpoN2yZQbpWZLnjfnjWLPUv3F65PWgqqpx4Vv0kdJYzyrA3HfKXiIhD5A==
+X-Received: by 2002:a17:90b:110a:b0:1d2:bde4:e277 with SMTP id gi10-20020a17090b110a00b001d2bde4e277mr33552950pjb.188.1651079914148;
+        Wed, 27 Apr 2022 10:18:34 -0700 (PDT)
+Received: from thinkpad ([27.111.75.179])
+        by smtp.gmail.com with ESMTPSA id v1-20020a62c301000000b00505bc0b970dsm20234632pfg.178.2022.04.27.10.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Apr 2022 10:18:33 -0700 (PDT)
+Date:   Wed, 27 Apr 2022 22:48:27 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Zhi Li <lznuaa@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v9 4/9] dmaengine: dw-edma: Rename wr(rd)_ch_cnt to
+ ll_wr(rd)_cnt in struct dw_edma_chip
+Message-ID: <20220427171827.GD4161@thinkpad>
+References: <20220422143643.727871-1-Frank.Li@nxp.com>
+ <20220422143643.727871-5-Frank.Li@nxp.com>
+ <20220423121218.GG374560@thinkpad>
+ <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd5bb9f5-df25-4012-91bb-08da2870fe7f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2022 17:11:39.7267
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C03ZidqhIwXAI24xVeYs5QBDn2/wLGubeLBBxoRLVhrUQ8TSvaDw0SOnOzro8fDW/S/P4VEGdAosRo5TrbzzGXVeYavpr/c4M4nYp0HBSJc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1372
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHrpEqTxc71wKMHQCcAd=jFPOONbrD1S1RNOr78kiu3Vr25a7w@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jeffrey Hugo <quic_jhugo@quicinc.com> Sent: Wednesday, April 27, 2022=
- 7:08 AM
->=20
-> In the multi-MSI case, hv_arch_irq_unmask() will only operate on the firs=
-t
-> MSI of the N allocated.  This is because only the first msi_desc is cache=
-d
-> and it is shared by all the MSIs of the multi-MSI block.  This means that
-> hv_arch_irq_unmask() gets the correct address, but the wrong data (always
-> 0).
->=20
-> This can break MSIs.
->=20
-> Lets assume MSI0 is vector 34 on CPU0, and MSI1 is vector 33 on CPU0.
->=20
-> hv_arch_irq_unmask() is called on MSI0.  It uses a hypercall to configure
-> the MSI address and data (0) to vector 34 of CPU0.  This is correct.  The=
-n
-> hv_arch_irq_unmask is called on MSI1.  It uses another hypercall to
-> configure the MSI address and data (0) to vector 33 of CPU0.  This is
-> wrong, and results in both MSI0 and MSI1 being routed to vector 33.  Linu=
-x
-> will observe extra instances of MSI1 and no instances of MSI0 despite the
-> endpoint device behaving correctly.
->=20
-> For the multi-MSI case, we need unique address and data info for each MSI=
-,
-> but the cached msi_desc does not provide that.  However, that information
-> can be gotten from the int_desc cached in the chip_data by
-> compose_msi_msg().  Fix the multi-MSI case to use that cached information
-> instead.  Since hv_set_msi_entry_from_desc() is no longer applicable,
-> remove it.
->=20
-> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 5800ecf..7aea0b7 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -611,13 +611,6 @@ static unsigned int hv_msi_get_int_vector(struct irq=
-_data
-> *data)
->  	return cfg->vector;
->  }
->=20
-> -static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
-> -				       struct msi_desc *msi_desc)
-> -{
-> -	msi_entry->address.as_uint32 =3D msi_desc->msg.address_lo;
-> -	msi_entry->data.as_uint32 =3D msi_desc->msg.data;
-> -}
-> -
->  static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
->  			  int nvec, msi_alloc_info_t *info)
->  {
-> @@ -647,6 +640,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  {
->  	struct msi_desc *msi_desc =3D irq_data_get_msi_desc(data);
->  	struct hv_retarget_device_interrupt *params;
-> +	struct tran_int_desc *int_desc;
->  	struct hv_pcibus_device *hbus;
->  	struct cpumask *dest;
->  	cpumask_var_t tmp;
-> @@ -661,6 +655,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  	pdev =3D msi_desc_to_pci_dev(msi_desc);
->  	pbus =3D pdev->bus;
->  	hbus =3D container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
-> +	int_desc =3D data->chip_data;
->=20
->  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
->=20
-> @@ -668,7 +663,8 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  	memset(params, 0, sizeof(*params));
->  	params->partition_id =3D HV_PARTITION_ID_SELF;
->  	params->int_entry.source =3D HV_INTERRUPT_SOURCE_MSI;
-> -	hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
-> +	params->int_entry.msi_entry.address.as_uint32 =3D int_desc->address &
-> 0xffffffff;
-> +	params->int_entry.msi_entry.data.as_uint32 =3D int_desc->data;
->  	params->device_id =3D (hbus->hdev->dev_instance.b[5] << 24) |
->  			   (hbus->hdev->dev_instance.b[4] << 16) |
->  			   (hbus->hdev->dev_instance.b[7] << 8) |
-> --
-> 2.7.4
+On Sat, Apr 23, 2022 at 04:47:51PM -0500, Zhi Li wrote:
+> On Sat, Apr 23, 2022 at 7:12 AM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Fri, Apr 22, 2022 at 09:36:38AM -0500, Frank Li wrote:
+> > > There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
+> > > write(read) channel number from register, then save these into dw_edma.
+> > > Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
+> > > are available in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
+> > > ll_wr(rd)_cnt to indicate actual usage.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> >
+> > One minor comment below,
+> >
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >
+> > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> > > ---
+> > > Change from v6 to v9
+> > >  - none
+> > > Change from v5 to v6
+> > >  - s/rename/Rename/ at subject
+> > > new patch at v4
+> > >
+> > >  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
+> > >  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
+> > >  include/linux/dma/edma.h           |  8 ++++----
+> > >  3 files changed, 12 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > > index 435e4f2ab6575..1a0a98f6c5515 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > @@ -919,11 +919,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+> > >
+> > >       raw_spin_lock_init(&dw->lock);
+> > >
+> > > -     dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
+> > > +     dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
+> > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
+> > >       dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
+> > >
+> > > -     dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
+> > > +     dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
+> > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
+> > >       dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
+> > >
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > index ae42bad24dd5a..7732537f96086 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> > >       chip->nr_irqs = nr_irqs;
+> > >       chip->ops = &dw_edma_pcie_core_ops;
+> > >
+> > > -     chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
+> > > -     chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
+> > > +     chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+> > > +     chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+> > >
+> > >       chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
+> > >       if (!chip->reg_base)
+> > >               return -ENOMEM;
+> > >
+> > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
+> > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
+> > >               struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+> > >               struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+> > >               struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+> > > @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> > >               dt_region->sz = dt_block->sz;
+> > >       }
+> > >
+> > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
+> > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
+> > >               struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+> > >               struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+> > >               struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
+> > > @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> > >               chip->reg_base);
+> > >
+> > >
+> > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
+> > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
+> > >               pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> > >                       i, vsec_data.ll_wr[i].bar,
+> > >                       vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
+> > > @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> > >                       chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
+> > >       }
+> > >
+> > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
+> > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
+> > >               pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> > >                       i, vsec_data.ll_rd[i].bar,
+> > >                       vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
+> > > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > > index e9ce652b88233..c2039246fc08c 100644
+> > > --- a/include/linux/dma/edma.h
+> > > +++ b/include/linux/dma/edma.h
+> > > @@ -40,8 +40,8 @@ enum dw_edma_map_format {
+> > >   * @nr_irqs:          total dma irq number
+> > >   * @ops                       DMA channel to IRQ number mapping
+> > >   * @reg_base          DMA register base address
+> > > - * @wr_ch_cnt                 DMA write channel number
+> > > - * @rd_ch_cnt                 DMA read channel number
+> > > + * @ll_wr_cnt                 DMA write link list number
+> > > + * @ll_rd_cnt                 DMA read link list number
+> >
+> > DMA linked list write/read memory regions?
+> 
+> ll_wr_cnt is the counter of the DMA listed list.
+> 
+> Do you means
+> 
+> @ll_region_wr        DMA linked list write memory regions
+> 
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Sorry, I confused the terms here. But can you use "count" instead of "number"?
 
+Thanks,
+Mani
+
+> best regards
+> Frank Li
+> 
+> 
+> >
+> > Thanks,
+> > Mani
+> >
+> > >   * @rg_region                 DMA register region
+> > >   * @ll_region_wr      DMA descriptor link list memory for write channel
+> > >   * @ll_region_rd      DMA descriptor link list memory for read channel
+> > > @@ -56,8 +56,8 @@ struct dw_edma_chip {
+> > >
+> > >       void __iomem            *reg_base;
+> > >
+> > > -     u16                     wr_ch_cnt;
+> > > -     u16                     rd_ch_cnt;
+> > > +     u16                     ll_wr_cnt;
+> > > +     u16                     ll_rd_cnt;
+> > >       /* link list address */
+> > >       struct dw_edma_region   ll_region_wr[EDMA_MAX_WR_CH];
+> > >       struct dw_edma_region   ll_region_rd[EDMA_MAX_RD_CH];
+> > > --
+> > > 2.35.1
+> > >
