@@ -2,99 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF065512ED6
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 10:45:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 413A1512F49
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 11:09:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344720AbiD1Is1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 04:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58274 "EHLO
+        id S236479AbiD1JLm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 05:11:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344612AbiD1Irt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 04:47:49 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5EFD926FF
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 01:40:47 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ACE61474;
-        Thu, 28 Apr 2022 01:40:47 -0700 (PDT)
-Received: from lpieralisi (unknown [10.57.13.193])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81FA53F774;
-        Thu, 28 Apr 2022 01:40:46 -0700 (PDT)
-Date:   Thu, 28 Apr 2022 09:40:41 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] PCI: vmd: Assign VMD IRQ domain before enumeration
-Message-ID: <20220428084041.GA15506@lpieralisi>
-References: <20220405171005.45586-1-nirmal.patel@linux.intel.com>
- <b2b73869-9889-a70f-73a9-bb7215ab7daf@linux.intel.com>
+        with ESMTP id S229709AbiD1JLh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 05:11:37 -0400
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6DB453E19;
+        Thu, 28 Apr 2022 02:08:21 -0700 (PDT)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id BD0C824000C;
+        Thu, 28 Apr 2022 09:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1651136900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3ZaVxd+2WjygVQXWswdisAkNx+oA7fl9OUz2pidyb4k=;
+        b=M9NQEgqxVS+N0oyyjs4W4Whgk+JUc7I5Mfy1xvbtI9cZ6obYaEXP6mqwwDvcbuwULXvquQ
+        7mwoiCOmTjWbeoYn8PQKndMWvWDBVUdlb+5ezUH26//GxEhuBCZn5VswA09Kw0xhGNxA4J
+        9jCKV/zOSETAqDJQbqmEFBnRm9YcdSjqhbU6ozCZzBRWz6vEuIB2B8qMWmvt4jug2XL2c3
+        mUNTarLAOxOATtEo/qk6AuwGbrelDf5RhXS1awQqX4wo0H/IW3jwucBaXR9TeWztDdDkfv
+        8f/W7ARWVQR+kx9IjVZsNw/xHaL5Cdjzx5xZ24Sz3MdlaZ57cmswJxjmhoHgBg==
+Date:   Thu, 28 Apr 2022 11:08:17 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 2/8] dt-bindings: PCI: renesas,pci-rcar-gen2: Add
+ device tree support for r9a06g032
+Message-ID: <20220428110817.07ce92a6@bootlin.com>
+In-Reply-To: <CAMuHMdVB2-Sv1AWFr43erOioui0me5A4TfvazKHp9hTF3gJCwg@mail.gmail.com>
+References: <20220422120850.769480-1-herve.codina@bootlin.com>
+        <20220422120850.769480-3-herve.codina@bootlin.com>
+        <CAMuHMdVB2-Sv1AWFr43erOioui0me5A4TfvazKHp9hTF3gJCwg@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b2b73869-9889-a70f-73a9-bb7215ab7daf@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 07:21:08PM -0700, Patel, Nirmal wrote:
-> On 4/5/2022 10:10 AM, Nirmal Patel wrote:
-> > VMD creates and assigns a separate IRQ domain only when MSI remapping is
-> > enabled. For example VMD-MSI. But VMD doesn't assign IRQ domain when
-> > MSI remapping is disabled resulting child devices getting default
-> > PCI-MSI IRQ domain. Now when interrupt remapping is enabled by
-> > intel-iommu all the PCI devices are assigned INTEL-IR-MSI domain
-> > including VMD endpoints. But devices behind VMD get PCI-MSI IRQ domain
-> > when VMD create a root bus and configures child devices.
+Hi Geert,
+
+On Wed, 27 Apr 2022 17:15:15 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+
+> Hi Herv=C3=A9,
+>=20
+> On Fri, Apr 22, 2022 at 2:09 PM Herve Codina <herve.codina@bootlin.com> w=
+rote:
+> > Add internal PCI bridge support for the r9a06g032 SOC. The Renesas
+> > RZ/N1D (R9A06G032) internal PCI bridge is compatible with the one
+> > present in the R-Car Gen2 family.
+> > Compared to the R-Car Gen2 family, it needs three clocks instead of
+> > one.
 > >
-> > As a result DMAR errors were observed when interrupt remapping was
-> > enabled on Intel Icelake CPUs. For instance:
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com> =20
+>=20
+> Thanks for your patch!
+>=20
+> > --- a/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
+> > @@ -113,6 +113,37 @@ required:
+> >    - "#size-cells"
+> >    - "#interrupt-cells"
 > >
-> >   DMAR: DRHD: handling fault status reg 2
-> >   DMAR: [INTR-REMAP] Request device [0xe2:0x00.0] fault index 0xa00 [fault reason 0x25] Blocked a compatibility format interrupt request
-> >
-> > Acked-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> > ---
-> > v2->v3: Update commit log.
-> > v1->v2: Split patch into two separate patches. One applies the fix and
-> > 	other reverts the commit 2565e5b69c44 which was added as a
-> > 	workaround.
-> > ---
-> >  drivers/pci/controller/vmd.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > index cc166c683638..3a6570e5b765 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -853,6 +853,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> >  	vmd_attach_resources(vmd);
-> >  	if (vmd->irq_domain)
-> >  		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
-> > +	else
-> > +		dev_set_msi_domain(&vmd->bus->dev, dev_get_msi_domain(&vmd->dev->dev));
-> >  
-> >  	vmd_acpi_begin();
-> >  
-> 
-> Gentle reminder.
+> > +if:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        enum:
+> > +          - renesas,pci-rzn1
+> > +
+> > +then:
+> > +  properties:
+> > +    clocks:
+> > +      items:
+> > +        - description: Internal bus clock (AHB) for HOST
+> > +        - description: Internal bus clock (AHB) Power Management
+> > +        - description: PCI clock for USB subsystem
+> > +    clock-names:
+> > +      items:
+> > +        - const: hclk_usbh
+> > +        - const: hclk_usbpm
+> > +        - const: clk_pci_usb =20
+>=20
+> These are the provider names.
+> I think they should use the consumer names: usb_hclkh, usb_hclkpm,
+> and usb_pciclk.
 
-Instead of sending these reminders, could you please, as Bjorn
-requested, fix your patch posting flow to make sure your patches are
-logged in lore and patchwork/linux-pci, where I look for patches to
-review please ?
+Yes, it makes sense.
+I will changed in v4.
 
-There is no point in sending reminders for something I don't see,
-I have no idea you are waiting for me to review this series if it
-does not show up in patchwork/linux-pci, if it is not there for
-me it does not exist.
+>=20
+> The rest looks good to me.
 
-Thanks,
-Lorenzo
+Perfect.
+
+Thanks for the review,
+Herv=C3=A9
 
 
+--=20
+Herv=C3=A9 Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
