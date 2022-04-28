@@ -2,59 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3303513243
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 13:17:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E3D05132AD
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 13:42:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345473AbiD1LUI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 07:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46796 "EHLO
+        id S1345687AbiD1Low (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 07:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345476AbiD1LUE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 07:20:04 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481EB546AC
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:16:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0C505B82C88
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 11:16:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F730C385A0;
-        Thu, 28 Apr 2022 11:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651144607;
-        bh=/s/78RD6T24Id7kM+k9Xv990mnYTK3r237lb4FSWOhY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mJhC5Gpxf4dr3sRFPhJaSyoYGCizmQ2eNYZW2g3TvCAaljDgruuBmYdc3eXYNoqjx
-         wENf8WE5568u55QVVvYvqjkZKjZLKikZ5FHd6o5E6K6vCwn3nrDPP9pyu4Ve8l8uYG
-         xwWJxiWbAr8/XOBpxirfDJUEITt/ZMHPzKUInOlNKafxIjN8SmMEsGT6RHGOMmk5NR
-         p31Lls7NYY8sCe48dcd18+Xh7ImRodaKBqQ+ylUwS++88wIJqk+YzPo+RbQxzRD6wj
-         dLFvRby/sJIFhfr+JlbIJSkZMek2fQzS7p58VctBW6Ahm9TaX0AqLnNLQ8POV6rs3i
-         Uf+zagayoj9gg==
-Received: by pali.im (Postfix)
-        id BBE358A0; Thu, 28 Apr 2022 13:16:44 +0200 (CEST)
-Date:   Thu, 28 Apr 2022 13:16:44 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 04/18] PCI: Add PCI_EXP_SLTCAP_*_SHIFT macros
-Message-ID: <20220428111644.n3cfa6ba6etljycw@pali>
-References: <20220220193346.23789-1-kabel@kernel.org>
- <20220220193346.23789-5-kabel@kernel.org>
- <20220428110926.GA32469@lpieralisi>
+        with ESMTP id S1345722AbiD1Loq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 07:44:46 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8DC666FBC
+        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:41:16 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id l19so6321173ljb.7
+        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aFeP+wlMs5f/su3ORobrj/Yy4MoRl+estrIOSgCRy3g=;
+        b=RW45UfHESE5ZFvbky9okdlnqsq/i92EOulvsvfMbQpBOXR1g5AcRaIu43Yrmt42Jr+
+         naaYud7S/Xe9O/7Cwn2Sy2UWQC9l7PKSsagKDIzVgBzxvbiAw6vhFMBg4q/yqfw8q88d
+         Z9PsooeyDHxFfPwrsfY7HVCjxSTK7qgjGrzoYb0y13svmsdENtAQqAxab0gcRO067aEL
+         NN2nLSqZ8DP41bkaM+KzZbjyJ8H0LSt1CJhWBFwnyxRP4DwCz0GYoOJTAvyLxBiRrLPu
+         AkzbSHu63vzzpey00H/uGz+F9d3Vr0tz7Ca9Guh9ze/OZ+7JyoYIjkxByoHJalH4IqHf
+         uJAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aFeP+wlMs5f/su3ORobrj/Yy4MoRl+estrIOSgCRy3g=;
+        b=YyWZ03rPFqhWtqdgdnJ8ci5xI+7wS2q5EbgwjVIPjA2RIG6PuqE16OCurDOyFiVPC+
+         yUKs1LHXvJYJhOSblE+msqCVQIEuRcJh2mDCj0WKYVa7jZpli0NapmDGiQ/PAAPmnKaJ
+         8TSuV3ZuE+Gkex4rVYtMMACjC1p8BZBZOeDtQ7W0J/VrGE9VvNuf69egULoyVE+24jyr
+         t0x0yXg/9LVnKPK0ETCwqf0CbtPdOxWxo/Dn//LljLokoGtdO83Z6Mi+qkMaMB/VaT9h
+         DXzlaA99h08noBytYqT37k5x2wJlA2sETME44k6sBc2lNyykRlW8vm5/9nxKrzi+9FFd
+         HoqQ==
+X-Gm-Message-State: AOAM533Yal89s8gT3palquaQHs+tyW7nk8QeMdGz7fY8AmPyT0yTq3He
+        LVt8CCYefltHYBvb8F/nxMaTvQ==
+X-Google-Smtp-Source: ABdhPJwpJf149dDvtvWmWu01QdboGQZWM/jCTA2QtpsIYK/1TsBM2tKKhszXtS5uLm7ph9fQZLIgSw==
+X-Received: by 2002:a2e:b6d3:0:b0:24f:3144:6349 with SMTP id m19-20020a2eb6d3000000b0024f31446349mr1982733ljo.50.1651146074869;
+        Thu, 28 Apr 2022 04:41:14 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id bu39-20020a05651216a700b004484a8cf5f8sm2338790lfb.302.2022.04.28.04.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Apr 2022 04:41:14 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v4 0/8] dt-bindings: YAMLify pci/qcom,pcie schema
+Date:   Thu, 28 Apr 2022 14:41:05 +0300
+Message-Id: <20220428114113.3411536-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220428110926.GA32469@lpieralisi>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,48 +75,86 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 28 April 2022 12:09:26 Lorenzo Pieralisi wrote:
-> On Sun, Feb 20, 2022 at 08:33:32PM +0100, Marek Behún wrote:
-> > From: Pali Rohár <pali@kernel.org>
-> > 
-> > These macros allows to easily compose and extract Slot Power Limit and
-> > Physical Slot Number values from Slot Capability Register.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > Signed-off-by: Marek Behún <kabel@kernel.org>
-> > ---
-> >  include/uapi/linux/pci_regs.h | 3 +++
-> >  1 file changed, 3 insertions(+)
-> 
-> This patch can be dropped, correct ?
+Convert pci/qcom,pcie schema to YAML description. The first patch
+introduces several warnings which are fixed by the other patches in the
+series.
 
-Yes!
+Note regarding the snps,dw-pcie compatibility. The Qualcomm PCIe
+controller uses Synopsys PCIe IP core. However it is not just fused to
+the address space. Accessing PCIe registers requires several clocks and
+regulators to be powered up. Thus it can be assumed that the qcom,pcie
+bindings are not fully compatible with the snps,dw-pcie schema.
 
-And note that 'slot-power-limit-milliwatt' DT property patch you took
-into pci/power-slot branch.
+Changes since v3:
+ - Rebase on linux-next to include sm8150 patches
 
-> Thanks,
-> Lorenzo
-> 
-> > 
-> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> > index bee1a9ed6e66..d825e17e448c 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -591,10 +591,13 @@
-> >  #define  PCI_EXP_SLTCAP_HPS	0x00000020 /* Hot-Plug Surprise */
-> >  #define  PCI_EXP_SLTCAP_HPC	0x00000040 /* Hot-Plug Capable */
-> >  #define  PCI_EXP_SLTCAP_SPLV	0x00007f80 /* Slot Power Limit Value */
-> > +#define  PCI_EXP_SLTCAP_SPLV_SHIFT	7  /* Slot Power Limit Value shift */
-> >  #define  PCI_EXP_SLTCAP_SPLS	0x00018000 /* Slot Power Limit Scale */
-> > +#define  PCI_EXP_SLTCAP_SPLS_SHIFT	15 /* Slot Power Limit Scale shift */
-> >  #define  PCI_EXP_SLTCAP_EIP	0x00020000 /* Electromechanical Interlock Present */
-> >  #define  PCI_EXP_SLTCAP_NCCS	0x00040000 /* No Command Completed Support */
-> >  #define  PCI_EXP_SLTCAP_PSN	0xfff80000 /* Physical Slot Number */
-> > +#define  PCI_EXP_SLTCAP_PSN_SHIFT	19 /* Physical Slot Number shift */
-> >  #define PCI_EXP_SLTCTL		0x18	/* Slot Control */
-> >  #define  PCI_EXP_SLTCTL_ABPE	0x0001	/* Attention Button Pressed Enable */
-> >  #define  PCI_EXP_SLTCTL_PFDE	0x0002	/* Power Fault Detected Enable */
-> > -- 
-> > 2.34.1
-> > 
+Changes since v2 (still kudos to Krzyshtof):
+ - Readded reg-names conversion patch
+ - Mention wake-gpio update in the commit message
+ - Remove extra quotes in the schema
+
+Changes since v1 (all kudos to Krzyshtof):
+ - Dropped the reg-names patch. It will be handled separately
+ - Squashed the snps,dw-pcie removal (from schema) into the first patch
+ - Replaced deprecated perst-gpio and wake-gpio with perst-gpios and
+   wake-gpios in the examples and in DT files
+ - Moved common clocks/clock-names, resets/reset-names and power-domains
+   properties to the top level of the schema, leaving only platform
+   specifics in the conditional branches
+ - Dropped iommu-map/iommu-map-mask for now
+ - Added (missed) interrupt-cells, clocks, clock-names, resets,
+   reset-names properties to the required list (resets/reset-names are
+   removed in the next patch, as they are not used on msm8996)
+ - Fixed IRQ flags in the examples
+ - Merged apq8064/ipq8064 into the single condition statement
+ - Added extra empty lines
+
+
+Dmitry Baryshkov (8):
+  dt-bindings: pci/qcom,pcie: convert to YAML
+  dt-bindings: pci/qcom,pcie: resets are not defined for msm8996
+  dt-bindings: pci/qcom-pcie: specify reg-names explicitly
+  dt-bindings: pci/qcom,pcie: add schema for sc7280 chipset
+  arm64: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom-*: replace deprecated perst-gpio with perst-gpios
+  arm64: dts: qcom: replace deprecated perst-gpio with perst-gpios
+
+Dmitry Baryshkov (8):
+  dt-bindings: pci/qcom,pcie: convert to YAML
+  dt-bindings: pci/qcom,pcie: resets are not defined for msm8996
+  dt-bindings: pci/qcom-pcie: specify reg-names explicitly
+  dt-bindings: pci/qcom,pcie: add schema for sc7280 chipset
+  arm64: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom-*: replace deprecated perst-gpio with perst-gpios
+  arm64: dts: qcom: replace deprecated perst-gpio with perst-gpios
+
+ .../devicetree/bindings/pci/qcom,pcie.txt     | 398 ----------
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 714 ++++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts   |   2 +-
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts    |   2 +-
+ arch/arm/boot/dts/qcom-apq8064.dtsi           |   2 +-
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi |   2 +-
+ .../boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts    |   2 +-
+ arch/arm/boot/dts/qcom-ipq4019.dtsi           |   2 +-
+ arch/arm/boot/dts/qcom-ipq8064.dtsi           |   6 +-
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts   |   6 +-
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts     |   4 +-
+ arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi    |   4 +-
+ .../dts/qcom/msm8996-sony-xperia-tone.dtsi    |   4 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |   6 +-
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |   2 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |   2 +-
+ .../arm64/boot/dts/qcom/sc7280-herobrine.dtsi |   2 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi      |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    |   4 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   4 +-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |   6 +-
+ 21 files changed, 746 insertions(+), 430 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+
+-- 
+2.35.1
+
