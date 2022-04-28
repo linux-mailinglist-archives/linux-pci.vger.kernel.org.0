@@ -2,65 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4153512FCC
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 11:47:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92E53512FF0
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 11:48:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231665AbiD1Jtu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 05:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
+        id S229991AbiD1Jts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 05:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346662AbiD1J00 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 05:26:26 -0400
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2B77B548;
-        Thu, 28 Apr 2022 02:23:09 -0700 (PDT)
+        with ESMTP id S1347018AbiD1J2q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 05:28:46 -0400
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DAD67C795;
+        Thu, 28 Apr 2022 02:25:30 -0700 (PDT)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 9A08BE000F;
-        Thu, 28 Apr 2022 09:23:03 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id 0CAC7240008;
+        Thu, 28 Apr 2022 09:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1651137787;
+        t=1651137929;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+FYRz/NDTDdoqmZUrm0uByCiRUWY9guhdRNlt4HmCM0=;
-        b=mJOuZ1T9tUD92MO7DKvtNI5dLapxlMOfwd7x4IIOEHvO1p2pSSEfgESCe1miSaBT1AgaMJ
-        5CsfIP5a+s3RTPwOw2+O+S5UiQxtIzAMf86SF1I/TFrEVBHzqrH1WKOi85bPLE86lBFoxE
-        jbWa112E+vXYK9vbmptM/yRaFcw6MjONxHK4d/AvH0CTKpvTVPBSo1+2qc91CSfQwgZaT7
-        qc8R0IvfKv6PFFUwaS6UdHsLKATrELdCMNdtEeZR6+aUgM4OGcdgWUhTcIcMi+rI7LlhET
-        RjssszI3MTwi14aQ1drKj44O76GFOB8+ukLaYATaEmRHMuEaFSbr2D/vVvah1g==
-Date:   Thu, 28 Apr 2022 11:23:02 +0200
+        bh=HMLva4/g7+wAMx0LKhwNxH51lXYsvGGHAJATfjO0pGs=;
+        b=YPR4woGd2LbLPt23lAH82e2KSKHFmuR/RTpRojKTgNtF6wKuUygUbjYuS1XrGiaflxm9uc
+        JqhnwEiKfOLQERiERPTe+1//P5XkUcVgAPMfGLe/XO65agC9qinxS1MjW7i0jhYnbKpq1i
+        OpQ+VZRDpBnqLKyzY6iW7qdNVD1xaLQ0eOSwSXzJ8ufZFrL0eh69DNdIVZnIyk5XjbgmO0
+        K4hsoMazXZDhiruoFoQvpLvWWIiBHUmMbhk7M0iAehbFw+89OrK+zdZwYDNTM5VkQ9KBr2
+        L1tLpfgombKHZ1Q+/bEmGbmWT3hMaGmog8dBREZomFQvwOl55m58BEwh0imf3Q==
+Date:   Thu, 28 Apr 2022 11:25:26 +0200
 From:   Herve Codina <herve.codina@bootlin.com>
-To:     Sergey Shtylyov <s.shtylyov@omp.ru>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 7/8] ARM: dts: r9a06g032: Add USB PHY DT support
-Message-ID: <20220428112302.3e8d3a7f@bootlin.com>
-In-Reply-To: <f7e76000-11ec-42d1-5767-7f270a3b025d@omp.ru>
+Subject: Re: [PATCH v3 4/8] soc: renesas: rzn1: Select PM and
+ PM_GENERIC_DOMAINS configs
+Message-ID: <20220428112526.3b55555b@bootlin.com>
+In-Reply-To: <CAMuHMdUf6M=ESvSnRoqYkBfvizW-tBzTwUX2Uka-FOGvLFzL=w@mail.gmail.com>
 References: <20220422120850.769480-1-herve.codina@bootlin.com>
-        <20220422120850.769480-8-herve.codina@bootlin.com>
-        <ed432ba2-6081-4d82-bdc9-cd88cb52ca1f@omp.ru>
-        <f7e76000-11ec-42d1-5767-7f270a3b025d@omp.ru>
+        <20220422120850.769480-5-herve.codina@bootlin.com>
+        <CAMuHMdWmcBXRxZ_SDLCnimh7GqzkR0_qz178s51EtXsMm39ddg@mail.gmail.com>
+        <20220428111535.51833857@bootlin.com>
+        <CAMuHMdUf6M=ESvSnRoqYkBfvizW-tBzTwUX2Uka-FOGvLFzL=w@mail.gmail.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,42 +75,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sergey,
+Hi Geert,
+On Thu, 28 Apr 2022 11:22:35 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-On Sat, 23 Apr 2022 19:41:09 +0300
-Sergey Shtylyov <s.shtylyov@omp.ru> wrote:
-
-> On 4/23/22 12:09 PM, Sergey Shtylyov wrote:
+> Hi Herv=C3=A9,
 >=20
-> [...]
-> >> Define the r9a06g032 generic part of the USB PHY device node.
-> >>
-> >> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> >> ---
-> >>  arch/arm/boot/dts/r9a06g032.dtsi | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a0=
-6g032.dtsi
-> >> index 33581f0c55c4..58af07eb75c9 100644
-> >> --- a/arch/arm/boot/dts/r9a06g032.dtsi
-> >> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
-> >> @@ -59,6 +59,12 @@ ext_rtc_clk: extrtcclk {
-> >>  		clock-frequency =3D <0>;
-> >>  	};
-> >> =20
-> >> +	usbphy: usbphy { =20
-> >=20
-> >    I think the node name should be "usb-phy"... =20
+> On Thu, Apr 28, 2022 at 11:15 AM Herve Codina <herve.codina@bootlin.com> =
+wrote:
+> > On Wed, 27 Apr 2022 16:58:07 +0200
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote: =20
+> > > On Fri, Apr 22, 2022 at 2:09 PM Herve Codina <herve.codina@bootlin.co=
+m> wrote: =20
+> > > > PM and PM_GENERIC_DOMAINS configs are required for RZ/N1 SOCs.
+> > > > Without these configs, the clocks used by the PCI bridge are not
+> > > > enabled and so accessing the devices leads to a kernel crash:
+> > > >   [    0.832958] Unhandled fault: external abort on non-linefetch (=
+0x1008) at 0x90b5f848
+> > > >
+> > > > Select PM and PM_GENERIC_DOMAINS for ARCH_RZN1
+> > > >
+> > > > Signed-off-by: Herve Codina <herve.codina@bootlin.com> =20
+> > >
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > i.e. will queue in renesas-devel for v5.19. =20
+> >
+> > I plan to send a v4 of this series.
+> >
+> > As this patch (4/8) and the following one (5/8) will be
+> > queued for v5.19, I plan to remove them from the v4 version
+> > of the series.
+> >
+> > Is that ok for you or do you prefer to still have them
+> > in v4 ? =20
 >=20
->    It's not my thinking alone, the DT spec documents "usb-phy" in section=
- 2.2.2. :-)
+> As these two patches are not strictly related to adding PCI support,
+> but they are dependencies, I will queue them separately. Hence you
+> do not need to include them in v5.
 
-Will be changed in v4.
+Perfect.
 
-Thanks for pointing this.
-
-Regards,
+Thanks,
 Herv=C3=A9
 
 --=20
