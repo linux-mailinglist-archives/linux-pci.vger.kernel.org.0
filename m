@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 424E55132B6
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 13:42:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC6D251332F
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 14:00:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345710AbiD1Lo7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 07:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50382 "EHLO
+        id S243124AbiD1MCw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 08:02:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345749AbiD1Lot (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 07:44:49 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4219B69284
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:41:23 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id w1so8114770lfa.4
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:41:22 -0700 (PDT)
+        with ESMTP id S237593AbiD1MCw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 08:02:52 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DF598908A
+        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:59:37 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id t25so8183779lfg.7
+        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:59:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Kg1LPvr7CNmKtgBxGFEj5Vun/S0D0osu3a6EbDsk4vU=;
-        b=d1JNUpPFqdyqSgIH+N042aPoeNpvS9ZLEC6QG5U+eqR3h5Zmi/PVfC3gPkCKQ60f7A
-         0Yx5bHBRs7fin0tsVwRwFH4CDrleT9xN8BKe/PhPaC2ZTZz/W6crxqRTWksPJSwXL5Xx
-         gwbfM4zRtlDy8Cf5zjNHXb/RmmE1iErae/abfiYJg+jcjNdnR4MaMJtq5IG8SEbliMJK
-         iUsLrbXwi+iQb4F6ZeRNungPHfcnv//Z5O8Cmg2LPFaEs/tgzwAGZ1isxo3ICOfmiuh7
-         D41A2wHxGlspwodH0ZtTRK5mkkRXbOhBousybyBvAIekpOEvZbXIwVhHhhfkckQM/7yr
-         ITpg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B5+zPIoSBjlgURgVp9wtOYZR1bJTq6eewKu1uVP6YhU=;
+        b=c/VJanwMlti5J5yVKfOURvmGJ7fdqY4Omar4Wc9K2ajzGa3ZaIgqtJFsI4ZEfH3NZH
+         fOx1TizjiY2ceK/3N1pgDwAtNvNDdoanrJFnzzlA6MeF5WDNuqWBrxaeJ2ENT5KqtOeh
+         7O1jw9bFWst4+41jSjZPVaxfj+jtPVV6620KXi2qnfARLD4UMJog7IsUMe9lHAIA73XW
+         XgbafcfLxAH6Q6DfQbjTMFeeLd4Os9UkqwGkoC3p6b7sQRPKgim/W5tDJ9v4ePlY8S7k
+         l8ACpRoUewJdwuTf2gMKfzYmPUrcyjyWObBb5a9ZZfpBXOOfnqbYMxcC6hWugLsB5i7o
+         +jIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Kg1LPvr7CNmKtgBxGFEj5Vun/S0D0osu3a6EbDsk4vU=;
-        b=6i9rhYljAOAxfdzdQ7bmqhNOLKjxZBMpWo3oMzXRGu8tprh6A4b79zoqT0HvnO4ACC
-         ESM8yASREpr81R9x3843/R7tSo1l8ru3szjxEVc/htDcKz+FPK4Ggx/fujqGM/RDsPJ5
-         cbR62GHG0fOMVrHQfKgWh6K9wZHQiE23X9MkJroktucgAU3/8ewgs1m2ejGH0GZ2t8kH
-         fmsMeqo4+ohHmEbrLeBx+NyMbmvwyDpjr3RCqJuKkh9LxWSNxN6cE9Asl+AMZOSJzN9U
-         MAGsJT8djGrS5qZGyfKKEpW3/CkFCQVElYT6+EM7yKx8vBhXTbn8ee3TmeHMMD2JBDrJ
-         qphQ==
-X-Gm-Message-State: AOAM5331ie+5YdKtWCKE+tYlf2DUzmy2kKwAJ2wX7dvBg1EYKFksTJ+N
-        EJWQ6hbafQAv0cfOfLHAw2Er9e5mLHf0Ww==
-X-Google-Smtp-Source: ABdhPJzyBCYsLoS4Ofu7FN0YWK8ZuH4Wqpx92SQJlAdxRmLON+EdrAIAq9ehmwOURMT/g59BIoLN8A==
-X-Received: by 2002:a05:6512:3c93:b0:44b:4ba:c334 with SMTP id h19-20020a0565123c9300b0044b04bac334mr24006588lfv.27.1651146081363;
-        Thu, 28 Apr 2022 04:41:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B5+zPIoSBjlgURgVp9wtOYZR1bJTq6eewKu1uVP6YhU=;
+        b=V0W6d5YbTzKuKrUhqTjAl8ArOAPFmwgXL9n/95LI/51MlpFMp97xarr1JLGyyN2Mwf
+         gOEGh8T84GWTCBXa/9CMMbYISm7MZ7ZIvk/sbAH5ZDEmweNdcxWnSJcCF5LWLEFSyyEq
+         ENJZ2bBrO/k+wntbAfStr36Yrpq0zyco3qJPeLQhim6EV06hlobZueafNkWlUWW1zlpi
+         6uxoeYaSxXkfrik3prXGjp6WvMDst+lhbKiFuL7pD7cndXvv7trKFVroElHrsHE1w7Fg
+         HIZhsD9kqniANulNxNc7W9uNPlT1m2UDHOvobV1LP10LFgErbuoLA8u1hJXnMC9M5Dzq
+         wNUg==
+X-Gm-Message-State: AOAM530Lb8FxAxV/CPMutT96v4WjczBvGB+JjGQAEf9y3zkYQG3DrdLw
+        +ZvFH/xCQsGNtqdnTQlIicuraw==
+X-Google-Smtp-Source: ABdhPJxWluFAEwayYWdZ18Igbd7n13o+2+04LTbINdT9ndVp5iJRzsIn9nW0A4Uo+Fjj+zJ08Qvr6Q==
+X-Received: by 2002:a05:6512:320c:b0:472:1060:ca29 with SMTP id d12-20020a056512320c00b004721060ca29mr12011273lfe.280.1651147175742;
+        Thu, 28 Apr 2022 04:59:35 -0700 (PDT)
 Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id bu39-20020a05651216a700b004484a8cf5f8sm2338790lfb.302.2022.04.28.04.41.20
+        by smtp.gmail.com with ESMTPSA id f1-20020a2e1f01000000b0024602522b5dsm2069137ljf.120.2022.04.28.04.59.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Apr 2022 04:41:21 -0700 (PDT)
+        Thu, 28 Apr 2022 04:59:35 -0700 (PDT)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -59,184 +59,74 @@ To:     Andy Gross <agross@kernel.org>,
         Stanimir Varbanov <svarbanov@mm-sol.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 8/8] arm64: dts: qcom: replace deprecated perst-gpio with perst-gpios
-Date:   Thu, 28 Apr 2022 14:41:13 +0300
-Message-Id: <20220428114113.3411536-9-dmitry.baryshkov@linaro.org>
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v4 0/7] PCI: qcom: Fix higher MSI vectors handling
+Date:   Thu, 28 Apr 2022 14:59:27 +0300
+Message-Id: <20220428115934.3414641-1-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220428114113.3411536-1-dmitry.baryshkov@linaro.org>
-References: <20220428114113.3411536-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Replace deprecated perst-gpio and wake-gpio properties with up-to-date
-perst-gpios and wake-gpios in the Qualcomm device trees.
+I have replied with my Tested-by to the patch at [2], which has landed
+in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
+Add support for handling MSIs from 8 endpoints"). However lately I
+noticed that during the tests I still had 'pcie_pme=nomsi', so the
+device was not forced to use higher MSI vectors.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dts            | 6 +++---
- arch/arm64/boot/dts/qcom/ipq8074-hk01.dts              | 4 ++--
- arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi             | 4 ++--
- arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone.dtsi | 4 ++--
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi               | 2 +-
- arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi         | 2 +-
- arch/arm64/boot/dts/qcom/sc7280-idp.dtsi               | 2 +-
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts             | 4 ++--
- 8 files changed, 14 insertions(+), 14 deletions(-)
+After removing this option I noticed that hight MSI vectors are not
+delivered on tested platforms. After additional research I stumbled upon
+a patch in msm-4.14 ([1]), which describes that each group of MSI
+vectors is mapped to the separate interrupt. Implement corresponding
+mapping.
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-index f623db8451f1..9fb33850e46c 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-@@ -497,20 +497,20 @@ config {
- 
- &pcie0 {
- 	status = "okay";
--	perst-gpio = <&tlmm 35 GPIO_ACTIVE_LOW>;
-+	perst-gpios = <&tlmm 35 GPIO_ACTIVE_LOW>;
- 	vddpe-3v3-supply = <&wlan_en>;
- 	vdda-supply = <&vreg_l28a_0p925>;
- };
- 
- &pcie1 {
- 	status = "okay";
--	perst-gpio = <&tlmm 130 GPIO_ACTIVE_LOW>;
-+	perst-gpios = <&tlmm 130 GPIO_ACTIVE_LOW>;
- 	vdda-supply = <&vreg_l28a_0p925>;
- };
- 
- &pcie2 {
- 	status = "okay";
--	perst-gpio = <&tlmm 114 GPIO_ACTIVE_LOW>;
-+	perst-gpios = <&tlmm 114 GPIO_ACTIVE_LOW>;
- 	vdda-supply = <&vreg_l28a_0p925>;
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-index b5e1eaa367bf..2d5ee337054c 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
-@@ -54,12 +54,12 @@ &blsp1_uart5 {
- 
- &pcie0 {
- 	status = "okay";
--	perst-gpio = <&tlmm 61 0x1>;
-+	perst-gpios = <&tlmm 61 0x1>;
- };
- 
- &pcie1 {
- 	status = "okay";
--	perst-gpio = <&tlmm 58 0x1>;
-+	perst-gpios = <&tlmm 58 0x1>;
- };
- 
- &pcie_phy0 {
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
-index 07e670829676..3c0ac747de0e 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
-@@ -44,12 +44,12 @@ &blsp1_uart5 {
- 
- &pcie0 {
- 	status = "ok";
--	perst-gpio = <&tlmm 58 0x1>;
-+	perst-gpios = <&tlmm 58 0x1>;
- };
- 
- &pcie1 {
- 	status = "ok";
--	perst-gpio = <&tlmm 61 0x1>;
-+	perst-gpios = <&tlmm 61 0x1>;
- };
- 
- &pcie_phy0 {
-diff --git a/arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone.dtsi b/arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone.dtsi
-index 3bb50cecd62d..b90000223d69 100644
---- a/arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone.dtsi
-@@ -195,8 +195,8 @@ &mmcc {
- 
- &pcie0 {
- 	status = "okay";
--	perst-gpio = <&tlmm 35 GPIO_ACTIVE_LOW>;
--	wake-gpio = <&tlmm 37 GPIO_ACTIVE_HIGH>;
-+	perst-gpios = <&tlmm 35 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 37 GPIO_ACTIVE_HIGH>;
- 	vddpe-3v3-supply = <&wlan_en>;
- 	vdda-supply = <&pm8994_l28>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index a80c578484ba..b067b9f95189 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -99,7 +99,7 @@ pms405_s3: s3 {
- &pcie {
- 	status = "okay";
- 
--	perst-gpio = <&tlmm 43 GPIO_ACTIVE_LOW>;
-+	perst-gpios = <&tlmm 43 GPIO_ACTIVE_LOW>;
- 
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&perst_state>;
-diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-index dc17f2079695..461ba68fd939 100644
---- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-@@ -362,7 +362,7 @@ &pcie1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie1_clkreq_n>, <&ssd_rst_l>, <&pe_wake_odl>;
- 
--	perst-gpio = <&tlmm 2 GPIO_ACTIVE_LOW>;
-+	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
- 	vddpe-3v3-supply = <&pp3300_ssd>;
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-index ecbf2b89d896..8abf8077be11 100644
---- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-@@ -240,7 +240,7 @@ &ipa {
- 
- &pcie1 {
- 	status = "okay";
--	perst-gpio = <&tlmm 2 GPIO_ACTIVE_LOW>;
-+	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
- 
- 	vddpe-3v3-supply = <&nvme_3v3_regulator>;
- 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 28fe45c5d516..1aadd5504631 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -502,7 +502,7 @@ &mss_pil {
- 
- &pcie0 {
- 	status = "okay";
--	perst-gpio = <&tlmm 35 GPIO_ACTIVE_LOW>;
-+	perst-gpios = <&tlmm 35 GPIO_ACTIVE_LOW>;
- 	enable-gpio = <&tlmm 134 GPIO_ACTIVE_HIGH>;
- 
- 	vddpe-3v3-supply = <&pcie0_3p3v_dual>;
-@@ -520,7 +520,7 @@ &pcie0_phy {
- 
- &pcie1 {
- 	status = "okay";
--	perst-gpio = <&tlmm 102 GPIO_ACTIVE_LOW>;
-+	perst-gpios = <&tlmm 102 GPIO_ACTIVE_LOW>;
- 
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie1_default_state>;
+Patchseries dependecies: [2] (landed in pci-next) and [3] (for the
+schema change).
+
+Since we can not expect that other platforms will use multi-IRQ scheme
+for MSI mapping (e.g. iMX and Tegra map all 256 MSI interrupts to single
+IRQ), it's support is implemented directly in pcie-qcom rather than in
+the core driver.
+
+Changes since v3:
+ - Reimplement MSI handling scheme in the Qualcomm host controller
+   driver.
+
+Changes since v2:
+ - Fix and rephrase commit message for patch 2.
+
+Changes since v1:
+ - Split a huge patch into three patches as suggested by Bjorn Helgaas
+ - snps,dw-pcie removal is now part of [3]
+
+[1] https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/commit/671a3d5f129f4bfe477152292ada2194c8440d22
+[2] https://lore.kernel.org/linux-arm-msm/20211214101319.25258-1-manivannan.sadhasivam@linaro.org/
+[3] https://lore.kernel.org/linux-arm-msm/20220422211002.2012070-1-dmitry.baryshkov@linaro.org/
+
+Dmitry Baryshkov (7):
+  PCI: qcom: Revert "PCI: qcom: Add support for handling MSIs from 8
+    endpoints"
+  PCI: dwc: Correct msi_irq condition in dw_pcie_free_msi()
+  PCI: dwc: Add msi_host_deinit callback
+  PCI: dwc: Export several functions useful for MSI implentations
+  PCI: qcom: Handle MSI IRQs properly
+  dt-bindings: pci/qcom,pcie: support additional MSI interrupts
+  arm64: dts: qcom: sm8250: provide additional MSI interrupts
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  51 ++++++-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |  11 +-
+ .../pci/controller/dwc/pcie-designware-host.c |  72 +++++----
+ drivers/pci/controller/dwc/pcie-designware.h  |  12 ++
+ drivers/pci/controller/dwc/pcie-qcom.c        | 138 +++++++++++++++++-
+ 5 files changed, 252 insertions(+), 32 deletions(-)
+
 -- 
 2.35.1
 
