@@ -2,64 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C3F55130A1
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 12:03:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7109151310E
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 12:14:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232824AbiD1KG0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 06:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34302 "EHLO
+        id S234465AbiD1KRQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 06:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233269AbiD1KF6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 06:05:58 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667EB37BE8;
-        Thu, 28 Apr 2022 02:52:26 -0700 (PDT)
-Received: by mail-qt1-f170.google.com with SMTP id fu47so3026649qtb.5;
-        Thu, 28 Apr 2022 02:52:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ovyC5u95bHx0r6PJ7f5pXU0Bk1RoDto4j+E9S46SA34=;
-        b=CWrfDjPjWgMaiRpepK9/7Rx0RLkFeNsBAdf01ocar3dOkZ+h6txl4HVYN0/Kkvug/H
-         DrhhiO5ZqsKRx3i0kEKU/faB+Vn++CBZ4bdkVekIYQ6OJD4rTHBb723JqPj9cLg/qhnk
-         SOO/2Vav9s1WryweqPKCTeYZDV/2mRAdfP010yAUUCBtx+8bQbQWifUAIBHxFcq7RqmE
-         FaXd8gMtJf3U+I0T0jN5ukbNw+yDhhH9zQFk9W+DJLoLHKt8iDuhHkBDRXkDmusPy3Ei
-         mCEdO1XII+W5dnNELenrdE3X1Bk3uzl4NNyv6ZfeWPWjOIkQG/ru5P6pf+LefEpJ6KFA
-         KDxg==
-X-Gm-Message-State: AOAM530vKHoYEulvOoDTdKq9eDxq95nD3ToYPAKGFSqMfyaHNN6GpSJj
-        52VSJkeltROvA8cLkGNLQWBCsWvd/9N9mw==
-X-Google-Smtp-Source: ABdhPJwXLoOVe81bLQNY6/MlRjxxV0Xk4RN2RWldQdZqwCuAL3Pl46w+XrxBplVM6RocYexn93YVrQ==
-X-Received: by 2002:a05:622a:510:b0:2f3:81aa:cac2 with SMTP id l16-20020a05622a051000b002f381aacac2mr7033369qtx.679.1651139545346;
-        Thu, 28 Apr 2022 02:52:25 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id cr24-20020a05622a429800b002ed12cea2cdsm10387353qtb.96.2022.04.28.02.52.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Apr 2022 02:52:24 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id m128so8050863ybm.5;
-        Thu, 28 Apr 2022 02:52:24 -0700 (PDT)
-X-Received: by 2002:a25:d393:0:b0:648:4871:3b91 with SMTP id
- e141-20020a25d393000000b0064848713b91mr20928967ybf.506.1651139543993; Thu, 28
- Apr 2022 02:52:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220422120850.769480-1-herve.codina@bootlin.com> <20220422120850.769480-9-herve.codina@bootlin.com>
-In-Reply-To: <20220422120850.769480-9-herve.codina@bootlin.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 28 Apr 2022 11:52:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXJBG9kv7rYNy+Ej5jrLcGckZHfydgmxmtHa1U9uy_bwg@mail.gmail.com>
-Message-ID: <CAMuHMdXJBG9kv7rYNy+Ej5jrLcGckZHfydgmxmtHa1U9uy_bwg@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] ARM: dts: r9a06g032: Link the PCI USB devices to
- the USB PHY
-To:     Herve Codina <herve.codina@bootlin.com>
+        with ESMTP id S239808AbiD1KQp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 06:16:45 -0400
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9AF2125E;
+        Thu, 28 Apr 2022 03:07:52 -0700 (PDT)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id E5901E0002;
+        Thu, 28 Apr 2022 10:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1651140471;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p0pbW3Qe/fcOPwkZ542X36a6CjEmTTKa8MqcLRRPmgg=;
+        b=BTdo1ob7J24vsgk6I9B0sOpiH7EbVXJiU6W5zbSoMATqriqZIbKOQM5koHbpT7USP7/syO
+        qxt8JA4NPKMNM/piiYw9v+sJnu9ulhBwtSJWKE1K2TvMGHSanied5YtYwB/g6FDA8kG1qm
+        4UCrHysak4lqYJRdP7G0TgpujxEM80ykSHg7UvailxyMoVqcjxC/66ku+RMYnZ1cYgZOjg
+        e0+ZwBNsky/h+aRcsx+3Hrw7Kfzzi7LKYJdiG///FaWnF79goV8uf3dqbAJxd5y24nmSFS
+        WT5a2pSVWv5Mx72ceml+RQ+8jkYSSh125304egivnCt7VB6URIOtbp6iB55p1w==
+Date:   Thu, 28 Apr 2022 12:07:48 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
         linux-pci <linux-pci@vger.kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -70,33 +50,73 @@ Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v3 6/8] ARM: dts: r9a06g032: Add internal PCI bridge
+ node
+Message-ID: <20220428120748.69fdc087@bootlin.com>
+In-Reply-To: <CAMuHMdWfbbQ64CipqoVPEOGhE08HYckhyOaeSi+V7ar+F45PMw@mail.gmail.com>
+References: <20220422120850.769480-1-herve.codina@bootlin.com>
+        <20220422120850.769480-7-herve.codina@bootlin.com>
+        <CAMuHMdWfbbQ64CipqoVPEOGhE08HYckhyOaeSi+V7ar+F45PMw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 2:09 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> Describe the PCI USB devices that are behind the PCI bridge, adding
-> necessary links to the USB PHY device.
->
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Hi Geert,
+On Thu, 28 Apr 2022 11:49:28 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-LGTM, so
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Hi Herv=C3=A9
+>=20
+> On Fri, Apr 22, 2022 at 2:09 PM Herve Codina <herve.codina@bootlin.com> w=
+rote:
+> > Add the device node for the r9a06g032 internal PCI bridge device.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com> =20
+>=20
+> Thanks for your patch!
+>=20
+> > --- a/arch/arm/boot/dts/r9a06g032.dtsi
+> > +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> > @@ -212,6 +212,35 @@ gic: interrupt-controller@44101000 {
+> >                         interrupts =3D
+> >                                 <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IR=
+Q_TYPE_LEVEL_HIGH)>;
+> >                 };
+> > +
+> > +               pci_usb: pci@40030000 {
+> > +                       compatible =3D "renesas,pci-r9a06g032", "renesa=
+s,pci-rzn1";
+> > +                       device_type =3D "pci";
+> > +                       clocks =3D <&sysctrl R9A06G032_HCLK_USBH>,
+> > +                                <&sysctrl R9A06G032_HCLK_USBPM>,
+> > +                                <&sysctrl R9A06G032_CLK_PCI_USB>;
+> > +                       clock-names =3D "hclk_usbh", "hclk_usbpm", "clk=
+_pci_usb"; =20
+>=20
+> The clock names need an update, cfr. my comment on the bindings.
 
-Gr{oetje,eeting}s,
+Sure.
 
-                        Geert
+>=20
+> The rest LGTM, so with the above fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>=20
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks for the review.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Herv=C3=A9
+--=20
+Herv=C3=A9 Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
