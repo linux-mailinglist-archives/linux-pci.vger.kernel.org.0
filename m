@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7109151310E
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 12:14:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8999B51311D
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 12:16:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234465AbiD1KRQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 06:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52888 "EHLO
+        id S242223AbiD1KSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 06:18:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239808AbiD1KQp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 06:16:45 -0400
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9AF2125E;
-        Thu, 28 Apr 2022 03:07:52 -0700 (PDT)
+        with ESMTP id S231646AbiD1KRi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 06:17:38 -0400
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 288F9A1454;
+        Thu, 28 Apr 2022 03:08:35 -0700 (PDT)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id E5901E0002;
-        Thu, 28 Apr 2022 10:07:48 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id 4F561240004;
+        Thu, 28 Apr 2022 10:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1651140471;
+        t=1651140514;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=p0pbW3Qe/fcOPwkZ542X36a6CjEmTTKa8MqcLRRPmgg=;
-        b=BTdo1ob7J24vsgk6I9B0sOpiH7EbVXJiU6W5zbSoMATqriqZIbKOQM5koHbpT7USP7/syO
-        qxt8JA4NPKMNM/piiYw9v+sJnu9ulhBwtSJWKE1K2TvMGHSanied5YtYwB/g6FDA8kG1qm
-        4UCrHysak4lqYJRdP7G0TgpujxEM80ykSHg7UvailxyMoVqcjxC/66ku+RMYnZ1cYgZOjg
-        e0+ZwBNsky/h+aRcsx+3Hrw7Kfzzi7LKYJdiG///FaWnF79goV8uf3dqbAJxd5y24nmSFS
-        WT5a2pSVWv5Mx72ceml+RQ+8jkYSSh125304egivnCt7VB6URIOtbp6iB55p1w==
-Date:   Thu, 28 Apr 2022 12:07:48 +0200
+        bh=+FVu5gA7Z4WlGAv2Pb4YDkp22KxyYWyPGrSxniKUiP8=;
+        b=QhNuHYISF2nJVQmA0NAHP+AC2T8VDQYh5K3ouAUClwhIcMNzx7nUegC5ao1GovDvFzQp73
+        2M7KDd7tPNUKOQFwx0jtsycMxYMAzA5RqlwvOuGjriyckMp1HFV2Cu2qbR7ihNRPj/9+MU
+        TkNbuAeNqGiPbcPepiQJ/WmphHXpEYb2AL8BHKW5+9qB6xcENwaYOc7SQGG6n4nb4fz6a4
+        w2lTonu0Hy19LptRbrfplic07K+UJfxRuSqM0a0uzg0kim/dUrO4S3/pU9VjnrZ4ELortw
+        iu4rmSPE99yhIzLRJ2CNGFx4WzDhweMVq10X30Pof1/kOH6OZeEJxLRFaHkyrw==
+Date:   Thu, 28 Apr 2022 12:08:30 +0200
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
@@ -52,11 +52,12 @@ Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>
 Subject: Re: [PATCH v3 6/8] ARM: dts: r9a06g032: Add internal PCI bridge
  node
-Message-ID: <20220428120748.69fdc087@bootlin.com>
-In-Reply-To: <CAMuHMdWfbbQ64CipqoVPEOGhE08HYckhyOaeSi+V7ar+F45PMw@mail.gmail.com>
+Message-ID: <20220428120830.7eaa42ec@bootlin.com>
+In-Reply-To: <CAMuHMdX_CwsmzOHBi0TVBR7KOSqW0tY5=94betF_B40gkHoYxQ@mail.gmail.com>
 References: <20220422120850.769480-1-herve.codina@bootlin.com>
         <20220422120850.769480-7-herve.codina@bootlin.com>
         <CAMuHMdWfbbQ64CipqoVPEOGhE08HYckhyOaeSi+V7ar+F45PMw@mail.gmail.com>
+        <CAMuHMdX_CwsmzOHBi0TVBR7KOSqW0tY5=94betF_B40gkHoYxQ@mail.gmail.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
@@ -72,50 +73,30 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Geert,
-On Thu, 28 Apr 2022 11:49:28 +0200
+On Thu, 28 Apr 2022 11:50:21 +0200
 Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-> Hi Herv=C3=A9
+> Hi Herv=C3=A9,
 >=20
-> On Fri, Apr 22, 2022 at 2:09 PM Herve Codina <herve.codina@bootlin.com> w=
-rote:
-> > Add the device node for the r9a06g032 internal PCI bridge device.
-> >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com> =20
+> On Thu, Apr 28, 2022 at 11:49 AM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > > --- a/arch/arm/boot/dts/r9a06g032.dtsi
+> > > +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> > > @@ -212,6 +212,35 @@ gic: interrupt-controller@44101000 {
+> > >                         interrupts =3D
+> > >                                 <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | =
+IRQ_TYPE_LEVEL_HIGH)>;
+> > >                 };
+> > > +
+> > > +               pci_usb: pci@40030000 { =20
 >=20
-> Thanks for your patch!
->=20
-> > --- a/arch/arm/boot/dts/r9a06g032.dtsi
-> > +++ b/arch/arm/boot/dts/r9a06g032.dtsi
-> > @@ -212,6 +212,35 @@ gic: interrupt-controller@44101000 {
-> >                         interrupts =3D
-> >                                 <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IR=
-Q_TYPE_LEVEL_HIGH)>;
-> >                 };
-> > +
-> > +               pci_usb: pci@40030000 {
-> > +                       compatible =3D "renesas,pci-r9a06g032", "renesa=
-s,pci-rzn1";
-> > +                       device_type =3D "pci";
-> > +                       clocks =3D <&sysctrl R9A06G032_HCLK_USBH>,
-> > +                                <&sysctrl R9A06G032_HCLK_USBPM>,
-> > +                                <&sysctrl R9A06G032_CLK_PCI_USB>;
-> > +                       clock-names =3D "hclk_usbh", "hclk_usbpm", "clk=
-_pci_usb"; =20
->=20
-> The clock names need an update, cfr. my comment on the bindings.
+> Please preserve sort order (by unit address).
 
-Sure.
+Ok, will be done in v4.
 
->=20
-> The rest LGTM, so with the above fixed:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->=20
-
-Thanks for the review.
-
-Regards,
+Thanks,
 Herv=C3=A9
+
 --=20
 Herv=C3=A9 Codina, Bootlin
 Embedded Linux and Kernel engineering
