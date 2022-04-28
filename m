@@ -2,47 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 348A8513BE5
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 20:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72791513C08
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 21:12:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236810AbiD1S7Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 14:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42774 "EHLO
+        id S1351360AbiD1TPg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 15:15:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234496AbiD1S7P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 14:59:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE9AB1AA9;
-        Thu, 28 Apr 2022 11:55:59 -0700 (PDT)
+        with ESMTP id S238779AbiD1TPf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 15:15:35 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE269B3C75;
+        Thu, 28 Apr 2022 12:12:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5920561903;
-        Thu, 28 Apr 2022 18:55:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639D4C385A9;
-        Thu, 28 Apr 2022 18:55:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6CA64B82F6E;
+        Thu, 28 Apr 2022 19:12:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93EE0C385A0;
+        Thu, 28 Apr 2022 19:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651172158;
-        bh=QbMp+TVcUkgGvq0RzONOxoY8dbfDmVzl1OJIP43ws7M=;
+        s=k20201202; t=1651173137;
+        bh=Z5QrtyPoKtr4EXTz5f8XYaD44MEJLtU/UpYiIT1zJhQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HpeeN7zKaZ0TLJoF6hwVPx/0W0Mq4blWXgdROsyvZui/gM3LRKwgPNFhaB2vhBFx8
-         0OhmdsQgBYaBC9g+o4XR69PyLi9UETTgL7pSWrFDn6X/bpcBXFKCMMxd3aVmA3ZLJa
-         Iy0Gkpe02uROBT0FkyRemJn334rVgOjjQNuPwg5GaUt4rSZvoo7aw6n9dOhSbegmxL
-         6qtAKRbvAZqusgSk6qpuT9Ir9Ar4E2wZQaAhVISHw+t+O7DzXM8AUGL3KDYMcvu+UE
-         yuTurea2T/flvU0+ZUC6bFmVZNB3FWl6Bde/Xj+rW1YFuFdFbnwHIEkmM7o2yk1Kw5
-         RxA7kfdNEOlEA==
-Date:   Thu, 28 Apr 2022 13:55:56 -0500
+        b=InTqMwimwY/xTFEieuVIfeswQ0EoYsWCrDONLYTJLJQe3xAd7iMGaEPYN1qBRZS7q
+         i1b7F7wFSFfr5pW+k1pHsP2+K1rGEWUXsgiifuLmsk1Z/yLnZ/NIWHfYlEznZCBqwd
+         GYgkjGQ9NTzNa2yswmEWoaqy5eX5LBMFHMxw//ePSz5Ip0HfgGYJhaC6VM5d7e8Xk7
+         eb/K72NLbZkTquWmEGRMzYUfcwgDQJS5dj4EzMDo41mYbbOyRHjE7KLxKTWj3KPhMb
+         rXXg2VEMGBY97I+7LzkyhwJwMk/6/ysxPAJE8cx/YfUwG9mmLZ0itIViS62avreQDf
+         75qKdG9k7Dz4w==
+Date:   Thu, 28 Apr 2022 14:12:13 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Avoid handing out address 0 to devices
-Message-ID: <20220428185556.GA35255@bhelgaas>
+To:     Jake Oshins <jakeo@microsoft.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce VM boot
+ time
+Message-ID: <20220428191213.GA36573@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2204192214310.9383@angie.orcam.me.uk>
+In-Reply-To: <SN4PR2101MB0878E466880C047D3A0D0C92ABFB9@SN4PR2101MB0878.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -52,81 +64,111 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 11:18:12PM +0100, Maciej W. Rozycki wrote:
-> On Mon, 18 Apr 2022, Bjorn Helgaas wrote:
-> ...
+On Tue, Apr 26, 2022 at 07:25:43PM +0000, Jake Oshins wrote:
+> > -----Original Message-----
+> > From: Dexuan Cui <decui@microsoft.com>
+> > Sent: Tuesday, April 26, 2022 11:32 AM
+> > To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Jake Oshins <jakeo@microsoft.com>; Bjorn Helgaas <helgaas@kernel.org>;
+> > bhelgaas@google.com; Alex Williamson <alex.williamson@redhat.com>;
+> > wei.liu@kernel.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> > linux-hyperv@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Michael Kelley (LINUX) <mikelley@microsoft.com>;
+> > robh@kernel.org; kw@linux.com; kvm@vger.kernel.org
+> > Subject: RE: [PATCH] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce
+> > VM boot time
+> > 
+> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Sent: Tuesday, April 26, 2022 9:45 AM
+> > > > ...
+> > > > Sorry I don't quite follow. pci-hyperv allocates MMIO for the bridge
+> > > > window in hv_pci_allocate_bridge_windows() and registers the MMIO
+> > > > ranges to the core PCI driver via pci_add_resource(), and later the
+> > > > core PCI driver probes the bus/device(s), validates the BAR sizes
+> > > > and the pre-initialized BAR values, and uses the BAR configuration.
+> > > > IMO the whole process doesn't require the bit PCI_COMMAND_MEMORY to
+> > > > be pre-set, and there should be no issue to delay setting the bit to
+> > > > a PCI device device's .probe() -> pci_enable_device().
+> > >
+> > > IIUC you want to bootstrap devices with PCI_COMMAND_MEMORY clear
+> > > (otherwise PCI core would toggle it on and off for eg BAR sizing).
+> > >
+> > > Is that correct ?
+> > 
+> > Yes, that's the exact purpose of this patch.
+> > 
+> > Do you see any potential architectural issue with the patch?
+> > From my reading of the core PCI code, it looks like this should be safe.
 
-> > Sparc uses the MMIO I/O port address directly in the struct resource,
-> > so it will never try to allocate [io 0x0000], and there's no problem
-> > with using PCI I/O port 0:
-> > 
-> >   pci_bus 0000:00: root bus resource [io  0x804000000000-0x80400fffffff] (bus address [0x0000-0xfffffff])
-> >   mpt2sas0: ioport(0x0000804000001000), size(256)
-> > 
-> > The sparc ioport interfaces are basically:
-> > 
-> >   ioport_map(port)  { return port; }
-> >   ioread8(addr)     { return readb(addr); }
-> >   inb(addr)         { return readb(addr); }
-> > 
-> > RISC-V uses the generic ones, i.e.,
-> > 
-> >   ioport_map(port)  { return PIO_OFFSET + port; }
-> >   ioread8(addr)     { if (addr) >= PIO_RESERVED)
-> >                         return readb(addr);
-> >                       else
-> >                         return inb(addr & PIO_MASK); }
-> >   inb(addr)         { return __raw_readb(PCI_IOBASE + addr); }
-> > 
-> > Obviously RISC-V gives you prettier I/O port addresses, but at the
-> > cost of having PCI I/O port 0 be 0 in the struct resource as well,
-> > which makes it basically unusable.  Is it worth it?
+I don't know much about Hyper-V, but in general I don't think the PCI
+core should turn on PCI_COMMAND_MEMORY at all unless a driver requests
+it.  I assume that if a guest OS depends on PCI_COMMAND_MEMORY being
+set, guest firmware would take care of setting it.
+
+> > Jake has some concerns that I don't quite follow.
+> > @Jake, could you please explain the concerns with more details?
 > 
->  Well, the SPARC port may be able to get away with that, but overall I 
-> think using PCI bus addresses for port I/O resources is the only sane 
-> thing to do.
+> First, let me say that I really don't know whether this is an issue.
+> I know it's an issue with other operating system kernels.  I'm
+> curious whether the Linux kernel / Linux PCI driver would behave in
+> a way that has an issue here.
+> 
+> The VM has a window of address space into which it chooses to put
+> PCI device's BARs.  The guest OS will generally pick the value that
+> is within the BAR, by default, but it can theoretically place the
+> device in any free address space.  The subset of the VM's memory
+> address space which can be populated by devices' BARs is finite, and
+> generally not particularly large.
+> 
+> Imagine a VM that is configured with 25 NVMe controllers, each of
+> which requires 64KiB of address space.  (This is just an example.)
+> At first boot, all of these NVMe controllers are packed into address
+> space, one after the other.
+> 
+> While that VM is running, one of the 25 NVMe controllers fails and
+> is replaced with an NVMe controller from a separate manufacturer,
+> but this one requires 128KiB of memory, for some reason.  Perhaps it
+> implements the "controller buffer" feature of NVMe.  It doesn't fit
+> in the hole that was vacated by the failed NVMe controller, so it
+> needs to be placed somewhere else in address space.  This process
+> continues over months, with several more failures and replacements.
+> Eventually, the address space is very fragmented.
+> 
+> At some point, there is an attempt to place an NVMe controller into
+> the VM but there is no contiguous block of address space free which
+> would allow that NVMe controller to operate.  There is, however,
+> enough total address space if the other, currently functioning, NVMe
+> controllers are moved from the address space that they are using to
+> other ranges, consolidating their usage and reducing fragmentation.
+> Let's call this a rebalancing of memory resources.
+> 
+> When the NVMe controllers are moved, a new value is written into
+> their BAR.  In general, the PCI spec would require that you clear
+> the memory enable bit in the command register (PCI_COMMAND_MEMORY)
+> during this move operation, both so that there's never a moment when
+> two devices are occupying the same address space and because writing
+> a 64-bit BAR atomically isn't possible.  This is the reason that I
+> originally wrote the code in this driver to unmap the device from
+> the VM's address space when the memory enable bit is cleared.
+> 
+> What I don't know is whether this sequence of operations can ever
+> happen in Linux, or perhaps in a VM running Linux.  Will it
+> rebalance resources in order to consolidate address space?  If it
+> will, will this involve clearing the memory enable bit to ensure
+> that two devices never overlap?
 
-That only works if you have a single host bridge where you care about
-I/O ports, or if you're willing to split up the single space across
-the multiple host bridges, e.g., [io 0x0000-0x7fff] to one host
-bridge, [0x8000-0xffff] to another.
+This sequence definitely can occur in Linux, but it hasn't yet become
+a real priority.  But we do already have issues with assigning space
+for hot-added devices in general, especially if firmware hasn't
+assigned large windows to things like Thunderbolt controllers.  I
+suspect that we have or will soon have issues where resource
+assignment starts failing after a few hotplugs, e.g., dock/undock
+events.
 
-> In fact I think for MMIO resources we probably ought to do 
-> the same, though it may be actually more difficult to implement, because 
-> it's more likely there are systems out there with multiple per-bus MMIO 
-> address spaces.
-
-I might be missing your point here, but multiple host bridges are
-common on ia64, sparc, and (I think) powerpc.  It probably would be
-feasible to make the struct resource address identical to the PCI bus
-address for 64-bit MMIO space because they're both constrained to the
-same-sized space.
-
-But doing it for the PCI 32-bit non-prefetchable space would be an
-issue because there's usually RAM in that area of CPU address space,
-so we'd have to reserve a hole for PCI, put the MMIO in the hole, then
-split the MMIO space across all the host bridges.  This sparc system
-has 16 host bridges, so even if we had no hole, each one could only
-have 256MB of identity-mapped non-prefetchable space:
-
-  pci_bus 0000:00: root bus resource [mem 0x800000000000-0x80007effffff] (bus address [0x00000000-0x7effffff])
-  pci_bus 0001:00: root bus resource [mem 0x801000000000-0x80107effffff] (bus address [0x00000000-0x7effffff])
-  ...
-  pci_bus 000f:00: root bus resource [mem 0x839000000000-0x83907effffff] (bus address [0x00000000-0x7effffff])
-
-(This is from https://bugzilla.kernel.org/show_bug.cgi?id=96241)
-
->  The reason why I think using bus addresses here is the right thing to do 
-> is that systems may have multiple decode windows exposed to the CPU(s) 
-> mapping to the same I/O bus addresses, often for specific purposes. E.g. 
-> Alpha has the sparse and the dense address space and some systems (I have 
-> one with a MIPS CPU) have spaces with different endianness swap policies 
-> (for matching either bit or byte lanes) wired in the bus logic hardware.  
-> So the same port I/O location can be mapped at different MMIO addresses 
-> simultaneously in one system.
-
-Is this feature used by Linux?  I guess it would require some generic
-mechanism drivers could use to get the desired endianness?  I don't
-know whether such a thing exists.
+There have been patches posted to rebalance resources (quiesce
+drivers, reassign, restart drivers), but they haven't gone anywhere
+yet for lack of interest and momentum.  I do feel like we're the
+tracks and the train is coming, though ;)
 
 Bjorn
