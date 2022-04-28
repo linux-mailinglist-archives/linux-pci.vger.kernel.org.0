@@ -2,265 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3520E512B45
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 08:06:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9680512B92
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 08:30:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243473AbiD1GKG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 02:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44488 "EHLO
+        id S237410AbiD1Gdq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 02:33:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233488AbiD1GKF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 02:10:05 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DCD6972F3
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 23:06:52 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id t11-20020a17090ad50b00b001d95bf21996so6814823pju.2
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 23:06:52 -0700 (PDT)
+        with ESMTP id S235490AbiD1Gdp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 02:33:45 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5681CFE5
+        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 23:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1651127428; x=1682663428;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=Y5Ti5GCQSInxoALiSjBxBj57hoocej8G63ZLrgbG/GM=;
+  b=YdeXQl1k0dTnq5p3s8tAkwT5XSJZIOlahobEhn2L+ZbyDIh6lswIaR+s
+   kF3W7kkEK8s+Dy7BjTWBp0hwduvwWKdZoegpsWLJMUxf1HYr4Ae2Dl+61
+   w/pfLNRQdYYaBPljzmqQc0dCPbrP553wbtEq3hXxHX/ttjKkyYkpR4rRT
+   Aso8irBGWJ8MI7xvKDLmsMNX/OENNR4pn+S79nvwoa3B/i+7CWqwBJKC8
+   i00dk3vYOY8kgwU5SwSYBBen0QCM5YO5/z0E/MrbC5aIoUqGB4RpvxOfr
+   YAiJO5cR37iG9AnawEqvNvsP9hzo2+tvoMAu8TBW7P6oP/3WS5iUC5is0
+   A==;
+X-IronPort-AV: E=Sophos;i="5.90,295,1643698800"; 
+   d="scan'208";a="154113785"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Apr 2022 23:30:16 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Wed, 27 Apr 2022 23:30:14 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17 via Frontend Transport; Wed, 27 Apr 2022 23:30:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aq1bGjrRnA8lDN74ycU0a9S0b2DsNYAKsOKQdfT++4PNP2tplpiZ3FGVWcuoBrp3UqlpJ4QgUCarRmvD7KETW8J9GFuIr8YE4O84bLicCfr3I5PVfFmblsgG+p3H/J0Qdj+qaaHDsdHWByfi+evEmCQMcwa6FeCPl36HhhryGQbjvHqAPyANz27FcecoYPPZXIUuY30opF2NIyM0zboAHToxGkLvgWOdX1QQ98zX0Boc1qUv5XPOySvHRmSmvQua73lNudCKV+01N9olwCAKSlE+fICS0qq/vTtWxRiSvGajUmUw4s9+VEx+YA9bRTwVt+eRcei5dw+o159g1Jt4Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y5Ti5GCQSInxoALiSjBxBj57hoocej8G63ZLrgbG/GM=;
+ b=g+y5fm+av5Kor10c+lMN/HXWhpZ7ThVtNDg6whI/AACFXP6O3jGzZaFWrx5oxdDXKeGuiV2nIf6167Dowt9S6Lhl0hKQqcwfmjOUuWKwSBuYqCdA2XJaa7LZPVz2tWXai2Ylp2XEzega4H9vZZ8BJRyRirAQB/wPMA66I299Akfr+W+vB6O2N/Br0xmR/Vw99dFAW9l5CLn2tnQYgRGEjHIZzNvzMqIPoPlWGQYU6YYxEpoUBBTeXmq/nyHQWs7Jk/C0ZNnPKtQT7ZDa68pDY2WtIwEGNnssld5gu/8Heyp7g5fn9YhXkXwM2EW2EyRgXmGgF8citOBdqAPDfbdFCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sctLFwQqS8lBCdpG9q6rO8TA4Tc3AKrhBRg23uXCJys=;
-        b=XHRkwW7A26X4pGZIk+GiBtT0kdF1Z/gHTmq8LqkyxoI7bezQhGOIujVr9O01qMfzZP
-         uCQgcy+FI09brn3nnS0bxQSB5di8DnjxnrqOISRXBA6KmPIWt0kPkzPpsayDgd5HhmkM
-         KQJolfpcuaUXHTdFU3O+gUHAuzx3/3NcCePV9/XEEXD0QC3hS8hVuLH3Y7R13PZim3RM
-         13xWJlcOQnIzTJcdfYHQiuSaZ5dzInEIWzx3+E86R9WvTER2RC48hu74uoTP5PHw/BGG
-         cKnOm8gidYzc78vKjVHQ3ObH70IYyWjsKbeRfekBLY77/dH3Fyl3X2zulXKlGGhpQ0G4
-         Zc4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sctLFwQqS8lBCdpG9q6rO8TA4Tc3AKrhBRg23uXCJys=;
-        b=gWP6n0cqHxGjN0IZt69Sb+/D5ZRCO+JV+63TFhRHWjMg5xr2O2Fm37eRxYF7z881Ax
-         q99QXnYhTNyeuYDdqGCNryEkQnV4f7D3oCIGZtKpvn5bH9AErvGKQ6lm2JhS0N8KgK7L
-         Am60MD9guVVdmvx8He2vftbJLYGho5TrqhUfPFxWkTuBrMggBeSgQrjqGzflCtx/scND
-         ZZaD/170uaZPbrzqHec+grIk28pTMW9VfvES0cACFlLZ+z/AQaPk3Q8+HklqH5vAKL+4
-         FyywuuP2OxwteFg8qAAAg/sdYTy/ZsMZ7m/4PYqvhwJmJSmC8KvJ9HnosQznIJon2lhg
-         Vynw==
-X-Gm-Message-State: AOAM530uzms6+n0xqM22MjTeAfNUsFv/nVoSCs82tlcNH0Of8kWYVXU/
-        UNl47GxJLp0lk1TmTEO2YNOS
-X-Google-Smtp-Source: ABdhPJwCw9OT42rCS0BWyfxA58Fomrl8+W7C0DTbnEGsPLwmIrAFnemfLavgpQmLlwFTvKlUuY+7vA==
-X-Received: by 2002:a17:902:f78d:b0:14f:ce61:eaf2 with SMTP id q13-20020a170902f78d00b0014fce61eaf2mr32635012pln.124.1651126011557;
-        Wed, 27 Apr 2022 23:06:51 -0700 (PDT)
-Received: from thinkpad ([27.111.75.196])
-        by smtp.gmail.com with ESMTPSA id s7-20020a17090a13c700b001cd60246575sm9390715pjf.17.2022.04.27.23.06.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 23:06:48 -0700 (PDT)
-Date:   Thu, 28 Apr 2022 11:36:42 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] PCI: dwc: Convert msi_irq to the array
-Message-ID: <20220428060642.GA81644@thinkpad>
-References: <20220427121653.3158569-1-dmitry.baryshkov@linaro.org>
- <20220427121653.3158569-2-dmitry.baryshkov@linaro.org>
- <20220427141329.GA4161@thinkpad>
- <b9d81916-10e6-94f9-78b2-b2198620e66a@linaro.org>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y5Ti5GCQSInxoALiSjBxBj57hoocej8G63ZLrgbG/GM=;
+ b=rcqxHz8kEqxt983DemI04YyX4lCkhcSHr2aQ8oa6a5BDWwE6DUxiHLE7mFJi1OlBTWyROeP5X3BZhcamoYAPNzh/9RuS7W2ykja0CTIM/aYJvuRU7OYZJyNunl8FU8g2kD5DZg5oUGre0xLpFBJ4uN7pojrEv9aGAk845Ny3XPQ=
+Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:95::7)
+ by DM6PR11MB3194.namprd11.prod.outlook.com (2603:10b6:5:5c::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.20; Thu, 28 Apr
+ 2022 06:30:12 +0000
+Received: from CO1PR11MB5154.namprd11.prod.outlook.com
+ ([fe80::fcd4:8f8a:f0e9:8b18]) by CO1PR11MB5154.namprd11.prod.outlook.com
+ ([fe80::fcd4:8f8a:f0e9:8b18%9]) with mapi id 15.20.5206.013; Thu, 28 Apr 2022
+ 06:30:12 +0000
+From:   <Conor.Dooley@microchip.com>
+To:     <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>
+CC:     <bhelgaas@google.com>, <Cyril.Jean@microchip.com>,
+        <maz@kernel.org>, <david.abdurachmanov@gmail.com>,
+        <linux-pci@vger.kernel.org>, <robh@kernel.org>,
+        <Daire.McNamara@microchip.com>
+Subject: Re: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in
+ interrupt handling
+Thread-Topic: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in
+ interrupt handling
+Thread-Index: AQHYSN7WdGxuspPXV0KaH+H3O3rn2K0FAP4A
+Date:   Thu, 28 Apr 2022 06:30:12 +0000
+Message-ID: <3199781d-7581-4fec-02a8-80f254ac630a@microchip.com>
+References: <20220405111751.166427-1-daire.mcnamara@microchip.com>
+In-Reply-To: <20220405111751.166427-1-daire.mcnamara@microchip.com>
+Accept-Language: en-IE, en-US
+Content-Language: en-IE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a3b0e92d-87f5-4a7b-a7e8-08da28e08cc5
+x-ms-traffictypediagnostic: DM6PR11MB3194:EE_
+x-microsoft-antispam-prvs: <DM6PR11MB31944C702AB166EC55B9109B98FD9@DM6PR11MB3194.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sn/KNsGR17dLpdas4DsIPsMCJ2mqXIj/Re54QdiCZWZfPlHOZmW5kIUEu1Vtraol5HyvR2gAfAtoEuGDciKahMNyttYiZ5GqfvAim+imXHLriGKPx2JFNuyVdr98AdfEUfCwCjnVyYc/BBM0ctWqatS2CUO4mWKvI8r4RlcW/glJGpgxwwGuzAkfNNXbIllRHkJ9i8WbSzVo5Chcbn40kje5hUMFeGku8eF3d6X2SwmIQqGotW0Cw2AvmVh7JHfCBfzLqIteyteYY0iYXVDMKSxUbPskJH1vMjmjgtru2MSdkIFXcsMwiiTIzT76/r4PBH5xTBmblndzLLZNXvaWisXK/LrzeHRxeSIOqzLNF44/FNZuFGB6XtBA4kip9xVV6ozRP9tO5P/J0R7KeaXEIV+d8Y5K0rG3PY1k2rfO16ALTOi+4H7i0Q31GxZCQ6Mb70iAEEw+veV+Jf5GNkqWx07Bl6k2JR2Rm7OPAFWgxS7oqq/3oGVj8SF4XnAkb4FMMrg9zrz5utDswQDnPcYXBfTkhibfxc8B1NRkF0xiPRQ4UhLiwrDj2AgcMHE8YOvSRkbaAmomMfwmKokK94cDQU5EZ8VShSfvoRtTJqxotiIiHuLdxbwhzB93piyKUbajebzUa+a3kSmRuBX87TdnN5Aw1aB4YenkhpJGPsJe5/koEQcTb3RM6YgtAEiaiarEqKEtkBGcZog+Af1/K9T97PJNCK0Rtxe7oWGsp8FZJqH7YjE1WOAYQ13rZ/006Gejio30qCw5R6QIpf0iLmrHHpD1w3locCTymi01SXaoe3zxVlOyvd9Bj9LeHUxF0yaFWtF8PGf4rjBJLOQVaiJ9N/I1Bs4xYuALy/0SdagfXUtiWArdyVRtJ3l6cozcbnuDl7j8cP/a9n7oGIql6eFHqw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(5660300002)(8936002)(186003)(508600001)(31686004)(36756003)(6486002)(83380400001)(316002)(2616005)(107886003)(122000001)(2906002)(38070700005)(66946007)(66556008)(66476007)(53546011)(38100700002)(64756008)(54906003)(31696002)(76116006)(91956017)(966005)(86362001)(26005)(66446008)(110136005)(71200400001)(6506007)(4326008)(8676002)(6512007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dC9tbVB2ei92N3I2L3FvblZscWs5bTZYaFZjV0tIUldsb2tCYW1Qck8zb3Q3?=
+ =?utf-8?B?ZDdZam9lSGxHTEVaTlJuaDhWVVJkZzNpMnRITys1Z2U0Tlp1anBzeHJxRlBZ?=
+ =?utf-8?B?QmN3M3lXelpBTzN5aGZCREl5SG00d1g0dFlrazlocnEwMUdkVUlvL3dHUWFn?=
+ =?utf-8?B?Vjc4eVJWb3dtaGpRTVZ6aU95cFc1R0RQZjAxYURCc3hIU0srcmU0QnZzVS9S?=
+ =?utf-8?B?eTg1Tmc3M0ZMd3lhaHlvc1lZK0lBYkYxcDRkbnhxZ0dWVnJXV2JBb3M1QVU5?=
+ =?utf-8?B?VkZhTEp0K1d0d0hFc1U5MjFrM2VEQXQwSlo1K1dvd05waWgvVFR2RFgwb2NE?=
+ =?utf-8?B?S1c3dDdUSkhQa1lsMnBEdjgwRUNWNnlaTWg5VHJkZnVzOEVWQ3NGTXU5K2dj?=
+ =?utf-8?B?R2FTU3NrQ1dzOENiakhKV2cwVi9ZcGxMandJQkFsOUwrcDBoMkhFSjNnNUVy?=
+ =?utf-8?B?TFBPNWxHZ2hSMlVuaXdUUEs2T0RISElLOVNEVTFWajExMEQ0V2hhVkVtZi9V?=
+ =?utf-8?B?dG42SlB5VUZMVStqVmVodkNFR0JLRVhiZ1NLWjRoNHQ1M0R3SlVWU1JlNlpD?=
+ =?utf-8?B?ZGg2bnlDKzFVeVlOdnRQaFovaGd5RVVhRG4ycFlEUkJjWDZTMVpoYkdXbEdF?=
+ =?utf-8?B?b2l6SFpYWFMyYVZYM2VsS25RSGRDYTdpUXBNMjhJaDlLc2VjRlRTRFBucWVL?=
+ =?utf-8?B?YWRXN0Z4bmZpb3NnZnRBMk1CNDE1YTFpQzFKaFM1dFpMWExrcm0rRGJsY2Zn?=
+ =?utf-8?B?MGZ0ZkNqMUt4VW9hRi9KL2dsNDNRazAySWV1eVpMb3gzaEVjZ0JxTGdhMFQv?=
+ =?utf-8?B?cmZqSUNBMWRXaTUyZ0tMMS9yRVVYZFQrQUZHNitQYnN5N0NWbWt0K0dPVS91?=
+ =?utf-8?B?Y05wV0MrbWEvT1lxRmV5TEhnUXd3QWlidWI3ZnBpbEVZNFJ3SUJHSXpnQ25H?=
+ =?utf-8?B?T09Mei9iTk5mT0d5OTBpZ2xXNS9xMm1ocEl3alRuMWQrMCszbGN2T1ljQ2Vu?=
+ =?utf-8?B?MFFYMjA5blpFYnoxTU9lem94T3JDeHZwTFIrVjNJK3IyTFMyQXBTZVNtSUp2?=
+ =?utf-8?B?d0pnQmlLemt3UFh1SklwbGtPRll6K0I4S3BrTWRPNCtseVZNa3Q3K2NTUGxq?=
+ =?utf-8?B?aGozRnBQSjlzMXVZMUMwLzhQeSs4VS9KQ3RuUVFYdEFlcGNFb2RVQ1Q2OU5j?=
+ =?utf-8?B?TWhrUmZNbFhOTFpxOGdRR3VDRms3NElBWnNuQUJiTGNiS2pYWWgwaklSaWN0?=
+ =?utf-8?B?Rk0rVGpPOHRSU3cvNklVY2N2VHJQMXREcnF2RHZvTGJJcWIxVHpvWU5SRzNv?=
+ =?utf-8?B?SURkeVpLQTNhMzkrZEVWbnVRNnNQa0l4U3NjZk1peU5KSk9ZMnZaTVJkM1VC?=
+ =?utf-8?B?ZXRJWGcva3VheUd0TWpKZTZPakFWNXFaQlUyb3NLNWltcEVkZ1pDTXl3c2M4?=
+ =?utf-8?B?UW9SRWU5RnhCY1l0KzczTVBocURobnJsZGpvNnhwditVcFdxdUltVXhMbkh0?=
+ =?utf-8?B?bVgzYlI1Wm00ZnFESzBvNkd6YnJqOThkbkNhZDRGWkhyZ3BCZlhCNm16Rjgx?=
+ =?utf-8?B?NThvUi9yWWRkbTBTVmRGcUM5UWp5T2ppcDJsVy9vN25VdzJiNGhxTzlDU3R0?=
+ =?utf-8?B?WnJwTU1VM0E4cTlkd1JSbGlDc2Z2Vmdkc2pueEJTVnd2ek5FQnZlWDROQXVa?=
+ =?utf-8?B?ZmNMMUpPQXFUNitqL2NtYUVvclJFMHpBZUdUY3A5Y3JnLzJSbFFEdVN3WHNY?=
+ =?utf-8?B?aklzS3dhSjUwNEhZUmM0R0J6WEdlUVNGUUJ3QnB1dXZtSTFuYnZJbnpjSkVS?=
+ =?utf-8?B?dk0xZm5sRkRTeldHeUpiWUEzUjgyZmZmUkoxelFPQXNmcVpqQTFtNVBqUmhH?=
+ =?utf-8?B?TGlVb1o4akJ6aTN0Vnd3bnlaelErTmhKRm1UdlUxVkNrdHdKRG1hU3d3MTJk?=
+ =?utf-8?B?djQ5YXRtMVZiZ0dXTlZiVXpBZjBNbDZDUE8zMmJnNmVNeXJOdUtjbWZTaVhS?=
+ =?utf-8?B?bXJ3UDVlUkt6aFJMRE03di9xTFhpdXZqU0JXVTFzREZtbmxuSjYzRTYvSWww?=
+ =?utf-8?B?Mkh2KzNzaTIvcWQ2WmVZQzAzU2gwRFZWellyT2x4NWp6YnhaS3lMODNqckQw?=
+ =?utf-8?B?QlQ5ZFNzeXI2Z1NiMkExSEpnWHhoZ2VESDBLUHBXTnI3L2srVXpiY3pFaDJs?=
+ =?utf-8?B?R2w3VGcwVWVQamtkaENhdVRNTjhpNGV0alNzRlhYbCs5UWM4R002S2tJQjYw?=
+ =?utf-8?B?YU1ZSDZLR1ZTWG1HQzRnM0wyTmw5alJiRTRlc3BmUzZjQnZnc21XMnZCWlln?=
+ =?utf-8?B?dmEwWEg4bUtNY0lNTlEreVhUSUZkMGc1VlFTcC9TUXJMdlk5Z0pUZz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C9E808B729C4B547ABFB297D8183C47E@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9d81916-10e6-94f9-78b2-b2198620e66a@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3b0e92d-87f5-4a7b-a7e8-08da28e08cc5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2022 06:30:12.5426
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bR7wOXXMlWbUpFwhvCJsWvAzrI2rGrH7iFRlltaT71oEs2glapWsYWFzMKmTofjU8dqLTl44WKs9TTb1lC3WAoJlfoZMaIzkBpXAUzRah24=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3194
+X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 07:59:57PM +0300, Dmitry Baryshkov wrote:
-> On 27/04/2022 17:13, Manivannan Sadhasivam wrote:
-> > On Wed, Apr 27, 2022 at 03:16:49PM +0300, Dmitry Baryshkov wrote:
-> > > Qualcomm version of DWC PCIe controller supports more than 32 MSI
-> > > interrupts, but they are routed to separate interrupts in groups of 32
-> > > vectors. To support such configuration, change the msi_irq field into an
-> > > array. Let the DWC core handle all interrupts that were set in this
-> > > array.
-> > > 
-> > 
-> > Instead of defining it as an array, can we allocate it dynamically in the
-> > controller drivers instead? This has two benefits:
-> > 
-> > 1. There is no need of using a dedicated flag.
-> > 2. Controller drivers that don't support MSIs can pass NULL and in the core we
-> > can use platform_get_irq_byname_optional() to get supported number of MSIs from
-> > devicetree.
-> 
-> I think using dynamic allocation would make code worse. It would add
-> additional checks here and there.
-> 
-
-I take back my suggestion of allocating the memory for msi_irq in controller
-drivers. It should be done in the designware-host instead.
-
-We already know how many MSIs are supported by the platform using num_vectors.
-So we should just allocate msi_irqs of num_vectors length in
-dw_pcie_host_init() and populate it using platform_get_irq_byname_optional().
-
-I don't think this can make the code worse.
-
-> If you don't like this design. I have an alternative suggestion: export the
-> dw_chained_msi_irq() and move allocation of all MSIs to the pcie-qcom code.
-> Would that be better? I'm not sure whether this multi-host-IRQ design is
-> used on other DWC platforms or not.
-> 
-
-No, I think the allocation should belong to designware-host.
-
-Thanks,
-Mani
-
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > ---
-> > >   drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
-> > >   drivers/pci/controller/dwc/pci-exynos.c       |  2 +-
-> > >   .../pci/controller/dwc/pcie-designware-host.c | 30 +++++++++++--------
-> > >   drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
-> > >   drivers/pci/controller/dwc/pcie-keembay.c     |  2 +-
-> > >   drivers/pci/controller/dwc/pcie-spear13xx.c   |  2 +-
-> > >   drivers/pci/controller/dwc/pcie-tegra194.c    |  2 +-
-> > >   7 files changed, 24 insertions(+), 18 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> > > index dfcdeb432dc8..0919c96dcdbd 100644
-> > > --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> > > +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> > > @@ -483,7 +483,7 @@ static int dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
-> > >   		return pp->irq;
-> > >   	/* MSI IRQ is muxed */
-> > > -	pp->msi_irq = -ENODEV;
-> > > +	pp->msi_irq[0] = -ENODEV;
-> > >   	ret = dra7xx_pcie_init_irq_domain(pp);
-> > >   	if (ret < 0)
-> > > diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-> > > index 467c8d1cd7e4..4f2010bd9cd7 100644
-> > > --- a/drivers/pci/controller/dwc/pci-exynos.c
-> > > +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> > > @@ -292,7 +292,7 @@ static int exynos_add_pcie_port(struct exynos_pcie *ep,
-> > >   	}
-> > >   	pp->ops = &exynos_pcie_host_ops;
-> > > -	pp->msi_irq = -ENODEV;
-> > > +	pp->msi_irq[0] = -ENODEV;
-> > >   	ret = dw_pcie_host_init(pp);
-> > >   	if (ret) {
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index 2fa86f32d964..5d90009a0f73 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -257,8 +257,11 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
-> > >   static void dw_pcie_free_msi(struct pcie_port *pp)
-> > >   {
-> > > -	if (pp->msi_irq)
-> > > -		irq_set_chained_handler_and_data(pp->msi_irq, NULL, NULL);
-> > > +	u32 ctrl;
-> > > +
-> > > +	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
-> > > +		if (pp->msi_irq[ctrl])
-> > > +			irq_set_chained_handler_and_data(pp->msi_irq[ctrl], NULL, NULL);
-> > >   	irq_domain_remove(pp->msi_domain);
-> > >   	irq_domain_remove(pp->irq_domain);
-> > > @@ -368,13 +371,15 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >   			for (ctrl = 0; ctrl < num_ctrls; ctrl++)
-> > >   				pp->irq_mask[ctrl] = ~0;
-> > > -			if (!pp->msi_irq) {
-> > > -				pp->msi_irq = platform_get_irq_byname_optional(pdev, "msi");
-> > > -				if (pp->msi_irq < 0) {
-> > > -					pp->msi_irq = platform_get_irq(pdev, 0);
-> > > -					if (pp->msi_irq < 0)
-> > > -						return pp->msi_irq;
-> > > +			if (!pp->msi_irq[0]) {
-> > > +				int irq = platform_get_irq_byname_optional(pdev, "msi");
-> > > +
-> > > +				if (irq < 0) {
-> > > +					irq = platform_get_irq(pdev, 0);
-> > > +					if (irq < 0)
-> > > +						return irq;
-> > >   				}
-> > > +				pp->msi_irq[0] = irq;
-> > >   			}
-> > >   			pp->msi_irq_chip = &dw_pci_msi_bottom_irq_chip;
-> > > @@ -383,10 +388,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >   			if (ret)
-> > >   				return ret;
-> > > -			if (pp->msi_irq > 0)
-> > > -				irq_set_chained_handler_and_data(pp->msi_irq,
-> > > -							    dw_chained_msi_isr,
-> > > -							    pp);
-> > > +			for (ctrl = 0; ctrl < num_ctrls; ctrl++)
-> > > +				if (pp->msi_irq[ctrl] > 0)
-> > > +					irq_set_chained_handler_and_data(pp->msi_irq[ctrl],
-> > > +									 dw_chained_msi_isr,
-> > > +									 pp);
-> > >   			ret = dma_set_mask(pci->dev, DMA_BIT_MASK(32));
-> > >   			if (ret)
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index 7d6e9b7576be..9c1a38b0a6b3 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -187,7 +187,7 @@ struct pcie_port {
-> > >   	u32			io_size;
-> > >   	int			irq;
-> > >   	const struct dw_pcie_host_ops *ops;
-> > > -	int			msi_irq;
-> > > +	int			msi_irq[MAX_MSI_CTRLS];
-> > >   	struct irq_domain	*irq_domain;
-> > >   	struct irq_domain	*msi_domain;
-> > >   	u16			msi_msg;
-> > > diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
-> > > index 1ac29a6eef22..297e6e926c00 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-keembay.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-keembay.c
-> > > @@ -338,7 +338,7 @@ static int keembay_pcie_add_pcie_port(struct keembay_pcie *pcie,
-> > >   	int ret;
-> > >   	pp->ops = &keembay_pcie_host_ops;
-> > > -	pp->msi_irq = -ENODEV;
-> > > +	pp->msi_irq[0] = -ENODEV;
-> > >   	ret = keembay_pcie_setup_msi_irq(pcie);
-> > >   	if (ret)
-> > > diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
-> > > index 1569e82b5568..cc7776833810 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-spear13xx.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
-> > > @@ -172,7 +172,7 @@ static int spear13xx_add_pcie_port(struct spear13xx_pcie *spear13xx_pcie,
-> > >   	}
-> > >   	pp->ops = &spear13xx_pcie_host_ops;
-> > > -	pp->msi_irq = -ENODEV;
-> > > +	pp->msi_irq[0] = -ENODEV;
-> > >   	ret = dw_pcie_host_init(pp);
-> > >   	if (ret) {
-> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > index b1b5f836a806..e75712db85b0 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > @@ -2271,7 +2271,7 @@ static void tegra194_pcie_shutdown(struct platform_device *pdev)
-> > >   	disable_irq(pcie->pci.pp.irq);
-> > >   	if (IS_ENABLED(CONFIG_PCI_MSI))
-> > > -		disable_irq(pcie->pci.pp.msi_irq);
-> > > +		disable_irq(pcie->pci.pp.msi_irq[0]);
-> > >   	tegra194_pcie_pme_turnoff(pcie);
-> > >   	tegra_pcie_unconfig_controller(pcie);
-> > > -- 
-> > > 2.35.1
-> > > 
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+SGV5IGFsbCwNCklzIHRoZXJlIGFueXRoaW5nIHlvdSBuZWVkIGZyb20gdXMgb24gdGhpcyBwYXRj
+aD8NClRoYW5rcywNCkNvbm9yDQoNCk9uIDA1LzA0LzIwMjIgMTI6MTcsIGRhaXJlLm1jbmFtYXJh
+QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+IEZyb206IERhaXJlIE1jTmFtYXJhIDxkYWlyZS5tY25h
+bWFyYUBtaWNyb2NoaXAuY29tPg0KPiANCj4gQ2xlYXIgTVNJIGJpdCBpbiBJU1RBVFVTIHJlZ2lz
+dGVyIGFmdGVyIHJlYWRpbmcgaXQgYmVmb3JlDQo+IGhhbmRsaW5nIGluZGl2aWR1YWwgTVNJIGJp
+dHMNCj4gDQo+IFRoaXMgZml4ZXMgYSBwb3RlbnRpYWwgcmFjZSBjb25kaXRpb24gcG9pbnRlZCBv
+dXQgYnkgQmpvcm4gSGVsZ2FhczoNCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtcGNp
+LzIwMjIwMTI3MjAyMDAwLkdBMTI2MzM1QGJoZWxnYWFzLw0KPiANCj4gRml4ZXM6IDZmMTVhOWM5
+Zjk0MSAoIlBDSTogbWljcm9jaGlwOiBBZGQgTWljcm9jaGlwIFBvbGFyRmlyZSBQQ0llIGNvbnRy
+b2xsZXIgZHJpdmVyIikNCj4gU2lnbmVkLW9mZi1ieTogRGFpcmUgTWNOYW1hcmEgPGRhaXJlLm1j
+bmFtYXJhQG1pY3JvY2hpcC5jb20+DQo+IC0tLQ0KPiBBZGRpbmcgbGludXgtcGNpIG1haWxpbmcg
+bGlzdA0KPiAgIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1taWNyb2NoaXAtaG9zdC5jIHwg
+NiArLS0tLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDUgZGVsZXRpb25z
+KC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1pY3Jv
+Y2hpcC1ob3N0LmMgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWljcm9jaGlwLWhvc3Qu
+Yw0KPiBpbmRleCAyOWQ4ZTgxZTQxODEuLmRhOGUzZmRjOTdiMyAxMDA2NDQNCj4gLS0tIGEvZHJp
+dmVycy9wY2kvY29udHJvbGxlci9wY2llLW1pY3JvY2hpcC1ob3N0LmMNCj4gKysrIGIvZHJpdmVy
+cy9wY2kvY29udHJvbGxlci9wY2llLW1pY3JvY2hpcC1ob3N0LmMNCj4gQEAgLTQxNiw2ICs0MTYs
+NyBAQCBzdGF0aWMgdm9pZCBtY19oYW5kbGVfbXNpKHN0cnVjdCBpcnFfZGVzYyAqZGVzYykNCj4g
+ICANCj4gICAJc3RhdHVzID0gcmVhZGxfcmVsYXhlZChicmlkZ2VfYmFzZV9hZGRyICsgSVNUQVRV
+U19MT0NBTCk7DQo+ICAgCWlmIChzdGF0dXMgJiBQTV9NU0lfSU5UX01TSV9NQVNLKSB7DQo+ICsJ
+CXdyaXRlbF9yZWxheGVkKHN0YXR1cyAmIFBNX01TSV9JTlRfTVNJX01BU0ssIGJyaWRnZV9iYXNl
+X2FkZHIgKyBJU1RBVFVTX0xPQ0FMKTsNCj4gICAJCXN0YXR1cyA9IHJlYWRsX3JlbGF4ZWQoYnJp
+ZGdlX2Jhc2VfYWRkciArIElTVEFUVVNfTVNJKTsNCj4gICAJCWZvcl9lYWNoX3NldF9iaXQoYml0
+LCAmc3RhdHVzLCBtc2ktPm51bV92ZWN0b3JzKSB7DQo+ICAgCQkJcmV0ID0gZ2VuZXJpY19oYW5k
+bGVfZG9tYWluX2lycShtc2ktPmRldl9kb21haW4sIGJpdCk7DQo+IEBAIC00MzIsMTMgKzQzMyw4
+IEBAIHN0YXRpYyB2b2lkIG1jX21zaV9ib3R0b21faXJxX2FjayhzdHJ1Y3QgaXJxX2RhdGEgKmRh
+dGEpDQo+ICAgCXZvaWQgX19pb21lbSAqYnJpZGdlX2Jhc2VfYWRkciA9DQo+ICAgCQlwb3J0LT5h
+eGlfYmFzZV9hZGRyICsgTUNfUENJRV9CUklER0VfQUREUjsNCj4gICAJdTMyIGJpdHBvcyA9IGRh
+dGEtPmh3aXJxOw0KPiAtCXVuc2lnbmVkIGxvbmcgc3RhdHVzOw0KPiAgIA0KPiAgIAl3cml0ZWxf
+cmVsYXhlZChCSVQoYml0cG9zKSwgYnJpZGdlX2Jhc2VfYWRkciArIElTVEFUVVNfTVNJKTsNCj4g
+LQlzdGF0dXMgPSByZWFkbF9yZWxheGVkKGJyaWRnZV9iYXNlX2FkZHIgKyBJU1RBVFVTX01TSSk7
+DQo+IC0JaWYgKCFzdGF0dXMpDQo+IC0JCXdyaXRlbF9yZWxheGVkKEJJVChQTV9NU0lfSU5UX01T
+SV9TSElGVCksDQo+IC0JCQkgICAgICAgYnJpZGdlX2Jhc2VfYWRkciArIElTVEFUVVNfTE9DQUwp
+Ow0KPiAgIH0NCj4gICANCj4gICBzdGF0aWMgdm9pZCBtY19jb21wb3NlX21zaV9tc2coc3RydWN0
+IGlycV9kYXRhICpkYXRhLCBzdHJ1Y3QgbXNpX21zZyAqbXNnKQ0KDQo=
