@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B28535132BE
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 13:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B757D5132AE
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 13:42:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243679AbiD1Lox (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 07:44:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
+        id S231552AbiD1Lo5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 07:44:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345730AbiD1Lor (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 07:44:47 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB4567D34
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:41:18 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id x33so8145365lfu.1
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:41:18 -0700 (PDT)
+        with ESMTP id S1345701AbiD1Los (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 07:44:48 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A864168327
+        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:41:19 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id bu29so8183511lfb.0
+        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 04:41:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nRWaeEiW/QVUz3fZlrexDEL8l27tmCvqK5tlRWI308w=;
-        b=itCxdb77MCR/EjKYnX5efwXx0Y88f8ihVWdSauBaK+99KBjk/JUTR8J4OHTSeYnG9L
-         WNmiZBMO9vCCfTuSiDj8CG50aJwQuBBAw17LtBKa2pJwatmfmd8BIes63cvUi6jW+8mi
-         xxYWlaUftwVcysWbFg+vlybFSuVoaHXoeaPrvLDN2HRpsCT205yxlWK9WMUg1udGR1bl
-         i3lhnIdHmkRyNtbA1eizCjGl0xNC99xewVuPdsIgO3UGjBk+09zvX4kHPyQo2gS1QGTR
-         4HVv9cbOXbbQ6iMjzO2SrTQ/i7gGyaONQ31BcYW+Lv1CaFGjMyAUTviFKnYOBNcYpEdL
-         HFQQ==
+        bh=/QSONSEpjxrPZtFb9gmtNnByfU6eZhR98/Jc/QyZERA=;
+        b=WgHfnJZW2T7FGBV601uUbbJgno5r9Lxi+hIvfua+TPmSYONX+PWUcLMcaL4mGkel44
+         3f0ApL0J19WoHscvvuVCvALudbggu3QS3Rj8uPPicySA2InUrxFvikyhEKVI+ehod/IL
+         xmQqGf0WpK7TocarfConpzwJTHOt8oP3QIyv+qAep1L17sRXwq8QET+x+y1gug4c0gmH
+         +ATqSODrcG+zIa2xX8Yrhvex6fAdd+mvQSbY1H1bRcRzeTRO8KyNIYoWYepntwIeKV7+
+         7v7BfrwsKuz6yhpRI8ilbwlE6IgFJpP/dNgwUpuPoJaqGEDkHVCAmvf0cbYznBKuRBmV
+         ThQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nRWaeEiW/QVUz3fZlrexDEL8l27tmCvqK5tlRWI308w=;
-        b=UoYgz1oBqXVgI7V8djKP3nKp8EamWf71bdvsY2NcGYxDnNNF/RiTlvwhD+lkG3fwbj
-         gUEu2IhxUQXoI24B6a43vAlqnvaaLdhRtTf+UDK9XycT4HIvh3J+Mu9rFHlcRYh8z0IG
-         1T2pVdge+e6S3LlJwUeOk6jOX3pxjoAeUR5QErJMw4SZ81UcznL/REkzXLSuK/ksc3Jm
-         p77vunFRlEt2f3vsNosx24qFC+ROrKb2bK4UErQ4noxll1iuwYW1rudj20W41mVB+Pus
-         trJ50nTm94XgtOCO+yjW5XsXLEEB2/iH22Pk+UBpuCiOFUVnTbZA05puoAEPOu3TCMiO
-         6pOA==
-X-Gm-Message-State: AOAM530Sn2jrtG/vdtqWhyzM5A48OK0zBiSuF4HBy6pP41jBSXFaJwln
-        2zAd18AVh2JibT7KLDdgTkC/Tw==
-X-Google-Smtp-Source: ABdhPJweIETiQxq/8CVvHAimLaUu0fN6GR7HwW0uC5Scq7Edc6ELZYP+eSICLGb7GQaNRfAc6Py45A==
-X-Received: by 2002:a05:6512:25a4:b0:471:fbe9:8893 with SMTP id bf36-20020a05651225a400b00471fbe98893mr17641999lfb.147.1651146076757;
-        Thu, 28 Apr 2022 04:41:16 -0700 (PDT)
+        bh=/QSONSEpjxrPZtFb9gmtNnByfU6eZhR98/Jc/QyZERA=;
+        b=SFGCdIiqgiVelBktNMZ32EmBHApnk3Ywi0T9BoM6HxZnHxQGiUS4UBaQ0/3pX3YvUR
+         ETWMYZHGTdu7CoQXTXc3K1F0KcCVNVaooGUdXGih1RNgL/hsmnrjqWbJ7NSMtzPVAWey
+         ytjHX5Kil7awNpS9/prIwqPoOYYmPinynX/HKCghQmd5CE9XtZ6PQOdzO+xPcxtWaGzE
+         J56CEc85TKYHKsqzoMVcpxVj9Fj9g2qxvUHVpzoLdPDTsYkzmC1UZqoP3CVrht1zF9e8
+         o5MURGHsnwAV4x86M7e/2jNQN83YU/oBQxELPs9KGnng3JEjaGGtNtsCScUf8RFR+G+X
+         BhfA==
+X-Gm-Message-State: AOAM533Z3CtVYSFL5Otl+ioqtKiv6KNpFo7RSVTsohHJSQDffCj2DlJM
+        4NziJbwFqMLMXGGi/QPrqAheIg==
+X-Google-Smtp-Source: ABdhPJwdXa+qlYDE8Y/a/HDiCzjlWOJpUqVG3mCRzHu0lGE3wEyv3QZg4u0GCxkYtK1svHoBRT3dvA==
+X-Received: by 2002:a05:6512:5c6:b0:472:9a4:9382 with SMTP id o6-20020a05651205c600b0047209a49382mr13077933lfo.333.1651146077583;
+        Thu, 28 Apr 2022 04:41:17 -0700 (PDT)
 Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id bu39-20020a05651216a700b004484a8cf5f8sm2338790lfb.302.2022.04.28.04.41.15
+        by smtp.gmail.com with ESMTPSA id bu39-20020a05651216a700b004484a8cf5f8sm2338790lfb.302.2022.04.28.04.41.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Apr 2022 04:41:16 -0700 (PDT)
+        Thu, 28 Apr 2022 04:41:17 -0700 (PDT)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -61,9 +61,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 2/8] dt-bindings: pci/qcom,pcie: resets are not defined for msm8996
-Date:   Thu, 28 Apr 2022 14:41:07 +0300
-Message-Id: <20220428114113.3411536-3-dmitry.baryshkov@linaro.org>
+Subject: [PATCH v4 3/8] dt-bindings: pci/qcom-pcie: specify reg-names explicitly
+Date:   Thu, 28 Apr 2022 14:41:08 +0300
+Message-Id: <20220428114113.3411536-4-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220428114113.3411536-1-dmitry.baryshkov@linaro.org>
 References: <20220428114113.3411536-1-dmitry.baryshkov@linaro.org>
@@ -79,48 +79,127 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On MSM8996/APQ8096 platforms the PCIe controller doesn't have any
-resets. So move the requirement stance under the corresponding if
-condition.
+Instead of specifying the enum of possible reg-names, specify them
+explicitly. This allows us to specify which chipsets need the "atu"
+regions, which do not. Also it clearly describes which platforms
+enumerate PCIe cores using the dbi region and which use parf region for
+that.
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- .../devicetree/bindings/pci/qcom,pcie.yaml         | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 91 +++++++++++++++++--
+ 1 file changed, 84 insertions(+), 7 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 16f765e96128..ce4f53cdaba0 100644
+index ce4f53cdaba0..e91ae436cafe 100644
 --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -114,8 +114,6 @@ required:
-   - interrupt-map
-   - clocks
-   - clock-names
--  - resets
--  - reset-names
+@@ -40,13 +40,6 @@ properties:
+   reg-names:
+     minItems: 4
+     maxItems: 5
+-    items:
+-      enum:
+-        - parf # Qualcomm specific registers
+-        - dbi # DesignWare PCIe registers
+-        - elbi # External local bus interface registers
+-        - config # PCIe configuration space
+-        - atu # ATU address space (optional)
+ 
+   interrupts:
+     maxItems: 1
+@@ -117,6 +110,90 @@ required:
  
  allOf:
    - $ref: /schemas/pci/pci-bus.yaml#
-@@ -504,6 +502,18 @@ allOf:
-       required:
-         - power-domains
- 
 +  - if:
-+      not:
-+        properties:
-+          compatibles:
-+            contains:
-+              enum:
-+                - qcom,pcie-msm8996
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-apq8064
++              - qcom,pcie-ipq4019
++              - qcom,pcie-ipq8064
++              - qcom,pcie-ipq8064v2
++              - qcom,pcie-ipq8074
++              - qcom,pcie-qcs404
 +    then:
-+      required:
-+        - resets
-+        - reset-names
++      properties:
++        reg:
++          minItems: 4
++          maxItems: 4
++        reg-names:
++          items:
++            - const: dbi # DesignWare PCIe registers
++            - const: elbi # External local bus interface registers
++            - const: parf # Qualcomm specific registers
++            - const: config # PCIe configuration space
 +
- unevaluatedProperties: false
- 
- examples:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-ipq6018
++    then:
++      properties:
++        reg:
++          minItems: 5
++          maxItems: 5
++        reg-names:
++          items:
++            - const: dbi # DesignWare PCIe registers
++            - const: elbi # External local bus interface registers
++            - const: atu # ATU address space
++            - const: parf # Qualcomm specific registers
++            - const: config # PCIe configuration space
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-apq8084
++              - qcom,pcie-msm8996
++              - qcom,pcie-sdm845
++    then:
++      properties:
++        reg:
++          minItems: 4
++          maxItems: 4
++        reg-names:
++          items:
++            - const: parf # Qualcomm specific registers
++            - const: dbi # DesignWare PCIe registers
++            - const: elbi # External local bus interface registers
++            - const: config # PCIe configuration space
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-sc8180x
++              - qcom,pcie-sm8250
++              - qcom,pcie-sm8450-pcie0
++              - qcom,pcie-sm8450-pcie1
++    then:
++      properties:
++        reg:
++          minItems: 5
++          maxItems: 5
++        reg-names:
++          items:
++            - const: parf # Qualcomm specific registers
++            - const: dbi # DesignWare PCIe registers
++            - const: elbi # External local bus interface registers
++            - const: atu # ATU address space
++            - const: config # PCIe configuration space
++
+   - if:
+       properties:
+         compatible:
 -- 
 2.35.1
 
