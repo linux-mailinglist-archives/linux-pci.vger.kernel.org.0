@@ -2,137 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3086C5137EC
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 17:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9042A513800
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 17:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345202AbiD1PTc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 11:19:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41586 "EHLO
+        id S1348946AbiD1PTx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 11:19:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235574AbiD1PTb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 11:19:31 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B6AAC06C;
-        Thu, 28 Apr 2022 08:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1651158977; x=1682694977;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yBA1rD83j32/lUm21bHTwXjYDtjFJVAFJsl4qYp5/TI=;
-  b=HPLmcWOcK7rjpXQPA0tbR3saXHoZQIgsE+HQdWWI6dDrIFzTf8RnjWA/
-   WspvY1KWTsgaCyOhDgFFXd71Ljj7Ja0IS1hLfvjeLRhgGLiH3TxWUiZTl
-   vFRh4XH4xQ1dMCracz2pZEJqE54AyYre6N5E2eY6x3nXW0H8vihiC8LZH
-   w=;
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 28 Apr 2022 08:16:17 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 08:16:16 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Thu, 28 Apr 2022 08:15:35 -0700
-Received: from [10.226.58.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Thu, 28 Apr
- 2022 08:15:34 -0700
-Message-ID: <8303e362-417a-6649-0cb3-f67d676ba163@quicinc.com>
-Date:   Thu, 28 Apr 2022 09:15:34 -0600
+        with ESMTP id S1348948AbiD1PTx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 11:19:53 -0400
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A5BAF1F7;
+        Thu, 28 Apr 2022 08:16:36 -0700 (PDT)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPA id 3D035E0002;
+        Thu, 28 Apr 2022 15:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1651158995;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Xx4++H4H07qRaFWCLXjPyhd8z07yHU6qu47SxPJ2nTk=;
+        b=bRWuHYKpBmXDLWGTmxrKlbl0K8wnqqcDg9rtbyuOds0h5kSdlI/HLfObWrUQjiOOj7pWS/
+        IrxKrfQuxtxIrBbZmTtTfSZ+CJer8Ssv1y/QzxCCQ6ZWq5u+2IjDoQnyrdp7dWS49tYLFr
+        hvIH7vcXyraNVABqvZf3JRMBIn1yLP5qdbhV96fjuOuR9xORhRJjk2MNGdbvGoEQuTU6hJ
+        hnx1XPL0jvZX6yIAJWSRIclfd14jx23psIM2F66FvdtGAZ936iEXZuFEFnROCyHF0oozp5
+        92LnUnetlULaN1FMCGQN7YGmlJpYwLHlR0g7HEAzx306utmfi2CcwCR7cE8d5Q==
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v4 0/6] RZN1 USB Host support
+Date:   Thu, 28 Apr 2022 17:16:24 +0200
+Message-Id: <20220428151630.586009-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH] PCI: hv: Fix hv_arch_irq_unmask() for multi-MSI
-Content-Language: en-US
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <decui@microsoft.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <bjorn.andersson@linaro.org>,
-        <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1651068453-29588-1-git-send-email-quic_jhugo@quicinc.com>
- <20220428145824.kp4p5qacgnncsxls@liuwe-devbox-debian-v2>
- <dec6b3a9-e988-aa10-817c-21f2d45194c9@quicinc.com>
- <20220428150819.xwiqqdhgrgrxcstf@liuwe-devbox-debian-v2>
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20220428150819.xwiqqdhgrgrxcstf@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/28/2022 9:08 AM, Wei Liu wrote:
-> On Thu, Apr 28, 2022 at 09:06:42AM -0600, Jeffrey Hugo wrote:
->> On 4/28/2022 8:58 AM, Wei Liu wrote:
->>> On Wed, Apr 27, 2022 at 08:07:33AM -0600, Jeffrey Hugo wrote:
->>>> In the multi-MSI case, hv_arch_irq_unmask() will only operate on the first
->>>> MSI of the N allocated.  This is because only the first msi_desc is cached
->>>> and it is shared by all the MSIs of the multi-MSI block.  This means that
->>>> hv_arch_irq_unmask() gets the correct address, but the wrong data (always
->>>> 0).
->>>>
->>>> This can break MSIs.
->>>>
->>>> Lets assume MSI0 is vector 34 on CPU0, and MSI1 is vector 33 on CPU0.
->>>>
->>>> hv_arch_irq_unmask() is called on MSI0.  It uses a hypercall to configure
->>>> the MSI address and data (0) to vector 34 of CPU0.  This is correct.  Then
->>>> hv_arch_irq_unmask is called on MSI1.  It uses another hypercall to
->>>> configure the MSI address and data (0) to vector 33 of CPU0.  This is
->>>> wrong, and results in both MSI0 and MSI1 being routed to vector 33.  Linux
->>>> will observe extra instances of MSI1 and no instances of MSI0 despite the
->>>> endpoint device behaving correctly.
->>>>
->>>> For the multi-MSI case, we need unique address and data info for each MSI,
->>>> but the cached msi_desc does not provide that.  However, that information
->>>> can be gotten from the int_desc cached in the chip_data by
->>>> compose_msi_msg().  Fix the multi-MSI case to use that cached information
->>>> instead.  Since hv_set_msi_entry_from_desc() is no longer applicable,
->>>> remove it.
->>>>
->>>> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
->>>> ---
->>>>    drivers/pci/controller/pci-hyperv.c | 12 ++++--------
->>>>    1 file changed, 4 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
->>>> index 5800ecf..7aea0b7 100644
->>>> --- a/drivers/pci/controller/pci-hyperv.c
->>>> +++ b/drivers/pci/controller/pci-hyperv.c
->>>> @@ -611,13 +611,6 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
->>>>    	return cfg->vector;
->>>>    }
->>>> -static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
->>>> -				       struct msi_desc *msi_desc)
->>>> -{
->>>> -	msi_entry->address.as_uint32 = msi_desc->msg.address_lo;
->>>> -	msi_entry->data.as_uint32 = msi_desc->msg.data;
->>>> -}
->>>> -
->>>
->>> Instead of dropping this function, can you change the second argument to
->>> take struct tran_int_desc *?
->>>
->>> This way you can use the same function in hv_compose_msi_msg.
->>
->> I do not see how this could be reused in hv_compose_msi_msg() with the
->> proposed change of the second argument.  The hv_msi_entry type is not used
->> in hv_compose_msi_msg(), nor does it look like it is applicable anywhere
->> within the function.
->>
->> What am I missing?
-> 
-> I mixed up two different types while going through the code --
-> hv_msi_entry and Linux's own msi_entry type. Sorry for the noise.
+Hi,
 
-No problem.  Thanks for picking this up.
+This series add support for the USB Host controllers available on
+RZN1 (r9a06g032) SOC.
+
+These USB Host controllers are PCI OHCI/EHCI controllers located
+behind a bridge.
+
+Regards,
+Herve
+
+Changes v2:
+- Convert bindings to json-schema
+- Update clocks description
+- Remove unneeded '.compatible = "renesas,pci-r9a06g032"'
+
+Changes v3:
+- Remove the unneeded patch that calls clk_bulk_prepare_enable()
+- Rework the device tree binding (conversion from .txt and RZ/N1 support)
+- Use the RZ/N1 SOCs family only in the driver match compatible string.
+- Enable PM and PM_GENERIC_DOMAIN for RZ/N1 and add the missing
+  '#power-domain-cells' in sysctrl node.
+
+Changes v4:
+- Remove patches related to PM enable and #pwower-domain-cells as they
+  will be handle out of this series.
+- Add Bob's reviewed-by on patch 1
+- Add Geert's reviewed by on patch 1 and 6
+- Rename clocks and make the 'resets' property optional on RZ/N1 family
+- Reword some commit logs and titles
+- Fix dst node location (sort by node names or unit addresses)
+- Fix the USB PHY node name
+
+
+Herve Codina (6):
+  dt-bindings: PCI: pci-rcar-gen2: Convert bindings to json-schema
+  dt-bindings: PCI: renesas,pci-rcar-gen2: Add device tree support for
+    r9a06g032
+  PCI: rcar-gen2: Add RZ/N1 SOCs family compatible string
+  ARM: dts: r9a06g032: Add internal PCI bridge node
+  ARM: dts: r9a06g032: Add USB PHY DT support
+  ARM: dts: r9a06g032: Link the PCI USB devices to the USB PHY
+
+ .../devicetree/bindings/pci/pci-rcar-gen2.txt |  84 --------
+ .../bindings/pci/renesas,pci-rcar-gen2.yaml   | 188 ++++++++++++++++++
+ arch/arm/boot/dts/r9a06g032.dtsi              |  47 +++++
+ drivers/pci/controller/pci-rcar-gen2.c        |   1 +
+ 4 files changed, 236 insertions(+), 84 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
+
+-- 
+2.35.1
+
