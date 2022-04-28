@@ -2,63 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8308D512BB6
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 08:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEB23512CBA
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 09:26:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244176AbiD1Gku (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 02:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49942 "EHLO
+        id S245320AbiD1H30 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 03:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243562AbiD1Gkt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 02:40:49 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A35897BBC
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 23:37:34 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id i27so7530995ejd.9
-        for <linux-pci@vger.kernel.org>; Wed, 27 Apr 2022 23:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=vQuJemEQZtOClpOcehCv8HwJ99NWWFLzVezPd8GOsHU=;
-        b=SQfA/qWnxaXhMdzN8fwO8LJSkhrZCgPApUc0W26KbVtHa1/bbo0ViFX+ofQKfo+5K/
-         DFVWIQYwoenoZq+bVHlU6015EMsluuxImU3vbKX1j71idFjW61GaANiq9LKtROHzWGE0
-         IH1XbG4wXxRNEv1zby59TG+Wqh1myUW5SPt3BPOQAAbxcOHXK4yIzZl0B5qEUCZmSSbf
-         PJnKcvbwbmDhH/eRu9KMo+Fxz7IpZAKy7jC484/zJ0N2Lgka0SLfQBdc2yUgfqRy+8RJ
-         74O33hF9OKmq0x/p5VikCLJbyKvxOhqn2heymD7ZFkT8DD0voR6Rmn/b3KViDePpg6Gf
-         dbrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=vQuJemEQZtOClpOcehCv8HwJ99NWWFLzVezPd8GOsHU=;
-        b=JLtc8QuNa2EvSvEO/MO1A0p1umlpNmlOM5BXT/8o1EgLQsKH9VWku4TTlFxntcbhQx
-         1F41NXOfZfc48yX19bbHOTeblpugdFenDyDS29mBdFW6AxfKCksDMN0xnVB8/jGhlVDG
-         f08f6KhKxVEzgLy4OD1PqlpvEhNr8JgurhVS7aIU5R807fA/9p3LWCvLh+lPtBiEbPaV
-         6hTxfFqe7npiDED9PnovfMwqy6Jq8VyxTy17nXkfCQ+12MB9uG9z+iASRXcCh96sb/Pa
-         fbH4zpxDiRCDg0NikVcwpg8wXrB+N8y15qfYbWgqsJqjCk9U3GBOf1pWRfaJhyiMW5vo
-         bXiQ==
-X-Gm-Message-State: AOAM530hrynwGVFDzC5qsZNkQySmK7eGO+9MwiJPNiHi72lntTH9rfmd
-        HEWK62PvAkmbwxD+mlE9pwBC0g==
-X-Google-Smtp-Source: ABdhPJwIDG6JJQkX2j+dOnGWCEo3T5++ulatebavZxvudL1ZgszkW2TlVKRE4wi1f/ha07iHzj1kJQ==
-X-Received: by 2002:a17:907:9482:b0:6da:8ad6:c8b5 with SMTP id dm2-20020a170907948200b006da8ad6c8b5mr29709648ejc.372.1651127853141;
-        Wed, 27 Apr 2022 23:37:33 -0700 (PDT)
-Received: from [192.168.0.159] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id u10-20020a1709060b0a00b006f38412b2d0sm6224668ejg.171.2022.04.27.23.37.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Apr 2022 23:37:32 -0700 (PDT)
-Message-ID: <ea6ccec6-81a3-b22d-46db-c31a9f1e85f3@linaro.org>
-Date:   Thu, 28 Apr 2022 08:37:31 +0200
+        with ESMTP id S245284AbiD1H3Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 03:29:24 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27C2340C9;
+        Thu, 28 Apr 2022 00:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1651130723;
+        bh=Kl1D0qKBLbFcGmM/inCOM/LMhQnD3kUx2fRwBIfJFbY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=ICgj3U0KsWCdSyk+4KTl7+UbbH7ZgeuOkjZprYn96+3lI1AwcRvsBXO6wd+8qZwPn
+         OoIxHHuNiq00mTWpDdxVNnQJovYajWGc5SsfcuWwvgRNldnbn6R5FYiuIV/k+QG89n
+         mi1e9wXTuqQiOIvz8GUyBD6Pzj3qw9SOqaQH/XoM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.145.42] ([217.61.145.42]) by web-mail.gmx.net
+ (3c-app-gmx-bs20.server.lan [172.19.170.72]) (via HTTP); Thu, 28 Apr 2022
+ 09:25:23 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [RFC/RFT v2 05/11] dt-bindings: pci: add bifurcation option to
- Rockchip DesignWare binding
-Content-Language: en-US
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-rockchip@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
+Message-ID: <trinity-fcca248f-cb76-474a-8227-5b7188140bdf-1651130723782@3c-app-gmx-bs20>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        linux-rockchip@lists.infradead.org,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -66,7 +38,7 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Johan Jonker <jbx6244@gmail.com>,
         Peter Geis <pgwipeout@gmail.com>,
@@ -74,46 +46,82 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-phy@lists.infradead.org
+Subject: Aw: Re: [RFC/RFT v2 05/11] dt-bindings: pci: add bifurcation option
+ to Rockchip DesignWare binding
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 28 Apr 2022 09:25:23 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <ea6ccec6-81a3-b22d-46db-c31a9f1e85f3@linaro.org>
 References: <20220426132139.26761-1-linux@fw-web.de>
  <20220426132139.26761-6-linux@fw-web.de>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220426132139.26761-6-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+ <ea6ccec6-81a3-b22d-46db-c31a9f1e85f3@linaro.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:HuS/IQbWns2B9KbVmd+JXXePQOBTI5r+4oLrCZnL6JqsyIeqTqsBN/vkAMd357JlnYgtg
+ 43YoCUDaepjA+gR16+vK2qsTsr2Ggk+GAdPHRIuTT25wO9OaXXFxzSpRFegBlZVrQWK5MXoEqjar
+ iAZeNn9SgywJLlkDgT8y3fRThCDpGCk0BET0WAB96yokouxCOXHKnW6UZMTKzC+794JlErXjecwE
+ nOvCkWakPUTT8Eb4neasYEGg6txE7h/DJplgMSgezg5PWQ445EzyGytjG9rvZ2t5gA53hlGPPTCu
+ CQ=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+DhlrGzejX0=:H7ejG4ksVlR2OD+2AK78pX
+ NEn5mlQjnBf4smxMBlFQljTTDT4W3WRU9Ox9sJ9xtSepQmURcyZ9dmRz33TNfj4pKUQQnPHR2
+ vJnr0pZHyzisgYrhozVIiPpQqDuK2Bm1g6wmUJEqNtkyvZMY1dJt50oY03g5hDHAh2Z68clXs
+ DEdgI9Q/rkGwXhaXXcmeWNR/yePzdnuglPIrJEqnIHu+WgpAcGYOT33sD8fxQOTKuGAhFUqVt
+ LGWzfBaGSHbQ7IAtL1cp5Os9cpbM5CWuUNUywoyNUW1mdZg6EO+tuRk8H/X0m3DgcfVfTFV5y
+ cdPM7M2+up0OIiVi1YuXUDrlfvppcNs5wmn5N/G5Mfoso5J3BnSqaAqu5IqW1MIkTFmZGnKHa
+ Otv3ngNV4/PnY0rspfKTYZBgtwvuFKESVSOjs/lbachHn9LL2mmrmjqiwmxlqPwDQq6W2mMFj
+ 2G5UtIxST1Y+5IHo0OXbSF0FwTXVwj2xMOBMDnDDUvGazu2xqLQFng8dzLnoGzVRr+m/srdOe
+ VCKBW4yNmX6U7tZ6W98QE14hn0R3gL4mWd6fSv9VGrE/O3HWP7rotqrVcDnMJ77F51RbKfNqP
+ JGdLo6lSN+nH7fuKzXYoDWU6JZD6FzyP72acErlUg0aLbF3UMNr+zZl7cdp/284bXNlZL5dLr
+ Fv6ERQriyiaZQ3BjuTQXJE5gIAslsj3d81qC8t6yyYFfqDWY+1bGH+38N9CmUIJixJkboSc4C
+ Mfqgom7Fv+w2Sh75SuR8v4crb79c6PkMGRAqpOJ8pdoZpebtchSZP90ENTVBfg3f5Enz/F/N4
+ 0aXBOMR
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 26/04/2022 15:21, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Add bifurcation property for splitting PCIe lanes.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> index bc0a9d1db750..a992970e8b85 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> @@ -74,6 +74,8 @@ properties:
->    reset-names:
->      const: pipe
->  
-> +  bifurcation: true
-> +
+Hi
+> Gesendet: Donnerstag, 28. April 2022 um 08:37 Uhr
+> Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+> On 26/04/2022 15:21, Frank Wunderlich wrote:
+> > From: Frank Wunderlich <frank-w@public-files.de>
+> >
+> > Add bifurcation property for splitting PCIe lanes.
+> >
+> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> > ---
+> >  Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.ya=
+ml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+> > index bc0a9d1db750..a992970e8b85 100644
+> > --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+> > @@ -74,6 +74,8 @@ properties:
+> >    reset-names:
+> >      const: pipe
+> >
+> > +  bifurcation: true
+> > +
+>
+> Does not look like standard property. Is it already defined somewhere?
+> All non-standard properties need vendor, type and description.
 
-Does not look like standard property. Is it already defined somewhere?
-All non-standard properties need vendor, type and description.
+have removed vendor-prefix from v1>v2 based on suggestion this can be usef=
+ul for other vendors too.
 
+but last 3 patches of this series replacing bifurcation property (which is=
+ only bool) by the more useful lane-map (left alone for discussion, will b=
+e squashed if the right way is found).
 
-Best regards,
-Krzysztof
+i guess same here, description+type needed, but how to describe an array o=
+f int in yaml? do you know any examples?
+
+regards Frank
