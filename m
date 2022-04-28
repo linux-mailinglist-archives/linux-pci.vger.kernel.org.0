@@ -2,172 +2,467 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC6E951373B
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 16:45:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B44B513741
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 16:48:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348562AbiD1OtD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 10:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48778 "EHLO
+        id S234704AbiD1OvR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 10:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348552AbiD1OtD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 10:49:03 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45AC31DEB
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 07:45:45 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id j4so9043028lfh.8
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 07:45:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=RVE7bzP/xG8OR9YebvG0SaqOsmIhaNnTjipQbYslYP4=;
-        b=rdJrZazOpI13ax3blUu0TE6AS3OMwYw0Grgrz/e6n0eMsnIa95aDF5uTlwbeXcwyaC
-         +EDlJddwCcJVnjKcqBn4VUcGUzy34peWzbYvfWM/cNSBUmaw2dfYNU4kIZMZWnydI9tD
-         lRXpMSU+kckpVxpgo3khR0c2eidjr/9lulRVIDv5OETIKEEJE36hPE1gwl+vTz6FDs7Z
-         WyQqaRvqTr623a5mUOj3zCI9scOn+kJDoDxX6oS1XdrNVeHUPaliQP4n4hVLbzYlpBox
-         7YnctWgBpkhdsp+Mhz6l5MwMOpIpiiMvHnctC9Cw3+pUY0r8I1x+4Xi7NeC5QgOK743m
-         B/FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=RVE7bzP/xG8OR9YebvG0SaqOsmIhaNnTjipQbYslYP4=;
-        b=cnpsBq3kZa4hkUE0cQYeggwAr1r+ppiFx6ZcaNm1rI+3nhtcvZbYo9plISYGDHjKlI
-         72zcBz9mJJCyw4jo0VnmD1ddvN/s5VwLEXEMw7nQR4RjzU8ZgAzPo2Mc/gAkGSiF+Kzr
-         eYNpNAtl07hgeZv6mPRoo+D3JvcMaZgD50oHwQu6oXsUn29mTpUEze7VDDNQ+JY9ffGx
-         xZPUKdkJaIu3qeTVJWTy97AhfAG3hxUTM1/UW1uVhIVPeadQNWpUppTkKVd4znPrziW3
-         zOS48bZUDrFNecxpktmXG5f8H2HX6y650VqO+CTZry46IPmnVC5GmB/MsjyRIdEzmSG8
-         ESAQ==
-X-Gm-Message-State: AOAM532/YuL2CWCuWeiIOEIkFwgVA1PLglmYhHYtn0ROborMAQkvjfWm
-        y/PTfo6i1rPcsiXGSHIOHCkGwA==
-X-Google-Smtp-Source: ABdhPJwmsNhConIOCc5mietOAg9DDuZNeiuCIoVtunmtUPJsTcYL5QTkNcmjAp4JHHlnovDvnsiPhg==
-X-Received: by 2002:a05:6512:3207:b0:472:24d5:fbb0 with SMTP id d7-20020a056512320700b0047224d5fbb0mr7973276lfe.615.1651157143928;
-        Thu, 28 Apr 2022 07:45:43 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id u12-20020a056512128c00b00446499f855dsm20507lfs.78.2022.04.28.07.45.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Apr 2022 07:45:43 -0700 (PDT)
-Message-ID: <db2f32e1-beeb-b421-efaa-b68900d99559@linaro.org>
-Date:   Thu, 28 Apr 2022 17:45:42 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v4 6/7] dt-bindings: pci/qcom,pcie: support additional MSI
- interrupts
-Content-Language: en-GB
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        with ESMTP id S231773AbiD1OvQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 10:51:16 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CFCB0D12;
+        Thu, 28 Apr 2022 07:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651157281; x=1682693281;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6+8IBvhFxht3+3o1jN6x7624NVhd4E7nSa5XJA9XIto=;
+  b=MnXtsfjuKPo4I0vk8NroWQ/KYwwGMhcwsqW4RYzPdDMWYv5GKriIbffI
+   Ze7KxDPGK/gpm8GUCfAbjW0XFqUTN/6w+8R6dxrEicK+0o6VzojPG/dqa
+   qtGSN1s480DRueZraL1hk9WFbWm8qJ0UMH7EWGTdJbP6TRoTdYwSMtQxw
+   sLYg5THgoUa6SdPqoeAV1RxLJNkWzWUGQJzFzVWmS/gu9Kbe6OpBai57m
+   MiLk7Qrfq79PBG2tt3RLluKXI/OjdPM54f7288W4cosQnOa7BYrYjRxwz
+   VhkPZDv33jRB/rBjtvnSB2pszLTIg6IHSJoDKERq/AfKuMMZ3pJZBwiFF
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="248242960"
+X-IronPort-AV: E=Sophos;i="5.91,295,1647327600"; 
+   d="scan'208";a="248242960"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 07:48:00 -0700
+X-IronPort-AV: E=Sophos;i="5.91,295,1647327600"; 
+   d="scan'208";a="731506741"
+Received: from iweiny-server.sc.intel.com (HELO localhost) ([172.25.222.75])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 07:48:00 -0700
+Date:   Thu, 28 Apr 2022 07:48:00 -0700
+From:   ira.weiny@intel.com
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-References: <20220428115934.3414641-1-dmitry.baryshkov@linaro.org>
- <20220428115934.3414641-7-dmitry.baryshkov@linaro.org>
- <6bd8eb4e-81eb-7e87-155b-f48b487e16ae@linaro.org>
- <CAA8EJpq38EudVcb7quuk1u85Cw+hJADxagkV7rN7fP9A-fz-Wg@mail.gmail.com>
- <42588c32-5068-5f12-4cf8-f8b9bd074e88@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <42588c32-5068-5f12-4cf8-f8b9bd074e88@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 05/10] cxl/pci: Create DOE auxiliary driver
+Message-ID: <YmnOK12AKqo5CAmF@iweiny-server>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+ <20220414203237.2198665-6-ira.weiny@intel.com>
+ <20220427184345.000076b1@Huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220427184345.000076b1@Huawei.com>
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/04/2022 17:06, Krzysztof Kozlowski wrote:
-> On 28/04/2022 15:57, Dmitry Baryshkov wrote:
->> On Thu, 28 Apr 2022 at 15:08, Krzysztof Kozlowski
->> <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>> On 28/04/2022 13:59, Dmitry Baryshkov wrote:
->>>> On Qualcomm platforms each group of 32 MSI vectors is routed to the
->>>> separate GIC interrupt. Document mapping of additional interrupts.
->>>>
->>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>> ---
->>>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 51 ++++++++++++++++++-
->>>>   1 file changed, 50 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> index 0b69b12b849e..a8f99bca389e 100644
->>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>> @@ -43,11 +43,20 @@ properties:
->>>>       maxItems: 5
->>>>
->>>>     interrupts:
->>>> -    maxItems: 1
->>>> +    minItems: 1
->>>> +    maxItems: 8
->>>>
->>>>     interrupt-names:
->>>> +    minItems: 1
->>>>       items:
->>>>         - const: msi
->>>> +      - const: msi2
->>>> +      - const: msi3
->>>> +      - const: msi4
->>>> +      - const: msi5
->>>> +      - const: msi6
->>>> +      - const: msi7
->>>> +      - const: msi8
->>>>
->>>>     # Common definitions for clocks, clock-names and reset.
->>>>     # Platform constraints are described later.
->>>> @@ -623,6 +632,46 @@ allOf:
->>>>           - resets
->>>>           - reset-names
->>>>
->>>> +    # On newer chipsets support either 1 or 8 msi interrupts
->>>> +    # On older chipsets it's always 1 msi interrupt
->>>> +  - if:
->>>> +      properties:
->>>> +        compatibles:
->>>> +          contains:
->>>> +            enum:
->>>> +              - qcom,pcie-msm8996
->>>> +              - qcom,pcie-sc7280
->>>> +              - qcom,pcie-sc8180x
->>>> +              - qcom,pcie-sdm845
->>>> +              - qcom,pcie-sm8150
->>>> +              - qcom,pcie-sm8250
->>>> +              - qcom,pcie-sm8450-pcie0
->>>> +              - qcom,pcie-sm8450-pcie1
->>>> +    then:
->>>> +      oneOf:
->>>> +        - properties:
->>>> +            interrupts:
->>>> +              minItems: 1
->>>
->>> minItems should not be needed here and in places below, because it is
->>> equal to maxItems.
->>
->> Maybe it's a misunderstanding from my side. In the top level we have
->> the min = 1, max = 8.
->> How does that interfere with these entries? In other words, if we e.g.
->> omit minItems here, which setting would preveal: implicit minItems = 8
->> (from maxItems = 8) or minItems = 1 in the top level?
->>
->>>> +              maxItems: 1
+On Wed, Apr 27, 2022 at 06:43:45PM +0100, Jonathan Cameron wrote:
+> On Thu, 14 Apr 2022 13:32:32 -0700
+> ira.weiny@intel.com wrote:
 > 
-> I don't propose to skip it for the case with maxItems:8, but only here.
-> minItems:1 is set in toplevel. Where is that implicit minItems:8?
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > CXL kernel drivers optionally need to access DOE mailbox capabilities.
+> > Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
+> > the kernel while other access is designed towards user space usage.  An
+> > example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
+> > Compliance Mode DOE) which offers a mechanism to set different test
+> > modes for a device.
+> > 
+> > There is no anticipated need for the kernel to share an individual
+> > mailbox with user space.  Thus developing an interface to marshal access
+> > between the kernel and user space for a single mailbox is unnecessary
+> > overhead.  However, having the kernel relinquish some mailboxes to be
+> > controlled by user space is a reasonable compromise to share access to
+> > the device.
+> > 
+> > The auxiliary bus provides an elegant solution for this.  Each DOE
+> > capability is given its own auxiliary device.  This device is controlled
+> > by a kernel driver by default which restricts access to the mailbox.
+> > Unbinding the driver from a single auxiliary device (DOE mailbox
+> > capability) frees the mailbox for user space access.  This architecture
+> > also allows a clear picture on which mailboxes are kernel controlled vs
+> > not.
+> > 
+> > Create a driver for the DOE auxiliary devices.  The driver uses the PCI
+> > DOE core to manage the mailbox.
+> > 
+> > User space must be prevented from unbinding the driver state when the
+> > DOE auxiliary driver is being accessed by the kernel.  Add a read write
+> > lock to the DOE auxiliary device to protect the driver data portion.
+> > 
+> > Finally, flag the driver module to be preloaded by device creation to
+> > ensure the driver is attached when iterating the DOE capabilities.
+> > 
+> > User space access can be obtained by unbinding the driver from that
+> > device.  For example:
+> > 
+> > $ ls -l /sys/bus/auxiliary/drivers
+> > total 0
+> > drwxr-xr-x 2 root root 0 Mar 24 10:45 cxl_doe.cxl_doe_drv
+> > 
+> > $ ls -l /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci*
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.0 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.1 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.2 -> ../../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.4
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.5 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.6 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.7 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
+> > 
+> > $ echo "cxl_pci.doe.4" > /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/unbind
+> > 
+> > $ ls -l /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci*
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.0 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.1 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.2 -> ../../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.3 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.5 -> ../../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.6 -> ../../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:53 /sys/bus/auxiliary/drivers/cxl_doe.cxl_doe_drv/cxl_pci.doe.7 -> ../../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> Hi Ira,
+> 
+> A few minor comments inline.
+> With those cleaned up
 
-maxItems:8? Maybe I just misunderstand this part of yaml/jsonschema.
+Thanks!
 
--- 
-With best wishes
-Dmitry
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> > 
+> > ---
+> > Changes from V7:
+> > 	Now need to select PCI_DOE
+> > 	Change MODULE_LICENSE to 'GPL' instead of old 'GPL v2'
+> > 
+> > Changes from V6:
+> > 	The CXL layer now contains the driver for these auxiliary
+> > 	devices.
+> > 
+> > Changes from V5:
+> > 	Split the CXL specific stuff off from the PCI DOE create
+> > 	auxiliary device code.
+> > ---
+> >  drivers/cxl/Kconfig           | 13 +++++
+> >  drivers/cxl/Makefile          |  2 +
+> >  drivers/cxl/cxlpci.h          | 13 +++++
+> >  drivers/cxl/doe.c             | 90 +++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/pci.c             | 20 ++++++++
+> >  include/uapi/linux/pci_regs.h |  1 +
+> >  6 files changed, 139 insertions(+)
+> >  create mode 100644 drivers/cxl/doe.c
+> > 
+> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> > index ac0f5ca95431..82f3908fa5cc 100644
+> > --- a/drivers/cxl/Kconfig
+> > +++ b/drivers/cxl/Kconfig
+> > @@ -103,4 +103,17 @@ config CXL_SUSPEND
+> >  	def_bool y
+> >  	depends on SUSPEND && CXL_MEM
+> >  
+> > +config CXL_PCI_DOE
+> > +      tristate "CXL PCI Data Object Exchange (DOE) support"
+> > +      depends on CXL_PCI
+> 
+> Should be leading tabs not spaces.
+
+Opps must have been a bad copy/paste.  Sorry.
+
+> 
+> > +      default CXL_BUS
+> > +      select PCI_DOE
+> > +      help
+> > +        Driver for DOE auxiliary devices.
+> > +
+> > +	The DOE capabilities provides a simple mailbox in PCI config space that
+> > +	is used for a number of different protocols useful to CXL.  The CXL PCI
+> > +	subsystem creates auxiliary devices for each DOE mailbox capability
+> > +	found.  This driver is required for the kernel to use these devices.
+> > +
+> >  endif
+> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> > index a78270794150..c71b7a6345fb 100644
+> > --- a/drivers/cxl/Makefile
+> > +++ b/drivers/cxl/Makefile
+> > @@ -1,6 +1,7 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  obj-y += core/
+> >  obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+> > +obj-$(CONFIG_CXL_PCI_DOE) += cxl_doe.o
+> >  obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+> >  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+> >  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+> > @@ -8,6 +9,7 @@ obj-$(CONFIG_CXL_PORT) += cxl_port.o
+> >  
+> >  cxl_mem-y := mem.o
+> >  cxl_pci-y := pci.o
+> > +cxl_doe-y := doe.o
+> >  cxl_acpi-y := acpi.o
+> >  cxl_pmem-y := pmem.o
+> >  cxl_port-y := port.o
+> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> > index 2ad8715173ce..821fe05e8289 100644
+> > --- a/drivers/cxl/cxlpci.h
+> > +++ b/drivers/cxl/cxlpci.h
+> > @@ -79,6 +79,7 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+> >   *
+> >   * @adev: Auxiliary bus device
+> >   * @pdev: PCI device this belongs to
+> > + * @driver_access: Lock the driver during access
+> >   * @cap_offset: Capability offset
+> >   * @use_irq: Set if IRQs are to be used with this mailbox
+> >   *
+> > @@ -88,9 +89,21 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+> >  struct cxl_doe_dev {
+> >  	struct auxiliary_device adev;
+> >  	struct pci_dev *pdev;
+> > +	struct rw_semaphore driver_access;
+> >  	int cap_offset;
+> >  	bool use_irq;
+> >  };
+> >  #define DOE_DEV_NAME "doe"
+> >  
+> > +/**
+> > + * struct cxl_doe_drv_state - state of the DOE Aux driver
+> > + *
+> > + * @doe_dev: The Auxiliary DOE device
+> 
+> As far as I can tell no one actually uses the doe_dev from here for anything
+> so do we need it at all?
+
+Oh wow!  Great catch.  Worse yet I never even set it.  :-(
+
+It must have been left over cruft from development which I missed in final
+review.  I think the logic was that the device goes along with the driver
+state...
+
+Yes I will remove it.
+
+But that unfortunately begs the question does cxl_doe_drv_state even need to
+exist?
+
+I don't like returning the pci_doe_mb directly but having a struct contain a
+struct is worse IMO.
+
+So cxl_pci_doe_get_drv() and cxl_pci_doe_put_drv() are going to be
+get_mb/put_mb respectively.
+
+Can I make that change with your review by?
+
+> 
+> > + * @doe_mb: PCI DOE mailbox state
+> > + */
+> > +struct cxl_doe_drv_state {
+> > +	struct cxl_doe_dev *doe_dev;
+> > +	struct pci_doe_mb *doe_mb;
+> > +};
+> > +
+> >  #endif /* __CXL_PCI_H__ */
+> > diff --git a/drivers/cxl/doe.c b/drivers/cxl/doe.c
+> > new file mode 100644
+> > index 000000000000..1d3a24a77002
+> > --- /dev/null
+> > +++ b/drivers/cxl/doe.c
+> > @@ -0,0 +1,90 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> > +
+> > +#include <linux/pci.h>
+> > +#include <linux/pci-doe.h>
+> 
+> Rather sparse include list given what is going on in here.
+> We shouldn't rely too heavily on what comes indirectly except
+> where it's really standard headers.
+> 
+> Probably mod_devicetable.h and some headers for auxiliary devices
+> and rwsem.h at least?  
+
+Yea I'll add to this list.
+
+> 
+> > +
+> > +#include "cxlpci.h"
+> > +
+> > +static void doe_destroy_mb(void *ds)
+> > +{
+> > +	struct cxl_doe_drv_state *doe_ds = ds;
+> > +
+> > +	pci_doe_destroy_mb(doe_ds->doe_mb);
+> > +}
+> > +
+> > +static int cxl_pci_doe_probe(struct auxiliary_device *aux_dev,
+> > +			     const struct auxiliary_device_id *id)
+> > +{
+> > +	struct cxl_doe_dev *doe_dev = container_of(aux_dev, struct cxl_doe_dev,
+> > +						   adev);
+> > +	struct device *dev = &aux_dev->dev;
+> > +	struct cxl_doe_drv_state *doe_ds;
+> > +	struct pci_doe_mb *doe_mb;
+> > +
+> > +	doe_ds = devm_kzalloc(dev, sizeof(*doe_ds), GFP_KERNEL);
+> > +	if (!doe_ds)
+> > +		return -ENOMEM;
+> > +
+> > +	doe_mb = pci_doe_create_mb(doe_dev->pdev, doe_dev->cap_offset,
+> > +				   doe_dev->use_irq);
+> > +	if (IS_ERR(doe_mb)) {
+> > +		dev_err(dev, "Failed to create the DOE mailbox state machine\n");
+> 
+> You could use dev_err_probe() here to tidy this up a little bit.
+
+Sure!
+
+> 
+> > +		return PTR_ERR(doe_mb);
+> 
+> > +	}
+> > +
+> > +	doe_ds->doe_mb = doe_mb;
+> > +	devm_add_action_or_reset(dev, doe_destroy_mb, doe_ds);
+> > +
+> > +	down_write(&doe_dev->driver_access);
+> > +	auxiliary_set_drvdata(aux_dev, doe_ds);
+> > +	up_write(&doe_dev->driver_access);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void cxl_pci_doe_remove(struct auxiliary_device *aux_dev)
+> > +{
+> > +	struct cxl_doe_dev *doe_dev = container_of(aux_dev, struct cxl_doe_dev,
+> > +						   adev);
+> > +
+> > +	down_write(&doe_dev->driver_access);
+> > +	auxiliary_set_drvdata(aux_dev, NULL);
+> 
+> This confused me for a bit.  I 'think' you are doing this to be able to use
+> it as a flag for whether the driver is still bound. If so, a comment would
+> be useful.
+
+Yes.
+
+I'll add this from the commit message:
+
+	User space must be prevented from unbinding the driver state when the
+	DOE auxiliary driver is being accessed by the kernel.
+
+> 
+> > +	up_write(&doe_dev->driver_access);
+> > +}
+> > +
+> > +static const struct auxiliary_device_id cxl_pci_doe_auxiliary_id_table[] = {
+> > +	{.name = "cxl_pci." DOE_DEV_NAME, },
+> > +	{},
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(auxiliary, cxl_pci_doe_auxiliary_id_table);
+> > +
+> > +struct auxiliary_driver cxl_pci_doe_auxiliary_drv = {
+> > +	.name = "cxl_doe_drv",
+> > +	.id_table = cxl_pci_doe_auxiliary_id_table,
+> > +	.probe = cxl_pci_doe_probe,
+> > +	.remove = cxl_pci_doe_remove,
+> > +};
+> > +
+> > +static int __init cxl_pci_doe_init_module(void)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = auxiliary_driver_register(&cxl_pci_doe_auxiliary_drv);
+> > +	if (ret) {
+> > +		pr_err("Failed cxl_pci_doe auxiliary_driver_register() ret=%d\n",
+> > +		       ret);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void __exit cxl_pci_doe_exit_module(void)
+> > +{
+> > +	auxiliary_driver_unregister(&cxl_pci_doe_auxiliary_drv);
+> > +}
+> > +
+> > +module_init(cxl_pci_doe_init_module);
+> > +module_exit(cxl_pci_doe_exit_module);
+> > +MODULE_LICENSE("GPL");
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 41a6f3eb0a5c..0dec1f1a3f38 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -590,6 +590,17 @@ static void cxl_pci_doe_destroy_device(void *ad)
+> >  	auxiliary_device_uninit(ad);
+> >  }
+> >  
+> > +static struct cxl_doe_drv_state *cxl_pci_doe_get_drv(struct cxl_doe_dev *doe_dev)
+> > +{
+> > +	down_read(&doe_dev->driver_access);
+> > +	return auxiliary_get_drvdata(&doe_dev->adev);
+> > +}
+> > +
+> > +static void cxl_pci_doe_put_drv(struct cxl_doe_dev *doe_dev)
+> > +{
+> > +	up_read(&doe_dev->driver_access);
+> > +}
+> > +
+> >  /**
+> >   * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
+> >   *				mailboxes found
+> > @@ -652,6 +663,7 @@ static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> >  			return -ENOMEM;
+> >  
+> >  		new_dev->pdev = pdev;
+> > +		init_rwsem(&new_dev->driver_access);
+> >  		new_dev->cap_offset = off;
+> >  		new_dev->use_irq = use_irq;
+> >  
+> > @@ -682,6 +694,13 @@ static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> >  					      adev);
+> >  		if (rc)
+> >  			return rc;
+> > +
+> > +		if (device_attach(&adev->dev) != 1) {
+> > +			dev_err(&adev->dev,
+> > +				"Failed to attach a driver to DOE device %d\n",
+> > +				adev->id);
+> > +			return -ENODEV;
+> > +		}
+> 
+> Can you add a comment on why this has to be the case at this point.  Why can't
+> the driver come along later?
+
+Yes I will.
+
+I've not really liked this aspect of the auxiliary device arch.  But I've not
+convinced myself that it will work ok to leave this till later.
+
+Putting the CDAT retry on a timer might be a better option but it would also
+mean searching for the proper DOE would need to be delayed as well...
+
+For now I'll put in a comment.
+
+Thanks for the review!
+Ira
+
+> 
+> >  	}
+> >  
+> >  	return 0;
+> > @@ -785,6 +804,7 @@ static struct pci_driver cxl_pci_driver = {
+> >  	},
+> >  };
+> 
+> ...
+> 
