@@ -2,310 +2,383 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94BA1513CD3
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 22:47:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47A53513D0E
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 23:10:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244960AbiD1UvD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 16:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49820 "EHLO
+        id S1345697AbiD1VMz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 17:12:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236992AbiD1UvC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 16:51:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A128878E;
-        Thu, 28 Apr 2022 13:47:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 06829B83036;
-        Thu, 28 Apr 2022 20:47:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19354C385AD;
-        Thu, 28 Apr 2022 20:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651178863;
-        bh=+vVNZguiz+/eS3ts46NEzw5RtmbAO/pDo7nfGJJkOec=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=k+8fD4QNWRemaZyEweZK+x5TjcPSzL3PrtoevcFE1SspwLWBAoZWBfWlVYFZX+8Et
-         0J3YXEa8vvC7ZDv04idXUYd2Wh8Nt5Mh9u8bUr3vkC9WqSrnj7V4ySs7icj+zD2SKT
-         3fTf7PpszJO+MaHORvKi9TlD7EM1jJs2oxKUnzXW2Bv3OrSRHeoNUTW97CssZUW9NW
-         eh+LOVw1K94rpNllXyQZmSdnw6K5TRSjqeH8ZRa36HdeI3yYo5UcTZQCgTVin2n8KH
-         q2jkpsCnx/cUYXvuug+L7MYYSvp86ip8+Km+6Q8vJzCfqIRWAliF3NivB6tO54o4V1
-         IR3d9hcTPB4sw==
-Date:   Thu, 28 Apr 2022 15:47:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Cc:     linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6] PCI hotplug: rpaphp: Error out on busy status from
- get-sensor-state
-Message-ID: <20220428204740.GA42242@bhelgaas>
+        with ESMTP id S234151AbiD1VMz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 17:12:55 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E879C12C4;
+        Thu, 28 Apr 2022 14:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651180179; x=1682716179;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XbXVcsQApCLk+hywcSTA1rXriHVLdLBd+PYx0u4rMH0=;
+  b=SfwDA3HwL8FzUlmqHoeAgTYmpLyq8MegcWkQtZy1gzjarDDtHtAxmjgj
+   lsZKe2JqQc9ADJzmCVKV0zJgp9JpaABPEIGney125zaNiZvkrhhKqnHrE
+   kNTwLJPdi0Pb9gg4UPj6FGuv1PZmmtl7qL7yJw/5I2pfFDcs9rg4hikRu
+   xotirgX6YmiLv+ItdSfwHYWYJPRmgMXD9YbEZBHWSCBcOJHefA6wm8IjV
+   H/ECsVvuoOAn9H4tsZb9FihVZ0agFJmZJ6Aq8bJgNpDKvUjvNJvf2ztMk
+   tVRqfN2yhDI+wskOR50LleM9oWhCrgmUvRSsNGN5m9cbXhLSgDZIZ+OT+
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10331"; a="264011790"
+X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
+   d="scan'208";a="264011790"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 14:09:38 -0700
+X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
+   d="scan'208";a="661986484"
+Received: from iweiny-server.sc.intel.com (HELO localhost) ([172.25.222.75])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 14:09:38 -0700
+Date:   Thu, 28 Apr 2022 14:09:38 -0700
+From:   ira.weiny@intel.com
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE
+ mailbox
+Message-ID: <YmsCfHf/HMuqBkTk@iweiny-server>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+ <20220414203237.2198665-5-ira.weiny@intel.com>
+ <20220427181942.00003492@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <165099464934.1658371.1526973220374528897.stgit@jupiter>
+In-Reply-To: <20220427181942.00003492@Huawei.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 26, 2022 at 11:07:39PM +0530, Mahesh Salgaonkar wrote:
-> When certain PHB HW failure causes phyp to recover PHB, it marks the PE
-> state as temporarily unavailable until recovery is complete. This also
-> triggers an EEH handler in Linux which needs to notify drivers, and perform
-> recovery. But before notifying the driver about the PCI error it uses
-> get_adapter_state()->get-sensor-state() operation of the hotplug_slot to
-> determine if the slot contains a device or not. if the slot is empty, the
-                                                  If
-> recovery is skipped entirely.
+On Wed, Apr 27, 2022 at 06:19:42PM +0100, Jonathan Cameron wrote:
+> On Thu, 14 Apr 2022 13:32:31 -0700
+> ira.weiny@intel.com wrote:
 > 
-> However on certain PHB failures, the rtas call get-sensor-state() returns
-> extended busy error (9902) until PHB is recovered by phyp. Once PHB is
-> recovered, the get-sensor-state() returns success with correct presence
-> status. The RTAS call interface rtas_get_sensor() loops over the rtas call
-> on extended delay return code (9902) until the return value is either
-> success (0) or error (-1). This causes the EEH handler to get stuck for ~6
-> seconds before it could notify that the pci error has been detected and
-> stop any active operations. Hence with running I/O traffic, during this 6
-> seconds, the network driver continues its operation and hits a timeout
-> (netdev watchdog). On timeouts, network driver go into ffdc capture mode
-
-I assume ffdc == First Failure Data Capture (please expand and remove
-the redundant "capture")  Is this a powerpc thing?  "ffdc" doesn't
-occur in drivers/net, so I don't know what network driver this refers
-to.
-
-> and reset path assuming the PCI device is in fatal condition. This
-> sometimes causes EEH recovery to fail. This impacts the ssh connection and
-> leads to the system being inaccessible.
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > CXL kernel drivers optionally need to access DOE mailbox capabilities.
+> > Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
+> > the kernel while other access is designed towards user space usage.  An
+> > example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
+> > Compliance Mode DOE) which offers a mechanism to set different test
+> > modes for a device.
+> > 
+> > There is no anticipated need for the kernel to share an individual
+> > mailbox with user space.  Thus developing an interface to marshal access
+> > between the kernel and user space for a single mailbox is unnecessary
+> > overhead.  However, having the kernel relinquish some mailboxes to be
+> > controlled by user space is a reasonable compromise to share access to
+> > the device.
+> > 
+> > The auxiliary bus provides an elegant solution for this.  Each DOE
+> > capability is given its own auxiliary device.  This device is controlled
+> > by a kernel driver by default which restricts access to the mailbox.
+> > Unbinding the driver from a single auxiliary device (DOE mailbox
+> > capability) frees the mailbox for user space access.  This architecture
+> > also allows a clear picture on which mailboxes are kernel controlled vs
+> > not.
+> > 
+> > Iterate each DOE mailbox capability and create auxiliary bus devices.
+> > Follow on patches will define a driver for the newly created devices.
+> > 
+> > sysfs shows the devices.
+> > 
+> > $ ls -l /sys/bus/auxiliary/devices/
+> > total 0
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.0 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.1 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.2 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.3 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.4 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.4
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.5 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.6 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
+> > lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> ------------
-> [52732.244731] DEBUG: ibm_read_slot_reset_state2()
-> [52732.244762] DEBUG: ret = 0, rets[0]=5, rets[1]=1, rets[2]=4000, rets[3]=>
-> [52732.244798] DEBUG: in eeh_slot_presence_check
-> [52732.244804] DEBUG: error state check
-> [52732.244807] DEBUG: Is slot hotpluggable
-> [52732.244810] DEBUG: hotpluggable ops ?
-> [52732.244953] DEBUG: Calling ops->get_adapter_status
-> [52732.244958] DEBUG: calling rpaphp_get_sensor_state
-> [52736.564262] ------------[ cut here ]------------
-> [52736.564299] NETDEV WATCHDOG: enP64p1s0f3 (tg3): transmit queue 0 timed o>
-> [52736.564324] WARNING: CPU: 1442 PID: 0 at net/sched/sch_generic.c:478 dev>
-> [...]
-> [52736.564505] NIP [c000000000c32368] dev_watchdog+0x438/0x440
-> [52736.564513] LR [c000000000c32364] dev_watchdog+0x434/0x440
-> ------------
+> I'm not 100% happy with effectively having one solution for CXL
+> and probably a different one for DOEs on switch ports
+> (which I just hacked into a port service driver to convince
+> myself there was at least one plausible way of doing that) but if
+> this effectively separates the two discussions then I guess I can
+> live with it for now ;)
+
+I took some time this morning to mull this over and talk to Dan...
+
+:-(
+
+Truthfully the aux driver does very little except provide a way for admins to
+trigger the driver to stop/start accessing the Mailbox.
+
+I suppose a simple sysfs interface could be done to do the same?
+
+I'll let Dan weigh in here.
+
 > 
-> To avoid this issue, fix the pci hotplug driver (rpaphp) to return an error
-> if the slot presence state can not be detected immediately while PE is in
-> EEH recovery state. Current implementation uses rtas_get_sensor() API which
-> blocks the slot check state until rtas call returns success. Change
-> rpaphp_get_sensor_state() to invoke rtas_call(get-sensor-state) directly
-> only if the respective pe is in EEH recovery state, and take actions based
-> on rtas return status.
+> Once this is merged we can start the discussion about how to
+> handle switch ports with DOEs both for CDAT and SPDM.
 
-I'm not too clear on what the problem is.  I guess you don't want the
-netdev watchdog timeout.  Is the NIC still operating?  It's just the
-PHB leading to the NIC that has an issue?
+I'm ok with that too.  However, I was thinking that this was not a user ABI.
+But it really is.  If user space starts writing script to unbind drivers and
+then we drop the aux driver support it will break them...
 
-Apparently the remedy is to return -ENODEV (from SLOT_NOT_USABLE ==
--9002) from rpaphp_get_sensor_state() instead of doing the retries.
-It would be good to explain why *that* is safe.
-
-> In normal cases (non-EEH case) rpaphp_get_sensor_state() will continue to
-> invoke rtas_get_sensor() as it was earlier with no change in existing
-> behavior.
-
-Nits:
-Follow historical convention in subject line.
-s/phyp/pHyp/   (or whatever the normal styling is)
-s/pe/PE/       (used inconsistently above and in comment)
-s/rtas/RTAS/   (Michael mentioned this already, but I guess you missed some)
-s/pci/PCI/
-s/ffdc/First Failure Data Capture/   (or the correct expansion)
-Make similar changes in the comment below.
-
-> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-> Reviewed-by: Nathan Lynch <nathanl@linux.ibm.com>
-> ---
-> Change in v6:
-> - Fixed typo's in the patch description as per review comments.
 > 
-> Change in v5:
-> - Fixup #define macros with parentheses around the values.
+> I'll send out an RFC that is so hideous it will get people to
+> suggestion how to do it better!
+
+I think I'd like to see that.
+
+> Currently it starts and
+> stops the mailbox 3 times in the registration path and I think
+> it's more luck than judgement that is landing me with the right
+> MSI.
 > 
-> Change in V4:
-> - Error out on sensor busy only if pe is going through EEH recovery instead
->   of always error out.
+> Anyhow, this looks good to me.
 > 
-> Change in V3:
-> - Invoke rtas_call(get-sensor-state) directly from
->   rpaphp_get_sensor_state() directly and do special handling.
-> - See v2 at
->   https://lists.ozlabs.org/pipermail/linuxppc-dev/2021-November/237336.html
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Thanks!
+
+The good news is that the main support for the algorithm is now just part of
+the pci core as library functions.  I think this discussion is a pretty
+light lift to move the calls to those around...
+
+Ira
+
 > 
-> Change in V2:
-> - Alternate approach to fix the EEH issue instead of delaying slot presence
->   check proposed at
->   https://lists.ozlabs.org/pipermail/linuxppc-dev/2021-November/236956.html
 > 
-> Also refer:
-> https://lists.ozlabs.org/pipermail/linuxppc-dev/2021-November/237027.html
-> ---
->  drivers/pci/hotplug/rpaphp_pci.c |  100 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 97 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
-> index c380bdacd1466..e463e915a052a 100644
-> --- a/drivers/pci/hotplug/rpaphp_pci.c
-> +++ b/drivers/pci/hotplug/rpaphp_pci.c
-> @@ -18,12 +18,107 @@
->  #include "../pci.h"		/* for pci_add_new_bus */
->  #include "rpaphp.h"
->  
-> +/*
-> + * RTAS call get-sensor-state(DR_ENTITY_SENSE) return values as per PAPR:
-> + *    -1: Hardware Error
-> + *    -2: RTAS_BUSY
-> + *    -3: Invalid sensor. RTAS Parameter Error.
-> + * -9000: Need DR entity to be powered up and unisolated before RTAS call
-> + * -9001: Need DR entity to be powered up, but not unisolated, before RTAS call
-> + * -9002: DR entity unusable
-> + *  990x: Extended delay - where x is a number in the range of 0-5
-> + */
-> +#define RTAS_HARDWARE_ERROR	(-1)
-> +#define RTAS_INVALID_SENSOR	(-3)
-> +#define SLOT_UNISOLATED		(-9000)
-> +#define SLOT_NOT_UNISOLATED	(-9001)
-
-I would say "isolated" instead of "not unisolated", but I suppose this
-follows language in the spec.  If so, you should follow the spec.
-
-> +#define SLOT_NOT_USABLE		(-9002)
-> +
-> +static int rtas_to_errno(int rtas_rc)
-> +{
-> +	int rc;
-> +
-> +	switch (rtas_rc) {
-> +	case RTAS_HARDWARE_ERROR:
-> +		rc = -EIO;
-> +		break;
-> +	case RTAS_INVALID_SENSOR:
-> +		rc = -EINVAL;
-> +		break;
-> +	case SLOT_UNISOLATED:
-> +	case SLOT_NOT_UNISOLATED:
-> +		rc = -EFAULT;
-> +		break;
-> +	case SLOT_NOT_USABLE:
-> +		rc = -ENODEV;
-> +		break;
-> +	case RTAS_BUSY:
-> +	case RTAS_EXTENDED_DELAY_MIN...RTAS_EXTENDED_DELAY_MAX:
-> +		rc = -EBUSY;
-> +		break;
-> +	default:
-> +		err("%s: unexpected RTAS error %d\n", __func__, rtas_rc);
-> +		rc = -ERANGE;
-> +		break;
-> +	}
-> +	return rc;
-
-This basically duplicates rtas_error_rc().  Why do we need two copies?
-
-> +}
-> +
-> +/*
-> + * get_adapter_status() can be called by the EEH handler during EEH recovery.
-> + * On certain PHB failures, the rtas call get-sensor-state() returns extended
-> + * busy error (9902) until PHB is recovered by phyp. The rtas call interface
-> + * rtas_get_sensor() loops over the rtas call on extended delay return code
-> + * (9902) until the return value is either success (0) or error (-1). This
-> + * causes the EEH handler to get stuck for ~6 seconds before it could notify
-> + * that the pci error has been detected and stop any active operations. This
-> + * sometimes causes EEH recovery to fail. To avoid this issue, invoke
-> + * rtas_call(get-sensor-state) directly if the respective pe is in EEH recovery
-> + * state and return -EBUSY error based on rtas return status. This will help
-> + * the EEH handler to notify the driver about the pci error immediately and
-> + * successfully proceed with EEH recovery steps.
-> + */
-> +static int __rpaphp_get_sensor_state(struct slot *slot, int *state)
-> +{
-> +	int rc;
-> +#ifdef CONFIG_EEH
-> +	int token = rtas_token("get-sensor-state");
-> +	struct pci_dn *pdn;
-> +	struct eeh_pe *pe;
-> +	struct pci_controller *phb = PCI_DN(slot->dn)->phb;
-> +
-> +	if (token == RTAS_UNKNOWN_SERVICE)
-> +		return -ENOENT;
-> +
-> +	/*
-> +	 * Fallback to existing method for empty slot or pe isn't in EEH
-> +	 * recovery.
-> +	 */
-> +	if (list_empty(&PCI_DN(phb->dn)->child_list))
-> +		goto fallback;
-> +
-> +	pdn = list_first_entry(&PCI_DN(phb->dn)->child_list,
-> +			       struct pci_dn, list);
-
-I guess you don't need locking to ensure that child_list doesn't
-become empty between the list_empty() and the list_first_entry()?
-I didn't see locking at other places that traverse it, but it's not
-obvious to me what protects it.
-
-> +	pe = eeh_dev_to_pe(pdn->edev);
-> +	if (pe && (pe->state & EEH_PE_RECOVERING)) {
-> +		rc = rtas_call(token, 2, 2, state, DR_ENTITY_SENSE,
-> +			       slot->index);
-> +		if (rc)
-> +			rc = rtas_to_errno(rc);
-> +		return rc;
-
-I'd probably make rtas_to_errno(0) return 0, then do:
-
-  return rtas_to_errno(rc);
-
-> +	}
-> +fallback:
-> +#endif
-> +	rc = rtas_get_sensor(DR_ENTITY_SENSE, slot->index, state);
-> +	return rc;
-
-  return rtas_get_sensor(DR_ENTITY_SENSE, ...);
-
-> +}
-> +
->  int rpaphp_get_sensor_state(struct slot *slot, int *state)
->  {
->  	int rc;
->  	int setlevel;
->  
-> -	rc = rtas_get_sensor(DR_ENTITY_SENSE, slot->index, state);
-> +	rc = __rpaphp_get_sensor_state(slot, state);
->  
->  	if (rc < 0) {
->  		if (rc == -EFAULT || rc == -EEXIST) {
-> @@ -39,8 +134,7 @@ int rpaphp_get_sensor_state(struct slot *slot, int *state)
->  				dbg("%s: power on slot[%s] failed rc=%d.\n",
->  				    __func__, slot->name, rc);
->  			} else {
-> -				rc = rtas_get_sensor(DR_ENTITY_SENSE,
-> -						     slot->index, state);
-> +				rc = __rpaphp_get_sensor_state(slot, state);
->  			}
->  		} else if (rc == -ENODEV)
->  			info("%s: slot is unusable\n", __func__);
-> 
+> > 
+> > ---
+> > Changes from V7:
+> > 	Minor code clean ups
+> > 	Rebased on cxl-pending
+> > 
+> > Changes from V6:
+> > 	Move all the auxiliary device stuff to the CXL layer
+> > 
+> > Changes from V5:
+> > 	Split the CXL specific stuff off from the PCI DOE create
+> > 	auxiliary device code.
+> > ---
+> >  drivers/cxl/Kconfig  |   1 +
+> >  drivers/cxl/cxlpci.h |  21 +++++++
+> >  drivers/cxl/pci.c    | 127 +++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 149 insertions(+)
+> > 
+> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> > index f64e3984689f..ac0f5ca95431 100644
+> > --- a/drivers/cxl/Kconfig
+> > +++ b/drivers/cxl/Kconfig
+> > @@ -16,6 +16,7 @@ if CXL_BUS
+> >  config CXL_PCI
+> >  	tristate "PCI manageability"
+> >  	default CXL_BUS
+> > +	select AUXILIARY_BUS
+> >  	help
+> >  	  The CXL specification defines a "CXL memory device" sub-class in the
+> >  	  PCI "memory controller" base class of devices. Device's identified by
+> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> > index 329e7ea3f36a..2ad8715173ce 100644
+> > --- a/drivers/cxl/cxlpci.h
+> > +++ b/drivers/cxl/cxlpci.h
+> > @@ -2,6 +2,7 @@
+> >  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> >  #ifndef __CXL_PCI_H__
+> >  #define __CXL_PCI_H__
+> > +#include <linux/auxiliary_bus.h>
+> >  #include <linux/pci.h>
+> >  #include "cxl.h"
+> >  
+> > @@ -72,4 +73,24 @@ static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
+> >  }
+> >  
+> >  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+> > +
+> > +/**
+> > + * struct cxl_doe_dev - CXL DOE auxiliary bus device
+> > + *
+> > + * @adev: Auxiliary bus device
+> > + * @pdev: PCI device this belongs to
+> > + * @cap_offset: Capability offset
+> > + * @use_irq: Set if IRQs are to be used with this mailbox
+> > + *
+> > + * This represents a single DOE mailbox device.  CXL devices should create this
+> > + * device and register it on the Auxiliary bus for the CXL DOE driver to drive.
+> > + */
+> > +struct cxl_doe_dev {
+> > +	struct auxiliary_device adev;
+> > +	struct pci_dev *pdev;
+> > +	int cap_offset;
+> > +	bool use_irq;
+> > +};
+> > +#define DOE_DEV_NAME "doe"
+> > +
+> >  #endif /* __CXL_PCI_H__ */
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index e7ab9a34d718..41a6f3eb0a5c 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -8,6 +8,7 @@
+> >  #include <linux/mutex.h>
+> >  #include <linux/list.h>
+> >  #include <linux/pci.h>
+> > +#include <linux/pci-doe.h>
+> >  #include <linux/io.h>
+> >  #include "cxlmem.h"
+> >  #include "cxlpci.h"
+> > @@ -564,6 +565,128 @@ static void cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
+> >  	info->ranges = __cxl_dvsec_ranges(cxlds, info);
+> >  }
+> >  
+> > +static void cxl_pci_free_irq_vectors(void *data)
+> > +{
+> > +	pci_free_irq_vectors(data);
+> > +}
+> > +
+> > +static DEFINE_IDA(pci_doe_adev_ida);
+> > +
+> > +static void cxl_pci_doe_dev_release(struct device *dev)
+> > +{
+> > +	struct auxiliary_device *adev = container_of(dev,
+> > +						struct auxiliary_device,
+> > +						dev);
+> > +	struct cxl_doe_dev *doe_dev = container_of(adev, struct cxl_doe_dev,
+> > +						   adev);
+> > +
+> > +	ida_free(&pci_doe_adev_ida, adev->id);
+> > +	kfree(doe_dev);
+> > +}
+> > +
+> > +static void cxl_pci_doe_destroy_device(void *ad)
+> > +{
+> > +	auxiliary_device_delete(ad);
+> > +	auxiliary_device_uninit(ad);
+> > +}
+> > +
+> > +/**
+> > + * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
+> > + *				mailboxes found
+> > + *
+> > + * @pci_dev: The PCI device to scan for DOE mailboxes
+> > + *
+> > + * There is no coresponding destroy of these devices.  This function associates
+> > + * the DOE auxiliary devices created with the pci_dev passed in.  That
+> > + * association is device managed (devm_*) such that the DOE auxiliary device
+> > + * lifetime is always less than or equal to the lifetime of the pci_dev.
+> > + *
+> > + * RETURNS: 0 on success -ERRNO on failure.
+> > + */
+> > +static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	bool use_irq = true;
+> > +	int irqs = 0;
+> > +	u16 off = 0;
+> > +	int rc;
+> > +
+> > +	pci_doe_for_each_off(pdev, off)
+> > +		irqs++;
+> > +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
+> > +
+> > +	/*
+> > +	 * Allocate enough vectors for the DOE's
+> > +	 */
+> > +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
+> > +						     PCI_IRQ_MSIX);
+> > +	if (rc != irqs) {
+> > +		pci_err(pdev,
+> > +			"Not enough interrupts for all the DOEs; use polling\n");
+> > +		use_irq = false;
+> > +		/* Some got allocated; clean them up */
+> > +		if (rc > 0)
+> > +			cxl_pci_free_irq_vectors(pdev);
+> > +	} else {
+> > +		/*
+> > +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
+> > +		 * done later within the DOE initialization, but as it
+> > +		 * potentially has other impacts keep it here when setting up
+> > +		 * the IRQ's.
+> > +		 */
+> > +		pci_set_master(pdev);
+> > +		rc = devm_add_action_or_reset(dev,
+> > +					      cxl_pci_free_irq_vectors,
+> > +					      pdev);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +
+> > +	pci_doe_for_each_off(pdev, off) {
+> > +		struct auxiliary_device *adev;
+> > +		struct cxl_doe_dev *new_dev;
+> > +		int id;
+> > +
+> > +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
+> > +		if (!new_dev)
+> > +			return -ENOMEM;
+> > +
+> > +		new_dev->pdev = pdev;
+> > +		new_dev->cap_offset = off;
+> > +		new_dev->use_irq = use_irq;
+> > +
+> > +		/* Set up struct auxiliary_device */
+> > +		adev = &new_dev->adev;
+> > +		id = ida_alloc(&pci_doe_adev_ida, GFP_KERNEL);
+> > +		if (id < 0) {
+> > +			kfree(new_dev);
+> > +			return -ENOMEM;
+> > +		}
+> > +
+> > +		adev->id = id;
+> > +		adev->name = DOE_DEV_NAME;
+> > +		adev->dev.release = cxl_pci_doe_dev_release;
+> > +		adev->dev.parent = dev;
+> > +
+> > +		if (auxiliary_device_init(adev)) {
+> > +			cxl_pci_doe_dev_release(&adev->dev);
+> > +			return -EIO;
+> > +		}
+> > +
+> > +		if (auxiliary_device_add(adev)) {
+> > +			auxiliary_device_uninit(adev);
+> > +			return -EIO;
+> > +		}
+> > +
+> > +		rc = devm_add_action_or_reset(dev, cxl_pci_doe_destroy_device,
+> > +					      adev);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  {
+> >  	struct cxl_register_map map;
+> > @@ -630,6 +753,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > +	rc = cxl_pci_create_doe_devices(pdev);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> >  	cxl_dvsec_ranges(cxlds);
+> >  
+> >  	cxlmd = devm_cxl_add_memdev(cxlds);
 > 
