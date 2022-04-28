@@ -2,286 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 697A0512D4F
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 09:48:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31B2C512DC5
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 10:08:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233135AbiD1HvT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 03:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51450 "EHLO
+        id S1343877AbiD1ILF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 04:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231254AbiD1HvS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 03:51:18 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74589D4E1
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 00:48:04 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id p12so3625578pfn.0
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 00:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9KbJSxuos5zcM4hZiVHGbET3lN31A6yxd95nMYXgYAM=;
-        b=dRsK8/I/Js8kjNilnUh13u53zcFDO4NgPOOPhnPhC3xDsvysfx4KVtMGCwtjqh9dtA
-         FtL3Fe2kz4ipSCCgmGMnKOlGKT9U2AQ6RjrdIgYaRlcJYpH0yKbLQBVR1RZTZs0SrYuH
-         a4bwvidqMdRx8XzVII73AOMz6+7zKJlVDjSZL5ZyQ9Q6zBUDWIxvMzDzSwdDy7yZdvsl
-         UOyCI9YeqP8BQOV2Y9vfwDdFzAoQnTIX/dNaldc6K+D8z+mNlwCkIORcbg0nyZdcIeNc
-         UQBaX8F1pFhmL/+ydJtMwTNnJ2pLjDlSF0HK+Xqu7hWGcVUKfHLyHP4M4enuR4g5CDl3
-         a4+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9KbJSxuos5zcM4hZiVHGbET3lN31A6yxd95nMYXgYAM=;
-        b=A3UxfFf7HS12uqD1G95i09pVCAlI92+hM7S34n5IkGARcdCF5ppKvCjbVcOYKBUcy8
-         iD35tX4T5a6eyilKlVNCSHhZwlvZzIR0x4ILSGJhJScUa9TQ3ueQMmY0c/qcWHt70Oqi
-         NUvANdprSid5izdrD9hmzoC3VIKPetWBAZqB+Qf4eaKcdM5CP4a7uPYN3+/1n0aG7bY1
-         0m+HeEjuYn7i92r63WwO176VcnjxKItrNxLLubToX+VKCB0IsD2bBsrCqEyX5m2+sEfW
-         VOEQpfd+q9nmYDWWihNvyJsWnbZa9YM8aH44lytQaEA0RIyUi8HbTWbGsD2M0dxcDs4C
-         aahg==
-X-Gm-Message-State: AOAM532DJMTYtFmsGmUPoou6pyClTJMbmCaP4FcrEIy/TGPLX9pxqsqJ
-        e9Zee7En4Ibq4yykOHHa58CY
-X-Google-Smtp-Source: ABdhPJyT733B2MAVpDaFr0Wj8Wp/aEKRO7k+uKs5nt9C5bj1NKUgFmlprg01roFZfuq5A1ZIJOYylg==
-X-Received: by 2002:a63:f61:0:b0:3aa:193b:5ac5 with SMTP id 33-20020a630f61000000b003aa193b5ac5mr26727206pgp.597.1651132084125;
-        Thu, 28 Apr 2022 00:48:04 -0700 (PDT)
-Received: from thinkpad ([27.111.75.196])
-        by smtp.gmail.com with ESMTPSA id p64-20020a622943000000b004fdd5c07d0bsm20756053pfp.63.2022.04.28.00.48.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Apr 2022 00:48:03 -0700 (PDT)
-Date:   Thu, 28 Apr 2022 13:17:58 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] PCI: dwc: Convert msi_irq to the array
-Message-ID: <20220428074758.GB81644@thinkpad>
-References: <20220427121653.3158569-1-dmitry.baryshkov@linaro.org>
- <20220427121653.3158569-2-dmitry.baryshkov@linaro.org>
- <20220427141329.GA4161@thinkpad>
- <b9d81916-10e6-94f9-78b2-b2198620e66a@linaro.org>
- <20220428060642.GA81644@thinkpad>
- <80132575-1abc-9a2e-dc73-3df72035a7d0@linaro.org>
+        with ESMTP id S233984AbiD1IKr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 04:10:47 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A245F8F2;
+        Thu, 28 Apr 2022 01:07:29 -0700 (PDT)
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23S7jBE9002377;
+        Thu, 28 Apr 2022 08:07:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=P5GSW7S1bGcTV0o4nVQux7Wo07UtirM3gAsmxixkw3o=;
+ b=sHRv7KOIs8uZcsib4SMqQi8jz+8RcDagMGlbGb/d8PqjOlpd9ScIAhDsl12yjPB/UCI9
+ Hv3WU5HbNkRpYBEtf4xaNK4OgJTUwUfVD8oT9ZylTnfEuAKBVJscwj/vBaS0XC+aEnDh
+ N4i4g+QgfrsccHR9L6kKHfGDl4cxzC0CVTTeho8O/NhtRggCj6/SJhS64uypy4zYGXck
+ GOmI5BK9HFdB1BiIr0uN89mJlWgASvDEqZTERM49ZAiGxfQnhyipg+5HS2UQYC75DbpM
+ ve9tECCXqQhE2ayCTrUsZ7ufA44daQ72QOPgfz4ft4zs7r2XLHKmWxWqrLKvYRJiYph/ /g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqmk7u4y0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 08:07:24 +0000
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 23S7ehAa028779;
+        Thu, 28 Apr 2022 08:07:24 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqmk7u4x9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 08:07:23 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23S7ueke006684;
+        Thu, 28 Apr 2022 08:07:22 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 3fpuyg9k91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 28 Apr 2022 08:07:22 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23S87IDa49545654
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Apr 2022 08:07:18 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CAC2C4C044;
+        Thu, 28 Apr 2022 08:07:18 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 899C44C040;
+        Thu, 28 Apr 2022 08:07:18 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Apr 2022 08:07:18 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v5 0/4]  PCI: Rework pci_scan_slot() and isolated PCI functions
+Date:   Thu, 28 Apr 2022 10:07:14 +0200
+Message-Id: <20220428080718.3094464-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80132575-1abc-9a2e-dc73-3df72035a7d0@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Amv0XS3eBV8LnTTqsNza-I_OCTb8tSZF
+X-Proofpoint-ORIG-GUID: OV4Ct2rHkptg9YL5dprTnuiiEJnWYj0M
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-27_04,2022-04-27_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=762 phishscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 malwarescore=0 bulkscore=0
+ priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2202240000 definitions=main-2204280049
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 10:43:54AM +0300, Dmitry Baryshkov wrote:
-> On 28/04/2022 09:06, Manivannan Sadhasivam wrote:
-> > On Wed, Apr 27, 2022 at 07:59:57PM +0300, Dmitry Baryshkov wrote:
-> > > On 27/04/2022 17:13, Manivannan Sadhasivam wrote:
-> > > > On Wed, Apr 27, 2022 at 03:16:49PM +0300, Dmitry Baryshkov wrote:
-> > > > > Qualcomm version of DWC PCIe controller supports more than 32 MSI
-> > > > > interrupts, but they are routed to separate interrupts in groups of 32
-> > > > > vectors. To support such configuration, change the msi_irq field into an
-> > > > > array. Let the DWC core handle all interrupts that were set in this
-> > > > > array.
-> > > > > 
-> > > > 
-> > > > Instead of defining it as an array, can we allocate it dynamically in the
-> > > > controller drivers instead? This has two benefits:
-> > > > 
-> > > > 1. There is no need of using a dedicated flag.
-> > > > 2. Controller drivers that don't support MSIs can pass NULL and in the core we
-> > > > can use platform_get_irq_byname_optional() to get supported number of MSIs from
-> > > > devicetree.
-> > > 
-> > > I think using dynamic allocation would make code worse. It would add
-> > > additional checks here and there.
-> > > 
-> > 
-> > I take back my suggestion of allocating the memory for msi_irq in controller
-> > drivers. It should be done in the designware-host instead.
-> > 
-> > We already know how many MSIs are supported by the platform using num_vectors.
-> > So we should just allocate msi_irqs of num_vectors length in
-> > dw_pcie_host_init() and populate it using platform_get_irq_byname_optional().
-> > 
-> > I don't think this can make the code worse.
-> > 
-> > > If you don't like this design. I have an alternative suggestion: export the
-> > > dw_chained_msi_irq() and move allocation of all MSIs to the pcie-qcom code.
-> > > Would that be better? I'm not sure whether this multi-host-IRQ design is
-> > > used on other DWC platforms or not.
-> > > 
-> > 
-> > No, I think the allocation should belong to designware-host.
-> 
-> Granted that at least tegra and iMX tie all MSI vectors to a single host
-> interrupt, I think it's impractical to assume that other hosts would benefit
-> from such allocation. Let's move support for split IRQs into the
-> pcie-qcom.c. We can make this generic later if any other host would use a
-> separate per-"endpoint" (per-group) IRQ.
-> 
+Hi Bjorn, Hi Jan,
 
-Okay, I'm fine with moving just the split irq handling to Qcom driver.
+In an earlier version[0], I sought to apply the existing jailhouse special case
+for isolated PCI functions to s390. As Bjorn noted in[1] there appears to be
+some potential for cleaning things up and removing duplication though.
+
+This series attempts to do this cleanup (Patches 1 and 2) followed by enabling
+isolated PCI functions for s390 (Patches 3 and 4). If need be I can of course
+split the cleanup off but for now I kept it as one as that's what I have
+been testing.
+
+Testing:
+- On s390 with SR-IOV and a ConnectX NIC with PF 1 but not PF 0 passed throug
+  i.e. the isolated function case. Also of course with just VFs and an NVMe.
+- On x86_64 on a desktop system where ARI is disabled and with an SR-IOV NIC
+  with non-contiguous VFs as well as the usual other PCI devices.
 
 Thanks,
-Mani
+Niklas
 
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > > 
-> > > > Thanks,
-> > > > Mani
-> > > > 
-> > > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > > ---
-> > > > >    drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
-> > > > >    drivers/pci/controller/dwc/pci-exynos.c       |  2 +-
-> > > > >    .../pci/controller/dwc/pcie-designware-host.c | 30 +++++++++++--------
-> > > > >    drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
-> > > > >    drivers/pci/controller/dwc/pcie-keembay.c     |  2 +-
-> > > > >    drivers/pci/controller/dwc/pcie-spear13xx.c   |  2 +-
-> > > > >    drivers/pci/controller/dwc/pcie-tegra194.c    |  2 +-
-> > > > >    7 files changed, 24 insertions(+), 18 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> > > > > index dfcdeb432dc8..0919c96dcdbd 100644
-> > > > > --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> > > > > +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> > > > > @@ -483,7 +483,7 @@ static int dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
-> > > > >    		return pp->irq;
-> > > > >    	/* MSI IRQ is muxed */
-> > > > > -	pp->msi_irq = -ENODEV;
-> > > > > +	pp->msi_irq[0] = -ENODEV;
-> > > > >    	ret = dra7xx_pcie_init_irq_domain(pp);
-> > > > >    	if (ret < 0)
-> > > > > diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-> > > > > index 467c8d1cd7e4..4f2010bd9cd7 100644
-> > > > > --- a/drivers/pci/controller/dwc/pci-exynos.c
-> > > > > +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> > > > > @@ -292,7 +292,7 @@ static int exynos_add_pcie_port(struct exynos_pcie *ep,
-> > > > >    	}
-> > > > >    	pp->ops = &exynos_pcie_host_ops;
-> > > > > -	pp->msi_irq = -ENODEV;
-> > > > > +	pp->msi_irq[0] = -ENODEV;
-> > > > >    	ret = dw_pcie_host_init(pp);
-> > > > >    	if (ret) {
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > index 2fa86f32d964..5d90009a0f73 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > @@ -257,8 +257,11 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
-> > > > >    static void dw_pcie_free_msi(struct pcie_port *pp)
-> > > > >    {
-> > > > > -	if (pp->msi_irq)
-> > > > > -		irq_set_chained_handler_and_data(pp->msi_irq, NULL, NULL);
-> > > > > +	u32 ctrl;
-> > > > > +
-> > > > > +	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
-> > > > > +		if (pp->msi_irq[ctrl])
-> > > > > +			irq_set_chained_handler_and_data(pp->msi_irq[ctrl], NULL, NULL);
-> > > > >    	irq_domain_remove(pp->msi_domain);
-> > > > >    	irq_domain_remove(pp->irq_domain);
-> > > > > @@ -368,13 +371,15 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > >    			for (ctrl = 0; ctrl < num_ctrls; ctrl++)
-> > > > >    				pp->irq_mask[ctrl] = ~0;
-> > > > > -			if (!pp->msi_irq) {
-> > > > > -				pp->msi_irq = platform_get_irq_byname_optional(pdev, "msi");
-> > > > > -				if (pp->msi_irq < 0) {
-> > > > > -					pp->msi_irq = platform_get_irq(pdev, 0);
-> > > > > -					if (pp->msi_irq < 0)
-> > > > > -						return pp->msi_irq;
-> > > > > +			if (!pp->msi_irq[0]) {
-> > > > > +				int irq = platform_get_irq_byname_optional(pdev, "msi");
-> > > > > +
-> > > > > +				if (irq < 0) {
-> > > > > +					irq = platform_get_irq(pdev, 0);
-> > > > > +					if (irq < 0)
-> > > > > +						return irq;
-> > > > >    				}
-> > > > > +				pp->msi_irq[0] = irq;
-> > > > >    			}
-> > > > >    			pp->msi_irq_chip = &dw_pci_msi_bottom_irq_chip;
-> > > > > @@ -383,10 +388,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > >    			if (ret)
-> > > > >    				return ret;
-> > > > > -			if (pp->msi_irq > 0)
-> > > > > -				irq_set_chained_handler_and_data(pp->msi_irq,
-> > > > > -							    dw_chained_msi_isr,
-> > > > > -							    pp);
-> > > > > +			for (ctrl = 0; ctrl < num_ctrls; ctrl++)
-> > > > > +				if (pp->msi_irq[ctrl] > 0)
-> > > > > +					irq_set_chained_handler_and_data(pp->msi_irq[ctrl],
-> > > > > +									 dw_chained_msi_isr,
-> > > > > +									 pp);
-> > > > >    			ret = dma_set_mask(pci->dev, DMA_BIT_MASK(32));
-> > > > >    			if (ret)
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > index 7d6e9b7576be..9c1a38b0a6b3 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > @@ -187,7 +187,7 @@ struct pcie_port {
-> > > > >    	u32			io_size;
-> > > > >    	int			irq;
-> > > > >    	const struct dw_pcie_host_ops *ops;
-> > > > > -	int			msi_irq;
-> > > > > +	int			msi_irq[MAX_MSI_CTRLS];
-> > > > >    	struct irq_domain	*irq_domain;
-> > > > >    	struct irq_domain	*msi_domain;
-> > > > >    	u16			msi_msg;
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
-> > > > > index 1ac29a6eef22..297e6e926c00 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-keembay.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-keembay.c
-> > > > > @@ -338,7 +338,7 @@ static int keembay_pcie_add_pcie_port(struct keembay_pcie *pcie,
-> > > > >    	int ret;
-> > > > >    	pp->ops = &keembay_pcie_host_ops;
-> > > > > -	pp->msi_irq = -ENODEV;
-> > > > > +	pp->msi_irq[0] = -ENODEV;
-> > > > >    	ret = keembay_pcie_setup_msi_irq(pcie);
-> > > > >    	if (ret)
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
-> > > > > index 1569e82b5568..cc7776833810 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-spear13xx.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
-> > > > > @@ -172,7 +172,7 @@ static int spear13xx_add_pcie_port(struct spear13xx_pcie *spear13xx_pcie,
-> > > > >    	}
-> > > > >    	pp->ops = &spear13xx_pcie_host_ops;
-> > > > > -	pp->msi_irq = -ENODEV;
-> > > > > +	pp->msi_irq[0] = -ENODEV;
-> > > > >    	ret = dw_pcie_host_init(pp);
-> > > > >    	if (ret) {
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > index b1b5f836a806..e75712db85b0 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > @@ -2271,7 +2271,7 @@ static void tegra194_pcie_shutdown(struct platform_device *pdev)
-> > > > >    	disable_irq(pcie->pci.pp.irq);
-> > > > >    	if (IS_ENABLED(CONFIG_PCI_MSI))
-> > > > > -		disable_irq(pcie->pci.pp.msi_irq);
-> > > > > +		disable_irq(pcie->pci.pp.msi_irq[0]);
-> > > > >    	tegra194_pcie_pme_turnoff(pcie);
-> > > > >    	tegra_pcie_unconfig_controller(pcie);
-> > > > > -- 
-> > > > > 2.35.1
-> > > > > 
-> > > 
-> > > 
-> > > -- 
-> > > With best wishes
-> > > Dmitry
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+Changes v4 -> v5:
+- Remove unintended whitespace change in patch 1
+Changes v3 -> v4:
+- Use a do {} while loop in pci_scan_slot() as it is simpler (Bjorn)
+- Explicitly check "fn == 0" as it is not a pointer or bool (Bjorn)
+- Keep the "!dev" check in the ARI branch of next_fn() (Bjorn)
+- Moved the "fn == 0 && !dev" condition out of next_fn() into pci_scan_slot().
+  This allows us to keep the "!dev" case in the ARI branch and means there are
+  no new conditions in next_fn() making it easier to verify that its behavior
+  is equivalent to the existing code.
+- Guard the assignment of dev->multifunction with "fn > 0"
+  instead of "nr > 0". This matches the existing logic more closely and works
+  for the jailhouse case which unconditionally sets dev->multifunction for
+  "fn > 0". This also means fn == 0 is the single "first iteration" test.
+- Remove some unneeded whitespace in patch 2
+
+Changes v2 -> v3:
+- Removed now unused nr_devs variable (kernel test robot)
+
+Niklas Schnelle (4):
+  PCI: Clean up pci_scan_slot()
+  PCI: Move jailhouse's isolated function handling to pci_scan_slot()
+  PCI: Extend isolated function probing to s390
+  s390/pci: allow zPCI zbus without a function zero
+
+ arch/s390/pci/pci_bus.c    | 82 ++++++++++----------------------------
+ drivers/pci/probe.c        | 64 +++++++++++++----------------
+ include/linux/hypervisor.h |  8 ++++
+ 3 files changed, 55 insertions(+), 99 deletions(-)
+
+-- 
+2.32.0
+
