@@ -2,180 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82E67513AA4
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 19:09:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CC31513BC0
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 20:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233222AbiD1RMx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 13:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48320 "EHLO
+        id S1351204AbiD1Sq2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 14:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232805AbiD1RMv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 13:12:51 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E961B82C6
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 10:09:36 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id t13so4482939pgn.8
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 10:09:36 -0700 (PDT)
+        with ESMTP id S1348158AbiD1Sq2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 14:46:28 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1187ABF511;
+        Thu, 28 Apr 2022 11:43:12 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id y21so6549194edo.2;
+        Thu, 28 Apr 2022 11:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=fBDyiC8ejx38/XGCdInTXi7p0RF0GjbjfMkRMdvSGv0=;
-        b=PkwH6hgXz4MEQ6AJYKtgR6JdFn8khlfOomPptOtAb4gKvnZVbyITWFLj18HBDE/jVq
-         V52Y2WTHH+Mlon2KaabpIWE26PVgruOF7iMHzxKPxm04JREeCkFaFvsLGw8n02fmKDjZ
-         jBD/fLoL1Haf8fcxb2iA+AcqU3ztg6rPCAFvccJkcIfUESAAgOglJ8SSPGiyM9GwYclN
-         MVuJ9xQujbAgag0ghXdfMxWFU3vpQ5qXhSaQIz6A34VxadwhAlLt0ey9YQrTOyvsDkqT
-         e5ovy538EjH3oNSYBO35UeP82w4JaRIv/rUgEPPUkNpfXcOqGo4e8PbEFsMyVxtWrrOn
-         KPag==
+        bh=zI+9j94q19l63yFihh0+ZsjTI2C5NOx2hP5jr2k4x9k=;
+        b=WK6kihR8b3wSbEull4x65571g240iY3fBAfiTXsaZDlpj/xdgiElV/P43tUu9yXSVX
+         hWkKZvrStyCqJIayhO18QI89R8AHdCsLMnVVefiMboCPUg9jwW8UI371XTLloEYzpnBa
+         B0GUhQiLmGId/z5djVFsZ7AFAUgOKJDiPHULAklgepOzju10xb0RTX4BA1BeUnJ/S377
+         TjafnXdVqpgpA3pC8zc1MJup7/P2VeO9LxoimierGf1yWwgM8XqY65KnT+hRZSeagjyb
+         oxpyI9c1YV+pNkCdzr9uu3mIs5PfLCToQJgYckJ8Hywf72cLHHacgZsutwe5E7PxhHXF
+         hUSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fBDyiC8ejx38/XGCdInTXi7p0RF0GjbjfMkRMdvSGv0=;
-        b=VHJo5EmJZwm5MTxUPmIwIHxOdItYz4eRkjlOUAazXt3mruAqmlugTUD8sYndXmWMN6
-         YpC5YwsIh6SvQ8Ey5usBz+F/PBgqbMzmiNlLWQXzFjeGpbGZYCfAuoGphty8ikjrcv+d
-         AC8i0LYZsLVrW9FA9S7UpYKJcqJoHwUVm0698QY9ZPgbYigMZg4GXNkrf0xhzdJ+w4An
-         PDDJzHVysQFmFctXM3e8mHSH5E/GAyweprwpGcqY3ahz7e/9/8xM6NNYGHqJlvGwtOON
-         9EZASi9FXzpv4J7/qA0B/fGug6rvSbr4c/vSynLEggfQ9CWGuA1hAyxZbqMm3ycmgnRU
-         HVTw==
-X-Gm-Message-State: AOAM530SKgEunW5YuoZwqrD2uOnRtPgr7ck3eWCLM0WnDXER8K4Yplrt
-        7ZQACyF44Ideggc6Y7Df+4L/
-X-Google-Smtp-Source: ABdhPJxJ1Bxs03N1VpCNGCBPDVOJJta4JTsZ6CuaLJFmn8qQJEEPihJ4pXGGAzycImcb+yUjHIiQZw==
-X-Received: by 2002:aa7:9085:0:b0:50d:35ae:271 with SMTP id i5-20020aa79085000000b0050d35ae0271mr24736247pfa.42.1651165775932;
-        Thu, 28 Apr 2022 10:09:35 -0700 (PDT)
-Received: from thinkpad ([220.158.158.235])
-        by smtp.gmail.com with ESMTPSA id b22-20020a63cf56000000b003c1a1f44736sm320918pgj.90.2022.04.28.10.09.31
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=zI+9j94q19l63yFihh0+ZsjTI2C5NOx2hP5jr2k4x9k=;
+        b=6rwKrNuSL0XXu0nYcWhXHUxkiJdS2bOd1jVGDf3qfKXkJZAt1lr0w5qDT1PZgbv8M2
+         z5nwnb92MWy6YKsBRTRFUgit321njLjbuC4dIX+ae9rCQM0jMvzlqJKMi7t1PeTayKwr
+         O5pRZHw+PObWpVMNA3M+9A79AVUoIMs6ffCtCaNsAhaRMJ6J/pXcyu19RBc5FOROfCPX
+         Ivg2olImHdHjHoMnYxXK9mllPBsZ2ukYuoIzklOLR6xIbUIPbRHoJ/IiOLCIrzcR6YpY
+         TCLKTz/EkaR0+vb9jRLIjeTcByibZsIez7LeSMOUplorU2uEHrEaZL6AJmWijEIvm6D3
+         RCTg==
+X-Gm-Message-State: AOAM533e7emqyzaBYTne6YYBnvz2WYPjTaC41HrEeAK2VNkYaBhr5D2I
+        Jo5VXboGAbfeCWf36SRCMoY=
+X-Google-Smtp-Source: ABdhPJx/YPYe4JPKWoxoRcaMVgX4E0nnzI2Yu9Okc03Ig2cnSUmTTSqOuZdSRJVF91tk7qq1rWWdDg==
+X-Received: by 2002:aa7:d954:0:b0:425:f621:f77f with SMTP id l20-20020aa7d954000000b00425f621f77fmr18775972eds.363.1651171390413;
+        Thu, 28 Apr 2022 11:43:10 -0700 (PDT)
+Received: from eldamar (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id v17-20020a1709060b5100b006f38cf075cbsm273241ejg.104.2022.04.28.11.43.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Apr 2022 10:09:35 -0700 (PDT)
-Date:   Thu, 28 Apr 2022 22:39:29 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        Thu, 28 Apr 2022 11:43:09 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Date:   Thu, 28 Apr 2022 20:43:07 +0200
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
+        Dusty Mabe <dustymabe@redhat.com>, Stefan Roese <sr@denx.de>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 25/25] PCI: dwc: Add DW eDMA engine support
-Message-ID: <20220428170929.GC81644@thinkpad>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-26-Sergey.Semin@baikalelectronics.ru>
- <20220328141521.GA17663@thinkpad>
- <20220419205403.hdtp67mwoyrl6b6q@mobilestation>
- <20220423144055.GR374560@thinkpad>
- <20220428140501.6geybgwvkevqaz7e@mobilestation.baikal.int>
+        Michal Simek <michal.simek@xilinx.com>,
+        Marek Vasut <marex@denx.de>, x86@kernel.org, maz@kernel.org,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Noah Meyerhans <noahm@debian.org>
+Subject: Re: [tip: irq/urgent] PCI/MSI: Mask MSI-X vectors only on success
+Message-ID: <YmrgO09bqePgiJJd@eldamar.lan>
+References: <20211210161025.3287927-1-sr@denx.de>
+ <163948488617.23020.3934435568065766936.tip-bot2@tip-bot2>
+ <Yi9vH2F2OBDprwd8@jpiotrowski-Surface-Book-3>
+ <43418c23-5efd-4d14-706f-f536c504b75a@denx.de>
+ <c4a65b9a-d1e2-bf0d-2519-aac7185931d5@redhat.com>
+ <Yi+lwVRTu8xxi9Gy@jpiotrowski-Surface-Book-3>
+ <Ymj3zzjQ9PwYaX/p@eldamar.lan>
+ <87v8uuwhs4.ffs@tglx>
+ <87wnf9uxnw.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220428140501.6geybgwvkevqaz7e@mobilestation.baikal.int>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <87wnf9uxnw.ffs@tglx>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 05:05:23PM +0300, Serge Semin wrote:
+Hi Thomas,
 
-[...]
-
-> > If iATU has unroll enabled then I think we can assume that edma will also be
-> > the same. So I was wondering if we could just depend on iatu_unroll_enabled
-> > here.
+On Thu, Apr 28, 2022 at 03:48:03PM +0200, Thomas Gleixner wrote:
+> On Wed, Apr 27 2022 at 19:35, Thomas Gleixner wrote:
+> > On Wed, Apr 27 2022 at 09:59, Salvatore Bonaccorso wrote:
+> > XEN guests do not use the common PCI mask/unmask machinery which would
+> > unmask the interrupt on request_irq().
+> >
+> > So I assume that the following happens:
+> >
+> > Guest                     Hypervisor
+> >
+> > msix_capabilities_init()
+> >         ....
+> >         alloc_irq()
+> >            xen_magic()  -> alloc_msix_interrupt()
+> >                            request_irq()
+> >
+> >         msix_mask_all() -> trap
+> >                              do_magic()
+> > request_irq()
+> >    unmask()
+> >      xen_magic()
+> >        unmask_evtchn()  -> do_more_magic()
+> >
+> > So I assume further that msix_mask_all() actually is able to mask the
+> > interrupts in the hardware (ctrl word of the vector table) despite the
+> > hypervisor having allocated and requested the interrupt already.
+> >
+> > Nothing in XEN_HVM handles PCI/MSI[-X] mask/unmask in the guest, so I
+> > really have to ask why XEN_HVM does not disable PCI/MSI[-X] masking like
+> > XEN_PV does. I can only assume the answer is voodoo...
+> >
+> > Maybe the XEN people have some more enlightened answers to that.
 > 
-> I thought about that, but then I decided it was easier to just define
-> a new flag. Anyway according to the hw manuals indeed the unroll
-> mapping is enabled either for both iATU and eDMA modules or for none
-> of them just because they are mapped over a single space. It's
-> determined by the internal VHL parameter CC_UNROLL_ENABLE.
-> On the second thought I agree with you then. I'll convert the
-> iatu_unroll_enabled flag into a more generic 'reg_unroll' and make
-> sure it's used for both modules.
+> So I was talking to Juergen about this and he agrees, that for the case
+> where a XEN HVM guest uses the PIRQ/Eventchannel mechanism PCI/MSI[-X]
+> masking should be disabled like it is done for XEN PV.
 > 
-
-Sounds good!
-
-> > 
-> > > > 
-> > > > > +	if (pci->edma_unroll_enabled && pci->iatu_unroll_enabled) {
-> > > > > +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-> > > > > +		if (pci->atu_base != pci->dbi_base + DEFAULT_DBI_ATU_OFFSET)
-> > > > > +			pci->edma.reg_base = pci->atu_base + PCIE_DMA_UNROLL_BASE;
-> > > > > +		else
-> > > > > +			pci->edma.reg_base = pci->dbi_base + DEFAULT_DBI_DMA_OFFSET;
-> > > > 
-> > > 
-> > > > This assumption won't work on all platforms. Atleast on our platform, the
-> > > > offsets vary. So I'd suggest to try getting the reg_base from DT first and use
-> > > > these offsets as a fallback as we do for iATU.
-> > > 
-> > > I don't know how the eDMA offset can vary at least concerning the
-> > > normal DW PCIe setup. In any case the DW eDMA controller CSRs are
-> > > mapped in the same way as the iATU space: CS2=1 CDM=1. They are either
-> > > created as an unrolled region mapped into the particular MMIO space
-> > > (as a separate MMIO space or as a part of the DBI space), or
-> > > accessible over the PL viewports (as a part of the Port Logic CSRs).
-> > > Nothing else is described in the hardware manuals. Based on that I
-> > > don't see a reason to add one more reg space binding.
-> > > 
-> > 
+> Why the hypervisor grants the mask write is still mysterious, but I
+> leave that to the folks who can master the XEN voodoo.
 > 
-> > This is not true. Vendors can customize the iATU location inside DBI region
-> > for unroll too. That's one of the reason why dw_pcie_iatu_detect() works on
-> > qcom platforms as it tries to get iatu address from DT first and then falls
-> > back to the default offset if not found.
-> > 
-> > So please define an additional DT region for edma.
-> 
-> It's obvious that iATU location can vary. I never said it didn't. We
-> are talking about eDMA here. In accordance with what the DW PCIe hw
-> manuals say eDMA always resides the same space as the iATU. The space
-> is enabled by setting the CS2=1 and CDM=1 wires in case of the Native
-> Controller DBI access. In this case eDMA is defined with the 0x80000
-> offset over the iATU base address while the iATU base can be placed at
-> whatever region platform engineer needs.
-> 
-> Alternatively the AXI Bridge-based DBI access can be enabled thus
-> having the DBI+iATU+eDMA mapped over the same MMIO space with
-> respective offsets 0x0;0x300000;0x380000. This case is handled in the
-> branch of the conditional statement above if it's found that iATU base
-> is having the default offset with respect to the DBI base address
-> (pci->atu_base == pci->dbi_base + DEFAULT_DBI_ATU_OFFSET).
-> 
-> To sum up seeing I couldn't find the eDMA region defined in the qcom
-> bindings and judging by what you say doesn't really contradict to what
-> is done in my code, I guess there must be some misunderstanding either in
-> what you see in the code above or what I understand from what you say.
-> So please be more specific what offsets and whether they are really
-> different from what I use in the code above.
-> 
+> I'll send out a patch in minute.
 
-You won't see any edma register offset because no one bothered to define it
-since it was not used until now. But the memory region should've been
-documented...
+Thank you. We are having Noah Meyerhans now testing the patch and he
+will report back if it works (Cc'ed here now).
 
-Anyway, here is the offset for the Qcom SoC I'm currently working on:
-
-DBI  - 0x0
-iATU - 0x1000
-eDMA - 0x2000
-
-As you can see, these offsets doesn't really fit in both the cases you shared
-above.
-
-I don't have the knowledge about the internal representation of the IP or what
-customization Qcom did apart from some high level information.
-
-Hope this clarifies!
-
-Thanks,
-Mani
+Regards,
+Salvatore
