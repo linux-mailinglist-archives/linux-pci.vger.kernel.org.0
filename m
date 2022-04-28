@@ -2,135 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CC31513BC0
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 20:43:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 348A8513BE5
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 20:56:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351204AbiD1Sq2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 14:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38892 "EHLO
+        id S236810AbiD1S7Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 14:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348158AbiD1Sq2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 14:46:28 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1187ABF511;
-        Thu, 28 Apr 2022 11:43:12 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id y21so6549194edo.2;
-        Thu, 28 Apr 2022 11:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zI+9j94q19l63yFihh0+ZsjTI2C5NOx2hP5jr2k4x9k=;
-        b=WK6kihR8b3wSbEull4x65571g240iY3fBAfiTXsaZDlpj/xdgiElV/P43tUu9yXSVX
-         hWkKZvrStyCqJIayhO18QI89R8AHdCsLMnVVefiMboCPUg9jwW8UI371XTLloEYzpnBa
-         B0GUhQiLmGId/z5djVFsZ7AFAUgOKJDiPHULAklgepOzju10xb0RTX4BA1BeUnJ/S377
-         TjafnXdVqpgpA3pC8zc1MJup7/P2VeO9LxoimierGf1yWwgM8XqY65KnT+hRZSeagjyb
-         oxpyI9c1YV+pNkCdzr9uu3mIs5PfLCToQJgYckJ8Hywf72cLHHacgZsutwe5E7PxhHXF
-         hUSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=zI+9j94q19l63yFihh0+ZsjTI2C5NOx2hP5jr2k4x9k=;
-        b=6rwKrNuSL0XXu0nYcWhXHUxkiJdS2bOd1jVGDf3qfKXkJZAt1lr0w5qDT1PZgbv8M2
-         z5nwnb92MWy6YKsBRTRFUgit321njLjbuC4dIX+ae9rCQM0jMvzlqJKMi7t1PeTayKwr
-         O5pRZHw+PObWpVMNA3M+9A79AVUoIMs6ffCtCaNsAhaRMJ6J/pXcyu19RBc5FOROfCPX
-         Ivg2olImHdHjHoMnYxXK9mllPBsZ2ukYuoIzklOLR6xIbUIPbRHoJ/IiOLCIrzcR6YpY
-         TCLKTz/EkaR0+vb9jRLIjeTcByibZsIez7LeSMOUplorU2uEHrEaZL6AJmWijEIvm6D3
-         RCTg==
-X-Gm-Message-State: AOAM533e7emqyzaBYTne6YYBnvz2WYPjTaC41HrEeAK2VNkYaBhr5D2I
-        Jo5VXboGAbfeCWf36SRCMoY=
-X-Google-Smtp-Source: ABdhPJx/YPYe4JPKWoxoRcaMVgX4E0nnzI2Yu9Okc03Ig2cnSUmTTSqOuZdSRJVF91tk7qq1rWWdDg==
-X-Received: by 2002:aa7:d954:0:b0:425:f621:f77f with SMTP id l20-20020aa7d954000000b00425f621f77fmr18775972eds.363.1651171390413;
-        Thu, 28 Apr 2022 11:43:10 -0700 (PDT)
-Received: from eldamar (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id v17-20020a1709060b5100b006f38cf075cbsm273241ejg.104.2022.04.28.11.43.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Apr 2022 11:43:09 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Date:   Thu, 28 Apr 2022 20:43:07 +0200
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
-        Dusty Mabe <dustymabe@redhat.com>, Stefan Roese <sr@denx.de>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Marek Vasut <marex@denx.de>, x86@kernel.org, maz@kernel.org,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Noah Meyerhans <noahm@debian.org>
-Subject: Re: [tip: irq/urgent] PCI/MSI: Mask MSI-X vectors only on success
-Message-ID: <YmrgO09bqePgiJJd@eldamar.lan>
-References: <20211210161025.3287927-1-sr@denx.de>
- <163948488617.23020.3934435568065766936.tip-bot2@tip-bot2>
- <Yi9vH2F2OBDprwd8@jpiotrowski-Surface-Book-3>
- <43418c23-5efd-4d14-706f-f536c504b75a@denx.de>
- <c4a65b9a-d1e2-bf0d-2519-aac7185931d5@redhat.com>
- <Yi+lwVRTu8xxi9Gy@jpiotrowski-Surface-Book-3>
- <Ymj3zzjQ9PwYaX/p@eldamar.lan>
- <87v8uuwhs4.ffs@tglx>
- <87wnf9uxnw.ffs@tglx>
+        with ESMTP id S234496AbiD1S7P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 14:59:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE9AB1AA9;
+        Thu, 28 Apr 2022 11:55:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5920561903;
+        Thu, 28 Apr 2022 18:55:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639D4C385A9;
+        Thu, 28 Apr 2022 18:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651172158;
+        bh=QbMp+TVcUkgGvq0RzONOxoY8dbfDmVzl1OJIP43ws7M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HpeeN7zKaZ0TLJoF6hwVPx/0W0Mq4blWXgdROsyvZui/gM3LRKwgPNFhaB2vhBFx8
+         0OhmdsQgBYaBC9g+o4XR69PyLi9UETTgL7pSWrFDn6X/bpcBXFKCMMxd3aVmA3ZLJa
+         Iy0Gkpe02uROBT0FkyRemJn334rVgOjjQNuPwg5GaUt4rSZvoo7aw6n9dOhSbegmxL
+         6qtAKRbvAZqusgSk6qpuT9Ir9Ar4E2wZQaAhVISHw+t+O7DzXM8AUGL3KDYMcvu+UE
+         yuTurea2T/flvU0+ZUC6bFmVZNB3FWl6Bde/Xj+rW1YFuFdFbnwHIEkmM7o2yk1Kw5
+         RxA7kfdNEOlEA==
+Date:   Thu, 28 Apr 2022 13:55:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Avoid handing out address 0 to devices
+Message-ID: <20220428185556.GA35255@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87wnf9uxnw.ffs@tglx>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <alpine.DEB.2.21.2204192214310.9383@angie.orcam.me.uk>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
+On Wed, Apr 27, 2022 at 11:18:12PM +0100, Maciej W. Rozycki wrote:
+> On Mon, 18 Apr 2022, Bjorn Helgaas wrote:
+> ...
 
-On Thu, Apr 28, 2022 at 03:48:03PM +0200, Thomas Gleixner wrote:
-> On Wed, Apr 27 2022 at 19:35, Thomas Gleixner wrote:
-> > On Wed, Apr 27 2022 at 09:59, Salvatore Bonaccorso wrote:
-> > XEN guests do not use the common PCI mask/unmask machinery which would
-> > unmask the interrupt on request_irq().
-> >
-> > So I assume that the following happens:
-> >
-> > Guest                     Hypervisor
-> >
-> > msix_capabilities_init()
-> >         ....
-> >         alloc_irq()
-> >            xen_magic()  -> alloc_msix_interrupt()
-> >                            request_irq()
-> >
-> >         msix_mask_all() -> trap
-> >                              do_magic()
-> > request_irq()
-> >    unmask()
-> >      xen_magic()
-> >        unmask_evtchn()  -> do_more_magic()
-> >
-> > So I assume further that msix_mask_all() actually is able to mask the
-> > interrupts in the hardware (ctrl word of the vector table) despite the
-> > hypervisor having allocated and requested the interrupt already.
-> >
-> > Nothing in XEN_HVM handles PCI/MSI[-X] mask/unmask in the guest, so I
-> > really have to ask why XEN_HVM does not disable PCI/MSI[-X] masking like
-> > XEN_PV does. I can only assume the answer is voodoo...
-> >
-> > Maybe the XEN people have some more enlightened answers to that.
+> > Sparc uses the MMIO I/O port address directly in the struct resource,
+> > so it will never try to allocate [io 0x0000], and there's no problem
+> > with using PCI I/O port 0:
+> > 
+> >   pci_bus 0000:00: root bus resource [io  0x804000000000-0x80400fffffff] (bus address [0x0000-0xfffffff])
+> >   mpt2sas0: ioport(0x0000804000001000), size(256)
+> > 
+> > The sparc ioport interfaces are basically:
+> > 
+> >   ioport_map(port)  { return port; }
+> >   ioread8(addr)     { return readb(addr); }
+> >   inb(addr)         { return readb(addr); }
+> > 
+> > RISC-V uses the generic ones, i.e.,
+> > 
+> >   ioport_map(port)  { return PIO_OFFSET + port; }
+> >   ioread8(addr)     { if (addr) >= PIO_RESERVED)
+> >                         return readb(addr);
+> >                       else
+> >                         return inb(addr & PIO_MASK); }
+> >   inb(addr)         { return __raw_readb(PCI_IOBASE + addr); }
+> > 
+> > Obviously RISC-V gives you prettier I/O port addresses, but at the
+> > cost of having PCI I/O port 0 be 0 in the struct resource as well,
+> > which makes it basically unusable.  Is it worth it?
 > 
-> So I was talking to Juergen about this and he agrees, that for the case
-> where a XEN HVM guest uses the PIRQ/Eventchannel mechanism PCI/MSI[-X]
-> masking should be disabled like it is done for XEN PV.
-> 
-> Why the hypervisor grants the mask write is still mysterious, but I
-> leave that to the folks who can master the XEN voodoo.
-> 
-> I'll send out a patch in minute.
+>  Well, the SPARC port may be able to get away with that, but overall I 
+> think using PCI bus addresses for port I/O resources is the only sane 
+> thing to do.
 
-Thank you. We are having Noah Meyerhans now testing the patch and he
-will report back if it works (Cc'ed here now).
+That only works if you have a single host bridge where you care about
+I/O ports, or if you're willing to split up the single space across
+the multiple host bridges, e.g., [io 0x0000-0x7fff] to one host
+bridge, [0x8000-0xffff] to another.
 
-Regards,
-Salvatore
+> In fact I think for MMIO resources we probably ought to do 
+> the same, though it may be actually more difficult to implement, because 
+> it's more likely there are systems out there with multiple per-bus MMIO 
+> address spaces.
+
+I might be missing your point here, but multiple host bridges are
+common on ia64, sparc, and (I think) powerpc.  It probably would be
+feasible to make the struct resource address identical to the PCI bus
+address for 64-bit MMIO space because they're both constrained to the
+same-sized space.
+
+But doing it for the PCI 32-bit non-prefetchable space would be an
+issue because there's usually RAM in that area of CPU address space,
+so we'd have to reserve a hole for PCI, put the MMIO in the hole, then
+split the MMIO space across all the host bridges.  This sparc system
+has 16 host bridges, so even if we had no hole, each one could only
+have 256MB of identity-mapped non-prefetchable space:
+
+  pci_bus 0000:00: root bus resource [mem 0x800000000000-0x80007effffff] (bus address [0x00000000-0x7effffff])
+  pci_bus 0001:00: root bus resource [mem 0x801000000000-0x80107effffff] (bus address [0x00000000-0x7effffff])
+  ...
+  pci_bus 000f:00: root bus resource [mem 0x839000000000-0x83907effffff] (bus address [0x00000000-0x7effffff])
+
+(This is from https://bugzilla.kernel.org/show_bug.cgi?id=96241)
+
+>  The reason why I think using bus addresses here is the right thing to do 
+> is that systems may have multiple decode windows exposed to the CPU(s) 
+> mapping to the same I/O bus addresses, often for specific purposes. E.g. 
+> Alpha has the sparse and the dense address space and some systems (I have 
+> one with a MIPS CPU) have spaces with different endianness swap policies 
+> (for matching either bit or byte lanes) wired in the bus logic hardware.  
+> So the same port I/O location can be mapped at different MMIO addresses 
+> simultaneously in one system.
+
+Is this feature used by Linux?  I guess it would require some generic
+mechanism drivers could use to get the desired endianness?  I don't
+know whether such a thing exists.
+
+Bjorn
