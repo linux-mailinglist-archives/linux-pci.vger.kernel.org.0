@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34D855135A2
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 15:48:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 349785135B0
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Apr 2022 15:51:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347562AbiD1NvY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Apr 2022 09:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48884 "EHLO
+        id S1347729AbiD1NyR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Apr 2022 09:54:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344676AbiD1NvW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 09:51:22 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C41F49C87;
-        Thu, 28 Apr 2022 06:48:07 -0700 (PDT)
+        with ESMTP id S1347855AbiD1NyL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Apr 2022 09:54:11 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AA8287;
+        Thu, 28 Apr 2022 06:50:56 -0700 (PDT)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1651153684;
+        s=2020; t=1651153854;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=BRKdot5ttusBTKgjdBbqkbA/kf9Xlr83fTRIj0wkH84=;
-        b=TDVC34fSnSPxzYcINftwPpx5/duIBp2zqhZ+Np9mWNUL0oYWvhRdoBf/AVJSgjszCnJAKk
-        JtpIG2eGXh/BwJUdms03bJ3whjcZbsDcYN2eBeZY3OK2dOE5+DfZe7JezcpDL02cJsylP/
-        XREMKrt+eKlYFQ7HDhiYz41wRLWtQUanqgtU6N1RYVOCu6epwNlfRYvUYCseb0bJIe6p0U
-        uBqhjBhwWauqzZTyd5a7ZAFXdWimCnd67tZxj36aixFyahABpZxiytU2fc7ngNCxlCmiP0
-        HbtJe41fB/HMZx6AlVlRgyREuJ2Ge7F5gZXpzOPwKADXmTTPVjAnu06Kj7JkOg==
+        bh=dCGtFkm7vYpLzkgi/vPjKkxFD15BrWI9YEH1owpKlTI=;
+        b=JHF1x9+aYskUyJAqqRbUsp6urutL55NEvbWQRqrmpeiyXlu/CKpOLnVWQXVl2Ebx4J0fPr
+        d4NPU4WSfR4jTCyhPyZSiMdK2p+XqoRa4+QB9bMo61m31occ7org2KitZci+tJ0LJl7gN+
+        C+Ppe4rNZ8PAFrHyl4rgHBq7bE6uiuAyFTnGgg3i5d1C+7m6115QBaNFaYTE+HR9xmEQlA
+        pkbl3TsYSbAEDfYmN3qs/JyKa83Fx0E4vwpyC9bdHK5E2kXETqolIHza2QN9AW2592QSez
+        SYygIayV5OwqhmpsAkOY/7BfknosBfPotFGuXMDMXEnEUctTmuXX8ff/XnW4KA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1651153684;
+        s=2020e; t=1651153854;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=BRKdot5ttusBTKgjdBbqkbA/kf9Xlr83fTRIj0wkH84=;
-        b=iSex9BtdxA9VVKGTdcZeKTKYsnoSP0JqXGxVekCncx0EzMDri3nZItgkjhutaLCMDFCwLr
-        BfAMf7EIz+w2j8Aw==
+        bh=dCGtFkm7vYpLzkgi/vPjKkxFD15BrWI9YEH1owpKlTI=;
+        b=rvop2lxwc/NZ5bIp8mBZLz9aR19pADzzrZP2H+kpgUqoth9GhBjDWP45UaRsePTuHnWbUU
+        np744uxYgsQMtYAQ==
 To:     Salvatore Bonaccorso <carnil@debian.org>,
         Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
 Cc:     Dusty Mabe <dustymabe@redhat.com>, Stefan Roese <sr@denx.de>,
@@ -43,17 +43,17 @@ Cc:     Dusty Mabe <dustymabe@redhat.com>, Stefan Roese <sr@denx.de>,
         Marek Vasut <marex@denx.de>, x86@kernel.org, maz@kernel.org,
         Andrew Cooper <andrew.cooper3@citrix.com>,
         Juergen Gross <jgross@suse.com>
-Subject: Re: [tip: irq/urgent] PCI/MSI: Mask MSI-X vectors only on success
-In-Reply-To: <87v8uuwhs4.ffs@tglx>
+Subject: [PATCH] x86/pci/xen: Disable PCI/MSI[-X] masking for XEN_HVM guests
+In-Reply-To: <87wnf9uxnw.ffs@tglx>
 References: <20211210161025.3287927-1-sr@denx.de>
  <163948488617.23020.3934435568065766936.tip-bot2@tip-bot2>
  <Yi9vH2F2OBDprwd8@jpiotrowski-Surface-Book-3>
  <43418c23-5efd-4d14-706f-f536c504b75a@denx.de>
  <c4a65b9a-d1e2-bf0d-2519-aac7185931d5@redhat.com>
  <Yi+lwVRTu8xxi9Gy@jpiotrowski-Surface-Book-3>
- <Ymj3zzjQ9PwYaX/p@eldamar.lan> <87v8uuwhs4.ffs@tglx>
-Date:   Thu, 28 Apr 2022 15:48:03 +0200
-Message-ID: <87wnf9uxnw.ffs@tglx>
+ <Ymj3zzjQ9PwYaX/p@eldamar.lan> <87v8uuwhs4.ffs@tglx> <87wnf9uxnw.ffs@tglx>
+Date:   Thu, 28 Apr 2022 15:50:54 +0200
+Message-ID: <87tuaduxj5.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -65,47 +65,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 27 2022 at 19:35, Thomas Gleixner wrote:
-> On Wed, Apr 27 2022 at 09:59, Salvatore Bonaccorso wrote:
-> XEN guests do not use the common PCI mask/unmask machinery which would
-> unmask the interrupt on request_irq().
->
-> So I assume that the following happens:
->
-> Guest                     Hypervisor
->
-> msix_capabilities_init()
->         ....
->         alloc_irq()
->            xen_magic()  -> alloc_msix_interrupt()
->                            request_irq()
->
->         msix_mask_all() -> trap
->                              do_magic()
-> request_irq()
->    unmask()
->      xen_magic()
->        unmask_evtchn()  -> do_more_magic()
->
-> So I assume further that msix_mask_all() actually is able to mask the
-> interrupts in the hardware (ctrl word of the vector table) despite the
-> hypervisor having allocated and requested the interrupt already.
->
-> Nothing in XEN_HVM handles PCI/MSI[-X] mask/unmask in the guest, so I
-> really have to ask why XEN_HVM does not disable PCI/MSI[-X] masking like
-> XEN_PV does. I can only assume the answer is voodoo...
->
-> Maybe the XEN people have some more enlightened answers to that.
+When a XEN_HVM guest uses the XEN PIRQ/Eventchannel mechanism, then
+PCI/MSI[-X] masking is solely controlled by the hypervisor, but contrary to
+XEN_PV guests this does not disable PCI/MSI[-X] masking in the PCI/MSI
+layer.
 
-So I was talking to Juergen about this and he agrees, that for the case
-where a XEN HVM guest uses the PIRQ/Eventchannel mechanism PCI/MSI[-X]
-masking should be disabled like it is done for XEN PV.
+This can lead to a situation where the PCI/MSI layer masks an MSI[-X]
+interrupt and the hypervisor grants the write despite the fact that it
+already requested the interrupt. As a consequence interrupt delivery on the
+affected device is not happening ever.
 
-Why the hypervisor grants the mask write is still mysterious, but I
-leave that to the folks who can master the XEN voodoo.
+Set pci_msi_ignore_mask to prevent that like it's done for XEN_PV guests
+already.
 
-I'll send out a patch in minute.
+Reported-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+Reported-by: Dusty Mabe <dustymabe@redhat.com>
+Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+Fixes: 809f9267bbab ("xen: map MSIs into pirqs")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/pci/xen.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Thanks,
-
-        tglx
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -467,7 +467,6 @@ static __init void xen_setup_pci_msi(voi
+ 		else
+ 			xen_msi_ops.setup_msi_irqs = xen_setup_msi_irqs;
+ 		xen_msi_ops.teardown_msi_irqs = xen_pv_teardown_msi_irqs;
+-		pci_msi_ignore_mask = 1;
+ 	} else if (xen_hvm_domain()) {
+ 		xen_msi_ops.setup_msi_irqs = xen_hvm_setup_msi_irqs;
+ 		xen_msi_ops.teardown_msi_irqs = xen_teardown_msi_irqs;
+@@ -481,6 +480,11 @@ static __init void xen_setup_pci_msi(voi
+ 	 * in allocating the native domain and never use it.
+ 	 */
+ 	x86_init.irqs.create_pci_msi_domain = xen_create_pci_msi_domain;
++	/*
++	 * With XEN PIRQ/Eventchannels in use PCI/MSI[-X] masking is solely
++	 * controlled by the hypervisor.
++	 */
++	pci_msi_ignore_mask = 1;
+ }
+ 
+ #else /* CONFIG_PCI_MSI */
