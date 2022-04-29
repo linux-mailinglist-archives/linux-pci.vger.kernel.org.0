@@ -2,180 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0740E5142A1
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 08:49:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42F785142AB
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 08:53:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354777AbiD2Gwh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 02:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43572 "EHLO
+        id S1354628AbiD2G4p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 02:56:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354741AbiD2Gwg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 02:52:36 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29097BCB57
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 23:49:19 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id k23so13644168ejd.3
-        for <linux-pci@vger.kernel.org>; Thu, 28 Apr 2022 23:49:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=ojBbvtb1o01zsnYB75OteAg/TGpNEdw9pesZ19hw8Vk=;
-        b=XAh1xUf3hrxIejOXIORrozIl5IMMRTLzxUJgWIEB4uIkZjQ17TYHJ+oTQ2RH40nENk
-         cs9hSSbpwsK3GhdSLC+vcYZmvOdsxBCvkmCOJu8LV1VVZokHPIqWhrCtR9dF4mqBqERo
-         dF+Eo/oLlfjRMpOn3YIHmZdR1za7luj5DmoVGP8++N5Xm9bq9iDoSCahZcv3eg1YbnR5
-         EnBESMaBeHrmXellDZAgKH7qy2VR+67e2yV+ffFYl6iylkY5PqRYc45R+g5/8NKSz3QC
-         uJyaddT+LGTNj5efcfxY6E2IpPjRlFUr7C3cIWcc3fx9VWINTNzFoFnpLLsnFkA52CMA
-         GFpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ojBbvtb1o01zsnYB75OteAg/TGpNEdw9pesZ19hw8Vk=;
-        b=uZDKORLQHmizNj/cRtn1rMojLEwYT+jKg9KwkZ4Kh0+GrZcU+9Icfm/RN7JlRGcN32
-         JP8NVi4XqXqbqrLzPsfuXbK6oF1wQK9slMUqB0sofBk50A8mjzjUrf1CR0PV2e/shmvf
-         4u1crnuVS3kQEux5NeWHIBxxnqOW4jA9iYfeBFfSFmQq4t8hNH02epO9df+55HaHqXki
-         AfCHXmHuVncg50YIWRQlsSxCsWGi3qi5eA5Vvip/huKpId059YoZdEQZbdKHCEYa/W59
-         u79P5LgaObotnZjv4IQGOyVJgH0PEG7nkuV56HHnbK2xNP85TtiX37vjjUGUf/yA2PHL
-         ijog==
-X-Gm-Message-State: AOAM530ychRqq4rcpYHwbQbouNLZ30F7mXXxJGLHQuJLg4MKJsdRUKK8
-        LShefjWw6WYgFNmM6TlszXmKTA==
-X-Google-Smtp-Source: ABdhPJxBiIlo6xZcqio/Vpvr1Nuc0WuzvHNnNXZAE0k+/chdCWeqOZAxBw2MhEeiLlSHJvfCQiL6lw==
-X-Received: by 2002:a17:906:2991:b0:6cd:ac19:ce34 with SMTP id x17-20020a170906299100b006cdac19ce34mr35412237eje.746.1651214957738;
-        Thu, 28 Apr 2022 23:49:17 -0700 (PDT)
-Received: from [192.168.0.168] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id v3-20020aa7d9c3000000b0042617ba63cesm2592560eds.88.2022.04.28.23.49.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Apr 2022 23:49:17 -0700 (PDT)
-Message-ID: <fcc92b14-83fc-c945-a7eb-8907e5ba7922@linaro.org>
-Date:   Fri, 29 Apr 2022 08:49:16 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v4 6/7] dt-bindings: pci/qcom,pcie: support additional MSI
- interrupts
-Content-Language: en-US
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        with ESMTP id S1348954AbiD2G4p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 02:56:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C323756768;
+        Thu, 28 Apr 2022 23:53:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0E9D3B832F4;
+        Fri, 29 Apr 2022 06:53:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B806DC385AC;
+        Fri, 29 Apr 2022 06:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651215204;
+        bh=jFzLIgFDBXvEXK9brj3GiRx598j1W1BP4ZGK9938VXo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TYg+QiGKPQu2FAiyx7bvU2SOo7ce9+OXiJ0n1cAuExR2I38Zq8OapYQCAgiO2T8bV
+         lTY+gdKLQKEKrpiuBBs8AgJje9vxzh9f2nQd9Zyk3aeWv9u6CnW4fjlhykrxXOYPfR
+         pMuewp9WzGC0sO5SHR6BGUlzm/0KxwkerfQwrzBJq17sHM1ukKURBvoO3Hsc2bECHs
+         lRf+J4LuM2YTV0bTPnyI/zMZQO+DudRZTBsAe2x8DAefgFrqKYC+QAXpCLnOsriNZu
+         nxPKOtA+EKE9ILxmzg8Kc5bDPZ9VYIJKt78U5qxiaRTSa9QUZOvH9lyhOU2l65ZBI3
+         fQHdYTnQyNfNg==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1nkKVI-0001ir-A6; Fri, 29 Apr 2022 08:53:25 +0200
+Date:   Fri, 29 Apr 2022 08:53:24 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-References: <20220428115934.3414641-1-dmitry.baryshkov@linaro.org>
- <20220428115934.3414641-7-dmitry.baryshkov@linaro.org>
- <6bd8eb4e-81eb-7e87-155b-f48b487e16ae@linaro.org>
- <CAA8EJpq38EudVcb7quuk1u85Cw+hJADxagkV7rN7fP9A-fz-Wg@mail.gmail.com>
- <42588c32-5068-5f12-4cf8-f8b9bd074e88@linaro.org>
- <db2f32e1-beeb-b421-efaa-b68900d99559@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <db2f32e1-beeb-b421-efaa-b68900d99559@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: Re: [PATCH RFC 1/5] phy: qcom-qmp: add support for pipe clock muxing
+Message-ID: <YmuLZNg+91HW2lsY@hovoldconsulting.com>
+References: <20220421102041.17345-1-johan+linaro@kernel.org>
+ <20220421102041.17345-2-johan+linaro@kernel.org>
+ <YmqSkP++4xzisJHp@ripper>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YmqSkP++4xzisJHp@ripper>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/04/2022 16:45, Dmitry Baryshkov wrote:
-> On 28/04/2022 17:06, Krzysztof Kozlowski wrote:
->> On 28/04/2022 15:57, Dmitry Baryshkov wrote:
->>> On Thu, 28 Apr 2022 at 15:08, Krzysztof Kozlowski
->>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>
->>>> On 28/04/2022 13:59, Dmitry Baryshkov wrote:
->>>>> On Qualcomm platforms each group of 32 MSI vectors is routed to the
->>>>> separate GIC interrupt. Document mapping of additional interrupts.
->>>>>
->>>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>>> ---
->>>>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 51 ++++++++++++++++++-
->>>>>   1 file changed, 50 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>>> index 0b69b12b849e..a8f99bca389e 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->>>>> @@ -43,11 +43,20 @@ properties:
->>>>>       maxItems: 5
->>>>>
->>>>>     interrupts:
->>>>> -    maxItems: 1
->>>>> +    minItems: 1
->>>>> +    maxItems: 8
->>>>>
->>>>>     interrupt-names:
->>>>> +    minItems: 1
->>>>>       items:
->>>>>         - const: msi
->>>>> +      - const: msi2
->>>>> +      - const: msi3
->>>>> +      - const: msi4
->>>>> +      - const: msi5
->>>>> +      - const: msi6
->>>>> +      - const: msi7
->>>>> +      - const: msi8
->>>>>
->>>>>     # Common definitions for clocks, clock-names and reset.
->>>>>     # Platform constraints are described later.
->>>>> @@ -623,6 +632,46 @@ allOf:
->>>>>           - resets
->>>>>           - reset-names
->>>>>
->>>>> +    # On newer chipsets support either 1 or 8 msi interrupts
->>>>> +    # On older chipsets it's always 1 msi interrupt
->>>>> +  - if:
->>>>> +      properties:
->>>>> +        compatibles:
->>>>> +          contains:
->>>>> +            enum:
->>>>> +              - qcom,pcie-msm8996
->>>>> +              - qcom,pcie-sc7280
->>>>> +              - qcom,pcie-sc8180x
->>>>> +              - qcom,pcie-sdm845
->>>>> +              - qcom,pcie-sm8150
->>>>> +              - qcom,pcie-sm8250
->>>>> +              - qcom,pcie-sm8450-pcie0
->>>>> +              - qcom,pcie-sm8450-pcie1
->>>>> +    then:
->>>>> +      oneOf:
->>>>> +        - properties:
->>>>> +            interrupts:
->>>>> +              minItems: 1
->>>>
->>>> minItems should not be needed here and in places below, because it is
->>>> equal to maxItems.
->>>
->>> Maybe it's a misunderstanding from my side. In the top level we have
->>> the min = 1, max = 8.
->>> How does that interfere with these entries? In other words, if we e.g.
->>> omit minItems here, which setting would preveal: implicit minItems = 8
->>> (from maxItems = 8) or minItems = 1 in the top level?
->>>
->>>>> +              maxItems: 1
->>
->> I don't propose to skip it for the case with maxItems:8, but only here.
->> minItems:1 is set in toplevel. Where is that implicit minItems:8?
+On Thu, Apr 28, 2022 at 06:11:44AM -0700, Bjorn Andersson wrote:
+> On Thu 21 Apr 03:20 PDT 2022, Johan Hovold wrote:
 > 
-> maxItems:8? Maybe I just misunderstand this part of yaml/jsonschema.
+> > Some QMP PHYs need to remux to their pipe clock input to the pipe clock
+> > output generated by the PHY before powering on the PHY and restore the
+> > default source during power down.
+> > 
+> > Add support for an optional pipe clock mux which will be reparented to
+> > the generated pipe clock before powering on the PHY and restored to the
+> > default reference source on power off.
+> > 
+> 
+> After considering this for a while, I have two objections to doing this
+> explicitly:
+> 
+> 1) The QMP block is fed &gcc_pcie_N_pipe_clk (and on sc8280xp)
+> gcc_pcie_N_pipediv2_clk. But neither of these clocks are the mux, so
+> what this patch (and the existing muxing logic in the controller) does
+> is to poke into gcc "internals".
 
-The top level defines minItems=1, maxItems=8, so it cannot mean
-implicitly "minItems=1, maxItems=8, minItems=maxItems".
+I agree that this is perhaps the strongest argument against describing
+the mux in DT (as is also currently done for sc7280).
 
-There is no other place in the bindings which would implicitly set here
-minItems=maxItems.
+> 2) The actual reason for the mux dance is that toggling the associated
+> GDSC without a valid parent of this clock would cause the clock to lock
+> up and GDSC transition to time out. This property is shared with a wide
+> range of other clocks (so far we have 84 users of clk_rcg2_shared_ops on
+> sc8280xp).
 
+Right, but the situation with rcg2 is a little different. From what I
+gather the problem there is that some downstream clock could have been
+enabled by some other part of the system behind the kernel's back and
+then things go wrong when the kernel configures the clock.
 
-Best regards,
-Krzysztof
+Here it is the kernel that controls the source of the pipe clock mux
+(the PHY PLL) and knows when the source is valid (and the PHY is both
+provider and consumer of the pipe clock).
+
+For rcg2, there's no choice but to work around the hardware in the clock
+driver, while for QMP the PHY power sequences could be made explicit in
+the driver:
+
+	clk_prepare_enable(pipe);
+	clk_set_parent(pipe_src, pll);
+	start_pll();
+	
+	stop_pll();
+	clk_set_parent(pipe_src, xo);
+	clk_disable_unprepare(pipe);
+
+Note that with the above sequences it would be possible to drop the pipe
+clock BRANCH_HALT_SKIP flag, which is only there in the clock driver
+because of the how the PHY works (i.e. that the pipe clock must be
+ungated before the PLL is started).
+
+(This wouldn't be possible with a pipe-mux implementation in the clock
+driver since the parent mux would be enabled before the child pipe
+clock.)
+
+But sure, the requirement to restore XO to prevent a later GDSC hang has
+little to do with the PHY.
+
+> It would be nice if clk_summary would represent the real state of these
+> clocks, but unfortunately I don't think the state matches reality with
+> this approach either.
+> 
+> E.g. we prepare/enable the pipe clock before setting
+> QPHY_POWER_DOWN_CONTROL, during this time there's shouldn't be any pipe
+> clock coming out of the PHY...
+
+Right, there's a small window there where the source is still off (due
+to hardware requirements), but at least the topology is always reported
+correctly, which is really useful when dealing with boot handover.
+
+I have an sc8280xp here where the boot firmware leaves the pipe clock
+muxed in despite the GDSC being disabled. Fortunately, it doesn't seem
+to trigger the lockup when toggling the GDSC as it does on an sa8540p.
+
+My concerns are otherwise mostly related to the implementation of the
+safe-mux (e.g. ad-hoc, missing locking) and can probably be addressed.
+
+As an example, with the current implementation it is not possible to use
+an assigned clock parent in DT to make sure that the XO source is
+selected before toggling the GDSC. The muxing doesn't happen until the
+pipe clock is enabled, which is much too late in case the boot firmware
+left the pipe clock muxed in, and when enabling the pipe clock you
+really want the PHY PLL as source and not the cached XO.
+
+Can you still drop the current safe-mux patches from your tree or would
+they need to be fixed up incrementally? I think you merged v2, but
+there's already a v3 out (addressing the hardcoded mux configuration
+values).
+
+Johan
