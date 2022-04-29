@@ -2,62 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4E09515516
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 22:03:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E27B5156CB
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 23:30:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380489AbiD2UGT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 16:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43192 "EHLO
+        id S237867AbiD2VeC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 17:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351229AbiD2UGR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 16:06:17 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8030B32996
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 13:02:58 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id p10so15847515lfa.12
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 13:02:58 -0700 (PDT)
+        with ESMTP id S237997AbiD2Vd5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 17:33:57 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244023EF10
+        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 14:30:35 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id x17so16166366lfa.10
+        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 14:30:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=KQmxhazXdwnOp329/F1Ja7jyqqhUxCgPrYWsGjeTXIc=;
-        b=iXmqBaaXqlKaQSe9e+eDS2qIkibjeUzGFeUyCfxVi9CLrBblDdj08s6+qhf8y/kvrK
-         28+qhq1ZnMJlMjY0o9tkaSl6NwwE649lA/mMOQfTzF3LOy1sxE+CWrvgdbDY0n53WMbF
-         s2EahFFoFkBXooc1kbqtJdr96HYtUdn0lhn6k9veI0zoavK61y0lrP4oZsNKiRVVjZLR
-         o+SzC4RIqNPy8GNEGZ5rBzN5kSNhaxtym2oZ6uB1AybXbUfUn0/IPdf9c4zldmPckDNf
-         RmhZnJOtjTRc5ZYYH+kg2dFMf4j41EnGdrXPUmlpZnNTP9PW369qqsfvGCsod5QZmvZb
-         KgEQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=goa3USIzgFnot/RzMg+KWOHUx1cjO1GVqQ9lvgA7QVI=;
+        b=UlB8vM9+Nr9fDFu1FF73XowN1h/9tE5MLV0bfuzOJw6vYJdGxyyr6CxZ4X9fHfvqUE
+         JwZIkg67HpS+Cq2HpEab/jGXgYUt7YZ6hB9biQwQWCcxULuIfFJKSU4our1xpPRVZlNj
+         5pS85Fv6+7bg3+USVeGUkPfkpEz4pNIOvSXZnnaIQjxQB8iVjtRzzg7U9NBc9P0OQVk/
+         znvOBhBEZXZJMO6oIk9Mxx0kzppYfexAt9MFd/iI1ipHkRLFWihHwB56RkIpCA6wDk6U
+         sbtP9jO3ToH4ewp8u0Me7Oq6aCAVeZVyxR7nocvJp3oFLGsBpLC4PQUHsGVp3HlT5SrF
+         nTvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KQmxhazXdwnOp329/F1Ja7jyqqhUxCgPrYWsGjeTXIc=;
-        b=A/MlrGXSpcEFQP0RxoVri4pYbIp+h1lBBq2w398wpE1xiZ1/jtiwWZqKCXSfuV/xeM
-         QBEqf713wQT4NEnywX5Bks/kdrEp9ZxA+Ofjf5alDGJF2TYH5C24aU/TXvN+8PdKPACj
-         sFmYkMqNfkPTu1LvZcGOANVySPFVOS2zDE8Vcko9vtb/Q07PDtZEriZt1tujfMZmPIDL
-         qHaiQHyK5MMPpBGBWaGtWFK8PRgLcWF9zVyVc+KSRWv+U50jE6Oagd8/uCznDcNuuKIl
-         XFfIHugzwxL2QgkjsOSyciGuT4axbwtXorMFHS7hsM1ziTNtOrv9G0oQ6G+bUW50V7WW
-         +MyQ==
-X-Gm-Message-State: AOAM530LoK4L1AFqWHlXz+YcEQ0T1yne5wT/pWPWz4u4meJNvukQXJNd
-        5On0pX9ZfKPaXoNmF/4EQNpUAOgqt2f81w==
-X-Google-Smtp-Source: ABdhPJzTflMpQAiH/7EilkMJgrNGIiLGV1NMfKNCAQP/p7Nw14KfwZcLtAZpNzfHS0uD61orjYUdDw==
-X-Received: by 2002:a19:5f05:0:b0:46b:a5f2:5fab with SMTP id t5-20020a195f05000000b0046ba5f25fabmr647096lfb.8.1651262576888;
-        Fri, 29 Apr 2022 13:02:56 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id v16-20020ac25590000000b0047255d211d4sm11889lfg.259.2022.04.29.13.02.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Apr 2022 13:02:56 -0700 (PDT)
-Message-ID: <522388b9-310d-25dd-1688-4bb715b594c0@linaro.org>
-Date:   Fri, 29 Apr 2022 23:02:55 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v4 2/8] dt-bindings: pci/qcom,pcie: resets are not defined
- for msm8996
-Content-Language: en-GB
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
+        bh=goa3USIzgFnot/RzMg+KWOHUx1cjO1GVqQ9lvgA7QVI=;
+        b=kF09S7PO6pQRBkS7K7UQBX8620IVKUlq4TsXMHQL5qsbTgGK+vLH1qiSSn8uqUHizZ
+         mUQj5lZw12Xp9+BAfoInMi05eUwmgP2J97mXnJrRhYq9UBrQh8gxhv++48e+6KeswGbb
+         jRud3yBS68bkqLak9RJWqTo7yMP5S9Qjz+NUNwPqouTDYFM5MCeKJ1hTse2a1MOPzGG4
+         SBtdkNqXUUcnGWbKleDs4EQ+QRQpd+W2mo2wpapAaFeyuKBCUvBazbndBBeodwm28tSc
+         spqRHXhGR0Yh7YWDXW/k3DmbisKu13Lq4YUW//FSj3PsO+d2OdhpXQIktvGYIW2Tbni7
+         6yYA==
+X-Gm-Message-State: AOAM531OhD9QRpsNYNxN5keNCtt3C4aMZQzvM01RnDNaTs//FWkqqIiY
+        WxpKrmlPyGDZFAH1whJomVNZmg==
+X-Google-Smtp-Source: ABdhPJwxFrwsTBtG79yMlexgdeDvXhoOVELN19WahCoWMSMJiQ9G7MAXRG0fib3o1D+azVPXNmyHLQ==
+X-Received: by 2002:a05:6512:322a:b0:472:7d2:1114 with SMTP id f10-20020a056512322a00b0047207d21114mr839868lfe.105.1651267833277;
+        Fri, 29 Apr 2022 14:30:33 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id 11-20020ac2568b000000b0047255d21182sm28589lfr.177.2022.04.29.14.30.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Apr 2022 14:30:32 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -66,115 +57,97 @@ Cc:     Andy Gross <agross@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20220428143508.GA12269@bhelgaas>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <20220428143508.GA12269@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v5 0/8] dt-bindings: YAMLify pci/qcom,pcie schema
+Date:   Sat, 30 Apr 2022 00:30:24 +0300
+Message-Id: <20220429213032.3724066-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/04/2022 17:35, Bjorn Helgaas wrote:
-> Unlike the other patches in this series, this subject line mentions a
-> problem (actually, I don't even know whether it's a *problem* or just
-> a statement of fact), but doesn't say what this patch does.
-> 
-> Based on the patch, I guess this does something like:
-> 
->    Require resets except for MSM8996/APQ8096
+Convert pci/qcom,pcie schema to YAML description. The first patch
+introduces several warnings which are fixed by the other patches in the
+series.
 
-Ack
+Note regarding the snps,dw-pcie compatibility. The Qualcomm PCIe
+controller uses Synopsys PCIe IP core. However it is not just fused to
+the address space. Accessing PCIe registers requires several clocks and
+regulators to be powered up. Thus it can be assumed that the qcom,pcie
+bindings are not fully compatible with the snps,dw-pcie schema.
 
-> 
-> I don't know whether you're changing the prefix convention for this
-> file, or just didn't look to see how it was done in the past, but it's
-> nice to have some consistency:
+Changes since v4:
+ - Change subjects to follow convention (suggested by Bjorn Helgaas)
 
+Changes since v3:
+ - Rebase on linux-next to include sm8150 patches
 
-Ack
+Changes since v2 (still kudos to Krzyshtof):
+ - Readded reg-names conversion patch
+ - Mention wake-gpio update in the commit message
+ - Remove extra quotes in the schema
 
-> 
->    $ git log --oneline Documentation/devicetree/bindings/pci/qcom,pcie.txt
->    f52d2a0f0d32 dt-bindings: pci: qcom: Document PCIe bindings for SM8150 SoC
->    dddb4efa5192 dt-bindings: pci: qcom: Document PCIe bindings for SM8450
->    45a3ec891370 PCI: qcom: Add sc8180x compatible
->    320e10986ef7 dt-bindings: PCI: update references to Designware schema
->    9f7368ff1210 dt-bindings: pci: qcom: Document PCIe bindings for IPQ6018 SoC
->    c9f04600026f dt-bindings: PCI: qcom: Document ddrss_sf_tbu clock for sm8250
->    458168247ccc dt-bindings: pci: qcom: Document PCIe bindings for SM8250 SoC
->    d511580ea9c2 dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
->    b11b8cc161de dt-bindings: PCI: qcom: Add ext reset
->    736ae5c91712 dt-bindings: PCI: qcom: Add missing clks
->    5d28bee7c91e dt-bindings: PCI: qcom: Add support for SDM845 PCIe
->    29a50257a9d6 dt-bindings: PCI: qcom: Add QCS404 to the binding
->    f625b1ade245 PCI: qcom: Add missing supplies required for msm8996
->    8baf0151cd4b dt-bindings: PCI: qcom: Add support for IPQ8074
->    90d52d57ccac PCI: qcom: Add support for IPQ4019 PCIe controller
->    d0491fc39bdd PCI: qcom: Add support for MSM8996 PCIe controller
->    845d5ca26647 PCI: qcom: Document PCIe devicetree bindings
-> 
-> Including both "pci" and "pcie" in the prefix seems like overkill.
-> 
-> On Thu, Apr 28, 2022 at 02:41:07PM +0300, Dmitry Baryshkov wrote:
->> On MSM8996/APQ8096 platforms the PCIe controller doesn't have any
->> resets. So move the requirement stance under the corresponding if
->> condition.
-> 
-> s/stance/stanza/
-> 
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> ---
->>   .../devicetree/bindings/pci/qcom,pcie.yaml         | 14 ++++++++++++--
->>   1 file changed, 12 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> index 16f765e96128..ce4f53cdaba0 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> @@ -114,8 +114,6 @@ required:
->>     - interrupt-map
->>     - clocks
->>     - clock-names
->> -  - resets
->> -  - reset-names
->>   
->>   allOf:
->>     - $ref: /schemas/pci/pci-bus.yaml#
->> @@ -504,6 +502,18 @@ allOf:
->>         required:
->>           - power-domains
->>   
->> +  - if:
->> +      not:
->> +        properties:
->> +          compatibles:
->> +            contains:
->> +              enum:
->> +                - qcom,pcie-msm8996
->> +    then:
->> +      required:
->> +        - resets
->> +        - reset-names
->> +
->>   unevaluatedProperties: false
->>   
->>   examples:
->> -- 
->> 2.35.1
->>
+Changes since v1 (all kudos to Krzyshtof):
+ - Dropped the reg-names patch. It will be handled separately
+ - Squashed the snps,dw-pcie removal (from schema) into the first patch
+ - Replaced deprecated perst-gpio and wake-gpio with perst-gpios and
+   wake-gpios in the examples and in DT files
+ - Moved common clocks/clock-names, resets/reset-names and power-domains
+   properties to the top level of the schema, leaving only platform
+   specifics in the conditional branches
+ - Dropped iommu-map/iommu-map-mask for now
+ - Added (missed) interrupt-cells, clocks, clock-names, resets,
+   reset-names properties to the required list (resets/reset-names are
+   removed in the next patch, as they are not used on msm8996)
+ - Fixed IRQ flags in the examples
+ - Merged apq8064/ipq8064 into the single condition statement
+ - Added extra empty lines
 
+Dmitry Baryshkov (8):
+  dt-bindings: PCI: qcom: Convert to YAML
+  dt-bindings: PCI: qcom: Do not require resets on msm8996 platforms
+  dt-bindings: PCI: qcom: Specify reg-names explicitly
+  dt-bindings: PCI: qcom: Add schema for sc7280 chipset
+  arm64: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom: stop using snps,dw-pcie falback
+  arm: dts: qcom-*: replace deprecated perst-gpio with perst-gpios
+  arm64: dts: qcom: replace deprecated perst-gpio with perst-gpios
+
+ .../devicetree/bindings/pci/qcom,pcie.txt     | 398 ----------
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 714 ++++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts   |   2 +-
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts    |   2 +-
+ arch/arm/boot/dts/qcom-apq8064.dtsi           |   2 +-
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi |   2 +-
+ .../boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts    |   2 +-
+ arch/arm/boot/dts/qcom-ipq4019.dtsi           |   2 +-
+ arch/arm/boot/dts/qcom-ipq8064.dtsi           |   6 +-
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts   |   6 +-
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts     |   4 +-
+ arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi    |   4 +-
+ .../dts/qcom/msm8996-sony-xperia-tone.dtsi    |   4 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |   6 +-
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |   2 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |   2 +-
+ .../arm64/boot/dts/qcom/sc7280-herobrine.dtsi |   2 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi      |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    |   4 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   4 +-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |   6 +-
+ 21 files changed, 746 insertions(+), 430 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 
 -- 
-With best wishes
-Dmitry
+2.35.1
+
