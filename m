@@ -2,348 +2,239 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30D83514F8C
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 17:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB1F4514F9A
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 17:36:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378514AbiD2Pgf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 11:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57508 "EHLO
+        id S229886AbiD2Pj3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 11:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378487AbiD2Pgf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 11:36:35 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F1D89330;
-        Fri, 29 Apr 2022 08:33:15 -0700 (PDT)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Kqbz04KbGz67fK4;
-        Fri, 29 Apr 2022 23:30:20 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 29 Apr 2022 17:33:12 +0200
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 29 Apr
- 2022 16:33:12 +0100
-Date:   Fri, 29 Apr 2022 16:33:11 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V7 04/10] cxl/pci: Create auxiliary devices for each DOE
- mailbox
-Message-ID: <20220429163311.000060c1@huawei.com>
-In-Reply-To: <20220330235920.2800929-5-ira.weiny@intel.com>
-References: <20220330235920.2800929-1-ira.weiny@intel.com>
-        <20220330235920.2800929-5-ira.weiny@intel.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        with ESMTP id S233043AbiD2Pj2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 11:39:28 -0400
+Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CECED5EB3;
+        Fri, 29 Apr 2022 08:36:09 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 10EB5101D81; Fri, 29 Apr 2022 16:36:05 +0100 (BST)
+Date:   Fri, 29 Apr 2022 16:36:05 +0100
+From:   Sean Young <sean@mess.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>
+Subject: Re: [RFC v2 17/39] media: add HAS_IOPORT dependencies
+Message-ID: <YmwF5TLJy2ZiU25a@gofer.mess.org>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+ <20220429135108.2781579-30-schnelle@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220429135108.2781579-30-schnelle@linux.ibm.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 30 Mar 2022 16:59:14 -0700
-ira.weiny@intel.com wrote:
-
-> From: Ira Weiny <ira.weiny@intel.com>
+On Fri, Apr 29, 2022 at 03:50:27PM +0200, Niklas Schnelle wrote:
+> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> not being declared. We thus need to add HAS_IOPORT as dependency for
+> those drivers using them.
 > 
-> CXL kernel drivers optionally need to access DOE mailbox capabilities.
-> Access to mailboxes for things such as CDAT, SPDM, and IDE are needed by
-> the kernel while other access is designed towards user space usage.  An
-> example of this is for CXL Compliance Testing (see CXL 2.0 14.16.4
-> Compliance Mode DOE) which offers a mechanism to set different test
-> modes for a device.
-> 
-> There is no anticipated need for the kernel to share an individual
-> mailbox with user space.  Thus developing an interface to marshal access
-> between the kernel and user space for a single mailbox is unnecessary
-> overhead.  However, having the kernel relinquish some mailboxes to be
-> controlled by user space is a reasonable compromise to share access to
-> the device.
-> 
-> The auxiliary bus provides an elegant solution for this.  Each DOE
-> capability is given its own auxiliary device.  This device is controlled
-> by a kernel driver by default which restricts access to the mailbox.
-> Unbinding the driver from a single auxiliary device (DOE mailbox
-> capability) frees the mailbox for user space access.  This architecture
-> also allows a clear picture on which mailboxes are kernel controlled vs
-> not.
-> 
-> Iterate each DOE mailbox capability and create auxiliary bus devices.
-> Follow on patches will define a driver for the newly created devices.
-> 
-> sysfs shows the devices.
-> 
-> $ ls -l /sys/bus/auxiliary/devices/
-> total 0
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.0 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.0
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.1 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.1
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.2 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.2
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.3 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.3
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.4 -> ../../../devices/pci0000:35/0000:35:00.0/0000:36:00.0/cxl_pci.doe.4
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.5 -> ../../../devices/pci0000:bf/0000:bf:00.0/0000:c0:00.0/cxl_pci.doe.5
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.6 -> ../../../devices/pci0000:35/0000:35:01.0/0000:37:00.0/cxl_pci.doe.6
-> lrwxrwxrwx 1 root root 0 Mar 24 10:47 cxl_pci.doe.7 -> ../../../devices/pci0000:bf/0000:bf:01.0/0000:c1:00.0/cxl_pci.doe.7
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Hi Ira,
-
-Noticed something else about the number of irq vectors requested.
-
-Thanks,
-
-Jonathan
-
-> 
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > ---
-> Changes from V6:
-> 	Move all the auxiliary device stuff to the CXL layer
+>  drivers/media/pci/dm1105/Kconfig |  2 +-
+>  drivers/media/radio/Kconfig      | 14 +++++++++++++-
+>  drivers/media/rc/Kconfig         |  6 ++++++
+
+For drivers/media/rc/Kconfig:
+
+Reviewed-by: Sean Young <sean@mess.org>
+
+Sean
+
+>  3 files changed, 20 insertions(+), 2 deletions(-)
 > 
-> Changes from V5:
-> 	Split the CXL specific stuff off from the PCI DOE create
-> 	auxiliary device code.
-> ---
->  drivers/cxl/Kconfig  |   1 +
->  drivers/cxl/cxlpci.h |  21 +++++++
->  drivers/cxl/pci.c    | 135 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 157 insertions(+)
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 054dc78d6f7d..77fff6f6b0fb 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -16,6 +16,7 @@ if CXL_BUS
->  config CXL_PCI
->  	tristate "PCI manageability"
->  	default CXL_BUS
-> +	select AUXILIARY_BUS
+> diff --git a/drivers/media/pci/dm1105/Kconfig b/drivers/media/pci/dm1105/Kconfig
+> index e0e3af67c99c..4498c37f4990 100644
+> --- a/drivers/media/pci/dm1105/Kconfig
+> +++ b/drivers/media/pci/dm1105/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DVB_DM1105
+>  	tristate "SDMC DM1105 based PCI cards"
+> -	depends on DVB_CORE && PCI && I2C && I2C_ALGOBIT
+> +	depends on DVB_CORE && PCI && I2C && I2C_ALGOBIT && HAS_IOPORT
+>  	select DVB_PLL if MEDIA_SUBDRV_AUTOSELECT
+>  	select DVB_STV0299 if MEDIA_SUBDRV_AUTOSELECT
+>  	select DVB_STV0288 if MEDIA_SUBDRV_AUTOSELECT
+> diff --git a/drivers/media/radio/Kconfig b/drivers/media/radio/Kconfig
+> index cca03bd2cc42..e15d50d9161f 100644
+> --- a/drivers/media/radio/Kconfig
+> +++ b/drivers/media/radio/Kconfig
+> @@ -15,7 +15,7 @@ if RADIO_ADAPTERS
+>  
+>  config RADIO_MAXIRADIO
+>  	tristate "Guillemot MAXI Radio FM 2000 radio"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	select RADIO_TEA575X
 >  	help
->  	  The CXL specification defines a "CXL memory device" sub-class in the
->  	  PCI "memory controller" base class of devices. Device's identified by
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 329e7ea3f36a..2ad8715173ce 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -2,6 +2,7 @@
->  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
->  #ifndef __CXL_PCI_H__
->  #define __CXL_PCI_H__
-> +#include <linux/auxiliary_bus.h>
->  #include <linux/pci.h>
->  #include "cxl.h"
+>  	  Choose Y here if you have this radio card.  This card may also be
+> @@ -232,6 +232,7 @@ source "drivers/media/radio/wl128x/Kconfig"
+>  menuconfig V4L_RADIO_ISA_DRIVERS
+>  	bool "ISA radio devices"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	help
+>  	  Say Y here to enable support for these ISA drivers.
 >  
-> @@ -72,4 +73,24 @@ static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
->  }
+> @@ -240,6 +241,7 @@ if V4L_RADIO_ISA_DRIVERS
+>  config RADIO_AZTECH
+>  	tristate "Aztech/Packard Bell Radio"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select RADIO_ISA
+>  	help
+>  	  Choose Y here if you have one of these FM radio cards, and then fill
+> @@ -260,6 +262,7 @@ config RADIO_AZTECH_PORT
+>  config RADIO_CADET
+>  	tristate "ADS Cadet AM/FM Tuner"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	help
+>  	  Choose Y here if you have one of these AM/FM radio cards, and then
+>  	  fill in the port address below.
+> @@ -270,6 +273,7 @@ config RADIO_CADET
+>  config RADIO_GEMTEK
+>  	tristate "GemTek Radio card (or compatible) support"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select RADIO_ISA
+>  	help
+>  	  Choose Y here if you have this FM radio card, and then fill in the
+> @@ -309,6 +313,7 @@ config RADIO_GEMTEK_PROBE
 >  
->  int devm_cxl_port_enumerate_dports(struct cxl_port *port);
-> +
-> +/**
-> + * struct cxl_doe_dev - CXL DOE auxiliary bus device
-> + *
-> + * @adev: Auxiliary bus device
-> + * @pdev: PCI device this belongs to
-> + * @cap_offset: Capability offset
-> + * @use_irq: Set if IRQs are to be used with this mailbox
-> + *
-> + * This represents a single DOE mailbox device.  CXL devices should create this
-> + * device and register it on the Auxiliary bus for the CXL DOE driver to drive.
-> + */
-> +struct cxl_doe_dev {
-> +	struct auxiliary_device adev;
-> +	struct pci_dev *pdev;
-> +	int cap_offset;
-> +	bool use_irq;
-> +};
-> +#define DOE_DEV_NAME "doe"
-> +
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 8a7267d116b7..6249f2a30026 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -8,6 +8,7 @@
->  #include <linux/mutex.h>
->  #include <linux/list.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-doe.h>
->  #include <linux/io.h>
->  #include "cxlmem.h"
->  #include "cxlpci.h"
-> @@ -545,6 +546,136 @@ static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
->  	return 0;
->  }
+>  config RADIO_ISA
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	tristate
 >  
-> +static void cxl_pci_free_irq_vectors(void *data)
-> +{
-> +	pci_free_irq_vectors(data);
-> +}
-> +
-> +static DEFINE_IDA(pci_doe_adev_ida);
-> +
-> +static void cxl_pci_doe_dev_release(struct device *dev)
-> +{
-> +	struct auxiliary_device *adev = container_of(dev,
-> +						struct auxiliary_device,
-> +						dev);
-> +	struct cxl_doe_dev *doe_dev = container_of(adev, struct cxl_doe_dev,
-> +						   adev);
-> +
-> +	ida_free(&pci_doe_adev_ida, adev->id);
-> +	kfree(doe_dev);
-> +}
-> +
-> +static void cxl_pci_doe_destroy_device(void *ad)
-> +{
-> +	auxiliary_device_delete(ad);
-> +	auxiliary_device_uninit(ad);
-> +}
-> +
-> +/**
-> + * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
-> + *				mailboxes found
-> + *
-> + * @pci_dev: The PCI device to scan for DOE mailboxes
-> + *
-> + * There is no coresponding destroy of these devices.  This function associates
-> + * the DOE auxiliary devices created with the pci_dev passed in.  That
-> + * association is device managed (devm_*) such that the DOE auxiliary device
-> + * lifetime is always less than or equal to the lifetime of the pci_dev.
-> + *
-> + * RETURNS: 0 on success -ERRNO on failure.
-> + */
-> +int cxl_pci_create_doe_devices(struct pci_dev *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	bool use_irq = true;
-> +	int irqs = 0;
-> +	u16 off = 0;
-> +	int rc;
-> +
-> +	pci_doe_for_each_off(pdev, off)
-> +		irqs++;
-
-I don't think this is sufficient.  I think we need something similar
-to that done to calculate the necessary vectors in
-portdrv_core.c / pcie_message_numbers()
-https://elixir.bootlin.com/linux/latest/source/drivers/pci/pcie/portdrv_core.c#L45
-
-That is we need to ensure that vectors are requested such that we can always
-cover the vector for the DOE interrupt. To get that we need to read
-the capability register and then set irqs to one larger than that.
-
-Jonathan
-
-
-> +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
-> +
-> +	/*
-> +	 * Allocate enough vectors for the DOE's
-> +	 */
-> +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
-> +						     PCI_IRQ_MSIX);
-> +	if (rc != irqs) {
-> +		pci_err(pdev,
-> +			"Not enough interrupts for all the DOEs; use polling\n");
-> +		use_irq = false;
-> +		/* Some got allocated; clean them up */
-> +		if (rc > 0)
-> +			cxl_pci_free_irq_vectors(pdev);
-> +	} else {
-> +		/*
-> +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
-> +		 * done later within the DOE initialization, but as it
-> +		 * potentially has other impacts keep it here when setting up
-> +		 * the IRQ's.
-> +		 */
-> +		pci_set_master(pdev);
-> +		rc = devm_add_action_or_reset(dev,
-> +					      cxl_pci_free_irq_vectors,
-> +					      pdev);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	pci_doe_for_each_off(pdev, off) {
-> +		struct auxiliary_device *adev;
-> +		struct cxl_doe_dev *new_dev;
-> +		int id;
-> +
-> +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
-> +		if (!new_dev)
-> +			return -ENOMEM;
-> +
-> +		new_dev->pdev = pdev;
-> +		new_dev->cap_offset = off;
-> +		new_dev->use_irq = use_irq;
-> +
-> +		/* Set up struct auxiliary_device */
-> +		adev = &new_dev->adev;
-> +		id = ida_alloc(&pci_doe_adev_ida, GFP_KERNEL);
-> +		if (id < 0) {
-> +			kfree(new_dev);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		adev->id = id;
-> +		adev->name = DOE_DEV_NAME;
-> +		adev->dev.release = cxl_pci_doe_dev_release;
-> +		adev->dev.parent = dev;
-> +
-> +		if (auxiliary_device_init(adev)) {
-> +			cxl_pci_doe_dev_release(&adev->dev);
-> +			return -EIO;
-> +		}
-> +
-> +		if (auxiliary_device_add(adev)) {
-> +			auxiliary_device_uninit(adev);
-> +			return -EIO;
-> +		}
-> +
-> +		rc = devm_add_action_or_reset(dev, cxl_pci_doe_destroy_device,
-> +					      adev);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
-> +{
-> +	struct device *dev = cxlds->dev;
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	return cxl_pci_create_doe_devices(pdev);
-> +}
-> +
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
->  	struct cxl_register_map map;
-> @@ -611,6 +742,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
+>  config RADIO_MIROPCM20
+> @@ -329,6 +334,7 @@ config RADIO_MIROPCM20
+>  config RADIO_RTRACK
+>  	tristate "AIMSlab RadioTrack (aka RadioReveal) support"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select RADIO_ISA
+>  	help
+>  	  Choose Y here if you have one of these FM radio cards, and then fill
+> @@ -383,6 +389,7 @@ config RADIO_RTRACK_PORT
+>  config RADIO_SF16FMI
+>  	tristate "SF16-FMI/SF16-FMP/SF16-FMD Radio"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	help
+>  	  Choose Y here if you have one of these FM radio cards.
 >  
-> +	rc = cxl_setup_doe_devices(cxlds);
-> +	if (rc)
-> +		return rc;
-> +
->  	rc = cxl_dvsec_ranges(cxlds);
->  	if (rc)
->  		dev_warn(&pdev->dev,
-
+> @@ -392,6 +399,7 @@ config RADIO_SF16FMI
+>  config RADIO_SF16FMR2
+>  	tristate "SF16-FMR2/SF16-FMD2 Radio"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select RADIO_TEA575X
+>  	help
+>  	  Choose Y here if you have one of these FM radio cards.
+> @@ -402,6 +410,7 @@ config RADIO_SF16FMR2
+>  config RADIO_TERRATEC
+>  	tristate "TerraTec ActiveRadio ISA Standalone"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select RADIO_ISA
+>  	help
+>  	  Choose Y here if you have this FM radio card.
+> @@ -416,6 +425,7 @@ config RADIO_TERRATEC
+>  config RADIO_TRUST
+>  	tristate "Trust FM radio card"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select RADIO_ISA
+>  	help
+>  	  This is a driver for the Trust FM radio cards. Say Y if you have
+> @@ -439,6 +449,7 @@ config RADIO_TRUST_PORT
+>  config RADIO_TYPHOON
+>  	tristate "Typhoon Radio (a.k.a. EcoRadio)"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select RADIO_ISA
+>  	help
+>  	  Choose Y here if you have one of these FM radio cards, and then fill
+> @@ -473,6 +484,7 @@ config RADIO_TYPHOON_PORT
+>  config RADIO_ZOLTRIX
+>  	tristate "Zoltrix Radio"
+>  	depends on ISA || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select RADIO_ISA
+>  	help
+>  	  Choose Y here if you have one of these FM radio cards, and then fill
+> diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
+> index f560fc38895f..96528e6532fd 100644
+> --- a/drivers/media/rc/Kconfig
+> +++ b/drivers/media/rc/Kconfig
+> @@ -148,6 +148,7 @@ if RC_DEVICES
+>  config IR_ENE
+>  	tristate "ENE eHome Receiver/Transceiver (pnp id: ENE0100/ENE02xxx)"
+>  	depends on PNP || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	help
+>  	   Say Y here to enable support for integrated infrared receiver
+>  	   /transceiver made by ENE.
+> @@ -161,6 +162,7 @@ config IR_ENE
+>  config IR_FINTEK
+>  	tristate "Fintek Consumer Infrared Transceiver"
+>  	depends on PNP || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	help
+>  	   Say Y here to enable support for integrated infrared receiver
+>  	   /transceiver made by Fintek. This chip is found on assorted
+> @@ -249,6 +251,7 @@ config IR_IMON_RAW
+>  config IR_ITE_CIR
+>  	tristate "ITE Tech Inc. IT8712/IT8512 Consumer Infrared Transceiver"
+>  	depends on PNP || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	help
+>  	   Say Y here to enable support for integrated infrared receivers
+>  	   /transceivers made by ITE Tech Inc. These are found in
+> @@ -301,6 +304,7 @@ config IR_MTK
+>  config IR_NUVOTON
+>  	tristate "Nuvoton w836x7hg Consumer Infrared Transceiver"
+>  	depends on PNP || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	help
+>  	   Say Y here to enable support for integrated infrared receiver
+>  	   /transceiver made by Nuvoton (formerly Winbond). This chip is
+> @@ -345,6 +349,7 @@ config IR_RX51
+>  
+>  config IR_SERIAL
+>  	tristate "Homebrew Serial Port Receiver"
+> +	depends on HAS_IOPORT
+>  	help
+>  	   Say Y if you want to use Homebrew Serial Port Receivers and
+>  	   Transceivers.
+> @@ -412,6 +417,7 @@ config IR_TTUSBIR
+>  config IR_WINBOND_CIR
+>  	tristate "Winbond IR remote control"
+>  	depends on (X86 && PNP) || COMPILE_TEST
+> +	depends on HAS_IOPORT
+>  	select NEW_LEDS
+>  	select LEDS_CLASS
+>  	select BITREVERSE
+> -- 
+> 2.32.0
