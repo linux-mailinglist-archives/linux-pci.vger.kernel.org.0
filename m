@@ -2,32 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEF1E514ACC
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 15:41:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57129514ACD
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 15:42:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351766AbiD2NpJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 09:45:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44466 "EHLO
+        id S1376303AbiD2NpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 09:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236729AbiD2NpJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 09:45:09 -0400
+        with ESMTP id S236729AbiD2NpM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 09:45:12 -0400
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F2DFC8BD9;
-        Fri, 29 Apr 2022 06:41:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E6EBCABA8;
+        Fri, 29 Apr 2022 06:41:53 -0700 (PDT)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id CF7581BF20D;
-        Fri, 29 Apr 2022 13:41:45 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPA id 0ED961BF20A;
+        Fri, 29 Apr 2022 13:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1651239709;
+        t=1651239712;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=gDnDcKW8Xd1x45ET4ZAmwfvhffariZ4uKWPW/9uCw84=;
-        b=aOn6dmhqDzFGukbOL4KWOinf8tSpn+jtKr1DDoiVQe0g/EYFqjMJQky4SD8qA6K87fNDhM
-        L25IRmIjsU4WspSZkssvsTkqLL9+eyW+2qpgkscon8h/7Y3+HpWbQbg4Ascr+KbORkMvyx
-        fUCnzNGubCnaNoLSnkPDXNWRw9hYXckW78VMdYosJ9k9QVb3S/fpLe7JRD8o5e15jeJ0IP
-        EDLHKSFFVLkyn9JScclKAghiBZu0TtHO+9QVYEZUR1T7SkDigdx2i4XeWCG/T4YM498nKT
-        OkxwFDAXGJiiwzGY98PDu72ODK3pB97QxAz7iOrbmakAWFOwK7zhzESVKdQvYg==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X0p3vWqJ3mIo9zlAjNUTJartwZ4v7nF0TrR4PIDRNnE=;
+        b=hVgFYN/TWvmR3lWlsG3JRcG6CriujOCdvBda07Hk3jOvNODRSPM9XVXncRNN1pJfowXb0n
+        Vhb+qVPtZrTWrdBpQHrw8MQTbEU7Aeeyf9UIIhdJtrLUg8hx2zKNE9rUcKq6wm+3SeNQH5
+        i6VlIMqI2ilyvng/MNB4NjpLR3YB6VhZoos8ct0z2lI0eu28Epcpab2Ia2xpfZjLnTH1JC
+        jcHSUQ0wvsEAM4+VOiMK6/Qx2FkyOF0D/u0gRBYnMSVwQ33aVlz1Eph42rnHEaqzSVuqdO
+        N2wP9HQ52tRoni8gLDQob90EGXimlgmqI2jwJOnYhljsh/8OSruICWsWrUPNPg==
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -45,10 +46,12 @@ Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v5 0/6] RZN1 USB Host support
-Date:   Fri, 29 Apr 2022 15:41:36 +0200
-Message-Id: <20220429134143.628428-1-herve.codina@bootlin.com>
+Subject: [PATCH v4 0/6] RZN1 USB Host support
+Date:   Fri, 29 Apr 2022 15:41:37 +0200
+Message-Id: <20220429134143.628428-2-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220429134143.628428-1-herve.codina@bootlin.com>
+References: <20220429134143.628428-1-herve.codina@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -95,7 +98,8 @@ Changes v4:
 
 Changes v5:
 - Rename clocks ("usb_" prefix removed)
-- Add Geert's reviewed-by on patch 2, 3, 4 and 5
+- - Add Geert's reviewed-by on patch 2, 3, 4 and 5
+
 
 Herve Codina (6):
   dt-bindings: PCI: pci-rcar-gen2: Convert bindings to json-schema
