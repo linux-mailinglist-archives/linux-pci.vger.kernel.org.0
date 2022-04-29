@@ -2,213 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63339514C8E
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 16:16:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EB1B514CB3
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 16:24:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376887AbiD2OT4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 10:19:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
+        id S1376983AbiD2O1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 10:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359769AbiD2OT4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 10:19:56 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C4C17CDC2
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 07:16:36 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id i27so15712859ejd.9
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 07:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=UdINARUtzcFoW7h6RyjDI8lgOBSw6WOSOqD14X2CFJU=;
-        b=R3GZ3IwUpu5UUm3UrgEWZ4yVRf5jvXz7GwFUllasFjFFL0aBEmLKNpewMp+KpvazTf
-         g8p8hr+kOKGqyfgS7Y6uQhzrVoBaclahGzEyJPahetcB4lmaLSZiOEXz2JI6zFxDHQpC
-         maW0lcQI5+oePb8/E6eX0hAdKzV8yvr+mZ4vk1i/OguhilfBrgpfSdkLeZzOH/QGszCI
-         RH2NayuUkJaUmwHXmH4I6VtjsZF4R1jZUbZ8lGtIMUIXu5uVYHzuEr+3e8Zq7RWXMNWD
-         XG+381AkVI2TTgKMvdTb9CLibCPzJlooCB/siw0KduRzu5GuQpMZWdmfj293jx06HRzp
-         Ng6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=UdINARUtzcFoW7h6RyjDI8lgOBSw6WOSOqD14X2CFJU=;
-        b=mDIs1/p/r5HyAMPsysw10qNlbcSM+XuRnf9cVRSIcdEV4/mB2PABd2mG7x8ADkmrPO
-         YPuYbtRpxoKxYTgsH4SewAk830e6MlAg4XTFoecVnTtKpvR1qhdhFo5b6ULIaSIauVy0
-         D82RpjGHkr1Pnk8al7ZrgIzcp0IOSgaXKCJJiUGln2TplbbrcSwrpMeD3Wjjvnu0zIqg
-         bMpwavBx128yUuNS2iKna81u5RnBaaxlqBAXBsi3v/o4wRT8spYmdDHX4IAcpTIpFliC
-         uY3MO3M2c8wDfMlEUN/1nSHP/gbsMAA9OKmJVKxgx+srpEM/R87E+OUs87ZUZUHhCuu2
-         pxyA==
-X-Gm-Message-State: AOAM530VeeRTFyd36nlNNrYFfXjtK2J5+G/If2ArOCfPR5DLo116c+cf
-        3D4UdqupjrC1J0OAvVJemiyw6A==
-X-Google-Smtp-Source: ABdhPJykYBCwe9aQMDhIZ8XGDNf9p2LGcca3xyCDUbkpjt15wUq7VCOYejWxIXJEzJpfvaAJeCOHOw==
-X-Received: by 2002:a17:907:6d12:b0:6f3:d304:e259 with SMTP id sa18-20020a1709076d1200b006f3d304e259mr10624053ejc.110.1651241795135;
-        Fri, 29 Apr 2022 07:16:35 -0700 (PDT)
-Received: from [192.168.0.170] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id j12-20020a50ed0c000000b0042617ba63d4sm2982642eds.94.2022.04.29.07.16.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Apr 2022 07:16:34 -0700 (PDT)
-Message-ID: <75b94ccd-b739-2164-bc4a-20025356cc34@linaro.org>
-Date:   Fri, 29 Apr 2022 16:16:32 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v7 12/12] rpmsg: Fix kfree() of static memory on setting
- driver_override
-Content-Language: en-US
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Stuart Yoder <stuyoder@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20220419113435.246203-1-krzysztof.kozlowski@linaro.org>
- <20220419113435.246203-13-krzysztof.kozlowski@linaro.org>
- <CGME20220429122942eucas1p1820d0cd17a871d4953bac2b3de1dcdd9@eucas1p1.samsung.com>
- <870885de-33f3-e0ba-4d56-71c3c993ac87@samsung.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <870885de-33f3-e0ba-4d56-71c3c993ac87@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S1376827AbiD2O1U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 10:27:20 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344F991340;
+        Fri, 29 Apr 2022 07:24:02 -0700 (PDT)
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23TE1bBZ023968;
+        Fri, 29 Apr 2022 14:23:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=+G1WvBMc9aZ+BJJcJ0yKF+ldFn3BMb8yfamF1OdJplQ=;
+ b=XZFkVJtrpbtLOqdB5AQHS+AqAbJPIy6ZPz0539t/l2oVz7543JOii2uoleB/cnjqRgmV
+ O1/rlQrNBxxN+DjosanBTac9+7DcHH1JbsGSCSWNt3xaL7AVDsNGTBHdh4GSanJQe+G5
+ MXU0VkIeTGyk7v887KL1HZaBTtm14eDNzlwgjbgx+ydB1EgVpRaObFi7hTLdoHi//byL
+ GifUi4Opl6DN7MsKR40tabN7laSVOINLwpSwm7o3LEFIunPkA9xjbLhhxRxlbJFmVNxM
+ R3JrD9P81PRGvQdtkdWUgV+KK73QRT6dFOudCxX568Cp2ilxElQYDE1icoyntdul0QPR cQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqsyj636w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Apr 2022 14:23:39 +0000
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 23TE4OP4028292;
+        Fri, 29 Apr 2022 14:23:38 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fqsyj6368-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Apr 2022 14:23:38 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23TEKrnJ032650;
+        Fri, 29 Apr 2022 14:23:36 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 3fm939184a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 29 Apr 2022 14:23:36 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23TEAP3F50200986
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 29 Apr 2022 14:10:25 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FB87A4040;
+        Fri, 29 Apr 2022 14:23:34 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9853FA4053;
+        Fri, 29 Apr 2022 14:23:33 +0000 (GMT)
+Received: from sig-9-145-61-57.uk.ibm.com (unknown [9.145.61.57])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 29 Apr 2022 14:23:33 +0000 (GMT)
+Message-ID: <07c39877d9e940a96be41e21e22fe45dbb73d949.camel@linux.ibm.com>
+Subject: Re: [RFC v2 04/39] char: impi, tpm: depend on HAS_IOPORT
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Corey Minyard <minyard@acm.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        "moderated list:IPMI SUBSYSTEM" 
+        <openipmi-developer@lists.sourceforge.net>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>
+Date:   Fri, 29 Apr 2022 16:23:33 +0200
+In-Reply-To: <20220429135108.2781579-7-schnelle@linux.ibm.com>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+         <20220429135108.2781579-7-schnelle@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: mP-YwAL0SztvsqODE36bIGF3Xag2W2D8
+X-Proofpoint-ORIG-GUID: bYBDgac0vnj0x4Nm9JnXLItL86qpeoRT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-29_06,2022-04-28_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 spamscore=0 impostorscore=0 mlxscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 adultscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204290078
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 29/04/2022 14:29, Marek Szyprowski wrote:
-> Hi Krzysztof,
+> Hello Niklas,
 > 
-> On 19.04.2022 13:34, Krzysztof Kozlowski wrote:
->> The driver_override field from platform driver should not be initialized
->> from static memory (string literal) because the core later kfree() it,
->> for example when driver_override is set via sysfs.
->>
->> Use dedicated helper to set driver_override properly.
->>
->> Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
->> Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> On 29.04.22 15:50, Niklas Schnelle wrote:
+> > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> > not being declared. We thus need to add this dependency and ifdef
+> > sections of code using inb()/outb() as alternative access methods.
+> > 
+> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > 
-> This patch landed recently in linux-next as commit 42cd402b8fd4 ("rpmsg: 
-> Fix kfree() of static memory on setting driver_override"). In my tests I 
-> found that it triggers the following issue during boot of the 
-> DragonBoard410c SBC (arch/arm64/boot/dts/qcom/apq8016-sbc.dtb):
+> [snip]
 > 
-> ------------[ cut here ]------------
-> DEBUG_LOCKS_WARN_ON(lock->magic != lock)
-> WARNING: CPU: 1 PID: 8 at kernel/locking/mutex.c:582 
-> __mutex_lock+0x1ec/0x430
-> Modules linked in:
-> CPU: 1 PID: 8 Comm: kworker/u8:0 Not tainted 5.18.0-rc4-next-20220429 #11815
-> Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> Workqueue: events_unbound deferred_probe_work_func
-> pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : __mutex_lock+0x1ec/0x430
-> lr : __mutex_lock+0x1ec/0x430
-> ..
-> Call trace:
->   __mutex_lock+0x1ec/0x430
->   mutex_lock_nested+0x38/0x64
->   driver_set_override+0x124/0x150
->   qcom_smd_register_edge+0x2a8/0x4ec
->   qcom_smd_probe+0x54/0x80
->   platform_probe+0x68/0xe0
->   really_probe.part.0+0x9c/0x29c
->   __driver_probe_device+0x98/0x144
->   driver_probe_device+0xac/0x14c
->   __device_attach_driver+0xb8/0x120
->   bus_for_each_drv+0x78/0xd0
->   __device_attach+0xd8/0x180
->   device_initial_probe+0x14/0x20
->   bus_probe_device+0x9c/0xa4
->   deferred_probe_work_func+0x88/0xc4
->   process_one_work+0x288/0x6bc
->   worker_thread+0x248/0x450
->   kthread+0x118/0x11c
->   ret_from_fork+0x10/0x20
-> irq event stamp: 3599
-> hardirqs last  enabled at (3599): [<ffff80000919053c>] 
-> _raw_spin_unlock_irqrestore+0x98/0x9c
-> hardirqs last disabled at (3598): [<ffff800009190ba4>] 
-> _raw_spin_lock_irqsave+0xc0/0xcc
-> softirqs last  enabled at (3554): [<ffff800008010470>] _stext+0x470/0x5e8
-> softirqs last disabled at (3549): [<ffff8000080a4514>] 
-> __irq_exit_rcu+0x180/0x1ac
-> ---[ end trace 0000000000000000 ]---
+> > diff --git a/drivers/char/tpm/tpm_infineon.c b/drivers/char/tpm/tpm_infineon.c
+> > index 9c924a1440a9..2d2ae37153ba 100644
+> > --- a/drivers/char/tpm/tpm_infineon.c
+> > +++ b/drivers/char/tpm/tpm_infineon.c
+> > @@ -51,34 +51,40 @@ static struct tpm_inf_dev tpm_dev;
+> >  
+> >  static inline void tpm_data_out(unsigned char data, unsigned char offset)
+> >  {
+> > +#ifdef CONFIG_HAS_IOPORT
+> >       if (tpm_dev.iotype == TPM_INF_IO_PORT)
+> >               outb(data, tpm_dev.data_regs + offset);
+> >       else
+> > +#endif
 > 
-> I don't see any direct relation between the $subject and the above log, 
-> but reverting the $subject on top of linux next-20220429 hides/fixes it. 
-> Maybe there is a kind of memory trashing somewhere there and your change 
-> only revealed it?
+> This looks ugly. Can't you declare inb/outb anyway and skip the definition,
+> so you can use IS_ENABLED() here instead?
+> 
+> You can mark the declarations with __compiletime_error("some message"), so
+> if an IS_ENABLED() reference is not removed at compile time, you get some
+> readable error message instead of a link error.
+> 
+> Cheers,
+> Ahmad
 
-Thanks for the report. I think the error path of my patch is wrong - I
-should not kfree(rpdev->driver_override) from the rpmsg code. That's the
-only thing I see now...
+I didn't know about __compiletime_error() that certainly sounds
+interesting even when using a normal #ifdef.
 
-Could you test following patch and tell if it helps?
-https://pastebin.ubuntu.com/p/rp3q9Z5fXj/
+That said either with the function not being declared or this
+__compiletime_error() mechanism I would think that using IS_ENABLED()
+relies on compiler optimizations not to compile in the missing/error
+function call, right? I'm not sure if that is something we should do.
 
------
-
-diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-index 3e81642238d2..1e2ad944e2ec 100644
---- a/drivers/rpmsg/rpmsg_internal.h
-+++ b/drivers/rpmsg/rpmsg_internal.h
-@@ -102,11 +102,7 @@ static inline int
-rpmsg_ctrldev_register_device(struct rpmsg_device *rpdev)
-        if (ret)
-                return ret;
-
--       ret = rpmsg_register_device(rpdev);
--       if (ret)
--               kfree(rpdev->driver_override);
--
--       return ret;
-+       return rpmsg_register_device(rpdev);
- }
-
- #endif
-diff --git a/drivers/rpmsg/rpmsg_ns.c b/drivers/rpmsg/rpmsg_ns.c
-index 8eb8f328237e..f26078467899 100644
---- a/drivers/rpmsg/rpmsg_ns.c
-+++ b/drivers/rpmsg/rpmsg_ns.c
-@@ -31,11 +31,7 @@ int rpmsg_ns_register_device(struct rpmsg_device *rpdev)
-        rpdev->src = RPMSG_NS_ADDR;
-        rpdev->dst = RPMSG_NS_ADDR;
-
--       ret = rpmsg_register_device(rpdev);
--       if (ret)
--               kfree(rpdev->driver_override);
--
--       return ret;
-+       return rpmsg_register_device(rpdev);
- }
- EXPORT_SYMBOL(rpmsg_ns_register_device);
