@@ -2,110 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A8AF51497A
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 14:36:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 613C751498B
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 14:38:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359330AbiD2Mjg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 08:39:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47696 "EHLO
+        id S1359215AbiD2Ml6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 08:41:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359305AbiD2Mjg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 08:39:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 842A65AEDD
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 05:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651235777;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tmPALbAB2aFHap4uYCwyzn1Tmk9I3K+tWth9ftQrgaY=;
-        b=EY3M1kSm4wT8l9wufLyrDwpugLXaS+8TFkeYQGMadx5wQlAobt9kl4yRDwhZtUGVT5xoqQ
-        StXpUWrwILt9zjv79Soyv54DqK1oITYWHwotNYihZfPRlZzIoUhUEIZGqoNLR7JQBYNMuz
-        OLxHNl8G54VG8/yd740H//3wsbn4uTU=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-464-IUJ7Dyz5MvCpMux0yNDyWg-1; Fri, 29 Apr 2022 08:36:15 -0400
-X-MC-Unique: IUJ7Dyz5MvCpMux0yNDyWg-1
-Received: by mail-qv1-f69.google.com with SMTP id b8-20020a056214002800b0044666054d36so5852781qvr.12
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 05:36:15 -0700 (PDT)
+        with ESMTP id S230170AbiD2Ml5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 08:41:57 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0FAAFAD0;
+        Fri, 29 Apr 2022 05:38:39 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id r8so5206604qvx.10;
+        Fri, 29 Apr 2022 05:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u+dxdp5rrl14/eORvrLB8L3RavPWDRGDtxwA0AijHS0=;
+        b=EANN7oTOPbgNT6aPWLJ3jidqnFmPU/PO2+Gua9a0sPGBRzbptwMDRo0wKSgRLbHsK9
+         gkuuic9aitbXcvRhkO6zzQyqTQzBgSnE9LTCMRanDZq/RJqYJ18NEKqx811n/xtqX0GX
+         2KIS12D8Ln39n+JKaXCBlNXnP6u5G26GU6QJs6trZtWoJOov+siVqD/PdRxEopdJUQdt
+         RUPJtzwhVVpImWLB8Vgcg6M3mStk1mu/dY5rBv9gJDYGGrYK91iRZpun21OoeY2uvRTV
+         DP7nAZf4fI4JOYSm9kLGa85vnjWGFLy4zg9xTLY2Z/wBvRum7myBWlXAb5e9NcEgIWXj
+         hCeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tmPALbAB2aFHap4uYCwyzn1Tmk9I3K+tWth9ftQrgaY=;
-        b=a1TSar/feXx7R9WuN6vdcrOoYJtD5+BXghm0BHlnLktStEesGJ7cq9XVE9drQD7+aQ
-         XcyrYe0g0IOzujM0AlCtYz9cL+ubBUbgwSB7jfmZYieJCzQyGQeKt4y2gq35BUAR1biW
-         oU3wh54mfUveN5pTN02brN+KTZXDIWED7sUhW9imjoqju9HenIR9PJUEnU3JZSZLkuRn
-         pxdZ+azO4Hccr+MKqL4tDdsG+gdNDQilfhFKz6Y34u11bw03lV1MNdzwrtQtwLm3vmmI
-         /3a1TzS0bmdO3yTQxNRP6IzAvb4IxN0r5Rhu89q7WeVnHuqKjfYezbj7QqIy4tkVlQ1a
-         S2Yw==
-X-Gm-Message-State: AOAM530jLaDpt/YMhGxqlGT1pPh/w3p5gbR8ZCXgOFCWq5y/IPmRjSsW
-        untHoj13yAvnJVWjDY0xpVPDCI9CKsasfPNL8HW9SrLuKBEDeDSHNoY7ncyCoPSHJl+oY0z2dDi
-        K+01iK7gdgAiDrT3dKAY4
-X-Received: by 2002:ae9:c30d:0:b0:69e:bd20:40cc with SMTP id n13-20020ae9c30d000000b0069ebd2040ccmr22855194qkg.10.1651235775349;
-        Fri, 29 Apr 2022 05:36:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzR/e2gvH8C2pX3ZYsnNabO4ZISvCIsY0TiWhX1g+iYQGQTh69cKbIxck8xvTa6d132FN2MyQ==
-X-Received: by 2002:ae9:c30d:0:b0:69e:bd20:40cc with SMTP id n13-20020ae9c30d000000b0069ebd2040ccmr22855187qkg.10.1651235775101;
-        Fri, 29 Apr 2022 05:36:15 -0700 (PDT)
-Received: from halaneylaptop (068-184-200-203.res.spectrum.com. [68.184.200.203])
-        by smtp.gmail.com with ESMTPSA id h75-20020a379e4e000000b0069db8210ffbsm1383072qke.12.2022.04.29.05.36.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u+dxdp5rrl14/eORvrLB8L3RavPWDRGDtxwA0AijHS0=;
+        b=Gd2x4eHlt0287Qmjs4dT0fZWId466Ee0YnXnbN3y+Jih8V4g1aY4ZOJ4mN6brXTt7u
+         EGI9iVbkL5g58CsoaQfpcmmymnOuaCnY5+ygchxE07DHz4T4yD1HlNqEkVvH1X8WlyXv
+         j4Yf9BidpSlFZ7q3C7NaueKUS0I3PdXqRq6vNwtUN0LZiX06YbJhC4mw9FFo3IwhpVya
+         PvBTOLRo6E2Y10C4BuomHn4XAQXODOJYMHD/eRV7ujHZa11E6LB4HHBdkufyVMCfJHtS
+         2Qc+VXDAkw+b2C2kfFPdJL+uk5qGLidSJNo+GFLfpT6Tiguh3pA1MS4D2ezxsm+X581/
+         VzRQ==
+X-Gm-Message-State: AOAM533JkNR3ZBUfU1Msb3sdhuLS7Nk8PKIRxYK4gcTqi2mr85GagbvF
+        Q9dUahP2TeEHH/GlQkVgiBE=
+X-Google-Smtp-Source: ABdhPJwD6ARY0Qg7OhPhaRZ2aJoyeHoWzMfqlNR6k0S7Sh2YZmG5qHY1oEVs8qx99m23l9ocRQp3PQ==
+X-Received: by 2002:a0c:d6ce:0:b0:443:f22e:6dd with SMTP id l14-20020a0cd6ce000000b00443f22e06ddmr28013580qvi.111.1651235918751;
+        Fri, 29 Apr 2022 05:38:38 -0700 (PDT)
+Received: from master-x64.sparksnet ([2601:153:980:85b1::10])
+        by smtp.gmail.com with ESMTPSA id v126-20020a37dc84000000b0069f9c375519sm1431644qki.46.2022.04.29.05.38.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Apr 2022 05:36:14 -0700 (PDT)
-Date:   Fri, 29 Apr 2022 07:36:12 -0500
-From:   Andrew Halaney <ahalaney@redhat.com>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, mani@kernel.org,
-        lorenzo.pieralisi@arm.com
-Subject: Re: [PATCH] PCI: qcom-ep: check return value after calling
- platform_get_resource_byname()
-Message-ID: <20220429123612.sugqipgfmyy2xc6s@halaneylaptop>
-References: <20220429080740.1294797-1-yangyingliang@huawei.com>
+        Fri, 29 Apr 2022 05:38:38 -0700 (PDT)
+From:   Peter Geis <pgwipeout@gmail.com>
+To:     linux-rockchip@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     heiko@sntech.de, Peter Geis <pgwipeout@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/5] Enable rk356x PCIe controller
+Date:   Fri, 29 Apr 2022 08:38:26 -0400
+Message-Id: <20220429123832.2376381-1-pgwipeout@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220429080740.1294797-1-yangyingliang@huawei.com>
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 04:07:40PM +0800, Yang Yingliang wrote:
-> If platform_get_resource_byname() fails, 'mmio_res' will be set to null pointer,
-> it will cause null-ptr-deref when it used in qcom_pcie_perst_deassert(), so we
-> need check the return value.
-> 
-> Fixes: f55fee56a631 ("PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver")
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 6ce8eddf3a37..becb0c2ff870 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -416,6 +416,10 @@ static int qcom_pcie_ep_get_io_resources(struct platform_device *pdev,
->  
->  	pcie_ep->mmio_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->  							 "mmio");
-> +	if (!pcie_ep->mmio_res) {
-> +		dev_err(dev, "Failed to get mmio resource\n");
-> +		return -EINVAL;
-> +	}
->  
->  	syscon = of_parse_phandle(dev->of_node, "qcom,perst-regs", 0);
->  	if (!syscon) {
-> -- 
-> 2.25.1
-> 
+This series enables the DesignWare based PCIe controller on the rk356x
+series of chips. We drop the fallback to the core driver due to 
+compatibility issues. We reset the PCIe controller at driver probe to
+prevent issues in the future when firmware / kexec leaves the controller
+in an unknown state. We add support for legacy interrupts for cards that
+lack MSI support (which is partially broken currently). We then add the
+device tree nodes to enable PCIe on the Quartz64 Model A.
 
-Reviewed-by: Andrew Halaney <ahalaney@redhat.com>
+Patch 1 drops the snps,dw,pcie fallback from the dt-binding
+Patch 2 resets the PCIe controller to prevent configuration bugs
+Patch 3 adds legacy interrupt support to the driver
+Patch 4 adds the device tree binding to the rk356x.dtsi
+Patch 5 enables the PCIe controller on the Quartz64-A
+
+Changelog:
+v9:
+- move reset_control_assert out of rockchip_pcie_resource_get
+- fix various formatting mistakes
+- fix a checkpatch warning
+
+v8:
+- add core reset patch
+- simplify IRQ enable/disable functions
+- drop spinlock
+- only enable/disable IRQ requested
+- only pass the IRQ register bits used to irq functions
+
+v7:
+- drop assigned-clocks
+
+v6:
+- fix a ranges issue
+- point to GIC instead of ITS
+
+v5:
+- fix incorrect series (apologies for the v4 spam)
+
+v4:
+- drop the ITS modification, poor compatibility is better than
+  completely broken
+
+v3:
+- drop select node from dt-binding
+- convert to for_each_set_bit
+- convert to generic_handle_domain_irq
+- drop unncessary dev_err
+- reorder irq_chip items
+- change to level_irq
+- install the handler after initializing the domain
+
+v2:
+- Define PCIE_CLIENT_INTR_STATUS_LEGACY
+- Fix PCIE_LEGACY_INT_ENABLE to only enable the RC interrupts
+- Add legacy interrupt enable/disable support
+
+
+Peter Geis (5):
+  dt-bindings: PCI: Remove fallback from Rockchip DesignWare binding
+  PCI: rockchip-dwc: Reset core at driver probe
+  PCI: rockchip-dwc: Add legacy interrupt support
+  arm64: dts: rockchip: Add rk3568 PCIe2x1 controller
+  arm64: dts: rockchip: Enable PCIe controller on quartz64-a
+
+ .../bindings/pci/rockchip-dw-pcie.yaml        |  12 +-
+ .../boot/dts/rockchip/rk3566-quartz64-a.dts   |  34 +++++
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi      |  52 ++++++++
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 119 +++++++++++++++---
+ 4 files changed, 191 insertions(+), 26 deletions(-)
+
+-- 
+2.25.1
 
