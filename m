@@ -2,222 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D4A951518F
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 19:21:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D05FA515340
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 20:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235726AbiD2RY0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 13:24:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
+        id S1379867AbiD2SGj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 14:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235457AbiD2RY0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 13:24:26 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404AB4C790;
-        Fri, 29 Apr 2022 10:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651252867; x=1682788867;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LDN4LTmiRFBu3yewHsXaqx2iqRnXy9xm2ypIZ36Kb28=;
-  b=PhSXqXUVilFIPk6P1a2eWhFgUAfrSPYAfwn3AyoVvOPhBL7Dbc4NJjYv
-   lgmprFH0G0HhoNonzQiYyCycAagq1ERkd5SMLmNbkJEhPhwktRdWZlJnZ
-   hYzrSNi/+w5JaKlCaMMqjhuCQ8SIX35sfz9bqwWNvnM22XxfP7/6XYQ/N
-   63LGENw2Uf+Re8J//I+xNX0kpt4daMiEWPu5HVd8vwvS56nDped55q6Gp
-   /iN194BfS+qVCIrK1e0UTqJFRkhLvIPbbXzipGzCmnSta1tqJB+9j88oR
-   kwTUZa7q3O+5Bba+dcYAw4eeXx10PmXwQvNtIYdZqDD46Xnrp/a0fjXu3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="266869745"
-X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
-   d="scan'208";a="266869745"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 10:20:55 -0700
-X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
-   d="scan'208";a="651838350"
-Received: from nadelgad-mobl.amr.corp.intel.com (HELO localhost) ([10.212.108.243])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 10:20:54 -0700
-Date:   Fri, 29 Apr 2022 10:20:54 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V8 04/10] cxl/pci: Create auxiliary devices for each DOE
- mailbox
-Message-ID: <YmwedkzLrsOmsQt/@iweiny-desk3>
-References: <20220414203237.2198665-1-ira.weiny@intel.com>
- <20220414203237.2198665-5-ira.weiny@intel.com>
- <20220429165502.00000d01@huawei.com>
+        with ESMTP id S231160AbiD2SGi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 14:06:38 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D366D4C48
+        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 11:03:19 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id m6so6393216iob.4
+        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 11:03:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+UEKgXrrD0bBkveYKV1BzyuG02j+m4QM4Vug4t1K1Lc=;
+        b=QTAhsROB7PeybDtVIea7NpCcw6Y2SGXrxVNMO7ueaeqMjkvhygrvrO0CB92dH9jYHv
+         /1nCwI6Csg2CaPABJV27UPGb+RZGethrwyW6l9S/0RC4pDBGuwKfa+1q7I/+z5H21Z+w
+         +7l5ZduiDLL6NLD8GFd41Tsa7yF5dg6x6s+q3kbxi4YNf3F7vWX1I2KU7vW2wJ2z/HrJ
+         TdeOd6pFhgxZGYn+oda5ArqSaiiM9auNh6u6kBlG8er/5Dn7LqYesgqm6k8RG1rG2swV
+         jLFb9vwGPv4PNejd+S6r4d5/N9/J7CVn5pzUglxFfDhAg7y/B0z64DikIAot0VeJMD+r
+         oaRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+UEKgXrrD0bBkveYKV1BzyuG02j+m4QM4Vug4t1K1Lc=;
+        b=l6wWg0jbufVBmSjrIjFNvYNFB9rXkH+5Hrzo5euuLIR4298NoaIU9e00DUqW+e224w
+         R4E59V6jQFS0HT3VQfIn2SDTLFPg2tnVDsmFhOt3G2BwyGYMP1DnsGMg5fSidyOBcS0D
+         dGzWb1598bksLyKXGSrXdLcvLaX+FfTfXA679VTE3myNqE6md/qJHZJAf3+bV54VhL//
+         UtdERGCJ3CqXS7+Taf39w6ggMZeoV2kLLFY+VvxwEFWe3Ys1TOUsXBs+i4DKFN76REIU
+         N9TzCLMgybC2332R8hG7/krBwyH4I3ilmFWdmv09PIMDLgJCwAc27WFf+zNuRO5jscSk
+         xloQ==
+X-Gm-Message-State: AOAM531p8plc6ovRHVrwHjpwUk+NJ25RLF+UfouvD2mEO0TRYXZLCkUs
+        hbrkLzAPQUbfj025e0wl5nBu2KlVmXRwuALBb3enwA==
+X-Google-Smtp-Source: ABdhPJxlXzGicn38bpRJBvIzpXXTfNsqk06DDdDi/Q9CDMeryZztyna/X6hAAJIMQXteAb0adbuW7DcpXj+kgmwV6hg=
+X-Received: by 2002:a02:7a06:0:b0:32b:1b83:649a with SMTP id
+ a6-20020a027a06000000b0032b1b83649amr229323jac.29.1651255398079; Fri, 29 Apr
+ 2022 11:03:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220429165502.00000d01@huawei.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220412224348.1038613-1-tansuresh@google.com>
+ <20220412224348.1038613-2-tansuresh@google.com> <CAJZ5v0ivNq3aYCEcxPYMosLJCAyWiAnucwOCmRBzkM=sbyPWgQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0ivNq3aYCEcxPYMosLJCAyWiAnucwOCmRBzkM=sbyPWgQ@mail.gmail.com>
+From:   Tanjore Suresh <tansuresh@google.com>
+Date:   Fri, 29 Apr 2022 11:03:07 -0700
+Message-ID: <CALVARr6v5hcY0Vcf1izPUX-tXNJyyNXBMANbKX4CW9wfRf-pYQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] driver core: Support asynchronous driver shutdown
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 04:55:02PM +0100, Jonathan Cameron wrote:
-> On Thu, 14 Apr 2022 13:32:31 -0700
-> ira.weiny@intel.com wrote:
-> 
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
+Rafael,
 
-[snip]
+That is a good observation, however, many of the use cases in data
+centers (deployment of devices in data centers) do not exploit device
+power management. Therefore, I'm not sure that is the right way to
+design this.
 
-> > +
-> > +/**
-> > + * cxl_pci_create_doe_devices - Create auxiliary bus DOE devices for all DOE
-> > + *				mailboxes found
-> > + *
-> > + * @pci_dev: The PCI device to scan for DOE mailboxes
-> > + *
-> > + * There is no coresponding destroy of these devices.  This function associates
-> > + * the DOE auxiliary devices created with the pci_dev passed in.  That
-> > + * association is device managed (devm_*) such that the DOE auxiliary device
-> > + * lifetime is always less than or equal to the lifetime of the pci_dev.
-> > + *
-> > + * RETURNS: 0 on success -ERRNO on failure.
-> > + */
-> > +static int cxl_pci_create_doe_devices(struct pci_dev *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	bool use_irq = true;
-> > +	int irqs = 0;
-> > +	u16 off = 0;
-> > +	int rc;
-> > +
-> > +	pci_doe_for_each_off(pdev, off)
-> > +		irqs++;
-> I believe this is insufficient because there may be other irqs in use
-> on the device.
+Also if you look into device_shutdown (drivers/base/core.c) generic
+kernel routine does not exploit the shutdown method suggested by you
+instead use the generic shutdown methods defined in bus, class,
+drivers structures. Therefore, adopting to expand on those generic
+shutdown interfaces is the incremental choice to not confuse driver
+developers.
 
-I did not think that was true for any current CXL device.  From what I could
-tell all CXL devices would be covered by this simple calculation.  I left it to
-the reader to determine if a new CXL device came along which needed other irq's
-to lift this somewhere to cover those allocations.  I probably should have made
-some comment.  Sorry.
+Hope this clarifies why this extension is proposed when compared to
+overloading a generic shutdown entry point with device power
+management requirements.
 
-> In a similar fashion to that done in pcie/portdrv_core.c
-> I think we need to instead find the maximum msi/msix vector number
-> by reading the config space.
+Thanks
+sureshtk
 
-I was not aware I could do that...
 
-> Then we request one more vector
-> than that max value to ensure the vector we need has been requested.
 
-Yea at some point I figured this would be lifted out of here as part of a
-larger 'allocate all the vectors for the device' function.
-
-But for now this is the only place that needs irqs so I punted.  I can lift
-this into something like
-
-cxl_pci_alloc_irq_vectors(...) and then pass use_irq here.
-
-But to move this series forward I would propose that
-cxl_pci_alloc_irq_vectors() do what I'm doing here for now.
-
-Ira
-
-> 
-> Jonathan
-> 
-> > +	pci_info(pdev, "Found %d DOE mailbox's\n", irqs);
-> > +
-> > +	/*
-> > +	 * Allocate enough vectors for the DOE's
-> > +	 */
-> > +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSI |
-> > +						     PCI_IRQ_MSIX);
-> > +	if (rc != irqs) {
-> > +		pci_err(pdev,
-> > +			"Not enough interrupts for all the DOEs; use polling\n");
-> > +		use_irq = false;
-> > +		/* Some got allocated; clean them up */
-> > +		if (rc > 0)
-> > +			cxl_pci_free_irq_vectors(pdev);
-> > +	} else {
-> > +		/*
-> > +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
-> > +		 * done later within the DOE initialization, but as it
-> > +		 * potentially has other impacts keep it here when setting up
-> > +		 * the IRQ's.
-> > +		 */
-> > +		pci_set_master(pdev);
-> > +		rc = devm_add_action_or_reset(dev,
-> > +					      cxl_pci_free_irq_vectors,
-> > +					      pdev);
-> > +		if (rc)
-> > +			return rc;
-> > +	}
-> > +
-> > +	pci_doe_for_each_off(pdev, off) {
-> > +		struct auxiliary_device *adev;
-> > +		struct cxl_doe_dev *new_dev;
-> > +		int id;
-> > +
-> > +		new_dev = kzalloc(sizeof(*new_dev), GFP_KERNEL);
-> > +		if (!new_dev)
-> > +			return -ENOMEM;
-> > +
-> > +		new_dev->pdev = pdev;
-> > +		new_dev->cap_offset = off;
-> > +		new_dev->use_irq = use_irq;
-> > +
-> > +		/* Set up struct auxiliary_device */
-> > +		adev = &new_dev->adev;
-> > +		id = ida_alloc(&pci_doe_adev_ida, GFP_KERNEL);
-> > +		if (id < 0) {
-> > +			kfree(new_dev);
-> > +			return -ENOMEM;
-> > +		}
-> > +
-> > +		adev->id = id;
-> > +		adev->name = DOE_DEV_NAME;
-> > +		adev->dev.release = cxl_pci_doe_dev_release;
-> > +		adev->dev.parent = dev;
-> > +
-> > +		if (auxiliary_device_init(adev)) {
-> > +			cxl_pci_doe_dev_release(&adev->dev);
-> > +			return -EIO;
-> > +		}
-> > +
-> > +		if (auxiliary_device_add(adev)) {
-> > +			auxiliary_device_uninit(adev);
-> > +			return -EIO;
-> > +		}
-> > +
-> > +		rc = devm_add_action_or_reset(dev, cxl_pci_doe_destroy_device,
-> > +					      adev);
-> > +		if (rc)
-> > +			return rc;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+On Fri, Apr 15, 2022 at 7:42 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Apr 13, 2022 at 12:44 AM Tanjore Suresh <tansuresh@google.com> wrote:
+> >
+> > This changes the bus driver interface with additional entry points
+> > to enable devices to implement asynchronous shutdown. The existing
+> > synchronous interface to shutdown is unmodified and retained for
+> > backward compatibility.
+> >
+> > This changes the common device shutdown code to enable devices to
+> > participate in asynchronous shutdown implementation.
+> >
+> > Signed-off-by: Tanjore Suresh <tansuresh@google.com>
+>
+> Is there any specific reason why you didn't follow the design of, say,
+> dpm_suspend(), where the "async" devices only need to have a flag set
+> and the driver is not required to implement any new callbacks?
+>
+> IMO having different driver interfaces for asynchronous suspend and
+> shutdown would be quite confusing for driver developers, wouldn't it?
+>
+> > ---
+> >  drivers/base/core.c        | 38 +++++++++++++++++++++++++++++++++++++-
+> >  include/linux/device/bus.h | 12 ++++++++++++
+> >  2 files changed, 49 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 3d6430eb0c6a..ba267ae70a22 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -4479,6 +4479,7 @@ EXPORT_SYMBOL_GPL(device_change_owner);
+> >  void device_shutdown(void)
 > >  {
-> >  	struct cxl_register_map map;
-> > @@ -630,6 +753,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	rc = cxl_pci_create_doe_devices(pdev);
-> > +	if (rc)
-> > +		return rc;
+> >         struct device *dev, *parent;
+> > +       LIST_HEAD(async_shutdown_list);
+> >
+> >         wait_for_device_probe();
+> >         device_block_probing();
+> > @@ -4523,7 +4524,13 @@ void device_shutdown(void)
+> >                                 dev_info(dev, "shutdown_pre\n");
+> >                         dev->class->shutdown_pre(dev);
+> >                 }
+> > -               if (dev->bus && dev->bus->shutdown) {
+> > +               if (dev->bus && dev->bus->async_shutdown_start) {
+> > +                       if (initcall_debug)
+> > +                               dev_info(dev, "async_shutdown_start\n");
+> > +                       dev->bus->async_shutdown_start(dev);
+> > +                       list_add_tail(&dev->kobj.entry,
+> > +                               &async_shutdown_list);
+> > +               } else if (dev->bus && dev->bus->shutdown) {
+> >                         if (initcall_debug)
+> >                                 dev_info(dev, "shutdown\n");
+> >                         dev->bus->shutdown(dev);
+> > @@ -4543,6 +4550,35 @@ void device_shutdown(void)
+> >                 spin_lock(&devices_kset->list_lock);
+> >         }
+> >         spin_unlock(&devices_kset->list_lock);
 > > +
-> >  	cxl_dvsec_ranges(cxlds);
-> >  
-> >  	cxlmd = devm_cxl_add_memdev(cxlds);
-> 
+> > +       /*
+> > +        * Second pass spin for only devices, that have configured
+> > +        * Asynchronous shutdown.
+> > +        */
+> > +       while (!list_empty(&async_shutdown_list)) {
+> > +               dev = list_entry(async_shutdown_list.next, struct device,
+> > +                               kobj.entry);
+> > +               parent = get_device(dev->parent);
+> > +               get_device(dev);
+> > +               /*
+> > +                * Make sure the device is off the  list
+> > +                */
+> > +               list_del_init(&dev->kobj.entry);
+> > +               if (parent)
+> > +                       device_lock(parent);
+> > +               device_lock(dev);
+> > +               if (dev->bus && dev->bus->async_shutdown_end) {
+> > +                       if (initcall_debug)
+> > +                               dev_info(dev,
+> > +                               "async_shutdown_end called\n");
+> > +                       dev->bus->async_shutdown_end(dev);
+> > +               }
+> > +               device_unlock(dev);
+> > +               if (parent)
+> > +                       device_unlock(parent);
+> > +               put_device(dev);
+> > +               put_device(parent);
+> > +       }
+> >  }
+> >
+> >  /*
+> > diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
+> > index a039ab809753..f582c9d21515 100644
+> > --- a/include/linux/device/bus.h
+> > +++ b/include/linux/device/bus.h
+> > @@ -49,6 +49,16 @@ struct fwnode_handle;
+> >   *             will never get called until they do.
+> >   * @remove:    Called when a device removed from this bus.
+> >   * @shutdown:  Called at shut-down time to quiesce the device.
+> > + * @async_shutdown_start:      Called at the shutdown-time to start
+> > + *                             the shutdown process on the device.
+> > + *                             This entry point will be called only
+> > + *                             when the bus driver has indicated it would
+> > + *                             like to participate in asynchronous shutdown
+> > + *                             completion.
+> > + * @async_shutdown_end:        Called at shutdown-time  to complete the shutdown
+> > + *                     process of the device. This entry point will be called
+> > + *                     only when the bus drive has indicated it would like to
+> > + *                     participate in the asynchronous shutdown completion.
+> >   *
+> >   * @online:    Called to put the device back online (after offlining it).
+> >   * @offline:   Called to put the device offline for hot-removal. May fail.
+> > @@ -93,6 +103,8 @@ struct bus_type {
+> >         void (*sync_state)(struct device *dev);
+> >         void (*remove)(struct device *dev);
+> >         void (*shutdown)(struct device *dev);
+> > +       void (*async_shutdown_start)(struct device *dev);
+> > +       void (*async_shutdown_end)(struct device *dev);
+> >
+> >         int (*online)(struct device *dev);
+> >         int (*offline)(struct device *dev);
+> > --
+> > 2.36.0.rc0.470.gd361397f0d-goog
+> >
