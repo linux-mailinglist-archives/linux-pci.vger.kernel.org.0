@@ -2,72 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0B73514FBB
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 17:39:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E701D514FCA
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 17:43:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233227AbiD2PmR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 11:42:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
+        id S231540AbiD2Pqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 11:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231193AbiD2PmQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 11:42:16 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59AFBD64EF;
-        Fri, 29 Apr 2022 08:38:58 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id y14so7213634pfe.10;
-        Fri, 29 Apr 2022 08:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yz+GfZEY0lDErDcA+KJ5430knUlaWFgwbXbXhvtuKG4=;
-        b=InWrBiaVQOeVlsMTBT8/NLfDfcKgZaj1r5WHzTcXVx59zmPWC7ZekBZgfr8iV9gtxg
-         DEtso7g9gVP41L4j4s/ilubxG3jNHBLtiWRWElco9zIDWgdy9+Ud87RGt54uGezCkYg/
-         Fb3y4+gyAPYtUNqOVEZZtaPsvNcD3qajC4c8/t4ePgM1cgtYzR08cwcoDa+/SsTXMv3F
-         eDQOgvP7Xai0bN/dWhy+J9jn4riWKONNAN9DKswwAHPe8VHMYHeuYQBRiHhU0Nvsv80q
-         FOKsY0Pg74ZgKkyZwaW7DFRPFP/20EneHsUTA0vgBB2guGtjxUPzpXNO7/XlIB6ikyK9
-         61Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yz+GfZEY0lDErDcA+KJ5430knUlaWFgwbXbXhvtuKG4=;
-        b=0Jopu7A/ZxhxmBFloP+OQ6TZgBRurBw7NXKaOx8U+NtAU1A3X4SV60N5Rz58NHqrdA
-         9QtXyRzSdBEZMivgGnnmfZ/dnhQ2Ukvz1TtgiXYvofgWDUxbnnKxvRWBa4QF5qxchbK6
-         YXU7Hev68S1/3jm/1+wxv8nrzWC6Pz1IgCuPQGMxVSlPEVwiP50mcYdQpXvwCqwtQPeN
-         jq2lEc5u++lCeakD7SGvWmbCIyf+WXfW1NDJ3pmDHQ/2cN/9rY/SW/SHWlqFO8XW49qE
-         Yc1kfrlCDZxSBY/V/Ae4ds6w3DIJUFTfC9N1qJ2ysxMsfGhuQS5sM+EJVgj5KnrP05oz
-         OIhA==
-X-Gm-Message-State: AOAM530LG4hrNGF5kQtDm60oX7W0W2H0jPQcP+dsvM0qYUyZEDEaSgmB
-        KJSEKj+j17kvA7KXUtU5BNPw6IhIIOlb2KSAMKY=
-X-Google-Smtp-Source: ABdhPJzqmfkiDJSrbmrFkFpx81Zd00niQB5gdBWqkRpnRTKroLDDpxI6HZttSo6o5IVf9DecwHXATElXSzg3OFW/ZAY=
-X-Received: by 2002:a63:c22:0:b0:39d:a9ed:ebc6 with SMTP id
- b34-20020a630c22000000b0039da9edebc6mr9403pgl.350.1651246737544; Fri, 29 Apr
- 2022 08:38:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220422143643.727871-1-Frank.Li@nxp.com> <20220422143643.727871-10-Frank.Li@nxp.com>
- <YmkNRnkKo/UQT5uX@lpieralisi> <CAHrpEqTp6BrUSGqaRZ6wMxHsGttLrqrd+yVKm2xghnQ0RZG0oA@mail.gmail.com>
-In-Reply-To: <CAHrpEqTp6BrUSGqaRZ6wMxHsGttLrqrd+yVKm2xghnQ0RZG0oA@mail.gmail.com>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Fri, 29 Apr 2022 10:38:45 -0500
-Message-ID: <CAHrpEqSEoN_D=x2R9cF_pb7Qjcx8ON3buCRNGTZ_W68dCWnVtg@mail.gmail.com>
-Subject: Re: [PATCH v9 9/9] PCI: endpoint: Add embedded DMA controller test
+        with ESMTP id S1377382AbiD2Pqg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 11:46:36 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9392FA5EA3
+        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 08:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651246997; x=1682782997;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AcGFE3hn9ZBZTKCAEVb4sB2viRk7cnEIXTGNdxTsrYA=;
+  b=c4MZyTZkpBhagCf77J4SzYMPGpf5wXs2mxmGB22Xl3JUuA/CCUUf/h5G
+   yUvJeT3LvX0xKgLx0VbJePb2PbDyXJuIi2HBTh/nge7niliDOvHquQoT2
+   Lo3q/D/giUb+gB+MLO4xYLHGorR7cDAYqn+ugjOmSemSiFIr53gaX5BII
+   krzXgAvtndl3407E0w/kGsDfgBAofAzgVbsGeTltnr4PRkOLJ3RU/R/2B
+   n53nELpntM+ZfeyVIDY4Bmf9WyqPpPk0mc3oyDKCGKrn4tw7qz90Pt7sE
+   f5PSqelkvvain2UrEmd0OOsUh8mdgAp+ToHBDW2t1tcMnJQjrv6KYyPfZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10332"; a="246591185"
+X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
+   d="scan'208";a="246591185"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2022 08:43:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,185,1647327600"; 
+   d="scan'208";a="685066133"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 29 Apr 2022 08:43:15 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nkSm2-0006SD-Sa;
+        Fri, 29 Apr 2022 15:43:14 +0000
+Date:   Fri, 29 Apr 2022 23:43:12 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/microchip] BUILD SUCCESS
+ c049b4b37685ff5b179a7e062b919c31eb406214
+Message-ID: <626c0790.5sammDWB0raSwj1l%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,290 +62,302 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 12:01 PM Zhi Li <lznuaa@gmail.com> wrote:
->
-> On Wed, Apr 27, 2022 at 4:30 AM Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
-> >
-> > On Fri, Apr 22, 2022 at 09:36:43AM -0500, Frank Li wrote:
-> > > Designware provided eDMA support in controller. This enabled use
-> > > this eDMA controller to transfer data.
-> > >
-> > > The whole flow align with standard DMA usage module
-> > >
-> > > 1. Using dma_request_channel() and filter function to find correct
-> > > RX and TX Channel.
-> > > 2. dmaengine_slave_config() config remote side physcial address.
-> > > 3. using dmaengine_prep_slave_single() create transfer descriptor
-> > > 4. tx_submit();
-> > > 5. dma_async_issue_pending();
-> > >
-> > > Tested at i.MX8DXL platform.
-> > >
-> > > root@imx8qmmek:~# /usr/bin/pcitest -d -w
-> > > WRITE ( 102400 bytes):          OKAY
-> > > root@imx8qmmek:~# /usr/bin/pcitest -d -r
-> > > READ ( 102400 bytes):           OKAY
-> > >
-> > > WRITE => Size: 102400 bytes DMA: YES  Time: 0.000180145 seconds Rate: 555108 KB/s
-> > > READ => Size: 102400 bytes  DMA: YES  Time: 0.000194397 seconds Rate: 514411 KB/s
-> > >
-> > > READ => Size: 102400 bytes  DMA: NO   Time: 0.013532597 seconds Rate: 7389 KB/s
-> > > WRITE => Size: 102400 bytes DMA: NO   Time: 0.000857090 seconds Rate: 116673 KB/s
-> > >
-> >
-> > You should rewrite this commit log.
-> >
-> > 1) this is not Designware specific
-> > 2) On what platforms you tested is information for a cover letter but
-> >    not very useful for a commit log
-> > 3) The commit log describes why you need the patch and what the patch
-> >    does.
-> >    It can be a one liner: "Enable DMA controller tests for endpoints with
-> >    DMA capabilities". Or something along those lines.
->
-> How about write as below
->
-> PCI: endpoint: Enable DMA controller tests for endpoints with DMA capabilities
->
-> Some Endpoints controllers have DMA capabilities.  This DMA controller has more
-> efficiency then a general external DMA controller.  And this DMA
-> controller can bypass
-> outbound memory address translation unit.
->
-> The whole flow use standard DMA usage module
->
-> 1. Using dma_request_channel() and filter function to find correct
->  RX and TX Channel. if not exist,  failure back to try allocate
-> general DMA controller
-> channel.
->  2. dmaengine_slave_config() config remote side physcial address.
->  3. using dmaengine_prep_slave_single() create transfer descriptor
->  4. tx_submit();
->  5. dma_async_issue_pending();
->  .
-> best regards
-> Frank Li
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/microchip
+branch HEAD: c049b4b37685ff5b179a7e062b919c31eb406214  PCI: microchip: Add a missing semicolon
 
-@Lorenzo  do you satisfy the above commit message?
+elapsed time: 5885m
 
-> >
-> > Lorenzo
-> >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > > Change from v6 to v9:
-> > >  - none
-> > > Change from v5 to v6:
-> > >  - change subject
-> > > Change from v4 to v5:
-> > >  - none
-> > > Change from v3 to v4:
-> > >  - reverse Xmas tree order
-> > >  - local -> dma_local
-> > >  - change error message
-> > >  - IS_ERR -> IS_ERR_OR_NULL
-> > >  - check return value of dmaengine_slave_config()
-> > > Change from v1 to v2:
-> > >  - none
-> > >
-> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
-> > >  1 file changed, 98 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > index 90d84d3bc868f..f26afd02f3a86 100644
-> > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > @@ -52,9 +52,11 @@ struct pci_epf_test {
-> > >       enum pci_barno          test_reg_bar;
-> > >       size_t                  msix_table_offset;
-> > >       struct delayed_work     cmd_handler;
-> > > -     struct dma_chan         *dma_chan;
-> > > +     struct dma_chan         *dma_chan_tx;
-> > > +     struct dma_chan         *dma_chan_rx;
-> > >       struct completion       transfer_complete;
-> > >       bool                    dma_supported;
-> > > +     bool                    dma_private;
-> > >       const struct pci_epc_features *epc_features;
-> > >  };
-> > >
-> > > @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
-> > >   */
-> > >  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> > >                                     dma_addr_t dma_dst, dma_addr_t dma_src,
-> > > -                                   size_t len)
-> > > +                                   size_t len, dma_addr_t dma_remote,
-> > > +                                   enum dma_transfer_direction dir)
-> > >  {
-> > > +     struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> > > +     dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
-> > >       enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> > > -     struct dma_chan *chan = epf_test->dma_chan;
-> > >       struct pci_epf *epf = epf_test->epf;
-> > >       struct dma_async_tx_descriptor *tx;
-> > > +     struct dma_slave_config sconf = {};
-> > >       struct device *dev = &epf->dev;
-> > >       dma_cookie_t cookie;
-> > >       int ret;
-> > > @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> > >               return -EINVAL;
-> > >       }
-> > >
-> > > -     tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > > +     if (epf_test->dma_private) {
-> > > +             sconf.direction = dir;
-> > > +             if (dir == DMA_MEM_TO_DEV)
-> > > +                     sconf.dst_addr = dma_remote;
-> > > +             else
-> > > +                     sconf.src_addr = dma_remote;
-> > > +
-> > > +             if (dmaengine_slave_config(chan, &sconf)) {
-> > > +                     dev_err(dev, "DMA slave config fail\n");
-> > > +                     return -EIO;
-> > > +             }
-> > > +             tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> > > +     } else {
-> > > +             tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > > +     }
-> > > +
-> > >       if (!tx) {
-> > >               dev_err(dev, "Failed to prepare DMA memcpy\n");
-> > >               return -EIO;
-> > > @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> > >       return 0;
-> > >  }
-> > >
-> > > +struct epf_dma_filter {
-> > > +     struct device *dev;
-> > > +     u32 dma_mask;
-> > > +};
-> > > +
-> > > +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> > > +{
-> > > +     struct epf_dma_filter *filter = node;
-> > > +     struct dma_slave_caps caps;
-> > > +
-> > > +     memset(&caps, 0, sizeof(caps));
-> > > +     dma_get_slave_caps(chan, &caps);
-> > > +
-> > > +     return chan->device->dev == filter->dev
-> > > +             && (filter->dma_mask & caps.directions);
-> > > +}
-> > > +
-> > >  /**
-> > >   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-> > >   * @epf_test: the EPF test device that performs data transfer operation
-> > > @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> > >  {
-> > >       struct pci_epf *epf = epf_test->epf;
-> > >       struct device *dev = &epf->dev;
-> > > +     struct epf_dma_filter filter;
-> > >       struct dma_chan *dma_chan;
-> > >       dma_cap_mask_t mask;
-> > >       int ret;
-> > >
-> > > +     filter.dev = epf->epc->dev.parent;
-> > > +     filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> > > +
-> > > +     dma_cap_zero(mask);
-> > > +     dma_cap_set(DMA_SLAVE, mask);
-> > > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > > +     if (IS_ERR_OR_NULL(dma_chan)) {
-> > > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > > +             goto fail_back_tx;
-> > > +     }
-> > > +
-> > > +     epf_test->dma_chan_rx = dma_chan;
-> > > +
-> > > +     filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> > > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > > +
-> > > +     if (IS_ERR(dma_chan)) {
-> > > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > > +             goto fail_back_rx;
-> > > +     }
-> > > +
-> > > +     epf_test->dma_chan_tx = dma_chan;
-> > > +     epf_test->dma_private = true;
-> > > +
-> > > +     init_completion(&epf_test->transfer_complete);
-> > > +
-> > > +     return 0;
-> > > +
-> > > +fail_back_rx:
-> > > +     dma_release_channel(epf_test->dma_chan_rx);
-> > > +     epf_test->dma_chan_tx = NULL;
-> > > +
-> > > +fail_back_tx:
-> > >       dma_cap_zero(mask);
-> > >       dma_cap_set(DMA_MEMCPY, mask);
-> > >
-> > > @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> > >       }
-> > >       init_completion(&epf_test->transfer_complete);
-> > >
-> > > -     epf_test->dma_chan = dma_chan;
-> > > +     epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
-> > >
-> > >       return 0;
-> > >  }
-> > > @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
-> > >       if (!epf_test->dma_supported)
-> > >               return;
-> > >
-> > > -     dma_release_channel(epf_test->dma_chan);
-> > > -     epf_test->dma_chan = NULL;
-> > > +     dma_release_channel(epf_test->dma_chan_tx);
-> > > +     if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> > > +             epf_test->dma_chan_tx = NULL;
-> > > +             epf_test->dma_chan_rx = NULL;
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     dma_release_channel(epf_test->dma_chan_rx);
-> > > +     epf_test->dma_chan_rx = NULL;
-> > > +
-> > > +     return;
-> > >  }
-> > >
-> > >  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> > > @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
-> > >                       goto err_map_addr;
-> > >               }
-> > >
-> > > +             if (epf_test->dma_private) {
-> > > +                     dev_err(dev, "Cannot transfer data using DMA\n");
-> > > +                     ret = -EINVAL;
-> > > +                     goto err_map_addr;
-> > > +             }
-> > > +
-> > >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > > -                                              src_phys_addr, reg->size);
-> > > +                                              src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
-> > >               if (ret)
-> > >                       dev_err(dev, "Data transfer failed\n");
-> > >       } else {
-> > > @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
-> > >
-> > >               ktime_get_ts64(&start);
-> > >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > > -                                              phys_addr, reg->size);
-> > > +                                              phys_addr, reg->size,
-> > > +                                              reg->src_addr, DMA_DEV_TO_MEM);
-> > >               if (ret)
-> > >                       dev_err(dev, "Data transfer failed\n");
-> > >               ktime_get_ts64(&end);
-> > > @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
-> > >               }
-> > >
-> > >               ktime_get_ts64(&start);
-> > > +
-> > >               ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> > > -                                              src_phys_addr, reg->size);
-> > > +                                              src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
-> > >               if (ret)
-> > >                       dev_err(dev, "Data transfer failed\n");
-> > >               ktime_get_ts64(&end);
-> > > --
-> > > 2.35.1
-> > >
+configs tested: 272
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+mips                 randconfig-c004-20220425
+i386                 randconfig-c001-20220425
+i386                          randconfig-c001
+ia64                          tiger_defconfig
+sh                            shmin_defconfig
+mips                           ip32_defconfig
+nios2                               defconfig
+mips                     decstation_defconfig
+m68k                            q40_defconfig
+arm                           corgi_defconfig
+powerpc                       ppc64_defconfig
+sh                  sh7785lcr_32bit_defconfig
+powerpc                    sam440ep_defconfig
+sh                           se7619_defconfig
+powerpc                      pasemi_defconfig
+sh                        sh7785lcr_defconfig
+powerpc                    amigaone_defconfig
+um                               alldefconfig
+powerpc                      makalu_defconfig
+sh                               j2_defconfig
+arm                        cerfcube_defconfig
+sh                           se7751_defconfig
+arm                         assabet_defconfig
+mips                  decstation_64_defconfig
+arm                            zeus_defconfig
+arm                      integrator_defconfig
+arc                              alldefconfig
+arm                           sunxi_defconfig
+s390                             allmodconfig
+sh                          rsk7264_defconfig
+mips                  maltasmvp_eva_defconfig
+mips                      maltasmvp_defconfig
+sh                        sh7763rdp_defconfig
+openrisc                  or1klitex_defconfig
+mips                       bmips_be_defconfig
+arm                         lpc18xx_defconfig
+arm                          pxa910_defconfig
+sh                           se7206_defconfig
+powerpc                    adder875_defconfig
+sh                   secureedge5410_defconfig
+sh                          r7780mp_defconfig
+powerpc                     taishan_defconfig
+sparc                       sparc64_defconfig
+powerpc                        cell_defconfig
+parisc                generic-64bit_defconfig
+arm                         cm_x300_defconfig
+sparc                               defconfig
+arm                            hisi_defconfig
+alpha                            alldefconfig
+xtensa                generic_kc705_defconfig
+m68k                       bvme6000_defconfig
+i386                             alldefconfig
+arm                        clps711x_defconfig
+arm                             pxa_defconfig
+arm                        keystone_defconfig
+arm                         vf610m4_defconfig
+sh                              ul2_defconfig
+sh                          sdk7786_defconfig
+arm                           viper_defconfig
+powerpc                     mpc83xx_defconfig
+sh                      rts7751r2d1_defconfig
+m68k                       m5249evb_defconfig
+arm                          iop32x_defconfig
+xtensa                              defconfig
+arm                        mini2440_defconfig
+sh                ecovec24-romimage_defconfig
+arm                      jornada720_defconfig
+sh                         ap325rxa_defconfig
+sh                           se7724_defconfig
+sh                          kfr2r09_defconfig
+mips                      loongson3_defconfig
+parisc64                            defconfig
+xtensa                         virt_defconfig
+powerpc                      mgcoge_defconfig
+powerpc                   motionpro_defconfig
+m68k                       m5475evb_defconfig
+powerpc                 mpc837x_mds_defconfig
+microblaze                          defconfig
+mips                            gpr_defconfig
+sh                        edosk7705_defconfig
+arc                 nsimosci_hs_smp_defconfig
+arm                            pleb_defconfig
+arc                        nsim_700_defconfig
+ia64                             alldefconfig
+sh                           sh2007_defconfig
+powerpc                     asp8347_defconfig
+m68k                        mvme147_defconfig
+h8300                       h8s-sim_defconfig
+xtensa                          iss_defconfig
+sh                             sh03_defconfig
+sparc64                          alldefconfig
+sparc64                             defconfig
+powerpc                  storcenter_defconfig
+arc                      axs103_smp_defconfig
+m68k                             alldefconfig
+arm                           h3600_defconfig
+arm                           tegra_defconfig
+parisc                generic-32bit_defconfig
+sh                            hp6xx_defconfig
+openrisc                 simple_smp_defconfig
+h8300                            alldefconfig
+arm                        mvebu_v7_defconfig
+sh                          sdk7780_defconfig
+arm                      footbridge_defconfig
+s390                                defconfig
+sh                        edosk7760_defconfig
+mips                       capcella_defconfig
+powerpc                 mpc85xx_cds_defconfig
+arm                         lubbock_defconfig
+arc                     haps_hs_smp_defconfig
+xtensa                  nommu_kc705_defconfig
+arc                                 defconfig
+powerpc                      arches_defconfig
+mips                          rb532_defconfig
+x86_64                           alldefconfig
+x86_64               randconfig-c001-20220425
+arm                  randconfig-c002-20220425
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220427
+arm                  randconfig-c002-20220428
+arm                  randconfig-c002-20220426
+ia64                                defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+arc                              allyesconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64               randconfig-a015-20220425
+x86_64               randconfig-a014-20220425
+x86_64               randconfig-a011-20220425
+x86_64               randconfig-a013-20220425
+x86_64               randconfig-a012-20220425
+x86_64               randconfig-a016-20220425
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                 randconfig-a014-20220425
+i386                 randconfig-a012-20220425
+i386                 randconfig-a011-20220425
+i386                 randconfig-a015-20220425
+i386                 randconfig-a013-20220425
+i386                 randconfig-a016-20220425
+i386                          randconfig-a012
+i386                          randconfig-a016
+i386                          randconfig-a014
+arc                  randconfig-r043-20220425
+s390                 randconfig-r044-20220425
+riscv                randconfig-r042-20220425
+arc                  randconfig-r043-20220428
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-syz
+
+clang tested configs:
+riscv                randconfig-c006-20220425
+mips                 randconfig-c004-20220425
+x86_64               randconfig-c007-20220425
+arm                  randconfig-c002-20220425
+i386                 randconfig-c001-20220425
+powerpc              randconfig-c003-20220425
+riscv                randconfig-c006-20220427
+mips                 randconfig-c004-20220427
+x86_64                        randconfig-c007
+i386                          randconfig-c001
+arm                  randconfig-c002-20220427
+powerpc              randconfig-c003-20220427
+riscv                randconfig-c006-20220428
+mips                 randconfig-c004-20220428
+arm                  randconfig-c002-20220428
+powerpc              randconfig-c003-20220428
+riscv                randconfig-c006-20220429
+mips                 randconfig-c004-20220429
+arm                  randconfig-c002-20220429
+powerpc              randconfig-c003-20220429
+mips                          ath79_defconfig
+arm                       spear13xx_defconfig
+mips                   sb1250_swarm_defconfig
+arm                         shannon_defconfig
+mips                     loongson2k_defconfig
+arm                          pxa168_defconfig
+powerpc                    socrates_defconfig
+arm                            dove_defconfig
+powerpc                     tqm5200_defconfig
+arm                       aspeed_g4_defconfig
+powerpc                      walnut_defconfig
+arm                              alldefconfig
+mips                            e55_defconfig
+arm                     davinci_all_defconfig
+arm                         bcm2835_defconfig
+mips                          rm200_defconfig
+mips                           ip22_defconfig
+powerpc                  mpc885_ads_defconfig
+mips                malta_qemu_32r6_defconfig
+powerpc                       ebony_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                          allyesconfig
+powerpc                      katmai_defconfig
+powerpc                     pseries_defconfig
+mips                       lemote2f_defconfig
+powerpc                     kmeter1_defconfig
+x86_64                           allyesconfig
+mips                           mtx1_defconfig
+powerpc                        fsp2_defconfig
+arm                      pxa255-idp_defconfig
+mips                      malta_kvm_defconfig
+mips                           ip27_defconfig
+arm                        vexpress_defconfig
+mips                       rbtx49xx_defconfig
+powerpc                          allmodconfig
+powerpc                 mpc8560_ads_defconfig
+mips                         tb0287_defconfig
+mips                        workpad_defconfig
+mips                      bmips_stb_defconfig
+arm                       versatile_defconfig
+x86_64               randconfig-a002-20220425
+x86_64               randconfig-a004-20220425
+x86_64               randconfig-a003-20220425
+x86_64               randconfig-a001-20220425
+x86_64               randconfig-a005-20220425
+x86_64               randconfig-a006-20220425
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+i386                 randconfig-a006-20220425
+i386                 randconfig-a002-20220425
+i386                 randconfig-a005-20220425
+i386                 randconfig-a003-20220425
+i386                 randconfig-a001-20220425
+i386                 randconfig-a004-20220425
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+hexagon              randconfig-r041-20220428
+riscv                randconfig-r042-20220428
+hexagon              randconfig-r045-20220428
+hexagon              randconfig-r041-20220425
+hexagon              randconfig-r045-20220425
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
