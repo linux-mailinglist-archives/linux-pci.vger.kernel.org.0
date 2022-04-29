@@ -2,68 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42F785142AB
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 08:53:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 155C9514380
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 09:57:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354628AbiD2G4p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 02:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
+        id S1355313AbiD2H7L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 03:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348954AbiD2G4p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 02:56:45 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C323756768;
-        Thu, 28 Apr 2022 23:53:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0E9D3B832F4;
-        Fri, 29 Apr 2022 06:53:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B806DC385AC;
-        Fri, 29 Apr 2022 06:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651215204;
-        bh=jFzLIgFDBXvEXK9brj3GiRx598j1W1BP4ZGK9938VXo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TYg+QiGKPQu2FAiyx7bvU2SOo7ce9+OXiJ0n1cAuExR2I38Zq8OapYQCAgiO2T8bV
-         lTY+gdKLQKEKrpiuBBs8AgJje9vxzh9f2nQd9Zyk3aeWv9u6CnW4fjlhykrxXOYPfR
-         pMuewp9WzGC0sO5SHR6BGUlzm/0KxwkerfQwrzBJq17sHM1ukKURBvoO3Hsc2bECHs
-         lRf+J4LuM2YTV0bTPnyI/zMZQO+DudRZTBsAe2x8DAefgFrqKYC+QAXpCLnOsriNZu
-         nxPKOtA+EKE9ILxmzg8Kc5bDPZ9VYIJKt78U5qxiaRTSa9QUZOvH9lyhOU2l65ZBI3
-         fQHdYTnQyNfNg==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1nkKVI-0001ir-A6; Fri, 29 Apr 2022 08:53:25 +0200
-Date:   Fri, 29 Apr 2022 08:53:24 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org
-Subject: Re: [PATCH RFC 1/5] phy: qcom-qmp: add support for pipe clock muxing
-Message-ID: <YmuLZNg+91HW2lsY@hovoldconsulting.com>
-References: <20220421102041.17345-1-johan+linaro@kernel.org>
- <20220421102041.17345-2-johan+linaro@kernel.org>
- <YmqSkP++4xzisJHp@ripper>
+        with ESMTP id S1355298AbiD2H7F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 03:59:05 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903814ECF6;
+        Fri, 29 Apr 2022 00:55:47 -0700 (PDT)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KqPt95v5szhYkp;
+        Fri, 29 Apr 2022 15:55:29 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 29 Apr 2022 15:55:45 +0800
+Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 29 Apr
+ 2022 15:55:44 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     <mani@kernel.org>, <lorenzo.pieralisi@arm.com>
+Subject: [PATCH] PCI: qcom-ep: check return value after calling platform_get_resource_byname()
+Date:   Fri, 29 Apr 2022 16:07:40 +0800
+Message-ID: <20220429080740.1294797-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YmqSkP++4xzisJHp@ripper>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,97 +48,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 06:11:44AM -0700, Bjorn Andersson wrote:
-> On Thu 21 Apr 03:20 PDT 2022, Johan Hovold wrote:
-> 
-> > Some QMP PHYs need to remux to their pipe clock input to the pipe clock
-> > output generated by the PHY before powering on the PHY and restore the
-> > default source during power down.
-> > 
-> > Add support for an optional pipe clock mux which will be reparented to
-> > the generated pipe clock before powering on the PHY and restored to the
-> > default reference source on power off.
-> > 
-> 
-> After considering this for a while, I have two objections to doing this
-> explicitly:
-> 
-> 1) The QMP block is fed &gcc_pcie_N_pipe_clk (and on sc8280xp)
-> gcc_pcie_N_pipediv2_clk. But neither of these clocks are the mux, so
-> what this patch (and the existing muxing logic in the controller) does
-> is to poke into gcc "internals".
+If platform_get_resource_byname() fails, 'mmio_res' will be set to null pointer,
+it will cause null-ptr-deref when it used in qcom_pcie_perst_deassert(), so we
+need check the return value.
 
-I agree that this is perhaps the strongest argument against describing
-the mux in DT (as is also currently done for sc7280).
+Fixes: f55fee56a631 ("PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> 2) The actual reason for the mux dance is that toggling the associated
-> GDSC without a valid parent of this clock would cause the clock to lock
-> up and GDSC transition to time out. This property is shared with a wide
-> range of other clocks (so far we have 84 users of clk_rcg2_shared_ops on
-> sc8280xp).
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 6ce8eddf3a37..becb0c2ff870 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -416,6 +416,10 @@ static int qcom_pcie_ep_get_io_resources(struct platform_device *pdev,
+ 
+ 	pcie_ep->mmio_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+ 							 "mmio");
++	if (!pcie_ep->mmio_res) {
++		dev_err(dev, "Failed to get mmio resource\n");
++		return -EINVAL;
++	}
+ 
+ 	syscon = of_parse_phandle(dev->of_node, "qcom,perst-regs", 0);
+ 	if (!syscon) {
+-- 
+2.25.1
 
-Right, but the situation with rcg2 is a little different. From what I
-gather the problem there is that some downstream clock could have been
-enabled by some other part of the system behind the kernel's back and
-then things go wrong when the kernel configures the clock.
-
-Here it is the kernel that controls the source of the pipe clock mux
-(the PHY PLL) and knows when the source is valid (and the PHY is both
-provider and consumer of the pipe clock).
-
-For rcg2, there's no choice but to work around the hardware in the clock
-driver, while for QMP the PHY power sequences could be made explicit in
-the driver:
-
-	clk_prepare_enable(pipe);
-	clk_set_parent(pipe_src, pll);
-	start_pll();
-	
-	stop_pll();
-	clk_set_parent(pipe_src, xo);
-	clk_disable_unprepare(pipe);
-
-Note that with the above sequences it would be possible to drop the pipe
-clock BRANCH_HALT_SKIP flag, which is only there in the clock driver
-because of the how the PHY works (i.e. that the pipe clock must be
-ungated before the PLL is started).
-
-(This wouldn't be possible with a pipe-mux implementation in the clock
-driver since the parent mux would be enabled before the child pipe
-clock.)
-
-But sure, the requirement to restore XO to prevent a later GDSC hang has
-little to do with the PHY.
-
-> It would be nice if clk_summary would represent the real state of these
-> clocks, but unfortunately I don't think the state matches reality with
-> this approach either.
-> 
-> E.g. we prepare/enable the pipe clock before setting
-> QPHY_POWER_DOWN_CONTROL, during this time there's shouldn't be any pipe
-> clock coming out of the PHY...
-
-Right, there's a small window there where the source is still off (due
-to hardware requirements), but at least the topology is always reported
-correctly, which is really useful when dealing with boot handover.
-
-I have an sc8280xp here where the boot firmware leaves the pipe clock
-muxed in despite the GDSC being disabled. Fortunately, it doesn't seem
-to trigger the lockup when toggling the GDSC as it does on an sa8540p.
-
-My concerns are otherwise mostly related to the implementation of the
-safe-mux (e.g. ad-hoc, missing locking) and can probably be addressed.
-
-As an example, with the current implementation it is not possible to use
-an assigned clock parent in DT to make sure that the XO source is
-selected before toggling the GDSC. The muxing doesn't happen until the
-pipe clock is enabled, which is much too late in case the boot firmware
-left the pipe clock muxed in, and when enabling the pipe clock you
-really want the PHY PLL as source and not the cached XO.
-
-Can you still drop the current safe-mux patches from your tree or would
-they need to be fixed up incrementally? I think you merged v2, but
-there's already a v3 out (addressing the hardcoded mux configuration
-values).
-
-Johan
