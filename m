@@ -2,146 +2,363 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52C16514FA8
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 17:37:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0B73514FBB
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 17:39:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378580AbiD2Pkn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 11:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39478 "EHLO
+        id S233227AbiD2PmR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 11:42:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378567AbiD2Pkm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 11:40:42 -0400
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D10BD64E3
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 08:37:22 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id j6so6174286qkp.9
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 08:37:22 -0700 (PDT)
+        with ESMTP id S231193AbiD2PmQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 11:42:16 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59AFBD64EF;
+        Fri, 29 Apr 2022 08:38:58 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id y14so7213634pfe.10;
+        Fri, 29 Apr 2022 08:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bZXp9UdtwQUhq4ByWWPM2fGxW46dWdEnK/AAX/Cv5Mk=;
-        b=K7k1NR2iw9kVdnCUnxPN/AGmdqZLJYlSXYLXaJhLiudcd1Mtfwu8JpG1ZiL21PbPDl
-         cZKLE89rhE2vHHzVazDpdjx/0YSML1XahKPVknxXXd3hsT2Oz+bwVvWGWPMtv3uucyup
-         IrWcjmwiZ4ehml0LcXKVLkAuFRzWVjst1EZEsV/Ag4yMMWb8ZQn9Is5yrcfTKQSKO32C
-         v39WiD/8BkGWUU0aCAosD6uGHsWt8/WCfg1025NmSs6w3Qzp7mwsQZ2PXyD+5M28iOlZ
-         S/C4saM3TAbiCrvaCL8cBRRByxhaJdVo87fa/f6cpD6YSIrtgXx7MAZ4o6kS9t+CxrbX
-         jsGg==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yz+GfZEY0lDErDcA+KJ5430knUlaWFgwbXbXhvtuKG4=;
+        b=InWrBiaVQOeVlsMTBT8/NLfDfcKgZaj1r5WHzTcXVx59zmPWC7ZekBZgfr8iV9gtxg
+         DEtso7g9gVP41L4j4s/ilubxG3jNHBLtiWRWElco9zIDWgdy9+Ud87RGt54uGezCkYg/
+         Fb3y4+gyAPYtUNqOVEZZtaPsvNcD3qajC4c8/t4ePgM1cgtYzR08cwcoDa+/SsTXMv3F
+         eDQOgvP7Xai0bN/dWhy+J9jn4riWKONNAN9DKswwAHPe8VHMYHeuYQBRiHhU0Nvsv80q
+         FOKsY0Pg74ZgKkyZwaW7DFRPFP/20EneHsUTA0vgBB2guGtjxUPzpXNO7/XlIB6ikyK9
+         61Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bZXp9UdtwQUhq4ByWWPM2fGxW46dWdEnK/AAX/Cv5Mk=;
-        b=ZRVUr9Hvs2LzJAr4nnvlM+ttmkrz9a2Z9im0YQFXLvMUMattaSKyvmO2E0CtpWEqcE
-         h3dV66JVxQHv5KiI+RjSqzuceUWKuxMuZ1gSHDuG6GzCEnrSYK4KVgHN8d1bWU8ezAg7
-         b/Q/iUSqI+baxs2uKKo8bYdcN9465pwQiQxyK92Gjj6dgPMljBUW85cpahLZtA7Qx84U
-         o/wAgwsHDkZ+29lZyMVYq8jfLDU6uwhti91BmB2YgLMoAP7AAgRiq7xZY5lmBjfm8k3y
-         ayyKdc3vDvGUmLpkZAWydE0l710gdCT702Ujgd+EgOT8FV8ULB1fwq2puVjAtKL72vEx
-         L7oQ==
-X-Gm-Message-State: AOAM533QrJW/reJmC1GFNfUvHgKZnuVAyKKe0z8fPrIjqv92pbT+Ohlr
-        AExSz6+DCOwBoQSeRyE7BOxB0g==
-X-Google-Smtp-Source: ABdhPJw2cY0R0MGKHsfQdnqbWfaWvp4skgSgNWcuhYrHEFDV9lMBXC/qRnYVkHx3ENkOwGHbC2LFiw==
-X-Received: by 2002:a05:620a:1906:b0:67b:3ac1:8f72 with SMTP id bj6-20020a05620a190600b0067b3ac18f72mr22573943qkb.478.1651246641508;
-        Fri, 29 Apr 2022 08:37:21 -0700 (PDT)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id r9-20020ac85c89000000b002f378738ed4sm1906774qta.7.2022.04.29.08.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Apr 2022 08:37:20 -0700 (PDT)
-Date:   Fri, 29 Apr 2022 11:37:18 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
-Message-ID: <YmwGLrh4U+pVJo0m@fedora>
-References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
- <20220429135108.2781579-19-schnelle@linux.ibm.com>
- <Ymv3DnS1vPMY8QIg@fedora>
- <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yz+GfZEY0lDErDcA+KJ5430knUlaWFgwbXbXhvtuKG4=;
+        b=0Jopu7A/ZxhxmBFloP+OQ6TZgBRurBw7NXKaOx8U+NtAU1A3X4SV60N5Rz58NHqrdA
+         9QtXyRzSdBEZMivgGnnmfZ/dnhQ2Ukvz1TtgiXYvofgWDUxbnnKxvRWBa4QF5qxchbK6
+         YXU7Hev68S1/3jm/1+wxv8nrzWC6Pz1IgCuPQGMxVSlPEVwiP50mcYdQpXvwCqwtQPeN
+         jq2lEc5u++lCeakD7SGvWmbCIyf+WXfW1NDJ3pmDHQ/2cN/9rY/SW/SHWlqFO8XW49qE
+         Yc1kfrlCDZxSBY/V/Ae4ds6w3DIJUFTfC9N1qJ2ysxMsfGhuQS5sM+EJVgj5KnrP05oz
+         OIhA==
+X-Gm-Message-State: AOAM530LG4hrNGF5kQtDm60oX7W0W2H0jPQcP+dsvM0qYUyZEDEaSgmB
+        KJSEKj+j17kvA7KXUtU5BNPw6IhIIOlb2KSAMKY=
+X-Google-Smtp-Source: ABdhPJzqmfkiDJSrbmrFkFpx81Zd00niQB5gdBWqkRpnRTKroLDDpxI6HZttSo6o5IVf9DecwHXATElXSzg3OFW/ZAY=
+X-Received: by 2002:a63:c22:0:b0:39d:a9ed:ebc6 with SMTP id
+ b34-20020a630c22000000b0039da9edebc6mr9403pgl.350.1651246737544; Fri, 29 Apr
+ 2022 08:38:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UN0ca/LPGGPy0rfH"
-Content-Disposition: inline
-In-Reply-To: <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com>
+References: <20220422143643.727871-1-Frank.Li@nxp.com> <20220422143643.727871-10-Frank.Li@nxp.com>
+ <YmkNRnkKo/UQT5uX@lpieralisi> <CAHrpEqTp6BrUSGqaRZ6wMxHsGttLrqrd+yVKm2xghnQ0RZG0oA@mail.gmail.com>
+In-Reply-To: <CAHrpEqTp6BrUSGqaRZ6wMxHsGttLrqrd+yVKm2xghnQ0RZG0oA@mail.gmail.com>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Fri, 29 Apr 2022 10:38:45 -0500
+Message-ID: <CAHrpEqSEoN_D=x2R9cF_pb7Qjcx8ON3buCRNGTZ_W68dCWnVtg@mail.gmail.com>
+Subject: Re: [PATCH v9 9/9] PCI: endpoint: Add embedded DMA controller test
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Apr 27, 2022 at 12:01 PM Zhi Li <lznuaa@gmail.com> wrote:
+>
+> On Wed, Apr 27, 2022 at 4:30 AM Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> >
+> > On Fri, Apr 22, 2022 at 09:36:43AM -0500, Frank Li wrote:
+> > > Designware provided eDMA support in controller. This enabled use
+> > > this eDMA controller to transfer data.
+> > >
+> > > The whole flow align with standard DMA usage module
+> > >
+> > > 1. Using dma_request_channel() and filter function to find correct
+> > > RX and TX Channel.
+> > > 2. dmaengine_slave_config() config remote side physcial address.
+> > > 3. using dmaengine_prep_slave_single() create transfer descriptor
+> > > 4. tx_submit();
+> > > 5. dma_async_issue_pending();
+> > >
+> > > Tested at i.MX8DXL platform.
+> > >
+> > > root@imx8qmmek:~# /usr/bin/pcitest -d -w
+> > > WRITE ( 102400 bytes):          OKAY
+> > > root@imx8qmmek:~# /usr/bin/pcitest -d -r
+> > > READ ( 102400 bytes):           OKAY
+> > >
+> > > WRITE => Size: 102400 bytes DMA: YES  Time: 0.000180145 seconds Rate: 555108 KB/s
+> > > READ => Size: 102400 bytes  DMA: YES  Time: 0.000194397 seconds Rate: 514411 KB/s
+> > >
+> > > READ => Size: 102400 bytes  DMA: NO   Time: 0.013532597 seconds Rate: 7389 KB/s
+> > > WRITE => Size: 102400 bytes DMA: NO   Time: 0.000857090 seconds Rate: 116673 KB/s
+> > >
+> >
+> > You should rewrite this commit log.
+> >
+> > 1) this is not Designware specific
+> > 2) On what platforms you tested is information for a cover letter but
+> >    not very useful for a commit log
+> > 3) The commit log describes why you need the patch and what the patch
+> >    does.
+> >    It can be a one liner: "Enable DMA controller tests for endpoints with
+> >    DMA capabilities". Or something along those lines.
+>
+> How about write as below
+>
+> PCI: endpoint: Enable DMA controller tests for endpoints with DMA capabilities
+>
+> Some Endpoints controllers have DMA capabilities.  This DMA controller has more
+> efficiency then a general external DMA controller.  And this DMA
+> controller can bypass
+> outbound memory address translation unit.
+>
+> The whole flow use standard DMA usage module
+>
+> 1. Using dma_request_channel() and filter function to find correct
+>  RX and TX Channel. if not exist,  failure back to try allocate
+> general DMA controller
+> channel.
+>  2. dmaengine_slave_config() config remote side physcial address.
+>  3. using dmaengine_prep_slave_single() create transfer descriptor
+>  4. tx_submit();
+>  5. dma_async_issue_pending();
+>  .
+> best regards
+> Frank Li
 
---UN0ca/LPGGPy0rfH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+@Lorenzo  do you satisfy the above commit message?
 
-On Fri, Apr 29, 2022 at 04:46:00PM +0200, Niklas Schnelle wrote:
-> On Fri, 2022-04-29 at 10:32 -0400, William Breathitt Gray wrote:
-> > On Fri, Apr 29, 2022 at 03:50:16PM +0200, Niklas Schnelle wrote:
-> > > In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and frie=
-nds
-> > > not being declared. We thus need to add HAS_IOPORT as dependency for
-> > > those drivers using them.
-> > >=20
-> > > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> >
+> > Lorenzo
+> >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > > > ---
-> > >  drivers/gpio/Kconfig | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > > index 45764ec3b2eb..14e5998ee95c 100644
-> > > --- a/drivers/gpio/Kconfig
-> > > +++ b/drivers/gpio/Kconfig
-> > > @@ -697,7 +697,7 @@ config GPIO_VR41XX
-> > > =20
-> > >  config GPIO_VX855
-> > >  	tristate "VIA VX855/VX875 GPIO"
-> > > -	depends on (X86 || COMPILE_TEST) && PCI
-> > > +	depends on (X86 || COMPILE_TEST) && PCI && HAS_IOPORT
-> > >  	select MFD_CORE
-> > >  	select MFD_VX855
-> > >  	help
-> > > --=20
-> > > 2.32.0
-> >=20
-> > I noticed a number of other GPIO drivers make use of inb()/outb() -- for
-> > example the PC104 drivers -- should the respective Kconfigs for those
-> > drivers also be adjusted here?
-> >=20
-> > William Breathitt Gray
->=20
-> Good question. As far as I can see most (all?) of these have "select
-> ISA_BUS_API" which is "def_bool ISA". Now "config ISA" seems to
-> currently be repeated in architectures and doesn't have an explicit
-> HAS_IOPORT dependency (it maybe should have one). But it does only make
-> sense on architectures with HAS_IOPORT set.
-
-There is such a thing as ISA DMA, but you'll still need to initialize
-the device via the IO Port bus first, so perhaps setting HAS_IOPORT for
-"config ISA" is the right thing to do: all ISA devices are expected to
-communicate in some way via ioport.
-
-William Breathitt Gray
-
---UN0ca/LPGGPy0rfH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCYmwGKgAKCRC1SFbKvhIj
-K8KEAP0TKKesiZ/wUezoJg8+48qr5yK22ZRd1gc3a6/67xLQNgEAvu4pev2XF5/q
-8PHoF5Bmkx2ZgF9O5X8qFa9zGNUxqAk=
-=PRGE
------END PGP SIGNATURE-----
-
---UN0ca/LPGGPy0rfH--
+> > > Change from v6 to v9:
+> > >  - none
+> > > Change from v5 to v6:
+> > >  - change subject
+> > > Change from v4 to v5:
+> > >  - none
+> > > Change from v3 to v4:
+> > >  - reverse Xmas tree order
+> > >  - local -> dma_local
+> > >  - change error message
+> > >  - IS_ERR -> IS_ERR_OR_NULL
+> > >  - check return value of dmaengine_slave_config()
+> > > Change from v1 to v2:
+> > >  - none
+> > >
+> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
+> > >  1 file changed, 98 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > index 90d84d3bc868f..f26afd02f3a86 100644
+> > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > > @@ -52,9 +52,11 @@ struct pci_epf_test {
+> > >       enum pci_barno          test_reg_bar;
+> > >       size_t                  msix_table_offset;
+> > >       struct delayed_work     cmd_handler;
+> > > -     struct dma_chan         *dma_chan;
+> > > +     struct dma_chan         *dma_chan_tx;
+> > > +     struct dma_chan         *dma_chan_rx;
+> > >       struct completion       transfer_complete;
+> > >       bool                    dma_supported;
+> > > +     bool                    dma_private;
+> > >       const struct pci_epc_features *epc_features;
+> > >  };
+> > >
+> > > @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
+> > >   */
+> > >  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+> > >                                     dma_addr_t dma_dst, dma_addr_t dma_src,
+> > > -                                   size_t len)
+> > > +                                   size_t len, dma_addr_t dma_remote,
+> > > +                                   enum dma_transfer_direction dir)
+> > >  {
+> > > +     struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
+> > > +     dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
+> > >       enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+> > > -     struct dma_chan *chan = epf_test->dma_chan;
+> > >       struct pci_epf *epf = epf_test->epf;
+> > >       struct dma_async_tx_descriptor *tx;
+> > > +     struct dma_slave_config sconf = {};
+> > >       struct device *dev = &epf->dev;
+> > >       dma_cookie_t cookie;
+> > >       int ret;
+> > > @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+> > >               return -EINVAL;
+> > >       }
+> > >
+> > > -     tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
+> > > +     if (epf_test->dma_private) {
+> > > +             sconf.direction = dir;
+> > > +             if (dir == DMA_MEM_TO_DEV)
+> > > +                     sconf.dst_addr = dma_remote;
+> > > +             else
+> > > +                     sconf.src_addr = dma_remote;
+> > > +
+> > > +             if (dmaengine_slave_config(chan, &sconf)) {
+> > > +                     dev_err(dev, "DMA slave config fail\n");
+> > > +                     return -EIO;
+> > > +             }
+> > > +             tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
+> > > +     } else {
+> > > +             tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
+> > > +     }
+> > > +
+> > >       if (!tx) {
+> > >               dev_err(dev, "Failed to prepare DMA memcpy\n");
+> > >               return -EIO;
+> > > @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+> > >       return 0;
+> > >  }
+> > >
+> > > +struct epf_dma_filter {
+> > > +     struct device *dev;
+> > > +     u32 dma_mask;
+> > > +};
+> > > +
+> > > +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
+> > > +{
+> > > +     struct epf_dma_filter *filter = node;
+> > > +     struct dma_slave_caps caps;
+> > > +
+> > > +     memset(&caps, 0, sizeof(caps));
+> > > +     dma_get_slave_caps(chan, &caps);
+> > > +
+> > > +     return chan->device->dev == filter->dev
+> > > +             && (filter->dma_mask & caps.directions);
+> > > +}
+> > > +
+> > >  /**
+> > >   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
+> > >   * @epf_test: the EPF test device that performs data transfer operation
+> > > @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+> > >  {
+> > >       struct pci_epf *epf = epf_test->epf;
+> > >       struct device *dev = &epf->dev;
+> > > +     struct epf_dma_filter filter;
+> > >       struct dma_chan *dma_chan;
+> > >       dma_cap_mask_t mask;
+> > >       int ret;
+> > >
+> > > +     filter.dev = epf->epc->dev.parent;
+> > > +     filter.dma_mask = BIT(DMA_DEV_TO_MEM);
+> > > +
+> > > +     dma_cap_zero(mask);
+> > > +     dma_cap_set(DMA_SLAVE, mask);
+> > > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
+> > > +     if (IS_ERR_OR_NULL(dma_chan)) {
+> > > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
+> > > +             goto fail_back_tx;
+> > > +     }
+> > > +
+> > > +     epf_test->dma_chan_rx = dma_chan;
+> > > +
+> > > +     filter.dma_mask = BIT(DMA_MEM_TO_DEV);
+> > > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
+> > > +
+> > > +     if (IS_ERR(dma_chan)) {
+> > > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
+> > > +             goto fail_back_rx;
+> > > +     }
+> > > +
+> > > +     epf_test->dma_chan_tx = dma_chan;
+> > > +     epf_test->dma_private = true;
+> > > +
+> > > +     init_completion(&epf_test->transfer_complete);
+> > > +
+> > > +     return 0;
+> > > +
+> > > +fail_back_rx:
+> > > +     dma_release_channel(epf_test->dma_chan_rx);
+> > > +     epf_test->dma_chan_tx = NULL;
+> > > +
+> > > +fail_back_tx:
+> > >       dma_cap_zero(mask);
+> > >       dma_cap_set(DMA_MEMCPY, mask);
+> > >
+> > > @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+> > >       }
+> > >       init_completion(&epf_test->transfer_complete);
+> > >
+> > > -     epf_test->dma_chan = dma_chan;
+> > > +     epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
+> > >
+> > >       return 0;
+> > >  }
+> > > @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
+> > >       if (!epf_test->dma_supported)
+> > >               return;
+> > >
+> > > -     dma_release_channel(epf_test->dma_chan);
+> > > -     epf_test->dma_chan = NULL;
+> > > +     dma_release_channel(epf_test->dma_chan_tx);
+> > > +     if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
+> > > +             epf_test->dma_chan_tx = NULL;
+> > > +             epf_test->dma_chan_rx = NULL;
+> > > +             return;
+> > > +     }
+> > > +
+> > > +     dma_release_channel(epf_test->dma_chan_rx);
+> > > +     epf_test->dma_chan_rx = NULL;
+> > > +
+> > > +     return;
+> > >  }
+> > >
+> > >  static void pci_epf_test_print_rate(const char *ops, u64 size,
+> > > @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+> > >                       goto err_map_addr;
+> > >               }
+> > >
+> > > +             if (epf_test->dma_private) {
+> > > +                     dev_err(dev, "Cannot transfer data using DMA\n");
+> > > +                     ret = -EINVAL;
+> > > +                     goto err_map_addr;
+> > > +             }
+> > > +
+> > >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+> > > -                                              src_phys_addr, reg->size);
+> > > +                                              src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
+> > >               if (ret)
+> > >                       dev_err(dev, "Data transfer failed\n");
+> > >       } else {
+> > > @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+> > >
+> > >               ktime_get_ts64(&start);
+> > >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+> > > -                                              phys_addr, reg->size);
+> > > +                                              phys_addr, reg->size,
+> > > +                                              reg->src_addr, DMA_DEV_TO_MEM);
+> > >               if (ret)
+> > >                       dev_err(dev, "Data transfer failed\n");
+> > >               ktime_get_ts64(&end);
+> > > @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+> > >               }
+> > >
+> > >               ktime_get_ts64(&start);
+> > > +
+> > >               ret = pci_epf_test_data_transfer(epf_test, phys_addr,
+> > > -                                              src_phys_addr, reg->size);
+> > > +                                              src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
+> > >               if (ret)
+> > >                       dev_err(dev, "Data transfer failed\n");
+> > >               ktime_get_ts64(&end);
+> > > --
+> > > 2.35.1
+> > >
