@@ -2,188 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EE1D5153B1
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 20:29:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F257D515423
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Apr 2022 20:54:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379996AbiD2Scw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Apr 2022 14:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36556 "EHLO
+        id S1380164AbiD2S55 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Apr 2022 14:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380000AbiD2Scu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 14:32:50 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C041CD0A9A
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 11:29:29 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id kq17so16988005ejb.4
-        for <linux-pci@vger.kernel.org>; Fri, 29 Apr 2022 11:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=1Zn4UF57t4pnfMwkACd31jjeal5RhpHnkwFarZTu/dQ=;
-        b=Yju2gP3H7feQ0jeMIY/hZkOEOoSoa00CEibfna6oVQzF9/eQ5+ytMAsdLe5WX7mHeQ
-         J61qzVV7hJgD2E7DTMm799fD1ExZWC92O5Z5MQJ3Izz75VW5dcvN/q6CSgHUbws9RglY
-         83cEuaWdBuKpqQTXIrafNSDyCsuv2Ew28D74WXz/Ik2eST10Un3FzGmvqMC8O+fYL4PC
-         8JQYD4vG/i4KtH8ZMZH0GPFGUg6Nz8RKmYkXLtDfxBXypISaZi6+WTwWX/9LGj3oj9Ql
-         L8++NV0TVRjT6Iqj0aHMEIgQOGyyJP0xnB5R1z3nGhE9kAKq1TuJQ1gQ5SW7rPZfWhCn
-         o50w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=1Zn4UF57t4pnfMwkACd31jjeal5RhpHnkwFarZTu/dQ=;
-        b=pol9VoXiogg23U8Pi8D4Lh/CTW/gW0fij8CsBNwk+2/39nqAOXDnoYH5mWjVzuQMj7
-         L6ur+YlZdeCXz8ZUkvSg6ezPD86MlqkocHSusxZyJMkFBolxaLCjeHou2xLSWB/vzogS
-         T5SWvYlt1PIdjBD8JxS9OEE1Y2Tv0LHL9k/5TynqfzN8fywKd2Sckde6uohvdfAIKVOv
-         0XasVhoFDwSbbgZvVU8ko9SYBSrTcg/W/uq1WnvyIZV5P8pg+eQqhF22RuZ+5LxzXiRL
-         gT1kSlBrkFoP6z2oVc7viSebxJYrZ0AjmXuCMs3B6r+hxzaPD6Lrn0Z+a11LYU0VWxZL
-         SeKQ==
-X-Gm-Message-State: AOAM530CW6CTKSQAtc5Hn66AU71VErP/+UutlA07XlvAA1pIzeqlamsx
-        cMmd+bH9Xks442olpJgA7QRk3g==
-X-Google-Smtp-Source: ABdhPJxnnexTfm1ciFrnHmiTZVvUaiD85uL4/xEhS6m4C1gFLe/tyvaZCnOhPWZFKjyEpqAej5KZuQ==
-X-Received: by 2002:a17:907:2cc6:b0:6f0:2de3:9446 with SMTP id hg6-20020a1709072cc600b006f02de39446mr581569ejc.690.1651256968301;
-        Fri, 29 Apr 2022 11:29:28 -0700 (PDT)
-Received: from [192.168.0.175] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id h14-20020a1709070b0e00b006f3ef214db9sm858906ejl.31.2022.04.29.11.29.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Apr 2022 11:29:27 -0700 (PDT)
-Message-ID: <cbf9aad1-cbdb-8886-f979-a793b070e2a1@linaro.org>
-Date:   Fri, 29 Apr 2022 20:29:25 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v7 12/12] rpmsg: Fix kfree() of static memory on setting
- driver_override
-Content-Language: en-US
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        with ESMTP id S232952AbiD2S54 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Apr 2022 14:57:56 -0400
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B453CCEE33;
+        Fri, 29 Apr 2022 11:54:37 -0700 (PDT)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 6EE651C0B82; Fri, 29 Apr 2022 20:54:35 +0200 (CEST)
+Date:   Fri, 29 Apr 2022 20:54:35 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Stuart Yoder <stuyoder@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20220419113435.246203-1-krzysztof.kozlowski@linaro.org>
- <20220419113435.246203-13-krzysztof.kozlowski@linaro.org>
- <CGME20220429122942eucas1p1820d0cd17a871d4953bac2b3de1dcdd9@eucas1p1.samsung.com>
- <870885de-33f3-e0ba-4d56-71c3c993ac87@samsung.com>
- <75b94ccd-b739-2164-bc4a-20025356cc34@linaro.org>
- <6e21f7d3-49d0-eda7-7a89-0f8ac69596a4@samsung.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <6e21f7d3-49d0-eda7-7a89-0f8ac69596a4@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
+Subject: Re: [RFC v2 16/39] leds: add HAS_IOPORT dependencies
+Message-ID: <20220429185435.GB2597@duo.ucw.cz>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+ <20220429135108.2781579-29-schnelle@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
+Content-Disposition: inline
+In-Reply-To: <20220429135108.2781579-29-schnelle@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 29/04/2022 16:51, Marek Szyprowski wrote:
-> On 29.04.2022 16:16, Krzysztof Kozlowski wrote:
->> On 29/04/2022 14:29, Marek Szyprowski wrote:
->>> On 19.04.2022 13:34, Krzysztof Kozlowski wrote:
->>>> The driver_override field from platform driver should not be initialized
->>>> from static memory (string literal) because the core later kfree() it,
->>>> for example when driver_override is set via sysfs.
->>>>
->>>> Use dedicated helper to set driver_override properly.
->>>>
->>>> Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
->>>> Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
->>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>> This patch landed recently in linux-next as commit 42cd402b8fd4 ("rpmsg:
->>> Fix kfree() of static memory on setting driver_override"). In my tests I
->>> found that it triggers the following issue during boot of the
->>> DragonBoard410c SBC (arch/arm64/boot/dts/qcom/apq8016-sbc.dtb):
->>>
->>> ------------[ cut here ]------------
->>> DEBUG_LOCKS_WARN_ON(lock->magic != lock)
->>> WARNING: CPU: 1 PID: 8 at kernel/locking/mutex.c:582
->>> __mutex_lock+0x1ec/0x430
->>> Modules linked in:
->>> CPU: 1 PID: 8 Comm: kworker/u8:0 Not tainted 5.18.0-rc4-next-20220429 #11815
->>> Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
->>> Workqueue: events_unbound deferred_probe_work_func
->>> pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->>> pc : __mutex_lock+0x1ec/0x430
->>> lr : __mutex_lock+0x1ec/0x430
->>> ..
->>> Call trace:
->>>    __mutex_lock+0x1ec/0x430
->>>    mutex_lock_nested+0x38/0x64
->>>    driver_set_override+0x124/0x150
->>>    qcom_smd_register_edge+0x2a8/0x4ec
->>>    qcom_smd_probe+0x54/0x80
->>>    platform_probe+0x68/0xe0
->>>    really_probe.part.0+0x9c/0x29c
->>>    __driver_probe_device+0x98/0x144
->>>    driver_probe_device+0xac/0x14c
->>>    __device_attach_driver+0xb8/0x120
->>>    bus_for_each_drv+0x78/0xd0
->>>    __device_attach+0xd8/0x180
->>>    device_initial_probe+0x14/0x20
->>>    bus_probe_device+0x9c/0xa4
->>>    deferred_probe_work_func+0x88/0xc4
->>>    process_one_work+0x288/0x6bc
->>>    worker_thread+0x248/0x450
->>>    kthread+0x118/0x11c
->>>    ret_from_fork+0x10/0x20
->>> irq event stamp: 3599
->>> hardirqs last  enabled at (3599): [<ffff80000919053c>]
->>> _raw_spin_unlock_irqrestore+0x98/0x9c
->>> hardirqs last disabled at (3598): [<ffff800009190ba4>]
->>> _raw_spin_lock_irqsave+0xc0/0xcc
->>> softirqs last  enabled at (3554): [<ffff800008010470>] _stext+0x470/0x5e8
->>> softirqs last disabled at (3549): [<ffff8000080a4514>]
->>> __irq_exit_rcu+0x180/0x1ac
->>> ---[ end trace 0000000000000000 ]---
->>>
->>> I don't see any direct relation between the $subject and the above log,
->>> but reverting the $subject on top of linux next-20220429 hides/fixes it.
->>> Maybe there is a kind of memory trashing somewhere there and your change
->>> only revealed it?
->> Thanks for the report. I think the error path of my patch is wrong - I
->> should not kfree(rpdev->driver_override) from the rpmsg code. That's the
->> only thing I see now...
->>
->> Could you test following patch and tell if it helps?
->> https://pastebin.ubuntu.com/p/rp3q9Z5fXj/
-> 
-> This doesn't help, the issue is still reported.
 
-I think I screwed this part of code. The new helper uses device_lock()
-(the mutexes you see in backtrace) but in rpmsg it is called before
-device_register() which initializes the device.
+--nVMJ2NtxeReIH9PS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't have a device using qcom-smd rpmsg, so it's a bit tricky to
-reproduce.
+Hi!
+
+> In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and friends
+> not being declared. We thus need to add HAS_IOPORT as dependency for
+> those drivers using them.
+>=20
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+
+I don't see a problem there.
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+(Its marked RFC so I'm not taking the patch.. right?)
 
 Best regards,
-Krzysztof
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--nVMJ2NtxeReIH9PS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYmw0awAKCRAw5/Bqldv6
+8rdvAJ9JqGcOEZknQhX9taNj0ty1A9CApACfaRDB/fejexdNLbfKU4p2/caBPZk=
+=vMyB
+-----END PGP SIGNATURE-----
+
+--nVMJ2NtxeReIH9PS--
