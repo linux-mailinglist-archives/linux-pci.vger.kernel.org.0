@@ -2,95 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 265D5515B8B
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Apr 2022 10:47:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C62E515B8C
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Apr 2022 10:48:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231574AbiD3IvF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 30 Apr 2022 04:51:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57740 "EHLO
+        id S229687AbiD3Ivw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 30 Apr 2022 04:51:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbiD3IvE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Apr 2022 04:51:04 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34603B16
-        for <linux-pci@vger.kernel.org>; Sat, 30 Apr 2022 01:47:43 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id y19so13036221ljd.4
-        for <linux-pci@vger.kernel.org>; Sat, 30 Apr 2022 01:47:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZJrQpBqWc0KVALG1rh1UB+pQIMCJksr0Y84G0XAqkI=;
-        b=hTuCF4hyvZSJQ4ETq8X2DOmQPb1Vur/Gp+tQdjC+Pflmei4fPKv+wfi/gE30pQZotr
-         eoZLLY2EQAW/EQC0fO0HiPpT0wQSMjs+irljtm3VNOCtQObwjALXVB8rAsmdsFV5qKxN
-         Xwj2alIVS7fBc5nwMKzuDCljR5OdLnTe5phlD0fFo30C1rmXFP155k+S1ZB6OC7311BA
-         wSy/9HWID+WktQKWkMw/qVdiZRT6KmCBC217h1VOv8Dftan+5NISpZjxFoVoIo6Gusqf
-         f9wWHahivjOddi71jY2lUlrBLH3mSnbBCwdbEm44W8snUjTlHiDNBCtIPFGyAwrJsFvw
-         Ncng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZJrQpBqWc0KVALG1rh1UB+pQIMCJksr0Y84G0XAqkI=;
-        b=caGelamRxmRyCKvfhtlrAP7v9rdL53+2P06TX7YGOjW5RviSmOPLiF8b9rF9gPqRsa
-         /hXwlQF3IwbcBKOlBPkHedfcRFR4S1TDiyeNeZ5l9D6E/93XKQSY9FNFadlRRxBoTJcj
-         82kk4O7ClUI5BtIABv2e/PnbYQC5komGjxJ29VlYUaEAtkZ8sYZnaUjvUXMKhNOcWViB
-         dFs7SgvlLhaT9gLBiUth4qeHVFTgRvIp0WiC1lUkv3ilLnwGz9E+BjY1DgU7wWn8Eghx
-         xzQvVTihAGw/HUgo8s6WaV3zqvRKzQXysXnyQIJqgi3Uc0pM2d22uuXMOMH1QHo5fY+g
-         WbNg==
-X-Gm-Message-State: AOAM530FIFNbhiQVyoPehxS7fREeidmfxndWbk5Lhe686Sd770Q5KCPV
-        DV9uxt2Hbvh3p3ffR36ReI36qg==
-X-Google-Smtp-Source: ABdhPJxT9ORINi6yVj7e5MWsiqCSpscPApz5kAYeTJXdT9blVn/yAO/bNVIgRembFabd51zMZxLN9A==
-X-Received: by 2002:a2e:960a:0:b0:24f:1492:41e8 with SMTP id v10-20020a2e960a000000b0024f149241e8mr2110319ljh.184.1651308461592;
-        Sat, 30 Apr 2022 01:47:41 -0700 (PDT)
-Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id x11-20020a2e9dcb000000b0024f4c30365esm78463ljj.132.2022.04.30.01.47.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Apr 2022 01:47:41 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Manivannan Sadhasivam <mani@kernel.org>,
+        with ESMTP id S229530AbiD3Ivv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Apr 2022 04:51:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D3D3B16
+        for <linux-pci@vger.kernel.org>; Sat, 30 Apr 2022 01:48:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 023CA60C8B
+        for <linux-pci@vger.kernel.org>; Sat, 30 Apr 2022 08:48:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EC08C385AA;
+        Sat, 30 Apr 2022 08:48:23 +0000 (UTC)
+From:   Huacai Chen <chenhuacai@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Siddartha Mohanadoss <quic_smohanad@quicinc.com>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH] PCI: qcom-ep: Add MODULE_DEVICE_TABLE
-Date:   Sat, 30 Apr 2022 11:47:40 +0300
-Message-Id: <20220430084740.3769925-1-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.35.1
+Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH V13 0/6] PCI: Loongson pci improvements and quirks 
+Date:   Sat, 30 Apr 2022 16:48:40 +0800
+Message-Id: <20220430084846.3127041-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add MODULE_DEVICE_TABLE to enable module autoloading for respective
-device.
+This patchset improves Loongson PCI controller driver and resolves some
+problems: LS2K/LS7A's PCI config space supports 1/2/4-bytes access, so
+the first patch use pci_generic_config_read()/pci_generic_config_write()
+for them; the second patch add ACPI init support which will be used by
+LoongArch; the third patch improves the mrrs quirk for LS7A chipset; The
+fourth patch add a new quirk for LS7A chipset to avoid poweroff/reboot
+failure, and the fifth patch add a new quirk for LS7A chipset to fix the
+multifunction devices' irq pin mappings.
 
-Fixes: f55fee56a631 ("PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+V1 -> V2:
+1, Rework the 4th patch;
+2, Improve commit messages;
+3, Remove the last patch since there is better solutions.
+
+V2 -> V3:
+1, Add more affected device ids for the 4th patch;
+2, Improve commit messages to describe root causes.
+
+V3 -> V4:
+1, Rework the MRRS quirk patch;
+2, Improve commit messages to describe root causes, again.
+
+V4 -> V5:
+1, Improve the MRRS quirk patch;
+2, Change the order of 2nd and 3rd patch;
+3, Improve commit messages to describe root causes, again.
+
+V5 -> V6:
+1, Rework the 1st patch;
+2, Adjust the order of the series.
+
+V6 -> V7:
+1, Use correct pci config access operations;
+2, Add ACPI init support for LoongArch;
+3, Don't move to quirks.c since the driver has ACPI support;
+4, Some other minor improvements.
+
+V7 -> V8:
+1, Use CFG1 method for LS2K/LS7A pci config.
+
+V8 -> V9:
+1, Use pci_controller_data for the first patch. 
+
+V9 -> V10:
+1, Add a patch to avoid LS2K/LS7A access unexisting devices.
+
+V10 -> V11:
+1, Rebased on 5.16-rc4.
+
+V11 -> V12:
+1, Rebased on 5.17-rc5.
+
+V12 -> V13:
+1, Rebased on 5.18-rc2;
+2, Some minor improvements (adopt Rob Herring's suggestions).
+
+Huacai Chen, Tiezhu Yang and Jianmin Lv(6):
+ PCI: loongson: Use generic 8/16/32-bit config ops on LS2K/LS7A.
+ PCI: loongson: Add ACPI init support.
+ PCI: loongson: Don't access unexisting devices.
+ PCI: loongson: Improve the MRRS quirk for LS7A.
+ PCI: Add quirk for LS7A to avoid reboot failure.
+ PCI: Add quirk for multifunction devices of LS7A.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn> 
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 6ce8eddf3a37..b56d1438f40b 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -703,6 +703,7 @@ static const struct of_device_id qcom_pcie_ep_match[] = {
- 	{ .compatible = "qcom,sdx55-pcie-ep", },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, qcom_pcie_ep_match);
- 
- static struct platform_driver qcom_pcie_ep_driver = {
- 	.probe	= qcom_pcie_ep_probe,
--- 
-2.35.1
+ drivers/acpi/pci_mcfg.c               |  13 +++
+ drivers/pci/controller/Kconfig        |   2 +-
+ drivers/pci/controller/pci-loongson.c | 184 ++++++++++++++++++++++++++--------
+ drivers/pci/pci.c                     |   6 ++
+ drivers/pci/pcie/portdrv_core.c       |   6 +-
+ include/linux/pci-ecam.h              |   1 +
+ include/linux/pci.h                   |   2 +
+ 7 files changed, 169 insertions(+), 45 deletions(-)
+--
+2.27.0
 
