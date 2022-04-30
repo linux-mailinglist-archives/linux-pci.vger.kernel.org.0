@@ -2,119 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 431D6515B92
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Apr 2022 10:51:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB9B2515D17
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Apr 2022 14:56:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234221AbiD3Iyb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 30 Apr 2022 04:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34344 "EHLO
+        id S1358157AbiD3NAE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 30 Apr 2022 09:00:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233339AbiD3Iya (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Apr 2022 04:54:30 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB841F1
-        for <linux-pci@vger.kernel.org>; Sat, 30 Apr 2022 01:51:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 88976B81CEA
-        for <linux-pci@vger.kernel.org>; Sat, 30 Apr 2022 08:51:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F1EC385AA;
-        Sat, 30 Apr 2022 08:51:04 +0000 (UTC)
-From:   Huacai Chen <chenhuacai@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V13 6/6] PCI: Add quirk for multifunction devices of LS7A
-Date:   Sat, 30 Apr 2022 16:48:46 +0800
-Message-Id: <20220430084846.3127041-7-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220430084846.3127041-1-chenhuacai@loongson.cn>
-References: <20220430084846.3127041-1-chenhuacai@loongson.cn>
+        with ESMTP id S232897AbiD3NAA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Apr 2022 09:00:00 -0400
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 1CAA6674EF
+        for <linux-pci@vger.kernel.org>; Sat, 30 Apr 2022 05:56:38 -0700 (PDT)
+Received: (qmail 986304 invoked by uid 1000); 30 Apr 2022 08:56:38 -0400
+Date:   Sat, 30 Apr 2022 08:56:38 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+Subject: Re: [RFC v2 35/39] usb: handle HAS_IOPORT dependencies
+Message-ID: <Ym0yBti0J5w2S59W@rowland.harvard.edu>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+ <20220429135108.2781579-65-schnelle@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220429135108.2781579-65-schnelle@linux.ibm.com>
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_PASS,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Jianmin Lv <lvjianmin@loongson.cn>
+On Fri, Apr 29, 2022 at 03:51:02PM +0200, Niklas Schnelle wrote:
+> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> not being declared. We thus need to guard sections of code calling them
+> as alternative access methods with CONFIG_HAS_IOPORT checks. Similarly
+> drivers requiring these functions need to depend on HAS_IOPORT.
+> 
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
 
-In LS7A, multifunction device use same PCI PIN (because the PIN register
-report the same INTx value to each function) but we need different IRQ
-for different functions, so add a quirk to fix it for standard PCI PIN
-usage.
+...
 
-This patch only affect ACPI based systems (and only needed by ACPI based
-systems, too). For DT based systems, the irq mappings is defined in .dts
-files and be handled by of_irq_parse_pci().
+> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
+> index ef08d68b9714..4fd06b48149d 100644
+> --- a/drivers/usb/host/pci-quirks.c
+> +++ b/drivers/usb/host/pci-quirks.c
 
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/pci/controller/pci-loongson.c | 32 +++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+> @@ -632,7 +590,53 @@ bool usb_amd_pt_check_port(struct device *device, int port)
+>  	return !(value & BIT(port_shift));
+>  }
+>  EXPORT_SYMBOL_GPL(usb_amd_pt_check_port);
+> +#endif
+> @@ -1273,7 +1280,8 @@ static void quirk_usb_early_handoff(struct pci_dev *pdev)
+>  			 "Can't enable PCI device, BIOS handoff failed.\n");
+>  		return;
+>  	}
+> -	if (pdev->class == PCI_CLASS_SERIAL_USB_UHCI)
+> +	if (IS_ENABLED(CONFIG_USB_UHCI_HCD) &&
+> +	    pdev->class == PCI_CLASS_SERIAL_USB_UHCI)
+>  		quirk_usb_handoff_uhci(pdev);
 
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 49d8b8c24ffb..024542a31a8c 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -22,6 +22,13 @@
- #define DEV_LS2K_APB	0x7a02
- #define DEV_LS7A_CONF	0x7a10
- #define DEV_LS7A_LPC	0x7a0c
-+#define DEV_LS7A_GMAC	0x7a03
-+#define DEV_LS7A_DC1	0x7a06
-+#define DEV_LS7A_DC2	0x7a36
-+#define DEV_LS7A_GPU	0x7a15
-+#define DEV_LS7A_AHCI	0x7a08
-+#define DEV_LS7A_EHCI	0x7a14
-+#define DEV_LS7A_OHCI	0x7a24
- 
- #define FLAG_CFG0	BIT(0)
- #define FLAG_CFG1	BIT(1)
-@@ -102,6 +109,31 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_PCIE_PORT_2, loongson_bmaster_quirk);
- 
-+static void loongson_pci_pin_quirk(struct pci_dev *pdev)
-+{
-+	pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_DC1, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_DC2, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_GPU, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_GMAC, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_AHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_EHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_LS7A_OHCI, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_pci_pin_quirk);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_pci_pin_quirk);
-+
- static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
- {
- 	struct pci_config_window *cfg;
--- 
-2.27.0
+We discussed this already.  quirk_usb_handoff_uhci() is supposed to be 
+called even when CONFIG_USB_UHCI_HCD isn't enabled.
 
+...
+
+> diff --git a/drivers/usb/host/uhci-hcd.h b/drivers/usb/host/uhci-hcd.h
+> index 8ae5ccd26753..be4aee1f0ca5 100644
+> --- a/drivers/usb/host/uhci-hcd.h
+> +++ b/drivers/usb/host/uhci-hcd.h
+> @@ -505,36 +505,43 @@ static inline bool uhci_is_aspeed(const struct uhci_hcd *uhci)
+>   * we use memory mapped registers.
+>   */
+>  
+> +#ifdef CONFIG_HAS_IOPORT
+> +#define UHCI_IN(x)	x
+> +#define UHCI_OUT(x)	x
+> +#else
+> +#define UHCI_IN(x)	0
+> +#define UHCI_OUT(x)
+> +#endif
+
+Should have a blank line here.
+
+>  #ifndef CONFIG_USB_UHCI_SUPPORT_NON_PCI_HC
+>  /* Support PCI only */
+>  static inline u32 uhci_readl(const struct uhci_hcd *uhci, int reg)
+>  {
+> -	return inl(uhci->io_addr + reg);
+> +	return UHCI_IN(inl(uhci->io_addr + reg));
+>  }
+>  
+>  static inline void uhci_writel(const struct uhci_hcd *uhci, u32 val, int reg)
+>  {
+> -	outl(val, uhci->io_addr + reg);
+> +	UHCI_OUT(outl(val, uhci->io_addr + reg));
+>  }
+>  
+>  static inline u16 uhci_readw(const struct uhci_hcd *uhci, int reg)
+>  {
+> -	return inw(uhci->io_addr + reg);
+> +	return UHCI_IN(inw(uhci->io_addr + reg));
+>  }
+>  
+>  static inline void uhci_writew(const struct uhci_hcd *uhci, u16 val, int reg)
+>  {
+> -	outw(val, uhci->io_addr + reg);
+> +	UHCI_OUT(outw(val, uhci->io_addr + reg));
+>  }
+>  
+>  static inline u8 uhci_readb(const struct uhci_hcd *uhci, int reg)
+>  {
+> -	return inb(uhci->io_addr + reg);
+> +	return UHCI_IN(inb(uhci->io_addr + reg));
+>  }
+>  
+>  static inline void uhci_writeb(const struct uhci_hcd *uhci, u8 val, int reg)
+>  {
+> -	outb(val, uhci->io_addr + reg);
+> +	UHCI_OUT(outb(val, uhci->io_addr + reg));
+>  }
+>  
+>  #else
+
+I thought you were going to update the definition of 
+uhci_has_pci_registers().  It shouldn't do a test at runtime if 
+CONFIG_HAS_IOPORT is disabled.
+
+Alan Stern
