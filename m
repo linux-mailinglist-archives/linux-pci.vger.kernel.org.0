@@ -2,86 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20A3B517278
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 17:25:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FD035172A2
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 17:32:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242541AbiEBP2Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 11:28:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32876 "EHLO
+        id S1385818AbiEBPgL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 11:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239588AbiEBP2X (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 11:28:23 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEDF13D31
-        for <linux-pci@vger.kernel.org>; Mon,  2 May 2022 08:24:53 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id q185so18775386ljb.5
-        for <linux-pci@vger.kernel.org>; Mon, 02 May 2022 08:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=GRaa0IiGsjCYmH9IwV7aIzgjHqX454NWT5gLXScXiHU=;
-        b=CsAv3+Khoia2wgEVvUV/D779w3tRK1DYekDG+/77k7W/MYStUKX0gTl682kNcwi7Ow
-         PNUG3vJ625UTDhjsApZ9NJFbWjSfIHmVsgWcf5zuMxnAF6IbjZZiY4HdRiZ2JakkpXTx
-         evkOGvPCsTlTl8P27h6JF0Asg/tkTdlv7MYyDc5zyIYTcYqwxldakyUWeh8hfs/YM0zd
-         TQe/xkxsbYn0I+zm6SNiwsPM3Z+G1k1vR/0gso6PbAdhM41VbOJbzEQTtm+ydeRgqWf+
-         /wDIEqXAeIPlOS8apErrkM3F/LO1OUwzgWZSZ/yMoAQgzafee4uT+VcD1ig5yhE+eX/V
-         PR3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=GRaa0IiGsjCYmH9IwV7aIzgjHqX454NWT5gLXScXiHU=;
-        b=ktZGweP3HSpLLUVhGRLwVCjzA/jjEQzPDsWR3bcuWuYmC48gnnyGj9hZjooq0lOQbC
-         M1F/vkVa9VHqxDOP84kO0bkUTydWX/dGV1Ec+BD43V5o4VGSRUP77t2BzjRI/gCpWfo+
-         8aG2qgKsGFvjE9TJAcvODDek9Rfc6mmZX0KwMVQ9597zlz0hGfAf+tHO+S5xy6RCAF/v
-         bbHHhKOoeB3FPVnzTtvdathiT/bti7FSZ2RMoRTnA6LWBC9UoGWU1TBeSpEnt9j60s0h
-         XfRsWhccT9kS29azB8KysjGopiX6qN81GA3XeFTCdQRzakYnFHG6N0CbOPS8gR1VIKx2
-         DjMg==
-X-Gm-Message-State: AOAM5313Xsz7TATZrv1qWu5f/L4iNc7QgQ/XB2qebhIWHqvRQrGnOlFy
-        cONggqk4OsAf6owy3ZV3QOmzqA==
-X-Google-Smtp-Source: ABdhPJwViR/s5Vc8H+a2CdDxIHduCqP768i3THr5TaDpMEBdWpUPn6TM16Fxzt+97n77JvDmHMfpuA==
-X-Received: by 2002:a2e:84d0:0:b0:24f:13ac:e5ed with SMTP id q16-20020a2e84d0000000b0024f13ace5edmr7465890ljh.175.1651505091708;
-        Mon, 02 May 2022 08:24:51 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id f15-20020ac24e4f000000b0047255d2111fsm725236lfr.78.2022.05.02.08.24.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 May 2022 08:24:51 -0700 (PDT)
-Message-ID: <ce73d203-f40a-e12f-1e1a-7a60c250b68d@linaro.org>
-Date:   Mon, 2 May 2022 18:24:50 +0300
+        with ESMTP id S1385871AbiEBPgH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 11:36:07 -0400
+Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2D7BE0B;
+        Mon,  2 May 2022 08:32:26 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id DD83041E96;
+        Mon,  2 May 2022 15:32:21 +0000 (UTC)
+Message-ID: <0ccc44cd-21aa-3670-24b3-4ee051dd3c12@marcan.st>
+Date:   Tue, 3 May 2022 00:32:19 +0900
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v4 2/5] clk: qcom: regmap: add pipe clk implementation
-Content-Language: en-GB
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
+ Thunderbird/91.7.0
+Content-Language: es-ES
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20220501192149.4128158-1-dmitry.baryshkov@linaro.org>
- <20220501192149.4128158-3-dmitry.baryshkov@linaro.org>
- <20220502101053.GF5053@thinkpad>
- <c47616bf-a0c3-3ad5-c3e2-ba2ae33110d0@linaro.org>
- <20220502111004.GH5053@thinkpad>
- <29819e6d-9aa1-aca9-0ff6-b81098077f28@linaro.org>
- <20220502150611.GF98313@thinkpad>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <20220502150611.GF98313@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Sven Peter <sven@svenpeter.dev>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20220502093832.32778-1-marcan@marcan.st>
+ <20220502093832.32778-4-marcan@marcan.st>
+ <CAL_Jsq+_cWZUXtJVXC_cwhmADj0NQc95v1sqgFioMsfEX6OqGg@mail.gmail.com>
+From:   Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH 3/3] PCI: apple: Add support for optional PWREN GPIO
+In-Reply-To: <CAL_Jsq+_cWZUXtJVXC_cwhmADj0NQc95v1sqgFioMsfEX6OqGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,110 +53,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 02/05/2022 18:06, Manivannan Sadhasivam wrote:
-> On Mon, May 02, 2022 at 02:18:26PM +0300, Dmitry Baryshkov wrote:
->> On 02/05/2022 14:10, Manivannan Sadhasivam wrote:
->>> On Mon, May 02, 2022 at 01:35:34PM +0300, Dmitry Baryshkov wrote:
->>>
->>> [...]
->>>
->>>>>> +static int pipe_is_enabled(struct clk_hw *hw)
->>>>>> +{
->>>>>> +	struct clk_regmap_pipe *pipe = to_clk_regmap_pipe(hw);
->>>>>> +	struct clk_regmap *clkr = to_clk_regmap(hw);
->>>>>> +	unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
->>>>>> +	unsigned int val;
->>>>>> +
->>>>>> +	regmap_read(clkr->regmap, pipe->reg, &val);
->>>>>> +	val = (val & mask) >> pipe->shift;
->>>>>> +
->>>>>> +	WARN_ON(unlikely(val != pipe->enable_val && val != pipe->disable_val));
->>>>>> +
->>>>>> +	return val == pipe->enable_val;
->>>>>
->>>>> Selecting the clk parents in the enable/disable callback seems fine to me but
->>>>> the way it is implemented doesn't look right.
->>>>>
->>>>> First this "pipe_clksrc" is a mux clk by design, since we can only select the
->>>>> parent. But you are converting it to a gate clk now.
->>>>>
->>>>> Instead of that, my proposal would be to make this clk a composite one i.e,.
->>>>> gate clk + mux clk. So even though the gate clk here would be a hack, we are
->>>>> not changing the definition of mux clk.
->>>>
->>>> This is what I had before, in revisions 1-3. Which proved to work, but is
->>>> problematic a bit.
->>>>
->>>> In the very end, it is not easily possible to make a difference between a
->>>> clock reparented to the bi_tcxo and a disabled clock. E.g. if some user
->>>> reparents the clock to the tcxo, then the driver will consider the clock
->>>> disabled, but the clock framework will think that the clock is still
->>>> enabled.
->>>
->>> I don't understand this. How can you make this clock disabled? It just has 4
->>> parents, right?
+On 03/05/2022 00.14, Rob Herring wrote:
+> On Mon, May 2, 2022 at 4:39 AM Hector Martin <marcan@marcan.st> wrote:
 >>
->> It has 4 parents. It uses just two of them (pipe and tcxo).
->>
->> And like the clk_rcg2_safe clock we'd like to say that these clocks are
->> disabled by reparenting ("parking") them to the tcxo source. Yes, this makes
->> a lot of code simpler. The clock framework will switch the clock to the
->> "safe" state instead of disabling it during the unused clocks evaporation.
->> The PHY can just disable the gcc_pcie_N_pipe_clock, which will end up in
->> parking this clock to a safe state too, etc.
+>> WiFi and SD card devices on M1 Macs have a separate power enable GPIO.
+>> Add support for this to the PCIe controller. This is modeled after how
+>> pcie-fu740 does it.
 > 
-> If I get the logic behind this "parking" thing right, then it is required
-> for producing a stable pipe_clk from GCC when the PHY is about to initialize.
-> Also to make sure that there is no glitch observed on pipe_clk while
-> initializing the PHY. And once it is powered ON properly, the pipe_clksrc
-> should be used as the parent for pipe_clk.
+> It did, but it's not ideal really. The problem is the GPIO is really
+> associated with the device (WiFi/SD) rather than the PCI host and
+> therefore should be part of a WiFi or SD node. You probably don't have
+> one (yet), but I would suspect that SD will need one for all the
+> standard MMC/SD DT properties. The secondary issue is we'll end up
+> adding more power sequencing properties to control ordering and timing
+> for different devices. The exception here is standard PCI slot
+> properties like perst#, clkreq, and standard voltage rails can go in
+> the host bridge (and for new bindings, those should really be in the
+> root port node). For a complicated example, see Hikey960 or 970.
 > 
-> So with that logic, we cannot say that this clk is disabled.
+> Of course with power control related properties there's a chicken or
+> egg issue that the PCI device is not discoverable until the device is
+> powered on. This issue comes up over and over with various hacky
+> solutions in the bindings. The PCI subsystem needs to solve this. My
+> suggestion is that if the firmware says there is a device on the bus
+> and it wasn't probed, then we should force probing (or add a pre-probe
+> hook for drivers). That is what MDIO bus does for example.
+> 
 
-Yes. It is not technically disabled. But as I said, it serves a good 
-abstraction, as a clock is a good as being disabled.
+I agree with the premise. Right now macOS does not actually power down
+these devices as far as I know (except maybe sleep mode? not sure what
+goes on then yet), but I think the hardware actually has an SD card
+detect GPIO hookup that would allow us to entirely power down the SD
+controller when no card is inserted. That would obviously be ideal.
 
-> 
-> Please correct me if my understanding is wrong.
-> 
-> Thanks,
-> Mani
-> 
->>
->>>
->>>>
->>>> Thus we have to remove "safe" clock (bi_tcxo) from the list of parents. In
->>>> case of pipe clocks (and ufs symbol clocks) this will leave us with just a
->>>> single possible parent. Then having the mux part just doesn't make sense. It
->>>> is just a gated clock. And this simplified a lot of things.
->>>>
->>>>>
->>>>> So you can introduce a new ops like "clk_regmap_mux_gate_ops" and implement the
->>>>> parent switching logic in the enable/disable callbacks. Additional benefit of
->>>>> this ops is, in the future we can also support "gate + mux" clks easily.
->>>>
->>>> If the need arises, we can easily resurrect the regmap_mux_safe patchset,
->>>> fix the race pointed out by Johan, remove extra src-val mapping for safe
->>>> value and use it for such clocks. I can post it separately, if you wish. But
->>>> I'm not sure that it makes sense to use it for single-parent clocks.
->>>>
->>>>>
->>>>> Also, please don't use the "enable_val/disable_val" members. It should be
->>>>> something like "mux_sel_pre/mux_sel_post".
->>>>
->>>> Why? Could you please elaborate?
->>>>
->>>
->>> It aligns with my question above. I don't see how this clk can be
->>> enabled/disabled.
->>
->> I see. Let's settle on the first question then.
->>
->> -- 
->> With best wishes
->> Dmitry
+FWIW, we do have the device nodes downstream [1]. I did in fact have to
+add the SD one for the CD/WP inversion flags (and had to add driver
+support for that too).
 
+That said, as for how to make this happen in the PCI subsystem
+properly... I think I'll defer to the maintainers' opinion there before
+trying to hack something up ;)
+
+Meanwhile, I guess I better get PCIe hotplug working, since doing it in
+the driver isn't going to work without that first...
+
+[1]
+https://github.com/AsahiLinux/linux/blob/bits/000-devicetree/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi#L222
 
 -- 
-With best wishes
-Dmitry
+Hector Martin (marcan@marcan.st)
+Public Key: https://mrcn.st/pub
