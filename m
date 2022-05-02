@@ -2,67 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC24516E28
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 12:31:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D7C516E35
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 12:35:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349349AbiEBKew (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 06:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34442 "EHLO
+        id S1384645AbiEBKjJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 06:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384538AbiEBKen (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 06:34:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9990B7F0;
-        Mon,  2 May 2022 03:31:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B5AB6123B;
-        Mon,  2 May 2022 10:31:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E887C385A4;
-        Mon,  2 May 2022 10:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651487473;
-        bh=F47tb2LcIQl1JzmX/6+L6mZEb8vZi9kPtE/YAoCVFFQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RbZeh2W3aXkSAYwbcO1vfSGS9AalqPh0LtpikQHrl1l6XQJJMZpAFRtIgkuxVW2Fe
-         ncn/24QnrG+TKvF+jpgTBnp4dqNqAmt2irGJpvxucnGXK3316JTsFEnQfdWOPJ4w+m
-         Y5Xg2Tdgc2p56WW1yOx6+mmkLBcV++Fk5uNIwjgKrD0tUys8gyI+bbrnEW7PcIY+Ao
-         pggFxy0cGNuKDukuJz93xigqnijwnu8EvFlWZzwpVZGcwKCYBS5sUa9nMamp6H5z0p
-         Xy01cTMR2Klt/Rut43CblnibnjlKkjCZP6Njf7uG5NVF63Qno68PN8MbclRfvi9eWC
-         6edOpUA8dU6PQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nlTKh-008OYC-DR; Mon, 02 May 2022 11:31:11 +0100
-Date:   Mon, 02 May 2022 11:31:11 +0100
-Message-ID: <87ee1ci5u8.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Hector Martin <marcan@marcan.st>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        with ESMTP id S1384540AbiEBKjG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 06:39:06 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE2A1121
+        for <linux-pci@vger.kernel.org>; Mon,  2 May 2022 03:35:37 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id q185so17858441ljb.5
+        for <linux-pci@vger.kernel.org>; Mon, 02 May 2022 03:35:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=JPi36Ptgl/jtMll86PTXlR5o1uXCZjkEd+ie0lzbuAE=;
+        b=bsJKjJDpCcPqKit+kE3Yjc6BY2OQxj0Kb4tgD+OYgA6+IJWVXnc115ng78JEER9DYp
+         VnKz6j41SSEHm7ppGUrslGfjfh0eu58D+D/Hz9XMo1Z4stQJOTiqexG+r1RjOXey5wsA
+         d6rRlfqtENviL4mAz7rK4Mol9A7KSAARaJ5+RUQhBhKVzVyZuH6AoGJWtdG8blS4xxtp
+         qYDI2kUZqKvMJEGgd45w3uaQ9tLSK6KMQBbvt4kEupfyMOg2IsIBgslg/UkdO2/I0EJR
+         NsnCIGnDZo0TVNC1saGoa50dm4NdEmz4z0GpcK8zBSIlsPzUTJRxGu/siu8D2O+QundT
+         qvig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=JPi36Ptgl/jtMll86PTXlR5o1uXCZjkEd+ie0lzbuAE=;
+        b=sAA5rytJhavKW7XEsxwdJ4ag8P+4+SxXIXNBl8gMJRmJ8FvQtSRGZvFnsmCBuCtyNB
+         1PtKNuBEJBZRBiDzlZlWKHynsDglP05nUwV8JIvIbwpX+RPTmoQqp/N7uaGsaBOd2U5j
+         Fah8v4MGLacGV3vINm6gbFqTgsBuxU7LEb4tt8RZ9rSzZ1smoTq9g2ZO8Z0I16M3t4Vf
+         p8On/Hw0Cv+i+5TJLgu3zHWya5FU8WUuBljj454rytLKI7up10M7EcIS3hv0MUnxHoFg
+         xXZTS4ZJSGX9DzYJFTx1ndHD6HXpjyoF1XHtO5HE/tVWqRLCLK15UdhZzG/Lp+VN65X1
+         wEgg==
+X-Gm-Message-State: AOAM5322DHjF+CEaJHRcUk8hHtyVpRQNBQIBy+4C98O/y58u2InYihPh
+        UWKU9cTjCvozdk2IzRhc+yJ1aA==
+X-Google-Smtp-Source: ABdhPJwG1NDqsp3Jq/Yvec0IUonj0PRb5PNQDpASTzoJEfo+oSwH/l1/JHTJPx6VKrQXv72undkHFw==
+X-Received: by 2002:a2e:9c0c:0:b0:24e:e2e0:f61e with SMTP id s12-20020a2e9c0c000000b0024ee2e0f61emr7649857lji.75.1651487736112;
+        Mon, 02 May 2022 03:35:36 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id c19-20020ac244b3000000b0047255d211b5sm667875lfm.228.2022.05.02.03.35.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 May 2022 03:35:35 -0700 (PDT)
+Message-ID: <c47616bf-a0c3-3ad5-c3e2-ba2ae33110d0@linaro.org>
+Date:   Mon, 2 May 2022 13:35:34 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH v4 2/5] clk: qcom: regmap: add pipe clk implementation
+Content-Language: en-GB
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] PCI: apple: Add support for optional PWREN GPIO
-In-Reply-To: <20220502093832.32778-4-marcan@marcan.st>
-References: <20220502093832.32778-1-marcan@marcan.st>
-        <20220502093832.32778-4-marcan@marcan.st>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: marcan@marcan.st, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, alyssa@rosenzweig.io, sven@svenpeter.dev, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20220501192149.4128158-1-dmitry.baryshkov@linaro.org>
+ <20220501192149.4128158-3-dmitry.baryshkov@linaro.org>
+ <20220502101053.GF5053@thinkpad>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220502101053.GF5053@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,102 +85,207 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 02 May 2022 10:38:32 +0100,
-Hector Martin <marcan@marcan.st> wrote:
+On 02/05/2022 13:10, Manivannan Sadhasivam wrote:
+> On Sun, May 01, 2022 at 10:21:46PM +0300, Dmitry Baryshkov wrote:
+>> On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
+>> muxes which must be parked to the "safe" source (bi_tcxo) when
+>> corresponding GDSC is turned off and on again. Currently this is
+>> handcoded in the PCIe driver by reparenting the gcc_pipe_N_clk_src
+>> clock. However the same code sequence should be applied in the
+>> pcie-qcom endpoint, USB3 and UFS drivers.
+>>
+>> Rather than copying this sequence over and over again, follow the
+>> example of clk_rcg2_shared_ops and implement this parking in the
+>> enable() and disable() clock operations. Suppliement the regmap-mux with
+>> the new regmap-pipe implementation, which hides multiplexer behind
+>> simple branch-like clock. This is possible since each of this
+>> multiplexers has just two clock sources: working (pipe) and safe
+>> (bi_tcxo) clock sources. If the clock is running off the external pipe
+>> source, report it as enable and report it as disabled otherwise.
+>>
 > 
-> WiFi and SD card devices on M1 Macs have a separate power enable GPIO.
-> Add support for this to the PCIe controller. This is modeled after how
-> pcie-fu740 does it.
+> Sorry for chiming in late and providing comments that might have been addressed
+> before. But I have few questions below:
+> 
+>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>> ---
+>>   drivers/clk/qcom/Makefile          |  1 +
+>>   drivers/clk/qcom/clk-regmap-pipe.c | 62 ++++++++++++++++++++++++++++++
+>>   drivers/clk/qcom/clk-regmap-pipe.h | 24 ++++++++++++
+>>   3 files changed, 87 insertions(+)
+>>   create mode 100644 drivers/clk/qcom/clk-regmap-pipe.c
+>>   create mode 100644 drivers/clk/qcom/clk-regmap-pipe.h
+>>
+>> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+>> index 671cf5821af1..882c8ecc2e93 100644
+>> --- a/drivers/clk/qcom/Makefile
+>> +++ b/drivers/clk/qcom/Makefile
+>> @@ -11,6 +11,7 @@ clk-qcom-y += clk-branch.o
+>>   clk-qcom-y += clk-regmap-divider.o
+>>   clk-qcom-y += clk-regmap-mux.o
+>>   clk-qcom-y += clk-regmap-mux-div.o
+>> +clk-qcom-y += clk-regmap-pipe.o
+>>   clk-qcom-$(CONFIG_KRAIT_CLOCKS) += clk-krait.o
+>>   clk-qcom-y += clk-hfpll.o
+>>   clk-qcom-y += reset.o
+>> diff --git a/drivers/clk/qcom/clk-regmap-pipe.c b/drivers/clk/qcom/clk-regmap-pipe.c
+>> new file mode 100644
+>> index 000000000000..9a7c27cc644b
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/clk-regmap-pipe.c
+>> @@ -0,0 +1,62 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2022, Linaro Ltd.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/bitops.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/export.h>
+>> +
+>> +#include "clk-regmap-pipe.h"
+>> +
+>> +static inline struct clk_regmap_pipe *to_clk_regmap_pipe(struct clk_hw *hw)
+>> +{
+>> +	return container_of(to_clk_regmap(hw), struct clk_regmap_pipe, clkr);
+>> +}
+>> +
+>> +static int pipe_is_enabled(struct clk_hw *hw)
+>> +{
+>> +	struct clk_regmap_pipe *pipe = to_clk_regmap_pipe(hw);
+>> +	struct clk_regmap *clkr = to_clk_regmap(hw);
+>> +	unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
+>> +	unsigned int val;
+>> +
+>> +	regmap_read(clkr->regmap, pipe->reg, &val);
+>> +	val = (val & mask) >> pipe->shift;
+>> +
+>> +	WARN_ON(unlikely(val != pipe->enable_val && val != pipe->disable_val));
+>> +
+>> +	return val == pipe->enable_val;
+> 
+> Selecting the clk parents in the enable/disable callback seems fine to me but
+> the way it is implemented doesn't look right.
+> 
+> First this "pipe_clksrc" is a mux clk by design, since we can only select the
+> parent. But you are converting it to a gate clk now.
+> 
+> Instead of that, my proposal would be to make this clk a composite one i.e,.
+> gate clk + mux clk. So even though the gate clk here would be a hack, we are
+> not changing the definition of mux clk.
 
-Please update the DT binding to reflect this as an optional property.
+This is what I had before, in revisions 1-3. Which proved to work, but 
+is problematic a bit.
+
+In the very end, it is not easily possible to make a difference between 
+a clock reparented to the bi_tcxo and a disabled clock. E.g. if some 
+user reparents the clock to the tcxo, then the driver will consider the 
+clock disabled, but the clock framework will think that the clock is 
+still enabled.
+
+Thus we have to remove "safe" clock (bi_tcxo) from the list of parents. 
+In case of pipe clocks (and ufs symbol clocks) this will leave us with 
+just a single possible parent. Then having the mux part just doesn't 
+make sense. It is just a gated clock. And this simplified a lot of things.
 
 > 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> ---
->  drivers/pci/controller/pcie-apple.c | 35 ++++++++++++++++++++++++++---
->  1 file changed, 32 insertions(+), 3 deletions(-)
+> So you can introduce a new ops like "clk_regmap_mux_gate_ops" and implement the
+> parent switching logic in the enable/disable callbacks. Additional benefit of
+> this ops is, in the future we can also support "gate + mux" clks easily.
+
+If the need arises, we can easily resurrect the regmap_mux_safe 
+patchset, fix the race pointed out by Johan, remove extra src-val 
+mapping for safe value and use it for such clocks. I can post it 
+separately, if you wish. But I'm not sure that it makes sense to use it 
+for single-parent clocks.
+
 > 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index e3aa2d461739..5b73c03ebe94 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -518,6 +518,16 @@ static int apple_pcie_probe_port(struct device_node *np)
->  	}
->  
->  	gpiod_put(gd);
-> +
-> +	gd = gpiod_get_from_of_node(np, "pwren-gpios", 0,
-> +				    GPIOD_OUT_LOW, "PWREN");
-> +	if (IS_ERR(gd)) {
-> +		if (PTR_ERR(gd) != -ENOENT)
-> +			return PTR_ERR(gd);
-> +	} else {
-> +		gpiod_put(gd);
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -526,7 +536,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
->  {
->  	struct platform_device *platform = to_platform_device(pcie->dev);
->  	struct apple_pcie_port *port;
-> -	struct gpio_desc *reset;
-> +	struct gpio_desc *reset, *pwren = NULL;
->  	u32 stat, idx;
->  	int ret, i;
->  
-> @@ -535,6 +545,15 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
->  	if (IS_ERR(reset))
->  		return PTR_ERR(reset);
->  
-> +	pwren = devm_gpiod_get_from_of_node(pcie->dev, np, "pwren-gpios", 0,
-> +					    GPIOD_OUT_LOW, "PWREN");
-> +	if (IS_ERR(pwren)) {
-> +		if (PTR_ERR(pwren) == -ENOENT)
-> +			pwren = NULL;
-> +		else
-> +			return PTR_ERR(pwren);
-> +	}
-> +
->  	port = devm_kzalloc(pcie->dev, sizeof(*port), GFP_KERNEL);
->  	if (!port)
->  		return -ENOMEM;
-> @@ -557,12 +576,22 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
->  	/* Assert PERST# before setting up the clock */
->  	gpiod_set_value_cansleep(reset, 1);
->  
-> +	/* Power on the device if required */
-> +	if (pwren)
-> +		gpiod_set_value_cansleep(pwren, 1);
+> Also, please don't use the "enable_val/disable_val" members. It should be
+> something like "mux_sel_pre/mux_sel_post".
 
-nit: AFAICT, the gpiod_* helpers already check for a NULL descriptor,
-and silently return without an error.
+Why? Could you please elaborate?
 
-> +
->  	ret = apple_pcie_setup_refclk(pcie, port);
->  	if (ret < 0)
->  		return ret;
->  
-> -	/* The minimal Tperst-clk value is 100us (PCIe CEM r5.0, 2.9.2) */
-> -	usleep_range(100, 200);
-> +	/*
-> +	 * The minimal Tperst-clk value is 100us (PCIe CEM r5.0, 2.9.2)
-> +	 * If powering up, the minimal Tpvperl is 100ms
-> +	 */
-> +	if (pwren)
-> +		msleep(100);
-> +	else
-> +		usleep_range(100, 200);
->  
->  	/* Deassert PERST# */
->  	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
+> 
+>> +}
+>> +
+>> +static int pipe_enable(struct clk_hw *hw)
+>> +{
+>> +	struct clk_regmap_pipe *pipe = to_clk_regmap_pipe(hw);
+>> +	struct clk_regmap *clkr = to_clk_regmap(hw);
+>> +	unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
+>> +	unsigned int val;
+>> +
+>> +	val = pipe->enable_val << pipe->shift;
+>> +
+>> +	return regmap_update_bits(clkr->regmap, pipe->reg, mask, val);
+>> +}
+>> +
+>> +static void pipe_disable(struct clk_hw *hw)
+>> +{
+>> +	struct clk_regmap_pipe *pipe = to_clk_regmap_pipe(hw);
+>> +	struct clk_regmap *clkr = to_clk_regmap(hw);
+>> +	unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
+>> +	unsigned int val;
+>> +
+>> +	val = pipe->disable_val << pipe->shift;
+>> +
+>> +	regmap_update_bits(clkr->regmap, pipe->reg, mask, val);
+>> +}
+>> +
+>> +const struct clk_ops clk_regmap_pipe_ops = {
+>> +	.enable = pipe_enable,
+>> +	.disable = pipe_disable,
+>> +	.is_enabled = pipe_is_enabled,
+>> +};
+>> +EXPORT_SYMBOL_GPL(clk_regmap_pipe_ops);
+>> diff --git a/drivers/clk/qcom/clk-regmap-pipe.h b/drivers/clk/qcom/clk-regmap-pipe.h
+>> new file mode 100644
+>> index 000000000000..cfaa792a029b
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/clk-regmap-pipe.h
+>> @@ -0,0 +1,24 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (c) 2022, Linaru Ltd.
+> 
+> Linaro
 
-With the documentation aspect addressed:
+ack
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+> 
+>> + * Author: Dmitry Baryshkov
+> 
+> No email?
+> 
+> Thanks,
+> Mani
+> 
+>> + */
+>> +
+>> +#ifndef __QCOM_CLK_REGMAP_PIPE_H__
+>> +#define __QCOM_CLK_REGMAP_PIPE_H__
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include "clk-regmap.h"
+>> +
+>> +struct clk_regmap_pipe {
+>> +	u32			reg;
+>> +	u32			shift;
+>> +	u32			width;
+>> +	u32			enable_val;
+>> +	u32			disable_val;
+>> +	struct clk_regmap	clkr;
+>> +};
+>> +
+>> +extern const struct clk_ops clk_regmap_pipe_ops;
+>> +
+>> +#endif
+>> -- 
+>> 2.35.1
+>>
 
-	M.
 
 -- 
-Without deviation from the norm, progress is not possible.
+With best wishes
+Dmitry
