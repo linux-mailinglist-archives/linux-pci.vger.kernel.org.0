@@ -2,65 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 640155176A6
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 20:39:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 644F1517738
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 21:13:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351299AbiEBSmj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 14:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53252 "EHLO
+        id S1387054AbiEBTRT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 15:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231752AbiEBSmg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 14:42:36 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B4D7645
-        for <linux-pci@vger.kernel.org>; Mon,  2 May 2022 11:39:06 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id c15so19421149ljr.9
-        for <linux-pci@vger.kernel.org>; Mon, 02 May 2022 11:39:06 -0700 (PDT)
+        with ESMTP id S1387050AbiEBTRS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 15:17:18 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31677E92
+        for <linux-pci@vger.kernel.org>; Mon,  2 May 2022 12:13:49 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id e194so16912697iof.11
+        for <linux-pci@vger.kernel.org>; Mon, 02 May 2022 12:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=VY74pSb44aXaB5Q/ACtIOW5Tcs+anB1Z5G3riabqw6I=;
-        b=EFMI8iBz3AEwusat5ro5bkbFAA0UYW5zy1phWCVHYnuiCSCqrBPTx/tFpe5A+5btFv
-         5+pjUmm3lKrp06RUJ46bylbdOiijgjTQett/UmSx93qTM8Kg8Puz7cpafk5JkcvS730C
-         ayPYY8Fvt8/jS3A4hR/MuDOAcfJWWoQ1q/lezKpMNYP2h3kzAOA9glJrH4OQVG8cFvCn
-         hy+9hHv5BIWOoyDEdJLHVn9DtE5/SlFMQJIMD1dPQnDT62hCh/X1RiNqLVGd5KnIbTfu
-         A0ss6ZLITN+844uyEp9ndZeG8juC+wNxlueia8AjlBjziuPnSp9245Rcle/M79UPHOmw
-         gw5A==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y0LBGAd1mzPzBgDI34ZO9E56JL4JndzFBjXWTJ7seYs=;
+        b=ckPp/NdRMXgf5FFXPyGc9liaDJqL2hcNn8pjXgoavzCrY0KDzgtvF0XFqZcMNDXfOr
+         6l0lOd/hHI50esNE7LrmDR6dg2UfbkHDyciTF6LeHVIUleHrSlXIeRHzr97J1v7x8kSk
+         uzomDevaWRkXHoUH1qWDXTMfMsXSKVz+jFnJCewEpD4C6IMblNSJx23INuzLghEhlxQE
+         6mEsGQvJu3GuLNm3d8F4s/JrjutfEMrDVMEOfsJPdPIG+JojWyMeaaIRprxbMHoaoQxh
+         Gk4SpxniQhemtQMl77jiDeVgdZebFILROTazekNN8BwMh2KFYXZPPdsTcFTHY45nWptd
+         Am4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=VY74pSb44aXaB5Q/ACtIOW5Tcs+anB1Z5G3riabqw6I=;
-        b=WfDscqTpX8JzBMdtNWdbhoDA4pQlTgx8fOMwpUl0j2XK0YFGs8nQ4IndThnpY45/oy
-         7cJWfc+5Opf3t0UmL/9Zv6gfZOAWISTyN2EdknrRNT9bvfFwin+epmRFO4ZFFQFeGQJ7
-         E0B/FeH5QZg0XnPfh6KFXJSTl0cO0OQt8k4SJMPCv3iIrnv2Iqu/hnDpCsU2c83T6ivr
-         ohfrRYbqYEIb/0m9+eH+sssDq9L4RSf4z3iOO6byJ9UJDYZza2/AhXS1mtD/LMK/OAqj
-         47HG/Z+xDrYLMMwM4LwZHaybUy6idHZjaO9IK8sWf5MoT9NDn35esrzCkXPub0h+Dr6d
-         lYSg==
-X-Gm-Message-State: AOAM531fhiS6kj8q1pW1pRG/025lKCMGaaaYWmXarNzohagGeeXtpD1W
-        nIooiwIiJiBsDdikjldFQFREcGQuWyN+5aKzue+BXen2
-X-Google-Smtp-Source: ABdhPJyB2zyIza0RGWQzI2l5qkil3PnQb//0VdFKk7mymMBttAiiGKy+UmC1sdmZ+reA41z2FZzpMIgs/tEFt6Zg+s0=
-X-Received: by 2002:a2e:a811:0:b0:24e:fb1a:e49f with SMTP id
- l17-20020a2ea811000000b0024efb1ae49fmr7932505ljq.284.1651516743644; Mon, 02
- May 2022 11:39:03 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y0LBGAd1mzPzBgDI34ZO9E56JL4JndzFBjXWTJ7seYs=;
+        b=WdfCJlkA3PtOQcsUfabMq+WbRvjoYmyQ21Fnwa8rD1H89TNp3YiSelfzrgE1HZF4CB
+         /YfjJxM/uGRXquYV7xJFlsyxfyJXl6tFjZkn8/VXXPNcpsMD95uXFEW18h7L+Ijhy9rO
+         e3/QjM0+w/LxjrYACZJYfY2CL2O0YewG57BaIG/PSvcJpGxriR9mDR8WXnIe7EoyzW5R
+         +i3jgT2LkXK5j2fRnS3Of+SNkkIYrNe74Gf3IlGa6lHdBv8/Me0xbtXOZVHJFC8QmRDX
+         EQNaqz1xUfMKTu4BZQA+Peoga5YSr1qEswDJSkGsYirutWbvgDH/AmbhxtaNOslofRst
+         ZcJw==
+X-Gm-Message-State: AOAM5323G265FfDxNWZQu8VOwRigknT86buRKIe8CC8Rg1TEGvJf8/2x
+        IGrSxPWA8U1hrUt21F/hB3w7N17uiQ8N2kgTwLIMfA==
+X-Google-Smtp-Source: ABdhPJwHqlWg5WB6OOOBQLDDEVN8nqKNBqzia3qBgR8p0HecQJbYk6Xkq8myPoSaLOqltKHBMqJU5Kkn5+UKlAQieTA=
+X-Received: by 2002:a6b:4419:0:b0:657:aeaa:d2e with SMTP id
+ r25-20020a6b4419000000b00657aeaa0d2emr4701122ioa.24.1651518828432; Mon, 02
+ May 2022 12:13:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <bug-215925-41252@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-215925-41252@https.bugzilla.kernel.org/>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Mon, 2 May 2022 13:38:51 -0500
-Message-ID: <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
-Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
- 4 (CM4) breaks booting
-To:     Linux PCI <linux-pci@vger.kernel.org>
-Cc:     Bjorn Helgaas <bjorn@helgaas.com>,
-        Jim Quinlan <jim2101024@gmail.com>
+References: <20220412224348.1038613-1-tansuresh@google.com>
+ <20220412224348.1038613-2-tansuresh@google.com> <CAJZ5v0ivNq3aYCEcxPYMosLJCAyWiAnucwOCmRBzkM=sbyPWgQ@mail.gmail.com>
+ <CALVARr6v5hcY0Vcf1izPUX-tXNJyyNXBMANbKX4CW9wfRf-pYQ@mail.gmail.com> <YmzqrqfVLQ9/4KXp@kroah.com>
+In-Reply-To: <YmzqrqfVLQ9/4KXp@kroah.com>
+From:   Tanjore Suresh <tansuresh@google.com>
+Date:   Mon, 2 May 2022 12:13:37 -0700
+Message-ID: <CALVARr50MWexNpCf_PoZ4-pdnexiZiibz7Nd0PH+b-EVnBUN6w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] driver core: Support asynchronous driver shutdown
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,85 +73,77 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 30, 2022 at 2:53 PM <bugzilla-daemon@kernel.org> wrote:
+On Sat, Apr 30, 2022 at 12:52 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D215925
+> A: http://en.wikipedia.org/wiki/Top_post
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
 >
->             Bug ID: 215925
->            Summary: PCIe regression on Raspberry Pi Compute Module 4 (CM4=
-)
->                     breaks booting
->            Product: Drivers
->            Version: 2.5
->     Kernel Version: v5.17-rc1
->           Hardware: ARM
->                 OS: Linux
->               Tree: Mainline
->             Status: NEW
->           Severity: normal
->           Priority: P1
->          Component: PCI
->           Assignee: drivers_pci@kernel-bugs.osdl.org
->           Reporter: kibi@debian.org
->         Regression: No
+> A: No.
+> Q: Should I include quotations after my reply?
 >
-> Catching up with latest kernel releases in Debian, it turned out that my
-> Raspberry Pi Compute Module 4, mounted on an official Compute Module 4 IO
-> Board,
-> and booting from an SD card, no longer boots: this means a black screen o=
-n the
-> HDMI output, and no output on the serial console.
+> http://daringfireball.net/2007/07/on_top
 >
-> Trying various releases, I confirmed that v5.16 was fine, and v5.17-rc1 w=
-as the
-> first (pre)release that wasn't.
+> On Fri, Apr 29, 2022 at 11:03:07AM -0700, Tanjore Suresh wrote:
+> > Rafael,
+> >
+> > That is a good observation, however, many of the use cases in data
+> > centers (deployment of devices in data centers) do not exploit device
+> > power management. Therefore, I'm not sure that is the right way to
+> > design this.
 >
-> After some git bisect, it turns out the cause seems to be the following c=
-ommit
-> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commi=
-t/?id=3D830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21):
+> Yes it is, enable device power management and use that interface please.
+> Devices in data centers should of course be doing the same thing as
+> everyone else, as it actually saves real money in power costs.  To not
+> do so is very odd.
 >
-> ```
-> commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21
-> Author: Jim Quinlan <jim2101024@gmail.com>
-> Date:   Thu Jan 6 11:03:27 2022 -0500
+
+I guess we are intermixing the  terminology of device power management
+with shutdown.
+My second, third reasoning in my previous e-mail, thought it brings
+out that difference. Maybe not.
+I will try one more time, my thought process on this one.
+
+This patch is only for shutdown. The shutdown can be done in a system
+in various flavors,
+(this may include a power being pulled from the system components when
+all the devices
+are quiescent and it can also be soft shutdown, where power is not
+removed from the system, but system
+could be attempting a reboot)
+
+The device power management allows the device to bring down any
+devices that may be idle to various power states that
+device may support in a selective manner & based on the transition
+allowed by the device. Such a transition initiated by
+the system can be achieved using the 'dpm' interface for runtime power
+management (more for extending laptop battery life).
+It can also be exploited for system sleep models (suspend and resume -
+where state is preserved and restarted from where it left off
+--> More applicable for laptops/desktops). That does not mean data
+center devices cannot exploit, but they worry about slight latency
+variation in any
+I/O initiated to any device. Such power management could introduce
+more latency when it transitions from one state to another.
+Therefore, the use case is more apt for Laptops, in certain cases
+desktops in my opinion or understanding.
+
+The shutdown entry point has been traditionally different and the
+semantics is that the whole system is going down to a
+quiescent state and power may be pulled or may not be, IMO, i am
+seeing both are independent requirements, in my view.
+Let me know if I am mistaken. I am not sure why we should break the
+shutdown semantics as understood by driver developers and
+overload it with dpm requirements?
+
+Thanks
+sureshtk
+
+
+> thanks,
 >
->     PCI: brcmstb: Split brcm_pcie_setup() into two funcs
-> ```
->
-> Starting with this commit, the kernel panics early (before 0.30 seconds),=
- with
-> an `Asynchronous SError Interrupt`. The backtrace references various
-> `brcm_pcie_*` functions; I can share a picture or try and transcribe it
-> manually if that helps (nothing on the serial console=E2=80=A6).
->
-> This commit is part of a branch that was ultimately merged as
-> d0a231f01e5b25bacd23e6edc7c979a18a517b2b; starting with this commit, ther=
-e's
-> not even a backtrace anymore, the screen stays black after the usual =E2=
-=80=9Cboot-up
-> rainbow=E2=80=9D, and there's still nothing on the serial console.
->
-> I confirmed that 88db8458086b1dcf20b56682504bdb34d2bca0e2 (on the master =
-side)
-> was still booting properly, and that 87c71931633bd15e9cfd51d4a4d9cd685e8c=
-db55
-> (from the branch being merged into master) is the last commit showing the
-> panic.
->
-> Since d0a231f01e5b25bacd23e6edc7c979a18a517b2b is a merge commit that inc=
-ludes
-> conflict resolutions in drivers/pci/controller/pcie-brcmstb.c, I suppose =
-this
-> could be consistent with the initial panic being =E2=80=9Cupgraded=E2=80=
-=9D into an even more
-> serious issue.
->
-> I've also verified that latest master (v5.18-rc4-396-g57ae8a492116) is st=
-ill
-> affected by this issue.
->
-> The regular Raspberry Pi 4 B doesn't seem to be affected by this issue: t=
-he
-> exact same image on the same SD card (with latest master) boots fine on i=
-t.
+> greg k-h
