@@ -2,73 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F41451702F
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 15:21:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 715D3517351
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 17:54:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385236AbiEBNYi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 09:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
+        id S239336AbiEBP5m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 11:57:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235673AbiEBNYh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 09:24:37 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12575645B;
-        Mon,  2 May 2022 06:21:07 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 54E9C92009C; Mon,  2 May 2022 15:21:06 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 50E1992009B;
-        Mon,  2 May 2022 14:21:06 +0100 (BST)
-Date:   Mon, 2 May 2022 14:21:06 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     William Breathitt Gray <william.gray@linaro.org>
-cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
-In-Reply-To: <YmwGLrh4U+pVJo0m@fedora>
-Message-ID: <alpine.DEB.2.21.2205021406080.64520@angie.orcam.me.uk>
-References: <20220429135108.2781579-1-schnelle@linux.ibm.com> <20220429135108.2781579-19-schnelle@linux.ibm.com> <Ymv3DnS1vPMY8QIg@fedora> <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com> <YmwGLrh4U+pVJo0m@fedora>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S229625AbiEBP5m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 11:57:42 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7CDF6155
+        for <linux-pci@vger.kernel.org>; Mon,  2 May 2022 08:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651506852; x=1683042852;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qoz3iTWhlFjjxtR0HCzqo1bjdBwAmPkkKQujNoMqefM=;
+  b=jph5n+Pi6eEI9xLUXH9TbweOGaGmy08nSpWTGu7EUm83NGrVjS5kU0/F
+   Fi6X7eGbIpjixQwvKvITrfN+BN1yigCuizsrnj+Y/tB6lUiClEPp9OMrw
+   ESmMj501JIl/0FE2u/MGcAaFKDIgH1iII6yPu/9IVhP34xT2HwMeC1ex8
+   gWeHtx0H0NJwOGcISIaBdv6zOnX5jDXdPtwqcQrWg8OhPrLPtqKQeSMXK
+   pWZjIYMoE+Ii9DB8b+4LARof+usn/uTWJIbQKaw9onpy0kzZmA8zTag7m
+   18TvWkmL4cK5X5JBTahILIGIzqZacidOmMK+Acrr2Fkw3fkHlGb4Db+M+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="267398625"
+X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
+   d="scan'208";a="267398625"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 08:54:01 -0700
+X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
+   d="scan'208";a="583761585"
+Received: from unknown (HELO azvmdlinux1.ch.intel.com) ([10.2.230.15])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 08:54:00 -0700
+From:   Nirmal Patel <nirmal.patel@linux.intel.com>
+To:     <linux-pci@vger.kernel.org>
+Cc:     Nirmal Patel <nirmal.patel@linux.intel.com>
+Subject: [PATCH 0/2] PCI: vmd: IRQ domain assignment to sub devices
+Date:   Mon,  2 May 2022 01:48:58 -0700
+Message-Id: <20220502084900.7903-1-nirmal.patel@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 29 Apr 2022, William Breathitt Gray wrote:
+Make sure VMD assigns proper IRQ domain to the child devices during
+device enumeration. DMAR errors were observed when interrupt remapping
+is enabled by intel_iommu because of the fact that VMD child devices
+are on different IRQ domain than all other PCI devices.
 
-> > Good question. As far as I can see most (all?) of these have "select
-> > ISA_BUS_API" which is "def_bool ISA". Now "config ISA" seems to
-> > currently be repeated in architectures and doesn't have an explicit
-> > HAS_IOPORT dependency (it maybe should have one). But it does only make
-> > sense on architectures with HAS_IOPORT set.
-> 
-> There is such a thing as ISA DMA, but you'll still need to initialize
-> the device via the IO Port bus first, so perhaps setting HAS_IOPORT for
-> "config ISA" is the right thing to do: all ISA devices are expected to
-> communicate in some way via ioport.
+Nirmal Patel (2):
+  PCI: vmd: Assign VMD IRQ domain before enumeration
+  PCI: vmd: Revert 2565e5b69c44 ("PCI: vmd: Do not disable MSI-X
+    remapping if interrupt remapping is enabled by IOMMU.")
 
- Strictly speaking you can make an ISA device that only does MMIO (and I 
-believe in the early PC days there used to be ISA memory expansion cards 
-along with the EMS standard) which is also why the host memory area in the 
-15-16MiB range, the top 1MiB addressable on 16-bit ISA, can be excluded 
-from decoding to DRAM and accesses made there forwarded to ISA in I 
-believe all chipsets that provide actual ISA bus circuitry (rather than 
-just a degenerate form like LPC).  That's an exception rather than the 
-rule though, nearly all ISA devices do decode in the port I/O space.  
-After all I/O is what the port I/O address space has been invented for.
+ drivers/pci/controller/vmd.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
- FWIW,
+-- 
+2.26.2
 
-  Maciej
