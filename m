@@ -2,52 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6574451775A
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 21:22:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D58651778B
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 21:44:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235226AbiEBTZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 15:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
+        id S1387158AbiEBTrm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 15:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233034AbiEBTZ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 15:25:58 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 050CBFF0
-        for <linux-pci@vger.kernel.org>; Mon,  2 May 2022 12:22:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B6C01B819ED
-        for <linux-pci@vger.kernel.org>; Mon,  2 May 2022 19:22:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E077C385AF;
-        Mon,  2 May 2022 19:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651519345;
-        bh=Hh4AlgPmJhCDXrRtfRBuZb1qLAYQJURmPGPni5vvRoc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FayGj4B+RsJ0ngqhJKdYsr92LCA+jAy/h1wcGghFnQ/9JV3xgPgX/5dOk6spI6yGL
-         vFMhZAg1z5eQdPFXFPwyU27gWc/GqfYpezVhR8coHmE+vbWuzm+HtCMLlaA1gtqNYV
-         Xf618XD7Pkh9bGiCfd+cns3i/PEcM80n8aJeg+pvvZgk2Nchs0dMhm65JwYMdX9CZ2
-         dcy1WuIjeB9xLmSQ5J1N8IzZMIUhtx2kUPRokEXQzpsb0jz0s3AkISLaTq2xXGnubg
-         gfuUa+F7FsHJRwKWDUBJbPtursrAy4rzI87zUp4QfSTsycWnkiHGnBLyGyiURhGnGI
-         qgKZLAquJhB9A==
-Date:   Mon, 2 May 2022 14:22:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Conor.Dooley@microchip.com, lorenzo.pieralisi@arm.com,
-        Daire.McNamara@microchip.com, bhelgaas@google.com,
-        Cyril.Jean@microchip.com, david.abdurachmanov@gmail.com,
-        linux-pci@vger.kernel.org, robh@kernel.org
-Subject: Re: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in
- interrupt handling
-Message-ID: <20220502192223.GA319570@bhelgaas>
+        with ESMTP id S1387149AbiEBTrl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 15:47:41 -0400
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 225E565CF;
+        Mon,  2 May 2022 12:44:12 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id m25so2311105oih.2;
+        Mon, 02 May 2022 12:44:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ucAvB47OLCc21fcBaiRNI7ffxRGUPPe35CD1iyIndks=;
+        b=KblTwfLJj7M7U4HD5HMFhttNSsv0YwdjupljaNzVqZidKHqMXbG+vqzsS91aTO98Ar
+         9mw+CCd/jVm4c8xww5aw6lZPFi2wjtblDj9PTfUo1uXsBAjD0tvnH/Wlh8dbHVODBR5k
+         WFYF8PZ/su/iX0y4PGw/Fgfxr9x272D16/yabW6Fhu2hLQznq7nINpB6RqU8GG4E+U9O
+         fTzIlrLS2KfKUanP789+FE8QoijxtDnHeZaTyYcOmRVpoINP0z7ihhcaxlUAW6jljA2e
+         mjxDKLHk4xkp4Py32uqRx+kqW2nwtuNxhUHrs4aiRec+Gz7amrj5kJdpPK6BqwfuzW+r
+         O0Sg==
+X-Gm-Message-State: AOAM532qiardx51AwSeb6GJ68YkkNZwv1zWxSElzZHij2qUkK/X1HqhB
+        yxFJIY9CEXqYEgfBryWKQA==
+X-Google-Smtp-Source: ABdhPJzG0RRJdyMVQN6p9lCm1Mkp6SZ7X84M3460ToEWrNZlJfrvlz74VS86/3RCEHBwMzht6kudBQ==
+X-Received: by 2002:a05:6808:220c:b0:325:c254:9b0a with SMTP id bd12-20020a056808220c00b00325c2549b0amr324140oib.239.1651520651405;
+        Mon, 02 May 2022 12:44:11 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id z17-20020a9d4691000000b006060322125dsm3283901ote.45.2022.05.02.12.44.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 May 2022 12:44:10 -0700 (PDT)
+Received: (nullmailer pid 1611767 invoked by uid 1000);
+        Mon, 02 May 2022 19:44:09 -0000
+Date:   Mon, 2 May 2022 14:44:09 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: renesas,pci-rcar-gen2: Add
+ device tree support for r9a06g032
+Message-ID: <YnA0id1rXlNHNz+N@robh.at.kernel.org>
+References: <20220429134143.628428-1-herve.codina@bootlin.com>
+ <20220429134143.628428-4-herve.codina@bootlin.com>
+ <29ba3db6-e5c7-06d3-29d9-918ee5b34555@linaro.org>
+ <CAMuHMdWN_ni_V+e3QipWH2qKXeNPkEcVpHpb5iBYw1YQSAnCDA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h76b8nxc.wl-maz@kernel.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <CAMuHMdWN_ni_V+e3QipWH2qKXeNPkEcVpHpb5iBYw1YQSAnCDA@mail.gmail.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,53 +82,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 30, 2022 at 12:33:51AM +0100, Marc Zyngier wrote:
-> On Fri, 29 Apr 2022 22:57:33 +0100,
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Apr 29, 2022 at 09:42:52AM +0000, Conor.Dooley@microchip.com wrote:
-> > > On 28/04/2022 10:29, Lorenzo Pieralisi wrote:
-> > > > On Tue, Apr 05, 2022 at 12:17:51PM +0100, daire.mcnamara@microchip.com wrote:
-> > > >> From: Daire McNamara <daire.mcnamara@microchip.com>
-> > > >>
-> > > >> Clear MSI bit in ISTATUS register after reading it before
-> > > >> handling individual MSI bits
-
-> > > Clear the MSI bit in ISTATUS register after reading it, but before
-> > > reading and handling individual MSI bits from the IMSI register.
-> > > This avoids a potential race where new MSI bits may be set on the
-> > > IMSI register after it was read and be missed when the MSI bit in
-> > > the ISTATUS register is cleared.
-
-> > Honestly, I don't understand enough about IRQs to determine whether
-> > this is a correct fix.  Hopefully Marc will chime in.  All I really
-> > know how to do is compare all the drivers and see which ones don't fit
-> > the typical patterns.
+On Mon, May 02, 2022 at 11:19:19AM +0200, Geert Uytterhoeven wrote:
+> Hi Krzysztof,
 > 
-> This seems sensible. In general, edge interrupts need an early Ack
-> *before* the handler can be run. If it happens after, you're pretty
-> much guaranteed to lose edges that would be generated between the
-> handler and the late Ack.
+> On Sun, May 1, 2022 at 10:51 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+> > On 29/04/2022 15:41, Herve Codina wrote:
+> > > Add internal PCI bridge support for the r9a06g032 SOC. The Renesas
+> > > RZ/N1D (R9A06G032) internal PCI bridge is compatible with the one
+> > > present in the R-Car Gen2 family.
+> > > Compared to the R-Car Gen2 family, it needs three clocks instead of
+> > > one.
+> > >
+> > > The 'resets' property for the RZ/N1 family is not required since
+> > > there is no reset-controller support yet for the RZ/N1 family.
+> >
+> > This should not be a reason why a property is or is not required. Either
+> > this is required for device operation or not. If it is required, should
+> > be in the bindings. Otherwise what are you going to do in the future?
+> > Add a required property breaking the ABI?
 > 
-> This can be implemented in HW in a variety of ways (read a register,
-> write a register, or even both).
+> The problem is that there are no bindings for the reset controller
+> (actually the reset controller feature of the system-controller) yet.
+> Yeah, we can just add #reset-cells = <1> to the system-controller
+> device node, but we cannot add the actual resets properties to the
+> consumers, until the actual cell values are defined.
 
-Is this something that is or could be documented somewhere under
-Documentation, e.g., "here are the common canonical patterns to use"?
-I feel like an idiot because I have this kind of question all the time
-and I never know how to confidently analyze it.
+Sounds like you should implement providers first. Or just live with the 
+warning as a reminder to implement the reset provider?
 
-> > And speaking of that, I looked at all the users of
-> > irq_set_chained_handler_and_data() in drivers/pci.  All the handlers
-> > except mc_handle_intx() and mc_handle_msi() call chained_irq_enter()
-> > and chained_irq_exit().
-> > 
-> > Are mc_handle_intx() and mc_handle_msi() just really special, or is
-> > this a mistake?
-> 
-> That's just a bug. On the right HW, this would just result in lost
-> interrupts.
-
-I wonder if coccinelle or some other static analyzer would be smart
-enough to find this kind of error.
-
-Bjorn
+Rob
