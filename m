@@ -2,42 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97DFB516D1F
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 11:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11A56516D29
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 11:15:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354255AbiEBJRK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 05:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35278 "EHLO
+        id S1384112AbiEBJSb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 05:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234028AbiEBJRJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 05:17:09 -0400
-Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 603F2366A2;
-        Mon,  2 May 2022 02:13:35 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: hector@marcansoft.com)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 812F041982;
-        Mon,  2 May 2022 09:13:31 +0000 (UTC)
-From:   Hector Martin <marcan@marcan.st>
-To:     Sven Peter <sven@svenpeter.dev>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Kettenis <kettenis@openbsd.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>
-Subject: [PATCH] dt-bindings: pci: apple,pcie: Drop max-link-speed from example
-Date:   Mon,  2 May 2022 18:13:08 +0900
-Message-Id: <20220502091308.28233-1-marcan@marcan.st>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S234028AbiEBJSa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 05:18:30 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 50E8036B50;
+        Mon,  2 May 2022 02:15:01 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 776CE92009C; Mon,  2 May 2022 11:15:00 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 712B392009B;
+        Mon,  2 May 2022 10:15:00 +0100 (BST)
+Date:   Mon, 2 May 2022 10:15:00 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Subject: Re: [RFC v2 34/39] tty: serial: add HAS_IOPORT dependencies
+In-Reply-To: <20220429135108.2781579-63-schnelle@linux.ibm.com>
+Message-ID: <alpine.DEB.2.21.2205020341140.64520@angie.orcam.me.uk>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com> <20220429135108.2781579-63-schnelle@linux.ibm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -45,43 +44,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We no longer use these since 111659c2a570 (and they never worked
-anyway); drop them from the example to avoid confusion.
+On Fri, 29 Apr 2022, Niklas Schnelle wrote:
 
-Fixes: 111659c2a570 ("arm64: dts: apple: t8103: Remove PCIe max-link-speed properties")
-Signed-off-by: Hector Martin <marcan@marcan.st>
----
- Documentation/devicetree/bindings/pci/apple,pcie.yaml | 3 ---
- 1 file changed, 3 deletions(-)
+> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> not being declared. We thus need to add HAS_IOPORT as dependency for
+> those drivers using them.
+[...]
+> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+> index cd93ea6eed65..e216bf745e78 100644
+> --- a/drivers/tty/serial/8250/Kconfig
+> +++ b/drivers/tty/serial/8250/Kconfig
+> @@ -6,7 +6,7 @@
+>  
+>  config SERIAL_8250
+>  	tristate "8250/16550 and compatible serial support"
+> -	depends on !S390
+> +	depends on HAS_IOPORT
+>  	select SERIAL_CORE
+>  	select SERIAL_MCTRL_GPIO if GPIOLIB
+>  	help
 
-diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-index 7f01e15fc81c..daf602ac0d0f 100644
---- a/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-@@ -142,7 +142,6 @@ examples:
-           device_type = "pci";
-           reg = <0x0 0x0 0x0 0x0 0x0>;
-           reset-gpios = <&pinctrl_ap 152 0>;
--          max-link-speed = <2>;
- 
-           #address-cells = <3>;
-           #size-cells = <2>;
-@@ -153,7 +152,6 @@ examples:
-           device_type = "pci";
-           reg = <0x800 0x0 0x0 0x0 0x0>;
-           reset-gpios = <&pinctrl_ap 153 0>;
--          max-link-speed = <2>;
- 
-           #address-cells = <3>;
-           #size-cells = <2>;
-@@ -164,7 +162,6 @@ examples:
-           device_type = "pci";
-           reg = <0x1000 0x0 0x0 0x0 0x0>;
-           reset-gpios = <&pinctrl_ap 33 0>;
--          max-link-speed = <1>;
- 
-           #address-cells = <3>;
-           #size-cells = <2>;
--- 
-2.35.1
+ Similarly here some 8250-compatible platform or PCI/e serial port devices 
+use MMIO, e.g.:
 
+serial8250.0: ttyS2 at MMIO 0x1f000900 (irq = 20, base_baud = 230400) is a 16550A
+
+or:
+
+0001:01:00.0: ttyS0 at MMIO 0x600c080401000 (irq = 40, base_baud = 15625000) is a 16C950/954
+
+so this has to be sorted out within the driver rather than by disabling it 
+altogether.  Possibly with a suitable conditional wired to HAS_IOPORT in 
+`set_io_from_upio' in drivers/tty/serial/8250/8250_port.c.
+
+  Maciej
