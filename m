@@ -2,63 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CADBD516DFE
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 12:14:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA9D2516E0D
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 12:20:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384385AbiEBKRw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 06:17:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51550 "EHLO
+        id S229607AbiEBKYO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 06:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384417AbiEBKRt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 06:17:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E9E23C;
-        Mon,  2 May 2022 03:14:21 -0700 (PDT)
+        with ESMTP id S1384506AbiEBKXs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 06:23:48 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02EBE3D;
+        Mon,  2 May 2022 03:20:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A5B2C61238;
-        Mon,  2 May 2022 10:14:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D33C385A4;
-        Mon,  2 May 2022 10:14:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5D83DB8136B;
+        Mon,  2 May 2022 10:20:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05879C385A4;
+        Mon,  2 May 2022 10:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651486460;
-        bh=Ytg1tQ2oxulHa1Lh+RCOt+LqpTtcT9uXRgZ8Buq1CMI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SpmIMQ5eVc/hxV+PCQoHr4To19kotvQqy9Sf6WUumVcluu9KbVh3VRMBFCaHVM663
-         Mit0v4iFrBvDWm4shFNDiy+QcSMDPdBnDRoZ4DBk5lsjjTlj1dNNIatlEf8VS5zhlI
-         YIGGySaDOmEuQm7nK+cMqMdvif2aE6UIRQ7/xFshx9c0Z/2Qj39lHfdQsqGEGOqJuH
-         E9EZuzGjTtNUexiZshZX2Qts/VrP0/zJ6Ppdl7Nfi+CfTRJvyAhNA4U1uJv7Zthnqm
-         wt4qraGinyDsAOBvCWUaW3pRapIkfWLTDyFTXx0BLhoNjLZ6078GvB2b476D0lpp1P
-         52Rrr7XWBI7Wg==
-Date:   Mon, 2 May 2022 15:44:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Wangseok Lee <wangseok.lee@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        robh+dt <robh+dt@kernel.org>, krzk+dt <krzk+dt@kernel.org>,
-        kishon <kishon@ti.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson" <jesper.nilsson@axis.com>,
-        "lars.persson" <lars.persson@axis.com>,
-        bhelgaas <bhelgaas@google.com>,
-        linux-phy <linux-phy@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi" <lorenzo.pieralisi@arm.com>, kw <kw@linux.com>,
-        linux-arm-kernel <linux-arm-kernel@axis.com>,
-        kernel <kernel@axis.com>, Moon-Ki Jun <moonki.jun@samsung.com>,
-        Dongjin Yang <dj76.yang@samsung.com>
-Subject: Re: [PATCH 0/5] Add support for Axis, ARTPEC-8 PCIe driver
-Message-ID: <Ym+u9yYrV9mxkyWX@matsya>
-References: <4a6dd90c-3f8e-ad18-0136-88b75f4d9cf9@kernel.org>
- <20220418072049epcms2p463a9f01d8ae3e29f75b746a0dce934f1@epcms2p4>
- <CGME20220418072049epcms2p463a9f01d8ae3e29f75b746a0dce934f1@epcms2p1>
- <20220421235725epcms2p1fc34c904f960cba958fa692c6d5dad9c@epcms2p1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220421235725epcms2p1fc34c904f960cba958fa692c6d5dad9c@epcms2p1>
+        s=k20201202; t=1651486817;
+        bh=H/4R1EpBq3eerMw2bv6Q6fjwZU5GW14BHJfL5BIi01c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZkBM2DVEvOdESoOmys2DpmqzePhzFi2hk0IO6/HkOtTTHgGE+kdBjSTEvI3FQNHng
+         09NK8z2MBRIWYdOZDaADDLfPvdE41T8KDF7Q3wkRIETWvYcf08FLfHEQHqHPN+Ozs8
+         ++Zwp0blzkOJHpvMhPsb+rzgZlxFtZZAP4HHor9QuXECEFOSVO4cHRqJuHs1b8TIih
+         TkRh9st5lhW2i+huOxLs9SIHFa43KfASQDF9w3Gm4mBFPgUWcM9ZMPIgUH0BeBUXXN
+         TWmeRrOR8CBk1oOCclBPzExK23KpW0UsE1QIKkeHTrT9sfOhoHXoZgJAfLGtcFi7PZ
+         TlanNJnU6eEaQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nlTA6-008OSK-Dt; Mon, 02 May 2022 11:20:14 +0100
+Date:   Mon, 02 May 2022 11:20:13 +0100
+Message-ID: <87h768i6ci.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Hector Martin <marcan@marcan.st>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI: apple: GPIO handling nitfixes
+In-Reply-To: <20220502093832.32778-2-marcan@marcan.st>
+References: <20220502093832.32778-1-marcan@marcan.st>
+        <20220502093832.32778-2-marcan@marcan.st>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: marcan@marcan.st, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, alyssa@rosenzweig.io, sven@svenpeter.dev, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -69,27 +70,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22-04-22, 08:57, Wangseok Lee wrote:
-> > On 18/04/2022 09:20, Wangseok Lee wrote:
+On Mon, 02 May 2022 10:38:30 +0100,
+Hector Martin <marcan@marcan.st> wrote:
+> 
+> - Use devm managed GPIO getter
+> - GPIO ops can sleep in this context
+> 
+> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+> Cc: stable@vger.kernel.org
 
-> > Maybe, quite probably. The reluctance to extend any existing code makes
-> > me doubting this, but I admit that there are many differences.
-> > 
-> >> For these reasons, my opinion is that better to create
-> >> a phy, controller both driver with a new file.
-> >> Please let me know your opinion.
-> > 
-> > At the end it's mostly the decision of PCIe and phy subsystem
-> > maintainers whether they want to have separate drivers for DWC PCIe
-> > blocks in ARMv8 Samsung SoCs.
-> > 
-> > In any case, the driver code looks like copied-pasted from some vendor
-> > sources, so you need to bring it to shape.
+Why the Cc: stable? I'd guess that at a push, the devm_*() usage help
+with potential memory leaks when the driver fails to probe, but it
+would be good to call that out in the commit message.
 
-I think havong a common driver helps everyone, many vendors do that
-already. If you have a technical issue of adding and maintaining a
-common driver upstream we would be eager to understand and help with
-that...
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> ---
+>  drivers/pci/controller/pcie-apple.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> index a2c3c207a04b..e0c06c0ee731 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -516,8 +516,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  	u32 stat, idx;
+>  	int ret, i;
+>  
+> -	reset = gpiod_get_from_of_node(np, "reset-gpios", 0,
+> -				       GPIOD_OUT_LOW, "PERST#");
+> +	reset = devm_gpiod_get_from_of_node(pcie->dev, np, "reset-gpios", 0,
+> +					    GPIOD_OUT_LOW, "PERST#");
+>  	if (IS_ERR(reset))
+>  		return PTR_ERR(reset);
+>  
+> @@ -541,7 +541,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
+>  
+>  	/* Assert PERST# before setting up the clock */
+> -	gpiod_set_value(reset, 1);
+> +	gpiod_set_value_cansleep(reset, 1);
+>  
+>  	ret = apple_pcie_setup_refclk(pcie, port);
+>  	if (ret < 0)
+> @@ -552,7 +552,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  
+>  	/* Deassert PERST# */
+>  	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
+> -	gpiod_set_value(reset, 0);
+> +	gpiod_set_value_cansleep(reset, 0);
+>  
+>  	/* Wait for 100ms after PERST# deassertion (PCIe r5.0, 6.6.1) */
+>  	msleep(100);
+
+Otherwise:
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+	M.
 
 -- 
-~Vinod
+Without deviation from the norm, progress is not possible.
