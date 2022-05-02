@@ -2,97 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C81A517359
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 17:55:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31B295171A7
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 16:34:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349213AbiEBP6s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 11:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37108 "EHLO
+        id S1385567AbiEBOiI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 10:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379602AbiEBP6q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 11:58:46 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E1C8F3F
-        for <linux-pci@vger.kernel.org>; Mon,  2 May 2022 08:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651506915; x=1683042915;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=y+sH+KYtpA3FTHJUlkj4OGG4z9G9ace9jIhjOhgviEk=;
-  b=jtXJKzgxv6rYc+WDZotjsM1+0QH2kucS7f/IHsGkHc2rbcruRoJTHzpw
-   8D6YAKm+2XXumKOgLgeqGgQkTthI3wtCB+oD+VdXZCbs09rXb+d+2oIc+
-   nWSzfegb6Moyb8L9kmJuLMaSKzcqC9JsDcxN6QyKHkrXa0OWdjSKHl8v5
-   ReFbe+nsarVrRxcha4/RakS/m2aH0hwS00K8u2SJ7CRzs54cJuLBBLPLm
-   1XnpiKG0lOaJf/guix+BQhUM3QychaOvjQA/alFQZ5jnWh/ni+s9ccNGI
-   E99Lqh5L5Z8Ma24bukpzZqa1oZrq5bq9sRti8sKEbdlloBuoeYPdeJlXR
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10335"; a="353676516"
-X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="353676516"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 08:54:15 -0700
-X-IronPort-AV: E=Sophos;i="5.91,192,1647327600"; 
-   d="scan'208";a="583761672"
-Received: from unknown (HELO azvmdlinux1.ch.intel.com) ([10.2.230.15])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 08:54:14 -0700
-From:   Nirmal Patel <nirmal.patel@linux.intel.com>
-To:     <linux-pci@vger.kernel.org>
-Cc:     Nirmal Patel <nirmal.patel@linux.intel.com>
-Subject: [PATCH 2/2] PCI: vmd: Revert 2565e5b69c44 ("PCI: vmd: Do not disable MSI-X remapping if interrupt remapping is enabled by IOMMU.")
-Date:   Mon,  2 May 2022 01:49:00 -0700
-Message-Id: <20220502084900.7903-3-nirmal.patel@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20220502084900.7903-1-nirmal.patel@linux.intel.com>
-References: <20220502084900.7903-1-nirmal.patel@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1378194AbiEBOiH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 10:38:07 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B3C5F81;
+        Mon,  2 May 2022 07:34:39 -0700 (PDT)
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 242EVH50020019;
+        Mon, 2 May 2022 14:34:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=WdExTye17olTIg6QT8mBBfdfn+P/Stz7q1ekNoAttpE=;
+ b=dxJ6fZaDeSA4ihga6rpilVdEGfjabtwwsf0ZJVuk3WBq2lc6XY5E8vJ90pFhHIwnS7ic
+ s9M+aPW0IRYqIe7FV1Bf/NuQ3Ixo9S85C9EqHjVF9GDZQHywaoMvjvp2K2uEOktqV7RW
+ n36HAaX1wbRZrSrd9ZPPFtVmk09yEOfP3RlqCuaqCzAPpXgnPkfjezg7XwWeU3Cif8dq
+ cLEfIwW6QLsy4sKI4+v0l+JMQgbi5oYpI/hr6OGAL7UVnFMg9MsftDd5bzXxC3eHu0fQ
+ xKPlBebfDEEmMesP30yAmbZz/kk5tQbbaJXiSdNN2mHxcpjpEhuDFb1CKrET1LGX8KFO 2g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fth4tg18m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 May 2022 14:34:16 +0000
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 242EYG7c031072;
+        Mon, 2 May 2022 14:34:16 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fth4tg186-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 May 2022 14:34:16 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 242EWbT2032085;
+        Mon, 2 May 2022 14:34:14 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03fra.de.ibm.com with ESMTP id 3fscdk1nuk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 May 2022 14:34:13 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 242EKu3q23462322
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 May 2022 14:20:56 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82282AE055;
+        Mon,  2 May 2022 14:34:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A6E6AE045;
+        Mon,  2 May 2022 14:34:11 +0000 (GMT)
+Received: from sig-9-145-11-74.uk.ibm.com (unknown [9.145.11.74])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  2 May 2022 14:34:11 +0000 (GMT)
+Message-ID: <438c88e740f674ad334cdc88004fcec5b9ec57f4.camel@linux.ibm.com>
+Subject: Re: [RFC v2 04/39] char: impi, tpm: depend on HAS_IOPORT
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Corey Minyard <minyard@acm.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        "moderated list:IPMI SUBSYSTEM" 
+        <openipmi-developer@lists.sourceforge.net>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Date:   Mon, 02 May 2022 16:34:10 +0200
+In-Reply-To: <ff7605de-fe12-3bbf-cce9-aec18be9d54e@pengutronix.de>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+         <20220429135108.2781579-7-schnelle@linux.ibm.com>
+         <07c39877d9e940a96be41e21e22fe45dbb73d949.camel@linux.ibm.com>
+         <ff7605de-fe12-3bbf-cce9-aec18be9d54e@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Fm4gl_CCV9IRrCnZDVRyK0djotDq9YcN
+X-Proofpoint-ORIG-GUID: eIPjDVk3Gk_Wv_RNZGcDg89tcb5gRnjm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-02_04,2022-05-02_03,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 phishscore=0 mlxlogscore=920 spamscore=0 bulkscore=0
+ clxscore=1011 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205020114
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Revert 2565e5b69c44 ("PCI: vmd: Do not disable MSI-X remapping if
-interrupt remapping is enabled by IOMMU.")
+On Fri, 2022-04-29 at 16:33 +0200, Ahmad Fatoum wrote:
+> Hello Niklas,
+> 
+> On 29.04.22 16:23, Niklas Schnelle wrote:
+> > > Hello Niklas,
+> > > 
+> > > On 29.04.22 15:50, Niklas Schnelle wrote:
+> > > > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> > > > not being declared. We thus need to add this dependency and ifdef
+> > > > sections of code using inb()/outb() as alternative access methods.
+> > > > 
+> > > > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> > > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > > 
+> > > [snip]
+> > > 
+> > > > diff --git a/drivers/char/tpm/tpm_infineon.c b/drivers/char/tpm/tpm_infineon.c
+> > > > index 9c924a1440a9..2d2ae37153ba 100644
+> > > > --- a/drivers/char/tpm/tpm_infineon.c
+> > > > +++ b/drivers/char/tpm/tpm_infineon.c
+> > > > @@ -51,34 +51,40 @@ static struct tpm_inf_dev tpm_dev;
+> > > >  
+> > > >  static inline void tpm_data_out(unsigned char data, unsigned char offset)
+> > > >  {
+> > > > +#ifdef CONFIG_HAS_IOPORT
+> > > >       if (tpm_dev.iotype == TPM_INF_IO_PORT)
+> > > >               outb(data, tpm_dev.data_regs + offset);
+> > > >       else
+> > > > +#endif
+> > > 
+> > > This looks ugly. Can't you declare inb/outb anyway and skip the definition,
+> > > so you can use IS_ENABLED() here instead?
+> > > 
+> > > You can mark the declarations with __compiletime_error("some message"), so
+> > > if an IS_ENABLED() reference is not removed at compile time, you get some
+> > > readable error message instead of a link error.
+> > > 
+> > > Cheers,
+> > > Ahmad
+> > 
+> > I didn't know about __compiletime_error() that certainly sounds
+> > interesting even when using a normal #ifdef.
+> > 
+> > That said either with the function not being declared or this
+> > __compiletime_error() mechanism I would think that using IS_ENABLED()
+> > relies on compiler optimizations not to compile in the missing/error
+> > function call, right? I'm not sure if that is something we should do.
+> 
+> Yes, it assumes your compiler is able to discard the body of an if (0),
+> which we already assume, otherwise it wouldn't make sense for any existing
+> code to use __compiletime_error().
+> 
+> To me this sounds much cleaner than #ifdefs in the midst of functions,
+> which are a detriment to maintainability.
+> 
+> Cheers,
+> Ahmad
+> 
 
-The commit 2565e5b69c44 was added as a workaround to enable MSI-X
-remapping if IOMMU enables interrupt remapping. VMD does not assign
-proper IRQ domain to child devices when MSI-X remapping is disabled.
-There is no dependency between MSI-X remapping by VMD and interrupt
-remapping by IOMMU.
+Ok, makes sense. I'll look into using __compiletime_error() and
+IS_ENABLED().
 
-Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
----
- drivers/pci/controller/vmd.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 5015adc04d19..94a14a3d7e55 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -6,7 +6,6 @@
- 
- #include <linux/device.h>
- #include <linux/interrupt.h>
--#include <linux/iommu.h>
- #include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -813,8 +812,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	 * acceptable because the guest is usually CPU-limited and MSI
- 	 * remapping doesn't become a performance bottleneck.
- 	 */
--	if (iommu_capable(vmd->dev->dev.bus, IOMMU_CAP_INTR_REMAP) ||
--	    !(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
-+	if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
- 	    offset[0] || offset[1]) {
- 		ret = vmd_alloc_irqs(vmd);
- 		if (ret)
--- 
-2.26.2
 
