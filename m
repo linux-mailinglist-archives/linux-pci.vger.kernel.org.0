@@ -2,68 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DF4B516AB9
-	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 08:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0454F516B7D
+	for <lists+linux-pci@lfdr.de>; Mon,  2 May 2022 09:58:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382689AbiEBGKx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 02:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
+        id S1383597AbiEBIBm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 May 2022 04:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383486AbiEBGKi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 02:10:38 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6228051313
-        for <linux-pci@vger.kernel.org>; Sun,  1 May 2022 23:06:50 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id i62so10982044pgd.6
-        for <linux-pci@vger.kernel.org>; Sun, 01 May 2022 23:06:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qL3Xk4i7o3UQDTmWTBFhAVM3P0U5Z5danFVnlmhWQU8=;
-        b=CtDYa+9rPrahTWxdPX13retvUVvs4Vrobf4PgFMToLII8bMacFJj+QQrgX4vZYBfdy
-         nlJIuJYDDq7BnkZeI8YvZbnNrAl8w50yyKALZQpOmzzCSv6qbcXiC0fpXWl5dkWM/kaf
-         Cf/aKhdFLkEtyWCj2qDSzdqupsB5KiWZf7tTUUQKj0/X+Zx46xSDnyivPzGxuQRBB0oD
-         vPiCE8BMrPLV+4aysNAAeMgg3p+GJ8egDF3UmXe4XLTWB+N/4/LQF1GymPpYfA28Jewn
-         eTgb9jj/nTKB/9HnLl6SYwCOoX3Rkl9LsGQff8ZdN0tXosL74xU4qjUIv+D9w1Omr+Ug
-         IJGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qL3Xk4i7o3UQDTmWTBFhAVM3P0U5Z5danFVnlmhWQU8=;
-        b=WZfs6lurkIgbgJfjIkM6CoyzPtRX+X+kHQDUWTg6L2J926yzK6Lz8yCi0VcRd+x51Q
-         EuD04Fg9G24iPqdoLD3JIUajUI28iJ1cUyHa1Y3DDPZiqBBmarhOlGZlOJptHqdZKqI4
-         t2VYq0tdgifaHJBLFMeME6USWkuDDsn5QrQLt4Qi4Tg4Ovp77C2Vk6ZztDjoOgwItAeL
-         fRAhotDCsxL9VT4JF/sUyjLrikeIFH+t+LgdlJJUF6Z2iORDTplPJiTcnHRoWYQarjK/
-         xXBWVdI7rMZnPcGhxQm3vGTaF1lpECaQFYzozxNxaLenivnoY9E+iFYBVg3bnlARett+
-         bBLw==
-X-Gm-Message-State: AOAM532/93hooo9M7QrsaHGJW4C7At4kOol3Ef++CS1JZwUMQxD8UCIb
-        CHVdi7yXurApxmEFEES9rHzG
-X-Google-Smtp-Source: ABdhPJxskezcORxtvqy4ATQjhlEIvBxEON3WMDr/MmKeG4ZkcnLMaygsynDRGW7NqqhQ371q9Pyu5Q==
-X-Received: by 2002:a62:33c2:0:b0:50d:a588:daab with SMTP id z185-20020a6233c2000000b0050da588daabmr9610562pfz.31.1651471609629;
-        Sun, 01 May 2022 23:06:49 -0700 (PDT)
-Received: from localhost.localdomain ([27.111.75.99])
-        by smtp.gmail.com with ESMTPSA id h3-20020a62b403000000b0050dc7628181sm3933826pfn.91.2022.05.01.23.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 May 2022 23:06:49 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     kishon@ti.com, lorenzo.pieralisi@arm.com, kw@linux.com,
-        bhelgaas@google.com, robh@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 8/8] PCI: endpoint: Add PCI Endpoint function driver for MHI bus
-Date:   Mon,  2 May 2022 11:36:11 +0530
-Message-Id: <20220502060611.58987-9-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220502060611.58987-1-manivannan.sadhasivam@linaro.org>
-References: <20220502060611.58987-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S1376532AbiEBIBl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 04:01:41 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020016.outbound.protection.outlook.com [52.101.61.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DC029CB3;
+        Mon,  2 May 2022 00:58:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F3dkt7+nCLig1weRU071EqvTJRkOBP46J8KG81Hqizu7ELsNu7xjPmr2n6KAeHLcinr1piNe0DWYsrQwRpw4OX6YmWjd9AlR9mUs/N0ijwHYUCO864cvpU4xOEOJCQmZU+7fg5lq1ubAtqr7nMxyI4YmjglHDraMOiDeHcwuD1fU1cphHAG3SYIl1GAPAA/w7D7ZtUHSlNmTzvgrwwSU7O9oSzrRe0+ymuEht7bXzMaXliWHIrglVmBTVWTlLdbNidQ8X9TZ0DsK0JsfcUyd5HcrCt9SRaRShIjnMP+HBGbq60fu21l0H3OG+GW5rrq5izY/kZs1s648ZcDUriUpWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gbUIZVvmh/wiSrp8bG5PwsR2tyAoOE4BtdcOQuS4gw8=;
+ b=ZF4KZnVpdG1yjwuiUczfbnR1vsGKrxZEaF6lGsUFsdrvZqtvg+Z6Q+3GYE75aKNq7sijHafvakrDM3aTZzVkvezqklo847S0B3veMe60C1MVyLK2mD+L1n5QTzWekWqSAR/eZbVpeJbrM0FdfAm2fWwKr/9nx/3rLnMcVVyonw0KsXvdYngB8NbniWDO1JwANdN5irpIy5T3ntiJu2rWx/nfg8TMVXJO+yFvgS+MypUglz4xuYRcPlaFkb6cMnoXdkKq9TRiCBJmJn/QIYBDnZvuAb3gtlFTnWUC6oXoLhEKxpnNV8WcyNgZNkenLgeAt4qxEI/dW7T5qbrG1uLdwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gbUIZVvmh/wiSrp8bG5PwsR2tyAoOE4BtdcOQuS4gw8=;
+ b=R/MZlXYoj7gtUivT9O6/Jebuq6FfJZyXZMhddcf2ISMzrdsgoyUhc8vpg5S1I+agQCuihdquZEGSAL6UpTpSa2lklLeI5j9n3WsslhC57ixRsOutJFI+1Ag0mvh7cm6B2I5ujaLbtGR91ikDqhlymukaF9FK5P15Itz4D8mjDgE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26) by BN6PR21MB0273.namprd21.prod.outlook.com
+ (2603:10b6:404:9b::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.4; Mon, 2 May
+ 2022 07:43:41 +0000
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::c45a:9279:12d9:eca1]) by BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::c45a:9279:12d9:eca1%9]) with mapi id 15.20.5250.004; Mon, 2 May 2022
+ 07:43:41 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, robh@kernel.org, kw@linux.com,
+        helgaas@kernel.org, alex.williamson@redhat.com,
+        boqun.feng@gmail.com, Boqun.Feng@microsoft.com
+Cc:     jakeo@microsoft.com, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce VM boot time
+Date:   Mon,  2 May 2022 00:42:55 -0700
+Message-Id: <20220502074255.16901-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0065.namprd03.prod.outlook.com
+ (2603:10b6:303:b6::10) To BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5684d03c-f94f-4c9f-bfe3-08da2c0f7a04
+X-MS-TrafficTypeDiagnostic: BN6PR21MB0273:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR21MB027380E4184691E1EE328911BFC19@BN6PR21MB0273.namprd21.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DsG/otRtLmDOZ27E4aMWpTfukSFTmBvAtoL1VHtTnJLXC1nJKYH/sDCguZxUIpKEo/n+u1+0pgPJ1izbLlu3805O9b1CjglwdrDoLsQlLkWihUGXPKQJ4B6e/CuFrOVDcccOgt4mY8j9hdMbdRi8FB/W5eGo7Y57qNw5pvLjfsUkw9xzH12BBEit8H6Ee1D0OxQQNDLe3judKcmZNHWEoqOu8YsWeaY93uVJhGJ6VUQl74LD9Si7nV6AOjGHtVGQsvRLtkUb0is3r9XoWGNwceiU97+B/fJ2Oi6rjAyOHtnOGxEdtUNYL/QZmIjJEFbBMs5w1qAVRNR4u9Wl2ImeWyBCpcPICwrUf4BD5FA3Zywm5nzbuLb249o7/94OLEzX0lDLRQVB06t1nWTgX/1ibTZ+uCaU24p1b4MbCDx6+jxUQ727t1S9/FC7g82NGXwAC4+wWxPIn0vORxuNJ/2oAt9G5Wvq9ewzBCRIlfY0XLReO5j0D1gR4oUDbycdz7Auro70V3sfOb6WNdyXY3DR6qcuJ6cEzagGv/7Vi1o5e+GJY1uAy9HbsU1yKc9YGxzXYBWdiKjWwmAl7GQHvHkQ71xMG3nlXWUiFxkL5XBtt5Y7u76OD+ytlPUw0JDspIJ8YtsAFCe600e1xdv6gOScOTIVhuVEXHDn/w2Xpfoo0DcNQq+Ho7wzP2CzD9WVoW9n5AAPme3m5pklmJVeGdGejOPWWGKDSqD/p5aFzTUWZjMEzaSVui0Fce6wKE7fCjpXcnSRppP3KrbiXLwcMQ2vZ7cRBfJh7aZ18U1uqF3JNiiAdlRIEUqkRLHwr30MGR1Uc4QTa6v1sk+pxoYEzB+SdaWzizUGx0jPNGe+kLDv9J8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(6486002)(966005)(38100700002)(6512007)(86362001)(4326008)(8676002)(1076003)(6666004)(316002)(10290500003)(6636002)(186003)(66946007)(66556008)(66476007)(2616005)(82950400001)(6506007)(508600001)(52116002)(921005)(107886003)(7416002)(83380400001)(5660300002)(2906002)(8936002)(82960400001)(36756003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1ABnBg/7F1yvDCGpM9KcBPeAceozRRCc2HSQx7VW/QrcwkgBVtJRT5SIAXNB?=
+ =?us-ascii?Q?ozjEVupnOFSK4NIRLcb5qVukgA2cZSwvCTv08oNrY1FxYbjIrLgcKVCFz5rd?=
+ =?us-ascii?Q?5TlFNFu1bcPIlqY7od8qA3Okqxq+Ujq05zG/eqZxBOurO0n0Q8bkF63U78bX?=
+ =?us-ascii?Q?K59f57aX4bhuqU6vMhkciie5dSHizv2AEzT/A9gS9NW9YOFpiADmeOQC5uPR?=
+ =?us-ascii?Q?WWC1pmXjEjUHCHm56w+Zg9vlZ/e8k6pinI08W7/xqLWJtB8NhybpORvcG2Zf?=
+ =?us-ascii?Q?zPVEAztxZPpGc3xQf2NlA4VZBLU9sKltRT3KvzLu9Up8T7ieBnaPIbJPygmg?=
+ =?us-ascii?Q?5TRlW/LgJDEOmFs6gPJnhQoM8yCMDJBT0uM25I4zXQBgjHRmje5Zsx7hk9St?=
+ =?us-ascii?Q?REbCTZW2TiZA2Tj1fHjLAXW6CL4e8WwU2UlK54GwLhazq1vUhxZj/mNnsdGE?=
+ =?us-ascii?Q?tyOnJ5YSud/RzmvXufmBmcKJYULPae/4hUWwaP+xq4LrzTZsCZ/z4R42WLMP?=
+ =?us-ascii?Q?9FQ0NQkKjw/9m/pQMiKnYmjcLobA61RhpTMQQp0Nv3QksZ66VWgp2vpy6f2J?=
+ =?us-ascii?Q?2mjVm6q3C1/nd6LsG7CJLTif1T5Vv2su/Ol+SL2cPZIf9b9WA22rzVQ11Poy?=
+ =?us-ascii?Q?SwZcV5iG/z7ERy1PjNpimggsH+iibTwZ1AbQvosB2VqMjG4OtKKvGhRN7yLV?=
+ =?us-ascii?Q?68wk3+/GyKQRD27shv5VHIh2kDO1Mmp+Ou2GLzh4lDu0WFzF1u62A4wIhigP?=
+ =?us-ascii?Q?nUD7+6mkRN/taQmCKuu04TAkMQby/r4UQxP6E0CevnIMesJX4iBtU0WML30V?=
+ =?us-ascii?Q?RqioBq/BC+BYm00G6mEsxL7vr+3ccjSByYEZw/t/2dmVFYuUfKgmROxZzrFm?=
+ =?us-ascii?Q?8hpAPYlNFiVzMFOSCOcEvcOx+aC3jg9dGiL1mJljKsF8hbn1Q/ct5aa7EcrY?=
+ =?us-ascii?Q?NhwxX92fmBoTY+PXh5hjLyuKwvpjcbyZh0eKlX5QO59RUA5mLo8gK5xr6HIg?=
+ =?us-ascii?Q?3KbP2bPLk39UyDIE7zNK3tr7ptyYTcSlIRhd9scrj2OlFEk7PLeRNhPI3Vit?=
+ =?us-ascii?Q?2Lu8D/mx8fgWtYNaussSO+jKTksDcHcunxCquQgtGc5d0QNyUCOXh0Esh0sG?=
+ =?us-ascii?Q?U0AiDgaczn2X6XQbGLkGVYIbXYkIMsPKwSm36Tyc4ut+WHCYUDlKmdTK0PTK?=
+ =?us-ascii?Q?VmhrhAt67Hhtoq2FhgNTp4TJnvbFjASkz3vOqnvuymlusXlyqW4zKejeAlYy?=
+ =?us-ascii?Q?OZqceYWz/m2pyp8bJSB6/PtrFMrLWUijyjjf/6jdLLo2578B2+2A8PQJtIZ+?=
+ =?us-ascii?Q?sL+3GF0aB8dJK9zkZr/iUp8+ivfrS9pqMyJIsveQaiLW6k+MrkfW4RNon+RI?=
+ =?us-ascii?Q?Hszec5bjkGM6ZrGjfp7rysN/JO4U+t9ZodEyr76B17qyJe+Z+ugx/wjDmQV/?=
+ =?us-ascii?Q?B6WKSEpppehdOBe2GBAQyCIjXNDYY99+7JGot3hTHo/yOU/0oHt7bq32CppV?=
+ =?us-ascii?Q?FgoFJCr34PksLSnDP32Qjfgc4gGCKA4Zl0Km4KpRL+Wc5NKy60zxgzXQluO+?=
+ =?us-ascii?Q?okGTRKKDWs2jnlcMLbHEHEfg2Qiu2bAnA8MqLVisbhFrsgybpwzpJj4n8Zlv?=
+ =?us-ascii?Q?s8aiBdHOrq5nl3R9RfhmHRlalSGqhmZbSEC43SWi/dHmX0q73iKON5LwZBBS?=
+ =?us-ascii?Q?lYJNNzMTL5VzbvpHxgS1tAnfeocC94e0hyiwgb/xkeINpwH47Hy6GDe05uDB?=
+ =?us-ascii?Q?ywi4kwKaWx97cnJHQ8VJ2NM5W7BWqbSg/NpnRghlPWmUE8sClGGzO+qxaAST?=
+X-MS-Exchange-AntiSpam-MessageData-1: weL/5FPy0baCtA==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5684d03c-f94f-4c9f-bfe3-08da2c0f7a04
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2022 07:43:41.4009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yE8rfMz+nda6DqZAkyKlFR4Gu6jtYygSE7ZgGjsPcDAgR6zxty4psOxYy2fMqKVCk/OAgsCX8SmhtI+8YVly+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0273
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,490 +121,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCI Endpoint driver for the Qualcomm MHI (Modem Host Interface) bus.
-The driver implements the MHI function over PCI in the endpoint device
-such as SDX55 modem. The MHI endpoint function driver acts as a
-controller driver for the MHI Endpoint stack and carries out all PCI
-related activities like mapping the host memory using iATU, triggering
-MSIs etc...
+Currently when the pci-hyperv driver finishes probing and initializing the
+PCI device, it sets the PCI_COMMAND_MEMORY bit; later when the PCI device
+is registered to the core PCI subsystem, the core PCI driver's BAR detection
+and initialization code toggles the bit multiple times, and each toggling of
+the bit causes the hypervisor to unmap/map the virtual BARs from/to the
+physical BARs, which can be slow if the BAR sizes are huge, e.g., a Linux VM
+with 14 GPU devices has to spend more than 3 minutes on BAR detection and
+initialization, causing a long boot time.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reduce the boot time by not setting the PCI_COMMAND_MEMORY bit when we
+register the PCI device (there is no need to have it set in the first place).
+The bit stays off till the PCI device driver calls pci_enable_device().
+With this change, the boot time of such a 14-GPU VM is reduced by almost
+3 minutes.
+
+Link: https://lore.kernel.org/lkml/20220419220007.26550-1-decui@microsoft.com/
+Tested-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Jake Oshins <jakeo@microsoft.com>
+
 ---
- drivers/pci/endpoint/functions/Kconfig       |  10 +
- drivers/pci/endpoint/functions/Makefile      |   1 +
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 436 +++++++++++++++++++
- 3 files changed, 447 insertions(+)
- create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
 
-diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
-index 5f1242ca2f4e..93497fb70e31 100644
---- a/drivers/pci/endpoint/functions/Kconfig
-+++ b/drivers/pci/endpoint/functions/Kconfig
-@@ -25,3 +25,13 @@ config PCI_EPF_NTB
- 	  device tree.
- 
- 	  If in doubt, say "N" to disable Endpoint NTB driver.
-+
-+config PCI_EPF_MHI
-+	tristate "PCI Endpoint driver for MHI bus"
-+	depends on PCI_ENDPOINT && MHI_BUS_EP
-+	help
-+	   Enable this configuration option to enable the PCI Endpoint
-+	   driver for Modem Host Interface (MHI) bus found in Qualcomm
-+	   modems such as SDX55.
-+
-+	   If in doubt, say "N" to disable Endpoint driver for MHI bus.
-diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
-index 96ab932a537a..eee99b2e9103 100644
---- a/drivers/pci/endpoint/functions/Makefile
-+++ b/drivers/pci/endpoint/functions/Makefile
-@@ -5,3 +5,4 @@
- 
- obj-$(CONFIG_PCI_EPF_TEST)		+= pci-epf-test.o
- obj-$(CONFIG_PCI_EPF_NTB)		+= pci-epf-ntb.o
-+obj-$(CONFIG_PCI_EPF_MHI)		+= pci-epf-mhi.o
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-new file mode 100644
-index 000000000000..a8119841a252
---- /dev/null
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -0,0 +1,436 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCI EPF driver for MHI Endpoint devices
-+ *
-+ * Copyright (C) 2022 Linaro Ltd.
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
-+
-+#include <linux/mhi_ep.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pci-epc.h>
-+#include <linux/pci-epf.h>
-+
-+#define MHI_VERSION_1_0 0x01000000
-+
-+struct pci_epf_mhi_ep_info {
-+	const struct mhi_ep_cntrl_config *config;
-+	struct pci_epf_header *epf_header;
-+	enum pci_barno bar_num;
-+	u32 epf_flags;
-+	u32 msi_count;
-+	u32 mru;
-+};
-+
-+#define MHI_EP_CHANNEL_CONFIG_UL(ch_num, ch_name)	\
-+	{						\
-+		.num = ch_num,				\
-+		.name = ch_name,			\
-+		.dir = DMA_TO_DEVICE,			\
-+	}
-+
-+#define MHI_EP_CHANNEL_CONFIG_DL(ch_num, ch_name)	\
-+	{						\
-+		.num = ch_num,				\
-+		.name = ch_name,			\
-+		.dir = DMA_FROM_DEVICE,			\
-+	}
-+
-+static const struct mhi_ep_channel_config mhi_v1_channels[] = {
-+	MHI_EP_CHANNEL_CONFIG_UL(0, "LOOPBACK"),
-+	MHI_EP_CHANNEL_CONFIG_DL(1, "LOOPBACK"),
-+	MHI_EP_CHANNEL_CONFIG_UL(2, "SAHARA"),
-+	MHI_EP_CHANNEL_CONFIG_DL(3, "SAHARA"),
-+	MHI_EP_CHANNEL_CONFIG_UL(4, "DIAG"),
-+	MHI_EP_CHANNEL_CONFIG_DL(5, "DIAG"),
-+	MHI_EP_CHANNEL_CONFIG_UL(6, "SSR"),
-+	MHI_EP_CHANNEL_CONFIG_DL(7, "SSR"),
-+	MHI_EP_CHANNEL_CONFIG_UL(8, "QDSS"),
-+	MHI_EP_CHANNEL_CONFIG_DL(9, "QDSS"),
-+	MHI_EP_CHANNEL_CONFIG_UL(10, "EFS"),
-+	MHI_EP_CHANNEL_CONFIG_DL(11, "EFS"),
-+	MHI_EP_CHANNEL_CONFIG_UL(12, "MBIM"),
-+	MHI_EP_CHANNEL_CONFIG_DL(13, "MBIM"),
-+	MHI_EP_CHANNEL_CONFIG_UL(14, "QMI"),
-+	MHI_EP_CHANNEL_CONFIG_DL(15, "QMI"),
-+	MHI_EP_CHANNEL_CONFIG_UL(16, "QMI"),
-+	MHI_EP_CHANNEL_CONFIG_DL(17, "QMI"),
-+	MHI_EP_CHANNEL_CONFIG_UL(18, "IP-CTRL-1"),
-+	MHI_EP_CHANNEL_CONFIG_DL(19, "IP-CTRL-1"),
-+	MHI_EP_CHANNEL_CONFIG_UL(20, "IPCR"),
-+	MHI_EP_CHANNEL_CONFIG_DL(21, "IPCR"),
-+	MHI_EP_CHANNEL_CONFIG_UL(32, "DUN"),
-+	MHI_EP_CHANNEL_CONFIG_DL(33, "DUN"),
-+	MHI_EP_CHANNEL_CONFIG_UL(36, "IP_SW0"),
-+	MHI_EP_CHANNEL_CONFIG_DL(37, "IP_SW0"),
-+};
-+
-+static const struct mhi_ep_cntrl_config mhi_v1_config = {
-+	.max_channels = 128,
-+	.num_channels = ARRAY_SIZE(mhi_v1_channels),
-+	.ch_cfg = mhi_v1_channels,
-+	.mhi_version = MHI_VERSION_1_0,
-+};
-+
-+static struct pci_epf_header sdx55_header = {
-+	.vendorid = PCI_VENDOR_ID_QCOM,
-+	.deviceid = 0x0306,
-+	.baseclass_code = PCI_BASE_CLASS_COMMUNICATION,
-+	.subclass_code = PCI_CLASS_COMMUNICATION_MODEM & 0xff,
-+	.interrupt_pin	= PCI_INTERRUPT_INTA,
-+};
-+
-+static const struct pci_epf_mhi_ep_info sdx55_info = {
-+	.config = &mhi_v1_config,
-+	.epf_header = &sdx55_header,
-+	.bar_num = BAR_0,
-+	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
-+	.msi_count = 32,
-+	.mru = 0x8000,
-+};
-+
-+struct pci_epf_mhi {
-+	const struct pci_epf_mhi_ep_info *info;
-+	struct mhi_ep_cntrl mhi_cntrl;
-+	struct pci_epf *epf;
-+	struct mutex lock;
-+	void __iomem *mmio;
-+	resource_size_t mmio_phys;
-+	enum pci_notify_event event;
-+	u32 mmio_size;
-+	int irq;
-+	bool mhi_registered;
-+};
-+
-+static int pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
-+				 phys_addr_t *phys_ptr, void __iomem **virt, size_t size)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf_mhi->epf->epc;
-+	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-+	void __iomem *virt_addr;
-+	phys_addr_t phys_addr;
-+	int ret;
-+
-+	virt_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, size + offset);
-+	if (!virt_addr)
-+		return -ENOMEM;
-+
-+	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, phys_addr, pci_addr - offset, size + offset);
-+	if (ret) {
-+		pci_epc_mem_free_addr(epc, phys_addr, virt_addr, size + offset);
-+
-+		return ret;
-+	}
-+
-+	*phys_ptr = phys_addr + offset;
-+	*virt = virt_addr + offset;
-+
-+	return 0;
-+}
-+
-+static void pci_epf_mhi_unmap_free(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
-+				   phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf->epc;
-+	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-+
-+	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, phys_addr - offset);
-+	pci_epc_mem_free_addr(epc, phys_addr - offset, virt_addr - offset, size + offset);
-+}
-+
-+void pci_epf_mhi_raise_irq(struct mhi_ep_cntrl *mhi_cntrl, u32 vector)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf->epc;
-+
-+	/*
-+	 * Vector is incremented by 1 here as the DWC core will decrement it before
-+	 * writing to iATU.
-+	 */
-+	pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no, PCI_EPC_IRQ_MSI, vector + 1);
-+}
-+
-+int pci_epf_mhi_read_from_host(struct mhi_ep_cntrl *mhi_cntrl, u64 from, void __iomem *to,
-+			       size_t size)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf_mhi->epf->epc;
-+	void __iomem *tre_buf;
-+	phys_addr_t tre_phys;
-+	size_t offset = from % 0x1000;
-+	int ret;
-+
-+	mutex_lock(&epf_mhi->lock);
-+
-+	tre_buf = pci_epc_mem_alloc_addr(epc, &tre_phys, size + offset);
-+	if (!tre_buf) {
-+		mutex_unlock(&epf_mhi->lock);
-+		return -ENOMEM;
-+	}
-+
-+	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, tre_phys, from - offset,
-+			       size + offset);
-+	if (ret) {
-+		pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-+		mutex_unlock(&epf_mhi->lock);
-+		return ret;
-+	}
-+
-+	memcpy_fromio(to, tre_buf + offset, size);
-+
-+	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, tre_phys);
-+	pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-+
-+	mutex_unlock(&epf_mhi->lock);
-+
-+	return 0;
-+}
-+
-+int pci_epf_mhi_write_to_host(struct mhi_ep_cntrl *mhi_cntrl, void __iomem *from, u64 to,
-+			      size_t size)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf_mhi->epf->epc;
-+	void __iomem *tre_buf;
-+	phys_addr_t tre_phys;
-+	size_t offset = to % 0x1000;
-+	int ret;
-+
-+	mutex_lock(&epf_mhi->lock);
-+
-+	tre_buf = pci_epc_mem_alloc_addr(epc, &tre_phys, size + offset);
-+	if (!tre_buf) {
-+		mutex_unlock(&epf_mhi->lock);
-+		return -ENOMEM;
-+	}
-+
-+	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, tre_phys, to - offset,
-+			       size + offset);
-+	if (ret) {
-+		pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-+		mutex_unlock(&epf_mhi->lock);
-+		return ret;
-+	}
-+
-+	memcpy_toio(tre_buf + offset, from, size);
-+
-+	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, tre_phys);
-+	pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-+
-+	mutex_unlock(&epf_mhi->lock);
-+
-+	return 0;
-+}
-+
-+static int pci_epf_mhi_notifier(struct notifier_block *nb, unsigned long val, void *data)
-+{
-+	struct pci_epf *epf = container_of(nb, struct pci_epf, nb);
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-+	struct pci_epf_bar *epf_bar = &epf->bar[info->bar_num];
-+	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-+	struct pci_epc *epc = epf->epc;
-+	struct device *dev = &epf->dev;
-+	int ret;
-+
-+	switch (val) {
-+	case CORE_INIT:
-+		epf_bar->phys_addr = epf_mhi->mmio_phys;
-+		epf_bar->size = epf_mhi->mmio_size;
-+		epf_bar->barno = info->bar_num;
-+		epf_bar->flags = info->epf_flags;
-+		ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, epf_bar);
-+		if (ret) {
-+			dev_err(dev, "Failed to set BAR: %d\n", ret);
-+			return NOTIFY_BAD;
-+		}
-+
-+		ret = pci_epc_set_msi(epc, epf->func_no, epf->vfunc_no,
-+				      order_base_2(info->msi_count));
-+		if (ret) {
-+			dev_err(dev, "Failed to set MSI configuration: %d\n", ret);
-+			return NOTIFY_BAD;
-+		}
-+
-+		ret = pci_epc_write_header(epc, epf->func_no, epf->vfunc_no, epf->header);
-+		if (ret) {
-+			dev_err(dev, "Failed to set Configuration header: %d\n", ret);
-+			return NOTIFY_BAD;
-+		}
-+
-+		break;
-+	case LINK_UP:
-+		mhi_cntrl->mmio = epf_mhi->mmio;
-+		mhi_cntrl->irq = epf_mhi->irq;
-+		mhi_cntrl->mru = info->mru;
-+
-+		/* Assign the struct dev of PCI EP as MHI controller device */
-+		mhi_cntrl->cntrl_dev = epc->dev.parent;
-+		mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
-+		mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
-+		mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
-+		mhi_cntrl->read_from_host = pci_epf_mhi_read_from_host;
-+		mhi_cntrl->write_to_host = pci_epf_mhi_write_to_host;
-+
-+		/* Register the MHI EP controller */
-+		ret = mhi_ep_register_controller(mhi_cntrl, info->config);
-+		if (ret) {
-+			dev_err(dev, "Failed to register MHI EP controller: %d\n", ret);
-+			return NOTIFY_BAD;
-+		}
-+
-+		epf_mhi->mhi_registered = true;
-+		break;
-+	case LINK_DOWN:
-+		if (epf_mhi->mhi_registered) {
-+			mhi_ep_power_down(mhi_cntrl);
-+			mhi_ep_unregister_controller(mhi_cntrl);
-+			epf_mhi->mhi_registered = false;
-+		}
-+
-+		break;
-+	case BME:
-+		/* Power up the MHI EP stack if link is up and stack is in power down state */
-+		if (!mhi_cntrl->enabled && epf_mhi->mhi_registered) {
-+			ret = mhi_ep_power_up(mhi_cntrl);
-+			if (ret) {
-+				dev_err(dev, "Failed to power up MHI EP: %d\n", ret);
-+				mhi_ep_unregister_controller(mhi_cntrl);
-+				epf_mhi->mhi_registered = false;
-+				return NOTIFY_BAD;
-+			}
-+		}
-+
-+		break;
-+	default:
-+		dev_err(&epf->dev, "Invalid MHI EP notifier event: %d\n", epf_mhi->event);
-+		return NOTIFY_BAD;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int pci_epf_mhi_bind(struct pci_epf *epf)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	struct pci_epc *epc = epf->epc;
-+	struct platform_device *pdev = to_platform_device(epc->dev.parent);
-+	struct device *dev = &epf->dev;
-+	struct resource *res;
-+	int ret;
-+
-+	if (WARN_ON_ONCE(!epc))
-+		return -EINVAL;
-+
-+	/* Get MMIO base address from Endpoint controller */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mmio");
-+	epf_mhi->mmio_phys = res->start;
-+	epf_mhi->mmio_size = resource_size(res);
-+
-+	epf_mhi->mmio = ioremap_wc(epf_mhi->mmio_phys, epf_mhi->mmio_size);
-+	if (IS_ERR(epf_mhi->mmio))
-+		return PTR_ERR(epf_mhi->mmio);
-+
-+	ret = platform_get_irq_byname(pdev, "doorbell");
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get Doorbell IRQ\n");
-+		iounmap(epf_mhi->mmio);
-+		return ret;
-+	}
-+
-+	epf_mhi->irq = ret;
-+
-+	epf->nb.notifier_call = pci_epf_mhi_notifier;
-+	pci_epc_register_notifier(epc, &epf->nb);
-+
-+	return 0;
-+}
-+
-+static void pci_epf_mhi_unbind(struct pci_epf *epf)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-+	struct pci_epf_bar *epf_bar = &epf->bar[info->bar_num];
-+	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-+	struct pci_epc *epc = epf->epc;
-+
-+	pci_epc_unregister_notifier(epc, &epf->nb);
-+
-+	/*
-+	 * Forcefully power down the MHI EP stack. Only way to bring the MHI EP stack
-+	 * back to working state after successive bind is by getting BME from host.
-+	 */
-+	if (epf_mhi->mhi_registered) {
-+		mhi_ep_power_down(mhi_cntrl);
-+		mhi_ep_unregister_controller(mhi_cntrl);
-+		epf_mhi->mhi_registered = false;
-+	}
-+
-+	iounmap(epf_mhi->mmio);
-+	pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no, epf_bar);
-+}
-+
-+static int pci_epf_mhi_probe(struct pci_epf *epf, const struct pci_epf_device_id *id)
-+{
-+	struct pci_epf_mhi_ep_info *info = (struct pci_epf_mhi_ep_info *) id->driver_data;
-+	struct pci_epf_mhi *epf_mhi;
-+	struct device *dev = &epf->dev;
-+
-+	epf_mhi = devm_kzalloc(dev, sizeof(*epf_mhi), GFP_KERNEL);
-+	if (!epf_mhi)
-+		return -ENOMEM;
-+
-+	epf->header = info->epf_header;
-+	epf_mhi->info = info;
-+	epf_mhi->epf = epf;
-+
-+	mutex_init(&epf_mhi->lock);
-+
-+	epf_set_drvdata(epf, epf_mhi);
-+
-+	return 0;
-+}
-+
-+static const struct pci_epf_device_id pci_epf_mhi_ids[] = {
-+	{
-+		.name = "sdx55", .driver_data = (kernel_ulong_t) &sdx55_info,
-+	},
-+	{},
-+};
-+
-+static struct pci_epf_ops pci_epf_mhi_ops = {
-+	.unbind	= pci_epf_mhi_unbind,
-+	.bind	= pci_epf_mhi_bind,
-+};
-+
-+static struct pci_epf_driver pci_epf_mhi_driver = {
-+	.driver.name	= "pci_epf_mhi",
-+	.probe		= pci_epf_mhi_probe,
-+	.id_table	= pci_epf_mhi_ids,
-+	.ops		= &pci_epf_mhi_ops,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int __init pci_epf_mhi_init(void)
-+{
-+	return pci_epf_register_driver(&pci_epf_mhi_driver);
-+}
-+module_init(pci_epf_mhi_init);
-+
-+static void __exit pci_epf_mhi_exit(void)
-+{
-+	pci_epf_unregister_driver(&pci_epf_mhi_driver);
-+}
-+module_exit(pci_epf_mhi_exit);
-+
-+MODULE_DESCRIPTION("PCI EPF driver for MHI Endpoint devices");
-+MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
-+MODULE_LICENSE("GPL v2");
+Changes in v2:
+	Added Michael's Reviewed-by, Lorenzo's Acked-by, and a Link.
+	Rewrote the commit message by following Lorenzo's suggestion.
+
+	Thanks all for the informatie discussion!
+
+@ Wei Liu: Lorenzo agrees that this patch can go via the Hyper-V tree's
+hyperv-next branch (the patch should not go via the hyperv-fixes branch),
+but in general we should keep the PCI folks in the review loop for PCI
+hyper-V changes: https://lore.kernel.org/lkml/YmuzOJy%2F6F5wSjY7@lpieralisi/
+
+ drivers/pci/controller/pci-hyperv.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index d270a204324e..f9fbbd8d94db 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2082,12 +2082,17 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
+ 				}
+ 			}
+ 			if (high_size <= 1 && low_size <= 1) {
+-				/* Set the memory enable bit. */
+-				_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2,
+-							 &command);
+-				command |= PCI_COMMAND_MEMORY;
+-				_hv_pcifront_write_config(hpdev, PCI_COMMAND, 2,
+-							  command);
++				/*
++				 * No need to set the PCI_COMMAND_MEMORY bit as
++				 * the core PCI driver doesn't require the bit
++				 * to be pre-set. Actually here we intentionally
++				 * keep the bit off so that the PCI BAR probing
++				 * in the core PCI driver doesn't cause Hyper-V
++				 * to unnecessarily unmap/map the virtual BARs
++				 * from/to the physical BARs multiple times.
++				 * This reduces the VM boot time significantly
++				 * if the BAR sizes are huge.
++				 */
+ 				break;
+ 			}
+ 		}
 -- 
-2.25.1
+2.17.1
 
