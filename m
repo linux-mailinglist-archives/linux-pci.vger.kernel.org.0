@@ -2,38 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30F875190AA
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 23:51:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38F845190F8
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 00:07:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243201AbiECVvh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 17:51:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33032 "EHLO
+        id S243312AbiECV7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 17:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243306AbiECVvO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 17:51:14 -0400
+        with ESMTP id S243376AbiECV7D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 17:59:03 -0400
+X-Greylist: delayed 503 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 03 May 2022 14:55:28 PDT
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A8A7141997;
-        Tue,  3 May 2022 14:47:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8AF25419A3;
+        Tue,  3 May 2022 14:55:25 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 172E016D1;
-        Wed,  4 May 2022 00:47:53 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 172E016D1
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6DA6B16A9;
+        Wed,  4 May 2022 00:47:38 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 6DA6B16A9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651614473;
-        bh=GGm0J01jG+g92+o9xdvL2fNFklozLmBseaz47JIn5EY=;
+        d=baikalelectronics.ru; s=mail; t=1651614458;
+        bh=/NNqKlGrE9DdGtQaaw/RHMV8Tm/RE5jwPHgm8fD0EGo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=OfbKX2EPYuql+0cPtG5QNSP86hP0kO3C031LytlumTYTNNuQKEjGAPHQbkOBq50d8
-         pmCz4Jde8jQb/rufoJyY4tqPw3rPrYR8qVaxPJo7+yFIoW/G4yUp9P75HuQNMRx6CH
-         ia2x7jjUtXFL0M1YSY/J2ocMIMBNd2m4QClQHC4s=
+        b=SoXcHgoEL5pP+dw4Lh5stuLMCN/rvxY81a4H257iJUW5UhhT533nudJMnVDZ+U4fg
+         LhkLy/3jKYtbKxsMYiPJADpA4MABaaqnk/L3GSxuBfWP9IlwXprZ1kPext4puvq/8f
+         EEvBIcZbP9koMXoSxrSSuICmmh6chsJElWw6b0UA=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 00:47:18 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 00:47:04 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rahul Tanwar <rtanwar@maxlinear.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -41,10 +45,11 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 17/17] PCI: dwc: Add Baikal-T1 PCIe controller support
-Date:   Wed, 4 May 2022 00:46:38 +0300
-Message-ID: <20220503214638.1895-18-Sergey.Semin@baikalelectronics.ru>
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>
+Subject: [PATCH v2 05/17] PCI: dwc: Convert to using native IP-core versions representation
+Date:   Wed, 4 May 2022 00:46:26 +0300
+Message-ID: <20220503214638.1895-6-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -60,710 +65,185 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Baikal-T1 SoC is equipped with DWC PCIe v4.60a host controller. It can be
-trained to work up to Gen.3 speed over up to x4 lanes. The host controller
-is attached to the DW PCIe 3.0 PCS via the PIPE-4 interface, which in its
-turn is connected to the DWC 10G PHY. The whole system is supposed to be
-fed up with four clock sources: DBI peripheral clock, AXI application
-clocks and external PHY/core reference clock generating the 100MHz signal.
-In addition to that the platform provide a way to reset each part of the
-controller: sticky/non-sticky bits, host controller core, PIPE interface,
-PCS/PHY and Hot/Power reset signal. The driver also provides a way to
-handle the GPIO-based PERST# signal.
+Since DWC PCIe v4.70a the controller version can be read from the
+PORT_LOGIC.PCIE_VERSION_OFF register. Version is represented in the FourCC
+format [1]. It's standard versioning approach for the Synopsys DWC
+IP-cores. Moreover some of the DWC kernel drivers already make use of it
+to fixup version-dependent functionality (See DWC USB3, Stmicro STMMAC or
+recent DW SPI driver). In order to preserve the standard version
+representation and prevent the data conversion back and forth, we suggest
+to preserve the native version representation in the DWC PCIe driver too
+in the same way as it has already been done in the rest of the DWC
+drivers. IP-core version reading from the CSR will be introduced in the
+next commit together with a simple macro-based API to use it.
 
-Note due to the Baikal-T1 MMIO peculiarity we have to implement the DBI
-interface accessors which make sure the IO operations are dword-aligned.
+[1] https://en.wikipedia.org/wiki/FourCC
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-
 ---
+ drivers/pci/controller/dwc/pci-keystone.c    | 12 ++++++------
+ drivers/pci/controller/dwc/pcie-designware.c |  8 ++++----
+ drivers/pci/controller/dwc/pcie-designware.h | 10 +++++++++-
+ drivers/pci/controller/dwc/pcie-intel-gw.c   |  4 ++--
+ drivers/pci/controller/dwc/pcie-tegra194.c   |  2 +-
+ 5 files changed, 22 insertions(+), 14 deletions(-)
 
-Changelog v2:
-- Rename 'syscon' property to 'baikal,bt1-syscon'.
----
- drivers/pci/controller/dwc/Kconfig    |   9 +
- drivers/pci/controller/dwc/Makefile   |   1 +
- drivers/pci/controller/dwc/pcie-bt1.c | 639 ++++++++++++++++++++++++++
- 3 files changed, 649 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-bt1.c
-
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 62ce3abf0f19..771b8b146623 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -222,6 +222,15 @@ config PCIE_ARTPEC6_EP
- 	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
- 	  endpoint mode. This uses the DesignWare core.
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index d10e5fd0f83c..c51018c68b56 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -109,7 +109,7 @@ struct ks_pcie_of_data {
+ 	enum dw_pcie_device_mode mode;
+ 	const struct dw_pcie_host_ops *host_ops;
+ 	const struct dw_pcie_ep_ops *ep_ops;
+-	unsigned int version;
++	u32 version;
+ };
  
-+config PCIE_BT1
-+	tristate "Baikal-T1 PCIe controller"
-+	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
-+	depends on PCI_MSI_IRQ_DOMAIN
-+	select PCIE_DW_HOST
-+	help
-+	  Enables support for the PCIe controller in the Baikal-T1 SoC to work
-+	  in host mode. It's based on the Synopsys DWC PCIe v4.60a IP-core.
-+
- config PCIE_ROCKCHIP_DW_HOST
- 	bool "Rockchip DesignWare PCIe controller"
- 	select PCIE_DW
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 8ba7b67f5e50..bf5c311875a1 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
- obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
- obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
- obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
-+obj-$(CONFIG_PCIE_BT1) += pcie-bt1.o
- obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
- obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCIE_FU740) += pcie-fu740.o
-diff --git a/drivers/pci/controller/dwc/pcie-bt1.c b/drivers/pci/controller/dwc/pcie-bt1.c
-new file mode 100644
-index 000000000000..66ed90603ffb
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-bt1.c
-@@ -0,0 +1,639 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2021 BAIKAL ELECTRONICS, JSC
-+ *
-+ * Authors:
-+ *   Vadim Vlasov <Vadim.Vlasov@baikalelectronics.ru>
-+ *   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-+ *
-+ * Baikal-T1 PCIe controller driver
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/types.h>
-+
-+#include "pcie-designware.h"
-+
-+/* Baikal-T1 System CCU control registers */
-+#define BT1_CCU_PCIE_CLKC			0x140
-+#define BT1_CCU_PCIE_REQ_PCS_CLK		BIT(16)
-+#define BT1_CCU_PCIE_REQ_MAC_CLK		BIT(17)
-+#define BT1_CCU_PCIE_REQ_PIPE_CLK		BIT(18)
-+
-+#define BT1_CCU_PCIE_RSTC			0x144
-+#define BT1_CCU_PCIE_REQ_LINK_RST		BIT(13)
-+#define BT1_CCU_PCIE_REQ_SMLH_RST		BIT(14)
-+#define BT1_CCU_PCIE_REQ_PHY_RST		BIT(16)
-+#define BT1_CCU_PCIE_REQ_CORE_RST		BIT(24)
-+#define BT1_CCU_PCIE_REQ_STICKY_RST		BIT(26)
-+#define BT1_CCU_PCIE_REQ_NSTICKY_RST		BIT(27)
-+
-+#define BT1_CCU_PCIE_PMSC			0x148
-+#define BT1_CCU_PCIE_LTSSM_STATE_MASK		GENMASK(5, 0)
-+#define BT1_CCU_PCIE_LTSSM_DET_QUIET		0x00
-+#define BT1_CCU_PCIE_LTSSM_DET_ACT		0x01
-+#define BT1_CCU_PCIE_LTSSM_POLL_ACT		0x02
-+#define BT1_CCU_PCIE_LTSSM_POLL_COMP		0x03
-+#define BT1_CCU_PCIE_LTSSM_POLL_CONF		0x04
-+#define BT1_CCU_PCIE_LTSSM_PRE_DET_QUIET	0x05
-+#define BT1_CCU_PCIE_LTSSM_DET_WAIT		0x06
-+#define BT1_CCU_PCIE_LTSSM_CFG_LNKWD_START	0x07
-+#define BT1_CCU_PCIE_LTSSM_CFG_LNKWD_ACEPT	0x08
-+#define BT1_CCU_PCIE_LTSSM_CFG_LNNUM_WAIT	0x09
-+#define BT1_CCU_PCIE_LTSSM_CFG_LNNUM_ACEPT	0x0a
-+#define BT1_CCU_PCIE_LTSSM_CFG_COMPLETE		0x0b
-+#define BT1_CCU_PCIE_LTSSM_CFG_IDLE		0x0c
-+#define BT1_CCU_PCIE_LTSSM_RCVR_LOCK		0x0d
-+#define BT1_CCU_PCIE_LTSSM_RCVR_SPEED		0x0e
-+#define BT1_CCU_PCIE_LTSSM_RCVR_RCVRCFG		0x0f
-+#define BT1_CCU_PCIE_LTSSM_RCVR_IDLE		0x10
-+#define BT1_CCU_PCIE_LTSSM_L0			0x11
-+#define BT1_CCU_PCIE_LTSSM_L0S			0x12
-+#define BT1_CCU_PCIE_LTSSM_L123_SEND_IDLE	0x13
-+#define BT1_CCU_PCIE_LTSSM_L1_IDLE		0x14
-+#define BT1_CCU_PCIE_LTSSM_L2_IDLE		0x15
-+#define BT1_CCU_PCIE_LTSSM_L2_WAKE		0x16
-+#define BT1_CCU_PCIE_LTSSM_DIS_ENTRY		0x17
-+#define BT1_CCU_PCIE_LTSSM_DIS_IDLE		0x18
-+#define BT1_CCU_PCIE_LTSSM_DISABLE		0x19
-+#define BT1_CCU_PCIE_LTSSM_LPBK_ENTRY		0x1a
-+#define BT1_CCU_PCIE_LTSSM_LPBK_ACTIVE		0x1b
-+#define BT1_CCU_PCIE_LTSSM_LPBK_EXIT		0x1c
-+#define BT1_CCU_PCIE_LTSSM_LPBK_EXIT_TOUT	0x1d
-+#define BT1_CCU_PCIE_LTSSM_HOT_RST_ENTRY	0x1e
-+#define BT1_CCU_PCIE_LTSSM_HOT_RST		0x1f
-+#define BT1_CCU_PCIE_LTSSM_RCVR_EQ0		0x20
-+#define BT1_CCU_PCIE_LTSSM_RCVR_EQ1		0x21
-+#define BT1_CCU_PCIE_LTSSM_RCVR_EQ2		0x22
-+#define BT1_CCU_PCIE_LTSSM_RCVR_EQ3		0x23
-+#define BT1_CCU_PCIE_SMLH_LINKUP		BIT(6)
-+#define BT1_CCU_PCIE_RDLH_LINKUP		BIT(7)
-+#define BT1_CCU_PCIE_PM_LINKSTATE_L0S		BIT(8)
-+#define BT1_CCU_PCIE_PM_LINKSTATE_L1		BIT(9)
-+#define BT1_CCU_PCIE_PM_LINKSTATE_L2		BIT(10)
-+#define BT1_CCU_PCIE_L1_PENDING			BIT(12)
-+#define BT1_CCU_PCIE_REQ_EXIT_L1		BIT(14)
-+#define BT1_CCU_PCIE_LTSSM_RCVR_EQ		BIT(15)
-+#define BT1_CCU_PCIE_PM_DSTAT_MASK		GENMASK(18, 16)
-+#define BT1_CCU_PCIE_PM_PME_EN			BIT(20)
-+#define BT1_CCU_PCIE_PM_PME_STATUS		BIT(21)
-+#define BT1_CCU_PCIE_AUX_PM_EN			BIT(22)
-+#define BT1_CCU_PCIE_AUX_PWR_DET		BIT(23)
-+#define BT1_CCU_PCIE_WAKE_DET			BIT(24)
-+#define BT1_CCU_PCIE_TURNOFF_REQ		BIT(30)
-+#define BT1_CCU_PCIE_TURNOFF_ACK		BIT(31)
-+
-+#define BT1_CCU_PCIE_GENC			0x14c
-+#define BT1_CCU_PCIE_LTSSM_EN			BIT(1)
-+#define BT1_CCU_PCIE_DBI2_MODE			BIT(2)
-+#define BT1_CCU_PCIE_MGMT_EN			BIT(3)
-+#define BT1_CCU_PCIE_RXLANE_FLIP_EN		BIT(16)
-+#define BT1_CCU_PCIE_TXLANE_FLIP_EN		BIT(17)
-+#define BT1_CCU_PCIE_SLV_XFER_PEND		BIT(24)
-+#define BT1_CCU_PCIE_RCV_XFER_PEND		BIT(25)
-+#define BT1_CCU_PCIE_DBI_XFER_PEND		BIT(26)
-+#define BT1_CCU_PCIE_DMA_XFER_PEND		BIT(27)
-+
-+#define BT1_CCU_PCIE_LTSSM_LINKUP(_pmsc) \
-+({ \
-+	int __state = FIELD_GET(BT1_CCU_PCIE_LTSSM_STATE_MASK, _pmsc); \
-+	__state >= BT1_CCU_PCIE_LTSSM_L0 && __state <= BT1_CCU_PCIE_LTSSM_L2_WAKE; \
-+})
-+
-+/* Baikal-T1 PCIe specific control registers */
-+#define BT1_PCIE_AXI2MGM_LANENUM		0xd04
-+#define BT1_PCIE_AXI2MGM_LANESEL_MASK		GENMASK(3, 0)
-+
-+#define BT1_PCIE_AXI2MGM_ADDRCTL		0xd08
-+#define BT1_PCIE_AXI2MGM_PHYREG_ADDR_MASK	GENMASK(20, 0)
-+#define BT1_PCIE_AXI2MGM_READ_FLAG		BIT(29)
-+#define BT1_PCIE_AXI2MGM_DONE			BIT(30)
-+#define BT1_PCIE_AXI2MGM_BUSY			BIT(31)
-+
-+#define BT1_PCIE_AXI2MGM_WRITEDATA		0xd0c
-+#define BT1_PCIE_AXI2MGM_WDATA			GENMASK(15, 0)
-+
-+#define BT1_PCIE_AXI2MGM_READDATA		0xd10
-+#define BT1_PCIE_AXI2MGM_RDATA			GENMASK(15, 0)
-+
-+/* General Baikal-T1 PCIe interface resources */
-+#define BT1_PCIE_NUM_CLKS			ARRAY_SIZE(bt1_pcie_clks)
-+#define BT1_PCIE_NUM_APP_RSTS			ARRAY_SIZE(bt1_pcie_app_rsts)
-+#define BT1_PCIE_NUM_CORE_RSTS			ARRAY_SIZE(bt1_pcie_core_rsts)
-+
-+enum bt1_pcie_core_rst {
-+	BT1_PCIE_NON_STICKY_RST,
-+	BT1_PCIE_STICKY_RST,
-+	BT1_PCIE_CORE_RST,
-+	BT1_PCIE_PIPE_RST,
-+	BT1_PCIE_PHY_RST,
-+	BT1_PCIE_HOT_RST,
-+	BT1_PCIE_PWR_RST,
-+};
-+
-+static const enum dw_pcie_clk bt1_pcie_clks[] = {
-+	DW_PCIE_DBI_CLK, DW_PCIE_MSTR_CLK, DW_PCIE_SLV_CLK, DW_PCIE_REF_CLK
-+};
-+
-+static const enum dw_pcie_app_rst bt1_pcie_app_rsts[] = {
-+	DW_PCIE_MSTR_RST, DW_PCIE_SLV_RST
-+};
-+
-+static const enum dw_pcie_core_rst bt1_pcie_core_rsts[] = {
-+	[BT1_PCIE_NON_STICKY_RST] = DW_PCIE_NON_STICKY_RST,
-+	[BT1_PCIE_STICKY_RST] = DW_PCIE_STICKY_RST,
-+	[BT1_PCIE_CORE_RST] = DW_PCIE_CORE_RST,
-+	[BT1_PCIE_PIPE_RST] = DW_PCIE_PIPE_RST,
-+	[BT1_PCIE_PHY_RST] = DW_PCIE_PHY_RST,
-+	[BT1_PCIE_HOT_RST] = DW_PCIE_HOT_RST,
-+	[BT1_PCIE_PWR_RST] = DW_PCIE_PWR_RST,
-+};
-+
-+struct bt1_pcie {
-+	struct dw_pcie dw;
-+	struct platform_device *pdev;
-+	struct regmap *sys_regs;
-+
-+	struct clk_bulk_data clks[BT1_PCIE_NUM_CLKS];
-+	struct reset_control_bulk_data app_rsts[BT1_PCIE_NUM_APP_RSTS];
-+	struct reset_control_bulk_data core_rsts[BT1_PCIE_NUM_CORE_RSTS];
-+	struct gpio_desc *pe_rst;
-+};
-+#define to_bt1_pcie(_dw) container_of(_dw, struct bt1_pcie, dw)
-+
-+/*
-+ * Baikal-T1 MMIO space must be read/written by the dword-aligned
-+ * instructions. Note the methods are optimized to have the dword operations
-+ * performed with minimum overhead as the most frequently used ones.
-+ */
-+static int bt1_pcie_read_mmio(void __iomem *addr, int size, u32 *val)
-+{
-+	unsigned int ofs = (uintptr_t)addr & 0x3;
-+
-+	if (!IS_ALIGNED((uintptr_t)addr, size))
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	*val = readl(addr - ofs) >> ofs * BITS_PER_BYTE;
-+	if (size == 4) {
-+		return PCIBIOS_SUCCESSFUL;
-+	} else if (size == 2) {
-+		*val &= 0xffff;
-+		return PCIBIOS_SUCCESSFUL;
-+	} else if (size == 1) {
-+		*val &= 0xff;
-+		return PCIBIOS_SUCCESSFUL;
-+	}
-+
-+	return PCIBIOS_BAD_REGISTER_NUMBER;
-+}
-+
-+static int bt1_pcie_write_mmio(void __iomem *addr, int size, u32 val)
-+{
-+	unsigned int ofs = (uintptr_t)addr & 0x3;
-+	u32 tmp, mask;
-+
-+	if (!IS_ALIGNED((uintptr_t)addr, size))
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	if (size == 4) {
-+		writel(val, addr);
-+		return PCIBIOS_SUCCESSFUL;
-+	} else if (size == 2 || size == 1) {
-+		mask = GENMASK(size * BITS_PER_BYTE - 1, 0);
-+		tmp = readl(addr - ofs) & ~(mask << ofs * BITS_PER_BYTE);
-+		tmp |= (val & mask) << ofs * BITS_PER_BYTE;
-+		writel(tmp, addr - ofs);
-+		return PCIBIOS_SUCCESSFUL;
-+	}
-+
-+	return PCIBIOS_BAD_REGISTER_NUMBER;
-+}
-+
-+static u32 bt1_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
-+			     size_t size)
-+{
-+	int ret;
-+	u32 val;
-+
-+	ret = bt1_pcie_read_mmio(base + reg, size, &val);
-+	if (ret != PCIBIOS_SUCCESSFUL) {
-+		dev_err(pci->dev, "Read DBI address failed\n");
-+		return ~0U;
-+	}
-+
-+	return val;
-+}
-+
-+static void bt1_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
-+			       size_t size, u32 val)
-+{
-+	int ret;
-+
-+	ret = bt1_pcie_write_mmio(base + reg, size, val);
-+	if (ret != PCIBIOS_SUCCESSFUL)
-+		dev_err(pci->dev, "Write DBI address failed\n");
-+}
-+
-+static void bt1_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg,
-+				size_t size, u32 val)
-+{
-+	struct bt1_pcie *btpci = to_bt1_pcie(pci);
-+	int ret;
-+
-+	regmap_update_bits(btpci->sys_regs, BT1_CCU_PCIE_GENC,
-+			   BT1_CCU_PCIE_DBI2_MODE, BT1_CCU_PCIE_DBI2_MODE);
-+
-+	ret = bt1_pcie_write_mmio(base + reg, size, val);
-+	if (ret != PCIBIOS_SUCCESSFUL)
-+		dev_err(pci->dev, "Write DBI2 address failed\n");
-+
-+	regmap_update_bits(btpci->sys_regs, BT1_CCU_PCIE_GENC,
-+			   BT1_CCU_PCIE_DBI2_MODE, 0);
-+}
-+
-+static int bt1_pcie_start_ltssm(struct dw_pcie *pci)
-+{
-+	struct bt1_pcie *btpci = to_bt1_pcie(pci);
-+	u32 val;
-+	int ret;
-+
-+	/*
-+	 * Enable LTSSM and make sure it was able to establish both PHY and
-+	 * data links. This procedure shall work fine to reach 2.5 GT/s speed.
-+	 */
-+	regmap_update_bits(btpci->sys_regs, BT1_CCU_PCIE_GENC,
-+			   BT1_CCU_PCIE_LTSSM_EN, BT1_CCU_PCIE_LTSSM_EN);
-+
-+	ret = regmap_read_poll_timeout(btpci->sys_regs, BT1_CCU_PCIE_PMSC, val,
-+				       (val & BT1_CCU_PCIE_SMLH_LINKUP),
-+				       1000, 1000000);
-+	if (ret) {
-+		dev_err(pci->dev, "LTSSM failed to set PHY link up\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_read_poll_timeout(btpci->sys_regs, BT1_CCU_PCIE_PMSC, val,
-+				       (val & BT1_CCU_PCIE_RDLH_LINKUP),
-+				       1000, 1000000);
-+	if (ret) {
-+		dev_err(pci->dev, "LTSSM failed to set data link up\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Activate direct speed change after the link is established in an
-+	 * attempt to reach a higher bus performance (up to Gen.3 - 8.0 GT/s).
-+	 * This is required at least to get 8.0 GT/s speed.
-+	 */
-+	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-+	val |= PORT_LOGIC_SPEED_CHANGE;
-+	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+
-+	ret = regmap_read_poll_timeout(btpci->sys_regs, BT1_CCU_PCIE_PMSC, val,
-+				       BT1_CCU_PCIE_LTSSM_LINKUP(val),
-+				       1000, 1000000);
-+	if (ret)
-+		dev_err(pci->dev, "LTSSM failed to get into L0 state\n");
-+
-+	return ret;
-+}
-+
-+static void bt1_pcie_stop_ltssm(struct dw_pcie *pci)
-+{
-+	struct bt1_pcie *btpci = to_bt1_pcie(pci);
-+
-+	regmap_update_bits(btpci->sys_regs, BT1_CCU_PCIE_GENC,
-+			   BT1_CCU_PCIE_LTSSM_EN, 0);
-+}
-+
-+struct dw_pcie_ops bt1_pcie_dw_ops = {
-+	.read_dbi = bt1_pcie_read_dbi,
-+	.write_dbi = bt1_pcie_write_dbi,
-+	.write_dbi2 = bt1_pcie_write_dbi2,
-+	.start_link = bt1_pcie_start_ltssm,
-+	.stop_link = bt1_pcie_stop_ltssm,
-+};
-+
-+static int bt1_pcie_get_res(struct bt1_pcie *btpci)
-+{
-+	struct device *dev = btpci->dw.dev;
-+	int ret;
-+
-+	/* AXI-interface is configured with 64-bit address bus width */
-+	ret = dma_coerce_mask_and_coherent(&btpci->dw.pp.bridge->dev,
-+					   DMA_BIT_MASK(64));
-+	if (ret) {
-+		ret = dma_set_mask_and_coherent(&btpci->dw.pp.bridge->dev,
-+						DMA_BIT_MASK(32));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* These CSRs are in MMIO so we won't check the regmap-methods status */
-+	btpci->sys_regs =
-+		syscon_regmap_lookup_by_phandle(dev->of_node, "baikal,bt1-syscon");
-+	if (IS_ERR(btpci->sys_regs))
-+		return dev_err_probe(dev, PTR_ERR(btpci->sys_regs),
-+				     "Failed to get syscon\n");
-+
-+	ret = devm_clk_bulk_get(dev, BT1_PCIE_NUM_CLKS, btpci->clks);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get clocks\n");
-+
-+	ret = devm_reset_control_bulk_get_exclusive(dev, BT1_PCIE_NUM_APP_RSTS,
-+						    btpci->app_rsts);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get app resets\n");
-+
-+	ret = devm_reset_control_bulk_get_exclusive(dev, BT1_PCIE_NUM_CORE_RSTS,
-+						    btpci->core_rsts);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get core resets\n");
-+
-+	btpci->pe_rst = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(btpci->pe_rst))
-+		return dev_err_probe(dev, PTR_ERR(btpci->pe_rst),
-+				     "Failed to get PERST#\n");
-+
-+	return 0;
-+}
-+
-+static void bt1_pcie_full_stop_bus(struct bt1_pcie *btpci, bool init)
-+{
-+	struct device *dev = btpci->dw.dev;
-+	int ret;
-+
-+	/* Disable LTSSM for sure */
-+	regmap_update_bits(btpci->sys_regs, BT1_CCU_PCIE_GENC,
-+			   BT1_CCU_PCIE_LTSSM_EN, 0);
-+
-+	/*
-+	 * Application reset controls are trigger-based so de-assert the core
-+	 * resets only.
-+	 */
-+	ret = reset_control_bulk_assert(BT1_PCIE_NUM_CORE_RSTS, btpci->core_rsts);
-+	if (ret)
-+		dev_err(dev, "Failed to assert core resets\n");
-+
-+	/*
-+	 * Clocks are disabled by default at least in accordance with the clk
-+	 * enable counter value on init stage.
-+	 */
-+	if (!init)
-+		clk_bulk_disable_unprepare(BT1_PCIE_NUM_CLKS, btpci->clks);
-+
-+	/* The peripheral devices are unavailable anyway so reset them too */
-+	gpiod_set_value_cansleep(btpci->pe_rst, 1);
-+
-+	/* Make sure the reset is settled */
-+	usleep_range(1, 10);
-+}
-+
-+/*
-+ * Implements the cold reset procedure in accordance with the reference manual
-+ * and available PM signals.
-+ */
-+static int bt1_pcie_cold_start_bus(struct bt1_pcie *btpci)
-+{
-+	struct device *dev = btpci->dw.dev;
-+	u32 val;
-+	int ret;
-+
-+	/* First get out of the Power/Hot reset state */
-+	ret = reset_control_deassert(btpci->core_rsts[BT1_PCIE_PWR_RST].rstc);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert PHY reset\n");
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(btpci->core_rsts[BT1_PCIE_HOT_RST].rstc);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert hot reset\n");
-+		goto err_assert_pwr_rst;
-+	}
-+
-+	/* Wait for the PM-core to stop requesting the PHY reset */
-+	ret = regmap_read_poll_timeout(btpci->sys_regs, BT1_CCU_PCIE_RSTC, val,
-+				       !(val & BT1_CCU_PCIE_REQ_PHY_RST), 1, 1000);
-+	if (ret) {
-+		dev_err(dev, "Timed out waiting for PM to stop PHY resetting\n");
-+		goto err_assert_hot_rst;
-+	}
-+
-+	ret = reset_control_deassert(btpci->core_rsts[BT1_PCIE_PHY_RST].rstc);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert PHY reset\n");
-+		goto err_assert_hot_rst;
-+	}
-+
-+	/* Clocks can be now enabled, but the ref one is crucial at this stage */
-+	ret = clk_bulk_prepare_enable(BT1_PCIE_NUM_CLKS, btpci->clks);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable ref clocks\n");
-+		goto err_assert_phy_rst;
-+	}
-+
-+	/* Wait for the PM to stop requesting the controller core reset */
-+	ret = regmap_read_poll_timeout(btpci->sys_regs, BT1_CCU_PCIE_RSTC, val,
-+				       !(val & BT1_CCU_PCIE_REQ_CORE_RST), 1, 1000);
-+	if (ret) {
-+		dev_err(dev, "Timed out waiting for PM to stop core resetting\n");
-+		goto err_clk_disable;
-+	}
-+
-+	/* PCS-PIPE interface and controller core can be now activated */
-+	ret = reset_control_deassert(btpci->core_rsts[BT1_PCIE_PIPE_RST].rstc);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert PIPE reset\n");
-+		goto err_clk_disable;
-+	}
-+
-+	ret = reset_control_deassert(btpci->core_rsts[BT1_PCIE_CORE_RST].rstc);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert core reset\n");
-+		goto err_assert_pipe_rst;
-+	}
-+
-+	/* It's recommended to reset the core and application logic together */
-+	ret = reset_control_bulk_reset(BT1_PCIE_NUM_APP_RSTS, btpci->app_rsts);
-+	if (ret) {
-+		dev_err(dev, "Failed to reset app domain\n");
-+		goto err_assert_core_rst;
-+	}
-+
-+	/* Sticky/Non-sticky CSR flags can be now unreset too */
-+	ret = reset_control_deassert(btpci->core_rsts[BT1_PCIE_STICKY_RST].rstc);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert sticky reset\n");
-+		goto err_assert_core_rst;
-+	}
-+
-+	ret = reset_control_deassert(btpci->core_rsts[BT1_PCIE_NON_STICKY_RST].rstc);
-+	if (ret) {
-+		dev_err(dev, "Failed to deassert non-sticky reset\n");
-+		goto err_assert_sticky_rst;
-+	}
-+
-+	/* Activate the PCIe bus peripheral devices */
-+	gpiod_set_value_cansleep(btpci->pe_rst, 0);
-+
-+	/* Make sure the state is settled (LTSSM is still disabled though) */
-+	usleep_range(1, 10);
-+
-+	return 0;
-+
-+err_assert_sticky_rst:
-+	reset_control_assert(btpci->core_rsts[BT1_PCIE_STICKY_RST].rstc);
-+
-+err_assert_core_rst:
-+	reset_control_assert(btpci->core_rsts[BT1_PCIE_CORE_RST].rstc);
-+
-+err_assert_pipe_rst:
-+	reset_control_assert(btpci->core_rsts[BT1_PCIE_PIPE_RST].rstc);
-+
-+err_clk_disable:
-+	clk_bulk_disable_unprepare(BT1_PCIE_NUM_CLKS, btpci->clks);
-+
-+err_assert_phy_rst:
-+	reset_control_assert(btpci->core_rsts[BT1_PCIE_PHY_RST].rstc);
-+
-+err_assert_hot_rst:
-+	reset_control_assert(btpci->core_rsts[BT1_PCIE_HOT_RST].rstc);
-+
-+err_assert_pwr_rst:
-+	reset_control_assert(btpci->core_rsts[BT1_PCIE_PWR_RST].rstc);
-+
-+	return ret;
-+}
-+
-+static int bt1_pcie_host_init(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct bt1_pcie *btpci = to_bt1_pcie(pci);
-+	int ret;
-+
-+	ret = bt1_pcie_get_res(btpci);
-+	if (ret)
-+		return ret;
-+
-+	bt1_pcie_full_stop_bus(btpci, true);
-+
-+	return bt1_pcie_cold_start_bus(btpci);
-+}
-+
-+static void bt1_pcie_host_deinit(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct bt1_pcie *btpci = to_bt1_pcie(pci);
-+
-+	bt1_pcie_full_stop_bus(btpci, false);
-+}
-+
-+struct dw_pcie_host_ops bt1_pcie_host_ops = {
-+	.host_init = bt1_pcie_host_init,
-+	.host_deinit = bt1_pcie_host_deinit,
-+};
-+
-+static struct bt1_pcie *bt1_pcie_create_data(struct platform_device *pdev)
-+{
-+	struct bt1_pcie *btpci;
-+	int i;
-+
-+	btpci = devm_kzalloc(&pdev->dev, sizeof(*btpci), GFP_KERNEL);
-+	if (!btpci)
-+		return ERR_PTR(-ENOMEM);
-+
-+	btpci->pdev = pdev;
-+
-+	for (i = 0; i < BT1_PCIE_NUM_CLKS; ++i)
-+		btpci->clks[i].id = dw_pcie_clk_name(bt1_pcie_clks[i]);
-+
-+	for (i = 0; i < BT1_PCIE_NUM_APP_RSTS; ++i)
-+		btpci->app_rsts[i].id = dw_pcie_app_rst_name(bt1_pcie_app_rsts[i]);
-+
-+	for (i = 0; i < BT1_PCIE_NUM_CORE_RSTS; ++i)
-+		btpci->core_rsts[i].id = dw_pcie_core_rst_name(bt1_pcie_core_rsts[i]);
-+
-+	platform_set_drvdata(pdev, btpci);
-+
-+	return btpci;
-+}
-+
-+static int bt1_pcie_add_dw_port(struct bt1_pcie *btpci)
-+{
-+	struct device *dev = &btpci->pdev->dev;
-+	int ret;
-+
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+	if (ret)
-+		return ret;
-+
-+	btpci->dw.version = DW_PCIE_VER_460A;
-+	btpci->dw.dev = dev;
-+	btpci->dw.ops = &bt1_pcie_dw_ops;
-+
-+	btpci->dw.pp.num_vectors = MAX_MSI_IRQS;
-+	btpci->dw.pp.ops = &bt1_pcie_host_ops;
-+
-+	ret = dw_pcie_host_init(&btpci->dw.pp);
-+	if (ret)
-+		dev_err_probe(dev, ret, "Failed to initialize DWC PCIe host\n");
-+
-+	return ret;
-+}
-+
-+static void bt1_pcie_del_dw_port(struct bt1_pcie *btpci)
-+{
-+	dw_pcie_host_deinit(&btpci->dw.pp);
-+}
-+
-+static int bt1_pcie_probe(struct platform_device *pdev)
-+{
-+	struct bt1_pcie *btpci;
-+
-+	btpci = bt1_pcie_create_data(pdev);
-+	if (IS_ERR(btpci))
-+		return PTR_ERR(btpci);
-+
-+	return bt1_pcie_add_dw_port(btpci);
-+}
-+
-+static int bt1_pcie_remove(struct platform_device *pdev)
-+{
-+	struct bt1_pcie *btpci = platform_get_drvdata(pdev);
-+
-+	bt1_pcie_del_dw_port(btpci);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bt1_pcie_of_match[] = {
-+	{ .compatible = "baikal,bt1-pcie" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, bt1_pcie_of_match);
-+
-+static struct platform_driver bt1_pcie_driver = {
-+	.probe = bt1_pcie_probe,
-+	.remove = bt1_pcie_remove,
-+	.driver = {
-+		.name	= "bt1-pcie",
-+		.of_match_table = bt1_pcie_of_match,
-+	},
-+};
-+module_platform_driver(bt1_pcie_driver);
-+
-+MODULE_AUTHOR("Serge Semin <Sergey.Semin@baikalelectronics.ru>");
-+MODULE_DESCRIPTION("Baikal-T1 PCIe driver");
-+MODULE_LICENSE("GPL v2");
+ struct keystone_pcie {
+@@ -1069,19 +1069,19 @@ static int ks_pcie_am654_set_mode(struct device *dev,
+ 
+ static const struct ks_pcie_of_data ks_pcie_rc_of_data = {
+ 	.host_ops = &ks_pcie_host_ops,
+-	.version = 0x365A,
++	.version = DW_PCIE_VER_365A,
+ };
+ 
+ static const struct ks_pcie_of_data ks_pcie_am654_rc_of_data = {
+ 	.host_ops = &ks_pcie_am654_host_ops,
+ 	.mode = DW_PCIE_RC_TYPE,
+-	.version = 0x490A,
++	.version = DW_PCIE_VER_490A,
+ };
+ 
+ static const struct ks_pcie_of_data ks_pcie_am654_ep_of_data = {
+ 	.ep_ops = &ks_pcie_am654_ep_ops,
+ 	.mode = DW_PCIE_EP_TYPE,
+-	.version = 0x490A,
++	.version = DW_PCIE_VER_490A,
+ };
+ 
+ static const struct of_device_id ks_pcie_of_match[] = {
+@@ -1114,12 +1114,12 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	struct device_link **link;
+ 	struct gpio_desc *gpiod;
+ 	struct resource *res;
+-	unsigned int version;
+ 	void __iomem *base;
+ 	u32 num_viewport;
+ 	struct phy **phy;
+ 	u32 num_lanes;
+ 	char name[10];
++	u32 version;
+ 	int ret;
+ 	int irq;
+ 	int i;
+@@ -1233,7 +1233,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 		goto err_get_sync;
+ 	}
+ 
+-	if (pci->version >= 0x480A)
++	if (pci->version >= DW_PCIE_VER_480A)
+ 		ret = ks_pcie_am654_set_mode(dev, mode);
+ 	else
+ 		ret = ks_pcie_set_mode(dev);
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 1682f477bf20..3ebb7bfee10f 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -289,7 +289,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ 	val = type | PCIE_ATU_FUNC_NUM(func_no);
+ 	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr))
+ 		val |= PCIE_ATU_INCREASE_REGION_SIZE;
+-	if (pci->version == 0x490A)
++	if (pci->version == DW_PCIE_VER_490A)
+ 		val = dw_pcie_enable_ecrc(val);
+ 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+ 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+@@ -336,7 +336,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+ 			   upper_32_bits(cpu_addr));
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_LIMIT,
+ 			   lower_32_bits(limit_addr));
+-	if (pci->version >= 0x460A)
++	if (pci->version >= DW_PCIE_VER_460A)
+ 		dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_LIMIT,
+ 				   upper_32_bits(limit_addr));
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET,
+@@ -345,9 +345,9 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+ 			   upper_32_bits(pci_addr));
+ 	val = type | PCIE_ATU_FUNC_NUM(func_no);
+ 	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
+-	    pci->version >= 0x460A)
++	    pci->version >= DW_PCIE_VER_460A)
+ 		val |= PCIE_ATU_INCREASE_REGION_SIZE;
+-	if (pci->version == 0x490A)
++	if (pci->version == DW_PCIE_VER_490A)
+ 		val = dw_pcie_enable_ecrc(val);
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 7d6e9b7576be..5be43c662176 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -20,6 +20,14 @@
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
+ 
++/* DWC PCIe IP-core versions (native support since v4.70a) */
++#define DW_PCIE_VER_365A		0x3336352a
++#define DW_PCIE_VER_460A		0x3436302a
++#define DW_PCIE_VER_470A		0x3437302a
++#define DW_PCIE_VER_480A		0x3438302a
++#define DW_PCIE_VER_490A		0x3439302a
++#define DW_PCIE_VER_520A		0x3532302a
++
+ /* Parameters for the waiting for link up routine */
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+@@ -269,7 +277,7 @@ struct dw_pcie {
+ 	struct pcie_port	pp;
+ 	struct dw_pcie_ep	ep;
+ 	const struct dw_pcie_ops *ops;
+-	unsigned int		version;
++	u32			version;
+ 	int			num_lanes;
+ 	int			link_gen;
+ 	u8			n_fts[2];
+diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+index 5ba144924ff8..786af2ba379f 100644
+--- a/drivers/pci/controller/dwc/pcie-intel-gw.c
++++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+@@ -59,7 +59,7 @@
+ #define RESET_INTERVAL_MS		100
+ 
+ struct intel_pcie_soc {
+-	unsigned int	pcie_ver;
++	u32	pcie_ver;
+ };
+ 
+ struct intel_pcie {
+@@ -395,7 +395,7 @@ static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
+ };
+ 
+ static const struct intel_pcie_soc pcie_data = {
+-	.pcie_ver =		0x520A,
++	.pcie_ver =		DW_PCIE_VER_520A,
+ };
+ 
+ static int intel_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index b1b5f836a806..6f1330ed63e5 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1981,7 +1981,7 @@ static int tegra194_pcie_probe(struct platform_device *pdev)
+ 	pci->ops = &tegra_dw_pcie_ops;
+ 	pci->n_fts[0] = N_FTS_VAL;
+ 	pci->n_fts[1] = FTS_VAL;
+-	pci->version = 0x490A;
++	pci->version = DW_PCIE_VER_490A;
+ 
+ 	pp = &pci->pp;
+ 	pp->num_vectors = MAX_MSI_IRQS;
 -- 
 2.35.1
 
