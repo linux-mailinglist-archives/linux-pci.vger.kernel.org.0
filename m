@@ -2,170 +2,331 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA614518603
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 16:03:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D64E51863A
+	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 16:12:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236594AbiECOHR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 10:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50698 "EHLO
+        id S236729AbiECOPm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 10:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235733AbiECOHQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 10:07:16 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E971EC6B
-        for <linux-pci@vger.kernel.org>; Tue,  3 May 2022 07:03:42 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id h3so8849427qtn.4
-        for <linux-pci@vger.kernel.org>; Tue, 03 May 2022 07:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rEA/WO8Mvi9mkyG5kqELFWFIRU5FfjNv5FVVN5OBPRg=;
-        b=MDQvYf3gHtS8HMjUwWzCiC1Fxsu4angXku7mUGw6MlSIkca0gx06FMTNx90ziQLTSJ
-         HZ9lhSQHa/EVC5868dkxuWAOvyZvMsoYkrz21ar6/5K54iB4gG3yLII8mizfC5izOGhg
-         klbEw4Uz6lDilG7A1yQKqjoJs5bxmZCVvTYE186FFYeDLqZ0QtGW3vB5k8Q3rJrS+q4f
-         kHyhTreXc46uS3u+ahxQtcx7/4fegW8vGCjGHNhJYSJ33xjwcCwj9jk1OsGlGhKhRVWA
-         F3/o+H3gGosX+5Bds/YwlxtRVNephxXBMJSflC65Dd2DQw10H50pNPKWfwebZDRhySKA
-         zSFQ==
+        with ESMTP id S236013AbiECOPl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 10:15:41 -0400
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A451581B;
+        Tue,  3 May 2022 07:12:08 -0700 (PDT)
+Received: by mail-oo1-f50.google.com with SMTP id y27-20020a4a9c1b000000b0032129651bb0so3113840ooj.2;
+        Tue, 03 May 2022 07:12:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rEA/WO8Mvi9mkyG5kqELFWFIRU5FfjNv5FVVN5OBPRg=;
-        b=MbSGcOkJ1g/msEfjiAuMZPX5X+/JalzE8Qhtr3wa9kCzfOGOORXA4+ZTQX+E4/7aZ+
-         QVqBP6x/Wa9Q8F8T92i4CUkajA8OVFG8z15vrb/b+yPG8MImtzOV0nAtr0TLGBmQfuHD
-         aLQQ4A3+ar6tEh0W0S8NfK131ueylqOa6jGd/7AEckV+669eZAflFTY9STrl6ZRLQBvy
-         cms2NJVG1j6URIs1+qtFjsTK/CW+Y85eCa9eNQWAFStto0t4pBVvu+LEcbzkwa1DVcrp
-         /jk60x8eFsz8+HrIRgwXpCn41qHtqVcHdno9W9wXh1G8XUFi8hbgvRjPMqxSTjwaDOJt
-         x1Fg==
-X-Gm-Message-State: AOAM533AdIqwuTOl77h6k9bLfrXMvBXHJFtUqcehPjbAx/vEod7FJHdv
-        Qub8Qen1HohYapQQdPyMtyNhbQ==
-X-Google-Smtp-Source: ABdhPJw7Ve6j3sQ7hOzQ1wudzvX76tu9J1CZFDESduQg/nFoUbXy7Wi6oqzqRoi1RsCGOF4EtrRjFQ==
-X-Received: by 2002:ac8:580e:0:b0:2f3:7ff9:39c6 with SMTP id g14-20020ac8580e000000b002f37ff939c6mr14863406qtg.434.1651586621658;
-        Tue, 03 May 2022 07:03:41 -0700 (PDT)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id j6-20020a05620a146600b0069fc13ce217sm5811708qkl.72.2022.05.03.07.03.40
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+YF29TZi131w+V+niyw8f+5BrVYB2TL4PkQPvgOxC1c=;
+        b=kyjmNVAk+5Plm1ZZ7PK1tWgvYl3lczYhmf44lu0dWmNQN8CK1R08C5aJmn7JyX53vX
+         gF+vZrFRPRMsdQkO9PRtqQAqjTdezF7eHbkti2w1N+AxyU0XsKuuPlKRhU/N/dm41ZOC
+         srFlJ1Ioqqo/vZ8TiQbdjGh2ks+2vPxfZvboffrEqPLQiy6GPynM1Y/daTjK6EsUg4fw
+         lyYpOx8UPbQNJDZ5ywKkEb48Bxg184+aKl70tbqRzYCkqj9vjTKua8XK4XFW6+aW+aoY
+         NuFpNQyRHiS8yhkzzOQR87/ezEtn5k1L7nxTnjTF3IInx8St3Rwnd1ivf430WC6edHWQ
+         j7/Q==
+X-Gm-Message-State: AOAM531UnVipyNF/ECr1Z8wzBZmUE8fHXH3vv7yI3/6KGkO67QyuGp6W
+        PHB9ewQpnBlWuYmn8LjD6w==
+X-Google-Smtp-Source: ABdhPJxkPagr4DtftAZPsUY7FNqg5juEjTTAW1X5Ft6g2qNU4vcojndBMTr46RVJBtG9EyVK+zpt+A==
+X-Received: by 2002:a4a:e8cc:0:b0:35f:6c5:a41a with SMTP id h12-20020a4ae8cc000000b0035f06c5a41amr2262794ooe.74.1651587127814;
+        Tue, 03 May 2022 07:12:07 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id f9-20020a0568301c2900b0060603221247sm3981516ote.23.2022.05.03.07.12.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 07:03:41 -0700 (PDT)
-Date:   Tue, 3 May 2022 10:03:39 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Linus Walleij' <linus.walleij@linaro.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
-Message-ID: <YnE2OxAsXmXSB87L@fedora>
-References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
- <20220429135108.2781579-19-schnelle@linux.ibm.com>
- <Ymv3DnS1vPMY8QIg@fedora>
- <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com>
- <YmwGLrh4U+pVJo0m@fedora>
- <CACRpkdaha37y-ZNSqYSbf=TvsJNcvbH1Y=N0JkVCewB-Lvf81Q@mail.gmail.com>
- <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com>
+        Tue, 03 May 2022 07:12:07 -0700 (PDT)
+Received: (nullmailer pid 3564454 invoked by uid 1000);
+        Tue, 03 May 2022 14:12:06 -0000
+Date:   Tue, 3 May 2022 09:12:06 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allan Nielsen <allan.nielsen@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Thomas Petazzoni <thomas.petazonni@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/3] PCI: of: create DT nodes for PCI devices if they do
+ not exists
+Message-ID: <YnE4Ni+QUJT/CXV4@robh.at.kernel.org>
+References: <20220427094502.456111-1-clement.leger@bootlin.com>
+ <20220427094502.456111-3-clement.leger@bootlin.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qkJkToKVV3ZYwUlC"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220427094502.456111-3-clement.leger@bootlin.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Apr 27, 2022 at 11:45:01AM +0200, Clément Léger wrote:
+> In order to apply overlays to PCI device nodes, the nodes must first
+> exist. This commit add support to populate a skeleton tree for PCI bus
+> and devices. These nodes can then be used by drivers to apply overlays.
+> 
 
---qkJkToKVV3ZYwUlC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+While I implemented this creating the nodes as the PCI devices are 
+created, I think probably we're going to want to create the device node 
+and any needed parent nodes on demand. Otherwise, just turning on 
+CONFIG_OF could break platforms.
 
-On Tue, May 03, 2022 at 01:08:04PM +0000, David Laight wrote:
-> From: Linus Walleij
-> > Sent: 01 May 2022 22:56
-> >=20
-> > On Fri, Apr 29, 2022 at 5:37 PM William Breathitt Gray
-> > <william.gray@linaro.org> wrote:
-> > > On Fri, Apr 29, 2022 at 04:46:00PM +0200, Niklas Schnelle wrote:
-> >=20
-> > > > Good question. As far as I can see most (all?) of these have "select
-> > > > ISA_BUS_API" which is "def_bool ISA". Now "config ISA" seems to
-> > > > currently be repeated in architectures and doesn't have an explicit
-> > > > HAS_IOPORT dependency (it maybe should have one). But it does only =
-make
-> > > > sense on architectures with HAS_IOPORT set.
-> > >
-> > > There is such a thing as ISA DMA, but you'll still need to initialize
-> > > the device via the IO Port bus first, so perhaps setting HAS_IOPORT f=
-or
-> > > "config ISA" is the right thing to do: all ISA devices are expected to
-> > > communicate in some way via ioport.
-> >=20
-> > Adding that dependency seems like the right solution to me.
->=20
-> I think it all depends on what HAS_IOPORT is meant to mean and
-> how portable kernel binaries need to be.
->=20
-> x86 is (probably) the only architecture that actually has 'in'
-> and 'out' instructions - but that doesn't mean that some other
-> cpu (and I mean cpu+pcb not architecture) have the ability to
-> generate 'IO' bus cycles on a specific physical bus.
->=20
-> While the obvious case is a physical address window that generates
-> PCI(e) IO cycles from normal memory cycles it isn't the only one.
->=20
-> I've used sparc cpu systems that have pcmcia card slots.
-> These are pretty much ISA and the drivers might expect to
-> access port 0x300 (etc) - certainly that would be right on x86.
->=20
-> In this case is isn't so much that the ISA_BUS depends on support
-> for in/out but that presence of the ISA bus provides the required
-> in/out support.
+One potential issue is that fwnode assumes there is either a DT node or 
+ACPI node. With this, we have the potential for both. I'm not sure how 
+much that's going to be an issue.
 
-That's true, it does seem somewhat backwards to have a depends on line
-when the bus is really just providing the support for devices that want
-to use it rather than requiring it. Do you think a HAVE_IOPORT line
-should be added independently for each driver instead of adding it to
-ISA_BUS?
+> Co-developed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Clément Léger <clement.leger@bootlin.com>
+> ---
+>  drivers/pci/of.c | 184 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 184 insertions(+)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index cb2e8351c2cc..f2325708726e 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -16,12 +16,194 @@
+>  #include "pci.h"
+>  
+>  #ifdef CONFIG_PCI
+> +static int of_pci_add_property(struct of_changeset *ocs, struct device_node *np,
+> +			       const char *name, const void *value, int length)
 
-> Now, maybe, the drivers should be using some ioremap variant and
-> then calling ioread8() rather than directly calling inb().
-> But that seems orthogonal to this changeset.
->=20
-> 	David
->=20
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
+Nothing really PCI specific about this function.
 
-Using ioremap() does have the benefit of making it easier to reuse the
-code for some of these PC104 drivers with their PCI device variants; the
-ioread8() calls and such can stay the same and we just initialize to the
-proper address during probe. I plan to look into this in the future
-then.
+The kernel support for creating nodes and properties is pretty poor. We 
+should improve it with functions like this (in drivers/of/). Maybe the 
+changeset part should be separate though. We have some cases of creating 
+properties or nodes already, and whatever new APIs we make those 
+cases should be able to use them. And if they are converted, then it can 
+be merged sooner rather than when all the PCI parts are ready.
 
-William Breathitt Gray
+> +{
+> +	struct property *prop;
+> +	int ret = -ENOMEM;
+> +
+> +	prop = kzalloc(sizeof(*prop), GFP_KERNEL);
+> +	if (!prop)
+> +		return -ENOMEM;
+> +
+> +	prop->name = kstrdup(name, GFP_KERNEL);
+> +	if (!prop->name)
+> +		goto out_err;
+> +
+> +	if (value) {
+> +		prop->value = kmemdup(value, length, GFP_KERNEL);
+> +		if (!prop->value)
+> +			goto out_err;
+> +	} else {
+> +		/*
+> +		 * Even if the property has no value, it must be set to a
+> +		 * non-null value since of_get_property() is used to check
+> +		 * some values that might or not have a values (ranges for
+> +		 * instance). Moreover, when the node is released, prop->value
+> +		 * is kfreed so the memory must come from kmalloc.
+> +		 */
+> +		prop->value = kmalloc(1, GFP_KERNEL);
+> +		if (!prop->value)
+> +			goto out_err;
+> +	}
+> +
+> +	of_property_set_flag(prop, OF_DYNAMIC);
+> +
+> +	prop->length = length;
+> +
+> +	ret = of_changeset_add_property(ocs, np, prop);
+> +	if (!ret)
+> +		return 0;
+> +
+> +out_err:
+> +	kfree(prop->value);
+> +	kfree(prop->name);
+> +	kfree(prop);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct device_node *of_pci_make_node(void)
+> +{
 
---qkJkToKVV3ZYwUlC
-Content-Type: application/pgp-signature; name="signature.asc"
+This isn't PCI specific either.
 
------BEGIN PGP SIGNATURE-----
+> +	struct device_node *node;
+> +
+> +	node = kzalloc(sizeof(*node), GFP_KERNEL);
+> +	if (!node)
+> +		return NULL;
+> +
+> +	of_node_set_flag(node, OF_DYNAMIC);
+> +	of_node_set_flag(node, OF_DETACHED);
+> +	of_node_init(node);
+> +
+> +	return node;
+> +}
+> +
+> +static int of_pci_add_cells_props(struct device_node *node,
+> +				  struct of_changeset *cs, int n_addr_cells,
+> +				  int n_size_cells)
+> +{
+> +	__be32 val;
+> +	int ret;
+> +
+> +	ret = of_pci_add_property(cs, node, "ranges", NULL, 0);
 
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCYnE2NgAKCRC1SFbKvhIj
-K1ziAQC/Gcd4KmfP+1GLpIrE5Gy3ocse41ufgCdCXVkLTjgj2QEA4Mr46B97PGjA
-9gDCAjBNMj+K03gxZel1wfWWyw4bZwQ=
-=cAd7
------END PGP SIGNATURE-----
+The host bridge node is going to need to fill in 'ranges'. Empty ranges 
+is not valid when there's a change in number of cells.
 
---qkJkToKVV3ZYwUlC--
+The root node also will need "#address-cells" and "#size-cells".
+ 
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = __cpu_to_be32(n_addr_cells);
+> +	ret = of_pci_add_property(cs, node, "#address-cells", &val,
+> +				  sizeof(__be32));
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = __cpu_to_be32(n_size_cells);
+> +	return of_pci_add_property(cs, node, "#size-cells", &val,
+> +				   sizeof(__be32));
+> +}
+> +
+> +static int of_pci_add_pci_bus_props(struct device_node *node,
+> +				    struct of_changeset *cs)
+> +{
+> +	int ret;
+> +
+> +	ret = of_pci_add_property(cs, node, "device_type", "pci",
+> +				  strlen("pci") + 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return of_pci_add_cells_props(node, cs, 3, 2);
+> +}
+> +
+> +static void of_pci_make_dev_node(struct pci_dev *dev)
+> +{
+> +	static struct of_changeset cs;
+> +	const char *pci_type = "dev";
+> +	struct device_node *node;
+> +	__be32 val[5] = {0};
+> +	int ret;
+> +
+> +	node = of_pci_make_node();
+> +	if (!node)
+> +		return;
+> +
+> +	node->parent = dev->bus->dev.of_node;
+> +	of_changeset_init(&cs);
+> +
+> +	if (pci_is_bridge(dev)) {
+> +		ret = of_pci_add_pci_bus_props(node, &cs);
+> +		if (ret)
+> +			goto changeset_destroy;
+> +		pci_type = "pci";
+> +	}
+> +
+> +	node->full_name = kasprintf(GFP_KERNEL, "%s@%x,%x", pci_type,
+> +				    PCI_SLOT(dev->devfn), PCI_FUNC(dev->devfn));
+> +
+> +	val[0] = __cpu_to_be32(dev->devfn << 8);
+> +	val[4] = __cpu_to_be32(SZ_4K);
+> +	ret = of_pci_add_property(&cs, node, "reg", val, 5 * sizeof(__be32));
+> +	if (ret)
+> +		goto changeset_destroy;
+> +
+> +	ret = of_changeset_attach_node(&cs, node);
+> +	if (ret)
+> +		goto changeset_destroy;
+> +
+> +	ret = of_changeset_apply(&cs);
+> +	if (ret)
+> +		goto changeset_destroy;
+> +
+> +	dev->dev.of_node = node;
+> +
+> +	return;
+> +
+> +changeset_destroy:
+> +	of_changeset_destroy(&cs);
+> +	kfree(node);
+> +}
+> +
+> +static struct device_node *of_pci_create_root_bus_node(struct pci_bus *bus)
+> +{
+> +	static struct of_changeset cs;
+> +	struct device_node *node;
+> +	int ret;
+> +
+> +	node = of_pci_make_node();
+> +	if (!node)
+> +		return NULL;
+> +
+> +	node->full_name = "pci";
+> +	node->parent = of_root;
+> +
+> +	of_changeset_init(&cs);
+> +	ret = of_pci_add_pci_bus_props(node, &cs);
+> +	if (ret)
+> +		goto changeset_destroy;
+> +
+> +	ret = of_changeset_attach_node(&cs, node);
+> +	if (ret)
+> +		goto changeset_destroy;
+> +
+> +	ret = of_changeset_apply(&cs);
+> +	if (ret)
+> +		goto changeset_destroy;
+> +
+> +	return node;
+> +
+> +changeset_destroy:
+> +	of_changeset_destroy(&cs);
+> +	kfree(node);
+> +
+> +	return NULL;
+> +}
+> +
+>  void pci_set_of_node(struct pci_dev *dev)
+>  {
+>  	if (!dev->bus->dev.of_node)
+>  		return;
+>  	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
+>  						    dev->devfn);
+> +	if (!dev->dev.of_node)
+> +		of_pci_make_dev_node(dev);
+>  	if (dev->dev.of_node)
+>  		dev->dev.fwnode = &dev->dev.of_node->fwnode;
+>  }
+> @@ -39,6 +221,8 @@ void pci_set_bus_of_node(struct pci_bus *bus)
+>  
+>  	if (bus->self == NULL) {
+>  		node = pcibios_get_phb_of_node(bus);
+> +		if (!node)
+> +			node = of_pci_create_root_bus_node(bus);
+>  	} else {
+>  		node = of_node_get(bus->self->dev.of_node);
+>  		if (node && of_property_read_bool(node, "external-facing"))
+> -- 
+> 2.34.1
+> 
+> 
