@@ -2,138 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5A8E518BB2
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 19:59:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A40C3518FA1
+	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 23:03:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240625AbiECSDW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 14:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
+        id S238576AbiECVBE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 17:01:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237273AbiECSDV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 14:03:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70C5C3E5F0;
-        Tue,  3 May 2022 10:59:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 02187B81DC0;
-        Tue,  3 May 2022 17:59:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C91C385B1;
-        Tue,  3 May 2022 17:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651600785;
-        bh=HE8JDXWHuqMA5lG6TsX84CsZNFrqdgvPHAK265pgkfM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uPtGYVBofjxM/0JIP9bZa1rb1hdLccBdHg2fFcsZnw326Am4P7hJpdU/efwbHSj2e
-         NuvsvWz6UvgEiMAnFsPgDhhTaoxgQ5Jqhu5J4pPMZEQbDq4kA+uNTV13i7W81mWkbt
-         w33wjSYpV7WAAnaGg+8HCwevvVTfQQtCaebs+QGcboBtV6+88f0kg7fGJiJwhVHP0i
-         8WPaBGhhFYt5uOzrZYJ1Y+xLxvty5AwmikmfxxdJNKzVNbcG2svyWntJS5Z3Zsq3aW
-         1mqOp647kN1a+DrCKv5IcBcA6tT/nH0YX3qx/OYh6THuvjF225fDDSVI03a03x79aC
-         yJzVSM4nPhI3A==
-Date:   Tue, 3 May 2022 10:59:43 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI
- devices
-Message-ID: <YnFtjzGYwe28tVAA@dev-arch.thelio-3990X>
-References: <4419002.LvFx2qVVIh@kreacher>
- <11975904.O9o76ZdvQC@kreacher>
- <5838942.lOV4Wx5bFT@kreacher>
- <3687697.kQq0lBPeGt@kreacher>
+        with ESMTP id S231552AbiECVBE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 17:01:04 -0400
+Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 72F991EC7B;
+        Tue,  3 May 2022 13:57:30 -0700 (PDT)
+Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id D8D5316A9;
+        Tue,  3 May 2022 23:58:01 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru D8D5316A9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baikalelectronics.ru; s=mail; t=1651611483;
+        bh=9UF9RAJ5A/A23HPF4BnRRw1WEi3wipp0ffStvYxeUdM=;
+        h=From:To:CC:Subject:Date:From;
+        b=K6GNSEFUm8YgaTGfpPhxtNWidBgNu8i7veb0Q5lPxX/RBpU26MKq4Sbf1mSqDl5Ie
+         QA+DFMbYHyYCwoNtIWYKG8l0krbbQFZWAw60bIXg//llTQ6TXlU9y/wQ0CjN403Ie9
+         XVqo6F4NL8uvk75BFwxDwyKTWgJrJVcW08TpDOTo=
+Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 3 May 2022 23:57:27 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        <linux-clk@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+Date:   Tue, 3 May 2022 23:57:18 +0300
+Message-ID: <20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3687697.kQq0lBPeGt@kreacher>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rafael,
+This patchset is an initial one in the series created in the framework
+of my Baikal-T1 PCIe/eDMA-related work:
 
-On Thu, Apr 14, 2022 at 03:11:21PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> There are some issues related to changing power states of PCI
-> devices, mostly related to carrying out unnecessary actions in some
-> places, and the code is generally hard to follow.
-> 
->  1. pci_power_up() has two callers, pci_set_power_state() and
->     pci_pm_default_resume_early().  The latter updates the current
->     power state of the device right after calling pci_power_up()
->     and it restores the entire config space of the device right
->     after that, so pci_power_up() itself need not read the
->     PCI_PM_CTRL register or restore the BARs after programming the
->     device into D0 in that case.
->  
->  2. It is generally hard to get a clear view of the pci_power_up()
->     code flow, especially in some corner cases, due to all of the
->     involved PCI_PM_CTRL register reads and writes occurring in
->     pci_platform_power_transition() and in pci_raw_set_power_state(),
->     some of which are redundant.
-> 
->  3. The transitions from low-power states to D0 and the other way
->     around are unnecessarily tangled in pci_raw_set_power_state()
->     which causes it to use a redundant local variable and makes it
->     rather hard to follow.
-> 
-> To address the above shortcomings, make the following changes:
-> 
->  a. Remove the code handling transitions into D0
->     from pci_raw_set_power_state() and rename it as
->     pci_set_low_power_state().
-> 
->  b. Add the code handling transitions into D0 directly
->     to pci_power_up() and to a new wrapper function
->     pci_set_full_power_state() calling it internally that is
->     only used in pci_set_power_state().
-> 
->  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
->     and make it work in the same way for transitions from any
->     low-power states (transitions from D1 and D2 are handled
->     slightly differently before the change).
-> 
->  d. Put the restoration of the BARs and the PCI_PM_CTRL
->     register read confirming the power state change into
->     pci_set_full_power_state() to avoid doing that in
->     pci_pm_default_resume_early() unnecessarily.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[1: In-progress v3] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+Link: https://lore.kernel.org/linux-pci/20220330144320.27039-1-Sergey.Semin@baikalelectronics.ru/
+[2: In-progress v1] PCI: dwc: Various fixes and cleanups
+Link: https://lore.kernel.org/linux-pci/20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru/
+[3: In-progress v1] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+Link: https://lore.kernel.org/linux-pci/20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru/
+[4: In-progress v1] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
 
-This change as commit 5bffe4c611f5 ("PCI/PM: Rework changing power
-states of PCI devices") causes my AMD-based system to fail to fully
-boot. As far as I can tell, this might be NVMe related, which might make
-getting a full log difficult, as journalctl won't have anywhere to save
-it. I see:
+Since some of the patches in the later patchsets depend on the
+modifications introduced here, @Lorenzo could you please merge this series
+through your PCIe subsystem repo? After getting all the required ack'es of
+course.
 
-nvme nvme0: I/O 8 QID 0 timeout, completion polled
+Short summary regarding this patchset. A few more modifications are
+introduced here to finally finish the Baikal-T1 CCU unit support up and
+prepare the code before adding the Baikal-T1 PCIe/xGMAC support. First of
+all it turned out I specified wrong DW xGMAC PTP reference clock divider
+in my initial patches. It must be 8, not 10. Secondly I was wrong to add a
+joint xGMAC Ref and PTP clock instead of having them separately defined.
+The SoC manual describes these clocks as separate fixed clock wrappers.
+Finally in order to close the SoC clock/reset support up we need to add
+the DDR and PCIe interfaces reset controls support. It's done in two
+steps. First I've moved the reset-controls-related code into a dedicated
+module. Then the DDR/PCIe reset-control functionality is added.
 
-then shortly afterwards:
+Link: https://lore.kernel.org/linux-pci/20220324010905.15589-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Resubmit the series with adding @Philipp to the list of the recipients.
 
-nvme nvme0: I/O 24 QID 0 timeout, completion polled
-nvme nvme0: missing or invalid SUBNQN field
+Link: https://lore.kernel.org/linux-pci/20220330144320.27039-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Rebased from v5.17 onto v5.18-rc3.
+- No comments. Just resend the series.
 
-then I am dropped into an emergency shell.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-clk@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-This is a log from the previous commit, which may give some hints about
-the configuration of this particular system.
+Serge Semin (4):
+  clk: baikal-t1: Fix invalid xGMAC PTP clock divider
+  clk: baikal-t1: Define shared xGMAC ref/ptp clocks parent
+  clk: baikal-t1: Move reset-controls code into a dedicated module
+  clk: baikal-t1: Add DDR/PCIe directly controlled resets support
 
-https://gist.github.com/nathanchance/8a56f0939410cb187896e904c72e41e7/raw/b47b2620bdd32d43c7a3b209fcfd9e3d4668f058/good-boot.log
+ drivers/clk/baikal-t1/Kconfig       |  12 +-
+ drivers/clk/baikal-t1/Makefile      |   1 +
+ drivers/clk/baikal-t1/ccu-div.c     |   1 +
+ drivers/clk/baikal-t1/ccu-div.h     |   6 +
+ drivers/clk/baikal-t1/ccu-rst.c     | 373 ++++++++++++++++++++++++++++
+ drivers/clk/baikal-t1/ccu-rst.h     |  64 +++++
+ drivers/clk/baikal-t1/clk-ccu-div.c | 102 ++------
+ include/dt-bindings/reset/bt1-ccu.h |   9 +
+ 8 files changed, 482 insertions(+), 86 deletions(-)
+ create mode 100644 drivers/clk/baikal-t1/ccu-rst.c
+ create mode 100644 drivers/clk/baikal-t1/ccu-rst.h
 
-If there is any additional debugging information I can provide or
-patches I can try, please let me know!
+-- 
+2.35.1
 
-Cheers,
-Nathan
