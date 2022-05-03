@@ -2,38 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85AB8519020
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 23:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E4AD519034
+	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 23:36:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242874AbiECV1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 17:27:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41830 "EHLO
+        id S242999AbiECV1Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 17:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242878AbiECV1W (ORCPT
+        with ESMTP id S242887AbiECV1W (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 17:27:22 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1BB5141627;
-        Tue,  3 May 2022 14:23:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 221464162E;
+        Tue,  3 May 2022 14:23:36 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5F12416D8;
-        Wed,  4 May 2022 00:24:08 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 5F12416D8
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5D53816A9;
+        Wed,  4 May 2022 00:24:09 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 5D53816A9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651613048;
-        bh=9PcRuQEaH+jvkJWJj0pj6vOsFD3ddTPPKALUi/ORWCk=;
+        d=baikalelectronics.ru; s=mail; t=1651613049;
+        bh=bo5OqnK+Z6C/zfKXy1FN6D2uyOimMZxXIfJNT8kWNlI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=alkGb13GFTu62m73PN6DWszLWlNGDaXOPk54J5Ka0fmp7wsrivcGQXar1aoSRZkkG
-         zQ23EHvEUdZLKLy3WuditcWWHtici0t/JpaZ3DnON0IUrQQVIo6yH9njrRcgz/CUij
-         WP6NpC05FnIrF3a/+CdT4Yvfad09vElMxueqggDM=
+        b=icKemu7SIwVe5HDWo/ep1D9y8aOHLzTYni1wpNEF53a3vC9mME5CA6sE+3K6iE3NE
+         4yxxXUuURFofMY9YRBUEsQ2hYa1P5mL9cGNmPf5MrxrT86g2UwgopxDo5vp+e7Qqn4
+         2H11maKoNHZiZfaLEfpHYaufos/aY7SHAYGV0tIM=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 00:23:34 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 00:23:35 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Niklas Cassel <niklas.cassel@axis.com>,
+        Joao Pinto <jpinto@synopsys.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -41,9 +43,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 09/13] PCI: dwc: Convert Link-up status method to using dw_pcie_readl_dbi()
-Date:   Wed, 4 May 2022 00:22:56 +0300
-Message-ID: <20220503212300.30105-10-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v2 10/13] PCI: dwc: Deallocate EPC memory on EP init error
+Date:   Wed, 4 May 2022 00:22:57 +0300
+Message-ID: <20220503212300.30105-11-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -59,32 +61,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-While the rest of the generic DWC PCIe code is using the dedicated IO-mem
-accessors, the dw_pcie_link_up() method for some unobvious reason directly
-calls readl() to get PortLogic.DEBUG1 register content. Since the way the
-dbi-bus is accessed can be platform-specific let's replace the direct dbi
-memory space read procedure with the readl-wrapper invocation. Thus we'll
-have a slightly more generic dw_pcie_link_up() method.
+If the dw_pcie_ep_init() method fails to perform any action after the EPC
+memory is initialized and the MSI memory region is allocated, the later
+parts won't be undone thus causing the memory leak.  Let's fix that by
+introducing the cleanup-on-error path in the dw_pcie_ep_init() method,
+which will be taken should any consequent erroneous situation happens.
 
+Fixes: 2fd0c9d966cc ("PCI: designware-ep: Pre-allocate memory for MSI in dw_pcie_ep_init")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-designware.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index e3d2c11e6998..6e81264fdfb4 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -548,7 +548,7 @@ int dw_pcie_link_up(struct dw_pcie *pci)
- 	if (pci->ops && pci->ops->link_up)
- 		return pci->ops->link_up(pci);
+---
+
+Changelog v2:
+- This is a new patch create as a result of the discussion in:
+  Link: https://lore.kernel.org/linux-pci/20220324014836.19149-26-Sergey.Semin@baikalelectronics.ru
+---
+ .../pci/controller/dwc/pcie-designware-ep.c    | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 7c9315fffe24..7ad349c32082 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -780,8 +780,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+ 					     epc->mem->window.page_size);
+ 	if (!ep->msi_mem) {
++		ret = -ENOMEM;
+ 		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+-		return -ENOMEM;
++		goto err_exit_epc_mem;
+ 	}
  
--	val = readl(pci->dbi_base + PCIE_PORT_DEBUG1);
-+	val = dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1);
- 	return ((val & PCIE_PORT_DEBUG1_LINK_UP) &&
- 		(!(val & PCIE_PORT_DEBUG1_LINK_IN_TRAINING)));
+ 	if (ep->ops->get_features) {
+@@ -790,6 +791,19 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 			return 0;
+ 	}
+ 
+-	return dw_pcie_ep_init_complete(ep);
++	ret = dw_pcie_ep_init_complete(ep);
++	if (ret)
++		goto err_free_epc_mem;
++
++	return 0;
++
++err_free_epc_mem:
++	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
++			      epc->mem->window.page_size);
++
++err_exit_epc_mem:
++	pci_epc_mem_exit(epc);
++
++	return ret;
  }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
 -- 
 2.35.1
 
