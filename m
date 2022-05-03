@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 771D4519090
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 23:51:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C418051908B
+	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 23:51:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235218AbiECVu4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 17:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33054 "EHLO
+        id S243197AbiECVuy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 17:50:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243206AbiECVuv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 17:50:51 -0400
+        with ESMTP id S243212AbiECVuw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 17:50:52 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 122A4419B1;
-        Tue,  3 May 2022 14:47:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38F2141F86;
+        Tue,  3 May 2022 14:47:09 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E4EA816D8;
-        Wed,  4 May 2022 00:47:40 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru E4EA816D8
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1671916D7;
+        Wed,  4 May 2022 00:47:42 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 1671916D7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651614460;
-        bh=N+tYr4zaUJ+vceg87ZbypIbrzuc9Q30htjSjapYm3hw=;
+        d=baikalelectronics.ru; s=mail; t=1651614462;
+        bh=Pxrs7DK7vxqECv2QPErmbU18NhNkQAvSL78XxW7WIrM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=MFEevMncXEXk+mfkkvahBktDt36nCcrWzMqo9XtqvJxb6KHsQkS89YTc7CFuMnDDV
-         vBNa9ZmwvJ9CKmErahM0aNBXZgNTnAYgQyPqf38B30Ak2MpCxyg04cp4LLw3w0OXPq
-         tDrAJTcRdAoUHHTSU0qVrF29hr0Oc17nwLV+/g6A=
+        b=cBCneDm+zv4ZX2+Gk9JXehXRrao5umUSeVdBdMNJbsehYLUrRsCHqOneJ6FubKgfV
+         Avet4YReaOONtUqokc36CindxKmCZbq4T3mUh7AKGlfrliYpXYbQxNlCMFbrtryJSK
+         yeL1oklS930P8HKF6OSzHKxPv2Hekh0mwDxMlwIA=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 00:47:06 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 00:47:08 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -42,9 +42,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 07/17] PCI: dwc: Introduce Synopsys IP-core versions/types interface
-Date:   Wed, 4 May 2022 00:46:28 +0300
-Message-ID: <20220503214638.1895-8-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v2 08/17] PCI: dwc: Add host de-initialization callback
+Date:   Wed, 4 May 2022 00:46:29 +0300
+Message-ID: <20220503214638.1895-9-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -60,93 +60,96 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of manual DW PCIe data version field comparison let's use a handy
-macro-based interface in order to shorten out the statements, simplify the
-corresponding parts, improve the code readability and maintainability in
-perspective when more complex version-based dependencies need to
-implemented. Similar approaches have already been implemented in the DWC
-USB3 and DW SPI drivers (though with some IP-core evolution specifics).
+Seeing the platform-specific DW PCIe host-initialization is performed from
+within the generic dw_pcie_host_init() method by means of the dedicated
+dw_pcie_ops.host_init() callback, there must be declared an antagonist
+which would perform the corresponding cleanups. Let's add such callback
+then. It will be called in the dw_pcie_host_deinit() method and in the
+cleanup-on-error path in the dw_pcie_host_init() function.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/pci/controller/dwc/pci-keystone.c    |  2 +-
- drivers/pci/controller/dwc/pcie-designware.c |  8 ++++----
- drivers/pci/controller/dwc/pcie-designware.h | 15 +++++++++++++++
- 3 files changed, 20 insertions(+), 5 deletions(-)
+ .../pci/controller/dwc/pcie-designware-host.c | 21 ++++++++++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index c51018c68b56..a0874bf4a0b6 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -1233,7 +1233,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 		goto err_get_sync;
- 	}
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index c74b4587b236..bb1c25c32f2d 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -354,13 +354,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			pp->num_vectors = MSI_DEF_NUM_VECTORS;
+ 		} else if (pp->num_vectors > MAX_MSI_IRQS) {
+ 			dev_err(dev, "Invalid number of vectors\n");
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto err_deinit_host;
+ 		}
  
--	if (pci->version >= DW_PCIE_VER_480A)
-+	if (dw_pcie_ver_is_ge(pci, 480A))
- 		ret = ks_pcie_am654_set_mode(dev, mode);
- 	else
- 		ret = ks_pcie_set_mode(dev);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 62f50086aa49..dd2e4335d85a 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -313,7 +313,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 	val = type | PCIE_ATU_FUNC_NUM(func_no);
- 	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr))
- 		val |= PCIE_ATU_INCREASE_REGION_SIZE;
--	if (pci->version == DW_PCIE_VER_490A)
-+	if (dw_pcie_ver_is(pci, 490A))
- 		val = dw_pcie_enable_ecrc(val);
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-@@ -360,7 +360,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 			   upper_32_bits(cpu_addr));
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_LIMIT,
- 			   lower_32_bits(limit_addr));
--	if (pci->version >= DW_PCIE_VER_460A)
-+	if (dw_pcie_ver_is_ge(pci, 460A))
- 		dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_LIMIT,
- 				   upper_32_bits(limit_addr));
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET,
-@@ -369,9 +369,9 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 			   upper_32_bits(pci_addr));
- 	val = type | PCIE_ATU_FUNC_NUM(func_no);
- 	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
--	    pci->version >= DW_PCIE_VER_460A)
-+	    dw_pcie_ver_is_ge(pci, 460A))
- 		val |= PCIE_ATU_INCREASE_REGION_SIZE;
--	if (pci->version == DW_PCIE_VER_490A)
-+	if (dw_pcie_ver_is(pci, 490A))
- 		val = dw_pcie_enable_ecrc(val);
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
+ 		if (pp->ops->msi_host_init) {
+ 			ret = pp->ops->msi_host_init(pp);
+ 			if (ret < 0)
+-				return ret;
++				goto err_deinit_host;
+ 		} else if (pp->has_msi_ctrl) {
+ 			u32 ctrl, num_ctrls;
+ 
+@@ -372,8 +373,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 				pp->msi_irq = platform_get_irq_byname_optional(pdev, "msi");
+ 				if (pp->msi_irq < 0) {
+ 					pp->msi_irq = platform_get_irq(pdev, 0);
+-					if (pp->msi_irq < 0)
+-						return pp->msi_irq;
++					if (pp->msi_irq < 0) {
++						ret = pp->msi_irq;
++						goto err_deinit_host;
++					}
+ 				}
+ 			}
+ 
+@@ -381,7 +384,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 
+ 			ret = dw_pcie_allocate_domains(pp);
+ 			if (ret)
+-				return ret;
++				goto err_deinit_host;
+ 
+ 			if (pp->msi_irq > 0)
+ 				irq_set_chained_handler_and_data(pp->msi_irq,
+@@ -434,6 +437,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ err_free_msi:
+ 	if (pp->has_msi_ctrl)
+ 		dw_pcie_free_msi(pp);
++
++err_deinit_host:
++	if (pp->ops->host_deinit)
++		pp->ops->host_deinit(pp);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_host_init);
+@@ -450,6 +458,9 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
+ 
+ 	if (pp->has_msi_ctrl)
+ 		dw_pcie_free_msi(pp);
++
++	if (pp->ops->host_deinit)
++		pp->ops->host_deinit(pp);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
+ 
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index f70cbdedf5a3..1868773ecb91 100644
+index 1868773ecb91..bca1d3e83636 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -28,6 +28,21 @@
- #define DW_PCIE_VER_490A		0x3439302a
- #define DW_PCIE_VER_520A		0x3532302a
+@@ -200,6 +200,7 @@ enum dw_pcie_device_mode {
  
-+#define __dw_pcie_ver_cmp(_pci, _ver, _op) \
-+	((_pci)->version _op DW_PCIE_VER_ ## _ver)
-+
-+#define dw_pcie_ver_is(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, ==)
-+
-+#define dw_pcie_ver_is_ge(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, >=)
-+
-+#define dw_pcie_ver_type_is(_pci, _ver, _type) \
-+	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
-+	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, ==))
-+
-+#define dw_pcie_ver_type_is_ge(_pci, _ver, _type) \
-+	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
-+	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, >=))
-+
- /* Parameters for the waiting for link up routine */
- #define LINK_WAIT_MAX_RETRIES		10
- #define LINK_WAIT_USLEEP_MIN		90000
+ struct dw_pcie_host_ops {
+ 	int (*host_init)(struct pcie_port *pp);
++	void (*host_deinit)(struct pcie_port *pp);
+ 	int (*msi_host_init)(struct pcie_port *pp);
+ };
+ 
 -- 
 2.35.1
 
