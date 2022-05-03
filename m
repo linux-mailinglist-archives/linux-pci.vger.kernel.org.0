@@ -2,147 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4061517C33
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 05:27:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6905517DAA
+	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 08:52:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230304AbiECDYf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 May 2022 23:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
+        id S230312AbiECGzP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 02:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230340AbiECDY3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 May 2022 23:24:29 -0400
-Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2128F29836;
-        Mon,  2 May 2022 20:20:55 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 539AB41DF4;
-        Tue,  3 May 2022 03:20:51 +0000 (UTC)
-Message-ID: <2615501d-7569-41cb-7039-46e690689f1f@marcan.st>
-Date:   Tue, 3 May 2022 12:20:48 +0900
+        with ESMTP id S230179AbiECGzG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 02:55:06 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A33D18E1E;
+        Mon,  2 May 2022 23:51:34 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id v9so2246254qkp.11;
+        Mon, 02 May 2022 23:51:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pr4t1gPb6uklDrXM+exywKisHYkbCy1hPACrniddb9I=;
+        b=rjx6ZbeIPjz85RoWHQVqdNk8S4Kg6qG0weXU/9b1PCK5kfm2gErtnirmo4/bcXG5A5
+         vhnG7vPUpw/D5Z77up7eXuNevzN2CkmjsHRVFLZQhLKK9VbBtG1ZUkzzYnL3f/yH1Xsm
+         6VuGxcE5Dd2c8VNLVokPPuYTo21St55GL7ObC4UWp3ObXbdwRsOC4/WCSdnIK+viDTzh
+         +EHkIJ/PyIJZK2bUr7RxXe6JRFlJ87L0r829v0QrxnAz+/pq29obdyzTjv07AE0dmngo
+         zP24rGd1jsjnJM+FxniVvkk+mmoceNpdWZnUGM3KG41Zgs557HAG+u5enFyzEhbF+geD
+         ufNA==
+X-Gm-Message-State: AOAM5301Fm2kfeKbj7Zr9so6tKm5DZdDSL+MIpZeDSnLBPtopTYLhK8B
+        IlOPsGMo5oi2thO210gsLVQUUKezJviEVw==
+X-Google-Smtp-Source: ABdhPJy5glkxfW3WjzC/QQb5m5JtoZwVxdFfnQ2L1RVxq+rNzeivavGQl34wzQnJANlOWzeEW7ld6A==
+X-Received: by 2002:a37:7c8:0:b0:69f:c5f8:85a2 with SMTP id 191-20020a3707c8000000b0069fc5f885a2mr9895845qkh.662.1651560693386;
+        Mon, 02 May 2022 23:51:33 -0700 (PDT)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
+        by smtp.gmail.com with ESMTPSA id e12-20020ac845cc000000b002f39b99f6adsm5560386qto.71.2022.05.02.23.51.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 May 2022 23:51:32 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-2f7d621d1caso169917027b3.11;
+        Mon, 02 May 2022 23:51:31 -0700 (PDT)
+X-Received: by 2002:a81:9b0c:0:b0:2f4:c522:7d3c with SMTP id
+ s12-20020a819b0c000000b002f4c5227d3cmr14127188ywg.316.1651560691618; Mon, 02
+ May 2022 23:51:31 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Content-Language: es-ES
-From:   Hector Martin <marcan@marcan.st>
+References: <20220429134143.628428-1-herve.codina@bootlin.com>
+ <20220429134143.628428-4-herve.codina@bootlin.com> <29ba3db6-e5c7-06d3-29d9-918ee5b34555@linaro.org>
+ <CAMuHMdWN_ni_V+e3QipWH2qKXeNPkEcVpHpb5iBYw1YQSAnCDA@mail.gmail.com> <YnA0id1rXlNHNz+N@robh.at.kernel.org>
+In-Reply-To: <YnA0id1rXlNHNz+N@robh.at.kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 May 2022 08:51:19 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWktaRAw8Y6TR93_rH8v4mPR2yt3wGqeXeTA2p_Dh--wA@mail.gmail.com>
+Message-ID: <CAMuHMdWktaRAw8Y6TR93_rH8v4mPR2yt3wGqeXeTA2p_Dh--wA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: renesas,pci-rcar-gen2: Add
+ device tree support for r9a06g032
 To:     Rob Herring <robh@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Sven Peter <sven@svenpeter.dev>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20220502093832.32778-1-marcan@marcan.st>
- <20220502093832.32778-4-marcan@marcan.st>
- <CAL_Jsq+_cWZUXtJVXC_cwhmADj0NQc95v1sqgFioMsfEX6OqGg@mail.gmail.com>
- <0ccc44cd-21aa-3670-24b3-4ee051dd3c12@marcan.st>
-Subject: Re: [PATCH 3/3] PCI: apple: Add support for optional PWREN GPIO
-In-Reply-To: <0ccc44cd-21aa-3670-24b3-4ee051dd3c12@marcan.st>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 03/05/2022 00.32, Hector Martin wrote:
-> On 03/05/2022 00.14, Rob Herring wrote:
->> On Mon, May 2, 2022 at 4:39 AM Hector Martin <marcan@marcan.st> wrote:
->>>
->>> WiFi and SD card devices on M1 Macs have a separate power enable GPIO.
->>> Add support for this to the PCIe controller. This is modeled after how
->>> pcie-fu740 does it.
->>
->> It did, but it's not ideal really. The problem is the GPIO is really
->> associated with the device (WiFi/SD) rather than the PCI host and
->> therefore should be part of a WiFi or SD node. You probably don't have
->> one (yet), but I would suspect that SD will need one for all the
->> standard MMC/SD DT properties. The secondary issue is we'll end up
->> adding more power sequencing properties to control ordering and timing
->> for different devices. The exception here is standard PCI slot
->> properties like perst#, clkreq, and standard voltage rails can go in
->> the host bridge (and for new bindings, those should really be in the
->> root port node). For a complicated example, see Hikey960 or 970.
->>
->> Of course with power control related properties there's a chicken or
->> egg issue that the PCI device is not discoverable until the device is
->> powered on. This issue comes up over and over with various hacky
->> solutions in the bindings. The PCI subsystem needs to solve this. My
->> suggestion is that if the firmware says there is a device on the bus
->> and it wasn't probed, then we should force probing (or add a pre-probe
->> hook for drivers). That is what MDIO bus does for example.
->>
-> 
-> I agree with the premise. Right now macOS does not actually power down
-> these devices as far as I know (except maybe sleep mode? not sure what
-> goes on then yet), but I think the hardware actually has an SD card
-> detect GPIO hookup that would allow us to entirely power down the SD
-> controller when no card is inserted. That would obviously be ideal.
-> 
-> FWIW, we do have the device nodes downstream [1]. I did in fact have to
-> add the SD one for the CD/WP inversion flags (and had to add driver
-> support for that too).
-> 
-> That said, as for how to make this happen in the PCI subsystem
-> properly... I think I'll defer to the maintainers' opinion there before
-> trying to hack something up ;)
-> 
-> Meanwhile, I guess I better get PCIe hotplug working, since doing it in
-> the driver isn't going to work without that first...
-> 
-> [1]
-> https://github.com/AsahiLinux/linux/blob/bits/000-devicetree/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi#L222
+Hi Rob,
 
-Thinking about this some more, I think it still makes sense to have the
-power enable GPIO in the PCI root port node. A generic power enable GPIO
-still makes sense there (think "slot power"). The PCI core could handle
-it properly by default, including turning it on prior to initial probing
-and shutting it down when the device should go into whatever the PCI
-core's idea of D3cold is. AIUI this already happens on some platforms
-via firmware, right? Since D3cold is supposed to be a state where the
-device receives no power after all.
+On Mon, May 2, 2022 at 9:44 PM Rob Herring <robh@kernel.org> wrote:
+> On Mon, May 02, 2022 at 11:19:19AM +0200, Geert Uytterhoeven wrote:
+> > On Sun, May 1, 2022 at 10:51 AM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> > > On 29/04/2022 15:41, Herve Codina wrote:
+> > > > Add internal PCI bridge support for the r9a06g032 SOC. The Renesas
+> > > > RZ/N1D (R9A06G032) internal PCI bridge is compatible with the one
+> > > > present in the R-Car Gen2 family.
+> > > > Compared to the R-Car Gen2 family, it needs three clocks instead of
+> > > > one.
+> > > >
+> > > > The 'resets' property for the RZ/N1 family is not required since
+> > > > there is no reset-controller support yet for the RZ/N1 family.
+> > >
+> > > This should not be a reason why a property is or is not required. Either
+> > > this is required for device operation or not. If it is required, should
+> > > be in the bindings. Otherwise what are you going to do in the future?
+> > > Add a required property breaking the ABI?
+> >
+> > The problem is that there are no bindings for the reset controller
+> > (actually the reset controller feature of the system-controller) yet.
+> > Yeah, we can just add #reset-cells = <1> to the system-controller
+> > device node, but we cannot add the actual resets properties to the
+> > consumers, until the actual cell values are defined.
+>
+> Sounds like you should implement providers first. Or just live with the
+> warning as a reminder to implement the reset provider?
 
-Obviously this can't handle funky power sequencing requirements, but we
-don't have any of those here and we don't know if we ever will (at least
-Apple seems to be a fan of throwing little CPLDs on their boards for
-fine grained power sequencing, driven by a single IO). If we do, then
-that would be the time to have GPIOs in the device node.
+I'd go for the latter. The upstream r9a06g032.dtsi is still under active
+development. Until very recently, the only device supported was the
+serial console.
 
-In addition, sometimes a single power enable is shared between multiple
-functions of one device. This is the case with WiFi/BT, which is a combo
-chip with two functions. Coordinating GPIO usage between both drivers
-would be problematic if they both try to own it.
+Gr{oetje,eeting}s,
 
-The individual device drivers still need to have some kind of API to be
-able to put devices into a low-power state. For example, the WiFi driver
-could outright power down the device when it is wholly unused and the
-interface is down (same for BT, and the PCI core should only put the
-slot GPIO into powerdown if both functions say they should be off).
-Similarly, the SD driver needs to support an external SD detect GPIO,
-and have a mode where it tells the PCI core to shut down the device when
-no SD is inserted, and power it back up on insertion. This all allows
-the devices to behave a users might expect, with the device nodes
-existing and the PCI devices "visible" even when they are powered down
-behind the scenes, until they are needed. AIUI this is already how e.g.
-hybrid graphics power management works, where power is outright yanked
-from the secondary card when it is not needed even though it is still
-visible from the userspace point of view (and it is automatically
-powered and reinitialized on use).
+                        Geert
 
-I'm not super familiar with PCI device power states (making brcmfmac
-sleep work properly on these platforms is on my TODO list...) so I'd
-love to get some feedback from the PCI folks on what they think about
-this whole issue.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
--- 
-Hector Martin (marcan@marcan.st)
-Public Key: https://mrcn.st/pub
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
