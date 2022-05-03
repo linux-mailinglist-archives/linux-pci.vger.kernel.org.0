@@ -2,89 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 470E95182F7
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 12:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C10C51848F
+	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 14:45:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232908AbiECLDV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 07:03:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41830 "EHLO
+        id S235552AbiECMt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 08:49:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232149AbiECLDU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 07:03:20 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58772B95;
-        Tue,  3 May 2022 03:59:48 -0700 (PDT)
-Received: by mail-wr1-f50.google.com with SMTP id d5so22839313wrb.6;
-        Tue, 03 May 2022 03:59:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FS/1ZW5mhYBaurYyULbkqpkXIFIT+G6Pb25VduaI8B0=;
-        b=Cm6O4smTWK6WJLJF1UUVti+krTyWjBFf3bmn4B1NiwXGtQjPsHrBbaTLZQ0zo1kc/i
-         GlgmuAdiPAab6S9mflKJLiwcsRFalM23rqptZ4DQjvLshOO4Aopa/AmJIVmmW1wn1s8C
-         Tz71WSqHVXu4/Ktsxyut/Bg5ot3tX6Gvs9f4K6TnlvVWOot7AlNUi1+IfledqYplK6Yw
-         jcUPzx/8hcrlcUcJtrfRONXX2k2Br6Rm3TKPoM+5ZUGU2GdK6NGYT9SJrcctaVy+sRUs
-         x59K8PcZ5Pw2KfSUCxBdGWOsAdaNc/hyy7jQq/IDxD+fsfSCh/8SsOGyAL6dbPPwEj+t
-         u8QQ==
-X-Gm-Message-State: AOAM532bcThHOz1YhZl89mio8k9iULTnVATNE7G3jsiLs2Dutn8wGif5
-        t5sJAV/iPGGADnOz+pM9N38=
-X-Google-Smtp-Source: ABdhPJz1r0WdWT86Ff3hcmvZrz6jS3SJ8tbvQJeUVMD+me3yv78BAOMD25Qp9V6xanTVf/EK7+4BRw==
-X-Received: by 2002:adf:f14a:0:b0:20a:d7bd:a5d4 with SMTP id y10-20020adff14a000000b0020ad7bda5d4mr12103294wro.390.1651575586817;
-        Tue, 03 May 2022 03:59:46 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id d15-20020adf9b8f000000b0020c5253d8c8sm8829524wrc.20.2022.05.03.03.59.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 03:59:46 -0700 (PDT)
-Date:   Tue, 3 May 2022 10:59:44 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, robh@kernel.org, kw@linux.com,
-        helgaas@kernel.org, alex.williamson@redhat.com,
-        boqun.feng@gmail.com, Boqun.Feng@microsoft.com, jakeo@microsoft.com
-Subject: Re: [PATCH v2] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce VM
- boot time
-Message-ID: <20220503105944.nezlg26jfxv4fqha@liuwe-devbox-debian-v2>
-References: <20220502074255.16901-1-decui@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220502074255.16901-1-decui@microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S235535AbiECMt0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 08:49:26 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31D21A839;
+        Tue,  3 May 2022 05:45:53 -0700 (PDT)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 243AHhcD018592;
+        Tue, 3 May 2022 12:45:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=z5pRrwadTvaMNn3IfMVuln6dl3dg7299RmoATTWlzwg=;
+ b=D0+Qdgb0wJMI40BA+uEYDB2P6ae4KozbuZ5K2JQhR9fNK/vvaCLl8k/uzHk+kiFMdb7H
+ frtHTtYr0bpz3U0IBPVI0yQiqYkMij/Qoal91w/qxWeeTfyH0L7yu9WYWJMH3RduaEWk
+ S6cryHXPNrOrbD1mNOGwPNQlFI6C53VncjhyvgIMu1Jg+xG0WtcFVVuOcaCsVeeVCOiR
+ 0uhyts6SV9au3nINgAaS/hrT/qrRyKsFOW8eEMnTceJ/nZod58M93wWyEA61QO4+KW5i
+ 9z5ydpwqezzhj4U7nSkKGL5hsRg1/vAaS0NeoTph0IkgsHmgbps2PLUqi8Ikbl+Z9nUM uA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fu2gx29ac-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 May 2022 12:45:28 +0000
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 243CT501031317;
+        Tue, 3 May 2022 12:45:27 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fu2gx299h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 May 2022 12:45:27 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 243CgoEL007825;
+        Tue, 3 May 2022 12:45:24 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 3fttcj0kqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 May 2022 12:45:24 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 243CjMSU52232586
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 May 2022 12:45:22 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E1005204F;
+        Tue,  3 May 2022 12:45:22 +0000 (GMT)
+Received: from sig-9-145-89-42.uk.ibm.com (unknown [9.145.89.42])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7FCD85204E;
+        Tue,  3 May 2022 12:45:21 +0000 (GMT)
+Message-ID: <867e70df01fc938abf93ffa15a3f1989a8fb136b.camel@linux.ibm.com>
+Subject: Re: [RFC v2 21/39] net: add HAS_IOPORT dependencies
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
+        Arnd Bergmann <arnd@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "open list:CAN NETWORK DRIVERS" <linux-can@vger.kernel.org>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "open list:AX.25 NETWORK LAYER" <linux-hams@vger.kernel.org>
+Date:   Tue, 03 May 2022 14:45:21 +0200
+In-Reply-To: <alpine.DEB.2.21.2205012324130.9383@angie.orcam.me.uk>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+         <20220429135108.2781579-36-schnelle@linux.ibm.com>
+         <alpine.DEB.2.21.2205012324130.9383@angie.orcam.me.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: UXMkE0Jl2bfDY_C86ZbGXUit00mBBjDH
+X-Proofpoint-ORIG-GUID: K2hn79ghKwvBH28giVmJiMbz3A6Tgxi4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-03_03,2022-05-02_03,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ mlxscore=0 malwarescore=0 mlxlogscore=474 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205030092
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 02, 2022 at 12:42:55AM -0700, Dexuan Cui wrote:
-> Currently when the pci-hyperv driver finishes probing and initializing the
-> PCI device, it sets the PCI_COMMAND_MEMORY bit; later when the PCI device
-> is registered to the core PCI subsystem, the core PCI driver's BAR detection
-> and initialization code toggles the bit multiple times, and each toggling of
-> the bit causes the hypervisor to unmap/map the virtual BARs from/to the
-> physical BARs, which can be slow if the BAR sizes are huge, e.g., a Linux VM
-> with 14 GPU devices has to spend more than 3 minutes on BAR detection and
-> initialization, causing a long boot time.
+On Sun, 2022-05-01 at 23:48 +0100, Maciej W. Rozycki wrote:
+> On Fri, 29 Apr 2022, Niklas Schnelle wrote:
 > 
-> Reduce the boot time by not setting the PCI_COMMAND_MEMORY bit when we
-> register the PCI device (there is no need to have it set in the first place).
-> The bit stays off till the PCI device driver calls pci_enable_device().
-> With this change, the boot time of such a 14-GPU VM is reduced by almost
-> 3 minutes.
+> > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> > not being declared. We thus need to add HAS_IOPORT as dependency for
+> > those drivers using them. It also turns out that with HAS_IOPORT handled
+> > explicitly HAMRADIO does not need the !S390 dependency and successfully
+> > builds the bpqether driver.
+> [...]
+> > diff --git a/drivers/net/fddi/Kconfig b/drivers/net/fddi/Kconfig
+> > index 846bf41c2717..fa3f1e0fe143 100644
+> > --- a/drivers/net/fddi/Kconfig
+> > +++ b/drivers/net/fddi/Kconfig
+> > @@ -29,7 +29,7 @@ config DEFZA
+> >  
+> >  config DEFXX
+> >  	tristate "Digital DEFTA/DEFEA/DEFPA adapter support"
+> > -	depends on FDDI && (PCI || EISA || TC)
+> > +	depends on FDDI && (PCI || EISA || TC) && HAS_IOPORT
+> >  	help
+> >  	  This is support for the DIGITAL series of TURBOchannel (DEFTA),
+> >  	  EISA (DEFEA) and PCI (DEFPA) controllers which can connect you
 > 
-> Link: https://lore.kernel.org/lkml/20220419220007.26550-1-decui@microsoft.com/
-> Tested-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Jake Oshins <jakeo@microsoft.com>
+>  NAK, this has to be sorted out differently (and I think we discussed it 
+> before).
+> 
+>  The driver works just fine with MMIO where available, so if `inb'/`outb' 
+> do get removed, then only parts that rely on port I/O need to be disabled.  
+> In fact there's already such provision there in drivers/net/fddi/defxx.c 
+> for TURBOchannel systems (CONFIG_TC), which have no port I/O space either:
+> 
+> #if defined(CONFIG_EISA) || defined(CONFIG_PCI)
+> #define dfx_use_mmio bp->mmio
+> #else
+> #define dfx_use_mmio true
+> #endif
+> 
+> so I guess it's just the conditional that will have to be changed to:
+> 
+> #ifdef CONFIG_HAS_IOPORT
+> 
+> replacing the current explicit bus dependency list.  The compiler will 
+> then optimise away all the port I/O stuff (though I suspect dummy function 
+> declarations may be required for `inb'/`outb', etc.).
+> 
+>  I can verify a suitable change with a TURBOchannel configuration once the 
+> MIPS part has been sorted.
+> 
+>   Maciej
 
-Applied to hyperv-next. Thanks.
+With dfx_use_mmio changed as you propose above things compile on s390
+which previously ran into missing (now __compile_error()) inl() via
+dfx_port_read_long() -> dfx_inl() ->  inl().
+
+Looking at the other uses of dfx_use_mmio I notice however that in
+dfx_get_bars(), inb() actually gets called when dfx_use_mmio is true.
+This happens if dfx_bus_eisa is also true. Now that variable is just
+the cached result of DFX_BUS_EISA(dev) which is defined to 0 if
+CONFIG_EISA is unset. I'm not 100% sure if going through a local
+variable is still considered trivial enough dead code elimination, at
+least it works for me™. I did also check the GCC docs and they
+explicitly say that __attribute__(error) is supposed to be used when
+dead code elimination gets rid of the error paths.
+
+I think we also need a "depends on HAS_IOPORT" for "config HAVE_EISA"
+just as I'm adding for "config ISA".
+
