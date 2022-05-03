@@ -2,108 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A731251851E
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 15:08:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD3EA518599
+	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 15:36:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235211AbiECNLq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 09:11:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59098 "EHLO
+        id S234955AbiECNj5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 09:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233216AbiECNLo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 09:11:44 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1AA512AE3D
-        for <linux-pci@vger.kernel.org>; Tue,  3 May 2022 06:08:07 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-234-VLCMgDn0OwqNyGTPU6svxg-1; Tue, 03 May 2022 14:08:05 +0100
-X-MC-Unique: VLCMgDn0OwqNyGTPU6svxg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.32; Tue, 3 May 2022 14:08:04 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.033; Tue, 3 May 2022 14:08:04 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Walleij' <linus.walleij@linaro.org>,
-        William Breathitt Gray <william.gray@linaro.org>
-CC:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        with ESMTP id S230367AbiECNj4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 09:39:56 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1078A24598;
+        Tue,  3 May 2022 06:36:23 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 86FD492009C; Tue,  3 May 2022 15:36:21 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 8082392009B;
+        Tue,  3 May 2022 14:36:21 +0100 (BST)
+Date:   Tue, 3 May 2022 14:36:21 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
         Arnd Bergmann <arnd@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: RE: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
-Thread-Topic: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
-Thread-Index: AQHYXaY4HSGVKKYe1UmuRZfv/6NY/a0NHk4Q
-Date:   Tue, 3 May 2022 13:08:04 +0000
-Message-ID: <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com>
-References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
- <20220429135108.2781579-19-schnelle@linux.ibm.com> <Ymv3DnS1vPMY8QIg@fedora>
- <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com>
- <YmwGLrh4U+pVJo0m@fedora>
- <CACRpkdaha37y-ZNSqYSbf=TvsJNcvbH1Y=N0JkVCewB-Lvf81Q@mail.gmail.com>
-In-Reply-To: <CACRpkdaha37y-ZNSqYSbf=TvsJNcvbH1Y=N0JkVCewB-Lvf81Q@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "open list:CAN NETWORK DRIVERS" <linux-can@vger.kernel.org>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "open list:AX.25 NETWORK LAYER" <linux-hams@vger.kernel.org>
+Subject: Re: [RFC v2 21/39] net: add HAS_IOPORT dependencies
+In-Reply-To: <867e70df01fc938abf93ffa15a3f1989a8fb136b.camel@linux.ibm.com>
+Message-ID: <alpine.DEB.2.21.2205031359490.64520@angie.orcam.me.uk>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>  <20220429135108.2781579-36-schnelle@linux.ibm.com>  <alpine.DEB.2.21.2205012324130.9383@angie.orcam.me.uk> <867e70df01fc938abf93ffa15a3f1989a8fb136b.camel@linux.ibm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogTGludXMgV2FsbGVpag0KPiBTZW50OiAwMSBNYXkgMjAyMiAyMjo1Ng0KPiANCj4gT24g
-RnJpLCBBcHIgMjksIDIwMjIgYXQgNTozNyBQTSBXaWxsaWFtIEJyZWF0aGl0dCBHcmF5DQo+IDx3
-aWxsaWFtLmdyYXlAbGluYXJvLm9yZz4gd3JvdGU6DQo+ID4gT24gRnJpLCBBcHIgMjksIDIwMjIg
-YXQgMDQ6NDY6MDBQTSArMDIwMCwgTmlrbGFzIFNjaG5lbGxlIHdyb3RlOg0KPiANCj4gPiA+IEdv
-b2QgcXVlc3Rpb24uIEFzIGZhciBhcyBJIGNhbiBzZWUgbW9zdCAoYWxsPykgb2YgdGhlc2UgaGF2
-ZSAic2VsZWN0DQo+ID4gPiBJU0FfQlVTX0FQSSIgd2hpY2ggaXMgImRlZl9ib29sIElTQSIuIE5v
-dyAiY29uZmlnIElTQSIgc2VlbXMgdG8NCj4gPiA+IGN1cnJlbnRseSBiZSByZXBlYXRlZCBpbiBh
-cmNoaXRlY3R1cmVzIGFuZCBkb2Vzbid0IGhhdmUgYW4gZXhwbGljaXQNCj4gPiA+IEhBU19JT1BP
-UlQgZGVwZW5kZW5jeSAoaXQgbWF5YmUgc2hvdWxkIGhhdmUgb25lKS4gQnV0IGl0IGRvZXMgb25s
-eSBtYWtlDQo+ID4gPiBzZW5zZSBvbiBhcmNoaXRlY3R1cmVzIHdpdGggSEFTX0lPUE9SVCBzZXQu
-DQo+ID4NCj4gPiBUaGVyZSBpcyBzdWNoIGEgdGhpbmcgYXMgSVNBIERNQSwgYnV0IHlvdSdsbCBz
-dGlsbCBuZWVkIHRvIGluaXRpYWxpemUNCj4gPiB0aGUgZGV2aWNlIHZpYSB0aGUgSU8gUG9ydCBi
-dXMgZmlyc3QsIHNvIHBlcmhhcHMgc2V0dGluZyBIQVNfSU9QT1JUIGZvcg0KPiA+ICJjb25maWcg
-SVNBIiBpcyB0aGUgcmlnaHQgdGhpbmcgdG8gZG86IGFsbCBJU0EgZGV2aWNlcyBhcmUgZXhwZWN0
-ZWQgdG8NCj4gPiBjb21tdW5pY2F0ZSBpbiBzb21lIHdheSB2aWEgaW9wb3J0Lg0KPiANCj4gQWRk
-aW5nIHRoYXQgZGVwZW5kZW5jeSBzZWVtcyBsaWtlIHRoZSByaWdodCBzb2x1dGlvbiB0byBtZS4N
-Cg0KSSB0aGluayBpdCBhbGwgZGVwZW5kcyBvbiB3aGF0IEhBU19JT1BPUlQgaXMgbWVhbnQgdG8g
-bWVhbiBhbmQNCmhvdyBwb3J0YWJsZSBrZXJuZWwgYmluYXJpZXMgbmVlZCB0byBiZS4NCg0KeDg2
-IGlzIChwcm9iYWJseSkgdGhlIG9ubHkgYXJjaGl0ZWN0dXJlIHRoYXQgYWN0dWFsbHkgaGFzICdp
-bicNCmFuZCAnb3V0JyBpbnN0cnVjdGlvbnMgLSBidXQgdGhhdCBkb2Vzbid0IG1lYW4gdGhhdCBz
-b21lIG90aGVyDQpjcHUgKGFuZCBJIG1lYW4gY3B1K3BjYiBub3QgYXJjaGl0ZWN0dXJlKSBoYXZl
-IHRoZSBhYmlsaXR5IHRvDQpnZW5lcmF0ZSAnSU8nIGJ1cyBjeWNsZXMgb24gYSBzcGVjaWZpYyBw
-aHlzaWNhbCBidXMuDQoNCldoaWxlIHRoZSBvYnZpb3VzIGNhc2UgaXMgYSBwaHlzaWNhbCBhZGRy
-ZXNzIHdpbmRvdyB0aGF0IGdlbmVyYXRlcw0KUENJKGUpIElPIGN5Y2xlcyBmcm9tIG5vcm1hbCBt
-ZW1vcnkgY3ljbGVzIGl0IGlzbid0IHRoZSBvbmx5IG9uZS4NCg0KSSd2ZSB1c2VkIHNwYXJjIGNw
-dSBzeXN0ZW1zIHRoYXQgaGF2ZSBwY21jaWEgY2FyZCBzbG90cy4NClRoZXNlIGFyZSBwcmV0dHkg
-bXVjaCBJU0EgYW5kIHRoZSBkcml2ZXJzIG1pZ2h0IGV4cGVjdCB0bw0KYWNjZXNzIHBvcnQgMHgz
-MDAgKGV0YykgLSBjZXJ0YWlubHkgdGhhdCB3b3VsZCBiZSByaWdodCBvbiB4ODYuDQoNCkluIHRo
-aXMgY2FzZSBpcyBpc24ndCBzbyBtdWNoIHRoYXQgdGhlIElTQV9CVVMgZGVwZW5kcyBvbiBzdXBw
-b3J0DQpmb3IgaW4vb3V0IGJ1dCB0aGF0IHByZXNlbmNlIG9mIHRoZSBJU0EgYnVzIHByb3ZpZGVz
-IHRoZSByZXF1aXJlZA0KaW4vb3V0IHN1cHBvcnQuDQoNCk5vdywgbWF5YmUsIHRoZSBkcml2ZXJz
-IHNob3VsZCBiZSB1c2luZyBzb21lIGlvcmVtYXAgdmFyaWFudCBhbmQNCnRoZW4gY2FsbGluZyBp
-b3JlYWQ4KCkgcmF0aGVyIHRoYW4gZGlyZWN0bHkgY2FsbGluZyBpbmIoKS4NCkJ1dCB0aGF0IHNl
-ZW1zIG9ydGhvZ29uYWwgdG8gdGhpcyBjaGFuZ2VzZXQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3Rl
-cmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtl
-eW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Tue, 3 May 2022, Niklas Schnelle wrote:
 
+> >  The driver works just fine with MMIO where available, so if `inb'/`outb' 
+> > do get removed, then only parts that rely on port I/O need to be disabled.  
+> > In fact there's already such provision there in drivers/net/fddi/defxx.c 
+> > for TURBOchannel systems (CONFIG_TC), which have no port I/O space either:
+> > 
+> > #if defined(CONFIG_EISA) || defined(CONFIG_PCI)
+> > #define dfx_use_mmio bp->mmio
+> > #else
+> > #define dfx_use_mmio true
+> > #endif
+> > 
+> > so I guess it's just the conditional that will have to be changed to:
+> > 
+> > #ifdef CONFIG_HAS_IOPORT
+> > 
+> > replacing the current explicit bus dependency list.  The compiler will 
+> > then optimise away all the port I/O stuff (though I suspect dummy function 
+> > declarations may be required for `inb'/`outb', etc.).
+[...]
+> With dfx_use_mmio changed as you propose above things compile on s390
+> which previously ran into missing (now __compile_error()) inl() via
+> dfx_port_read_long() -> dfx_inl() ->  inl().
+
+ Great, thanks for checking!  And I note referring `__compile_error' is 
+roughly equivalent to a dummy declaration, so you've got that part sorted.
+
+> Looking at the other uses of dfx_use_mmio I notice however that in
+> dfx_get_bars(), inb() actually gets called when dfx_use_mmio is true.
+> This happens if dfx_bus_eisa is also true. Now that variable is just
+> the cached result of DFX_BUS_EISA(dev) which is defined to 0 if
+> CONFIG_EISA is unset. I'm not 100% sure if going through a local
+> variable is still considered trivial enough dead code elimination, at
+> least it works for me™. I did also check the GCC docs and they
+> explicitly say that __attribute__(error) is supposed to be used when
+> dead code elimination gets rid of the error paths.
+
+ Yeah, dead code elimination is supposed to handle such cases.  The local
+automatic variable is essentially a syntactic feature not to use the same 
+expression inline over and over throughout a function (for clarity the 
+variable should probably be declared `const', but that is not essential) 
+and it is up to the compiler whether to reuse the value previously 
+calculated or to re-evaluate the expression.
+
+> I think we also need a "depends on HAS_IOPORT" for "config HAVE_EISA"
+> just as I'm adding for "config ISA".
+
+ Oh absolutely!  There's the slot-specific port I/O space that is used to 
+identify EISA option cards in device discovery, so no EISA device will 
+ever work without port I/O.  Have a look at `decode_eisa_sig' in 
+drivers/eisa/eisa-bus.c for the very obvious code.  Note that some ISA 
+cards can be configured to appear as EISA devices as well (I have a 3c509B 
+Ethernet NIC set up that way).
+
+  Maciej
