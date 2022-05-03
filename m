@@ -2,104 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC34A519196
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 00:44:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B7175191AE
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 00:51:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236354AbiECWrW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 18:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35192 "EHLO
+        id S243824AbiECWyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 18:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232766AbiECWrW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 18:47:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9631A427FB;
-        Tue,  3 May 2022 15:43:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 43153B82225;
-        Tue,  3 May 2022 22:43:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD586C385A9;
-        Tue,  3 May 2022 22:43:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651617826;
-        bh=Z6S2y7SUOakVPhPiGmuDOM2Gy1kVlAWgAuhNi3LGULs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EuRM+xKHtw/nFA9UEqMY8i0S22dY3/CFsn8xt3cAPhCzU7Cb70s7Tjb/tsbOrkfOB
-         hmwglyPYxM+Qy7tc1L1Kxs5nHLEwc3tjFDaiSc1vgK2Hu/R6o1NorSbgtht9PIBh3A
-         mXoJm8vNgHYoTY6Rj3E5SBK94H3nfJnYJpkd0/DcaZNeW+gERmyBV3BMuXzKtdIkK8
-         Ri8g1gkBSP2Cr3AgisBjXoDnEo5iK4/+poNBWnGliVY5boQyktMQfT7ov7jObnJcAh
-         DlpCgLsVEaOPLX6mB5fUTqwiAvGEylHMjupQGJBfPeeQJjpNgYZgBXuvSQcE2YbAmG
-         IAnGw0zNxZBng==
-Date:   Tue, 3 May 2022 17:43:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S240167AbiECWys (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 18:54:48 -0400
+Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 288FD28990;
+        Tue,  3 May 2022 15:51:13 -0700 (PDT)
+Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7ED2816A9;
+        Wed,  4 May 2022 01:51:46 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 7ED2816A9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baikalelectronics.ru; s=mail; t=1651618307;
+        bh=JPtlov/R26iaJoGYLE65h7R26Fa4fW15sVpsEpMYVE0=;
+        h=From:To:CC:Subject:Date:From;
+        b=sB2vwT0GZyd6haIudkMbBYmtvZK6jPS6DaM6B3lV45IzO6cfRSl5Po8sAsyWksWLF
+         XAB+IsIqiaWMuoPOmwQyn7rn9//O0wJTpHCuKTxXPXGd5kzFEq6YmvraPX+8qfEKnv
+         U3Llmf6TmfclwIu1xOu8E3Z+WbH3zKYd9kUWJgnE=
+Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:12 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Remove ddrss_sf_tbu clock from sc8180x
-Message-ID: <20220503224343.GA415146@bhelgaas>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 00/26] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+Date:   Wed, 4 May 2022 01:50:38 +0300
+Message-ID: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220331013415.592748-1-bjorn.andersson@linaro.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 30, 2022 at 06:34:15PM -0700, Bjorn Andersson wrote:
-> The Qualcomm SC8180X platform was piggy backing on the SM8250
-> qcom_pcie_cfg, but the platform doesn't have the ddrss_sf_tbu clock, so
-> it now fails to probe due to the missing clock.
-> 
-> Give SC8180X its own qcom_pcie_cfg, without the ddrss_sf_tbu flag set.
-> 
-> Fixes: 0614f98bbb9f ("PCI: qcom: Add ddrss_sf_tbu flag")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This is a final patchset in the series created in the framework of
+my Baikal-T1 PCIe/eDMA-related work:
 
-Since this fixes a regression that we added in v5.18-rc1, I applied
-this to for-linus for v5.18.  Thanks!
+[1: In-progress v3] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+Link: https://lore.kernel.org/linux-pci/20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru/
+[2: In-progress v2] PCI: dwc: Various fixes and cleanups
+Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+[3: In-progress v2] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+[4: In-progress v2] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+Link: --you are looking at it--
 
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 6ab90891801d..816028c0f6ed 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1550,6 +1550,11 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
->  	.pipe_clk_need_muxing = true,
->  };
->  
-> +static const struct qcom_pcie_cfg sc8180x_cfg = {
-> +	.ops = &ops_1_9_0,
-> +	.has_tbu_clk = true,
-> +};
-> +
->  static const struct dw_pcie_ops dw_pcie_ops = {
->  	.link_up = qcom_pcie_link_up,
->  	.start_link = qcom_pcie_start_link,
-> @@ -1656,7 +1661,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-qcs404", .data = &ipq4019_cfg },
->  	{ .compatible = "qcom,pcie-sdm845", .data = &sdm845_cfg },
->  	{ .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
-> -	{ .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
-> +	{ .compatible = "qcom,pcie-sc8180x", .data = &sc8180x_cfg },
->  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &sm8450_pcie0_cfg },
->  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &sm8450_pcie1_cfg },
->  	{ .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
-> -- 
-> 2.35.1
-> 
+Note it is recommended to merge this patchset after the former ones in
+order to prevent merge conflicts. @Lorenzo could you merge in this
+patchset through your PCIe repo? After getting all the ack'es of course
+and after merging in the @Frank' series? (See the next paragraph for more
+details.)
+
+Please note originally this series was self content, but due to Frank
+being a bit faster in his work submission I had to rebase my patchset onto
+his one. So now this patchset turns to be dependent on the Frank' work:
+Link: https://lore.kernel.org/linux-pci/20220503005801.1714345-1-Frank.Li@nxp.com/
+So please merge Frank' series first before applying this one.
+
+Here is a short summary regarding this patchset. The series starts with
+fixes patches. The very first patch fixes the dma_direct_map_resource()
+method, which turned out to be not working correctly for the case of
+having devive.dma_range_map being non-empty (non-empty dma-ranges DT
+property). Then we discovered that the dw-edma-pcie.c driver incorrectly
+initializes the LL/DT base addresses for the platforms with not matching
+CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
+method to get a correct base address. After that you can find a series of
+the interleaved xfers fixes. It turned out the interleaved transfers
+implementation didn't work quite correctly from the very beginning for
+instance missing src/dst addresses initialization, etc. In the framework
+of the next two patches we suggest to add a new platform-specific
+callback - pci_address() and use it to convert the CPU address to the PCIe
+space address. It is at least required for the DW eDMA remote End-point
+setup on the platforms with not-matching CPU/PCIe address spaces. In case
+of the DW eDMA local RP/EP setup the conversion will be done automatically
+by the outbound iATU (if no DMA-bypass flag is specified for the
+corresponding iATU window). Then we introduce a set of the patches to make
+the DebugFS part of the code supporting the multi-eDMA controllers
+platforms. It starts with several cleanup patches and is closed joining
+the Read/Write channels into a single DMA-device as they originally should
+have been. After that you can find the patches with adding the non-atomic
+io-64 methods usage, dropping DT-region descriptors allocation, replacing
+chip IDs with the device name. In addition to that in order to have the
+eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
+dma-ranges-based memory ranges mapping since in case of the root port DT
+node it's applicable for the peripheral PCIe devices only. Finally at the
+series closure we introduce a generic DW eDMA controller support being
+available in the DW PCIe Host/End-point driver.
+
+Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Drop the patches:
+  [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+  [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
+  since they are going to be merged in in the framework of the
+  Frank's patchset.
+- Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
+  failure."
+- Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
+  definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
+- Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
+  'dent'." (@Manivannan)
+- Slightly extend the eDMA name array size. (@Manivannan)
+- Change the specific DMA mapping comment a bit to being
+  clearer. (@Manivannan)
+- Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+  method."
+- Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
+  device. That happens if the driver is disabled. (@Manivannan)
+- Add "dma" registers resource mapping procedure. (@Manivannan)
+- Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
+- Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
+- Remove eDMA in the dw_pcie_ep_exit() method.
+- Move the dw_pcie_edma_detect() method execution to the tail of the
+  dw_pcie_ep_init() function.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: linux-pci@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (26):
+  dma-direct: take dma-ranges/offsets into account in resource mapping
+  dmaengine: Fix dma_slave_config.dst_addr description
+  dmaengine: dw-edma: Release requested IRQs on failure
+  dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
+  dmaengine: dw-edma: Fix missing src/dst address of the interleaved
+    xfers
+  dmaengine: dw-edma: Don't permit non-inc interleaved xfers
+  dmaengine: dw-edma: Fix invalid interleaved xfers semantics
+  dmaengine: dw-edma: Add CPU to PCIe bus address translation
+  dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
+    glue-driver
+  dmaengine: dw-edma: Drop chancnt initialization
+  dmaengine: dw-edma: Fix DebugFS reg entry type
+  dmaengine: dw-edma: Stop checking debugfs_create_*() return value
+  dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
+  dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
+  dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
+  dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
+  dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
+  dmaengine: dw-edma: Join Write/Read channels into a single device
+  dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
+  dmaengine: dw-edma: Use non-atomic io-64 methods
+  dmaengine: dw-edma: Drop DT-region allocation
+  dmaengine: dw-edma: Replace chip ID number with device name
+  dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
+  dmaengine: dw-edma: Skip cleanup procedure if no private data found
+  PCI: dwc: Add generic iATU/eDMA CSRs space detection method
+  PCI: dwc: Add DW eDMA engine support
+
+ drivers/dma/dw-edma/dw-edma-core.c            | 211 +++++-----
+ drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
+ drivers/dma/dw-edma/dw-edma-v0-core.c         |  76 ++--
+ drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
+ .../pci/controller/dwc/pcie-designware-ep.c   |  16 +-
+ .../pci/controller/dwc/pcie-designware-host.c |  17 +-
+ drivers/pci/controller/dwc/pcie-designware.c  | 251 ++++++++++--
+ drivers/pci/controller/dwc/pcie-designware.h  |  23 +-
+ include/linux/dma/edma.h                      |  18 +-
+ include/linux/dmaengine.h                     |   2 +-
+ kernel/dma/direct.c                           |   2 +-
+ 14 files changed, 628 insertions(+), 400 deletions(-)
+
+-- 
+2.35.1
+
