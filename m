@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 962BB519073
-	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 23:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C07A3519085
+	for <lists+linux-pci@lfdr.de>; Tue,  3 May 2022 23:51:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243341AbiECVv2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 17:51:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        id S243236AbiECVvP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 17:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243240AbiECVux (ORCPT
+        with ESMTP id S243241AbiECVux (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 17:50:53 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E987741F82;
-        Tue,  3 May 2022 14:47:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F0D541F93;
+        Tue,  3 May 2022 14:47:14 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D255816DA;
-        Wed,  4 May 2022 00:47:46 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru D255816DA
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id EE33C16D6;
+        Wed,  4 May 2022 00:47:47 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru EE33C16D6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651614466;
-        bh=vL9ZLHHm22X/gnPYmYxaWQdMrSZyf+tmef5JkFUoktQ=;
+        d=baikalelectronics.ru; s=mail; t=1651614467;
+        bh=DE07tde5EIYdsFG7YTpf4YolgyrqiTMh/YtdqPmWpgw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=Y0Uw0YHmDogdrNkK/kr1HrP3puXdg0Ysn+LlXkHF9N19WrAGGycL5PxUOAJ7bdcK3
-         KWRfbWg6HUu5oiO2lMIT+YrHAPYPUqNWUkfR8ZjqQ86VYqTBIKEuRF4xN7UaPAPweP
-         j2PLus7eD+O2rV8ACgZqiioWoMF4+3uOiOJiFelI=
+        b=QK8g8i8MN3UK7s3ux/31qZgRw56IQDC6AUnxbyt/klWtQdaSQ8kYhQ7yANW/z4EBr
+         drnBT9UOmPnflsxyMsj4TkIHxjWGVbVqas4W5Cm2+IlbPpKaXtJBNxy8C+jqWI5+Xc
+         L0xpOzb9GhjUPkYJX/5RmLoU1AWIg9YvOEX9kvZY=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 00:47:12 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 00:47:13 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -42,9 +42,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 12/17] PCI: dwc: Add iATU regions size detection procedure
-Date:   Wed, 4 May 2022 00:46:33 +0300
-Message-ID: <20220503214638.1895-13-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v2 13/17] PCI: dwc: Verify in/out regions against iATU constraints
+Date:   Wed, 4 May 2022 00:46:34 +0300
+Message-ID: <20220503214638.1895-14-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -60,118 +60,147 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Depending on the DWC PCIe RC/EP/DM IP-core configuration parameters the
-controllers can be equipped not only with various number of inbound and
-outbound iATU windows, but with varied regions settings like alignment
-(which is also the minimum window size), minimum and maximum sizes. So to
-speak if internal ATU is enabled for the denoted IP-cores then the former
-settings will be defined by the CX_ATU_MIN_REGION_SIZE parameter while the
-later one will be determined by the CX_ATU_MAX_REGION_SIZE configuration
-parameter. Anyway having these parameters used in the driver will help to
-verify whether the requested inbound or outbound memory mappings can be
-fully created. Currently the driver doesn't perform any corresponding
-checking.
+Since the DWC PCIe driver private data now contains the iATU inbound and
+outbound regions constraints info like alignment, minimum and maximum
+limits, we can use them to make the in- and outbound iATU regions setup
+methods more strict to the ranges a callee tries to specify.  That will
+give us the safer dw_pcie_prog_outbound_atu(),
+dw_pcie_prog_ep_outbound_atu() and dw_pcie_prog_inbound_atu() functions.
 
-Note 1. The extended iATU regions have been supported since DWC PCIe
-v4.60a. There is no need in testing the upper limit register availability
-for the older cores.
-
-Note 2. The regions alignment is determined with using the fls() method
-since the lower four bits of the ATU Limit register can be occupied with
-the Circular Buffer Increment setting, which can be initialized with
-zeros.
-
-The (dma-)ranges verification will be added a bit later in one of the next
-commits.
+First of all let's update the outbound ATU entries setup methods to
+returning the operation status. The methods will fail either in case if
+the range is failed to be activated or the passed region doesn't fulfill
+iATU constraints. Secondly the passed to the
+dw_pcie_prog_{ep_}outbound_atu() methods region-related parameters are
+verified against the detected iATU regions constraints. In particular the
+region limit address must not overflow the lower/upper limit CSR RW-fields
+otherwise the specified range will be just silently clamped. That
+verification will also protect the code from having u64 type overflow.
+Secondly let's make sure base address (CPU-address), target address
+(PCI-address) and size are properly aligned. Unaligned ranges will be
+silently aligned down (addresses) and up (limit) on writing the values to
+the corresponding registers, which in it turn may lead to unpredictable
+results like ranges virtual overlap. Finally the CPU-address alignment
+needs to be verified in the dw_pcie_prog_inbound_atu() method too as the
+DWC PCIe RC/EP registers manual demands seeing the lower bits of the in-
+and outbound iATU base address are always zeros.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 33 +++++++++++++++++---
- drivers/pci/controller/dwc/pcie-designware.h |  2 ++
- 2 files changed, 31 insertions(+), 4 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware.c | 39 +++++++++++++-------
+ drivers/pci/controller/dwc/pcie-designware.h | 10 ++---
+ 2 files changed, 30 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 0781fa145b3f..1cc5e3b2fa6d 100644
+index 1cc5e3b2fa6d..747e252c09e6 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.c
 +++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -8,9 +8,11 @@
+@@ -8,6 +8,7 @@
   * Author: Jingoo Han <jg1.han@samsung.com>
   */
  
-+#include <linux/bitops.h>
++#include <linux/align.h>
+ #include <linux/bitops.h>
  #include <linux/delay.h>
  #include <linux/of.h>
- #include <linux/of_platform.h>
-+#include <linux/sizes.h>
- #include <linux/types.h>
+@@ -308,9 +309,9 @@ static inline u32 dw_pcie_enable_ecrc(u32 val)
+ 	return val | PCIE_ATU_TD;
+ }
  
- #include "../../pci.h"
-@@ -525,7 +527,8 @@ static bool dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
- static void dw_pcie_iatu_detect_regions(struct dw_pcie *pci)
+-static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+-					int index, int type, u64 cpu_addr,
+-					u64 pci_addr, u64 size)
++static int __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
++				       int index, int type, u64 cpu_addr,
++				       u64 pci_addr, u64 size)
  {
- 	int max_region, ob, ib;
--	u32 val;
-+	u32 val, min, dir;
-+	u64 max;
+ 	u32 retries, val;
+ 	u64 limit_addr;
+@@ -320,6 +321,13 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
  
- 	if (pci->iatu_unroll_enabled) {
- 		max_region = min((int)pci->atu_size / 512, 256);
-@@ -548,8 +551,29 @@ static void dw_pcie_iatu_detect_regions(struct dw_pcie *pci)
- 			break;
+ 	limit_addr = cpu_addr + size - 1;
+ 
++	if ((limit_addr & ~pci->region_limit) != (cpu_addr & ~pci->region_limit) ||
++	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
++	    !IS_ALIGNED(pci_addr, pci->region_align) ||
++	    !IS_ALIGNED(size, pci->region_align) || !size) {
++		return -EINVAL;
++	}
++
+ 	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LOWER_BASE,
+ 			      lower_32_bits(cpu_addr));
+ 	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_BASE,
+@@ -353,27 +361,29 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+ 	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
+ 		val = dw_pcie_readl_atu_ob(pci, index, PCIE_ATU_REGION_CTRL2);
+ 		if (val & PCIE_ATU_ENABLE)
+-			return;
++			return 0;
+ 
+ 		mdelay(LINK_WAIT_IATU);
  	}
  
--	pci->num_ib_windows = ib;
-+	if (ob) {
-+		dir = PCIE_ATU_REGION_DIR_OB;
-+	} else if (ib) {
-+		dir = PCIE_ATU_REGION_DIR_IB;
-+	} else {
-+		dev_err(pci->dev, "No iATU regions found\n");
-+		return;
-+	}
+ 	dev_err(pci->dev, "Outbound iATU is not being enabled\n");
 +
-+	dw_pcie_writel_atu(pci, dir, 0, PCIE_ATU_LIMIT, 0x0);
-+	min = dw_pcie_readl_atu(pci, dir, 0, PCIE_ATU_LIMIT);
-+
-+	if (dw_pcie_ver_is_ge(pci, 460A)) {
-+		dw_pcie_writel_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT, 0xFFFFFFFF);
-+		max = dw_pcie_readl_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT);
-+	} else {
-+		max = 0;
-+	}
-+
- 	pci->num_ob_windows = ob;
-+	pci->num_ib_windows = ib;
-+	pci->region_align = 1 << fls(min);
-+	pci->region_limit = (max << 32) | (SZ_4G - 1);
++	return -ETIMEDOUT;
  }
  
- void dw_pcie_iatu_detect(struct dw_pcie *pci)
-@@ -583,8 +607,9 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
- 	dev_info(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
- 		"enabled" : "disabled");
- 
--	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound\n",
--		 pci->num_ob_windows, pci->num_ib_windows);
-+	dev_info(pci->dev, "iATU regions: %u ob, %u ib, align %uK, limit %lluG\n",
-+		 pci->num_ob_windows, pci->num_ib_windows,
-+		 pci->region_align / SZ_1K, (pci->region_limit + 1) / SZ_1G);
+-void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+-			       u64 cpu_addr, u64 pci_addr, u64 size)
++int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
++			      u64 cpu_addr, u64 pci_addr, u64 size)
+ {
+-	__dw_pcie_prog_outbound_atu(pci, 0, index, type,
+-				    cpu_addr, pci_addr, size);
++	return __dw_pcie_prog_outbound_atu(pci, 0, index, type,
++					   cpu_addr, pci_addr, size);
  }
  
- void dw_pcie_setup(struct dw_pcie *pci)
+-void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-				  int type, u64 cpu_addr, u64 pci_addr,
+-				  u64 size)
++int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
++				 int type, u64 cpu_addr, u64 pci_addr,
++				 u64 size)
+ {
+-	__dw_pcie_prog_outbound_atu(pci, func_no, index, type,
+-				    cpu_addr, pci_addr, size);
++	return __dw_pcie_prog_outbound_atu(pci, func_no, index, type,
++					   cpu_addr, pci_addr, size);
+ }
+ 
+ static inline u32 dw_pcie_readl_atu_ib(struct dw_pcie *pci, u32 index, u32 reg)
+@@ -392,6 +402,9 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+ {
+ 	u32 retries, val;
+ 
++	if (!IS_ALIGNED(cpu_addr, pci->region_align))
++		return -EINVAL;
++
+ 	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_TARGET,
+ 			      lower_32_bits(cpu_addr));
+ 	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_TARGET,
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index f5b793caabff..faf42f2b2ff3 100644
+index faf42f2b2ff3..f0aa2c823b5d 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -271,6 +271,8 @@ struct dw_pcie {
- 	size_t			atu_size;
- 	u32			num_ib_windows;
- 	u32			num_ob_windows;
-+	u32			region_align;
-+	u64			region_limit;
- 	struct pcie_port	pp;
- 	struct dw_pcie_ep	ep;
- 	const struct dw_pcie_ops *ops;
+@@ -304,12 +304,10 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
+ int dw_pcie_link_up(struct dw_pcie *pci);
+ void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+ int dw_pcie_wait_for_link(struct dw_pcie *pci);
+-void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+-			       int type, u64 cpu_addr, u64 pci_addr,
+-			       u64 size);
+-void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-				  int type, u64 cpu_addr, u64 pci_addr,
+-				  u64 size);
++int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
++			      u64 cpu_addr, u64 pci_addr, u64 size);
++int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
++				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
+ int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+ 			     int type, u64 cpu_addr, u8 bar);
+ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
 -- 
 2.35.1
 
