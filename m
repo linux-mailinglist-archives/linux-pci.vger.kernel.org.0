@@ -2,80 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7986251B1B8
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 00:18:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99F6151B407
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 02:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240375AbiEDWWX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 18:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
+        id S235238AbiEEAGr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 20:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234889AbiEDWWV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 18:22:21 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631594ECC3;
-        Wed,  4 May 2022 15:18:44 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id 88-20020a9d0ee1000000b005d0ae4e126fso1820191otj.5;
-        Wed, 04 May 2022 15:18:44 -0700 (PDT)
+        with ESMTP id S233046AbiEDX6O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 19:58:14 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A404C53A40
+        for <linux-pci@vger.kernel.org>; Wed,  4 May 2022 16:54:11 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id s12-20020a0568301e0c00b00605f30530c2so1934032otr.9
+        for <linux-pci@vger.kernel.org>; Wed, 04 May 2022 16:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=Dn1MT8x7p4Rbn+pctwVkt7IgIdUxT0LRLjox/JaF9ttsZ2N8sUUglHFRxQa3sl75aK
+         h1U1JpCoOjPff8rV+LL0edQuBh+YvYlTbZ4zx127Qa80qMcS49J0d2nS2s7mVVadwp/M
+         vGp6wV8qQhR9tMRiQjyWHIJslgvG4HigF7p24aLxixJ1l99K68kLikab9Y0HgtSpkDYW
+         0+riuhXlj9dAnGs04evyYz4sFXKtm0FlJKiBI2Dtbo7ebvKr6E7XJkxgxzCXhReMwL1D
+         yv9OUeo9KjH+/RIlVXefhsYivAQRdlwo604eWoXrrvRFVxcSgXwgPis+UtVhyLpBWx3z
+         WyWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uPA2WXPf2ORHLvPqYvnaXDrZT9G3gl/LbUxeEGa3+Rk=;
-        b=M4h8Vw51/xwlanfMXEiTwbgMGOPmm+NZsHpgjeNZtcxSgvcNXffCoaEIQYVz54K3s0
-         QzT1QE86vZww78nhW8+vOdOIcSbB/ZxzqgS3BYAjvhKGlBxswvkWccRxJUXk4Tp9y2cq
-         LBjSjDXufUvLbjAj560Z2oVMO++btrHsbH6x4bzU98cqgFxTEj3Qp1UoUY04iE5gWFzP
-         aOMv51agQI025J2+2WVnEB5zboblp17Ldj9eaa0iGBh1KcKvRTPPByDE8do0G2v+iHC0
-         3ANHA6j7YipOscEOqMUlXBLx8eZwQRrOMGPL8SuZN3RCi1HMCaXh4iIGOb3JXH/XFq2g
-         mdXg==
-X-Gm-Message-State: AOAM531j9G8HVZCpmo6dTcuqOnwXBn7J9VjPf/R0kMQy1LV7qD6s/Z4k
-        do5htEvrI8P3jhbpBE+08Q==
-X-Google-Smtp-Source: ABdhPJxN6SwWGQWW1Tig+s8KsEXHmVP8UolyZn342PEBZ4kMRNzHqwmoRY1xgkpkGrYlZ3tUZAhjSA==
-X-Received: by 2002:a9d:195:0:b0:605:eb43:5b84 with SMTP id e21-20020a9d0195000000b00605eb435b84mr8372575ote.357.1651702723637;
-        Wed, 04 May 2022 15:18:43 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id l21-20020a544515000000b00325cda1ffb8sm38618oil.55.2022.05.04.15.18.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 May 2022 15:18:43 -0700 (PDT)
-Received: (nullmailer pid 2325128 invoked by uid 1000);
-        Wed, 04 May 2022 22:18:42 -0000
-Date:   Wed, 4 May 2022 17:18:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hector Martin <marcan@marcan.st>
-Cc:     Mark Kettenis <kettenis@openbsd.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pci: apple,pcie: Drop max-link-speed from
- example
-Message-ID: <YnL7wnGDbyGGksGX@robh.at.kernel.org>
-References: <20220502091308.28233-1-marcan@marcan.st>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=BixulbBw7cklz6F+bH6YB5EOKC1Ag/9x5VMTTEynrbggAWuPSaMxAwtv7PikmqoeG4
+         IK2xuzoJltcLWJ8AAT/EioOL0t/e/cRhlTVNGUURYrkWeSSURqQlDc0X60c+na32RdMG
+         ZXxnU/Z71aIGWr3egV9NjqV7yDEY8uJUMzkvaW81zvUcOJhBdhFYTkHOoNEu0sKwzacn
+         ZRhGEZmEmjr7y5bPPGhu8Dk7Te6jn5fxLoxAh3y320gb1Yi7p/kzgyvnwoEIrGrozTTY
+         muPNF2tq8j906av9OMp/U+sajbj4Hb2s8CxJvbY1A0hgRGjXZiAccpskAIl8uWtjoQOE
+         Ughw==
+X-Gm-Message-State: AOAM532GEFtzcbgpT2VYjQ/Cg9K490zjHah8YPQXr8MYfWDJX/48o0T3
+        Tderqv+NqcpH/CfqXzlZ1T/c/SnsSXNwPItbNBSZN105IAidTA==
+X-Google-Smtp-Source: ABdhPJyXbFHNtxfp8+qt+M9kuv/iG7XfFeFFPd7I4/fmpdxuycMtmf6dIJw5ghtZAT2CwgvAVE/kUl0HxsirxLIU8v0=
+X-Received: by 2002:a9d:6b16:0:b0:605:e0eb:d3d6 with SMTP id
+ g22-20020a9d6b16000000b00605e0ebd3d6mr8263208otp.213.1651708440302; Wed, 04
+ May 2022 16:54:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220502091308.28233-1-marcan@marcan.st>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Received: by 2002:a05:6802:1a9:0:0:0:0 with HTTP; Wed, 4 May 2022 16:53:59
+ -0700 (PDT)
+Reply-To: ortegainvestmmentforrealinvest@gmail.com
+From:   Info <joybhector64@gmail.com>
+Date:   Thu, 5 May 2022 05:23:59 +0530
+Message-ID: <CAP7KLYgH9LcKHS-KgR0zObHAgC6Fr3D+dOJSbDKurTc_12+iFw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:344 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [joybhector64[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [joybhector64[at]gmail.com]
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 02 May 2022 18:13:08 +0900, Hector Martin wrote:
-> We no longer use these since 111659c2a570 (and they never worked
-> anyway); drop them from the example to avoid confusion.
-> 
-> Fixes: 111659c2a570 ("arm64: dts: apple: t8103: Remove PCIe max-link-speed properties")
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> ---
->  Documentation/devicetree/bindings/pci/apple,pcie.yaml | 3 ---
->  1 file changed, 3 deletions(-)
-> 
+-- 
+I am an investor. I came from the USA and I have many investments all
+over the world.
 
-Applied, thanks!
+I want you to partner with me to invest in your country I am into many
+investment such as real Estate or buying of properties i can also
+invest money in any of existing business with equity royalty or by %
+percentage so on,
+Warm regards
