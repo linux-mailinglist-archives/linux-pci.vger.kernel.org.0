@@ -2,53 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 189D051A7EF
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 19:05:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B45651A852
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 19:07:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354930AbiEDRHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 13:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52244 "EHLO
+        id S1355527AbiEDRK0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 13:10:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354579AbiEDRFT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 13:05:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0ED5132B;
-        Wed,  4 May 2022 09:54:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D5CD4B827AC;
-        Wed,  4 May 2022 16:54:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50683C385B1;
-        Wed,  4 May 2022 16:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651683251;
-        bh=c6+7Ne4K8yZ0+BKb8IfJNxGJ6ZxxOYXvDdFYiQ0PJqM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uh7kUaXix6SXNpSHxcQafJqyVWArJKQx6BIJfPPwMl8cluoqPN3qGBf87C0JFYMh6
-         aUOJawCMaS6sZ7ndt9v8Sf0sPtPEJqffnJVQsm7THm2CtvsHU2AX9qaBlyBS7vDP9m
-         bBpyKzWp23iRlbBOwpNx9iabOCVxCVRLsMlixJ8MgdAvsYok1P1GsQzwz6toDlNjFg
-         KrvGLi8oVTmLGLVxGdCLImBEWD9YebI+IfxvCA9qRXcAtAjfXqKVEBuGQ4JmeWHHtg
-         LTOlrf0DOG1SdR1yVvMgg4/hfJrfgI4FtzUcCeKB1h1s2iF5k/INugSy7H0797WFSM
-         pkT9fnIfhu9NQ==
-Date:   Wed, 4 May 2022 11:54:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI
- devices
-Message-ID: <20220504165409.GA453565@bhelgaas>
+        with ESMTP id S1357169AbiEDRKA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 13:10:00 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50FC44924D
+        for <linux-pci@vger.kernel.org>; Wed,  4 May 2022 09:57:06 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 1-20020a05600c248100b00393fbf11a05so3583616wms.3
+        for <linux-pci@vger.kernel.org>; Wed, 04 May 2022 09:57:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=conchuod.ie; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=CzFQdBAVymLNDuNAsoBhl3Tfx7wzWa0NoFyiQoVzgrY=;
+        b=H4+JoY1Lspd2eWdgO1EYeeW+Uf284/fO3PrmxoT5pOYeCN4pIFVYjnZEgZ62p1IIzw
+         yWk6XaXkv2Vyd/+WEdejfYngfqBUCPUwaEBcsMy9WK8WRkqoXbhQkVGjR2x1dvqWZC9b
+         OPFsnLNhQBUGys9bqgQ67ojeZy7Cl4i0M+e1QNznLTJllJ2qDVsKBad/u1mvDqXSg9d8
+         JNgAmCY04mGoCE2WZJ9+2fTAkntjcDI0lDS19b12ZxHuctJPkZZ1bS5tIGd9o+gJTEPU
+         2j8g8KelxSRxGo9pgSf9enCA0BpkqH45NaGaJcqDCXC3Hr4gENWw+xGAXN2dfIEEHtTf
+         XFvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=CzFQdBAVymLNDuNAsoBhl3Tfx7wzWa0NoFyiQoVzgrY=;
+        b=rtxo2djmC/rXt8XF1GyQoccXxNJtc/7fNgfeej9I2hgB8SIf2QqlztqvcUF0VjwRy7
+         aeoQ3+WEGkSa/m4nh8Xqz6Iosw5o5mTbyO3TmbW7uMYVVIaWwd/D01rbDm8Wr2+t4cGE
+         ceYIWY599oHfkzIVU5V3F9vL351Yt6RGfR511WWGW+GQeg5G8ltNnPwKy3SJ4/4qeisj
+         JMJtwdFTHYM3COan0Hja2uEHvehE1VeN5seq9Lt8sjzWD/JAwmd3x5ISTgpHdf4XsyYX
+         PVl9B90ZvDHxNfLRUOhI9TnJntNPBVnRofy4/Uev1HnFNaWd6c4ZT5mdAWxfx64jQY3e
+         tgOQ==
+X-Gm-Message-State: AOAM531kavBVddFWPnl1L9QJmK9qVVEHeZ5GzGxYFaJ+Gl5PMvF4m70m
+        18R+hIxVDNFqEaDmevXnONi5aw==
+X-Google-Smtp-Source: ABdhPJzC0r3IdSMa44UgYEJ96l1ndGUDAmyh8akegbtuibHbHpEGMqr2tAlgB7dVnducaXTvi4yeDQ==
+X-Received: by 2002:a1c:a101:0:b0:392:942f:3aa with SMTP id k1-20020a1ca101000000b00392942f03aamr278174wme.1.1651683425395;
+        Wed, 04 May 2022 09:57:05 -0700 (PDT)
+Received: from [192.168.2.222] ([109.77.36.132])
+        by smtp.gmail.com with ESMTPSA id l184-20020a1c25c1000000b003943558a976sm4112947wml.29.2022.05.04.09.57.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 May 2022 09:57:04 -0700 (PDT)
+Message-ID: <3257dbdc-1f96-3baa-426d-9e834327dd21@conchuod.ie>
+Date:   Wed, 4 May 2022 17:57:03 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YnFtjzGYwe28tVAA@dev-arch.thelio-3990X>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in
+ interrupt handling
+Content-Language: en-US
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Conor.Dooley@microchip.com, Daire.McNamara@microchip.com,
+        bhelgaas@google.com, Cyril.Jean@microchip.com,
+        david.abdurachmanov@gmail.com, linux-pci@vger.kernel.org,
+        robh@kernel.org
+References: <20220502192223.GA319570@bhelgaas>
+ <199f5479-b212-e1ac-f9e4-d5d13708cb0c@conchuod.ie>
+ <20220504165307.GA19115@lpieralisi>
+From:   Conor Dooley <mail@conchuod.ie>
+In-Reply-To: <20220504165307.GA19115@lpieralisi>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,64 +79,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Anders]
 
-On Tue, May 03, 2022 at 10:59:43AM -0700, Nathan Chancellor wrote:
-> On Thu, Apr 14, 2022 at 03:11:21PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > 
-> > There are some issues related to changing power states of PCI
-> > devices, mostly related to carrying out unnecessary actions in some
-> > places, and the code is generally hard to follow.
-> > 
-> >  1. pci_power_up() has two callers, pci_set_power_state() and
-> >     pci_pm_default_resume_early().  The latter updates the current
-> >     power state of the device right after calling pci_power_up()
-> >     and it restores the entire config space of the device right
-> >     after that, so pci_power_up() itself need not read the
-> >     PCI_PM_CTRL register or restore the BARs after programming the
-> >     device into D0 in that case.
-> >  
-> >  2. It is generally hard to get a clear view of the pci_power_up()
-> >     code flow, especially in some corner cases, due to all of the
-> >     involved PCI_PM_CTRL register reads and writes occurring in
-> >     pci_platform_power_transition() and in pci_raw_set_power_state(),
-> >     some of which are redundant.
-> > 
-> >  3. The transitions from low-power states to D0 and the other way
-> >     around are unnecessarily tangled in pci_raw_set_power_state()
-> >     which causes it to use a redundant local variable and makes it
-> >     rather hard to follow.
-> > 
-> > To address the above shortcomings, make the following changes:
-> > 
-> >  a. Remove the code handling transitions into D0
-> >     from pci_raw_set_power_state() and rename it as
-> >     pci_set_low_power_state().
-> > 
-> >  b. Add the code handling transitions into D0 directly
-> >     to pci_power_up() and to a new wrapper function
-> >     pci_set_full_power_state() calling it internally that is
-> >     only used in pci_set_power_state().
-> > 
-> >  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
-> >     and make it work in the same way for transitions from any
-> >     low-power states (transitions from D1 and D2 are handled
-> >     slightly differently before the change).
-> > 
-> >  d. Put the restoration of the BARs and the PCI_PM_CTRL
-> >     register read confirming the power state change into
-> >     pci_set_full_power_state() to avoid doing that in
-> >     pci_pm_default_resume_early() unnecessarily.
-> > 
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+On 04/05/2022 17:53, Lorenzo Pieralisi wrote:
+> On Wed, May 04, 2022 at 04:12:39PM +0100, Conor Dooley wrote:
+>> On 02/05/2022 20:22, Bjorn Helgaas wrote:
+>>> On Sat, Apr 30, 2022 at 12:33:51AM +0100, Marc Zyngier wrote:
+>>>> On Fri, 29 Apr 2022 22:57:33 +0100,
+>>>> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>> On Fri, Apr 29, 2022 at 09:42:52AM +0000, Conor.Dooley@microchip.com wrote:
+>>>>>> On 28/04/2022 10:29, Lorenzo Pieralisi wrote:
+>>>>>>> On Tue, Apr 05, 2022 at 12:17:51PM +0100, daire.mcnamara@microchip.com wrote:
+>>>>>>>> From: Daire McNamara <daire.mcnamara@microchip.com>
+>>>>>>>>
+>>>>>>>> Clear MSI bit in ISTATUS register after reading it before
+>>>>>>>> handling individual MSI bits
+>>>
+>>>>>> Clear the MSI bit in ISTATUS register after reading it, but before
+>>>>>> reading and handling individual MSI bits from the IMSI register.
+>>>>>> This avoids a potential race where new MSI bits may be set on the
+>>>>>> IMSI register after it was read and be missed when the MSI bit in
+>>>>>> the ISTATUS register is cleared.
+>>>
+>>>>> Honestly, I don't understand enough about IRQs to determine whether
+>>>>> this is a correct fix.  Hopefully Marc will chime in.  All I really
+>>>>> know how to do is compare all the drivers and see which ones don't fit
+>>>>> the typical patterns.
+>>>>
+>>>> This seems sensible. In general, edge interrupts need an early Ack
+>>>> *before* the handler can be run. If it happens after, you're pretty
+>>>> much guaranteed to lose edges that would be generated between the
+>>>> handler and the late Ack.
+>>>>
+>>>> This can be implemented in HW in a variety of ways (read a register,
+>>>> write a register, or even both).
+>>>
+>>> Is this something that is or could be documented somewhere under
+>>> Documentation, e.g., "here are the common canonical patterns to use"?
+>>> I feel like an idiot because I have this kind of question all the time
+>>> and I never know how to confidently analyze it.
+>>
+>> Daire is still having the IT issues, so before I resend the patch with
+>> a new commit message, how is the following:
+>>
+>> Clear the MSI bit in ISTATUS_LOCAL register after reading it, but
+>> before reading and handling individual MSI bits from the ISTATUS_MSI
+>> register. This avoids a potential race where new MSI bits may be set
+>> on the ISTATUS_MSI register after it was read and be missed when the
+>> MSI bit in the ISTATUS_LOCAL register is cleared.
 > 
-> This change as commit 5bffe4c611f5 ("PCI/PM: Rework changing power
-> states of PCI devices") causes my AMD-based system to fail to fully
-> boot.
+> It is still unclear. You should translate what Marc said above into
+> how ISTATUS_MSI and ISTATUS_LOCAL work (ie describe how HW works).
+> 
+> Please describe what the registers do and use that to describe
+> the fix.
 
-I dropped 5bffe4c611f5 and subsequent pci/pm patches temporarily while
-this gets worked out.
+Sure, best to wait until the IT issues are resolved so!
 
-Bjorn
+Conor.
