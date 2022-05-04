@@ -2,316 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22C6651ADD8
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 21:34:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1239251ADE1
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 21:35:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352087AbiEDTiY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 15:38:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
+        id S1377550AbiEDTjN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 15:39:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238144AbiEDTiX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 15:38:23 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA694C42F;
-        Wed,  4 May 2022 12:34:47 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id z5-20020a17090a468500b001d2bc2743c4so2132123pjf.0;
-        Wed, 04 May 2022 12:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zGpWlqhH8LsEoyGiIeLjJGDTm34z5sP4m6zGUM4qs7s=;
-        b=fgXQdMR+DcvqTq61rC4Qq+cx3sAomCd48q2K1rv0y8KqERTi480CP9Oi9hdzntM2z3
-         nLkmNaB+Z6OhA/y5RSdkpvq0fj7WCfasoe7XU3SQwmHgGIXk+peo6gLuVw7N3+dO7eqJ
-         C1NgKJCxLe7iRyZJB4kVl5sUDF4eg2MTnqrJeYG8obIN0PUEhQrpSne2kc9u3fQRQMHO
-         wYAdt0TrrfTRhr8LQ2egzoBDiw8Gf3tGIhB8v0VHUFoyMDD0kCfjlpLe9QjIpooQ4flG
-         9Pu3ZrMbn+e2EYwzMNk7c1U0N2lanAqGRpdZjGqLgIrU1k4ncQM/cUPpIrPzvmfkEdxY
-         KTCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zGpWlqhH8LsEoyGiIeLjJGDTm34z5sP4m6zGUM4qs7s=;
-        b=MPROGjGA8dShMuPTSM6R4OyYm0X1dGqsFVJUDvYWWY/sp4aKNxm/YA+punxVAv/1C0
-         vaAYWWJ244EGr7QU5W6yUHv27k8rGoj0/Tc99KVaIfOxdSH9krO3hEOJsRrSn9EKaTBB
-         NUaY8V3AoVk8nLYtB/LkyNVVtRZWWAkRwcHl3zdYP0xTdXU5xirBCLKrfmCQvNkevwwU
-         7gC72ZyzztJyGiIYEb/VXrKOKtt11OtZXM5oOW7bVSFlXputNM13P1sZIP9pvE/UIJ16
-         VcZOOG/gVWPI7Q/p1i6CnEZSq41Skq2vNIupGgoQLwnRrMSN4nbZZMvNh9p8tVOXEw32
-         OpdQ==
-X-Gm-Message-State: AOAM532Ney+otIH4csEDcYzXfV3fN+GoIR/0z9cTOsRA2Q0NbEFYhSIk
-        uEcilAOsmOCkcJMRzNoRy5GceIdvACevuw0+ZgI=
-X-Google-Smtp-Source: ABdhPJxee7CJfue6dS8Zs3Di0PLlQ4Hf7KW5lwCBClxasjhxt0K0FNZUEu8t5QzvvYYHx0bjIwYUQlNvC6j6Z2NK/sE=
-X-Received: by 2002:a17:90b:3d0b:b0:1dc:1953:462d with SMTP id
- pt11-20020a17090b3d0b00b001dc1953462dmr1275909pjb.122.1651692886522; Wed, 04
- May 2022 12:34:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220503005801.1714345-1-Frank.Li@nxp.com> <20220503005801.1714345-10-Frank.Li@nxp.com>
-In-Reply-To: <20220503005801.1714345-10-Frank.Li@nxp.com>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Wed, 4 May 2022 14:34:35 -0500
-Message-ID: <CAHrpEqRyaQM6iVsC7U4mgjWForbcpyEyUKyBHouEJC3BV492pQ@mail.gmail.com>
-Subject: Re: [PATCH v10 9/9] PCI: endpoint: Enable DMA controller tests for
- endpoints with DMA capabilities
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        with ESMTP id S238694AbiEDTjL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 15:39:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB42E1C13D;
+        Wed,  4 May 2022 12:35:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D2C1361BE3;
+        Wed,  4 May 2022 19:35:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B762DC385A4;
+        Wed,  4 May 2022 19:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651692931;
+        bh=wifdIng5C5+zvFOVkWllKXbxxVMnCc1cn//B0XhEpek=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lzMbrpl1X0/Izn8Dbd/Pgv0Yx4q/r1wmVr7Ln6lHotMVWggcGUiZhSP413k9Y9zMt
+         dwhdbICf8SZ+qiA+cdQy+g/Jyq2to0UQSy36giJfE0cLWlKUiQPNijxiHfEgtQipxB
+         NJkqWR0PjkuOThf5WqfkhkGX1KQKn3IbjZeVd7/Um+iMZvihmnAQTKSer0jwmGJC6+
+         qYdyywA0pFQpyg7E4HwE2Nf161ijabc5PIfgwm5BzMtyXJ7cKcD9jQyWe1IqbC82Za
+         wRJohgmPQp1nIeAsGZBuq/x3p+c7xAFkx4sw6IpcWSKJz2y/PuubWJRr08wWbKQVs1
+         RPu3wb9+BxLcg==
+Date:   Wed, 4 May 2022 12:35:28 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI
+ devices
+Message-ID: <YnLVgOqGOPaSrC7G@dev-arch.thelio-3990X>
+References: <4419002.LvFx2qVVIh@kreacher>
+ <CAJZ5v0i1Ynt54yb7aMJorkYUvqkxhxOqvQJb8AdA7Ps1aBO5tg@mail.gmail.com>
+ <YnKrcFSjLr+W+myL@dev-arch.thelio-3990X>
+ <2650302.mvXUDI8C0e@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2650302.mvXUDI8C0e@kreacher>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 2, 2022 at 7:59 PM Frank Li <Frank.Li@nxp.com> wrote:
->
-> Some Endpoints controllers have DMA capabilities.  This DMA controller has
-> more efficiency then a general external DMA controller.  And this DMA
-> controller can bypass outbound memory address translation unit.
->
-> The whole flow use standard DMA usage module
->
->  1. Using dma_request_channel() and filter function to find correct
->     RX and TX Channel. if not exist,  fallback to try allocate
->     general DMA controller channel.
->  2. dmaengine_slave_config() config remote side physcial address.
->  3. using dmaengine_prep_slave_single() create transfer descriptor.
->  4. tx_submit();
->  5. dma_async_issue_pending();
->
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Wed, May 04, 2022 at 08:00:33PM +0200, Rafael J. Wysocki wrote:
+> On Wednesday, May 4, 2022 6:36:00 PM CEST Nathan Chancellor wrote:
+> > On Wed, May 04, 2022 at 02:59:17PM +0200, Rafael J. Wysocki wrote:
+> > > On Tue, May 3, 2022 at 7:59 PM Nathan Chancellor <nathan@kernel.org> wrote:
+> > > >
+> > > > Hi Rafael,
+> > > >
+> > > > On Thu, Apr 14, 2022 at 03:11:21PM +0200, Rafael J. Wysocki wrote:
+> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >
+> > > > > There are some issues related to changing power states of PCI
+> > > > > devices, mostly related to carrying out unnecessary actions in some
+> > > > > places, and the code is generally hard to follow.
+> > > > >
+> > > > >  1. pci_power_up() has two callers, pci_set_power_state() and
+> > > > >     pci_pm_default_resume_early().  The latter updates the current
+> > > > >     power state of the device right after calling pci_power_up()
+> > > > >     and it restores the entire config space of the device right
+> > > > >     after that, so pci_power_up() itself need not read the
+> > > > >     PCI_PM_CTRL register or restore the BARs after programming the
+> > > > >     device into D0 in that case.
+> > > > >
+> > > > >  2. It is generally hard to get a clear view of the pci_power_up()
+> > > > >     code flow, especially in some corner cases, due to all of the
+> > > > >     involved PCI_PM_CTRL register reads and writes occurring in
+> > > > >     pci_platform_power_transition() and in pci_raw_set_power_state(),
+> > > > >     some of which are redundant.
+> > > > >
+> > > > >  3. The transitions from low-power states to D0 and the other way
+> > > > >     around are unnecessarily tangled in pci_raw_set_power_state()
+> > > > >     which causes it to use a redundant local variable and makes it
+> > > > >     rather hard to follow.
+> > > > >
+> > > > > To address the above shortcomings, make the following changes:
+> > > > >
+> > > > >  a. Remove the code handling transitions into D0
+> > > > >     from pci_raw_set_power_state() and rename it as
+> > > > >     pci_set_low_power_state().
+> > > > >
+> > > > >  b. Add the code handling transitions into D0 directly
+> > > > >     to pci_power_up() and to a new wrapper function
+> > > > >     pci_set_full_power_state() calling it internally that is
+> > > > >     only used in pci_set_power_state().
+> > > > >
+> > > > >  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
+> > > > >     and make it work in the same way for transitions from any
+> > > > >     low-power states (transitions from D1 and D2 are handled
+> > > > >     slightly differently before the change).
+> > > > >
+> > > > >  d. Put the restoration of the BARs and the PCI_PM_CTRL
+> > > > >     register read confirming the power state change into
+> > > > >     pci_set_full_power_state() to avoid doing that in
+> > > > >     pci_pm_default_resume_early() unnecessarily.
+> > > > >
+> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > >
+> > > > This change as commit 5bffe4c611f5 ("PCI/PM: Rework changing power
+> > > > states of PCI devices") causes my AMD-based system to fail to fully
+> > > > boot. As far as I can tell, this might be NVMe related, which might make
+> > > > getting a full log difficult, as journalctl won't have anywhere to save
+> > > > it. I see:
+> > > >
+> > > > nvme nvme0: I/O 8 QID 0 timeout, completion polled
+> > > >
+> > > > then shortly afterwards:
+> > > >
+> > > > nvme nvme0: I/O 24 QID 0 timeout, completion polled
+> > > > nvme nvme0: missing or invalid SUBNQN field
+> > > >
+> > > > then I am dropped into an emergency shell.
+> > > 
+> > > Thanks for the report!
+> > > 
+> > > > This is a log from the previous commit, which may give some hints about
+> > > > the configuration of this particular system.
+> > > >
+> > > > https://gist.github.com/nathanchance/8a56f0939410cb187896e904c72e41e7/raw/b47b2620bdd32d43c7a3b209fcfd9e3d4668f058/good-boot.log
+> > > >
+> > > > If there is any additional debugging information I can provide or
+> > > > patches I can try, please let me know!
+> > > 
+> > > Please see what happens if the "if (dev->current_state == PCI_D0)"
+> > > check and the following "return 0" statement in pci_power_up() are
+> > > commented out.
+> > 
+> > If I understand you correctly, this? Unfortunately, that does not help.
+> 
+> Thanks for testing.
+> 
+> Please check if the patch below makes any difference.
 
-Added kishon@ti.com
+Unfortunately, there is still no difference. Even worse, I thought I
+might be able to get some information from the emergency shell but I
+don't think the HID driver is loaded yet so my keyboard does not work. I
+am not sure of how to get any further information from the problematic
+kernel; if anyone has any ideas, I am happy to test them! I am more than
+happy to continue to test patches or provide information, I just don't
+want to be a waste of time :)
 
-best regards
-Frank Li
+Cheers,
+Nathan
 
 > ---
-> Change from v9 to v10:
->  - rewrite commit message
-> Change from v4 to v9:
->  - none
-> Change from v3 to v4:
->  - reverse Xmas tree order
->  - local -> dma_local
->  - change error message
->  - IS_ERR -> IS_ERR_OR_NULL
->  - check return value of dmaengine_slave_config()
-> Change from v1 to v2:
->  - none
->
->  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
->  1 file changed, 98 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 90d84d3bc868f..f26afd02f3a86 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -52,9 +52,11 @@ struct pci_epf_test {
->         enum pci_barno          test_reg_bar;
->         size_t                  msix_table_offset;
->         struct delayed_work     cmd_handler;
-> -       struct dma_chan         *dma_chan;
-> +       struct dma_chan         *dma_chan_tx;
-> +       struct dma_chan         *dma_chan_rx;
->         struct completion       transfer_complete;
->         bool                    dma_supported;
-> +       bool                    dma_private;
->         const struct pci_epc_features *epc_features;
->  };
->
-> @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
->   */
->  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->                                       dma_addr_t dma_dst, dma_addr_t dma_src,
-> -                                     size_t len)
-> +                                     size_t len, dma_addr_t dma_remote,
-> +                                     enum dma_transfer_direction dir)
->  {
-> +       struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> +       dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
->         enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> -       struct dma_chan *chan = epf_test->dma_chan;
->         struct pci_epf *epf = epf_test->epf;
->         struct dma_async_tx_descriptor *tx;
-> +       struct dma_slave_config sconf = {};
->         struct device *dev = &epf->dev;
->         dma_cookie_t cookie;
->         int ret;
-> @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->                 return -EINVAL;
->         }
->
-> -       tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +       if (epf_test->dma_private) {
-> +               sconf.direction = dir;
-> +               if (dir == DMA_MEM_TO_DEV)
-> +                       sconf.dst_addr = dma_remote;
-> +               else
-> +                       sconf.src_addr = dma_remote;
+>  drivers/pci/pci.c |   10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> Index: linux-pm/drivers/pci/pci.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci.c
+> +++ linux-pm/drivers/pci/pci.c
+> @@ -1245,7 +1245,7 @@ int pci_power_up(struct pci_dev *dev)
+>  
+>  	/* There's nothing more to do if current_state is D0 at this point. */
+>  	if (dev->current_state == PCI_D0)
+> -		return 0;
+> +		goto done;
+>  
+>  	/*
+>  	 * Program the device into PCI_D0 by forcing the entire word to 0 (this
+> @@ -1260,6 +1260,11 @@ int pci_power_up(struct pci_dev *dev)
+>  		udelay(PCI_PM_D2_DELAY);
+>  
+>  	dev->current_state = PCI_D0;
 > +
-> +               if (dmaengine_slave_config(chan, &sconf)) {
-> +                       dev_err(dev, "DMA slave config fail\n");
-> +                       return -EIO;
-> +               }
-> +               tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> +       } else {
-> +               tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +       }
+> +done:
+> +	if (dev->bus->self)
+> +		pcie_aspm_pm_state_change(dev->bus->self);
 > +
->         if (!tx) {
->                 dev_err(dev, "Failed to prepare DMA memcpy\n");
->                 return -EIO;
-> @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->         return 0;
+>  	return 1;
+>  
+>  fail:
+> @@ -1339,9 +1344,6 @@ static int pci_set_full_power_state(stru
+>  		pci_restore_bars(dev);
+>  	}
+>  
+> -	if (dev->bus->self)
+> -		pcie_aspm_pm_state_change(dev->bus->self);
+> -
+>  	return 0;
 >  }
->
-> +struct epf_dma_filter {
-> +       struct device *dev;
-> +       u32 dma_mask;
-> +};
-> +
-> +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> +{
-> +       struct epf_dma_filter *filter = node;
-> +       struct dma_slave_caps caps;
-> +
-> +       memset(&caps, 0, sizeof(caps));
-> +       dma_get_slave_caps(chan, &caps);
-> +
-> +       return chan->device->dev == filter->dev
-> +               && (filter->dma_mask & caps.directions);
-> +}
-> +
->  /**
->   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
->   * @epf_test: the EPF test device that performs data transfer operation
-> @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->  {
->         struct pci_epf *epf = epf_test->epf;
->         struct device *dev = &epf->dev;
-> +       struct epf_dma_filter filter;
->         struct dma_chan *dma_chan;
->         dma_cap_mask_t mask;
->         int ret;
->
-> +       filter.dev = epf->epc->dev.parent;
-> +       filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> +
-> +       dma_cap_zero(mask);
-> +       dma_cap_set(DMA_SLAVE, mask);
-> +       dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +       if (IS_ERR_OR_NULL(dma_chan)) {
-> +               dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> +               goto fail_back_tx;
-> +       }
-> +
-> +       epf_test->dma_chan_rx = dma_chan;
-> +
-> +       filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> +       dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +
-> +       if (IS_ERR(dma_chan)) {
-> +               dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> +               goto fail_back_rx;
-> +       }
-> +
-> +       epf_test->dma_chan_tx = dma_chan;
-> +       epf_test->dma_private = true;
-> +
-> +       init_completion(&epf_test->transfer_complete);
-> +
-> +       return 0;
-> +
-> +fail_back_rx:
-> +       dma_release_channel(epf_test->dma_chan_rx);
-> +       epf_test->dma_chan_tx = NULL;
-> +
-> +fail_back_tx:
->         dma_cap_zero(mask);
->         dma_cap_set(DMA_MEMCPY, mask);
->
-> @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->         }
->         init_completion(&epf_test->transfer_complete);
->
-> -       epf_test->dma_chan = dma_chan;
-> +       epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
->
->         return 0;
->  }
-> @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
->         if (!epf_test->dma_supported)
->                 return;
->
-> -       dma_release_channel(epf_test->dma_chan);
-> -       epf_test->dma_chan = NULL;
-> +       dma_release_channel(epf_test->dma_chan_tx);
-> +       if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +               epf_test->dma_chan_tx = NULL;
-> +               epf_test->dma_chan_rx = NULL;
-> +               return;
-> +       }
-> +
-> +       dma_release_channel(epf_test->dma_chan_rx);
-> +       epf_test->dma_chan_rx = NULL;
-> +
-> +       return;
->  }
->
->  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->                         goto err_map_addr;
->                 }
->
-> +               if (epf_test->dma_private) {
-> +                       dev_err(dev, "Cannot transfer data using DMA\n");
-> +                       ret = -EINVAL;
-> +                       goto err_map_addr;
-> +               }
-> +
->                 ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -                                                src_phys_addr, reg->size);
-> +                                                src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
->                 if (ret)
->                         dev_err(dev, "Data transfer failed\n");
->         } else {
-> @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
->
->                 ktime_get_ts64(&start);
->                 ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -                                                phys_addr, reg->size);
-> +                                                phys_addr, reg->size,
-> +                                                reg->src_addr, DMA_DEV_TO_MEM);
->                 if (ret)
->                         dev_err(dev, "Data transfer failed\n");
->                 ktime_get_ts64(&end);
-> @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
->                 }
->
->                 ktime_get_ts64(&start);
-> +
->                 ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> -                                                src_phys_addr, reg->size);
-> +                                                src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
->                 if (ret)
->                         dev_err(dev, "Data transfer failed\n");
->                 ktime_get_ts64(&end);
-> --
-> 2.35.1
->
+>  
+> 
+> 
+> 
