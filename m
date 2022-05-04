@@ -2,157 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F5CA51A000
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 14:51:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F199751A01D
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 14:59:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350014AbiEDMyq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 08:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39808 "EHLO
+        id S1346172AbiEDNDF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 09:03:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350025AbiEDMyn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 08:54:43 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68AA3340DF;
-        Wed,  4 May 2022 05:51:07 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id l18so2675774ejc.7;
-        Wed, 04 May 2022 05:51:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4oUj7O1NwJKsfpkZYyH3UkjfTQ0Yjl6gl4HxIj+8zVw=;
-        b=MEb2d+PxSJCuqZOwnllnt/62Wd7GMRUtBYnzNjs1ff4SKu/3pNBjnpeboa0sajWeJp
-         89hF2rFzTdEKo5hnkFVjq2JBX0Ky70LKfZGDIJBiGJljv7pcb8/uvG9JNunt0wq4hgad
-         VYwy9I5C6Ns1qPuCxNbIqi1j6ze7sEueUidGiMDOUpA8eq4eIZ1ew9Qua9CQdsHSllEU
-         nU2g5QaYxUtQe0nvMuD78LLBTlaod7OTxK9wC/P0h/GbJo+x/RBsRQCS/KPTdU0P76ZC
-         zCXARGNTDcY0fTpIK02bJM0KBij9teAtnDVn76mBRYqBcoKf5dUo6O9M25Qcp74HGAvL
-         pl5Q==
+        with ESMTP id S235988AbiEDNDE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 09:03:04 -0400
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC703BFBF;
+        Wed,  4 May 2022 05:59:28 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id f38so2233591ybi.3;
+        Wed, 04 May 2022 05:59:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4oUj7O1NwJKsfpkZYyH3UkjfTQ0Yjl6gl4HxIj+8zVw=;
-        b=oacBXH+TpRFsdA/SE9mykVZ6kKiQJDKAFJgb3/5g4jSVW4nDPId+dRlaUeE0TGErew
-         9OfYovcy3atvhsS8xCR8cC64M4NYEz+zPrd/8klOBVcS44BmGtGt8S+Ws/T+4ETG5JBM
-         tSb7txjqvFFy/AIsuLp+tfp2Gr8QRHT3zk6SdU7cSMSAzlmHQJjQOAMqGAt4VaNDoNMp
-         R2SLfXvcoKQlqS8zPY/O5EMotyNChFqwFdUjXwUESHec3zcWJchO9Q7tXmm5eJ5ZWPSB
-         8PlngQm46ABUnk6RLHdubpbk9v1zY7dgowuCRkljDpIZQ6YJQ2XXTrvcKXOUEu8kt6eP
-         w02w==
-X-Gm-Message-State: AOAM5304yNc6FThkEFZgBfbV1mG/psJFzuk4LRioB6HPCd72dYgkTqKv
-        3lAa76a09mbyybh6u0uVlhc=
-X-Google-Smtp-Source: ABdhPJzKz5xW6gV7XNgNc0HAq4cChXpUz/hEyX9kk5b86BCBFvkIE27EFe9Pe8Mk0bZ1ZMgwJEuCEA==
-X-Received: by 2002:a17:906:8301:b0:6e4:896d:59b1 with SMTP id j1-20020a170906830100b006e4896d59b1mr19397788ejx.396.1651668665762;
-        Wed, 04 May 2022 05:51:05 -0700 (PDT)
-Received: from anparri.mshome.net (host-2-117-178-169.business.telecomitalia.it. [2.117.178.169])
-        by smtp.gmail.com with ESMTPSA id hz7-20020a1709072ce700b006f3ef214dc9sm5743045ejc.47.2022.05.04.05.51.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 May 2022 05:51:05 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 2/2] PCI: hv: Fix synchronization between channel callback and hv_pci_bus_exit()
-Date:   Wed,  4 May 2022 14:50:39 +0200
-Message-Id: <20220504125039.2598-3-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220504125039.2598-1-parri.andrea@gmail.com>
-References: <20220504125039.2598-1-parri.andrea@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gmvxIQHG/ljLt51DjNy57CzPAA1TYfJjkUMDlKRN2cw=;
+        b=SfjjF1dfuEKuRJMWiDZvsj94oyQ0i+I3oOECAT+stn1MnUhZRhDjizIDBibra7sN00
+         DJy1I347O5t54FAyuZ0gkLt5XfITqcKgkxi5aa+78E5xEhFv0HFh/oiaYrO4Yzv8LGf9
+         uApgEeoLrvNEutl0ZluIcIUGwXR87rXKjefJgFmmQQJrKRa+8TXhjleNWnSl+MnTpOqq
+         Jis9meyBZCE9k/UyqSxKFgf6aXFgrIYO2zuzx9CJUjZHVWB7ZPO6NgmZyAnqhertr63X
+         7T+2vzXOpt0crXgvoOKa71bVjssawjhMruTTKL5goxc+X8p6XDWHbW67aIDHI/9+3cMe
+         FyeA==
+X-Gm-Message-State: AOAM531vXSJO8DITv5b9o+tCxMoR2VnX5qDuSD4/R5LgIThCKpvt5j4/
+        I4eb+7d4y3KMGWSs5NFd4bIFlh0IstzvUFYrr1B21oZ39L8=
+X-Google-Smtp-Source: ABdhPJzXVZ/1w3GPYeCO2dkamDxMnp8QXC2QHFPATCMzTrRgP9tKaW861v6nF7Uy5dyU4a+K22nPQzaM4JHk+ZqMOW8=
+X-Received: by 2002:a05:6902:100e:b0:649:7385:5e68 with SMTP id
+ w14-20020a056902100e00b0064973855e68mr11693394ybt.622.1651669167783; Wed, 04
+ May 2022 05:59:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <4419002.LvFx2qVVIh@kreacher> <11975904.O9o76ZdvQC@kreacher>
+ <5838942.lOV4Wx5bFT@kreacher> <3687697.kQq0lBPeGt@kreacher> <YnFtjzGYwe28tVAA@dev-arch.thelio-3990X>
+In-Reply-To: <YnFtjzGYwe28tVAA@dev-arch.thelio-3990X>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 4 May 2022 14:59:17 +0200
+Message-ID: <CAJZ5v0i1Ynt54yb7aMJorkYUvqkxhxOqvQJb8AdA7Ps1aBO5tg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI devices
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[ Similarly to commit a765ed47e4516 ("PCI: hv: Fix synchronization
-  between channel callback and hv_compose_msi_msg()"): ]
+On Tue, May 3, 2022 at 7:59 PM Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> Hi Rafael,
+>
+> On Thu, Apr 14, 2022 at 03:11:21PM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > There are some issues related to changing power states of PCI
+> > devices, mostly related to carrying out unnecessary actions in some
+> > places, and the code is generally hard to follow.
+> >
+> >  1. pci_power_up() has two callers, pci_set_power_state() and
+> >     pci_pm_default_resume_early().  The latter updates the current
+> >     power state of the device right after calling pci_power_up()
+> >     and it restores the entire config space of the device right
+> >     after that, so pci_power_up() itself need not read the
+> >     PCI_PM_CTRL register or restore the BARs after programming the
+> >     device into D0 in that case.
+> >
+> >  2. It is generally hard to get a clear view of the pci_power_up()
+> >     code flow, especially in some corner cases, due to all of the
+> >     involved PCI_PM_CTRL register reads and writes occurring in
+> >     pci_platform_power_transition() and in pci_raw_set_power_state(),
+> >     some of which are redundant.
+> >
+> >  3. The transitions from low-power states to D0 and the other way
+> >     around are unnecessarily tangled in pci_raw_set_power_state()
+> >     which causes it to use a redundant local variable and makes it
+> >     rather hard to follow.
+> >
+> > To address the above shortcomings, make the following changes:
+> >
+> >  a. Remove the code handling transitions into D0
+> >     from pci_raw_set_power_state() and rename it as
+> >     pci_set_low_power_state().
+> >
+> >  b. Add the code handling transitions into D0 directly
+> >     to pci_power_up() and to a new wrapper function
+> >     pci_set_full_power_state() calling it internally that is
+> >     only used in pci_set_power_state().
+> >
+> >  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
+> >     and make it work in the same way for transitions from any
+> >     low-power states (transitions from D1 and D2 are handled
+> >     slightly differently before the change).
+> >
+> >  d. Put the restoration of the BARs and the PCI_PM_CTRL
+> >     register read confirming the power state change into
+> >     pci_set_full_power_state() to avoid doing that in
+> >     pci_pm_default_resume_early() unnecessarily.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> This change as commit 5bffe4c611f5 ("PCI/PM: Rework changing power
+> states of PCI devices") causes my AMD-based system to fail to fully
+> boot. As far as I can tell, this might be NVMe related, which might make
+> getting a full log difficult, as journalctl won't have anywhere to save
+> it. I see:
+>
+> nvme nvme0: I/O 8 QID 0 timeout, completion polled
+>
+> then shortly afterwards:
+>
+> nvme nvme0: I/O 24 QID 0 timeout, completion polled
+> nvme nvme0: missing or invalid SUBNQN field
+>
+> then I am dropped into an emergency shell.
 
-The (on-stack) teardown packet becomes invalid once the completion
-timeout in hv_pci_bus_exit() has expired and hv_pci_bus_exit() has
-returned.  Prevent the channel callback from accessing the invalid
-packet by removing the ID associated to such packet from the VMbus
-requestor in hv_pci_bus_exit().
+Thanks for the report!
 
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+> This is a log from the previous commit, which may give some hints about
+> the configuration of this particular system.
+>
+> https://gist.github.com/nathanchance/8a56f0939410cb187896e904c72e41e7/raw/b47b2620bdd32d43c7a3b209fcfd9e3d4668f058/good-boot.log
+>
+> If there is any additional debugging information I can provide or
+> patches I can try, please let me know!
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9a3e17b682eb7..db4b3f86726b2 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -3620,6 +3620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- {
- 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-+	struct vmbus_channel *chan = hdev->channel;
- 	struct {
- 		struct pci_packet teardown_packet;
- 		u8 buffer[sizeof(struct pci_message)];
-@@ -3627,13 +3628,14 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- 	struct hv_pci_compl comp_pkt;
- 	struct hv_pci_dev *hpdev, *tmp;
- 	unsigned long flags;
-+	u64 trans_id;
- 	int ret;
- 
- 	/*
- 	 * After the host sends the RESCIND_CHANNEL message, it doesn't
- 	 * access the per-channel ringbuffer any longer.
- 	 */
--	if (hdev->channel->rescind)
-+	if (chan->rescind)
- 		return 0;
- 
- 	if (!keep_devs) {
-@@ -3670,16 +3672,26 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- 	pkt.teardown_packet.compl_ctxt = &comp_pkt;
- 	pkt.teardown_packet.message[0].type = PCI_BUS_D0EXIT;
- 
--	ret = vmbus_sendpacket(hdev->channel, &pkt.teardown_packet.message,
--			       sizeof(struct pci_message),
--			       (unsigned long)&pkt.teardown_packet,
--			       VM_PKT_DATA_INBAND,
--			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-+	ret = vmbus_sendpacket_getid(chan, &pkt.teardown_packet.message,
-+				     sizeof(struct pci_message),
-+				     (unsigned long)&pkt.teardown_packet,
-+				     &trans_id, VM_PKT_DATA_INBAND,
-+				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	if (ret)
- 		return ret;
- 
--	if (wait_for_completion_timeout(&comp_pkt.host_event, 10 * HZ) == 0)
-+	if (wait_for_completion_timeout(&comp_pkt.host_event, 10 * HZ) == 0) {
-+		/*
-+		 * The completion packet on the stack becomes invalid after
-+		 * 'return'; remove the ID from the VMbus requestor if the
-+		 * identifier is still mapped to/associated with the packet.
-+		 *
-+		 * Cf. hv_pci_onchannelcallback().
-+		 */
-+		vmbus_request_addr_match(chan, trans_id,
-+					 (unsigned long)&pkt.teardown_packet);
- 		return -ETIMEDOUT;
-+	}
- 
- 	return 0;
- }
--- 
-2.25.1
-
+Please see what happens if the "if (dev->current_state == PCI_D0)"
+check and the following "return 0" statement in pci_power_up() are
+commented out.
