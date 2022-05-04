@@ -2,56 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61A2351A49B
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 17:54:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4024351A59E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 18:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352908AbiEDP6U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 11:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54836 "EHLO
+        id S233151AbiEDQjo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 12:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352867AbiEDP6T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 11:58:19 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC98D4614E
-        for <linux-pci@vger.kernel.org>; Wed,  4 May 2022 08:54:41 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id x17so3073412lfa.10
-        for <linux-pci@vger.kernel.org>; Wed, 04 May 2022 08:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3H4PHGcmcD+NCKJdcFxPs3wW4ElbujkBimfkF3e+URM=;
-        b=wzPHotuGedh31jRQr6oLxnKSgGm0pUbSOWzlWDVKvf5SurNBXuwBS1zf1XHsku3nYA
-         u2RL+UY64tBWP9RD7n9N1ToLKcsH3HC2S/AjXKAELzKh1pndZXrsDVVXs9LFvt0fX0+C
-         O/boUc5/+cO+IEzvYrD40t0//sxjKTL5enF/byZR54PbSwujJlNYqAJNHXWMa8EwGoHz
-         V9zE5j1uqV8czPzatSQCtM6SWm0RMlMuO9a0a/tU+BirJu9ees19vHh6TxcvNz6d0IXf
-         kv0FBc5LLB2eAOabKAHpVPvVRValB5OEGK7Mu25Qe2NbbajlygGpAcI7Y9eLLqlrPYFR
-         Ak6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3H4PHGcmcD+NCKJdcFxPs3wW4ElbujkBimfkF3e+URM=;
-        b=ft8f1+dQezj/bIz5gwLLkYRRTJ3ozgB1LfjlFsIKTv03kEFaRoCoSNpq7fX0gcBn90
-         BOv6ZcZ0c8KNRVXdJlK/sCE5/pbuMoT0ejGNwazivqZp2WBSUabgLeF3DYClOE2pe+Gc
-         2XYEg2pBMzoeFU0WdRjOqenc8fXM92XSW2BBPyDY920Db2sFcGmoIlaEdS+jQ9RBy+gs
-         qzz6/m/ZDbwbPcO2MeKLRwZuuAe6ZG1xdzTY+dH4qPdDTByN1k5x/ouZK5Tcejwa3NSU
-         cUPFFtV245tGSeTE0NiclsYYRfelFUzTpS+Qh68hwPg271NPCaewMyDroK3x+Usugb1f
-         YCfA==
-X-Gm-Message-State: AOAM533VoxQYY5hUSXhQZgfyqQiMkuRGTo11KsZun2LvGg2wKwccdbrz
-        3tc2RNU2a9iBbb+uj3Rh8t2CBWpCrlbAkA==
-X-Google-Smtp-Source: ABdhPJy2k2HB3KfJRFEQ2j/sT6Uag0ae/waYLlCpHmCdtKQItZhDaV/s17DneFU28x9fkOEDN2jBoQ==
-X-Received: by 2002:a05:6512:234c:b0:473:c3ba:2cf1 with SMTP id p12-20020a056512234c00b00473c3ba2cf1mr1301333lfu.402.1651679680147;
-        Wed, 04 May 2022 08:54:40 -0700 (PDT)
-Received: from mutt (c-9b28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.155])
-        by smtp.gmail.com with ESMTPSA id b25-20020ac25639000000b0047255d2119dsm1236703lff.204.2022.05.04.08.54.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 May 2022 08:54:39 -0700 (PDT)
-Date:   Wed, 4 May 2022 17:54:36 +0200
-From:   Anders Roxell <anders.roxell@linaro.org>
+        with ESMTP id S231852AbiEDQjm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 12:39:42 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD94C2DA85;
+        Wed,  4 May 2022 09:36:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 486F8B82794;
+        Wed,  4 May 2022 16:36:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 866ADC385A4;
+        Wed,  4 May 2022 16:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651682163;
+        bh=dK7q7nPy0C7TXwDvFGlFHBLcvJkYagL5iuU1SwZwUEk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y+qEAp9wvvYjGY3G6rPO1gIG9p21+rkwpON8Aqu7OFeYX0/htK+Ecy4pEwD6g/vgA
+         m2D6FJi4wyAawscxf8prCDBPlfb2abE8gTNg1ya7RO2DAnBei7qBYYAF8VflK1o9td
+         Buu5FvHWSAAlVdp62ipgAsy9deUOe6ZrcfNgOK4gN0O8rRgoIZ9L3emnVjlaWkU5sp
+         ybJtyXed31dmNtEtpOayJNB1u6pBEDUgxU2pvjRDBK7WqcwDFs57/yahJ//FGZ/FzX
+         36lcPfAgtrMrFjsgKUQIxO+cPHUdoMCd9ZKSXGmsmzlwRTotbOTs0EMtDgEr87dmNp
+         +AtSjHAAQUflg==
+Date:   Wed, 4 May 2022 09:36:00 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Linux PCI <linux-pci@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -59,7 +42,7 @@ Cc:     Nathan Chancellor <nathan@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>
 Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI
  devices
-Message-ID: <20220504155435.GB2697452@mutt>
+Message-ID: <YnKrcFSjLr+W+myL@dev-arch.thelio-3990X>
 References: <4419002.LvFx2qVVIh@kreacher>
  <11975904.O9o76ZdvQC@kreacher>
  <5838942.lOV4Wx5bFT@kreacher>
@@ -67,13 +50,12 @@ References: <4419002.LvFx2qVVIh@kreacher>
  <YnFtjzGYwe28tVAA@dev-arch.thelio-3990X>
  <CAJZ5v0i1Ynt54yb7aMJorkYUvqkxhxOqvQJb8AdA7Ps1aBO5tg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <CAJZ5v0i1Ynt54yb7aMJorkYUvqkxhxOqvQJb8AdA7Ps1aBO5tg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,7 +63,7 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-05-04 14:59, Rafael J. Wysocki wrote:
+On Wed, May 04, 2022 at 02:59:17PM +0200, Rafael J. Wysocki wrote:
 > On Tue, May 3, 2022 at 7:59 PM Nathan Chancellor <nathan@kernel.org> wrote:
 > >
 > > Hi Rafael,
@@ -165,15 +147,23 @@ On 2022-05-04 14:59, Rafael J. Wysocki wrote:
 > check and the following "return 0" statement in pci_power_up() are
 > commented out.
 
-I've built an arm64 allmodconfig kernel on linux-next tag next-20220503, and tried to boot it.
-This is the boot error I see [1].
-I bisected down to this patch [2]
-
-When I revert the following patches [3] the kernel boots fine.
-I also tried next-20220504 and I saw the same issue.
+If I understand you correctly, this? Unfortunately, that does not help.
 
 Cheers,
-Anders
-[1] http://ix.io/3WT3
-[2] http://ix.io/3WXT
-[3] http://ix.io/3WXU
+Nathan
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 1e22dc5187e7..9f7a463107f3 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1235,8 +1235,10 @@ int pci_power_up(struct pci_dev *dev)
+ 	}
+ 
+ 	/* There's nothing more to do if current_state is D0 at this point. */
++#if 0
+ 	if (dev->current_state == PCI_D0)
+ 		return 0;
++#endif
+ 
+ 	/*
+ 	 * Program the device into PCI_D0 by forcing the entire word to 0 (this
