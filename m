@@ -2,295 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B346F5192BC
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 02:21:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71C855192D9
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 02:33:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232818AbiEDAYf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 20:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
+        id S243353AbiEDAhG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 20:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230437AbiEDAYd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 20:24:33 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2051.outbound.protection.outlook.com [40.107.94.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66CC61A811;
-        Tue,  3 May 2022 17:20:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E5RqliDX2MFZRJ5Qq1TNrHTDF55EFd542R1UEDTSfxu1l6xyOM7gsaTwSnVQglbkMFGE7UiFpbd5u7IkP8W9CVMIcYrCulK+5xnfESza3VOUCAgSDzstzfbqT9o73A8oaAbf5QBxVIFuAXNb6Xcb7FJJiqmAU6TkgfhEBDyrV+ECPQZWCmMxdi5earJrUBZKxET3ZLP8ir/iQ9kWDwxDJUkCiwcG5oB1xLbJpHdv5k1EY3CMIjaV11elk/CgVK8spsJzzjnDB7kXUXsLFLla2xAV1qtsFEfCLc0IecvAoFsoukgy0kI/kElQwfzwS9aEGQDB8UnFykRj/w3Stxiedw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FginmT8J/6XvmL6t/KIqeV5eqwhsP4DFKnZgwjAUPXc=;
- b=UQB04TLmnLbpsCOWGhBqEe/BCCl3fDJDL6pFEQlgeXuJw/Zjm3nJWD5Tm669CiGa+TEGQqaSLp1FtamHOU28rcp57Woen2TjxD8o29hmGEFjd94qzKdI55ltbwtHi6o3c5BA9E2Sc8Bhz02X38tgMr8Kann0bgM2xYa89dDUPhJgUdNa0SqxFQC4YAMmcrFs/EweVZ2MjsAjNY2+OMltZU5r7RgzR+Z42wqzIxm8mMVwFOVpP7E2tXb2gUc8mQJSXZWakqliEa8qKyJeTuU/EKYSygVOXcIr1g0HJ7xQUEb6B3ERPfKQxZXxDnoA4Eyy7MDTRwxV30RAm4G1MXycUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FginmT8J/6XvmL6t/KIqeV5eqwhsP4DFKnZgwjAUPXc=;
- b=Hf8Y0rsnCUKe2uliTXkS7m38ikb77vmTvLI299bK6OBpxAvUoWJXt0ncxCG7cgtKhSReuppap43Dm2lVp+40eLhoCAVoP8GVaonFhg0G3ha1K6LQiIeaIVqaulb4JatA/DQXxTaHmbgYL3S5ymv9qerb+AuwaTd0lPE6V6jyKDQX80cqdJdRDJb4a3SvHQMd24snpI7uNpA53POx6oQohR+RqqSI6CLaxN6pHtMU1/LzPCWWG84jE/qDY9Hfmz1jJRR9ktIYmak9uSkIYDp8fooOWLciEVtRmcNXCScwwVlv/Tx2hprE0ybWT/tnX37ZqpLTnBvoytMls0ATIFTpzg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by DM6PR12MB2748.namprd12.prod.outlook.com (2603:10b6:5:43::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.14; Wed, 4 May
- 2022 00:20:57 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::ec2d:9167:1b47:2db2]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::ec2d:9167:1b47:2db2%6]) with mapi id 15.20.5206.024; Wed, 4 May 2022
- 00:20:57 +0000
-Date:   Tue, 3 May 2022 21:20:56 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Abhishek Sahu <abhsahu@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        with ESMTP id S233015AbiEDAhF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 20:37:05 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9B71AF03;
+        Tue,  3 May 2022 17:33:31 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id a10so19864413oif.9;
+        Tue, 03 May 2022 17:33:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+69jK9IPHtq7eTQpuH4u7DsenSPiOVy1Fxyon9TR9q0=;
+        b=vhsnB7Eu8YLo8GpNYxcBFEh5lQCusz56zGQUCJ1cBvW3tnSXfBRw64jt+49UQA43w1
+         QTCxtK/Q/YZVbYN8l7+/kjP4/Rqh8tbBj+MUz1jq6dshS7zilWmmh8R5/uDviq5Ez0RQ
+         xXHXmJCCBWgP1ZN1CwAFsDLGBAqOh0okp1N1WLQI4QXZh9P9mtHy6BXR9bqhBev8U3V3
+         Hq7XFcTCCQShz6AoHoIY2qFbbiJsssi/gmKM6AuuhX3r0SicyjUVMqNLVVLdsQcqNQoh
+         AyIz004xFtFLU31I9kWFd0u/HsMzqLv9et6U4aFCYI0sq/1LAcgV7w+ZsvVZvSVJQ9/f
+         H5IA==
+X-Gm-Message-State: AOAM530HFwGvcROKT54XTO90P5Y901T/rxW5Hz45o3AcNmSoVEKS+tJj
+        yEqT3Rh7E5jPT4wqb2E8tw==
+X-Google-Smtp-Source: ABdhPJy9hwsgHM6RNU9r1FLK8J2cCGc+iKNimAULdRWWFDNux+5LRT3N6BpBMEvwZ0ZU5BfGCMl4Xg==
+X-Received: by 2002:a05:6808:118f:b0:2d9:a01a:48be with SMTP id j15-20020a056808118f00b002d9a01a48bemr2854191oil.265.1651624411016;
+        Tue, 03 May 2022 17:33:31 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id p6-20020aca4206000000b00325cda1ffbbsm3769396oia.58.2022.05.03.17.33.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 May 2022 17:33:30 -0700 (PDT)
+Received: (nullmailer pid 319775 invoked by uid 1000);
+        Wed, 04 May 2022 00:33:29 -0000
+Date:   Tue, 3 May 2022 19:33:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Hector Martin <marcan@marcan.st>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 4/8] vfio/pci: Add support for setting driver data
- inside core layer
-Message-ID: <20220504002056.GW8364@nvidia.com>
-References: <20220425092615.10133-1-abhsahu@nvidia.com>
- <20220425092615.10133-5-abhsahu@nvidia.com>
- <20220503111124.38b07a9e.alex.williamson@redhat.com>
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Sven Peter <sven@svenpeter.dev>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] PCI: apple: Add support for optional PWREN GPIO
+Message-ID: <YnHJ2ZKd2CqhNWrX@robh.at.kernel.org>
+References: <20220502093832.32778-1-marcan@marcan.st>
+ <20220502093832.32778-4-marcan@marcan.st>
+ <CAL_Jsq+_cWZUXtJVXC_cwhmADj0NQc95v1sqgFioMsfEX6OqGg@mail.gmail.com>
+ <0ccc44cd-21aa-3670-24b3-4ee051dd3c12@marcan.st>
+ <2615501d-7569-41cb-7039-46e690689f1f@marcan.st>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220503111124.38b07a9e.alex.williamson@redhat.com>
-X-ClientProxiedBy: BLAPR03CA0141.namprd03.prod.outlook.com
- (2603:10b6:208:32e::26) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fd4ebf35-27e0-4714-daf2-08da2d63f5c1
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2748:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2748F1A9310C52EC6B58698EC2C39@DM6PR12MB2748.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NysgA7pVsRM4d/Dck5tYBWG9heJ1fC/INJJ3ka2Y1UDuXfF6XUN/iOAS73le+UqvjYcak2gYe7V8+hUEkoGgNNOSioxxVvjkUyYZZqY7+9RtXREY2evFmE4J3E1gQlU+8VAldll3SD7wkOZ6G3sdCAwePYrAjzWm5Wd7ePvJmMEjGKSxwIfvkQ6jwxQtHLVVXKcMbPykuksrF2xwe/i4NrdIsT8s7Xllstw79334N+gXus6ZHHBrwEl2vkZ0ImRqrOmpgGP4l4C415RNfUk7M9f8VRlV3M22Z4mhlurlXMYR5kT/y5Q8fHNlRLPTjmjGggdb8yVACyC9qdvnGPvLvBqYSnz+2n4SDAAVRItjR8ihmnbP8hGd9Z4kmD2QpTZBiYy1VjITnIzSvfiIyQxsSvbEnuRtz9uU0UjAG1XeteZ5etRo+XoYapYbZY+bvhFwFcMnQsUKoCxJmLppvE2EAU63NSRh9y8+ZORyAYDofnsQaw/XuOcW68CgA+Gm8fbhNe/4KWzu2xj/6Fjp9YdUknk23fW8g4cf/Okkd9PFeKSBF13NDofptd3Jrpiz8Y3a0TGLAIRbbrBbtLtjbvDUcKjNq6RV7XTklRfxVeJwfasqnllWHNiuNTZRDxDyBe3yn2FoyrCzmpjGLAB3nSIlAG9zGV020o2sq2ISCj5udXkCawWMLJB/YeiM8BQ/1hkAn1AVpwTrTfysOILd0I04NPI0/XDHA4GcE/QGM8a3+28=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(26005)(86362001)(966005)(66476007)(36756003)(6506007)(6512007)(66946007)(66556008)(54906003)(2616005)(316002)(186003)(1076003)(6916009)(4326008)(6486002)(33656002)(8676002)(508600001)(7416002)(8936002)(83380400001)(2906002)(38100700002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?exrOtyBZxZVmfaZ3YvSu9yEOveclWAik86zyiXt8tkFQeUDcg1i3D4OF2gkQ?=
- =?us-ascii?Q?+zWFcWLmOtc1HALlYxvJNBAEFwpDjsyEFxLd8yBKnBSzVH8/0Er/xHnsvQ9S?=
- =?us-ascii?Q?AiCyd+x8qWywlii1u/pD+qihScdHWU4zaajun3YAKf1bBFu8E4gc6O0hq54f?=
- =?us-ascii?Q?6pOrkUcbKnSm5zz9laeF+uv3iy0QmA6jnXWxDFs2IxEr6e/jhl7jgUslrCE+?=
- =?us-ascii?Q?mkGzX7/zVBWbtbpY0O5K9WwM4ikf8wVawFzyb3feens0z2xl2LvP+TY3Ws0/?=
- =?us-ascii?Q?VW5KqJR6/tDnIqafec/ovhqpTL/2aJ5JUiPFxJeEjNyFo3fJBW3dSJSHZyCs?=
- =?us-ascii?Q?GKvIrnbRbEnBhwUuJV22VNz727zM0K1v+9ud+WtgtaTgMfvDLGHCcqynbWbb?=
- =?us-ascii?Q?NoP1MdoiBeSrExE4wzpA5jerKOi64JSNzevw1dhOxAhqLGHYX4kk3A1IUGYC?=
- =?us-ascii?Q?0h6bbmARFIjuOBLlCjAIbJ5o+6xJgIPyVmLVYh43OFsPqBD8zdSiGuKaiH/D?=
- =?us-ascii?Q?5rfRQasicXrfNGbL1Y5eguYSWn43bwGaxqlqJh2ygaqc2+cuROrJWkWE3p8R?=
- =?us-ascii?Q?YD8+wD1HBAT3C8Cj6HfOWE77OdAwsDq5EEsyliG9VA5/fHlpH95fDDhAUj7g?=
- =?us-ascii?Q?qwGFxFLsyC5WpJj5PWZMhYIzFtSTqpEr5wwXfhMmB3uhumEs2ywfwv06iTrX?=
- =?us-ascii?Q?qFvcHGGXP5mOrI7aLhl4uJf+jgFRVqbccDAXWKwnrJKSsFA39iYgauO+UhkJ?=
- =?us-ascii?Q?4K8FdXmrnC27tv5ME2VQuJngGVYRfiDAzNkNkc3bruKsn0o959jzKU5pp3fL?=
- =?us-ascii?Q?2gOnRsL/hoHmVAdXYSpHPgzUhY9783Jce5JNY6IPb0fri4PCnLGK9nm6CTVf?=
- =?us-ascii?Q?GLVw5JY1fwxDQ6CAZsXJqI1+mqdr4TwQEUp7gccGnrjrLwY+DwlgA82h1j6b?=
- =?us-ascii?Q?welMRLjBDMIbbfynZxpjWE2WtJy1dt/8jvmSqUz0BWyZlyQH3DxrZ1IH8c0B?=
- =?us-ascii?Q?lAwrZXIusr5cEXdLBl1l6mVie8vrjOtPV5OcnP5+qnNuEjDIlYC5jvv/pzqE?=
- =?us-ascii?Q?vn4fp0Fx8ojmGPQVHnyIwnFyRd081MPggBKsihm5vXGyOi2WnxtK57+eAcUO?=
- =?us-ascii?Q?Sab5moolhv1375xwb1T53g33bn4rx0gXqJb6f3wX17/rVqnPqT78V9+7SEY7?=
- =?us-ascii?Q?ePvxNMCiRduTlanD3u/kvR0CoFZ6eQAvJfxb01TEegDwbQUuOMyQKgdnNcwb?=
- =?us-ascii?Q?GSFQH8MiQTXJOa38EwZXb+i3DKlbUiFmPDHU70Vqd9O6cY7zk8hnI/lwMm0g?=
- =?us-ascii?Q?r7YNv6r+OSVrK5oRxBk6PmKJRVA2uimpKF6c+6VuaokluudLrQZZMdqlNQN8?=
- =?us-ascii?Q?nXs6T9ksaznkohQmqKYChJ5lnEx+2ZHEFJm4HKghe8KAmPz0iRiUqZuylJf6?=
- =?us-ascii?Q?TY9BjIbMsl2TzCE/ceW+jXupyaPobg9Hs17KF6kQ/d4seBlWrq9IALw9W8qn?=
- =?us-ascii?Q?EL5GiCieQXLEOUkDhibc5bp+LI7ndOXgRqHaVdmI7Hyf6RT/+4eQLnKvd5bA?=
- =?us-ascii?Q?CmVybZCveAmx+J+wrGq96MtpBsTfRVuThLjDGV5OEvvlNh5+rhkSS9m4w2Kq?=
- =?us-ascii?Q?luxZWDZF4urYdPdwRAGwT10vMtDmeTbxujgO6B+L90q7m7wOClBzeEXlG/t8?=
- =?us-ascii?Q?DqEuMeU/+dw7fmgJsXW7fpP51lHUO7Pp/0EXfOXlHhq9ZZTBvNf/lz/4xury?=
- =?us-ascii?Q?JI6yX5Jjqg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd4ebf35-27e0-4714-daf2-08da2d63f5c1
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2022 00:20:57.6199
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XNwS/C8MoKIv7iNVS995WQ/KwXK4C3TOOf0Z7fWpKNtbTMXYtAFEMgkCTiQ953Rw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2748
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <2615501d-7569-41cb-7039-46e690689f1f@marcan.st>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 03, 2022 at 11:11:24AM -0600, Alex Williamson wrote:
-> > @@ -1843,6 +1845,17 @@ int vfio_pci_core_register_device(struct vfio_pci_core_device *vdev)
-> >  		return -EBUSY;
-> >  	}
-> >  
-> > +	/*
-> > +	 * The 'struct vfio_pci_core_device' should be the first member of the
-> > +	 * of the structure referenced by 'driver_data' so that it can be
-> > +	 * retrieved with dev_get_drvdata() inside vfio-pci core layer.
-> > +	 */
-> > +	if ((struct vfio_pci_core_device *)driver_data != vdev) {
-> > +		pci_warn(pdev, "Invalid driver data\n");
-> > +		return -EINVAL;
-> > +	}
+On Tue, May 03, 2022 at 12:20:48PM +0900, Hector Martin wrote:
+> On 03/05/2022 00.32, Hector Martin wrote:
+> > On 03/05/2022 00.14, Rob Herring wrote:
+> >> On Mon, May 2, 2022 at 4:39 AM Hector Martin <marcan@marcan.st> wrote:
+> >>>
+> >>> WiFi and SD card devices on M1 Macs have a separate power enable GPIO.
+> >>> Add support for this to the PCIe controller. This is modeled after how
+> >>> pcie-fu740 does it.
+> >>
+> >> It did, but it's not ideal really. The problem is the GPIO is really
+> >> associated with the device (WiFi/SD) rather than the PCI host and
+> >> therefore should be part of a WiFi or SD node. You probably don't have
+> >> one (yet), but I would suspect that SD will need one for all the
+> >> standard MMC/SD DT properties. The secondary issue is we'll end up
+> >> adding more power sequencing properties to control ordering and timing
+> >> for different devices. The exception here is standard PCI slot
+> >> properties like perst#, clkreq, and standard voltage rails can go in
+> >> the host bridge (and for new bindings, those should really be in the
+> >> root port node). For a complicated example, see Hikey960 or 970.
+> >>
+> >> Of course with power control related properties there's a chicken or
+> >> egg issue that the PCI device is not discoverable until the device is
+> >> powered on. This issue comes up over and over with various hacky
+> >> solutions in the bindings. The PCI subsystem needs to solve this. My
+> >> suggestion is that if the firmware says there is a device on the bus
+> >> and it wasn't probed, then we should force probing (or add a pre-probe
+> >> hook for drivers). That is what MDIO bus does for example.
+> >>
+> > 
+> > I agree with the premise. Right now macOS does not actually power down
+> > these devices as far as I know (except maybe sleep mode? not sure what
+> > goes on then yet), but I think the hardware actually has an SD card
+> > detect GPIO hookup that would allow us to entirely power down the SD
+> > controller when no card is inserted. That would obviously be ideal.
+> > 
+> > FWIW, we do have the device nodes downstream [1]. I did in fact have to
+> > add the SD one for the CD/WP inversion flags (and had to add driver
+> > support for that too).
+> > 
+> > That said, as for how to make this happen in the PCI subsystem
+> > properly... I think I'll defer to the maintainers' opinion there before
+> > trying to hack something up ;)
+> > 
+> > Meanwhile, I guess I better get PCIe hotplug working, since doing it in
+> > the driver isn't going to work without that first...
+> > 
+> > [1]
+> > https://github.com/AsahiLinux/linux/blob/bits/000-devicetree/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi#L222
 > 
-> It seems a bit odd to me to add a driver_data arg to the function,
-> which is actually required to point to the same thing as the existing
-> function arg.  Is this just to codify the requirement?  Maybe others
-> can suggest alternatives.
+> Thinking about this some more, I think it still makes sense to have the
+> power enable GPIO in the PCI root port node. A generic power enable GPIO
+> still makes sense there (think "slot power"). The PCI core could handle
+> it properly by default, including turning it on prior to initial probing
+> and shutting it down when the device should go into whatever the PCI
+> core's idea of D3cold is. AIUI this already happens on some platforms
+> via firmware, right? Since D3cold is supposed to be a state where the
+> device receives no power after all.
+
+We have put slot stuff in the bridge node. That's because PCI child 
+nodes already have a definition and we didn't define slot nodes up 
+front. We often have started without a slot/connector and then 
+retrofitted nodes in.
+
+I can think of lots of ways to implement 'slot power' with a single GPIO 
+being just one way. If it's not defined by PCIe specs or defacto 
+standards then I don't think we want to try to do something generic.
+
+The other way to model power gpios is as a GPIO regulator. We probably 
+already have PCI examples doing that.
+
+> Obviously this can't handle funky power sequencing requirements, but we
+> don't have any of those here and we don't know if we ever will (at least
+> Apple seems to be a fan of throwing little CPLDs on their boards for
+> fine grained power sequencing, driven by a single IO). If we do, then
+> that would be the time to have GPIOs in the device node.
 > 
-> We also need to collaborate with Jason's patch:
-> 
-> https://lore.kernel.org/all/0-v2-0f36bcf6ec1e+64d-vfio_get_from_dev_jgg@nvidia.com/
-> 
-> (and maybe others)
-> 
-> If we implement a change like proposed here that vfio-pci-core sets
-> drvdata then we don't need for each variant driver to implement their
-> own wrapper around err_handler or err_detected as Jason proposes in the
-> linked patch.  Thanks,
+> In addition, sometimes a single power enable is shared between multiple
+> functions of one device. This is the case with WiFi/BT, which is a combo
+> chip with two functions. Coordinating GPIO usage between both drivers
+> would be problematic if they both try to own it.
 
-Oh, I forgot about this series completely.
+A GPIO regulator solves this problem as it is reference counted.
 
-Yes, we need to pick a method, either drvdata always points at the
-core struct, or we wrapper the core functions.
+> The individual device drivers still need to have some kind of API to be
+> able to put devices into a low-power state. For example, the WiFi driver
+> could outright power down the device when it is wholly unused and the
+> interface is down (same for BT, and the PCI core should only put the
+> slot GPIO into powerdown if both functions say they should be off).
+> Similarly, the SD driver needs to support an external SD detect GPIO,
+> and have a mode where it tells the PCI core to shut down the device when
+> no SD is inserted, and power it back up on insertion. This all allows
+> the devices to behave a users might expect, with the device nodes
+> existing and the PCI devices "visible" even when they are powered down
+> behind the scenes, until they are needed. AIUI this is already how e.g.
+> hybrid graphics power management works, where power is outright yanked
+> from the secondary card when it is not needed even though it is still
+> visible from the userspace point of view (and it is automatically
+> powered and reinitialized on use).
 
-I have an independent version of the above patch that uses the
-drvdata, but I chucked it because it was unnecessary for just a couple
-of AER functions. 
+Can it detect a card insertion when powered down?
 
-We should probably go back to it though if we are adding more
-functions, as the wrapping is a bit repetitive. I'll go and respin
-that series then. Abhishek can base on top of it.
+I think a GPIO regulator solves all this as long as card detect still 
+works.
 
-My approach was more type-sane though:
+> I'm not super familiar with PCI device power states (making brcmfmac
+> sleep work properly on these platforms is on my TODO list...) so I'd
+> love to get some feedback from the PCI folks on what they think about
+> this whole issue.
 
-commit 12ba94a72d7aa134af8752d6ff78193acdac93ae
-Author: Jason Gunthorpe <jgg@ziepe.ca>
-Date:   Tue Mar 29 16:32:32 2022 -0300
+I'm not either. I know there's some backlog of work to rework PCI power 
+management to be more inline with how the rest of kernel drivers work.
+ 
+Isn't D3cold an ACPI thing, not PCI?
 
-    vfio/pci: Have all VFIO PCI drivers store the vfio_pci_core_device in drvdata
-    
-    Having a consistent pointer in the drvdata will allow the next patch to
-    make use of the drvdata from some of the core code helpers.
-    
-    Use a WARN_ON inside vfio_pci_core_unregister_device() to detect drivers
-    that miss this.
-    
-    Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-
-diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-index 767b5d47631a49..665691967a030c 100644
---- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-+++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-@@ -337,6 +337,14 @@ static int vf_qm_cache_wb(struct hisi_qm *qm)
- 	return 0;
- }
- 
-+static struct hisi_acc_vf_core_device *hssi_acc_drvdata(struct pci_dev *pdev)
-+{
-+	struct vfio_pci_core_device *core_device = dev_get_drvdata(&pdev->dev);
-+
-+	return container_of(core_device, struct hisi_acc_vf_core_device,
-+			    core_device);
-+}
-+
- static void vf_qm_fun_reset(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 			    struct hisi_qm *qm)
- {
-@@ -962,7 +970,7 @@ hisi_acc_vfio_pci_get_device_state(struct vfio_device *vdev,
- 
- static void hisi_acc_vf_pci_aer_reset_done(struct pci_dev *pdev)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = dev_get_drvdata(&pdev->dev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hssi_acc_drvdata(pdev);
- 
- 	if (hisi_acc_vdev->core_device.vdev.migration_flags !=
- 				VFIO_MIGRATION_STOP_COPY)
-@@ -1278,7 +1286,7 @@ static int hisi_acc_vfio_pci_probe(struct pci_dev *pdev, const struct pci_device
- 	if (ret)
- 		goto out_free;
- 
--	dev_set_drvdata(&pdev->dev, hisi_acc_vdev);
-+	dev_set_drvdata(&pdev->dev, &hisi_acc_vdev->core_device);
- 	return 0;
- 
- out_free:
-@@ -1289,7 +1297,7 @@ static int hisi_acc_vfio_pci_probe(struct pci_dev *pdev, const struct pci_device
- 
- static void hisi_acc_vfio_pci_remove(struct pci_dev *pdev)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = dev_get_drvdata(&pdev->dev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hssi_acc_drvdata(pdev);
- 
- 	vfio_pci_core_unregister_device(&hisi_acc_vdev->core_device);
- 	vfio_pci_core_uninit_device(&hisi_acc_vdev->core_device);
-diff --git a/drivers/vfio/pci/mlx5/main.c b/drivers/vfio/pci/mlx5/main.c
-index bbec5d288fee97..3391f965abd9f0 100644
---- a/drivers/vfio/pci/mlx5/main.c
-+++ b/drivers/vfio/pci/mlx5/main.c
-@@ -39,6 +39,14 @@ struct mlx5vf_pci_core_device {
- 	struct mlx5_vf_migration_file *saving_migf;
- };
- 
-+static struct mlx5vf_pci_core_device *mlx5vf_drvdata(struct pci_dev *pdev)
-+{
-+	struct vfio_pci_core_device *core_device = dev_get_drvdata(&pdev->dev);
-+
-+	return container_of(core_device, struct mlx5vf_pci_core_device,
-+			    core_device);
-+}
-+
- static struct page *
- mlx5vf_get_migration_page(struct mlx5_vf_migration_file *migf,
- 			  unsigned long offset)
-@@ -505,7 +513,7 @@ static int mlx5vf_pci_get_device_state(struct vfio_device *vdev,
- 
- static void mlx5vf_pci_aer_reset_done(struct pci_dev *pdev)
- {
--	struct mlx5vf_pci_core_device *mvdev = dev_get_drvdata(&pdev->dev);
-+	struct mlx5vf_pci_core_device *mvdev = mlx5vf_drvdata(pdev);
- 
- 	if (!mvdev->migrate_cap)
- 		return;
-@@ -618,7 +626,7 @@ static int mlx5vf_pci_probe(struct pci_dev *pdev,
- 	if (ret)
- 		goto out_free;
- 
--	dev_set_drvdata(&pdev->dev, mvdev);
-+	dev_set_drvdata(&pdev->dev, &mvdev->core_device);
- 	return 0;
- 
- out_free:
-@@ -629,7 +637,7 @@ static int mlx5vf_pci_probe(struct pci_dev *pdev,
- 
- static void mlx5vf_pci_remove(struct pci_dev *pdev)
- {
--	struct mlx5vf_pci_core_device *mvdev = dev_get_drvdata(&pdev->dev);
-+	struct mlx5vf_pci_core_device *mvdev = mlx5vf_drvdata(pdev);
- 
- 	vfio_pci_core_unregister_device(&mvdev->core_device);
- 	vfio_pci_core_uninit_device(&mvdev->core_device);
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 06b6f3594a1316..53ad39d617653d 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -262,6 +262,10 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
- 	u16 cmd;
- 	u8 msix_pos;
- 
-+	/* Drivers must set the vfio_pci_core_device to their drvdata */
-+	if (WARN_ON(vdev != dev_get_drvdata(&vdev->pdev->dev)))
-+		return -EINVAL;
-+
- 	vfio_pci_set_power_state(vdev, PCI_D0);
- 
- 	/* Don't allow our initial saved state to include busmaster */
+Rob
