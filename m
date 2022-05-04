@@ -2,188 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD0DD51ACC0
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 20:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C77BC51AD20
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 20:43:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376731AbiEDS3e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 14:29:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
+        id S1354574AbiEDSrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 14:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376761AbiEDS3N (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 14:29:13 -0400
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76BE4757F;
-        Wed,  4 May 2022 11:00:37 -0700 (PDT)
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
- id 51a7cf1e4c0649f0; Wed, 4 May 2022 20:00:35 +0200
-Received: from kreacher.localnet (unknown [213.134.161.219])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id A61BA66C2D7;
-        Wed,  4 May 2022 20:00:34 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI devices
-Date:   Wed, 04 May 2022 20:00:33 +0200
-Message-ID: <2650302.mvXUDI8C0e@kreacher>
-In-Reply-To: <YnKrcFSjLr+W+myL@dev-arch.thelio-3990X>
-References: <4419002.LvFx2qVVIh@kreacher> <CAJZ5v0i1Ynt54yb7aMJorkYUvqkxhxOqvQJb8AdA7Ps1aBO5tg@mail.gmail.com> <YnKrcFSjLr+W+myL@dev-arch.thelio-3990X>
+        with ESMTP id S245582AbiEDSrb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 14:47:31 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D16264DC;
+        Wed,  4 May 2022 11:43:54 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id iq2-20020a17090afb4200b001d93cf33ae9so5923903pjb.5;
+        Wed, 04 May 2022 11:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NWeu0nEWN3XSTkbN9zMmwPgQVi68QrONisgvlMfoNCE=;
+        b=J8GzvYrxew0M1XivYp6N34lfK02T0WoaJ+KLKwglomN5WdhzYAtJWWdEoFww2XwIyE
+         Fp7HOA6XmIl2YyPEl0A5XCpW8u/mRnAkTDq3HUY3P6ahyEG2H5h363JuOXR552JO0Uk3
+         dvotBEACmkIDwVUowi07DOQn6AFiHqVFJyy34RUqoIhsXPi+9nWQIZ1fSAAyJhaBSu4s
+         iY1S4DgycGJyxDHemMFdM6AJriuIOUuLvNVjgSkTkxE6auay1ui8Z00PxoMT470bJ9E+
+         KWckgWDRmjdSnqD7JFJ6EUm8zYtfXNP/Khr6bbfzjaaTrMRxYnqGSmDwcFo/V20gBIgo
+         HGog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NWeu0nEWN3XSTkbN9zMmwPgQVi68QrONisgvlMfoNCE=;
+        b=ZXJ3JdNRsI8TyJcIfE/gAFQV1Na2IRNHJaL8I0+H5oYPcXNMXJ3wywhV8T/fSoYATH
+         VeqMF1wAtD7p+FsPjN6mIVLAchyUgQMYhIwFg6kS9pEIUURJIGMR0Aqk6tvB68+JXOWn
+         ZZ2b/Z7Zc1q8ZecKRCHt1Ebsg5hf4YGD/GPvIDO2dWkv/HFu+0u8Gq3kdKyaF6bC6bxH
+         poG4c3lqNkmnCc4NGaDJZ1OdirwXE9F6MV5bMdGZ4J7xsvvZniWYD9gaHm7OGQ5DeW/u
+         lpWRwQeCoumom3Gdh0S9J9eI+BOq09cbNhv9iB7STI2q4VZIYdtTL/OlOkeZoMCAE47P
+         Sm2A==
+X-Gm-Message-State: AOAM532e3U21qrxCpoNvY15dFl0UjppoUx1gMuy11VUivQi4WZ956FVV
+        Lg+2LFoIxp9lGCm18ltaH4oMQpAL3yCauH4Eoao=
+X-Google-Smtp-Source: ABdhPJwpvdPgJAEMKUJvMA4X+x59qOnVrqDDstxA1jgczkWBqfMP1CnntW6M1CcPciH2Tsv9d2w3QCIwCfYLLbvfNfk=
+X-Received: by 2002:a17:903:120e:b0:15e:84d2:4bbb with SMTP id
+ l14-20020a170903120e00b0015e84d24bbbmr21885314plh.165.1651689833389; Wed, 04
+ May 2022 11:43:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+References: <20220503005801.1714345-1-Frank.Li@nxp.com> <20220503005801.1714345-9-Frank.Li@nxp.com>
+In-Reply-To: <20220503005801.1714345-9-Frank.Li@nxp.com>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Wed, 4 May 2022 13:43:41 -0500
+Message-ID: <CAHrpEqSSfk37Z1v=TbXc5LbL4JxcET0qzcUW7y7UFJ3adp=W2Q@mail.gmail.com>
+Subject: Re: [PATCH v10 8/9] dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI
+ for chip specific flags
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 213.134.161.219
-X-CLIENT-HOSTNAME: 213.134.161.219
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrvdelgdduudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddufedrudefgedrudeiuddrvdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudefrddufeegrdduiedurddvudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeejpdhrtghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
- rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday, May 4, 2022 6:36:00 PM CEST Nathan Chancellor wrote:
-> On Wed, May 04, 2022 at 02:59:17PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, May 3, 2022 at 7:59 PM Nathan Chancellor <nathan@kernel.org> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > On Thu, Apr 14, 2022 at 03:11:21PM +0200, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > There are some issues related to changing power states of PCI
-> > > > devices, mostly related to carrying out unnecessary actions in some
-> > > > places, and the code is generally hard to follow.
-> > > >
-> > > >  1. pci_power_up() has two callers, pci_set_power_state() and
-> > > >     pci_pm_default_resume_early().  The latter updates the current
-> > > >     power state of the device right after calling pci_power_up()
-> > > >     and it restores the entire config space of the device right
-> > > >     after that, so pci_power_up() itself need not read the
-> > > >     PCI_PM_CTRL register or restore the BARs after programming the
-> > > >     device into D0 in that case.
-> > > >
-> > > >  2. It is generally hard to get a clear view of the pci_power_up()
-> > > >     code flow, especially in some corner cases, due to all of the
-> > > >     involved PCI_PM_CTRL register reads and writes occurring in
-> > > >     pci_platform_power_transition() and in pci_raw_set_power_state(),
-> > > >     some of which are redundant.
-> > > >
-> > > >  3. The transitions from low-power states to D0 and the other way
-> > > >     around are unnecessarily tangled in pci_raw_set_power_state()
-> > > >     which causes it to use a redundant local variable and makes it
-> > > >     rather hard to follow.
-> > > >
-> > > > To address the above shortcomings, make the following changes:
-> > > >
-> > > >  a. Remove the code handling transitions into D0
-> > > >     from pci_raw_set_power_state() and rename it as
-> > > >     pci_set_low_power_state().
-> > > >
-> > > >  b. Add the code handling transitions into D0 directly
-> > > >     to pci_power_up() and to a new wrapper function
-> > > >     pci_set_full_power_state() calling it internally that is
-> > > >     only used in pci_set_power_state().
-> > > >
-> > > >  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
-> > > >     and make it work in the same way for transitions from any
-> > > >     low-power states (transitions from D1 and D2 are handled
-> > > >     slightly differently before the change).
-> > > >
-> > > >  d. Put the restoration of the BARs and the PCI_PM_CTRL
-> > > >     register read confirming the power state change into
-> > > >     pci_set_full_power_state() to avoid doing that in
-> > > >     pci_pm_default_resume_early() unnecessarily.
-> > > >
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > >
-> > > This change as commit 5bffe4c611f5 ("PCI/PM: Rework changing power
-> > > states of PCI devices") causes my AMD-based system to fail to fully
-> > > boot. As far as I can tell, this might be NVMe related, which might make
-> > > getting a full log difficult, as journalctl won't have anywhere to save
-> > > it. I see:
-> > >
-> > > nvme nvme0: I/O 8 QID 0 timeout, completion polled
-> > >
-> > > then shortly afterwards:
-> > >
-> > > nvme nvme0: I/O 24 QID 0 timeout, completion polled
-> > > nvme nvme0: missing or invalid SUBNQN field
-> > >
-> > > then I am dropped into an emergency shell.
-> > 
-> > Thanks for the report!
-> > 
-> > > This is a log from the previous commit, which may give some hints about
-> > > the configuration of this particular system.
-> > >
-> > > https://gist.github.com/nathanchance/8a56f0939410cb187896e904c72e41e7/raw/b47b2620bdd32d43c7a3b209fcfd9e3d4668f058/good-boot.log
-> > >
-> > > If there is any additional debugging information I can provide or
-> > > patches I can try, please let me know!
-> > 
-> > Please see what happens if the "if (dev->current_state == PCI_D0)"
-> > check and the following "return 0" statement in pci_power_up() are
-> > commented out.
-> 
-> If I understand you correctly, this? Unfortunately, that does not help.
+On Mon, May 2, 2022 at 7:58 PM Frank Li <Frank.Li@nxp.com> wrote:
+>
+> DW_EDMA_CHIP_32BIT_DBI was used by the controller drivers like i.MX8 that
+> allows only 32bit access to the DBI region.
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Tested-by: Serge Semin <fancer.lancer@gmail.com>
 
-Thanks for testing.
+I just found a fixed patch already upstreamed.
+https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git/commit/?h=fixes&id=8fc5133d6d4da65cad6b73152fc714ad3d7f91c1
 
-Please check if the patch below makes any difference.
+So this patch can be skipped. This is the last patch about eDMA change.
 
----
- drivers/pci/pci.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+best regards
+Frank Li
 
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -1245,7 +1245,7 @@ int pci_power_up(struct pci_dev *dev)
- 
- 	/* There's nothing more to do if current_state is D0 at this point. */
- 	if (dev->current_state == PCI_D0)
--		return 0;
-+		goto done;
- 
- 	/*
- 	 * Program the device into PCI_D0 by forcing the entire word to 0 (this
-@@ -1260,6 +1260,11 @@ int pci_power_up(struct pci_dev *dev)
- 		udelay(PCI_PM_D2_DELAY);
- 
- 	dev->current_state = PCI_D0;
-+
-+done:
-+	if (dev->bus->self)
-+		pcie_aspm_pm_state_change(dev->bus->self);
-+
- 	return 1;
- 
- fail:
-@@ -1339,9 +1344,6 @@ static int pci_set_full_power_state(stru
- 		pci_restore_bars(dev);
- 	}
- 
--	if (dev->bus->self)
--		pcie_aspm_pm_state_change(dev->bus->self);
--
- 	return 0;
- }
- 
-
-
-
+> ---
+> Change from v6 to v10
+> - none
+> Change from v5 to v6
+> - use enum instead of define
+> New patch at v5
+> - fix kernel test robot build error
+>
+>  drivers/dma/dw-edma/dw-edma-v0-core.c | 13 ++++++++-----
+>  include/linux/dma/edma.h              |  2 ++
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> index 2ab1059a3de1e..2d3f74ccc340a 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> @@ -417,15 +417,18 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+>                 SET_CH_32(dw, chan->dir, chan->id, ch_control1,
+>                           (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
+>                 /* Linked list */
+> -               #ifdef CONFIG_64BIT
+> -                       SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> -                                 chunk->ll_region.paddr);
+> -               #else /* CONFIG_64BIT */
+> +               if ((chan->dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI) ||
+> +                   !IS_ENABLED(CONFIG_64BIT)) {
+>                         SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+>                                   lower_32_bits(chunk->ll_region.paddr));
+>                         SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>                                   upper_32_bits(chunk->ll_region.paddr));
+> -               #endif /* CONFIG_64BIT */
+> +               } else {
+> +               #ifdef CONFIG_64BIT
+> +                       SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> +                                 chunk->ll_region.paddr);
+> +               #endif
+> +               }
+>         }
+>         /* Doorbell */
+>         SET_RW_32(dw, chan->dir, doorbell,
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index 7baf16fd4f233..1664c70a8a0c5 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -36,9 +36,11 @@ enum dw_edma_map_format {
+>  /**
+>   * enum dw_edma_chip_flags - Flags specific to an eDMA chip
+>   * @DW_EDMA_CHIP_LOCAL:                eDMA is used locally by an endpoint
+> + * @DW_EDMA_CHIP_32BIT_DBI     Only support 32bit DBI register access
+>   */
+>  enum dw_edma_chip_flags {
+>         DW_EDMA_CHIP_LOCAL      = BIT(0),
+> +       DW_EDMA_CHIP_32BIT_DBI  = BIT(1),
+>  };
+>
+>  /**
+> --
+> 2.35.1
+>
