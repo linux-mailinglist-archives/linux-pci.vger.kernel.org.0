@@ -2,116 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5073451A133
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 15:44:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9D7751A164
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 15:53:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350660AbiEDNsS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 09:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35968 "EHLO
+        id S235435AbiEDN44 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 09:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350775AbiEDNsH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 09:48:07 -0400
-X-Greylist: delayed 79480 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 04 May 2022 06:44:30 PDT
-Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [217.70.178.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 160BF27156;
-        Wed,  4 May 2022 06:44:29 -0700 (PDT)
-Received: (Authenticated sender: clement.leger@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 836C924000C;
-        Wed,  4 May 2022 13:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1651671868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rk72OOOdZSUj/t0ck9GUkQrJCm6OvviM5pEqmXGfJr4=;
-        b=GAjLy704dfosoxU9eAdGTyyj8HAuQP8NWeOEuRGQ8M0aC3aXtC4Z/+0wzc3MpPCNpazLqs
-        sqlSOuSZ6E7OfjEh41ItNsnvAA5BxHa65iDBnypdHxt0BXP1A3CRsej8eMwM2b4fFkFuYm
-        eqTfzkGfgZHCKC2EK18B8yQalmXLzMRS1WCKPc68XwGexWOYo+13s9ra5xfpAfeRdggkuW
-        Qub8s2GnqY2eWh1s/GD7d4ckd9MGOF29XRakpcsqC74GCJBSbd/9vNgAN1oXHmChv6Pbmc
-        g4QS/5UYg5Fm56SNbfpJkQ/Tv6k70XROwA7nHj0ThHUcgAPCMn6XmDh2rwu3gQ==
-Date:   Wed, 4 May 2022 15:43:03 +0200
-From:   =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        with ESMTP id S230519AbiEDN4z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 09:56:55 -0400
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 850403E5EC;
+        Wed,  4 May 2022 06:53:19 -0700 (PDT)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-ed9a75c453so1210070fac.11;
+        Wed, 04 May 2022 06:53:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AXUAqmMP0IKTrRo8ZlNuVuepbf5KrJWQjBDK1HtGLLw=;
+        b=YSLFEcLQ0MGTlODY9bX7+8wMzmR+0fXdDIF4k1Q3LwvW/C4nZEwCMXITPZ3ZeR0aFV
+         JfwaoGpr8G+spYz3Ls9fJZKSq+OfOG9PvJFvcpyUwjCF3Lz/XDEkcMurm8NpVvBrJ1o5
+         pafiJBBAY5L9N04IB73RNqAZRXdoraw+oTPWEZuLJW8vAPDl0It7GiHfXAuarfiUgcy1
+         NVay1yrJpopmNrxtfmTsFLToHkFjgWnS9k2e5YCgNeRS0YK8oFAPkGw48NnHuY5JtSL1
+         AZ3pm8VaLaaDZmNZZLO+Za28TOt5Sk4Bx6nvEHBaj4W1EkKMp77QnD5i9lHOUzlpNTSu
+         fPdA==
+X-Gm-Message-State: AOAM533jCKY+mgmZo0M/6oKRvinfssH5bPE+lYY98+gVv+khW/tMjoxc
+        vG2oM4WeA0PNpN4dyZv6hg==
+X-Google-Smtp-Source: ABdhPJzjCamIbsRnwMxIYYcdgHb0qtrrxFace/QMGM+oPVnpbU+5MGTcMTiDynIHesGyt/SIPpgG4Q==
+X-Received: by 2002:a05:6870:9a17:b0:e9:3d1:f91a with SMTP id fo23-20020a0568709a1700b000e903d1f91amr3798837oab.44.1651672398836;
+        Wed, 04 May 2022 06:53:18 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id n3-20020a056870a44300b000e90544b79fsm8497700oal.41.2022.05.04.06.53.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 May 2022 06:53:18 -0700 (PDT)
+Received: (nullmailer pid 1609314 invoked by uid 1000);
+        Wed, 04 May 2022 13:53:17 -0000
+Date:   Wed, 4 May 2022 08:53:17 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Allan Nielsen <allan.nielsen@microchip.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Steen Hegelund <steen.hegelund@microchip.com>,
-        Thomas Petazzoni <thomas.petazonni@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] PCI: of: create DT nodes for PCI devices if they do
- not exists
-Message-ID: <20220504154303.5cdf8cc2@fixe.home>
-In-Reply-To: <20220503225353.GA415393@bhelgaas>
-References: <20220427094502.456111-3-clement.leger@bootlin.com>
-        <20220503225353.GA415393@bhelgaas>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-pc-linux-gnu)
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: renesas,pci-rcar-gen2: Add
+ device tree support for r9a06g032
+Message-ID: <YnKFTVFaYO9uk2m0@robh.at.kernel.org>
+References: <20220429134143.628428-1-herve.codina@bootlin.com>
+ <20220429134143.628428-4-herve.codina@bootlin.com>
+ <29ba3db6-e5c7-06d3-29d9-918ee5b34555@linaro.org>
+ <CAMuHMdWN_ni_V+e3QipWH2qKXeNPkEcVpHpb5iBYw1YQSAnCDA@mail.gmail.com>
+ <YnA0id1rXlNHNz+N@robh.at.kernel.org>
+ <CAMuHMdWktaRAw8Y6TR93_rH8v4mPR2yt3wGqeXeTA2p_Dh--wA@mail.gmail.com>
+ <5a89e9bf-1004-500a-75e1-995732629937@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a89e9bf-1004-500a-75e1-995732629937@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le Tue, 3 May 2022 17:53:53 -0500,
-Bjorn Helgaas <helgaas@kernel.org> a =C3=A9crit :
+On Tue, May 03, 2022 at 11:29:53AM +0200, Krzysztof Kozlowski wrote:
+> On 03/05/2022 08:51, Geert Uytterhoeven wrote:
+> >>>> This should not be a reason why a property is or is not required. Either
+> >>>> this is required for device operation or not. If it is required, should
+> >>>> be in the bindings. Otherwise what are you going to do in the future?
+> >>>> Add a required property breaking the ABI?
+> >>>
+> >>> The problem is that there are no bindings for the reset controller
+> >>> (actually the reset controller feature of the system-controller) yet.
+> >>> Yeah, we can just add #reset-cells = <1> to the system-controller
+> >>> device node, but we cannot add the actual resets properties to the
+> >>> consumers, until the actual cell values are defined.
+> >>
+> >> Sounds like you should implement providers first. Or just live with the
+> >> warning as a reminder to implement the reset provider?
+> > 
+> > I'd go for the latter. The upstream r9a06g032.dtsi is still under active
+> > development. Until very recently, the only device supported was the
+> > serial console.
+> 
+> For clocks we use in such cases fixed-clock placeholders or empty
+> phandles. Maybe something like that would work here as well?
 
-> In subject:
->=20
->   PCI: of: Create DT nodes ... if they do not exist
->=20
-> The subject could be read as saying that you're going to create DT
-> nodes before the PCI devices exist, but I think you mean that when we
-> enumerate a PCI devices, we're *always* going to create a DT node for
-> it, even if the DT didn't mention it.
+IMO, we should move away from doing that for clocks. It's a guaranteed 
+ABI break.
 
-Hi Bjorn,
-
-Indeed ! I'll modify that.
-
->=20
-> Maybe something like:
->=20
->   PCI: of: Create DT node for every PCI device
->=20
-> although I see Rob thinks this should be done on demand instead of
-> doing it for every device, which sounds sensible to me.
-
-Agreed, I'll rework this series.
-
-Thanks,
-
->=20
-> On Wed, Apr 27, 2022 at 11:45:01AM +0200, Cl=C3=A9ment L=C3=A9ger wrote:
-> > In order to apply overlays to PCI device nodes, the nodes must first
-> > exist. This commit add support to populate a skeleton tree for PCI bus
-> > and devices. These nodes can then be used by drivers to apply overlays.=
- =20
->=20
-> s/This commit add support/Add support/
->=20
-> Bjorn
-
-
-
---=20
-Cl=C3=A9ment L=C3=A9ger,
-Embedded Linux and Kernel engineer at Bootlin
-https://bootlin.com
+Rob
