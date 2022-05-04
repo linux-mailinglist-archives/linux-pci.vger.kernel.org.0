@@ -2,58 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1239251ADE1
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 21:35:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D91951AE1F
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 21:43:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377550AbiEDTjN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 15:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40008 "EHLO
+        id S1377570AbiEDTqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 15:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238694AbiEDTjL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 15:39:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB42E1C13D;
-        Wed,  4 May 2022 12:35:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D2C1361BE3;
-        Wed,  4 May 2022 19:35:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B762DC385A4;
-        Wed,  4 May 2022 19:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651692931;
-        bh=wifdIng5C5+zvFOVkWllKXbxxVMnCc1cn//B0XhEpek=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lzMbrpl1X0/Izn8Dbd/Pgv0Yx4q/r1wmVr7Ln6lHotMVWggcGUiZhSP413k9Y9zMt
-         dwhdbICf8SZ+qiA+cdQy+g/Jyq2to0UQSy36giJfE0cLWlKUiQPNijxiHfEgtQipxB
-         NJkqWR0PjkuOThf5WqfkhkGX1KQKn3IbjZeVd7/Um+iMZvihmnAQTKSer0jwmGJC6+
-         qYdyywA0pFQpyg7E4HwE2Nf161ijabc5PIfgwm5BzMtyXJ7cKcD9jQyWe1IqbC82Za
-         wRJohgmPQp1nIeAsGZBuq/x3p+c7xAFkx4sw6IpcWSKJz2y/PuubWJRr08wWbKQVs1
-         RPu3wb9+BxLcg==
-Date:   Wed, 4 May 2022 12:35:28 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI
- devices
-Message-ID: <YnLVgOqGOPaSrC7G@dev-arch.thelio-3990X>
-References: <4419002.LvFx2qVVIh@kreacher>
- <CAJZ5v0i1Ynt54yb7aMJorkYUvqkxhxOqvQJb8AdA7Ps1aBO5tg@mail.gmail.com>
- <YnKrcFSjLr+W+myL@dev-arch.thelio-3990X>
- <2650302.mvXUDI8C0e@kreacher>
+        with ESMTP id S1358531AbiEDTqe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 15:46:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD95019C10
+        for <linux-pci@vger.kernel.org>; Wed,  4 May 2022 12:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651693375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RGEmRYEdNvJND2/+wEsW7QIppOzBfSn18Tv9D3BrSCY=;
+        b=SXZJx+ZdMec2lv2lH91hOr9QnRt3ic/e0H8AQx/frMh+alpZQaMRytWI4j6PyXgkLmhEOS
+        zB48TUKJ6dYU3MpV85zO+COuMmgJsLms1ewbimeYdibL2guvJ+ttzNToj4/2s0G+gevglF
+        2OE0lIkptCBeee0UxwNAmZBxQyp8Mag=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-449-eE7Uj_5POfCnCz-BGPr59A-1; Wed, 04 May 2022 15:42:54 -0400
+X-MC-Unique: eE7Uj_5POfCnCz-BGPr59A-1
+Received: by mail-io1-f71.google.com with SMTP id h10-20020a05660224ca00b0064c77aa4477so1617321ioe.17
+        for <linux-pci@vger.kernel.org>; Wed, 04 May 2022 12:42:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=RGEmRYEdNvJND2/+wEsW7QIppOzBfSn18Tv9D3BrSCY=;
+        b=1omsUFI+giD+AM023gUWlRsdh10+NEqb3GoRssCdKHllfvyRQwbIr6anA6NKj9Kq5v
+         h8AKBNbF8k+S7kvAYwWmPwEKmUx6k2XU+nCvJmZCUs/Mwy3eteAdUs/rOiaS0phB20j+
+         ryILsTBNeRfQvzWBvM38bn0aJHugywzxeU0fNfdBSwTIwNiAK7QWJ+tr23/QApOONIxu
+         B+K2bdvQ/i3WbniHKul6NOSKy/RZTgYRTWgOcSD164s5zJRs3vPG9ozC44vtqxH2g+V6
+         PfHjFOqCaTdOD/y9B8L2cpvruAHYLqm8aBlSWXOAynLGKIkgTfUYql8tdBmRM5sJ5Lcr
+         x8kg==
+X-Gm-Message-State: AOAM532OV22HnRAVK/JmQ9J2ky1A5jYPzrhoudVoEzNDBA150WZoqlM5
+        7Nn3YvIvC/ZIIHo9c+TW9As6vduLyh5jWO5hPhNmQ4PoanMpmrZlwZ83tE/sZ5IbM14/tE4e1jc
+        gqFe78c2COpTPUHC9/tGa
+X-Received: by 2002:a02:a690:0:b0:32b:7cc3:af6c with SMTP id j16-20020a02a690000000b0032b7cc3af6cmr5178065jam.217.1651693373989;
+        Wed, 04 May 2022 12:42:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxxh/UrybHm6ZrjyaVfMFSjydozfllWg24qx8F49l7BTxLeNYANtdbbA2w1d/Ys0a1oCmL1Ww==
+X-Received: by 2002:a02:a690:0:b0:32b:7cc3:af6c with SMTP id j16-20020a02a690000000b0032b7cc3af6cmr5178056jam.217.1651693373688;
+        Wed, 04 May 2022 12:42:53 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id z2-20020a92da02000000b002cdfeead6basm3540168ilm.63.2022.05.04.12.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 May 2022 12:42:53 -0700 (PDT)
+Date:   Wed, 4 May 2022 13:42:52 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Abhishek Sahu <abhsahu@nvidia.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 5/8] vfio/pci: Enable runtime PM for vfio_pci_core
+ based drivers
+Message-ID: <20220504134252.6d556d66.alex.williamson@redhat.com>
+In-Reply-To: <20220425092615.10133-6-abhsahu@nvidia.com>
+References: <20220425092615.10133-1-abhsahu@nvidia.com>
+        <20220425092615.10133-6-abhsahu@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2650302.mvXUDI8C0e@kreacher>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,148 +87,430 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 08:00:33PM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, May 4, 2022 6:36:00 PM CEST Nathan Chancellor wrote:
-> > On Wed, May 04, 2022 at 02:59:17PM +0200, Rafael J. Wysocki wrote:
-> > > On Tue, May 3, 2022 at 7:59 PM Nathan Chancellor <nathan@kernel.org> wrote:
-> > > >
-> > > > Hi Rafael,
-> > > >
-> > > > On Thu, Apr 14, 2022 at 03:11:21PM +0200, Rafael J. Wysocki wrote:
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >
-> > > > > There are some issues related to changing power states of PCI
-> > > > > devices, mostly related to carrying out unnecessary actions in some
-> > > > > places, and the code is generally hard to follow.
-> > > > >
-> > > > >  1. pci_power_up() has two callers, pci_set_power_state() and
-> > > > >     pci_pm_default_resume_early().  The latter updates the current
-> > > > >     power state of the device right after calling pci_power_up()
-> > > > >     and it restores the entire config space of the device right
-> > > > >     after that, so pci_power_up() itself need not read the
-> > > > >     PCI_PM_CTRL register or restore the BARs after programming the
-> > > > >     device into D0 in that case.
-> > > > >
-> > > > >  2. It is generally hard to get a clear view of the pci_power_up()
-> > > > >     code flow, especially in some corner cases, due to all of the
-> > > > >     involved PCI_PM_CTRL register reads and writes occurring in
-> > > > >     pci_platform_power_transition() and in pci_raw_set_power_state(),
-> > > > >     some of which are redundant.
-> > > > >
-> > > > >  3. The transitions from low-power states to D0 and the other way
-> > > > >     around are unnecessarily tangled in pci_raw_set_power_state()
-> > > > >     which causes it to use a redundant local variable and makes it
-> > > > >     rather hard to follow.
-> > > > >
-> > > > > To address the above shortcomings, make the following changes:
-> > > > >
-> > > > >  a. Remove the code handling transitions into D0
-> > > > >     from pci_raw_set_power_state() and rename it as
-> > > > >     pci_set_low_power_state().
-> > > > >
-> > > > >  b. Add the code handling transitions into D0 directly
-> > > > >     to pci_power_up() and to a new wrapper function
-> > > > >     pci_set_full_power_state() calling it internally that is
-> > > > >     only used in pci_set_power_state().
-> > > > >
-> > > > >  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
-> > > > >     and make it work in the same way for transitions from any
-> > > > >     low-power states (transitions from D1 and D2 are handled
-> > > > >     slightly differently before the change).
-> > > > >
-> > > > >  d. Put the restoration of the BARs and the PCI_PM_CTRL
-> > > > >     register read confirming the power state change into
-> > > > >     pci_set_full_power_state() to avoid doing that in
-> > > > >     pci_pm_default_resume_early() unnecessarily.
-> > > > >
-> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > >
-> > > > This change as commit 5bffe4c611f5 ("PCI/PM: Rework changing power
-> > > > states of PCI devices") causes my AMD-based system to fail to fully
-> > > > boot. As far as I can tell, this might be NVMe related, which might make
-> > > > getting a full log difficult, as journalctl won't have anywhere to save
-> > > > it. I see:
-> > > >
-> > > > nvme nvme0: I/O 8 QID 0 timeout, completion polled
-> > > >
-> > > > then shortly afterwards:
-> > > >
-> > > > nvme nvme0: I/O 24 QID 0 timeout, completion polled
-> > > > nvme nvme0: missing or invalid SUBNQN field
-> > > >
-> > > > then I am dropped into an emergency shell.
-> > > 
-> > > Thanks for the report!
-> > > 
-> > > > This is a log from the previous commit, which may give some hints about
-> > > > the configuration of this particular system.
-> > > >
-> > > > https://gist.github.com/nathanchance/8a56f0939410cb187896e904c72e41e7/raw/b47b2620bdd32d43c7a3b209fcfd9e3d4668f058/good-boot.log
-> > > >
-> > > > If there is any additional debugging information I can provide or
-> > > > patches I can try, please let me know!
-> > > 
-> > > Please see what happens if the "if (dev->current_state == PCI_D0)"
-> > > check and the following "return 0" statement in pci_power_up() are
-> > > commented out.
-> > 
-> > If I understand you correctly, this? Unfortunately, that does not help.
+On Mon, 25 Apr 2022 14:56:12 +0530
+Abhishek Sahu <abhsahu@nvidia.com> wrote:
+
+> Currently, there is very limited power management support
+> available in the upstream vfio_pci_core based drivers. If there
+> are no users of the device, then the PCI device will be moved into
+> D3hot state by writing directly into PCI PM registers. This D3hot
+> state help in saving power but we can achieve zero power consumption
+> if we go into the D3cold state. The D3cold state cannot be possible
+> with native PCI PM. It requires interaction with platform firmware
+> which is system-specific. To go into low power states (including D3cold),
+> the runtime PM framework can be used which internally interacts with PCI
+> and platform firmware and puts the device into the lowest possible
+> D-States.
 > 
-> Thanks for testing.
+> This patch registers vfio_pci_core based drivers with the
+> runtime PM framework.
 > 
-> Please check if the patch below makes any difference.
-
-Unfortunately, there is still no difference. Even worse, I thought I
-might be able to get some information from the emergency shell but I
-don't think the HID driver is loaded yet so my keyboard does not work. I
-am not sure of how to get any further information from the problematic
-kernel; if anyone has any ideas, I am happy to test them! I am more than
-happy to continue to test patches or provide information, I just don't
-want to be a waste of time :)
-
-Cheers,
-Nathan
-
+> 1. The PCI core framework takes care of most of the runtime PM
+>    related things. For enabling the runtime PM, the PCI driver needs to
+>    decrement the usage count and needs to provide 'struct dev_pm_ops'
+>    at least. The runtime suspend/resume callbacks are optional and needed
+>    only if we need to do any extra handling. Now there are multiple
+>    vfio_pci_core based drivers. Instead of assigning the
+>    'struct dev_pm_ops' in individual parent driver, the vfio_pci_core
+>    itself assigns the 'struct dev_pm_ops'. There are other drivers where
+>    the 'struct dev_pm_ops' is being assigned inside core layer
+>    (For example, wlcore_probe() and some sound based driver, etc.).
+> 
+> 2. This patch provides the stub implementation of 'struct dev_pm_ops'.
+>    The subsequent patch will provide the runtime suspend/resume
+>    callbacks. All the config state saving, and PCI power management
+>    related things will be done by PCI core framework itself inside its
+>    runtime suspend/resume callbacks (pci_pm_runtime_suspend() and
+>    pci_pm_runtime_resume()).
+> 
+> 3. Inside pci_reset_bus(), all the devices in dev_set needs to be
+>    runtime resumed. vfio_pci_dev_set_pm_runtime_get() will take
+>    care of the runtime resume and its error handling.
+> 
+> 4. Inside vfio_pci_core_disable(), the device usage count always needs
+>    to be decremented which was incremented in vfio_pci_core_enable().
+> 
+> 5. Since the runtime PM framework will provide the same functionality,
+>    so directly writing into PCI PM config register can be replaced with
+>    the use of runtime PM routines. Also, the use of runtime PM can help
+>    us in more power saving.
+> 
+>    In the systems which do not support D3cold,
+> 
+>    With the existing implementation:
+> 
+>    // PCI device
+>    # cat /sys/bus/pci/devices/0000\:01\:00.0/power_state
+>    D3hot
+>    // upstream bridge
+>    # cat /sys/bus/pci/devices/0000\:00\:01.0/power_state
+>    D0
+> 
+>    With runtime PM:
+> 
+>    // PCI device
+>    # cat /sys/bus/pci/devices/0000\:01\:00.0/power_state
+>    D3hot
+>    // upstream bridge
+>    # cat /sys/bus/pci/devices/0000\:00\:01.0/power_state
+>    D3hot
+> 
+>    So, with runtime PM, the upstream bridge or root port will also go
+>    into lower power state which is not possible with existing
+>    implementation.
+> 
+>    In the systems which support D3cold,
+> 
+>    // PCI device
+>    # cat /sys/bus/pci/devices/0000\:01\:00.0/power_state
+>    D3hot
+>    // upstream bridge
+>    # cat /sys/bus/pci/devices/0000\:00\:01.0/power_state
+>    D0
+> 
+>    With runtime PM:
+> 
+>    // PCI device
+>    # cat /sys/bus/pci/devices/0000\:01\:00.0/power_state
+>    D3cold
+>    // upstream bridge
+>    # cat /sys/bus/pci/devices/0000\:00\:01.0/power_state
+>    D3cold
+> 
+>    So, with runtime PM, both the PCI device and upstream bridge will
+>    go into D3cold state.
+> 
+> 6. If 'disable_idle_d3' module parameter is set, then also the runtime
+>    PM will be enabled, but in this case, the usage count should not be
+>    decremented.
+> 
+> 7. vfio_pci_dev_set_try_reset() return value is unused now, so this
+>    function return type can be changed to void.
+> 
+> 8. Use the runtime PM API's in vfio_pci_core_sriov_configure().
+>    For preventing any runtime usage mismatch, pci_num_vf() has been
+>    called explicitly during disable.
+> 
+> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
 > ---
->  drivers/pci/pci.c |   10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>  drivers/vfio/pci/vfio_pci_core.c | 169 +++++++++++++++++++++----------
+>  1 file changed, 114 insertions(+), 55 deletions(-)
 > 
-> Index: linux-pm/drivers/pci/pci.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci.c
-> +++ linux-pm/drivers/pci/pci.c
-> @@ -1245,7 +1245,7 @@ int pci_power_up(struct pci_dev *dev)
->  
->  	/* There's nothing more to do if current_state is D0 at this point. */
->  	if (dev->current_state == PCI_D0)
-> -		return 0;
-> +		goto done;
->  
->  	/*
->  	 * Program the device into PCI_D0 by forcing the entire word to 0 (this
-> @@ -1260,6 +1260,11 @@ int pci_power_up(struct pci_dev *dev)
->  		udelay(PCI_PM_D2_DELAY);
->  
->  	dev->current_state = PCI_D0;
-> +
-> +done:
-> +	if (dev->bus->self)
-> +		pcie_aspm_pm_state_change(dev->bus->self);
-> +
->  	return 1;
->  
->  fail:
-> @@ -1339,9 +1344,6 @@ static int pci_set_full_power_state(stru
->  		pci_restore_bars(dev);
->  	}
->  
-> -	if (dev->bus->self)
-> -		pcie_aspm_pm_state_change(dev->bus->self);
-> -
->  	return 0;
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 953ac33b2f5f..aee5e0cd6137 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -156,7 +156,7 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_core_device *vdev)
 >  }
 >  
-> 
-> 
-> 
+>  struct vfio_pci_group_info;
+> -static bool vfio_pci_dev_set_try_reset(struct vfio_device_set *dev_set);
+> +static void vfio_pci_dev_set_try_reset(struct vfio_device_set *dev_set);
+>  static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
+>  				      struct vfio_pci_group_info *groups);
+>  
+> @@ -261,6 +261,19 @@ int vfio_pci_set_power_state(struct vfio_pci_core_device *vdev, pci_power_t stat
+>  	return ret;
+>  }
+>  
+> +#ifdef CONFIG_PM
+> +/*
+> + * The dev_pm_ops needs to be provided to make pci-driver runtime PM working,
+> + * so use structure without any callbacks.
+> + *
+> + * The pci-driver core runtime PM routines always save the device state
+> + * before going into suspended state. If the device is going into low power
+> + * state with only with runtime PM ops, then no explicit handling is needed
+> + * for the devices which have NoSoftRst-.
+> + */
+> +static const struct dev_pm_ops vfio_pci_core_pm_ops = { };
+> +#endif
+> +
+>  int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+>  {
+>  	struct pci_dev *pdev = vdev->pdev;
+> @@ -268,21 +281,23 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+>  	u16 cmd;
+>  	u8 msix_pos;
+>  
+> -	vfio_pci_set_power_state(vdev, PCI_D0);
+> +	if (!disable_idle_d3) {
+> +		ret = pm_runtime_resume_and_get(&pdev->dev);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+>  
+>  	/* Don't allow our initial saved state to include busmaster */
+>  	pci_clear_master(pdev);
+>  
+>  	ret = pci_enable_device(pdev);
+>  	if (ret)
+> -		return ret;
+> +		goto out_power;
+>  
+>  	/* If reset fails because of the device lock, fail this path entirely */
+>  	ret = pci_try_reset_function(pdev);
+> -	if (ret == -EAGAIN) {
+> -		pci_disable_device(pdev);
+> -		return ret;
+> -	}
+> +	if (ret == -EAGAIN)
+> +		goto out_disable_device;
+>  
+>  	vdev->reset_works = !ret;
+>  	pci_save_state(pdev);
+> @@ -306,12 +321,8 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+>  	}
+>  
+>  	ret = vfio_config_init(vdev);
+> -	if (ret) {
+> -		kfree(vdev->pci_saved_state);
+> -		vdev->pci_saved_state = NULL;
+> -		pci_disable_device(pdev);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		goto out_free_state;
+>  
+>  	msix_pos = pdev->msix_cap;
+>  	if (msix_pos) {
+> @@ -332,6 +343,16 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+>  
+>  
+>  	return 0;
+> +
+> +out_free_state:
+> +	kfree(vdev->pci_saved_state);
+> +	vdev->pci_saved_state = NULL;
+> +out_disable_device:
+> +	pci_disable_device(pdev);
+> +out_power:
+> +	if (!disable_idle_d3)
+> +		pm_runtime_put(&pdev->dev);
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_pci_core_enable);
+>  
+> @@ -439,8 +460,11 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
+>  out:
+>  	pci_disable_device(pdev);
+>  
+> -	if (!vfio_pci_dev_set_try_reset(vdev->vdev.dev_set) && !disable_idle_d3)
+> -		vfio_pci_set_power_state(vdev, PCI_D3hot);
+> +	vfio_pci_dev_set_try_reset(vdev->vdev.dev_set);
+> +
+> +	/* Put the pm-runtime usage counter acquired during enable */
+> +	if (!disable_idle_d3)
+> +		pm_runtime_put(&pdev->dev);
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_pci_core_disable);
+>  
+> @@ -1879,19 +1903,24 @@ int vfio_pci_core_register_device(struct vfio_pci_core_device *vdev,
+>  
+>  	vfio_pci_probe_power_state(vdev);
+>  
+> -	if (!disable_idle_d3) {
+> -		/*
+> -		 * pci-core sets the device power state to an unknown value at
+> -		 * bootup and after being removed from a driver.  The only
+> -		 * transition it allows from this unknown state is to D0, which
+> -		 * typically happens when a driver calls pci_enable_device().
+> -		 * We're not ready to enable the device yet, but we do want to
+> -		 * be able to get to D3.  Therefore first do a D0 transition
+> -		 * before going to D3.
+> -		 */
+> -		vfio_pci_set_power_state(vdev, PCI_D0);
+> -		vfio_pci_set_power_state(vdev, PCI_D3hot);
+> -	}
+> +	/*
+> +	 * pci-core sets the device power state to an unknown value at
+> +	 * bootup and after being removed from a driver.  The only
+> +	 * transition it allows from this unknown state is to D0, which
+> +	 * typically happens when a driver calls pci_enable_device().
+> +	 * We're not ready to enable the device yet, but we do want to
+> +	 * be able to get to D3.  Therefore first do a D0 transition
+> +	 * before enabling runtime PM.
+> +	 */
+> +	vfio_pci_set_power_state(vdev, PCI_D0);
+> +
+> +#if defined(CONFIG_PM)
+> +	dev->driver->pm = &vfio_pci_core_pm_ops,
+> +#endif
+> +
+> +	pm_runtime_allow(dev);
+> +	if (!disable_idle_d3)
+> +		pm_runtime_put(dev);
+>  
+>  	ret = vfio_register_group_dev(&vdev->vdev);
+>  	if (ret)
+> @@ -1900,7 +1929,9 @@ int vfio_pci_core_register_device(struct vfio_pci_core_device *vdev,
+>  
+>  out_power:
+>  	if (!disable_idle_d3)
+> -		vfio_pci_set_power_state(vdev, PCI_D0);
+> +		pm_runtime_get_noresume(dev);
+> +
+> +	pm_runtime_forbid(dev);
+>  out_vf:
+>  	vfio_pci_vf_uninit(vdev);
+>  out_drvdata:
+> @@ -1922,8 +1953,9 @@ void vfio_pci_core_unregister_device(struct vfio_pci_core_device *vdev)
+>  	vfio_pci_vga_uninit(vdev);
+>  
+>  	if (!disable_idle_d3)
+> -		vfio_pci_set_power_state(vdev, PCI_D0);
+> +		pm_runtime_get_noresume(dev);
+>  
+> +	pm_runtime_forbid(dev);
+>  	dev_set_drvdata(dev, NULL);
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_pci_core_unregister_device);
+> @@ -1984,18 +2016,26 @@ int vfio_pci_core_sriov_configure(struct pci_dev *pdev, int nr_virtfn)
+>  
+>  		/*
+>  		 * The PF power state should always be higher than the VF power
+> -		 * state. If PF is in the low power state, then change the
+> -		 * power state to D0 first before enabling SR-IOV.
+> +		 * state. If PF is in the runtime suspended state, then resume
+> +		 * it first before enabling SR-IOV.
+>  		 */
+> -		vfio_pci_set_power_state(vdev, PCI_D0);
+> -		ret = pci_enable_sriov(pdev, nr_virtfn);
+> +		ret = pm_runtime_resume_and_get(&pdev->dev);
+>  		if (ret)
+>  			goto out_del;
+> +
+> +		ret = pci_enable_sriov(pdev, nr_virtfn);
+> +		if (ret) {
+> +			pm_runtime_put(&pdev->dev);
+> +			goto out_del;
+> +		}
+>  		ret = nr_virtfn;
+>  		goto out_put;
+>  	}
+>  
+> -	pci_disable_sriov(pdev);
+> +	if (pci_num_vf(pdev)) {
+> +		pci_disable_sriov(pdev);
+> +		pm_runtime_put(&pdev->dev);
+> +	}
+>  
+>  out_del:
+>  	mutex_lock(&vfio_pci_sriov_pfs_mutex);
+> @@ -2072,6 +2112,30 @@ vfio_pci_dev_set_resettable(struct vfio_device_set *dev_set)
+>  	return pdev;
+>  }
+>  
+> +static int vfio_pci_dev_set_pm_runtime_get(struct vfio_device_set *dev_set)
+> +{
+> +	struct vfio_pci_core_device *cur_pm;
+> +	struct vfio_pci_core_device *cur;
+> +	int ret = 0;
+> +
+> +	list_for_each_entry(cur_pm, &dev_set->device_list, vdev.dev_set_list) {
+> +		ret = pm_runtime_resume_and_get(&cur_pm->pdev->dev);
+> +		if (ret < 0)
+> +			break;
+> +	}
+> +
+> +	if (!ret)
+> +		return 0;
+> +
+> +	list_for_each_entry(cur, &dev_set->device_list, vdev.dev_set_list) {
+> +		if (cur == cur_pm)
+> +			break;
+> +		pm_runtime_put(&cur->pdev->dev);
+> +	}
+> +
+> +	return ret;
+> +}
+
+The above works, but maybe could be a little cleaner taking advantage
+of list_for_each_entry_continue_reverse as:
+
+{
+	struct vfio_pci_core_device *cur;
+	int ret;
+
+	list_for_each_entry(cur, &dev_set->device_list, vdev.dev_set_list) {
+		ret = pm_runtime_resume_and_get(&cur->pdev->dev);
+		if (ret)
+			goto unwind;
+	}
+
+	return 0;
+
+unwind:
+	list_for_each_entry_continue_reverse(cur, &dev_set->device_list, vdev.dev_set_list)
+		pm_runtime_put(&cur->pdev->dev);
+
+	return ret;
+}
+
+Thanks,
+Alex
+
+> +
+>  /*
+>   * We need to get memory_lock for each device, but devices can share mmap_lock,
+>   * therefore we need to zap and hold the vma_lock for each device, and only then
+> @@ -2178,43 +2242,38 @@ static bool vfio_pci_dev_set_needs_reset(struct vfio_device_set *dev_set)
+>   *  - At least one of the affected devices is marked dirty via
+>   *    needs_reset (such as by lack of FLR support)
+>   * Then attempt to perform that bus or slot reset.
+> - * Returns true if the dev_set was reset.
+>   */
+> -static bool vfio_pci_dev_set_try_reset(struct vfio_device_set *dev_set)
+> +static void vfio_pci_dev_set_try_reset(struct vfio_device_set *dev_set)
+>  {
+>  	struct vfio_pci_core_device *cur;
+>  	struct pci_dev *pdev;
+> -	int ret;
+> +	bool reset_done = false;
+>  
+>  	if (!vfio_pci_dev_set_needs_reset(dev_set))
+> -		return false;
+> +		return;
+>  
+>  	pdev = vfio_pci_dev_set_resettable(dev_set);
+>  	if (!pdev)
+> -		return false;
+> +		return;
+>  
+>  	/*
+> -	 * The pci_reset_bus() will reset all the devices in the bus.
+> -	 * The power state can be non-D0 for some of the devices in the bus.
+> -	 * For these devices, the pci_reset_bus() will internally set
+> -	 * the power state to D0 without vfio driver involvement.
+> -	 * For the devices which have NoSoftRst-, the reset function can
+> -	 * cause the PCI config space reset without restoring the original
+> -	 * state (saved locally in 'vdev->pm_save').
+> +	 * Some of the devices in the bus can be in the runtime suspended
+> +	 * state. Increment the usage count for all the devices in the dev_set
+> +	 * before reset and decrement the same after reset.
+>  	 */
+> -	list_for_each_entry(cur, &dev_set->device_list, vdev.dev_set_list)
+> -		vfio_pci_set_power_state(cur, PCI_D0);
+> +	if (!disable_idle_d3 && vfio_pci_dev_set_pm_runtime_get(dev_set))
+> +		return;
+>  
+> -	ret = pci_reset_bus(pdev);
+> -	if (ret)
+> -		return false;
+> +	if (!pci_reset_bus(pdev))
+> +		reset_done = true;
+>  
+>  	list_for_each_entry(cur, &dev_set->device_list, vdev.dev_set_list) {
+> -		cur->needs_reset = false;
+> +		if (reset_done)
+> +			cur->needs_reset = false;
+> +
+>  		if (!disable_idle_d3)
+> -			vfio_pci_set_power_state(cur, PCI_D3hot);
+> +			pm_runtime_put(&cur->pdev->dev);
+>  	}
+> -	return true;
+>  }
+>  
+>  void vfio_pci_core_set_params(bool is_nointxmask, bool is_disable_vga,
+
