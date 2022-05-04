@@ -2,50 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A446151A957
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 19:17:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A05A151AB1B
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 19:40:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356297AbiEDRRE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 13:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58860 "EHLO
+        id S1358862AbiEDRml (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 13:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358182AbiEDRPo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 13:15:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA0F56425
-        for <linux-pci@vger.kernel.org>; Wed,  4 May 2022 09:59:27 -0700 (PDT)
+        with ESMTP id S1358558AbiEDRlb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 13:41:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F094704B;
+        Wed,  4 May 2022 10:07:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FDBC61770
-        for <linux-pci@vger.kernel.org>; Wed,  4 May 2022 16:59:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8084FC385B0;
-        Wed,  4 May 2022 16:59:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F3D9619C0;
+        Wed,  4 May 2022 17:07:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52846C385A4;
+        Wed,  4 May 2022 17:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651683566;
-        bh=mNKghIme2ywQvwL7BlzCw6MrK2ZPU84sXX0KFl2hZBU=;
+        s=k20201202; t=1651684020;
+        bh=GLYjDWr+192rxC48wQ8VgGspiNE5r/eo1X3Mg9YC2x8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=V9Ea8Eo6WdpTV16tt1QPjeQGxECK+40zE3QX2K+3+SDzlWKmQVMW8VTFfD7M1kdpr
-         D/50t5Y2GJLdz4BFsSZrBWgDnL7QRP+uRxJ0sNPA//nkNtUaJcKFQzEeSm+U799Ro7
-         f55ooTIHyb53qCZR6z9lz240PgMtO1x2n1UgZsVBiBCaKO63RhrcDi+kisJ4sc1cp4
-         cT0htYQpEFDNu2wJkSmOyZcr1UGFXxC+n8SMV9aJC4eXvGNKiQ16hmo0PouJcCPaIE
-         JysILwHVgIZK4emymtGoeV5HQEqcim4wo+/GezC3/XGZ0vahSKM4pcfEd0y91r7iya
-         SIdAmKBCmYvzA==
-Date:   Wed, 4 May 2022 11:59:24 -0500
+        b=H8Hoc5qYMvP4u27oz6zF7hCsz/eCyjoMiZuqzCfI6Tpar5ffkEgHLTBGdSLb4gliO
+         rYXBbqd5/BTm7yApdjTQAdZ3KO3xyFIf060yv+VwBsSvu3aXe5Er1TLM75832BnuRN
+         hoMd1RF50MYKELSn9odqDU8d8J2wdY9v+Eh28KZbkIgLaHmF0uhmTKY5IfYzDBEJ6a
+         QXwpOZ4szXJMlLAmUaqmz/Z+DP6QBFa1HyNBp9TIRWl5ExYZh2fqDWKz53Lew5rASp
+         HQhKuS/3hAfAptQ261aPe+LLlHkvVbDXjjV2vRQcT2fpSlnaC5EaTE+EZbJkUEB9pL
+         9He7Nm+83TMDg==
+Date:   Wed, 4 May 2022 12:06:58 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Conor Dooley <mail@conchuod.ie>
-Cc:     Marc Zyngier <maz@kernel.org>, Conor.Dooley@microchip.com,
-        lorenzo.pieralisi@arm.com, Daire.McNamara@microchip.com,
-        bhelgaas@google.com, Cyril.Jean@microchip.com,
-        david.abdurachmanov@gmail.com, linux-pci@vger.kernel.org,
-        robh@kernel.org
-Subject: Re: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in
- interrupt handling
-Message-ID: <20220504165924.GA453752@bhelgaas>
+To:     Felix Fietkau <nbd@nbd.name>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: mediatek-gen3: change driver name to mtk-pcie-gen3
+Message-ID: <20220504170658.GA453994@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <199f5479-b212-e1ac-f9e4-d5d13708cb0c@conchuod.ie>
+In-Reply-To: <20220504100555.96007-1-nbd@nbd.name>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,56 +59,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 04:12:39PM +0100, Conor Dooley wrote:
-> On 02/05/2022 20:22, Bjorn Helgaas wrote:
-> > On Sat, Apr 30, 2022 at 12:33:51AM +0100, Marc Zyngier wrote:
-> >> On Fri, 29 Apr 2022 22:57:33 +0100,
-> >> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>> On Fri, Apr 29, 2022 at 09:42:52AM +0000, Conor.Dooley@microchip.com wrote:
-> >>>> On 28/04/2022 10:29, Lorenzo Pieralisi wrote:
-> >>>>> On Tue, Apr 05, 2022 at 12:17:51PM +0100, daire.mcnamara@microchip.com wrote:
-> >>>>>> From: Daire McNamara <daire.mcnamara@microchip.com>
-> >>>>>>
-> >>>>>> Clear MSI bit in ISTATUS register after reading it before
-> >>>>>> handling individual MSI bits
-> > 
-> >>>> Clear the MSI bit in ISTATUS register after reading it, but before
-> >>>> reading and handling individual MSI bits from the IMSI register.
-> >>>> This avoids a potential race where new MSI bits may be set on the
-> >>>> IMSI register after it was read and be missed when the MSI bit in
-> >>>> the ISTATUS register is cleared.
+On Wed, May 04, 2022 at 12:05:55PM +0200, Felix Fietkau wrote:
+> This allows it to coexist with the other mtk pcie driver in the same kernel
 
-Restoring the context here:
+I assume this is a v3 of [1].  Please:
 
-> >>> "ISTATUS" doesn't appear in the code as a register name.
-> >>> Neither does "IMSI".  Please use names that match the code.
+  - Follow the subject line capitalization convention, i.e.,
+    "PCI: mediatek-gen3: Change ..."
 
-> Daire is still having the IT issues, so before I resend the patch with
-> a new commit message, how is the following:
+  - Expand the commit log to say why this is important.  From a C
+    language level, using the same "mtk-pcie" string in both drivers
+    is no problem.  So please mention where it *is* a problem, e.g.,
+    if it's a problem with modprobe or similar, say that.  Or if it's
+    to make log messages in dmesg have different driver names, say
+    that.
+
+  - s/pcie/PCIe/ in commit log and other English text.
+
+  - Add a period at the end of the commit log sentence.
+
+[1] https://lore.kernel.org/r/20220422070908.14043-1-jianjun.wang@mediatek.com
+
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> ---
+>  drivers/pci/controller/pcie-mediatek-gen3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Clear the MSI bit in ISTATUS_LOCAL register after reading it, but
-> before reading and handling individual MSI bits from the ISTATUS_MSI
-> register. This avoids a potential race where new MSI bits may be set
-> on the ISTATUS_MSI register after it was read and be missed when the
-> MSI bit in the ISTATUS_LOCAL register is cleared.
-
-Looks good, thank you!
-
-> >>> And speaking of that, I looked at all the users of
-> >>> irq_set_chained_handler_and_data() in drivers/pci.  All the handlers
-> >>> except mc_handle_intx() and mc_handle_msi() call chained_irq_enter()
-> >>> and chained_irq_exit().
-> >>>
-> >>> Are mc_handle_intx() and mc_handle_msi() just really special, or is
-> >>> this a mistake?
-> >>
-> >> That's just a bug. On the right HW, this would just result in lost
-> >> interrupts.
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index 3e8d70bfabc6..2e665cd7e735 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -1021,7 +1021,7 @@ static struct platform_driver mtk_pcie_driver = {
+>  	.probe = mtk_pcie_probe,
+>  	.remove = mtk_pcie_remove,
+>  	.driver = {
+> -		.name = "mtk-pcie",
+> +		.name = "mtk-pcie-gen3",
+>  		.of_match_table = mtk_pcie_of_match,
+>  		.pm = &mtk_pcie_pm_ops,
+>  	},
+> -- 
+> 2.35.1
 > 
-> Separate issue, separate patch. Do you want them in a series or as
-> another standalone patch?
-
-Agreed, should be a separate patch.  Doesn't need to be a series
-unless that patch only applies correctly on top of this one.
-
-Bjorn
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
