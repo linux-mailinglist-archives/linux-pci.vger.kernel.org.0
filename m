@@ -2,68 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71C855192D9
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 02:33:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A285E5195A7
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 04:54:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243353AbiEDAhG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 20:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
+        id S1344140AbiEDC6Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 May 2022 22:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233015AbiEDAhF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 20:37:05 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9B71AF03;
-        Tue,  3 May 2022 17:33:31 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id a10so19864413oif.9;
-        Tue, 03 May 2022 17:33:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+69jK9IPHtq7eTQpuH4u7DsenSPiOVy1Fxyon9TR9q0=;
-        b=vhsnB7Eu8YLo8GpNYxcBFEh5lQCusz56zGQUCJ1cBvW3tnSXfBRw64jt+49UQA43w1
-         QTCxtK/Q/YZVbYN8l7+/kjP4/Rqh8tbBj+MUz1jq6dshS7zilWmmh8R5/uDviq5Ez0RQ
-         xXHXmJCCBWgP1ZN1CwAFsDLGBAqOh0okp1N1WLQI4QXZh9P9mtHy6BXR9bqhBev8U3V3
-         Hq7XFcTCCQShz6AoHoIY2qFbbiJsssi/gmKM6AuuhX3r0SicyjUVMqNLVVLdsQcqNQoh
-         AyIz004xFtFLU31I9kWFd0u/HsMzqLv9et6U4aFCYI0sq/1LAcgV7w+ZsvVZvSVJQ9/f
-         H5IA==
-X-Gm-Message-State: AOAM530HFwGvcROKT54XTO90P5Y901T/rxW5Hz45o3AcNmSoVEKS+tJj
-        yEqT3Rh7E5jPT4wqb2E8tw==
-X-Google-Smtp-Source: ABdhPJy9hwsgHM6RNU9r1FLK8J2cCGc+iKNimAULdRWWFDNux+5LRT3N6BpBMEvwZ0ZU5BfGCMl4Xg==
-X-Received: by 2002:a05:6808:118f:b0:2d9:a01a:48be with SMTP id j15-20020a056808118f00b002d9a01a48bemr2854191oil.265.1651624411016;
-        Tue, 03 May 2022 17:33:31 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id p6-20020aca4206000000b00325cda1ffbbsm3769396oia.58.2022.05.03.17.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 17:33:30 -0700 (PDT)
-Received: (nullmailer pid 319775 invoked by uid 1000);
-        Wed, 04 May 2022 00:33:29 -0000
-Date:   Tue, 3 May 2022 19:33:29 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hector Martin <marcan@marcan.st>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Sven Peter <sven@svenpeter.dev>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] PCI: apple: Add support for optional PWREN GPIO
-Message-ID: <YnHJ2ZKd2CqhNWrX@robh.at.kernel.org>
-References: <20220502093832.32778-1-marcan@marcan.st>
- <20220502093832.32778-4-marcan@marcan.st>
- <CAL_Jsq+_cWZUXtJVXC_cwhmADj0NQc95v1sqgFioMsfEX6OqGg@mail.gmail.com>
- <0ccc44cd-21aa-3670-24b3-4ee051dd3c12@marcan.st>
- <2615501d-7569-41cb-7039-46e690689f1f@marcan.st>
+        with ESMTP id S245718AbiEDC6P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 22:58:15 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4171A3AD;
+        Tue,  3 May 2022 19:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651632881; x=1683168881;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fsWFIBdCiaIZnDpi6aLAm3yjd4bu5P5ackQ3H9N6o+U=;
+  b=LyuBzcbt/VRsVKbrombq5Xd7yIRL0C+KNyhdqhk88NFsoACw7KKRqyvb
+   e0eOOvCdMK5lkYfTedkITQMYsiw2mt+D1yPbcBpXrAk/Pvv+hifCtOCUA
+   AXWGmjLDFPuZD4Ww6PdlvPIi6HEC2YCyPDssiBy8iJGiFQKjAzQwZMmHT
+   0h28pPUrez/W/MlvFYiTqkqxzA246mYnf3d2hGrR9eVRHFCdxxWf0FJQ7
+   hKzsUxXvkeB1+tNCJXfKh1Bj9qYyz8jsmnr855HrhtgtAvDL94EQ9QSzj
+   rcRnfFfXqDHX9yUpuUM3RUzTf3KFA3anw9j0GCcT3ahyjLSxZpXPyuH2k
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="267528048"
+X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
+   d="scan'208";a="267528048"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 19:54:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
+   d="scan'208";a="548155712"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 03 May 2022 19:54:35 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nm59u-000AzT-FF;
+        Wed, 04 May 2022 02:54:34 +0000
+Date:   Wed, 4 May 2022 10:53:43 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        pantelis.antoniou@konsulko.com, Tim Harvey <tharvey@gateworks.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     kbuild-all@lists.01.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Jason Liu <jason.hui.liu@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] of: overlay: rename overlay source files from
+ .dts to .dtso
+Message-ID: <202205041054.U5pUx0xQ-lkp@intel.com>
+References: <20220503211954.1428919-1-frowand.list@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2615501d-7569-41cb-7039-46e690689f1f@marcan.st>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <20220503211954.1428919-1-frowand.list@gmail.com>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,118 +82,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 03, 2022 at 12:20:48PM +0900, Hector Martin wrote:
-> On 03/05/2022 00.32, Hector Martin wrote:
-> > On 03/05/2022 00.14, Rob Herring wrote:
-> >> On Mon, May 2, 2022 at 4:39 AM Hector Martin <marcan@marcan.st> wrote:
-> >>>
-> >>> WiFi and SD card devices on M1 Macs have a separate power enable GPIO.
-> >>> Add support for this to the PCIe controller. This is modeled after how
-> >>> pcie-fu740 does it.
-> >>
-> >> It did, but it's not ideal really. The problem is the GPIO is really
-> >> associated with the device (WiFi/SD) rather than the PCI host and
-> >> therefore should be part of a WiFi or SD node. You probably don't have
-> >> one (yet), but I would suspect that SD will need one for all the
-> >> standard MMC/SD DT properties. The secondary issue is we'll end up
-> >> adding more power sequencing properties to control ordering and timing
-> >> for different devices. The exception here is standard PCI slot
-> >> properties like perst#, clkreq, and standard voltage rails can go in
-> >> the host bridge (and for new bindings, those should really be in the
-> >> root port node). For a complicated example, see Hikey960 or 970.
-> >>
-> >> Of course with power control related properties there's a chicken or
-> >> egg issue that the PCI device is not discoverable until the device is
-> >> powered on. This issue comes up over and over with various hacky
-> >> solutions in the bindings. The PCI subsystem needs to solve this. My
-> >> suggestion is that if the firmware says there is a device on the bus
-> >> and it wasn't probed, then we should force probing (or add a pre-probe
-> >> hook for drivers). That is what MDIO bus does for example.
-> >>
-> > 
-> > I agree with the premise. Right now macOS does not actually power down
-> > these devices as far as I know (except maybe sleep mode? not sure what
-> > goes on then yet), but I think the hardware actually has an SD card
-> > detect GPIO hookup that would allow us to entirely power down the SD
-> > controller when no card is inserted. That would obviously be ideal.
-> > 
-> > FWIW, we do have the device nodes downstream [1]. I did in fact have to
-> > add the SD one for the CD/WP inversion flags (and had to add driver
-> > support for that too).
-> > 
-> > That said, as for how to make this happen in the PCI subsystem
-> > properly... I think I'll defer to the maintainers' opinion there before
-> > trying to hack something up ;)
-> > 
-> > Meanwhile, I guess I better get PCIe hotplug working, since doing it in
-> > the driver isn't going to work without that first...
-> > 
-> > [1]
-> > https://github.com/AsahiLinux/linux/blob/bits/000-devicetree/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi#L222
-> 
-> Thinking about this some more, I think it still makes sense to have the
-> power enable GPIO in the PCI root port node. A generic power enable GPIO
-> still makes sense there (think "slot power"). The PCI core could handle
-> it properly by default, including turning it on prior to initial probing
-> and shutting it down when the device should go into whatever the PCI
-> core's idea of D3cold is. AIUI this already happens on some platforms
-> via firmware, right? Since D3cold is supposed to be a state where the
-> device receives no power after all.
+Hi,
 
-We have put slot stuff in the bridge node. That's because PCI child 
-nodes already have a definition and we didn't define slot nodes up 
-front. We often have started without a slot/connector and then 
-retrofitted nodes in.
+I love your patch! Yet something to improve:
 
-I can think of lots of ways to implement 'slot power' with a single GPIO 
-being just one way. If it's not defined by PCIe specs or defacto 
-standards then I don't think we want to try to do something generic.
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on next-20220503]
+[cannot apply to masahiroy-kbuild/for-next v5.18-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-The other way to model power gpios is as a GPIO regulator. We probably 
-already have PCI examples doing that.
+url:    https://github.com/intel-lab-lkp/linux/commits/frowand-list-gmail-com/of-overlay-rename-overlay-source-files-from-dts-to-dtso/20220504-052106
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+config: arc-randconfig-m031-20220501 (https://download.01.org/0day-ci/archive/20220504/202205041054.U5pUx0xQ-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/53969d905002b16289e1524e691435a64652db0d
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review frowand-list-gmail-com/of-overlay-rename-overlay-source-files-from-dts-to-dtso/20220504-052106
+        git checkout 53969d905002b16289e1524e691435a64652db0d
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash
 
-> Obviously this can't handle funky power sequencing requirements, but we
-> don't have any of those here and we don't know if we ever will (at least
-> Apple seems to be a fan of throwing little CPLDs on their boards for
-> fine grained power sequencing, driven by a single IO). If we do, then
-> that would be the time to have GPIOs in the device node.
-> 
-> In addition, sometimes a single power enable is shared between multiple
-> functions of one device. This is the case with WiFi/BT, which is a combo
-> chip with two functions. Coordinating GPIO usage between both drivers
-> would be problematic if they both try to own it.
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-A GPIO regulator solves this problem as it is reference counted.
+All errors (new ones prefixed by >>):
 
-> The individual device drivers still need to have some kind of API to be
-> able to put devices into a low-power state. For example, the WiFi driver
-> could outright power down the device when it is wholly unused and the
-> interface is down (same for BT, and the PCI core should only put the
-> slot GPIO into powerdown if both functions say they should be off).
-> Similarly, the SD driver needs to support an external SD detect GPIO,
-> and have a mode where it tells the PCI core to shut down the device when
-> no SD is inserted, and power it back up on insertion. This all allows
-> the devices to behave a users might expect, with the device nodes
-> existing and the PCI devices "visible" even when they are powered down
-> behind the scenes, until they are needed. AIUI this is already how e.g.
-> hybrid graphics power management works, where power is outright yanked
-> from the secondary card when it is not needed even though it is still
-> visible from the userspace point of view (and it is automatically
-> powered and reinitialized on use).
+>> make[4]: *** No rule to make target 'drivers/of/unittest-data/static_base_1.dtb', needed by 'drivers/of/unittest-data/static_test_1.dtb'.
+>> make[4]: *** No rule to make target 'drivers/of/unittest-data/static_base_2.dtb', needed by 'drivers/of/unittest-data/static_test_2.dtb'.
+   make[4]: Target '__build' not remade because of errors.
 
-Can it detect a card insertion when powered down?
-
-I think a GPIO regulator solves all this as long as card detect still 
-works.
-
-> I'm not super familiar with PCI device power states (making brcmfmac
-> sleep work properly on these platforms is on my TODO list...) so I'd
-> love to get some feedback from the PCI folks on what they think about
-> this whole issue.
-
-I'm not either. I know there's some backlog of work to rework PCI power 
-management to be more inline with how the rest of kernel drivers work.
- 
-Isn't D3cold an ACPI thing, not PCI?
-
-Rob
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
