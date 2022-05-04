@@ -2,72 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFD6951A35E
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 17:12:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D284651A45F
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 17:44:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351829AbiEDPQY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 11:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
+        id S234577AbiEDPri (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 11:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350363AbiEDPQX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 11:16:23 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DACF41325
-        for <linux-pci@vger.kernel.org>; Wed,  4 May 2022 08:12:43 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id e24so2454014wrc.9
-        for <linux-pci@vger.kernel.org>; Wed, 04 May 2022 08:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod.ie; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=J/6edDAoGiJvwXrwHfZneoLWTo+GhcZIzXoJ98ClTtc=;
-        b=MqH+uACj88R/r3Sqdkwt7CDqlVGvd/Upo14iVij92A/8XnlbBqs9c8x8ZumFEbvceP
-         qxXVwbEizXsEaSLDdnGUbP2nX++MB5DR2BEPLW2WGQo6pBbwSCC0wu/CtnfDyCTSJ8iw
-         Y1cQ8xtn/QW0J3rzGYR51fr3TMTKaSSPQdwVToV03//tojGc3wvTpcznWrfSwESBE3Fl
-         uwDD1MjUMGRXb9VPpPe7cOvqg2WDkG1oLDebHKUha16FCJjegMtn2UvQcibzvCCvqJUc
-         zEz2R4g+OHjDzXIM/vtQ0WLJP8b+vsA4UQDiqErG31X6jxkyIthAkZhySdn726Hckloh
-         pgOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=J/6edDAoGiJvwXrwHfZneoLWTo+GhcZIzXoJ98ClTtc=;
-        b=jAQC07iWpOOLWU9pWeouu9asudXoLnSZbTYpbOxxjWwLcliYVDOnrb1LSKnPCeLVJC
-         IxpQk2eXmPNcOwsndQvkIN0FNKle+WnfCAC/li8tBB9ZnkyOdxS3ofLFVKO20eiBZuX7
-         jj+jaio3wQLLib0dP0b0/MTOqADC6G9J6Js3fWPDWMgdFzXKF76JPaQ9wnHIZxHnuuI2
-         SFmF/w4G2lOCHkdGSzPuSXjup/HeblqNRX57hl0K5Fkd+VDdAcmceI5R4cLMzkE/bGS4
-         SPKPyaMLsWJsCv966gCU5xag8mYX0H5GLM2HTi6/gHJG9qz1GE7lsPFzL9eHU7wfQR2Z
-         RI5Q==
-X-Gm-Message-State: AOAM532PskonwvJQZPbHvgqrf9K5VdkSbw+Ng3riQifQNIuSK2H9n/nF
-        btYCTgp5Rppg6nLhrZgSqFB1pg==
-X-Google-Smtp-Source: ABdhPJw3jQ6NzbntELwroQk+0eE2ZdM81gr/DnNhoJVU8cSfyQDlw5mMXVRJl1+CObA5QDQo4561Sg==
-X-Received: by 2002:adf:b64c:0:b0:1e3:16d0:3504 with SMTP id i12-20020adfb64c000000b001e316d03504mr16785118wre.333.1651677161589;
-        Wed, 04 May 2022 08:12:41 -0700 (PDT)
-Received: from [192.168.2.222] ([109.77.36.132])
-        by smtp.gmail.com with ESMTPSA id l28-20020a05600c1d1c00b003942a244ed1sm1777942wms.22.2022.05.04.08.12.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 May 2022 08:12:41 -0700 (PDT)
-Message-ID: <199f5479-b212-e1ac-f9e4-d5d13708cb0c@conchuod.ie>
-Date:   Wed, 4 May 2022 16:12:39 +0100
+        with ESMTP id S230413AbiEDPri (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 11:47:38 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F36D51AF35;
+        Wed,  4 May 2022 08:44:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B958BB8247D;
+        Wed,  4 May 2022 15:44:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE12C385A4;
+        Wed,  4 May 2022 15:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651679039;
+        bh=jJYVOF65XbY/QhoDeI2ZVjpogs+998okYV/rZf0Ftq0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bmZL/dx/IGJNf11PKxL+15uVILHeBJOgSPqdtMJhl9tQauAqRT+okgdFU13AJIP5B
+         q1bu1krQyGOBXokMl2xIgm06STREHQfE0Hkj2tjRyVaJ1dHA9Ohp6bo7nTlhG5h7fk
+         RKU6GLYc7IV5OdERa3QUQQ5QhyZkAjuih1cLEW7IMDhq2w6/MLnKERP9gL59BJCvrJ
+         ML7yHcJ55SjrLTMAOom+YCssrVPijfoeSrNEDn38smDPFVc39TCn1ENP2Vocls2HJF
+         ZzCJixmXuTvNnFhmD1HVgoJ9Qs7kH4JtskiK4Urfeem8aiVI7xNYqsLg8lt1hVjcDv
+         j6OmJVfdd24mg==
+Received: by mail-pj1-f49.google.com with SMTP id w5-20020a17090aaf8500b001d74c754128so5556869pjq.0;
+        Wed, 04 May 2022 08:43:59 -0700 (PDT)
+X-Gm-Message-State: AOAM5308/1Qbif3gU9TmyHO4A5KpGjz3A/OMrAQBWd9hCrebFbIikDRm
+        mjz+8bqRbjpqoF2QEevp5XTqDiRQbJLRdj0jEA==
+X-Google-Smtp-Source: ABdhPJxkucuV8a41LdyYPvaUmw97Bg0ATupEharuX6qajHpWciC7tFXFEfRQjgpryCU/kUyZFOXlbZBrkmbL5LYQf48=
+X-Received: by 2002:a17:902:b694:b0:153:1d9a:11a5 with SMTP id
+ c20-20020a170902b69400b001531d9a11a5mr21806839pls.151.1651679038864; Wed, 04
+ May 2022 08:43:58 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in
- interrupt handling
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     Conor.Dooley@microchip.com, lorenzo.pieralisi@arm.com,
-        Daire.McNamara@microchip.com, bhelgaas@google.com,
-        Cyril.Jean@microchip.com, david.abdurachmanov@gmail.com,
-        linux-pci@vger.kernel.org, robh@kernel.org
-References: <20220502192223.GA319570@bhelgaas>
-From:   Conor Dooley <mail@conchuod.ie>
-In-Reply-To: <20220502192223.GA319570@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+References: <20220429130221.32113-1-bharat.kumar.gogada@xilinx.com>
+In-Reply-To: <20220429130221.32113-1-bharat.kumar.gogada@xilinx.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 4 May 2022 10:43:47 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJkHRbXoHdgDYgeF5JhdPgDhjCg=W7YUmCRdBR8xSKz6A@mail.gmail.com>
+Message-ID: <CAL_JsqJkHRbXoHdgDYgeF5JhdPgDhjCg=W7YUmCRdBR8xSKz6A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: PCI: xilinx-cpm: Change reg property order
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michals@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -76,69 +65,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 02/05/2022 20:22, Bjorn Helgaas wrote:
-> On Sat, Apr 30, 2022 at 12:33:51AM +0100, Marc Zyngier wrote:
->> On Fri, 29 Apr 2022 22:57:33 +0100,
->> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>> On Fri, Apr 29, 2022 at 09:42:52AM +0000, Conor.Dooley@microchip.com wrote:
->>>> On 28/04/2022 10:29, Lorenzo Pieralisi wrote:
->>>>> On Tue, Apr 05, 2022 at 12:17:51PM +0100, daire.mcnamara@microchip.com wrote:
->>>>>> From: Daire McNamara <daire.mcnamara@microchip.com>
->>>>>>
->>>>>> Clear MSI bit in ISTATUS register after reading it before
->>>>>> handling individual MSI bits
-> 
->>>> Clear the MSI bit in ISTATUS register after reading it, but before
->>>> reading and handling individual MSI bits from the IMSI register.
->>>> This avoids a potential race where new MSI bits may be set on the
->>>> IMSI register after it was read and be missed when the MSI bit in
->>>> the ISTATUS register is cleared.
-> 
->>> Honestly, I don't understand enough about IRQs to determine whether
->>> this is a correct fix.  Hopefully Marc will chime in.  All I really
->>> know how to do is compare all the drivers and see which ones don't fit
->>> the typical patterns.
->>
->> This seems sensible. In general, edge interrupts need an early Ack
->> *before* the handler can be run. If it happens after, you're pretty
->> much guaranteed to lose edges that would be generated between the
->> handler and the late Ack.
->>
->> This can be implemented in HW in a variety of ways (read a register,
->> write a register, or even both).
-> 
-> Is this something that is or could be documented somewhere under
-> Documentation, e.g., "here are the common canonical patterns to use"?
-> I feel like an idiot because I have this kind of question all the time
-> and I never know how to confidently analyze it.
+On Fri, Apr 29, 2022 at 8:02 AM Bharat Kumar Gogada
+<bharat.kumar.gogada@xilinx.com> wrote:
+>
+> Describe cpm reg property before cfg reg property to align with
+> node name.
 
-Daire is still having the IT issues, so before I resend the patch with
-a new commit message, how is the following:
+The order is an ABI. If breaking it is okay, explain why here.
 
-Clear the MSI bit in ISTATUS_LOCAL register after reading it, but
-before reading and handling individual MSI bits from the ISTATUS_MSI
-register. This avoids a potential race where new MSI bits may be set
-on the ISTATUS_MSI register after it was read and be missed when the
-MSI bit in the ISTATUS_LOCAL register is cleared.
-
-Reported by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lore.kernel.org/linux-pci/20220127202000.GA126335@bhelgaas/
-Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe controller driver")
-Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> 
->>> And speaking of that, I looked at all the users of
->>> irq_set_chained_handler_and_data() in drivers/pci.  All the handlers
->>> except mc_handle_intx() and mc_handle_msi() call chained_irq_enter()
->>> and chained_irq_exit().
->>>
->>> Are mc_handle_intx() and mc_handle_msi() just really special, or is
->>> this a mistake?
->>
->> That's just a bug. On the right HW, this would just result in lost
->> interrupts.
-
-Separate issue, separate patch. Do you want them in a series or as
-another standalone patch?
-
-Thanks,
-Conor.
+>
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml     | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index 32f4641085bc..cca395317a4c 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -18,13 +18,13 @@ properties:
+>
+>    reg:
+>      items:
+> -      - description: Configuration space region and bridge registers.
+>        - description: CPM system level control and status registers.
+> +      - description: Configuration space region and bridge registers.
+>
+>    reg-names:
+>      items:
+> -      - const: cfg
+>        - const: cpm_slcr
+> +      - const: cfg
+>
+>    interrupts:
+>      maxItems: 1
+> @@ -86,9 +86,9 @@ examples:
+>                         ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
+>                                  <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
+>                         msi-map = <0x0 &its_gic 0x0 0x10000>;
+> -                       reg = <0x6 0x00000000 0x0 0x10000000>,
+> -                             <0x0 0xfca10000 0x0 0x1000>;
+> -                       reg-names = "cfg", "cpm_slcr";
+> +                       reg = <0x0 0xfca10000 0x0 0x1000>,
+> +                             <0x6 0x00000000 0x0 0x10000000>;
+> +                       reg-names = "cpm_slcr", "cfg";
+>                         pcie_intc_0: interrupt-controller {
+>                                 #address-cells = <0>;
+>                                 #interrupt-cells = <1>;
+> --
+> 2.17.1
+>
