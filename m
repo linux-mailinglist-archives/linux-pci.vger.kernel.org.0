@@ -2,126 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A04CE51ABFA
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 19:58:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B5FE51ABFB
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 19:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359635AbiEDSCJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 14:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42060 "EHLO
+        id S1355493AbiEDSCI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 14:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377378AbiEDSAx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 14:00:53 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57F6631A;
-        Wed,  4 May 2022 10:15:36 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id m128so3508242ybm.5;
-        Wed, 04 May 2022 10:15:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OFV/p74juyEoPxSYXHrzkAx2l6TnhNSxPpzNHi+zhs4=;
-        b=4+b1SFPFX4jUr8n7X41dAVG7CcgfqSCIxnhZGEjv+FtmCuDSmycDybFkrhdgaHGWEU
-         4QTrUmd8XHulaAZP1oVgWJh814JGp6K+D7qRLtWMbAvwKVZ96RjnL4n9x1Zgcdw8ZZuy
-         ABd/nH8sXqXK0XE8KP+359Hewt9LfoRhl46gWAmwJlfm1qf5W9nvvwTeMgtFxR1OKSgQ
-         EYJjerXyqkf6m9i68ubaJltVS2p0Kwl4a0n7FJTiGoI0O5gw4uO4lXvZwLe0DtUeB6yN
-         D/KuDUO440NYwp50eVnvg2fjxLPuaLsIKVfeuXRHSH6aEWb5HJi5PIZ4oD62y4Ow4Kve
-         WVIw==
-X-Gm-Message-State: AOAM530JkiU2tX7wjZDuLau/eoMpoEHmyvO/JjFNtIuCMNoEFZ/17d1a
-        MN8yh3dvLnbiHDzAEJ9c1Nn3htugiE46rJWv/C8=
-X-Google-Smtp-Source: ABdhPJzjRfM0DpouS6xdyXwR/B26C26P2+1p0G7fDh2ZXfbBTY+AxBBIPZjUd3fdQqUDpXtFohq4/YXNynsvaWYmFMg=
-X-Received: by 2002:a05:6902:187:b0:63d:9c95:edca with SMTP id
- t7-20020a056902018700b0063d9c95edcamr17647508ybh.81.1651684535365; Wed, 04
- May 2022 10:15:35 -0700 (PDT)
+        with ESMTP id S1377569AbiEDSBN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 14:01:13 -0400
+Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34434E3A8;
+        Wed,  4 May 2022 10:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hy+OhVR/LV0xEzAsGTGdgKCKGoSd8NJQpERGht9sL1o=; b=Ex1fLswhxbmvMM6ln5WhknBLM/
+        PmSusBqYOAcPwmB8INTvkq+eguCyPDijsDz8PAtNIfwqfyCvYK2KU8Jlv28tNo5jveGmStK04hweD
+        C5mjIZ/bvhvb0WqBv6UmR1pHy1qBwnblP8khg8eEY94TpR3ROiwJeqqqiZC1ZAsUlcS0=;
+Received: from p200300daa70ef200891a2ae4514fd280.dip0.t-ipconnect.de ([2003:da:a70e:f200:891a:2ae4:514f:d280] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1nmIcD-00043Z-CU; Wed, 04 May 2022 19:16:41 +0200
+Message-ID: <c54c5692-56bd-c17c-24f5-741ec2a1a839@nbd.name>
+Date:   Wed, 4 May 2022 19:16:40 +0200
 MIME-Version: 1.0
-References: <YnFtjzGYwe28tVAA@dev-arch.thelio-3990X> <20220504165409.GA453565@bhelgaas>
-In-Reply-To: <20220504165409.GA453565@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 4 May 2022 19:15:24 +0200
-Message-ID: <CAJZ5v0g7oN534uyNh4YBeArH8xqGxYCXrrqAz2jiH=D4cyx=+w@mail.gmail.com>
-Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI devices
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.8.1
+Subject: Re: [PATCH] PCI: mediatek-gen3: change driver name to mtk-pcie-gen3
+Content-Language: en-US
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Cc:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20220504170658.GA453994@bhelgaas>
+From:   Felix Fietkau <nbd@nbd.name>
+In-Reply-To: <20220504170658.GA453994@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 4, 2022 at 7:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Anders]
->
-> On Tue, May 03, 2022 at 10:59:43AM -0700, Nathan Chancellor wrote:
-> > On Thu, Apr 14, 2022 at 03:11:21PM +0200, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > There are some issues related to changing power states of PCI
-> > > devices, mostly related to carrying out unnecessary actions in some
-> > > places, and the code is generally hard to follow.
-> > >
-> > >  1. pci_power_up() has two callers, pci_set_power_state() and
-> > >     pci_pm_default_resume_early().  The latter updates the current
-> > >     power state of the device right after calling pci_power_up()
-> > >     and it restores the entire config space of the device right
-> > >     after that, so pci_power_up() itself need not read the
-> > >     PCI_PM_CTRL register or restore the BARs after programming the
-> > >     device into D0 in that case.
-> > >
-> > >  2. It is generally hard to get a clear view of the pci_power_up()
-> > >     code flow, especially in some corner cases, due to all of the
-> > >     involved PCI_PM_CTRL register reads and writes occurring in
-> > >     pci_platform_power_transition() and in pci_raw_set_power_state(),
-> > >     some of which are redundant.
-> > >
-> > >  3. The transitions from low-power states to D0 and the other way
-> > >     around are unnecessarily tangled in pci_raw_set_power_state()
-> > >     which causes it to use a redundant local variable and makes it
-> > >     rather hard to follow.
-> > >
-> > > To address the above shortcomings, make the following changes:
-> > >
-> > >  a. Remove the code handling transitions into D0
-> > >     from pci_raw_set_power_state() and rename it as
-> > >     pci_set_low_power_state().
-> > >
-> > >  b. Add the code handling transitions into D0 directly
-> > >     to pci_power_up() and to a new wrapper function
-> > >     pci_set_full_power_state() calling it internally that is
-> > >     only used in pci_set_power_state().
-> > >
-> > >  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
-> > >     and make it work in the same way for transitions from any
-> > >     low-power states (transitions from D1 and D2 are handled
-> > >     slightly differently before the change).
-> > >
-> > >  d. Put the restoration of the BARs and the PCI_PM_CTRL
-> > >     register read confirming the power state change into
-> > >     pci_set_full_power_state() to avoid doing that in
-> > >     pci_pm_default_resume_early() unnecessarily.
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >
-> > This change as commit 5bffe4c611f5 ("PCI/PM: Rework changing power
-> > states of PCI devices") causes my AMD-based system to fail to fully
-> > boot.
->
-> I dropped 5bffe4c611f5 and subsequent pci/pm patches temporarily while
-> this gets worked out.
 
-OK
+On 04.05.22 19:06, Bjorn Helgaas wrote:
+> On Wed, May 04, 2022 at 12:05:55PM +0200, Felix Fietkau wrote:
+>> This allows it to coexist with the other mtk pcie driver in the same kernel
+> 
+> I assume this is a v3 of [1].  Please:
+Thanks, I wasn't aware of that patch.
 
-It looks like I missed something subtle that triggers on a subset of
-systems only.
+>    - Follow the subject line capitalization convention, i.e.,
+>      "PCI: mediatek-gen3: Change ..."
+> 
+>    - Expand the commit log to say why this is important.  From a C
+>      language level, using the same "mtk-pcie" string in both drivers
+>      is no problem.  So please mention where it *is* a problem, e.g.,
+>      if it's a problem with modprobe or similar, say that.  Or if it's
+>      to make log messages in dmesg have different driver names, say
+>      that.The reason is the fact that driver_register will refuse to register a 
+driver if one with the same name has already been registered.
+
+>    - s/pcie/PCIe/ in commit log and other English text.
+> 
+>    - Add a period at the end of the commit log sentence.
+> 
+> [1] https://lore.kernel.org/r/20220422070908.14043-1-jianjun.wang@mediatek.com
+Will take care of this and send an updated version as v3.
+
+- Felix
