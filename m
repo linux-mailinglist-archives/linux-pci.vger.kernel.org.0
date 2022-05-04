@@ -2,129 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC150519CFB
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 12:33:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83039519E78
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 13:48:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348178AbiEDKhW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 06:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45354 "EHLO
+        id S1343856AbiEDLuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 07:50:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348156AbiEDKhU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 06:37:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E2728E03;
-        Wed,  4 May 2022 03:33:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 60A41B82553;
-        Wed,  4 May 2022 10:33:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EBB0C385AF;
-        Wed,  4 May 2022 10:33:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651660421;
-        bh=E8CEzIAsWz9Rmvw13XFPv/adMpOwsz2QRxp2bzHQxCE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PQWOF9oSgEdn5spCau1vYDvRsS1HHfUeOA4Od05fC00yS0tyyOD+fOLl9QnmqHGQI
-         wHYQy7kje5Gg/nEp5ErHjoGmD/b4jW53yav9c/mfgu8szu/WN5+shhYk03/ZrkMCge
-         hqJscs8JhQ+E4P1lB+ZZjurxCFvVODHApQETnqTiVDaNHN/rPdujgfo2jZ6GUPlzQc
-         Nbar0v79O8QIIN5ZVjJCRaLxKzs20Aw4M4Pidg5HoDxB7CJzo0m3JPhkeMd+3WSEfq
-         m7+4Y5Z/fagiwY7a74bR52JdQzPQyGGYz6GaRyoSKxC7w0BowID1Z6upBKXRXBfuZP
-         9jSA629Vn2Qyw==
-Received: by mail-wm1-f51.google.com with SMTP id q20so604302wmq.1;
-        Wed, 04 May 2022 03:33:40 -0700 (PDT)
-X-Gm-Message-State: AOAM531WyMQtVWtA2d2Op2gBYAPD2Rt0kOvFMA9+1+iuKW9L5tTCrNhO
-        Dq7rYurHeFnXDCjiZ3s3cn6lvtdP4eEcK2bOdKg=
-X-Google-Smtp-Source: ABdhPJwOmoNuUoi/jWtPqmt55hkpFmZRUX1rQCTG/MBa1moNMRI9KXGnBtVTPDUY1plM3AGJvlzbvLih0M2ebaRjwPY=
-X-Received: by 2002:a7b:cc93:0:b0:394:2622:fcd9 with SMTP id
- p19-20020a7bcc93000000b003942622fcd9mr7398696wma.20.1651660419246; Wed, 04
- May 2022 03:33:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220429135108.2781579-44-schnelle@linux.ibm.com> <20220503233802.GA420374@bhelgaas>
-In-Reply-To: <20220503233802.GA420374@bhelgaas>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Wed, 4 May 2022 12:33:23 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a02vidd7u5Kp6UJj=9tj_hFGL24SmzuNpDGu1GOa1w9+w@mail.gmail.com>
-Message-ID: <CAK8P3a02vidd7u5Kp6UJj=9tj_hFGL24SmzuNpDGu1GOa1w9+w@mail.gmail.com>
-Subject: Re: [RFC v2 25/39] pcmcia: add HAS_IOPORT dependencies
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        with ESMTP id S237744AbiEDLuT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 07:50:19 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 136131F623;
+        Wed,  4 May 2022 04:46:43 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id A4B0A92009C; Wed,  4 May 2022 13:46:41 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 9DFED92009B;
+        Wed,  4 May 2022 12:46:41 +0100 (BST)
+Date:   Wed, 4 May 2022 12:46:41 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     David Laight <David.Laight@ACULAB.COM>
+cc:     'Linus Walleij' <linus.walleij@linaro.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: RE: [RFC v2 10/39] gpio: add HAS_IOPORT dependencies
+In-Reply-To: <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com>
+Message-ID: <alpine.DEB.2.21.2205041226160.64942@angie.orcam.me.uk>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com> <20220429135108.2781579-19-schnelle@linux.ibm.com> <Ymv3DnS1vPMY8QIg@fedora> <f006229ae056d4cdcf57fc5722a695ad4c257182.camel@linux.ibm.com> <YmwGLrh4U+pVJo0m@fedora>
+ <CACRpkdaha37y-ZNSqYSbf=TvsJNcvbH1Y=N0JkVCewB-Lvf81Q@mail.gmail.com> <c3a3cdd99d4645e2bbbe082808cbb2a5@AcuMS.aculab.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 4, 2022 at 1:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Fri, Apr 29, 2022 at 03:50:41PM +0200, Niklas Schnelle wrote:
-> > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> > not being declared. PCMCIA devices are either LEGACY_PCI devices
-> > which implies HAS_IOPORT or require HAS_IOPORT.
-> >
-> > Acked-by: Dominik Brodowski <linux@dominikbrodowski.net>
-> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > ---
-> >  drivers/pcmcia/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pcmcia/Kconfig b/drivers/pcmcia/Kconfig
-> > index 2ce261cfff8e..32b5cd324c58 100644
-> > --- a/drivers/pcmcia/Kconfig
-> > +++ b/drivers/pcmcia/Kconfig
-> > @@ -5,7 +5,7 @@
-> >
-> >  menuconfig PCCARD
-> >       tristate "PCCard (PCMCIA/CardBus) support"
-> > -     depends on !UML
-> > +     depends on HAS_IOPORT
->
-> I don't know much about PC Card.  Is there a requirement that these
-> devices must use I/O port space?  If so, can you include a spec
-> reference in the commit log?
+On Tue, 3 May 2022, David Laight wrote:
 
-I think for PCMCIA devices, the dependency makes sense because
-all device drivers for PCMCIA devices need I/O ports.
+> > > There is such a thing as ISA DMA, but you'll still need to initialize
+> > > the device via the IO Port bus first, so perhaps setting HAS_IOPORT for
+> > > "config ISA" is the right thing to do: all ISA devices are expected to
+> > > communicate in some way via ioport.
+> > 
+> > Adding that dependency seems like the right solution to me.
+> 
+> I think it all depends on what HAS_IOPORT is meant to mean and
+> how portable kernel binaries need to be.
+> 
+> x86 is (probably) the only architecture that actually has 'in'
+> and 'out' instructions - but that doesn't mean that some other
+> cpu (and I mean cpu+pcb not architecture) have the ability to
+> generate 'IO' bus cycles on a specific physical bus.
 
-For cardbus, we can go either way, I don't see any reference to
-I/O ports in yenta_socket.c or the pccard core, so it would build
-fine with or without I/O ports.
+ I am fairly sure IA-64 has some form of IN/OUT machine instructions too.
 
-> I do see the PC Card spec, r8.1, sec 5.5.4.2.2 says:
->
->   All CardBus PC Card adapters must support either memory-mapped I/O
->   or both memory-mapped I/O and I/O space. The selection will depend
->   largely on the system architecture the adapter is intended to be
->   used in. The requirement to also support memory-mapped I/O, if I/O
->   space is supported, is driven by the potential emergence of
->   memory-mapped I/O only cards. Supporting both modes may also
->   position the adapter to be sold into multiple system architectures.
->
-> which sounds like I/O space is optional.
+> While the obvious case is a physical address window that generates
+> PCI(e) IO cycles from normal memory cycles it isn't the only one.
+> 
+> I've used sparc cpu systems that have pcmcia card slots.
+> These are pretty much ISA and the drivers might expect to
+> access port 0x300 (etc) - certainly that would be right on x86.
+> 
+> In this case is isn't so much that the ISA_BUS depends on support
+> for in/out but that presence of the ISA bus provides the required
+> in/out support.
 
-An earlier version of the patch series had a separate
-CONFIG_LEGACY_PCI that required CONFIG_HAS_IOPORT
-here, which I think made this clearer:
+ Well, one can implement a pluggable PCI/e expansion card with a PCI-ISA 
+bridge on it and a backplane to plug ISA cards into.  Without support for 
+issuing I/O cycles to PCI from the host however you won't be able to make 
+use of the ISA backplane except maybe for some ancient ISA memory cards.  
+So logically I think CONFIG_ISA should depend on CONFIG_HAS_IOPORT and 
+CONFIG_HAS_IOPORT ought to be selected by platform configurations.
 
-Almost all architectures that support CONFIG_PCI also provide
-HAS_IOPORT today (at least at compile time, if not at runtime),
-with s390 as a notable exception. Any machines that have legacy
-PCI device support will also have I/O ports because a lot of
-legacy PCI cards used it, and any machine with a pc-card slot
-should also support legacy PCI devices.
+ ISTR there was a company that manufactured a USB-ISA option (providing an 
+external ISA backplane).  We never supported it, but in principle if we 
+wanted to, then it would be the USB-ISA device's driver config option that 
+CONFIG_ISA would additionally depend on as an alternative.  That wouldn't 
+enable CONFIG_HAS_IOPORT though because the presence of this particular 
+USB-ISA device would not itself permit the use of I/O cycles with any 
+PCI/e buses a machine might independently have, so devices for PCI/e 
+options that require port I/O shouldn't be made available at the same 
+time.
 
-If we get new architectures without I/O space in the future, they
-would certainly not care about supporting old cardbus devices.
+ I think that company might have actually manufactured a similar PCI-ISA 
+option as well, but that I suppose did rely on support for I/O cycles on 
+PCI.  Early 2000s BTW.
 
-        Arnd
+  Maciej
