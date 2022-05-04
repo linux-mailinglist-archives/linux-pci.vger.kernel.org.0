@@ -2,59 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4024351A59E
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 18:36:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16B3551A7E2
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 19:04:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233151AbiEDQjo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 May 2022 12:39:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
+        id S1355142AbiEDRGG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 13:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231852AbiEDQjm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 12:39:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD94C2DA85;
-        Wed,  4 May 2022 09:36:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 486F8B82794;
-        Wed,  4 May 2022 16:36:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 866ADC385A4;
-        Wed,  4 May 2022 16:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651682163;
-        bh=dK7q7nPy0C7TXwDvFGlFHBLcvJkYagL5iuU1SwZwUEk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y+qEAp9wvvYjGY3G6rPO1gIG9p21+rkwpON8Aqu7OFeYX0/htK+Ecy4pEwD6g/vgA
-         m2D6FJi4wyAawscxf8prCDBPlfb2abE8gTNg1ya7RO2DAnBei7qBYYAF8VflK1o9td
-         Buu5FvHWSAAlVdp62ipgAsy9deUOe6ZrcfNgOK4gN0O8rRgoIZ9L3emnVjlaWkU5sp
-         ybJtyXed31dmNtEtpOayJNB1u6pBEDUgxU2pvjRDBK7WqcwDFs57/yahJ//FGZ/FzX
-         36lcPfAgtrMrFjsgKUQIxO+cPHUdoMCd9ZKSXGmsmzlwRTotbOTs0EMtDgEr87dmNp
-         +AtSjHAAQUflg==
-Date:   Wed, 4 May 2022 09:36:00 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 4/9] PCI/PM: Rework changing power states of PCI
- devices
-Message-ID: <YnKrcFSjLr+W+myL@dev-arch.thelio-3990X>
-References: <4419002.LvFx2qVVIh@kreacher>
- <11975904.O9o76ZdvQC@kreacher>
- <5838942.lOV4Wx5bFT@kreacher>
- <3687697.kQq0lBPeGt@kreacher>
- <YnFtjzGYwe28tVAA@dev-arch.thelio-3990X>
- <CAJZ5v0i1Ynt54yb7aMJorkYUvqkxhxOqvQJb8AdA7Ps1aBO5tg@mail.gmail.com>
+        with ESMTP id S1355708AbiEDREj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 13:04:39 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1B8AD4F452
+        for <linux-pci@vger.kernel.org>; Wed,  4 May 2022 09:53:15 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9F661042;
+        Wed,  4 May 2022 09:53:14 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.1.196])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE8E43FA27;
+        Wed,  4 May 2022 09:53:12 -0700 (PDT)
+Date:   Wed, 4 May 2022 17:53:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Conor Dooley <mail@conchuod.ie>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Conor.Dooley@microchip.com, Daire.McNamara@microchip.com,
+        bhelgaas@google.com, Cyril.Jean@microchip.com,
+        david.abdurachmanov@gmail.com, linux-pci@vger.kernel.org,
+        robh@kernel.org
+Subject: Re: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in
+ interrupt handling
+Message-ID: <20220504165307.GA19115@lpieralisi>
+References: <20220502192223.GA319570@bhelgaas>
+ <199f5479-b212-e1ac-f9e4-d5d13708cb0c@conchuod.ie>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0i1Ynt54yb7aMJorkYUvqkxhxOqvQJb8AdA7Ps1aBO5tg@mail.gmail.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <199f5479-b212-e1ac-f9e4-d5d13708cb0c@conchuod.ie>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -63,107 +47,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 02:59:17PM +0200, Rafael J. Wysocki wrote:
-> On Tue, May 3, 2022 at 7:59 PM Nathan Chancellor <nathan@kernel.org> wrote:
-> >
-> > Hi Rafael,
-> >
-> > On Thu, Apr 14, 2022 at 03:11:21PM +0200, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > There are some issues related to changing power states of PCI
-> > > devices, mostly related to carrying out unnecessary actions in some
-> > > places, and the code is generally hard to follow.
-> > >
-> > >  1. pci_power_up() has two callers, pci_set_power_state() and
-> > >     pci_pm_default_resume_early().  The latter updates the current
-> > >     power state of the device right after calling pci_power_up()
-> > >     and it restores the entire config space of the device right
-> > >     after that, so pci_power_up() itself need not read the
-> > >     PCI_PM_CTRL register or restore the BARs after programming the
-> > >     device into D0 in that case.
-> > >
-> > >  2. It is generally hard to get a clear view of the pci_power_up()
-> > >     code flow, especially in some corner cases, due to all of the
-> > >     involved PCI_PM_CTRL register reads and writes occurring in
-> > >     pci_platform_power_transition() and in pci_raw_set_power_state(),
-> > >     some of which are redundant.
-> > >
-> > >  3. The transitions from low-power states to D0 and the other way
-> > >     around are unnecessarily tangled in pci_raw_set_power_state()
-> > >     which causes it to use a redundant local variable and makes it
-> > >     rather hard to follow.
-> > >
-> > > To address the above shortcomings, make the following changes:
-> > >
-> > >  a. Remove the code handling transitions into D0
-> > >     from pci_raw_set_power_state() and rename it as
-> > >     pci_set_low_power_state().
-> > >
-> > >  b. Add the code handling transitions into D0 directly
-> > >     to pci_power_up() and to a new wrapper function
-> > >     pci_set_full_power_state() calling it internally that is
-> > >     only used in pci_set_power_state().
-> > >
-> > >  c. Make pci_power_up() avoid redundant PCI_PM_CTRL register reads
-> > >     and make it work in the same way for transitions from any
-> > >     low-power states (transitions from D1 and D2 are handled
-> > >     slightly differently before the change).
-> > >
-> > >  d. Put the restoration of the BARs and the PCI_PM_CTRL
-> > >     register read confirming the power state change into
-> > >     pci_set_full_power_state() to avoid doing that in
-> > >     pci_pm_default_resume_early() unnecessarily.
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >
-> > This change as commit 5bffe4c611f5 ("PCI/PM: Rework changing power
-> > states of PCI devices") causes my AMD-based system to fail to fully
-> > boot. As far as I can tell, this might be NVMe related, which might make
-> > getting a full log difficult, as journalctl won't have anywhere to save
-> > it. I see:
-> >
-> > nvme nvme0: I/O 8 QID 0 timeout, completion polled
-> >
-> > then shortly afterwards:
-> >
-> > nvme nvme0: I/O 24 QID 0 timeout, completion polled
-> > nvme nvme0: missing or invalid SUBNQN field
-> >
-> > then I am dropped into an emergency shell.
+On Wed, May 04, 2022 at 04:12:39PM +0100, Conor Dooley wrote:
+> On 02/05/2022 20:22, Bjorn Helgaas wrote:
+> > On Sat, Apr 30, 2022 at 12:33:51AM +0100, Marc Zyngier wrote:
+> >> On Fri, 29 Apr 2022 22:57:33 +0100,
+> >> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >>> On Fri, Apr 29, 2022 at 09:42:52AM +0000, Conor.Dooley@microchip.com wrote:
+> >>>> On 28/04/2022 10:29, Lorenzo Pieralisi wrote:
+> >>>>> On Tue, Apr 05, 2022 at 12:17:51PM +0100, daire.mcnamara@microchip.com wrote:
+> >>>>>> From: Daire McNamara <daire.mcnamara@microchip.com>
+> >>>>>>
+> >>>>>> Clear MSI bit in ISTATUS register after reading it before
+> >>>>>> handling individual MSI bits
+> > 
+> >>>> Clear the MSI bit in ISTATUS register after reading it, but before
+> >>>> reading and handling individual MSI bits from the IMSI register.
+> >>>> This avoids a potential race where new MSI bits may be set on the
+> >>>> IMSI register after it was read and be missed when the MSI bit in
+> >>>> the ISTATUS register is cleared.
+> > 
+> >>> Honestly, I don't understand enough about IRQs to determine whether
+> >>> this is a correct fix.  Hopefully Marc will chime in.  All I really
+> >>> know how to do is compare all the drivers and see which ones don't fit
+> >>> the typical patterns.
+> >>
+> >> This seems sensible. In general, edge interrupts need an early Ack
+> >> *before* the handler can be run. If it happens after, you're pretty
+> >> much guaranteed to lose edges that would be generated between the
+> >> handler and the late Ack.
+> >>
+> >> This can be implemented in HW in a variety of ways (read a register,
+> >> write a register, or even both).
+> > 
+> > Is this something that is or could be documented somewhere under
+> > Documentation, e.g., "here are the common canonical patterns to use"?
+> > I feel like an idiot because I have this kind of question all the time
+> > and I never know how to confidently analyze it.
 > 
-> Thanks for the report!
+> Daire is still having the IT issues, so before I resend the patch with
+> a new commit message, how is the following:
 > 
-> > This is a log from the previous commit, which may give some hints about
-> > the configuration of this particular system.
-> >
-> > https://gist.github.com/nathanchance/8a56f0939410cb187896e904c72e41e7/raw/b47b2620bdd32d43c7a3b209fcfd9e3d4668f058/good-boot.log
-> >
-> > If there is any additional debugging information I can provide or
-> > patches I can try, please let me know!
+> Clear the MSI bit in ISTATUS_LOCAL register after reading it, but
+> before reading and handling individual MSI bits from the ISTATUS_MSI
+> register. This avoids a potential race where new MSI bits may be set
+> on the ISTATUS_MSI register after it was read and be missed when the
+> MSI bit in the ISTATUS_LOCAL register is cleared.
+
+It is still unclear. You should translate what Marc said above into
+how ISTATUS_MSI and ISTATUS_LOCAL work (ie describe how HW works).
+
+Please describe what the registers do and use that to describe
+the fix.
+
+Thanks,
+Lorenzo
+
+> Reported by: Bjorn Helgaas <bhelgaas@google.com>
+> Link: https://lore.kernel.org/linux-pci/20220127202000.GA126335@bhelgaas/
+> Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe controller driver")
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> > 
+> >>> And speaking of that, I looked at all the users of
+> >>> irq_set_chained_handler_and_data() in drivers/pci.  All the handlers
+> >>> except mc_handle_intx() and mc_handle_msi() call chained_irq_enter()
+> >>> and chained_irq_exit().
+> >>>
+> >>> Are mc_handle_intx() and mc_handle_msi() just really special, or is
+> >>> this a mistake?
+> >>
+> >> That's just a bug. On the right HW, this would just result in lost
+> >> interrupts.
 > 
-> Please see what happens if the "if (dev->current_state == PCI_D0)"
-> check and the following "return 0" statement in pci_power_up() are
-> commented out.
-
-If I understand you correctly, this? Unfortunately, that does not help.
-
-Cheers,
-Nathan
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1e22dc5187e7..9f7a463107f3 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1235,8 +1235,10 @@ int pci_power_up(struct pci_dev *dev)
- 	}
- 
- 	/* There's nothing more to do if current_state is D0 at this point. */
-+#if 0
- 	if (dev->current_state == PCI_D0)
- 		return 0;
-+#endif
- 
- 	/*
- 	 * Program the device into PCI_D0 by forcing the entire word to 0 (this
+> Separate issue, separate patch. Do you want them in a series or as
+> another standalone patch?
+> 
+> Thanks,
+> Conor.
