@@ -2,177 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E0D3519608
-	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 05:36:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58E13519633
+	for <lists+linux-pci@lfdr.de>; Wed,  4 May 2022 06:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344190AbiEDDjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 May 2022 23:39:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
+        id S235390AbiEDEGT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 May 2022 00:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230263AbiEDDjp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 May 2022 23:39:45 -0400
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C1D27FE1;
-        Tue,  3 May 2022 20:36:09 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id DCF9041982;
-        Wed,  4 May 2022 03:36:04 +0000 (UTC)
-Message-ID: <57e47786-0b99-646e-9e73-694e47d14cf5@marcan.st>
-Date:   Wed, 4 May 2022 12:36:02 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Content-Language: es-ES
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
+        with ESMTP id S229379AbiEDEGR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 May 2022 00:06:17 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8998D1A393;
+        Tue,  3 May 2022 21:02:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651636962; x=1683172962;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OyN5mceNj+AWcDecdxPU2pdvxMVgMY1EeS2aRZyWFTo=;
+  b=jwgqUN4KVo6PnYUzz0eelkMCJMUin3uoTiJ4+G6Ghwn7Itgrmin44NXz
+   rN39WdD89R8QOsqcB59G8XsMhPcT3Irg5sF+VIvctFYHaYOeEb+3alBbq
+   at9P0aUhaR95JLyu33LiIPmKVM8pBBUrnMReAxzEq65y4WpZQB3TmaI+7
+   aaNS5zz+OIMovmj2PUyysee2a6NQxEF1efN+DnMwz+eAxkhXBpceruSwo
+   YyacOLGBqKNVc8qM9ucHBwiikwA9BWaj61fkeAb912c1t7s/bl0GHy91s
+   2n7VQoKLzYK43VN2VqfuG1YMMVfChDajQ0ZmkAFFDQL3AUaUJnbCte5Qu
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="255118862"
+X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
+   d="scan'208";a="255118862"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 21:02:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
+   d="scan'208";a="734215663"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 03 May 2022 21:02:38 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nm6Dk-000B32-Md;
+        Wed, 04 May 2022 04:02:36 +0000
+Date:   Wed, 4 May 2022 12:01:56 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Sven Peter <sven@svenpeter.dev>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20220502093832.32778-1-marcan@marcan.st>
- <20220502093832.32778-4-marcan@marcan.st>
- <CAL_Jsq+_cWZUXtJVXC_cwhmADj0NQc95v1sqgFioMsfEX6OqGg@mail.gmail.com>
- <0ccc44cd-21aa-3670-24b3-4ee051dd3c12@marcan.st>
- <2615501d-7569-41cb-7039-46e690689f1f@marcan.st>
- <YnHJ2ZKd2CqhNWrX@robh.at.kernel.org>
-From:   Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 3/3] PCI: apple: Add support for optional PWREN GPIO
-In-Reply-To: <YnHJ2ZKd2CqhNWrX@robh.at.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 03/13] PCI: dwc: Add unroll iATU space support to the
+ regions disable method
+Message-ID: <202205041128.dPzBiZsY-lkp@intel.com>
+References: <20220503212300.30105-4-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220503212300.30105-4-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 04/05/2022 09.33, Rob Herring wrote:
-> On Tue, May 03, 2022 at 12:20:48PM +0900, Hector Martin wrote:
->> Thinking about this some more, I think it still makes sense to have the
->> power enable GPIO in the PCI root port node. A generic power enable GPIO
->> still makes sense there (think "slot power"). The PCI core could handle
->> it properly by default, including turning it on prior to initial probing
->> and shutting it down when the device should go into whatever the PCI
->> core's idea of D3cold is. AIUI this already happens on some platforms
->> via firmware, right? Since D3cold is supposed to be a state where the
->> device receives no power after all.
-> 
-> We have put slot stuff in the bridge node. That's because PCI child 
-> nodes already have a definition and we didn't define slot nodes up 
-> front. We often have started without a slot/connector and then 
-> retrofitted nodes in.
-> 
-> I can think of lots of ways to implement 'slot power' with a single GPIO 
-> being just one way. If it's not defined by PCIe specs or defacto 
-> standards then I don't think we want to try to do something generic.
+Hi Serge,
 
-The first question is whether it should go in the slot/port node for
-apcie or the device node, the second question is whether it should be
-generic or just specific to apcie :)
+I love your patch! Perhaps something to improve:
 
-But the d3cold concept *is* defined by PCIe specs. See PCIe 4.0
-5.3.1.4.2. "D3cold State".
+[auto build test WARNING on helgaas-pci/next]
+[also build test WARNING on v5.18-rc5 next-20220503]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-> The other way to model power gpios is as a GPIO regulator. We probably 
-> already have PCI examples doing that.
+url:    https://github.com/intel-lab-lkp/linux/commits/Serge-Semin/PCI-dwc-Various-fixes-and-cleanups/20220504-052648
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+config: riscv-randconfig-r003-20220501 (https://download.01.org/0day-ci/archive/20220504/202205041128.dPzBiZsY-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 363b3a645a1e30011cc8da624f13dac5fd915628)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install riscv cross compiling tool for clang build
+        # apt-get install binutils-riscv64-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/b7ab9c3904c4948a2bdb0ed9bf5ca5e38c9ac52c
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Serge-Semin/PCI-dwc-Various-fixes-and-cleanups/20220504-052648
+        git checkout b7ab9c3904c4948a2bdb0ed9bf5ca5e38c9ac52c
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash drivers/pci/controller/dwc/
 
-Could certainly do it as a regulator, yes, though that still leaves the
-question of what node to put it in. If it goes in the device node we
-still have the chicken and egg problem with device probing.
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
->> Obviously this can't handle funky power sequencing requirements, but we
->> don't have any of those here and we don't know if we ever will (at least
->> Apple seems to be a fan of throwing little CPLDs on their boards for
->> fine grained power sequencing, driven by a single IO). If we do, then
->> that would be the time to have GPIOs in the device node.
->>
->> In addition, sometimes a single power enable is shared between multiple
->> functions of one device. This is the case with WiFi/BT, which is a combo
->> chip with two functions. Coordinating GPIO usage between both drivers
->> would be problematic if they both try to own it.
-> 
-> A GPIO regulator solves this problem as it is reference counted.
+All warnings (new ones prefixed by >>):
 
-Right, that it does.
+   In file included from drivers/pci/controller/dwc/pcie-designware.c:16:
+   In file included from drivers/pci/controller/dwc/../../pci.h:5:
+   In file included from include/linux/pci.h:38:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:464:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __raw_readb(PCI_IOBASE + addr);
+                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:477:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+                                                           ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+   #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+                                                     ^
+   In file included from drivers/pci/controller/dwc/pcie-designware.c:16:
+   In file included from drivers/pci/controller/dwc/../../pci.h:5:
+   In file included from include/linux/pci.h:38:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+                                                           ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+   #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+                                                     ^
+   In file included from drivers/pci/controller/dwc/pcie-designware.c:16:
+   In file included from drivers/pci/controller/dwc/../../pci.h:5:
+   In file included from include/linux/pci.h:38:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:501:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writeb(value, PCI_IOBASE + addr);
+                               ~~~~~~~~~~ ^
+   include/asm-generic/io.h:511:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+                                                         ~~~~~~~~~~ ^
+   include/asm-generic/io.h:521:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+                                                         ~~~~~~~~~~ ^
+   include/asm-generic/io.h:1024:55: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           return (port > MMIO_UPPER_LIMIT) ? NULL : PCI_IOBASE + port;
+                                                     ~~~~~~~~~~ ^
+>> drivers/pci/controller/dwc/pcie-designware.c:508:14: warning: result of comparison of constant 2147483648 with expression of type 'int' is always false [-Wtautological-constant-out-of-range-compare]
+                   if (region == PCIE_ATU_REGION_INBOUND) {
+                       ~~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   error: A dwo section may not contain relocations
+   fatal error: too many errors emitted, stopping now [-ferror-limit=]
+   8 warnings and 20 errors generated.
 
->> The individual device drivers still need to have some kind of API to be
->> able to put devices into a low-power state. For example, the WiFi driver
->> could outright power down the device when it is wholly unused and the
->> interface is down (same for BT, and the PCI core should only put the
->> slot GPIO into powerdown if both functions say they should be off).
->> Similarly, the SD driver needs to support an external SD detect GPIO,
->> and have a mode where it tells the PCI core to shut down the device when
->> no SD is inserted, and power it back up on insertion. This all allows
->> the devices to behave a users might expect, with the device nodes
->> existing and the PCI devices "visible" even when they are powered down
->> behind the scenes, until they are needed. AIUI this is already how e.g.
->> hybrid graphics power management works, where power is outright yanked
->> from the secondary card when it is not needed even though it is still
->> visible from the userspace point of view (and it is automatically
->> powered and reinitialized on use).
-> 
-> Can it detect a card insertion when powered down?
 
-The card detect is also hooked up to a PMU GPIO accessible via SMC which
-has interrupt capability (which is not in that driver yet but I will add
-that :-)). We can use that in conjunction with or in replacement of the
-internal card detect.
+vim +/int +508 drivers/pci/controller/dwc/pcie-designware.c
 
-> 
->> I'm not super familiar with PCI device power states (making brcmfmac
->> sleep work properly on these platforms is on my TODO list...) so I'd
->> love to get some feedback from the PCI folks on what they think about
->> this whole issue.
-> 
-> I'm not either. I know there's some backlog of work to rework PCI power 
-> management to be more inline with how the rest of kernel drivers work.
->  
-> Isn't D3cold an ACPI thing, not PCI?
-
-It's a PCI thing. See Documentation/power/pci.txt for a discussion of
-the various PCI power states. This is already part of the API, e.g.
-pci_d3cold_enable and friends. Given how d3cold works today on existing
-ACPI systems, I think it makes a lot more sense to add that to the PCI
-port nodes (whether as a GPIO or a regulator, I don't really care) and
-hook it up to that plumbing, rather than try to make the downstream
-device driver reinvent that wheel. The PCI core needs to know about
-d3cold transitions to save/restore certain config space registers. And
-as far as I know this is all hooked up to runtime-pm, so if a driver
-enables d3cold and runtime-pm the device can be powered down by the PCI
-core when not in use.
-
-So it'd go something like this:
-
-- apcie driver, on slot activation, sees a pwren gpio/reg and powers it
-on prior to bringing up the link (and marks that port as d3cold supported)
-- sdhci-pci driver, on probe, sees an external card detect GPIO declared
-and considers that license to call pci_d3cold_enable and enable
-runtime-pm (since it won't need the internal card detect IRQ/GPIO)
-- No SD card is inserted, so SD driver goes into runtime suspend and
-saves whatever controller state it needs
-- PCI core saves whatever config space stuff it needs to save, SD
-controller is powered down via GPIO
-- SD card is inserted, SMC GPIO IRQ notifies SD driver
-- SD driver goes out of runtime suspend
-- PCI core powers on controller, re-establishes link, restores config space
-- SD driver restores host controller registers and discovers the new card
-
-No new APIs, this is all existing kernel stuff. PCI manages slot power
-same as it does on ACPI systems (that support it), driver interacts with
-it via runtime-pm and the d3cold control stuff.
-
-I'm tempted to prototype this today and see how it goes...
+   490	
+   491	void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
+   492				 enum dw_pcie_region_type type)
+   493	{
+   494		int region;
+   495	
+   496		switch (type) {
+   497		case DW_PCIE_REGION_INBOUND:
+   498			region = PCIE_ATU_REGION_INBOUND;
+   499			break;
+   500		case DW_PCIE_REGION_OUTBOUND:
+   501			region = PCIE_ATU_REGION_OUTBOUND;
+   502			break;
+   503		default:
+   504			return;
+   505		}
+   506	
+   507		if (pci->iatu_unroll_enabled) {
+ > 508			if (region == PCIE_ATU_REGION_INBOUND) {
+   509				dw_pcie_writel_ib_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+   510							 ~(u32)PCIE_ATU_ENABLE);
+   511			} else {
+   512				dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+   513							 ~(u32)PCIE_ATU_ENABLE);
+   514			}
+   515		} else {
+   516			dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, region | index);
+   517			dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, ~(u32)PCIE_ATU_ENABLE);
+   518		}
+   519	}
+   520	
 
 -- 
-Hector Martin (marcan@marcan.st)
-Public Key: https://mrcn.st/pub
+0-DAY CI Kernel Test Service
+https://01.org/lkp
