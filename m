@@ -2,121 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB90951C40C
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 17:37:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4C2051C412
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 17:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242683AbiEEPlg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 11:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33890 "EHLO
+        id S1380752AbiEEPmL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 11:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238590AbiEEPld (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 11:41:33 -0400
-Received: from extserv.mm-sol.com (ns.mm-sol.com [37.157.136.199])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218BD15815;
-        Thu,  5 May 2022 08:37:52 -0700 (PDT)
-Received: from [192.168.1.17] (unknown [84.238.208.205])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: svarbanov@mm-sol.com)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id BF412D2AA;
-        Thu,  5 May 2022 18:37:50 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1651765070; bh=uVBey31bxdTj1jCCK+/s43l7HdKmJ0V7+XbcUggK3zA=;
-        h=Date:Subject:To:Cc:From:From;
-        b=nkIpo+HObdOmz3xtRL3k69eQ5gV3avmAx9tAxhZakfllVMMRQJLx0GpYxbf7XKTnm
-         Wf6qbPwZ7Z912uWgMvVyb9htTfP6OpOCQIsHX4XkodBxZ8RqIBBaIVbSRMmm+8Ku7g
-         urirEqfGJmmDX2wZwRRDLLZbGIbIdivxe+H8kes5t47FZMFEuVnApJLBgPXtcuGDpP
-         rN6n7+KZ+rP8vaHVz0CzGt53tQKEjQmSNkDTioHzmbFWuLbiph0DEOIRNMWQP2rWtj
-         vM+NysPthpGf/2duhomPGxxlfd1j7IFDqEOMlMnI0VkWn7e9S5/SqzkBMrnMdAiFoL
-         9T6z5/LVoNoWA==
-Message-ID: <ace7dd07-cf2f-fa74-866f-50f7da0b89bb@mm-sol.com>
-Date:   Thu, 5 May 2022 18:37:48 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v7 0/7] PCI: qcom: Fix higher MSI vectors handling
-Content-Language: en-US
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        with ESMTP id S1380759AbiEEPmK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 11:42:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0377957B15;
+        Thu,  5 May 2022 08:38:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1FAD861D1B;
+        Thu,  5 May 2022 15:38:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7350AC385A8;
+        Thu,  5 May 2022 15:38:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651765109;
+        bh=Np8qjfuZd4T5JqzN9vyOqdbCko5iAGfOJsY1a9k7kjs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B8KjwH+SmG/PA/TUMcocOHV9fNtRi0ICkxpNV46AhiQydGNzI1H5qFWbJigWgWU7s
+         eu4icqtQoKuz+mrholtDw/AyUJQA9SY6LS+5IXo6rwX/dlnbPjBin4VRiWQozICOjg
+         F38lHR2u/ipv5Onk4CB4BDZEyZAN7T4B7lgLdk//pjVVtrxzk+hInbVPXrhsTuFIWz
+         kK19N6UX1SNckP2hhsP/Pe8iyYrcHTMUb7ppKJXM+gzO96XJyKny9/6wEGPCDQNGOm
+         QkTuf5+d6Lj2HZ1bm+j3LpLHO658M27z9i+njUMTKHzInNTLEDLWPDe/sqkHrPRFNV
+         I45j/PzN5Ny5g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nmdYg-009FLc-QL; Thu, 05 May 2022 16:38:26 +0100
+Date:   Thu, 05 May 2022 16:38:26 +0100
+Message-ID: <87wnf06lcd.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Hector Martin <marcan@marcan.st>
+Cc:     Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-References: <20220505135407.1352382-1-dmitry.baryshkov@linaro.org>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-In-Reply-To: <20220505135407.1352382-1-dmitry.baryshkov@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Sven Peter <sven@svenpeter.dev>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] PCI: apple: Add support for optional PWREN GPIO
+In-Reply-To: <57e47786-0b99-646e-9e73-694e47d14cf5@marcan.st>
+References: <20220502093832.32778-1-marcan@marcan.st>
+        <20220502093832.32778-4-marcan@marcan.st>
+        <CAL_Jsq+_cWZUXtJVXC_cwhmADj0NQc95v1sqgFioMsfEX6OqGg@mail.gmail.com>
+        <0ccc44cd-21aa-3670-24b3-4ee051dd3c12@marcan.st>
+        <2615501d-7569-41cb-7039-46e690689f1f@marcan.st>
+        <YnHJ2ZKd2CqhNWrX@robh.at.kernel.org>
+        <57e47786-0b99-646e-9e73-694e47d14cf5@marcan.st>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: marcan@marcan.st, robh@kernel.org, lorenzo.pieralisi@arm.com, kw@linux.com, bhelgaas@google.com, alyssa@rosenzweig.io, sven@svenpeter.dev, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks Dmitry!
+On Wed, 04 May 2022 04:36:02 +0100,
+Hector Martin <marcan@marcan.st> wrote:
 
-On 5/5/22 16:54, Dmitry Baryshkov wrote:
-> I have replied with my Tested-by to the patch at [2], which has landed
-> in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
-> Add support for handling MSIs from 8 endpoints"). However lately I
-> noticed that during the tests I still had 'pcie_pme=nomsi', so the
-> device was not forced to use higher MSI vectors.
-> 
-> After removing this option I noticed that hight MSI vectors are not
-> delivered on tested platforms. After additional research I stumbled upon
-> a patch in msm-4.14 ([1]), which describes that each group of MSI
-> vectors is mapped to the separate interrupt. Implement corresponding
-> mapping.
-> 
-> Since we can not expect that other platforms will use multi-IRQ scheme
-> for MSI mapping (e.g. iMX and Tegra map all 256 MSI interrupts to single
-> IRQ), it's support is implemented directly in pcie-qcom rather than in
-> the core driver.
-> 
-> The first patch in the series is a revert of  [2] (landed in pci-next).
-> Either both patches should be applied or both should be dropped.
-> 
-> Patchseries dependecies: [3] (for the schema change).
-> 
-> Changes since v6:
->  - Fix indentation of the arguments as requested by Stanimir
-
-<cut>
+[...]
 
 > 
-> Dmitry Baryshkov (7):
->   PCI: qcom: Revert "PCI: qcom: Add support for handling MSIs from 8
->     endpoints"
->   PCI: dwc: Correct msi_irq condition in dw_pcie_free_msi()
->   PCI: dwc: Add msi_host_deinit callback
->   PCI: dwc: Export several functions useful for MSI implentations
->   PCI: qcom: Handle MSIs routed to multiple GIC interrupts
->   dt-bindings: PCI: qcom: Support additional MSI interrupts
->   arm64: dts: qcom: sm8250: provide additional MSI interrupts
-
-For PCI qcom driver:
-
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-
+> So it'd go something like this:
 > 
->  .../devicetree/bindings/pci/qcom,pcie.yaml    |  45 +++++-
->  arch/arm64/boot/dts/qcom/sm8250.dtsi          |  11 +-
->  .../pci/controller/dwc/pcie-designware-host.c |  72 +++++----
->  drivers/pci/controller/dwc/pcie-designware.h  |  12 ++
->  drivers/pci/controller/dwc/pcie-qcom.c        | 138 +++++++++++++++++-
->  5 files changed, 246 insertions(+), 32 deletions(-)
+> - apcie driver, on slot activation, sees a pwren gpio/reg and powers it
+> on prior to bringing up the link (and marks that port as d3cold supported)
+> - sdhci-pci driver, on probe, sees an external card detect GPIO declared
+> and considers that license to call pci_d3cold_enable and enable
+> runtime-pm (since it won't need the internal card detect IRQ/GPIO)
+> - No SD card is inserted, so SD driver goes into runtime suspend and
+> saves whatever controller state it needs
+> - PCI core saves whatever config space stuff it needs to save, SD
+> controller is powered down via GPIO
+
+I haven't quite found yet how this goes, but I can't say I tried in
+anger. I guess that the root port device has to provide some standard
+PM callbacks that would further tickle the regulator?
+
+> - SD card is inserted, SMC GPIO IRQ notifies SD driver
+> - SD driver goes out of runtime suspend
+> - PCI core powers on controller, re-establishes link, restores config space
+> - SD driver restores host controller registers and discovers the new card
 > 
+> No new APIs, this is all existing kernel stuff. PCI manages slot power
+> same as it does on ACPI systems (that support it), driver interacts with
+> it via runtime-pm and the d3cold control stuff.
+> 
+> I'm tempted to prototype this today and see how it goes...
+
+Well, let us know how that goes.
+
+Thanks,
+
+	M.
 
 -- 
-regards,
-Stan
+Without deviation from the norm, progress is not possible.
