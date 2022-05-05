@@ -2,83 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8052E51BAC3
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 10:39:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 911B151BADF
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 10:45:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349784AbiEEInK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 04:43:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54564 "EHLO
+        id S1350553AbiEEItY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 04:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350246AbiEEInH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 04:43:07 -0400
-Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D324949CBC;
-        Thu,  5 May 2022 01:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
-        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=0S0y/Rdk5Z4jKRvQmXg7i6mtMuCdFPTssifWTZDLJYc=; b=gaoOwYpXivZzZ1DtvcqcuGuWnr
-        9asAcKr/aWFEoP1l/b0tBhBIoJnDAwSSCxvgDbjuvaCAGi6KmqXdB6iys0TftjF2fnuwjpFKSu+R3
-        C1lXozBHaxkYi3xnGPq4YS3Dud5xTGpthOeFdlVd+p5H/tERa1XWoU89zv6NdNG5k1gw=;
-Received: from [217.114.218.24] (helo=localhost.localdomain)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1nmX0z-0000IR-Lu; Thu, 05 May 2022 10:39:13 +0200
-From:   Felix Fietkau <nbd@nbd.name>
-To:     Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4] PCI: mediatek-gen3: Change driver name to mtk-pcie-gen3
-Date:   Thu,  5 May 2022 10:39:07 +0200
-Message-Id: <20220505083907.86598-1-nbd@nbd.name>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S241214AbiEEIs5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 04:48:57 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 30906B93;
+        Thu,  5 May 2022 01:45:15 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 4E39792009C; Thu,  5 May 2022 10:45:14 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 4A38F92009B;
+        Thu,  5 May 2022 09:45:14 +0100 (BST)
+Date:   Thu, 5 May 2022 09:45:14 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Arnd Bergmann <arnd@kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>
+Subject: Re: [RFC v2 25/39] pcmcia: add HAS_IOPORT dependencies
+In-Reply-To: <20220504172201.GA454911@bhelgaas>
+Message-ID: <alpine.DEB.2.21.2205050917160.52331@angie.orcam.me.uk>
+References: <20220504172201.GA454911@bhelgaas>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-driver_register() will refuse to register another driver with the same name.
-This change allows pcie-mediatek-gen3 to coexist with pcie-mediatek built into
-the kernel.
+On Wed, 4 May 2022, Bjorn Helgaas wrote:
 
-Fixes: d3bf75b579b9 ("PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192")
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
----
- drivers/pci/controller/pcie-mediatek-gen3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> >  Well, yes, except I would expect POWER9_CPU (and any higher versions we 
+> > eventually get) to clear HAS_IOPORT.  Generic configurations (GENERIC_CPU) 
+> > would set HAS_IOPORT of course, as would any lower architecture variants 
+> > that do or may support port I/O (it's not clear to me if there are any 
+> > that do not).  Ideally a generic configuration would not issue accesses to 
+> > random MMIO locations for port I/O accesses via `inb'/`outb', etc. for 
+> > systems that do not support port I/O (which it now does, or at least used 
+> > to until recently).
+> 
+> It would seem weird to me that a module would build and run on a
+> generic kernel running on POWER9 (with some safe way of handling
+> inb/outb that don't actually work), but not on a kernel built
+> specifically for POWER9_CPU.
 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 3e8d70bfabc6..2e665cd7e735 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -1021,7 +1021,7 @@ static struct platform_driver mtk_pcie_driver = {
- 	.probe = mtk_pcie_probe,
- 	.remove = mtk_pcie_remove,
- 	.driver = {
--		.name = "mtk-pcie",
-+		.name = "mtk-pcie-gen3",
- 		.of_match_table = mtk_pcie_of_match,
- 		.pm = &mtk_pcie_pm_ops,
- 	},
--- 
-2.35.1
+ Why?  If you say configure your Alpha kernel for ALPHA_JENSEN, a pure 
+EISA system, then you won't get PCI support nor any PCI drivers offered 
+even though a generic Alpha kernel will get them all and still run on a 
+Jensen system.  I find that no different from our case here.
 
+ And if we do ever get TURBOchannel Alpha support, then a generic kernel 
+configuration will offer EISA, PCI and TURBOchannel drivers, while you 
+won't be offered TURBOchannel drivers for a PCI system and vice versa.  
+It would make no sense to me.
+
+ Please mind that the main objective for system-specific configurations is 
+optimisation, including both size and speed, and a part of the solution is 
+discarding stuff that's irrelevant for the respective system.  So in our 
+case we do want any port I/O code not to be there at all in compiled code 
+and consequently any driver that absolutely requires port I/O code to work 
+will have to become a useless stub in its compiled form.  What would be 
+the point then of having it there in the first place except to spread 
+confusion?
+
+  Maciej
