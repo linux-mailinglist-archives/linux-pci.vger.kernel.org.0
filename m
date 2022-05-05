@@ -2,52 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86A3C51C957
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 21:39:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E365B51C962
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 21:44:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385179AbiEETmp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 15:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54928 "EHLO
+        id S1385221AbiEETrt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 15:47:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240224AbiEETmo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 15:42:44 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98DE5D5F0;
-        Thu,  5 May 2022 12:39:04 -0700 (PDT)
+        with ESMTP id S1385211AbiEETrs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 15:47:48 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56205E154;
+        Thu,  5 May 2022 12:44:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 65FFBB82FAB;
-        Thu,  5 May 2022 19:39:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1BF1C385A4;
-        Thu,  5 May 2022 19:39:01 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CD1DEB82E5B;
+        Thu,  5 May 2022 19:44:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C09C385A4;
+        Thu,  5 May 2022 19:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651779542;
-        bh=nvJ0vKCyj+OxDQA4BLRRzvEtpD2Bij13dOiL8LL8YsA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GCAXCFuH/hYZK9EncBIRU6MfSTdzmvcYVBiEkgukAJFyPch+57l6fM7K++h3l2ahh
-         w8Wya2kzM9ZkI8cBsGkE0juf8uZt9tpiPAAY7FHcyNiixr7/8sbH2TRksQSaEkHSnh
-         NSFqnE5jp1FrblYSSi0euVSGNBRFL7YApv7bpPPA47aC2oDo4TRc2bOA08+8FL1C3i
-         TG1YWIhfbeu4EqAPOArqRNVSWpBeJiNJlqOxERmkXZG/ApBI243954L1v6uR2pWRkV
-         rwaCj3TY/yBVdDPBd5tGIED3r9mzX3Uyf8l50hRScAGVvmWmbCZ2e2O1vexeqxKgIc
-         pj2tFgc48frog==
-Date:   Thu, 5 May 2022 14:38:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc:     Arnd Bergmann <arnd@kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-Subject: Re: [RFC v2 25/39] pcmcia: add HAS_IOPORT dependencies
-Message-ID: <20220505193859.GA509737@bhelgaas>
+        s=k20201202; t=1651779843;
+        bh=CK8hGVm6HY+SD5vqpXt0g5BOWD2qa/R5HokCnm40O7M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bjO1p1qtf3GE9MpxXurI5NfLU/Ey4ot5586VfiDle02PkfoFoRfl/Zq4kj+9Rvrs+
+         G2bGkAptZuC2o+xMgMxO/7nSRaTT4/CiHdl4BS0+2/6sLcOBLqtw6JuOEio//JvW5v
+         JRKPOQo1ejLcidoVCV1Djy3pjbtbOzCtgFXbMHrZli+J72jtfeqwJDcT5ICAqE5n0p
+         p+u5Qvh1532/mgcGgoAICpb/GT0ZY3MyhFIY1/SAWKk0Mn+aME8afUGhOdoHSueggm
+         MSbl0yJ3bYnEi5t+Vld6fTJslnEktAMJdHQBCf8Q2vyh6rXG7f2g0+2+6XXtJHj+Hy
+         TG0hv0voiS9NA==
+Date:   Thu, 5 May 2022 12:44:01 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v1 00/11] PCI/PM: Rework powering up PCI devices
+Message-ID: <YnQpAT59+dnfkfjO@thelio-3990X>
+References: <4738492.GXAFRqVoOG@kreacher>
+ <20220505192241.GA508163@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2205050917160.52331@angie.orcam.me.uk>
+In-Reply-To: <20220505192241.GA508163@bhelgaas>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,40 +59,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 05, 2022 at 09:45:14AM +0100, Maciej W. Rozycki wrote:
-> On Wed, 4 May 2022, Bjorn Helgaas wrote:
+On Thu, May 05, 2022 at 02:22:41PM -0500, Bjorn Helgaas wrote:
+> [+cc Krzysztof, just FYI]
 > 
-> > >  Well, yes, except I would expect POWER9_CPU (and any higher versions we 
-> > > eventually get) to clear HAS_IOPORT.  Generic configurations (GENERIC_CPU) 
-> > > would set HAS_IOPORT of course, as would any lower architecture variants 
-> > > that do or may support port I/O (it's not clear to me if there are any 
-> > > that do not).  Ideally a generic configuration would not issue accesses to 
-> > > random MMIO locations for port I/O accesses via `inb'/`outb', etc. for 
-> > > systems that do not support port I/O (which it now does, or at least used 
-> > > to until recently).
+> On Thu, May 05, 2022 at 07:57:15PM +0200, Rafael J. Wysocki wrote:
+> > Hi All,
 > > 
-> > It would seem weird to me that a module would build and run on a
-> > generic kernel running on POWER9 (with some safe way of handling
-> > inb/outb that don't actually work), but not on a kernel built
-> > specifically for POWER9_CPU.
+> > This patch set replaces patches [4-9/9] from the series at
+> > 
+> > https://lore.kernel.org/linux-pm/4419002.LvFx2qVVIh@kreacher/T/#mf7ed30e7cf114b131e6067e4e10c28e59d661cb4
 > 
->  Why?  If you say configure your Alpha kernel for ALPHA_JENSEN, a pure 
-> EISA system, then you won't get PCI support nor any PCI drivers offered 
-> even though a generic Alpha kernel will get them all and still run on a 
-> Jensen system.  I find that no different from our case here.
+> I applied this to pci/pm, thanks!
 > 
->  And if we do ever get TURBOchannel Alpha support, then a generic kernel 
-> configuration will offer EISA, PCI and TURBOchannel drivers, while you 
-> won't be offered TURBOchannel drivers for a PCI system and vice versa.  
-> It would make no sense to me.
-> 
->  Please mind that the main objective for system-specific configurations is 
-> optimisation, including both size and speed, and a part of the solution is 
-> discarding stuff that's irrelevant for the respective system.  So in our 
-> case we do want any port I/O code not to be there at all in compiled code 
-> and consequently any driver that absolutely requires port I/O code to work 
-> will have to become a useless stub in its compiled form.  What would be 
-> the point then of having it there in the first place except to spread 
-> confusion?
+> I reordered the branch so Krzysztof's "pci_restore_standard_config()
+> defined but not used" fix is first, followed by your changes, Rafael.
 
-Good points.
+I can confirm that at commit 0f40ac35e4ec ("PCI/PM: Replace
+pci_set_power_state() in pci_pm_thaw_noirq()"), the problematic machine
+boots up with no visible issues. Thanks a lot for the quick fixes!
+
+Cheers,
+Nathan
