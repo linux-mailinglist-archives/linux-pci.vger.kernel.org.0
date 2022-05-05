@@ -2,131 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F41651BA2C
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 10:22:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF17751BA56
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 10:27:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349060AbiEEIZz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 04:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54990 "EHLO
+        id S240099AbiEEIb0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 04:31:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349126AbiEEIZt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 04:25:49 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAD31D328;
-        Thu,  5 May 2022 01:20:40 -0700 (PDT)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2457om3f031389;
-        Thu, 5 May 2022 08:20:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=7QCZWIKCv0xodO97AD5DPPlIdbYnmHCdNmsjpJ3TKwQ=;
- b=kl0RZqPP01iadYFGo0D/0/XTw2Z4SQsxM1mygceQjuUW+n6fKqTkp8Caa1Hefdcxtla+
- SsMc5SA8g953kMgxQXaU7ACcmwYbVcZbWIbxOtKHsL3L/DJIzBjka3aThiW8P39WfC+T
- ttxLxNGZJjPdrflBmMZQwIpMlw/+6ZQzqDrnt7ncnFCnTab4OK4E0lm5OxyXnnzMrYs7
- peqXY38WnaVQskr+zNSuOs8DP8USfjGgXWnMbnU8TUeATY3idf/mmxuGj63/VRGyB5wd
- bcB/u+1kmErpqwr4RyR0OTWc8G9tXaLzJf/eF0CS48pqksJSRYfMzIewNrHyHkKYRoJ2 qg== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fvaj4rh0k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 May 2022 08:20:34 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2458I96q007125;
-        Thu, 5 May 2022 08:20:32 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06fra.de.ibm.com with ESMTP id 3fttcj2teb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 May 2022 08:20:31 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2458KO1S35324240
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 May 2022 08:20:25 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A564011C04C;
-        Thu,  5 May 2022 08:20:29 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2AF5711C04A;
-        Thu,  5 May 2022 08:20:29 +0000 (GMT)
-Received: from sig-9-145-85-251.uk.ibm.com (unknown [9.145.85.251])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 May 2022 08:20:29 +0000 (GMT)
-Message-ID: <849f53a613b66991c1661799583714fa1883094c.camel@linux.ibm.com>
-Subject: Re: [RFC v2 02/39] ACPI: add dependency on HAS_IOPORT
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Arnd Bergmann <arnd@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>
-Date:   Thu, 05 May 2022 10:20:28 +0200
-In-Reply-To: <CAK8P3a3AddBGnBV=6wK+LZDjZD05k=9tBBWd7LWm6smXLcfREQ@mail.gmail.com>
-References: <20220429135108.2781579-3-schnelle@linux.ibm.com>
-         <20220504175352.GA456913@bhelgaas>
-         <CAK8P3a3AddBGnBV=6wK+LZDjZD05k=9tBBWd7LWm6smXLcfREQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
+        with ESMTP id S1347885AbiEEIbW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 04:31:22 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540622D1EB;
+        Thu,  5 May 2022 01:27:43 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: kholk11)
+        with ESMTPSA id 72C5A1F44D84
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1651739262;
+        bh=mFMc9Q2nDIQR0sOpjH1myPXm3e8CImboII/qXcWq5JU=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=GMIp6mRlSS7KAQ8A9IVcFvFyA43EZx2MPS9THZM+iZp6wpQiki8+SaO1lrUujJzUm
+         XFpVDRI7ZuxDVrblKkw9SzZ95TX7oitciWHideclbO2hu+2iPvKcv4hMOcQH9b2N+J
+         d6erKHQJefc2MvAkjyyOIFrIuQ30TUY/10s7wUGPryG3A/8KmfGrgsWSHgsPLvv7Oe
+         O1OQPK0t5Hv36s59X6fG1lbTmXe6VwCjL6iOiRFw/1+xhqqtegNSkEstE71eZCJBLK
+         xv8Lx4XPlRt3ycvFmuvQ0IYO+VFDxQn4fDCysKSIwFF/UTu5OCkPMJDmA+PG/K3Ub1
+         gn/ZBPqYeHCtQ==
+Message-ID: <2d50b30d-ed3a-29db-266e-9e395e9e4c6a@collabora.com>
+Date:   Thu, 5 May 2022 10:27:39 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v3] PCI: mediatek-gen3: Change driver name to
+ mtk-pcie-gen3
+Content-Language: en-US
+To:     Felix Fietkau <nbd@nbd.name>, Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20220504172128.27489-1-nbd@nbd.name>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20220504172128.27489-1-nbd@nbd.name>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: aX9i4giMAEznhRBbGgTq9Z33L_sg2DcL
-X-Proofpoint-GUID: aX9i4giMAEznhRBbGgTq9Z33L_sg2DcL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-05_02,2022-05-04_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 clxscore=1015 malwarescore=0
- mlxscore=0 priorityscore=1501 mlxlogscore=863 adultscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205050055
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2022-05-04 at 21:58 +0200, Arnd Bergmann wrote:
-> On Wed, May 4, 2022 at 7:53 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Apr 29, 2022 at 03:50:00PM +0200, Niklas Schnelle wrote:
-> > > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> > > not being declared. As ACPI always uses I/O port access we simply depend
-> > > on HAS_IOPORT.
-> > 
-> > CONFIG_ACPI depends on ARCH_SUPPORTS_ACPI, which is only set by arm64,
-> > ia64, and x86, all of which support I/O port access.  So does this
-> > actually solve a problem?  I wouldn't think you'd be able to build
-> > ACPI on s390 even without this patch.
-> > "ACPI always uses I/O port access" is a pretty broad brush, and it
-> > would be useful to know specifically what the dependencies are.
-> > 
-> > Many ACPI hardware accesses use acpi_hw_read()/acpi_hw_write(), which
-> > use either MMIO or I/O port accesses depending on what the firmware
-> > told us.
+Il 04/05/22 19:21, Felix Fietkau ha scritto:
+> driver_register() will refuse to register another driver with the same name.
+> This change allows pcie-mediatek-gen3 to coexist with pcie-mediatek built into
+> the kernel.
 > 
-> I think this came from my original prototype of the series where I tested it
-> out on arm64 with HAS_IOPORT disabled. I would like to hide the definition
-> of inb()/outb() from include/asm-generic/io.h whenever CONFIG_HAS_IOPORT
-> is not set, and I was prototyping this on arm64.
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> ---
+>   drivers/pci/controller/pcie-mediatek-gen3.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> There are uses of inb()/outb() in drivers/acpi/ec.c and drivers/acpi/osl.c,
-> which in turn are not optional in ACPI, so it seems that those are
-> required.
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index 3e8d70bfabc6..2e665cd7e735 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -1021,7 +1021,7 @@ static struct platform_driver mtk_pcie_driver = {
+>   	.probe = mtk_pcie_probe,
+>   	.remove = mtk_pcie_remove,
+>   	.driver = {
+> -		.name = "mtk-pcie",
+> +		.name = "mtk-pcie-gen3",
+>   		.of_match_table = mtk_pcie_of_match,
+>   		.pm = &mtk_pcie_pm_ops,
+>   	},
 > 
-> If we want to allow building arm64 without HAS_IOPORT for some reason,
-> that means either force-disabling ACPI as well, or changin ACPI to not
-> rely on port I/O. I think it's fine to leave that as a problem for whoever
-> wants to make HAS_IOPORT optional in the future, and drop the
-> dependency here.
-> 
->        Arnd
 
-I'll improve the commit message to make the dependency on HAS_IOPORT
-more clear. I also agree with Arnd that since all architectures where
-ACPI is useful have I/O ports making it work without I/O port access
-compiled in is for another day.
+Hello Felix,
 
+this is a good fix - and being it a fix, this requires a Fixes: tag - which also
+gets this scheduled for backporting, which is important to solve this issue on
+all of the affected kernels.
+
+I'll make it easy for you as I've already checked the commit hash:
+
+Fixes: d3bf75b579b9 ("PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192")
+
+
+After adding that:
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+Cheers,
+Angelo
