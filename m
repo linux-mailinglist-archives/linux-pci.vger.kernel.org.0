@@ -2,137 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 366CF51BC55
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 11:41:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80D9B51BC78
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 11:49:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353969AbiEEJop (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 05:44:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
+        id S1348605AbiEEJxS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 05:53:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353961AbiEEJom (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 05:44:42 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2072.outbound.protection.outlook.com [40.107.92.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F6344B43F;
-        Thu,  5 May 2022 02:40:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lIMzqSnhA2vjBnfSHGC1RYGVUyQoWLcBw+7H5bzQmJSwNOfBMtfUOutxWnEve5lT5iP9yJnY3Cl17F16QmZxWpvrqvUJyTRVrkqVB991647Yiko2yn89l+dOeoDIDsTfBi6QWibEyMaEYzdiQJgFpIgpsrZKTMHSCz47miArwgE7vmMrVYRWWu/lTwx9yH+4GhF6Rbto4I1+RNMsFT/W4oac5Hiedr7++6tRuP/V1ywnkXjPv4/Pbge6kN+g3U5nLfuXcRl/kfup1lGtBq5KS/7ZH5gRXjqXej2yPpBxvt5e4xPcs7pRXaIECDK2Rm6RYBu5lIY7YHyaoetkRsi0GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UJ/IJFAlezuSlLHWfmcbwRrwRnjuYyAwEogLIahdgGs=;
- b=Q8NFjVp+jsLsvXKRh9Qs5GbGQ0Tf0VxJUGMTPBvY3Bq2K475U7A+xscb79Nx8KvXyYfQLVSt8XFH1SrlaffFfMM/NTJnV+m1c7/3XDiLIDm08adQFLoxX9uNSOdziAqq/zacYpliD393Fv3/vpP1rcOZ08dYUMWypae1rSxAZQhvcG/hyHxNCT9pxhhZoLxRfmrejYidhcE1p2C/YaFkHUBgCSaeJKXLq7WMBc0xdgCtM5DQ9VrWZ94E7IlYK9SXPvwgu5CwLPShQeJFmplqRwFAZjb3Ieu9ql9rUESBsJ/Ph6193rqbXdVBzJ/G/IklR1u01nE98xQqPFG36jLz1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UJ/IJFAlezuSlLHWfmcbwRrwRnjuYyAwEogLIahdgGs=;
- b=dbdXeAAjnwmXF9Yqs1DSDw7PKG5nEadrvpnz05pP+AfbRR5e0cDRvufuxNXTBhSA2t4jKxEbwhGOaZMWNz90ZSGBVjNwpJ8aAmD1TeJRTCxxqSL7ywHDvlCeXe1GZKkVflgvoJZSaLCmiNJC65MzCfk1p11ZL5Yh1mPp697VbnogqBUCm1jSkJilDk2FJ0czcMFUa3h+9v/sKVI3BDy6ReOMOz0FPwee7A+jSlJly6SSAAhkTZgvBnHVZ4+JyIGlvhmrFC3KPhKKO3KFBEOltHGKZG7d/JVT+2nudfs0x55lq+0PYDcUdyNQ1YiN120Cy12OYWARaMRsOnYsvrL10w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL1PR12MB5304.namprd12.prod.outlook.com (2603:10b6:208:314::13)
- by MWHPR12MB1245.namprd12.prod.outlook.com (2603:10b6:300:13::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15; Thu, 5 May
- 2022 09:40:56 +0000
-Received: from BL1PR12MB5304.namprd12.prod.outlook.com
- ([fe80::a9fa:62ae:bbc8:9d7d]) by BL1PR12MB5304.namprd12.prod.outlook.com
- ([fe80::a9fa:62ae:bbc8:9d7d%6]) with mapi id 15.20.5206.025; Thu, 5 May 2022
- 09:40:56 +0000
-Message-ID: <0ba3d469-58af-64d3-514c-6d33c483f8fb@nvidia.com>
-Date:   Thu, 5 May 2022 15:10:43 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v3 6/8] vfio: Invoke runtime PM API for IOCTL request
+        with ESMTP id S229576AbiEEJxQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 05:53:16 -0400
+Received: from extserv.mm-sol.com (ns.mm-sol.com [37.157.136.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7C5457AA;
+        Thu,  5 May 2022 02:49:36 -0700 (PDT)
+Received: from [192.168.1.17] (hst-208-205.medicom.bg [84.238.208.205])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: svarbanov@mm-sol.com)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 63318D2AC;
+        Thu,  5 May 2022 12:49:34 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1651744174; bh=AFckxHcnZVoQgT2lesS9EBjRiWjo3xR8AXz9n0uwhSs=;
+        h=Date:Subject:To:Cc:From:From;
+        b=Z4vPaW/2NzYNAwiVbosE5R51lWhDKZ62Y8XlKOzwvq5GeUnVQ0e/xd84XD7/7rN/0
+         bQhOGyxPOomr26qBHWe9XMRDR2xogNEr5UzkOn2c63c0PUwl+q3N+xAUZrhSuVbQe8
+         8S45Z5XV3EKQv4EJZxr/RG9vC+V+5SuSuP8D4TVjCnyEhamcNF7iT18Ef1a1exsXEa
+         PTghS7N6hqkxZi/mtwI9KRK2BmaCLSeTNFTrJABiWjHfjwOnABHLDEdywVnR1G9Onu
+         Myn0FO57YOL6PposCjJnmtZBMlsklhjOLnPcE9w1BqzIy+zlpJn2zLMEnELIlz3GpP
+         J7OY9m1HS7Hag==
+Message-ID: <d1632695-754b-06a9-35c7-a82e44f37e6d@mm-sol.com>
+Date:   Thu, 5 May 2022 12:49:32 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v6 5/7] PCI: qcom: Handle MSIs routed to multiple GIC
+ interrupts
 Content-Language: en-US
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20220425092615.10133-1-abhsahu@nvidia.com>
- <20220425092615.10133-7-abhsahu@nvidia.com>
- <20220504134257.1ecb245b.alex.williamson@redhat.com>
-X-Nvconfidentiality: public
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-In-Reply-To: <20220504134257.1ecb245b.alex.williamson@redhat.com>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+References: <20220505091231.1308963-1-dmitry.baryshkov@linaro.org>
+ <20220505091231.1308963-6-dmitry.baryshkov@linaro.org>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+In-Reply-To: <20220505091231.1308963-6-dmitry.baryshkov@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR01CA0143.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:71::13) To BL1PR12MB5304.namprd12.prod.outlook.com
- (2603:10b6:208:314::13)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 419c216e-f2c9-4b8c-e84d-08da2e7b5a84
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1245:EE_
-X-Microsoft-Antispam-PRVS: <MWHPR12MB124519D1C4A90082E271853BCCC29@MWHPR12MB1245.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7OojXz6SIU/0jJ9Vw43tiZDiVXyE2wJrmrys0dMTZ26sMRYkwBfrigVrXkr0bQ4xIGqmBxhxbc4UhFTG2G/vAf+S94tr+vfXa9sQXGYfxvle6kirDko+m6O4m0qFiUB+I2kp/ufkmj+cKCvSFkmxK3b8qmE0Dvq3vVO93viAuV+nDkhqoi3T4UCRtRwln6SaAEUK8d0C7uo72Svp2qyvUjDN1/xFOX5N5CveuuIubeMg+Q0Eejm1AC8Diylg050fk9znvsJmN7Wu+P6kUszBNsT3X4W14y1EkDW9dUS81hfLFs6cqFEDs+ZM/ncJGHBSvlc8Ai/9Okz9Zq2Kr8GNPzZdke4lAOpN5L/y/esPWTCmQ3lmF4ow+T3pCoWAyA4jI+vLUPuMWZ7fxbDqbBi9DRG41QGB4H5yX0bcZwwbr3wIYaQqg/Twv8K6FbvAWgr8mP/MQtOMGF5ek+8buXvVVblvjDLDz7Nm1WrjRVjBhqqgwXh4Gn9HzWwQRk6jcxvHH+Uu4YrKZbOxJK2oUC2wEdFN0KLkV9RW86GUmXDuS1Eq7amwxoV1nfkdnuZANXz8hZ84al6R3b10cPonI6wLE1AYQAmjw3UzicFOjl35pzMCoFMRPhfpY4PUYoxWEqbwNtApp/EnzR4Yo453LSQqkwzaWCe/lY72zq34/FTfyE7QLR32znOyNrYM4Nkw3hJU8IQHdKsz6ekioDwvbdhFTs5LNrfU/mzRlVRQ8I8phdRYDAw5o1Qsmqj8ajj1VUNV
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5304.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(31696002)(4326008)(8676002)(2906002)(36756003)(31686004)(86362001)(66556008)(66946007)(66476007)(6666004)(26005)(316002)(5660300002)(7416002)(8936002)(38100700002)(508600001)(2616005)(54906003)(6916009)(83380400001)(186003)(6506007)(6512007)(6486002)(55236004)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TDhNV1VEbzVVOEsvS1hZcm1ucXUxbVIyTnFsRStGNGlRUHJJTUk0Yi9OdXVB?=
- =?utf-8?B?ZTMrODBaYXovdXdXUU43M2JMdjU4YTlvMVNid2pGcUY4WXBhRysxMWhodWJi?=
- =?utf-8?B?aVRRM1BnYWNCTGE3MUk3dVExdCtBcGN2VFhuZyt1QTZ1S0h4ZnpkRmtKcDNX?=
- =?utf-8?B?VjZqaGkrVlJtVDNUUGJBQjBrNHpiUGhZQlJoZjM1M2NpQkRqN01OL21lcTJi?=
- =?utf-8?B?U3dVV3R1ODdBUk5CUXVsT2Qza3BZY3ArNGxJT0Z6bXdDMzhZL1YycjNNRVFq?=
- =?utf-8?B?ZDRMU2gvczMvMGIvWUZCaW9velkraXJiUVo1VWh0Ykd0c3lBemdOWXZtanpk?=
- =?utf-8?B?SHU1NktpclVjd284TU9lTzUwRE41V3VDSFBkdWVkUS8xN0p3WlBSRE8vZHFp?=
- =?utf-8?B?V2VrKzZON2Y2TlZMeXc1SDVNWDF5VExPbVVDODJyVnE4cXZBV1JIR054UXVC?=
- =?utf-8?B?QmdCdG1WelVna0k1MEdacm5QTnl5eStKQmdxL3FJZmplaTFvUmRaUzBZellN?=
- =?utf-8?B?d3hwTC9JLzFPQ1lRWjhaaG05aDNKczB6SHNSdmYvcVlNQ0orekQ4clVJRys1?=
- =?utf-8?B?NXdLQjZ2TTEvVGRpY05wbmd0VGNDWlNqUzI0dHpLZ3hZVUw4ZXFta0ZTNlNj?=
- =?utf-8?B?aWJPc0ZvQlhrRXRDUGUwbzRTZGRDWVFzZmVCNmNDMUc2aSs0RXJuYkZQR0Q1?=
- =?utf-8?B?ZCtZVlpVMlpCTTZEeVcwa3ZXVzNwMXFwMmJwSWgwRjNSMVQrQlFCSnh4aC9N?=
- =?utf-8?B?YVlGR3lXSXJKZ0hleExlYzVodk9JbXl5YUp6elA3SXE1dmJTaGc0UFBoL0w0?=
- =?utf-8?B?U01WVVk0YWpCelJRVnRJMXVZeUszNFJnTERMeFJ6akJJdXJxbk5tbWVxYUdN?=
- =?utf-8?B?bTNaQkxFeTFJelM0RDVXZUE0a3lSUzVDdW9MY1BmT0QvZHFHMHYzUlA0dWo1?=
- =?utf-8?B?NGZ2RFZpNXFZYXpKaTc4eHNPb1FiaFVvNTlmL20rUWgrOHNmTkRDYlczbUxa?=
- =?utf-8?B?ZStYOVFLWjJyRndKTWE3bXpFM3ZNaHNjeTBxd3FQTHZXMC9GeTJXVmorcG0x?=
- =?utf-8?B?T1RUUzJFWUZJOXpFRDQyWDRGSkorbjZ3MUdZQk9ycXFoM1lVbXdsUExLTzRm?=
- =?utf-8?B?UDg5WkYwSmNKNUxSMjFtUXI0K242eGp3ZEdyeDBIamVqcUpkR2dpSGpDeEdu?=
- =?utf-8?B?bmpDR0hLeTBoQnZjc1JzVStKTXY5ZkQ2ZE9pUlR1bE45L285SG0zMjRHSW5Q?=
- =?utf-8?B?Q1VxS0JNTG16YW96c0ltWS9wSGU5dVJBRkw5NnhWc2R0N0NPSGlGbFlCa2FY?=
- =?utf-8?B?aUp6TjZ0a2FqT2hXVEVwZU45WnhXcXVMSTJYOHg3R1Z3aEN3ampCME8wbXFJ?=
- =?utf-8?B?MkVjV29nb2g5bkVINkUvSWNYSWN1K3Zzc0RtS2tWQ25EYkUyMUYwS1Q1M2dz?=
- =?utf-8?B?REhxQ002Q0JzUVVWRmxpcEg1Y2RCMDBCUXBTbDduWFpUU25hZGlkMUtUUys4?=
- =?utf-8?B?RkltTThodkx2YWNGSllqTnY3aTFtYTI5VEJXbDZLcWlnRHg3M203aU5OakE5?=
- =?utf-8?B?TFdZMVFaTmZoMm41WkR0MTNZZitLZzhwcE9qaUFHeFp3QlRFZmtHSGY2WStp?=
- =?utf-8?B?TDhhK1hQUElaeFBoT01YMjFhQkQ1ZXZremNrOFBTSGZnc2pCNCtBYzNsd1FJ?=
- =?utf-8?B?MU9tSkJwRW5JOTBZZ1BmTVNSYjFRdVBOSXVPWkdMTzRPN000YUZIWXFUeFlp?=
- =?utf-8?B?MWYvSlBTZ3RIUGxjRFlqMGc1SmhjVC9pMzVtb1o0TmM1VmUrMjJrRHY5WG54?=
- =?utf-8?B?RTZQTjgwN204TkNwN3d1djBZSFBVOVNDNDdPWVFvdFhRejBpbmYzb3hTT2Zk?=
- =?utf-8?B?MmNWdnNyNldmWXNjdHQ4amg1Q2Y3YTBIZnFTNjhwaGZPRmlnb1lNbnVsVVdu?=
- =?utf-8?B?ekIvMk8vSTdrN2RuaWNqM1VyY2NWbGNYMFJ3cE1YL1djQWhNQkJ2SjRSdGVm?=
- =?utf-8?B?WjduUHJuOXFLNFB6b081SHRibTFCOXRsVnc5NE40dW8vbkRWdHlSTnRRcnY5?=
- =?utf-8?B?UnNjeDJ1SVdCeEN6dG02RUZOdWRqNXpwMk9wazVvNmdXU2t5WTZGYm1tMGNG?=
- =?utf-8?B?ckVPS0w3a1lFUERaSkNwc0hQNVdvODh4OFBtOVNyOXpzaGtZL3NGUmVUSHZv?=
- =?utf-8?B?bDlGeVlWTjBvSHRwWG9YWDhzTFdrTCtzMFVBeUpoczRmaXhFVU9tTFVybENv?=
- =?utf-8?B?QUhCL2xPWXRSSkw1akRMRndqYkdoM0V0L0FEeUJOeVMrV0FCUDlsSzd6U1BC?=
- =?utf-8?B?ak1GU2oyK29LbVUyL2RZOUh4Y1J0QTBFN1FXbkk0UGxKN1Awbm9iZz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 419c216e-f2c9-4b8c-e84d-08da2e7b5a84
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5304.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2022 09:40:56.4611
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MNsCFocP3oSm8wNRr1qP9Fgf4afmMfSRoJQkdm37VMmhGmDP2S7k7suXZRZhr5Fm5bnH9c2Rw3X6sGKNoEJVOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1245
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -140,160 +65,168 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/5/2022 1:12 AM, Alex Williamson wrote:
-> On Mon, 25 Apr 2022 14:56:13 +0530
-> Abhishek Sahu <abhsahu@nvidia.com> wrote:
-> 
->> The vfio/pci driver will have runtime power management support where the
->> user can put the device low power state and then PCI devices can go into
->> the D3cold state. If the device is in low power state and user issues any
->> IOCTL, then the device should be moved out of low power state first. Once
->> the IOCTL is serviced, then it can go into low power state again. The
->> runtime PM framework manages this with help of usage count. One option
->> was to add the runtime PM related API's inside vfio/pci driver but some
->> IOCTL (like VFIO_DEVICE_FEATURE) can follow a different path and more
->> IOCTL can be added in the future. Also, the runtime PM will be
->> added for vfio/pci based drivers variant currently but the other vfio
->> based drivers can use the same in the future. So, this patch adds the
->> runtime calls runtime related API in the top level IOCTL function itself.
->>
->> For the vfio drivers which do not have runtime power management support
->> currently, the runtime PM API's won't be invoked. Only for vfio/pci
->> based drivers currently, the runtime PM API's will be invoked to increment
->> and decrement the usage count. Taking this usage count incremented while
->> servicing IOCTL will make sure that user won't put the device into low
->> power state when any other IOCTL is being serviced in parallel.
->>
->> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
->> ---
->>  drivers/vfio/vfio.c | 44 +++++++++++++++++++++++++++++++++++++++++---
->>  1 file changed, 41 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
->> index a4555014bd1e..4e65a127744e 100644
->> --- a/drivers/vfio/vfio.c
->> +++ b/drivers/vfio/vfio.c
->> @@ -32,6 +32,7 @@
->>  #include <linux/vfio.h>
->>  #include <linux/wait.h>
->>  #include <linux/sched/signal.h>
->> +#include <linux/pm_runtime.h>
->>  #include "vfio.h"
->>  
->>  #define DRIVER_VERSION	"0.3"
->> @@ -1536,6 +1537,30 @@ static const struct file_operations vfio_group_fops = {
->>  	.release	= vfio_group_fops_release,
->>  };
->>  
->> +/*
->> + * Wrapper around pm_runtime_resume_and_get().
->> + * Return 0, if driver power management callbacks are not present i.e. the driver is not
-> 
-> Mind the gratuitous long comment line here.
-> 
- 
- Thanks Alex.
- 
- That was a miss. I will fix this.
- 
->> + * using runtime power management.
->> + * Return 1 upon success, otherwise -errno
-> 
-> Changing semantics vs the thing we're wrapping, why not provide a
-> wrapper for the `put` as well to avoid?  The only cases where we return
-> zero are just as easy to detect on the other side.
-> 
 
- Yes. Using wrapper function for put is better option.
- I will make the changes.
 
->> + */
->> +static inline int vfio_device_pm_runtime_get(struct device *dev)
+On 5/5/22 12:12, Dmitry Baryshkov wrote:
+> On some of Qualcomm platforms each group of 32 MSI vectors is routed to the
+> separate GIC interrupt. Thus to receive higher MSI vectors properly,
+> add separate msi_host_init()/msi_host_deinit() handling additional host
+> IRQs.
 > 
-> Given some of Jason's recent series, this should probably just accept a
-> vfio_device.
+> Note, that if DT doesn't list extra MSI interrupts, the driver will limit
+> the amount of supported MSI vectors accordingly (to 32).
 > 
-
- Sorry. I didn't get this part.
-
- Do I need to change it to
-
- static inline int vfio_device_pm_runtime_get(struct vfio_device *device)
- {
-    struct device *dev = device->dev;
-    ...
- }
-
->> +{
->> +#ifdef CONFIG_PM
->> +	int ret;
->> +
->> +	if (!dev->driver || !dev->driver->pm)
->> +		return 0;
->> +
->> +	ret = pm_runtime_resume_and_get(dev);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return 1;
->> +#else
->> +	return 0;
->> +#endif
->> +}
->> +
->>  /*
->>   * VFIO Device fd
->>   */
->> @@ -1845,15 +1870,28 @@ static long vfio_device_fops_unl_ioctl(struct file *filep,
->>  				       unsigned int cmd, unsigned long arg)
->>  {
->>  	struct vfio_device *device = filep->private_data;
->> +	int pm_ret, ret = 0;
->> +
->> +	pm_ret = vfio_device_pm_runtime_get(device->dev);
->> +	if (pm_ret < 0)
->> +		return pm_ret;
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 137 ++++++++++++++++++++++++-
+>  1 file changed, 136 insertions(+), 1 deletion(-)
 > 
-> I wonder if we might simply want to mask pm errors behind -EIO, maybe
-> with a rate limited dev_info().  My concern would be that we might mask
-> errnos that userspace has come to expect for certain ioctls.  Thanks,
-> 
-> Alex
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 375f27ab9403..6cd1c2cc6d9e 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -194,6 +194,7 @@ struct qcom_pcie_ops {
+>  
+>  struct qcom_pcie_cfg {
+>  	const struct qcom_pcie_ops *ops;
+> +	unsigned int has_split_msi_irqs:1;
+>  	unsigned int pipe_clk_need_muxing:1;
+>  	unsigned int has_tbu_clk:1;
+>  	unsigned int has_ddrss_sf_tbu_clk:1;
+> @@ -209,6 +210,7 @@ struct qcom_pcie {
+>  	struct phy *phy;
+>  	struct gpio_desc *reset;
+>  	const struct qcom_pcie_cfg *cfg;
+> +	int msi_irqs[MAX_MSI_CTRLS];
+>  };
+>  
+>  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> @@ -1387,6 +1389,124 @@ static int qcom_pcie_config_sid_sm8250(struct qcom_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static void qcom_chained_msi_isr(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	int irq = irq_desc_get_irq(desc);
+> +	struct pcie_port *pp;
+> +	int i, pos;
+> +	unsigned long val;
+> +	u32 status, num_ctrls;
+> +	struct dw_pcie *pci;
+> +	struct qcom_pcie *pcie;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	pp = irq_desc_get_handler_data(desc);
+> +	pci = to_dw_pcie_from_pp(pp);
+> +	pcie = to_qcom_pcie(pci);
+> +
+> +	/*
+> +	 * Unlike generic dw_handle_msi_irq(), we can determine which group of
+> +	 * MSIs triggered the IRQ, so process just that group.
+> +	 */
+> +	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	for (i = 0; i < num_ctrls; i++) {
+> +		if (pcie->msi_irqs[i] == irq)
+> +			break;
+> +	}
+> +
+> +	if (WARN_ON_ONCE(unlikely(i == num_ctrls)))
+> +		goto out;
+> +
+> +	status = dw_pcie_readl_dbi(pci, PCIE_MSI_INTR0_STATUS +
+> +				   (i * MSI_REG_CTRL_BLOCK_SIZE));
+> +	if (!status)
+> +		goto out;
+> +
+> +	val = status;
+> +	pos = 0;
+> +	while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+> +				    pos)) != MAX_MSI_IRQS_PER_CTRL) {
+> +		generic_handle_domain_irq(pp->irq_domain,
+> +					  (i * MAX_MSI_IRQS_PER_CTRL) +
+> +					  pos);
+> +		pos++;
+> +	}
+> +
+> +out:
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int qcom_pcie_msi_host_init(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +	struct platform_device *pdev = to_platform_device(pci->dev);
+> +	char irq_name[] = "msiXXX";
+> +	unsigned int ctrl, num_ctrls;
+> +	int msi_irq, ret;
+> +
+> +	pp->msi_irq = -EINVAL;
+> +
+> +	/*
+> +	 * We provide our own implementation of MSI init/deinit, but rely on
+> +	 * using the rest of DWC MSI functionality.
+> +	 */
+> +	pp->has_msi_ctrl = true;
+> +
+> +	msi_irq = platform_get_irq_byname_optional(pdev, "msi");
+> +	if (msi_irq < 0) {
+> +		msi_irq = platform_get_irq(pdev, 0);
+> +		if (msi_irq < 0)
+> +			return msi_irq;
+> +	}
+> +
+> +	pcie->msi_irqs[0] = msi_irq;
+> +
+> +	for (num_ctrls = 1; num_ctrls < MAX_MSI_CTRLS; num_ctrls++) {
+> +		snprintf(irq_name, sizeof(irq_name), "msi%d", num_ctrls + 1);
+> +		msi_irq = platform_get_irq_byname_optional(pdev, irq_name);
+> +		if (msi_irq == -ENXIO)
+> +			break;
+> +
+> +		pcie->msi_irqs[num_ctrls] = msi_irq;
+> +	}
+> +
+> +	pp->num_vectors = num_ctrls * MAX_MSI_IRQS_PER_CTRL;
+> +	dev_info(&pdev->dev, "Using %d MSI vectors\n", pp->num_vectors);
+> +	for (ctrl = 0; ctrl < num_ctrls; ctrl++)
+> +		pp->irq_mask[ctrl] = ~0;
+> +
+> +	ret = dw_pcie_allocate_msi(pp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (ctrl = 0; ctrl < num_ctrls; ctrl++)
+> +		irq_set_chained_handler_and_data(pcie->msi_irqs[ctrl],
+> +				qcom_chained_msi_isr,
+> +				pp)
 
-  I need to do something like following. Correct ?
+Align on the open brace, please.
 
-  ret = vfio_device_pm_runtime_get(device);
-  if (ret < 0) {
-     dev_info_ratelimited(device->dev, "vfio: runtime resume failed %d\n", ret);
-     return -EIO;
-  }
-  
-  Regards,
-  Abhishek
- 
->>  
->>  	switch (cmd) {
->>  	case VFIO_DEVICE_FEATURE:
->> -		return vfio_ioctl_device_feature(device, (void __user *)arg);
->> +		ret = vfio_ioctl_device_feature(device, (void __user *)arg);
->> +		break;
->>  	default:
->>  		if (unlikely(!device->ops->ioctl))
->> -			return -EINVAL;
->> -		return device->ops->ioctl(device, cmd, arg);
->> +			ret = -EINVAL;
->> +		else
->> +			ret = device->ops->ioctl(device, cmd, arg);
->> +		break;
->>  	}
->> +
->> +	if (pm_ret)
->> +		pm_runtime_put(device->dev);
->> +
->> +	return ret;
->>  }
->>  
->>  static ssize_t vfio_device_fops_read(struct file *filep, char __user *buf,
-> 
+;
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_pcie_msi_host_deinit(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +	unsigned int ctrl, num_ctrls;
+> +
+> +	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	for (ctrl = 0; ctrl < num_ctrls; ctrl++)
+> +		irq_set_chained_handler_and_data(pcie->msi_irqs[ctrl],
+> +				NULL,
+> +				NULL);
 
+ditto.
+
+
+-- 
+regards,
+Stan
