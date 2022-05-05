@@ -2,41 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E3ED51BF8A
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 14:36:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7FC251BFAD
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 14:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242893AbiEEMkZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 08:40:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44976 "EHLO
+        id S1358748AbiEEMqO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 08:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244338AbiEEMkY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 08:40:24 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE0154FA0;
-        Thu,  5 May 2022 05:36:44 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KvCqJ4wbJzQj6q;
-        Thu,  5 May 2022 20:36:12 +0800 (CST)
+        with ESMTP id S1377588AbiEEMqO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 08:46:14 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5248A55364;
+        Thu,  5 May 2022 05:42:34 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KvCwc1CLKz1JBr3;
+        Thu,  5 May 2022 20:40:48 +0800 (CST)
 Received: from [10.67.102.169] (10.67.102.169) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 5 May 2022 20:36:42 +0800
-CC:     <bhelgaas@google.com>, <rafael@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <lenb@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>
-Subject: Re: [PATCH] PCI/ACPI: Always advertise ASPM support if
- CONFIG_PCIEASPM=y
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Yicong Yang <yangyicong@hisilicon.com>
-References: <20220503223857.GA414278@bhelgaas>
+ 15.1.2375.24; Thu, 5 May 2022 20:41:52 +0800
+CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v5] PCI: Make sure the bus bridge powered on when scanning
+ bus
+To:     Yicong Yang <yangyicong@hisilicon.com>, <bhelgaas@google.com>,
+        <rafael@kernel.org>, <linux-pci@vger.kernel.org>
+References: <20220424020710.17589-1-yangyicong@hisilicon.com>
 From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <38e81af3-e7fa-df0c-c3f7-14244dde5a21@huawei.com>
-Date:   Thu, 5 May 2022 20:36:42 +0800
+Message-ID: <39c4793e-836f-0d94-4a0e-b3c76b1a8ce2@huawei.com>
+Date:   Thu, 5 May 2022 20:41:52 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <20220503223857.GA414278@bhelgaas>
+In-Reply-To: <20220424020710.17589-1-yangyicong@hisilicon.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.102.169]
@@ -52,80 +51,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/5/4 6:38, Bjorn Helgaas wrote:
-> On Mon, Apr 25, 2022 at 03:06:34PM +0800, Yicong Yang wrote:
->> When we have CONFIG_PCIEASPM enabled it means OS can always support ASPM no
->> matter user have disabled it through pcie_aspm=off or not. But currently we
->> won't advertise ASPM support in _OSC negotiation if user disables it, which
->> doesn't match the fact. This will also have side effects that other PCIe
->> services like AER and hotplug will be disabled as ASPM support is required
->> and we won't negotiate other services if ASPM support is absent.
->>
->> So this patch makes OS always advertising ASPM support if CONFIG_PCIEASPM=y.
->> It intends no functional change to pcie_aspm=off as it will still mark
->> aspm_disabled=1 and aspm_support_enabled=false, driver will check these
->> status before configuring ASPM.
->>
->> Tested this patch with pcie_aspm=off:
->> estuary:/$ dmesg | egrep -i "aspm|osc"
->> [    0.000000] PCIe ASPM is disabled
->> [    8.706961] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM
->> ClockPM Segments MSI EDR HPX-Type3]
->> [    8.726032] acpi PNP0A08:00: _OSC: platform does not support [LTR]
->> [    8.742818] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME
->> AER PCIeCapability DPC]
->> estuary:/sys/module/pcie_aspm/parameters$ cat policy
->> [default] performance powersave powersupersave
->> estuary:/sys/module/pcie_aspm/parameters$ echo powersave > policy
->> bash: echo: write error: Operation not permitted
->>
->> Cc: Rafael J. Wysocki <rafael@kernel.org>
->> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
->> [https://lore.kernel.org/linux-pci/20220407154257.GA235990@bhelgaas/]
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> ---
->>  drivers/acpi/pci_root.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index 6f9e75d14808..17e78582e633 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -393,7 +393,7 @@ static u32 calculate_support(void)
->>  	support |= OSC_PCI_HPX_TYPE_3_SUPPORT;
->>  	if (pci_ext_cfg_avail())
->>  		support |= OSC_PCI_EXT_CONFIG_SUPPORT;
->> -	if (pcie_aspm_support_enabled())
->> +	if (IS_ENABLED(CONFIG_PCIEASPM))
+Hi Bjorn,
+
+Any comment? Is it ok to take this?
+
+Thanks.
+
+On 2022/4/24 10:07, Yicong Yang wrote:
+> When the bus bridge is runtime suspended, we'll fail to rescan
+> the devices through sysfs as we cannot access the configuration
+> space correctly when the bridge is in D3hot.
+> It can be reproduced like:
 > 
-> Is there any way firmware could tell the difference between
-> "CONFIG_PCIEASPM not set" and "CONFIG_PCIEASPM=y and booted with
-> 'pcie_aspm=off'"?
+> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
 > 
-> If not, why would we even check whether CONFIG_PCIEASPM is set?
+> 0000:80:00.0 is a Root Port and it is runtime-suspended, so
+> 0000:81:00.1 is unreachable after a rescan.
 > 
-
-If we announce ASPM support when CONFIG_PCIEASPM=n it'll work as well
-but negotiation and the log don't match the fact. We'll get misleading
-messages that ASPM is supported by OS by it cannot be enable as there's
-no driver.
-
-As mentioned by the PCIe Firmware Spec r3.3,
-"ASPM Optionality supported
- The operating system sets this bit to 1 if it properly recognizes
- and manages ASPM support on PCI Express components which report
- support for ASPM L1 only in the ASPM Support field within the Link
- Capabilities Register. Otherwise, the operating system sets this
- bit to 0"
-
-When CONFIG_PCIEASPM=n we have no aspm driver and apparently cannot
-support any ASPM features so we should set the bit to 0 to match the spec.
-
->>  		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
->>  	if (pci_msi_enabled())
->>  		support |= OSC_PCI_MSI_SUPPORT;
->> -- 
->> 2.24.0
->>
-> .
+> Power up the bridge when scanning the child bus and allow it to
+> suspend again by adding pm_runtime_get_sync()/pm_runtime_put()
+> in pci_scan_child_bus_extend().
+> 
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> Change since v4:
+> - rephrase the commit suggested by Rafael
+> Link: https://lore.kernel.org/lkml/20220422080404.27724-1-yangyicong@hisilicon.com/
+> 
+> Change since v3:
+> - retain the pm_runtime_*() calls in pci_scan_bridge_extend() as Rafael points
+>   out that it's necessary when the brigde is in D3cold
+> Link: https://lore.kernel.org/linux-pci/20220414123736.34150-1-yangyicong@hisilicon.com/
+> 
+> Change since v2:
+> - just rebase it on v5.18-rc2
+> Link: https://lore.kernel.org/linux-pci/1601029386-4928-1-git-send-email-yangyicong@hisilicon.com/
+> 
+> Change since v1:
+> - use an intermediate variable *bridge as suggested
+> - remove the pm_runtime_*() calls in pci_scan_bridge_extend()
+> Link: https://lore.kernel.org/linux-pci/1596022223-4765-1-git-send-email-yangyicong@hisilicon.com/
+> 
+>  drivers/pci/probe.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 17a969942d37..b108e72b6586 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2859,11 +2859,20 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>  	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+>  	unsigned int start = bus->busn_res.start;
+>  	unsigned int devfn, fn, cmax, max = start;
+> +	struct pci_dev *bridge = bus->self;
+>  	struct pci_dev *dev;
+>  	int nr_devs;
+>  
+>  	dev_dbg(&bus->dev, "scanning bus\n");
+>  
+> +	/*
+> +	 * Make sure the bus bridge is powered on, otherwise we may not be
+> +	 * able to scan the devices as we may fail to access the configuration
+> +	 * space of subordinates.
+> +	 */
+> +	if (bridge)
+> +		pm_runtime_get_sync(&bridge->dev);
+> +
+>  	/* Go find them, Rover! */
+>  	for (devfn = 0; devfn < 256; devfn += 8) {
+>  		nr_devs = pci_scan_slot(bus, devfn);
+> @@ -2976,6 +2985,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>  		}
+>  	}
+>  
+> +	if (bridge)
+> +		pm_runtime_put(&bridge->dev);
+> +
+>  	/*
+>  	 * We've scanned the bus and so we know all about what's on
+>  	 * the other side of any bridges that may be on this bus plus
 > 
