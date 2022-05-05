@@ -2,38 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8306F51C4CD
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 18:11:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DDF551C64B
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 19:40:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352325AbiEEQOa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 12:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
+        id S1382793AbiEERoE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 13:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382328AbiEEQOU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 12:14:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFF701D0FC;
-        Thu,  5 May 2022 09:10:32 -0700 (PDT)
+        with ESMTP id S1382758AbiEERnw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 13:43:52 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDEB5BD2C;
+        Thu,  5 May 2022 10:40:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B22161E38;
-        Thu,  5 May 2022 16:10:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE18C385A8;
-        Thu,  5 May 2022 16:10:31 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 70DA7B82E13;
+        Thu,  5 May 2022 17:40:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA1EC385C1;
+        Thu,  5 May 2022 17:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651767031;
-        bh=y1bm/ePw6qN7M+uAMLXPbjzr3hDC7iN+2T5U5hZp75c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=V+TiGeXpnpx8QAPISZ/tFZ1vgqt07jnZ/e8UGsZFjYbSOIbxjOaFyb/UjHBhqn5hx
-         Z64n0P5wnIuaGgxiRpF7HUD9ziSD/Vy04koyZ+3OiNayjnxjzS0fZIDvEf4IlnjJDh
-         ZFqZNchd+Rmh0D+frE/gcDMj07LtCQDi4bliOoYzYtwBViRsBNVzjXBMPmC2/Yp3+O
-         avJDoEKTBRLhRLGuv5dd4ZPPntedsmPSHGr9oDetkDU8rgxRb4BichpG/ijCid5diK
-         e/q4W6AYEDDk6fNQ6Z+JXpgOmkNdUU12Kp4sKoGZvuLv591DrEpNAjn9EHl9SCvfts
-         lHbL5gffrnaQA==
-Date:   Thu, 5 May 2022 11:10:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
+        s=k20201202; t=1651772401;
+        bh=2IoE4BfEuAg77WmuhMuImyNDvTFHhyYDFxiBCowXMW0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jjkpXAHdVdaGYPRA/+3MWK8YySttWTFzcYC1keAu8erj/0Qv22sl3zrDQYguGunS5
+         EYa5oM+lHkIE7YTdldWLi0OWY/DsNHWma+k3zqfE22SXyjFuALh5riYHbPe1kbAc44
+         9KAWXnmbdCqw/9NbiY+BaqDNCtIn7quRedBG1XfiA99nj6AB8gym8fHYhho7MeeQF1
+         l9XXlvvZnqwjxE3vlzhp6PnrE7j4IrFhVl0Qex8zon67fDEF5nEZv2gZ3ktfM3q+fs
+         7pbwFrQBZZkl4jB1bUVpER7HBPy1pVzyBaA4EK56UQiDwNHTAidoXgBZp7AUZ4Ox2c
+         dWIFDXtyn6eAA==
+Received: by mail-wm1-f47.google.com with SMTP id l62-20020a1c2541000000b0038e4570af2fso3057496wml.5;
+        Thu, 05 May 2022 10:40:00 -0700 (PDT)
+X-Gm-Message-State: AOAM530yTQ0JfV7UcZJ2sGdAUtPmpZUHjzeVwfywFlcrhtcN+zBTpQ3E
+        I54ikdPAfAKxu/CEiGl5fe/z60RnqY9ehyeeKhM=
+X-Google-Smtp-Source: ABdhPJxtMhUha7a+dwpeZyyg5w+ON9JC8vKB6RB8veyDWjdr1D7VRDLkqvJBk615pYcXmnWu5kgj+KPCSrbSxhVU2uo=
+X-Received: by 2002:a7b:cc93:0:b0:394:2622:fcd9 with SMTP id
+ p19-20020a7bcc93000000b003942622fcd9mr6321312wma.20.1651772399229; Thu, 05
+ May 2022 10:39:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAK8P3a0sJgMSpZB_Butx2gO0hapYZy-Dm_QH-hG5rOaq_ZgsXg@mail.gmail.com>
+ <20220505161028.GA492600@bhelgaas>
+In-Reply-To: <20220505161028.GA492600@bhelgaas>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Thu, 5 May 2022 19:39:42 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3fmPExr70+fVb564hZdGAuPtYa-QxgMMe5KLpnY_sTrQ@mail.gmail.com>
+Message-ID: <CAK8P3a3fmPExr70+fVb564hZdGAuPtYa-QxgMMe5KLpnY_sTrQ@mail.gmail.com>
+Subject: Re: [RFC v2 01/39] Kconfig: introduce HAS_IOPORT option and select it
+ as necessary
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -74,13 +90,7 @@ Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
         "open list:SUPERH" <linux-sh@vger.kernel.org>,
         "open list:SPARC + UltraSPARC (sparc/sparc64)" 
         <sparclinux@vger.kernel.org>
-Subject: Re: [RFC v2 01/39] Kconfig: introduce HAS_IOPORT option and select
- it as necessary
-Message-ID: <20220505161028.GA492600@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0sJgMSpZB_Butx2gO0hapYZy-Dm_QH-hG5rOaq_ZgsXg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -91,50 +101,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 11:31:28PM +0200, Arnd Bergmann wrote:
-> On Wed, May 4, 2022 at 11:08 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Apr 29, 2022 at 03:49:59PM +0200, Niklas Schnelle wrote:
-> > > We introduce a new HAS_IOPORT Kconfig option to indicate support for
-> > > I/O Port access. In a future patch HAS_IOPORT=n will disable compilation
-> > > of the I/O accessor functions inb()/outb() and friends on architectures
-> > > which can not meaningfully support legacy I/O spaces such as s390 or
-> > > where such support is optional.
+On Thu, May 5, 2022 at 6:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Wed, May 04, 2022 at 11:31:28PM +0200, Arnd Bergmann wrote:
 > >
-> > So you plan to drop inb()/outb() on architectures where I/O port space
-> > is optional?  So even platforms that have I/O port space may not be
-> > able to use it?
-> >
-> > This feels like a lot of work where the main benefit is to keep
-> > Kconfig from offering drivers that aren't of interest on s390.
-> >
-> > Granted, there may be issues where inb()/outb() does the wrong thing
-> > such as dereferencing null pointers when I/O port space isn't
-> > implemented.  I think that's a defect in inb()/outb() and could be
-> > fixed there.
-> 
-> The current implementation in asm-generic/io.h implements inb()/outb()
-> using readb()/writeb() with a fixed architecture specific offset.
-> 
-> There are three possible things that can happen here:
-> 
-> a) there is a host bridge driver that maps its I/O ports to this window,
->     and everything works
-> b) the address range is reserved and accessible but no host bridge
->    driver has mapped its registers there, so an access causes a
->    page fault
-> c) the architecture does not define an offset, and accessing low I/O
->     ports ends up as a NULL pointer dereference
-> 
-> The main goal is to avoid c), which is what happens on s390, but
-> can also happen elsewhere. Catching b) would be nice as well,
-> but is much harder to do from generic code as you'd need an
-> architecture specific inline asm statement to insert a ex_table
-> fixup, or a runtime conditional on each access.
+> > The main goal is to avoid c), which is what happens on s390, but
+> > can also happen elsewhere. Catching b) would be nice as well,
+> > but is much harder to do from generic code as you'd need an
+> > architecture specific inline asm statement to insert a ex_table
+> > fixup, or a runtime conditional on each access.
+>
+> Or s390 could implement its own inb().
+>
+> I'm hearing that generic powerpc kernels have to run both on machines
+> that have I/O port space and those that don't.  That makes me think
+> s390 could do something similar.
 
-Or s390 could implement its own inb().
+No, this is actually the current situation, and it makes absolutely no
+sense. s390 has no way of implementing inb()/outb() because there
+are no instructions for it and it cannot tunnel them through a virtual
+address mapping like on most of the other architectures. (it has special
+instructions for accessing memory space, which is not the same as
+a pointer dereference here).
 
-I'm hearing that generic powerpc kernels have to run both on machines
-that have I/O port space and those that don't.  That makes me think
-s390 could do something similar.
+The existing implementation gets flagged as a NULL pointer dereference
+by a compiler warning because it effectively is.
 
-Bjorn
+powerpc kernels generally map the I/O space into a section of the
+physical address space, where it gets mapped into a fixed virtual
+address and accessed through pointer dereference. This works on
+any powerpc CPU as long as it is implemented in the PCI host
+bridge in the usual way. The only difference between powerpc and
+arm here is that there are fewer implementations, so one can
+make assumptions about which PCI host bridge is used based on
+a CPU core.
+
+     Arnd
