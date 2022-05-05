@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6901951C7E1
-	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 20:37:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A51B51C821
+	for <lists+linux-pci@lfdr.de>; Thu,  5 May 2022 20:37:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383435AbiEESc2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 14:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
+        id S232818AbiEEShP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 14:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385357AbiEESaW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 14:30:22 -0400
+        with ESMTP id S1381112AbiEESff (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 14:35:35 -0400
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6125DA63;
-        Thu,  5 May 2022 11:21:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D242D14087;
+        Thu,  5 May 2022 11:26:38 -0700 (PDT)
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
- id 33f5f557048ad12f; Thu, 5 May 2022 20:19:32 +0200
+ id e30f9251d57c40cd; Thu, 5 May 2022 20:19:30 +0200
 Received: from kreacher.localnet (unknown [213.134.161.219])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id BE64266C2F2;
-        Thu,  5 May 2022 20:19:31 +0200 (CEST)
+        by v370.home.net.pl (Postfix) with ESMTPSA id 0EFE266C2F2;
+        Thu,  5 May 2022 20:19:30 +0200 (CEST)
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PCI <linux-pci@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -31,9 +31,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH v1 08/11] PCI/PM: Do not restore BARs if device is not in D0
-Date:   Thu, 05 May 2022 20:14:24 +0200
-Message-ID: <1849718.CQOukoFCf9@kreacher>
+Subject: [PATCH v1 09/11] PCI/PM: Clean up pci_set_low_power_state()
+Date:   Thu, 05 May 2022 20:15:34 +0200
+Message-ID: <2539071.Lt9SDvczpP@kreacher>
 In-Reply-To: <4738492.GXAFRqVoOG@kreacher>
 References: <4738492.GXAFRqVoOG@kreacher>
 MIME-Version: 1.0
@@ -56,61 +56,51 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Do not attempt to restore the device's BARs in
-pci_set_full_power_state() if the actual current
-power state of the device is not D0.
+Make the following assorted non-essential changes in
+pci_set_low_power_state():
+
+ 1. Drop two redundant checks from it (the caller takes care of these
+    conditions).
+
+ 2. Change the log level of a messages printed by it to "debug",
+    because it only indicates a programming mistake.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/pci/pci.c |   32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/pci/pci.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
 Index: linux-pm/drivers/pci/pci.c
 ===================================================================
 --- linux-pm.orig/drivers/pci/pci.c
 +++ linux-pm/drivers/pci/pci.c
-@@ -1273,25 +1273,25 @@ static int pci_set_full_power_state(stru
+@@ -1341,16 +1341,9 @@ static int pci_set_low_power_state(struc
+ {
+ 	u16 pmcsr;
  
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
--	if (dev->current_state != PCI_D0)
-+	if (dev->current_state != PCI_D0) {
- 		pci_info_ratelimited(dev, "Refused to change power state from %s to D0\n",
- 				     pci_power_name(dev->current_state));
+-	/* Check if we're already there */
+-	if (dev->current_state == state)
+-		return 0;
 -
--	/*
--	 * According to section 5.4.1 of the "PCI BUS POWER MANAGEMENT
--	 * INTERFACE SPECIFICATION, REV. 1.2", a device transitioning
--	 * from D3hot to D0 _may_ perform an internal reset, thereby
--	 * going to "D0 Uninitialized" rather than "D0 Initialized".
--	 * For example, at least some versions of the 3c905B and the
--	 * 3c556B exhibit this behaviour.
--	 *
--	 * At least some laptop BIOSen (e.g. the Thinkpad T21) leave
--	 * devices in a D3hot state at boot.  Consequently, we need to
--	 * restore at least the BARs so that the device will be
--	 * accessible to its driver.
--	 */
--	if (ret > 0)
-+	} else if (ret > 0) {
-+		/*
-+		 * According to section 5.4.1 of the "PCI BUS POWER MANAGEMENT
-+		 * INTERFACE SPECIFICATION, REV. 1.2", a device transitioning
-+		 * from D3hot to D0 _may_ perform an internal reset, thereby
-+		 * going to "D0 Uninitialized" rather than "D0 Initialized".
-+		 * For example, at least some versions of the 3c905B and the
-+		 * 3c556B exhibit this behaviour.
-+		 *
-+		 * At least some laptop BIOSen (e.g. the Thinkpad T21) leave
-+		 * devices in a D3hot state at boot.  Consequently, we need to
-+		 * restore at least the BARs so that the device will be
-+		 * accessible to its driver.
-+		 */
- 		pci_restore_bars(dev);
-+	}
+ 	if (!dev->pm_cap)
+ 		return -EIO;
  
- 	if (dev->bus->self)
- 		pcie_aspm_pm_state_change(dev->bus->self);
+-	if (state < PCI_D1 || state > PCI_D3hot)
+-		return -EINVAL;
+-
+ 	/*
+ 	 * Validate transition: We can enter D0 from any state, but if
+ 	 * we're already in a low-power state, we can only go deeper.  E.g.,
+@@ -1358,7 +1351,7 @@ static int pci_set_low_power_state(struc
+ 	 * we'd have to go from D3 to D0, then to D1.
+ 	 */
+ 	if (dev->current_state <= PCI_D3cold && dev->current_state > state) {
+-		pci_err(dev, "invalid power transition (from %s to %s)\n",
++		pci_dbg(dev, "Invalid power transition (from %s to %s)\n",
+ 			pci_power_name(dev->current_state),
+ 			pci_power_name(state));
+ 		return -EINVAL;
 
 
 
