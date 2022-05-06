@@ -2,68 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1859851D688
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 13:20:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3154951D6B1
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 13:33:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1391276AbiEFLYU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 07:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55710 "EHLO
+        id S1391360AbiEFLhI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 07:37:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1391303AbiEFLYH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 07:24:07 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6D61136;
-        Fri,  6 May 2022 04:20:22 -0700 (PDT)
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 246AxYnp014029;
-        Fri, 6 May 2022 11:18:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=y5OiXKtWxrE9jkRNnZnUPIxSoW5NO888lYPMeY8p20o=;
- b=KUrZVHNedJMQHXRUcjFYRz49EjLPt/z8Enxpe963RBRHVwRMBIajjKHTbAEmyQygRzWc
- lvtblkDBEv0KM5s9aGvgB1VbknJOF47xy4utbk/2sTFacNlPn+6id8sHDSEmtYqCHgce
- bb8f78CA6OZEGHds6XuwyfyNYtjQ/Sz14sYUz2gP0WSwg3pg800hXKb7bnHzDJeiHtFZ
- dZaiepyf5OYOjy0JX7QcOFu7TIf6eefQLMPf+V2/m05DTHXeyKaCpGjGJHSckMTQJXTK
- 0SdLpB5S8k05thmQVCh28GCCFzfAXO02Xps+YQB3gva5HPAW0rJhQpu/5Dq/ASHPVitd Ng== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fw2dm8asx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 May 2022 11:18:58 +0000
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 246BI0IY021612;
-        Fri, 6 May 2022 11:18:57 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fw2dm8asf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 May 2022 11:18:57 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 246BHWn0005982;
-        Fri, 6 May 2022 11:18:55 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 3ftp7fwcut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 May 2022 11:18:55 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 246BIrKO46924078
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 May 2022 11:18:53 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27ED14C044;
-        Fri,  6 May 2022 11:18:53 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 641CB4C046;
-        Fri,  6 May 2022 11:18:51 +0000 (GMT)
-Received: from sig-9-145-46-59.uk.ibm.com (unknown [9.145.46.59])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  6 May 2022 11:18:51 +0000 (GMT)
-Message-ID: <105ccec439f709846e82b69cb854ac825d7a6a49.camel@linux.ibm.com>
-Subject: Re: [RFC v2 01/39] Kconfig: introduce HAS_IOPORT option and select
- it as necessary
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Finn Thain <fthain@linux-m68k.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Arnd Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        with ESMTP id S1346328AbiEFLhH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 07:37:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2963160C9;
+        Fri,  6 May 2022 04:33:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AC1A0B8358E;
+        Fri,  6 May 2022 11:33:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40408C385BE;
+        Fri,  6 May 2022 11:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651836800;
+        bh=mPb8Q8Ok2oNk7WAjedaRk8DoRYKS47EIw5ypxOHVuLY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MEhcEVVROzt7JNAkcDasKjP6BiznNx2llyEJNiQphooQOz3sWxo0NeoXq1qGjma3j
+         4Zt4jDF3Ol/xJAYGhMV7xEI6p4hpnR/gRU7+VCsgRasl9P+SdnFoiymfONZVvlYETt
+         Boao+8XuCNnL8WJt+Ku2LRimxFR5pkFhCoiv4Gx3lyU9EAL5a8k+iOgArRRLkDSEJW
+         AaBLP7ncLeAs7u+HKJRBautcMPZHX2Pkrx+vHRF9kJ799TJSl12whMXRpdvA/BCx/X
+         tyIj+uq91VCi3tKMnerH0qkv3BEzLb7m0J7sSBXjzflmqbSrTeB5I+mO87mHoSsyFq
+         2FwMAHSG49yNQ==
+Received: by mail-yb1-f172.google.com with SMTP id y76so12363630ybe.1;
+        Fri, 06 May 2022 04:33:20 -0700 (PDT)
+X-Gm-Message-State: AOAM533WkIphyq6CzJGfB6I7e5q6tTbO0f97sEmW1Xub1pG1AICBETHh
+        I9cLEU4Z246x1tvEj71v40UpF5ZDwattFWn81Lk=
+X-Google-Smtp-Source: ABdhPJy5Vv8YTgA/+Yk25Xv8xMKQhcEw8LiqaQy/3bb0wg6KVBd/5y4hLeqVF7Zu5FslZtdBqz1tOtNTiterOIoDfDE=
+X-Received: by 2002:a25:d3c2:0:b0:645:74df:f43d with SMTP id
+ e185-20020a25d3c2000000b0064574dff43dmr1886331ybf.394.1651836798896; Fri, 06
+ May 2022 04:33:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAK8P3a0sJgMSpZB_Butx2gO0hapYZy-Dm_QH-hG5rOaq_ZgsXg@mail.gmail.com>
+ <20220505161028.GA492600@bhelgaas> <CAK8P3a3fmPExr70+fVb564hZdGAuPtYa-QxgMMe5KLpnY_sTrQ@mail.gmail.com>
+ <alpine.DEB.2.21.2205061058540.52331@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2205061058540.52331@angie.orcam.me.uk>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Fri, 6 May 2022 13:33:02 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0NzG=3tDLCdPj2=A__2r_+xiiUTW=WJCBNp29x_A63Og@mail.gmail.com>
+Message-ID: <CAK8P3a0NzG=3tDLCdPj2=A__2r_+xiiUTW=WJCBNp29x_A63Og@mail.gmail.com>
+Subject: Re: [RFC v2 01/39] Kconfig: introduce HAS_IOPORT option and select it
+ as necessary
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-arch <linux-arch@vger.kernel.org>,
@@ -102,85 +92,49 @@ Cc:     Arnd Bergmann <arnd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         "open list:SUPERH" <linux-sh@vger.kernel.org>,
         "open list:SPARC + UltraSPARC (sparc/sparc64)" 
         <sparclinux@vger.kernel.org>
-Date:   Fri, 06 May 2022 13:18:51 +0200
-In-Reply-To: <22bec167-241f-2cbe-829f-a3f65e40e71@linux-m68k.org>
-References: <20220505195342.GA509942@bhelgaas>
-         <22bec167-241f-2cbe-829f-a3f65e40e71@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 5UqqC9GevofRxBeHStbLnLlUH6eZ3euH
-X-Proofpoint-ORIG-GUID: w_xuM4uo82W1hTrsAd4vNrc6YUx1BE02
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-06_03,2022-05-06_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 mlxlogscore=999 clxscore=1011 spamscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 bulkscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205060062
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 2022-05-06 at 19:12 +1000, Finn Thain wrote:
-> 
-> On Thu, 5 May 2022, Bjorn Helgaas wrote:
-> 
-> > On Thu, May 05, 2022 at 07:39:42PM +0200, Arnd Bergmann wrote:
-> > > On Thu, May 5, 2022 at 6:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Wed, May 04, 2022 at 11:31:28PM +0200, Arnd Bergmann wrote:
-> > > > > The main goal is to avoid c), which is what happens on s390, but
-> > > > > can also happen elsewhere. Catching b) would be nice as well,
-> > > > > but is much harder to do from generic code as you'd need an
-> > > > > architecture specific inline asm statement to insert a ex_table
-> > > > > fixup, or a runtime conditional on each access.
-> > > > 
-> > > > Or s390 could implement its own inb().
-> > > > 
-> > > > I'm hearing that generic powerpc kernels have to run both on machines
-> > > > that have I/O port space and those that don't.  That makes me think
-> > > > s390 could do something similar.
-> > > 
-> > > No, this is actually the current situation, and it makes absolutely no
-> > > sense. s390 has no way of implementing inb()/outb() because there
-> > > are no instructions for it and it cannot tunnel them through a virtual
-> > > address mapping like on most of the other architectures. (it has special
-> > > instructions for accessing memory space, which is not the same as
-> > > a pointer dereference here).
-> > > 
-> > > The existing implementation gets flagged as a NULL pointer dereference
-> > > by a compiler warning because it effectively is.
-> > 
-> > I think s390 currently uses the inb() in asm-generic/io.h, i.e.,
-> > "__raw_readb(PCI_IOBASE + addr)".  I understand that's a NULL pointer
-> > dereference because the default PCI_IOBASE is 0.
-> > 
-> > I mooted a s390 inb() implementation like "return ~0" because that's
-> > what happens on most arches when there's no device to respond to the
-> > inb().
-> > 
-> > The HAS_IOPORT dependencies are fairly ugly IMHO, and they clutter
-> > drivers that use I/O ports in some cases but not others.  But maybe
-> > it's the most practical way.
-> > 
-> 
-> Do you mean, "the most practical way to avoid a compiler warning on s390"? 
-> What about "#pragma GCC diagnostic ignored"?
+On Fri, May 6, 2022 at 12:20 PM Maciej W. Rozycki <macro@orcam.me.uk> wrote:
+> On Thu, 5 May 2022, Arnd Bergmann wrote:
+>  I think I'm missing something here.  IIUC we're talking about a PCI/PCIe
+> bus used with s390 hardware, right?
+>
+>  (It has to be PCI/PCIe, because other than x86/IA-64 host buses there are
+> only PCI/PCIe and EISA/ISA buses out there that define I/O access cycles
+> and EISA/ISA have long been obsoleted except perhaps from some niche use.)
+>
+>  If this is PCI/PCIe indeed, then an I/O access is just a different bit
+> pattern put on the bus/in the TLP in the address phase.  So what is there
+> inherent to the s390 architecture that prevents that different bit pattern
+> from being used?
 
-This actually happens with clang. Apart from that, I think this would
-also fall under the same argument as the original patch Linus unpulled.
-We would just paint over someting that we know at compile time won't
-work:
+The hardware design for PCI on s390 is very different from any other
+architecture, and more abstract. Rather than implementing MMIO register
+access as pointer dereference, this is a separate CPU instruction that
+takes a device/bar plus offset as arguments rather than a pointer, and
+Linux encodes this back into a fake __iomem token.
 
-https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
+>  If anything, I could imagine the same limitation as with current POWER9
+> implementations, that is whatever glue is used to wire PCI/PCIe to the
+> rest of the system does not implement a way to use said bit pattern (which
+> has nothing to do with the POWER9 processor instruction set).
+>
+>  But that has nothing to do with the presence or absence of any specific
+> processor instructions.  It's just a limitation of bus glue.  So I guess
+> it's just that all PCI/PCIe glue logic implementations for s390 have such
+> a limitation, right?
 
+There are separate instructions for PCI memory and config space, but
+no instructions for I/O space, or for non-PCI MMIO that it could be mapped
+into.
+
+       Arnd
