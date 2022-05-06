@@ -2,84 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FA6E51DBE7
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 17:26:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFC8551DDE6
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 18:51:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1390522AbiEFP3s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 11:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51342 "EHLO
+        id S1350324AbiEFQy5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 12:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442814AbiEFP3s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 11:29:48 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74DF6899D
-        for <linux-pci@vger.kernel.org>; Fri,  6 May 2022 08:26:04 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id fv2so7314255pjb.4
-        for <linux-pci@vger.kernel.org>; Fri, 06 May 2022 08:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=iGapkGE60Ffp9Dn3FwYexU8rjobxhlsX80rf5yE5Vjs=;
-        b=f9uM7cC/GaS4cQVSQZojtKIz32bLjFaJ+lWtzkVLxkOgtdFA4e/M/SeEAGW1tssIgV
-         Goou3HGyVtCULN13GwNh6eTc+ck/MwsDYOtHMUZXyR/jaJXPGBkagH2dQQ5jc83AjYWR
-         5meOU1IpoTnlb/AcHQk4sqWPsKqxWBoir2yh1HggD4pNbhyDolRqkAWKTYSz2bBwy1xO
-         pVqFW8+aCJwf6G+GgBZgaDDTRhdLdEcfSMowidixPZRzjIuDIu6/PDHBxtlAb9nRPPmO
-         9ml+NxB9FCdMqV3tl7JRGUoXHD1Iqwt35i+3ziDurwGGK3NVrAhUAOhzNyGk/prgsobG
-         TUWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=iGapkGE60Ffp9Dn3FwYexU8rjobxhlsX80rf5yE5Vjs=;
-        b=k114qYOJuXoRrmhPRIUM0KITZ8RURikIVgoYCQSnFzlCJRJD5IN+hOtPE2rfyokYqy
-         VN1Cqy5/I3vqwHf1ESajvby25wF4Dt6kbDcQZfQjgEAjmTlXqekr1sDRTmDiYB2JR2z7
-         Pmx4Lec3d8anm4THiTC4YeDwhh0jHRuleKa6LsfIE7jGhgfFnOElPmxoA3FwHiuGrnbl
-         fjDKvq3Zt8TIecPAOkd7DnHl3WAZLUHvy4XBXiuw9Yhk7tnH2c3MUydyuASN5S1qJLSv
-         7NQMtAy6uHofEK5UHz3CYL8jd75kS/06yG8NwJ8aJczi5OuF5HkZFBC6YjRI/MltgS28
-         6/Dw==
-X-Gm-Message-State: AOAM531Ay0pEo8vHNHHnm8hq33BbpVJjy4rXSgI60V34ZJlG6b+gIJIH
-        OH35eZhLUxLyTboGnRFv3QaZ
-X-Google-Smtp-Source: ABdhPJxRHQ1fSI73te9IorgJaSG7Tug/yMs0bB1EYetO1etF/9nUgYGFqgHAyTidzPAwZSI/J7S+UQ==
-X-Received: by 2002:a17:902:ef45:b0:156:1858:71fc with SMTP id e5-20020a170902ef4500b00156185871fcmr4071899plx.23.1651850764099;
-        Fri, 06 May 2022 08:26:04 -0700 (PDT)
-Received: from thinkpad ([27.111.75.233])
-        by smtp.gmail.com with ESMTPSA id t11-20020a170902b20b00b0015ea9aabd19sm1858160plr.241.2022.05.06.08.25.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 May 2022 08:26:03 -0700 (PDT)
-Date:   Fri, 6 May 2022 20:55:58 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        with ESMTP id S1346165AbiEFQy5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 12:54:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 207EE633A9;
+        Fri,  6 May 2022 09:51:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9CD3761FEF;
+        Fri,  6 May 2022 16:51:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B90B5C385AC;
+        Fri,  6 May 2022 16:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651855872;
+        bh=JLOPe7is6n6Rmcoo4s0ssyBJhamRXROIw2bTQJTX4u4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qElFZ11li7gXN1H+bAlgkcrSrCJ0uRCkHCB9jwQKD/r9hOaTKUVZobEeLhILWPDY8
+         QQCwWagoimnRG3zfDjEBKY5HsiTq3IroD7PBtnndHQ4gdDzRItrc99Mj2SGhXcEAqc
+         MrTgLn3NEt5iRtGt21i6HDUfU9/EzPbSuL1PWh2zpfZg3/mZseoHDWS2CBxJb5fF9K
+         2n/HcLahg7iU3X3F6At9IbCWgpN1exT94uIwJA/A50xm4s1GvXsZNaP0cCt3i8EId0
+         nZM6SGEk2hPyl1ZZIgt8aQtjOp1yxaK9dBhftQH9fifYuHtBmuJ92JU6QAh49ILwQF
+         g7pejc3Hlbhxw==
+Date:   Fri, 6 May 2022 11:51:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] clk: qcom: regmap: add pipe clk implementation
-Message-ID: <20220506152558.GA5907@thinkpad>
-References: <20220501192149.4128158-1-dmitry.baryshkov@linaro.org>
- <20220501192149.4128158-3-dmitry.baryshkov@linaro.org>
- <20220502101053.GF5053@thinkpad>
- <c47616bf-a0c3-3ad5-c3e2-ba2ae33110d0@linaro.org>
- <20220502111004.GH5053@thinkpad>
- <29819e6d-9aa1-aca9-0ff6-b81098077f28@linaro.org>
- <20220502150611.GF98313@thinkpad>
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/1] x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems
+Message-ID: <20220506165110.GA509329@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220502150611.GF98313@thinkpad>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+In-Reply-To: <20220505152016.5059-2-hdegoede@redhat.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,120 +65,115 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 02, 2022 at 08:36:19PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, May 02, 2022 at 02:18:26PM +0300, Dmitry Baryshkov wrote:
-> > On 02/05/2022 14:10, Manivannan Sadhasivam wrote:
-> > > On Mon, May 02, 2022 at 01:35:34PM +0300, Dmitry Baryshkov wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > > > +static int pipe_is_enabled(struct clk_hw *hw)
-> > > > > > +{
-> > > > > > +	struct clk_regmap_pipe *pipe = to_clk_regmap_pipe(hw);
-> > > > > > +	struct clk_regmap *clkr = to_clk_regmap(hw);
-> > > > > > +	unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
-> > > > > > +	unsigned int val;
-> > > > > > +
-> > > > > > +	regmap_read(clkr->regmap, pipe->reg, &val);
-> > > > > > +	val = (val & mask) >> pipe->shift;
-> > > > > > +
-> > > > > > +	WARN_ON(unlikely(val != pipe->enable_val && val != pipe->disable_val));
-> > > > > > +
-> > > > > > +	return val == pipe->enable_val;
-> > > > > 
-> > > > > Selecting the clk parents in the enable/disable callback seems fine to me but
-> > > > > the way it is implemented doesn't look right.
-> > > > > 
-> > > > > First this "pipe_clksrc" is a mux clk by design, since we can only select the
-> > > > > parent. But you are converting it to a gate clk now.
-> > > > > 
-> > > > > Instead of that, my proposal would be to make this clk a composite one i.e,.
-> > > > > gate clk + mux clk. So even though the gate clk here would be a hack, we are
-> > > > > not changing the definition of mux clk.
-> > > > 
-> > > > This is what I had before, in revisions 1-3. Which proved to work, but is
-> > > > problematic a bit.
-> > > > 
-> > > > In the very end, it is not easily possible to make a difference between a
-> > > > clock reparented to the bi_tcxo and a disabled clock. E.g. if some user
-> > > > reparents the clock to the tcxo, then the driver will consider the clock
-> > > > disabled, but the clock framework will think that the clock is still
-> > > > enabled.
-> > > 
-> > > I don't understand this. How can you make this clock disabled? It just has 4
-> > > parents, right?
-> > 
-> > It has 4 parents. It uses just two of them (pipe and tcxo).
-> > 
-> > And like the clk_rcg2_safe clock we'd like to say that these clocks are
-> > disabled by reparenting ("parking") them to the tcxo source. Yes, this makes
-> > a lot of code simpler. The clock framework will switch the clock to the
-> > "safe" state instead of disabling it during the unused clocks evaporation.
-> > The PHY can just disable the gcc_pcie_N_pipe_clock, which will end up in
-> > parking this clock to a safe state too, etc.
+On Thu, May 05, 2022 at 05:20:16PM +0200, Hans de Goede wrote:
+> Some BIOS-es contain bugs where they add addresses which are already
+> used in some other manner to the PCI host bridge window returned by
+> the ACPI _CRS method. To avoid this Linux by default excludes
+> E820 reservations when allocating addresses since 2010, see:
+> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> space").
 > 
-> If I get the logic behind this "parking" thing right, then it is required
-> for producing a stable pipe_clk from GCC when the PHY is about to initialize.
-> Also to make sure that there is no glitch observed on pipe_clk while
-> initializing the PHY. And once it is powered ON properly, the pipe_clksrc
-> should be used as the parent for pipe_clk.
+> Recently (2019) some systems have shown-up with E820 reservations which
+> cover the entire _CRS returned PCI bridge memory window, causing all
+> attempts to assign memory to PCI BARs which have not been setup by the
+> BIOS to fail. For example here are the relevant dmesg bits from a
+> Lenovo IdeaPad 3 15IIL 81WE:
 > 
-> So with that logic, we cannot say that this clk is disabled.
+>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
+>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
 > 
-> Please correct me if my understanding is wrong.
+> The ACPI specifications appear to allow this new behavior:
 > 
-
-After going through the previous iterations and PHY patches, this
-implementation makes sense to me now (modelling this pipe_clk_src as gate clk
-alone).
-
-But as Johan said, you should change the "pipe_clk" to "pipe_clk_src" or
-something similar. As this clk is defined as "pipe_clk_src" in GCC.
-
-Regarding the {enable/disable}_val variables, I'm not fully convinced about the
-naming but I don't object it strongly. But irrespective of that, please add a
-brief comment in the driver about its purpose and what it does enable/disable
-callbacks.
-
-Thanks,
-Mani
-
-> Thanks,
-> Mani
+> The relationship between E820 and ACPI _CRS is not really very clear.
+> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
 > 
-> > 
-> > > 
-> > > > 
-> > > > Thus we have to remove "safe" clock (bi_tcxo) from the list of parents. In
-> > > > case of pipe clocks (and ufs symbol clocks) this will leave us with just a
-> > > > single possible parent. Then having the mux part just doesn't make sense. It
-> > > > is just a gated clock. And this simplified a lot of things.
-> > > > 
-> > > > > 
-> > > > > So you can introduce a new ops like "clk_regmap_mux_gate_ops" and implement the
-> > > > > parent switching logic in the enable/disable callbacks. Additional benefit of
-> > > > > this ops is, in the future we can also support "gate + mux" clks easily.
-> > > > 
-> > > > If the need arises, we can easily resurrect the regmap_mux_safe patchset,
-> > > > fix the race pointed out by Johan, remove extra src-val mapping for safe
-> > > > value and use it for such clocks. I can post it separately, if you wish. But
-> > > > I'm not sure that it makes sense to use it for single-parent clocks.
-> > > > 
-> > > > > 
-> > > > > Also, please don't use the "enable_val/disable_val" members. It should be
-> > > > > something like "mux_sel_pre/mux_sel_post".
-> > > > 
-> > > > Why? Could you please elaborate?
-> > > > 
-> > > 
-> > > It aligns with my question above. I don't see how this clk can be
-> > > enabled/disabled.
-> > 
-> > I see. Let's settle on the first question then.
-> > 
-> > -- 
-> > With best wishes
-> > Dmitry
+>   This range of addresses is in use or reserved by the system and is
+>   not to be included in the allocatable memory pool of the operating
+>   system's memory manager.
+> 
+> and it may be used when:
+> 
+>   The address range is in use by a memory-mapped system device.
+> 
+> Furthermore, sec 15.2 says:
+> 
+>   Address ranges defined for baseboard memory-mapped I/O devices, such
+>   as APICs, are returned as reserved.
+> 
+> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
+> and its apertures are in use and certainly should not be included in
+> the general allocatable pool, so the fact that some BIOS-es reports
+> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
+> 
+> So it seems that the excluding of E820 reserved addresses is a mistake.
+> 
+> Ideally Linux would fully stop excluding E820 reserved addresses,
+> but then various old systems will regress.
+> Instead keep the old behavior for old systems, while ignoring
+> the E820 reservations for any systems from now on.
+> 
+> Old systems are defined here as BIOS year < 2018, this was chosen to
+> make sure that pci_use_e820 will not be set on the currently affected
+> systems, the oldest known one is from 2019.
+> 
+> Testing has shown that some newer systems also have a bad _CRS return.
+> The pci_crs_quirks DMI table is used to keep excluding E820 reservations
+> from the bridge window on these systems.
+> 
+> Also add pci=no_e820 and pci=use_e820 options to allow overriding
+> the BIOS year + DMI matching logic.
+> 
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
+> BugLink: https://bugs.launchpad.net/bugs/1878279
+> BugLink: https://bugs.launchpad.net/bugs/1931715
+> BugLink: https://bugs.launchpad.net/bugs/1932069
+> BugLink: https://bugs.launchpad.net/bugs/1921649
+> Cc: Benoit Gr�goire <benoitg@coeus.ca>
+> Cc: Hui Wang <hui.wang@canonical.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
--- 
-மணிவண்ணன் சதாசிவம்
+> +	 * Ideally Linux would fully stop using E820 reservations, but then
+> +	 * various old systems will regress. Instead keep the old behavior for
+> +	 * old systems + known to be broken newer systems in pci_crs_quirks.
+> +	 */
+> +	if (year >= 0 && year < 2018)
+> +		pci_use_e820 = true;
+
+How did you pick 2018?  Prior to this patch, we used E820 reservations
+for all machines.  This patch would change that for 2019-2022
+machines, so there's a risk of breaking some of them.
+
+I'm hesitant about changing the behavior for machines already in the
+field because if they were tested at all with Linux, it was without
+this patch.  So I would lean toward preserving the current behavior
+for BIOS year < 2023.
+
+> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+> index 9e1e6b8d8876..7e6f79aab6a8 100644
+> --- a/arch/x86/pci/common.c
+> +++ b/arch/x86/pci/common.c
+> @@ -595,6 +595,12 @@ char *__init pcibios_setup(char *str)
+>  	} else if (!strcmp(str, "nocrs")) {
+>  		pci_probe |= PCI_ROOT_NO_CRS;
+>  		return NULL;
+> +	} else if (!strcmp(str, "use_e820")) {
+> +		pci_probe |= PCI_USE_E820;
+
+I think we should add_taint(TAINT_FIRMWARE_WORKAROUND) for both these
+cases.
+
+We probably should do it for *all* the parameters here, but that would
+be a separate discussion.
+
+> +		return NULL;
+> +	} else if (!strcmp(str, "no_e820")) {
+> +		pci_probe |= PCI_NO_E820;
+> +		return NULL;
+>  #ifdef CONFIG_PHYS_ADDR_T_64BIT
+>  	} else if (!strcmp(str, "big_root_window")) {
+>  		pci_probe |= PCI_BIG_ROOT_WINDOW;
+> -- 
+> 2.36.0
+> 
