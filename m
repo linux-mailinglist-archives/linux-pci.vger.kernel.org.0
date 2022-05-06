@@ -2,97 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88D7651D95A
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 15:40:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 386C351D971
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 15:41:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1441799AbiEFNoC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 09:44:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41660 "EHLO
+        id S1441843AbiEFNoe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 09:44:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1392635AbiEFNny (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 09:43:54 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B84B9689B6;
-        Fri,  6 May 2022 06:40:10 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 418EA9200BC; Fri,  6 May 2022 15:40:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 3D20D92009E;
-        Fri,  6 May 2022 14:40:09 +0100 (BST)
-Date:   Fri, 6 May 2022 14:40:09 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-cc:     David Laight <David.Laight@aculab.com>,
-        Arnd Bergmann <arnd@kernel.org>, Rich Felker <dalias@libc.org>,
-        "open list:IA64 (Itanium) PLATFORM" <linux-ia64@vger.kernel.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        "open list:SPARC + UltraSPARC (sparc/sparc64)" 
-        <sparclinux@vger.kernel.org>,
-        "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Helge Deller <deller@gmx.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        "open list:M68K ARCHITECTURE" <linux-m68k@lists.linux-m68k.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "open list:ALPHA PORT" <linux-alpha@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [RFC v2 01/39] Kconfig: introduce HAS_IOPORT option and select
- it as necessary
-In-Reply-To: <CAMuHMdWj5rmrP941DF7bsUXbiiemE-o2=8XqnAS-chgmpFFPQg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2205061426390.52331@angie.orcam.me.uk>
-References: <CAK8P3a0sJgMSpZB_Butx2gO0hapYZy-Dm_QH-hG5rOaq_ZgsXg@mail.gmail.com> <20220505161028.GA492600@bhelgaas> <CAK8P3a3fmPExr70+fVb564hZdGAuPtYa-QxgMMe5KLpnY_sTrQ@mail.gmail.com> <alpine.DEB.2.21.2205061058540.52331@angie.orcam.me.uk>
- <CAK8P3a0NzG=3tDLCdPj2=A__2r_+xiiUTW=WJCBNp29x_A63Og@mail.gmail.com> <alpine.DEB.2.21.2205061314110.52331@angie.orcam.me.uk> <5239892986c94239a122ab2f7a18a7a5@AcuMS.aculab.com> <CAMuHMdWj5rmrP941DF7bsUXbiiemE-o2=8XqnAS-chgmpFFPQg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S1441814AbiEFNo3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 09:44:29 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A68A32BE7;
+        Fri,  6 May 2022 06:40:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DF808B835AA;
+        Fri,  6 May 2022 13:40:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5040EC385A8;
+        Fri,  6 May 2022 13:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651844442;
+        bh=RT1F1zNAaJmkdaF49UnBjI25nZ5pYOQV7wKcebKfjIA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=POIqY7hRPVqRnKVU7bJThf6D6fVf8sDOi3cAgufXdobV1guN0UAx5CuwtDzOr6hAg
+         x5h2CV9WPv54Fi//9WoyVx/vkWq0vBDV1+UlxFtpnnffzktD3rVPwXXJLBcqcQIz3/
+         TRNCEU4YH2I2m1gI1Wum1gVnaBQmIjD7ERe5yr5U24DS5SKCPHG1XLHkDttoXqUAsu
+         q9CFVaeXYz3BedK/5foq0NmU2AiyHqALDUe9MYJM3sDAUwSzJP8iJ463SO8h5VstVf
+         kt2tREwT+cfKXkdKcVvMgw4sOcKbjL5LTA4dlK9ykOlACMnza6G7zS1KfjnySkh/6B
+         oROnzoZTL0I5A==
+Received: by pali.im (Postfix)
+        id 8180D1141; Fri,  6 May 2022 15:40:39 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/6] PCI: mvebu: Add support for PME and AER interrupts
+Date:   Fri,  6 May 2022 15:40:23 +0200
+Message-Id: <20220506134029.21470-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 6 May 2022, Geert Uytterhoeven wrote:
+mvebu PCIe PME and AER interrupts are reported via PCIe summary
+interrupt. PCIe summary interrupt is reported via mvebu MPIC SoC error
+summary interrupt. And MPIC SoC error summary interrupt is reported via
+MPIC IRQ 4.
 
-> A loooong time ago,  it was suggested to add register accessor
-> functions to struct device, so e.g. readl(dev, offset) would call
-> into these accessors, which would implement the bus-specific behavior.
-> No more worries about readl(), __raw_readl(), ioread32b(), or whatever
-> quirk is needed, at the (small on nowadays' machines) expense of
-> some indirection...
+This patch series implements support for interrupts in MPIC SoC error
+hierarchy in irq-armada-370-xp.c driver and support for interrupts in
+mvebu PCIe hierarchy in pci-mvebu.c.
 
- I guess you'd need an additional parameter for the endianness policy 
-required (to match either bit or byte lanes, according to ultimate data 
-interpretation) where crossing between buses of a different endianness 
-each.  Otherwise you'd end up with the mess elsewhere.
+Finally PCIe PME and AER interrupts are routed to the correct PCIe Root
+Port, which allows kernel PME and AER drivers to take care of them.
 
-  Maciej
+Tested on A385 board and kernel PME and AER drivers works correctly:
+
+[    0.898482] pcieport 0000:00:01.0: PME: Signaling with IRQ 61
+[    0.904422] pcieport 0000:00:01.0: AER: enabled with IRQ 61
+[    0.910113] pcieport 0000:00:02.0: enabling device (0140 -> 0142)
+[    0.916299] pcieport 0000:00:02.0: PME: Signaling with IRQ 62
+[    0.922216] pcieport 0000:00:02.0: AER: enabled with IRQ 62
+[    0.927917] pcieport 0000:00:03.0: enabling device (0140 -> 0142)
+[    0.934090] pcieport 0000:00:03.0: PME: Signaling with IRQ 63
+[    0.940006] pcieport 0000:00:03.0: AER: enabled with IRQ 63
+
+This change finally allows to debug PCIe issues on A385 boards.
+
+Pali Rohár (6):
+  dt-bindings: irqchip: armada-370-xp: Update information about MPIC SoC
+    Error
+  irqchip/armada-370-xp: Implement SoC Error interrupts
+  ARM: dts: armada-38x.dtsi: Add node for MPIC SoC Error IRQ controller
+  dt-bindings: PCI: mvebu: Update information about summary interrupt
+  PCI: mvebu: Implement support for interrupts on emulated bridge
+  ARM: dts: armada-385.dtsi: Add definitions for PCIe summary interrupts
+
+ .../marvell,armada-370-xp-mpic.txt            |   9 +
+ .../devicetree/bindings/pci/mvebu-pci.txt     |   1 +
+ arch/arm/boot/dts/armada-385.dtsi             |  20 +-
+ arch/arm/boot/dts/armada-38x.dtsi             |   5 +
+ drivers/irqchip/irq-armada-370-xp.c           | 213 +++++++++++++++++-
+ drivers/pci/controller/pci-mvebu.c            | 208 +++++++++++++++--
+ 6 files changed, 426 insertions(+), 30 deletions(-)
+
+-- 
+2.20.1
+
