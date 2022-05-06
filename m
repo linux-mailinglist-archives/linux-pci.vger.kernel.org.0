@@ -2,42 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1554E51CE9D
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 04:16:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A51D51CE62
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 04:16:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1388212AbiEFCC4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 May 2022 22:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
+        id S1388175AbiEFBps (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 May 2022 21:45:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1388231AbiEFCCy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 22:02:54 -0400
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC63F13D10;
-        Thu,  5 May 2022 18:59:12 -0700 (PDT)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 91A2F1A09D0;
-        Fri,  6 May 2022 03:59:11 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E2C31A0A37;
-        Fri,  6 May 2022 03:59:11 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 7C43C180031B;
-        Fri,  6 May 2022 09:59:09 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
-        broonie@kernel.org, lorenzo.pieralisi@arm.com,
-        jingoohan1@gmail.com, festevam@gmail.com,
-        francesco.dolcini@toradex.com
-Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-Subject: [PATCH v9 8/8] PCI: imx6: Add compliance tests mode support
-Date:   Fri,  6 May 2022 09:47:09 +0800
-Message-Id: <1651801629-30223-9-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1651801629-30223-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1651801629-30223-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        with ESMTP id S1388101AbiEFBpL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 May 2022 21:45:11 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66AAF62129;
+        Thu,  5 May 2022 18:41:27 -0700 (PDT)
+Received: from kwepemi100025.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KvYB84Mk6zGpVF;
+        Fri,  6 May 2022 09:38:40 +0800 (CST)
+Received: from kwepemm600017.china.huawei.com (7.193.23.234) by
+ kwepemi100025.china.huawei.com (7.221.188.158) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 6 May 2022 09:41:24 +0800
+Received: from localhost.localdomain (10.175.112.125) by
+ kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 6 May 2022 09:41:22 +0800
+From:   Peng Liu <liupeng256@huawei.com>
+To:     <bhelgaas@google.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        <hpa@zytor.com>, <lorenzo.pieralisi@arm.com>,
+        <guohanjun@huawei.com>, <sudeep.holla@arm.com>,
+        <rafael@kernel.org>, <lenb@kernel.org>,
+        <akpm@linux-foundation.org>, <logang@deltatee.com>,
+        <martin.oliveira@eideticom.com>, <thunder.leizhen@huawei.com>,
+        <axboe@kernel.dk>, <kch@nvidia.com>, <ming.lei@redhat.com>,
+        <shinichiro.kawasaki@wdc.com>, <mcgrof@kernel.org>,
+        <jiangguoqing@kylinos.cn>, <jpittman@redhat.com>,
+        <dave@stgolabs.net>, <liupeng256@huawei.com>,
+        <wangkefeng.wang@huawei.com>, <linux-block@vger.kernel.org>,
+        <linux-ia64@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>
+Subject: [PATCH 0/2] null_blk: fix wrong use of nr_online_nodes
+Date:   Fri, 6 May 2022 01:57:59 +0000
+Message-ID: <20220506015801.757918-1-liupeng256@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.112.125]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600017.china.huawei.com (7.193.23.234)
+X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -47,102 +61,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Refer to the Chapter 3.2 System Board Signal Quality of PCI Express
-Architecture PHY Test Specification Revision 2.0.
+Helper node_available is introduced to judge whether a node can be
+used, and it is used to fix the wrong use of nr_online_nodes when
+numa node is sparse.
 
-Signal quality tests (for example: jitter, differential eye opening and
-so on) can be executed with devices in the polling.compliance state.
+Peng Liu (2):
+  include/linux/nodemask.h: create node_available() helper
+  null_blk: fix wrong use of nr_online_nodes
 
-To let the device support polling.compliance state, the clocks and powers
-shouldn't be turned off when the probe of device driver fails.
+ arch/ia64/hp/common/sba_iommu.c |  2 +-
+ arch/x86/pci/acpi.c             |  2 +-
+ drivers/acpi/arm64/iort.c       |  2 +-
+ drivers/block/null_blk/main.c   | 45 ++++++++++++++++++++-------------
+ drivers/pci/pci-sysfs.c         |  2 +-
+ include/linux/nodemask.h        |  3 +++
+ mm/mempolicy.c                  |  2 +-
+ 7 files changed, 36 insertions(+), 22 deletions(-)
 
-Based on CLB (Compliance Load Board) Test Fixture and so on test
-equipments, the PHY link would be down during the compliance tests.
-Refer to this scenario, add the i.MX PCIe compliance tests mode enable
-support, and keep the clocks and powers on, and finish the driver probe
-without error return.
-
-Use the "pci_imx6.compliance=1" in kernel command line to enable the
-compliance tests mode.
-
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 39 ++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index f0ffd9011975..f78b59822626 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -146,6 +146,10 @@ struct imx6_pcie {
- #define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
- #define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
- 
-+static bool imx6_pcie_cmp_mode;
-+module_param_named(compliance, imx6_pcie_cmp_mode, bool, 0644);
-+MODULE_PARM_DESC(compliance, "i.MX PCIe compliance test mode (1=compliance test mode enabled)");
-+
- static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
- {
- 	struct dw_pcie *pci = imx6_pcie->pci;
-@@ -826,10 +830,12 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 	 * started in Gen2 mode, there is a possibility the devices on the
- 	 * bus will not be detected at all.  This happens with PCIe switches.
- 	 */
--	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
--	tmp &= ~PCI_EXP_LNKCAP_SLS;
--	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
--	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-+	if (!imx6_pcie_cmp_mode) {
-+		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-+		tmp &= ~PCI_EXP_LNKCAP_SLS;
-+		tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-+		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-+	}
- 
- 	/* Start LTSSM. */
- 	imx6_pcie_ltssm_enable(dev);
-@@ -887,14 +893,16 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 	dev_dbg(dev, "PHY DEBUG_R0=0x%08x DEBUG_R1=0x%08x\n",
- 		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
- 		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
--	imx6_pcie_reset_phy(imx6_pcie);
--	imx6_pcie_clk_disable(imx6_pcie);
--	if (imx6_pcie->phy != NULL) {
--		phy_power_off(imx6_pcie->phy);
--		phy_exit(imx6_pcie->phy);
-+	if (!imx6_pcie_cmp_mode) {
-+		imx6_pcie_reset_phy(imx6_pcie);
-+		imx6_pcie_clk_disable(imx6_pcie);
-+		if (imx6_pcie->phy != NULL) {
-+			phy_power_off(imx6_pcie->phy);
-+			phy_exit(imx6_pcie->phy);
-+		}
-+		if (imx6_pcie->vpcie)
-+			regulator_disable(imx6_pcie->vpcie);
- 	}
--	if (imx6_pcie->vpcie)
--		regulator_disable(imx6_pcie->vpcie);
- 	return ret;
- }
- 
-@@ -1289,8 +1297,15 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	ret = dw_pcie_host_init(&pci->pp);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (imx6_pcie_cmp_mode) {
-+			dev_info(dev, "driver loaded with compliance test mode enabled\n");
-+			ret = 0;
-+		} else {
-+			dev_err(dev, "unable to add PCIe port\n");
-+		}
- 		return ret;
-+	}
- 
- 	if (pci_msi_enabled()) {
- 		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
 -- 
 2.25.1
 
