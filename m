@@ -2,230 +2,288 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E71C651DF27
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 20:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0733A51DF47
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 20:47:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242835AbiEFShJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 14:37:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52356 "EHLO
+        id S1387994AbiEFSvC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 14:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbiEFShI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 14:37:08 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF1F6D4E2;
-        Fri,  6 May 2022 11:33:24 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id i22so5335042ila.1;
-        Fri, 06 May 2022 11:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=RForlUT1tka3D1tuSnbrKPYqMy4ZhSvtUp48zMmLj58=;
-        b=g+I9Ev0qq3OCzb5zVk0ITAEmdVkonfpXJaP/Rh19izrDXm0eqe4yaLAzf9j9aMtnQV
-         ZeWfO6UmufVSeBPHFTa/s8zKynaGmJtkHAc1nLPR2qJnbQgT7oKe3hDOpJVR29f8vn3J
-         9ypqN46Rik4XTGtabXFDVJK4bE8dFv01Nojlv2RxmDOWdhKTZYqZ5NFEn6tZhrlqprxs
-         y4U3FB9/oZWhnTZktchYo3ZeHE6ESh6fURHOd+Tf/EnSQxxTG5+zoCkFho2W+4FQHusk
-         +zY7BbPjg7K+a+hd8qyfoyeDogQshu0n9KSwyOKrs/Uv1Af20pnZ5iTjiZN3uVVKbKvc
-         5vsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=RForlUT1tka3D1tuSnbrKPYqMy4ZhSvtUp48zMmLj58=;
-        b=6gGkkStqGOWWCo5UMpZPE1zo/5M/HZp6hYoyG3PxxRXAVh67DB7tNxRdQJaPoDAbyN
-         02NST8FGM6tcLlHIJxUy8XSiQGGt81YUohl7X+kRO9PIeqjemxQG6KG/vzbnYr7UbgW6
-         eE9MSbtc/NpBjMEbwPI9ddw/f1rIpTToNNYFcOYkRirzILtV7jXGUVwKJHQ+SPxFLZh9
-         DegoxUm2tv0Qk6eZwk1GvHZ4IB8LXqUnLmOiZ9oeYudWYgqhqS7K6lz12Tv6GXijy+Rm
-         Fd8z1LRCJlrXH6zwNlxP7xmWcL0B5nIVhPhR3WNYdRVxQog3YrjedvFxDx0ODAFKFzdf
-         AGXw==
-X-Gm-Message-State: AOAM533IjwnyB+InZ0+AfTikJg5/ym/E7dGBnc+L1bQZSZ+qv6wqMjgU
-        6Ha5nIcJnSga3B5NToTZh0A=
-X-Google-Smtp-Source: ABdhPJw72pNhl353Pc98O3yyv12NQwEJD4pCTyRpIjclc3mrGl8JfUF//uk6t6DiiIsz4oa0ucSOqw==
-X-Received: by 2002:a05:6e02:15c8:b0:2bd:fdca:18a8 with SMTP id q8-20020a056e0215c800b002bdfdca18a8mr1840552ilu.320.1651862003987;
-        Fri, 06 May 2022 11:33:23 -0700 (PDT)
-Received: from ?IPV6:2600:1700:2442:6db0:cc95:9825:1cd:66f2? ([2600:1700:2442:6db0:cc95:9825:1cd:66f2])
-        by smtp.gmail.com with ESMTPSA id a12-20020a02ac0c000000b0032b3a7817desm1501572jao.162.2022.05.06.11.33.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 May 2022 11:33:23 -0700 (PDT)
-Message-ID: <96db62bb-18be-f44a-6f53-05b22319f23a@gmail.com>
-Date:   Fri, 6 May 2022 13:33:22 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 0/3] add dynamic PCI device of_node creation for overlay
-Content-Language: en-US
-To:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+        with ESMTP id S1386541AbiEFSvB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 14:51:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9BA5F8E4;
+        Fri,  6 May 2022 11:47:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C8E762171;
+        Fri,  6 May 2022 18:47:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D172C385A8;
+        Fri,  6 May 2022 18:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651862836;
+        bh=DlBOyewLLihF/iWcRWhcj+SVK/isx3rYo6ba8naJpzA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I9BrzcaezDnmBjKmkIIC2T4Am8w8xiOj2ppMdBTjvaWZNfVQKqp7ovEAG/XuPVomH
+         qlx+a41L4BgXe1Pjt8PwrqJoyszMjLB+WPp9y0kl35zygxqyM6ose0Qztc6K440/CL
+         pBdp8Se7d0GwUqmKe0ph4DjmQTlBwYpGV0ddVZ7jTXrhMfP44CEZmvCaU6nMrzOAZ6
+         J53wfLNJSQ6hX4TSeo28O+e59srXsGScjw1RafDqjXviB2WKMBwE0fGdhX/V85Qe87
+         dsjlBVe1bmvFUjZ2QeOaB2KztIFUTTslsfhB7CJ1jWkE+aBO/Ln9PtQcmMBtlhXxqz
+         lAmvvpHUxrLXw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nn2yw-009XK2-3e; Fri, 06 May 2022 19:47:14 +0100
+Date:   Fri, 06 May 2022 19:47:25 +0100
+Message-ID: <8735hmijlu.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Allan Nielsen <allan.nielsen@microchip.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Steen Hegelund <steen.hegelund@microchip.com>,
-        Thomas Petazzoni <thomas.petazonni@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20220427094502.456111-1-clement.leger@bootlin.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-In-Reply-To: <20220427094502.456111-1-clement.leger@bootlin.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/6] irqchip/armada-370-xp: Implement SoC Error interrupts
+In-Reply-To: <20220506183051.wimo7p4nuqfnl2aj@pali>
+References: <20220506134029.21470-1-pali@kernel.org>
+        <20220506134029.21470-3-pali@kernel.org>
+        <87mtfu7ccd.wl-maz@kernel.org>
+        <20220506183051.wimo7p4nuqfnl2aj@pali>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: pali@kernel.org, tglx@linutronix.de, robh+dt@kernel.org, bhelgaas@google.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com, kw@linux.com, kabel@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/27/22 04:44, Clément Léger wrote:
-> This series adds foundation work to support the lan9662 PCIe card. This
-> card is meant to be used an ethernet switch with 2 x RJ45 ports and
-> 2 x 2.5G SFPs. The lan966x SoCs can be used in two different ways:
-> 
->  - It can run Linux by itself, on ARM64 cores included in the SoC. This
->    use-case of the lan966x is currently being upstreamed, using a
->    traditional Device Tree representation of the lan996x HW blocks [1]
->    A number of drivers for the different IPs of the SoC have already
->    been merged in upstream Linux.
-> 
->  - It can be used as a PCIe endpoint, connected to a separate platform
->    that acts as the PCIe root complex. In this case, all the devices
->    that are embedded on this SoC are exposed through PCIe BARs and the
->    ARM64 cores of the SoC are not used. Since this is a PCIe card, it
->    can be plugged on any platform, of any architecture supporting PCIe.
-> 
-> The problem that arose is that we want to reuse all the existing OF
-> compatible drivers that are used when in SoC mode to instantiate the
-> PCI device when in PCIe endpoint mode.
-> 
-> A previous attempt to tackle this problem was made using fwnode [1].
-> However, this proved being way too invasive and it required
-> modifications in both subsystems and drivers to support fwnode. First
-> series did not lead to a consensus and multiple ideas to support this
-> use-case were mentioned (ACPI overlay, fwnode, device-tree overlay).
-> Since it only seemed that fwnode was not a totally silly idea, we
-> continued on this way.
-> 
-> However, on the series that added fwnode support to the reset subsystem,
-> Rob Herring mentioned the fact that OF overlay might actually be the
-> best way to probe PCI devices and populate platform drivers using this
-> overlay. He also provided a branch containing some commits that helped
+On Fri, 06 May 2022 19:30:51 +0100,
+Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>=20
+> On Friday 06 May 2022 19:19:46 Marc Zyngier wrote:
+> > On Fri, 06 May 2022 14:40:25 +0100,
+> > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > >=20
+> > > MPIC IRQ 4 is used as SoC Error Summary interrupt and provides access=
+ to
+> > > another hierarchy of SoC Error interrupts. Implement a new IRQ chip a=
+nd
+> > > domain for accessing this IRQ hierarchy.
+> > >=20
+> > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> > > ---
+> > >  drivers/irqchip/irq-armada-370-xp.c | 213 ++++++++++++++++++++++++++=
++-
+> > >  1 file changed, 210 insertions(+), 3 deletions(-)
+> > >=20
+> > > diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/ir=
+q-armada-370-xp.c
+> > > index ebd76ea1c69b..71578b65f5c8 100644
+> > > --- a/drivers/irqchip/irq-armada-370-xp.c
+> > > +++ b/drivers/irqchip/irq-armada-370-xp.c
+> > > @@ -117,6 +117,8 @@
+> > >  /* Registers relative to main_int_base */
+> > >  #define ARMADA_370_XP_INT_CONTROL		(0x00)
+> > >  #define ARMADA_370_XP_SW_TRIG_INT_OFFS		(0x04)
+> > > +#define ARMADA_370_XP_INT_SOC_ERR_0_CAUSE_OFFS	(0x20)
+> > > +#define ARMADA_370_XP_INT_SOC_ERR_1_CAUSE_OFFS	(0x24)
+> > >  #define ARMADA_370_XP_INT_SET_ENABLE_OFFS	(0x30)
+> > >  #define ARMADA_370_XP_INT_CLEAR_ENABLE_OFFS	(0x34)
+> > >  #define ARMADA_370_XP_INT_SOURCE_CTL(irq)	(0x100 + irq*4)
+> > > @@ -130,6 +132,8 @@
+> > >  #define ARMADA_370_XP_CPU_INTACK_OFFS		(0x44)
+> > >  #define ARMADA_370_XP_INT_SET_MASK_OFFS		(0x48)
+> > >  #define ARMADA_370_XP_INT_CLEAR_MASK_OFFS	(0x4C)
+> > > +#define ARMADA_370_XP_INT_SOC_ERR_0_MASK_OFF	(0x50)
+> > > +#define ARMADA_370_XP_INT_SOC_ERR_1_MASK_OFF	(0x54)
+> > >  #define ARMADA_370_XP_INT_FABRIC_MASK_OFFS	(0x54)
+> > >  #define ARMADA_370_XP_INT_CAUSE_PERF(cpu)	(1 << cpu)
+> > > =20
+> > > @@ -146,6 +150,8 @@
+> > >  static void __iomem *per_cpu_int_base;
+> > >  static void __iomem *main_int_base;
+> > >  static struct irq_domain *armada_370_xp_mpic_domain;
+> > > +static struct irq_domain *armada_370_xp_soc_err_domain;
+> > > +static unsigned int soc_err_irq_num_regs;
+> > >  static u32 doorbell_mask_reg;
+> > >  static int parent_irq;
+> > >  #ifdef CONFIG_PCI_MSI
+> > > @@ -156,6 +162,8 @@ static DEFINE_MUTEX(msi_used_lock);
+> > >  static phys_addr_t msi_doorbell_addr;
+> > >  #endif
+> > > =20
+> > > +static void armada_370_xp_soc_err_irq_unmask(struct irq_data *d);
+> > > +
+> > >  static inline bool is_percpu_irq(irq_hw_number_t irq)
+> > >  {
+> > >  	if (irq <=3D ARMADA_370_XP_MAX_PER_CPU_IRQS)
+> > > @@ -509,6 +517,27 @@ static void armada_xp_mpic_reenable_percpu(void)
+> > >  		armada_370_xp_irq_unmask(data);
+> > >  	}
+> > > =20
+> > > +	/* Re-enable per-CPU SoC Error interrupts that were enabled before =
+suspend */
+> > > +	for (irq =3D 0; irq < soc_err_irq_num_regs * 32; irq++) {
+> > > +		struct irq_data *data;
+> > > +		int virq;
+> > > +
+> > > +		virq =3D irq_linear_revmap(armada_370_xp_soc_err_domain, irq);
+> > > +		if (virq =3D=3D 0)
+> > > +			continue;
+> > > +
+> > > +		data =3D irq_get_irq_data(virq);
+> > > +
+> > > +		if (!irq_percpu_is_enabled(virq))
+> > > +			continue;
+> > > +
+> > > +		armada_370_xp_soc_err_irq_unmask(data);
+> > > +	}
+> >=20
+> > So you do this loop and all these lookups, both here and in the resume
+> > function (duplicated code!) just to be able to call the unmask
+> > function?  This would be better served by two straight writes of the
+> > mask register, which you'd conveniently save on suspend.
+> >=20
+> > Yes, you have only duplicated the existing logic. But surely there is
+> > something better to do.
+>=20
+> Yes, I just used existing logic.
+>=20
+> I'm not rewriting driver or doing big refactor of it, as this is not in
+> the scope of the PCIe AER interrupt support.
 
-I need to go look at the various email threads mentioned above before I
-continue reading this patch series.
+Fair enough. By the same logic, I'm not taking any change to the
+driver until it is put in a better shape. Your call.
 
-I do have serious concerns with this approach.  I need to investigate
-more fully before I can determine whether the concerns are addressed
-sufficiently.
+> > > +
+> > > +	/* Unmask summary SoC Error Interrupt */
+> > > +	if (soc_err_irq_num_regs > 0)
+> > > +		writel(4, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
+> > > +
+> > >  	ipi_resume();
+> > >  }
+> > > =20
+> > > @@ -546,8 +575,8 @@ static struct irq_chip armada_370_xp_irq_chip =3D=
+ {
+> > >  static int armada_370_xp_mpic_irq_map(struct irq_domain *h,
+> > >  				      unsigned int virq, irq_hw_number_t hw)
+> > >  {
+> > > -	/* IRQs 0 and 1 cannot be mapped, they are handled internally */
+> > > -	if (hw <=3D 1)
+> > > +	/* IRQs 0, 1 and 4 cannot be mapped, they are handled internally */
+> > > +	if (hw <=3D 1 || hw =3D=3D 4)
+> > >  		return -EINVAL;
+> > > =20
+> > >  	armada_370_xp_irq_mask(irq_get_irq_data(virq));
+> > > @@ -577,6 +606,99 @@ static const struct irq_domain_ops armada_370_xp=
+_mpic_irq_ops =3D {
+> > >  	.xlate =3D irq_domain_xlate_onecell,
+> > >  };
+> > > =20
+> > > +static DEFINE_RAW_SPINLOCK(armada_370_xp_soc_err_lock);
+> > > +
+> > > +static void armada_370_xp_soc_err_irq_mask(struct irq_data *d)
+> > > +{
+> > > +	irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+> > > +	u32 reg, mask;
+> > > +
+> > > +	reg =3D hwirq >=3D 32 ? ARMADA_370_XP_INT_SOC_ERR_1_MASK_OFF
+> > > +			  : ARMADA_370_XP_INT_SOC_ERR_0_MASK_OFF;
+> > > +
+> > > +	raw_spin_lock(&armada_370_xp_soc_err_lock);
+> > > +	mask =3D readl(per_cpu_int_base + reg);
+> > > +	mask &=3D ~BIT(hwirq % 32);
+> > > +	writel(mask, per_cpu_int_base + reg);
+> > > +	raw_spin_unlock(&armada_370_xp_soc_err_lock);
+> > > +}
+> > > +
+> > > +static void armada_370_xp_soc_err_irq_unmask(struct irq_data *d)
+> > > +{
+> > > +	irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+> > > +	u32 reg, mask;
+> > > +
+> > > +	reg =3D hwirq >=3D 32 ? ARMADA_370_XP_INT_SOC_ERR_1_MASK_OFF
+> > > +			  : ARMADA_370_XP_INT_SOC_ERR_0_MASK_OFF;
+> > > +
+> > > +	raw_spin_lock(&armada_370_xp_soc_err_lock);
+> > > +	mask =3D readl(per_cpu_int_base + reg);
+> > > +	mask |=3D BIT(hwirq % 32);
+> > > +	writel(mask, per_cpu_int_base + reg);
+> > > +	raw_spin_unlock(&armada_370_xp_soc_err_lock);
+> > > +}
+> > > +
+> > > +static int armada_370_xp_soc_err_irq_mask_on_cpu(void *par)
+> > > +{
+> > > +	struct irq_data *d =3D par;
+> > > +	armada_370_xp_soc_err_irq_mask(d);
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int armada_370_xp_soc_err_irq_unmask_on_cpu(void *par)
+> > > +{
+> > > +	struct irq_data *d =3D par;
+> > > +	armada_370_xp_soc_err_irq_unmask(d);
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int armada_xp_soc_err_irq_set_affinity(struct irq_data *d,
+> > > +					      const struct cpumask *mask,
+> > > +					      bool force)
+> > > +{
+> > > +	unsigned int cpu;
+> > > +
+> > > +	cpus_read_lock();
+> > > +
+> > > +	/* First disable IRQ on all cores */
+> > > +	for_each_online_cpu(cpu)
+> > > +		smp_call_on_cpu(cpu, armada_370_xp_soc_err_irq_mask_on_cpu, d, tru=
+e);
+> > > +
+> > > +	/* Select a single core from the affinity mask which is online */
+> > > +	cpu =3D cpumask_any_and(mask, cpu_online_mask);
+> > > +	smp_call_on_cpu(cpu, armada_370_xp_soc_err_irq_unmask_on_cpu, d, tr=
+ue);
+> > > +
+> > > +	cpus_read_unlock();
+> > > +
+> > > +	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+> > > +
+> > > +	return IRQ_SET_MASK_OK;
+> > > +}
+> >=20
+> > Aren't these per-CPU interrupts anyway? What does it mean to set their
+> > affinity? /me rolls eyes...
+>=20
+> Yes, they are per-CPU interrupts. But to mask or unmask particular
+> interrupt for specific CPU is possible only from that CPU. CPU 0 just
+> cannot move interrupt from CPU 0 to CPU 1. CPU 0 can only mask that
+> interrupt and CPU 1 has to unmask it.
 
-To give some background to my longstanding response to similar proposals,
-here is my old statement from https://elinux.org/Device_Tree_Reference:
+And that's no different form other per-CPU interrupts that have the
+exact same requirements. NAK to this sort of hacks.
 
-   Overlays
-   Mainline Linux Support
-   Run time overlay apply and run time overlay remove from user space are
-   not supported in the mainline kernel. There   are out of tree patches
-   to implement this feature via an overlay manager. The overlay manager
-   is used successfully by many users for specific overlays on specific
-   boards with specific environments and use cases. However, there are many
-   issues with the Linux kernel overlay implementation due to incomplete and
-   incorrect code. The overlay manager has not been accepted in mainline due
-   to these issues. Once these issues are resolved, it is expected that some
-   method of run time overlay apply and overlay removal from user space will
-   be supported by the Linux kernel.
+	M.
 
-   There is a possibility that overlay apply and overlay remove support could
-   be phased in slowly, feature by feature, as specific issues are resolved.
-
-Those are my words, not Rob's, but I thought that Rob was somewhat in
-agreement with those ideas.  Apparently either I misunderstood his
-thoughts, or his thoughts have evolved, since you say that he suggested
-overlays in one of the above email threads, and you list him as a
-co-developer.
-
-In the next line of the elinux info above, I provide a link to more
-detailed information:
-
-   Frank's thoughts on what is needed to complete basic overlay support
-
-The link goes to:
-
-   https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
-
-That page provides an incomplete list of issues to be resolved, and
-a list of "what has been completed".
-
-Please read through the elinux.org page to understand the basis of
-my concerns.
-
-If after reading through the related email threads, and this thread,
-I agree that overlays are a good approach, I am already aware of areas
-that I will have specific comments about on the patches in this thread.
-
--Frank
-
-> to implement this idea on a x86 setup. Due to the dynamic nature of PCI
-> bus enumeration, some other modifications needs to be applied on the
-> overlay to apply it correctly. Indeed, it is necessary to modify the
-> target node of the fragments to apply them correctly on the PCI device
-> that was probed. Moreover, the 'ranges' must be set according to the
-> BAR addresses in order to remap devices to the correct PCI addresses.
-> These modifications are the located into the driver since the remapping
-> is something that is specific to each driver.
-> 
-> After modifications, this proves to be successful and a full support of
-> the aforementioned lan966x PCI card was added. The modifications to
-> support that (apply an overlay on a dynamically created PCI of_node) are
-> actually minimal and only touches a few places (pci/of.c). This series
-> contains the 3 commits that are necessary to do that:
-> 
-> - First commit creates the root node if not present on a x86 setup
->   without a firmware provided device-tree.
-> - Second one dynamically creates the PCI bus/device device-tree node
->   hierarchy using changeset API.
-> - Finally a last commit allows to apply an overlay by targeting a
->   specific device-tree node.
-> 
-> Other problems that might be considered with this series is the fact
-> that CONFIG_OF is not enabled by default on x86 configuration and thus
-> the driver can't be used without rebuilding a complete kernel with
-> CONFIG_OF=y. In order to fully support this PCIe card and allow lambda
-> user to use this driver, it would be almost mandatory to enable
-> CONFIG_OF by default on such setup.
-> 
-> A driver using this support was added and can be seen at [3]. This
-> driver embeds a builtin overlay and applies it to the live tree using
-> of_overlay_fdt_apply_to_node(). An interrupt driver is also included and
-> associated to a node that is added by the overlay. The driver also
-> insert a specific "ranges" property based on the BAR values which allows
-> to remap the device-tree node to BAR addresses dynamically. This is
-> needed to allow applying the overlay without depending on specific
-> enumeration BAR addresses.
-> 
-> This series was tested on a x86 kernel using CONFIG_OF under a virtual
-> machine using PCI passthrough.
-> 
-> Link: [1] https://lore.kernel.org/lkml/YhQHqDJvahgriDZK@lunn.ch/t/
-> Link: [2] https://lore.kernel.org/lkml/20220408174841.34458529@fixe.home/T/
-> Link: [3] https://github.com/clementleger/linux/tree/lan966x/of_support
-> 
-> Clément Léger (3):
->   of: always populate a root node
->   PCI: of: create DT nodes for PCI devices if they do not exists
->   of: overlay: add of_overlay_fdt_apply_to_node()
-> 
->  drivers/of/base.c    |  16 +++-
->  drivers/of/overlay.c |  21 +++--
->  drivers/pci/of.c     | 184 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h   |  17 +++-
->  4 files changed, 224 insertions(+), 14 deletions(-)
-> 
-
+--=20
+Without deviation from the norm, progress is not possible.
