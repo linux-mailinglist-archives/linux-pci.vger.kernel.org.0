@@ -2,97 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 119AD51E0C4
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 23:09:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C059F51E27F
+	for <lists+linux-pci@lfdr.de>; Sat,  7 May 2022 01:41:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1444303AbiEFVNM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 17:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35876 "EHLO
+        id S1347039AbiEFWod (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 18:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377538AbiEFVNM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 17:13:12 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBBAC6F49D
-        for <linux-pci@vger.kernel.org>; Fri,  6 May 2022 14:09:27 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x18so8590251plg.6
-        for <linux-pci@vger.kernel.org>; Fri, 06 May 2022 14:09:27 -0700 (PDT)
+        with ESMTP id S1391354AbiEFWoW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 18:44:22 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D168318360
+        for <linux-pci@vger.kernel.org>; Fri,  6 May 2022 15:40:36 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id g3so7189378pgg.3
+        for <linux-pci@vger.kernel.org>; Fri, 06 May 2022 15:40:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
-         :subject:to;
-        bh=VSSUIwdzgxQxnEkB7+u7pnweyPajIQMP3nQqWYs8VX0=;
-        b=DCL4ASSQyWhAON34kE5OIISSqSj3rOCfF8Ciqjh+lsqRdCfgeusA5Vwv0XnJkYI/K8
-         PpoBtZS88yuL3et/lZLKleXxq4URSZD9f6MROtdldcj3gOmiMCUI/6TV1Dl/T+qpwJiw
-         M0N+RaWrDo6cEqXCC4jcgWP8yqP5i27fdlJmL+Z22MNaap80xcYhj1kcUEIwB2pTrZYY
-         bvvbxOCDGxpg/KNpF54H7KtPoC+ybJ/VsbbP4Y4Ldgfhj+OsOwqpuNJpDXQhyZEajcO2
-         TQ+8Ad8csIfLm6I1rNVsM3KaAaNUHUcZcLEHvw01t2/Qn5zFCtxGu68RLxA3LTyrzGSv
-         07+A==
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=065LDUWhqHCWgMdSSFbFDlbRvxvwACfC87yilPrGdlI=;
+        b=zBIqQHyP2DRtu8jz8+AeLb0ciWZUD2F8sqANruiZOVMvEMBEZAD3emBi/qQVdLHqzp
+         FVHMU/GpxMUVJkH9RZzn+SAkcjpv4QVSuwQq5svgxeZZuJMAfI5wZmEpZr/PUNpF0trc
+         v3FhaSLgSXaMB+u/Oj16M0ZDcapRGhaMUNu5wuOgExggSL2OpO6Q79H9C0m44+SLlmoK
+         CGdmBpImvHG/vxatvNPDekkhw+VeGMDKncZSVQPPJN84rz/lbCUkxKFc0jAyjgd0j8bN
+         XjopR/MAHgdcUIvAT/+tlwE2P5TQ9VWRpEznQWZ+5aS2XCz+uU3dwDcZAZ01ORpmZxyj
+         NKrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
-         :from:date:message-id:subject:to;
-        bh=VSSUIwdzgxQxnEkB7+u7pnweyPajIQMP3nQqWYs8VX0=;
-        b=g+3plejrnsfe2BSi0TPzdN37ueu86ExeXB/Qgn4pn7QGRnABIDnJ4/ruLpajtDtixn
-         N/Tljz9I+R8t2/59qVJba5fXChgNKujNvAtPpR9l3eFmH+3djWwqo+plKCCvMk3UmBls
-         sR9RsPIBOCp6wcVKSAPGNK0N15P03bSPfpY6XAErAW7S459L+zCGqvCUK7CI29J3kWkc
-         dMHfrV1CDqdIwHwRx5Px6rgoZV3TwB9KA0l9RiivZ+1CYmodNqXJWzxeiiUCap9T62s1
-         pYKOlhsOb29V4csfMzImjhqqz36qgksSpKAukIjHEQWXKHX6ayGZF7XIL6GbkPZRoBwN
-         uhyA==
-X-Gm-Message-State: AOAM530Iuk+7orC0i08GHMsZSYnPQMco2xbVueZVS36PtgpKbA3boEx8
-        tGHeW6BX/V0ybZo3VEJSQTCQQLFPFmICQ9zX/w==
-X-Google-Smtp-Source: ABdhPJwp4Ke3UOg5WGZvnc+9zoj6LuBlmjaWEumAhXp6nyRAoOsi+A9K7QpSIh/DOmfrS0/kdtzDsFQAu7yldmf5qAo=
-X-Received: by 2002:a17:902:a501:b0:153:f956:29f0 with SMTP id
- s1-20020a170902a50100b00153f95629f0mr5613774plq.120.1651871367333; Fri, 06
- May 2022 14:09:27 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=065LDUWhqHCWgMdSSFbFDlbRvxvwACfC87yilPrGdlI=;
+        b=rMA9hp2Tp7zJ3ZnvtLLXZ0I6MfF6rdYhrZ2d6yGoijvgw0ZoC1g8oBhxptkEfRWslc
+         ar2fKK6FcT1SbgI8F3XikZMio0EicIBGO0/MsKvbG1p8G9K2qv44tHy0ObM0z7s+8X04
+         TuwSzD3fgB6YrcmuDtvXHI7U6XqfOYUR45PQVWSmMKNcM1uyEV2YHxuLp4djKAEJDzRf
+         MQaPCgAjHR9406XCPObG+e27Jq2YJTA63ns4jGWXa19hHzru4L2wbdbRH7Nf7IgA56ek
+         /xmSYTiN3KejudyHMHsFreMtgUhWQbvYzL30RyyIZu84rBkJgNXEjnfmQn/R9Psi7j6T
+         Obfg==
+X-Gm-Message-State: AOAM533j7tSC/JSCCQxWOQqFu/+mFLvr9J+sNLgwzTyaRDImpzuPqPTk
+        lMvGaht2Phrs8kbxgMZiaQG5+jXDHPMuy1Oh+PbGykJMo3gbQg==
+X-Google-Smtp-Source: ABdhPJwmOiKypJh3j0YJSeDdlLbNrycMsjuELoXdkDcdp8bN/9RM2i9cleVTUpHB3xROZ6zQ4ez2oeSNjpMNfuP+Jtw=
+X-Received: by 2002:a63:1117:0:b0:399:2df0:7fb9 with SMTP id
+ g23-20020a631117000000b003992df07fb9mr4692066pgl.40.1651876836471; Fri, 06
+ May 2022 15:40:36 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ac4:9906:0:b0:4ba:807b:b8f3 with HTTP; Fri, 6 May 2022
- 14:09:26 -0700 (PDT)
-Reply-To: warren001buffett@gmail.com
-In-Reply-To: <CAD_xG_pvNZK6BFCW+28Xv4DE=_5rbDZXDok2BYNn9xw6Ma7iow@mail.gmail.com>
-References: <CAD_xG_pvNZK6BFCW+28Xv4DE=_5rbDZXDok2BYNn9xw6Ma7iow@mail.gmail.com>
-From:   Warren Buffett <guidayema@gmail.com>
-Date:   Fri, 6 May 2022 21:09:26 +0000
-Message-ID: <CAD_xG_qmkaecRMLoM=8Av+-AOUpQv=7REEM0B2SR_6pXvr6_sQ@mail.gmail.com>
-Subject: Fwd: My name is Warren Buffett, an American businessman.
-To:     undisclosed-recipients:;
+References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 6 May 2022 15:40:25 -0700
+Message-ID: <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Linuxarm <linuxarm@huawei.com>, "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-cxl@vger.kernel.org,
+        "Wunner, Lukas" <lukas.wunner@intel.com>,
+        CHUCK_LEVER <chuck.lever@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:641 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4850]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [guidayema[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-My name is Warren Buffett, an American businessman and investor I have
-something important to discuss with you.
+[ add Lukas and Chuck ]
 
-Mr. Warren Buffett
-warren001buffett@gmail.com
-Chief Executive Officer: Berkshire Hathaway
-aphy/Warren-Edward-Buffett
+On Tue, May 3, 2022 at 8:35 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> So far, we have been considering Data Object Exchange (DOE) mailboxes only
+> on EPs (CXL type 3 devices).
+> CXL CDAT (technically CXL Table Query Protocol but lets just call it CDAT)
+>   https://lore.kernel.org/linux-cxl/20220414203237.2198665-1-ira.weiny@intel.com
+> CMA/SPDM support
+>   https://lore.kernel.org/linux-cxl/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
+>
+> However, a number of DOE protocols apply to switch (and root) ports.
+> DOE instances supporting CDAT occur on switch upstream ports as well as EPs.
+>
+> DOE instances supporting CMA may occur in root ports, upstream switch ports,
+> downstream switch ports and EPs (including multiple functions where relevant).
+>
+
+So, like you, I was envisioning all the CMA and SPDM code landing in
+the kernel until I read this:
+
+"Extending in-kernel TLS support"
+https://lwn.net/Articles/892216/
+
+...and questioned why this new CMA/SPDM session establishment, which
+is similar to TLS, be done inside the kernel while TLS session
+establishment is done in userspace? I had a chance to chat with Chuck
+at LSF/MM and confirmed there is little appetite to change this
+up-call requirement for session establishment and expect CMA to be the
+same. The rough idea of how this works with CMA/SPDM is providing an
+ABI to retrieve session setup data with the end result of userspace
+instantiating a keyid via keyctl the to be used for future SPDM
+messages.
+
+> The intent of this RFC is to discuss how to actually implement such support.
+> The attached patch is a really rough PoC for CDAT on upstream switch ports
+> done by adding a new pcie_port_service_driver.  This is different from the
+> proposed auxiliary device used for CXL type 3 devices (for now).
+
+CDAT to me is on the "CXL" side of a given PCI device. Given that
+endpoints and switches are each represented by cxl_port objects it
+seems those should generically carry the CDAT binary attribute, not
+the PCI device, don't you think?
+
+>
+> So open questions:
+>
+> 1. Granularity. Should we do a driver per group of protocols that may
+>    be collocated, or one per DOE instance. For now, we might be looking
+>    at CDAT as done for this PoC, and CMA/IDE.
+
+The more time goes by the more I am coming around to Bjorn's initial
+reaction to all this that DOE is closer to a VPD model than an
+auxiliary_device model or pcie_port_device model.
+
+I.e. have some common discovery in the PCI core for enumerating DOE
+instances and advertisting protocols, but otherwise leave it up to
+individual leaf drivers like cxl_pci or cxl_port to use that core to
+run a given protocol.
+
+> 2. Use of a pcie_port_service_driver a reasonable way to do this?
+> 3. Service provision. It is likely that all of the protocols defined
+>    above will be used as part of activities that span multiple devices.
+>    a) CDAT used to establish latencies and bandwidth between host CPU
+>       and memory on a CXL type 3 device beyond one or more CXL switches.
+>    b) CMA.  Might just be used to provide simple device attestation
+>       and potentially lock out the upstream port above a switch if the
+>       switch does not pass attestation.  Many many other uses possible...
+
+Per above once userspace has installed an SPDM session keyid for a
+given PCI device it can also optionally set an 'authorized' attribute
+(similiar to what USB and Thunderbolt have) to indicate whether a
+device has passed attestation. As for the actual protocols that are
+going to run over the SPDM session those would need their own drivers
+that reference the established keyid.
+
+>    c) Secure CMA / IDE. Likely to be used to set up link IDE.  What
+>       this will look like is a question I've not really started
+>       thinking about yet.
+>
+>    So how do we support this?  If nothing else we need to make sure
+>    the drivers for the port don't go away whilst in use.
+
+Another reason to make it a core aspect of the PCI device like VPD so
+there are no entanglements beyond "PCI device exists".
+
+> The patch is a very early PoC just to show it would 'work'...
+>
+> Note I am keen to not have the discussion around this support delay
+> Ira's series.
+
+Is there a nearer term forcing function for this? I.e. v5.20 seems to
+be where the current DOE series is going to intercept. I think abandon
+the "aux" organization for now and make DOE like VPD.
