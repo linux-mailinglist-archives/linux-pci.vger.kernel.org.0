@@ -2,134 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A07451DA74
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 16:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 367BE51DAF6
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 16:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442038AbiEFO0m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 10:26:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48794 "EHLO
+        id S231820AbiEFOsL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 10:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238749AbiEFO0l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 10:26:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 733F05A2C5;
-        Fri,  6 May 2022 07:22:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1185F6212E;
-        Fri,  6 May 2022 14:22:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19332C385A8;
-        Fri,  6 May 2022 14:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651846977;
-        bh=E6ckQimwVSaJW0lOSfV/5lkLUMUjbvk41FciJ2SCey8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lbg4lp/e+Ro7BaNZuo0VdvKl3tLnLoX4vaXA2rE2jhp3cB8b8PSn9BG/nhEUFTqZd
-         XDK36kHSjqC/LRjmjSWyLzl8JrkegNQRhRyYVaFK/mDbku9OanJaC6mfLlkJOPfHiF
-         u6Eu3EgN+vcR/3klokvMzrURadg6q1IIJ9HFtUZMXEcNYy7PtQUwoIovcrUsXFwO7a
-         QFVkPRGhLD6tG3XM2wwdGsgAspTzCF9H+300lhSVib5p0caRTf5p+If+SHlpB+44gV
-         9ZBOhK1pVcGNqJnmP89axU5KilkZ6DcHd6Wq7yUdfNGdcra4YUpmT3a8gkyO/5dyYK
-         pZ03u0/mRlLmg==
-Received: by pali.im (Postfix)
-        id 220C21141; Fri,  6 May 2022 16:22:54 +0200 (CEST)
-Date:   Fri, 6 May 2022 16:22:54 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/6] PCI: mvebu: Add support for PME and AER interrupts
-Message-ID: <20220506142254.mzl7jotubvebptlp@pali>
-References: <20220506134029.21470-1-pali@kernel.org>
+        with ESMTP id S1442401AbiEFOsF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 10:48:05 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 30F626AA6D;
+        Fri,  6 May 2022 07:44:21 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id AEF9F9200BF; Fri,  6 May 2022 16:44:19 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id AAE6792009B;
+        Fri,  6 May 2022 15:44:19 +0100 (BST)
+Date:   Fri, 6 May 2022 15:44:19 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     David Laight <David.Laight@ACULAB.COM>
+cc:     Arnd Bergmann <arnd@kernel.org>, Rich Felker <dalias@libc.org>,
+        "open list:IA64 (Itanium) PLATFORM" <linux-ia64@vger.kernel.org>,
+        "open list:SUPERH" <linux-sh@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        "open list:SPARC + UltraSPARC (sparc/sparc64)" 
+        <sparclinux@vger.kernel.org>,
+        "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Helge Deller <deller@gmx.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        "open list:M68K ARCHITECTURE" <linux-m68k@lists.linux-m68k.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "open list:ALPHA PORT" <linux-alpha@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [RFC v2 01/39] Kconfig: introduce HAS_IOPORT option and select
+ it as necessary
+In-Reply-To: <3669a28a055344a792b51439c953fd30@AcuMS.aculab.com>
+Message-ID: <alpine.DEB.2.21.2205061440260.52331@angie.orcam.me.uk>
+References: <CAK8P3a0sJgMSpZB_Butx2gO0hapYZy-Dm_QH-hG5rOaq_ZgsXg@mail.gmail.com> <20220505161028.GA492600@bhelgaas> <CAK8P3a3fmPExr70+fVb564hZdGAuPtYa-QxgMMe5KLpnY_sTrQ@mail.gmail.com> <alpine.DEB.2.21.2205061058540.52331@angie.orcam.me.uk>
+ <CAK8P3a0NzG=3tDLCdPj2=A__2r_+xiiUTW=WJCBNp29x_A63Og@mail.gmail.com> <alpine.DEB.2.21.2205061314110.52331@angie.orcam.me.uk> <5239892986c94239a122ab2f7a18a7a5@AcuMS.aculab.com> <alpine.DEB.2.21.2205061412080.52331@angie.orcam.me.uk>
+ <3669a28a055344a792b51439c953fd30@AcuMS.aculab.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220506134029.21470-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 06 May 2022 15:40:23 Pali Rohár wrote:
-> mvebu PCIe PME and AER interrupts are reported via PCIe summary
-> interrupt. PCIe summary interrupt is reported via mvebu MPIC SoC error
-> summary interrupt. And MPIC SoC error summary interrupt is reported via
-> MPIC IRQ 4.
-> 
-> This patch series implements support for interrupts in MPIC SoC error
-> hierarchy in irq-armada-370-xp.c driver and support for interrupts in
-> mvebu PCIe hierarchy in pci-mvebu.c.
-> 
-> Finally PCIe PME and AER interrupts are routed to the correct PCIe Root
-> Port, which allows kernel PME and AER drivers to take care of them.
-> 
-> Tested on A385 board and kernel PME and AER drivers works correctly:
-> 
-> [    0.898482] pcieport 0000:00:01.0: PME: Signaling with IRQ 61
-> [    0.904422] pcieport 0000:00:01.0: AER: enabled with IRQ 61
-> [    0.910113] pcieport 0000:00:02.0: enabling device (0140 -> 0142)
-> [    0.916299] pcieport 0000:00:02.0: PME: Signaling with IRQ 62
-> [    0.922216] pcieport 0000:00:02.0: AER: enabled with IRQ 62
-> [    0.927917] pcieport 0000:00:03.0: enabling device (0140 -> 0142)
-> [    0.934090] pcieport 0000:00:03.0: PME: Signaling with IRQ 63
-> [    0.940006] pcieport 0000:00:03.0: AER: enabled with IRQ 63
-> 
-> This change finally allows to debug PCIe issues on A385 boards.
+On Fri, 6 May 2022, David Laight wrote:
 
-FYI I tested that AER errors are now really handled by kernel AER driver:
+> >  It was retrofitted in that x86 systems already existed for ~15 years when
+> > PCI came into picture.  Therefore the makers of the CPU ISA couldn't have
+> > envisaged the need for config access instructions like they did for memory
+> > and port access.
+> 
+> Rev 2.0 of the PCI spec (1993) defines two mechanisms for config cycles.
+> #2 is probably the first one and maps all of PCI config space into
+> 4k of IO space (PCI bridges aren't supported).
 
-[ 2733.258661] pcieport 0000:00:02.0: AER: Multiple Uncorrected (Non-Fatal) error received: 0000:02:00.0
-[ 2733.258661] pcieport 0000:00:01.0: AER: Multiple Corrected error received: 0000:01:00.0
-[ 2733.258682] pcieport 0000:00:01.0: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-[ 2733.267932] ath10k_pci 0000:02:00.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-[ 2733.275956] pcieport 0000:00:01.0:   device [11ab:6820] error status/mask=00000001/00002000
-[ 2733.285547] ath10k_pci 0000:02:00.0:   device [168c:003c] error status/mask=00100000/00000000
-[ 2733.296876] pcieport 0000:00:01.0:    [ 0] RxErr                  (First)
-[ 2733.305245] ath10k_pci 0000:02:00.0:    [20] UnsupReq               (First)
-[ 2733.305251] ath10k_pci 0000:02:00.0: AER:   TLP Header: 30000000 02080030 00000000 00000000
-[ 2733.305282] ath10k_pci 0000:02:00.0: AER: can't recover (no error_detected callback)
-[ 2733.313816] nvme 0000:01:00.0: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Transmitter ID)
-[ 2733.320671] pcieport 0000:00:02.0: AER: device recovery failed
-[ 2733.327609] nvme 0000:01:00.0:   device [1e0f:0001] error status/mask=00001041/00002000
-[ 2733.367127] nvme 0000:01:00.0:    [ 0] RxErr                  (First)
-[ 2733.373591] nvme 0000:01:00.0:    [ 6] BadTLP                
-[ 2733.379358] nvme 0000:01:00.0:    [12] Timeout               
-[ 2733.385120] nvme 0000:01:00.0: AER:   Error of this Agent is reported first
+ This one is even more horrid than #1 in that it requires two separate 
+preparatory I/O writes rather than just one, one to the Forward Register 
+(at 0xcfa) to set the bus number, and another to the Configuration Space 
+Enable Register (at 0xcf8) to set the function number, before you can 
+issue a configuration read or write to a device.  So you need MP locking 
+too.
 
-> Pali Rohár (6):
->   dt-bindings: irqchip: armada-370-xp: Update information about MPIC SoC
->     Error
->   irqchip/armada-370-xp: Implement SoC Error interrupts
->   ARM: dts: armada-38x.dtsi: Add node for MPIC SoC Error IRQ controller
->   dt-bindings: PCI: mvebu: Update information about summary interrupt
->   PCI: mvebu: Implement support for interrupts on emulated bridge
->   ARM: dts: armada-385.dtsi: Add definitions for PCIe summary interrupts
+ NB only peer bridges aren't supported with this mechanism, normal PCI-PCI 
+bridges are, via the Forward Register.
+
+> #1 requires a pair of accesses (and SMP locking).
 > 
->  .../marvell,armada-370-xp-mpic.txt            |   9 +
->  .../devicetree/bindings/pci/mvebu-pci.txt     |   1 +
->  arch/arm/boot/dts/armada-385.dtsi             |  20 +-
->  arch/arm/boot/dts/armada-38x.dtsi             |   5 +
->  drivers/irqchip/irq-armada-370-xp.c           | 213 +++++++++++++++++-
->  drivers/pci/controller/pci-mvebu.c            | 208 +++++++++++++++--
->  6 files changed, 426 insertions(+), 30 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+> Neither is really horrid.
+
+ Both are.  First neither is MP-safe and second both are indirect in that 
+you need to poke at some chipset registers before you can issue the actual 
+read or write.
+
+ Sane access would require a single CPU instruction to read or write from 
+the configuration space.  To access the conventional PCI configuration 
+space in a direct linear manner you need 256 * 21 * 8 * 256 = 10.5MiB of 
+address space.  Such amount of address space seems affordable even with 
+32-bit systems.
+
+  Maciej
