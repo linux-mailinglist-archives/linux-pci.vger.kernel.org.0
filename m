@@ -2,65 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7415E51DF55
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 20:56:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A5E051E010
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 22:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1388819AbiEFS7g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 14:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39442 "EHLO
+        id S242918AbiEFUVM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 16:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239453AbiEFS7f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 14:59:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC8820BEB;
-        Fri,  6 May 2022 11:55:51 -0700 (PDT)
+        with ESMTP id S233871AbiEFUVM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 16:21:12 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FD464725
+        for <linux-pci@vger.kernel.org>; Fri,  6 May 2022 13:17:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DB9E062185;
-        Fri,  6 May 2022 18:55:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D496BC385A9;
-        Fri,  6 May 2022 18:55:49 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2F497B83945
+        for <linux-pci@vger.kernel.org>; Fri,  6 May 2022 20:17:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F3D5C385A8;
+        Fri,  6 May 2022 20:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651863350;
-        bh=UhAfnAGyYCHxB1vBUp7V89kxjGB3UeRzniR2RreuUlQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r+1rMliRFufQ7rLwSbN62U4D7ZlKAoJYzA4UdAjH0Z+ozLXlPYMWb08hAWMcyhcV6
-         nfDnc+5fPk9xs7Lr34w45BU4IdmV0K0sFudVVlZ76LUHrdNCMLnyqhJK/h0sCob5o4
-         tSfjt4C4r5Ub3sM0EGCeYr/MSDRBfG43t5VZuGMrvRM4AxUIRAx+7gYPhVGZjAvm5g
-         1g1QH2k0pCQM3TeZfdK3qpVXsDexH+w0gEP/diUADtPKujnz5LL8tp2tDCJ+lMjV5p
-         lZVjZHon5zcpMJaMmgd2AaluSdnPdqs2bjR+4TdIk5uhTSDFIx8Q33n0vpDntj3qUn
-         dAlX8bly3W6rA==
-Received: by pali.im (Postfix)
-        id E15891141; Fri,  6 May 2022 20:55:46 +0200 (CEST)
-Date:   Fri, 6 May 2022 20:55:46 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/6] irqchip/armada-370-xp: Implement SoC Error interrupts
-Message-ID: <20220506185546.n5rl3chyyauy4bjt@pali>
-References: <20220506134029.21470-1-pali@kernel.org>
- <20220506134029.21470-3-pali@kernel.org>
- <87mtfu7ccd.wl-maz@kernel.org>
- <20220506183051.wimo7p4nuqfnl2aj@pali>
- <8735hmijlu.wl-maz@kernel.org>
+        s=k20201202; t=1651868244;
+        bh=OmjI2XCL4fTldCAIC0FtoHQghW1E611IMOnivnt6Q9M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=E357CrUptmg2XtIbr1Up4PiUggZncPkf5F2zRbVysQi4etyne1ypPo/+4e7hWMdF0
+         iMYaUj6vTRpLHaotWFUKXE18X+tON8Wqg5peQMaWKf5Yi5+6uzKFNw9IPXgo6EYugU
+         qRweyco/GfQRUYg3d0i3cvofjtBJa1B2Y6/YGy7MxFMP6zekUUwkSe6XvTVDiOAxSj
+         6hrxaNU3NdVKEIw5Nl9znPIU0jYwoMP5hBiHKyTO325SL+4/ZGIVcQx3jp+1SN2PMa
+         g5Mk0qFqh1XMGZ0SyXnUopuHWmAnsXs57L4BkS6hFJx+JZOgY9RK7sORkJHiq+UmYg
+         K12j69Y+OpyZA==
+Date:   Fri, 6 May 2022 15:17:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: Write to srvio_numvfs triggers kernel panic
+Message-ID: <20220506201722.GA555374@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8735hmijlu.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <87a6bxm5vm.fsf@epam.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -71,207 +55,175 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 06 May 2022 19:47:25 Marc Zyngier wrote:
-> On Fri, 06 May 2022 19:30:51 +0100,
-> Pali Rohár <pali@kernel.org> wrote:
-> > 
-> > On Friday 06 May 2022 19:19:46 Marc Zyngier wrote:
-> > > On Fri, 06 May 2022 14:40:25 +0100,
-> > > Pali Rohár <pali@kernel.org> wrote:
-> > > > 
-> > > > MPIC IRQ 4 is used as SoC Error Summary interrupt and provides access to
-> > > > another hierarchy of SoC Error interrupts. Implement a new IRQ chip and
-> > > > domain for accessing this IRQ hierarchy.
-> > > > 
-> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > ---
-> > > >  drivers/irqchip/irq-armada-370-xp.c | 213 +++++++++++++++++++++++++++-
-> > > >  1 file changed, 210 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada-370-xp.c
-> > > > index ebd76ea1c69b..71578b65f5c8 100644
-> > > > --- a/drivers/irqchip/irq-armada-370-xp.c
-> > > > +++ b/drivers/irqchip/irq-armada-370-xp.c
-> > > > @@ -117,6 +117,8 @@
-> > > >  /* Registers relative to main_int_base */
-> > > >  #define ARMADA_370_XP_INT_CONTROL		(0x00)
-> > > >  #define ARMADA_370_XP_SW_TRIG_INT_OFFS		(0x04)
-> > > > +#define ARMADA_370_XP_INT_SOC_ERR_0_CAUSE_OFFS	(0x20)
-> > > > +#define ARMADA_370_XP_INT_SOC_ERR_1_CAUSE_OFFS	(0x24)
-> > > >  #define ARMADA_370_XP_INT_SET_ENABLE_OFFS	(0x30)
-> > > >  #define ARMADA_370_XP_INT_CLEAR_ENABLE_OFFS	(0x34)
-> > > >  #define ARMADA_370_XP_INT_SOURCE_CTL(irq)	(0x100 + irq*4)
-> > > > @@ -130,6 +132,8 @@
-> > > >  #define ARMADA_370_XP_CPU_INTACK_OFFS		(0x44)
-> > > >  #define ARMADA_370_XP_INT_SET_MASK_OFFS		(0x48)
-> > > >  #define ARMADA_370_XP_INT_CLEAR_MASK_OFFS	(0x4C)
-> > > > +#define ARMADA_370_XP_INT_SOC_ERR_0_MASK_OFF	(0x50)
-> > > > +#define ARMADA_370_XP_INT_SOC_ERR_1_MASK_OFF	(0x54)
-> > > >  #define ARMADA_370_XP_INT_FABRIC_MASK_OFFS	(0x54)
-> > > >  #define ARMADA_370_XP_INT_CAUSE_PERF(cpu)	(1 << cpu)
-> > > >  
-> > > > @@ -146,6 +150,8 @@
-> > > >  static void __iomem *per_cpu_int_base;
-> > > >  static void __iomem *main_int_base;
-> > > >  static struct irq_domain *armada_370_xp_mpic_domain;
-> > > > +static struct irq_domain *armada_370_xp_soc_err_domain;
-> > > > +static unsigned int soc_err_irq_num_regs;
-> > > >  static u32 doorbell_mask_reg;
-> > > >  static int parent_irq;
-> > > >  #ifdef CONFIG_PCI_MSI
-> > > > @@ -156,6 +162,8 @@ static DEFINE_MUTEX(msi_used_lock);
-> > > >  static phys_addr_t msi_doorbell_addr;
-> > > >  #endif
-> > > >  
-> > > > +static void armada_370_xp_soc_err_irq_unmask(struct irq_data *d);
-> > > > +
-> > > >  static inline bool is_percpu_irq(irq_hw_number_t irq)
-> > > >  {
-> > > >  	if (irq <= ARMADA_370_XP_MAX_PER_CPU_IRQS)
-> > > > @@ -509,6 +517,27 @@ static void armada_xp_mpic_reenable_percpu(void)
-> > > >  		armada_370_xp_irq_unmask(data);
-> > > >  	}
-> > > >  
-> > > > +	/* Re-enable per-CPU SoC Error interrupts that were enabled before suspend */
-> > > > +	for (irq = 0; irq < soc_err_irq_num_regs * 32; irq++) {
-> > > > +		struct irq_data *data;
-> > > > +		int virq;
-> > > > +
-> > > > +		virq = irq_linear_revmap(armada_370_xp_soc_err_domain, irq);
-> > > > +		if (virq == 0)
-> > > > +			continue;
-> > > > +
-> > > > +		data = irq_get_irq_data(virq);
-> > > > +
-> > > > +		if (!irq_percpu_is_enabled(virq))
-> > > > +			continue;
-> > > > +
-> > > > +		armada_370_xp_soc_err_irq_unmask(data);
-> > > > +	}
-> > > 
-> > > So you do this loop and all these lookups, both here and in the resume
-> > > function (duplicated code!) just to be able to call the unmask
-> > > function?  This would be better served by two straight writes of the
-> > > mask register, which you'd conveniently save on suspend.
-> > > 
-> > > Yes, you have only duplicated the existing logic. But surely there is
-> > > something better to do.
-> > 
-> > Yes, I just used existing logic.
-> > 
-> > I'm not rewriting driver or doing big refactor of it, as this is not in
-> > the scope of the PCIe AER interrupt support.
+[+cc Alex, Leon, Jason]
+
+On Wed, May 04, 2022 at 07:56:01PM +0000, Volodymyr Babchuk wrote:
 > 
-> Fair enough. By the same logic, I'm not taking any change to the
-> driver until it is put in a better shape. Your call.
-
-If you are maintainer of this code then it is expected from _you_ to
-move the current code into _better shape_ as you wrote and expect. And
-then show us exactly, how new changes in this driver should look like,
-in examples.
-
-> > > > +
-> > > > +	/* Unmask summary SoC Error Interrupt */
-> > > > +	if (soc_err_irq_num_regs > 0)
-> > > > +		writel(4, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
-> > > > +
-> > > >  	ipi_resume();
-> > > >  }
-> > > >  
-> > > > @@ -546,8 +575,8 @@ static struct irq_chip armada_370_xp_irq_chip = {
-> > > >  static int armada_370_xp_mpic_irq_map(struct irq_domain *h,
-> > > >  				      unsigned int virq, irq_hw_number_t hw)
-> > > >  {
-> > > > -	/* IRQs 0 and 1 cannot be mapped, they are handled internally */
-> > > > -	if (hw <= 1)
-> > > > +	/* IRQs 0, 1 and 4 cannot be mapped, they are handled internally */
-> > > > +	if (hw <= 1 || hw == 4)
-> > > >  		return -EINVAL;
-> > > >  
-> > > >  	armada_370_xp_irq_mask(irq_get_irq_data(virq));
-> > > > @@ -577,6 +606,99 @@ static const struct irq_domain_ops armada_370_xp_mpic_irq_ops = {
-> > > >  	.xlate = irq_domain_xlate_onecell,
-> > > >  };
-> > > >  
-> > > > +static DEFINE_RAW_SPINLOCK(armada_370_xp_soc_err_lock);
-> > > > +
-> > > > +static void armada_370_xp_soc_err_irq_mask(struct irq_data *d)
-> > > > +{
-> > > > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > > > +	u32 reg, mask;
-> > > > +
-> > > > +	reg = hwirq >= 32 ? ARMADA_370_XP_INT_SOC_ERR_1_MASK_OFF
-> > > > +			  : ARMADA_370_XP_INT_SOC_ERR_0_MASK_OFF;
-> > > > +
-> > > > +	raw_spin_lock(&armada_370_xp_soc_err_lock);
-> > > > +	mask = readl(per_cpu_int_base + reg);
-> > > > +	mask &= ~BIT(hwirq % 32);
-> > > > +	writel(mask, per_cpu_int_base + reg);
-> > > > +	raw_spin_unlock(&armada_370_xp_soc_err_lock);
-> > > > +}
-> > > > +
-> > > > +static void armada_370_xp_soc_err_irq_unmask(struct irq_data *d)
-> > > > +{
-> > > > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > > > +	u32 reg, mask;
-> > > > +
-> > > > +	reg = hwirq >= 32 ? ARMADA_370_XP_INT_SOC_ERR_1_MASK_OFF
-> > > > +			  : ARMADA_370_XP_INT_SOC_ERR_0_MASK_OFF;
-> > > > +
-> > > > +	raw_spin_lock(&armada_370_xp_soc_err_lock);
-> > > > +	mask = readl(per_cpu_int_base + reg);
-> > > > +	mask |= BIT(hwirq % 32);
-> > > > +	writel(mask, per_cpu_int_base + reg);
-> > > > +	raw_spin_unlock(&armada_370_xp_soc_err_lock);
-> > > > +}
-> > > > +
-> > > > +static int armada_370_xp_soc_err_irq_mask_on_cpu(void *par)
-> > > > +{
-> > > > +	struct irq_data *d = par;
-> > > > +	armada_370_xp_soc_err_irq_mask(d);
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int armada_370_xp_soc_err_irq_unmask_on_cpu(void *par)
-> > > > +{
-> > > > +	struct irq_data *d = par;
-> > > > +	armada_370_xp_soc_err_irq_unmask(d);
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int armada_xp_soc_err_irq_set_affinity(struct irq_data *d,
-> > > > +					      const struct cpumask *mask,
-> > > > +					      bool force)
-> > > > +{
-> > > > +	unsigned int cpu;
-> > > > +
-> > > > +	cpus_read_lock();
-> > > > +
-> > > > +	/* First disable IRQ on all cores */
-> > > > +	for_each_online_cpu(cpu)
-> > > > +		smp_call_on_cpu(cpu, armada_370_xp_soc_err_irq_mask_on_cpu, d, true);
-> > > > +
-> > > > +	/* Select a single core from the affinity mask which is online */
-> > > > +	cpu = cpumask_any_and(mask, cpu_online_mask);
-> > > > +	smp_call_on_cpu(cpu, armada_370_xp_soc_err_irq_unmask_on_cpu, d, true);
-> > > > +
-> > > > +	cpus_read_unlock();
-> > > > +
-> > > > +	irq_data_update_effective_affinity(d, cpumask_of(cpu));
-> > > > +
-> > > > +	return IRQ_SET_MASK_OK;
-> > > > +}
-> > > 
-> > > Aren't these per-CPU interrupts anyway? What does it mean to set their
-> > > affinity? /me rolls eyes...
-> > 
-> > Yes, they are per-CPU interrupts. But to mask or unmask particular
-> > interrupt for specific CPU is possible only from that CPU. CPU 0 just
-> > cannot move interrupt from CPU 0 to CPU 1. CPU 0 can only mask that
-> > interrupt and CPU 1 has to unmask it.
+> Hello,
 > 
-> And that's no different form other per-CPU interrupts that have the
-> exact same requirements. NAK to this sort of hacks.
+> I have encountered issue when PCI code tries to use both fields in
+> 
+>         union {
+> 		struct pci_sriov	*sriov;		/* PF: SR-IOV info */
+> 		struct pci_dev		*physfn;	/* VF: related PF */
+> 	};
+> 
+> (which are part of struct pci_dev) at the same time.
+> 
+> Symptoms are following:
+> 
+> # echo 1 > /sys/bus/pci/devices/0000:01:00.0/sriov_numvfs
+> 
+> pci 0000:01:00.2: reg 0x20c: [mem 0x30018000-0x3001ffff 64bit]
+> pci 0000:01:00.2: VF(n) BAR0 space: [mem 0x30018000-0x30117fff 64bit] (contains BAR0 for 32 VFs)
+>  Unable to handle kernel paging request at virtual address 0001000200000010
+>  Mem abort info:
+>    ESR = 0x96000004
+>    EC = 0x25: DABT (current EL), IL = 32 bits
+>    SET = 0, FnV = 0
+>    EA = 0, S1PTW = 0
+>  Data abort info:
+>    ISV = 0, ISS = 0x00000004
+>    CM = 0, WnR = 0
+>  [0001000200000010] address between user and kernel address ranges
+>  Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> Modules linked in: xt_MASQUERADE iptable_nat nf_nat nf_conntrack nf_defrag_ipv6
+> nf_defrag_ipv4 libcrc32c iptable_filter crct10dif_ce nvme nvme_core at24
+> pci_endpoint_test bridge pdrv_genirq ip_tables x_tables ipv6
+>  CPU: 3 PID: 287 Comm: sh Not tainted 5.10.41-lorc+ #233
+>  Hardware name: XENVM-4.17 (DT)
+>  pstate: 60400005 (nZCv daif +PAN -UAO -TCO BTYPE=--)
+>  pc : pcie_aspm_get_link+0x90/0xcc
+>  lr : pcie_aspm_get_link+0x8c/0xcc
+>  sp : ffff8000130d39c0
+>  x29: ffff8000130d39c0 x28: 00000000000001a4
+>  x27: 00000000ffffee4b x26: ffff80001164f560
+>  x25: 0000000000000000 x24: 0000000000000000
+>  x23: ffff80001164f660 x22: 0000000000000000
+>  x23: ffff80001164f660 x22: 0000000000000000
+>  x21: ffff000003f08000 x20: ffff800010db37d8
+>  x19: ffff000004b8e780 x18: ffffffffffffffff
+>  x17: 0000000000000000 x16: 00000000deadbeef
+>  x15: ffff8000930d36c7 x14: 0000000000000006
+>  x13: ffff8000115c2710 x12: 000000000000081c
+>  x11: 00000000000002b4 x10: ffff8000115c2710
+>  x9 : ffff8000115c2710 x8 : 00000000ffffefff
+>  x7 : ffff80001161a710 x6 : ffff80001161a710
+>  x5 : ffff00003fdad900 x4 : 0000000000000000
+>  x3 : 0000000000000000 x2 : 0000000000000000
+>  x1 : ffff000003c51c80 x0 : 0001000200000000
+>  Call trace:
+>   pcie_aspm_get_link+0x90/0xcc
+>   aspm_ctrl_attrs_are_visible+0x30/0xc0
+>   internal_create_group+0xd0/0x3cc
+>   internal_create_groups.part.0+0x4c/0xc0
+>   sysfs_create_groups+0x20/0x34
+>   device_add+0x2b4/0x760
+>   pci_device_add+0x814/0x854
+>   pci_iov_add_virtfn+0x240/0x2f0
+>   sriov_enable+0x1f8/0x474
+>   pci_sriov_configure_simple+0x38/0x90
+>   sriov_numvfs_store+0xa4/0x1a0
+>   dev_attr_store+0x1c/0x30
+>   sysfs_kf_write+0x48/0x60
+>   kernfs_fop_write_iter+0x118/0x1ac
+>   new_sync_write+0xe8/0x184
+>   vfs_write+0x23c/0x2a0
+>   ksys_write+0x68/0xf4
+>   __arm64_sys_write+0x20/0x2c
+>   el0_svc_common.constprop.0+0x78/0x1a0
+>   do_el0_svc+0x28/0x94
+>   el0_svc+0x14/0x20
+>   el0_sync_handler+0xa4/0x130
+>   el0_sync+0x180/0x1c0
+> Code: d0002120 9133e000 97ffef8e f9400a60 (f9400813)
+> 
+> 
+> Debugging showed the following:
+> 
+> pci_iov_add_virtfn() allocates new struct pci_dev:
+> 
+> 	virtfn = pci_alloc_dev(bus);
+> and sets physfn:
+> 	virtfn->is_virtfn = 1;
+> 	virtfn->physfn = pci_dev_get(dev);
+> 
+> then we will get into sriov_init() via the following call path:
+> 
+> pci_device_add(virtfn, virtfn->bus);
+>   pci_init_capabilities(dev);
+>     pci_iov_init(dev);
+>       sriov_init(dev, pos);
 
-You forgot to mention in your previous email how to do it, right? So we
-are waiting...
+We called pci_device_add() with the VF.  pci_iov_init() only calls
+sriov_init() if it finds an SR-IOV capability on the device:
+
+  pci_iov_init(struct pci_dev *dev)
+    pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV);
+    if (pos)
+      return sriov_init(dev, pos);
+
+So this means the VF must have an SR-IOV capability, which sounds a
+little dubious.  From PCIe r6.0:
+
+  9.3.3 SR-IOV Extended Capability
+
+  The SR-IOV Extended Capability defined here is a PCIe extended
+  capability that must be implemented in each PF that supports SR-IOV.
+  This Capability is used to describe and control a PF’s SR-IOV
+  Capabilities.
+
+  For Multi-Function Devices, each PF that supports SR-IOV shall
+  provide the Capability structure defined in this section.  This
+  Capability structure may be present in any Function with a Type 0
+  Configuration Space Header. This Capability must not be present in
+  Functions with a Type 1 Configuration Space Header.
+
+Can you supply the output of "sudo lspci -vv" for your system?
+
+It could be that the device has an SR-IOV capability when it
+shouldn't.  But even if it does, Linux could tolerate that better
+than it does today.
+
+> sriov_init() overwrites value in the union:
+> 	dev->sriov = iov; <<<<<---- There
+> 	dev->is_physfn = 1;
+> 
+> Next, we will get into function that causes panic:
+> 
+> pci_device_add(virtfn, virtfn->bus);
+>   device_add(&dev->dev)
+>     sysfs_create_groups()
+>       internal_create_group()
+>         aspm_ctrl_attrs_are_visible()
+>           pcie_aspm_get_link()
+>             pci_upstream_bridge()
+>               pci_physfn()
+> 
+> which is
+> 
+> static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+> {
+> #ifdef CONFIG_PCI_IOV
+> 	if (dev->is_virtfn)
+> 		dev = dev->physfn;
+> #endif
+> 	return dev;
+> }
+> 
+> 
+> as is_virtfn == 1 and dev->physfn was overwritten via write to
+> dev->sriov, pci_physfn() will return pointer to struct pci_sriov
+> allocated by sriov_init(). And then pci_upstream_bridge() will
+> cause panic by acessing it as if it were pointer to struct pci_dev
+> 
+> I encountered this issue on ARM64, Linux 5.10.41. Tried to test
+> on master branch, but it is quite difficult to rebase platform
+> code on the master. But I compared all relevant parts of PCI code
+> and didn't found any differences.
+> 
+> Looks like I am missing following, because how SR-IOV can be so broken?
+> But what exactly?
+> 
+> -- 
+> Volodymyr Babchuk at EPAM
