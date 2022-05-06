@@ -2,186 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5208B51D7C4
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 14:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A9D251D7F7
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 14:35:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1391873AbiEFMev (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 08:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
+        id S1346958AbiEFMjb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 08:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233559AbiEFMeu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 08:34:50 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3316571;
-        Fri,  6 May 2022 05:31:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4471FB835A7;
-        Fri,  6 May 2022 12:31:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B40C385A8;
-        Fri,  6 May 2022 12:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651840265;
-        bh=VUkc4x5co6VINK47Df8xTVJtnK5r1B3tZxhcXs1qt+E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S/kIT51r74siNrheaEI+xbkmHIPnhAb0FXAwC34wY2yxgI1ZKHT2arEQMuKjFzkV0
-         KkFFeFumJIiEsWK3CJY7JN3c4ZWv7xH/PqgxrR7UweFDIwQixt8ZE/qLC1OGbWcAEi
-         7+T451Y+u86fsrt5O7MMuR2j0s5hMG0LxfKsO9JlCC1rvYlvixY1DFZTAm2wgEvEPW
-         UTJAdYHB7I8aatGONXX3eDHkOdf+N4OYrp2czmnr/QQxbPmR4OTU+6LAEBo91+Y+Wn
-         LHIWTq16u0yesV3xcjduGCiYXACG9TWSiMowoiaUifezjozNB7qCd7FAezkinSzK4J
-         LCEuAdHuAyLZg==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1nmx6u-0007O0-Ul; Fri, 06 May 2022 14:31:05 +0200
-Date:   Fri, 6 May 2022 14:31:04 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S1392080AbiEFMjL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 08:39:11 -0400
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C48011C1E;
+        Fri,  6 May 2022 05:35:24 -0700 (PDT)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 574461C000E;
+        Fri,  6 May 2022 12:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1651840523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H2Bk3mQ20dGxFwnkKyvshpUua/wpum6W/dZbHZ7rm1Y=;
+        b=g9gnkmhIb6svEygm5WDSRv6YcrjnfsEQPpH8RsytHfDx0bynTua6C23Cnk+Qa3teGWjU8b
+        vc4shpPdG5xxiUh8mTSQNueJ3Iqi6V2/TfITKAk5ligg0xv2CAFTjFx659sM/X5RhVE/Ml
+        5122xb2Ph32OvMZNpRTT3rXOm0IqUUbwKqy0IuB+rvWgg/+4bJA3DGAkdnWhVj7rlJkhgx
+        XeoEfu/kz4i0FCSAtkLEkcIFgw9X+zXEQO9fnhpeZr/D1YU/sBLwKOFmNxmQKx9lAwwxX+
+        F5K5Qd0bi/nWcT10WT97TqyRu958m79YPralpcevRha3m+IYMMkygwUBDzfQpQ==
+Date:   Fri, 6 May 2022 14:35:18 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] clk: qcom: regmap: add pipe clk implementation
-Message-ID: <YnUVCCXybHUSAYx2@hovoldconsulting.com>
-References: <20220501192149.4128158-1-dmitry.baryshkov@linaro.org>
- <20220501192149.4128158-3-dmitry.baryshkov@linaro.org>
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: renesas,pci-rcar-gen2: Add
+ device tree support for r9a06g032
+Message-ID: <20220506143518.3ed9765b@bootlin.com>
+In-Reply-To: <CAMuHMdVv-qCTyMQzr8ALCP-UmojZe9=NOrExPieJNV2300yzbQ@mail.gmail.com>
+References: <20220429134143.628428-1-herve.codina@bootlin.com>
+        <20220429134143.628428-4-herve.codina@bootlin.com>
+        <29ba3db6-e5c7-06d3-29d9-918ee5b34555@linaro.org>
+        <CAMuHMdWN_ni_V+e3QipWH2qKXeNPkEcVpHpb5iBYw1YQSAnCDA@mail.gmail.com>
+        <YnA0id1rXlNHNz+N@robh.at.kernel.org>
+        <CAMuHMdWktaRAw8Y6TR93_rH8v4mPR2yt3wGqeXeTA2p_Dh--wA@mail.gmail.com>
+        <5a89e9bf-1004-500a-75e1-995732629937@linaro.org>
+        <CAMuHMdVv-qCTyMQzr8ALCP-UmojZe9=NOrExPieJNV2300yzbQ@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220501192149.4128158-3-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, May 01, 2022 at 10:21:46PM +0300, Dmitry Baryshkov wrote:
-> On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
-> muxes which must be parked to the "safe" source (bi_tcxo) when
-> corresponding GDSC is turned off and on again. Currently this is
-> handcoded in the PCIe driver by reparenting the gcc_pipe_N_clk_src
-> clock. However the same code sequence should be applied in the
-> pcie-qcom endpoint, USB3 and UFS drivers.
-> 
-> Rather than copying this sequence over and over again, follow the
-> example of clk_rcg2_shared_ops and implement this parking in the
-> enable() and disable() clock operations. Suppliement the regmap-mux with
-> the new regmap-pipe implementation, which hides multiplexer behind
-> simple branch-like clock. This is possible since each of this
-> multiplexers has just two clock sources: working (pipe) and safe
-> (bi_tcxo) clock sources. If the clock is running off the external pipe
-> source, report it as enable and report it as disabled otherwise.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Hi All,
 
-I think this is much better and it addresses most of my concerns with
-the previous approach by keeping things simple and using a dedicated
-implementation (i.e. separate from regmap-mux).
+On Tue, 3 May 2022 11:37:31 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-The purpose of the clock implementation can be documented in the source
-and is reflected in the naming. It avoids the issues related to the
-caching (locking and deferred muxing) which wasn't really needed in the
-first place as these muxes are binary.
+> Hi Krzysztof,
+>=20
+> On Tue, May 3, 2022 at 11:29 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+> > On 03/05/2022 08:51, Geert Uytterhoeven wrote: =20
+> > >>>> This should not be a reason why a property is or is not required. =
+Either
+> > >>>> this is required for device operation or not. If it is required, s=
+hould
+> > >>>> be in the bindings. Otherwise what are you going to do in the futu=
+re?
+> > >>>> Add a required property breaking the ABI? =20
+> > >>>
+> > >>> The problem is that there are no bindings for the reset controller
+> > >>> (actually the reset controller feature of the system-controller) ye=
+t.
+> > >>> Yeah, we can just add #reset-cells =3D <1> to the system-controller
+> > >>> device node, but we cannot add the actual resets properties to the
+> > >>> consumers, until the actual cell values are defined. =20
+> > >>
+> > >> Sounds like you should implement providers first. Or just live with =
+the
+> > >> warning as a reminder to implement the reset provider? =20
+> > >
+> > > I'd go for the latter. The upstream r9a06g032.dtsi is still under act=
+ive
+> > > development. Until very recently, the only device supported was the
+> > > serial console. =20
+> >
+> > For clocks we use in such cases fixed-clock placeholders or empty
+> > phandles. Maybe something like that would work here as well? =20
+>=20
+> I don't think that works for resets.
+> Besides, the driver doesn't need or use the reset anyway.
+>=20
 
-By implementing is_enabled() you also allow for inspecting the state
-that the boot firmware left the mux in.
+Finally, related to the "resets" property, what should I do ?
+ (a) Keep the property as not required an change the commit log
+ (b) Set the property as required and live with a warning (Rob's suggestion)
 
-The only thing that comes to mind that wouldn't be possible is to
-set the mux state using an assigned clock parent in devicetree to make
-sure that XO is always selected before toggling the GDSC at probe.
+Regards,
+Herv=C3=A9
 
-But since that doesn't seem to work anyway when the boot firmware has
-set things up (e.g. causes a modem here to reset) that would probably
-need to be handled in the GDSC driver anyway (i.e. make sure the source
-is XO before enabling the GDSC but only when it was actually disabled).
-
-Taking that one step further would be to implement all this in the GDSC
-driver from the start so that the PHY PLL is always muxed in while the
-power domain is enabled (and only then)...
-
-> ---
->  drivers/clk/qcom/Makefile          |  1 +
->  drivers/clk/qcom/clk-regmap-pipe.c | 62 ++++++++++++++++++++++++++++++
->  drivers/clk/qcom/clk-regmap-pipe.h | 24 ++++++++++++
->  3 files changed, 87 insertions(+)
->  create mode 100644 drivers/clk/qcom/clk-regmap-pipe.c
->  create mode 100644 drivers/clk/qcom/clk-regmap-pipe.h
-> 
-> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-> index 671cf5821af1..882c8ecc2e93 100644
-> --- a/drivers/clk/qcom/Makefile
-> +++ b/drivers/clk/qcom/Makefile
-> @@ -11,6 +11,7 @@ clk-qcom-y += clk-branch.o
->  clk-qcom-y += clk-regmap-divider.o
->  clk-qcom-y += clk-regmap-mux.o
->  clk-qcom-y += clk-regmap-mux-div.o
-> +clk-qcom-y += clk-regmap-pipe.o
->  clk-qcom-$(CONFIG_KRAIT_CLOCKS) += clk-krait.o
->  clk-qcom-y += clk-hfpll.o
->  clk-qcom-y += reset.o
-> diff --git a/drivers/clk/qcom/clk-regmap-pipe.c b/drivers/clk/qcom/clk-regmap-pipe.c
-> new file mode 100644
-> index 000000000000..9a7c27cc644b
-> --- /dev/null
-> +++ b/drivers/clk/qcom/clk-regmap-pipe.c
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2022, Linaro Ltd.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/bitops.h>
-> +#include <linux/regmap.h>
-> +#include <linux/export.h>
-> +
-> +#include "clk-regmap-pipe.h"
-> +
-> +static inline struct clk_regmap_pipe *to_clk_regmap_pipe(struct clk_hw *hw)
-> +{
-> +	return container_of(to_clk_regmap(hw), struct clk_regmap_pipe, clkr);
-> +}
-> +
-> +static int pipe_is_enabled(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap_pipe *pipe = to_clk_regmap_pipe(hw);
-
-Since pipe is so overloaded already can we call this "pipe_mux" or
-"pipe_src" instead of just "pipe"?
-
-And similarly for
-
-	pipe_mux_is_enabled()
-	struct clk_regmap_pipe_mux
-	struct clk_regmap_pipe_mux_ops
-
-etc.
-
-> +	struct clk_regmap *clkr = to_clk_regmap(hw);
-> +	unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
-> +	unsigned int val;
-> +
-> +	regmap_read(clkr->regmap, pipe->reg, &val);
-> +	val = (val & mask) >> pipe->shift;
-> +
-> +	WARN_ON(unlikely(val != pipe->enable_val && val != pipe->disable_val));
-
-This is not a hot path and there's rarely a need for unlikely().
-
-> +
-> +	return val == pipe->enable_val;
-> +}
-
-Johan
+--=20
+Herv=C3=A9 Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
