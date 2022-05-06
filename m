@@ -2,116 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6430D51D7B1
-	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 14:28:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5208B51D7C4
+	for <lists+linux-pci@lfdr.de>; Fri,  6 May 2022 14:31:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1391977AbiEFMcJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 May 2022 08:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
+        id S1391873AbiEFMev (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 May 2022 08:34:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1391937AbiEFMbz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 08:31:55 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 47E356A071;
-        Fri,  6 May 2022 05:27:21 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 2BD8B9200B3; Fri,  6 May 2022 14:27:20 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 2728F92009D;
-        Fri,  6 May 2022 13:27:20 +0100 (BST)
-Date:   Fri, 6 May 2022 13:27:20 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Arnd Bergmann <arnd@kernel.org>
-cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "open list:ALPHA PORT" <linux-alpha@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "open list:IA64 (Itanium) PLATFORM" <linux-ia64@vger.kernel.org>,
-        "open list:M68K ARCHITECTURE" <linux-m68k@lists.linux-m68k.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>,
-        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:SPARC + UltraSPARC (sparc/sparc64)" 
-        <sparclinux@vger.kernel.org>
-Subject: Re: [RFC v2 01/39] Kconfig: introduce HAS_IOPORT option and select
- it as necessary
-In-Reply-To: <CAK8P3a0NzG=3tDLCdPj2=A__2r_+xiiUTW=WJCBNp29x_A63Og@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2205061314110.52331@angie.orcam.me.uk>
-References: <CAK8P3a0sJgMSpZB_Butx2gO0hapYZy-Dm_QH-hG5rOaq_ZgsXg@mail.gmail.com> <20220505161028.GA492600@bhelgaas> <CAK8P3a3fmPExr70+fVb564hZdGAuPtYa-QxgMMe5KLpnY_sTrQ@mail.gmail.com> <alpine.DEB.2.21.2205061058540.52331@angie.orcam.me.uk>
- <CAK8P3a0NzG=3tDLCdPj2=A__2r_+xiiUTW=WJCBNp29x_A63Og@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S233559AbiEFMeu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 May 2022 08:34:50 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3316571;
+        Fri,  6 May 2022 05:31:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4471FB835A7;
+        Fri,  6 May 2022 12:31:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B40C385A8;
+        Fri,  6 May 2022 12:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651840265;
+        bh=VUkc4x5co6VINK47Df8xTVJtnK5r1B3tZxhcXs1qt+E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S/kIT51r74siNrheaEI+xbkmHIPnhAb0FXAwC34wY2yxgI1ZKHT2arEQMuKjFzkV0
+         KkFFeFumJIiEsWK3CJY7JN3c4ZWv7xH/PqgxrR7UweFDIwQixt8ZE/qLC1OGbWcAEi
+         7+T451Y+u86fsrt5O7MMuR2j0s5hMG0LxfKsO9JlCC1rvYlvixY1DFZTAm2wgEvEPW
+         UTJAdYHB7I8aatGONXX3eDHkOdf+N4OYrp2czmnr/QQxbPmR4OTU+6LAEBo91+Y+Wn
+         LHIWTq16u0yesV3xcjduGCiYXACG9TWSiMowoiaUifezjozNB7qCd7FAezkinSzK4J
+         LCEuAdHuAyLZg==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1nmx6u-0007O0-Ul; Fri, 06 May 2022 14:31:05 +0200
+Date:   Fri, 6 May 2022 14:31:04 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] clk: qcom: regmap: add pipe clk implementation
+Message-ID: <YnUVCCXybHUSAYx2@hovoldconsulting.com>
+References: <20220501192149.4128158-1-dmitry.baryshkov@linaro.org>
+ <20220501192149.4128158-3-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220501192149.4128158-3-dmitry.baryshkov@linaro.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 6 May 2022, Arnd Bergmann wrote:
-
-> >  If this is PCI/PCIe indeed, then an I/O access is just a different bit
-> > pattern put on the bus/in the TLP in the address phase.  So what is there
-> > inherent to the s390 architecture that prevents that different bit pattern
-> > from being used?
+On Sun, May 01, 2022 at 10:21:46PM +0300, Dmitry Baryshkov wrote:
+> On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
+> muxes which must be parked to the "safe" source (bi_tcxo) when
+> corresponding GDSC is turned off and on again. Currently this is
+> handcoded in the PCIe driver by reparenting the gcc_pipe_N_clk_src
+> clock. However the same code sequence should be applied in the
+> pcie-qcom endpoint, USB3 and UFS drivers.
 > 
-> The hardware design for PCI on s390 is very different from any other
-> architecture, and more abstract. Rather than implementing MMIO register
-> access as pointer dereference, this is a separate CPU instruction that
-> takes a device/bar plus offset as arguments rather than a pointer, and
-> Linux encodes this back into a fake __iomem token.
-
- OK, that seems to me like a reasonable and quite a clean design (on the 
-hardware side).
-
- So what happens if the instruction is given an I/O rather than memory BAR 
-as the relevant argument?  Is the address space indicator bit (bit #0) 
-simply ignored or what?
-
-> >  But that has nothing to do with the presence or absence of any specific
-> > processor instructions.  It's just a limitation of bus glue.  So I guess
-> > it's just that all PCI/PCIe glue logic implementations for s390 have such
-> > a limitation, right?
+> Rather than copying this sequence over and over again, follow the
+> example of clk_rcg2_shared_ops and implement this parking in the
+> enable() and disable() clock operations. Suppliement the regmap-mux with
+> the new regmap-pipe implementation, which hides multiplexer behind
+> simple branch-like clock. This is possible since each of this
+> multiplexers has just two clock sources: working (pipe) and safe
+> (bi_tcxo) clock sources. If the clock is running off the external pipe
+> source, report it as enable and report it as disabled otherwise.
 > 
-> There are separate instructions for PCI memory and config space, but
-> no instructions for I/O space, or for non-PCI MMIO that it could be mapped
-> into.
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
- The PCI configuration space was retrofitted into x86 systems (and is 
-accessed in an awkward manner with them), but with a new design such a 
-clean approach is most welcome IMHO.  Thank you for your explanation.
+I think this is much better and it addresses most of my concerns with
+the previous approach by keeping things simple and using a dedicated
+implementation (i.e. separate from regmap-mux).
 
-  Maciej
+The purpose of the clock implementation can be documented in the source
+and is reflected in the naming. It avoids the issues related to the
+caching (locking and deferred muxing) which wasn't really needed in the
+first place as these muxes are binary.
+
+By implementing is_enabled() you also allow for inspecting the state
+that the boot firmware left the mux in.
+
+The only thing that comes to mind that wouldn't be possible is to
+set the mux state using an assigned clock parent in devicetree to make
+sure that XO is always selected before toggling the GDSC at probe.
+
+But since that doesn't seem to work anyway when the boot firmware has
+set things up (e.g. causes a modem here to reset) that would probably
+need to be handled in the GDSC driver anyway (i.e. make sure the source
+is XO before enabling the GDSC but only when it was actually disabled).
+
+Taking that one step further would be to implement all this in the GDSC
+driver from the start so that the PHY PLL is always muxed in while the
+power domain is enabled (and only then)...
+
+> ---
+>  drivers/clk/qcom/Makefile          |  1 +
+>  drivers/clk/qcom/clk-regmap-pipe.c | 62 ++++++++++++++++++++++++++++++
+>  drivers/clk/qcom/clk-regmap-pipe.h | 24 ++++++++++++
+>  3 files changed, 87 insertions(+)
+>  create mode 100644 drivers/clk/qcom/clk-regmap-pipe.c
+>  create mode 100644 drivers/clk/qcom/clk-regmap-pipe.h
+> 
+> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+> index 671cf5821af1..882c8ecc2e93 100644
+> --- a/drivers/clk/qcom/Makefile
+> +++ b/drivers/clk/qcom/Makefile
+> @@ -11,6 +11,7 @@ clk-qcom-y += clk-branch.o
+>  clk-qcom-y += clk-regmap-divider.o
+>  clk-qcom-y += clk-regmap-mux.o
+>  clk-qcom-y += clk-regmap-mux-div.o
+> +clk-qcom-y += clk-regmap-pipe.o
+>  clk-qcom-$(CONFIG_KRAIT_CLOCKS) += clk-krait.o
+>  clk-qcom-y += clk-hfpll.o
+>  clk-qcom-y += reset.o
+> diff --git a/drivers/clk/qcom/clk-regmap-pipe.c b/drivers/clk/qcom/clk-regmap-pipe.c
+> new file mode 100644
+> index 000000000000..9a7c27cc644b
+> --- /dev/null
+> +++ b/drivers/clk/qcom/clk-regmap-pipe.c
+> @@ -0,0 +1,62 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2022, Linaro Ltd.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/bitops.h>
+> +#include <linux/regmap.h>
+> +#include <linux/export.h>
+> +
+> +#include "clk-regmap-pipe.h"
+> +
+> +static inline struct clk_regmap_pipe *to_clk_regmap_pipe(struct clk_hw *hw)
+> +{
+> +	return container_of(to_clk_regmap(hw), struct clk_regmap_pipe, clkr);
+> +}
+> +
+> +static int pipe_is_enabled(struct clk_hw *hw)
+> +{
+> +	struct clk_regmap_pipe *pipe = to_clk_regmap_pipe(hw);
+
+Since pipe is so overloaded already can we call this "pipe_mux" or
+"pipe_src" instead of just "pipe"?
+
+And similarly for
+
+	pipe_mux_is_enabled()
+	struct clk_regmap_pipe_mux
+	struct clk_regmap_pipe_mux_ops
+
+etc.
+
+> +	struct clk_regmap *clkr = to_clk_regmap(hw);
+> +	unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
+> +	unsigned int val;
+> +
+> +	regmap_read(clkr->regmap, pipe->reg, &val);
+> +	val = (val & mask) >> pipe->shift;
+> +
+> +	WARN_ON(unlikely(val != pipe->enable_val && val != pipe->disable_val));
+
+This is not a hot path and there's rarely a need for unlikely().
+
+> +
+> +	return val == pipe->enable_val;
+> +}
+
+Johan
