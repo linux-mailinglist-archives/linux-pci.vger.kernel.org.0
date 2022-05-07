@@ -2,195 +2,243 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01E1351E62A
-	for <lists+linux-pci@lfdr.de>; Sat,  7 May 2022 11:42:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9BBE51E65F
+	for <lists+linux-pci@lfdr.de>; Sat,  7 May 2022 12:09:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384251AbiEGJqa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 May 2022 05:46:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
+        id S232498AbiEGKM4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 May 2022 06:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343969AbiEGJq3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 May 2022 05:46:29 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA3D14090;
-        Sat,  7 May 2022 02:42:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 90858B83AC8;
-        Sat,  7 May 2022 09:42:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23817C385A5;
-        Sat,  7 May 2022 09:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651916560;
-        bh=4+dyx8oODyTIP1fTleKBIFWbS0FSiB5ywoj/ypnfrS8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Me9Cluf1Hw+dpVj5SxXXe9rTjrwX+oV1DkYfWSm0qmADICDkOH90f4qAxB8mS0l+a
-         kmjIGHeMeblvInhbsshBlTfukoJBu4CjqnWJynp52Ou/jx+689d7o+BZcTm08NXXIs
-         Sh8QYroGGiRhlv/ulrcOtCFW7js5FcKSVS+srFFyU8QzOpnn7DnhpTjB55IQk38epN
-         c5jXshnQT+gRXqseJ7xEEiaO2L7XinPn5+H6z7Y6//jsJ73hniqKEstZCgoX76FXvL
-         /V4pQjHHCmp9hsJTJWjJxgrxNB/s9isIyXYZhtBEJMob4h4YORuezbukxgEu/F5zNB
-         8pR4eVcGuzm1w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nnGxR-009dwj-SC; Sat, 07 May 2022 10:42:37 +0100
-Date:   Sat, 07 May 2022 10:42:49 +0100
-Message-ID: <871qx5ispy.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S232437AbiEGKM4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 May 2022 06:12:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 82DAB37BCD
+        for <linux-pci@vger.kernel.org>; Sat,  7 May 2022 03:09:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651918148;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ugyhJHOyJRb+Ii6eaPgL20qr8QTMbWmypOsqDi+kA7I=;
+        b=Vl4+UFb0HRYMD/B7GQA45pgLFkRScRXLAzQH+CNdRFWdqaEbEm7LYeQCUT2elD6LpIHYL9
+        o86m3BTaxVo9k9JIbpqaeThCyaZ1nHk6KWl7B059OV2ytAZk74OY+c2Y8gpbpu5yzfO5rH
+        N+cXmgTCDPhdh1vPmi4PfXv+59vW6ZM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-632-iTWv23wrOc6MgyQw0ExNnQ-1; Sat, 07 May 2022 06:09:07 -0400
+X-MC-Unique: iTWv23wrOc6MgyQw0ExNnQ-1
+Received: by mail-ej1-f69.google.com with SMTP id re25-20020a170906d8d900b006f50701fbefso3091697ejb.23
+        for <linux-pci@vger.kernel.org>; Sat, 07 May 2022 03:09:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ugyhJHOyJRb+Ii6eaPgL20qr8QTMbWmypOsqDi+kA7I=;
+        b=fsXQPzAM+Ry3vxskHXU//+huQ093DVAEVCp8OYUh+yF1RbMbnwi5vMJlDkflZTenJy
+         17016ONQ83FY1vw+cZPOTr8zmVctZWkPX411V3UlT9W1AaCCAIMoQlSFC1zd54IR0/+Y
+         FUSdO4PCuqaUwFDcVKq82qUAY0xC2ThlmQJ81qiT5mG3iAOLP0pMXdm64l1P1MH7uaWm
+         1VZjy22XeQfqiQNm7ZYD+ZPOwrkR1afRjErgJs/q+yHVxC7QjcIwAHO1dZgQsiONdOfI
+         B5pPAHSeVLYlYDObciZT325fwtj0FXaHIW7WcYDdhl0ORV+XHdMAMTkbiYblhVki+CnD
+         2lEg==
+X-Gm-Message-State: AOAM5320xH03XMdNI2jQCDwYs9AHVHOBWfI8Gy7/1d+HmTavz83R/ABG
+        Dzu4Ml9rAcgb/l9CHTWnlRIGFw4KnNgVu4guGs3gWR1titWqorfmSP0ccGwGE6EebYfauDZElD+
+        TYDMCWcQ3iYplCbtGUSfd
+X-Received: by 2002:a17:907:94cd:b0:6f4:da4d:6ec2 with SMTP id dn13-20020a17090794cd00b006f4da4d6ec2mr6576362ejc.702.1651918145707;
+        Sat, 07 May 2022 03:09:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzZ4nAdow9Qwp9gKwTAcqGLkTqXlfn0VuBxIqMJjGNO1GJsCm5V203TV3mn+eU6485JZcWvpw==
+X-Received: by 2002:a17:907:94cd:b0:6f4:da4d:6ec2 with SMTP id dn13-20020a17090794cd00b006f4da4d6ec2mr6576344ejc.702.1651918145470;
+        Sat, 07 May 2022 03:09:05 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id u10-20020aa7d88a000000b0042617ba638csm3365565edq.22.2022.05.07.03.09.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 May 2022 03:09:04 -0700 (PDT)
+Message-ID: <94238be8-023e-a70a-45c8-a7096149e752@redhat.com>
+Date:   Sat, 7 May 2022 12:09:03 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v7 1/1] x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/6] irqchip/armada-370-xp: Implement SoC Error interrupts
-In-Reply-To: <20220507092054.b7yu23nj667l6xhy@pali>
-References: <20220506134029.21470-1-pali@kernel.org>
-        <20220506134029.21470-3-pali@kernel.org>
-        <87mtfu7ccd.wl-maz@kernel.org>
-        <20220506183051.wimo7p4nuqfnl2aj@pali>
-        <8735hmijlu.wl-maz@kernel.org>
-        <20220506185546.n5rl3chyyauy4bjt@pali>
-        <87levd7m2n.wl-maz@kernel.org>
-        <20220507092054.b7yu23nj667l6xhy@pali>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220506165110.GA509329@bhelgaas>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220506165110.GA509329@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: pali@kernel.org, tglx@linutronix.de, robh+dt@kernel.org, bhelgaas@google.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com, kw@linux.com, kabel@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 07 May 2022 10:20:54 +0100,
-Pali Roh=C3=A1r <pali@kernel.org> wrote:
->=20
-> On Saturday 07 May 2022 10:01:52 Marc Zyngier wrote:
-> > On Fri, 06 May 2022 19:55:46 +0100,
-> > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > >=20
-> > > On Friday 06 May 2022 19:47:25 Marc Zyngier wrote:
-> > > > On Fri, 06 May 2022 19:30:51 +0100,
-> > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > >=20
-> > > > > On Friday 06 May 2022 19:19:46 Marc Zyngier wrote:
-> > > > > > On Fri, 06 May 2022 14:40:25 +0100,
-> > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> > > > > > >=20
-> > > > > > > +static void armada_370_xp_soc_err_irq_unmask(struct irq_data=
- *d);
-> > > > > > > +
-> > > > > > >  static inline bool is_percpu_irq(irq_hw_number_t irq)
-> > > > > > >  {
-> > > > > > >  	if (irq <=3D ARMADA_370_XP_MAX_PER_CPU_IRQS)
-> > > > > > > @@ -509,6 +517,27 @@ static void armada_xp_mpic_reenable_perc=
-pu(void)
-> > > > > > >  		armada_370_xp_irq_unmask(data);
-> > > > > > >  	}
-> > > > > > > =20
-> > > > > > > +	/* Re-enable per-CPU SoC Error interrupts that were enabled=
- before suspend */
-> > > > > > > +	for (irq =3D 0; irq < soc_err_irq_num_regs * 32; irq++) {
-> > > > > > > +		struct irq_data *data;
-> > > > > > > +		int virq;
-> > > > > > > +
-> > > > > > > +		virq =3D irq_linear_revmap(armada_370_xp_soc_err_domain, i=
-rq);
-> > > > > > > +		if (virq =3D=3D 0)
-> > > > > > > +			continue;
-> > > > > > > +
-> > > > > > > +		data =3D irq_get_irq_data(virq);
-> > > > > > > +
-> > > > > > > +		if (!irq_percpu_is_enabled(virq))
-> > > > > > > +			continue;
-> > > > > > > +
-> > > > > > > +		armada_370_xp_soc_err_irq_unmask(data);
-> > > > > > > +	}
-> > > > > >=20
-> > > > > > So you do this loop and all these lookups, both here and in the=
- resume
-> > > > > > function (duplicated code!) just to be able to call the unmask
-> > > > > > function?  This would be better served by two straight writes o=
-f the
-> > > > > > mask register, which you'd conveniently save on suspend.
-> > > > > >=20
-> > > > > > Yes, you have only duplicated the existing logic. But surely th=
-ere is
-> > > > > > something better to do.
-> > > > >=20
-> > > > > Yes, I just used existing logic.
-> > > > >=20
-> > > > > I'm not rewriting driver or doing big refactor of it, as this is =
-not in
-> > > > > the scope of the PCIe AER interrupt support.
-> > > >=20
-> > > > Fair enough. By the same logic, I'm not taking any change to the
-> > > > driver until it is put in a better shape. Your call.
-> > >=20
-> > > If you are maintainer of this code then it is expected from _you_ to
-> > > move the current code into _better shape_ as you wrote and expect. And
-> > > then show us exactly, how new changes in this driver should look like,
-> > > in examples.
-> >=20
-> > Sorry, but that's not how this works. You are the one willing to
-> > change a sub-par piece of code, you get to make it better. You
-> > obviously have the means (the HW) and the incentive (these patches).
-> > But you don't get to make something even more unmaintainable because
-> > you're unwilling to do some extra work.
-> >=20
-> > If you're unhappy with my position, that's fine. I suggest you take it
-> > with Thomas, and maybe even Linus. As I suggested before, you can also
-> > post a patch removing me as the irqchip maintainer. I'm sure that will
-> > spark an interesting discussion.
->=20
-> You have already suggested it in email [1] but apparently you are _not_
-> maintainer of mvebu pci controller. get_maintainer.pl for part about
-> which you have talked in [1] says:
->=20
-> $ ./scripts/get_maintainer.pl -f drivers/pci/controller/pci-aardvark.c
+Hi Bjorn,
 
-Remind me which file this patch is touching?
+On 5/6/22 18:51, Bjorn Helgaas wrote:
+> On Thu, May 05, 2022 at 05:20:16PM +0200, Hans de Goede wrote:
+>> Some BIOS-es contain bugs where they add addresses which are already
+>> used in some other manner to the PCI host bridge window returned by
+>> the ACPI _CRS method. To avoid this Linux by default excludes
+>> E820 reservations when allocating addresses since 2010, see:
+>> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+>> space").
+>>
+>> Recently (2019) some systems have shown-up with E820 reservations which
+>> cover the entire _CRS returned PCI bridge memory window, causing all
+>> attempts to assign memory to PCI BARs which have not been setup by the
+>> BIOS to fail. For example here are the relevant dmesg bits from a
+>> Lenovo IdeaPad 3 15IIL 81WE:
+>>
+>>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
+>>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+>>
+>> The ACPI specifications appear to allow this new behavior:
+>>
+>> The relationship between E820 and ACPI _CRS is not really very clear.
+>> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
+>>
+>>   This range of addresses is in use or reserved by the system and is
+>>   not to be included in the allocatable memory pool of the operating
+>>   system's memory manager.
+>>
+>> and it may be used when:
+>>
+>>   The address range is in use by a memory-mapped system device.
+>>
+>> Furthermore, sec 15.2 says:
+>>
+>>   Address ranges defined for baseboard memory-mapped I/O devices, such
+>>   as APICs, are returned as reserved.
+>>
+>> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
+>> and its apertures are in use and certainly should not be included in
+>> the general allocatable pool, so the fact that some BIOS-es reports
+>> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
+>>
+>> So it seems that the excluding of E820 reserved addresses is a mistake.
+>>
+>> Ideally Linux would fully stop excluding E820 reserved addresses,
+>> but then various old systems will regress.
+>> Instead keep the old behavior for old systems, while ignoring
+>> the E820 reservations for any systems from now on.
+>>
+>> Old systems are defined here as BIOS year < 2018, this was chosen to
+>> make sure that pci_use_e820 will not be set on the currently affected
+>> systems, the oldest known one is from 2019.
+>>
+>> Testing has shown that some newer systems also have a bad _CRS return.
+>> The pci_crs_quirks DMI table is used to keep excluding E820 reservations
+>> from the bridge window on these systems.
+>>
+>> Also add pci=no_e820 and pci=use_e820 options to allow overriding
+>> the BIOS year + DMI matching logic.
+>>
+>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
+>> BugLink: https://bugs.launchpad.net/bugs/1878279
+>> BugLink: https://bugs.launchpad.net/bugs/1931715
+>> BugLink: https://bugs.launchpad.net/bugs/1932069
+>> BugLink: https://bugs.launchpad.net/bugs/1921649
+>> Cc: Benoit Grégoire <benoitg@coeus.ca>
+>> Cc: Hui Wang <hui.wang@canonical.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+>> +	 * Ideally Linux would fully stop using E820 reservations, but then
+>> +	 * various old systems will regress. Instead keep the old behavior for
+>> +	 * old systems + known to be broken newer systems in pci_crs_quirks.
+>> +	 */
+>> +	if (year >= 0 && year < 2018)
+>> +		pci_use_e820 = true;
+> 
+> How did you pick 2018?  Prior to this patch, we used E820 reservations
+> for all machines.  This patch would change that for 2019-2022
+> machines, so there's a risk of breaking some of them.
 
-> The only _toy_ here is your broken mvebu board which your ego was unable
-> to fix, and you have put it into recycling pile [2] and since than for
-> months you are trying to reject every change or improvement in mvebu
-> drivers and trying to find out a way how to remove all mvebu code, like
-> if you were not able to fix your toy, then broke it also to all other
-> people. You have already expressed this, but I'm not going to search
-> emails more and find these your statements.
+Correct. I picked 2018 because the first devices where using E820
+reservations are causing issues (i2c controller not getting resources
+leading to non working touchpad / thunderbolt hotplug issues) have
+BIOS dates starting in 2019. I added a year margin, so we could make
+this 2019.
 
-At this stage, this is pure paranoia. Do you think I am so emotionally
-attached to HW purity that I would plot the annihilation of some ugly
-platform?
+> I'm hesitant about changing the behavior for machines already in the
+> field because if they were tested at all with Linux, it was without
+> this patch.  So I would lean toward preserving the current behavior
+> for BIOS year < 2023.
 
-> Sorry, I'm stopping here. This is just a prove that you are not
-> qualified in reviewing mvebu code.
+I see, I presume the idea is to then use DMI to disable E820 clipping
+on current devices where this is known to cause problems ?
 
-Happy not to have to review this code. Just stop Cc'ing me on your
-patches, and don't expect me to merge any IRQ related patches coming
-from you.
+So for v8 I would:
 
-	M.
+1. Change the cut-off check to < 2023
+2. Drop the DMI quirks I added for models which are known to need E820
+   clipping hit by the < 2018 check
+3. Add DMI quirks for models for which it is known that we must _not_
+   do E820 clipping
 
---=20
-Without deviation from the norm, progress is not possible.
+Is this the direction you want to go / does that sound right?
+
+Note the DMI list for 3. will initially very likely be incomplete, but
+I can ask around for testing once we have settled on this approach
+and do one or more follow up patches to extend the list.
+
+
+>> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+>> index 9e1e6b8d8876..7e6f79aab6a8 100644
+>> --- a/arch/x86/pci/common.c
+>> +++ b/arch/x86/pci/common.c
+>> @@ -595,6 +595,12 @@ char *__init pcibios_setup(char *str)
+>>  	} else if (!strcmp(str, "nocrs")) {
+>>  		pci_probe |= PCI_ROOT_NO_CRS;
+>>  		return NULL;
+>> +	} else if (!strcmp(str, "use_e820")) {
+>> +		pci_probe |= PCI_USE_E820;
+> 
+> I think we should add_taint(TAINT_FIRMWARE_WORKAROUND) for both these
+> cases.
+
+Ok, I'll add this for v8.
+
+> 
+> We probably should do it for *all* the parameters here, but that would
+> be a separate discussion.
+> 
+>> +		return NULL;
+>> +	} else if (!strcmp(str, "no_e820")) {
+>> +		pci_probe |= PCI_NO_E820;
+>> +		return NULL;
+>>  #ifdef CONFIG_PHYS_ADDR_T_64BIT
+>>  	} else if (!strcmp(str, "big_root_window")) {
+>>  		pci_probe |= PCI_BIG_ROOT_WINDOW;
+>> -- 
+>> 2.36.0
+>>
+> 
+
+
+Regards,
+
+Hans
+
+
