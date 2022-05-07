@@ -2,300 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E588A51E840
-	for <lists+linux-pci@lfdr.de>; Sat,  7 May 2022 17:41:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31EE051EAA0
+	for <lists+linux-pci@lfdr.de>; Sun,  8 May 2022 02:00:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359097AbiEGPpk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 May 2022 11:45:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59602 "EHLO
+        id S230099AbiEHADp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 May 2022 20:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230521AbiEGPpj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 May 2022 11:45:39 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7604F2E9E1
-        for <linux-pci@vger.kernel.org>; Sat,  7 May 2022 08:41:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EF27CB80AC7
-        for <linux-pci@vger.kernel.org>; Sat,  7 May 2022 15:41:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B663C385A6;
-        Sat,  7 May 2022 15:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651938108;
-        bh=Rc5LpTM7ADMEzoBwyMvFyeeJ86YS2yp0mwc+k75iig0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KBKupm+KCkBiWT+WraJf2SsCxQgf7pvfJVc8XUqBD0NHAOAs4u2yRueZ0Hk/IAVYm
-         9di3n0/H0T85zY+DQnv/Q4lGW7RCW+elOpwEixwS+xxoEwMzM3cfEvdjNNemVBY0HD
-         X6jZu2QAoIG4xjYD7hGuBpcBbpxu9iDMiJCw8e4a5oe0uzL3SpdjiAo4ZYHleye/Yt
-         MOLYLcyOS3AMr/8BTxGkxuF+pAs4JJ29hu/A3tj4BIqdpSHSuXYTXd7fASI8ajN2m+
-         5R1jtcOojcWJTHh3U9t6XXQDXdh2/DQnpvFnJwu9uAY/UJvhMl6wPVmM34MxRp4qH1
-         jDJmMnY6DRSCg==
-Date:   Sat, 7 May 2022 10:41:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: Write to srvio_numvfs triggers kernel panic
-Message-ID: <20220507154145.GA568412@bhelgaas>
+        with ESMTP id S229602AbiEHADn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 May 2022 20:03:43 -0400
+Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E603A2BF9;
+        Sat,  7 May 2022 16:59:53 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 62C585810CD;
+        Sat,  7 May 2022 19:59:50 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 07 May 2022 19:59:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1651967990; x=
+        1651975190; bh=QTgRzNLqn7nTVpn4kEmk9hjonN4SIouDolNH8iVgiLs=; b=x
+        yhXwE5TnGDXuuNwf54vPo1myGUH3NoA0fbqOh35QFU69RQVVilaeCqHjF4940KGW
+        ObQCxFRPvPnismpi8nsZySyqcbu72zxQxx+eLsmlVQKIh8aN2Mac6nsj6wtJHNaa
+        EWebIh9iDQOmBp75hegASiIr+LraEUUQQHN/TtU/mWjGf1OH5vKlxzYzxlEy7B7g
+        r9dNK0XzD7Za9S2u8mjB85p/tkE3XYzle24fsW3pI/MrTI6I58Jqfuh35WmmvmRE
+        GBFK1VnfhrO5G5PO+YBhtHiXZgJ/7MTB3Wjzi80yCETO2PpoyypGdjh7Dig1WtGZ
+        y+/DWCIgG0ZchwYn4Uebg==
+X-ME-Sender: <xms:7Ad3YgzFozHLPh-Tuvv9Gqa4JW7NHgoXVD6uHnxvGJEZ-tkIihVCDA>
+    <xme:7Ad3YkTKyZysYg2yiwmXhP33c2XVZ7wWIz7D3BIhSt0Rngayh0bii6CYLN5SiPksG
+    -cNLBt1xruZDjtSVV4>
+X-ME-Received: <xmr:7Ad3YiWPtHMCCzEwEeO0M89qLJMqu8cAc2Md3CmzBWr_Ga-NWofXlYyUHOriwh52P-UrqY86yVyM6vrfUu01QnBZ1skBohaDr88>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeeigddvjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefujgfkfhggtgesthdtredttddtvdenucfhrhhomhephfhinhhnucfv
+    hhgrihhnuceofhhthhgrihhnsehlihhnuhigqdhmieekkhdrohhrgheqnecuggftrfgrth
+    htvghrnhepfeeiheejvdetgfeitddutefhkeeilefhveehgfdvtdekkedvkeehffdtkeev
+    vdeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehfthhhrghinheslhhinhhugidqmheikehk
+    rdhorhhg
+X-ME-Proxy: <xmx:7Ad3Yuice80PD-V4uxHnQ1Erm7oI19uB5cOkarRVxo8MljzuuE853Q>
+    <xmx:7Ad3YiADvp59I8imKHk5XlTEJp7UmvBetFQM0RlFZ9BlDwZ444knHQ>
+    <xmx:7Ad3YvKwHHBZFwpac1G-LQnfrNPsBIz1Q832CQdz3sq_FGN8sc0f2A>
+    <xmx:9gd3Yk2F_FbIkiIJajz3nA0al_jEr6hrURnhe-kUGx-pn8yEEL4ZWg>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 7 May 2022 19:59:34 -0400 (EDT)
+Date:   Sun, 8 May 2022 09:59:37 +1000 (AEST)
+From:   Finn Thain <fthain@linux-m68k.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "open list:ALPHA PORT" <linux-alpha@vger.kernel.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:IA64 (Itanium) PLATFORM" <linux-ia64@vger.kernel.org>,
+        "open list:M68K ARCHITECTURE" <linux-m68k@lists.linux-m68k.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>,
+        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
+        "open list:SUPERH" <linux-sh@vger.kernel.org>,
+        "open list:SPARC + UltraSPARC (sparc/sparc64)" 
+        <sparclinux@vger.kernel.org>
+Subject: Re: [RFC v2 01/39] Kconfig: introduce HAS_IOPORT option and select
+ it as necessary
+In-Reply-To: <CAK8P3a3tds8O+Gg2nF3MfrVVcmtLbtdQ2TnCJaDYz28cyhhWkg@mail.gmail.com>
+Message-ID: <6f33385-5612-7042-e1b3-aa32895e91e0@linux-m68k.org>
+References: <20220505195342.GA509942@bhelgaas> <22bec167-241f-2cbe-829f-a3f65e40e71@linux-m68k.org> <105ccec439f709846e82b69cb854ac825d7a6a49.camel@linux.ibm.com> <7dfa7578-039-e132-c573-ad89bd3215@linux-m68k.org>
+ <CAK8P3a3tds8O+Gg2nF3MfrVVcmtLbtdQ2TnCJaDYz28cyhhWkg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v8uhlk1w.fsf@epam.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 07, 2022 at 10:22:32AM +0000, Volodymyr Babchuk wrote:
-> Bjorn Helgaas <helgaas@kernel.org> writes:
-> > On Wed, May 04, 2022 at 07:56:01PM +0000, Volodymyr Babchuk wrote:
-> >> 
-> >> I have encountered issue when PCI code tries to use both fields in
-> >> 
-> >>         union {
-> >> 		struct pci_sriov	*sriov;		/* PF: SR-IOV info */
-> >> 		struct pci_dev		*physfn;	/* VF: related PF */
-> >> 	};
-> >> 
-> >> (which are part of struct pci_dev) at the same time.
-> >> 
-> >> Symptoms are following:
-> >> 
-> >> # echo 1 > /sys/bus/pci/devices/0000:01:00.0/sriov_numvfs
-> >> 
-> >> pci 0000:01:00.2: reg 0x20c: [mem 0x30018000-0x3001ffff 64bit]
-> >> pci 0000:01:00.2: VF(n) BAR0 space: [mem 0x30018000-0x30117fff 64bit] (contains BAR0 for 32 VFs)
-> >>  Unable to handle kernel paging request at virtual address 0001000200000010
 
-> >> Debugging showed the following:
-> >> 
-> >> pci_iov_add_virtfn() allocates new struct pci_dev:
-> >> 
-> >> 	virtfn = pci_alloc_dev(bus);
-> >> and sets physfn:
-> >> 	virtfn->is_virtfn = 1;
-> >> 	virtfn->physfn = pci_dev_get(dev);
-> >> 
-> >> then we will get into sriov_init() via the following call path:
-> >> 
-> >> pci_device_add(virtfn, virtfn->bus);
-> >>   pci_init_capabilities(dev);
-> >>     pci_iov_init(dev);
-> >>       sriov_init(dev, pos);
+Hi Arnd,
+
+On Sat, 7 May 2022, Arnd Bergmann wrote:
+
+> On Sat, May 7, 2022 at 2:01 AM Finn Thain <fthain@linux-m68k.org> wrote:
+> > On Fri, 6 May 2022, Niklas Schnelle wrote:
+> > > On Fri, 2022-05-06 at 19:12 +1000, Finn Thain wrote:
+> > > > On Thu, 5 May 2022, Bjorn Helgaas wrote:
+> > > > >
+> > > > > I mooted a s390 inb() implementation like "return ~0" because that's
+> > > > > what happens on most arches when there's no device to respond to the
+> > > > > inb().
+> > > > >
+> > > > > The HAS_IOPORT dependencies are fairly ugly IMHO, and they clutter
+> > > > > drivers that use I/O ports in some cases but not others.  But maybe
+> > > > > it's the most practical way.
+> > > > >
+> > > >
+> > > > Do you mean, "the most practical way to avoid a compiler warning on
+> > > > s390"? What about "#pragma GCC diagnostic ignored"?
+> > >
+> > > This actually happens with clang.
 > >
-> > We called pci_device_add() with the VF.  pci_iov_init() only calls
-> > sriov_init() if it finds an SR-IOV capability on the device:
+> > That suggests a clang bug to me. If you believe GCC should behave like
+> > clang, then I guess the pragma above really is the one you want. If you
+> > somehow feel that the kernel should cater to gcc and clang even where they
+> > disagree then you would have to use "#pragma clang diagnostic ignored".
+> 
+> I don't see how you can blame the compiler for this. On architectures
+> with a zero PCI_IOBASE, an inb(0x2f8) literally becomes
+> 
+>         var = *(u8*)((NULL + 0x2f8);
+> 
+> If you run a driver that does this, the kernel gets a page fault for
+> the NULL page
+> and reports an Oops. clang tells you 'warning: performing pointer
+> arithmetic on a null pointer has undefined behavior', which is not exactly
+> spot on, but close enough to warn you that you probably shouldn't do this. gcc
+> doesn't warn here, but it does warn about an array out-of-bounds access when
+> you pass such a pointer into memcpy or another string function.
+> 
+
+The appeal to UB is weak IMHO. Pointer arithmetic with a zero value is 
+unambiguous and the compiler generates the code to implement the expected 
+behaviour just fine.
+
+UB is literally an omission in the standard. Well, low level programming 
+has always been beyond the scope of C standards. If architectural-level 
+code wants to do arithmetic with an arbitrary integer values, and the 
+compiler doesn't like it, then the relevant warnings should be disabled 
+for those expressions.
+
+> > > Apart from that, I think this would also fall under the same argument as
+> > > the original patch Linus unpulled. We would just paint over someting
+> > > that we know at compile time won't work:
+> > >
+> > > https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
+> > >
 > >
-> >   pci_iov_init(struct pci_dev *dev)
-> >     pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV);
-> >     if (pos)
-> >       return sriov_init(dev, pos);
+> > I wasn't advocating adding any warnings.
 > >
-> > So this means the VF must have an SR-IOV capability, which sounds a
-> > little dubious.  From PCIe r6.0:
+> > If you know at compile time that a driver won't work, the usual solution
+> > is scripts/config -d CONFIG_SOME_UNDESIRED_DRIVER. Why is that no
+> > longer appropriate for drivers that use IO ports?
 > 
-> [...]
-> 
-> Yes, I dived into debugging and came to the same conclusions. I'm still
-> investigating this, but looks like my PCIe controller (DesignWare-based)
-> incorrectly reads configuration space for VF. Looks like instead of
-> providing access VF config space, it reads PF's one.
-> 
-> > Can you supply the output of "sudo lspci -vv" for your system?
-> 
-> Sure:
-> 
-> root@spider:~# lspci -vv
-> 00:00.0 PCI bridge: Renesas Technology Corp. Device 0031 (prog-if 00 [Normal decode])
->         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Latency: 0
->         Interrupt: pin A routed to IRQ 189
->         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
->         I/O behind bridge: [disabled]
->         Memory behind bridge: 30000000-301fffff [size=2M]
->         Prefetchable memory behind bridge: [disabled]
->         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
->         BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
->                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
->         Capabilities: [40] Power Management version 3
->                 Flags: PMEClk- DSI- D1+ D2- AuxCurrent=0mA PME(D0+,D1+,D2-,D3hot+,D3cold+)
->                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
->         Capabilities: [50] MSI: Enable+ Count=128/128 Maskable+ 64bit+
->                 Address: 0000000004030040  Data: 0000
->                 Masking: fffffffe  Pending: 00000000
->         Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
->                 DevCap: MaxPayload 256 bytes, PhantFunc 0
->                         ExtTag+ RBE+
->                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
->                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
->                         MaxPayload 128 bytes, MaxReadReq 512 bytes
->                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
->                 LnkCap: Port #0, Speed 5GT/s, Width x2, ASPM L0s L1, Exit Latency L0s <4us, L1 <64us
->                         ClockPM- Surprise- LLActRep+ BwNot- ASPMOptComp+
->                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
->                 LnkSta: Speed 5GT/s (ok), Width x2 (ok)
->                         TrErr- Train- SlotClk- DLActive+ BWMgmt- ABWMgmt-
->                 RootCap: CRSVisible-
->                 RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
->                 RootSta: PME ReqID 0000, PMEStatus- PMEPending-
->                 DevCap2: Completion Timeout: Not Supported, TimeoutDis+, NROPrPrP+, LTR+
->                          10BitTagComp+, 10BitTagReq-, OBFF Not Supported, ExtFmt-, EETLPPrefix-
->                          EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
->                          FRS-, LN System CLS Not Supported, TPHComp-, ExtTPHComp-, ARIFwd-
->                          AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
->                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+, OBFF Disabled ARIFwd-
->                          AtomicOpsCtl: ReqEn- EgressBlck-
->                 LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
->                          Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
->                          Compliance De-emphasis: -6dB
->                 LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
->                          EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
->         Capabilities: [100 v2] Advanced Error Reporting
->                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
->                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
->                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
->                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
->                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
->                 AERCap: First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
->                         MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
->                 HeaderLog: 00000000 00000000 00000000 00000000
->                 RootCmd: CERptEn- NFERptEn- FERptEn-
->                 RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
->                          FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
->                 ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
->         Capabilities: [148 v1] Device Serial Number 00-00-00-00-00-00-00-00
->         Capabilities: [158 v1] Secondary PCI Express
->                 LnkCtl3: LnkEquIntrruptEn-, PerformEqu-
->                 LaneErrStat: 0
->         Capabilities: [178 v1] Physical Layer 16.0 GT/s <?>
->         Capabilities: [19c v1] Lane Margining at the Receiver <?>
->         Capabilities: [1bc v1] L1 PM Substates
->                 L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
->                           PortCommonModeRestoreTime=10us PortTPowerOnTime=14us
->                 L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
->                            T_CommonMode=0us LTR1.2_Threshold=0ns
->                 L1SubCtl2: T_PwrOn=10us
->         Capabilities: [1cc v1] Vendor Specific Information: ID=0002 Rev=4 Len=100 <?>
->         Capabilities: [2cc v1] Vendor Specific Information: ID=0001 Rev=1 Len=038 <?>
->         Capabilities: [304 v1] Data Link Feature <?>
->         Capabilities: [310 v1] Precision Time Measurement
->                 PTMCap: Requester:+ Responder:+ Root:+
->                 PTMClockGranularity: 16ns
->                 PTMControl: Enabled:- RootSelected:-
->                 PTMEffectiveGranularity: Unknown
->         Capabilities: [31c v1] Vendor Specific Information: ID=0004 Rev=1 Len=054 <?>
->         Kernel driver in use: pcieport
->         Kernel modules: pci_endpoint_test
-> 
-> 01:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd Device a824 (prog-if 02 [NVM Express])
->         Subsystem: Samsung Electronics Co Ltd Device a809
->         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Latency: 0
->         Interrupt: pin A routed to IRQ 0
->         NUMA node: 0
->         Region 0: Memory at 30010000 (64-bit, non-prefetchable) [size=32K]
->         Expansion ROM at 30000000 [virtual] [disabled] [size=64K]
->         Capabilities: [40] Power Management version 3
->                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
->                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
->         Capabilities: [70] Express (v2) Endpoint, MSI 00                                                                                                                               [8/5710]
->                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
->                         ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 0.000W
->                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
->                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ FLReset-
->                         MaxPayload 128 bytes, MaxReadReq 512 bytes
->                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
->                 LnkCap: Port #0, Speed 16GT/s, Width x4, ASPM not supported
->                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
->                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
->                 LnkSta: Speed 5GT/s (downgraded), Width x2 (downgraded)
->                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
->                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, NROPrPrP-, LTR-
->                          10BitTagComp+, 10BitTagReq-, OBFF Not Supported, ExtFmt-, EETLPPrefix-
->                          EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
->                          FRS-, TPHComp-, ExtTPHComp-
->                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
->                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
->                          AtomicOpsCtl: ReqEn-
->                 LnkCtl2: Target Link Speed: 16GT/s, EnterCompliance- SpeedDis-
->                          Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
->                          Compliance De-emphasis: -6dB
->                 LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
->                          EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
->         Capabilities: [b0] MSI-X: Enable+ Count=64 Masked-
->                 Vector table: BAR=0 offset=00004000
->                 PBA: BAR=0 offset=00003000
->         Capabilities: [100 v2] Advanced Error Reporting
->                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
->                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
->                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
->                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
->                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
->                 AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
->                         MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
->                 HeaderLog: 00000000 00000000 00000000 00000000
->         Capabilities: [148 v1] Device Serial Number d3-42-50-11-99-38-25-00
->         Capabilities: [168 v1] Alternative Routing-ID Interpretation (ARI)
->                 ARICap: MFVC- ACS-, Next Function: 0
->                 ARICtl: MFVC- ACS-, Function Group: 0
->         Capabilities: [178 v1] Secondary PCI Express
->                 LnkCtl3: LnkEquIntrruptEn-, PerformEqu-
->                 LaneErrStat: 0
->         Capabilities: [198 v1] Physical Layer 16.0 GT/s <?>
->         Capabilities: [1c0 v1] Lane Margining at the Receiver <?>
->         Capabilities: [1e8 v1] Single Root I/O Virtualization (SR-IOV)
->                 IOVCap: Migration-, Interrupt Message Number: 000
->                 IOVCtl: Enable- Migration- Interrupt- MSE- ARIHierarchy-
->                 IOVSta: Migration-
->                 Initial VFs: 32, Total VFs: 32, Number of VFs: 0, Function Dependency Link: 00
->                 VF offset: 2, stride: 1, Device ID: a824
->                 Supported Page Size: 00000553, System Page Size: 00000001
->                 Region 0: Memory at 0000000030018000 (64-bit, non-prefetchable)
->                 VF Migration: offset: 00000000, BIR: 0
->         Capabilities: [3a4 v1] Data Link Feature <?>
->         Kernel driver in use: nvme
->         Kernel modules: nvme
+> This was never an option, we rely on 'make allmodconfig' to build 
+> without warnings on all architectures for finding regressions.
 
-I guess this is before enabling SR-IOV on 01:00.0, so it doesn't show
-the VFs themselves.
+"All modules on all architectures with all compilers and checkers with all 
+warnings enabled"? That's not even vaguely realistic.
 
-> > It could be that the device has an SR-IOV capability when it
-> > shouldn't.  But even if it does, Linux could tolerate that better
-> > than it does today.
+How about, "All modules on all architectures with a nominated compiler 
+with the appropriate warnings enabled."
+
+> Any driver that depends on architecture specific interfaces must not get 
+> selected on architectures that don't have those interfaces.
 > 
-> Agree there. I can create simple patch that checks for is_virtfn
-> in sriov_init(). But what to do if it is set?
 
-Maybe something like this?  It makes no sense to me that a VF would
-have an SR-IOV capability, but ...
+Kconfig always met that need before we got saddled with -Werror.
 
-If the below avoids the problem, maybe collect another "lspci -vv"
-output including the VF(s).
-
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 952217572113..9c5184384a45 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -901,6 +901,10 @@ int pci_iov_init(struct pci_dev *dev)
- 	if (!pci_is_pcie(dev))
- 		return -ENODEV;
- 
-+	/* Some devices include SR-IOV cap on VFs as well as PFs */
-+	if (dev->is_virtfn)
-+		return -ENODEV;
-+
- 	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_SRIOV);
- 	if (pos)
- 		return sriov_init(dev, pos);
+That suggests to me that we need a "bool CONFIG_WARINGS_INTO_ERRORS" to 
+control -Werror, which could be disabled for .config files (like make 
+allmodconfig) where it is not helping.
