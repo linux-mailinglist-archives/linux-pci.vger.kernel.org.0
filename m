@@ -2,166 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFB1251E672
-	for <lists+linux-pci@lfdr.de>; Sat,  7 May 2022 12:25:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7507351E69A
+	for <lists+linux-pci@lfdr.de>; Sat,  7 May 2022 13:15:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243948AbiEGK3O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 7 May 2022 06:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44234 "EHLO
+        id S1382070AbiEGLTA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 7 May 2022 07:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237793AbiEGK3M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 May 2022 06:29:12 -0400
-Received: from mx0a-0039f301.pphosted.com (mx0a-0039f301.pphosted.com [148.163.133.242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBD8CCB
-        for <linux-pci@vger.kernel.org>; Sat,  7 May 2022 03:25:23 -0700 (PDT)
-Received: from pps.filterd (m0174679.ppops.net [127.0.0.1])
-        by mx0a-0039f301.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 247A9XPH015532;
-        Sat, 7 May 2022 10:25:20 GMT
-Received: from eur03-am5-obe.outbound.protection.outlook.com (mail-am5eur03lp2051.outbound.protection.outlook.com [104.47.8.51])
-        by mx0a-0039f301.pphosted.com (PPS) with ESMTPS id 3fwprq80ma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 07 May 2022 10:25:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jUbYzhfJ+6BNo/bwKmaGig69lfLRzGXZy27vyqIX5c/odkkT0B9f2Lm26AcV3jRRAwaLhJCBLaoYIrlphCF3Gjmd0Jr+uInyPnXEXrRG7cpcw7Er6s7CK5Djc7Eab0yGmHjb6/Cd7nV4Bexn38Sn8U0t7inLDlc2F6ijNDpWuBSJ07q4XJrc7jiJhjpueXqaRs+U0QlWEsts3uRuVkEC5duOzV0O/MLMpOxXnDaOqc4VYAQ5ryKMdtuRpvxiGciFcnKea5RivrSX+ZwKBIQ2ztXmt1pHTOlOaYB1XbyZvr+4OiFKlsPeg25xMgXjeKo9Jj93I3PT4GcOlcLjlc+eMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jtA8zbGgtlaDJY58jBaxXAgFHPKOOq+gWASuQooQiUA=;
- b=WpfcPPELJ1NRvxRKCgcdtiTmaJPIzin0wL2A9gZ3e51Fvikj0TBly+nBUkoytcX0UtFyJbhHItDeRMUxx2/ih47Bycx6x4CBnb//EdX98Yn13NLqO7phhNPua6vkmUXDMeFF1cGDmsCabrJ74L5nB3Zo9lSHEpW+9ogPC8vXH5lGPX65XPUQ0Xr8A12P3FQ05LDdGyelKhZi1JL2Crjb3QNGi/MY1VQBYkZF2SVWQUHVn2Nq06qN9vD22UHjHnHbAw+pyDeTGsPIUFZfdFD3L7emu4oLQ/p1+4lnj0u1tqjhys1iQg4QYOQ80zxYRrcaeOyR+7Z39eSslJi6D0GChQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
- dkim=pass header.d=epam.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jtA8zbGgtlaDJY58jBaxXAgFHPKOOq+gWASuQooQiUA=;
- b=fmYngUphwD/hpriRf7eCiEpCcgCyhOe1hct6cYhuBnpsYCIG2sFOPJRVZcv8RC/Lg+Vrwd6Wuc93UGiaWw/N7zhj4uJc3aByYPpOBFEPn3MA4gnE9BfuLKnd9xwf9FLVkpV8WYytsYaQ1qkbUrZldT4SXRfs+k1iO9BIgxs5mgS2Lj9TCNnoVZt2w1fqK4vlHMFSG83Ikesa5YuN4K8suiH9cODTiWyIhJe4Ykr/kACsNEapLivwU5B7UGODACVoaIwaRn/P0wfr7fR7zW/r7dHDw5QfJyqDAMbPmE1IvbgGsHpzaRulxBgf94LeuKXSKyncAk+kig9Y/k+CmxQzvA==
-Received: from VI1PR03MB3710.eurprd03.prod.outlook.com (2603:10a6:803:31::18)
- by VI1PR03MB3583.eurprd03.prod.outlook.com (2603:10a6:803:2b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.21; Sat, 7 May
- 2022 10:25:16 +0000
-Received: from VI1PR03MB3710.eurprd03.prod.outlook.com
- ([fe80::4534:2241:9a1:3937]) by VI1PR03MB3710.eurprd03.prod.outlook.com
- ([fe80::4534:2241:9a1:3937%6]) with mapi id 15.20.5206.027; Sat, 7 May 2022
- 10:25:16 +0000
-From:   Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>
-Subject: Re: Write to srvio_numvfs triggers kernel panic
-Thread-Topic: Write to srvio_numvfs triggers kernel panic
-Thread-Index: AQHYX/D7w22LhOQ4BkKjl8Bb5V4dfa0STLQAgABYogCAAJOvgA==
-Date:   Sat, 7 May 2022 10:25:16 +0000
-Message-ID: <87levdljw3.fsf@epam.com>
-References: <87a6bxm5vm.fsf@epam.com> <20220506201722.GA555374@bhelgaas>
- <20220507013436.GB63055@ziepe.ca>
-In-Reply-To: <20220507013436.GB63055@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: mu4e 1.6.5; emacs 27.2
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6dc38226-659d-4d50-8a36-08da3013e13a
-x-ms-traffictypediagnostic: VI1PR03MB3583:EE_
-x-microsoft-antispam-prvs: <VI1PR03MB358397C0D03A5A7628FF5A46E6C49@VI1PR03MB3583.eurprd03.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: t1MheqhyIMMVTrmcWEGlI/vm/DZry4NqdJpJW+Z7TkzoHLUJ8R/DMpnn+VmqiHlpINSRk4f4/4XBS4H8e8kgDBa6bzOZlK2CR3b5gCzO+HoodrtOU9S1GHL6wIrC3jE250ms4JWlZQGGnEFAIiwBdY7kR8d0LrCT5McP3pubU19a+A2FpmyCe454dTqvhpYZKVWLgOfi+TsI+S8Egu6fpywoH/x25dNLpq+Nbkk8VLeIZjJLuMr7u0VEbvkKpwNk9bKvO1pgjTSFT1MRmF9Ey3wL5/h3uZKeCiJZz8xP3ffZ7MinX7gelKoufXSWPLbnGy3yTO5eqbMt20dd+hK8C+tLSE0AT+/w3fcI7+j10qyhloe8K3hzE4r7/EsCJdXRlyPYHrNqdjLvEVlSlapoJu5lAFr6O8hwEDmagOLYxcTwtI/O5ZKRt3Gu+MWYr1/W3375yH2JEhfZunxCHodCstnN+PakZATFMyVibZA9R7KN7der1XmxIAY8fKtVlEYWBtLhWcymyCwSUwpmu7GhOate///7T86VxAqPZWlBPneVql+asXoz3Tq5arhd4rjIgJxd95wA7utVyP19o93NERZCmVbYUNVwh5Z71YAMza9IqkNKquT5/ugCozzr+7iy2akz7JkZ7/hSe4IiqIuN/Tv0EQKbFRuT3/ZdFi0qWT5BtPddv+4ZynkQCpAtsHkXLsYlYYpeG+OoPe2gfmDWCA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR03MB3710.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(26005)(6512007)(38100700002)(122000001)(38070700005)(66446008)(66476007)(64756008)(8676002)(66946007)(91956017)(4326008)(36756003)(45080400002)(66556008)(76116006)(83380400001)(6916009)(2906002)(186003)(6506007)(54906003)(86362001)(71200400001)(55236004)(2616005)(8936002)(5660300002)(508600001)(4744005)(316002)(6486002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?26gzqFTFyPs0whFTxNpGhntnHzXecMtbTy48MwyfDuoXUi/+Ut7356JWKP?=
- =?iso-8859-1?Q?RypzL0ppxF3VeetVEsLgQJOvIWQxjynzKo8LiCQYlMaEkyTLZ8kmpr1fxG?=
- =?iso-8859-1?Q?0SvLlsxRaYgMbgRiSsVTcvQ4ELG1RKd45xdLxVauwf1fx/e6tgHgzUyt1G?=
- =?iso-8859-1?Q?zLCXW4kcPe8LOBFURjblKh5lnirYXn0wJKg7TJ14iez8sKB9xpBIvtkR8R?=
- =?iso-8859-1?Q?EccNQGwvVwa0NXFHWDa8NIqkqWAwgnb6UoTwAaw2Y99QbWQ/DHrj8M8Heg?=
- =?iso-8859-1?Q?xyvsf464SkhKf1fNlpiFinSUTskQ5cDI/GjlBimCPhFPOk1aHbG6LuP9mm?=
- =?iso-8859-1?Q?hLZlwOb+mj3C6fJkpsMS+eVJheV0mkmU8vkScx1+UT0vt24TUwTb7Kva3z?=
- =?iso-8859-1?Q?VlLewSa2d+hagljs1uk+27hExT/ZXzL/7+Sdl03k9qqT4Xy/9+f4ymVqTh?=
- =?iso-8859-1?Q?2sPqWjUeLRMzuAEVrMIaQRlXp1fLLc0wreHzCWKnOr2WuW3kGVFCD5b+kE?=
- =?iso-8859-1?Q?TPWuxpKDVeolJ3X5R7mjFH/GmdyC0tAYvOVmT/GY5D7O9kZz/69biAELOG?=
- =?iso-8859-1?Q?2vmjxu9e7QREvIXv3+/aW9cSnimyb37IfZoGpgJrEGi7hmpCS7/t8xQbvJ?=
- =?iso-8859-1?Q?pcizWekVcO5swpDY4W0R00LRQ0Tf96R0nv5HfK9avLy/H0Fqf8qbHrM/fC?=
- =?iso-8859-1?Q?suOxVYQ8WCcLjc8x8hkJpRqab9/oUIkUVbgLiYOUDHOqHTUD+HdNgdpsl9?=
- =?iso-8859-1?Q?WFGDp9v1YdqiS+7Rid9Fva/3BWK/+gt+JvRl5l9w24stjEmb05Cu3Fqxjc?=
- =?iso-8859-1?Q?HlHznJR0R1sn4inbG6lSTav4b0H0pD5+y+Ju46iCXLMVHPg9T82hkhsbRJ?=
- =?iso-8859-1?Q?/MEHBa4f3TQzCfKeABLdykzBWXWju8KxzFO3xkXLQQBmHp8tSNXOu+sy/t?=
- =?iso-8859-1?Q?Hd9ycM8PMu0oV9f2L6wTJciyewaEdZWmtezZpBbFGmZPBlu8FsItJ2U1GC?=
- =?iso-8859-1?Q?1aCqO38l9QzwSLMxjSa2c7CiZBomNZpOt2no8OZa86VjSmFsrn1EnvLGNm?=
- =?iso-8859-1?Q?C4AI91k4fcxOJgQtTBeec/hNiWfXqZCb77XSMUYzrPi93ev1A9BQq6yNlv?=
- =?iso-8859-1?Q?AUH9YFR/xwPOVFWZ3DLuQ21cgUfLqiKVCmGPgo5Zg2jGHVKETx+iFOg0g9?=
- =?iso-8859-1?Q?S3iUU0U1RYmfAf/s4yGxSy6CFVRiKSb5wfA91QDk0hfgvfjneDmAEZUx/F?=
- =?iso-8859-1?Q?7oReP/uiEEC54p+ennOc/+mo25wsCJanW6Z+fjCFET0T//Yu8Fss8kk+wS?=
- =?iso-8859-1?Q?3OjbFq0kh1nqx8jZCKEKl5xUbW6h+ts6tSNjyOEFK00VPClxm9yu2BAXDo?=
- =?iso-8859-1?Q?637VgaQlRSovkGPmfNZDITrdEPG/tgDdymO6PxfPMZMwsQk761f7Ca0LCS?=
- =?iso-8859-1?Q?/P18jR2pg3CIKyAAYntbIKCAQUkncxwSRVddAQoqi9kcMTiv69zb/OwlMk?=
- =?iso-8859-1?Q?lhUE1EefXZSP5JtS/RV0G1fLtIgBzWKDGNM8hnd/fbjCGUqRa97Y56wzGS?=
- =?iso-8859-1?Q?c3HyPo18SWWHm52/9NLWy/7Knrm9WyN+T7GfENEvKuegrcCxwYYn3AfViQ?=
- =?iso-8859-1?Q?Xeg+GNP3Hm+Q8RaAN43xumx594UxuIP0CNhoKgIYYLMTaKnYaGntlHtf3l?=
- =?iso-8859-1?Q?4EQlvMjwpQ5CdeXWH/bjPfruwlbL3+pYxPx0hnDkVcVRhB7HN/bdobrnyQ?=
- =?iso-8859-1?Q?lm0gOZpkKBkwoClWD2vbQNbSLVe0wN3p8PILxgsNKWJoUO9F3vA+kg04tb?=
- =?iso-8859-1?Q?R6kuYMfXZKhxWowA59nN3CEdurEAYC8=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231782AbiEGLS7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 7 May 2022 07:18:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FD838DB2;
+        Sat,  7 May 2022 04:15:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A59226115F;
+        Sat,  7 May 2022 11:15:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CB30C385A9;
+        Sat,  7 May 2022 11:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651922112;
+        bh=/LOtxvTggIO6icaWFdhUM6BPOHRmcG034NQXFaL7UfA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vyp24Y7Yvi4m4vGqgXthnnoLjM2VFzlYC8FeIDkRH8MPFWeLRXMQZfvV6oH9bvxEL
+         XvduPF6jfOZpCyi8wkn5hvCqtqKVIJXQIPBS3gOJ54UoZ8zU+ieP0dhJ1hgKORmWy4
+         G6buMYACQKPxLOWQEXY6Stct3ESdccQ6yzH87PxBxgsGgeL+bbrcdOIzi9hz8dlDan
+         yqGy44pmiXBLlHfHECrM66QpAT1ebAssdMmPeR3pnrtBXghnon0vTmdDpqqFgGm1Ni
+         ob/cKeL68VLicy7n8emtc2RFhKrtTU/LCFW0lGgH7iDQoKqqjEyfgpf3ZqgmTzXcdg
+         Y4+qQgAO9YsVQ==
+Received: by pali.im (Postfix)
+        id 6ED077F6; Sat,  7 May 2022 13:15:08 +0200 (CEST)
+Date:   Sat, 7 May 2022 13:15:08 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/6] irqchip/armada-370-xp: Implement SoC Error interrupts
+Message-ID: <20220507111508.dk4ztsg7esspoupb@pali>
+References: <20220506134029.21470-1-pali@kernel.org>
+ <20220506134029.21470-3-pali@kernel.org>
+ <87mtfu7ccd.wl-maz@kernel.org>
+ <20220506183051.wimo7p4nuqfnl2aj@pali>
+ <8735hmijlu.wl-maz@kernel.org>
+ <20220506185546.n5rl3chyyauy4bjt@pali>
+ <87levd7m2n.wl-maz@kernel.org>
+ <20220507092054.b7yu23nj667l6xhy@pali>
+ <871qx5ispy.wl-maz@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: epam.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR03MB3710.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6dc38226-659d-4d50-8a36-08da3013e13a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2022 10:25:16.7255
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YR7ACqYa/ajhLUKO/u1lqKnYvyJ3w2sQg3alwVJWovpr1mBS6QwglR53wp/uohSumZMX0suzR/HBRgezsZ17oKHHqs72UzoyXbvO8fO5KxE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR03MB3583
-X-Proofpoint-GUID: COMd3kw_7kdraZJ_Mx2DLCW9CWqHihkI
-X-Proofpoint-ORIG-GUID: COMd3kw_7kdraZJ_Mx2DLCW9CWqHihkI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-07_02,2022-05-06_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 bulkscore=0
- adultscore=0 impostorscore=0 spamscore=0 mlxscore=0 mlxlogscore=489
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205070070
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <871qx5ispy.wl-maz@kernel.org>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Saturday 07 May 2022 10:42:49 Marc Zyngier wrote:
+> On Sat, 07 May 2022 10:20:54 +0100,
+> Pali Rohár <pali@kernel.org> wrote:
+> > 
+> > On Saturday 07 May 2022 10:01:52 Marc Zyngier wrote:
+> > > On Fri, 06 May 2022 19:55:46 +0100,
+> > > Pali Rohár <pali@kernel.org> wrote:
+> > > > 
+> > > > On Friday 06 May 2022 19:47:25 Marc Zyngier wrote:
+> > > > > On Fri, 06 May 2022 19:30:51 +0100,
+> > > > > Pali Rohár <pali@kernel.org> wrote:
+> > > > > > 
+> > > > > > On Friday 06 May 2022 19:19:46 Marc Zyngier wrote:
+> > > > > > > On Fri, 06 May 2022 14:40:25 +0100,
+> > > > > > > Pali Rohár <pali@kernel.org> wrote:
+> > > > > > > > 
+> > > > > > > > +static void armada_370_xp_soc_err_irq_unmask(struct irq_data *d);
+> > > > > > > > +
+> > > > > > > >  static inline bool is_percpu_irq(irq_hw_number_t irq)
+> > > > > > > >  {
+> > > > > > > >  	if (irq <= ARMADA_370_XP_MAX_PER_CPU_IRQS)
+> > > > > > > > @@ -509,6 +517,27 @@ static void armada_xp_mpic_reenable_percpu(void)
+> > > > > > > >  		armada_370_xp_irq_unmask(data);
+> > > > > > > >  	}
+> > > > > > > >  
+> > > > > > > > +	/* Re-enable per-CPU SoC Error interrupts that were enabled before suspend */
+> > > > > > > > +	for (irq = 0; irq < soc_err_irq_num_regs * 32; irq++) {
+> > > > > > > > +		struct irq_data *data;
+> > > > > > > > +		int virq;
+> > > > > > > > +
+> > > > > > > > +		virq = irq_linear_revmap(armada_370_xp_soc_err_domain, irq);
+> > > > > > > > +		if (virq == 0)
+> > > > > > > > +			continue;
+> > > > > > > > +
+> > > > > > > > +		data = irq_get_irq_data(virq);
+> > > > > > > > +
+> > > > > > > > +		if (!irq_percpu_is_enabled(virq))
+> > > > > > > > +			continue;
+> > > > > > > > +
+> > > > > > > > +		armada_370_xp_soc_err_irq_unmask(data);
+> > > > > > > > +	}
+> > > > > > > 
+> > > > > > > So you do this loop and all these lookups, both here and in the resume
+> > > > > > > function (duplicated code!) just to be able to call the unmask
+> > > > > > > function?  This would be better served by two straight writes of the
+> > > > > > > mask register, which you'd conveniently save on suspend.
+> > > > > > > 
+> > > > > > > Yes, you have only duplicated the existing logic. But surely there is
+> > > > > > > something better to do.
+> > > > > > 
+> > > > > > Yes, I just used existing logic.
+> > > > > > 
+> > > > > > I'm not rewriting driver or doing big refactor of it, as this is not in
+> > > > > > the scope of the PCIe AER interrupt support.
+> > > > > 
+> > > > > Fair enough. By the same logic, I'm not taking any change to the
+> > > > > driver until it is put in a better shape. Your call.
+> > > > 
+> > > > If you are maintainer of this code then it is expected from _you_ to
+> > > > move the current code into _better shape_ as you wrote and expect. And
+> > > > then show us exactly, how new changes in this driver should look like,
+> > > > in examples.
+> > > 
+> > > Sorry, but that's not how this works. You are the one willing to
+> > > change a sub-par piece of code, you get to make it better. You
+> > > obviously have the means (the HW) and the incentive (these patches).
+> > > But you don't get to make something even more unmaintainable because
+> > > you're unwilling to do some extra work.
+> > > 
+> > > If you're unhappy with my position, that's fine. I suggest you take it
+> > > with Thomas, and maybe even Linus. As I suggested before, you can also
+> > > post a patch removing me as the irqchip maintainer. I'm sure that will
+> > > spark an interesting discussion.
+> > 
+> > You have already suggested it in email [1] but apparently you are _not_
+> > maintainer of mvebu pci controller. get_maintainer.pl for part about
+> > which you have talked in [1] says:
+> > 
+> > $ ./scripts/get_maintainer.pl -f drivers/pci/controller/pci-aardvark.c
+> 
+> Remind me which file this patch is touching?
 
+So read again what you have presented in the past, in the email to which
+you have referenced. I sent link to that your email in previous email.
 
-Jason Gunthorpe <jgg@ziepe.ca> writes:
+Or you absolutely incompetent and I should have remind also previous
+email to which you wrote your reaction?
 
-> On Fri, May 06, 2022 at 03:17:22PM -0500, Bjorn Helgaas wrote:
->
->> > Modules linked in: xt_MASQUERADE iptable_nat nf_nat nf_conntrack nf_de=
-frag_ipv6
->> > nf_defrag_ipv4 libcrc32c iptable_filter crct10dif_ce nvme nvme_core at=
-24
->> > pci_endpoint_test bridge pdrv_genirq ip_tables x_tables ipv6
->> >  CPU: 3 PID: 287 Comm: sh Not tainted 5.10.41-lorc+ #233
->> >  Hardware name: XENVM-4.17 (DT)
->                 ^^^^^^^^^^^^^^^^^
->
->> So this means the VF must have an SR-IOV capability, which sounds a
->> little dubious.  From PCIe r6.0:
->
-> Enabling SRIOV from within a VM is "exciting" - I would not be
-> surprised if there was some wonky bugs here.
+> > The only _toy_ here is your broken mvebu board which your ego was unable
+> > to fix, and you have put it into recycling pile [2] and since than for
+> > months you are trying to reject every change or improvement in mvebu
+> > drivers and trying to find out a way how to remove all mvebu code, like
+> > if you were not able to fix your toy, then broke it also to all other
+> > people. You have already expressed this, but I'm not going to search
+> > emails more and find these your statements.
+> 
+> At this stage, this is pure paranoia.
 
-Well, yes. But in this case, this VM has direct access to the PCIe
-controller. So it should not cause any troubles. I'll try baremetal
-setup, though.=20
+No, just pure reality of your behavior of what you are doing and what
+you are saying.
 
+> Do you think I am so emotionally
+> attached to HW purity that I would plot the annihilation of some ugly
+> platform?
 
---=20
-Volodymyr Babchuk at EPAM=
+I do not think. You personally, have presented this statement, and I'm
+just reminding it to you like you have asked for it.
+
+> > Sorry, I'm stopping here. This is just a prove that you are not
+> > qualified in reviewing mvebu code.
+> 
+> Happy not to have to review this code.
+
+You are doing it for more than one year. Are you happy with it? Seem
+absolutely.
+
+> Just stop Cc'ing me on your patches
+
+As there no progress from your side, nor change of your behavior from
+more than one year, I'm accepting this offer.
+
+This is my last email to you and I'm stopping right now to read your
+emails.
+
+I'm not obligated to remind you everything what you are asking just
+because you are lazy to find you what you have wrote in the past.
+
+> and don't expect me to merge any IRQ related patches coming
+> from you.
+> 
+> 	M.
+> 
+> -- 
+> Without deviation from the norm, progress is not possible.
