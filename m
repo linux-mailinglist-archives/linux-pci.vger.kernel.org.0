@@ -2,185 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12FD751FE35
-	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 15:26:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB6A051FF33
+	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 16:13:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235900AbiEIN1u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 May 2022 09:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
+        id S236692AbiEIOO0 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 9 May 2022 10:14:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235895AbiEIN1l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 09:27:41 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384E31E251A;
-        Mon,  9 May 2022 06:23:28 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id bu29so23828707lfb.0;
-        Mon, 09 May 2022 06:23:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=1K2obVx3YG8QEPrenU4QI5guJQ8Phbo/6yP70JTaawU=;
-        b=ctuOdHCyg4DfJDMuVyrfXjafqsIBGrPq9u27BiBAquJftMSjYFJ55Dztcsr8bNMn0w
-         oeM//L+QbMc5cqR/YL4ZYXu9SspJYNvQLipuO/dxUV/COK7qJD4YPieEuwN+Da6gnICg
-         tiL5ifQOF61sLM7j5k+TfKf3keD2QE9+mfbjkcLau1uokLQ0TJXXWGRj10hWZc6mNTCY
-         ZiPlrCXkxh/d8AP+hVzj144bdbLZ6gunWEeo3XTOHdZMf+1T4Dk4fDvhUDM82hKq6q3x
-         a24gfPwl0eQuynyAnF+v9tUB7WbmPEsnBDi3opOHoOjQkJbqyH8fYmRySBDQ1lHi3t+I
-         lY6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=1K2obVx3YG8QEPrenU4QI5guJQ8Phbo/6yP70JTaawU=;
-        b=mIkc0TZp+d1LwPecfcRJtDyH8BAqmNXPw1gYvuKs2yAX+y/qu14tJVn5mKfiCdAUiD
-         J1PqhiIjZpmt4I41YmLtpvg+xbziJgzNGHXGMiOFa6DvXp7/eZptbtwLH2IAhvwlPCxS
-         NabvguI5sndh9CnuM7+Nbt5RqzIBU1d3G0QPTQgzq002Of+D7T6HGgaawOrPEptXXb3P
-         eUYjlsTq3r2LFbCvBBF+mq0oXHqqNcckY+cE/SOi0e0PXu5RldMDfIevfXgKBHyWePHP
-         0sgqvfjsdEogwf9f3gIvaQlDCS3kpPAdvafbIWiQQWGKMr+zn7KSbobrxskZHZW/vLap
-         5kFg==
-X-Gm-Message-State: AOAM530ONvoAN48p67Wf1oX/vzg/HnhHcWEtfhjcp+b/GIzlzZTrFcLh
-        BlXgCeuNzxRrgAUVOGngXGI=
-X-Google-Smtp-Source: ABdhPJy54uNV0a0Y5a5xZUhU6QHCMVecZmAJ2frVW6KAYppShjM44jXuH8rdrMemcTVYgMIiSG1E7g==
-X-Received: by 2002:ac2:4c49:0:b0:473:ca4f:9345 with SMTP id o9-20020ac24c49000000b00473ca4f9345mr12622420lfk.203.1652102606387;
-        Mon, 09 May 2022 06:23:26 -0700 (PDT)
-Received: from [192.168.1.7] ([212.22.223.21])
-        by smtp.gmail.com with ESMTPSA id h5-20020a056512338500b0047255d2111csm1941442lfg.75.2022.05.09.06.23.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 May 2022 06:23:25 -0700 (PDT)
-Subject: Re: [PATCH v3 00/21] xen: simplify frontend side ring setup
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-integrity@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20220505081640.17425-1-jgross@suse.com>
-From:   Oleksandr <olekstysh@gmail.com>
-Message-ID: <409fb110-646a-2973-aff3-c97fdfb9bfbc@gmail.com>
-Date:   Mon, 9 May 2022 16:23:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S236751AbiEIOOY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 10:14:24 -0400
+X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 09 May 2022 07:10:29 PDT
+Received: from de-smtp-delivery-213.mimecast.com (de-smtp-delivery-213.mimecast.com [194.104.111.213])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 795CC2B1DCC
+        for <linux-pci@vger.kernel.org>; Mon,  9 May 2022 07:10:28 -0700 (PDT)
+Received: from CHE01-ZR0-obe.outbound.protection.outlook.com
+ (mail-zr0che01lp2110.outbound.protection.outlook.com [104.47.22.110]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-18-wQPcNrBsMYGr5UYcBwIe5A-1; Mon, 09 May 2022 16:09:21 +0200
+X-MC-Unique: wQPcNrBsMYGr5UYcBwIe5A-1
+Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2e::8) by
+ GV0P278MB0386.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:30::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5227.20; Mon, 9 May 2022 14:09:19 +0000
+Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::f465:3051:c795:3c2]) by ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::f465:3051:c795:3c2%9]) with mapi id 15.20.5227.023; Mon, 9 May 2022
+ 14:09:19 +0000
+Date:   Mon, 9 May 2022 16:09:19 +0200
+From:   Francesco Dolcini <francesco.dolcini@toradex.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Francesco Dolcini <francesco.dolcini@toradex.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, pali@kernel.org
+Subject: Re: [PATCH v3] PCI: imx6: Fix PERST# start-up sequence
+Message-ID: <20220509140919.GA7159@francesco-nb.int.toradex.com>
+References: <20220404081509.94356-1-francesco.dolcini@toradex.com>
+ <20220411165031.GA28780@lpieralisi>
+In-Reply-To: <20220411165031.GA28780@lpieralisi>
+X-ClientProxiedBy: ZR0P278CA0166.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:45::13) To ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:2e::8)
 MIME-Version: 1.0
-In-Reply-To: <20220505081640.17425-1-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 16d7028f-4e7e-4a76-f371-08da31c582af
+X-MS-TrafficTypeDiagnostic: GV0P278MB0386:EE_
+X-Microsoft-Antispam-PRVS: <GV0P278MB03868046BF83C2C938C489BBE2C69@GV0P278MB0386.CHEP278.PROD.OUTLOOK.COM>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0
+X-Microsoft-Antispam-Message-Info: P0NU6cgn5Oadtw0Lx+o7Orkg61o3U32H8g0HqREMpa39JOPYFdeAOPDFjOqZWwIvynWgdIxmSZCY8SGN3T9tL+Z34nfHldozoqfUY2rTJghbvnfMcz72Yl2b9l7HPtNtxRS8HutKRDV39t1Zee5xS3immRwCC5RqK4WQ2q6Q87R0bglFq2SfHgHIq7E7W9d4Rcw98J9cPH4TijRT3BgJtqjrAYWJN7+HSXChNbzetUXOUwqIsei8qht6iMatgxhmNQPK6i0FocMvQupA43KZMtZndEtj+gIVdPi6UBhBRwSZElTKKdeWRmZuOALZq/kIkAmx043P8dFBsG6o4k43ePKLjaXNSWD3nIq7GBfsOoU/KRCOn5CxhyyM9bZ+2AVnYnu/K6f+ivNZ5ZjvJEkGxpqbkhp/4JyYqUPI/wfRfvXRHk/jZQDCKcBxxhhcDGGu1ktQcoPjcm7svYbHfXy7+SdqOSQEdF7tzWNxC6fOPG1TSKGlEs4C7JPgumAfHwbd5BLVZncQqpG8t82QKFvZSoPZ8VGob+NXRWFm+0hIw+iczti/jrYyLa3SSSZuxfxVEL7iTeHJkrMKEL8pD7lfOYW5quF/mDaelbLv3XIPqqkov8zvX2x8FfQVm22MKHTWX19m8QL8mo1vnSYIcgY6gQ5OTggLqI7mW6/CCg2YV/XzRF3B47rjDDeBZC7CpxhfON5Xz6fD73ghPwqU5X+/jg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(39840400004)(366004)(136003)(396003)(346002)(376002)(7416002)(4744005)(5660300002)(1076003)(86362001)(6512007)(186003)(26005)(44832011)(38350700002)(8936002)(66476007)(66946007)(2906002)(66556008)(4326008)(8676002)(83380400001)(38100700002)(6486002)(6506007)(6916009)(52116002)(33656002)(54906003)(508600001)(316002);DIR:OUT;SFP:1102
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LK7wUHy22HN5AijyDj4kw/ymuWMdrKDihiinm9IhXC2A7aACD19cNjD3Iuna?=
+ =?us-ascii?Q?rRXFrSGwuTuIlnVhuStZ++RrZfl6A9L7QFSY2pkhMAe+QS5lZOxPT/F7P8Bz?=
+ =?us-ascii?Q?ik2La0/cAiv+S5bgi+v02zZimF5XM37L76wDVJbIYsXljjotIl4RazWtbI+N?=
+ =?us-ascii?Q?Wx8+QoOsMiC39SJo+KTwomF4V12POl8Kd4zf9uTfADjUq3XaaVHfCH2MK/tv?=
+ =?us-ascii?Q?rnMKH7qxPnqKHLZy4KvZncqs5/Co241VmlJ1fLdMbmov6TcMLBs3lEd+4a7Q?=
+ =?us-ascii?Q?dYeJlrtS3g6r70LiWxyqQ6Cjfgl3MKLJKK//j77FBmDiQTnNJZu8eqwthpUa?=
+ =?us-ascii?Q?6whyohYkEIoAl2K8lSWeBHz9grXxLgfAVXwtT89eYHGbsrnXXF6Ya6JzQjJD?=
+ =?us-ascii?Q?YJvxZrjjab4JF/dowgZnxepxb4RsQR9NxQ8Gz74ZPE2c7bC/hxiHOnjrupdK?=
+ =?us-ascii?Q?ou6LbNKH811WO72/dpIvKGwJ1GuQIYAGri64TOo1HgvYhPesdVVWpaBAlZHH?=
+ =?us-ascii?Q?cwvSocThT7AAqow4Vy7/AZnZ6nBdW6AWMpAFwmTfFc41ox4bvSMorORKeS4r?=
+ =?us-ascii?Q?TbjdruBVG6pAICRXvD/D6Pd6JFr8eR9qcCAP/YUClRhV3RzLa9uykSOgW//g?=
+ =?us-ascii?Q?uXDoZLJ+gX2bkx/1LAksBe/JsrVIuaC/y0Wwd1a0uorjEVZGNrQSWvDSh9P7?=
+ =?us-ascii?Q?nN7JBk9x/wZRf+Lw9nuHe/nNKqkVb2Dt/1tyAnhUjVFg9t+BPKUTGQGagNfV?=
+ =?us-ascii?Q?yU5sEpZvtUY+rx6piwrF9bvzByWlXD9n7LKMx0wXl0FoO0/nPtJjJJ5Eu+T9?=
+ =?us-ascii?Q?IODEvkxbLdQQPYyYM0GtAfXZQnLjz35pZ8W4OUwrJKCprrPhFz+5kElUY9d9?=
+ =?us-ascii?Q?NqfWXpj7tBFE780dJSi4Xob3lVs705HOpPWCAwuTGvmrVIipHX6Z3GWpuD9H?=
+ =?us-ascii?Q?6DMdWV9okxRWwOb8pi/53kdCqXWtzFoZJbKW4/BYuI2h73LNG4NcWifKrmoe?=
+ =?us-ascii?Q?473sI0R0sws+ougNF2jqJAC3udAbIjKXOIPQmwbb0NfkQ2jTDSYQmIU7nk+k?=
+ =?us-ascii?Q?WBqT/tXtrFMDlW4Nf5tCUkNYnbbvoH6u5sKvIVqeL3dAkUxgI8uP0ZxC2kYW?=
+ =?us-ascii?Q?e62hmvaYjsOTBQUXDrTgwA4FaX8Ewk43Hmu902lcjaKhxPH4BSbF/BTv8h9c?=
+ =?us-ascii?Q?O0IPvfOCUxBO022CPyXlIFJShql25Ec6hWYf7GWQhNmGnbET6Oa/DKi94a5K?=
+ =?us-ascii?Q?dGN+LEPDR3/JgF5IH7TgjaZRb7rsHbXvLL6VU5IbChQQtUp9DIU4AZzDGWg4?=
+ =?us-ascii?Q?8kj/T14p14oxJKrXvcyaZAQvIK60FTPkoNdEcRN0IWhI2DUc7/FvbLP2ISV5?=
+ =?us-ascii?Q?OVRqUbZHTGWDwU+47VVQ1i5pLalVYGQyOSJ+CrkH17LQms4jlPTmLkPNH1I0?=
+ =?us-ascii?Q?irEqCZO7pozh1CT1zIAKQgfnOsCF4SHNm/sHgFus5pEChjySUftyfwXt2q0E?=
+ =?us-ascii?Q?zikstW/Hypr7pVvRTojRCQ/GA+QQqZ0nCsx95DJB/SNWPXdGM1zEvDYhKkdv?=
+ =?us-ascii?Q?se1U+UoSyzMVbn0nhiwV/wbIfWHB9Hmjk+jabrtrc53e2EYhD6Z4a2DpoofK?=
+ =?us-ascii?Q?odlAfLO3WMBjeVc1seUGrRh9eUT2fYHAru4tcAef1MlItZauMUFcjyQ7poN8?=
+ =?us-ascii?Q?3pb3pLcq11FMhME5oDhmBRnz9VEbggI+vTRMnV6uPcHXQ27O2RWrEV3zhco6?=
+ =?us-ascii?Q?0RZiZFA/dqyDV0dm4RiL4Lgl17/0M/A=3D?=
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16d7028f-4e7e-4a76-f371-08da31c582af
+X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2022 14:09:19.8015
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: By1Jr2RoY6gCctwHKH/7vl+ivrmdJyc5iq9waOO3anf+9LYwR7BHXcGLHRpCNJzWChJfK96Z2fX1438TJl/9tNMjk5Amlm+VMScHWJfbRdw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0386
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CDE13A77 smtp.mailfrom=francesco.dolcini@toradex.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: toradex.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello Lorenzo,
 
-On 05.05.22 11:16, Juergen Gross wrote:
+On Mon, Apr 11, 2022 at 05:50:41PM +0100, Lorenzo Pieralisi wrote:
+> [CC'ed Pali, who is working on PERST consolidation]
+> 
+> On Mon, Apr 04, 2022 at 10:15:09AM +0200, Francesco Dolcini wrote:
+> > Failure to do so could prevent PCIe devices to be working correctly,
+> > and this was experienced with real devices.
 
-Hello Juergen.
+Just a gentle ping, any concern on the patch?
 
-
-
-> Many Xen PV frontends share similar code for setting up a ring page
-> (allocating and granting access for the backend) and for tearing it
-> down.
->
-> Create new service functions doing all needed steps in one go.
->
-> This requires all frontends to use a common value for an invalid
-> grant reference in order to make the functions idempotent.
->
-> Changes in V3:
-> - new patches 1 and 2, comments addressed
->
-> Changes in V2:
-> - new patch 9 and related changes in patches 10-18
->
-> Juergen Gross (21):
->    xen: update grant_table.h
->    xen/grant-table: never put a reserved grant on the free list
->    xen/blkfront: switch blkfront to use INVALID_GRANT_REF
->    xen/netfront: switch netfront to use INVALID_GRANT_REF
->    xen/scsifront: remove unused GRANT_INVALID_REF definition
->    xen/usb: switch xen-hcd to use INVALID_GRANT_REF
->    xen/drm: switch xen_drm_front to use INVALID_GRANT_REF
->    xen/sound: switch xen_snd_front to use INVALID_GRANT_REF
->    xen/dmabuf: switch gntdev-dmabuf to use INVALID_GRANT_REF
->    xen/shbuf: switch xen-front-pgdir-shbuf to use INVALID_GRANT_REF
->    xen: update ring.h
->    xen/xenbus: add xenbus_setup_ring() service function
->    xen/blkfront: use xenbus_setup_ring() and xenbus_teardown_ring()
->    xen/netfront: use xenbus_setup_ring() and xenbus_teardown_ring()
->    xen/tpmfront: use xenbus_setup_ring() and xenbus_teardown_ring()
->    xen/drmfront: use xenbus_setup_ring() and xenbus_teardown_ring()
->    xen/pcifront: use xenbus_setup_ring() and xenbus_teardown_ring()
->    xen/scsifront: use xenbus_setup_ring() and xenbus_teardown_ring()
->    xen/usbfront: use xenbus_setup_ring() and xenbus_teardown_ring()
->    xen/sndfront: use xenbus_setup_ring() and xenbus_teardown_ring()
->    xen/xenbus: eliminate xenbus_grant_ring()
-
-
-For the patches that touch PV display (#07, #16), PV sound (#08, #20) 
-and shared buffer framework used by both frontends (#10):
-
-Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-
-
-Also I didn't see any issues with these frontends while testing on Arm64 
-based board.
-So, you can also add:
-
-[Arm64 only]
-Tested-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-
-
-Thanks!
-
-
->
->   drivers/block/xen-blkfront.c                |  57 +++----
->   drivers/char/tpm/xen-tpmfront.c             |  18 +--
->   drivers/gpu/drm/xen/xen_drm_front.h         |   9 --
->   drivers/gpu/drm/xen/xen_drm_front_evtchnl.c |  43 ++----
->   drivers/net/xen-netfront.c                  |  85 ++++-------
->   drivers/pci/xen-pcifront.c                  |  19 +--
->   drivers/scsi/xen-scsifront.c                |  31 +---
->   drivers/usb/host/xen-hcd.c                  |  65 ++------
->   drivers/xen/gntdev-dmabuf.c                 |  13 +-
->   drivers/xen/grant-table.c                   |  12 +-
->   drivers/xen/xen-front-pgdir-shbuf.c         |  18 +--
->   drivers/xen/xenbus/xenbus_client.c          |  82 +++++++---
->   include/xen/grant_table.h                   |   2 -
->   include/xen/interface/grant_table.h         | 161 ++++++++++++--------
->   include/xen/interface/io/ring.h             |  19 ++-
->   include/xen/xenbus.h                        |   4 +-
->   sound/xen/xen_snd_front_evtchnl.c           |  44 ++----
->   sound/xen/xen_snd_front_evtchnl.h           |   9 --
->   18 files changed, 287 insertions(+), 404 deletions(-)
->
--- 
-Regards,
-
-Oleksandr Tyshchenko
+Francesco
 
