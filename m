@@ -2,174 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 301A85201FD
-	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 18:10:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFD25520244
+	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 18:23:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238958AbiEIQN1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 May 2022 12:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
+        id S238985AbiEIQ1a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 May 2022 12:27:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238893AbiEIQN0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 12:13:26 -0400
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045B627B30B;
-        Mon,  9 May 2022 09:09:29 -0700 (PDT)
-Received: (Authenticated sender: clement.leger@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 629021BF203;
-        Mon,  9 May 2022 16:09:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1652112566;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i7GSStgwKryZEOP1Jjq0CJbbm9/kTv+zC1i/HUwHXXA=;
-        b=Q3qHIfx01n4Z6VYb2ZeeD61UZj+SKoqZj/bmrMCXYMZbH02VhkUroQXvu6VEtLpX0el+ZZ
-        /M1Hf1oLfxfe9fgJlQvh4HxcXjJu100FCXHWOl2cVEj4LLGy+jgjGjjt/k5WK/m/aTgf1t
-        uTA5lv+FV/06uzWOikWHCPlpmAZULsl0Am9b8duDWm7Qhryo6xVgA+oCa3GVjKvQdHp27F
-        tllENT/8s1aW+B5NzJU8CJ1BM9bDXHczllL5wztlYqAgSkzLVcIgFvk/OnaLxKYoYckZsp
-        YQ3jgjHOjS9ZoR7jbWY+A/YAYi7zrnVVxqwwJF+Qq+1kkzVWdcpvwlsDDPZvVg==
-Date:   Mon, 9 May 2022 18:09:17 +0200
-From:   =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Allan Nielsen <allan.nielsen@microchip.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Steen Hegelund <steen.hegelund@microchip.com>,
-        Thomas Petazzoni <thomas.petazonni@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/3] add dynamic PCI device of_node creation for overlay
-Message-ID: <20220509180917.0f0ae851@xps-bootlin>
-In-Reply-To: <f9b0cbf1-dde2-ff97-cca0-5d2895734f91@gmail.com>
-References: <20220427094502.456111-1-clement.leger@bootlin.com>
-        <96db62bb-18be-f44a-6f53-05b22319f23a@gmail.com>
-        <20220509141634.16158c38@xps-bootlin>
-        <f9b0cbf1-dde2-ff97-cca0-5d2895734f91@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S238952AbiEIQ13 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 12:27:29 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABFF8267C19
+        for <linux-pci@vger.kernel.org>; Mon,  9 May 2022 09:23:34 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id y76so25932379ybe.1
+        for <linux-pci@vger.kernel.org>; Mon, 09 May 2022 09:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=o09YVCh1mJQw4VSlSm4Z8xeTjK0fr2xaHgKilffXS2s=;
+        b=OpRpEUkR7zZREIJEtYebpotKL58jNZGUbdJC3S3TGXeMBnX+wls42lH4KpjvvVqf/z
+         M7BUsofvMnxtwPEtG8w8/vBtyddUCK+LUkfbyTMaK6HOlLS55eXLCLmqF1XAgsvund54
+         iBmzcV/TMkDRSDcV78I8WPk+MSaPmclFxDKaRc4wVVBQ/zqLeWDs2ttwBqU/WovmRaPq
+         lnwFVAsf6vJwDPREx1GLNtqVdiuesbRoqhA697qkR87Uce4JZ6ExumXMkra+T8BENVN1
+         hoV7x7vF9N45EB+kbCBK6SPij9GVOGKwotF0WUQ4kbEDRIryPrTvTBMuQxags8aJd8kY
+         LhlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=o09YVCh1mJQw4VSlSm4Z8xeTjK0fr2xaHgKilffXS2s=;
+        b=PnOAsZ0n0kk83td1gMq+7dlet6l4LEfOsA3NnscgsDf6nqKIfRAQ+nXevYneplQtee
+         kOlLGvP3R6HIIEkGslhPBtjfZsToeWepI9Yrv6KvuyX27HqPn9+vgMFVB1nY8iNF24nK
+         7hUg6QXcFYvC+3HzvEtFbU1vip2YPz9iLxJr9u+K7J0JGhZ9ojWacCJeVNqaWfWlCriD
+         1+2j4lKoOPXbyCWVMjceVZPge4zpJYeDZaPaxCf5UZMHj5oRjOgf4UucUrbvvD+1A0SW
+         2zOIvTPSp18+B/1QGcwjaz/5DlYY7FKKmkIgYX4ltZ+IkdkJ0fF4TST+e/KiN62L8VUy
+         1Kqg==
+X-Gm-Message-State: AOAM532ghi4nrMcg51hwoKGFCY05atlg6xa0TvXhQcEJTM3t0DrtjquC
+        4KKBXENNLQIMeDII4rxfGooOSteQfbICYnlgTAn4NVr2CQc=
+X-Google-Smtp-Source: ABdhPJyiHgj5934QtcDLMhYh+2YO1SsEdWZ7FQNW3uuIo1YufxMtn8emfISdTrv9VzHbnBNxiz5wTznqB6TP9vd9E4M=
+X-Received: by 2002:a25:2554:0:b0:646:afdc:636b with SMTP id
+ l81-20020a252554000000b00646afdc636bmr14761574ybl.15.1652113412947; Mon, 09
+ May 2022 09:23:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <bug-215958-41252@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-215958-41252@https.bugzilla.kernel.org/>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Mon, 9 May 2022 11:23:21 -0500
+Message-ID: <CABhMZUW4=XUOwFAE74nebnZcKBp5pwktWufHNBpB79t3iUeQ3A@mail.gmail.com>
+Subject: Re: [Bug 215958] New: thunderbolt3 egpu cannot disconnect cleanly
+To:     Linux PCI <linux-pci@vger.kernel.org>
+Cc:     r087r70@yahoo.it, Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le Mon, 9 May 2022 10:56:36 -0500,
-Frank Rowand <frowand.list@gmail.com> a =C3=A9crit :
+On Sun, May 8, 2022 at 3:29 PM <bugzilla-daemon@kernel.org> wrote:
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=215958
+>
+>             Bug ID: 215958
+>            Summary: thunderbolt3 egpu cannot disconnect cleanly
+>            Product: Drivers
+>            Version: 2.5
+>     Kernel Version: 5.17.0-1003-oem #3-Ubuntu SMP PREEMPT
+>           Hardware: All
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: normal
+>           Priority: P1
+>          Component: PCI
+>           Assignee: drivers_pci@kernel-bugs.osdl.org
+>           Reporter: r087r70@yahoo.it
+>         Regression: No
 
-> > Hi Frank,
-> >=20
-> > This work uses the kernel space interface (of_overlay_fdt_apply())
-> > and the device tree overlay is builtin the driver. This interface
-> > was used until recently by rcu-dcar driver. While the only user
-> > (sic), this seems to work pretty well and I was able to use it
-> > successfully. =20
->=20
-> Yes, of_overlay_fdt_apply() was used by one driver.  But that driver
-> was explicitly recognized as a grandfathered exception, and not an
-> example for other users.  It was finally removed in 5.18-rc1.
+I assume this is not a regression, right?  If it is a regression, what
+previous kernel worked correctly?
 
-I noticed that unfortunately.
+> I have an external egpu (Radeon 6600 RX) connected through thunderbolt3 to my
+> Thinkpad X1 carbon 6th Gen.. When I disconnect the thunderbolt3 cable I get the
+> following error in dmesg:
+>
+> [21874.194994] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.195006] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.195123] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.195129] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.195271] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.195276] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.195406] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.195411] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.195544] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:51 param:0x00000000 message:GetPptLimit?
+> [21874.195550] amdgpu 0000:0c:00.0: amdgpu: [smu_v11_0_get_current_power_limit]
+> get PPT limit failed!
+> [21874.195582] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.195587] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.227454] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.227463] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.227532] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.227536] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.227618] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.227621] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.227700] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:18 param:0x00000005 message:TransferTableSmu2Dram?
+> [21874.227703] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.227784] amdgpu 0000:0c:00.0: amdgpu: [smu_v11_0_get_current_power_limit]
+> get PPT limit failed!
+> [21874.227804] amdgpu 0000:0c:00.0: amdgpu: Failed to export SMU metrics table!
+> [21874.514661] snd_hda_codec_hdmi hdaudioC1D0: Unable to sync register
+> 0x2f0d00. -5
+> [21874.568360] amdgpu 0000:0c:00.0: amdgpu: Failed to switch to AC mode!
+> [21874.599292] amdgpu 0000:0c:00.0: amdgpu: Failed to switch to AC mode!
+> [21874.718562] amdgpu 0000:0c:00.0: amdgpu: amdgpu: finishing device.
+> [21878.722376] amdgpu: cp queue pipe 4 queue 0 preemption failed
+> [21878.722422] amdgpu 0000:0c:00.0: amdgpu: Failed to disable gfxoff!
+> [21879.134918] amdgpu 0000:0c:00.0: [drm:amdgpu_ring_test_helper [amdgpu]]
+> *ERROR* ring kiq_2.1.0 test failed (-110)
+> [21879.135144] [drm:gfx_v10_0_hw_fini [amdgpu]] *ERROR* KGQ disable failed
+> [21879.338158] amdgpu 0000:0c:00.0: [drm:amdgpu_ring_test_helper [amdgpu]]
+> *ERROR* ring kiq_2.1.0 test failed (-110)
+> [21879.338402] [drm:gfx_v10_0_hw_fini [amdgpu]] *ERROR* KCQ disable failed
+> [21879.543318] [drm:gfx_v10_0_cp_gfx_enable.isra.0 [amdgpu]] *ERROR* failed to
+> halt cp gfx
+> [21879.544216] __smu_cmn_reg_print_error: 5 callbacks suppressed
+> [21879.544220] amdgpu 0000:0c:00.0: amdgpu: SMU: response:0xFFFFFFFF for
+> index:7 param:0x00000000 message:DisableAllSmuFeatures?
+> [21879.544226] amdgpu 0000:0c:00.0: amdgpu: Failed to disable smu features.
+> [21879.544230] amdgpu 0000:0c:00.0: amdgpu: Fail to disable dpm features!
+> [21879.544238] [drm] free PSP TMR buffer
 
->=20
-> You may have used of_overlay_fdt_apply() in a specific use case at
-> a specific kernel version, but if you read through the references
-> I provided you will find that applying overlays after the kernel
-> boots is a fragile endeavor, with expectations of bugs and problems
-> being exposed as usage is changed (simple example is that my adding
-> some overlay notifier unittests exposed yet another memory leak).
->=20
-> The reference that I provided also shows how the overlay code is
-> being improved over time.  Even with improvements, it will remain
-> fragile.
+The above looks like what amdgpu would see when the GPU is no longer
+accessible (writes are dropped and reads return 0xffffffff).  It's
+possible amdgpu could notice this and shut down more gracefully, but I
+don't think it's the main problem here and it probably wouldn't force
+you to reboot.
 
-Acked.
+> [21880.455935] i915 0000:00:02.0: vgaarb: changed VGA decodes:
+> olddecodes=none,decodes=io+mem:owns=io+mem
+> [21880.456218] pci 0000:0c:00.0: Removing from iommu group 14
+> [21880.456715] pci 0000:0c:00.1: Removing from iommu group 14
+> [21880.456798] pci_bus 0000:0c: busn_res: [bus 0c] is released
+> [21880.456950] pci 0000:0b:00.0: Removing from iommu group 14
+> [21880.456985] pci_bus 0000:0b: busn_res: [bus 0b-0c] is released
+> [21880.457106] pci 0000:0a:00.0: Removing from iommu group 14
+> [21880.457156] pci_bus 0000:0a: busn_res: [bus 0a-0c] is released
+> [21880.457279] pci 0000:09:01.0: Removing from iommu group 14
+> [21880.457311] pci_bus 0000:09: busn_res: [bus 09-3a] is released
+> [21880.457543] pci 0000:08:00.0: Removing from iommu group 14
 
->=20
-> >=20
-> > Moreover, this support targets at using this with PCI devices. This
-> > devices are really well contained and do not interfere with other
-> > devices. This actually consists in adding a complete subtree into
-> > the existing device-tree and thus it limits the interactions between
-> > potentially platform provided devices and PCI ones. =20
->=20
-> Yes, that it is very important that you have described this fact, both
-> here and in other emails.  Thank you for that information, it does
-> help understanding the alternatives.
->=20
-> I've hesitated in recommending a specific solution before better
-> understanding the architecture of your pcie board and drivers, but
-> I've delayed too long, so I am going to go ahead and mention one
-> possibility at the risk of not yet fully understanding the situation.
->=20
-> On the surface, it appears that your need might be well met by having
-> a base devicetree that describes all of the pcie nodes, but with each
-> node having a status of "disabled" so that they will not be used.
-> Have a devicetree overlay describing the pcie card (as you proposed),
-> where the overlay also includes a status of "ok" for the pcie node.
-> Applying the overlay, with a method of redirecting the target to a
-> specific pcie node would change the status of the pcie node to enable
-> its use.  (You have already proposed a patch to modify
-> of_overlay_fdt_apply() to allow a modified target, so not a new
-> concept from me.)  My suggestion is to apply the overlay devicetree
-> to the base devicetree before the combined FDT devicetree is passed
-> to the kernel at boot.  The overlay apply could be done by several
-> different entities.  It could be before the bootloader executes, it
-> could be done by the bootloader, it could be done by a shim between
-> the bootloader and the kernel.  This method avoids all of the issues
-> of applying an overlay to a running system that I find problematic.
-> It is also a method used by the U-boot bootloader, as an example.
+This looks like removing 0c:00.0 (the GPU) and two switches leading to
+it (probably part of the Thunderbolt topology), so to be expected.
 
-Ok, that is actually possible on a system that is given a device-tree
-by the bootloader. But on a system that is desrcibed using ACPI (such
-as the x86), this is much more difficult (at least to my knowledge)...
-We want this feature to be easy to use for the end user. Adding such
-configuration which also differs between various architecture is
-clearly not so easy to setup.
+> [21880.457847] pci_bus 0000:06: Allocating resources
+> [21880.457888] pcieport 0000:06:02.0: bridge window [io  0x1000-0x0fff] to [bus
+> 3b] add_size 1000
+> [21880.457897] pcieport 0000:06:04.0: bridge window [io  0x1000-0x0fff] to [bus
+> 3c-6f] add_size 1000
+> [21880.457913] pcieport 0000:06:02.0: BAR 13: no space for [io  size 0x1000]
+> [21880.457919] pcieport 0000:06:02.0: BAR 13: failed to assign [io  size
+> 0x1000]
+> [21880.457924] pcieport 0000:06:04.0: BAR 13: no space for [io  size 0x1000]
+> [21880.457928] pcieport 0000:06:04.0: BAR 13: failed to assign [io  size
+> 0x1000]
+> [21880.457934] pcieport 0000:06:04.0: BAR 13: no space for [io  size 0x1000]
+> [21880.457938] pcieport 0000:06:04.0: BAR 13: failed to assign [io  size
+> 0x1000]
+> [21880.457943] pcieport 0000:06:02.0: BAR 13: no space for [io  size 0x1000]
+> [21880.457947] pcieport 0000:06:02.0: BAR 13: failed to assign [io  size
+> 0x1000]
 
-Moreover, since the PCI is meant to be "Plug and Play", such
-configuration would completely break that. If the user switches the
-PCIe card from one slot to another, the bootloader configuration will
-need to be modified. This seems a big no way for me (and for the user).
+I'm not sure why we're allocating resources as part of the removal.
+The hierarchies under 06:02.0 (to [bus 3b]) and 06:04.0 (to [bus
+3c-6f]) seem to be siblings of the hierarchy you just removed (my
+guess is that was 06:01.0 to [bus 08-3a]).  But again, shouldn't
+require a reboot.
 
->=20
-> The other big issue is mixing ACPI and devicetree on a single system.
-> Historically, the Linux devicetree community has not been receptive
-> to the ides of that mixture.  Your example might be a specific case
-> where the two can be isolated from each other, or maybe not.  (For
-> disclosure, I am essentially ACPI ignorant.)  I suspect that mixing
-> ACPI and devicetree is a recipe for disaster in the general case.
+> upon reconnection of the cable I get:
+>
+> [22192.753261] input: HDA ATI HDMI HDMI/DP,pcm=3 as
+> /devices/pci0000:00/0000:00:1d.0/0000:05:00.0/0000:06:01.0/0000:08:00.0/0000:09:01.0/0000:0a:00.0/0000:0b:00.0/0000:0c:00.1/sound/card1/input98
+> [22192.753738] input: HDA ATI HDMI HDMI/DP,pcm=7 as
+> /devices/pci0000:00/0000:00:1d.0/0000:05:00.0/0000:06:01.0/0000:08:00.0/0000:09:01.0/0000:0a:00.0/0000:0b:00.0/0000:0c:00.1/sound/card1/input99
+> [22192.753952] input: HDA ATI HDMI HDMI/DP,pcm=8 as
+> /devices/pci0000:00/0000:00:1d.0/0000:05:00.0/0000:06:01.0/0000:08:00.0/0000:09:01.0/0000:0a:00.0/0000:0b:00.0/0000:0c:00.1/sound/card1/input100
+> [22192.755234] input: HDA ATI HDMI HDMI/DP,pcm=9 as
+> /devices/pci0000:00/0000:00:1d.0/0000:05:00.0/0000:06:01.0/0000:08:00.0/0000:09:01.0/0000:0a:00.0/0000:0b:00.0/0000:0c:00.1/sound/card1/input101
+> [22192.763885] input: HDA ATI HDMI HDMI/DP,pcm=10 as
+> /devices/pci0000:00/0000:00:1d.0/0000:05:00.0/0000:06:01.0/0000:08:00.0/0000:09:01.0/0000:0a:00.0/0000:0b:00.0/0000:0c:00.1/sound/card1/input102
+> [22192.975773] thunderbolt 0-1: new device found, vendor=0x127 device=0x1
+> [22192.975786] thunderbolt 0-1: Razer Core X
+>
+> but the egpu no longer appears in `xrandr --listproviders`. Full reboot is
+> needed.
 
-Agreed, on that fact, it did raised some eyebrows, and it was for that
-specific concern that initially, I proposed the fwnode solution.
-Honestly, the fwnode conversion represent a lot of work (hundreds of
-lines easily) + requires a conversion of all the subsystem that are not
-fwnode ready (spoiler: almost all of them are not ready).=20
-
-After implementing Rob's solution, the device-tree overlay really seems
-the cleaner to me and requires much less modifications.
-
->=20
-> More to come later as I finish reading through the various threads.
-
-Ok, thanks for your time !
-
-Cl=C3=A9ment
-
->=20
-> -Frank
-
+Can you please build with CONFIG_DYNAMIC_DEBUG=y, boot with
+'dyndbg="file pciehp* +p"', and attach the complete dmesg log to the
+bugzilla?  Also please attach the complete "sudo lspci -vv" output
+(before the unplug and after the replug)?
