@@ -2,134 +2,321 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB6A051FF33
-	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 16:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C924A5201C7
+	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 17:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236692AbiEIOO0 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 9 May 2022 10:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47654 "EHLO
+        id S238733AbiEIQAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 May 2022 12:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236751AbiEIOOY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 10:14:24 -0400
-X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 09 May 2022 07:10:29 PDT
-Received: from de-smtp-delivery-213.mimecast.com (de-smtp-delivery-213.mimecast.com [194.104.111.213])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 795CC2B1DCC
-        for <linux-pci@vger.kernel.org>; Mon,  9 May 2022 07:10:28 -0700 (PDT)
-Received: from CHE01-ZR0-obe.outbound.protection.outlook.com
- (mail-zr0che01lp2110.outbound.protection.outlook.com [104.47.22.110]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- de-mta-18-wQPcNrBsMYGr5UYcBwIe5A-1; Mon, 09 May 2022 16:09:21 +0200
-X-MC-Unique: wQPcNrBsMYGr5UYcBwIe5A-1
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2e::8) by
- GV0P278MB0386.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:30::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5227.20; Mon, 9 May 2022 14:09:19 +0000
-Received: from ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::f465:3051:c795:3c2]) by ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- ([fe80::f465:3051:c795:3c2%9]) with mapi id 15.20.5227.023; Mon, 9 May 2022
- 14:09:19 +0000
-Date:   Mon, 9 May 2022 16:09:19 +0200
-From:   Francesco Dolcini <francesco.dolcini@toradex.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, pali@kernel.org
-Subject: Re: [PATCH v3] PCI: imx6: Fix PERST# start-up sequence
-Message-ID: <20220509140919.GA7159@francesco-nb.int.toradex.com>
-References: <20220404081509.94356-1-francesco.dolcini@toradex.com>
- <20220411165031.GA28780@lpieralisi>
-In-Reply-To: <20220411165031.GA28780@lpieralisi>
-X-ClientProxiedBy: ZR0P278CA0166.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:45::13) To ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:2e::8)
+        with ESMTP id S238725AbiEIQAe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 12:00:34 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B249822704F;
+        Mon,  9 May 2022 08:56:39 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id c1so11118731qkf.13;
+        Mon, 09 May 2022 08:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=AAey19UwfcuWCtcClnQMzrM9eSrYLQXusxy2rwriRwc=;
+        b=TRFRGH85h6xYBHHy0RWAk08Ae8+yT5I0Yo8RUZZtBGJSRBQ93luscxFdOKTwvq2vql
+         /HBF1RROmCGt3rTGa8sTJpTD+Fy5fDGnikgiyFirCPai6H3NIDE3KgZobzz5SJRdFIbl
+         AIxzEYr5a4hLV2mA9uGhSk/9NoiLHx5qt1mNQg50zd8tzVQ9XFN5drUBNMfaGYgCey7N
+         vfsIz/1LlwZb5NIV2J0oCECIiQ8FxQ7j2808voXCSB2KTRxfmjbL2c4CidGRui/Wloda
+         Gxjmlc7YgWFEZzVC45OWVUJ8sYHq+Da+YkloMSDPSKLCnLB8XnkbTyHBhk+DPfLoZQu0
+         C2ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=AAey19UwfcuWCtcClnQMzrM9eSrYLQXusxy2rwriRwc=;
+        b=NfR+AsTL07h/qNWgI4kHs19+M+QwbAhDWDvLlU5j+1stib+NhGr5QwqJ4mobF7VZxi
+         8Py6ESReuJ26dLCv+eHJVtOZKLND+rHlE3sQKi2wGj2Xo44aVo2hhHvLAjTVc7jRtOPv
+         l1jX+oNyeC8srHlse3z/dwvZVAg8WiB85bFcOFcW8vz2Iw77Sk8sAAwArfQkLg2bXcVX
+         qmTx5dJJ/ONcvJI/QT87rWISMDLZM2RX61Vt0QOs4+fVNLNP/3RTqszJe77+qBsgHxFW
+         olKX/GT5SRW9FJCt2gMV6gelB8T2MwLSzGMvE3zNzwN9pGZ5l/OQFCVXtDBVzY7ZaK5G
+         6TNQ==
+X-Gm-Message-State: AOAM5332POB4UDI+yiKKCgE9687TMJQ0BFgFewEy2eDacU0Iu8YDvUel
+        0gHR7j3FUtUktsp8yuQsq5uXrWbgJ9o=
+X-Google-Smtp-Source: ABdhPJzImMtOKPG5DLT33drEizJYDECv70gBi9PWnZapeobeIE1/FL1/mY8wdhw7lLZysD9b1rDf6A==
+X-Received: by 2002:a05:620a:28d3:b0:6a0:42aa:da87 with SMTP id l19-20020a05620a28d300b006a042aada87mr12114574qkp.118.1652111798695;
+        Mon, 09 May 2022 08:56:38 -0700 (PDT)
+Received: from ?IPV6:2600:1700:2442:6db0:4a3:2265:73fb:e310? ([2600:1700:2442:6db0:4a3:2265:73fb:e310])
+        by smtp.gmail.com with ESMTPSA id i3-20020a05620a27c300b0069fc13ce220sm7151595qkp.81.2022.05.09.08.56.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 May 2022 08:56:38 -0700 (PDT)
+Message-ID: <f9b0cbf1-dde2-ff97-cca0-5d2895734f91@gmail.com>
+Date:   Mon, 9 May 2022 10:56:36 -0500
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 16d7028f-4e7e-4a76-f371-08da31c582af
-X-MS-TrafficTypeDiagnostic: GV0P278MB0386:EE_
-X-Microsoft-Antispam-PRVS: <GV0P278MB03868046BF83C2C938C489BBE2C69@GV0P278MB0386.CHEP278.PROD.OUTLOOK.COM>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0
-X-Microsoft-Antispam-Message-Info: P0NU6cgn5Oadtw0Lx+o7Orkg61o3U32H8g0HqREMpa39JOPYFdeAOPDFjOqZWwIvynWgdIxmSZCY8SGN3T9tL+Z34nfHldozoqfUY2rTJghbvnfMcz72Yl2b9l7HPtNtxRS8HutKRDV39t1Zee5xS3immRwCC5RqK4WQ2q6Q87R0bglFq2SfHgHIq7E7W9d4Rcw98J9cPH4TijRT3BgJtqjrAYWJN7+HSXChNbzetUXOUwqIsei8qht6iMatgxhmNQPK6i0FocMvQupA43KZMtZndEtj+gIVdPi6UBhBRwSZElTKKdeWRmZuOALZq/kIkAmx043P8dFBsG6o4k43ePKLjaXNSWD3nIq7GBfsOoU/KRCOn5CxhyyM9bZ+2AVnYnu/K6f+ivNZ5ZjvJEkGxpqbkhp/4JyYqUPI/wfRfvXRHk/jZQDCKcBxxhhcDGGu1ktQcoPjcm7svYbHfXy7+SdqOSQEdF7tzWNxC6fOPG1TSKGlEs4C7JPgumAfHwbd5BLVZncQqpG8t82QKFvZSoPZ8VGob+NXRWFm+0hIw+iczti/jrYyLa3SSSZuxfxVEL7iTeHJkrMKEL8pD7lfOYW5quF/mDaelbLv3XIPqqkov8zvX2x8FfQVm22MKHTWX19m8QL8mo1vnSYIcgY6gQ5OTggLqI7mW6/CCg2YV/XzRF3B47rjDDeBZC7CpxhfON5Xz6fD73ghPwqU5X+/jg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(39840400004)(366004)(136003)(396003)(346002)(376002)(7416002)(4744005)(5660300002)(1076003)(86362001)(6512007)(186003)(26005)(44832011)(38350700002)(8936002)(66476007)(66946007)(2906002)(66556008)(4326008)(8676002)(83380400001)(38100700002)(6486002)(6506007)(6916009)(52116002)(33656002)(54906003)(508600001)(316002);DIR:OUT;SFP:1102
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LK7wUHy22HN5AijyDj4kw/ymuWMdrKDihiinm9IhXC2A7aACD19cNjD3Iuna?=
- =?us-ascii?Q?rRXFrSGwuTuIlnVhuStZ++RrZfl6A9L7QFSY2pkhMAe+QS5lZOxPT/F7P8Bz?=
- =?us-ascii?Q?ik2La0/cAiv+S5bgi+v02zZimF5XM37L76wDVJbIYsXljjotIl4RazWtbI+N?=
- =?us-ascii?Q?Wx8+QoOsMiC39SJo+KTwomF4V12POl8Kd4zf9uTfADjUq3XaaVHfCH2MK/tv?=
- =?us-ascii?Q?rnMKH7qxPnqKHLZy4KvZncqs5/Co241VmlJ1fLdMbmov6TcMLBs3lEd+4a7Q?=
- =?us-ascii?Q?dYeJlrtS3g6r70LiWxyqQ6Cjfgl3MKLJKK//j77FBmDiQTnNJZu8eqwthpUa?=
- =?us-ascii?Q?6whyohYkEIoAl2K8lSWeBHz9grXxLgfAVXwtT89eYHGbsrnXXF6Ya6JzQjJD?=
- =?us-ascii?Q?YJvxZrjjab4JF/dowgZnxepxb4RsQR9NxQ8Gz74ZPE2c7bC/hxiHOnjrupdK?=
- =?us-ascii?Q?ou6LbNKH811WO72/dpIvKGwJ1GuQIYAGri64TOo1HgvYhPesdVVWpaBAlZHH?=
- =?us-ascii?Q?cwvSocThT7AAqow4Vy7/AZnZ6nBdW6AWMpAFwmTfFc41ox4bvSMorORKeS4r?=
- =?us-ascii?Q?TbjdruBVG6pAICRXvD/D6Pd6JFr8eR9qcCAP/YUClRhV3RzLa9uykSOgW//g?=
- =?us-ascii?Q?uXDoZLJ+gX2bkx/1LAksBe/JsrVIuaC/y0Wwd1a0uorjEVZGNrQSWvDSh9P7?=
- =?us-ascii?Q?nN7JBk9x/wZRf+Lw9nuHe/nNKqkVb2Dt/1tyAnhUjVFg9t+BPKUTGQGagNfV?=
- =?us-ascii?Q?yU5sEpZvtUY+rx6piwrF9bvzByWlXD9n7LKMx0wXl0FoO0/nPtJjJJ5Eu+T9?=
- =?us-ascii?Q?IODEvkxbLdQQPYyYM0GtAfXZQnLjz35pZ8W4OUwrJKCprrPhFz+5kElUY9d9?=
- =?us-ascii?Q?NqfWXpj7tBFE780dJSi4Xob3lVs705HOpPWCAwuTGvmrVIipHX6Z3GWpuD9H?=
- =?us-ascii?Q?6DMdWV9okxRWwOb8pi/53kdCqXWtzFoZJbKW4/BYuI2h73LNG4NcWifKrmoe?=
- =?us-ascii?Q?473sI0R0sws+ougNF2jqJAC3udAbIjKXOIPQmwbb0NfkQ2jTDSYQmIU7nk+k?=
- =?us-ascii?Q?WBqT/tXtrFMDlW4Nf5tCUkNYnbbvoH6u5sKvIVqeL3dAkUxgI8uP0ZxC2kYW?=
- =?us-ascii?Q?e62hmvaYjsOTBQUXDrTgwA4FaX8Ewk43Hmu902lcjaKhxPH4BSbF/BTv8h9c?=
- =?us-ascii?Q?O0IPvfOCUxBO022CPyXlIFJShql25Ec6hWYf7GWQhNmGnbET6Oa/DKi94a5K?=
- =?us-ascii?Q?dGN+LEPDR3/JgF5IH7TgjaZRb7rsHbXvLL6VU5IbChQQtUp9DIU4AZzDGWg4?=
- =?us-ascii?Q?8kj/T14p14oxJKrXvcyaZAQvIK60FTPkoNdEcRN0IWhI2DUc7/FvbLP2ISV5?=
- =?us-ascii?Q?OVRqUbZHTGWDwU+47VVQ1i5pLalVYGQyOSJ+CrkH17LQms4jlPTmLkPNH1I0?=
- =?us-ascii?Q?irEqCZO7pozh1CT1zIAKQgfnOsCF4SHNm/sHgFus5pEChjySUftyfwXt2q0E?=
- =?us-ascii?Q?zikstW/Hypr7pVvRTojRCQ/GA+QQqZ0nCsx95DJB/SNWPXdGM1zEvDYhKkdv?=
- =?us-ascii?Q?se1U+UoSyzMVbn0nhiwV/wbIfWHB9Hmjk+jabrtrc53e2EYhD6Z4a2DpoofK?=
- =?us-ascii?Q?odlAfLO3WMBjeVc1seUGrRh9eUT2fYHAru4tcAef1MlItZauMUFcjyQ7poN8?=
- =?us-ascii?Q?3pb3pLcq11FMhME5oDhmBRnz9VEbggI+vTRMnV6uPcHXQ27O2RWrEV3zhco6?=
- =?us-ascii?Q?0RZiZFA/dqyDV0dm4RiL4Lgl17/0M/A=3D?=
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16d7028f-4e7e-4a76-f371-08da31c582af
-X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0495.CHEP278.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2022 14:09:19.8015
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: By1Jr2RoY6gCctwHKH/7vl+ivrmdJyc5iq9waOO3anf+9LYwR7BHXcGLHRpCNJzWChJfK96Z2fX1438TJl/9tNMjk5Amlm+VMScHWJfbRdw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0386
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CDE13A77 smtp.mailfrom=francesco.dolcini@toradex.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: toradex.com
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 0/3] add dynamic PCI device of_node creation for overlay
+Content-Language: en-US
+To:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allan Nielsen <allan.nielsen@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Thomas Petazzoni <thomas.petazonni@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20220427094502.456111-1-clement.leger@bootlin.com>
+ <96db62bb-18be-f44a-6f53-05b22319f23a@gmail.com>
+ <20220509141634.16158c38@xps-bootlin>
+From:   Frank Rowand <frowand.list@gmail.com>
+In-Reply-To: <20220509141634.16158c38@xps-bootlin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Lorenzo,
-
-On Mon, Apr 11, 2022 at 05:50:41PM +0100, Lorenzo Pieralisi wrote:
-> [CC'ed Pali, who is working on PERST consolidation]
+On 5/9/22 07:16, Clément Léger wrote:
+> Le Fri, 6 May 2022 13:33:22 -0500,
+> Frank Rowand <frowand.list@gmail.com> a écrit :
 > 
-> On Mon, Apr 04, 2022 at 10:15:09AM +0200, Francesco Dolcini wrote:
-> > Failure to do so could prevent PCIe devices to be working correctly,
-> > and this was experienced with real devices.
+>> On 4/27/22 04:44, Clément Léger wrote:
+>>> This series adds foundation work to support the lan9662 PCIe card.
+>>> This card is meant to be used an ethernet switch with 2 x RJ45
+>>> ports and 2 x 2.5G SFPs. The lan966x SoCs can be used in two
+>>> different ways:
+>>>
+>>>  - It can run Linux by itself, on ARM64 cores included in the SoC.
+>>> This use-case of the lan966x is currently being upstreamed, using a
+>>>    traditional Device Tree representation of the lan996x HW blocks
+>>> [1] A number of drivers for the different IPs of the SoC have
+>>> already been merged in upstream Linux.
+>>>
+>>>  - It can be used as a PCIe endpoint, connected to a separate
+>>> platform that acts as the PCIe root complex. In this case, all the
+>>> devices that are embedded on this SoC are exposed through PCIe BARs
+>>> and the ARM64 cores of the SoC are not used. Since this is a PCIe
+>>> card, it can be plugged on any platform, of any architecture
+>>> supporting PCIe.
+>>>
+>>> The problem that arose is that we want to reuse all the existing OF
+>>> compatible drivers that are used when in SoC mode to instantiate the
+>>> PCI device when in PCIe endpoint mode.
+>>>
+>>> A previous attempt to tackle this problem was made using fwnode [1].
+>>> However, this proved being way too invasive and it required
+>>> modifications in both subsystems and drivers to support fwnode.
+>>> First series did not lead to a consensus and multiple ideas to
+>>> support this use-case were mentioned (ACPI overlay, fwnode,
+>>> device-tree overlay). Since it only seemed that fwnode was not a
+>>> totally silly idea, we continued on this way.
+>>>
+>>> However, on the series that added fwnode support to the reset
+>>> subsystem, Rob Herring mentioned the fact that OF overlay might
+>>> actually be the best way to probe PCI devices and populate platform
+>>> drivers using this overlay. He also provided a branch containing
+>>> some commits that helped  
+>>
+>> I need to go look at the various email threads mentioned above before
+>> I continue reading this patch series.
+>>
+>> I do have serious concerns with this approach.  I need to investigate
+>> more fully before I can determine whether the concerns are addressed
+>> sufficiently.
+>>
+>> To give some background to my longstanding response to similar
+>> proposals, here is my old statement from
+>> https://elinux.org/Device_Tree_Reference:
+>>
+>>    Overlays
+>>    Mainline Linux Support
+>>    Run time overlay apply and run time overlay remove from user space
+>> are not supported in the mainline kernel. There   are out of tree
+>> patches to implement this feature via an overlay manager. The overlay
+>> manager is used successfully by many users for specific overlays on
+>> specific boards with specific environments and use cases. However,
+>> there are many issues with the Linux kernel overlay implementation
+>> due to incomplete and incorrect code. The overlay manager has not
+>> been accepted in mainline due to these issues. Once these issues are
+>> resolved, it is expected that some method of run time overlay apply
+>> and overlay removal from user space will be supported by the Linux
+>> kernel.
+>>
+>>    There is a possibility that overlay apply and overlay remove
+>> support could be phased in slowly, feature by feature, as specific
+>> issues are resolved.
+> 
+> Hi Frank,
+> 
+> This work uses the kernel space interface (of_overlay_fdt_apply())
+> and the device tree overlay is builtin the driver. This interface was
+> used until recently by rcu-dcar driver. While the only user (sic),
+> this seems to work pretty well and I was able to use it successfully.
 
-Just a gentle ping, any concern on the patch?
+Yes, of_overlay_fdt_apply() was used by one driver.  But that driver
+was explicitly recognized as a grandfathered exception, and not an
+example for other users.  It was finally removed in 5.18-rc1.
 
-Francesco
+You may have used of_overlay_fdt_apply() in a specific use case at
+a specific kernel version, but if you read through the references
+I provided you will find that applying overlays after the kernel
+boots is a fragile endeavor, with expectations of bugs and problems
+being exposed as usage is changed (simple example is that my adding
+some overlay notifier unittests exposed yet another memory leak).
+
+The reference that I provided also shows how the overlay code is
+being improved over time.  Even with improvements, it will remain
+fragile.
+
+> 
+> Moreover, this support targets at using this with PCI devices. This
+> devices are really well contained and do not interfere with other
+> devices. This actually consists in adding a complete subtree into the
+> existing device-tree and thus it limits the interactions between
+> potentially platform provided devices and PCI ones.
+
+Yes, that it is very important that you have described this fact, both
+here and in other emails.  Thank you for that information, it does help
+understanding the alternatives.
+
+I've hesitated in recommending a specific solution before better
+understanding the architecture of your pcie board and drivers, but
+I've delayed too long, so I am going to go ahead and mention one
+possibility at the risk of not yet fully understanding the situation.
+
+On the surface, it appears that your need might be well met by having
+a base devicetree that describes all of the pcie nodes, but with each
+node having a status of "disabled" so that they will not be used.
+Have a devicetree overlay describing the pcie card (as you proposed),
+where the overlay also includes a status of "ok" for the pcie node.
+Applying the overlay, with a method of redirecting the target to a
+specific pcie node would change the status of the pcie node to enable
+its use.  (You have already proposed a patch to modify of_overlay_fdt_apply()
+to allow a modified target, so not a new concept from me.)  My suggestion
+is to apply the overlay devicetree to the base devicetree before the
+combined FDT devicetree is passed to the kernel at boot.  The overlay
+apply could be done by several different entities.  It could be before
+the bootloader executes, it could be done by the bootloader, it could
+be done by a shim between the bootloader and the kernel.  This method
+avoids all of the issues of applying an overlay to a running system
+that I find problematic.  It is also a method used by the U-boot
+bootloader, as an example.
+
+The other big issue is mixing ACPI and devicetree on a single system.
+Historically, the Linux devicetree community has not been receptive
+to the ides of that mixture.  Your example might be a specific case
+where the two can be isolated from each other, or maybe not.  (For
+disclosure, I am essentially ACPI ignorant.)  I suspect that mixing
+ACPI and devicetree is a recipe for disaster in the general case.
+
+More to come later as I finish reading through the various threads.
+
+-Frank
+
+> 
+> Clément
+> 
+>>
+>> Those are my words, not Rob's, but I thought that Rob was somewhat in
+>> agreement with those ideas.  Apparently either I misunderstood his
+>> thoughts, or his thoughts have evolved, since you say that he
+>> suggested overlays in one of the above email threads, and you list
+>> him as a co-developer.
+>>
+>> In the next line of the elinux info above, I provide a link to more
+>> detailed information:
+>>
+>>    Frank's thoughts on what is needed to complete basic overlay
+>> support
+>>
+>> The link goes to:
+>>
+>>    https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
+>>
+>> That page provides an incomplete list of issues to be resolved, and
+>> a list of "what has been completed".
+>>
+>> Please read through the elinux.org page to understand the basis of
+>> my concerns.
+>>
+>> If after reading through the related email threads, and this thread,
+>> I agree that overlays are a good approach, I am already aware of areas
+>> that I will have specific comments about on the patches in this
+>> thread.
+>>
+>> -Frank
+>>
+>>> to implement this idea on a x86 setup. Due to the dynamic nature of
+>>> PCI bus enumeration, some other modifications needs to be applied
+>>> on the overlay to apply it correctly. Indeed, it is necessary to
+>>> modify the target node of the fragments to apply them correctly on
+>>> the PCI device that was probed. Moreover, the 'ranges' must be set
+>>> according to the BAR addresses in order to remap devices to the
+>>> correct PCI addresses. These modifications are the located into the
+>>> driver since the remapping is something that is specific to each
+>>> driver.
+>>>
+>>> After modifications, this proves to be successful and a full
+>>> support of the aforementioned lan966x PCI card was added. The
+>>> modifications to support that (apply an overlay on a dynamically
+>>> created PCI of_node) are actually minimal and only touches a few
+>>> places (pci/of.c). This series contains the 3 commits that are
+>>> necessary to do that:
+>>>
+>>> - First commit creates the root node if not present on a x86 setup
+>>>   without a firmware provided device-tree.
+>>> - Second one dynamically creates the PCI bus/device device-tree node
+>>>   hierarchy using changeset API.
+>>> - Finally a last commit allows to apply an overlay by targeting a
+>>>   specific device-tree node.
+>>>
+>>> Other problems that might be considered with this series is the fact
+>>> that CONFIG_OF is not enabled by default on x86 configuration and
+>>> thus the driver can't be used without rebuilding a complete kernel
+>>> with CONFIG_OF=y. In order to fully support this PCIe card and
+>>> allow lambda user to use this driver, it would be almost mandatory
+>>> to enable CONFIG_OF by default on such setup.
+>>>
+>>> A driver using this support was added and can be seen at [3]. This
+>>> driver embeds a builtin overlay and applies it to the live tree
+>>> using of_overlay_fdt_apply_to_node(). An interrupt driver is also
+>>> included and associated to a node that is added by the overlay. The
+>>> driver also insert a specific "ranges" property based on the BAR
+>>> values which allows to remap the device-tree node to BAR addresses
+>>> dynamically. This is needed to allow applying the overlay without
+>>> depending on specific enumeration BAR addresses.
+>>>
+>>> This series was tested on a x86 kernel using CONFIG_OF under a
+>>> virtual machine using PCI passthrough.
+>>>
+>>> Link: [1] https://lore.kernel.org/lkml/YhQHqDJvahgriDZK@lunn.ch/t/
+>>> Link: [2]
+>>> https://lore.kernel.org/lkml/20220408174841.34458529@fixe.home/T/
+>>> Link: [3]
+>>> https://github.com/clementleger/linux/tree/lan966x/of_support
+>>>
+>>> Clément Léger (3):
+>>>   of: always populate a root node
+>>>   PCI: of: create DT nodes for PCI devices if they do not exists
+>>>   of: overlay: add of_overlay_fdt_apply_to_node()
+>>>
+>>>  drivers/of/base.c    |  16 +++-
+>>>  drivers/of/overlay.c |  21 +++--
+>>>  drivers/pci/of.c     | 184
+>>> +++++++++++++++++++++++++++++++++++++++++++ include/linux/of.h   |
+>>> 17 +++- 4 files changed, 224 insertions(+), 14 deletions(-)
+>>>   
+>>
+> 
 
