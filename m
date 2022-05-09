@@ -2,65 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C559051F81B
-	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 11:27:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 245E151F822
+	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 11:28:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230429AbiEIJav (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 May 2022 05:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52852 "EHLO
+        id S236016AbiEIJbq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 May 2022 05:31:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237186AbiEIIzy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 04:55:54 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F17013F1E7;
-        Mon,  9 May 2022 01:52:00 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1652086318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        with ESMTP id S236554AbiEII5g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 04:57:36 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304AE202B26;
+        Mon,  9 May 2022 01:53:36 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 9125E21B3D;
+        Mon,  9 May 2022 08:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1652086413; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=F47FNB3UPmZkk3XgxnsY0dE6OJ5OY97nItlGqfv1nig=;
-        b=MUrIGsX15rb+saRCqWwo7fGrHKkoPeYHsfDkuifsddStxXPK7vpsFeXPM+uJpMeqTJfiX0
-        1wfvYcDEWGBYWqqS9x0s9UYuvpdoshqHwuPmU5LVr55f8b5tQdqSd7PhzQVd7JLteNO3Kp
-        FZvdIIC4eE8GPD/RyItmNBom9EfEdBzWqZ/8FbxDmn3PRSy9tZD/10LWUQwVO199DbUjVA
-        sGJhjPZheZFhX2UkM/V24VEiyCISV6tGDKc0/MzMrrUXEA8lD4rR1vwuUZK2ToZS4+FOMP
-        6gx92yX0NOydhaxgBz9mOjrjjTnasPwhFwIlo6ru1SJHYaZ2YEH2lPPrPhqaaA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1652086318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        bh=dfcvUUdqksgvYc8rVDLHC5DOBo/kU2XO+VX1eeG4aV8=;
+        b=A34L+qWnS4KTuUIJIOdn/Oy0lRYM0k4tu6TprpUGGmO4q2IG6PgANqhT26b8ERa1UPxmL3
+        +i1ltyuQDR6b3JXdcEzOXVh1KYWhR2Zwt+tTJHHP3RNo/us6IFdzvOCkW7gcDMpTyzgCvx
+        xJwG93EwlvMl01wRmSewhq2A5QaBHXU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1652086413;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=F47FNB3UPmZkk3XgxnsY0dE6OJ5OY97nItlGqfv1nig=;
-        b=25QTTNR1gr/qNxOFt4KgxJmy+X+P9qgMg06xzXZUPudpM6mbF6bIcMMOloHobP2e4k15Ss
-        /FpS5Oy7H07w/4BQ==
-To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/6] irqchip/armada-370-xp: Implement SoC Error interrupts
-In-Reply-To: <20220506185546.n5rl3chyyauy4bjt@pali>
-References: <20220506134029.21470-1-pali@kernel.org>
- <20220506134029.21470-3-pali@kernel.org> <87mtfu7ccd.wl-maz@kernel.org>
- <20220506183051.wimo7p4nuqfnl2aj@pali> <8735hmijlu.wl-maz@kernel.org>
- <20220506185546.n5rl3chyyauy4bjt@pali>
-Date:   Mon, 09 May 2022 10:51:57 +0200
-Message-ID: <87sfpjytoy.ffs@tglx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        bh=dfcvUUdqksgvYc8rVDLHC5DOBo/kU2XO+VX1eeG4aV8=;
+        b=UKYq4/y/oVRFARjOiTG0UlZFJ7CNosy5fO4czqcNJLtcbGcYGz4OJwlbgEGhzVQm3iPfhB
+        Fx+12pZoeT2rmkDQ==
+Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
+        by relay2.suse.de (Postfix) with ESMTP id 79C5C2C141;
+        Mon,  9 May 2022 08:53:33 +0000 (UTC)
+Date:   Mon, 09 May 2022 10:53:33 +0200
+Message-ID: <s5hczgnm6ia.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND)
+Subject: Re: [RFC v2 31/39] sound: add HAS_IOPORT dependencies
+In-Reply-To: <20220429135108.2781579-57-schnelle@linux.ibm.com>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+        <20220429135108.2781579-57-schnelle@linux.ibm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -71,42 +66,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Pali,
+On Fri, 29 Apr 2022 15:50:54 +0200,
+Niklas Schnelle wrote:
+> 
+> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> not being declared. We thus need to add HAS_IOPORT as dependency for
+> those drivers using them. For SND_OPL3_LIB this adds its first
+> dependency so drivers currently selecting it unconditionally need to
+> depend on it instead.
+> 
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  sound/drivers/Kconfig |  5 ++++
+>  sound/isa/Kconfig     | 44 ++++++++++++++---------------
+>  sound/pci/Kconfig     | 64 +++++++++++++++++++++++++++++--------------
+>  3 files changed, 70 insertions(+), 43 deletions(-)
+> 
+> diff --git a/sound/drivers/Kconfig b/sound/drivers/Kconfig
+> index ca4cdf666f82..4d250e619786 100644
+> --- a/sound/drivers/Kconfig
+> +++ b/sound/drivers/Kconfig
+> @@ -1,10 +1,12 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config SND_MPU401_UART
+>  	tristate
+> +	depends on HAS_IOPORT
+>  	select SND_RAWMIDI
+>  
+>  config SND_OPL3_LIB
+>  	tristate
+> +	depends on HAS_IOPPORT
+>  	select SND_TIMER
+>  	select SND_HWDEP
+>  	select SND_SEQ_DEVICE if SND_SEQUENCER != n
 
-On Fri, May 06 2022 at 20:55, Pali Roh=C3=A1r wrote:
-> On Friday 06 May 2022 19:47:25 Marc Zyngier wrote:
->> > I'm not rewriting driver or doing big refactor of it, as this is not in
->> > the scope of the PCIe AER interrupt support.
->>
->> Fair enough. By the same logic, I'm not taking any change to the
->> driver until it is put in a better shape. Your call.
->
-> If you are maintainer of this code then it is expected from _you_ to
-> move the current code into _better shape_ as you wrote and expect. And
-> then show us exactly, how new changes in this driver should look like,
-> in examples.
+Both of those are the items to be reverse-selected, so cannot fulfill
+the dependency with depends-on.  That is, the items that select those
+should have the dependency on HAS_IOPORT instead.
 
-this is not how kernel development works.
+That is, a change like below:
 
-Maintainers are not the servants who mop up the mess which random people
-dump into the tree. They are gatekeepers and one of their duties is to
-prevent that mess is created or existing mess is proliferated.
+> --- a/sound/isa/Kconfig
+> +++ b/sound/isa/Kconfig
+> @@ -31,7 +31,7 @@ if SND_ISA
+>  
+>  config SND_ADLIB
+>  	tristate "AdLib FM card"
+> -	select SND_OPL3_LIB
+> +	depends on SND_OPL3_LIB
 
-You are asking the maintainer to take your changes, deal with the
-fallout and maintain them for a long time free of charge. So it's a very
-reasonable request from a maintainer to ask for refactoring of existing
-code before adding new functionality to it.
+... won't work.  CONFIG_SND_OPL3_LIB is not enabled by itself but only
+to be selected.
 
-With such a request the refactoring becomes scope of your work, whether
-you and your manager like it or not. If you don't want to do that extra
-work, then don't expect maintainers to care about your fancy new
-features.
 
-Marc gave you very reasonable and consice directions how the code should
-be reworked. He spent a lot of time explaining it to you. Again, free of
-charge. Now you expect him to do your homework free of charge, so you
-can get your feature merged? Nice try.
+thanks,
 
-Thanks,
-
-        Thomas
+Takashi
