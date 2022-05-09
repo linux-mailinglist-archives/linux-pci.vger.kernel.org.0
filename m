@@ -2,95 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D5751F9FE
-	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 12:33:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 142FF51FC6C
+	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 14:15:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229455AbiEIKfN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 May 2022 06:35:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39030 "EHLO
+        id S233938AbiEIMTA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 May 2022 08:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbiEIKeq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 06:34:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D721CE636;
-        Mon,  9 May 2022 03:30:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7C70BB8111D;
-        Mon,  9 May 2022 10:30:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 295D7C385AB;
-        Mon,  9 May 2022 10:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652092201;
-        bh=qUMFmHiviqebWqvyJYKJJHRpKLMQevtylKyQ9EXkbCw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G/JInV0uR9QWuZ0fLqeJBhoAX6pGbQl042jBHvK0y2tbBJUG5yAsazi1epCpYz2h5
-         Iy3qzVrTo2FPNEFxde3m102MHOhyBp+iVlIPjMv1ruKpnJyUFMR5fJGdYoa2PNF9SF
-         IlEKTZqy2hvAIHKTuGq3XKsuoiSg/7q3GRzHlLWUtpizaf4V5v7DLEJ/5J8+GRtjGI
-         S/zb2cJB8O8A1wf298pqNcXwKih9vVtE3Fmb7GaDpgCS7Qrs4Cr6BykxOLFyakg0+v
-         EFGN60a5Bm6/jjnP4MeIVCyOwRmbRXsV30gDsILlb3XkgkPEMO56ESKmObuZBfygJY
-         OiGo2p2ZD+gKw==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1no0eM-0006DF-0q; Mon, 09 May 2022 12:29:58 +0200
-Date:   Mon, 9 May 2022 12:29:58 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] clk: qcom: regmap: add pipe clk implementation
-Message-ID: <YnjtJuR7ShSsF+mz@hovoldconsulting.com>
-References: <20220501192149.4128158-1-dmitry.baryshkov@linaro.org>
- <20220501192149.4128158-3-dmitry.baryshkov@linaro.org>
- <20220502101053.GF5053@thinkpad>
- <c47616bf-a0c3-3ad5-c3e2-ba2ae33110d0@linaro.org>
- <20220502111004.GH5053@thinkpad>
- <29819e6d-9aa1-aca9-0ff6-b81098077f28@linaro.org>
- <YnUXOYxk47NRG2VD@hovoldconsulting.com>
- <30846cb5-a22e-0102-9700-a1417de69952@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30846cb5-a22e-0102-9700-a1417de69952@linaro.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233934AbiEIMSy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 08:18:54 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D73C24E03A;
+        Mon,  9 May 2022 05:15:00 -0700 (PDT)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 249BrDfb040214;
+        Mon, 9 May 2022 12:14:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=mFwQ6X5ROpPbQQvS6IJn0oLRB0j4XJ42BtNeuwsniXc=;
+ b=i5YipCeSSsRdAH8k+QNJ+j59oyMtbdoQS4+eIhG4/7dVDJBgMkqSIQzzMfDkwlsPIiq0
+ muFO0ZW6morKq8wYUKzFrVEohkgbVGO/f54wJC2ZOIY6PDnW+KrVccdF08rOHI5vO442
+ B0akLZPrnl5zBWvUkSWzwiF+x18GDAVcAv8oO5uegXuYELfZcRRq+H9IPH0bcmNONtHv
+ Ra8N8zQvFKjB3OMEz+vYBc8NRLplA7veoHGLDzdjy2eAl7SF/yiaz3+itqXi7Yz4ukJS
+ jB0qo45Pk6MALDO9fcoZpLnfBaLprHgyPYJRH+22qSeBga3dfk8cQ1HfCouE5vRl5+4D zg== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fy2frget4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 May 2022 12:14:09 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 249C3A31030155;
+        Mon, 9 May 2022 12:14:08 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 3fwgd8tgux-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 May 2022 12:14:07 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 249CE5I045678890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 May 2022 12:14:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C677A4053;
+        Mon,  9 May 2022 12:14:05 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECA35A4051;
+        Mon,  9 May 2022 12:14:04 +0000 (GMT)
+Received: from sig-9-145-22-239.uk.ibm.com (unknown [9.145.22.239])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 May 2022 12:14:04 +0000 (GMT)
+Message-ID: <11a1cdd869a3153a39ef9c07ca67817f9ea512fe.camel@linux.ibm.com>
+Subject: Re: [RFC v2 31/39] sound: add HAS_IOPORT dependencies
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Takashi Iwai <tiwai@suse.de>, Arnd Bergmann <arnd@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>
+Date:   Mon, 09 May 2022 14:14:04 +0200
+In-Reply-To: <s5h35hjm32n.wl-tiwai@suse.de>
+References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
+         <20220429135108.2781579-57-schnelle@linux.ibm.com>
+         <s5hczgnm6ia.wl-tiwai@suse.de>
+         <CAK8P3a3_ppFRY7y4TL21kXfthcbFJmjMivfmH2r4Cqy_vAiesA@mail.gmail.com>
+         <s5h35hjm32n.wl-tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: jdarINjh9VWb43QWZnBSEKM0W944MEzf
+X-Proofpoint-ORIG-GUID: jdarINjh9VWb43QWZnBSEKM0W944MEzf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-09_03,2022-05-09_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ priorityscore=1501 adultscore=0 phishscore=0 mlxlogscore=727 spamscore=0
+ mlxscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2205090069
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 06, 2022 at 04:00:38PM +0300, Dmitry Baryshkov wrote:
-> On 06/05/2022 15:40, Johan Hovold wrote:
-> > On Mon, May 02, 2022 at 02:18:26PM +0300, Dmitry Baryshkov wrote:
-> >> On 02/05/2022 14:10, Manivannan Sadhasivam wrote:
+On Mon, 2022-05-09 at 12:07 +0200, Takashi Iwai wrote:
+> On Mon, 09 May 2022 11:20:33 +0200,
+> Arnd Bergmann wrote:
+> > On Mon, May 9, 2022 at 10:53 AM Takashi Iwai <tiwai@suse.de> wrote:
+> > > On Fri, 29 Apr 2022 15:50:54 +0200, Niklas Schnelle wrote:
+> > > >  config SND_OPL3_LIB
+> > > >       tristate
+> > > > +     depends on HAS_IOPPORT
+> > > >       select SND_TIMER
+> > > >       select SND_HWDEP
+> > > >       select SND_SEQ_DEVICE if SND_SEQUENCER != n
+> > > 
+> > > Both of those are the items to be reverse-selected, so cannot fulfill
+> > > the dependency with depends-on.  That is, the items that select those
+> > > should have the dependency on HAS_IOPORT instead.
+> > > 
+> > > That is, a change like below:
+> > > 
+> > > > --- a/sound/isa/Kconfig
+> > > > +++ b/sound/isa/Kconfig
+> > > > @@ -31,7 +31,7 @@ if SND_ISA
+> > > > 
+> > > >  config SND_ADLIB
+> > > >       tristate "AdLib FM card"
+> > > > -     select SND_OPL3_LIB
+> > > > +     depends on SND_OPL3_LIB
+> > > 
+> > > ... won't work.  CONFIG_SND_OPL3_LIB is not enabled by itself but only
+> > > to be selected.
 > > 
-> >>> I don't understand this. How can you make this clock disabled? It just has 4
-> >>> parents, right?
-> >>
-> >> It has 4 parents. It uses just two of them (pipe and tcxo).
+> > Right, I missed that in my review. Not sure if this was a mistake in
+> > my original patch or if it started in a later version.
+
+I added this part recently I think even after your review so the fault
+is entirely mine.
+
 > > 
-> > Really? I did not know that. Which are the other two parents and what
-> > would they be used for?
+> > I think for the ISA drivers, I would still add 'depends on HAS_IOPORT'
+> > to both CONFIG_SND_ISA and CONFIG_SND_OPL3_LIB if only to
+> > make it easier to understand, even though CONFIG_ISA requires
+> > HAS_IOPORT already, and CONFIG_SND_OPL3_LIB cannot be
+> > selected by itself.
 > 
-> This is described neither in the downstream tree nor in any sources I 
-> have at possession.
+> Yes, that makes sense.
 
-Yeah, I don't see anything downstream either, but how do you know that
-it has four parents then?
+Good, incorporating this now and it looks like this works.
 
-Johan
+> 
+> > For the PCI drivers, I think we need to add the same dependency
+> > on anything that either selects SND_OPL3_LIB or calls inb()/outb()
+> > directly.
+> 
+> Agreed.
+
+Same as above and thanks for spotting my mistake.
+
+
