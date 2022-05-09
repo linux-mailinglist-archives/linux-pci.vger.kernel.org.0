@@ -2,50 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ABD251F5C3
-	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 09:55:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C05451F5A4
+	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 09:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230519AbiEIHzp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 May 2022 03:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48244 "EHLO
+        id S231272AbiEIHz1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 May 2022 03:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235802AbiEIHm1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 03:42:27 -0400
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FCA419C397;
-        Mon,  9 May 2022 00:38:30 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 8B45041385;
-        Mon,  9 May 2022 07:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1652081847;
-        bh=BGdQS7GDt72NyKsTP48y7ylwYoRPiomJUKtDk9kD5KI=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=APTuzxakfgtwQV4qWpjpID7To9ihg0LEQfJO+iSozdAPobUQA3OmkO5dM13Z8tXIr
-         uyKI8TGKfVF7ZRPaq0tL2ipecAozQlsWseqk7zYXVCpHkf/Jl+N/PyNhOExN0ghUgo
-         wYWD40D3zKb3MPDSslzTiFdfTWLyH3SQW1x9e8ZaJz6AKkiWoAQI6gDK8OYECZh/Uq
-         vbtFM/J8vIqJ+4C57R7qE4Qna+fUPWIoufYy9KcVzcM7LacNd8oIktY/eoK5xW9iSR
-         cNv2+Pr3rHSrc7QRMihpFMBjjG/gtRW81P5QIGWGtdqgZY4PKZqVCL8msKGFINT3Ms
-         /be0ReZS7CmiQ==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI:ASPM: Remove pcie_aspm_pm_state_change()
-Date:   Mon,  9 May 2022 15:36:37 +0800
-Message-Id: <20220509073639.2048236-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S236296AbiEIHsg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 03:48:36 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB41A18705D
+        for <linux-pci@vger.kernel.org>; Mon,  9 May 2022 00:44:38 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nny4E-0001iO-8Z; Mon, 09 May 2022 09:44:30 +0200
+Message-ID: <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
+Date:   Mon, 9 May 2022 09:44:29 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
+ 4 (CM4) breaks booting
+Content-Language: en-US
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     kibi@debian.org,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
+References: <bug-215925-41252@https.bugzilla.kernel.org/>
+ <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652082278;0ab4e398;
+X-HE-SMSGID: 1nny4E-0001iO-8Z
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -54,90 +46,115 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pcie_aspm_pm_state_change() was introduced at the inception of PCIe
-ASPM code.
+Hi, this is your Linux kernel regression tracker. Partly top-posting to
+mnake this easily accessible.
 
-However, it can cause some issues. For instance, when ASPM config is
-changed via sysfs, those changes won't persist across power state change
-because pcie_aspm_pm_state_change() overwrites them.
+Jim, what's up here? The regression was reported more than a week ago
+and it seems nothing happened since then. Or was there progress and I
+just missed it?
 
-In addition to that, if the driver is to restore L1ss [1] after system
-resume, the restored states will also be overwritten by
-pcie_aspm_pm_state_change().
+Anyway:
 
-So remove pcie_aspm_pm_state_change() for now, if there's any hardware
-really needs it to function, a quirk can be used instead.
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-[1] https://lore.kernel.org/linux-pci/20220201123536.12962-1-vidyas@nvidia.com/
+On 02.05.22 20:38, Bjorn Helgaas wrote:
+> On Sat, Apr 30, 2022 at 2:53 PM <bugzilla-daemon@kernel.org> wrote:
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=215925
+>>
+>>             Bug ID: 215925
+>>            Summary: PCIe regression on Raspberry Pi Compute Module 4 (CM4)
+>>                     breaks booting
+>>            Product: Drivers
+>>            Version: 2.5
+>>     Kernel Version: v5.17-rc1
+>>           Hardware: ARM
+>>                 OS: Linux
+>>               Tree: Mainline
+>>             Status: NEW
+>>           Severity: normal
+>>           Priority: P1
+>>          Component: PCI
+>>           Assignee: drivers_pci@kernel-bugs.osdl.org
+>>           Reporter: kibi@debian.org
+>>         Regression: No
+>>
+>> Catching up with latest kernel releases in Debian, it turned out that my
+>> Raspberry Pi Compute Module 4, mounted on an official Compute Module 4 IO
+>> Board,
+>> and booting from an SD card, no longer boots: this means a black screen on the
+>> HDMI output, and no output on the serial console.
+>>
+>> Trying various releases, I confirmed that v5.16 was fine, and v5.17-rc1 was the
+>> first (pre)release that wasn't.
+>>
+>> After some git bisect, it turns out the cause seems to be the following commit
+>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21):
+>>
+>> ```
+>> commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21
+>> Author: Jim Quinlan <jim2101024@gmail.com>
+>> Date:   Thu Jan 6 11:03:27 2022 -0500
+>>
+>>     PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+>> ```
+>>
+>> Starting with this commit, the kernel panics early (before 0.30 seconds), with
+>> an `Asynchronous SError Interrupt`. The backtrace references various
+>> `brcm_pcie_*` functions; I can share a picture or try and transcribe it
+>> manually if that helps (nothing on the serial console…).
+>>
+>> This commit is part of a branch that was ultimately merged as
+>> d0a231f01e5b25bacd23e6edc7c979a18a517b2b; starting with this commit, there's
+>> not even a backtrace anymore, the screen stays black after the usual “boot-up
+>> rainbow”, and there's still nothing on the serial console.
+>>
+>> I confirmed that 88db8458086b1dcf20b56682504bdb34d2bca0e2 (on the master side)
+>> was still booting properly, and that 87c71931633bd15e9cfd51d4a4d9cd685e8cdb55
+>> (from the branch being merged into master) is the last commit showing the
+>> panic.
+>>
+>> Since d0a231f01e5b25bacd23e6edc7c979a18a517b2b is a merge commit that includes
+>> conflict resolutions in drivers/pci/controller/pcie-brcmstb.c, I suppose this
+>> could be consistent with the initial panic being “upgraded” into an even more
+>> serious issue.
+>>
+>> I've also verified that latest master (v5.18-rc4-396-g57ae8a492116) is still
+>> affected by this issue.
+>>
+>> The regular Raspberry Pi 4 B doesn't seem to be affected by this issue: the
+>> exact same image on the same SD card (with latest master) boots fine on it.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/pci/pci.c       |  3 ---
- drivers/pci/pci.h       |  2 --
- drivers/pci/pcie/aspm.c | 19 -------------------
- 3 files changed, 24 deletions(-)
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9ecce435fb3f1..d09f7b60ee4dc 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1181,9 +1181,6 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 	if (need_restore)
- 		pci_restore_bars(dev);
- 
--	if (dev->bus->self)
--		pcie_aspm_pm_state_change(dev->bus->self);
--
- 	return 0;
- }
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3d60cabde1a15..86a19f293d4ad 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -560,12 +560,10 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
- #ifdef CONFIG_PCIEASPM
- void pcie_aspm_init_link_state(struct pci_dev *pdev);
- void pcie_aspm_exit_link_state(struct pci_dev *pdev);
--void pcie_aspm_pm_state_change(struct pci_dev *pdev);
- void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
- #else
- static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
--static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
- static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
- #endif
- 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index a96b7424c9bc8..7f76a5875feb4 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1012,25 +1012,6 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- 	up_read(&pci_bus_sem);
- }
- 
--/* @pdev: the root port or switch downstream port */
--void pcie_aspm_pm_state_change(struct pci_dev *pdev)
--{
--	struct pcie_link_state *link = pdev->link_state;
--
--	if (aspm_disabled || !link)
--		return;
--	/*
--	 * Devices changed PM state, we should recheck if latency
--	 * meets all functions' requirement
--	 */
--	down_read(&pci_bus_sem);
--	mutex_lock(&aspm_lock);
--	pcie_update_aspm_capable(link->root);
--	pcie_config_aspm_path(link);
--	mutex_unlock(&aspm_lock);
--	up_read(&pci_bus_sem);
--}
--
- void pcie_aspm_powersave_config_link(struct pci_dev *pdev)
- {
- 	struct pcie_link_state *link = pdev->link_state;
--- 
-2.34.1
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
+#regzbot ^introduced 830aa6f29f07a4e2f1a
+#regzbot title pci: brcmstb: CM4 no longer boots from SD card
+#regzbot ignore-activity
+#regzbot from: Cyril Brulebois <kibi@debian.org>
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replied to), as the kernel's
+documentation call for; above page explains why this is important for
+tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
