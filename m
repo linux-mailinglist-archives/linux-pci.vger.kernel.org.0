@@ -2,85 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11B0C5207A5
-	for <lists+linux-pci@lfdr.de>; Tue, 10 May 2022 00:30:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40476520832
+	for <lists+linux-pci@lfdr.de>; Tue, 10 May 2022 01:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbiEIWeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 May 2022 18:34:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        id S232242AbiEIXQY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 May 2022 19:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231684AbiEIWeC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 18:34:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4401026FA3C
-        for <linux-pci@vger.kernel.org>; Mon,  9 May 2022 15:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652135406;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HZA6VNXAM5i4PcwO3aAoa6h2tMmE/5TqVCC2BscCJgw=;
-        b=igAGOjWq7e/eZKmQi1k9/H/cZu96i52zK2bAdWDbWwO8K3k8/qua7B3vQxoiovYTWm+LfF
-        bCyaOowzZ+6NZVCwl7YvDGwcRQkiXD3oj+Sh8TYeM+yILl7wb9xaQd12SYKdH1xanPk90v
-        mVmdFxKWau8tRoioPwScpvg1kcyPb4Y=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-623-mjFtrvYiPTCquYyATREsPg-1; Mon, 09 May 2022 18:30:05 -0400
-X-MC-Unique: mjFtrvYiPTCquYyATREsPg-1
-Received: by mail-il1-f199.google.com with SMTP id v14-20020a056e020f8e00b002caa6a5d918so8401058ilo.15
-        for <linux-pci@vger.kernel.org>; Mon, 09 May 2022 15:30:05 -0700 (PDT)
+        with ESMTP id S232245AbiEIXQX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 19:16:23 -0400
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 085B92A3773;
+        Mon,  9 May 2022 16:12:28 -0700 (PDT)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-d6e29fb3d7so16432631fac.7;
+        Mon, 09 May 2022 16:12:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HZA6VNXAM5i4PcwO3aAoa6h2tMmE/5TqVCC2BscCJgw=;
-        b=DSPqNY4MrWP/Pwk1IXTNJIKoIYxE6fmrc9r7XcPKMvp+D3sIkdRa/8QhYuZTKcZxJb
-         3OojDQ3vorF38Ln08D87NX5GD4RCCO9gs9NNxQOiXTjAEkM9AwJo0hzXzoIjfqUFrZaP
-         VRWe7ulgKjGdjk4XsRJuji1HAS14VAncISeaBNLoGsSKKiJBm4AyZlc+VOX0YQfqyJn5
-         PEu2ynIXi5t3KbiVHw+DvYOK0XuRNhGpyfWjOOR6EjLf4TwLoXnvPsRAPm3dNiD+kVVs
-         nDX4kAtt8faUiCwqLz+L12FQDtQwQVEnJTVyz/u99rRWAnhwjejCJpyHOe9kUMjNXEFY
-         INzQ==
-X-Gm-Message-State: AOAM533+x0gy4WHzP+QHTaJ2OrVGW/YP53EpEyWsD9fCTcPxrfAuYvID
-        0dnu8hZonWk1/9Dln5ismSL8/AkRF8aJITklS4AspGba4IJB1ihC7av+oGQ4tZ33kTBm8E3YTPt
-        jOXuEIySQyOAXSXqzGvqh
-X-Received: by 2002:a05:6e02:1585:b0:2c2:5b2c:e3e5 with SMTP id m5-20020a056e02158500b002c25b2ce3e5mr8000891ilu.76.1652135404651;
-        Mon, 09 May 2022 15:30:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw/xDm0oeizzFs9OsjgHv5iN7DYQPBrPufu9Ukf8kxzdUFWsryqO/OP8BvcOcM21ir0kbx5eg==
-X-Received: by 2002:a05:6e02:1585:b0:2c2:5b2c:e3e5 with SMTP id m5-20020a056e02158500b002c25b2ce3e5mr8000867ilu.76.1652135404331;
-        Mon, 09 May 2022 15:30:04 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id q6-20020a056e02096600b002cde6e352ccsm3489431ilt.22.2022.05.09.15.30.03
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=EmgXIp6wMnmBy4zjwHY36GV+5Al3/f1oiVUfAfxCvxk=;
+        b=k5jxUUGjw3xPc9EL8QU3bBdnolB6+FtcBPTVtvBjchZYxk2EGWi08QdyfKmITvU3mD
+         +OoTsNjuJXGcIl1/zR9XT7Z3J5fFePpJ3oxFxsgCwX/aoIMdtriGYcp0tctO+VJIP6bL
+         XRv47Mv/GyUyomS9jBHx1DX9SFFrhbvr5ZE62Yo+OERyZKEbEdoRBWBNa3NDVRlcyJCd
+         PR1gl89jts91sadW81hmuuTC28Av+wEf9ugXSRXp5naG6A7PudcwBcMuTTHUU/XMY4j/
+         F0CPTHbsoSPD0JfnH8Q+S8UTE9JVNpNm1wwDNiwj3tyHG4+IJeqEArLEwAwCfbXXcjdX
+         iJvw==
+X-Gm-Message-State: AOAM532U2XUYrn1g5roxAPFTvXKl97SHwqxbSuDKzHdLiK5jrXkQHpuZ
+        KYWYMmGfMXLRCV3uagUb3w==
+X-Google-Smtp-Source: ABdhPJyQXGVgIQQnFpuDFb8C5WA0aJ+WbyZnIgmYjGPoDZXRH0oKqv26w/MqI6+h2SBJC994xOLNZA==
+X-Received: by 2002:a05:6870:c698:b0:de:8a16:c37 with SMTP id cv24-20020a056870c69800b000de8a160c37mr11542610oab.191.1652137947285;
+        Mon, 09 May 2022 16:12:27 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id x7-20020a056870a78700b000e686d13897sm4746599oao.49.2022.05.09.16.12.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 May 2022 15:30:04 -0700 (PDT)
-Date:   Mon, 9 May 2022 16:30:02 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        Mon, 09 May 2022 16:12:26 -0700 (PDT)
+Received: (nullmailer pid 393081 invoked by uid 1000);
+        Mon, 09 May 2022 23:12:25 -0000
+Date:   Mon, 9 May 2022 18:12:25 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] vfio: Invoke runtime PM API for IOCTL request
-Message-ID: <20220509163002.57fe44fa.alex.williamson@redhat.com>
-In-Reply-To: <0ba3d469-58af-64d3-514c-6d33c483f8fb@nvidia.com>
-References: <20220425092615.10133-1-abhsahu@nvidia.com>
-        <20220425092615.10133-7-abhsahu@nvidia.com>
-        <20220504134257.1ecb245b.alex.williamson@redhat.com>
-        <0ba3d469-58af-64d3-514c-6d33c483f8fb@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/6] irqchip/armada-370-xp: Implement SoC Error interrupts
+Message-ID: <Ynmf2SHN90yvsOmP@robh.at.kernel.org>
+References: <20220506134029.21470-1-pali@kernel.org>
+ <20220506134029.21470-3-pali@kernel.org>
+ <87mtfu7ccd.wl-maz@kernel.org>
+ <20220506183051.wimo7p4nuqfnl2aj@pali>
+ <8735hmijlu.wl-maz@kernel.org>
+ <20220506185546.n5rl3chyyauy4bjt@pali>
+ <87levd7m2n.wl-maz@kernel.org>
+ <20220507092054.b7yu23nj667l6xhy@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220507092054.b7yu23nj667l6xhy@pali>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,152 +80,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 5 May 2022 15:10:43 +0530
-Abhishek Sahu <abhsahu@nvidia.com> wrote:
-
-> On 5/5/2022 1:12 AM, Alex Williamson wrote:
-> > On Mon, 25 Apr 2022 14:56:13 +0530
-> > Abhishek Sahu <abhsahu@nvidia.com> wrote:
-> >   
-> >> The vfio/pci driver will have runtime power management support where the
-> >> user can put the device low power state and then PCI devices can go into
-> >> the D3cold state. If the device is in low power state and user issues any
-> >> IOCTL, then the device should be moved out of low power state first. Once
-> >> the IOCTL is serviced, then it can go into low power state again. The
-> >> runtime PM framework manages this with help of usage count. One option
-> >> was to add the runtime PM related API's inside vfio/pci driver but some
-> >> IOCTL (like VFIO_DEVICE_FEATURE) can follow a different path and more
-> >> IOCTL can be added in the future. Also, the runtime PM will be
-> >> added for vfio/pci based drivers variant currently but the other vfio
-> >> based drivers can use the same in the future. So, this patch adds the
-> >> runtime calls runtime related API in the top level IOCTL function itself.
-> >>
-> >> For the vfio drivers which do not have runtime power management support
-> >> currently, the runtime PM API's won't be invoked. Only for vfio/pci
-> >> based drivers currently, the runtime PM API's will be invoked to increment
-> >> and decrement the usage count. Taking this usage count incremented while
-> >> servicing IOCTL will make sure that user won't put the device into low
-> >> power state when any other IOCTL is being serviced in parallel.
-> >>
-> >> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
-> >> ---
-> >>  drivers/vfio/vfio.c | 44 +++++++++++++++++++++++++++++++++++++++++---
-> >>  1 file changed, 41 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> >> index a4555014bd1e..4e65a127744e 100644
-> >> --- a/drivers/vfio/vfio.c
-> >> +++ b/drivers/vfio/vfio.c
-> >> @@ -32,6 +32,7 @@
-> >>  #include <linux/vfio.h>
-> >>  #include <linux/wait.h>
-> >>  #include <linux/sched/signal.h>
-> >> +#include <linux/pm_runtime.h>
-> >>  #include "vfio.h"
-> >>  
-> >>  #define DRIVER_VERSION	"0.3"
-> >> @@ -1536,6 +1537,30 @@ static const struct file_operations vfio_group_fops = {
-> >>  	.release	= vfio_group_fops_release,
-> >>  };
-> >>  
-> >> +/*
-> >> + * Wrapper around pm_runtime_resume_and_get().
-> >> + * Return 0, if driver power management callbacks are not present i.e. the driver is not  
+On Sat, May 07, 2022 at 11:20:54AM +0200, Pali Rohár wrote:
+> On Saturday 07 May 2022 10:01:52 Marc Zyngier wrote:
+> > On Fri, 06 May 2022 19:55:46 +0100,
+> > Pali Rohár <pali@kernel.org> wrote:
+> > > 
+> > > On Friday 06 May 2022 19:47:25 Marc Zyngier wrote:
+> > > > On Fri, 06 May 2022 19:30:51 +0100,
+> > > > Pali Rohár <pali@kernel.org> wrote:
+> > > > > 
+> > > > > On Friday 06 May 2022 19:19:46 Marc Zyngier wrote:
+> > > > > > On Fri, 06 May 2022 14:40:25 +0100,
+> > > > > > Pali Rohár <pali@kernel.org> wrote:
+> > > > > > > 
+> > > > > > > +static void armada_370_xp_soc_err_irq_unmask(struct irq_data *d);
+> > > > > > > +
+> > > > > > >  static inline bool is_percpu_irq(irq_hw_number_t irq)
+> > > > > > >  {
+> > > > > > >  	if (irq <= ARMADA_370_XP_MAX_PER_CPU_IRQS)
+> > > > > > > @@ -509,6 +517,27 @@ static void armada_xp_mpic_reenable_percpu(void)
+> > > > > > >  		armada_370_xp_irq_unmask(data);
+> > > > > > >  	}
+> > > > > > >  
+> > > > > > > +	/* Re-enable per-CPU SoC Error interrupts that were enabled before suspend */
+> > > > > > > +	for (irq = 0; irq < soc_err_irq_num_regs * 32; irq++) {
+> > > > > > > +		struct irq_data *data;
+> > > > > > > +		int virq;
+> > > > > > > +
+> > > > > > > +		virq = irq_linear_revmap(armada_370_xp_soc_err_domain, irq);
+> > > > > > > +		if (virq == 0)
+> > > > > > > +			continue;
+> > > > > > > +
+> > > > > > > +		data = irq_get_irq_data(virq);
+> > > > > > > +
+> > > > > > > +		if (!irq_percpu_is_enabled(virq))
+> > > > > > > +			continue;
+> > > > > > > +
+> > > > > > > +		armada_370_xp_soc_err_irq_unmask(data);
+> > > > > > > +	}
+> > > > > > 
+> > > > > > So you do this loop and all these lookups, both here and in the resume
+> > > > > > function (duplicated code!) just to be able to call the unmask
+> > > > > > function?  This would be better served by two straight writes of the
+> > > > > > mask register, which you'd conveniently save on suspend.
+> > > > > > 
+> > > > > > Yes, you have only duplicated the existing logic. But surely there is
+> > > > > > something better to do.
+> > > > > 
+> > > > > Yes, I just used existing logic.
+> > > > > 
+> > > > > I'm not rewriting driver or doing big refactor of it, as this is not in
+> > > > > the scope of the PCIe AER interrupt support.
+> > > > 
+> > > > Fair enough. By the same logic, I'm not taking any change to the
+> > > > driver until it is put in a better shape. Your call.
+> > > 
+> > > If you are maintainer of this code then it is expected from _you_ to
+> > > move the current code into _better shape_ as you wrote and expect. And
+> > > then show us exactly, how new changes in this driver should look like,
+> > > in examples.
 > > 
-> > Mind the gratuitous long comment line here.
-> >   
->  
->  Thanks Alex.
->  
->  That was a miss. I will fix this.
->  
-> >> + * using runtime power management.
-> >> + * Return 1 upon success, otherwise -errno  
+> > Sorry, but that's not how this works. You are the one willing to
+> > change a sub-par piece of code, you get to make it better. You
+> > obviously have the means (the HW) and the incentive (these patches).
+> > But you don't get to make something even more unmaintainable because
+> > you're unwilling to do some extra work.
 > > 
-> > Changing semantics vs the thing we're wrapping, why not provide a
-> > wrapper for the `put` as well to avoid?  The only cases where we return
-> > zero are just as easy to detect on the other side.
-> >   
+> > If you're unhappy with my position, that's fine. I suggest you take it
+> > with Thomas, and maybe even Linus. As I suggested before, you can also
+> > post a patch removing me as the irqchip maintainer. I'm sure that will
+> > spark an interesting discussion.
 > 
->  Yes. Using wrapper function for put is better option.
->  I will make the changes.
+> You have already suggested it in email [1] but apparently you are _not_
+> maintainer of mvebu pci controller. get_maintainer.pl for part about
+> which you have talked in [1] says:
 > 
-> >> + */
-> >> +static inline int vfio_device_pm_runtime_get(struct device *dev)  
-> > 
-> > Given some of Jason's recent series, this should probably just accept a
-> > vfio_device.
-> >   
-> 
->  Sorry. I didn't get this part.
-> 
->  Do I need to change it to
-> 
->  static inline int vfio_device_pm_runtime_get(struct vfio_device *device)
->  {
->     struct device *dev = device->dev;
->     ...
->  }
+> $ ./scripts/get_maintainer.pl -f drivers/pci/controller/pci-aardvark.c
+> Thomas Petazzoni <thomas.petazzoni@bootlin.com> (maintainer:PCI DRIVER FOR AARDVARK (Marvell Armada 3700))
+> "Pali Rohár" <pali@kernel.org> (maintainer:PCI DRIVER FOR AARDVARK (Marvell Armada 3700))
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> (supporter:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS)
+> Rob Herring <robh@kernel.org> (reviewer:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS)
 
-Yes.
+Please just refactor the code in question. You've wasted more time 
+arguing about it than it would take to do. Having done a bit of PCI 
+refactoring, I can tell you hardly anyone else does. I can barely even 
+get comments/acks on refactoring until I break platforms (which happens 
+a lot). Maintainers have no other leverage other than what Marc pointed 
+out.
 
-> >> +{
-> >> +#ifdef CONFIG_PM
-> >> +	int ret;
-> >> +
-> >> +	if (!dev->driver || !dev->driver->pm)
-> >> +		return 0;
+In any case, I think there's no way the PCI maintainers will take this 
+as-is at this point.
 
-I'm also wondering how we could ever get here with dev->driver == NULL.
-If that were actually possible, the above would at best be racy.  It
-also really seems like there ought to be a better test than the
-driver->pm pointer to check if runtime pm is enabled, but I haven't
-spotted it yet.
-
-> >> +
-> >> +	ret = pm_runtime_resume_and_get(dev);
-> >> +	if (ret < 0)
-> >> +		return ret;
-> >> +
-> >> +	return 1;
-> >> +#else
-> >> +	return 0;
-> >> +#endif
-> >> +}
-> >> +
-> >>  /*
-> >>   * VFIO Device fd
-> >>   */
-> >> @@ -1845,15 +1870,28 @@ static long vfio_device_fops_unl_ioctl(struct file *filep,
-> >>  				       unsigned int cmd, unsigned long arg)
-> >>  {
-> >>  	struct vfio_device *device = filep->private_data;
-> >> +	int pm_ret, ret = 0;
-> >> +
-> >> +	pm_ret = vfio_device_pm_runtime_get(device->dev);
-> >> +	if (pm_ret < 0)
-> >> +		return pm_ret;  
-> > 
-> > I wonder if we might simply want to mask pm errors behind -EIO, maybe
-> > with a rate limited dev_info().  My concern would be that we might mask
-> > errnos that userspace has come to expect for certain ioctls.  Thanks,
-> > 
-> > Alex
-> >   
-> 
->   I need to do something like following. Correct ?
-> 
->   ret = vfio_device_pm_runtime_get(device);
->   if (ret < 0) {
->      dev_info_ratelimited(device->dev, "vfio: runtime resume failed %d\n", ret);
->      return -EIO;
->   }
-
-Yeah, though I'd welcome other thoughts here.  I don't necessarily like
-the idea of squashing the errno, but at the same time, if
-pm_runtime_resume_and_get() returns -EINVAL on user ioctl, that's not
-really describing an invalid parameter relative to the ioctl itself.
-Thanks,
-
-Alex
-
+Rob
