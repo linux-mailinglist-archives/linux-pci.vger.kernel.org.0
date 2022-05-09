@@ -2,76 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D2AC51F338
-	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 06:09:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C97851F47A
+	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 08:26:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229597AbiEIEML (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 May 2022 00:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34634 "EHLO
+        id S231587AbiEIG2q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 May 2022 02:28:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232383AbiEIEFf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 00:05:35 -0400
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9028233E81
-        for <linux-pci@vger.kernel.org>; Sun,  8 May 2022 21:01:41 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 6A2A628004991;
-        Mon,  9 May 2022 06:01:39 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 5ACB711A86B; Mon,  9 May 2022 06:01:39 +0200 (CEST)
-Date:   Mon, 9 May 2022 06:01:39 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Marc Zyngier <maz@kernel.org>, pali@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 07/18] PCI: pciehp: Enable Command Completed Interrupt
- only if supported
-Message-ID: <20220509040139.GB26780@wunner.de>
-References: <20220220193346.23789-1-kabel@kernel.org>
- <20220220193346.23789-8-kabel@kernel.org>
+        with ESMTP id S233816AbiEIGUK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 02:20:10 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 470558CB00;
+        Sun,  8 May 2022 23:16:14 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B429D68D05; Mon,  9 May 2022 08:15:53 +0200 (CEST)
+Date:   Mon, 9 May 2022 08:15:52 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2 01/26] dma-direct: take dma-ranges/offsets into
+ account in resource mapping
+Message-ID: <20220509061552.GA17190@lst.de>
+References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru> <20220503225104.12108-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220220193346.23789-8-kabel@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220503225104.12108-2-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 20, 2022 at 08:33:35PM +0100, Marek Behún wrote:
-> The No Command Completed Support bit in the Slot Capabilities register
-> indicates whether Command Completed Interrupt Enable is unsupported.
-> 
-> Enable this interrupt only in the case it is supported.
-[...]
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -817,7 +817,9 @@ static void pcie_enable_notification(struct controller *ctrl)
->  	else
->  		cmd |= PCI_EXP_SLTCTL_PDCE;
->  	if (!pciehp_poll_mode)
-> -		cmd |= PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_CCIE;
-> +		cmd |= PCI_EXP_SLTCTL_HPIE;
-> +	if (!pciehp_poll_mode && !NO_CMD_CMPL(ctrl))
-> +		cmd |= PCI_EXP_SLTCTL_CCIE;
+So I think the big problem pointed out by Robin is that existing DTs
+might not take this into account.  So I think we need to do a little
+research and at least Cc all maintainers and lists for relevant in-tree
+DTs for drivers that use dma_map_resource to discuss this.
 
-Looks okay to me in principle, I'm just wondering why this change is
-necessary, i.e. what issue are you seeing without it?
-
-Thanks,
-
-Lukas
