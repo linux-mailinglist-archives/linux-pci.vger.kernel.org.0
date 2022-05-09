@@ -2,48 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 784DC51FC8F
-	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 14:21:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12FD751FE35
+	for <lists+linux-pci@lfdr.de>; Mon,  9 May 2022 15:26:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233972AbiEIMYX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 May 2022 08:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53228 "EHLO
+        id S235900AbiEIN1u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 May 2022 09:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234232AbiEIMYU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 08:24:20 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F3BC24F202;
-        Mon,  9 May 2022 05:20:26 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KxgFt4jj2z1JC29;
-        Mon,  9 May 2022 20:19:14 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 9 May 2022 20:20:24 +0800
-CC:     <yangyicong@hisilicon.com>, <bhelgaas@google.com>,
-        <rafael@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <lenb@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: Re: [PATCH] PCI/ACPI: Always advertise ASPM support if
- CONFIG_PCIEASPM=y
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20220505184121.GA494499@bhelgaas>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <a5779c78-eb82-16ae-3f05-16f132f29a67@huawei.com>
-Date:   Mon, 9 May 2022 20:20:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S235895AbiEIN1l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 May 2022 09:27:41 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384E31E251A;
+        Mon,  9 May 2022 06:23:28 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id bu29so23828707lfb.0;
+        Mon, 09 May 2022 06:23:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=1K2obVx3YG8QEPrenU4QI5guJQ8Phbo/6yP70JTaawU=;
+        b=ctuOdHCyg4DfJDMuVyrfXjafqsIBGrPq9u27BiBAquJftMSjYFJ55Dztcsr8bNMn0w
+         oeM//L+QbMc5cqR/YL4ZYXu9SspJYNvQLipuO/dxUV/COK7qJD4YPieEuwN+Da6gnICg
+         tiL5ifQOF61sLM7j5k+TfKf3keD2QE9+mfbjkcLau1uokLQ0TJXXWGRj10hWZc6mNTCY
+         ZiPlrCXkxh/d8AP+hVzj144bdbLZ6gunWEeo3XTOHdZMf+1T4Dk4fDvhUDM82hKq6q3x
+         a24gfPwl0eQuynyAnF+v9tUB7WbmPEsnBDi3opOHoOjQkJbqyH8fYmRySBDQ1lHi3t+I
+         lY6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=1K2obVx3YG8QEPrenU4QI5guJQ8Phbo/6yP70JTaawU=;
+        b=mIkc0TZp+d1LwPecfcRJtDyH8BAqmNXPw1gYvuKs2yAX+y/qu14tJVn5mKfiCdAUiD
+         J1PqhiIjZpmt4I41YmLtpvg+xbziJgzNGHXGMiOFa6DvXp7/eZptbtwLH2IAhvwlPCxS
+         NabvguI5sndh9CnuM7+Nbt5RqzIBU1d3G0QPTQgzq002Of+D7T6HGgaawOrPEptXXb3P
+         eUYjlsTq3r2LFbCvBBF+mq0oXHqqNcckY+cE/SOi0e0PXu5RldMDfIevfXgKBHyWePHP
+         0sgqvfjsdEogwf9f3gIvaQlDCS3kpPAdvafbIWiQQWGKMr+zn7KSbobrxskZHZW/vLap
+         5kFg==
+X-Gm-Message-State: AOAM530ONvoAN48p67Wf1oX/vzg/HnhHcWEtfhjcp+b/GIzlzZTrFcLh
+        BlXgCeuNzxRrgAUVOGngXGI=
+X-Google-Smtp-Source: ABdhPJy54uNV0a0Y5a5xZUhU6QHCMVecZmAJ2frVW6KAYppShjM44jXuH8rdrMemcTVYgMIiSG1E7g==
+X-Received: by 2002:ac2:4c49:0:b0:473:ca4f:9345 with SMTP id o9-20020ac24c49000000b00473ca4f9345mr12622420lfk.203.1652102606387;
+        Mon, 09 May 2022 06:23:26 -0700 (PDT)
+Received: from [192.168.1.7] ([212.22.223.21])
+        by smtp.gmail.com with ESMTPSA id h5-20020a056512338500b0047255d2111csm1941442lfg.75.2022.05.09.06.23.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 May 2022 06:23:25 -0700 (PDT)
+Subject: Re: [PATCH v3 00/21] xen: simplify frontend side ring setup
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-integrity@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220505081640.17425-1-jgross@suse.com>
+From:   Oleksandr <olekstysh@gmail.com>
+Message-ID: <409fb110-646a-2973-aff3-c97fdfb9bfbc@gmail.com>
+Date:   Mon, 9 May 2022 16:23:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20220505184121.GA494499@bhelgaas>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20220505081640.17425-1-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Language: en-US
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,154 +95,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/5/6 2:41, Bjorn Helgaas wrote:
-> On Thu, May 05, 2022 at 08:36:42PM +0800, Yicong Yang wrote:
->> On 2022/5/4 6:38, Bjorn Helgaas wrote:
->>> On Mon, Apr 25, 2022 at 03:06:34PM +0800, Yicong Yang wrote:
->>>> When we have CONFIG_PCIEASPM enabled it means OS can always support ASPM no
->>>> matter user have disabled it through pcie_aspm=off or not. But currently we
->>>> won't advertise ASPM support in _OSC negotiation if user disables it, which
->>>> doesn't match the fact. This will also have side effects that other PCIe
->>>> services like AER and hotplug will be disabled as ASPM support is required
->>>> and we won't negotiate other services if ASPM support is absent.
->>>>
->>>> So this patch makes OS always advertising ASPM support if CONFIG_PCIEASPM=y.
->>>> It intends no functional change to pcie_aspm=off as it will still mark
->>>> aspm_disabled=1 and aspm_support_enabled=false, driver will check these
->>>> status before configuring ASPM.
->>>>
->>>> Tested this patch with pcie_aspm=off:
->>>> estuary:/$ dmesg | egrep -i "aspm|osc"
->>>> [    0.000000] PCIe ASPM is disabled
->>>> [    8.706961] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM
->>>> ClockPM Segments MSI EDR HPX-Type3]
->>>> [    8.726032] acpi PNP0A08:00: _OSC: platform does not support [LTR]
->>>> [    8.742818] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME
->>>> AER PCIeCapability DPC]
->>>> estuary:/sys/module/pcie_aspm/parameters$ cat policy
->>>> [default] performance powersave powersupersave
->>>> estuary:/sys/module/pcie_aspm/parameters$ echo powersave > policy
->>>> bash: echo: write error: Operation not permitted
->>>>
->>>> Cc: Rafael J. Wysocki <rafael@kernel.org>
->>>> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
->>>> [https://lore.kernel.org/linux-pci/20220407154257.GA235990@bhelgaas/]
->>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->>>> ---
->>>>  drivers/acpi/pci_root.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->>>> index 6f9e75d14808..17e78582e633 100644
->>>> --- a/drivers/acpi/pci_root.c
->>>> +++ b/drivers/acpi/pci_root.c
->>>> @@ -393,7 +393,7 @@ static u32 calculate_support(void)
->>>>  	support |= OSC_PCI_HPX_TYPE_3_SUPPORT;
->>>>  	if (pci_ext_cfg_avail())
->>>>  		support |= OSC_PCI_EXT_CONFIG_SUPPORT;
->>>> -	if (pcie_aspm_support_enabled())
->>>> +	if (IS_ENABLED(CONFIG_PCIEASPM))
->>>
->>> Is there any way firmware could tell the difference between
->>> "CONFIG_PCIEASPM not set" and "CONFIG_PCIEASPM=y and booted with
->>> 'pcie_aspm=off'"?
->>>
->>> If not, why would we even check whether CONFIG_PCIEASPM is set?
->>
->> If we announce ASPM support when CONFIG_PCIEASPM=n it'll work as well
->> but negotiation and the log don't match the fact. We'll get misleading
->> messages that ASPM is supported by OS by it cannot be enable as there's
->> no driver.
->>
->> As mentioned by the PCIe Firmware Spec r3.3,
->> "ASPM Optionality supported
->>  The operating system sets this bit to 1 if it properly recognizes
->>  and manages ASPM support on PCI Express components which report
->>  support for ASPM L1 only in the ASPM Support field within the Link
->>  Capabilities Register. Otherwise, the operating system sets this
->>  bit to 0"
-> 
-> Yes.  I don't completely understand this bit, but I think it's related
-> to the fact that L0s support was originally required for all links, so
-> the only defined ASPM Support encodings were these:
-> 
->   01b - L0s supported
->   11b - L0s and L1 supported
-> 
-> The "ASPM Optionality" ECN [1] of June 19, 2009, added these new
-> encodings:
-> 
->   00b - No ASPM support
->   10b - L1 supported
-> 
-> So I think the _OSC "ASPM Optionality Supported" bit tells the
-> firmware that the OS supports this new possibility of devices that
-> support L1 but not L0s.
-> 
-> Linux currently never sets the "ASPM Optionality Supported" bit, but
-> it probably should, because I think we *do* support L1 even if L0s
-> isn't supported.
-> 
 
-Yes, it sounds sensible to me. Actually I intended to refer BIT[1] which we're
-currently using for advertising ASPM support in _OSC, but I copied the wrong
-field...apologize.
+On 05.05.22 11:16, Juergen Gross wrote:
 
-"Active State Power Management supported
-The operating system sets this bit to 1 if it natively supports configuration
-of Active State Power Management registers in PCI Express devices. Otherwise,
-the operating system sets this bit to 0."
+Hello Juergen.
 
-IIUC, CONFIG_PCIEASPM=y means the OS *natively* support ASPM configuration so
-we should set this bit to 1 even if we boot with pcie_aspm=off; otherwise the
-OS has no native support of ASPM the bit should be 0. Currently the _OSC
-negotiation seems to violent the spec a bit when booting with pcie_aspm=off
-on a OS with CONFIG_PCIASPM=y.
 
->> When CONFIG_PCIEASPM=n we have no aspm driver and apparently cannot
->> support any ASPM features so we should set the bit to 0 to match the spec.
-> 
-> I think you're saying that firmware could not tell the difference, but
-> the Linux log messages might be slightly misleading.  I assume you
-> mean this message:
-> 
->   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
-> 
-> where we would claim that we support ASPM even when CONFIG_PCIEASPM is
-> unset.
-> 
 
-yes. That's what I mean misleading.
+> Many Xen PV frontends share similar code for setting up a ring page
+> (allocating and granting access for the backend) and for tearing it
+> down.
+>
+> Create new service functions doing all needed steps in one go.
+>
+> This requires all frontends to use a common value for an invalid
+> grant reference in order to make the functions idempotent.
+>
+> Changes in V3:
+> - new patches 1 and 2, comments addressed
+>
+> Changes in V2:
+> - new patch 9 and related changes in patches 10-18
+>
+> Juergen Gross (21):
+>    xen: update grant_table.h
+>    xen/grant-table: never put a reserved grant on the free list
+>    xen/blkfront: switch blkfront to use INVALID_GRANT_REF
+>    xen/netfront: switch netfront to use INVALID_GRANT_REF
+>    xen/scsifront: remove unused GRANT_INVALID_REF definition
+>    xen/usb: switch xen-hcd to use INVALID_GRANT_REF
+>    xen/drm: switch xen_drm_front to use INVALID_GRANT_REF
+>    xen/sound: switch xen_snd_front to use INVALID_GRANT_REF
+>    xen/dmabuf: switch gntdev-dmabuf to use INVALID_GRANT_REF
+>    xen/shbuf: switch xen-front-pgdir-shbuf to use INVALID_GRANT_REF
+>    xen: update ring.h
+>    xen/xenbus: add xenbus_setup_ring() service function
+>    xen/blkfront: use xenbus_setup_ring() and xenbus_teardown_ring()
+>    xen/netfront: use xenbus_setup_ring() and xenbus_teardown_ring()
+>    xen/tpmfront: use xenbus_setup_ring() and xenbus_teardown_ring()
+>    xen/drmfront: use xenbus_setup_ring() and xenbus_teardown_ring()
+>    xen/pcifront: use xenbus_setup_ring() and xenbus_teardown_ring()
+>    xen/scsifront: use xenbus_setup_ring() and xenbus_teardown_ring()
+>    xen/usbfront: use xenbus_setup_ring() and xenbus_teardown_ring()
+>    xen/sndfront: use xenbus_setup_ring() and xenbus_teardown_ring()
+>    xen/xenbus: eliminate xenbus_grant_ring()
 
-> The purpose of that message is to expose what Linux is telling the
-> platform via _OSC.  If we're telling the platform we support ASPM, I
-> think the message should reflect that.
-> 
 
-agree.
+For the patches that touch PV display (#07, #16), PV sound (#08, #20) 
+and shared buffer framework used by both frontends (#10):
 
-> But I'm actually not sure there's real value in advertising ASPM
-> support to the platform when CONFIG_PCIEASPM=y but we're booted with
-> "pcie_aspm=off".  It sounds like this was found by using that option
-> (even though it wasn't *needed*) and finding that Linux didn't request
-> control of other PCIe services.  I don't know if that's worth
-> changing.
-> 
+Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
-It's found in one of our test scenes that the AER is not worked. The issue
-is implicit as AER is influenced by the ASPM which it shouldn't be. And
-the implementation of pcie_aspm=off seems don't follow the spec. This patch
-intends to make the code follow the spec in this corner case and by the way
-fixes the issue I met. In the general cases there intends no change.
 
-For the usage of pcie_aspm=off there may be cases of turning off ASPM when
-the firmware grant the control to the OS. On some platform user may disable
-ASPM through firmware by ACPI FADT, but on other platform OS may always get
-the control of ASPM so this provide a way of disabling it. But I think it's
-not proper to assume user doesn't want other services like AER either.
+Also I didn't see any issues with these frontends while testing on Arm64 
+based board.
+So, you can also add:
 
-Since we haven't met any realistic issue on this boot option, I'd really
-appreciate your suggestions on this.
+[Arm64 only]
+Tested-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
+
+Thanks!
+
+
+>
+>   drivers/block/xen-blkfront.c                |  57 +++----
+>   drivers/char/tpm/xen-tpmfront.c             |  18 +--
+>   drivers/gpu/drm/xen/xen_drm_front.h         |   9 --
+>   drivers/gpu/drm/xen/xen_drm_front_evtchnl.c |  43 ++----
+>   drivers/net/xen-netfront.c                  |  85 ++++-------
+>   drivers/pci/xen-pcifront.c                  |  19 +--
+>   drivers/scsi/xen-scsifront.c                |  31 +---
+>   drivers/usb/host/xen-hcd.c                  |  65 ++------
+>   drivers/xen/gntdev-dmabuf.c                 |  13 +-
+>   drivers/xen/grant-table.c                   |  12 +-
+>   drivers/xen/xen-front-pgdir-shbuf.c         |  18 +--
+>   drivers/xen/xenbus/xenbus_client.c          |  82 +++++++---
+>   include/xen/grant_table.h                   |   2 -
+>   include/xen/interface/grant_table.h         | 161 ++++++++++++--------
+>   include/xen/interface/io/ring.h             |  19 ++-
+>   include/xen/xenbus.h                        |   4 +-
+>   sound/xen/xen_snd_front_evtchnl.c           |  44 ++----
+>   sound/xen/xen_snd_front_evtchnl.h           |   9 --
+>   18 files changed, 287 insertions(+), 404 deletions(-)
+>
+-- 
 Regards,
-Yicong
+
+Oleksandr Tyshchenko
+
