@@ -2,50 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D19F522259
-	for <lists+linux-pci@lfdr.de>; Tue, 10 May 2022 19:23:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB8EC5222E9
+	for <lists+linux-pci@lfdr.de>; Tue, 10 May 2022 19:37:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347964AbiEJR1E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 May 2022 13:27:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49364 "EHLO
+        id S245595AbiEJRlj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 May 2022 13:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348061AbiEJR1B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 May 2022 13:27:01 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47180562EA
-        for <linux-pci@vger.kernel.org>; Tue, 10 May 2022 10:22:48 -0700 (PDT)
+        with ESMTP id S1348312AbiEJRlg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 May 2022 13:41:36 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE6160BB7
+        for <linux-pci@vger.kernel.org>; Tue, 10 May 2022 10:37:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D2B25B81C64
-        for <linux-pci@vger.kernel.org>; Tue, 10 May 2022 17:22:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B10C385C2;
-        Tue, 10 May 2022 17:22:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 48230B81EB8
+        for <linux-pci@vger.kernel.org>; Tue, 10 May 2022 17:37:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AFAC385A6;
+        Tue, 10 May 2022 17:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652203365;
-        bh=GWylRjms/kidi7h4Oy0wn70MPEovvqtAvRoJ6jzh07Q=;
+        s=k20201202; t=1652204256;
+        bh=amTynlsXSBDuV1LFoOUJ1nJYmmTUPo8m+sUT2qLGbfc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sjjATE3gw5OQdOWgl2Jg0Iv+wk2KeE0T9B2qORwN32LdVApmi+5PMq8L1Xgmv5MvQ
-         FUvMno/MFltgaDdLCfhkFraaxbZWhawTLtheRnHl1yNgEaKNEMeig2zMM/i9qJuR6f
-         loHUNqi1wq69oXvpW4zTSennvAux1o7YJQbB5rmmN3KqrvLJ9ufVxbLisxWeA8yeAe
-         qkkkYhe/Dt1eHLBu4jOF/O9U18feQK/ibe1/0Q9BzLvmzHgjhkI25Alt39HLqyVdLE
-         zzImP2hwoEdInbr+gx31vCCkfu4/oQLAVppimgFjiDJRYWpSn0jaaqsD3BsVXPurSO
-         pp6iazKSQ4BhQ==
-Date:   Tue, 10 May 2022 12:22:43 -0500
+        b=qGgAFeGkkU7hvHnGWmMBwVefIyzpToHL4n5gIYqCLtcTi7KltgF77CbO1XEHH/kWL
+         HSOROQa0juqsaf0R9pxGuY7rv6ix4KvKHeo3tMTWdhtK5oyIGw8aWOzqX79vbhvZX1
+         ecMeGSQDDWOy5xy6+zyrjhCA8NgyOelpGgnMzg4QQZgXbpDN6Vi9q2H5ebpdDr5H2P
+         zK56qOnucef6pfoEVWc9QQcb3TrpqET13tAd1C562MPxb72YHVjP13PGn2SlZ/iGw8
+         itIq/ZPA9TVCvozQOVvZ8eW8E7pix8EaKwDwXyMNdykxrMlDWqlB5qkhCYcCGuye2j
+         8Mqj7TE3228Tg==
+Date:   Tue, 10 May 2022 12:37:33 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Cyril Brulebois <kibi@debian.org>
-Cc:     Thorsten Leemhuis <regressions@leemhuis.info>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
-Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
- 4 (CM4) breaks booting
-Message-ID: <20220510172243.GA684299@bhelgaas>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: Write to srvio_numvfs triggers kernel panic
+Message-ID: <20220510173733.GA688834@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220509174527.zoqhmaxfwo7udezo@mraw.org>
+In-Reply-To: <YnoIossyu7KQ8xmC@infradead.org>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,56 +55,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 09, 2022 at 07:45:27PM +0200, Cyril Brulebois wrote:
-> Hi Bjorn,
+On Mon, May 09, 2022 at 11:39:30PM -0700, Christoph Hellwig wrote:
+> On Mon, May 09, 2022 at 10:58:57AM -0600, Alex Williamson wrote:
+> > is_physfn = 0, is_virtfn = 0: A non-SR-IOV function
+> > is_physfn = 1, is_virtfn = 0: An SR-IOV PF
+> > is_physfn = 0, is_virtfn = 1: An SR-IOV VF
+> > 
+> > As implemented with bit fields this is 2 bits, which is more space
+> > efficient than an enum.  Thanks,
 > 
-> Bjorn Helgaas <helgaas@kernel.org> (2022-05-09):
-> > Cyril, 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two
-> > funcs") reverts cleanly as of 57ae8a492116.  Does reverting it avoid
-> > the regression?
+> A two-bit bitfield with explicit constants for the values would probably
+> still much eaiser to understand.
 > 
-> I didn't even try and revert this commit before you suggested doing so
-> since it was supposed to be some preliminary work. Quoting a part of
-> its commit message:
+> And there is some code that seems to intepret is_physfn a bit odd, e.g.:
 > 
->     In future commits the brcm_pcie_linkup() function will be called
->     indirectly by pci_host_probe() as opposed to the host driver
->     invoking it directly.
-> 
-> 
-> Anyway, the patch can indeed be reverted on top of v5.18-rc4 or
-> v5.18-rc6 but the build fails due to the former function being removed,
-> while being still called from other places:
-> 
->       CC      drivers/pci/controller/pcie-brcmstb.o
->     drivers/pci/controller/pcie-brcmstb.c:199:12: warning: ‘brcm_pcie_linkup’ used but never defined
->       199 | static int brcm_pcie_linkup(struct brcm_pcie *pcie);
->           |            ^~~~~~~~~~~~~~~~
->     …
->     aarch64-linux-gnu-ld: drivers/pci/controller/pcie-brcmstb.o: in function `brcm_pcie_add_bus':
->     /home/kibi/hack/linux.git/drivers/pci/controller/pcie-brcmstb.c:527: undefined reference to `brcm_pcie_linkup'
-> 
-> 
-> See for example:
-> 
->     commit 93e41f3fca3d4a0f927b784012338c37f80a8a80
->     Author: Jim Quinlan <jim2101024@gmail.com>
->     Date:   Thu Jan 6 11:03:29 2022 -0500
->     
->         PCI: brcmstb: Add control of subdevice voltage regulators
-> 
-> (And that one cannot be trivially reverted.)
+> arch/powerpc/kernel/eeh_sysfs.c:        np = pci_device_to_OF_node(pdev->is_physfn ? pdev : pdev->physfn);
+> arch/powerpc/kernel/eeh_sysfs.c:        np = pci_device_to_OF_node(pdev->is_physfn ? pdev : pdev->physfn);
 
-What if you revert 830aa6f29f07 and the subsequent brcmstb patches?
+"dev->sriov != NULL" and "dev->is_physfn" are basically the same and
+many of the dev->is_physfn uses in drivers/pci would end up being
+simpler if replaced with dev->sriov, e.g.,
 
-  11ed8b8624b8 ("PCI: brcmstb: Do not turn off WOL regulators on suspend")
-  93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-  67211aadcb4b ("PCI: brcmstb: Add mechanism to turn on subdev regulators")
-  830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
+  int pci_iov_virtfn_bus(struct pci_dev *dev, int vf_id)
+  {
+    if (!dev->is_physfn)
+      return -EINVAL;
+    return dev->bus->number + ((dev->devfn + dev->sriov->offset +
+				dev->sriov->stride * vf_id) >> 8);
+  }
 
-  $ git revert 11ed8b8624b8 93e41f3fca3d 67211aadcb4b 830aa6f29f07
+would be more obvious as:
 
-I did that on current upstream: 9be9ed2612b5 ("Merge tag
-'platform-drivers-x86-v5.18-4' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86")
-and it built fine on x86.
+  if (dev->sriov)
+    return dev->bus->number + ((dev->devfn + dev->sriov->offset +
+				dev->sriov->stride * vf_id) >> 8);
+  return -EINVAL;
