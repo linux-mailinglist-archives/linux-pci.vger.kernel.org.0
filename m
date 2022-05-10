@@ -2,51 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB8EC5222E9
-	for <lists+linux-pci@lfdr.de>; Tue, 10 May 2022 19:37:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C8B52231B
+	for <lists+linux-pci@lfdr.de>; Tue, 10 May 2022 19:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245595AbiEJRlj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 May 2022 13:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57436 "EHLO
+        id S1346345AbiEJRv5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 May 2022 13:51:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348312AbiEJRlg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 May 2022 13:41:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE6160BB7
-        for <linux-pci@vger.kernel.org>; Tue, 10 May 2022 10:37:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 48230B81EB8
-        for <linux-pci@vger.kernel.org>; Tue, 10 May 2022 17:37:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AFAC385A6;
-        Tue, 10 May 2022 17:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652204256;
-        bh=amTynlsXSBDuV1LFoOUJ1nJYmmTUPo8m+sUT2qLGbfc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qGgAFeGkkU7hvHnGWmMBwVefIyzpToHL4n5gIYqCLtcTi7KltgF77CbO1XEHH/kWL
-         HSOROQa0juqsaf0R9pxGuY7rv6ix4KvKHeo3tMTWdhtK5oyIGw8aWOzqX79vbhvZX1
-         ecMeGSQDDWOy5xy6+zyrjhCA8NgyOelpGgnMzg4QQZgXbpDN6Vi9q2H5ebpdDr5H2P
-         zK56qOnucef6pfoEVWc9QQcb3TrpqET13tAd1C562MPxb72YHVjP13PGn2SlZ/iGw8
-         itIq/ZPA9TVCvozQOVvZ8eW8E7pix8EaKwDwXyMNdykxrMlDWqlB5qkhCYcCGuye2j
-         8Mqj7TE3228Tg==
-Date:   Tue, 10 May 2022 12:37:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: Write to srvio_numvfs triggers kernel panic
-Message-ID: <20220510173733.GA688834@bhelgaas>
+        with ESMTP id S1343652AbiEJRv4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 May 2022 13:51:56 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A32E759B8A;
+        Tue, 10 May 2022 10:47:58 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7598312FC;
+        Tue, 10 May 2022 10:47:58 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.5.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 226DE3F73D;
+        Tue, 10 May 2022 10:47:56 -0700 (PDT)
+Date:   Tue, 10 May 2022 18:47:49 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, helgaas@kernel.org, kw@linux.com,
+        bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
+        Sergey.Semin@baikalelectronics.ru
+Subject: Re: [PATCH v10 0/9] Enable designware PCI EP EDMA locally
+Message-ID: <YnqlRShJzvma2SKM@lpieralisi>
+References: <20220503005801.1714345-1-Frank.Li@nxp.com>
+ <20220503231806.w2x4o2b3xymbwn74@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YnoIossyu7KQ8xmC@infradead.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <20220503231806.w2x4o2b3xymbwn74@mobilestation>
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -55,38 +47,103 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 09, 2022 at 11:39:30PM -0700, Christoph Hellwig wrote:
-> On Mon, May 09, 2022 at 10:58:57AM -0600, Alex Williamson wrote:
-> > is_physfn = 0, is_virtfn = 0: A non-SR-IOV function
-> > is_physfn = 1, is_virtfn = 0: An SR-IOV PF
-> > is_physfn = 0, is_virtfn = 1: An SR-IOV VF
+On Wed, May 04, 2022 at 02:18:06AM +0300, Serge Semin wrote:
+> On Mon, May 02, 2022 at 07:57:52PM -0500, Frank Li wrote:
+> > Default Designware EDMA just probe remotely at host side.
+> > This patch allow EDMA driver can probe at EP side.
 > > 
-> > As implemented with bit fields this is 2 bits, which is more space
-> > efficient than an enum.  Thanks,
+> > 1. Clean up patch
+> >    dmaengine: dw-edma: Detach the private data and chip info structures
+> >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> >    dmaengine: dw-edma: Change rg_region to reg_base in struct
+> >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> > 
+> > 2. Enhance EDMA driver to allow prode eDMA at EP side
+> >    dmaengine: dw-edma: Add support for chip specific flags
+> >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+> > 
+> > 3. Bugs fix at EDMA driver when probe eDMA at EP side
+> >    dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+> >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> > 
+> > 4. change pci-epf-test to use EDMA driver to transfer data.
+> >    PCI: endpoint: Add embedded DMA controller test
+> > 
+> > 5. Using imx8dxl to do test, but some EP functions still have not
+> > upstream yet. So below patch show how probe eDMA driver at EP
+> > controller driver.
+> > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
 > 
-> A two-bit bitfield with explicit constants for the values would probably
-> still much eaiser to understand.
+> As I have already said in my comment to v9, @Lorenzo, @Rob, @Vinod,
+> my patchset:
+> Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru
+> is based on this one. In its turn my series depends on the other
+> patchsets:
+> [PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+> Link: https://lore.kernel.org/linux-pci/20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru/
+> [PATCH v2 00/13] PCI: dwc: Various fixes and cleanups
+> Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+> [PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+> Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+> which are currently on review. I am very much eager to get my patches
+> merged in before the next merge windows. But in order to preserve the
+> consistency of the corresponding repo with my patchsets the repo needs
+> to have the @Frank' patches. Seeing aside with @Frank's series my changes
+> depend on the changes in the clk and pci subsystems, could you please
+> consider choosing a single repository for merging all my and @Frank
+> patches in? Since the changes mostly concern the DW PCIe controller I
+> suggest to use the 'pci/dwc' branch of the
+> 'kernel/git/lpieralisi/pci.git' repository. What do you think?
+> @Lorenzo?
 > 
-> And there is some code that seems to intepret is_physfn a bit odd, e.g.:
+
+Sorry for the delay in replying. I think @Frank's series will
+go via the DMA engine tree, I will do my best to review your
+DWC changes:
+
+[PATCH v2 00/13] PCI: dwc: Various fixes and cleanups
+Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+
+but I can't guarantee they will make v5.19 and after that I will
+be AFK for two months, which is not good either, I will coordinate
+with Bjorn to see what can we do on this, I am sorry but that's
+all I have to offer at this stage.
+
+Thanks,
+Lorenzo
+
+> -Sergey
 > 
-> arch/powerpc/kernel/eeh_sysfs.c:        np = pci_device_to_OF_node(pdev->is_physfn ? pdev : pdev->physfn);
-> arch/powerpc/kernel/eeh_sysfs.c:        np = pci_device_to_OF_node(pdev->is_physfn ? pdev : pdev->physfn);
-
-"dev->sriov != NULL" and "dev->is_physfn" are basically the same and
-many of the dev->is_physfn uses in drivers/pci would end up being
-simpler if replaced with dev->sriov, e.g.,
-
-  int pci_iov_virtfn_bus(struct pci_dev *dev, int vf_id)
-  {
-    if (!dev->is_physfn)
-      return -EINVAL;
-    return dev->bus->number + ((dev->devfn + dev->sriov->offset +
-				dev->sriov->stride * vf_id) >> 8);
-  }
-
-would be more obvious as:
-
-  if (dev->sriov)
-    return dev->bus->number + ((dev->devfn + dev->sriov->offset +
-				dev->sriov->stride * vf_id) >> 8);
-  return -EINVAL;
+> > 
+> > 
+> > Frank Li (7):
+> >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> >   dmaengine: dw-edma: Detach the private data and chip info structures
+> >   dmaengine: dw-edma: Change rg_region to reg_base in struct
+> >     dw_edma_chip
+> >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> >     dw_edma_chip
+> >   dmaengine: dw-edma: Add support for chip specific flags
+> >   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+> >   PCI: endpoint: Enable DMA controller tests for endpoints with DMA
+> >     capabilities
+> > 
+> > Serge Semin (2):
+> >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+> >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
+> >     semantics
+> > 
+> >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
+> >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
+> >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+> >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  54 ++++---
+> >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
+> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
+> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++--
+> >  include/linux/dma/edma.h                      |  61 +++++++-
+> >  9 files changed, 323 insertions(+), 185 deletions(-)
+> > 
+> > -- 
+> > 2.35.1
+> > 
