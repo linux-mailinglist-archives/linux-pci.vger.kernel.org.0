@@ -2,137 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25A2C52262C
-	for <lists+linux-pci@lfdr.de>; Tue, 10 May 2022 23:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2701D522638
+	for <lists+linux-pci@lfdr.de>; Tue, 10 May 2022 23:18:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232344AbiEJVPR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 May 2022 17:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44942 "EHLO
+        id S234713AbiEJVSL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 May 2022 17:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229834AbiEJVPQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 May 2022 17:15:16 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171D42944BF;
-        Tue, 10 May 2022 14:15:11 -0700 (PDT)
-Received: from ip5b412258.dynamic.kabel-deutschland.de ([91.65.34.88] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1noXCC-0007Ms-0L; Tue, 10 May 2022 23:15:04 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 0/5] Enable rk356x PCIe controller
-Date:   Tue, 10 May 2022 23:15:03 +0200
-Message-ID: <2109328.Mh6RI2rZIc@diego>
-In-Reply-To: <CAMdYzYrzq5C61T2NYmHr0g_P7Mm25TUfaDV3iz2LkV8-jpV4kA@mail.gmail.com>
-References: <20220429123832.2376381-1-pgwipeout@gmail.com> <CAMdYzYrzq5C61T2NYmHr0g_P7Mm25TUfaDV3iz2LkV8-jpV4kA@mail.gmail.com>
+        with ESMTP id S231347AbiEJVSK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 May 2022 17:18:10 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C222550E3C
+        for <linux-pci@vger.kernel.org>; Tue, 10 May 2022 14:18:08 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d25so219436pfo.10
+        for <linux-pci@vger.kernel.org>; Tue, 10 May 2022 14:18:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=awoehg3DVkTpMr0e5SN/82sAnQC4XZwnwHUruoursgM=;
+        b=YOVGXr/JNn7NPSjYf6oP+U8flXTU/H4OMQVFHnoQVQuCp2dBXGFb9os69kFhKPM+jU
+         XxEUW2pDQQ+IGcYmCKHU98xeAA4ITlEn3HdAuXDn3DLswU8FXoXJ65NYjunr3bbwVYNI
+         uGqjwirWmx1i3EU+2R9eK6WKw7QiCvfCoeX6Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=awoehg3DVkTpMr0e5SN/82sAnQC4XZwnwHUruoursgM=;
+        b=tWiuzVHjxqjSw9wL8ZKe84eqzRWHqoYuvfGxfmfCpx73brDEYShLdzM8GczKzdF9ay
+         GU8Ha8ANMU37ZiwplC7O6AHkWXhYwENR/AZFlYkPcoE3/UR75Bam3GChMzFa5sqXC7Pe
+         oCa9EcOZ3Y41EN7j80zU4GEe6M+8DXPMI6nB4v7szIOnDHyJuHPhv5hwYmBtff8P1nwz
+         /Hq1pcgs5SmS9ET6NgIhN6cFmbzjx8VAfh5eFHNKeYg71SOfJ6kpObkGGbdLMhNHV/Sq
+         LHR+yMNrA+lwb2B9jDba8jTdtCm7Sw7u2SUwroW+Ufx49wDfkRd8zm4Gn+oI6znslJ0K
+         ShlQ==
+X-Gm-Message-State: AOAM532sKXhCGUIDE1Y04Ji19CsspRcvi52d00dVXsIAdjAjOycIVPNF
+        2DtSzs5GONMzm1u4mHM2msvyQw==
+X-Google-Smtp-Source: ABdhPJx2RIAdUHBPstsH1ktBxYBfA3XcFRMgePn6fEJlQiEEWiujS3M+X1iD3LDGO6ShbUNTSTT8ew==
+X-Received: by 2002:a05:6a02:11a:b0:3c3:dabd:eafb with SMTP id bg26-20020a056a02011a00b003c3dabdeafbmr18680769pgb.87.1652217488225;
+        Tue, 10 May 2022 14:18:08 -0700 (PDT)
+Received: from irdv-mkhalfella.dev.purestorage.com ([208.88.158.128])
+        by smtp.googlemail.com with ESMTPSA id s55-20020a056a001c7700b0050dc76281a2sm6618pfw.124.2022.05.10.14.18.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 May 2022 14:18:07 -0700 (PDT)
+From:   Mohamed Khalfella <mkhalfella@purestorage.com>
+To:     helgaas@kernel.org
+Cc:     bhelgaas@google.com, ebadger@purestorage.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mkhalfella@purestorage.com,
+        msaggi@purestorage.com, oohall@gmail.com, rajatja@google.com,
+        ruscur@russell.cc, stable@vger.kernel.org
+Subject: Re: [PATCH] PCI/AER: Iterate over error counters instead of error
+Date:   Tue, 10 May 2022 21:17:56 +0000
+Message-Id: <20220510211756.5237-1-mkhalfella@purestorage.com>
+X-Mailer: git-send-email 2.29.0
+In-Reply-To: <20220510164305.GA678149@bhelgaas>
+References: <20220510164305.GA678149@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Dienstag, 10. Mai 2022, 23:11:18 CEST schrieb Peter Geis:
-> On Fri, Apr 29, 2022 at 8:38 AM Peter Geis <pgwipeout@gmail.com> wrote:
-> >
-> > This series enables the DesignWare based PCIe controller on the rk356x
-> > series of chips. We drop the fallback to the core driver due to
-> > compatibility issues. We reset the PCIe controller at driver probe to
-> > prevent issues in the future when firmware / kexec leaves the controller
-> > in an unknown state. We add support for legacy interrupts for cards that
-> > lack MSI support (which is partially broken currently). We then add the
-> > device tree nodes to enable PCIe on the Quartz64 Model A.
+> Thanks for catching this; it definitely looks like a real issue!  I
+> guess you're probably seeing junk in the sysfs files?
+
+That is correct. The initial report was seeing junk when reading sysfs
+files. As descibed, this is happening because we reading data past the
+end of the stats counters array.
+
+
+> I think maybe we should populate the currently NULL entries in the
+> string[] arrays and simplify the code here, e.g.,
 > 
-> Good Evening,
-> 
-> Just a gentle ping to see if there's anything outstanding here.
+> static const char *aer_correctable_error_string[] = {
+>        "RxErr",                        /* Bit Position 0       */
+>        "dev_cor_errs_bit[1]",
+>	...
+>
+>  if (stats[i])
+>    len += sysfs_emit_at(buf, len, "%s %llu\n", strings_array[i], stats[i]);
 
-From my side it looks good. I'll take patches 4+5 once the binding-change
-from patch1 has been applied to some tree.
+Doing it this way will change the output format. In this case we will show
+stats only if their value is greater than zero. The current code shows all the
+stats those have names (regardless of their value) plus those have non-zero
+values.
 
+>> @@ -1342,6 +1342,11 @@ static int aer_probe(struct pcie_device *dev)
+>>  	struct device *device = &dev->device;
+>>  	struct pci_dev *port = dev->port;
+>>
+>> +	BUILD_BUG_ON(ARRAY_SIZE(aer_correctable_error_string) <
+>> +		     AER_MAX_TYPEOF_COR_ERRS);
+>> +	BUILD_BUG_ON(ARRAY_SIZE(aer_uncorrectable_error_string) <
+>> +		     AER_MAX_TYPEOF_UNCOR_ERRS);
+>
+> And make these check for "!=" instead of "<".
 
-Heiko
-
-
-> >
-> > Patch 1 drops the snps,dw,pcie fallback from the dt-binding
-> > Patch 2 resets the PCIe controller to prevent configuration bugs
-> > Patch 3 adds legacy interrupt support to the driver
-> > Patch 4 adds the device tree binding to the rk356x.dtsi
-> > Patch 5 enables the PCIe controller on the Quartz64-A
-> >
-> > Changelog:
-> > v9:
-> > - move reset_control_assert out of rockchip_pcie_resource_get
-> > - fix various formatting mistakes
-> > - fix a checkpatch warning
-> >
-> > v8:
-> > - add core reset patch
-> > - simplify IRQ enable/disable functions
-> > - drop spinlock
-> > - only enable/disable IRQ requested
-> > - only pass the IRQ register bits used to irq functions
-> >
-> > v7:
-> > - drop assigned-clocks
-> >
-> > v6:
-> > - fix a ranges issue
-> > - point to GIC instead of ITS
-> >
-> > v5:
-> > - fix incorrect series (apologies for the v4 spam)
-> >
-> > v4:
-> > - drop the ITS modification, poor compatibility is better than
-> >   completely broken
-> >
-> > v3:
-> > - drop select node from dt-binding
-> > - convert to for_each_set_bit
-> > - convert to generic_handle_domain_irq
-> > - drop unncessary dev_err
-> > - reorder irq_chip items
-> > - change to level_irq
-> > - install the handler after initializing the domain
-> >
-> > v2:
-> > - Define PCIE_CLIENT_INTR_STATUS_LEGACY
-> > - Fix PCIE_LEGACY_INT_ENABLE to only enable the RC interrupts
-> > - Add legacy interrupt enable/disable support
-> >
-> >
-> > Peter Geis (5):
-> >   dt-bindings: PCI: Remove fallback from Rockchip DesignWare binding
-> >   PCI: rockchip-dwc: Reset core at driver probe
-> >   PCI: rockchip-dwc: Add legacy interrupt support
-> >   arm64: dts: rockchip: Add rk3568 PCIe2x1 controller
-> >   arm64: dts: rockchip: Enable PCIe controller on quartz64-a
-> >
-> >  .../bindings/pci/rockchip-dw-pcie.yaml        |  12 +-
-> >  .../boot/dts/rockchip/rk3566-quartz64-a.dts   |  34 +++++
-> >  arch/arm64/boot/dts/rockchip/rk356x.dtsi      |  52 ++++++++
-> >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 119 +++++++++++++++---
-> >  4 files changed, 191 insertions(+), 26 deletions(-)
-> >
-> > --
-> > 2.25.1
-> >
-> 
-
-
-
-
+This will require unnecessarily extending stats arrays to have 32 entries
+in order to match names arrays. If you don't feel strogly about changing
+"<" to "!=", I prefer to keep the code as it is. 
