@@ -2,170 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCB5D52402C
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 00:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAB3252404B
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 00:32:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348680AbiEKWWs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 18:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59864 "EHLO
+        id S1348758AbiEKWc0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 18:32:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348686AbiEKWWr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 18:22:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23B2E528A;
-        Wed, 11 May 2022 15:22:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 318F061D0E;
-        Wed, 11 May 2022 22:22:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23EAEC340EE;
-        Wed, 11 May 2022 22:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652307765;
-        bh=max/YLZZYvVMU4pJNqaOdGaTwdVGW7qxAj5WBVzWjJU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tiM6aexheYqaLaujb4nWX9I1pdfM2ZSwROG86IeLhNX0MZZrU/13PjbYpasFHgV31
-         1DB6QlaH5pcU9XK8cIZN2m6B5KyMvhMCLcXrXrqyAcNlAYOcp1C26fLbhBNIOfUmWj
-         DcVLuZFSfK66mZv1dlDowmZO/yhpQwSBeaXcudWz6tJmjNRz1CDkTQi37/3gkv3b/5
-         /xUFo7su1hKE8UVrZPH6dbm7X2rGhRKkQbKRhjSB16tvY6uAd1OkcGKnmBg8go0CbL
-         uSDx9l9AuFJ97+trSTD+wO72els3vCK5p93RbVtoAyYMeIUA986LLxMw3NCAk+HusW
-         y0igt+RUGJ6EA==
-Date:   Wed, 11 May 2022 17:22:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jay Zhou <jianjay.zhou@huawei.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, alex.williamson@redhat.com,
-        weidong.huang@huawei.com, Donald Dutile <ddutile@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH] pci: avoid dead lock between device reset and sriov
- disable
-Message-ID: <20220511222243.GA822874@bhelgaas>
+        with ESMTP id S235676AbiEKWcZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 18:32:25 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD3D62A18;
+        Wed, 11 May 2022 15:32:24 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id k27so4180020edk.4;
+        Wed, 11 May 2022 15:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rL9q1a1EeCnS72sAyvjARKItZ8kxxTTeGVdvVhBpEkQ=;
+        b=I84mYgaqMn3/HHXjspIHPNSz0fiSYhIrS1/hW5nAV5jByjcVzW2lpGByw9DBQ5GZKS
+         bnOiwe4MoO33cHXCl3IYfh3ZgRgNpN56PR+P+Qx8DlNdk/b1EESeOWh9FOLUiKCbZ7aD
+         xk3X6N4IXfOPAx9VxECn1jP4sVOj/ufTMycGkboHetx+fCzW41bBYLOhGaeGtFtnLwO2
+         H1evJSAa1QwgKEFuOgkox/tw32lmZSt4cbWpY6vna74Rt3VDZaUsKSm0AJ2vyhAZY7cB
+         w7mb0Otpzs7rcFMEU/VkS2ytYkqZj0vTfqzTs9MNOxjlTyO97hH3i3LydDm66iUibq/k
+         fD4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rL9q1a1EeCnS72sAyvjARKItZ8kxxTTeGVdvVhBpEkQ=;
+        b=wyFUz+S+dKsVdsFlZp2p4b/IVVs1GgkRYrXfF+Je7nIDBAkXjwosHFhIZG83H+TP/O
+         FaEZIE2ptKt7aCHf/L9z9UH8CROW5WYjFTVOSsgP9PyR9cpHJ+eR7eBhP+T76FqRMMTz
+         RCoc4lk+0JIaDSt5S7RVFQ4y4Z+wBvhNmQ/4SqasVk5GURNyaHVVteRC/Xj3nHPWxyih
+         GBCbHqk6D7p3FQae1fPYKPFA4H6Pu2n56EXaBIajznZOncTdwcYSxlFWJmDtFmHOK/k2
+         Q6yOwjzNNogDyLhx3wAP65CJtHSi5uFM/yWi7FgLWdwFSGNbRawr3/qoP+AnTYtTsYGk
+         Aqtw==
+X-Gm-Message-State: AOAM531ZLclms8c4Zjs3JXDTUlvr0SHL8IVCrEA5+uCO5JQYEsFjcxMM
+        19rahYhiOOPxmS2CpBkuewAkYmuwmGU=
+X-Google-Smtp-Source: ABdhPJz1X8XoNDPt8R0juMrba4PxJQPDZf5jjyy4BuqH4w+BlYcyN5Tp9et9hEXfuoCKrYqtKahRaA==
+X-Received: by 2002:aa7:c0c4:0:b0:425:c776:6f17 with SMTP id j4-20020aa7c0c4000000b00425c7766f17mr31121586edp.131.1652308342427;
+        Wed, 11 May 2022 15:32:22 -0700 (PDT)
+Received: from anparri.mshome.net (host-79-30-69-23.retail.telecomitalia.it. [79.30.69.23])
+        by smtp.gmail.com with ESMTPSA id f1-20020a1709064dc100b006fa84a0af2asm1468456ejw.16.2022.05.11.15.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 May 2022 15:32:21 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH v2 0/2] PCI: hv: Hardening changes
+Date:   Thu, 12 May 2022 00:32:05 +0200
+Message-Id: <20220511223207.3386-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220404062539.1710-1-jianjay.zhou@huawei.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Don, Jason, Leon, just FYI]
+Changes since v1[1]:
+  - Add validation in q_resource_requirements()
 
-On Mon, Apr 04, 2022 at 02:25:39PM +0800, Jay Zhou wrote:
-> Call trace of PF SRIOV disable:
-> sriov_numvfs_store
->   device_lock <----------------- (1) get the device lock
->     ->sriov_configure # e.g. vfio_pci_sriov_configure
->       sriov_disable
->         pci_cfg_access_lock <--- (4) wait dev->block_cfg_access to be 0
-> 
-> Call trace of PF reset:
-> reset_store
->   pci_reset_function
->     pci_dev_lock
->       pci_cfg_access_lock <----- (2) set dev->block_cfg_access = 1
->       device_lock <------------- (3) want to get the device lock
-> 
-> These two oprations would wait for each other forever if the
-> code execution sequence is (1)(2)(3)(4).
-> 
-> Let's get the device lock and then the config access lock in
-> pci_dev_lock().
-> 
-> Signed-off-by: Jay Zhou <jianjay.zhou@huawei.com>
+Patch #2 depends on changes in hyperv-next.  (Acknowledging that hyperv
+is entering EOM, for review.)
 
-Thanks, I (finally) applied Yicong's identical patch from a year ago
-to pci/virtualization for v5.19, with a commit log combined and
-adapted from both:
+Thanks,
+  Andrea
 
-    PCI: Avoid pci_dev_lock() AB/BA deadlock with sriov_numvfs_store()
-    
-    The sysfs sriov_numvfs_store() path acquires the device lock before the
-    config space access lock:
-    
-      sriov_numvfs_store
-        device_lock                 # A (1) acquire device lock
-        sriov_configure
-          vfio_pci_sriov_configure  # (for example)
-            vfio_pci_core_sriov_configure
-              pci_disable_sriov
-                sriov_disable
-                  pci_cfg_access_lock
-                    pci_wait_cfg    # B (4) wait for dev->block_cfg_access == 0
-    
-    Previously, pci_dev_lock() acquired the config space access lock before the
-    device lock:
-    
-      pci_dev_lock
-        pci_cfg_access_lock
-          dev->block_cfg_access = 1 # B (2) set dev->block_cfg_access = 1
-        device_lock                 # A (3) wait for device lock
-    
-    Any path that uses pci_dev_lock(), e.g., pci_reset_function(), may
-    deadlock with sriov_numvfs_store() if the operations occur in the sequence
-    (1) (2) (3) (4).
-    
-    Avoid the deadlock by reversing the order in pci_dev_lock() so it acquires
-    the device lock before the config space access lock, the same as the
-    sriov_numvfs_store() path.
-    
-    [bhelgaas: combined and adapted commit log from Jay Zhou's independent
-    subsequent posting:
-    https://lore.kernel.org/r/20220404062539.1710-1-jianjay.zhou@huawei.com]
-    Link: https://lore.kernel.org/linux-pci/1583489997-17156-1-git-send-email-yangyicong@hisilicon.com/
-    Also-posted-by: Jay Zhou <jianjay.zhou@huawei.com>
-    Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+[1] https://lkml.kernel.org/r/20220504125039.2598-1-parri.andrea@gmail.com
 
-> ---
->  drivers/pci/pci.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9ecce435fb3f..61a6db1d21f6 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5103,19 +5103,19 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->  
->  void pci_dev_lock(struct pci_dev *dev)
->  {
-> -	pci_cfg_access_lock(dev);
->  	/* block PM suspend, driver probe, etc. */
->  	device_lock(&dev->dev);
-> +	pci_cfg_access_lock(dev);
->  }
->  EXPORT_SYMBOL_GPL(pci_dev_lock);
->  
->  /* Return 1 on successful lock, 0 on contention */
->  int pci_dev_trylock(struct pci_dev *dev)
->  {
-> -	if (pci_cfg_access_trylock(dev)) {
-> -		if (device_trylock(&dev->dev))
-> +	if (device_trylock(&dev->dev)) {
-> +		if (pci_cfg_access_trylock(dev))
->  			return 1;
-> -		pci_cfg_access_unlock(dev);
-> +		device_unlock(&dev->dev);
->  	}
->  
->  	return 0;
-> @@ -5124,8 +5124,8 @@ EXPORT_SYMBOL_GPL(pci_dev_trylock);
->  
->  void pci_dev_unlock(struct pci_dev *dev)
->  {
-> -	device_unlock(&dev->dev);
->  	pci_cfg_access_unlock(dev);
-> +	device_unlock(&dev->dev);
->  }
->  EXPORT_SYMBOL_GPL(pci_dev_unlock);
->  
-> -- 
-> 2.27.0
-> 
+Andrea Parri (Microsoft) (2):
+  PCI: hv: Add validation for untrusted Hyper-V values
+  PCI: hv: Fix synchronization between channel callback and
+    hv_pci_bus_exit()
+
+ drivers/pci/controller/pci-hyperv.c | 59 +++++++++++++++++++++--------
+ 1 file changed, 43 insertions(+), 16 deletions(-)
+
+-- 
+2.25.1
+
