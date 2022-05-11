@@ -2,405 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0488523ADF
-	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 18:52:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03230523AFB
+	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 18:57:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242136AbiEKQwu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 12:52:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55204 "EHLO
+        id S1345197AbiEKQ53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 12:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243028AbiEKQwu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 12:52:50 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D1B80B60;
-        Wed, 11 May 2022 09:52:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7B04ED1;
-        Wed, 11 May 2022 09:52:48 -0700 (PDT)
-Received: from lpieralisi (unknown [10.57.1.148])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AC1D3F73D;
-        Wed, 11 May 2022 09:52:47 -0700 (PDT)
-Date:   Wed, 11 May 2022 17:52:43 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Li Chen <lchen.firstlove@zohomail.com>, kishon@ti.com
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V7] misc: pci_endpoint_test: simplify endpoint test read
- and write operations
-Message-ID: <Ynvp25i3zijc9/ce@lpieralisi>
-References: <20220208152106.GA476995@bhelgaas>
- <17edc630ef0.11d8ab06115620.4524266185949873552@zohomail.com>
+        with ESMTP id S233678AbiEKQ50 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 12:57:26 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D58646677
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 09:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652288244; x=1683824244;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+NWnGNJYf46SVOU0nzamlDIEmiOV9qFuWzzou7Mhbf0=;
+  b=Mw8VK4oyQB9vou7eZWkj8hGbVkRU/+7WgEoZ0nZWFm4X97efYl1e9qxM
+   Hxz/x7NCwWuRZRePsSvffCpToU5zeuUS2wzAKAcjrZBMLWLRjQ7eEwz5H
+   DXoP/ZSQSEy+1Nf35EGnRA82mq0ja/ZLI9fGGfzCQiPmdIUrRrxk2YKm5
+   1LDJnCQlJvcJbV8DJHeq79eF4f09gTv1cdXscNUGuv8AFBUXqHd7vVlz0
+   4o49JkXPcNlYmsiH+oLOj8rHpNyCXB6Iot9itl8nAzjk+i2IM3qnaFHrd
+   wQ1PWLGroqlEr6IgqZeTXcpB7P7XCGe8knGXhml/hCeNDXkiCXiBVt6TK
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="267341196"
+X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
+   d="scan'208";a="267341196"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 09:57:24 -0700
+X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
+   d="scan'208";a="624033752"
+Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.212.49.34]) ([10.212.49.34])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 09:57:20 -0700
+Message-ID: <fccd0dc4-fe00-6f34-0fd3-3cedcbcb8ca3@linux.intel.com>
+Date:   Wed, 11 May 2022 09:57:19 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17edc630ef0.11d8ab06115620.4524266185949873552@zohomail.com>
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH 1/2] PCI: vmd: Assign VMD IRQ domain before enumeration
+Content-Language: en-US
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, maz@kernel.org
+References: <20220502084900.7903-1-nirmal.patel@linux.intel.com>
+ <20220502084900.7903-2-nirmal.patel@linux.intel.com>
+ <Ynt9jJU78JnIiZ7z@lpieralisi>
+From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+In-Reply-To: <Ynt9jJU78JnIiZ7z@lpieralisi>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+On 5/11/2022 2:10 AM, Lorenzo Pieralisi wrote:
+> [Adding Marc, to keep an eye on IRQ domain usage]
+>
+> On Mon, May 02, 2022 at 01:48:59AM -0700, Nirmal Patel wrote:
+>> VMD creates and assigns a separate IRQ domain when MSI-X remapping is
+>> enabled. For example VMD-MSI. But VMD doesn't assign IRQ domain when
+>> MSI-X remapping is disabled resulting child devices getting default
+>> PCI-MSI IRQ domain. Now when interrupt remapping is enabled by
+>> intel-iommu all the PCI devices are assigned INTEL-IR-MSI domain
+>> including VMD endpoints. But devices behind VMD get PCI-MSI IRQ domain
+>> when VMD create a root bus and configures child devices.
+> I would encourage you to rewrite this log, it is unclear - granted,
+> I don't know intel-iommu internals - but IMHO if you explain the
+> issue and the fix thoroughly this could avoid repeating what
+> you have to do in patch(2).
+>
+> Please describe how VMD handles IRQ domains and how you are fixing
+> that.
+>
+> Thanks,
+> Lorenzo
+I will add more information to the commit logs.
 
-On Tue, Feb 08, 2022 at 09:49:46PM -0500, Li Chen wrote:
-> From: Li Chen <lchen@ambarella.com>
-> 
-> Introduce pci_endpoint_epf_transfer_data to simplify
-> read and write operations.
-> 
-> Signed-off-by: Li Chen <lchen@ambarella.com>
-> ---
-> Changes in V2:
-> fix WARNING: line length of 108 exceeds 100 columns
-> #128: FILE: drivers/misc/pci_endpoint_test.c:243:
-> Changes in V3:
-> This patch context doesn't change but resend with my Zoho mail account in that previous
-> company mail will contain un-removeable proprietary messages.
-> Changes in V4:
-> Add "From:" to the first line of the message body.
-> Changes in V5:
-> tabify file
-> replace enum EPF_WRITE/EPF_READ with WRITE/READ from linux/kernel.h
-> get_random_bytes only when WRITE.
-> Changes in V6:
-> remove useless "Date:" and "Subject:" in message body, only preserve "From:" tag. 
-> Changes in V7:
-> use /* */ comments to match the prevailing kernel comment style
-> capitalize "RC" and "EP" since they're not real words.
-> remove tabify in that the original code have no style issue if tab is 8-width.
-> 
->  drivers/misc/pci_endpoint_test.c | 286 ++++++++++++-------------------
->  1 file changed, 106 insertions(+), 180 deletions(-)
+Thanks,
+nirmal
 
-Please review these changes when you can, thanks.
+>> As a result DMAR errors were observed when interrupt remapping was
+>> enabled on Intel Icelake CPUs. For instance:
+>>
+>>   DMAR: DRHD: handling fault status reg 2
+>>   DMAR: [INTR-REMAP] Request device [0xe2:0x00.0] fault index 0xa00 [fault reason 0x25] Blocked a compatibility format interrupt request
+>>
+>> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+>> ---
+>>  drivers/pci/controller/vmd.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+>> index eb05cceab964..5015adc04d19 100644
+>> --- a/drivers/pci/controller/vmd.c
+>> +++ b/drivers/pci/controller/vmd.c
+>> @@ -853,6 +853,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>>  	vmd_attach_resources(vmd);
+>>  	if (vmd->irq_domain)
+>>  		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+>> +	else
+>> +		dev_set_msi_domain(&vmd->bus->dev,
+>> +				   dev_get_msi_domain(&vmd->dev->dev));
+>>  
+>>  	vmd_acpi_begin();
+>>  
+>> -- 
+>> 2.26.2
+>>
 
-Lorenzo
-
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 8f786a225dcf8..30adf0e4c36a0 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -12,6 +12,7 @@
->  #include <linux/io.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
-> +#include <linux/kernel.h>
->  #include <linux/miscdevice.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> @@ -142,6 +143,109 @@ static inline u32 pci_endpoint_test_bar_readl(struct pci_endpoint_test *test,
->  {
->  	return readl(test->bar[bar] + offset);
->  }
-> +static bool pci_endpoint_test_transfer_data(struct pci_endpoint_test *test,
-> +				unsigned long arg, const int operation)
-> +{
-> +	struct pci_endpoint_test_xfer_param param;
-> +	bool ret = false;
-> +	u32 flags = 0;
-> +	bool use_dma;
-> +	void *addr;
-> +	dma_addr_t phys_addr;
-> +	struct pci_dev *pdev = test->pdev;
-> +	struct device *dev = &pdev->dev;
-> +	void *orig_addr;
-> +	dma_addr_t orig_phys_addr;
-> +	size_t offset;
-> +	size_t alignment = test->alignment;
-> +	int irq_type = test->irq_type;
-> +	size_t size;
-> +	int err;
-> +
-> +	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
-> +	if (err != 0) {
-> +		dev_err(dev, "Failed to get transfer param\n");
-> +		return false;
-> +	}
-> +
-> +	size = param.size;
-> +	if (size > SIZE_MAX - alignment)
-> +		goto err;
-> +
-> +	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
-> +	if (use_dma)
-> +		flags |= FLAG_USE_DMA;
-> +
-> +	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
-> +		dev_err(dev, "Invalid IRQ type option\n");
-> +		goto err;
-> +	}
-> +
-> +	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
-> +	if (!orig_addr)
-> +		goto err;
-> +
-> +	if (operation == WRITE)
-> +		get_random_bytes(orig_addr, size + alignment);
-> +
-> +	orig_phys_addr = dma_map_single(dev, orig_addr, size + alignment,
-> +					operation == WRITE ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
-> +	if (dma_mapping_error(dev, orig_phys_addr)) {
-> +		dev_err(dev, "failed to map source buffer address\n");
-> +		goto err_phys_addr;
-> +	}
-> +
-> +	if (alignment && !IS_ALIGNED(orig_phys_addr, alignment)) {
-> +		phys_addr = PTR_ALIGN(orig_phys_addr, alignment);
-> +		offset = phys_addr - orig_phys_addr;
-> +		addr = orig_addr + offset;
-> +	} else {
-> +		phys_addr = orig_phys_addr;
-> +		addr = orig_addr;
-> +	}
-> +
-> +	if (operation == WRITE) {
-> +
-> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_CHECKSUM,
-> +				 crc32_le(~0, addr, size));
-> +
-> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_SRC_ADDR,
-> +								lower_32_bits(phys_addr));
-> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_SRC_ADDR,
-> +								upper_32_bits(phys_addr));
-> +	} else {
-> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_DST_ADDR,
-> +								lower_32_bits(phys_addr));
-> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_DST_ADDR,
-> +								upper_32_bits(phys_addr));
-> +	}
-> +
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
-> +
-> +	/* if we ask RC to write to EP, then EP should do read operation, and vice versa. */
-> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-> +				 operation == WRITE ? COMMAND_READ : COMMAND_WRITE);
-> +
-> +	wait_for_completion(&test->irq_raised);
-> +
-> +	dma_unmap_single(dev, orig_phys_addr, size + alignment,
-> +					 operation == WRITE ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
-> +
-> +	if (operation == WRITE)
-> +		ret = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS) & STATUS_READ_SUCCESS;
-> +	else
-> +		ret = crc32_le(~0, addr, size) ==
-> +			pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CHECKSUM);
-> +
-> +err_phys_addr:
-> +	kfree(orig_addr);
-> +
-> +err:
-> +	return ret;
-> +}
->  
->  static inline void pci_endpoint_test_bar_writel(struct pci_endpoint_test *test,
->  						int bar, u32 offset, u32 value)
-> @@ -473,191 +577,13 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
->  static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
->  				    unsigned long arg)
->  {
-> -	struct pci_endpoint_test_xfer_param param;
-> -	bool ret = false;
-> -	u32 flags = 0;
-> -	bool use_dma;
-> -	u32 reg;
-> -	void *addr;
-> -	dma_addr_t phys_addr;
-> -	struct pci_dev *pdev = test->pdev;
-> -	struct device *dev = &pdev->dev;
-> -	void *orig_addr;
-> -	dma_addr_t orig_phys_addr;
-> -	size_t offset;
-> -	size_t alignment = test->alignment;
-> -	int irq_type = test->irq_type;
-> -	size_t size;
-> -	u32 crc32;
-> -	int err;
-> -
-> -	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
-> -	if (err != 0) {
-> -		dev_err(dev, "Failed to get transfer param\n");
-> -		return false;
-> -	}
-> -
-> -	size = param.size;
-> -	if (size > SIZE_MAX - alignment)
-> -		goto err;
-> -
-> -	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
-> -	if (use_dma)
-> -		flags |= FLAG_USE_DMA;
-> -
-> -	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
-> -		dev_err(dev, "Invalid IRQ type option\n");
-> -		goto err;
-> -	}
-> -
-> -	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
-> -	if (!orig_addr) {
-> -		dev_err(dev, "Failed to allocate address\n");
-> -		ret = false;
-> -		goto err;
-> -	}
-> -
-> -	get_random_bytes(orig_addr, size + alignment);
-> -
-> -	orig_phys_addr = dma_map_single(dev, orig_addr, size + alignment,
-> -					DMA_TO_DEVICE);
-> -	if (dma_mapping_error(dev, orig_phys_addr)) {
-> -		dev_err(dev, "failed to map source buffer address\n");
-> -		ret = false;
-> -		goto err_phys_addr;
-> -	}
-> -
-> -	if (alignment && !IS_ALIGNED(orig_phys_addr, alignment)) {
-> -		phys_addr =  PTR_ALIGN(orig_phys_addr, alignment);
-> -		offset = phys_addr - orig_phys_addr;
-> -		addr = orig_addr + offset;
-> -	} else {
-> -		phys_addr = orig_phys_addr;
-> -		addr = orig_addr;
-> -	}
-> -
-> -	crc32 = crc32_le(~0, addr, size);
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_CHECKSUM,
-> -				 crc32);
-> -
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_SRC_ADDR,
-> -				 lower_32_bits(phys_addr));
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_SRC_ADDR,
-> -				 upper_32_bits(phys_addr));
-> -
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
-> -
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-> -				 COMMAND_READ);
-> -
-> -	wait_for_completion(&test->irq_raised);
-> -
-> -	reg = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
-> -	if (reg & STATUS_READ_SUCCESS)
-> -		ret = true;
-> -
-> -	dma_unmap_single(dev, orig_phys_addr, size + alignment,
-> -			 DMA_TO_DEVICE);
-> -
-> -err_phys_addr:
-> -	kfree(orig_addr);
-> -
-> -err:
-> -	return ret;
-> +	return pci_endpoint_test_transfer_data(test, arg, WRITE);
->  }
->  
->  static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
->  				   unsigned long arg)
->  {
-> -	struct pci_endpoint_test_xfer_param param;
-> -	bool ret = false;
-> -	u32 flags = 0;
-> -	bool use_dma;
-> -	size_t size;
-> -	void *addr;
-> -	dma_addr_t phys_addr;
-> -	struct pci_dev *pdev = test->pdev;
-> -	struct device *dev = &pdev->dev;
-> -	void *orig_addr;
-> -	dma_addr_t orig_phys_addr;
-> -	size_t offset;
-> -	size_t alignment = test->alignment;
-> -	int irq_type = test->irq_type;
-> -	u32 crc32;
-> -	int err;
-> -
-> -	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
-> -	if (err) {
-> -		dev_err(dev, "Failed to get transfer param\n");
-> -		return false;
-> -	}
-> -
-> -	size = param.size;
-> -	if (size > SIZE_MAX - alignment)
-> -		goto err;
-> -
-> -	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
-> -	if (use_dma)
-> -		flags |= FLAG_USE_DMA;
-> -
-> -	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
-> -		dev_err(dev, "Invalid IRQ type option\n");
-> -		goto err;
-> -	}
-> -
-> -	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
-> -	if (!orig_addr) {
-> -		dev_err(dev, "Failed to allocate destination address\n");
-> -		ret = false;
-> -		goto err;
-> -	}
-> -
-> -	orig_phys_addr = dma_map_single(dev, orig_addr, size + alignment,
-> -					DMA_FROM_DEVICE);
-> -	if (dma_mapping_error(dev, orig_phys_addr)) {
-> -		dev_err(dev, "failed to map source buffer address\n");
-> -		ret = false;
-> -		goto err_phys_addr;
-> -	}
-> -
-> -	if (alignment && !IS_ALIGNED(orig_phys_addr, alignment)) {
-> -		phys_addr = PTR_ALIGN(orig_phys_addr, alignment);
-> -		offset = phys_addr - orig_phys_addr;
-> -		addr = orig_addr + offset;
-> -	} else {
-> -		phys_addr = orig_phys_addr;
-> -		addr = orig_addr;
-> -	}
-> -
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_DST_ADDR,
-> -				 lower_32_bits(phys_addr));
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_DST_ADDR,
-> -				 upper_32_bits(phys_addr));
-> -
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
-> -
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
-> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
-> -				 COMMAND_WRITE);
-> -
-> -	wait_for_completion(&test->irq_raised);
-> -
-> -	dma_unmap_single(dev, orig_phys_addr, size + alignment,
-> -			 DMA_FROM_DEVICE);
-> -
-> -	crc32 = crc32_le(~0, addr, size);
-> -	if (crc32 == pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CHECKSUM))
-> -		ret = true;
-> -
-> -err_phys_addr:
-> -	kfree(orig_addr);
-> -err:
-> -	return ret;
-> +	return pci_endpoint_test_transfer_data(test, arg, READ);
->  }
->  
->  static bool pci_endpoint_test_clear_irq(struct pci_endpoint_test *test)
-> -- 
-> 2.34.1
-> 
-> 
