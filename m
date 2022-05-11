@@ -2,46 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 674F9523B18
-	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 19:03:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91C28523B19
+	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 19:03:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235500AbiEKRDo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 13:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35920 "EHLO
+        id S239565AbiEKRDp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 13:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237247AbiEKRDn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 13:03:43 -0400
+        with ESMTP id S237247AbiEKRDo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 13:03:44 -0400
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54471C5DA1
-        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 10:03:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE14C9ED2
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 10:03:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652288622; x=1683824622;
+  t=1652288623; x=1683824623;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=ixyYFVoIHjXjdTXaRRDloaSNaYplZU34cwPaeZ3lhq0=;
-  b=bxDcnJ0CLBU1cXZ6xOlL2F2Tj4CpsQZMeicWU7FLBc1wpUUtq2fPEBsN
-   bNVb2RGXoRME5rMGs6fQxBvWk+ac1WmQtx6Eq49j8rEQ9t+LBeqJSy9Wv
-   uIwymoqAf7Sy5jj6G5/BFXb1+Ux6yqaxK2qAu3zJKKuoxYE2ro9hnRUGB
-   vbfTnc6OPHWcOOC0ZwFvcfDsv6Ld0hwAj++G5kL7BHL1IMdSlpF6cNErU
-   xEPqfKMWOjQJWs4aEFMIfE58zD6alPb6p1zGQc7RYblMs2SQXtpfPMwkw
-   49v4md8UxtpKzN4tTQfY6s/oCxiQArVsOETnry0QRLpwObsUYFXoupT3r
+  bh=gzu1Y4DQFge3Rz3e1+l9bKTSqic9Fb1Uc/g71Fnzx8g=;
+  b=HdRmMylUIvrO0p69e7stJvkOkv8ydDT0D4J6nMuMsWHq9SOITIlMJnll
+   WylZ3dyo2+pSglzF4syOgb5gGzzSA31dxrnGErGvrBAgDAmMKQv826E3L
+   4FRxtqe8v5RfXKW+6E0IhkhZ6OvSPNpd9+/6QM5UBwRcbuAy0QFGFW35J
+   B/Ipd6Xe7iLWO7FCFQNQQdyUBJTD+e4tevkbUVlfCbBwRYEkAxdvhQ6mP
+   L+jLT7zEg9VHJeDLgEogRnFtIX7wRmDuwe9ULIDI/vyCK4vc28HDBLvSn
+   Pzy33v6lBbBAzJivNEljvEJMGmtFbihC9FTKFKSE937ua4XCKXgKe1sYQ
    w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="257304483"
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="257304503"
 X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
-   d="scan'208";a="257304483"
+   d="scan'208";a="257304503"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 10:03:28 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 10:03:31 -0700
 X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
-   d="scan'208";a="542391567"
+   d="scan'208";a="542391592"
 Received: from azvmdlinux1.ch.intel.com ([10.2.230.15])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 10:03:27 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 10:03:31 -0700
 From:   Nirmal Patel <nirmal.patel@linux.intel.com>
 To:     <linux-pci@vger.kernel.org>,
         Nirmal Patel <nirmal.patel@linux.intel.com>
-Subject: [PATCH v2 1/2] PCI: vmd: Assign VMD IRQ domain before enumeration
-Date:   Wed, 11 May 2022 02:57:06 -0700
-Message-Id: <20220511095707.25403-2-nirmal.patel@linux.intel.com>
+Subject: [PATCH v2 2/2] PCI: vmd: Revert 2565e5b69c44 ("PCI: vmd: Do not disable MSI-X remapping if interrupt remapping is enabled by IOMMU.")
+Date:   Wed, 11 May 2022 02:57:07 -0700
+Message-Id: <20220511095707.25403-3-nirmal.patel@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20220511095707.25403-1-nirmal.patel@linux.intel.com>
 References: <20220511095707.25403-1-nirmal.patel@linux.intel.com>
@@ -58,50 +58,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-During the boot process all the PCI devices are assigned default PCI-MSI
-IRQ domain including VMD endpoint devices. If interrupt-remapping is
-enabled by IOMMU, the PCI devices except VMD get new INTEL-IR-MSI IRQ
-domain. And VMD is supposed to create and assign a separate VMD-MSI IRQ
-domain for its child devices in order to support MSI-X remapping
-capabilities.
+Revert 2565e5b69c44 ("PCI: vmd: Do not disable MSI-X remapping if
+interrupt remapping is enabled by IOMMU.")
 
-Now when MSI-X remapping in VMD is disabled in order to improve
-performance, VMD skips VMD-MSI IRQ domain assignment process to its
-child devices. Thus the devices behind VMD get default PCI-MSI IRQ
-domain instead of INTEL-IR-MSI IRQ domain when VMD creates root bus and
-configures child devices.
-
-As a result host OS fails to boot and DMAR errors were observed when
-interrupt remapping was enabled on Intel Icelake CPUs. For instance:
-
-  DMAR: DRHD: handling fault status reg 2
-  DMAR: [INTR-REMAP] Request device [0xe2:0x00.0] fault index 0xa00 [fault reason 0x25] Blocked a compatibility format interrupt request
-
-To fix this issue, dev_msi_info struct in dev struct maintains correct
-value of IRQ domain. VMD will use this information to assign proper IRQ
-domain to its child devices when it doesn't create a separate IRQ domain.
+The commit 2565e5b69c44 was added as a workaround to keep MSI-X
+remapping enabled if IOMMU enables interrupt remapping. VMD would keep
+running in low performance mode. There is no dependency between MSI-X
+remapping by VMD and interrupt remapping by IOMMU.
 
 Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
 ---
-v1->v2: Adding more information to commit log.
+v1->v2: Add more information to the commit log.
 ---
- drivers/pci/controller/vmd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/vmd.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index eb05cceab964..5015adc04d19 100644
+index 5015adc04d19..94a14a3d7e55 100644
 --- a/drivers/pci/controller/vmd.c
 +++ b/drivers/pci/controller/vmd.c
-@@ -853,6 +853,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	vmd_attach_resources(vmd);
- 	if (vmd->irq_domain)
- 		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
-+	else
-+		dev_set_msi_domain(&vmd->bus->dev,
-+				   dev_get_msi_domain(&vmd->dev->dev));
+@@ -6,7 +6,6 @@
  
- 	vmd_acpi_begin();
- 
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+-#include <linux/iommu.h>
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -813,8 +812,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	 * acceptable because the guest is usually CPU-limited and MSI
+ 	 * remapping doesn't become a performance bottleneck.
+ 	 */
+-	if (iommu_capable(vmd->dev->dev.bus, IOMMU_CAP_INTR_REMAP) ||
+-	    !(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
++	if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
+ 	    offset[0] || offset[1]) {
+ 		ret = vmd_alloc_irqs(vmd);
+ 		if (ret)
 -- 
 2.26.2
 
