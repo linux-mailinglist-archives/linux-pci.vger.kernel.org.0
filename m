@@ -2,135 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6B6A5234AC
-	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 15:50:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41CD65234BE
+	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 15:53:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244162AbiEKNuR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 09:50:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
+        id S240455AbiEKNx4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 09:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244142AbiEKNuQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 09:50:16 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1EC2723E29A;
-        Wed, 11 May 2022 06:50:14 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 931D7ED1;
-        Wed, 11 May 2022 06:50:13 -0700 (PDT)
-Received: from lpieralisi (unknown [10.57.1.148])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FF783F66F;
-        Wed, 11 May 2022 06:50:11 -0700 (PDT)
-Date:   Wed, 11 May 2022 14:50:07 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-rockchip@lists.infradead.org, Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-Subject: Re: [PATCH v9 2/5] PCI: rockchip-dwc: Reset core at driver probe
-Message-ID: <Ynu/D4hXTRVy9IBF@lpieralisi>
-References: <20220429123832.2376381-1-pgwipeout@gmail.com>
- <20220429123832.2376381-3-pgwipeout@gmail.com>
+        with ESMTP id S231510AbiEKNxz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 09:53:55 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC1C2C67B
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 06:53:54 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id m190so4158716ybf.4
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 06:53:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EKBDsHZRYlf8FJ7KDE3y9NTurDd/YZ9iYNARovE8bGk=;
+        b=qUPnKVqt3hQXN9yc2X6cSefiSUewR3oJ0bBSN7J35htxxkYxBBZ4qKZ9MWHm4JieOO
+         akOeH7FyP+X2pxTipLoDydecNpskwP+cJvRsFV89R6Yz+VPaT1HmeBmQ/22yh2BbDXAu
+         EdilNg5CBTD3IKrQlfl97rWmnN4XKp/+R/X2k2hllzOmzr0EGl3u4k4H4z0tw2HfWejj
+         fFWg5j89aWwuVXF2N1eAya74m3uuSOeTSIKUDURGSCeY/GsHZhLJfWJuHH1xwjYXGlH8
+         IHZ8mtGVQ2RrQMt5QGKvV+ZHvPkFdsC4IWyL1RBmiRPypHt7OtL4iMXlHdjwrKdFk+4A
+         K/uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EKBDsHZRYlf8FJ7KDE3y9NTurDd/YZ9iYNARovE8bGk=;
+        b=uqNK2nR5F1qW6EtJIsAXxqmwX7tQ5IRy6Vc4pv9Euc2fZUQnQsT2fQSqpzjRS8b04h
+         npgZcTD1HkeSpBj1rF2o5zc5uMoDsiAKYO6tGhYwtp0vGpQjgXjEUL2hKdpsO4ixxuTG
+         aR4JTO15OQVKeb5ay8nCCWtFGIORkSaZ1nPixhY/RQkCl3uqKY3CUOYspS9yO6zIUb/j
+         jGCh2WZUwXDnkvEayYtEHIZPEjTZ5D1uZ7fipPL1PiHUJS9xLMVYqL5gMxnAxQFeSU4t
+         qOhf1N3ghD4P/OFi8GlouShRYeuejIIDg1qmOxUKJuy0Pfu4p/X6flcVOcNtiDR3mrq1
+         410w==
+X-Gm-Message-State: AOAM532NnILW6fNV3OIhYuGHKoloBxSM4mGjKp2XX6Y1VYe8hMk53Lh6
+        1x2UvNhUpjYsm/2j0Fk1zPeHFxoW3gVjQ2nDhG8Qt/9jSQc=
+X-Google-Smtp-Source: ABdhPJy4C8oSK2D5rm3zTpwR4XoY6AS+wh6T5Uf7ex4DN+vN2dIZy/VxRWvdleAWC0WsC5BlgDFjQQxUSIt85svwTYg=
+X-Received: by 2002:a25:c206:0:b0:64a:7dfe:e714 with SMTP id
+ s6-20020a25c206000000b0064a7dfee714mr22299152ybf.92.1652277233933; Wed, 11
+ May 2022 06:53:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220429123832.2376381-3-pgwipeout@gmail.com>
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220506152107.1527552-1-dmitry.baryshkov@linaro.org>
+ <YnqXxNxFhf/odyka@robh.at.kernel.org> <CAA8EJpriMcP4uQ3fjyiCKY+uc82ctXe2VrjO1psPDcp-P++Nhw@mail.gmail.com>
+ <Ynu1p1hzqHJNpSp3@lpieralisi>
+In-Reply-To: <Ynu1p1hzqHJNpSp3@lpieralisi>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Wed, 11 May 2022 16:53:43 +0300
+Message-ID: <CAA8EJpoQ0TkY9zVzhB00f9iYKquPauF2JeapSECaPp3=eXWjsw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/8] dt-bindings: YAMLify pci/qcom,pcie schema
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 08:38:28AM -0400, Peter Geis wrote:
-> The PCIe controller is in an unknown state at driver probe. This can
-> lead to undesireable effects when the driver attempts to configure the
-> controller.
-> 
-> Prevent issues in the future by resetting the core during probe.
-> 
-> Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-> Tested-by: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 23 ++++++++-----------
->  1 file changed, 10 insertions(+), 13 deletions(-)
+On Wed, 11 May 2022 at 16:10, Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Wed, May 11, 2022 at 01:13:28PM +0300, Dmitry Baryshkov wrote:
+> > On Tue, 10 May 2022 at 19:50, Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, May 06, 2022 at 06:20:59PM +0300, Dmitry Baryshkov wrote:
+> > > > Convert pci/qcom,pcie schema to YAML description. The first patch
+> > > > introduces several warnings which are fixed by the other patches in the
+> > > > series.
+> > > >
+> > > > Note regarding the snps,dw-pcie compatibility. The Qualcomm PCIe
+> > > > controller uses Synopsys PCIe IP core. However it is not just fused to
+> > > > the address space. Accessing PCIe registers requires several clocks and
+> > > > regulators to be powered up. Thus it can be assumed that the qcom,pcie
+> > > > bindings are not fully compatible with the snps,dw-pcie schema.
+> > > >
+> > > > Changes since v5:
+> > > >  - s/stance/stanza (pointed out by Bjorn Helgaas)
+> > > >
+> > > > Changes since v4:
+> > > >  - Change subjects to follow convention (suggested by Bjorn Helgaas)
+> > > >
+> > > > Changes since v3:
+> > > >  - Rebase on linux-next to include sm8150 patches
+> > > >
+> > > > Changes since v2 (still kudos to Krzyshtof):
+> > > >  - Readded reg-names conversion patch
+> > > >  - Mention wake-gpio update in the commit message
+> > > >  - Remove extra quotes in the schema
+> > > >
+> > > > Changes since v1 (all kudos to Krzyshtof):
+> > > >  - Dropped the reg-names patch. It will be handled separately
+> > > >  - Squashed the snps,dw-pcie removal (from schema) into the first patch
+> > > >  - Replaced deprecated perst-gpio and wake-gpio with perst-gpios and
+> > > >    wake-gpios in the examples and in DT files
+> > > >  - Moved common clocks/clock-names, resets/reset-names and power-domains
+> > > >    properties to the top level of the schema, leaving only platform
+> > > >    specifics in the conditional branches
+> > > >  - Dropped iommu-map/iommu-map-mask for now
+> > > >  - Added (missed) interrupt-cells, clocks, clock-names, resets,
+> > > >    reset-names properties to the required list (resets/reset-names are
+> > > >    removed in the next patch, as they are not used on msm8996)
+> > > >  - Fixed IRQ flags in the examples
+> > > >  - Merged apq8064/ipq8064 into the single condition statement
+> > > >  - Added extra empty lines
+> > > >
+> > > > Dmitry Baryshkov (8):
+> > > >   dt-bindings: PCI: qcom: Convert to YAML
+> > > >   dt-bindings: PCI: qcom: Do not require resets on msm8996 platforms
+> > > >   dt-bindings: PCI: qcom: Specify reg-names explicitly
+> > > >   dt-bindings: PCI: qcom: Add schema for sc7280 chipset
+> > > >   arm64: dts: qcom: stop using snps,dw-pcie falback
+> > > >   arm: dts: qcom: stop using snps,dw-pcie falback
+> > > >   arm: dts: qcom-*: replace deprecated perst-gpio with perst-gpios
+> > > >   arm64: dts: qcom: replace deprecated perst-gpio with perst-gpios
+> > > >
+> > > >  .../devicetree/bindings/pci/qcom,pcie.txt     | 398 ----------
+> > > >  .../devicetree/bindings/pci/qcom,pcie.yaml    | 714 ++++++++++++++++++
+> > >
+> > > What tree do these apply to because they don't apply to rc1. I'm
+> > > assuming the PCI tree and Lorenzo should take them.
+> >
+> > The series depends on the patch in Lorenzo's tree (sm8150 bindings),
+> > so I'd assume it would be natural to merge these patches through his
+> > tree too.
+>
+> I can take the DT bindings but the dts updates I'd prefer if they
+> went via platform trees. Is that OK ?
 
-I fear that the controller reset behaviour is bootloader/firmware
-dependent.
+Yes, that's fine with me. I think Bjorn has sent 5.19 pull request
+already, I'll track them getting merged into 5.19 or 5.20.
 
-Are we sure we are not triggering any regressions by resetting the
-controller in the middle of probe (aka is the driver implicitly
-relying on existing behaviour on systems that are not the ones
-you are testing on) ?
+>
+> Thanks,
+> Lorenzo
 
-Just asking, the rockchip maintainers should be able to answer this
-question.
 
-Thanks,
-Lorenzo
 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index c9b341e55cbb..faedbd6ebc20 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -152,6 +152,11 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
->  	if (IS_ERR(rockchip->rst_gpio))
->  		return PTR_ERR(rockchip->rst_gpio);
->  
-> +	rockchip->rst = devm_reset_control_array_get_exclusive(&pdev->dev);
-> +	if (IS_ERR(rockchip->rst))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
-> +				     "failed to get reset lines\n");
-> +
->  	return 0;
->  }
->  
-> @@ -182,18 +187,6 @@ static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
->  	phy_power_off(rockchip->phy);
->  }
->  
-> -static int rockchip_pcie_reset_control_release(struct rockchip_pcie *rockchip)
-> -{
-> -	struct device *dev = rockchip->pci.dev;
-> -
-> -	rockchip->rst = devm_reset_control_array_get_exclusive(dev);
-> -	if (IS_ERR(rockchip->rst))
-> -		return dev_err_probe(dev, PTR_ERR(rockchip->rst),
-> -				     "failed to get reset lines\n");
-> -
-> -	return reset_control_deassert(rockchip->rst);
-> -}
-> -
->  static const struct dw_pcie_ops dw_pcie_ops = {
->  	.link_up = rockchip_pcie_link_up,
->  	.start_link = rockchip_pcie_start_link,
-> @@ -222,6 +215,10 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	ret = reset_control_assert(rockchip->rst);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* DON'T MOVE ME: must be enable before PHY init */
->  	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
->  	if (IS_ERR(rockchip->vpcie3v3)) {
-> @@ -241,7 +238,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto disable_regulator;
->  
-> -	ret = rockchip_pcie_reset_control_release(rockchip);
-> +	ret = reset_control_deassert(rockchip->rst);
->  	if (ret)
->  		goto deinit_phy;
->  
-> -- 
-> 2.25.1
-> 
+-- 
+With best wishes
+Dmitry
