@@ -2,113 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B04C523F19
-	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 22:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B167D523F29
+	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 23:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347905AbiEKUyZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 16:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43168 "EHLO
+        id S237461AbiEKVCX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 17:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347892AbiEKUyX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 16:54:23 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABCD31C12F5
-        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 13:54:22 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id p12so3042048pfn.0
-        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 13:54:22 -0700 (PDT)
+        with ESMTP id S238891AbiEKVCV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 17:02:21 -0400
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 383E06161E
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 14:02:20 -0700 (PDT)
+Received: by mail-io1-xd31.google.com with SMTP id s23so3334666iog.13
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 14:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=QV6Lz2aGs3anXJW4RYiy6Oo8doNy37ZheOo8iqMeyZc=;
-        b=iA99rpcmBzeEFSjsItohY9n35a4ST68mji3JjLkvtvtg89fRWoyXOiMsMpz5gSC4kx
-         x1ghp/xOg0FCXeLNOhGt7aSGYbhxwptIq2IeTWDN2EzDiJ7W4hKdsh3oRc/ULM5rSfWu
-         Zyo+/1u6z+YD+rNsuDe+kTrAmVgIZHu8DDXz1ZxoI91iqxBs71HZRHxxHnYiZPjy4Yl0
-         rlOD/qDIa+6SMUbmiBacTswBVDTVbU4jmeKDUjH5P4u+u4jSzum1wxUgZSESlqC55FAR
-         Q/kDi6zuwb48bfUHblH2aGPxoCgoGtmMB3SasPrZggdMFsVPdP/GGLIrEnmBRjgshEdH
-         DSGQ==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t9KxxV9NPaarLjUn6WnSeaJ1unQjijG7pUlU5QRc31c=;
+        b=H+FMOTettN+fuJtHKZqvo9EElI2NN1SPK4306s/OFHXEpdYb2w8lMqMB9SYcHYzNYK
+         fPb27VOOqwfpDDqp5639NElcCyMRqOxbTyvlNIvswSaV2AJihPzGq1xo3mRDRoBbdY9Z
+         ieamvJCGxKnz7laf6bu3Els3to1eswUjqz7BPVzm8ZEFjlu+mFmArNAeeZ61qgI+39xf
+         jp6z/bpGJfGdnhddB5JrTTHjNlonTnbTOU1XAcwGupZCq+QMV5rdjheyamVoOumzLFj6
+         uChw2lg4VDkyw1fMCaQlWP3tiyel2InlZRfoUFjbHjqsH2+sUFi5PugWTKBosWZmIjeT
+         dhLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=QV6Lz2aGs3anXJW4RYiy6Oo8doNy37ZheOo8iqMeyZc=;
-        b=vccEFqRrjj+0PksQ68AqSZoHMgoFCX7pguPF8rHckfET3NTTWFbrdDfloArFZlrpww
-         6dWwRzOIEJvDdINaqE/Y+SXEyyqkj5udxtiup0+gESFW07tpYyh1rzo4fskveuMF0yMU
-         jhkt4StWJXhOBd+fFFeOON5DnjVtgxA76/ZdNz71OnNXb8nhMbOZCmqhuwSK1JbzyYGL
-         GmZaDtCjV0NGaLaXOOKVQpxp1WcMBsBpGsfeuN/oKPCJYlR9dOeL8VeqR4Xc6Pc1uJ0P
-         SE4lCcsvjeWH9pxNyUVCvVJbHL7duF3rREcMe2HLj2g7d1HaKfjByCuhm5vsXHmu+tmI
-         2PVQ==
-X-Gm-Message-State: AOAM531ooTNVZ2W/i8xR9elh8JF0XFKwpZat+doBhmjtLhvE4NIwebQq
-        P4de3Mz16TlAcenHROKAy8M=
-X-Google-Smtp-Source: ABdhPJzr8f9t0y8LGvXFf9E1amAAkPWPQmK7W4sPkYo8GzGbDOSDYoPTWukDpxE5xoYHHmtYoOcBjw==
-X-Received: by 2002:a65:6954:0:b0:3c6:42cd:bd38 with SMTP id w20-20020a656954000000b003c642cdbd38mr21863158pgq.331.1652302462089;
-        Wed, 11 May 2022 13:54:22 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id q5-20020a170903204500b0015e8ddeac5dsm2240770pla.252.2022.05.11.13.54.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 May 2022 13:54:21 -0700 (PDT)
-Message-ID: <aaa4b4d5-486d-869c-10b7-f88c87c450fd@gmail.com>
-Date:   Wed, 11 May 2022 13:54:16 -0700
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t9KxxV9NPaarLjUn6WnSeaJ1unQjijG7pUlU5QRc31c=;
+        b=aHYfZYm3amz5GrOATqr+URPpadB5P91UE/et+5Ad5UH7df/iL1Sj/16dli52zgFO8B
+         F9z99+NIWnvxhXqiqTFid9fbOxvCW2Fe+HoFoe+GXosw+2n/oDBlcskF8xI+QVuXHpJF
+         uhgSVIVeLnvaRT5Pe8H36Q5nvvwx8tBzNiJFxz3DUGmZl6UW+ExdsZbMmn2kXHuwPmhI
+         r3CituSfS2cl6PIKK7uEjgJD/I6nWrj8V0yWEOMo1adfR+WUdKQurEMXvEoZYy7hAjKW
+         YTWms3C6hgbDmd4yqdjhP4Bfp5oLaC7xBAhuD1jU4394Zp77SdRSfcQVy0YY/B20TtHN
+         X3ug==
+X-Gm-Message-State: AOAM533/BpZk/gn2iCE2Kn2IGsrRtfL9C9Z7fpT/QuMCf1fmq/0QZx6s
+        ch13ccqF0KSWfRdxJ5ECidOVADkgUs54XCbgLfN2ng==
+X-Google-Smtp-Source: ABdhPJwmnOOxYv5I7CBMV+/A8hb0Ch9gPYppkXgsf55Nobqofhk/HsYU3WHgCMZG16BXcmY0HTddv62MCMTE6GPSIAQ=
+X-Received: by 2002:a05:6638:34a2:b0:32b:7d4f:8932 with SMTP id
+ t34-20020a05663834a200b0032b7d4f8932mr13504775jal.317.1652302939471; Wed, 11
+ May 2022 14:02:19 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH 0/4] PCI: brcmstb: Revert subdevice regulator stuff
-Content-Language: en-US
-To:     Cyril Brulebois <kibi@debian.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        regressions@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
-References: <20220511201856.808690-1-helgaas@kernel.org>
- <f9be7d36-d670-ef6c-8877-5b38e828e97f@gmail.com>
- <20220511203946.nr2qqzjlintrgxmi@mraw.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20220511203946.nr2qqzjlintrgxmi@mraw.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220412224348.1038613-1-tansuresh@google.com>
+ <20220412224348.1038613-2-tansuresh@google.com> <CAJZ5v0ivNq3aYCEcxPYMosLJCAyWiAnucwOCmRBzkM=sbyPWgQ@mail.gmail.com>
+ <CALVARr6v5hcY0Vcf1izPUX-tXNJyyNXBMANbKX4CW9wfRf-pYQ@mail.gmail.com>
+ <YmzqrqfVLQ9/4KXp@kroah.com> <CALVARr50MWexNpCf_PoZ4-pdnexiZiibz7Nd0PH+b-EVnBUN6w@mail.gmail.com>
+In-Reply-To: <CALVARr50MWexNpCf_PoZ4-pdnexiZiibz7Nd0PH+b-EVnBUN6w@mail.gmail.com>
+From:   Tanjore Suresh <tansuresh@google.com>
+Date:   Wed, 11 May 2022 14:02:08 -0700
+Message-ID: <CALVARr71u8VD0+zaWbm=6A-1_6gO=bYUm7OM4K5b6kOVz09XOA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] driver core: Support asynchronous driver shutdown
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/11/22 13:39, Cyril Brulebois wrote:
-> Florian Fainelli <f.fainelli@gmail.com> (2022-05-11):
->> How about we get a chance to fix this? Where, when and how was this even
->> reported?
-> 
-> I started downstream:
->    https://bugs.debian.org/1010365
-> 
-> did some more debugging and moved upstream (the link is mentioned in
-> each commit message) roughly 10 days ago:
->    https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> 
-> As I wrote in response to Thorsten Leemhuis (regressions@), who looped
-> in a bunch of people:
-> 
->     I had spent so much time bisecting that issue that I concentrated on
->     trying to summarize it properly in Bugzilla, failing to check
->     reporting guidelines and best practices (I even missed the
->     Regression: yes flag in my initial submission).
-> 
-> Again, sorry for failing to notify everyone in the first place, I tried
-> to have the contents of the report squared away.
-> 
-> That being said, as mentioned on regressions@ & linux-pci@, I'm happy to
-> test any attempts at fixing the issue, instead of a full-on revert. I'll
-> also try to track mainline more closely, so that such obvious issues
-> don't go unnoticed for ~1.5 release cycles.
+Greg
 
-No worries, I don't have a CM4 board at the moment but will try to order 
-one so we can get to the bottom of this quicker.
--- 
-Florian
+On Mon, May 2, 2022 at 12:13 PM Tanjore Suresh <tansuresh@google.com> wrote:
+>
+> On Sat, Apr 30, 2022 at 12:52 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > A: http://en.wikipedia.org/wiki/Top_post
+> > Q: Were do I find info about this thing called top-posting?
+> > A: Because it messes up the order in which people normally read text.
+> > Q: Why is top-posting such a bad thing?
+> > A: Top-posting.
+> > Q: What is the most annoying thing in e-mail?
+> >
+> > A: No.
+> > Q: Should I include quotations after my reply?
+> >
+> > http://daringfireball.net/2007/07/on_top
+> >
+> > On Fri, Apr 29, 2022 at 11:03:07AM -0700, Tanjore Suresh wrote:
+> > > Rafael,
+> > >
+> > > That is a good observation, however, many of the use cases in data
+> > > centers (deployment of devices in data centers) do not exploit device
+> > > power management. Therefore, I'm not sure that is the right way to
+> > > design this.
+> >
+> > Yes it is, enable device power management and use that interface please.
+> > Devices in data centers should of course be doing the same thing as
+> > everyone else, as it actually saves real money in power costs.  To not
+> > do so is very odd.
+> >
+>
+> I guess we are intermixing the  terminology of device power management
+> with shutdown.
+> My second, third reasoning in my previous e-mail, thought it brings
+> out that difference. Maybe not.
+> I will try one more time, my thought process on this one.
+>
+> This patch is only for shutdown. The shutdown can be done in a system
+> in various flavors,
+> (this may include a power being pulled from the system components when
+> all the devices
+> are quiescent and it can also be soft shutdown, where power is not
+> removed from the system, but system
+> could be attempting a reboot)
+>
+> The device power management allows the device to bring down any
+> devices that may be idle to various power states that
+> device may support in a selective manner & based on the transition
+> allowed by the device. Such a transition initiated by
+> the system can be achieved using the 'dpm' interface for runtime power
+> management (more for extending laptop battery life).
+> It can also be exploited for system sleep models (suspend and resume -
+> where state is preserved and restarted from where it left off
+> --> More applicable for laptops/desktops). That does not mean data
+> center devices cannot exploit, but they worry about slight latency
+> variation in any
+> I/O initiated to any device. Such power management could introduce
+> more latency when it transitions from one state to another.
+> Therefore, the use case is more apt for Laptops, in certain cases
+> desktops in my opinion or understanding.
+>
+> The shutdown entry point has been traditionally different and the
+> semantics is that the whole system is going down to a
+> quiescent state and power may be pulled or may not be, IMO, i am
+> seeing both are independent requirements, in my view.
+> Let me know if I am mistaken. I am not sure why we should break the
+> shutdown semantics as understood by driver developers and
+> overload it with dpm requirements?
+>
+
+I have not seen additional comments, I request your help
+in moving this further, please. If i have missed something,
+Please let me know.
+
+Thanks
+sureshtk
+
+
+
+> Thanks
+> sureshtk
+>
+>
+> > thanks,
+> >
+> > greg k-h
