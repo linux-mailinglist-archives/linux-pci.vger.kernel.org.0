@@ -2,295 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E493524106
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 01:27:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 641E6524108
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 01:28:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349297AbiEKX1k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 19:27:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
+        id S1349308AbiEKX2C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 19:28:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347660AbiEKX1e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 19:27:34 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39D8692A5
-        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 16:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652311653; x=1683847653;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=1u/OieTs7o6idhQjyLMTZY6k3oNV8yXPSQyJqYdByC0=;
-  b=RDmnhlJL5D1zef6K2Q4G+ONEYhVEsgyjmAz3RMIKSxBTfvlA9ZbmqWZj
-   GlNOFHsLqxVcysQLkIsWBVON5Xr0/Z/XKUJ9g33wM4D1vcxvqBG5HYoAX
-   FSMA4isbyZ1mya0COSlFoN7VVyK11KCW87XcdfLfD+s9zKm/nDHq9c8IF
-   8E6TyK9Kna0cY2r+eMqmLgKG1AI7BlgpFrBaTICZS4OMxlKzhxuwC0ymj
-   E66aoetJnnEtW7F/o3QNFDfhIMbXsZw5hZjvN60vIwiKP+VSVqNg4nfcB
-   5J7Sa9viqpzfU64t90sBisRQ3nIAd4SMqOyTmxj0tX/A0j2mOv81IQ9vy
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="295084686"
-X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="295084686"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 16:27:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="553531812"
-Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 11 May 2022 16:27:31 -0700
-Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1novju-000Jg6-JL;
-        Wed, 11 May 2022 23:27:30 +0000
-Date:   Thu, 12 May 2022 07:27:07 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [lpieralisi-pci:pci/cadence 2/2]
- drivers/pci/controller/cadence/pci-j721e.c:408:7: error: no member named
- 'quirk_disable_flr' in 'struct cdns_pcie_ep'
-Message-ID: <202205120700.X76G7aC2-lkp@intel.com>
+        with ESMTP id S245183AbiEKX2B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 19:28:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C67BE694AB;
+        Wed, 11 May 2022 16:28:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6120261DC9;
+        Wed, 11 May 2022 23:28:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 751F9C340EE;
+        Wed, 11 May 2022 23:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652311679;
+        bh=siF8PIsP3XHsVSZH5Wv97Tl+fZ+3A6Kd5SrYh1Feyp8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cmdoL7mS/UXMhq4bFqDfAewpfd7ifK2Y83cZJgqQAb5UvtYPro4j5Lf4DTm09oqMH
+         5Tivg2wc2r6fMg7SSjY5/eHYp/DhPkwbtcFBoM9OPWI5jS4wRAgjt0n5CduKdlIsml
+         RgCP7NLJCJZlQ4o5Yc9/2tpjejnHsv3jTRn2sG6sFm78MGBncAjhNFoHSha+Lr4qlR
+         6FJ4c0OsGA9yowCGZzj9mKDLvuuK52Vx00IdduEhyFi+DgzqNY6FYEQMIZZVszJy2r
+         c6h5iC2Zn9OB2DofxQiphWhzyBJSO4J6QFe8OY55YeLeK71aMUSIDEByxgHMOoCdj/
+         jNDlLzEdn3/bQ==
+Date:   Wed, 11 May 2022 18:27:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Oliver OHalloran <oohall@gmail.com>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI/AER: Handle Multi UnCorrectable/Correctable
+ errors properly
+Message-ID: <20220511232757.GA829078@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20220418150237.1021519-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/cadence
-head:   d3dbd4d862f46ae8f3f3c9e9284ba357e5891e46
-commit: d3dbd4d862f46ae8f3f3c9e9284ba357e5891e46 [2/2] PCI: cadence: Clear FLR in device capabilities register
-config: x86_64-randconfig-a002-20220509 (https://download.01.org/0day-ci/archive/20220512/202205120700.X76G7aC2-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 18dd123c56754edf62c7042dcf23185c3727610f)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/commit/?id=d3dbd4d862f46ae8f3f3c9e9284ba357e5891e46
-        git remote add lpieralisi-pci https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
-        git fetch --no-tags lpieralisi-pci pci/cadence
-        git checkout d3dbd4d862f46ae8f3f3c9e9284ba357e5891e46
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
+On Mon, Apr 18, 2022 at 03:02:37PM +0000, Kuppuswamy Sathyanarayanan wrote:
+> Currently the aer_irq() handler returns IRQ_NONE for cases without bits
+> PCI_ERR_ROOT_UNCOR_RCV or PCI_ERR_ROOT_COR_RCV are set. But this
+> assumption is incorrect.
+> 
+> Consider a scenario where aer_irq() is triggered for a correctable
+> error, and while we process the error and before we clear the error
+> status in "Root Error Status" register, if the same kind of error
+> is triggered again, since aer_irq() only clears events it saw, the
+> multi-bit error is left in tact. This will cause the interrupt to fire
+> again, resulting in entering aer_irq() with just the multi-bit error
+> logged in the "Root Error Status" register.
+> 
+> Repeated AER recovery test has revealed this condition does happen
+> and this prevents any new interrupt from being triggered. Allow to
+> process interrupt even if only multi-correctable (BIT 1) or
+> multi-uncorrectable bit (BIT 3) is set.
+> 
+> Also note that, for cases with only multi-bit error is set, since this
+> is not the first occurrence of the error, PCI_ERR_ROOT_ERR_SRC may have
+> zero or some junk value. So we cannot cleanly process this error
+> information using aer_isr_one_error(). All we are attempting with this
+> fix is to make sure error interrupt processing can continue in this
+> scenario.
+> 
+> This error can be reproduced by making following changes to the
+> aer_irq() function and by executing the given test commands.
+> 
+>  static irqreturn_t aer_irq(int irq, void *context)
+>          struct aer_err_source e_src = {};
+> 
+>          pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS,
+> 				&e_src.status);
+>  +       pci_dbg(pdev->port, "Root Error Status: %04x\n",
+>  +		e_src.status);
+>          if (!(e_src.status & AER_ERR_STATUS_MASK))
+>                  return IRQ_NONE;
+> 
+>  +       mdelay(5000);
+> 
+>  # Prep injection data for a correctable error.
+>  $ cd /sys/kernel/debug/apei/einj
+>  $ echo 0x00000040 > error_type
+>  $ echo 0x4 > flags
+>  $ echo 0x891000 > param4
+> 
+>  # Root Error Status is initially clear
+>  $ setpci -s <Dev ID> ECAP0001+0x30.w
+>  0000
+> 
+>  # Inject one error
+>  $ echo 1 > error_inject
+> 
+>  # Interrupt received
+>  pcieport <Dev ID>: AER: Root Error Status 0001
+> 
+>  # Inject another error (within 5 seconds)
+>  $ echo 1 > error_inject
+> 
+>  # You will get a new IRQ with only multiple ERR_COR bit set
+>  pcieport <Dev ID>: AER: Root Error Status 0002
+> 
+> Currently, the above issue has been only reproduced in the ICL server
+> platform.
+> 
+> [Eric: proposed reproducing steps]
+> Fixes: 4696b828ca37 ("PCI/AER: Hoist aerdrv.c, aer_inject.c up to drivers/pci/pcie/")
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+4696b828ca37 only *moves* drivers/pci/pcie/aer/aerdrv.c to
+drivers/pci/pcie/aer.c, so I don't think it's related.
 
-All errors (new ones prefixed by >>):
+I think the actual change of interest is e167bfcaa4cd ("PCI: aerdrv:
+remove magical ROOT_ERR_STATUS_MASKS") [1].  It looks like we did
+exactly what you propose before that commit.
 
->> drivers/pci/controller/cadence/pci-j721e.c:408:7: error: no member named 'quirk_disable_flr' in 'struct cdns_pcie_ep'
-                   ep->quirk_disable_flr = data->quirk_disable_flr;
-                   ~~  ^
->> drivers/pci/controller/cadence/pci-j721e.c:408:33: error: no member named 'quirk_disable_flr' in 'struct j721e_pcie_data'
-                   ep->quirk_disable_flr = data->quirk_disable_flr;
-                                           ~~~~  ^
-   2 errors generated.
+I can update this unless you disagree.
 
+[1] https://git.kernel.org/linus/e167bfcaa4cd
 
-vim +408 drivers/pci/controller/cadence/pci-j721e.c
-
-   350	
-   351	static int j721e_pcie_probe(struct platform_device *pdev)
-   352	{
-   353		struct device *dev = &pdev->dev;
-   354		struct device_node *node = dev->of_node;
-   355		struct pci_host_bridge *bridge;
-   356		const struct j721e_pcie_data *data;
-   357		struct cdns_pcie *cdns_pcie;
-   358		struct j721e_pcie *pcie;
-   359		struct cdns_pcie_rc *rc = NULL;
-   360		struct cdns_pcie_ep *ep = NULL;
-   361		struct gpio_desc *gpiod;
-   362		void __iomem *base;
-   363		struct clk *clk;
-   364		u32 num_lanes;
-   365		u32 mode;
-   366		int ret;
-   367		int irq;
-   368	
-   369		data = of_device_get_match_data(dev);
-   370		if (!data)
-   371			return -EINVAL;
-   372	
-   373		mode = (u32)data->mode;
-   374	
-   375		pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-   376		if (!pcie)
-   377			return -ENOMEM;
-   378	
-   379		switch (mode) {
-   380		case PCI_MODE_RC:
-   381			if (!IS_ENABLED(CONFIG_PCIE_CADENCE_HOST))
-   382				return -ENODEV;
-   383	
-   384			bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
-   385			if (!bridge)
-   386				return -ENOMEM;
-   387	
-   388			if (!data->byte_access_allowed)
-   389				bridge->ops = &cdns_ti_pcie_host_ops;
-   390			rc = pci_host_bridge_priv(bridge);
-   391			rc->quirk_retrain_flag = data->quirk_retrain_flag;
-   392			rc->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
-   393	
-   394			cdns_pcie = &rc->pcie;
-   395			cdns_pcie->dev = dev;
-   396			cdns_pcie->ops = &j721e_pcie_ops;
-   397			pcie->cdns_pcie = cdns_pcie;
-   398			break;
-   399		case PCI_MODE_EP:
-   400			if (!IS_ENABLED(CONFIG_PCIE_CADENCE_EP))
-   401				return -ENODEV;
-   402	
-   403			ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
-   404			if (!ep)
-   405				return -ENOMEM;
-   406	
-   407			ep->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
- > 408			ep->quirk_disable_flr = data->quirk_disable_flr;
-   409	
-   410			cdns_pcie = &ep->pcie;
-   411			cdns_pcie->dev = dev;
-   412			cdns_pcie->ops = &j721e_pcie_ops;
-   413			pcie->cdns_pcie = cdns_pcie;
-   414			break;
-   415		default:
-   416			dev_err(dev, "INVALID device type %d\n", mode);
-   417			return 0;
-   418		}
-   419	
-   420		pcie->mode = mode;
-   421		pcie->linkdown_irq_regfield = data->linkdown_irq_regfield;
-   422	
-   423		base = devm_platform_ioremap_resource_byname(pdev, "intd_cfg");
-   424		if (IS_ERR(base))
-   425			return PTR_ERR(base);
-   426		pcie->intd_cfg_base = base;
-   427	
-   428		base = devm_platform_ioremap_resource_byname(pdev, "user_cfg");
-   429		if (IS_ERR(base))
-   430			return PTR_ERR(base);
-   431		pcie->user_cfg_base = base;
-   432	
-   433		ret = of_property_read_u32(node, "num-lanes", &num_lanes);
-   434		if (ret || num_lanes > MAX_LANES)
-   435			num_lanes = 1;
-   436		pcie->num_lanes = num_lanes;
-   437	
-   438		if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48)))
-   439			return -EINVAL;
-   440	
-   441		irq = platform_get_irq_byname(pdev, "link_state");
-   442		if (irq < 0)
-   443			return irq;
-   444	
-   445		dev_set_drvdata(dev, pcie);
-   446		pm_runtime_enable(dev);
-   447		ret = pm_runtime_get_sync(dev);
-   448		if (ret < 0) {
-   449			dev_err(dev, "pm_runtime_get_sync failed\n");
-   450			goto err_get_sync;
-   451		}
-   452	
-   453		ret = j721e_pcie_ctrl_init(pcie);
-   454		if (ret < 0) {
-   455			dev_err(dev, "pm_runtime_get_sync failed\n");
-   456			goto err_get_sync;
-   457		}
-   458	
-   459		ret = devm_request_irq(dev, irq, j721e_pcie_link_irq_handler, 0,
-   460				       "j721e-pcie-link-down-irq", pcie);
-   461		if (ret < 0) {
-   462			dev_err(dev, "failed to request link state IRQ %d\n", irq);
-   463			goto err_get_sync;
-   464		}
-   465	
-   466		j721e_pcie_config_link_irq(pcie);
-   467	
-   468		switch (mode) {
-   469		case PCI_MODE_RC:
-   470			gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-   471			if (IS_ERR(gpiod)) {
-   472				ret = PTR_ERR(gpiod);
-   473				if (ret != -EPROBE_DEFER)
-   474					dev_err(dev, "Failed to get reset GPIO\n");
-   475				goto err_get_sync;
-   476			}
-   477	
-   478			ret = cdns_pcie_init_phy(dev, cdns_pcie);
-   479			if (ret) {
-   480				dev_err(dev, "Failed to init phy\n");
-   481				goto err_get_sync;
-   482			}
-   483	
-   484			clk = devm_clk_get_optional(dev, "pcie_refclk");
-   485			if (IS_ERR(clk)) {
-   486				ret = PTR_ERR(clk);
-   487				dev_err(dev, "failed to get pcie_refclk\n");
-   488				goto err_pcie_setup;
-   489			}
-   490	
-   491			ret = clk_prepare_enable(clk);
-   492			if (ret) {
-   493				dev_err(dev, "failed to enable pcie_refclk\n");
-   494				goto err_pcie_setup;
-   495			}
-   496			pcie->refclk = clk;
-   497	
-   498			/*
-   499			 * "Power Sequencing and Reset Signal Timings" table in
-   500			 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-   501			 * indicates PERST# should be deasserted after minimum of 100us
-   502			 * once REFCLK is stable. The REFCLK to the connector in RC
-   503			 * mode is selected while enabling the PHY. So deassert PERST#
-   504			 * after 100 us.
-   505			 */
-   506			if (gpiod) {
-   507				usleep_range(100, 200);
-   508				gpiod_set_value_cansleep(gpiod, 1);
-   509			}
-   510	
-   511			ret = cdns_pcie_host_setup(rc);
-   512			if (ret < 0) {
-   513				clk_disable_unprepare(pcie->refclk);
-   514				goto err_pcie_setup;
-   515			}
-   516	
-   517			break;
-   518		case PCI_MODE_EP:
-   519			ret = cdns_pcie_init_phy(dev, cdns_pcie);
-   520			if (ret) {
-   521				dev_err(dev, "Failed to init phy\n");
-   522				goto err_get_sync;
-   523			}
-   524	
-   525			ret = cdns_pcie_ep_setup(ep);
-   526			if (ret < 0)
-   527				goto err_pcie_setup;
-   528	
-   529			break;
-   530		}
-   531	
-   532		return 0;
-   533	
-   534	err_pcie_setup:
-   535		cdns_pcie_disable_phy(cdns_pcie);
-   536	
-   537	err_get_sync:
-   538		pm_runtime_put(dev);
-   539		pm_runtime_disable(dev);
-   540	
-   541		return ret;
-   542	}
-   543	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> Reported-by: Eric Badger <ebadger@purestorage.com>
+> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+> 
+> Changes since v2:
+>  * Added more details to the commit log.
+>  * Rebased on v5.18-rc1.
+> 
+> Changes since v1:
+>  * Added Fixes tag.
+>  * Included reproducing steps proposed by Eric.
+> 
+>  drivers/pci/pcie/aer.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 9fa1f97e5b27..7952e5efd6cf 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -101,6 +101,11 @@ struct aer_stats {
+>  #define ERR_COR_ID(d)			(d & 0xffff)
+>  #define ERR_UNCOR_ID(d)			(d >> 16)
+>  
+> +#define AER_ERR_STATUS_MASK		(PCI_ERR_ROOT_UNCOR_RCV |	\
+> +					PCI_ERR_ROOT_COR_RCV |		\
+> +					PCI_ERR_ROOT_MULTI_COR_RCV |	\
+> +					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
+> +
+>  static int pcie_aer_disable;
+>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+>  
+> @@ -1196,7 +1201,7 @@ static irqreturn_t aer_irq(int irq, void *context)
+>  	struct aer_err_source e_src = {};
+>  
+>  	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS, &e_src.status);
+> -	if (!(e_src.status & (PCI_ERR_ROOT_UNCOR_RCV|PCI_ERR_ROOT_COR_RCV)))
+> +	if (!(e_src.status & AER_ERR_STATUS_MASK))
+>  		return IRQ_NONE;
+>  
+>  	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_ERR_SRC, &e_src.id);
+> -- 
+> 2.25.1
+> 
