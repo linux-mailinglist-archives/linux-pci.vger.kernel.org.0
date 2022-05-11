@@ -2,99 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF86C523616
-	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 16:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95D5D523629
+	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 16:50:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238113AbiEKOr2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 10:47:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51196 "EHLO
+        id S245121AbiEKOuh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 10:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244750AbiEKOr1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 10:47:27 -0400
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DBF13F1E;
-        Wed, 11 May 2022 07:47:25 -0700 (PDT)
+        with ESMTP id S245100AbiEKOue (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 10:50:34 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB031B0929
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 07:50:26 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id l19so2920971ljb.7
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 07:50:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1652280446; x=1683816446;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=N7APsdlpxz6u79WorIWwR5LZd+w3+vL9fRK/HNG4EQU=;
-  b=Sj9Q8flTXilnYFMR5m9urM3Xi1x4FYM5pLP57cfZwlxX4IE30iJzvsYQ
-   +OdANbqjx2JoDbWmf27lRjC12XEZUZRYhr+uwqyjXIEXhMkI6r7xza9cL
-   dRGmLFsifUSidTBSpslVMszrCl1peGoiCpW9+hfH4T170M1M1gdHD/P0T
-   I=;
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 11 May 2022 07:47:25 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 07:47:25 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 11 May 2022 07:47:24 -0700
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 11 May
- 2022 07:47:24 -0700
-Message-ID: <a0e60283-a448-650f-808e-a0080ae550f7@quicinc.com>
-Date:   Wed, 11 May 2022 08:47:23 -0600
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=ElWpfj0wGJL50TvRphg5kRjDcZaYvuq2GbVsqJVFYCc=;
+        b=D89wtlNLbOs5yE8adcQ/A2ga2mHXKALISGT/gYSnpbat0i4NuirW4ZCbyUo2MTqHIM
+         DybTUguFzP50B+QC5CPz2TzKjbooVf6vopYcNNMl7ZUovlVPA0oH8Br/q9KFIEAmXniz
+         F0j2NDH2h9QX+6DPv05OnLKU/lCRS2VNa6DQznqwmQB3VBxMPm5cCJbbSmyddqzOtzgw
+         MErApNu6AJbzoTmjvacV0Cjlufn2JPHd7IFrZPxtZuKzx5w77hCDKAFQUpVM50td0iZT
+         WgQtdLpvHIwe6pWOO3tlZhkYS3rM9lzdvgLUrwrDhiGGSwVnAz5iQAYClQs/zR9hV3u3
+         p17Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ElWpfj0wGJL50TvRphg5kRjDcZaYvuq2GbVsqJVFYCc=;
+        b=wRXIUzLHQRt9ECtdl7AJ4dUR45WA0trQDaehocUcnJA8QNUiCe5u/s9NySSD9Faa8C
+         w3OYq4LwDE0U5ys+YtPxjLoJiREP7yhu2Gky2tbZDQYe3KfFzdSa2+IYmKXavy01WyL2
+         A6Vv/fYWdjxxohTsCkn+dvrDx1HLVOkE3uCMcevaAQUsIgmwOcUbg9znk6EPDibt8mr4
+         9lPVf9wxHJqy+zaHznznUTlhlRqoJ8hh2XwLBXsWkgsLyVDqOxhhHNLEgoTt0tRGH9Z0
+         /oduymI+PfN8tRb/v4mNW03+v7OXnfsauG6NeiGr0m9QqkqPi0Ng2uRB2XXqU5u99OVr
+         5crw==
+X-Gm-Message-State: AOAM532RdaWq3k8LKim1/glVNC/iH7psdmaqgB608swtH75CnpIoAduU
+        MZboID36Kq+EIb3fClglLcwgDQ==
+X-Google-Smtp-Source: ABdhPJywfHPoACVHlBO9DahbBv/k/o1jSWDDDk9EmMhQ1LcoWNLUQAhoA0UwVt6duF/93+DZe8i4Pw==
+X-Received: by 2002:a2e:9e02:0:b0:249:7d50:bd8c with SMTP id e2-20020a2e9e02000000b002497d50bd8cmr17118916ljk.327.1652280624969;
+        Wed, 11 May 2022 07:50:24 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id d17-20020ac25ed1000000b0047255d2116bsm315476lfq.154.2022.05.11.07.50.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 May 2022 07:50:24 -0700 (PDT)
+Message-ID: <3c126a06-f8fb-bc7a-860b-d4b1f2ef0133@linaro.org>
+Date:   Wed, 11 May 2022 17:50:23 +0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH 0/2] hyperv compose_msi_msg fixups
-Content-Language: en-US
-To:     Wei Liu <wei.liu@kernel.org>
-CC:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <decui@microsoft.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <jakeo@microsoft.com>,
-        <dazhan@microsoft.com>, <linux-hyperv@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1652132902-27109-1-git-send-email-quic_jhugo@quicinc.com>
- <20220511144124.rj7inq6zy6bgbii4@liuwe-devbox-debian-v2>
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20220511144124.rj7inq6zy6bgbii4@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH v7 6/7] dt-bindings: PCI: qcom: Support additional MSI
+ interrupts
+Content-Language: en-GB
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20220505135407.1352382-1-dmitry.baryshkov@linaro.org>
+ <20220505135407.1352382-7-dmitry.baryshkov@linaro.org>
+ <YnRB4UxBzFDmsls7@robh.at.kernel.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <YnRB4UxBzFDmsls7@robh.at.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/11/2022 8:41 AM, Wei Liu wrote:
-> On Mon, May 09, 2022 at 03:48:20PM -0600, Jeffrey Hugo wrote:
->> While multi-MSI appears to work with pci-hyperv.c, there was a concern about
->> how linux was doing the ITRE allocations.  Patch 2 addresses the concern.
+On 06/05/2022 00:30, Rob Herring wrote:
+> On Thu, May 05, 2022 at 04:54:06PM +0300, Dmitry Baryshkov wrote:
+>> On Qualcomm platforms each group of 32 MSI vectors is routed to the
+>> separate GIC interrupt. Document mapping of additional interrupts.
 >>
->> However, patch 2 exposed an issue with how compose_msi_msg() was freeing a
->> previous allocation when called for the Nth time.  Imagine a driver using
->> pci_alloc_irq_vectors() to request 32 MSIs.  This would cause compose_msi_msg()
->> to be called 32 times, once for each MSI.  With patch 2, MSI0 would allocate
->> the ITREs needed, and MSI1-31 would use the cached information.  Then the driver
->> uses request_irq() on MSI1-17.  This would call compose_msi_msg() again on those
->> MSIs, which would again use the cached information.  Then unmask() would be
->> called to retarget the MSIs to the right VCPU vectors.  Finally, the driver
->> calls request_irq() on MSI0.  This would call conpose_msi_msg(), which would
->> free the block of 32 MSIs, and allocate a new block.  This would undo the
->> retarget of MSI1-17, and likely leave those MSIs targeting invalid VCPU vectors.
->> This is addressed by patch 1, which is introduced first to prevent a regression.
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>> ---
+>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 45 ++++++++++++++++++-
+>>   1 file changed, 44 insertions(+), 1 deletion(-)
 >>
->> Jeffrey Hugo (2):
->>    PCI: hv: Reuse existing ITRE allocation in compose_msi_msg()
->>    PCI: hv: Fix interrupt mapping for multi-MSI
->>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> index 0b69b12b849e..fd3290e0e220 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> @@ -43,11 +43,20 @@ properties:
+>>       maxItems: 5
+>>   
+>>     interrupts:
+>> -    maxItems: 1
+>> +    minItems: 1
+>> +    maxItems: 8
+>>   
+>>     interrupt-names:
+>> +    minItems: 1
+>>       items:
+>>         - const: msi
+>> +      - const: msi2
 > 
-> Applied to hyperv-next. Thanks.
+> Is 2 from some documentation or you made up. If the latter, software
+> folks start numbering at 0, not 1. :) I wouldn't care, but I think this
+> may become common.
 
-Huh?  I thought you wanted a V2.  I was intending on sending that out today.
+It has been made up, so I will update this.
 
--Jeff
+> 
+>> +      - const: msi3
+>> +      - const: msi4
+>> +      - const: msi5
+>> +      - const: msi6
+>> +      - const: msi7
+>> +      - const: msi8
+
+
+-- 
+With best wishes
+Dmitry
