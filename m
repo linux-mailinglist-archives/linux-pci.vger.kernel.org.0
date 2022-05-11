@@ -2,121 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D8F25231F9
-	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 13:42:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16BE0523295
+	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 14:07:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232969AbiEKLmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 07:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
+        id S239331AbiEKMGV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 08:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241691AbiEKLl5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 07:41:57 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D362267D34;
-        Wed, 11 May 2022 04:41:53 -0700 (PDT)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KytDK07y5z67Wgc;
-        Wed, 11 May 2022 19:37:05 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 11 May 2022 13:41:51 +0200
-Received: from [10.47.91.186] (10.47.91.186) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 11 May
- 2022 12:41:49 +0100
-Message-ID: <cee3177d-458f-e61c-d38f-08965eb79eb6@huawei.com>
-Date:   Wed, 11 May 2022 12:42:02 +0100
+        with ESMTP id S242074AbiEKMGH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 08:06:07 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAC92A70F;
+        Wed, 11 May 2022 05:06:06 -0700 (PDT)
+Received: by mail-qk1-f171.google.com with SMTP id a76so2052585qkg.12;
+        Wed, 11 May 2022 05:06:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qrwvLhGf2fxkmYD1DrdW1SHeEkV8PyijrK4hUn7/z0I=;
+        b=54yYrdGEM7tfCFtD1nFxVhM+UlhRaWGozplxqlPDPMveMR/Nzk/LoSxp1aQRS+gQ77
+         Lqri9nnWYwhzKXrkr+gVHINWz0fyQmzylnhzpQWRRF6ad2mX2Dbn+txjFQdJMI3SQDaX
+         wJTH6f1sonU8ObzZahfLn1HslBgrVX5no7IvnOUfKTPvwP6oKRrfL8up0WlKzn3l3RRY
+         AepdymKjCOwl9ga7gaWTLchmNWf/4WS444BaCTIzHSM0QBxiEgIoIUusvdHFfl/2JuUN
+         SruI5NMMEhtKrY9Zsyr77FZIRWkvNBbn24QssuD3zGQH98mMdSzwVaIAE0/WqZsBm8KU
+         W/og==
+X-Gm-Message-State: AOAM531RQX32jcGtmEhNGPJ5JQA1KM+6nC2hrdTWmM/UN8xjIrK30i6e
+        mgD83B2fQfkpYHtRAC4Cet0shwfCyX3vFA==
+X-Google-Smtp-Source: ABdhPJyRQnKGOcoLH9YkL8HBo2ODHTw7fJdqGL8GH5r/fQM91ljfiZInY6fw2f2KW/4UlVDuoxym3A==
+X-Received: by 2002:a05:620a:40cf:b0:6a0:4c65:bed6 with SMTP id g15-20020a05620a40cf00b006a04c65bed6mr16919840qko.78.1652270765265;
+        Wed, 11 May 2022 05:06:05 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id p10-20020ae9f30a000000b0069fc13ce220sm1103435qkg.81.2022.05.11.05.06.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 May 2022 05:06:04 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id r1so3559073ybo.7;
+        Wed, 11 May 2022 05:06:04 -0700 (PDT)
+X-Received: by 2002:a05:6902:905:b0:64a:2089:f487 with SMTP id
+ bu5-20020a056902090500b0064a2089f487mr22687750ybb.202.1652270764139; Wed, 11
+ May 2022 05:06:04 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v7 1/7] iommu/arm-smmu-v3: Make default domain type of
- HiSilicon PTT device to identity
-To:     Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>
-References: <20220407125841.3678-1-yangyicong@hisilicon.com>
- <20220407125841.3678-2-yangyicong@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220407125841.3678-2-yangyicong@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.91.186]
-X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220429134143.628428-1-herve.codina@bootlin.com>
+ <20220429134143.628428-5-herve.codina@bootlin.com> <YnuFIfcq1Wg9Nh1L@lpieralisi>
+In-Reply-To: <YnuFIfcq1Wg9Nh1L@lpieralisi>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 11 May 2022 14:05:52 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV3AWjxLD1YyN6aGttqPQueUqyvLo4PAvjozmobv6c1mA@mail.gmail.com>
+Message-ID: <CAMuHMdV3AWjxLD1YyN6aGttqPQueUqyvLo4PAvjozmobv6c1mA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/6] PCI: rcar-gen2: Add RZ/N1 SOCs family compatible string
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Herve Codina <herve.codina@bootlin.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 07/04/2022 13:58, Yicong Yang wrote:
-> The DMA operations of HiSilicon PTT device can only work properly with
-> identical mappings. So add a quirk for the device to force the domain
+Hi Lorenzo,
 
-I'm not sure if you meant to write "identity mappings".
+On Wed, May 11, 2022 at 12:42 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+> On Fri, Apr 29, 2022 at 03:41:40PM +0200, Herve Codina wrote:
+> > Add the Renesas RZ/N1 SOCs family support to the Renesas R-Car Gen2
+> > PCI bridge driver.
+> >
+> > The Renesas RZ/N1 SOCs internal PCI bridge is compatible with the one
+> > available in the R-Car Gen2 family.
+> >
+> > Tested with the RZ/N1D (R9A06G032) SOC.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  drivers/pci/controller/pci-rcar-gen2.c | 1 +
+> >  1 file changed, 1 insertion(+)
+>
+> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-> as passthrough.
-> 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Thanks!
 
-FWIW,
+> I assume this series will be picked up by platforms maintainers.
 
-Reviewed-by: John Garry <john.garry@huawei.com>
+Usually driver patches are picked by the driver (subsystem) maintainer.
+I can pick up the DTS changes once you agree with the DT bindings.
 
-> ---
->   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index 627a3ed5ee8f..5ec15ae2a9b1 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -2839,6 +2839,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
->   	}
->   }
->   
-> +#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
-> +					 (pdev)->device == 0xa12e)
-> +
-> +static int arm_smmu_def_domain_type(struct device *dev)
-> +{
-> +	if (dev_is_pci(dev)) {
-> +		struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +		if (IS_HISI_PTT_DEVICE(pdev))
-> +			return IOMMU_DOMAIN_IDENTITY;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static struct iommu_ops arm_smmu_ops = {
->   	.capable		= arm_smmu_capable,
->   	.domain_alloc		= arm_smmu_domain_alloc,
-> @@ -2856,6 +2871,7 @@ static struct iommu_ops arm_smmu_ops = {
->   	.sva_unbind		= arm_smmu_sva_unbind,
->   	.sva_get_pasid		= arm_smmu_sva_get_pasid,
->   	.page_response		= arm_smmu_page_response,
-> +	.def_domain_type	= arm_smmu_def_domain_type,
->   	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
->   	.owner			= THIS_MODULE,
->   	.default_domain_ops = &(const struct iommu_domain_ops) {
+Thanks!
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
