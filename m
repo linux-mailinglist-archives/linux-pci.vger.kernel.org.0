@@ -2,72 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 436FB523025
-	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 12:03:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED06C523083
+	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 12:14:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229902AbiEKKCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 06:02:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50534 "EHLO
+        id S234347AbiEKKOn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 06:14:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241697AbiEKKBw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 06:01:52 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B7BDCD
-        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 03:01:50 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id u3so2229259wrg.3
-        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 03:01:50 -0700 (PDT)
+        with ESMTP id S241240AbiEKKOT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 06:14:19 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D1C22B3BE
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 03:13:40 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2f7d7e3b5bfso15008297b3.5
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 03:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod.ie; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=B3PUC31Mlz5mEBY3Iz6lfGSbpuDsx653MliipHqDJLk=;
-        b=cTOTkUy7wKXpnc+uyqxqz4A4zvUQy5Vre4nYaAIDtgHuRtrRf5AW6wDQAfQ+Vx1TGC
-         ZMfg7jlRenLpWsh/BGJERUmxOLlDv3G4D1V9Z/13hMPvAvrKcthGrESj2JBIoyHVFG1E
-         u5/LZ3ShkkbWj7H4DKy6ys4FXbrpdxA+P77tfR/7V1Ji0zZCaLK8LOYQClAz5limd5M/
-         RbEWnaE718cRAw6B3ubtUZkLbaycarVrd/eMqVcLSPXL0sletOtiQrLr9Q4TJYQ3Euvq
-         tqLXluEhrCGlXkUIg9TZ9Xw5hwTUNgyY7tqE3uv7mpElq9B2ioQNImDK6ucNDOx6rB1b
-         reNQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LbS9CVLx3YERW8E3AnIjefuENgrYBnFy3iLpPYRS1dE=;
+        b=aZN6cRaNHqHH/Tfe1y8ta5XgMovAikD3irJpErfW8NqP3QAup9QUt917tGuJ1TGBFH
+         vD51ULlUtdB/+hTgybWL1sztV5VmGthR+Sw+1uT1mHLgQlOxwOZVouqMLjPKb9JJoWxv
+         MPJAEBIklP2ahcsQjrKfvdc80Kr8OVrRRvh9Ye+37G3uzNs7fuY+aCHM1vGDVrXQltD3
+         5FV2GxVOFMqzOux86aNE4Dvb7U0JdtevMkteY3/4Fosus97inclmtsYWQICzbwUWw7r0
+         TiQjzGjZsZ0FjXaS1YlA3SrjcC01d1gkwbeCvoVaICtGcRpx3KAnLNChjUU7mor1DMD7
+         93fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=B3PUC31Mlz5mEBY3Iz6lfGSbpuDsx653MliipHqDJLk=;
-        b=K8ok0f1sAmMEHsTStvFNkhCWweV3ZiEeiJNLKdUpMkI5wXMHFbsM7QLGHPJA3Azldt
-         ylNEX6pdUpuggf2JgBVnIALdOXfkYhvoEJnrMtNdjn6O9r1x83FJJ5tegsGnjEfvc8RO
-         +252SvXHuj6WuSV9EjvFBrukvNQTENs4iPxCZYOE5Bbv256qpzdqLvqol27pUh5IbJFO
-         5VTV1o+yPBuD2oWIJVN9HOBKYdKb5HGrHYZosMpXia0H00aYohkKPEx8aY7g7zf/38fM
-         BFOmdgmO9UQ15c8Ny+mZSvEgnQStAyjlCwW9fsIMJ4s2p0WFrIXXfrVFw6AmE8O0639M
-         2D9A==
-X-Gm-Message-State: AOAM5332Pb6iIWEVvxwP0ayYGcRf7/memJtjgOW6QUA7IFqTnQWvC9XO
-        ldQAZI40/i4k7m26lqaqfXrzG67Ls6UgCsQZ
-X-Google-Smtp-Source: ABdhPJyS37WrZqxkVmYDqqiLrMUtxVbfy6vtsfZ3hS1On8WaeCKU2zBShqvpOT3AMk5KFkRowZ+fZg==
-X-Received: by 2002:a5d:5505:0:b0:20a:ce51:1c48 with SMTP id b5-20020a5d5505000000b0020ace511c48mr22509329wrv.351.1652263308937;
-        Wed, 11 May 2022 03:01:48 -0700 (PDT)
-Received: from [10.205.160.53] ([95.83.233.54])
-        by smtp.gmail.com with ESMTPSA id r5-20020adfdc85000000b0020c5253d8d2sm1227690wrj.30.2022.05.11.03.01.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 May 2022 03:01:48 -0700 (PDT)
-Message-ID: <5afbd996-ba2b-9b12-4ab2-ff3e0c23d1f5@conchuod.ie>
-Date:   Wed, 11 May 2022 11:00:18 +0100
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LbS9CVLx3YERW8E3AnIjefuENgrYBnFy3iLpPYRS1dE=;
+        b=jKtU+T1zoyfretC88BM03ZeMeJu+h4BpMYty/ZMsmscef6ULCXHmZu1PQvA+Dhko0Y
+         FO0rnLyZ2n8KbuQap5ESOtIKMGulpy5bksBE7bFLGx8vmO0eQqwehiy9RDcSCdLXbVWH
+         Aqvdc/A1uGzguBG8YmI5zHgcpoBxwZ9QJIJLK6JyaPSOIj9teuh2hJjOuk1wXViKXy53
+         kZJKq70NPUxKZNquV4HIOhYIPl3Cm4/PWtoc6P+mvunRC/bB0wtEtZErtx+vC2vefy0/
+         CZu/5BVG8/sRLH2T/oBMD0afljOPEO8JVtjJ3kwZu5aw+6oBVNVfgoED8ZLy1ui86hy/
+         ssjw==
+X-Gm-Message-State: AOAM532PpxLzg8JpQs5Jg2CkWUhzu16DnbjfqC5q0gSzhew+5pmps5mK
+        4+NJDwHkkOwe1vIb0xbZ35ecMiM5ctg21dVGuac0kA==
+X-Google-Smtp-Source: ABdhPJw8o6138qy85Ja2D7d3jz1pg7TDpg0MtrPBdgGEPf6HMr12sOpTpfIueSQxq026AyyT8WC+qMovxe/YjVRJNYU=
+X-Received: by 2002:a0d:db8f:0:b0:2fb:958c:594f with SMTP id
+ d137-20020a0ddb8f000000b002fb958c594fmr3143624ywe.490.1652264019542; Wed, 11
+ May 2022 03:13:39 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [RESEND PATCH v1 1/1] PCI: microchip: Fix potential race in
- interrupt handling
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>, lorenzo.pieralisi@arm.com
-Cc:     Marc Zyngier <maz@kernel.org>, Conor.Dooley@microchip.com,
-        Daire.McNamara@microchip.com, bhelgaas@google.com,
-        Cyril.Jean@microchip.com, david.abdurachmanov@gmail.com,
-        linux-pci@vger.kernel.org, robh@kernel.org
-References: <20220504165924.GA453752@bhelgaas>
-From:   Conor Dooley <mail@conchuod.ie>
-In-Reply-To: <20220504165924.GA453752@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+References: <20220506152107.1527552-1-dmitry.baryshkov@linaro.org> <YnqXxNxFhf/odyka@robh.at.kernel.org>
+In-Reply-To: <YnqXxNxFhf/odyka@robh.at.kernel.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Wed, 11 May 2022 13:13:28 +0300
+Message-ID: <CAA8EJpriMcP4uQ3fjyiCKY+uc82ctXe2VrjO1psPDcp-P++Nhw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/8] dt-bindings: YAMLify pci/qcom,pcie schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -76,65 +74,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 04/05/2022 17:59, Bjorn Helgaas wrote:
-> On Wed, May 04, 2022 at 04:12:39PM +0100, Conor Dooley wrote:
->> On 02/05/2022 20:22, Bjorn Helgaas wrote:
->>> On Sat, Apr 30, 2022 at 12:33:51AM +0100, Marc Zyngier wrote:
->>>> On Fri, 29 Apr 2022 22:57:33 +0100,
->>>> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>>> On Fri, Apr 29, 2022 at 09:42:52AM +0000, Conor.Dooley@microchip.com wrote:
->>>>>> On 28/04/2022 10:29, Lorenzo Pieralisi wrote:
->>>>>>> On Tue, Apr 05, 2022 at 12:17:51PM +0100, daire.mcnamara@microchip.com wrote:
->>>>>>>> From: Daire McNamara <daire.mcnamara@microchip.com>
->>>>>>>>
->>>>>>>> Clear MSI bit in ISTATUS register after reading it before
->>>>>>>> handling individual MSI bits
->>>
->>>>>> Clear the MSI bit in ISTATUS register after reading it, but before
->>>>>> reading and handling individual MSI bits from the IMSI register.
->>>>>> This avoids a potential race where new MSI bits may be set on the
->>>>>> IMSI register after it was read and be missed when the MSI bit in
->>>>>> the ISTATUS register is cleared.
-> 
-> Restoring the context here:
-> 
->>>>> "ISTATUS" doesn't appear in the code as a register name.
->>>>> Neither does "IMSI".  Please use names that match the code.
-> 
->> Daire is still having the IT issues, so before I resend the patch with
->> a new commit message, how is the following:
->>
->> Clear the MSI bit in ISTATUS_LOCAL register after reading it, but
->> before reading and handling individual MSI bits from the ISTATUS_MSI
->> register. This avoids a potential race where new MSI bits may be set
->> on the ISTATUS_MSI register after it was read and be missed when the
->> MSI bit in the ISTATUS_LOCAL register is cleared.
-> 
-> Looks good, thank you!
+On Tue, 10 May 2022 at 19:50, Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, May 06, 2022 at 06:20:59PM +0300, Dmitry Baryshkov wrote:
+> > Convert pci/qcom,pcie schema to YAML description. The first patch
+> > introduces several warnings which are fixed by the other patches in the
+> > series.
+> >
+> > Note regarding the snps,dw-pcie compatibility. The Qualcomm PCIe
+> > controller uses Synopsys PCIe IP core. However it is not just fused to
+> > the address space. Accessing PCIe registers requires several clocks and
+> > regulators to be powered up. Thus it can be assumed that the qcom,pcie
+> > bindings are not fully compatible with the snps,dw-pcie schema.
+> >
+> > Changes since v5:
+> >  - s/stance/stanza (pointed out by Bjorn Helgaas)
+> >
+> > Changes since v4:
+> >  - Change subjects to follow convention (suggested by Bjorn Helgaas)
+> >
+> > Changes since v3:
+> >  - Rebase on linux-next to include sm8150 patches
+> >
+> > Changes since v2 (still kudos to Krzyshtof):
+> >  - Readded reg-names conversion patch
+> >  - Mention wake-gpio update in the commit message
+> >  - Remove extra quotes in the schema
+> >
+> > Changes since v1 (all kudos to Krzyshtof):
+> >  - Dropped the reg-names patch. It will be handled separately
+> >  - Squashed the snps,dw-pcie removal (from schema) into the first patch
+> >  - Replaced deprecated perst-gpio and wake-gpio with perst-gpios and
+> >    wake-gpios in the examples and in DT files
+> >  - Moved common clocks/clock-names, resets/reset-names and power-domains
+> >    properties to the top level of the schema, leaving only platform
+> >    specifics in the conditional branches
+> >  - Dropped iommu-map/iommu-map-mask for now
+> >  - Added (missed) interrupt-cells, clocks, clock-names, resets,
+> >    reset-names properties to the required list (resets/reset-names are
+> >    removed in the next patch, as they are not used on msm8996)
+> >  - Fixed IRQ flags in the examples
+> >  - Merged apq8064/ipq8064 into the single condition statement
+> >  - Added extra empty lines
+> >
+> > Dmitry Baryshkov (8):
+> >   dt-bindings: PCI: qcom: Convert to YAML
+> >   dt-bindings: PCI: qcom: Do not require resets on msm8996 platforms
+> >   dt-bindings: PCI: qcom: Specify reg-names explicitly
+> >   dt-bindings: PCI: qcom: Add schema for sc7280 chipset
+> >   arm64: dts: qcom: stop using snps,dw-pcie falback
+> >   arm: dts: qcom: stop using snps,dw-pcie falback
+> >   arm: dts: qcom-*: replace deprecated perst-gpio with perst-gpios
+> >   arm64: dts: qcom: replace deprecated perst-gpio with perst-gpios
+> >
+> >  .../devicetree/bindings/pci/qcom,pcie.txt     | 398 ----------
+> >  .../devicetree/bindings/pci/qcom,pcie.yaml    | 714 ++++++++++++++++++
+>
+> What tree do these apply to because they don't apply to rc1. I'm
+> assuming the PCI tree and Lorenzo should take them.
 
-Hmm, there's now a response saying that the proposed commit message is
-fine and one saying it isn't. Which is it?
+The series depends on the patch in Lorenzo's tree (sm8150 bindings),
+so I'd assume it would be natural to merge these patches through his
+tree too.
 
-> 
->>>>> And speaking of that, I looked at all the users of
->>>>> irq_set_chained_handler_and_data() in drivers/pci.  All the handlers
->>>>> except mc_handle_intx() and mc_handle_msi() call chained_irq_enter()
->>>>> and chained_irq_exit().
->>>>>
->>>>> Are mc_handle_intx() and mc_handle_msi() just really special, or is
->>>>> this a mistake?
->>>>
->>>> That's just a bug. On the right HW, this would just result in lost
->>>> interrupts.
->>
->> Separate issue, separate patch. Do you want them in a series or as
->> another standalone patch?
-> 
-> Agreed, should be a separate patch.  Doesn't need to be a series
-> unless that patch only applies correctly on top of this one.
 
-Cool, just sent one:
-https://lore.kernel.org/linux-pci/20220511095504.2273799-1-conor.dooley@microchip.com/
-
-Thanks,
-Conor.
+-- 
+With best wishes
+Dmitry
