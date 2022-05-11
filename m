@@ -2,154 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58D9252372C
-	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 17:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA383523B16
+	for <lists+linux-pci@lfdr.de>; Wed, 11 May 2022 19:03:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232784AbiEKPYJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 11:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44710 "EHLO
+        id S1345302AbiEKRD2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 May 2022 13:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343607AbiEKPYI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 11:24:08 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7B34EDE2;
-        Wed, 11 May 2022 08:24:05 -0700 (PDT)
-Received: from ip5b412258.dynamic.kabel-deutschland.de ([91.65.34.88] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1nooBr-0003aM-1O; Wed, 11 May 2022 17:23:53 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Peter Geis <pgwipeout@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-Subject: Re: [PATCH v9 2/5] PCI: rockchip-dwc: Reset core at driver probe
-Date:   Wed, 11 May 2022 17:23:28 +0200
-Message-ID: <1860493.taCxCBeP46@diego>
-In-Reply-To: <YnvPdSPUm85Bg9zE@lpieralisi>
-References: <20220429123832.2376381-1-pgwipeout@gmail.com> <CAMdYzYqdDPUFPhAZqA71dLaf6rT9CwFqQ1dFMRbGpVMyzgT8bg@mail.gmail.com> <YnvPdSPUm85Bg9zE@lpieralisi>
+        with ESMTP id S1345317AbiEKRD0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 13:03:26 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCB489CC7
+        for <linux-pci@vger.kernel.org>; Wed, 11 May 2022 10:03:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652288604; x=1683824604;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ep1NpoWBAu0QrrJGK5qZ85w2uoUEBDEApxOHzjml43A=;
+  b=HMVvJBfUYB2L2mjjtjOS81tHef2aMOuRjccDenKYVecICFZjPSEUgPF1
+   qhsO0DujRvVNujOjjkP3k8vo+h1mfsnfHhIVCA2u7QyN1jnuZ5aDYlD8t
+   ynOxvt5a+zJhlJfHqf9p5Vku0Rso6JAn6GzVwyhpayMVP1YzKbciuZj5Q
+   JPDfeUbc7pGgr4A31a3lwaG5E6uTvWt1y1rdHNBffsUjaAz70AX833N6s
+   VtJkawKBsru3x0r7x37TwmjfrOr0GGGoHEzZITO+xfO/1Nr08DTtP7zoX
+   HG5M9CLNwooA82tRkzGbs9fn+SDfyyVt7Un5TGT7lohNOpXGENOKwNKWu
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="269693794"
+X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
+   d="scan'208";a="269693794"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 10:03:13 -0700
+X-IronPort-AV: E=Sophos;i="5.91,217,1647327600"; 
+   d="scan'208";a="542391467"
+Received: from azvmdlinux1.ch.intel.com ([10.2.230.15])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 10:03:13 -0700
+From:   Nirmal Patel <nirmal.patel@linux.intel.com>
+To:     <linux-pci@vger.kernel.org>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>
+Subject: [PATCH v2 0/2] PCI: vmd: IRQ domain assignment to sub devices
+Date:   Wed, 11 May 2022 02:57:05 -0700
+Message-Id: <20220511095707.25403-1-nirmal.patel@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Mittwoch, 11. Mai 2022, 17:00:05 CEST schrieb Lorenzo Pieralisi:
-> On Wed, May 11, 2022 at 10:26:20AM -0400, Peter Geis wrote:
-> > On Wed, May 11, 2022 at 9:50 AM Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com> wrote:
-> > >
-> > > On Fri, Apr 29, 2022 at 08:38:28AM -0400, Peter Geis wrote:
-> > > > The PCIe controller is in an unknown state at driver probe. This can
-> > > > lead to undesireable effects when the driver attempts to configure the
-> > > > controller.
-> > > >
-> > > > Prevent issues in the future by resetting the core during probe.
-> > > >
-> > > > Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-> > > > Tested-by: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 23 ++++++++-----------
-> > > >  1 file changed, 10 insertions(+), 13 deletions(-)
-> > >
-> > > I fear that the controller reset behaviour is bootloader/firmware
-> > > dependent.
-> > >
-> > > Are we sure we are not triggering any regressions by resetting the
-> > > controller in the middle of probe (aka is the driver implicitly
-> > > relying on existing behaviour on systems that are not the ones
-> > > you are testing on) ?
-> > >
-> > > Just asking, the rockchip maintainers should be able to answer this
-> > > question.
-> > 
-> > This is a new driver with no current users, this series enables the
-> > first user. It does not support ACPI nor any sort of handoff at this
-> > time.
-> 
-> Ok. I will take patches [1-3], dts changes will have to go via
-> platform trees, I hope that's fine.
+Host OS fails to boot and DMAR errors were observed when interrupt
+remapping is enabled by intel_iommu because of the fact that VMD child
+devices are on different IRQ domain than all other PCI devices.
+Make sure VMD assigns proper IRQ domain to the child devices during
+device enumeration.
 
-yep, that sounds great and I'll pick the dts patches then :-)
+Nirmal Patel (2):
+  PCI: vmd: Assign VMD IRQ domain before enumeration
+  PCI: vmd: Revert 2565e5b69c44 ("PCI: vmd: Do not disable MSI-X
+    remapping if interrupt remapping is enabled by IOMMU.")
 
-Thanks
-Heiko
+ drivers/pci/controller/vmd.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > index c9b341e55cbb..faedbd6ebc20 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > @@ -152,6 +152,11 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
-> > > >       if (IS_ERR(rockchip->rst_gpio))
-> > > >               return PTR_ERR(rockchip->rst_gpio);
-> > > >
-> > > > +     rockchip->rst = devm_reset_control_array_get_exclusive(&pdev->dev);
-> > > > +     if (IS_ERR(rockchip->rst))
-> > > > +             return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst),
-> > > > +                                  "failed to get reset lines\n");
-> > > > +
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > @@ -182,18 +187,6 @@ static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
-> > > >       phy_power_off(rockchip->phy);
-> > > >  }
-> > > >
-> > > > -static int rockchip_pcie_reset_control_release(struct rockchip_pcie *rockchip)
-> > > > -{
-> > > > -     struct device *dev = rockchip->pci.dev;
-> > > > -
-> > > > -     rockchip->rst = devm_reset_control_array_get_exclusive(dev);
-> > > > -     if (IS_ERR(rockchip->rst))
-> > > > -             return dev_err_probe(dev, PTR_ERR(rockchip->rst),
-> > > > -                                  "failed to get reset lines\n");
-> > > > -
-> > > > -     return reset_control_deassert(rockchip->rst);
-> > > > -}
-> > > > -
-> > > >  static const struct dw_pcie_ops dw_pcie_ops = {
-> > > >       .link_up = rockchip_pcie_link_up,
-> > > >       .start_link = rockchip_pcie_start_link,
-> > > > @@ -222,6 +215,10 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
-> > > >       if (ret)
-> > > >               return ret;
-> > > >
-> > > > +     ret = reset_control_assert(rockchip->rst);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > >       /* DON'T MOVE ME: must be enable before PHY init */
-> > > >       rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
-> > > >       if (IS_ERR(rockchip->vpcie3v3)) {
-> > > > @@ -241,7 +238,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
-> > > >       if (ret)
-> > > >               goto disable_regulator;
-> > > >
-> > > > -     ret = rockchip_pcie_reset_control_release(rockchip);
-> > > > +     ret = reset_control_deassert(rockchip->rst);
-> > > >       if (ret)
-> > > >               goto deinit_phy;
-> > > >
-> > > > --
-> > > > 2.25.1
-> > > >
-> 
-
-
-
+-- 
+2.26.2
 
