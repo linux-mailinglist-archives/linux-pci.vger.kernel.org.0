@@ -2,311 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DB0D524ECF
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 15:52:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20699524EF9
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 15:57:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354712AbiELNw2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 09:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
+        id S1354816AbiELN5g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 09:57:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354511AbiELNw0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 09:52:26 -0400
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B457E6541F;
-        Thu, 12 May 2022 06:52:23 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 24CDpbFb090802;
-        Thu, 12 May 2022 08:51:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1652363497;
-        bh=Uvp5wutlAHqKJ6KqtWKdsiXOL7gAi/I6xhTgCSWp3Mw=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=xlPLvb4pTQK+LYOotcR5cx/e8yo95hhc42c+hTIhheLxBjtoDXv+eqXqJ+/fjdNHa
-         CZzrVcYl3WN6R9R+oOKQfoNoRnLL7j0qRR9rahS19pBCxsWxpK8vGQfAbKmBilkH7C
-         ASfNd7/yalpePilqANvmjPDFZikuPMsLL3efd6kA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 24CDpbOg032517
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 May 2022 08:51:37 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Thu, 12
- May 2022 08:51:36 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Thu, 12 May 2022 08:51:36 -0500
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 24CDpVSi056608;
-        Thu, 12 May 2022 08:51:32 -0500
-Message-ID: <b2961b3e-ad0e-5b8f-8d6f-221aead9992f@ti.com>
-Date:   Thu, 12 May 2022 19:21:31 +0530
+        with ESMTP id S1354796AbiELN5f (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 09:57:35 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7DC1C72DA
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 06:57:17 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id w17-20020a17090a529100b001db302efed6so4957131pjh.4
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 06:57:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=bEMB8902D/xSU2Wdpg64G1D2JXiY+ZOywalt6UyCaAU=;
+        b=KBOVdXRXiA3SV/T+G1ZfRjvvRftP7tuv2XeCQJ4JMfONBt7Iem5S38vET1/BKiFv68
+         9T8Nump6nZmyPNrTqZqmyl3y69JddhrPpkRrs6H+obAVIs+fEh0p9pVc+iNrupcEJlh/
+         d/WWStFYFjNRTJA82nDajzuza8T28jdT/vfR4OHkZLxJVo/leY3RInh2WoZWIsMxpaKF
+         8fhEqE5EFo/Sw1VyuEtwC64/+pSFBuXRppH7Erm99JpJpjP1lIBV7WLnGx+b+4IgIpez
+         WNqXiXm34oc7pRN5YkNPMZDvFwIb1/UMx0N9zJdB2+Z0E9vzwqTdNXC8hxDhH8gJbpOT
+         dGZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=bEMB8902D/xSU2Wdpg64G1D2JXiY+ZOywalt6UyCaAU=;
+        b=UbE7u6NUIfYZ+lse/7uLUrSYaFqGDlejA4AvwYJeblmUCci625dN5hTs9dnOaencvI
+         NHg4guiWn71xYGVHtHO45ho1NN8DJtTl7XZStZWpkj/oRGPBpNcRxgtjLnVvSVxQxY++
+         IwgoJ2+sc2njD7UOtXY3TDIBLgNkI5yfOo8AMuF/PEhxvJ47RfCEFQfda4kw5JA9Wtp+
+         twsYKL7Wui3rr/Y5hwkCrMqP11LOhOQuyCrTCxtnJGrnjaZLVXd3A98BNGF4yFDIUP6v
+         1Y9zmHrxbZhqn+bME3LuHtYggXUtVq2D5/hukznl16v6mZkERkTYsm1QVLs0bWj4z0Na
+         0nzw==
+X-Gm-Message-State: AOAM530xiHB8bhAIvLdgIvYXgYx0AjgIZnIa1U5vbhbrq2GnfrOmkBDY
+        T+RdQQmT2apufmN+QVWF0XxU
+X-Google-Smtp-Source: ABdhPJxSLuAcsbVDDjyWjII+1YMoRHbRkN60hJS1s/nQ2Zdb0HS/vNX+LP2GdewUYC4YFMMcvDCZCw==
+X-Received: by 2002:a17:90b:38c7:b0:1dc:77aa:e3d5 with SMTP id nn7-20020a17090b38c700b001dc77aae3d5mr10963534pjb.51.1652363836958;
+        Thu, 12 May 2022 06:57:16 -0700 (PDT)
+Received: from thinkpad ([117.202.184.202])
+        by smtp.gmail.com with ESMTPSA id o24-20020a17090ad25800b001dcf49d92a1sm1861938pjw.28.2022.05.12.06.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 06:57:16 -0700 (PDT)
+Date:   Thu, 12 May 2022 19:27:08 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 15/17] PCI: dwc: Introduce dma-ranges property support
+ for RC-host
+Message-ID: <20220512135708.GC35848@thinkpad>
+References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503214638.1895-16-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v10 9/9] PCI: endpoint: Enable DMA controller tests for
- endpoints with DMA capabilities
-Content-Language: en-US
-To:     Frank Li <Frank.Li@nxp.com>, <gustavo.pimentel@synopsys.com>,
-        <hongxing.zhu@nxp.com>, <l.stach@pengutronix.de>,
-        <linux-imx@nxp.com>, <linux-pci@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <fancer.lancer@gmail.com>,
-        <lznuaa@gmail.com>, <helgaas@kernel.org>
-CC:     <vkoul@kernel.org>, <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
-        <kw@linux.com>, <bhelgaas@google.com>,
-        <manivannan.sadhasivam@linaro.org>,
-        <Sergey.Semin@baikalelectronics.ru>
-References: <20220503005801.1714345-1-Frank.Li@nxp.com>
- <20220503005801.1714345-10-Frank.Li@nxp.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-In-Reply-To: <20220503005801.1714345-10-Frank.Li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-7.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220503214638.1895-16-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Frank,
-
-On 03/05/22 06:28, Frank Li wrote:
-> Some Endpoints controllers have DMA capabilities.  This DMA controller has
-> more efficiency then a general external DMA controller.  And this DMA
-> controller can bypass outbound memory address translation unit.
+On Wed, May 04, 2022 at 12:46:36AM +0300, Serge Semin wrote:
+> In accordance with the generic PCIe Root Port DT-bindings the "dma-ranges"
+> property has the same format as the "ranges" property. The only difference
+> is in their semantics. The "dma-ranges" property describes the PCIe-to-CPU
+> memory mapping in opposite to the CPU-to-PCIe mapping of the "ranges"
+> property. Even though the DW PCIe controllers are normally equipped with
+> internal Address Translation Unit which inbound and outbound tables can be
+> used to implement both properties semantics, it was surprise for me to
+> discover that the host-related part of the DW PCIe driver currently
+> supports the "ranges" property only while the "dma-ranges" windows are
+> just ignored. Having the "dma-ranges" supported in the driver would be
+> very handy for the platforms, that don't tolerate the 1:1 CPU-PCIe memory
+> mapping and require customized the PCIe memory layout. So let's fix that
+> by introducing the "dma-ranges" property support.
 > 
-> The whole flow use standard DMA usage module
+> First of all we suggest to rename the dw_pcie_prog_inbound_atu() method to
+> dw_pcie_prog_ep_inbound_atu() and create a new version of the
+> dw_pcie_prog_inbound_atu() function. Thus we'll have two methods for RC
+> and EP controllers respectively in the same way as it has been developed
+> for the outbound ATU setup methods.
 > 
->  1. Using dma_request_channel() and filter function to find correct
->     RX and TX Channel. if not exist,  fallback to try allocate
->     general DMA controller channel.
->  2. dmaengine_slave_config() config remote side physcial address.
->  3. using dmaengine_prep_slave_single() create transfer descriptor.
->  4. tx_submit();
->  5. dma_async_issue_pending();
+> Secondly aside with the memory window index and type the new
+> dw_pcie_prog_inbound_atu() function will accept CPU address, PCIe address
+> and size as its arguments. These parameters define the PCIe and CPU memory
+> ranges which will be used to setup the respective inbound ATU mapping. The
+> passed parameters need to be verified against the ATU ranges constraints
+> in the same way as it is done for the outbound ranges.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-The patch looks good to me (other than Lorenzo's comment on the
-description). Did you also verify DMA_MEMCPY just to make sure, the old
-path continues to work?
-
-Regards,
-Kishon
+> Finally the DMA-ranges detected for the PCIe controller need to be
+> converted into the inbound ATU entries during the host controller
+> initialization procedure. It will be done in the framework of the
+> dw_pcie_iatu_setup() method. Note before setting the inbound ranges up we
+> need to disable all the inbound ATU entries in order to prevent unexpected
+> PCIe TLPs translations defined by some third party software like
+> bootloader.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > ---
-> Change from v9 to v10:
->  - rewrite commit message
-> Change from v4 to v9:
->  - none
-> Change from v3 to v4:
->  - reverse Xmas tree order
->  - local -> dma_local
->  - change error message
->  - IS_ERR -> IS_ERR_OR_NULL
->  - check return value of dmaengine_slave_config()
-> Change from v1 to v2:
->  - none
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
+>  .../pci/controller/dwc/pcie-designware-host.c | 32 ++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.c  | 57 ++++++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.h  |  6 +-
+>  4 files changed, 90 insertions(+), 9 deletions(-)
 > 
->  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
->  1 file changed, 98 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 90d84d3bc868f..f26afd02f3a86 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -52,9 +52,11 @@ struct pci_epf_test {
->  	enum pci_barno		test_reg_bar;
->  	size_t			msix_table_offset;
->  	struct delayed_work	cmd_handler;
-> -	struct dma_chan		*dma_chan;
-> +	struct dma_chan		*dma_chan_tx;
-> +	struct dma_chan		*dma_chan_rx;
->  	struct completion	transfer_complete;
->  	bool			dma_supported;
-> +	bool			dma_private;
->  	const struct pci_epc_features *epc_features;
->  };
->  
-> @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
->   */
->  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  				      dma_addr_t dma_dst, dma_addr_t dma_src,
-> -				      size_t len)
-> +				      size_t len, dma_addr_t dma_remote,
-> +				      enum dma_transfer_direction dir)
->  {
-> +	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> +	dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
->  	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> -	struct dma_chan *chan = epf_test->dma_chan;
->  	struct pci_epf *epf = epf_test->epf;
->  	struct dma_async_tx_descriptor *tx;
-> +	struct dma_slave_config sconf = {};
->  	struct device *dev = &epf->dev;
->  	dma_cookie_t cookie;
->  	int ret;
-> @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index c62640201246..9b0540cfa9e8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -167,8 +167,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
 >  		return -EINVAL;
 >  	}
 >  
-> -	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +	if (epf_test->dma_private) {
-> +		sconf.direction = dir;
-> +		if (dir == DMA_MEM_TO_DEV)
-> +			sconf.dst_addr = dma_remote;
-> +		else
-> +			sconf.src_addr = dma_remote;
-> +
-> +		if (dmaengine_slave_config(chan, &sconf)) {
-> +			dev_err(dev, "DMA slave config fail\n");
-> +			return -EIO;
-> +		}
-> +		tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> +	} else {
-> +		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +	}
-> +
->  	if (!tx) {
->  		dev_err(dev, "Failed to prepare DMA memcpy\n");
->  		return -EIO;
-> @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  	return 0;
->  }
->  
-> +struct epf_dma_filter {
-> +	struct device *dev;
-> +	u32 dma_mask;
-> +};
-> +
-> +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> +{
-> +	struct epf_dma_filter *filter = node;
-> +	struct dma_slave_caps caps;
-> +
-> +	memset(&caps, 0, sizeof(caps));
-> +	dma_get_slave_caps(chan, &caps);
-> +
-> +	return chan->device->dev == filter->dev
-> +		&& (filter->dma_mask & caps.directions);
-> +}
-> +
->  /**
->   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
->   * @epf_test: the EPF test device that performs data transfer operation
-> @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->  {
->  	struct pci_epf *epf = epf_test->epf;
->  	struct device *dev = &epf->dev;
-> +	struct epf_dma_filter filter;
->  	struct dma_chan *dma_chan;
->  	dma_cap_mask_t mask;
->  	int ret;
->  
-> +	filter.dev = epf->epc->dev.parent;
-> +	filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> +
-> +	dma_cap_zero(mask);
-> +	dma_cap_set(DMA_SLAVE, mask);
-> +	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +	if (IS_ERR_OR_NULL(dma_chan)) {
-> +		dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> +		goto fail_back_tx;
-> +	}
-> +
-> +	epf_test->dma_chan_rx = dma_chan;
-> +
-> +	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> +	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +
-> +	if (IS_ERR(dma_chan)) {
-> +		dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> +		goto fail_back_rx;
-> +	}
-> +
-> +	epf_test->dma_chan_tx = dma_chan;
-> +	epf_test->dma_private = true;
-> +
-> +	init_completion(&epf_test->transfer_complete);
-> +
-> +	return 0;
-> +
-> +fail_back_rx:
-> +	dma_release_channel(epf_test->dma_chan_rx);
-> +	epf_test->dma_chan_tx = NULL;
-> +
-> +fail_back_tx:
->  	dma_cap_zero(mask);
->  	dma_cap_set(DMA_MEMCPY, mask);
->  
-> @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+> -	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, type,
+> -				       cpu_addr, bar);
+> +	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
+> +					  cpu_addr, bar);
+>  	if (ret < 0) {
+>  		dev_err(pci->dev, "Failed to program IB window\n");
+>  		return ret;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 7caca6c575a5..9cb406f5c185 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -612,12 +612,15 @@ static int dw_pcie_iatu_setup(struct pcie_port *pp)
 >  	}
->  	init_completion(&epf_test->transfer_complete);
 >  
-> -	epf_test->dma_chan = dma_chan;
-> +	epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
+>  	/*
+> -	 * Ensure all outbound windows are disabled before proceeding with
+> -	 * the MEM/IO ranges setups.
+> +	 * Ensure all out/inbound windows are disabled before proceeding with
+> +	 * the MEM/IO (dma-)ranges setups.
+>  	 */
+>  	for (i = 0; i < pci->num_ob_windows; i++)
+>  		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
 >  
->  	return 0;
->  }
-> @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
->  	if (!epf_test->dma_supported)
->  		return;
+> +	for (i = 0; i < pci->num_ib_windows; i++)
+> +		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
+> +
+>  	i = 0;
+>  	resource_list_for_each_entry(entry, &pp->bridge->windows) {
+>  		if (resource_type(entry->res) != IORESOURCE_MEM)
+> @@ -654,9 +657,32 @@ static int dw_pcie_iatu_setup(struct pcie_port *pp)
+>  	}
 >  
-> -	dma_release_channel(epf_test->dma_chan);
-> -	epf_test->dma_chan = NULL;
-> +	dma_release_channel(epf_test->dma_chan_tx);
-> +	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +		epf_test->dma_chan_tx = NULL;
-> +		epf_test->dma_chan_rx = NULL;
-> +		return;
+>  	if (pci->num_ob_windows <= i)
+> -		dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
+> +		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
+>  			 pci->num_ob_windows);
+>  
+> +	i = 0;
+> +	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
+> +		if (resource_type(entry->res) != IORESOURCE_MEM)
+> +			continue;
+> +
+> +		if (pci->num_ib_windows <= i)
+> +			break;
+> +
+> +		ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
+> +					       entry->res->start,
+> +					       entry->res->start - entry->offset,
+> +					       resource_size(entry->res));
+> +		if (ret) {
+> +			dev_err(pci->dev, "Failed to set DMA range %pr\n",
+> +				entry->res);
+> +			return ret;
+> +		}
 > +	}
 > +
-> +	dma_release_channel(epf_test->dma_chan_rx);
-> +	epf_test->dma_chan_rx = NULL;
+> +	if (pci->num_ib_windows <= i)
+> +		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
+> +			 pci->num_ib_windows);
 > +
-> +	return;
+>  	return 0;
 >  }
 >  
->  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->  			goto err_map_addr;
->  		}
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 747e252c09e6..33718ed6c511 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -397,8 +397,61 @@ static inline void dw_pcie_writel_atu_ib(struct dw_pcie *pci, u32 index, u32 reg
+>  	dw_pcie_writel_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg, val);
+>  }
 >  
-> +		if (epf_test->dma_private) {
-> +			dev_err(dev, "Cannot transfer data using DMA\n");
-> +			ret = -EINVAL;
-> +			goto err_map_addr;
-> +		}
+> -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> -			     int type, u64 cpu_addr, u8 bar)
+> +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> +			     u64 cpu_addr, u64 pci_addr, u64 size)
+> +{
+> +	u64 limit_addr = pci_addr + size - 1;
+> +	u32 retries, val;
 > +
->  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -						 src_phys_addr, reg->size);
-> +						 src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  	} else {
-> @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
->  
->  		ktime_get_ts64(&start);
->  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -						 phys_addr, reg->size);
-> +						 phys_addr, reg->size,
-> +						 reg->src_addr, DMA_DEV_TO_MEM);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  		ktime_get_ts64(&end);
-> @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
->  		}
->  
->  		ktime_get_ts64(&start);
-> +
->  		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> -						 src_phys_addr, reg->size);
-> +						 src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  		ktime_get_ts64(&end);
+> +	if ((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit) ||
+> +	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
+> +	    !IS_ALIGNED(pci_addr, pci->region_align) ||
+> +	    !IS_ALIGNED(size, pci->region_align) ||
+
+Why do you want the size to be aligned? What if I want to transfer a small size
+buffer?
+
+Same question applies to outbound programming as well.
+
+Thanks,
+Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
