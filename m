@@ -2,395 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F3EF525657
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 22:25:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FBD55256E4
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 23:14:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354147AbiELUZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 16:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34958 "EHLO
+        id S1358478AbiELVOi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 17:14:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358356AbiELUZc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 16:25:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 90000273F54
-        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 13:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652387129;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4g8+UBtZN01pq95prSQMY4IixzxculuDEyg3W4/kodQ=;
-        b=TwKtw4JM8az/lOCQuo85obMuKdfN8S1KGM+wH04qGWag1pB+IgFHiGNG/A+gN0xl4uswvZ
-        SpcHoZtSKTcbvj/v6qFRsfQLzSrSgzE8VD3GhmQQi9gWLRTwDXK3u6UaDrt39HE8QKCV6O
-        b7kIrhIgkzDYUwRfOMTkYf9LDqkVw/Q=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-646-Pb9fEq5nP2WAHjZokCqFGA-1; Thu, 12 May 2022 16:25:26 -0400
-X-MC-Unique: Pb9fEq5nP2WAHjZokCqFGA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F39CC811E81;
-        Thu, 12 May 2022 20:25:25 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C885C2026D6A;
-        Thu, 12 May 2022 20:25:23 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S235641AbiELVOi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 17:14:38 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E985B5DD1F;
+        Thu, 12 May 2022 14:14:36 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id bq30so11289122lfb.3;
+        Thu, 12 May 2022 14:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=2fvUun18Y3H3meaphIs95kvs9TKAJnuvpJthSALeEsM=;
+        b=SYgDrGbNWezxlXhEFlbnKE3qsxKpg88XcLFqsc7qV+AJzja8nq9Uexp4VpOOl+mC3e
+         jhMnlzK2uojPDcPOqs6NTPtCQJGBFRhg5A5ZuPF27RmZsEndI34lxxxzNyqfcbdLO9Fv
+         Q5xxhUUGW0kMcMd2HeXixR9aWsR0HFAbrwkMYJH8KpZk7stUNhRtvbmr1Y1ESAj25ZPo
+         MEt46XQG+ql7Wrp74OArn7vvK2YjM8kel2xsR0aj98UqlxpFZUqYVi2J5J4Fa89HvEJG
+         WUuhfKWD5wvAfD2ENIv2dnY1BGFaSnUJCucHcsHBBkvPV8CzWY5lrXXsIAYZRcudHRfv
+         UAwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2fvUun18Y3H3meaphIs95kvs9TKAJnuvpJthSALeEsM=;
+        b=sozquFOcTMDkfjCrmF+X4AjoaCSS/u4hpxdgEUo9r2WJBwp61YM7C7hXfHYjgZbmqZ
+         i973Lh/jY8+kIhmEdAqgqTDWpaMFODf2NBOdVokiXRm8bZi3jgsfyOJmxbv97CAJm7+U
+         RDoxd63tzHWAFN8M24P2h5W6AP2RGor4HvhDaxmFkkJUMmOE7imy4kAcS23cX/pZ7Uot
+         buQm2yYZHp0XGhgze5zL7P2I3aAVtjd6Pe7VL5vrAqDoaGYUZCGQ5/0zgeqVxjOwUeX1
+         oSHZ/lKf7HT80O2B8cka8gr/E5Au415F7TDeeNMGn8sEpUoCUonfsswSbQzhqqfi7XUm
+         R0Nw==
+X-Gm-Message-State: AOAM531jMzlgbkcaG+/BwYSeOyKwMUUH4YNYQsdXA2m3cIcT0ear3yyr
+        xjxPLl8JUOfDhzXTEKdoasnTwU48oOMogA==
+X-Google-Smtp-Source: ABdhPJw0FfTmusT3d920y6m5KoaaHCk+Tsb3Q08jENhNjHIibospIHJ569V43l4Bjqcs7Ohp7XYiIg==
+X-Received: by 2002:ac2:5cc7:0:b0:472:5be:eb7b with SMTP id f7-20020ac25cc7000000b0047205beeb7bmr1081981lfq.663.1652390075108;
+        Thu, 12 May 2022 14:14:35 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id p23-20020a2e8057000000b0024f3d1dae7csm104867ljg.4.2022.05.12.14.14.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 14:14:33 -0700 (PDT)
+Date:   Fri, 13 May 2022 00:14:31 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Benoit=20Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 1/1] x86/PCI: Ignore E820 reservations for bridge windows on future systems
-Date:   Thu, 12 May 2022 22:25:11 +0200
-Message-Id: <20220512202511.34197-2-hdegoede@redhat.com>
-In-Reply-To: <20220512202511.34197-1-hdegoede@redhat.com>
-References: <20220512202511.34197-1-hdegoede@redhat.com>
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-clk@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC
+ fixes
+Message-ID: <20220512211431.r23r6daua36lty7d@mobilestation>
+References: <20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru>
+ <20220512001156.x6kqyhi3vjjpqch6@mobilestation>
+ <20220512152705.GA2506@lpieralisi>
+ <20220512171150.GA164627@thinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220512171150.GA164627@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some BIOS-es contain bugs where they add addresses which are already
-used in some other manner to the PCI host bridge window returned by
-the ACPI _CRS method. To avoid this Linux by default excludes
-E820 reservations when allocating addresses since 2010, see:
-commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-space").
+On Thu, May 12, 2022 at 10:41:50PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, May 12, 2022 at 04:27:05PM +0100, Lorenzo Pieralisi wrote:
+> > On Thu, May 12, 2022 at 03:11:56AM +0300, Serge Semin wrote:
+> > > On Tue, May 03, 2022 at 11:57:18PM +0300, Serge Semin wrote:
+> > > > This patchset is an initial one in the series created in the framework
+> > > > of my Baikal-T1 PCIe/eDMA-related work:
+> > > > 
+> > > > [1: In-progress v3] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+> > > > Link: https://lore.kernel.org/linux-pci/20220330144320.27039-1-Sergey.Semin@baikalelectronics.ru/
+> > > > [2: In-progress v1] PCI: dwc: Various fixes and cleanups
+> > > > Link: https://lore.kernel.org/linux-pci/20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru/
+> > > > [3: In-progress v1] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+> > > > Link: https://lore.kernel.org/linux-pci/20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru/
+> > > > [4: In-progress v1] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+> > > > Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+> > > > 
+> > > > Since some of the patches in the later patchsets depend on the
+> > > > modifications introduced here, @Lorenzo could you please merge this series
+> > > > through your PCIe subsystem repo? After getting all the required ack'es of
+> > > > course.
+> > > > 
+> > > > Short summary regarding this patchset. A few more modifications are
+> > > > introduced here to finally finish the Baikal-T1 CCU unit support up and
+> > > > prepare the code before adding the Baikal-T1 PCIe/xGMAC support. First of
+> > > > all it turned out I specified wrong DW xGMAC PTP reference clock divider
+> > > > in my initial patches. It must be 8, not 10. Secondly I was wrong to add a
+> > > > joint xGMAC Ref and PTP clock instead of having them separately defined.
+> > > > The SoC manual describes these clocks as separate fixed clock wrappers.
+> > > > Finally in order to close the SoC clock/reset support up we need to add
+> > > > the DDR and PCIe interfaces reset controls support. It's done in two
+> > > > steps. First I've moved the reset-controls-related code into a dedicated
+> > > > module. Then the DDR/PCIe reset-control functionality is added.
+> > > > 
+> > > > Link: https://lore.kernel.org/linux-pci/20220324010905.15589-1-Sergey.Semin@baikalelectronics.ru/
+> > > > Changelog v2:
+> > > > - Resubmit the series with adding @Philipp to the list of the recipients.
+> > > > 
+> > > > Link: https://lore.kernel.org/linux-pci/20220330144320.27039-1-Sergey.Semin@baikalelectronics.ru/
+> > > > Changelog v3:
+> > > > - Rebased from v5.17 onto v5.18-rc3.
+> > > > - No comments. Just resend the series.
+> > > 
+> > > No comments for more than a week. There were no comments in v1 and v2
+> > > either. Please at least ack or merge in the series. It would be very
+> > > appreciated to merge it in through one repo with the rest of the
+> > > patchsets before the next merge window. @Bjorn, @Lorenzo, @Michael?
+> > 
 
-Recently (2019) some systems have shown-up with E820 reservations which
-cover the entire _CRS returned PCI bridge memory window, causing all
-attempts to assign memory to PCI BARs which have not been setup by the
-BIOS to fail. For example here are the relevant dmesg bits from a
-Lenovo IdeaPad 3 15IIL 81WE:
+Hello Lorenzo, Manivannan
 
- [mem 0x000000004bc50000-0x00000000cfffffff] reserved
- pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+> > Hi Sergey,
+> > 
+> > these changes affect the clock tree and have to be reviewed and merged
+> > by the respective maintainers if they think the changes can be accepted.
+> > 
+> > I don't see any reason why we should, if ACK'ed, take them in the PCI
+> > tree, this series does not apply changes to the PCI tree at all and you
+> > don't need it as a base for future to-be-merged PCI patches either.
+> > 
+> > So in short, this series has to go through the usual clock tree review
+> > process.
+> > 
 
-The ACPI specifications appear to allow this new behavior:
+I do know the normal procedure. But if patches concern different
+subsystems but for some reason inter-depended somehow it's ok to merge
+them in via a single repo. In my case the platform clock driver has
+been updated in a way so to support the reset-controls utilized in the
+PCIe driver altered in another patchset. So I didn't want to leave the
+kernel not working in the framework of my platform on any git hash
+state. That's why I asked to merge the patchsets in via the same repo.
+The kernel would be still buildable though.
 
-The relationship between E820 and ACPI _CRS is not really very clear.
-ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
+> 
+> Yes, Stephen should be the one taking these patches through the clk tree. Also,
+> there is no need to club both pci and clk patches in a single tree. That's
+> usually done for patches with build dependencies, but here there are none.
 
-  This range of addresses is in use or reserved by the system and is
-  not to be included in the allocatable memory pool of the operating
-  system's memory manager.
+Well, I didn't expect to have my patchsets review to be that delayed.
+Now seeing Lorenzo is going to review only DW PCIe fixes and cleanups
+after which will be gone for two more months I have to admit that my
+plan of getting the changes accepted in 5.19 won't come true. Really
+I thought of any subsystem but not of PCIe/DMA that review procedure
+would last that long.
 
-and it may be used when:
+-Sergey
 
-  The address range is in use by a memory-mapped system device.
-
-Furthermore, sec 15.2 says:
-
-  Address ranges defined for baseboard memory-mapped I/O devices, such
-  as APICs, are returned as reserved.
-
-A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
-and its apertures are in use and certainly should not be included in
-the general allocatable pool, so the fact that some BIOS-es reports
-the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
-
-So it seems that the excluding of E820 reserved addresses is a mistake.
-
-Ideally Linux would fully stop excluding E820 reserved addresses,
-but then various old systems will regress. Instead keep the old behavior
-for old systems, while ignoring the E820 reservations for any future
-systems.
-
-That is ignore E820 reservations starting with systems with
-a DMI BIOS year >= 2023.
-
-And use DMI quirks for existing systems on which excluding E820
-reservations from the _CRS returned bridge window is an issue.
-
-Also add pci=no_e820 and pci=use_e820 options to allow overriding
-the BIOS year + DMI matching logic.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-BugLink: https://bugs.launchpad.net/bugs/1878279
-BugLink: https://bugs.launchpad.net/bugs/1880172
-BugLink: https://bugs.launchpad.net/bugs/1884232
-BugLink: https://bugs.launchpad.net/bugs/1921649
-BugLink: https://bugs.launchpad.net/bugs/1931715
-BugLink: https://bugs.launchpad.net/bugs/1932069
-Cc: Benoit Grégoire <benoitg@coeus.ca>
-Cc: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v8:
-- Change the cut-off for no longer excluding E820 reservations from
-  the bridge window to BIOS year >= 2023 so that this only applies to
-  upcoming systems.
-- Use DMI quirks for existing systems on which excluding E820
-  reservations from the _CRS returned bridge window is an issue.
-
-Changes in v7:
-- Re-add the pci=use_e820 and pci=no_e820 kernel cmdline options since it
-  turns out that some newer laptops still need pci=use_e820
-- Add DMI quirks for known newer laptops which need pci=use_e820
-
-Changes in v6:
-- Remove the possibility to change the behavior from the commandline
-  because of worries that users may use this to paper over other problems
-
-Changes in v5:
-- Drop mention of Windows behavior from the commit msg, replace with a
-  reference to the specs
-- Improve documentation in Documentation/admin-guide/kernel-parameters.txt
-- Reword the big comment added, use "PCI host bridge window" in it and drop
-  all refences to Windows
-
-Changes in v4:
-- Rewrap the big comment block to fit in 80 columns
-- Add Rafael's Acked-by
-- Add Cc: stable@vger.kernel.org
-
-Changes in v3:
-- Commit msg tweaks (drop dmesg timestamps, typo fix)
-- Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
-- Add Mika's Reviewed-by
-
-Changes in v2:
-- Replace the per model DMI quirk approach with disabling E820 reservations
-  checking for all systems with a BIOS year >= 2018
-- Add documentation for the new kernel-parameters to
-  Documentation/admin-guide/kernel-parameters.txt
----
- .../admin-guide/kernel-parameters.txt         |   9 ++
- arch/x86/include/asm/pci_x86.h                |   2 +
- arch/x86/pci/acpi.c                           | 109 +++++++++++++++++-
- arch/x86/pci/common.c                         |   8 ++
- 4 files changed, 126 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 3f1cc5e317ed..2477b639d5c4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4066,6 +4066,15 @@
- 				please report a bug.
- 		nocrs		[X86] Ignore PCI host bridge windows from ACPI.
- 				If you need to use this, please report a bug.
-+		use_e820	[X86] Use E820 reservations to exclude parts of
-+				PCI host bridge windows. This is a workaround
-+				for BIOS defects in host bridge _CRS methods.
-+				If you need to use this, please report a bug to
-+				<linux-pci@vger.kernel.org>.
-+		no_e820		[X86] Ignore E820 reservations for PCI host
-+				bridge windows. This is the default on modern
-+				hardware. If you need to use this, please report
-+				a bug to <linux-pci@vger.kernel.org>.
- 		routeirq	Do IRQ routing for all PCI devices.
- 				This is normally done in pci_enable_device(),
- 				so this option is a temporary workaround
-diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-index a0627dfae541..ce3fd3311772 100644
---- a/arch/x86/include/asm/pci_x86.h
-+++ b/arch/x86/include/asm/pci_x86.h
-@@ -42,6 +42,8 @@ do {						\
- #define PCI_ROOT_NO_CRS		0x100000
- #define PCI_NOASSIGN_BARS	0x200000
- #define PCI_BIG_ROOT_WINDOW	0x400000
-+#define PCI_USE_E820		0x800000
-+#define PCI_NO_E820		0x1000000
- 
- extern unsigned int pci_probe;
- extern unsigned long pirq_table_addr;
-diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index 562c81a51ea0..125c55b58d7e 100644
---- a/arch/x86/pci/acpi.c
-+++ b/arch/x86/pci/acpi.c
-@@ -20,6 +20,7 @@ struct pci_root_info {
- #endif
- };
- 
-+static bool pci_use_e820 = true;
- static bool pci_use_crs = true;
- static bool pci_ignore_seg;
- 
-@@ -42,6 +43,13 @@ static int __init set_ignore_seg(const struct dmi_system_id *id)
- 	return 0;
- }
- 
-+static int __init set_no_e820(const struct dmi_system_id *id)
-+{
-+	printk(KERN_INFO "PCI: %s detected: ignoring e820 regions\n", id->ident);
-+	pci_use_e820 = false;
-+	return 0;
-+}
-+
- static const struct dmi_system_id pci_crs_quirks[] __initconst = {
- 	/* http://bugzilla.kernel.org/show_bug.cgi?id=14183 */
- 	{
-@@ -136,6 +144,74 @@ static const struct dmi_system_id pci_crs_quirks[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP xw9300 Workstation"),
- 		},
- 	},
-+
-+	/*
-+	 * Most Lenovo models with "IIL" in their DMI_PRODUCT_VERSION have
-+	 * an E820 reservation which covers the entire _CRS returned 32 bit
-+	 * PCI bridge memory window, causing all attempts to assign memory to
-+	 * 32 bit PCI bars which have not been setup by the BIOS to fail.
-+	 * Specifically this often causes some of the I2C controllers to not
-+	 * work breaking touchpad support and/or this may cause issues when
-+	 * hotplugging thunderbolt connected devices.
-+	 *
-+	 * This DMI match entry covers the following DMI_PRODUCT_VERSION-s with
-+	 * an E820 reservation which covers the entire 32 bit bridge window:
-+	 * "IdeaPad 3 14IIL05", "IdeaPad 3 15IIL05", "IdeaPad 3 17IIL05",
-+	 * "IdeaPad 5 14IIL05", "IdeaPad 5 15IIL05",
-+	 * "IdeaPad Slim 7 14IIL05", "IdeaPad Slim 7 15IIL05",
-+	 * "Lenovo BS145-15IIL",
-+	 * "Lenovo IdeaPad S145-15IIL", "Lenovo IdeaPad S340-14IIL",
-+	 * "Lenovo IdeaPad S340-15IIL", "Lenovo IdeaPad C340-15IIL",
-+	 * "Lenovo V14-IIL", "Lenovo V15-IIL", "Lenovo V17-IIL",
-+	 * "Lenovo Yoga S740-14IIL", "Lenovo Yoga C940-14IIL",
-+	 * "Yoga Slim 7 14IIL05", "Yoga Slim 7 15IIL05"
-+	 *
-+	 * On some of these the bridge's _CRS method *sometimes* (under unknown
-+	 * conditions) has a 64 bit [mem 0x4000000000-0x7fffffffff window].
-+	 * This avoids some of the issues, but even then there are still issues
-+	 * with assigning some 32 bit only BARs such as some Thunderbolt devs,
-+	 * the 00:1f.5 BIOS SPI controller and BAR6 of some nvidia gfx.
-+	 *
-+	 * This entry also covers the following DMI_PRODUCT_VERSION-s which do
-+	 * not need pci_use_e820=false. This quirk is a no-op for these models,
-+	 * because there is no overlap between E820 regions and _CRS windows:
-+	 * "IdeaPad Flex 5 14IIL05", "IdeaPad Flex 5 15IIL05",
-+	 * "Lenovo ThinkBook 14-IIL", "Lenovo ThinkBook 15-IIL",
-+	 * "Lenovo Yoga S940-14IIL"
-+	 *
-+	 * This entry fixes issues reported in the following bugs:
-+	 * https://bugzilla.kernel.org/show_bug.cgi?id=206459
-+	 * https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-+	 * https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-+	 * https://bugs.launchpad.net/bugs/1878279
-+	 * https://bugs.launchpad.net/bugs/1880172
-+	 * https://bugs.launchpad.net/bugs/1921649
-+	 * https://bugs.launchpad.net/bugs/1931715
-+	 * https://bugs.launchpad.net/bugs/1932069
-+	 */
-+	{
-+		.callback = set_no_e820,
-+		.ident = "Lenovo *IIL* product version",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "IIL"),
-+		},
-+	},
-+
-+	/*
-+	 * The Acer Spin 5 (SP513-54N) has the same E820 reservation covering
-+	 * the entire _CRS 32 bit window issue as the Lenovo *IIL* models.
-+	 * https://bugs.launchpad.net/bugs/1884232
-+	 */
-+	{
-+		.callback = set_no_e820,
-+		.ident = "Acer Spin 5 (SP513-54N)",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Spin SP513-54N"),
-+		},
-+	},
-+
- 	{}
- };
- 
-@@ -146,6 +222,24 @@ void __init pci_acpi_crs_quirks(void)
- 	if (year >= 0 && year < 2008 && iomem_resource.end <= 0xffffffff)
- 		pci_use_crs = false;
- 
-+	/*
-+	 * Some BIOS-es contain bugs where they add addresses which are already
-+	 * used in some other manner to the PCI host bridge window returned by
-+	 * the ACPI _CRS method. To avoid this Linux by default excludes
-+	 * E820 reservations when allocating addresses since 2010.
-+	 * In 2019 some systems have shown-up with E820 reservations which cover
-+	 * the entire _CRS returned PCI host bridge window, causing all attempts
-+	 * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
-+	 *
-+	 * Ideally Linux would fully stop using E820 reservations, but then
-+	 * various old systems will regress. Instead stop using E820 reservations
-+	 * for new systems with a DMI BIOS year >= 2023;
-+	 * and use DMI quirks for existing systems on which excluding E820
-+	 * reservations is known to cause issues.
-+	 */
-+	if (year >= 2023)
-+		pci_use_e820 = false;
-+
- 	dmi_check_system(pci_crs_quirks);
- 
- 	/*
-@@ -161,6 +255,15 @@ void __init pci_acpi_crs_quirks(void)
- 	       "if necessary, use \"pci=%s\" and report a bug\n",
- 	       pci_use_crs ? "Using" : "Ignoring",
- 	       pci_use_crs ? "nocrs" : "use_crs");
-+
-+	/* "pci=use_e820"/"pci=no_e820" on the kernel cmdline takes precedence */
-+	if (pci_probe & PCI_NO_E820)
-+		pci_use_e820 = false;
-+	else if (pci_probe & PCI_USE_E820)
-+		pci_use_e820 = true;
-+
-+	printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
-+	       pci_use_e820 ? "Using" : "Ignoring");
- }
- 
- #ifdef	CONFIG_PCI_MMCONFIG
-@@ -301,8 +404,10 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
- 
- 	status = acpi_pci_probe_root_resources(ci);
- 
--	resource_list_for_each_entry(entry, &ci->resources)
--		remove_e820_regions(&device->dev, entry->res);
-+	if (pci_use_e820) {
-+		resource_list_for_each_entry(entry, &ci->resources)
-+			remove_e820_regions(&device->dev, entry->res);
-+	}
- 
- 	if (pci_use_crs) {
- 		resource_list_for_each_entry_safe(entry, tmp, &ci->resources)
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 9e1e6b8d8876..ddb798603201 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -595,6 +595,14 @@ char *__init pcibios_setup(char *str)
- 	} else if (!strcmp(str, "nocrs")) {
- 		pci_probe |= PCI_ROOT_NO_CRS;
- 		return NULL;
-+	} else if (!strcmp(str, "use_e820")) {
-+		pci_probe |= PCI_USE_E820;
-+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-+		return NULL;
-+	} else if (!strcmp(str, "no_e820")) {
-+		pci_probe |= PCI_NO_E820;
-+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-+		return NULL;
- #ifdef CONFIG_PHYS_ADDR_T_64BIT
- 	} else if (!strcmp(str, "big_root_window")) {
- 		pci_probe |= PCI_BIG_ROOT_WINDOW;
--- 
-2.36.0
-
+> 
+> Thanks,
+> Mani
+> 
+> > Thanks,
+> > Lorenzo
+> > 
+> > > -Sergey
+> > > 
+> > > > 
+> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> > > > Cc: Rob Herring <robh@kernel.org>
+> > > > Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > > Cc: linux-clk@vger.kernel.org
+> > > > Cc: linux-pci@vger.kernel.org
+> > > > Cc: linux-mips@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > 
+> > > > Serge Semin (4):
+> > > >   clk: baikal-t1: Fix invalid xGMAC PTP clock divider
+> > > >   clk: baikal-t1: Define shared xGMAC ref/ptp clocks parent
+> > > >   clk: baikal-t1: Move reset-controls code into a dedicated module
+> > > >   clk: baikal-t1: Add DDR/PCIe directly controlled resets support
+> > > > 
+> > > >  drivers/clk/baikal-t1/Kconfig       |  12 +-
+> > > >  drivers/clk/baikal-t1/Makefile      |   1 +
+> > > >  drivers/clk/baikal-t1/ccu-div.c     |   1 +
+> > > >  drivers/clk/baikal-t1/ccu-div.h     |   6 +
+> > > >  drivers/clk/baikal-t1/ccu-rst.c     | 373 ++++++++++++++++++++++++++++
+> > > >  drivers/clk/baikal-t1/ccu-rst.h     |  64 +++++
+> > > >  drivers/clk/baikal-t1/clk-ccu-div.c | 102 ++------
+> > > >  include/dt-bindings/reset/bt1-ccu.h |   9 +
+> > > >  8 files changed, 482 insertions(+), 86 deletions(-)
+> > > >  create mode 100644 drivers/clk/baikal-t1/ccu-rst.c
+> > > >  create mode 100644 drivers/clk/baikal-t1/ccu-rst.h
+> > > > 
+> > > > -- 
+> > > > 2.35.1
+> > > > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
