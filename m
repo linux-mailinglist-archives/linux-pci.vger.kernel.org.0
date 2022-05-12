@@ -2,149 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27FC852504D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 16:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B16652506D
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 16:41:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355457AbiELOjM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 10:39:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45260 "EHLO
+        id S1355121AbiELOlm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 10:41:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355442AbiELOjL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 10:39:11 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46BA253A9F
-        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 07:39:08 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id cu23-20020a17090afa9700b001d98d8e53b7so6200957pjb.0
-        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 07:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=RpvA14mopi2wM/0/4s7P6t9yjcv8sVd/ys9twTz6XHs=;
-        b=IwjrKmELqe++qDbcjrB0VrUfg6crocNU1xe5lMxp6nWDAzOL5RWRRt8saVMkiGySTi
-         oFhpr/l7d61NIYvJG9xPdiXKeej6OyIZFHq7456kaCwqyz0g5bKVMdETsAH1TBVFFayr
-         rlNG/yc6J6myUNMWB6CFQ8qjTTUSzLwGSQTawUMIPH1LQ1wIQ39pAcWNRk4Wy4HpF9Q5
-         1GqUU7aWjlfmKZtqOwn+axFPpEsVq+5jqEMW2ZvjYj4y421WNHqCgfnk7QPDI/12rh7C
-         QNy2f3yAt3shWmOImGNjA8N37MhIMQs0iwYguP2rDjiZtaWS4/AE0VDsyJqe0dlJnArm
-         Ptvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=RpvA14mopi2wM/0/4s7P6t9yjcv8sVd/ys9twTz6XHs=;
-        b=2Ymhfp+qCLVdBUur/PTscVIPVS9D+aKwGI8/bhn0b4Eb0t3egq96zNTla8TEMaCSsW
-         rls01jcVTZVeUW0SqjRoDgf5r+r0hhf5/kijW2bzrV0toiOShUINnUybwrC1JrhZXjSl
-         wVWKFzyHkMYxfMh0PrRrwS1RT4SPf4XBu6xfryMzER6ARQ4T9bcrpKBGKXctW1LkuEZp
-         fihkNoHZZPX1AcHoIP0L1rq5h6XTBMA/WAf1JcrTj6dQaBl3Q8pL8zPxm3Sl5jYOldz6
-         lXDD9zAiVqeKplLplN+sN6Fi1h+0fKbfEVTT/jUDtBBPLc7ROI0Ak4POUN0BCAL+mN0u
-         0awA==
-X-Gm-Message-State: AOAM530s8i9btU37lOja5ToNaBl0HxkYcOy0bwNd01CiotmQmY6E3z1b
-        Xdlmd8lmIQcOM334WpdNhmNJ
-X-Google-Smtp-Source: ABdhPJzGX4QVR+Nu2JITJr/b8RNE+XCcktTJ7Bx+sADcWNFJ0GnMQN2f39XlXIhEaWDxYRZWAK1HHw==
-X-Received: by 2002:a17:902:f710:b0:15f:165f:b50b with SMTP id h16-20020a170902f71000b0015f165fb50bmr276822plo.158.1652366348217;
-        Thu, 12 May 2022 07:39:08 -0700 (PDT)
-Received: from thinkpad ([117.202.184.202])
-        by smtp.gmail.com with ESMTPSA id 72-20020a62154b000000b0050dc762816bsm3852511pfv.69.2022.05.12.07.39.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 May 2022 07:39:07 -0700 (PDT)
-Date:   Thu, 12 May 2022 20:09:00 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        with ESMTP id S1355489AbiELOll (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 10:41:41 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 077FC62105;
+        Thu, 12 May 2022 07:41:41 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC1C0106F;
+        Thu, 12 May 2022 07:41:40 -0700 (PDT)
+Received: from e123427-lin.lan (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E7E13F73D;
+        Thu, 12 May 2022 07:41:39 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/26] dmaengine: dw-edma: Release requested IRQs on
- failure
-Message-ID: <20220512143900.GH35848@thinkpad>
-References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
- <20220503225104.12108-4-Sergey.Semin@baikalelectronics.ru>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, kishon@ti.com,
+        dominic.rath@ibv-augsburg.net, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH v3] PCI: cadence: Allow PTM Responder to be enabled
+Date:   Thu, 12 May 2022 15:41:30 +0100
+Message-Id: <165236647653.32307.17828206891941657496.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220512055539.1782437-1-christian.gmeiner@gmail.com>
+References: <20220512055539.1782437-1-christian.gmeiner@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220503225104.12108-4-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 01:50:41AM +0300, Serge Semin wrote:
-> From very beginning of the DW eDMA driver live in the kernel the method
-> dw_edma_irq_request() hasn't been designed quite correct. In case if the
-> request_irq() method fails to initialize the IRQ handler at some point the
-> previously requested IRQs will be left initialized. It's prune to errors
-> up to the system crash. Let's fix that by releasing the previously
-> requested IRQs in the cleanup-on-error path of the dw_edma_irq_request()
-> function.
+On Thu, 12 May 2022 07:55:38 +0200, Christian Gmeiner wrote:
+> This enables the Controller [RP] to automatically respond with
+> Response/ResponseD messages if CDNS_PCIE_LM_TPM_CTRL_PTMRSEN
+> and PCI_PTM_CTRL_ENABLE bits are both set.
 > 
-> Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Applied to pci/cadence, thanks!
+
+[1/1] PCI: cadence: Allow PTM Responder to be enabled
+      https://git.kernel.org/lpieralisi/pci/c/0f0cd520aa
 
 Thanks,
-Mani
-
-> 
-> ---
-> 
-> Changelog v2:
-> - This is a new patch added in v2 iteration of the series.
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index 07f756479663..04efcb16d13d 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -899,10 +899,8 @@ static int dw_edma_irq_request(struct dw_edma *dw,
->  						dw_edma_interrupt_read,
->  					  IRQF_SHARED, dw->name,
->  					  &dw->irq[i]);
-> -			if (err) {
-> -				dw->nr_irqs = i;
-> -				return err;
-> -			}
-> +			if (err)
-> +				goto err_irq_free;
->  
->  			if (irq_get_msi_desc(irq))
->  				get_cached_msi_msg(irq, &dw->irq[i].msi);
-> @@ -911,6 +909,14 @@ static int dw_edma_irq_request(struct dw_edma *dw,
->  		dw->nr_irqs = i;
->  	}
->  
-> +	return 0;
-> +
-> +err_irq_free:
-> +	for  (i--; i >= 0; i--) {
-> +		irq = chip->ops->irq_vector(dev, i);
-> +		free_irq(irq, &dw->irq[i]);
-> +	}
-> +
->  	return err;
->  }
->  
-> -- 
-> 2.35.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Lorenzo
