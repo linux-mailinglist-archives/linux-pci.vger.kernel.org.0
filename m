@@ -2,324 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12E3852515E
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 17:37:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50BE5525215
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 18:08:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355478AbiELPhB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 11:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
+        id S245599AbiELQIw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 12:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356011AbiELPhA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 11:37:00 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6AC525C28B;
-        Thu, 12 May 2022 08:36:59 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id n10so5502063pjh.5;
-        Thu, 12 May 2022 08:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=krf3sQjkUcZDwoyOKRbmq1UjBHY+kqEwczeutGD/sfQ=;
-        b=R4bI0lTia785dsPngPupP+1+dxEn5OhB9XPHbwzuPdwj952iQePg4hqSBN5LJf+jL0
-         gojHwGIM446SgurBfKNFZhhp/TkkFnQjFKsMhdZGtf3f3rUlDr/H6pg28VnYBwatVcOu
-         Orn1Bngbz5+uJQDwHOqYa0l016rrYKbZWmPq1/KiWKU8tGHmcpIFhnb9Q/+G/begBSMR
-         RDb3lSk8ZDTvUYRQFJmBmKe9onPY1lVMhQnckbajVPIGrxzwMpk4nnZiGLerLGK4JqzM
-         Bo2Ji89s4V3+EPM5x+QKRfAlgu6Zns8RoNx144eQ4PsXTPTMVFnlQHiBqK3MKq5X8TQY
-         2i0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=krf3sQjkUcZDwoyOKRbmq1UjBHY+kqEwczeutGD/sfQ=;
-        b=JehfvZsNsJcxQbM5P+C61UFc3rI6GKXJ4vxy9Fi7Dy10XNDUN0IH7fE8L9GGdwjTbX
-         ZSe0jMfxjjahQd+uHlHeA2WlN4QFHtvxo7eYW8MAVA9hofbRprjfN19zdH8RvSrdhzbL
-         emZO85bHZNzdbGy7fZ86zez1eFhdmV2TXzsLIIg2hIb8/XYhCFehM182i/UY12obLrgp
-         H0LEr/cdrhJvZdG2zscWKmQybeTjlGtVq9AxNYsIpZTwuWxpjkykA3UtRKKZBD/NQ647
-         3cRn8JFJQVd+OFIMllQR+5KX7sI9hb9JFJPMLSSo2SKH+OKM1Xz7rTR2+VIAXX6Cll+7
-         2dbg==
-X-Gm-Message-State: AOAM531BkBhnvnxjWwzO3VTCw6LAgfpjqHl4gy+zF1mN4Q/Hj/6ifDAJ
-        g1kXUNK2tTqAG3QTXsBK1+dWu/tKpLmMKSkpJTc=
-X-Google-Smtp-Source: ABdhPJz3qhA6ZNx2QhdgTz/UfLedOta3RZFIOSIYK7Xoz85/OLaCcsyaf8yHKUsbJvLiOc7YFOtxETJja4D5M8W6BjI=
-X-Received: by 2002:a17:90b:3d0b:b0:1dc:1953:462d with SMTP id
- pt11-20020a17090b3d0b00b001dc1953462dmr185919pjb.122.1652369819247; Thu, 12
- May 2022 08:36:59 -0700 (PDT)
+        with ESMTP id S245007AbiELQIv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 12:08:51 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B3E0A60D85;
+        Thu, 12 May 2022 09:08:50 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85395106F;
+        Thu, 12 May 2022 09:08:50 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.2.156])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 596513F73D;
+        Thu, 12 May 2022 09:08:48 -0700 (PDT)
+Date:   Thu, 12 May 2022 17:08:45 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
+        bhelgaas@google.com, robh@kernel.org, shawnguo@kernel.org,
+        vkoul@kernel.org, alexander.stein@ew.tq-group.com,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v2 7/7] PCI: imx6: Add the iMX8MP PCIe support
+Message-ID: <20220512160845.GB2506@lpieralisi>
+References: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
+ <1646644054-24421-8-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
-References: <20220503005801.1714345-1-Frank.Li@nxp.com> <20220503005801.1714345-10-Frank.Li@nxp.com>
- <b2961b3e-ad0e-5b8f-8d6f-221aead9992f@ti.com>
-In-Reply-To: <b2961b3e-ad0e-5b8f-8d6f-221aead9992f@ti.com>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Thu, 12 May 2022 10:36:47 -0500
-Message-ID: <CAHrpEqT4hZ3G1YBxYdjHVDrPGZoZEpd_C==yK+CNE-ZOtk2nCA@mail.gmail.com>
-Subject: Re: [PATCH v10 9/9] PCI: endpoint: Enable DMA controller tests for
- endpoints with DMA capabilities
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1646644054-24421-8-git-send-email-hongxing.zhu@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 12, 2022 at 8:52 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Frank,
->
-> On 03/05/22 06:28, Frank Li wrote:
-> > Some Endpoints controllers have DMA capabilities.  This DMA controller has
-> > more efficiency then a general external DMA controller.  And this DMA
-> > controller can bypass outbound memory address translation unit.
-> >
-> > The whole flow use standard DMA usage module
-> >
-> >  1. Using dma_request_channel() and filter function to find correct
-> >     RX and TX Channel. if not exist,  fallback to try allocate
-> >     general DMA controller channel.
-> >  2. dmaengine_slave_config() config remote side physcial address.
-> >  3. using dmaengine_prep_slave_single() create transfer descriptor.
-> >  4. tx_submit();
-> >  5. dma_async_issue_pending();
-> >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> The patch looks good to me (other than Lorenzo's comment on the
-> description). Did you also verify DMA_MEMCPY just to make sure, the old
-> path continues to work?
+On Mon, Mar 07, 2022 at 05:07:34PM +0800, Richard Zhu wrote:
+> Add the i.MX8MP PCIe support.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 
-Not yet, our hardware platform has not memory to memory DMA.
+I expect this series will eventually go via the imx6 platform tree.
 
-best regards
-Frank Li
+To avoid you waiting for me when this series is deemed acceptable:
 
->
-> Regards,
-> Kishon
-> > ---
-> > Change from v9 to v10:
-> >  - rewrite commit message
-> > Change from v4 to v9:
-> >  - none
-> > Change from v3 to v4:
-> >  - reverse Xmas tree order
-> >  - local -> dma_local
-> >  - change error message
-> >  - IS_ERR -> IS_ERR_OR_NULL
-> >  - check return value of dmaengine_slave_config()
-> > Change from v1 to v2:
-> >  - none
-> >
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
-> >  1 file changed, 98 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > index 90d84d3bc868f..f26afd02f3a86 100644
-> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > @@ -52,9 +52,11 @@ struct pci_epf_test {
-> >       enum pci_barno          test_reg_bar;
-> >       size_t                  msix_table_offset;
-> >       struct delayed_work     cmd_handler;
-> > -     struct dma_chan         *dma_chan;
-> > +     struct dma_chan         *dma_chan_tx;
-> > +     struct dma_chan         *dma_chan_rx;
-> >       struct completion       transfer_complete;
-> >       bool                    dma_supported;
-> > +     bool                    dma_private;
-> >       const struct pci_epc_features *epc_features;
-> >  };
-> >
-> > @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
-> >   */
-> >  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >                                     dma_addr_t dma_dst, dma_addr_t dma_src,
-> > -                                   size_t len)
-> > +                                   size_t len, dma_addr_t dma_remote,
-> > +                                   enum dma_transfer_direction dir)
-> >  {
-> > +     struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> > +     dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
-> >       enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> > -     struct dma_chan *chan = epf_test->dma_chan;
-> >       struct pci_epf *epf = epf_test->epf;
-> >       struct dma_async_tx_descriptor *tx;
-> > +     struct dma_slave_config sconf = {};
-> >       struct device *dev = &epf->dev;
-> >       dma_cookie_t cookie;
-> >       int ret;
-> > @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >               return -EINVAL;
-> >       }
-> >
-> > -     tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > +     if (epf_test->dma_private) {
-> > +             sconf.direction = dir;
-> > +             if (dir == DMA_MEM_TO_DEV)
-> > +                     sconf.dst_addr = dma_remote;
-> > +             else
-> > +                     sconf.src_addr = dma_remote;
-> > +
-> > +             if (dmaengine_slave_config(chan, &sconf)) {
-> > +                     dev_err(dev, "DMA slave config fail\n");
-> > +                     return -EIO;
-> > +             }
-> > +             tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> > +     } else {
-> > +             tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > +     }
-> > +
-> >       if (!tx) {
-> >               dev_err(dev, "Failed to prepare DMA memcpy\n");
-> >               return -EIO;
-> > @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >       return 0;
-> >  }
-> >
-> > +struct epf_dma_filter {
-> > +     struct device *dev;
-> > +     u32 dma_mask;
-> > +};
-> > +
-> > +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> > +{
-> > +     struct epf_dma_filter *filter = node;
-> > +     struct dma_slave_caps caps;
-> > +
-> > +     memset(&caps, 0, sizeof(caps));
-> > +     dma_get_slave_caps(chan, &caps);
-> > +
-> > +     return chan->device->dev == filter->dev
-> > +             && (filter->dma_mask & caps.directions);
-> > +}
-> > +
-> >  /**
-> >   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-> >   * @epf_test: the EPF test device that performs data transfer operation
-> > @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> >  {
-> >       struct pci_epf *epf = epf_test->epf;
-> >       struct device *dev = &epf->dev;
-> > +     struct epf_dma_filter filter;
-> >       struct dma_chan *dma_chan;
-> >       dma_cap_mask_t mask;
-> >       int ret;
-> >
-> > +     filter.dev = epf->epc->dev.parent;
-> > +     filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> > +
-> > +     dma_cap_zero(mask);
-> > +     dma_cap_set(DMA_SLAVE, mask);
-> > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > +     if (IS_ERR_OR_NULL(dma_chan)) {
-> > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > +             goto fail_back_tx;
-> > +     }
-> > +
-> > +     epf_test->dma_chan_rx = dma_chan;
-> > +
-> > +     filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > +
-> > +     if (IS_ERR(dma_chan)) {
-> > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > +             goto fail_back_rx;
-> > +     }
-> > +
-> > +     epf_test->dma_chan_tx = dma_chan;
-> > +     epf_test->dma_private = true;
-> > +
-> > +     init_completion(&epf_test->transfer_complete);
-> > +
-> > +     return 0;
-> > +
-> > +fail_back_rx:
-> > +     dma_release_channel(epf_test->dma_chan_rx);
-> > +     epf_test->dma_chan_tx = NULL;
-> > +
-> > +fail_back_tx:
-> >       dma_cap_zero(mask);
-> >       dma_cap_set(DMA_MEMCPY, mask);
-> >
-> > @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> >       }
-> >       init_completion(&epf_test->transfer_complete);
-> >
-> > -     epf_test->dma_chan = dma_chan;
-> > +     epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
-> >
-> >       return 0;
-> >  }
-> > @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
-> >       if (!epf_test->dma_supported)
-> >               return;
-> >
-> > -     dma_release_channel(epf_test->dma_chan);
-> > -     epf_test->dma_chan = NULL;
-> > +     dma_release_channel(epf_test->dma_chan_tx);
-> > +     if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> > +             epf_test->dma_chan_tx = NULL;
-> > +             epf_test->dma_chan_rx = NULL;
-> > +             return;
-> > +     }
-> > +
-> > +     dma_release_channel(epf_test->dma_chan_rx);
-> > +     epf_test->dma_chan_rx = NULL;
-> > +
-> > +     return;
-> >  }
-> >
-> >  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> > @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
-> >                       goto err_map_addr;
-> >               }
-> >
-> > +             if (epf_test->dma_private) {
-> > +                     dev_err(dev, "Cannot transfer data using DMA\n");
-> > +                     ret = -EINVAL;
-> > +                     goto err_map_addr;
-> > +             }
-> > +
-> >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > -                                              src_phys_addr, reg->size);
-> > +                                              src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >       } else {
-> > @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
-> >
-> >               ktime_get_ts64(&start);
-> >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > -                                              phys_addr, reg->size);
-> > +                                              phys_addr, reg->size,
-> > +                                              reg->src_addr, DMA_DEV_TO_MEM);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >               ktime_get_ts64(&end);
-> > @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
-> >               }
-> >
-> >               ktime_get_ts64(&start);
-> > +
-> >               ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> > -                                              src_phys_addr, reg->size);
-> > +                                              src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >               ktime_get_ts64(&end);
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+I will mark it as "handled elsewhere" in the PCI tree patchwork.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index bb662f90d4f3..4d34f0c88550 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -51,6 +51,7 @@ enum imx6_pcie_variants {
+>  	IMX7D,
+>  	IMX8MQ,
+>  	IMX8MM,
+> +	IMX8MP,
+>  };
+>  
+>  #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
+> @@ -379,6 +380,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  		reset_control_assert(imx6_pcie->pciephy_reset);
+>  		fallthrough;
+>  	case IMX8MM:
+> +	case IMX8MP:
+>  		reset_control_assert(imx6_pcie->apps_reset);
+>  		break;
+>  	case IMX6SX:
+> @@ -407,7 +409,8 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
+>  {
+>  	WARN_ON(imx6_pcie->drvdata->variant != IMX8MQ &&
+> -		imx6_pcie->drvdata->variant != IMX8MM);
+> +		imx6_pcie->drvdata->variant != IMX8MM &&
+> +		imx6_pcie->drvdata->variant != IMX8MP);
+>  	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
+>  }
+>  
+> @@ -448,6 +451,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  		break;
+>  	case IMX8MM:
+>  	case IMX8MQ:
+> +	case IMX8MP:
+>  		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
+>  		if (ret) {
+>  			dev_err(dev, "unable to enable pcie_aux clock\n");
+> @@ -503,6 +507,7 @@ static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
+>  
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX8MM:
+> +	case IMX8MP:
+>  		if (phy_power_on(imx6_pcie->phy))
+>  			dev_err(dev, "unable to power on PHY\n");
+>  		break;
+> @@ -603,6 +608,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  		reset_control_deassert(imx6_pcie->pciephy_reset);
+>  		break;
+>  	case IMX8MM:
+> +	case IMX8MP:
+>  		if (phy_init(imx6_pcie->phy))
+>  			dev_err(dev, "waiting for phy ready timeout!\n");
+>  		break;
+> @@ -678,6 +684,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>  {
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX8MM:
+> +	case IMX8MP:
+>  		/*
+>  		 * The PHY initialization had been done in the PHY
+>  		 * driver, break here directly.
+> @@ -823,6 +830,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
+>  	case IMX7D:
+>  	case IMX8MQ:
+>  	case IMX8MM:
+> +	case IMX8MP:
+>  		reset_control_deassert(imx6_pcie->apps_reset);
+>  		break;
+>  	}
+> @@ -938,6 +946,7 @@ static void imx6_pcie_host_exit(struct pcie_port *pp)
+>  		imx6_pcie_clk_disable(imx6_pcie);
+>  		switch (imx6_pcie->drvdata->variant) {
+>  		case IMX8MM:
+> +		case IMX8MP:
+>  			if (phy_power_off(imx6_pcie->phy))
+>  				dev_err(dev, "unable to power off phy\n");
+>  			phy_exit(imx6_pcie->phy);
+> @@ -972,6 +981,7 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
+>  		break;
+>  	case IMX7D:
+>  	case IMX8MM:
+> +	case IMX8MP:
+>  		reset_control_assert(imx6_pcie->apps_reset);
+>  		break;
+>  	default:
+> @@ -1028,6 +1038,7 @@ static int imx6_pcie_suspend_noirq(struct device *dev)
+>  	imx6_pcie_clk_disable(imx6_pcie);
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX8MM:
+> +	case IMX8MP:
+>  		if (phy_power_off(imx6_pcie->phy))
+>  			dev_err(dev, "unable to power off PHY\n");
+>  		phy_exit(imx6_pcie->phy);
+> @@ -1177,6 +1188,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  		}
+>  		break;
+>  	case IMX8MM:
+> +	case IMX8MP:
+>  		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+>  		if (IS_ERR(imx6_pcie->pcie_aux))
+>  			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
+> @@ -1327,6 +1339,10 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.variant = IMX8MM,
+>  		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
+>  	},
+> +	[IMX8MP] = {
+> +		.variant = IMX8MP,
+> +		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
+> +	},
+>  };
+>  
+>  static const struct of_device_id imx6_pcie_of_match[] = {
+> @@ -1336,6 +1352,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
+>  	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
+>  	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
+>  	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
+> +	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
+>  	{},
+>  };
+>  
+> -- 
+> 2.25.1
+> 
