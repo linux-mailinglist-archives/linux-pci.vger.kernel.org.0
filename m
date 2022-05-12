@@ -2,230 +2,321 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20699524EF9
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 15:57:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69285524F22
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 16:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354816AbiELN5g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 09:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55732 "EHLO
+        id S1349563AbiELOAo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 10:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354796AbiELN5f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 09:57:35 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7DC1C72DA
-        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 06:57:17 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id w17-20020a17090a529100b001db302efed6so4957131pjh.4
-        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 06:57:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bEMB8902D/xSU2Wdpg64G1D2JXiY+ZOywalt6UyCaAU=;
-        b=KBOVdXRXiA3SV/T+G1ZfRjvvRftP7tuv2XeCQJ4JMfONBt7Iem5S38vET1/BKiFv68
-         9T8Nump6nZmyPNrTqZqmyl3y69JddhrPpkRrs6H+obAVIs+fEh0p9pVc+iNrupcEJlh/
-         d/WWStFYFjNRTJA82nDajzuza8T28jdT/vfR4OHkZLxJVo/leY3RInh2WoZWIsMxpaKF
-         8fhEqE5EFo/Sw1VyuEtwC64/+pSFBuXRppH7Erm99JpJpjP1lIBV7WLnGx+b+4IgIpez
-         WNqXiXm34oc7pRN5YkNPMZDvFwIb1/UMx0N9zJdB2+Z0E9vzwqTdNXC8hxDhH8gJbpOT
-         dGZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bEMB8902D/xSU2Wdpg64G1D2JXiY+ZOywalt6UyCaAU=;
-        b=UbE7u6NUIfYZ+lse/7uLUrSYaFqGDlejA4AvwYJeblmUCci625dN5hTs9dnOaencvI
-         NHg4guiWn71xYGVHtHO45ho1NN8DJtTl7XZStZWpkj/oRGPBpNcRxgtjLnVvSVxQxY++
-         IwgoJ2+sc2njD7UOtXY3TDIBLgNkI5yfOo8AMuF/PEhxvJ47RfCEFQfda4kw5JA9Wtp+
-         twsYKL7Wui3rr/Y5hwkCrMqP11LOhOQuyCrTCxtnJGrnjaZLVXd3A98BNGF4yFDIUP6v
-         1Y9zmHrxbZhqn+bME3LuHtYggXUtVq2D5/hukznl16v6mZkERkTYsm1QVLs0bWj4z0Na
-         0nzw==
-X-Gm-Message-State: AOAM530xiHB8bhAIvLdgIvYXgYx0AjgIZnIa1U5vbhbrq2GnfrOmkBDY
-        T+RdQQmT2apufmN+QVWF0XxU
-X-Google-Smtp-Source: ABdhPJxSLuAcsbVDDjyWjII+1YMoRHbRkN60hJS1s/nQ2Zdb0HS/vNX+LP2GdewUYC4YFMMcvDCZCw==
-X-Received: by 2002:a17:90b:38c7:b0:1dc:77aa:e3d5 with SMTP id nn7-20020a17090b38c700b001dc77aae3d5mr10963534pjb.51.1652363836958;
-        Thu, 12 May 2022 06:57:16 -0700 (PDT)
-Received: from thinkpad ([117.202.184.202])
-        by smtp.gmail.com with ESMTPSA id o24-20020a17090ad25800b001dcf49d92a1sm1861938pjw.28.2022.05.12.06.57.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 May 2022 06:57:16 -0700 (PDT)
-Date:   Thu, 12 May 2022 19:27:08 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 15/17] PCI: dwc: Introduce dma-ranges property support
- for RC-host
-Message-ID: <20220512135708.GC35848@thinkpad>
-References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
- <20220503214638.1895-16-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S1354888AbiELOAl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 10:00:41 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D436F25B043
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 07:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652364030; x=1683900030;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=l0SlDt2RY+qnsohQzONvUUKsZXYW22/2yk5VNK1Tv94=;
+  b=e3dRmNzvpPdBaWMMMPHJArbNwpmw/oqyzaZ4W2Muk6NUDfykaohG/bZX
+   mlEjOs2V4/QHO3CcllJqUQo7H40nSvD3p+mbWR0h170W4nVgb6bZXubfW
+   WlwtcwNEwvJCQyGA+w56bmUN/rlqch7HPZ7VF5rV20pAuuLpNHzSGprry
+   273EheGHfcGeAXe1ZuG+yQehEFiWVGw93mP9k1ZHRBa5mj9MAXvmFZHgT
+   VGFw4/gkAEHkA3KK87+yVFIYulLa2Vo7zzQQTWifDvh+FpzhSZ1aUaz/F
+   /SUjXNv0jZowseYgDAgRUuFd9LNZzSyoBD5Z8gvpdVO59E6cM37FPLVz0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="268841204"
+X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
+   d="scan'208";a="268841204"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 07:00:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
+   d="scan'208";a="542782118"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 12 May 2022 07:00:25 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1np9Mf-000KVO-54;
+        Thu, 12 May 2022 14:00:25 +0000
+Date:   Thu, 12 May 2022 21:59:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/dwc] BUILD SUCCESS
+ e8aae154df6121167e5b4f156cfc2402e651d2b1
+Message-ID: <627d12bf.y22xktH/gj5A7QGV%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220503214638.1895-16-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 12:46:36AM +0300, Serge Semin wrote:
-> In accordance with the generic PCIe Root Port DT-bindings the "dma-ranges"
-> property has the same format as the "ranges" property. The only difference
-> is in their semantics. The "dma-ranges" property describes the PCIe-to-CPU
-> memory mapping in opposite to the CPU-to-PCIe mapping of the "ranges"
-> property. Even though the DW PCIe controllers are normally equipped with
-> internal Address Translation Unit which inbound and outbound tables can be
-> used to implement both properties semantics, it was surprise for me to
-> discover that the host-related part of the DW PCIe driver currently
-> supports the "ranges" property only while the "dma-ranges" windows are
-> just ignored. Having the "dma-ranges" supported in the driver would be
-> very handy for the platforms, that don't tolerate the 1:1 CPU-PCIe memory
-> mapping and require customized the PCIe memory layout. So let's fix that
-> by introducing the "dma-ranges" property support.
-> 
-> First of all we suggest to rename the dw_pcie_prog_inbound_atu() method to
-> dw_pcie_prog_ep_inbound_atu() and create a new version of the
-> dw_pcie_prog_inbound_atu() function. Thus we'll have two methods for RC
-> and EP controllers respectively in the same way as it has been developed
-> for the outbound ATU setup methods.
-> 
-> Secondly aside with the memory window index and type the new
-> dw_pcie_prog_inbound_atu() function will accept CPU address, PCIe address
-> and size as its arguments. These parameters define the PCIe and CPU memory
-> ranges which will be used to setup the respective inbound ATU mapping. The
-> passed parameters need to be verified against the ATU ranges constraints
-> in the same way as it is done for the outbound ranges.
-> 
-> Finally the DMA-ranges detected for the PCIe controller need to be
-> converted into the inbound ATU entries during the host controller
-> initialization procedure. It will be done in the framework of the
-> dw_pcie_iatu_setup() method. Note before setting the inbound ranges up we
-> need to disable all the inbound ATU entries in order to prevent unexpected
-> PCIe TLPs translations defined by some third party software like
-> bootloader.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
->  .../pci/controller/dwc/pcie-designware-host.c | 32 ++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.c  | 57 ++++++++++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.h  |  6 +-
->  4 files changed, 90 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index c62640201246..9b0540cfa9e8 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -167,8 +167,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
->  		return -EINVAL;
->  	}
->  
-> -	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, type,
-> -				       cpu_addr, bar);
-> +	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
-> +					  cpu_addr, bar);
->  	if (ret < 0) {
->  		dev_err(pci->dev, "Failed to program IB window\n");
->  		return ret;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 7caca6c575a5..9cb406f5c185 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -612,12 +612,15 @@ static int dw_pcie_iatu_setup(struct pcie_port *pp)
->  	}
->  
->  	/*
-> -	 * Ensure all outbound windows are disabled before proceeding with
-> -	 * the MEM/IO ranges setups.
-> +	 * Ensure all out/inbound windows are disabled before proceeding with
-> +	 * the MEM/IO (dma-)ranges setups.
->  	 */
->  	for (i = 0; i < pci->num_ob_windows; i++)
->  		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
->  
-> +	for (i = 0; i < pci->num_ib_windows; i++)
-> +		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
-> +
->  	i = 0;
->  	resource_list_for_each_entry(entry, &pp->bridge->windows) {
->  		if (resource_type(entry->res) != IORESOURCE_MEM)
-> @@ -654,9 +657,32 @@ static int dw_pcie_iatu_setup(struct pcie_port *pp)
->  	}
->  
->  	if (pci->num_ob_windows <= i)
-> -		dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
-> +		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
->  			 pci->num_ob_windows);
->  
-> +	i = 0;
-> +	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
-> +		if (resource_type(entry->res) != IORESOURCE_MEM)
-> +			continue;
-> +
-> +		if (pci->num_ib_windows <= i)
-> +			break;
-> +
-> +		ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
-> +					       entry->res->start,
-> +					       entry->res->start - entry->offset,
-> +					       resource_size(entry->res));
-> +		if (ret) {
-> +			dev_err(pci->dev, "Failed to set DMA range %pr\n",
-> +				entry->res);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (pci->num_ib_windows <= i)
-> +		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
-> +			 pci->num_ib_windows);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 747e252c09e6..33718ed6c511 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -397,8 +397,61 @@ static inline void dw_pcie_writel_atu_ib(struct dw_pcie *pci, u32 index, u32 reg
->  	dw_pcie_writel_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg, val);
->  }
->  
-> -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> -			     int type, u64 cpu_addr, u8 bar)
-> +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
-> +			     u64 cpu_addr, u64 pci_addr, u64 size)
-> +{
-> +	u64 limit_addr = pci_addr + size - 1;
-> +	u32 retries, val;
-> +
-> +	if ((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit) ||
-> +	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
-> +	    !IS_ALIGNED(pci_addr, pci->region_align) ||
-> +	    !IS_ALIGNED(size, pci->region_align) ||
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/dwc
+branch HEAD: e8aae154df6121167e5b4f156cfc2402e651d2b1  PCI: rockchip-dwc: Add legacy interrupt support
 
-Why do you want the size to be aligned? What if I want to transfer a small size
-buffer?
+elapsed time: 1299m
 
-Same question applies to outbound programming as well.
+configs tested: 235
+configs skipped: 4
 
-Thanks,
-Mani
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                 randconfig-c001-20220509
+i386                          randconfig-c001
+arm                         lpc18xx_defconfig
+sh                          rsk7269_defconfig
+mips                          rb532_defconfig
+powerpc                 mpc834x_mds_defconfig
+powerpc64                           defconfig
+sh                        edosk7760_defconfig
+arc                          axs101_defconfig
+h8300                       h8s-sim_defconfig
+xtensa                generic_kc705_defconfig
+xtensa                         virt_defconfig
+um                                  defconfig
+m68k                       m5249evb_defconfig
+sh                          urquell_defconfig
+ia64                         bigsur_defconfig
+arm                            pleb_defconfig
+xtensa                          iss_defconfig
+arm                        mini2440_defconfig
+arm                        multi_v7_defconfig
+m68k                        m5272c3_defconfig
+sh                          rsk7201_defconfig
+arm                         at91_dt_defconfig
+arc                        nsim_700_defconfig
+powerpc                 linkstation_defconfig
+powerpc                       eiger_defconfig
+arm                          iop32x_defconfig
+arm                         cm_x300_defconfig
+arm                           h3600_defconfig
+um                               alldefconfig
+xtensa                  cadence_csp_defconfig
+powerpc                        warp_defconfig
+powerpc                     taishan_defconfig
+sh                          r7785rp_defconfig
+sh                                  defconfig
+powerpc                  storcenter_defconfig
+sparc                       sparc64_defconfig
+arm                       aspeed_g5_defconfig
+ia64                        generic_defconfig
+xtensa                  nommu_kc705_defconfig
+sh                           se7721_defconfig
+sh                           sh2007_defconfig
+i386                                defconfig
+m68k                             allmodconfig
+powerpc                     sequoia_defconfig
+sh                          polaris_defconfig
+sh                            hp6xx_defconfig
+sparc                            alldefconfig
+arc                         haps_hs_defconfig
+m68k                          multi_defconfig
+sh                          sdk7780_defconfig
+s390                             allyesconfig
+nios2                         10m50_defconfig
+openrisc                 simple_smp_defconfig
+sh                         ecovec24_defconfig
+mips                  maltasmvp_eva_defconfig
+sparc                       sparc32_defconfig
+sh                           se7750_defconfig
+arm                          exynos_defconfig
+s390                       zfcpdump_defconfig
+arc                          axs103_defconfig
+m68k                       m5208evb_defconfig
+powerpc                      pcm030_defconfig
+mips                       capcella_defconfig
+arc                    vdk_hs38_smp_defconfig
+mips                            ar7_defconfig
+xtensa                    smp_lx200_defconfig
+sh                         microdev_defconfig
+arm                          simpad_defconfig
+xtensa                       common_defconfig
+powerpc                 mpc837x_mds_defconfig
+h8300                            allyesconfig
+sh                          kfr2r09_defconfig
+sh                            migor_defconfig
+powerpc                     tqm8555_defconfig
+parisc                generic-32bit_defconfig
+alpha                            allyesconfig
+m68k                        mvme147_defconfig
+powerpc                        cell_defconfig
+ia64                                defconfig
+m68k                             alldefconfig
+openrisc                            defconfig
+sh                          lboxre2_defconfig
+sh                           se7722_defconfig
+openrisc                  or1klitex_defconfig
+m68k                        m5407c3_defconfig
+riscv                               defconfig
+xtensa                           alldefconfig
+powerpc                   currituck_defconfig
+sh                     sh7710voipgw_defconfig
+sh                           se7206_defconfig
+ia64                          tiger_defconfig
+sh                        apsh4ad0a_defconfig
+microblaze                          defconfig
+powerpc                      ep88xc_defconfig
+powerpc                         ps3_defconfig
+arm                             rpc_defconfig
+arm                        spear6xx_defconfig
+sh                      rts7751r2d1_defconfig
+powerpc                      cm5200_defconfig
+sh                           se7724_defconfig
+sh                          rsk7203_defconfig
+powerpc                     tqm8548_defconfig
+openrisc                         alldefconfig
+powerpc                 mpc834x_itx_defconfig
+x86_64               randconfig-c001-20220509
+arm                  randconfig-c002-20220509
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220512
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allyesconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+arc                                 defconfig
+xtensa                           allyesconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64               randconfig-a015-20220509
+x86_64               randconfig-a012-20220509
+x86_64               randconfig-a016-20220509
+x86_64               randconfig-a014-20220509
+x86_64               randconfig-a013-20220509
+x86_64               randconfig-a011-20220509
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                 randconfig-a011-20220509
+i386                 randconfig-a013-20220509
+i386                 randconfig-a016-20220509
+i386                 randconfig-a015-20220509
+i386                 randconfig-a014-20220509
+i386                 randconfig-a012-20220509
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220509
+s390                 randconfig-r044-20220509
+riscv                randconfig-r042-20220509
+s390                 randconfig-r044-20220512
+riscv                randconfig-r042-20220512
+arc                  randconfig-r043-20220512
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
+
+clang tested configs:
+x86_64               randconfig-c007-20220509
+s390                 randconfig-c005-20220509
+i386                 randconfig-c001-20220509
+powerpc              randconfig-c003-20220509
+riscv                randconfig-c006-20220509
+mips                 randconfig-c004-20220509
+arm                  randconfig-c002-20220509
+s390                 randconfig-c005-20220510
+powerpc              randconfig-c003-20220510
+x86_64                        randconfig-c007
+riscv                randconfig-c006-20220510
+mips                 randconfig-c004-20220510
+i386                          randconfig-c001
+arm                  randconfig-c002-20220510
+s390                 randconfig-c005-20220512
+powerpc              randconfig-c003-20220512
+riscv                randconfig-c006-20220512
+mips                 randconfig-c004-20220512
+arm                  randconfig-c002-20220512
+powerpc                      acadia_defconfig
+powerpc                    mvme5100_defconfig
+arm                                 defconfig
+mips                       rbtx49xx_defconfig
+mips                        maltaup_defconfig
+mips                      maltaaprp_defconfig
+mips                        omega2p_defconfig
+powerpc                 xes_mpc85xx_defconfig
+arm                  colibri_pxa300_defconfig
+arm                       versatile_defconfig
+powerpc                     ppa8548_defconfig
+arm                         shannon_defconfig
+x86_64               randconfig-a006-20220509
+x86_64               randconfig-a002-20220509
+x86_64               randconfig-a001-20220509
+x86_64               randconfig-a004-20220509
+x86_64               randconfig-a005-20220509
+x86_64               randconfig-a003-20220509
+i386                 randconfig-a004-20220509
+i386                 randconfig-a006-20220509
+i386                 randconfig-a002-20220509
+i386                 randconfig-a003-20220509
+i386                 randconfig-a001-20220509
+i386                 randconfig-a005-20220509
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+hexagon              randconfig-r045-20220509
+hexagon              randconfig-r041-20220509
+hexagon              randconfig-r045-20220512
+hexagon              randconfig-r041-20220512
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://01.org/lkp
