@@ -2,303 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5404524F2C
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 16:01:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC1A7524F33
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 16:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354891AbiELOBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 10:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41392 "EHLO
+        id S1354921AbiELOBk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 10:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354903AbiELOBa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 10:01:30 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC2651331
-        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 07:01:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652364089; x=1683900089;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=NP+Y6nEHLDoBsLksGTg9GC3dDXpnq1m5aK6kFAd8zRQ=;
-  b=RXI+uyrF5K56ACEf/KmgKEM9Ad2FlAKhMoEi/jLNoerxOW+RpRIej9yj
-   n6FbelUehOrdDok0DEyYub5iUVvqvsvegH0PTuSI1MkfgVJBX7dckKUKt
-   9WgTj3WRHE8wSMUdtFJWwZdi0DigmQdJOm8c1u0oWL/xWdid9nKsMS4V/
-   FRP+Y3xpRz1g4Wd0p5NHwBMj/2M5bq5fdak5ITtyAH+JCqaXj1hAdxFvg
-   CF/m210xLJNY7WAEfvYayeJHQR0jgYYYyShVM8DTzm6z1ZFDQyO8th1ez
-   CqqrprBH0g5+yUNiQvnclJEI55Ccn/2QUFEje7ZRrmHgfP1qwDDUhwbvy
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="333045024"
-X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
-   d="scan'208";a="333045024"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 07:01:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
-   d="scan'208";a="520958277"
-Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 12 May 2022 07:01:26 -0700
-Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1np9Nd-000KVr-D5;
-        Thu, 12 May 2022 14:01:25 +0000
-Date:   Thu, 12 May 2022 22:01:06 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/virtualization] BUILD SUCCESS
- a91ee0e9fca9d7501286cfbced9b30a33e52740a
-Message-ID: <627d1322.LSWfleHOS/FkFR4J%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S1354912AbiELOBf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 10:01:35 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B7445418F
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 07:01:33 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id n10so5233223pjh.5
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 07:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=LuitxF/LxlyDzAJ6WiMHBPYI6+2/9TqSBGYdKA4Kdbk=;
+        b=hXQKiSvErap40hy+dXmzuEfIjSuO7mQ4+LF6SI7ROCaq0cCea+dX7+6p0kYgipc7r7
+         fAg178C7ZxY+IqXATlnRL/PWrtggp5bfkNR5xPTvVlNa8oMEWEDqlRGJ9oJMB6ZXe86z
+         +ZQrfP6/9HOrmnkiutVcL7IbUW00wvqgViWkgP9Mcuun52KPbP9NdRaRFFz6gO9kwvAS
+         V4NwrLQnBi/ClLHsSCYEj+e1J6kqvb3kHPR7cjYWZv1HP/PkLOMnuG8CwLyhC3AxTRzn
+         A7NZBi+LXLeFf9kCkxUTUpaFh8abRrajqDJZoLIreRRPDK9m4TUh6DTMkeNw4lt/rXF8
+         WQ6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=LuitxF/LxlyDzAJ6WiMHBPYI6+2/9TqSBGYdKA4Kdbk=;
+        b=QvTse3pbvK0K3a2a8XGVeGbyu+ogst9ROKhuG4MSPo6g1+WSMZq7OXkRt6gY4AYpqa
+         olkzZa7DHT3xNkjC1BvLhbzueDWp3vIV/YHa2q3ogiHdmYZ6A+qfkxSyrT201tsLVfCA
+         ZID3xGZHSM8AffDXFCZzo0moHj/MvL6g3ADCbjQI2ROCRENud1040Y8F/R10Xj8mBlIC
+         LSWw4TBvg4YBPPm3YZ9HY/T+MYDhvEY0y3mMsxBOkPr87t2Ed1exN0ifHlunZEIYercm
+         d2A24scP62q44CvN1LFi0onzbhmiAQLr/5f0bHeRCihnCZJ67W/P5YeBmEgMh00cL45f
+         ToCA==
+X-Gm-Message-State: AOAM533RT+RJNaNTjGAUeo6icH/0DgCToMTWGYfaoJhBUsVrLmvdVsNA
+        d6nB7lw66+QmH6RbmfqJcKEr
+X-Google-Smtp-Source: ABdhPJxaAVTBu9QCUOg7jBzjc3IVOzl4NbzJYJxeufqURrOTTpDV1PE/u6pG6jCUU+sYZ0fh/cw2LQ==
+X-Received: by 2002:a17:90a:fcb:b0:1dc:f0ce:69fb with SMTP id 69-20020a17090a0fcb00b001dcf0ce69fbmr11084857pjz.198.1652364092878;
+        Thu, 12 May 2022 07:01:32 -0700 (PDT)
+Received: from thinkpad ([117.202.184.202])
+        by smtp.gmail.com with ESMTPSA id ch9-20020a056a00288900b0050dc76281c2sm3683732pfb.156.2022.05.12.07.01.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 07:01:32 -0700 (PDT)
+Date:   Thu, 12 May 2022 19:31:24 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 11/17] PCI: dwc: Simplify in/outbound iATU setup
+ methods
+Message-ID: <20220512140124.GD35848@thinkpad>
+References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503214638.1895-12-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220503214638.1895-12-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/virtualization
-branch HEAD: a91ee0e9fca9d7501286cfbced9b30a33e52740a  PCI: Avoid pci_dev_lock() AB/BA deadlock with sriov_numvfs_store()
+On Wed, May 04, 2022 at 12:46:32AM +0300, Serge Semin wrote:
+> From maintainability and scalability points of view it has been wrong to
+> use different iATU inbound and outbound regions accessors for the viewport
+> and unrolled versions of the iATU CSRs mapping. Seeing the particular iATU
+> region-wise registers layout is almost fully compatible for different
+> IP-core versions, there were no much points in splitting the code up that
+> way since it was possible to implement a common windows setup methods for
+> both viewport and unrolled iATU CSRs spaces. While what we can observe in
+> the current driver implementation of these methods, is a lot of code
+> duplication, which consequently worsen the code readability,
+> maintainability and scalability. Note the current implementation is a bit
+> more performant than the one suggested in this commit since it implies
+> having less MMIO accesses. But the gain just doesn't worth having the
+> denoted difficulties especially seeing the iATU setup methods are mainly
+> called on the DW PCIe controller and peripheral devices initialization
+> stage.
+> 
+> Here we suggest to move the iATU viewport and unrolled CSR access
+> specifics in the dw_pcie_readl_atu() and dw_pcie_writel_atu() method, and
+> convert the dw_pcie_prog_outbound_atu() and
+> dw_pcie_prog_{ep_}inbound_atu() functions to being generic instead of
+> having a different methods for each viewport and unrolled types of iATU
+> CSRs mapping. Nothing complex really. First of all the dw_pcie_readl_atu()
+> and dw_pcie_writel_atu() are converted to accept relative iATU CSRs
+> address together with the iATU region direction (inbound or outbound) and
+> region index. If DW PCIe controller doesn't have the unrolled iATU CSRs
+> space, then the accessors will need to activate a iATU viewport based on
+> the specified direction and index, otherwise a base address for the
+> corresponding region CSRs will be calculated by means of the
+> PCIE_ATU_UNROLL_BASE() macro. The CSRs macro have been modified in
+> accordance with that logic in the pcie-designware.h header file.
+> 
+> The rest of the changes in this commit just concern converting the iATU
+> in-/out-bound setup methods and iATU regions detection procedure to be
+> compatible with the new accessors semantics. As a result we've dropped the
+> no more required dw_pcie_prog_outbound_atu_unroll(),
+> dw_pcie_prog_inbound_atu_unroll() and dw_pcie_iatu_detect_regions_unroll()
+> methods.
+> 
+> Note aside with the denoted code improvements, there is an additional
+> positive side effect of this change. If at some point an atomic iATU
+> configs setup procedure is required, it will be possible to be done with
+> no much effort just by adding the synchronization into the
+> dw_pcie_readl_atu() and dw_pcie_writel_atu() accessors.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> ---
+> 
+> Changelog v2:
+> - Move the iATU region selection procedure into a helper function (@Rob).
+> - Simplify the iATU region selection procedure by recalculating the base
+>   address only if the space is unrolled. The iATU viewport base address
+>   is saved in the pci->atu_base field from now.
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 293 ++++++-------------
+>  drivers/pci/controller/dwc/pcie-designware.h |  48 ++-
 
-elapsed time: 930m
+In this patch, you also need to fix "pcie-tegra194-acpi.c" driver that makes
+use of the removed macros.
 
-configs tested: 218
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-i386                 randconfig-c001-20220509
-arm                         lpc18xx_defconfig
-sh                          rsk7269_defconfig
-mips                          rb532_defconfig
-powerpc                 mpc834x_mds_defconfig
-powerpc64                           defconfig
-sh                        edosk7760_defconfig
-arc                          axs101_defconfig
-h8300                       h8s-sim_defconfig
-xtensa                generic_kc705_defconfig
-xtensa                         virt_defconfig
-um                                  defconfig
-m68k                       m5249evb_defconfig
-sh                          urquell_defconfig
-ia64                         bigsur_defconfig
-arm                            pleb_defconfig
-xtensa                          iss_defconfig
-arc                        nsim_700_defconfig
-powerpc                 linkstation_defconfig
-powerpc                       eiger_defconfig
-arm                           h3600_defconfig
-arm                          iop32x_defconfig
-arm                         cm_x300_defconfig
-um                               alldefconfig
-xtensa                  cadence_csp_defconfig
-arm                         at91_dt_defconfig
-sh                          r7785rp_defconfig
-sh                                  defconfig
-powerpc                  storcenter_defconfig
-sparc                       sparc64_defconfig
-arm                       aspeed_g5_defconfig
-ia64                        generic_defconfig
-xtensa                  nommu_kc705_defconfig
-sh                           se7721_defconfig
-m68k                             allmodconfig
-sh                           sh2007_defconfig
-i386                                defconfig
-sh                          polaris_defconfig
-sh                            hp6xx_defconfig
-sparc                            alldefconfig
-arc                         haps_hs_defconfig
-m68k                          multi_defconfig
-sh                          sdk7780_defconfig
-s390                             allyesconfig
-nios2                         10m50_defconfig
-openrisc                 simple_smp_defconfig
-sh                         ecovec24_defconfig
-mips                  maltasmvp_eva_defconfig
-sparc                       sparc32_defconfig
-sh                           se7750_defconfig
-arm                          exynos_defconfig
-s390                       zfcpdump_defconfig
-arc                          axs103_defconfig
-m68k                       m5208evb_defconfig
-powerpc                      pcm030_defconfig
-mips                       capcella_defconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                     taishan_defconfig
-mips                            ar7_defconfig
-xtensa                    smp_lx200_defconfig
-sh                         microdev_defconfig
-arm                          simpad_defconfig
-xtensa                       common_defconfig
-m68k                        m5272c3_defconfig
-powerpc                 mpc837x_mds_defconfig
-parisc                generic-32bit_defconfig
-alpha                            allyesconfig
-m68k                        mvme147_defconfig
-powerpc                        cell_defconfig
-ia64                                defconfig
-openrisc                            defconfig
-sh                          lboxre2_defconfig
-sh                           se7722_defconfig
-openrisc                  or1klitex_defconfig
-m68k                        m5407c3_defconfig
-riscv                               defconfig
-xtensa                           alldefconfig
-powerpc                   currituck_defconfig
-sh                     sh7710voipgw_defconfig
-ia64                          tiger_defconfig
-sh                        apsh4ad0a_defconfig
-powerpc                      ep88xc_defconfig
-powerpc                         ps3_defconfig
-arm                             rpc_defconfig
-arm                        spear6xx_defconfig
-sh                           se7724_defconfig
-sh                          rsk7203_defconfig
-sh                      rts7751r2d1_defconfig
-powerpc                     tqm8548_defconfig
-openrisc                         alldefconfig
-powerpc                 mpc834x_itx_defconfig
-powerpc                      cm5200_defconfig
-x86_64               randconfig-c001-20220509
-arm                  randconfig-c002-20220509
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220512
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allyesconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-arc                                 defconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64               randconfig-a015-20220509
-x86_64               randconfig-a012-20220509
-x86_64               randconfig-a016-20220509
-x86_64               randconfig-a014-20220509
-x86_64               randconfig-a013-20220509
-x86_64               randconfig-a011-20220509
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                 randconfig-a011-20220509
-i386                 randconfig-a013-20220509
-i386                 randconfig-a016-20220509
-i386                 randconfig-a015-20220509
-i386                 randconfig-a014-20220509
-i386                 randconfig-a012-20220509
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220509
-s390                 randconfig-r044-20220509
-riscv                randconfig-r042-20220509
-s390                 randconfig-r044-20220512
-riscv                randconfig-r042-20220512
-arc                  randconfig-r043-20220512
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           rhel-8.3-syz
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
-
-clang tested configs:
-s390                 randconfig-c005-20220512
-powerpc              randconfig-c003-20220512
-x86_64                        randconfig-c007
-riscv                randconfig-c006-20220512
-mips                 randconfig-c004-20220512
-i386                          randconfig-c001
-arm                  randconfig-c002-20220512
-x86_64               randconfig-c007-20220509
-s390                 randconfig-c005-20220509
-i386                 randconfig-c001-20220509
-powerpc              randconfig-c003-20220509
-riscv                randconfig-c006-20220509
-mips                 randconfig-c004-20220509
-arm                  randconfig-c002-20220509
-powerpc                      acadia_defconfig
-mips                       rbtx49xx_defconfig
-mips                        maltaup_defconfig
-mips                      maltaaprp_defconfig
-mips                        omega2p_defconfig
-arm                  colibri_pxa300_defconfig
-arm                       versatile_defconfig
-powerpc                     ppa8548_defconfig
-arm                         shannon_defconfig
-powerpc                    mvme5100_defconfig
-x86_64               randconfig-a006-20220509
-x86_64               randconfig-a002-20220509
-x86_64               randconfig-a001-20220509
-x86_64               randconfig-a004-20220509
-x86_64               randconfig-a005-20220509
-x86_64               randconfig-a003-20220509
-i386                 randconfig-a004-20220509
-i386                 randconfig-a006-20220509
-i386                 randconfig-a002-20220509
-i386                 randconfig-a003-20220509
-i386                 randconfig-a001-20220509
-i386                 randconfig-a005-20220509
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-hexagon              randconfig-r045-20220509
-hexagon              randconfig-r041-20220509
-hexagon              randconfig-r045-20220512
-hexagon              randconfig-r041-20220512
+Thanks,
+Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+மணிவண்ணன் சதாசிவம்
