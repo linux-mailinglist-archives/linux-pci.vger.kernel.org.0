@@ -2,155 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CC9C5253CE
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 19:38:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9833D5253ED
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 19:42:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357105AbiELRin (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 13:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36484 "EHLO
+        id S1357171AbiELRmq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 13:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356959AbiELRim (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 13:38:42 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68AD5DA7E;
-        Thu, 12 May 2022 10:38:40 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id p26so10333018lfh.10;
-        Thu, 12 May 2022 10:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vZvTlrJYt+b8R7ehZmMqdHwToDN9FaTAo0nb7F19JWE=;
-        b=QU3BtwylRmSLrk4v/VGxeLSkgCsMMGlmA5r2K4qPM0Wzt6sURVzXDprRsrWGiMqMQO
-         XGO1WjSvN/dUlsnbZxXBjp4yO1Pe+yMdgE33W+Non+Cu2Z4gfFW2gd1g0NXIL3lCU2As
-         GkzzWRpQtUekBVZHMZNaaAR2DgbUYZjwx4S1WUVbCKzdWmEBv+tqxLZGW/F+ObonyFx/
-         39b5EOR5ruO8IMhHdfD5mpdTq5+Tcsy64UDrcnMFTsuRDMJsSh+H58X5xgMwnrh/Nae7
-         YmecFrv2Mb1HAcvo+SpW0Xxr/xypXAtnYZ4C/IzHiqBROeofyk7uAE9gqfSx33UcxV7E
-         XLPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vZvTlrJYt+b8R7ehZmMqdHwToDN9FaTAo0nb7F19JWE=;
-        b=ZrVSF2xrHJ0CLtIK8G69TgqPCPuTXWLEOHdosKTLI3M7gNRZL+WTz+sTSMN3mMS4V+
-         UMMGzbsDIl8I4rYcWYtMbwVWCMf6Gj2Tmi/MYe5U2gAUBjQwFyWWbLOusVC7Btqmo9NG
-         /RiVkNTENznVkBnSme9W9Wpku3ya/PvTvKKGIfVkRqD0uYLvbm/41jQwAPcemSp+WDZN
-         VF+YEzatRo2MW3aSQORBtS915zrL+CajqWGFNbSMfy9pAQ3FvRJ1vbPNeavuj1a9i8ix
-         VNhTfsUDghHagFYVJWce9zj9MJmouoKxd/AsGsAfqXlyJcgXOP1EYPWKuMIFhHyRmTsI
-         saDQ==
-X-Gm-Message-State: AOAM5313iCbEV3+k24WkoqmUqUYe+J/Gzez11L4yjE7VyVVps6jWwt5W
-        cU0qKU/AHrq41VnBQ7GHTtY=
-X-Google-Smtp-Source: ABdhPJyxmuiydmPxJbQNTIGcdclos+z6jvgx8M/o9YDj+8rLLVPMLo1zvWIGcOV6oUiNnHazYn1dTg==
-X-Received: by 2002:a19:ae0a:0:b0:472:d3e:8312 with SMTP id f10-20020a19ae0a000000b004720d3e8312mr645513lfc.176.1652377119219;
-        Thu, 12 May 2022 10:38:39 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id w8-20020a2e3008000000b00250664c906asm6673ljw.133.2022.05.12.10.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 May 2022 10:38:38 -0700 (PDT)
-Date:   Thu, 12 May 2022 20:38:35 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 24/26] dmaengine: dw-edma: Skip cleanup procedure if
- no private data found
-Message-ID: <20220512173835.ffboven6wbtswkek@mobilestation>
-References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
- <20220503225104.12108-25-Sergey.Semin@baikalelectronics.ru>
- <20220512152354.GO35848@thinkpad>
+        with ESMTP id S1353035AbiELRmo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 13:42:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17465E743;
+        Thu, 12 May 2022 10:42:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6CD6A620C3;
+        Thu, 12 May 2022 17:42:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87477C385B8;
+        Thu, 12 May 2022 17:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652377361;
+        bh=xqAM2tBdd1Wwr4gn7QuECIUH2WF1B4DBfO+9+uwWOHg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SVzzxKHIsuL34zozU+8DhYbhZ3LXXYPiE3Zsc+HXJU1jfuV4JCoFBtqQ5ditBeGQd
+         QpC9UuVvAzwtWxBU+kBdBppCkolASzQ51OAVEsny3Lqk94Yusf2mMiWAzotA0PdPiA
+         XacNYIbUgC6EXvR8Xxmc2WoZ+PUVEW7t4EwPaPzEtK4xEzMTETbyyyxUBKqH53gx9k
+         Ueu8XN1G7pZwzMh/u2lmffCUmeCmB+eXaq4efTAwKtqTNqW+4k/OImiKr5DHdXIoMX
+         FAicIJPA7HrgaA+bh58lX00OYFTAE0GTChNZtPZTv8ObaZ53KdyE3KXtRHGkqrRM7t
+         GFoh44sm04XSA==
+Date:   Thu, 12 May 2022 12:42:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajvi Jingar <rajvi.jingar@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        bhelgaas@google.com, david.e.box@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable PTM
+Message-ID: <20220512174239.GA851224@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220512152354.GO35848@thinkpad>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <70d0c0d4-093f-ae8a-9654-5a433285ab12@intel.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 12, 2022 at 08:53:54PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, May 04, 2022 at 01:51:02AM +0300, Serge Semin wrote:
-> > DW eDMA driver private data is preserved in the passed DW eDMA chip info
-> > structure. If either probe procedure failed or for some reason the passed
-> > info object doesn't have private data pointer initialized we need to halt
-> > the DMA device cleanup procedure in order to prevent possible system
-> > crashes.
+Hi Rajvi,
+
+I received your v1, v2, v3, v4, v5 postings because they were sent
+directly to bhelgaas@google.com, but for some reason vger doesn't like
+them so they don't show up on the mailing list:
+
+  https://lore.kernel.org/all/?q=a%3Arajvi.jingar
+
+I looked at the ones I received directly and don't see an obvious
+problem.  Maybe there's a hint here?
+
+  http://vger.kernel.org/majordomo-info.html
+
+All patches should appear on the linux-pci mailing list before
+applying them, so we need to figure this out somehow.  In fact, I read
+and review patches from linux-pci, so I often don't even see things
+that are just sent directly to bhelgaas@google.com. 
+
+On Thu, May 12, 2022 at 03:49:18PM +0200, Rafael J. Wysocki wrote:
+> On 4/29/2022 11:05 PM, Rajvi Jingar wrote:
+> > For the PCIe devices (like nvme) that do not go into D3 state still need to
+> > disable PTM to allow the port to enter a lower-power PM state and the SoC
+> > to reach a lower-power idle state as a whole. Move the pci_disable_ptm()
+> > out of pci_prepare_to_sleep() as this code path is not followed for devices
+> > that do not go into D3. This fixes the issue seen on Dell XPS 9300 with
+> > Ice Lake CPU and Dell Precision 5530 with Coffee Lake CPU platforms to get
+> > improved residency in low power idle states.
+
+I think the paragraph above is a distraction, and the real reason is
+the paragraph below.
+
+> > Also, on receiving a PTM Request from a downstream device, if PTM is
+> > disabled on the root port, as per PCIe r6.0, sec 6.21.3, such a request
+> > would cause an Unsupported Request error. So it must first disable PTM in
+> > any downstream devices.
 > > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-
-> As I said in the previous iteration, I'm not sure we will hit this issue.
-
-It's unlikely but still not impossible. Consider the case when your DW
-PCIe controller has eDMA capability, but the platform code isn't ready
-to have it properly utilized. In that case dw_edma_probe() will fail
-at some point while the rest of the DW PCIe code will go on executing
-ignoring that error. In that case calling the dw_edma_remove() will
-cause the system crash since the dw_edma_chip.dw pointer will be left
-uninitialized. For instance possible circumstances can be as follows:
-
-dw_pcie_host_init()
-+-> dw_pcie_edma_detect() FAIL ignored.
-+-> pci_host_probe() FAIL goto err_stop_link
-                      |
-                      +-> dw_pcie_edma_remove() CRASH !!!
-
-So to be on a safe side we need to make sure the DW eDMA descriptor
-cleanup is skipped in case if it hasn't been properly initialized. The
-proper initialization is indicated by having the dw_edma_chip.dw set
-with the valid pointer to the private data.
-
-> But I don't object the patch. So,
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks.
-
--Sergey
-
-> 
-> Thanks,
-> Mani
-> 
+> > Fixes: a697f072f5da ("PCI: Disable PTM during suspend to save power")
+> > Signed-off-by: Rajvi Jingar <rajvi.jingar@intel.com>
+> > Suggested-by: David E. Box <david.e.box@linux.intel.com>
 > > ---
-> >  drivers/dma/dw-edma/dw-edma-core.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
+> >   v1 -> v2: add Fixes tag in commit message
+> >   v2 -> v3: move changelog after "---" marker
+> >   v3 -> v4: add "---" marker after changelog
+> >   v4 -> v5: move pci_disable_ptm() out of the pci_dev->state_saved check.
+> > 	   disable PTM for all devices, not just root ports.
+> > ---
+> >   drivers/pci/pci-driver.c | 28 +++++++++++++++++++---------
+> >   drivers/pci/pci.c        | 10 ----------
+> >   2 files changed, 19 insertions(+), 19 deletions(-)
 > > 
-> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > index 908607785401..561686b51915 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > @@ -1035,6 +1035,10 @@ int dw_edma_remove(struct dw_edma_chip *chip)
-> >  	struct dw_edma *dw = chip->dw;
-> >  	int i;
-> >  
-> > +	/* Skip removal if no private data found */
-> > +	if (!dw)
-> > +		return -ENODEV;
-> > +
-> >  	/* Disable eDMA */
-> >  	dw_edma_v0_core_off(dw);
-> >  
-> > -- 
-> > 2.35.1
-> > 
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 8b55a90126a2..400dd18a9cf5 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -813,6 +813,7 @@ static int pci_pm_suspend_late(struct device *dev)
+> >   static int pci_pm_suspend_noirq(struct device *dev)
+> >   {
+> > +	unsigned int dev_state_saved;
+> >   	struct pci_dev *pci_dev = to_pci_dev(dev);
+> >   	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+> > @@ -845,16 +846,25 @@ static int pci_pm_suspend_noirq(struct device *dev)
+> >   		}
+> >   	}
+> > -	if (!pci_dev->state_saved) {
+> > +	dev_state_saved = pci_dev->state_saved;
 > 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+> If pci_dev->state_saved is set here, the device may be in D3cold already and
+> disabling PTM for it will not work.� Of course, it is not necessary to
+> disable PTM for it then, but this case need to be taken care of.
+> 
+> > +	if (!dev_state_saved)
+> >   		pci_save_state(pci_dev);
+> > -		/*
+> > -		 * If the device is a bridge with a child in D0 below it, it needs to
+> > -		 * stay in D0, so check skip_bus_pm to avoid putting it into a
+> > -		 * low-power state in that case.
+> > -		 */
+> > -		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+> > -			pci_prepare_to_sleep(pci_dev);
+> > -	}
+> > +
+> > +	/*
+> > +	 * There are systems (for example, Intel mobile chips since Coffee
+> > +	 * Lake) where the power drawn while suspended can be significantly
+> > +	 * reduced by disabling PTM as this allows the SoC to reach a
+> > +	 * lower-power idle state as a whole.
+
+I think the argument for disabling PTM is that:
+
+  - If a PTM Requester is put in a low-power state, a PTM Responder
+    upstream from it may also be put in a low-power state.
+
+  - Putting a Port in D1, D2, or D3hot does not prohibit it from
+    sending or responding to PTM Requests (I'd be glad to be corrected
+    about this).
+
+  - We want to disable PTM on Responders when they are in a low-power
+    state.
+
+  - Per 6.21.3, a PTM Requester must not be enabled when the upstream
+    PTM Responder is disabled.
+
+  - Therefore, we must disable all PTM on all downstream PTM
+    Requesters before disabling it on the PTM Responder, e.g., a Root
+    Port.
+
+This has nothing specifically to do with Coffee Lake or other Intel
+chips, so I think the comment should be merely something to the
+effect that "disabling PTM reduces power consumption."
+
+> Something like this should suffice IMV:
+> 
+> if (!dev_state_saved || pci_dev->current_state != PCI_D3cold)
+> 
+> ������� pci_disable_ptm(pci_dev);
+
+It makes sense to me that we needn't disable PTM if the device is in
+D3cold.  But the "!dev_state_saved" condition depends on what the
+driver did.  Why is that important?  Why should we not do the
+following?
+
+  if (pci_dev->current_state != PCI_D3cold)
+    pci_disable_ptm(pci_dev);
+
+Bjorn
