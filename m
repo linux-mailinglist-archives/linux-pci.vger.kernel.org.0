@@ -2,441 +2,240 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E71C9524F75
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 16:08:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45345524F82
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 16:11:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350206AbiELOIO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 10:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42342 "EHLO
+        id S1355050AbiELOL3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 10:11:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234455AbiELOIN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 10:08:13 -0400
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18FBA6D38D;
-        Thu, 12 May 2022 07:08:11 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 24CE824i057029;
-        Thu, 12 May 2022 09:08:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1652364482;
-        bh=bAoMx943Q9rqtr7fhOt5uzY1EsG5NvCGl5pz7GxU8QY=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=Ax82AW3bL5Nzx2fFvj6unwM1TV+GACV2pK8dSjVUwj9qdknPDLZ7FYOyodQUwTgJg
-         vlBAqDIsua5P0uqHdNsT7D7Xs2KQWrxZ7p6HC+DQh61HlTlAwVR44yzWiN6OcUJCk6
-         BDdErop87VpT09eDikFF108UFNJCNynGYrNmJIWA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 24CE81JK105932
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 May 2022 09:08:02 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Thu, 12
- May 2022 09:08:01 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Thu, 12 May 2022 09:08:01 -0500
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 24CE7wEZ113139;
-        Thu, 12 May 2022 09:07:59 -0500
-Message-ID: <22388bdf-8ab5-ac43-d3bb-5dddb76f303c@ti.com>
-Date:   Thu, 12 May 2022 19:37:58 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH V7] misc: pci_endpoint_test: simplify endpoint test read
- and write operations
-Content-Language: en-US
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Li Chen <lchen.firstlove@zohomail.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        with ESMTP id S1355143AbiELOL0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 10:11:26 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC828612A0
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 07:11:24 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id fv2so5262432pjb.4
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 07:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7DM0fhozyxZfRm0O8cuYidMQN4EUbzqJzK7mBi/zq5g=;
+        b=qQmcFeR2f/ZJ3GrSdy0gqIiC2l2t+wMUw0hwEEUDyJzba7YXHy0ob48OgB4jOh1Oyo
+         WL/4Hj+Zwo7vVaoTRRNMHaVpZcvxCxP46e77mTy7/dNjzPmWM5GtKex/6cbfvYMoWV9J
+         HU1STEHgs0MNCkAZh0JBsC9qSDm5KqWTQWBj70NlRUZ8/k7mybkyoUzmFIdu/cOQ20Yc
+         ZzDzfI1K6huZEVOT5weWb82c0Sg3BnEg0t7qiYMjRhFZ83DtJmUwew4oQzjBe0dan0R/
+         XgSkGszjXY2an95D+Li4KzWQyYK3MgOJIFAuhUKlf/BPTgiZx1H7f8+a2Bs3mmE5Tam8
+         DSFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7DM0fhozyxZfRm0O8cuYidMQN4EUbzqJzK7mBi/zq5g=;
+        b=heAAeRJE6zUyNl+ytkOPUbjrUbqKl3YhzE6sx24nm+3ihfpXs1YMXH04no5nGKUxaq
+         GPkq710ChaIB7qRAVwxjKOZPBUMxGaiK3Xwle9MknQYmpRRYBx803UH0YTnv64MKzlo5
+         14lEWVtQYoeH2EzHjT3fvkYZ0HlfjtCZrQwtS2ayGs+qML1n79S4DFQI/T4mffwzLniC
+         tV3fmDDVlOxtYvwaGrqx2jqpAjF34cRI6IzqDC4kSZlAR+w/4YQ945yQzF8OB39discC
+         OwIlhiJzRFy9WHQJFcRySK0m8MrHH/hsGm0Lo8pPcO7lxSFpnZAJ1F7kxYEk/KxVnFH2
+         piGQ==
+X-Gm-Message-State: AOAM530kOHI9VoTWWS7MPLr+YvC6eVUH4rAsloEYKetGMJonKOPrBmes
+        PjdxRMTsWWaiMYTJmL3wC4Dt
+X-Google-Smtp-Source: ABdhPJzFOCbGXcIm00mYaykwWZp+4Y22f7p6HRgUZHN0vZ452HnzpGCGO7+t52pJ9lz9aEdAeDz6AQ==
+X-Received: by 2002:a17:902:e353:b0:15d:4ca:90c3 with SMTP id p19-20020a170902e35300b0015d04ca90c3mr30015312plc.171.1652364684141;
+        Thu, 12 May 2022 07:11:24 -0700 (PDT)
+Received: from thinkpad ([117.202.184.202])
+        by smtp.gmail.com with ESMTPSA id e4-20020a17090ada0400b001cd4989fecesm1885043pjv.26.2022.05.12.07.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 07:11:23 -0700 (PDT)
+Date:   Thu, 12 May 2022 19:41:15 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20220208152106.GA476995@bhelgaas>
- <17edc630ef0.11d8ab06115620.4524266185949873552@zohomail.com>
- <Ynvp25i3zijc9/ce@lpieralisi>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-In-Reply-To: <Ynvp25i3zijc9/ce@lpieralisi>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-7.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/26] dmaengine: dw-edma: Add RP/EP local DMA
+ controllers support
+Message-ID: <20220512141115.GE35848@thinkpad>
+References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Chen,
-
-On 11/05/22 22:22, Lorenzo Pieralisi wrote:
-> Hi Kishon,
+On Wed, May 04, 2022 at 01:50:38AM +0300, Serge Semin wrote:
+> This is a final patchset in the series created in the framework of
+> my Baikal-T1 PCIe/eDMA-related work:
 > 
-> On Tue, Feb 08, 2022 at 09:49:46PM -0500, Li Chen wrote:
->> From: Li Chen <lchen@ambarella.com>
->>
->> Introduce pci_endpoint_epf_transfer_data to simplify
->> read and write operations.
->>
->> Signed-off-by: Li Chen <lchen@ambarella.com>
+> [1: In-progress v3] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+> Link: https://lore.kernel.org/linux-pci/20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru/
+> [2: In-progress v2] PCI: dwc: Various fixes and cleanups
+> Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+> [3: In-progress v2] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+> Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+> [4: In-progress v2] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+> Link: --you are looking at it--
+> 
 
-Sorry for the delay in looking into this.
-The read and write in it's current form is simple and easier to read.
-Don't think it has to be disturbed IMO.
+I rebased my Qcom specific changes on top of the above patches and tested
+on SM8450 based dev board. After fixing couple of issues (shared those in the
+respective patch postings), everything seems to work fine.
+
+So feel free to add my Tested-by tag for dwc/edma patches after fixing those
+issues.
+
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 Thanks,
-Kishon
->> ---
->> Changes in V2:
->> fix WARNING: line length of 108 exceeds 100 columns
->> #128: FILE: drivers/misc/pci_endpoint_test.c:243:
->> Changes in V3:
->> This patch context doesn't change but resend with my Zoho mail account in that previous
->> company mail will contain un-removeable proprietary messages.
->> Changes in V4:
->> Add "From:" to the first line of the message body.
->> Changes in V5:
->> tabify file
->> replace enum EPF_WRITE/EPF_READ with WRITE/READ from linux/kernel.h
->> get_random_bytes only when WRITE.
->> Changes in V6:
->> remove useless "Date:" and "Subject:" in message body, only preserve "From:" tag. 
->> Changes in V7:
->> use /* */ comments to match the prevailing kernel comment style
->> capitalize "RC" and "EP" since they're not real words.
->> remove tabify in that the original code have no style issue if tab is 8-width.
->>
->>  drivers/misc/pci_endpoint_test.c | 286 ++++++++++++-------------------
->>  1 file changed, 106 insertions(+), 180 deletions(-)
+Mani
+
+> Note it is recommended to merge this patchset after the former ones in
+> order to prevent merge conflicts. @Lorenzo could you merge in this
+> patchset through your PCIe repo? After getting all the ack'es of course
+> and after merging in the @Frank' series? (See the next paragraph for more
+> details.)
 > 
-> Please review these changes when you can, thanks.
+> Please note originally this series was self content, but due to Frank
+> being a bit faster in his work submission I had to rebase my patchset onto
+> his one. So now this patchset turns to be dependent on the Frank' work:
+> Link: https://lore.kernel.org/linux-pci/20220503005801.1714345-1-Frank.Li@nxp.com/
+> So please merge Frank' series first before applying this one.
 > 
-> Lorenzo
+> Here is a short summary regarding this patchset. The series starts with
+> fixes patches. The very first patch fixes the dma_direct_map_resource()
+> method, which turned out to be not working correctly for the case of
+> having devive.dma_range_map being non-empty (non-empty dma-ranges DT
+> property). Then we discovered that the dw-edma-pcie.c driver incorrectly
+> initializes the LL/DT base addresses for the platforms with not matching
+> CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
+> method to get a correct base address. After that you can find a series of
+> the interleaved xfers fixes. It turned out the interleaved transfers
+> implementation didn't work quite correctly from the very beginning for
+> instance missing src/dst addresses initialization, etc. In the framework
+> of the next two patches we suggest to add a new platform-specific
+> callback - pci_address() and use it to convert the CPU address to the PCIe
+> space address. It is at least required for the DW eDMA remote End-point
+> setup on the platforms with not-matching CPU/PCIe address spaces. In case
+> of the DW eDMA local RP/EP setup the conversion will be done automatically
+> by the outbound iATU (if no DMA-bypass flag is specified for the
+> corresponding iATU window). Then we introduce a set of the patches to make
+> the DebugFS part of the code supporting the multi-eDMA controllers
+> platforms. It starts with several cleanup patches and is closed joining
+> the Read/Write channels into a single DMA-device as they originally should
+> have been. After that you can find the patches with adding the non-atomic
+> io-64 methods usage, dropping DT-region descriptors allocation, replacing
+> chip IDs with the device name. In addition to that in order to have the
+> eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
+> dma-ranges-based memory ranges mapping since in case of the root port DT
+> node it's applicable for the peripheral PCIe devices only. Finally at the
+> series closure we introduce a generic DW eDMA controller support being
+> available in the DW PCIe Host/End-point driver.
 > 
->> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
->> index 8f786a225dcf8..30adf0e4c36a0 100644
->> --- a/drivers/misc/pci_endpoint_test.c
->> +++ b/drivers/misc/pci_endpoint_test.c
->> @@ -12,6 +12,7 @@
->>  #include <linux/io.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/irq.h>
->> +#include <linux/kernel.h>
->>  #include <linux/miscdevice.h>
->>  #include <linux/module.h>
->>  #include <linux/mutex.h>
->> @@ -142,6 +143,109 @@ static inline u32 pci_endpoint_test_bar_readl(struct pci_endpoint_test *test,
->>  {
->>  	return readl(test->bar[bar] + offset);
->>  }
->> +static bool pci_endpoint_test_transfer_data(struct pci_endpoint_test *test,
->> +				unsigned long arg, const int operation)
->> +{
->> +	struct pci_endpoint_test_xfer_param param;
->> +	bool ret = false;
->> +	u32 flags = 0;
->> +	bool use_dma;
->> +	void *addr;
->> +	dma_addr_t phys_addr;
->> +	struct pci_dev *pdev = test->pdev;
->> +	struct device *dev = &pdev->dev;
->> +	void *orig_addr;
->> +	dma_addr_t orig_phys_addr;
->> +	size_t offset;
->> +	size_t alignment = test->alignment;
->> +	int irq_type = test->irq_type;
->> +	size_t size;
->> +	int err;
->> +
->> +	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
->> +	if (err != 0) {
->> +		dev_err(dev, "Failed to get transfer param\n");
->> +		return false;
->> +	}
->> +
->> +	size = param.size;
->> +	if (size > SIZE_MAX - alignment)
->> +		goto err;
->> +
->> +	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
->> +	if (use_dma)
->> +		flags |= FLAG_USE_DMA;
->> +
->> +	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
->> +		dev_err(dev, "Invalid IRQ type option\n");
->> +		goto err;
->> +	}
->> +
->> +	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
->> +	if (!orig_addr)
->> +		goto err;
->> +
->> +	if (operation == WRITE)
->> +		get_random_bytes(orig_addr, size + alignment);
->> +
->> +	orig_phys_addr = dma_map_single(dev, orig_addr, size + alignment,
->> +					operation == WRITE ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
->> +	if (dma_mapping_error(dev, orig_phys_addr)) {
->> +		dev_err(dev, "failed to map source buffer address\n");
->> +		goto err_phys_addr;
->> +	}
->> +
->> +	if (alignment && !IS_ALIGNED(orig_phys_addr, alignment)) {
->> +		phys_addr = PTR_ALIGN(orig_phys_addr, alignment);
->> +		offset = phys_addr - orig_phys_addr;
->> +		addr = orig_addr + offset;
->> +	} else {
->> +		phys_addr = orig_phys_addr;
->> +		addr = orig_addr;
->> +	}
->> +
->> +	if (operation == WRITE) {
->> +
->> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_CHECKSUM,
->> +				 crc32_le(~0, addr, size));
->> +
->> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_SRC_ADDR,
->> +								lower_32_bits(phys_addr));
->> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_SRC_ADDR,
->> +								upper_32_bits(phys_addr));
->> +	} else {
->> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_DST_ADDR,
->> +								lower_32_bits(phys_addr));
->> +		pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_DST_ADDR,
->> +								upper_32_bits(phys_addr));
->> +	}
->> +
->> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
->> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
->> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
->> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
->> +
->> +	/* if we ask RC to write to EP, then EP should do read operation, and vice versa. */
->> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
->> +				 operation == WRITE ? COMMAND_READ : COMMAND_WRITE);
->> +
->> +	wait_for_completion(&test->irq_raised);
->> +
->> +	dma_unmap_single(dev, orig_phys_addr, size + alignment,
->> +					 operation == WRITE ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
->> +
->> +	if (operation == WRITE)
->> +		ret = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS) & STATUS_READ_SUCCESS;
->> +	else
->> +		ret = crc32_le(~0, addr, size) ==
->> +			pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CHECKSUM);
->> +
->> +err_phys_addr:
->> +	kfree(orig_addr);
->> +
->> +err:
->> +	return ret;
->> +}
->>  
->>  static inline void pci_endpoint_test_bar_writel(struct pci_endpoint_test *test,
->>  						int bar, u32 offset, u32 value)
->> @@ -473,191 +577,13 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
->>  static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
->>  				    unsigned long arg)
->>  {
->> -	struct pci_endpoint_test_xfer_param param;
->> -	bool ret = false;
->> -	u32 flags = 0;
->> -	bool use_dma;
->> -	u32 reg;
->> -	void *addr;
->> -	dma_addr_t phys_addr;
->> -	struct pci_dev *pdev = test->pdev;
->> -	struct device *dev = &pdev->dev;
->> -	void *orig_addr;
->> -	dma_addr_t orig_phys_addr;
->> -	size_t offset;
->> -	size_t alignment = test->alignment;
->> -	int irq_type = test->irq_type;
->> -	size_t size;
->> -	u32 crc32;
->> -	int err;
->> -
->> -	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
->> -	if (err != 0) {
->> -		dev_err(dev, "Failed to get transfer param\n");
->> -		return false;
->> -	}
->> -
->> -	size = param.size;
->> -	if (size > SIZE_MAX - alignment)
->> -		goto err;
->> -
->> -	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
->> -	if (use_dma)
->> -		flags |= FLAG_USE_DMA;
->> -
->> -	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
->> -		dev_err(dev, "Invalid IRQ type option\n");
->> -		goto err;
->> -	}
->> -
->> -	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
->> -	if (!orig_addr) {
->> -		dev_err(dev, "Failed to allocate address\n");
->> -		ret = false;
->> -		goto err;
->> -	}
->> -
->> -	get_random_bytes(orig_addr, size + alignment);
->> -
->> -	orig_phys_addr = dma_map_single(dev, orig_addr, size + alignment,
->> -					DMA_TO_DEVICE);
->> -	if (dma_mapping_error(dev, orig_phys_addr)) {
->> -		dev_err(dev, "failed to map source buffer address\n");
->> -		ret = false;
->> -		goto err_phys_addr;
->> -	}
->> -
->> -	if (alignment && !IS_ALIGNED(orig_phys_addr, alignment)) {
->> -		phys_addr =  PTR_ALIGN(orig_phys_addr, alignment);
->> -		offset = phys_addr - orig_phys_addr;
->> -		addr = orig_addr + offset;
->> -	} else {
->> -		phys_addr = orig_phys_addr;
->> -		addr = orig_addr;
->> -	}
->> -
->> -	crc32 = crc32_le(~0, addr, size);
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_CHECKSUM,
->> -				 crc32);
->> -
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_SRC_ADDR,
->> -				 lower_32_bits(phys_addr));
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_SRC_ADDR,
->> -				 upper_32_bits(phys_addr));
->> -
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
->> -
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
->> -				 COMMAND_READ);
->> -
->> -	wait_for_completion(&test->irq_raised);
->> -
->> -	reg = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
->> -	if (reg & STATUS_READ_SUCCESS)
->> -		ret = true;
->> -
->> -	dma_unmap_single(dev, orig_phys_addr, size + alignment,
->> -			 DMA_TO_DEVICE);
->> -
->> -err_phys_addr:
->> -	kfree(orig_addr);
->> -
->> -err:
->> -	return ret;
->> +	return pci_endpoint_test_transfer_data(test, arg, WRITE);
->>  }
->>  
->>  static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
->>  				   unsigned long arg)
->>  {
->> -	struct pci_endpoint_test_xfer_param param;
->> -	bool ret = false;
->> -	u32 flags = 0;
->> -	bool use_dma;
->> -	size_t size;
->> -	void *addr;
->> -	dma_addr_t phys_addr;
->> -	struct pci_dev *pdev = test->pdev;
->> -	struct device *dev = &pdev->dev;
->> -	void *orig_addr;
->> -	dma_addr_t orig_phys_addr;
->> -	size_t offset;
->> -	size_t alignment = test->alignment;
->> -	int irq_type = test->irq_type;
->> -	u32 crc32;
->> -	int err;
->> -
->> -	err = copy_from_user(&param, (void __user *)arg, sizeof(param));
->> -	if (err) {
->> -		dev_err(dev, "Failed to get transfer param\n");
->> -		return false;
->> -	}
->> -
->> -	size = param.size;
->> -	if (size > SIZE_MAX - alignment)
->> -		goto err;
->> -
->> -	use_dma = !!(param.flags & PCITEST_FLAGS_USE_DMA);
->> -	if (use_dma)
->> -		flags |= FLAG_USE_DMA;
->> -
->> -	if (irq_type < IRQ_TYPE_LEGACY || irq_type > IRQ_TYPE_MSIX) {
->> -		dev_err(dev, "Invalid IRQ type option\n");
->> -		goto err;
->> -	}
->> -
->> -	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
->> -	if (!orig_addr) {
->> -		dev_err(dev, "Failed to allocate destination address\n");
->> -		ret = false;
->> -		goto err;
->> -	}
->> -
->> -	orig_phys_addr = dma_map_single(dev, orig_addr, size + alignment,
->> -					DMA_FROM_DEVICE);
->> -	if (dma_mapping_error(dev, orig_phys_addr)) {
->> -		dev_err(dev, "failed to map source buffer address\n");
->> -		ret = false;
->> -		goto err_phys_addr;
->> -	}
->> -
->> -	if (alignment && !IS_ALIGNED(orig_phys_addr, alignment)) {
->> -		phys_addr = PTR_ALIGN(orig_phys_addr, alignment);
->> -		offset = phys_addr - orig_phys_addr;
->> -		addr = orig_addr + offset;
->> -	} else {
->> -		phys_addr = orig_phys_addr;
->> -		addr = orig_addr;
->> -	}
->> -
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_LOWER_DST_ADDR,
->> -				 lower_32_bits(phys_addr));
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_UPPER_DST_ADDR,
->> -				 upper_32_bits(phys_addr));
->> -
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_SIZE, size);
->> -
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_FLAGS, flags);
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
->> -	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
->> -				 COMMAND_WRITE);
->> -
->> -	wait_for_completion(&test->irq_raised);
->> -
->> -	dma_unmap_single(dev, orig_phys_addr, size + alignment,
->> -			 DMA_FROM_DEVICE);
->> -
->> -	crc32 = crc32_le(~0, addr, size);
->> -	if (crc32 == pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CHECKSUM))
->> -		ret = true;
->> -
->> -err_phys_addr:
->> -	kfree(orig_addr);
->> -err:
->> -	return ret;
->> +	return pci_endpoint_test_transfer_data(test, arg, READ);
->>  }
->>  
->>  static bool pci_endpoint_test_clear_irq(struct pci_endpoint_test *test)
->> -- 
->> 2.34.1
->>
->>
+> Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Drop the patches:
+>   [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+>   [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
+>   since they are going to be merged in in the framework of the
+>   Frank's patchset.
+> - Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
+>   failure."
+> - Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
+>   definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
+> - Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
+>   'dent'." (@Manivannan)
+> - Slightly extend the eDMA name array size. (@Manivannan)
+> - Change the specific DMA mapping comment a bit to being
+>   clearer. (@Manivannan)
+> - Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+>   method."
+> - Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
+>   device. That happens if the driver is disabled. (@Manivannan)
+> - Add "dma" registers resource mapping procedure. (@Manivannan)
+> - Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
+> - Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
+> - Remove eDMA in the dw_pcie_ep_exit() method.
+> - Move the dw_pcie_edma_detect() method execution to the tail of the
+>   dw_pcie_ep_init() function.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (26):
+>   dma-direct: take dma-ranges/offsets into account in resource mapping
+>   dmaengine: Fix dma_slave_config.dst_addr description
+>   dmaengine: dw-edma: Release requested IRQs on failure
+>   dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
+>   dmaengine: dw-edma: Fix missing src/dst address of the interleaved
+>     xfers
+>   dmaengine: dw-edma: Don't permit non-inc interleaved xfers
+>   dmaengine: dw-edma: Fix invalid interleaved xfers semantics
+>   dmaengine: dw-edma: Add CPU to PCIe bus address translation
+>   dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
+>     glue-driver
+>   dmaengine: dw-edma: Drop chancnt initialization
+>   dmaengine: dw-edma: Fix DebugFS reg entry type
+>   dmaengine: dw-edma: Stop checking debugfs_create_*() return value
+>   dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
+>   dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
+>   dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
+>   dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
+>   dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
+>   dmaengine: dw-edma: Join Write/Read channels into a single device
+>   dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
+>   dmaengine: dw-edma: Use non-atomic io-64 methods
+>   dmaengine: dw-edma: Drop DT-region allocation
+>   dmaengine: dw-edma: Replace chip ID number with device name
+>   dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
+>   dmaengine: dw-edma: Skip cleanup procedure if no private data found
+>   PCI: dwc: Add generic iATU/eDMA CSRs space detection method
+>   PCI: dwc: Add DW eDMA engine support
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c            | 211 +++++-----
+>  drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
+>  drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
+>  drivers/dma/dw-edma/dw-edma-v0-core.c         |  76 ++--
+>  drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  16 +-
+>  .../pci/controller/dwc/pcie-designware-host.c |  17 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  | 251 ++++++++++--
+>  drivers/pci/controller/dwc/pcie-designware.h  |  23 +-
+>  include/linux/dma/edma.h                      |  18 +-
+>  include/linux/dmaengine.h                     |   2 +-
+>  kernel/dma/direct.c                           |   2 +-
+>  14 files changed, 628 insertions(+), 400 deletions(-)
+> 
+> -- 
+> 2.35.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
