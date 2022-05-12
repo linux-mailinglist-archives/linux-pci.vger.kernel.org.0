@@ -2,66 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27F10524536
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 07:56:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 569B352454B
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 08:00:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350035AbiELF4T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 01:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40812 "EHLO
+        id S1350074AbiELGAZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 02:00:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350033AbiELF4M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 01:56:12 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D5B2497D;
-        Wed, 11 May 2022 22:56:10 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id bv19so8034673ejb.6;
-        Wed, 11 May 2022 22:56:10 -0700 (PDT)
+        with ESMTP id S1350077AbiELGAX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 02:00:23 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2163921AAB0;
+        Wed, 11 May 2022 23:00:22 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id m20so8001421ejj.10;
+        Wed, 11 May 2022 23:00:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jovg6Gn1+l1bFNNGDKkLFFufpn4EfrWqOlCPZrp3sfU=;
-        b=Xy0o+hM3tLvfZFqKsOhlwTwoOuWhFr+FGKgTHRYaM9okG67pwCh0qkD6FMf5tWO121
-         xVQr8qgZ67VG+OwWVYSJTnrXQhiRcrY4GQfVlcvJvd0IhUVkii0biNd4WAWiT5Txe+uh
-         MH/ftG2j7rUul1mbXRvZLlI/EigyjBpjZtoC87FbIhYbH2Ve/8pHNo3DgkQJT4dGciLq
-         De+oSIkX1ckMoS9Vkkv/sN77ejblRiyyNQ3DDJhVOx0sGJa6LQrLpA5HLQCZHLNDtfG/
-         uuzIJI9/J1WDGgV6X8iTnAW+74TOYGNaeZP4ixBR1wvLTp6VNSGFedzaA4+vhVVacclI
-         0rvA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EsIEN4O+TN/lxuS5UZLuc5seboCoSmgg6DJggBHbT4Y=;
+        b=HYG80oIF8cUpOGMyABw+qJ9keHg9v90TkcjPAjS4gUE6SH9FthhSZrjMmp9gP5sUo4
+         hV06Kdx9GvoPPGRQvE6/uae7aygj2hBaoCrSJd7DrEj0OsAsWqsEicRW82Cqjt1MJlTM
+         PJ92pppJXUIJgT0z1xue5WDKweXUim7LcrIUhgizV0EnSFkrpjZPOGacw7mPqp5A73jk
+         VhdD13IGpaXTvpCYTip4lkZD4/jg9gAompIEs8WkP80Jw+qt+THOikPXexSTM1Jm3STJ
+         t9YWEsESOyywtYtGFmxd2sJ1Zagr1odijVLS9UgsPBP3pwXZkj5NPSluVJ5e6IAdOiuO
+         utwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jovg6Gn1+l1bFNNGDKkLFFufpn4EfrWqOlCPZrp3sfU=;
-        b=JP0zALe3Mwsb/hZjsNzPB63okiArrOwR3LtG3sK6zYZUIhz2v9o+yh1nBGD15V+nd9
-         7BH3vbUiCFLEn8WrbE735bXYGq12/yy1Y7UKIH5oxXjbKzPEGNQ3LqKQDKqy9zQ5i5Q3
-         XgqtWH7K6yjG6NGEmrL7DVG1Tk4Zxr+VXUP1/QnrI90X/mh297vx3LVvv9gIKaRhaYiX
-         S+j4uVC1Gl51LF38Znfxhovprc5kLzhBE9iyobZwNcDM+pRtV7fcZwDK2BUoADrWqHua
-         /eCYOutPa2alpB0GrExwZWJous0oU56cOL5smRyk3RRueyWwozFEfVq5UMc2EqnqJpWQ
-         3z2Q==
-X-Gm-Message-State: AOAM532S/Yu+rRWftPjLyBvCX1Z1hQ1m0lQpZY4fJwHLObbdriQymKEt
-        TmzgiMlbTxd4q77W5lTCnY0+/q0HQFUdgQ==
-X-Google-Smtp-Source: ABdhPJyI3xxnYv+nUrY0ShpToYWh0lCS4SMpU7AgO5U14xIuKB6L20Ofw4VRc/Rv1YFCN5AboQIS+w==
-X-Received: by 2002:a17:907:6287:b0:6e1:6ac:c769 with SMTP id nd7-20020a170907628700b006e106acc769mr28929968ejc.388.1652334968811;
-        Wed, 11 May 2022 22:56:08 -0700 (PDT)
-Received: from localhost.localdomain.info (62-178-82-229.cable.dynamic.surfer.at. [62.178.82.229])
-        by smtp.gmail.com with ESMTPSA id n14-20020a170906700e00b006f3ef214e34sm1686320ejj.154.2022.05.11.22.56.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 May 2022 22:56:08 -0700 (PDT)
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     dominic.rath@ibv-augsburg.net, kishon@ti.com,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v3] PCI: cadence: Allow PTM Responder to be enabled
-Date:   Thu, 12 May 2022 07:55:38 +0200
-Message-Id: <20220512055539.1782437-1-christian.gmeiner@gmail.com>
-X-Mailer: git-send-email 2.36.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EsIEN4O+TN/lxuS5UZLuc5seboCoSmgg6DJggBHbT4Y=;
+        b=r9iclqUztdojPNbKo4z6i0/u5JuWF+vpSbsySS4aUclwiw2iRGMvqSIbBAPPpNFi+L
+         CVt3YAxTyhTLT55+1lDmI6DK94RX5qCP2Rahh3Tb+vkqlfuK8iOAXFsxP43mnrLgAEzp
+         PgA2taNzh8Is5MjpYqZvYBVKJDyNVvzuxcanxwbdMHqk2Mr3ijlg3EMQWa5pHfzSqZZk
+         SbpLGqTKtHk1ZpPbgSTf8eV3+yABwe4xfCD2JiV+V3Bnb2bKU7GHxCBHi39bK6E5ua9K
+         wGCT37YYuu0/V5Kh87axxNDPsV/js5FaCvIEV0f37SyfjMzLtw9kDHNzDF55hz1IS9uv
+         9Y4g==
+X-Gm-Message-State: AOAM530SWmor1klEQ8V62zAjOSY2+N9HbdmS/KANzQdV6uO0sq7f1xnv
+        N25UqWycfFWDYo1VqwWbLQSlmY+XBFu5wNquxhk=
+X-Google-Smtp-Source: ABdhPJxmaicvwEDsMJ+Hau8Pq8B99VQFj6+JSnEqaAQ9k+WI1DC7k2zhUbIuCEoR9nMMhuE4mVFUt5RC/LMKCDPE/aE=
+X-Received: by 2002:a17:907:2064:b0:6f4:3f07:c76e with SMTP id
+ qp4-20020a170907206400b006f43f07c76emr28442375ejb.462.1652335220507; Wed, 11
+ May 2022 23:00:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220429105627.GA28438@lpieralisi> <20220429192825.GA82239@bhelgaas>
+ <20220505144347.GA19346@JADEVM-DRA> <CAH9NwWcU71gZ2woZ7ePRvuwz=_T+F7V6VOYLyAqPhTy1j6xxPA@mail.gmail.com>
+ <YnuuIQgwt45zUEcR@lpieralisi>
+In-Reply-To: <YnuuIQgwt45zUEcR@lpieralisi>
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+Date:   Thu, 12 May 2022 08:00:09 +0200
+Message-ID: <CAH9NwWdbknzwDqzjfKPx1FRa0JV8botWZH6_HOh+KbLpRof9hw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: cadence: respond to received PTM Requests
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Dominic Rath <dominic.rath@ibv-augsburg.net>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -72,59 +73,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This enables the Controller [RP] to automatically respond with
-Response/ResponseD messages if CDNS_PCIE_LM_TPM_CTRL_PTMRSEN
-and PCI_PTM_CTRL_ENABLE bits are both set.
+Am Mi., 11. Mai 2022 um 14:37 Uhr schrieb Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com>:
+>
+> On Thu, May 05, 2022 at 04:48:17PM +0200, Christian Gmeiner wrote:
+>
+> [...]
+>
+> > > > I think the proposed subject of "Enable Controller to respond to
+> > > > received PTM Requests" is somewhat misleading, though, because PTM
+> > > > responses still aren't enabled until we set PTM Enable.  I suggest
+> > > > something like:
+> > > >
+> > > >   PCI: cadence: Allow PTM Responder to be enabled
+> > >
+> > > I'll ask Christian for permission to resend his patch with the subject
+> > > changed.
+> > >
+> >
+> > I will send a new version tomorrow with an improved subject line.
+>
+> Hi Christian,
 
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c | 10 ++++++++++
- drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++++
- 2 files changed, 14 insertions(+)
+Hi Lorenzo
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index fb96d37a135c..940c7dd701d6 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -123,6 +123,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
- 	return ret;
- }
- 
-+static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
-+{
-+	u32 val;
-+
-+	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
-+	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
-+}
-+
- static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
-@@ -501,6 +509,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	if (rc->quirk_detect_quiet_flag)
- 		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
- 
-+	cdns_pcie_host_enable_ptm_response(pcie);
-+
- 	ret = cdns_pcie_start_link(pcie);
- 	if (ret) {
- 		dev_err(dev, "Failed to start link\n");
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index c8a27b6290ce..1ffa8fa77a8a 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -116,6 +116,10 @@
- #define LM_RC_BAR_CFG_APERTURE(bar, aperture)		\
- 					(((aperture) - 2) << ((bar) * 8))
- 
-+/* PTM Control Register */
-+#define CDNS_PCIE_LM_PTM_CTRL 	(CDNS_PCIE_LM_BASE + 0x0da8)
-+#define CDNS_PCIE_LM_TPM_CTRL_PTMRSEN 	BIT(17)
-+
- /*
-  * Endpoint Function Registers (PCI configuration space for endpoint functions)
-  */
+>
+> just asking if you are about to post a new version to pick it up.
+>
+
+Sorry for the delay .. send out V3:
+https://lore.kernel.org/lkml/20220512055539.1782437-1-christian.gmeiner@gmail.com/
+
+
 -- 
-2.36.1
+greets
+--
+Christian Gmeiner, MSc
 
+https://christian-gmeiner.info/privacypolicy
