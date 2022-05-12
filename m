@@ -2,191 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50BE5525215
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 18:08:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D530652534A
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 19:12:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245599AbiELQIw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 12:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42858 "EHLO
+        id S1356920AbiELRMM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 13:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245007AbiELQIv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 12:08:51 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B3E0A60D85;
-        Thu, 12 May 2022 09:08:50 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85395106F;
-        Thu, 12 May 2022 09:08:50 -0700 (PDT)
-Received: from lpieralisi (unknown [10.57.2.156])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 596513F73D;
-        Thu, 12 May 2022 09:08:48 -0700 (PDT)
-Date:   Thu, 12 May 2022 17:08:45 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
-        bhelgaas@google.com, robh@kernel.org, shawnguo@kernel.org,
-        vkoul@kernel.org, alexander.stein@ew.tq-group.com,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: Re: [PATCH v2 7/7] PCI: imx6: Add the iMX8MP PCIe support
-Message-ID: <20220512160845.GB2506@lpieralisi>
-References: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
- <1646644054-24421-8-git-send-email-hongxing.zhu@nxp.com>
+        with ESMTP id S1356921AbiELRMJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 13:12:09 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D1D703D7
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 10:12:01 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id s14so5514538plk.8
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 10:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ZR7HUMI8Yd1xwk7BD+o92Bt4lqO1DXfyuDoVWDh5tgY=;
+        b=wcJz61uNHHkhwJPa75ZWU9CyanOq6y9sDmyhbNJbeepZmcSXGtQ0HBXm3cdjwJ5+wU
+         k1IL03y0zal44soErhaLiTSGWh+ennuCz5wa+vj2k+J0Q0Pvq03feKdUIQ2zS5SCBkLz
+         EBQ1tuy9UJxjEr7cBYL8caFvA17jwyoQly6p2tdMkVHIhd6OPrV2DBdUcDDfKrimJuW/
+         kvF5R1euuKgxpi4fJUSaqoQCdh4REvs27/XIWNlJ0FqkoJ8c7389xt5Ksi1okjGYvZbb
+         Z8jnzU42GKyaeBE01bAgxKulial29NvRI2Kmc0/RL51zY/rD+oBBO6M9aeUM6Bhvz7xT
+         VD5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZR7HUMI8Yd1xwk7BD+o92Bt4lqO1DXfyuDoVWDh5tgY=;
+        b=1hBMNKuCpFwc6TuQpiPk1EpfB+F8o5QmfcP3Iwdj66+34EkbJofcbvT8sQr2EtcozC
+         +k8seGEImu4gVW/f8SHJC4xrK5z7TJ0SIHaow9M3BBh7XblJWFqFln9eyVmj0RFI/hKr
+         rb7/TB0HrVk1016gtZP210SolaKN8fyIkCwHoQZCxp11Xx6Qoop+nJaiImk5c1651RUY
+         DYl20iEdLouKtSD9iAvakSHfxykw3NCg7FTWswADryH+MbCCUWkSSignf/dpYA22tip5
+         2VLKQvYHVCIve7Ad4lHBPhpXEKyWN/uZUzfw3619W0MJ+SsTIrFH8K9k1YlG1+6LHDMQ
+         QNpQ==
+X-Gm-Message-State: AOAM531cxhzEhhGgX+CA1UFdmhyJFFpfkonX107iX38YRwr+K6e7pKCF
+        qdLCB/WyPqmNTiZ9EnaFrYBx
+X-Google-Smtp-Source: ABdhPJz3rh/7E0RO/eeNNLHEWG+NTBDlLjo8AT2aePopZIvf/cnez6Q0MHrnczudOsJLDnnohyO67Q==
+X-Received: by 2002:a17:90b:1689:b0:1d8:28f9:3ba9 with SMTP id kv9-20020a17090b168900b001d828f93ba9mr11795087pjb.56.1652375520325;
+        Thu, 12 May 2022 10:12:00 -0700 (PDT)
+Received: from thinkpad ([117.202.184.202])
+        by smtp.gmail.com with ESMTPSA id f18-20020a170902ce9200b0015e8ddeac5dsm125155plg.252.2022.05.12.10.11.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 10:11:59 -0700 (PDT)
+Date:   Thu, 12 May 2022 22:41:50 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-clk@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC
+ fixes
+Message-ID: <20220512171150.GA164627@thinkpad>
+References: <20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru>
+ <20220512001156.x6kqyhi3vjjpqch6@mobilestation>
+ <20220512152705.GA2506@lpieralisi>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1646644054-24421-8-git-send-email-hongxing.zhu@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220512152705.GA2506@lpieralisi>
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 07, 2022 at 05:07:34PM +0800, Richard Zhu wrote:
-> Add the i.MX8MP PCIe support.
+On Thu, May 12, 2022 at 04:27:05PM +0100, Lorenzo Pieralisi wrote:
+> On Thu, May 12, 2022 at 03:11:56AM +0300, Serge Semin wrote:
+> > On Tue, May 03, 2022 at 11:57:18PM +0300, Serge Semin wrote:
+> > > This patchset is an initial one in the series created in the framework
+> > > of my Baikal-T1 PCIe/eDMA-related work:
+> > > 
+> > > [1: In-progress v3] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+> > > Link: https://lore.kernel.org/linux-pci/20220330144320.27039-1-Sergey.Semin@baikalelectronics.ru/
+> > > [2: In-progress v1] PCI: dwc: Various fixes and cleanups
+> > > Link: https://lore.kernel.org/linux-pci/20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru/
+> > > [3: In-progress v1] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+> > > Link: https://lore.kernel.org/linux-pci/20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru/
+> > > [4: In-progress v1] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+> > > Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+> > > 
+> > > Since some of the patches in the later patchsets depend on the
+> > > modifications introduced here, @Lorenzo could you please merge this series
+> > > through your PCIe subsystem repo? After getting all the required ack'es of
+> > > course.
+> > > 
+> > > Short summary regarding this patchset. A few more modifications are
+> > > introduced here to finally finish the Baikal-T1 CCU unit support up and
+> > > prepare the code before adding the Baikal-T1 PCIe/xGMAC support. First of
+> > > all it turned out I specified wrong DW xGMAC PTP reference clock divider
+> > > in my initial patches. It must be 8, not 10. Secondly I was wrong to add a
+> > > joint xGMAC Ref and PTP clock instead of having them separately defined.
+> > > The SoC manual describes these clocks as separate fixed clock wrappers.
+> > > Finally in order to close the SoC clock/reset support up we need to add
+> > > the DDR and PCIe interfaces reset controls support. It's done in two
+> > > steps. First I've moved the reset-controls-related code into a dedicated
+> > > module. Then the DDR/PCIe reset-control functionality is added.
+> > > 
+> > > Link: https://lore.kernel.org/linux-pci/20220324010905.15589-1-Sergey.Semin@baikalelectronics.ru/
+> > > Changelog v2:
+> > > - Resubmit the series with adding @Philipp to the list of the recipients.
+> > > 
+> > > Link: https://lore.kernel.org/linux-pci/20220330144320.27039-1-Sergey.Semin@baikalelectronics.ru/
+> > > Changelog v3:
+> > > - Rebased from v5.17 onto v5.18-rc3.
+> > > - No comments. Just resend the series.
+> > 
+> > No comments for more than a week. There were no comments in v1 and v2
+> > either. Please at least ack or merge in the series. It would be very
+> > appreciated to merge it in through one repo with the rest of the
+> > patchsets before the next merge window. @Bjorn, @Lorenzo, @Michael?
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-
-I expect this series will eventually go via the imx6 platform tree.
-
-To avoid you waiting for me when this series is deemed acceptable:
-
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-
-I will mark it as "handled elsewhere" in the PCI tree patchwork.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index bb662f90d4f3..4d34f0c88550 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -51,6 +51,7 @@ enum imx6_pcie_variants {
->  	IMX7D,
->  	IMX8MQ,
->  	IMX8MM,
-> +	IMX8MP,
->  };
->  
->  #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
-> @@ -379,6 +380,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  		reset_control_assert(imx6_pcie->pciephy_reset);
->  		fallthrough;
->  	case IMX8MM:
-> +	case IMX8MP:
->  		reset_control_assert(imx6_pcie->apps_reset);
->  		break;
->  	case IMX6SX:
-> @@ -407,7 +409,8 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
->  {
->  	WARN_ON(imx6_pcie->drvdata->variant != IMX8MQ &&
-> -		imx6_pcie->drvdata->variant != IMX8MM);
-> +		imx6_pcie->drvdata->variant != IMX8MM &&
-> +		imx6_pcie->drvdata->variant != IMX8MP);
->  	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
->  }
->  
-> @@ -448,6 +451,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  		break;
->  	case IMX8MM:
->  	case IMX8MQ:
-> +	case IMX8MP:
->  		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
->  		if (ret) {
->  			dev_err(dev, "unable to enable pcie_aux clock\n");
-> @@ -503,6 +507,7 @@ static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
->  
->  	switch (imx6_pcie->drvdata->variant) {
->  	case IMX8MM:
-> +	case IMX8MP:
->  		if (phy_power_on(imx6_pcie->phy))
->  			dev_err(dev, "unable to power on PHY\n");
->  		break;
-> @@ -603,6 +608,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  		reset_control_deassert(imx6_pcie->pciephy_reset);
->  		break;
->  	case IMX8MM:
-> +	case IMX8MP:
->  		if (phy_init(imx6_pcie->phy))
->  			dev_err(dev, "waiting for phy ready timeout!\n");
->  		break;
-> @@ -678,6 +684,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
->  {
->  	switch (imx6_pcie->drvdata->variant) {
->  	case IMX8MM:
-> +	case IMX8MP:
->  		/*
->  		 * The PHY initialization had been done in the PHY
->  		 * driver, break here directly.
-> @@ -823,6 +830,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
->  	case IMX7D:
->  	case IMX8MQ:
->  	case IMX8MM:
-> +	case IMX8MP:
->  		reset_control_deassert(imx6_pcie->apps_reset);
->  		break;
->  	}
-> @@ -938,6 +946,7 @@ static void imx6_pcie_host_exit(struct pcie_port *pp)
->  		imx6_pcie_clk_disable(imx6_pcie);
->  		switch (imx6_pcie->drvdata->variant) {
->  		case IMX8MM:
-> +		case IMX8MP:
->  			if (phy_power_off(imx6_pcie->phy))
->  				dev_err(dev, "unable to power off phy\n");
->  			phy_exit(imx6_pcie->phy);
-> @@ -972,6 +981,7 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
->  		break;
->  	case IMX7D:
->  	case IMX8MM:
-> +	case IMX8MP:
->  		reset_control_assert(imx6_pcie->apps_reset);
->  		break;
->  	default:
-> @@ -1028,6 +1038,7 @@ static int imx6_pcie_suspend_noirq(struct device *dev)
->  	imx6_pcie_clk_disable(imx6_pcie);
->  	switch (imx6_pcie->drvdata->variant) {
->  	case IMX8MM:
-> +	case IMX8MP:
->  		if (phy_power_off(imx6_pcie->phy))
->  			dev_err(dev, "unable to power off PHY\n");
->  		phy_exit(imx6_pcie->phy);
-> @@ -1177,6 +1188,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		}
->  		break;
->  	case IMX8MM:
-> +	case IMX8MP:
->  		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
->  		if (IS_ERR(imx6_pcie->pcie_aux))
->  			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-> @@ -1327,6 +1339,10 @@ static const struct imx6_pcie_drvdata drvdata[] = {
->  		.variant = IMX8MM,
->  		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
->  	},
-> +	[IMX8MP] = {
-> +		.variant = IMX8MP,
-> +		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-> +	},
->  };
->  
->  static const struct of_device_id imx6_pcie_of_match[] = {
-> @@ -1336,6 +1352,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
->  	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
->  	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
->  	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
-> +	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
->  	{},
->  };
->  
-> -- 
-> 2.25.1
+> Hi Sergey,
 > 
+> these changes affect the clock tree and have to be reviewed and merged
+> by the respective maintainers if they think the changes can be accepted.
+> 
+> I don't see any reason why we should, if ACK'ed, take them in the PCI
+> tree, this series does not apply changes to the PCI tree at all and you
+> don't need it as a base for future to-be-merged PCI patches either.
+> 
+> So in short, this series has to go through the usual clock tree review
+> process.
+> 
+
+Yes, Stephen should be the one taking these patches through the clk tree. Also,
+there is no need to club both pci and clk patches in a single tree. That's
+usually done for patches with build dependencies, but here there are none.
+
+Thanks,
+Mani
+
+> Thanks,
+> Lorenzo
+> 
+> > -Sergey
+> > 
+> > > 
+> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > Cc: linux-clk@vger.kernel.org
+> > > Cc: linux-pci@vger.kernel.org
+> > > Cc: linux-mips@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > 
+> > > Serge Semin (4):
+> > >   clk: baikal-t1: Fix invalid xGMAC PTP clock divider
+> > >   clk: baikal-t1: Define shared xGMAC ref/ptp clocks parent
+> > >   clk: baikal-t1: Move reset-controls code into a dedicated module
+> > >   clk: baikal-t1: Add DDR/PCIe directly controlled resets support
+> > > 
+> > >  drivers/clk/baikal-t1/Kconfig       |  12 +-
+> > >  drivers/clk/baikal-t1/Makefile      |   1 +
+> > >  drivers/clk/baikal-t1/ccu-div.c     |   1 +
+> > >  drivers/clk/baikal-t1/ccu-div.h     |   6 +
+> > >  drivers/clk/baikal-t1/ccu-rst.c     | 373 ++++++++++++++++++++++++++++
+> > >  drivers/clk/baikal-t1/ccu-rst.h     |  64 +++++
+> > >  drivers/clk/baikal-t1/clk-ccu-div.c | 102 ++------
+> > >  include/dt-bindings/reset/bt1-ccu.h |   9 +
+> > >  8 files changed, 482 insertions(+), 86 deletions(-)
+> > >  create mode 100644 drivers/clk/baikal-t1/ccu-rst.c
+> > >  create mode 100644 drivers/clk/baikal-t1/ccu-rst.h
+> > > 
+> > > -- 
+> > > 2.35.1
+> > > 
+
+-- 
+மணிவண்ணன் சதாசிவம்
