@@ -2,123 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E478C524187
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 02:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27F10524536
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 07:56:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349664AbiELA3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 May 2022 20:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
+        id S1350035AbiELF4T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 01:56:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349655AbiELA3t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 May 2022 20:29:49 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A68F11A90D9;
-        Wed, 11 May 2022 17:29:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652315388; x=1683851388;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QVmwNynkT04gSDeDkYvO4d7kGnKP1A1Q5Qz1j6zm5lk=;
-  b=NC5miKZ91AejrLui23NrzpXvZrOXwhojnV6iBkH6q7l0y8mgD67hi/zt
-   TR0NV4AAsnAaNSo0h7Oyp+KkHJ+uYIDj/AZ6VgddE3tGfcOarGMj3WH+e
-   q+JyxCqUVlXgnNpTI1RJNvTpSeBqbukHSmM+z7aUjDQTvxKJLyFWcnt6z
-   P5rMjyUkjanRq1a+RYBGUYlGZgqxybwQUZQZf0My2iyaNiZYu87/giXR/
-   F+kio9BuGrOXMv+GHVjY5CBypUaFRonCrmFEi3pL5Nb00/6VpWGpSXoJp
-   iRSvwfJ70AmVThqBqxaMs3AV4gE35oE/aEqNnRCTGFEvA++tRktJPAiXM
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="268683462"
-X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="268683462"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 17:29:48 -0700
-X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
-   d="scan'208";a="572305211"
-Received: from wancheny-mobl.amr.corp.intel.com (HELO [10.209.114.21]) ([10.209.114.21])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 17:29:47 -0700
-Message-ID: <54ab824c-44a9-239a-9380-2f051f26a079@linux.intel.com>
-Date:   Wed, 11 May 2022 17:29:45 -0700
+        with ESMTP id S1350033AbiELF4M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 01:56:12 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D5B2497D;
+        Wed, 11 May 2022 22:56:10 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id bv19so8034673ejb.6;
+        Wed, 11 May 2022 22:56:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jovg6Gn1+l1bFNNGDKkLFFufpn4EfrWqOlCPZrp3sfU=;
+        b=Xy0o+hM3tLvfZFqKsOhlwTwoOuWhFr+FGKgTHRYaM9okG67pwCh0qkD6FMf5tWO121
+         xVQr8qgZ67VG+OwWVYSJTnrXQhiRcrY4GQfVlcvJvd0IhUVkii0biNd4WAWiT5Txe+uh
+         MH/ftG2j7rUul1mbXRvZLlI/EigyjBpjZtoC87FbIhYbH2Ve/8pHNo3DgkQJT4dGciLq
+         De+oSIkX1ckMoS9Vkkv/sN77ejblRiyyNQ3DDJhVOx0sGJa6LQrLpA5HLQCZHLNDtfG/
+         uuzIJI9/J1WDGgV6X8iTnAW+74TOYGNaeZP4ixBR1wvLTp6VNSGFedzaA4+vhVVacclI
+         0rvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Jovg6Gn1+l1bFNNGDKkLFFufpn4EfrWqOlCPZrp3sfU=;
+        b=JP0zALe3Mwsb/hZjsNzPB63okiArrOwR3LtG3sK6zYZUIhz2v9o+yh1nBGD15V+nd9
+         7BH3vbUiCFLEn8WrbE735bXYGq12/yy1Y7UKIH5oxXjbKzPEGNQ3LqKQDKqy9zQ5i5Q3
+         XgqtWH7K6yjG6NGEmrL7DVG1Tk4Zxr+VXUP1/QnrI90X/mh297vx3LVvv9gIKaRhaYiX
+         S+j4uVC1Gl51LF38Znfxhovprc5kLzhBE9iyobZwNcDM+pRtV7fcZwDK2BUoADrWqHua
+         /eCYOutPa2alpB0GrExwZWJous0oU56cOL5smRyk3RRueyWwozFEfVq5UMc2EqnqJpWQ
+         3z2Q==
+X-Gm-Message-State: AOAM532S/Yu+rRWftPjLyBvCX1Z1hQ1m0lQpZY4fJwHLObbdriQymKEt
+        TmzgiMlbTxd4q77W5lTCnY0+/q0HQFUdgQ==
+X-Google-Smtp-Source: ABdhPJyI3xxnYv+nUrY0ShpToYWh0lCS4SMpU7AgO5U14xIuKB6L20Ofw4VRc/Rv1YFCN5AboQIS+w==
+X-Received: by 2002:a17:907:6287:b0:6e1:6ac:c769 with SMTP id nd7-20020a170907628700b006e106acc769mr28929968ejc.388.1652334968811;
+        Wed, 11 May 2022 22:56:08 -0700 (PDT)
+Received: from localhost.localdomain.info (62-178-82-229.cable.dynamic.surfer.at. [62.178.82.229])
+        by smtp.gmail.com with ESMTPSA id n14-20020a170906700e00b006f3ef214e34sm1686320ejj.154.2022.05.11.22.56.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 May 2022 22:56:08 -0700 (PDT)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     dominic.rath@ibv-augsburg.net, kishon@ti.com,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v3] PCI: cadence: Allow PTM Responder to be enabled
+Date:   Thu, 12 May 2022 07:55:38 +0200
+Message-Id: <20220512055539.1782437-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.7.0
-Subject: Re: [PATCH v3] PCI/AER: Handle Multi UnCorrectable/Correctable errors
- properly
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20220511234024.GA831116@bhelgaas>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20220511234024.GA831116@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This enables the Controller [RP] to automatically respond with
+Response/ResponseD messages if CDNS_PCIE_LM_TPM_CTRL_PTMRSEN
+and PCI_PTM_CTRL_ENABLE bits are both set.
 
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 10 ++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++++
+ 2 files changed, 14 insertions(+)
 
-On 5/11/22 4:40 PM, Bjorn Helgaas wrote:
-> On Mon, Apr 18, 2022 at 03:02:37PM +0000, Kuppuswamy Sathyanarayanan wrote:
->> Currently the aer_irq() handler returns IRQ_NONE for cases without bits
->> PCI_ERR_ROOT_UNCOR_RCV or PCI_ERR_ROOT_COR_RCV are set. But this
->> assumption is incorrect.
->>
->> Consider a scenario where aer_irq() is triggered for a correctable
->> error, and while we process the error and before we clear the error
->> status in "Root Error Status" register, if the same kind of error
->> is triggered again, since aer_irq() only clears events it saw, the
->> multi-bit error is left in tact. This will cause the interrupt to fire
->> again, resulting in entering aer_irq() with just the multi-bit error
->> logged in the "Root Error Status" register.
->>
->> Repeated AER recovery test has revealed this condition does happen
->> and this prevents any new interrupt from being triggered. Allow to
->> process interrupt even if only multi-correctable (BIT 1) or
->> multi-uncorrectable bit (BIT 3) is set.
->>
->> Also note that, for cases with only multi-bit error is set, since this
->> is not the first occurrence of the error, PCI_ERR_ROOT_ERR_SRC may have
->> zero or some junk value. So we cannot cleanly process this error
->> information using aer_isr_one_error(). All we are attempting with this
->> fix is to make sure error interrupt processing can continue in this
->> scenario.
->>
->> This error can be reproduced by making following changes to the
->> aer_irq() function and by executing the given test commands.
->>
->>   static irqreturn_t aer_irq(int irq, void *context)
->>           struct aer_err_source e_src = {};
->>
->>           pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS,
->> 				&e_src.status);
->>   +       pci_dbg(pdev->port, "Root Error Status: %04x\n",
->>   +		e_src.status);
->>           if (!(e_src.status & AER_ERR_STATUS_MASK))
-> 
-> Do you mean
-> 
->    if (!(e_src.status & (PCI_ERR_ROOT_UNCOR_RCV|PCI_ERR_ROOT_COR_RCV)))
-> 
-> here?  AER_ERR_STATUS_MASK would be after this fix.
-
-Yes. You are correct. Do you want me to update it and Fixes tag
-and send next version?
-
-> 
->>                   return IRQ_NONE;
->>
->>   +       mdelay(5000);
-
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index fb96d37a135c..940c7dd701d6 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -123,6 +123,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+ 	return ret;
+ }
+ 
++static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
++{
++	u32 val;
++
++	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
++	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
++}
++
+ static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+ {
+ 	struct cdns_pcie *pcie = &rc->pcie;
+@@ -501,6 +509,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	if (rc->quirk_detect_quiet_flag)
+ 		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+ 
++	cdns_pcie_host_enable_ptm_response(pcie);
++
+ 	ret = cdns_pcie_start_link(pcie);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to start link\n");
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index c8a27b6290ce..1ffa8fa77a8a 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -116,6 +116,10 @@
+ #define LM_RC_BAR_CFG_APERTURE(bar, aperture)		\
+ 					(((aperture) - 2) << ((bar) * 8))
+ 
++/* PTM Control Register */
++#define CDNS_PCIE_LM_PTM_CTRL 	(CDNS_PCIE_LM_BASE + 0x0da8)
++#define CDNS_PCIE_LM_TPM_CTRL_PTMRSEN 	BIT(17)
++
+ /*
+  * Endpoint Function Registers (PCI configuration space for endpoint functions)
+  */
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.36.1
+
