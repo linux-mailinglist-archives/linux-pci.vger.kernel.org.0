@@ -2,130 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 518B5524A19
-	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 12:15:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1320524A95
+	for <lists+linux-pci@lfdr.de>; Thu, 12 May 2022 12:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351065AbiELKPi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 06:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51588 "EHLO
+        id S240753AbiELKqQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 06:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243726AbiELKPg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 06:15:36 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15C11ACF91;
-        Thu, 12 May 2022 03:15:32 -0700 (PDT)
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KzSG90PzVz6H7Ps;
-        Thu, 12 May 2022 18:10:41 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 12 May 2022 12:15:30 +0200
-Received: from localhost (10.81.210.133) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 12 May
- 2022 11:15:29 +0100
-Date:   Thu, 12 May 2022 11:15:25 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Len Brown <lenb@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        <kernel-team@fb.com>, <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] : Revert "ACPI: Remove side effect of partly creating a
- node in acpi_get_node()"
-Message-ID: <20220512111525.0000570e@Huawei.com>
-In-Reply-To: <CAJZ5v0hSJExYtxEZuw-+ZUf1YoZesOtS+x9UbdoBNXtTKPiYxg@mail.gmail.com>
-References: <20220511171754.avfrrqg6eihku55s@bsd-mbp.dhcp.thefacebook.com>
-        <CAJZ5v0jHDNBqCfmgyLUOs7yUZaEjQ96m5HVZKHP3x7_uamH5zQ@mail.gmail.com>
-        <7A00774E-13F2-4FB4-9979-D7827C92F5B8@gmail.com>
-        <CAJZ5v0hSJExYtxEZuw-+ZUf1YoZesOtS+x9UbdoBNXtTKPiYxg@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S1352780AbiELKp6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 06:45:58 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C489BF43
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 03:45:48 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id p26so8271713lfh.10
+        for <linux-pci@vger.kernel.org>; Thu, 12 May 2022 03:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QzR6y+s/rLlcoOu2dDQknc5DKjFo+5yNrwU72UblAeg=;
+        b=ol1JW7fcNHfwQ1YNlwm0Lip823FLYoNhjGWx7m8Cx25T4sg5NVcH7vaWnUvXoIaZlH
+         xO8Dx0bOnZtXQbLF+mUXdC1rfWUZA7BxdNUjTc2f134n9tHay0TJpXmtFYyNR4/tFiJJ
+         2hN1V4IYAMtN5AfTOYlLuCdfKxWjskijvZomJYtgedDLCHgEkaeDo3quwuXokEFlnf7O
+         FlmsyJsMowP/g1Ykq+SfDgsRTtryOP9o2HTY6AdoMd7axSqGN7Ul2d8Z81TwEdC5RzzC
+         Wae3dI7ehvqFyh9PWVI1t+cGRxUI5EfS/pYonu1Jj3R8hj7qiuEpsgjZT8F8PxG6raIi
+         BZzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QzR6y+s/rLlcoOu2dDQknc5DKjFo+5yNrwU72UblAeg=;
+        b=MPNTf1Kw4/gtwwsi1OTWJvBiBeaUF+iZ0HNNYudF4jqJfoXj5ICw1TWu/RmvUxskfM
+         pmNqZGZdRf2b/wHg9hu8C+pJlwWmNorDClDakrsrJnYfcpDvZ17jFTROr8vtryuSCenD
+         wVeVc/6Izhd7Cf8gQqdxtsFXj2CpeGvwe9G7tnl2q1MgnnZWZoo/+O3prj4p3t7GGf3W
+         uB0VMtdcEaKqA582BZGwhozqK8Dr+Fgly6r2PzSKO4/lRPbVgGsnT/puJGaRr5lAv5jk
+         WMAvFCKiHSAXJR0Wiug9P/esMNTrJGSw9bLujkwSlrfKUVBMIEIUI2n0FYeYz3YlhpDW
+         j8Gw==
+X-Gm-Message-State: AOAM532IUbIQuJ/tvqH4VjQWVkoPlI6KB0WQled6l2c/ePmec7+GuXy1
+        +mdwfOFfX/jZfdnXVL6njF+E2Q==
+X-Google-Smtp-Source: ABdhPJzgzzVA3Ej3QA6e0x3uM0Ffqjexeynj5QlvErI0QzXLII84XahRJ8xD55yq+CN/RLq64KJsVQ==
+X-Received: by 2002:a19:4942:0:b0:473:e75f:c058 with SMTP id l2-20020a194942000000b00473e75fc058mr24184779lfj.82.1652352346599;
+        Thu, 12 May 2022 03:45:46 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id q21-20020a2e9695000000b0024f3d1daeafsm831660lji.55.2022.05.12.03.45.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 03:45:46 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v8 00/10] PCI: qcom: Fix higher MSI vectors handling
+Date:   Thu, 12 May 2022 13:45:35 +0300
+Message-Id: <20220512104545.2204523-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.210.133]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 11 May 2022 19:44:14 +0200
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+I have replied with my Tested-by to the patch at [2], which has landed
+in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
+Add support for handling MSIs from 8 endpoints"). However lately I
+noticed that during the tests I still had 'pcie_pme=nomsi', so the
+device was not forced to use higher MSI vectors.
 
-> On Wed, May 11, 2022 at 7:42 PM Jonathan Lemon <jonathan.lemon@gmail.com> wrote:
-> >
-> > On 11 May 2022, at 10:33, Rafael J. Wysocki wrote:
-> >  
-> > > On Wed, May 11, 2022 at 7:24 PM Jonathan Lemon <jonathan.lemon@gmail.com> wrote:  
-> > >>
-> > >> This reverts commit a62d07e0006a3a3ce77041ca07f3c488ec880790.
-> > >>
-> > >> The change calls pxm_to_node(), which ends up returning -1
-> > >> (NUMA_NO_NODE) on some systems for the pci bus, as opposed
-> > >> to the prior call to acpi_map_pxm_to_node(), which returns 0.
-> > >>
-> > >> The default numa node is then inherited by all pci devices, and is
-> > >> visible in /sys/bus/pci/devices/*/numa_node
-> > >>
-> > >> The prior behavior shows:
-> > >>  # cat /sys/bus/pci/devices/*/numa_node | sort | uniq -c
-> > >>      122 0
-> > >>
-> > >> While the new behavior has:
-> > >>  # cat /sys/bus/pci/devices/*/numa_node | sort | uniq -c
-> > >>        1 0
+After removing this option I noticed that hight MSI vectors are not
+delivered on tested platforms. After additional research I stumbled upon
+a patch in msm-4.14 ([1]), which describes that each group of MSI
+vectors is mapped to the separate interrupt. Implement corresponding
+mapping.
 
-Curious, which device is turning up in node 0?
+The first patch in the series is a revert of  [2] (landed in pci-next).
+Either both patches should be applied or both should be dropped.
 
-> > >>      121 -1
-> > >>
-> > >> While arguably NUMA_NO_NODE is correct on single-socket systems which
-> > >> have only one numa domain, this breaks scripts that attempt to read the
-> > >> NIC numa_node and pass that to numactl in order to pin memory allocation
-> > >> when running applications (like iperf).  E.g.:
-> > >>
-> > >>   # numactl -p -1 iperf3
-> > >>   libnuma: Warning: node argument -1 is out of range
-> > >>   <-1> is invalid
-> > >>
-> > >> Reverting this change restores the prior behavior.  
-> > >
-> > > Well, that's not a recent commit and it fixed a real and serious issue.
-> > >
-> > > Isn't there a way to fix this other than reverting it?  
-> >
-> > The userspace behavior changed - is there another way to fix things
-> > so that a valid numa_node is returned?  
-> 
-> Well, that's my question.
+Patchseries dependecies: [3] (for the schema change).
 
-As Rafael noted, we don't want to change the internal kernel representation because
-previous kernel behavior resulting in several paths where you could
-get NULL pointer de-references, but maybe we could special case
-it at the userspace boundary.
+Changes since v7:
+ - Move code back to the dwc core driver (as required by Rob),
+ - Change dt schema to require either a single "msi" interrupt or an
+   array of "msi0", "msi1", ... "msi7" IRQs. Disallow specifying a
+   part of the array (the DT should specify the exact amount of MSI IRQs
+   allowing fallback to a single "msi" IRQ),
+ - Fix in the DWC init code for the dma_mapping_error() return value.
 
-e.g. override dev_to_node() return value here
-https://elixir.bootlin.com/linux/v5.18-rc6/source/drivers/pci/pci-sysfs.c#L358
+Changes since v6:
+ - Fix indentation of the arguments as requested by Stanimir
 
-What's problematic is we missed this being being an issue until now and hence
-have shipping kernels with both behaviors.
+Changes since v5:
+ - Fixed commit subject and in-comment code according to Bjorn's
+   suggestion,
+ - Changed variable idx to i to follow dw_handle_msi_irq() style.
 
-+CC Bjorn and linux-pci
+Changes since v4:
+ - Fix the minItems/maxItems properties in the YAML schema.
 
-Jonathan
+Changes since v3:
+ - Reimplement MSI handling scheme in the Qualcomm host controller
+   driver.
+
+Changes since v2:
+ - Fix and rephrase commit message for patch 2.
+
+Changes since v1:
+ - Split a huge patch into three patches as suggested by Bjorn Helgaas
+ - snps,dw-pcie removal is now part of [3]
+
+[1] https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/commit/671a3d5f129f4bfe477152292ada2194c8440d22
+[2] https://lore.kernel.org/linux-arm-msm/20211214101319.25258-1-manivannan.sadhasivam@linaro.org/
+[3] https://lore.kernel.org/linux-arm-msm/20220422211002.2012070-1-dmitry.baryshkov@linaro.org/
 
 
+Dmitry Baryshkov (10):
+  PCI: qcom: Revert "PCI: qcom: Add support for handling MSIs from 8
+    endpoints"
+  PCI: dwc: Correct msi_irq condition in dw_pcie_free_msi()
+  PCI: dwc: Convert msi_irq to the array
+  PCI: dwc: Propagate error from dma_mapping_error()
+  PCI: dwc: split MSI IRQ parsing/allocation to a separate function
+  PCI: dwc: Handle MSIs routed to multiple GIC interrupts
+  PCI: qcom: Handle MSIs routed to multiple GIC interrupts
+  PCI: dwc: Implement special ISR handler for split MSI IRQ setup
+  dt-bindings: PCI: qcom: Support additional MSI interrupts
+  arm64: dts: qcom: sm8250: provide additional MSI interrupts
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  53 ++++-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |  11 +-
+ drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
+ drivers/pci/controller/dwc/pci-exynos.c       |   2 +-
+ .../pci/controller/dwc/pcie-designware-host.c | 214 +++++++++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |   3 +-
+ drivers/pci/controller/dwc/pcie-keembay.c     |   2 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        |  13 +-
+ drivers/pci/controller/dwc/pcie-spear13xx.c   |   2 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c    |   2 +-
+ 10 files changed, 231 insertions(+), 73 deletions(-)
+
+-- 
+2.35.1
 
