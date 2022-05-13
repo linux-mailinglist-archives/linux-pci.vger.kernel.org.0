@@ -2,75 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A86D2525F35
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 12:08:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9F44526001
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 12:39:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379153AbiEMJuf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 05:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53914 "EHLO
+        id S1379284AbiEMKK7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 06:10:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379149AbiEMJue (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 05:50:34 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC0528203A
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 02:50:33 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id h3so6432317qtn.4
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 02:50:33 -0700 (PDT)
+        with ESMTP id S1350059AbiEMKK6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 06:10:58 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521C4140C5
+        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 03:10:56 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id fu47so6444493qtb.5
+        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 03:10:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2/d6JMVM+IfX5VGpzFFWJq2aSU3gUsGcM3lDLoJ9M7g=;
-        b=qzl6XB/NInDHcgfoo/BSuClC2RyCad9DBd6T4pYvHJskLboYjga0eye7vgFzOHnqjX
-         t/7A77TvzR7tUJ4zklgYHl+QRIpwNfHV1K8TBKSYnfz6ayTeauIAO69HIL3DlY92KG4O
-         9lDIAE2XVSY/BWjT5+L9cibK2v6T018o3ntQiFRj2kR5GV9WK9ss7/CJ2xWyd2hcnoZy
-         RJlgmmOsrJ18gedoPPG65YABIqoymrHrZ7tYKgt4LwNOcepGy6nN0B8yl8Chr1qlVRSe
-         XL/z8RlC+GJJzuUiwobJDyw3c9aY7pbY2Et4y5ImlwyrHDKzzzfdbrGFyad8+HJpMNel
-         I2pg==
+        bh=+6a24hmutHKBGPmKdmfzo+GbqGc2VGX64fsVUBoQOak=;
+        b=ZJ2qfJ31vR6PlkYcXNCuvVB0LtzyBMrsX39x7zgy56oWu2NbHtdhnoTyNB8YvPOhdN
+         FK4B91mKUm+XHUNlEhbILynY9HJ0PNWsjhBHGSZ+NVY2IDa9AsBhGhy+xVHWkV5QaWT1
+         FL3oiJZrjcjas7G7EHOJk74E5UNCEKOPuV6nyXWCOVc2HeauNkBBJRqEnkLZDUPtuerW
+         PCXTUk6z8PzlF6d1sZg2f7HjzElZhW6twJjLW0Gol/Ula5tDl09rfYNaN4cRpk86FwMM
+         H7wFub9pyV/v5BqxQbFYQZ/S8ZfXTw1grLI3LqZ8rwL72MixXrBJSE2Gsj6QM/cKrsJT
+         13zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2/d6JMVM+IfX5VGpzFFWJq2aSU3gUsGcM3lDLoJ9M7g=;
-        b=5z26bGdOPLisHP+1SHvP2B1dLRbxNpjdfOrCnWqdrblKfFDhnGmR9M3F43H1HWPAeB
-         lmIlWrw6/POwjJvz6gRoVljfo2ytXr7Mx+4jw4+xRyoPadlGIq3KTNdnd5SO0PGaFl0C
-         kN0F4qkmgxrX1QTw/jlvxkFcZLZqUS3QIcODuVcb0KdE6xsT4IXSqCP21cQRou/2iuTl
-         X57S3hoZWtPwlhUURTnup01cIfQQeN812ui+xd/hCaCucj+SQWj+aoQ/G3Nw0MUM25Fn
-         13kVBPuSbqLxiINN7GEjbl+nl4DdatgvR+OTSniqXWhhhyi1NURw+K2kFLp0XtZDlXpp
-         OkxQ==
-X-Gm-Message-State: AOAM530UfJYWTb+OBDOWQAk1qaZB0cOS5svamxDe9pFh2ESV5OcINpqw
-        BlOxhCr8PR2jZBlUJ6WULgeu/rvP8nLJ066VvqF7SA==
-X-Google-Smtp-Source: ABdhPJy13WMKLbw5Kk6gWkYNK+lV5F3+Uq7ZlpudYETXrH8/GGqs+BTbagDeGIUJF2bQFn6N7SbHAZe13tf2pZch9uk=
-X-Received: by 2002:a05:622a:4f:b0:2f3:e77c:2c7e with SMTP id
- y15-20020a05622a004f00b002f3e77c2c7emr3680636qtw.62.1652435432151; Fri, 13
- May 2022 02:50:32 -0700 (PDT)
+        bh=+6a24hmutHKBGPmKdmfzo+GbqGc2VGX64fsVUBoQOak=;
+        b=F4Jvt56WDRy4E4LPLVaBUGluPTd26g+QCXQN58K8hm/jah1oGd4Z99VY37KenEnY5v
+         pDvbuDN/W0/FSXlrl5+bHF4T3BhIUnP3TdcN2s1fT5p3NDSLWydBbl0x91T/P5o6RePJ
+         K3bLXBCQj3A086YYNM7SNvNOv/+ArsU8n4mE4O6lQZkQp2NRvBbeDFybLbV+6u2QPLMe
+         ZN8xFGBEflB7IdNDqGTakJM5wLpoeJpIDXUMA2SGPDrcPPeKvZnEs2MZ1pBJaFI91Ouf
+         v46NvqHoir9QwnaApxJImCxfONvjE9LV9ys8M7tERJ4uTMYX2dJ4MqUxh5MZk9ObhmsE
+         Tjxg==
+X-Gm-Message-State: AOAM530JD8NM+5xezraGIpM6GWztrkbbfJpi2pAN0XQI+wPpMxSjGG9w
+        mtYAQd0fod0IDEkIz1/MuqwvdmNSoBuxlAGR6G3IAQ==
+X-Google-Smtp-Source: ABdhPJzAi/elIkBWOFcWmkdVB2d0z/x9dKi584KPCw1vkuUCARdqrVdlFvWzZG61xwKYSxSJZ6Anb6jvV8IDKkg/xGY=
+X-Received: by 2002:a05:622a:188e:b0:2f3:dc9f:946 with SMTP id
+ v14-20020a05622a188e00b002f3dc9f0946mr3736913qtc.682.1652436655475; Fri, 13
+ May 2022 03:10:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220512172909.2436302-1-dmitry.baryshkov@linaro.org>
- <20220512172909.2436302-3-dmitry.baryshkov@linaro.org> <Yn4T72U8GxwvIBBu@hovoldconsulting.com>
-In-Reply-To: <Yn4T72U8GxwvIBBu@hovoldconsulting.com>
+References: <20220512104545.2204523-1-dmitry.baryshkov@linaro.org>
+ <Yn4dvpgezdrKmSro@hovoldconsulting.com> <CAA8EJppzx5nkyk3gCcgFd2G_QewU0Z6q6DAKb-Lyj9yZyMo_AA@mail.gmail.com>
+ <Yn4ms7dKIzeAqt7A@hovoldconsulting.com>
+In-Reply-To: <Yn4ms7dKIzeAqt7A@hovoldconsulting.com>
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Fri, 13 May 2022 12:50:21 +0300
-Message-ID: <CAA8EJpqZBry9cZ=XhwvBgqib+Y8bL0Qb=J88S1cpkKhE+OKa7Q@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] clk: qcom: regmap: add PHY clock source implementation
+Date:   Fri, 13 May 2022 13:10:44 +0300
+Message-ID: <CAA8EJppt4kiG45j62W-Z7Ech8WLNnkPYiVv7T0AK-+Dxtc_KDQ@mail.gmail.com>
+Subject: Re: [PATCH v8 00/10] PCI: qcom: Fix higher MSI vectors handling
 To:     Johan Hovold <johan@kernel.org>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Prasad Malisetty <pmaliset@codeaurora.org>,
         Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-clk@vger.kernel.org
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,207 +77,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 13 May 2022 at 11:16, Johan Hovold <johan@kernel.org> wrote:
+On Fri, 13 May 2022 at 12:36, Johan Hovold <johan@kernel.org> wrote:
 >
-> On Thu, May 12, 2022 at 08:29:06PM +0300, Dmitry Baryshkov wrote:
-> > On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
-> > muxes which must be parked to the "safe" source (bi_tcxo) when
-> > corresponding GDSC is turned off and on again. Currently this is
-> > handcoded in the PCIe driver by reparenting the gcc_pipe_N_clk_src
-> > clock. However the same code sequence should be applied in the
-> > pcie-qcom endpoint, USB3 and UFS drivers.
->
-> You seem to have ignored my comment regarding UFS and naming except for
-> the updated Subject.
->
-> For UFS the corresponding clocks would be named symbol clocks, which
-> seems to suggest that a more generic name is warranted. I mentioned
-> phy_mux as a possible alternative name for for pipe_mux (or pipe_src).
-
-No, I did not. For some time I had named it clk_regmap_phy_src. Then I
-decided against it on the grounds of being not descriptive enough too.
-There are many PHY clocks (and sources), while this mechanism is used
-only for pipe and symbol clocks. So I preferred to have a descriptive
-name that is further extended to be used for symbol clocks rather than
-a too broad name that is used only for pipe and symbol clocks. But if
-you insist, I can change this.
-
->
-> > Rather than copying this sequence over and over again, follow the
-> > example of clk_rcg2_shared_ops and implement this parking in the
-> > enable() and disable() clock operations. Supplement the regmap-mux with
-> > the new clk_regmap_pipe_src type, which implements such multiplexers
-> > as a simple gate clocks.
+> On Fri, May 13, 2022 at 12:28:40PM +0300, Dmitry Baryshkov wrote:
+> > On Fri, 13 May 2022 at 11:58, Johan Hovold <johan@kernel.org> wrote:
+> > >
+> > > On Thu, May 12, 2022 at 01:45:35PM +0300, Dmitry Baryshkov wrote:
+> > > > I have replied with my Tested-by to the patch at [2], which has landed
+> > > > in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
+> > > > Add support for handling MSIs from 8 endpoints"). However lately I
+> > > > noticed that during the tests I still had 'pcie_pme=nomsi', so the
+> > > > device was not forced to use higher MSI vectors.
+> > > >
+> > > > After removing this option I noticed that hight MSI vectors are not
+> > > > delivered on tested platforms. After additional research I stumbled upon
+> > > > a patch in msm-4.14 ([1]), which describes that each group of MSI
+> > > > vectors is mapped to the separate interrupt. Implement corresponding
+> > > > mapping.
+> > > >
+> > > > The first patch in the series is a revert of  [2] (landed in pci-next).
+> > > > Either both patches should be applied or both should be dropped.
+> > > >
+> > > > Patchseries dependecies: [3] (for the schema change).
+> > > >
+> > > > Changes since v7:
+> > > >  - Move code back to the dwc core driver (as required by Rob),
+> > > >  - Change dt schema to require either a single "msi" interrupt or an
+> > > >    array of "msi0", "msi1", ... "msi7" IRQs. Disallow specifying a
+> > > >    part of the array (the DT should specify the exact amount of MSI IRQs
+> > > >    allowing fallback to a single "msi" IRQ),
+> > >
+> > > Why this new constraint?
+> > >
+> > > I've been using your v7 with an sc8280xp which only has four IRQs (and
+> > > hence 128 MSIs).
+> > >
+> > > Looks like this version of the series would not allow that anymore.
 > >
-> > This is possible since each of these multiplexers has just two clock
-> > sources: working (pipe) and safe/park (bi_tcxo) clock sources. If the
-> > clock is running off the external pipe source, report it as enabled and
-> > report it as disabled otherwise.
-> >
-> > This way the PHY will disable the pipe clock before turning off the
-> > GDSC, which in turn would lead to disabling corresponding pipe_clk_src
-> > (and thus parked to a safe clock srouce). And vice versa, after enabling
+> > It allows it, provided that you set pp->num_vectors correctly (to 128
+> > in your case).
+> > The main idea was to disallow mistakes in the platform configuration.
+> > If the platform says that it supports 256 vectors (and 8 groups),
+> > there must be 8 groups. Or a single backwards-compatible group.
 >
-> typo: source
+> But you also added
 >
-> > the GDSC the PHY will enable the pipe clock, which would cause
-> > pipe_clk_src to be switched from a safe source to the working one.
+> +        - properties:
+> +            interrupts:
+> +              minItems: 8
+> +            interrupt-names:
+> +              minItems: 8
+> +              items:
+> +                - const: msi0
+> +                - const: msi1
+> +                - const: msi2
+> +                - const: msi3
+> +                - const: msi4
+> +                - const: msi5
+> +                - const: msi6
+> +                - const: msi7
 >
-> Explaining how this fits together with the PHY power sequencing is good
-> but it needs to be reflected in the implementation too. Preferably using
-> good naming, but possibly also with a comment.
+> which means that I can no longer describe the four interrupts in DT.
+>
+> I didn't check the implementation, but it seems you should derive the
+> number of MSIs based on the devicetree as I guess you did in v7.
 
-Ack
-
->
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >  drivers/clk/qcom/Makefile              |  1 +
-> >  drivers/clk/qcom/clk-regmap-pipe-src.c | 62 ++++++++++++++++++++++++++
-> >  drivers/clk/qcom/clk-regmap-pipe-src.h | 24 ++++++++++
-> >  3 files changed, 87 insertions(+)
-> >  create mode 100644 drivers/clk/qcom/clk-regmap-pipe-src.c
-> >  create mode 100644 drivers/clk/qcom/clk-regmap-pipe-src.h
-> >
-> > diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-> > index 671cf5821af1..03b945535e49 100644
-> > --- a/drivers/clk/qcom/Makefile
-> > +++ b/drivers/clk/qcom/Makefile
-> > @@ -11,6 +11,7 @@ clk-qcom-y += clk-branch.o
-> >  clk-qcom-y += clk-regmap-divider.o
-> >  clk-qcom-y += clk-regmap-mux.o
-> >  clk-qcom-y += clk-regmap-mux-div.o
-> > +clk-qcom-y += clk-regmap-pipe-src.o
-> >  clk-qcom-$(CONFIG_KRAIT_CLOCKS) += clk-krait.o
-> >  clk-qcom-y += clk-hfpll.o
-> >  clk-qcom-y += reset.o
-> > diff --git a/drivers/clk/qcom/clk-regmap-pipe-src.c b/drivers/clk/qcom/clk-regmap-pipe-src.c
-> > new file mode 100644
-> > index 000000000000..02047987ab5f
-> > --- /dev/null
-> > +++ b/drivers/clk/qcom/clk-regmap-pipe-src.c
-> > @@ -0,0 +1,62 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2022, Linaro Ltd.
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/bitops.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/export.h>
-> > +
-> > +#include "clk-regmap-pipe-src.h"
-> > +
-> > +static inline struct clk_regmap_pipe_src *to_clk_regmap_pipe_src(struct clk_hw *hw)
-> > +{
-> > +     return container_of(to_clk_regmap(hw), struct clk_regmap_pipe_src, clkr);
-> > +}
-> > +
-> > +static int pipe_src_is_enabled(struct clk_hw *hw)
-> > +{
-> > +     struct clk_regmap_pipe_src *pipe = to_clk_regmap_pipe_src(hw);
->
-> Again, "pipe" is so overloaded and using "mux" (or possibly "src")
-> throughout would make the code easier to understand.
-
-Argh. I missed that the code still uses 'pipe' here. Will fix it in
-the next version.
-
->
-> > +     struct clk_regmap *clkr = to_clk_regmap(hw);
-> > +     unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
-> > +     unsigned int val;
-> > +
-> > +     regmap_read(clkr->regmap, pipe->reg, &val);
-> > +     val = (val & mask) >> pipe->shift;
-> > +
-> > +     WARN_ON(unlikely(val != pipe->working_val && val != pipe->park_val));
->
-> Again, please drop unlikely() here.
-
-Ack
-
->
-> > +
-> > +     return val == pipe->working_val;
-> > +}
-> > +
-> > +static int pipe_src_enable(struct clk_hw *hw)
-> > +{
-> > +     struct clk_regmap_pipe_src *pipe = to_clk_regmap_pipe_src(hw);
-> > +     struct clk_regmap *clkr = to_clk_regmap(hw);
-> > +     unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
-> > +     unsigned int val;
-> > +
-> > +     val = pipe->working_val << pipe->shift;
-> > +
-> > +     return regmap_update_bits(clkr->regmap, pipe->reg, mask, val);
-> > +}
-> > +
-> > +static void pipe_src_disable(struct clk_hw *hw)
-> > +{
-> > +     struct clk_regmap_pipe_src *pipe = to_clk_regmap_pipe_src(hw);
-> > +     struct clk_regmap *clkr = to_clk_regmap(hw);
-> > +     unsigned int mask = GENMASK(pipe->width + pipe->shift - 1, pipe->shift);
-> > +     unsigned int val;
-> > +
-> > +     val = pipe->park_val << pipe->shift;
-> > +
-> > +     regmap_update_bits(clkr->regmap, pipe->reg, mask, val);
-> > +}
-> > +
-> > +const struct clk_ops clk_regmap_pipe_src_ops = {
-> > +     .enable = pipe_src_enable,
-> > +     .disable = pipe_src_disable,
-> > +     .is_enabled = pipe_src_is_enabled,
-> > +};
-> > +EXPORT_SYMBOL_GPL(clk_regmap_pipe_src_ops);
-> > diff --git a/drivers/clk/qcom/clk-regmap-pipe-src.h b/drivers/clk/qcom/clk-regmap-pipe-src.h
-> > new file mode 100644
-> > index 000000000000..3aa4a9f402cd
-> > --- /dev/null
-> > +++ b/drivers/clk/qcom/clk-regmap-pipe-src.h
-> > @@ -0,0 +1,24 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (c) 2022, Linaro Ltd.
-> > + * Author: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > + */
-> > +
-> > +#ifndef __QCOM_CLK_REGMAP_PIPE_SRC_H__
-> > +#define __QCOM_CLK_REGMAP_PIPE_SRC_H__
-> > +
-> > +#include <linux/clk-provider.h>
-> > +#include "clk-regmap.h"
-> > +
-> > +struct clk_regmap_pipe_src {
-> > +     u32                     reg;
-> > +     u32                     shift;
-> > +     u32                     width;
-> > +     u32                     working_val;
-> > +     u32                     park_val;
->
-> Naming is hard, but I believe something like ext_src_val (or
-> phy_src_val) and ref_src_val (or xo_src_val) would allow the code to be
-> more self-explanatory and not rely on looking up the commit message to
-> understand where "working" and "park" came from.
-
-Thanks. Yes, this looks more descriptive.
-
->
-> You probably need to add a comment in the implementation either way.
->
-> > +     struct clk_regmap       clkr;
-> > +};
-> > +
-> > +extern const struct clk_ops clk_regmap_pipe_src_ops;
-> > +
-> > +#endif
->
-> Johan
-
-
+It is a conditional, so you can add another conditional for the
+sc8280xp platform describing just 4 interrupts. And as you don't have
+legacy DTS, you can completely omit the backwards compatible clause in
+your case.
+So, something like:
+ - if:
+   properties:
+      contains:
+         enum:
+            - qcom,pcie-sc8280xp
+  then:
+    properties:
+       interrupts:
+          minItems: 4
+          maxItems: 4
+       interrupt-names:
+           items:
+              - const: msi0
+              - const: msi1
+              - const: msi2
+              - const: msi3
 
 -- 
 With best wishes
