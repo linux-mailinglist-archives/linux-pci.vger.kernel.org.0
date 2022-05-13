@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6CCE52684A
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 19:26:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3099B52684D
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 19:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382983AbiEMR02 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 13:26:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40716 "EHLO
+        id S1382445AbiEMR03 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 13:26:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382445AbiEMR01 (ORCPT
+        with ESMTP id S1382947AbiEMR01 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 13:26:27 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3931B55213
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E57703CC
         for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 10:26:25 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id u23so15685375lfc.1
+Received: by mail-lf1-x12f.google.com with SMTP id t25so15663103lfg.7
         for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 10:26:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pbko96crE4TzzX/Ak0XuHEKRtxla1hBVnyQSgu2Jr0A=;
-        b=bNyrZ27wp+y18TJWzKJz+8icZvv5URoY2m/R90LErO+4SfNUpr5jaiCJGPqVVr4shO
-         VBhlBjIKYJDRDWYqyWpACBj53NryvcmURxIVUvpoHmjdNS136kbhc07APw4PAatMJIQE
-         FVnpO+KuLSzzd2OEm/0MrlnrjROIowfDH6/kLzIuULP0vJN+n8Cud2zryj6znEXcKN+3
-         7DyV55NxkFUAaHszt2wGm3tm2NU/PZobrxno2DMX4hx8WlLA4rqewKKtg3JPY6qsJAsw
-         qOwh29OLJt1ouHKWT8PMXCYFlVwFHa4fB7uVQSvCmXbYWYSE8J1Tgw0Lw+jkwgj03i+H
-         oPEw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lFsusYv3a39AFVrKGs8AUQpmcs9BSd1N8sKJb+8VaT8=;
+        b=WBfoYsdfMzXU2kGfudqa/v0jxVqo9JOrRsaY5HkekmUGEbhTBVmQzS/fp6dQ64SXjt
+         hMPLy3pN4F73WoI8xWZrj46CMxbup33u3/xi6ST2olQvJOhpyy7xGss7ugqdU+Udr2Wm
+         FM+8dbE69wjCjYsMqU75HBxNEjgNZgrUN1JTMZF/ESAF/sGYtFxjl3bYnrUyXQ0+K2tV
+         9hLtNM+KOmHh7Ituu6Q+26CmrM+5jxrDReh5lVMMODvIerYm6gyHprgncimqWKT25xlR
+         qxDkvBetbBQeZmXiB3piJCTzWqXeNm6NUsiHLVzQBiRhRRtq/ZkHHEgbMjpSXKJYLLhf
+         +FVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pbko96crE4TzzX/Ak0XuHEKRtxla1hBVnyQSgu2Jr0A=;
-        b=t+AlCfR7DdUUnY+SCsEpdO5K1yK/4pktXNu5My0M+4lUeTVk81VE7IJF+qwkfHifAa
-         zSSuIOWr+7Q3n+d+4M2sPiD65pq4EX0rk5LhoJx/uwI/FZLwKl327Ed21Ne7y3nioUjM
-         JOUJNzRNlL1bB67Xt7OUJBQP+9/0Gi2bCHpnaEnqOK3dxmq4ssAAfk3/655WEPFi+vE2
-         tSAkORgLeGLPizdAuUltrPpwZsmmik3EJiRee9jhlvCYg5PUz9wNybVJmDAyPOx9wown
-         nxZ7z45RhQLyA9s605BOxjPhbwnRsv1C+Ki8kh6BnODwnjyDjAHRXjVt8yzM7ykPIej1
-         Wyng==
-X-Gm-Message-State: AOAM5330Ga7wcDgWbpwUCHyThd1RtLtwZr3P/rK98w8GIuy/RMXUBJt4
-        9UVk5HjOPGQIOHyZ07T0u4petg==
-X-Google-Smtp-Source: ABdhPJzuQGBiIe3LyTOZcj9QUZq8ieO+lVchyXImkwrPqp0TvLrK71NHUMBFMStgVzdK2Ly1V24trA==
-X-Received: by 2002:ac2:561b:0:b0:472:586b:3209 with SMTP id v27-20020ac2561b000000b00472586b3209mr4098779lfd.234.1652462783510;
-        Fri, 13 May 2022 10:26:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lFsusYv3a39AFVrKGs8AUQpmcs9BSd1N8sKJb+8VaT8=;
+        b=OxxbULR0SvTK4bsThBeoNO7G5JUI4faxiYv8EZeZxl5E+Vjbq5zcT/sC/wvPbjD6kw
+         v5k35w0JaF8KZvlOX/CNXdlyTjWjmM8Toy/dAJBvGjbYr5T/O1XiABWgwmWZkDjse6JM
+         ihqKuvj/SPrRHutzpDQYZxIVK+zJiazzY6rdzjOFyjsu8NBKyM/8Fmrji4Hdxc31q6UJ
+         uMTYwssSjgK6b9dr5wFH4zmmtgu/++bHUL5ZyhkflfqBrEsBoz5BJ2BQ7ebIql2Pk8tW
+         /2uLT79PbpDcY+sbQ17FwjQnu7wsGBtj0+WQYS3z1FBxipM9rymuuKmX5dHdCTFny5Hb
+         lp6w==
+X-Gm-Message-State: AOAM531lAeKXOYkM95Z8+3ti3IfITlxgTH06FQz9lp3FeHKQrYbQzQ5U
+        CVZIg4wDeStHJ37XWyXFyJYo8w==
+X-Google-Smtp-Source: ABdhPJyXXi/FFYU6koUuAWjprgZAFDMa5RcEHpIS8ggoAd+Icwbqie+ygNH6DoHCp6qsbwCaYcGdyQ==
+X-Received: by 2002:ac2:482f:0:b0:472:47d5:ef32 with SMTP id 15-20020ac2482f000000b0047247d5ef32mr4119383lft.344.1652462784312;
+        Fri, 13 May 2022 10:26:24 -0700 (PDT)
 Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id e3-20020a2e8183000000b0024f3d1daec0sm511157ljg.72.2022.05.13.10.26.22
+        by smtp.gmail.com with ESMTPSA id e3-20020a2e8183000000b0024f3d1daec0sm511157ljg.72.2022.05.13.10.26.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 13 May 2022 10:26:23 -0700 (PDT)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
@@ -60,11 +60,14 @@ To:     Andy Gross <agross@kernel.org>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Johan Hovold <johan@kernel.org>
 Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v10 00/10] PCI: qcom: Fix higher MSI vectors handling
-Date:   Fri, 13 May 2022 20:26:12 +0300
-Message-Id: <20220513172622.2968887-1-dmitry.baryshkov@linaro.org>
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v10 01/10] PCI: qcom: Revert "PCI: qcom: Add support for handling MSIs from 8 endpoints"
+Date:   Fri, 13 May 2022 20:26:13 +0300
+Message-Id: <20220513172622.2968887-2-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220513172622.2968887-1-dmitry.baryshkov@linaro.org>
+References: <20220513172622.2968887-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -77,94 +80,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
- have replied with my Tested-by to the patch at [2], which has landed
+I have replied with my Tested-by to the patch at [2], which has landed
 in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
 Add support for handling MSIs from 8 endpoints"). However lately I
 noticed that during the tests I still had 'pcie_pme=nomsi', so the
 device was not forced to use higher MSI vectors.
 
-After removing this option I noticed that hight MSI vectors are not
-delivered on tested platforms. After additional research I stumbled upon
+After removing this option I noticed that high MSI vectors are not
+delivered on tested platforms. Additional research pointed to
 a patch in msm-4.14 ([1]), which describes that each group of MSI
-vectors is mapped to the separate interrupt. Implement corresponding
-mapping.
+vectors is mapped to the separate interrupt.
 
-The first patch in the series is a revert of  [2] (landed in pci-next).
-Either both patches should be applied or both should be dropped.
-
-Patchseries dependecies: [3] (for the schema change).
-
-Changes since v9:
- - Relax requirements and stop validating the DT. If the has_split_msi
-   was specified, parse as many msiN irqs as specified in DT. If there
-   are none, fallback to the single "msi" IRQ.
-
-Changes since v8:
- - Fix typos noted by Bjorn Helgaas
- - Add missing links to the patch 1 (revert)
- - Fix sm8250 interrupt-names (Johan)
- - Specify num_vectors in qcom configuration data (Johan)
- - Rework parsing of MSI IRQs (Johan)
-
-Changes since v7:
- - Move code back to the dwc core driver (as required by Rob),
- - Change dt schema to require either a single "msi" interrupt or an
-   array of "msi0", "msi1", ... "msi7" IRQs. Disallow specifying a
-   part of the array (the DT should specify the exact amount of MSI IRQs
-   allowing fallback to a single "msi" IRQ),
- - Fix in the DWC init code for the dma_mapping_error() return value.
-
-Changes since v6:
- - Fix indentation of the arguments as requested by Stanimir
-
-Changes since v5:
- - Fixed commit subject and in-comment code according to Bjorn's
-   suggestion,
- - Changed variable idx to i to follow dw_handle_msi_irq() style.
-
-Changes since v4:
- - Fix the minItems/maxItems properties in the YAML schema.
-
-Changes since v3:
- - Reimplement MSI handling scheme in the Qualcomm host controller
-   driver.
-
-Changes since v2:
- - Fix and rephrase commit message for patch 2.
-
-Changes since v1:
- - Split a huge patch into three patches as suggested by Bjorn Helgaas
- - snps,dw-pcie removal is now part of [3]
+Without these changes specifying num_vectors can lead to missing MSI
+interrupts and thus to devices malfunction.
 
 [1] https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/commit/671a3d5f129f4bfe477152292ada2194c8440d22
 [2] https://lore.kernel.org/linux-arm-msm/20211214101319.25258-1-manivannan.sadhasivam@linaro.org/
-[3] https://lore.kernel.org/linux-arm-msm/20220422211002.2012070-1-dmitry.baryshkov@linaro.org/
 
-Dmitry Baryshkov (10):
-  PCI: qcom: Revert "PCI: qcom: Add support for handling MSIs from 8
-    endpoints"
-  PCI: dwc: Propagate error from dma_mapping_error()
-  PCI: dwc: Correct msi_irq condition in dw_pcie_free_msi()
-  PCI: dwc: Convert msi_irq to the array
-  PCI: dwc: split MSI IRQ parsing/allocation to a separate function
-  PCI: dwc: Handle MSIs routed to multiple GIC interrupts
-  PCI: dwc: Implement special ISR handler for split MSI IRQ setup
-  PCI: qcom: Handle MSIs routed to multiple GIC interrupts
-  dt-bindings: PCI: qcom: Support additional MSI interrupts
-  arm64: dts: qcom: sm8250: provide additional MSI interrupts
+Fixes: 20f1bfb8dd62 ("PCI: qcom: Add support for handling MSIs from 8 endpoints")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- .../devicetree/bindings/pci/qcom,pcie.yaml    |  53 ++++-
- arch/arm64/boot/dts/qcom/sm8250.dtsi          |  12 +-
- drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
- drivers/pci/controller/dwc/pci-exynos.c       |   2 +-
- .../pci/controller/dwc/pcie-designware-host.c | 220 +++++++++++++-----
- drivers/pci/controller/dwc/pcie-designware.h  |   3 +-
- drivers/pci/controller/dwc/pcie-keembay.c     |   2 +-
- drivers/pci/controller/dwc/pcie-qcom.c        |  13 +-
- drivers/pci/controller/dwc/pcie-spear13xx.c   |   2 +-
- drivers/pci/controller/dwc/pcie-tegra194.c    |   2 +-
- 10 files changed, 238 insertions(+), 73 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index f9a61ad6d1f0..2e5464edc36e 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1587,7 +1587,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
+ 	pp = &pci->pp;
+-	pp->num_vectors = MAX_MSI_IRQS;
+ 
+ 	pcie->pci = pci;
+ 
 -- 
 2.35.1
 
