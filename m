@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 250D7526167
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 13:53:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E183052616F
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 13:55:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378780AbiEMLxA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 07:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53338 "EHLO
+        id S1352163AbiEMLzD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 07:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344951AbiEMLw7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 07:52:59 -0400
+        with ESMTP id S1344951AbiEMLzC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 07:55:02 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA9E16D109;
-        Fri, 13 May 2022 04:52:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F90B285AF7;
+        Fri, 13 May 2022 04:55:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C9DA761E78;
-        Fri, 13 May 2022 11:52:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2455AC34100;
-        Fri, 13 May 2022 11:52:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BE5861D7F;
+        Fri, 13 May 2022 11:55:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DD24C34100;
+        Fri, 13 May 2022 11:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652442777;
-        bh=plVoKs5ntKkRyOTvVf6qPt7Mg+ey65/xaSr7OIeYHG4=;
+        s=k20201202; t=1652442900;
+        bh=h8LjBcuAU7++hKV39SXxeZk2NnPv/cQLwgcVip/Iqg8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KvY1A2fpAaWG76TwJ7ZSnbB/+Pkh5lZDtgWNc1l/e9AD3PHbLCRrkzz8+RATy91zz
-         VAbJqsZm/mfimXsTaEz8/uQ7E433reluMmPSsuPPY5nKIeDqi6K+NMvej069jCA9JR
-         15T9d/Q3FluHS9KhKLN55VD3pIM4bxDegujIwVJhG0mbc2mok2YuaCrgzxgQFWBqSC
-         HZXaGQInC6CJGm4ETP9P0OJer9lyIZ0cimsqJuBVM2P5A7pyUyLvvq70r3YecW+6dG
-         fF42G1Om00IRbQD4uDaKMLGJMRFAGM58Hi/uOxLmTAF8PJHb1pqbVfrf420UBYFyG6
-         sJUArU4HUmSiw==
+        b=Onh8ctGtMJQKYmr+U297Q2iX8033k9+W3DjqD9112f2hBMep6Qf8gZWmEzxy/iw4X
+         U06R0kGcWJKr0X2Wx/SH6lEpA6kMuUhN65e+yHmGXLzXCAIbHGIsy7iUbIdEfhFCKX
+         6NlZtquABABkw0n05u66jfXXkij+CA1wW3pvWwGca5KxKcuUytMnU2nbhlAuL87cn/
+         QP3jQjO9jksB79wNnv+q9gyJCB7Fv3MgCyTuj4SlIPRCSLzu+2+KMYRt86h1C99ErV
+         q8PFiDPyPL+H1ekV/li8X1bQvtW9W9uX0ez7SzdvurbQmOpqb9SgiaCdYTghXfYOTo
+         xU5MOGyQpi44A==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan@kernel.org>)
-        id 1npTqn-0002JJ-2I; Fri, 13 May 2022 13:52:53 +0200
-Date:   Fri, 13 May 2022 13:52:53 +0200
+        id 1npTsn-0002Kb-Du; Fri, 13 May 2022 13:54:57 +0200
+Date:   Fri, 13 May 2022 13:54:57 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -49,15 +49,15 @@ Cc:     Andy Gross <agross@kernel.org>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 06/10] PCI: dwc: Handle MSIs routed to multiple GIC
- interrupts
-Message-ID: <Yn5GlR0UD2/pcOiy@hovoldconsulting.com>
+Subject: Re: [PATCH v8 10/10] arm64: dts: qcom: sm8250: provide additional
+ MSI interrupts
+Message-ID: <Yn5HEUkNW+g20u58@hovoldconsulting.com>
 References: <20220512104545.2204523-1-dmitry.baryshkov@linaro.org>
- <20220512104545.2204523-7-dmitry.baryshkov@linaro.org>
+ <20220512104545.2204523-11-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220512104545.2204523-7-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220512104545.2204523-11-dmitry.baryshkov@linaro.org>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -68,74 +68,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 12, 2022 at 01:45:41PM +0300, Dmitry Baryshkov wrote:
-> On some of Qualcomm platforms each group of 32 MSI vectors is routed to the
-> separate GIC interrupt. Implement support for such configuraions by
-> parsing "msi0" ... "msi7" interrupts and attaching them to the chained
-> handler.
+On Thu, May 12, 2022 at 01:45:45PM +0300, Dmitry Baryshkov wrote:
+> On SM8250 each group of MSI interrupts is mapped to the separate host
+> interrupt. Describe each of interrupts in the device tree for PCIe0
+> host.
 > 
-> Note, that if DT doesn't list an array of MSI interrupts and uses single
-> "msi" IRQ, the driver will limit the amount of supported MSI vectors
-> accordingly (to 32).
+> Tested on Qualcomm RB5 platform with first group of MSI interrupts being
+> used by the PME and attached ath11k WiFi chip using second group of MSI
+> interrupts.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  .../pci/controller/dwc/pcie-designware-host.c | 33 ++++++++++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->  2 files changed, 33 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 6b0c7b75391f..258bafa306dc 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -291,7 +291,8 @@ static void dw_pcie_msi_init(struct pcie_port *pp)
->  static int dw_pcie_msi_host_init(struct pcie_port *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> -	struct platform_device *pdev = to_platform_device(pci->dev);
-> +	struct device *dev = pci->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
->  	int ret;
->  	u32 ctrl, num_ctrls;
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index 410272a1e19b..ef683a2f7412 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -1807,8 +1807,15 @@ pcie0: pci@1c00000 {
+>  			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
+>  				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
 >  
-> @@ -299,6 +300,36 @@ static int dw_pcie_msi_host_init(struct pcie_port *pp)
->  	for (ctrl = 0; ctrl < num_ctrls; ctrl++)
->  		pp->irq_mask[ctrl] = ~0;
->  
-> +	if (pp->has_split_msi_irq) {
-> +		char irq_name[] = "msiXX";
-> +		int irq;
-> +
-> +		if (!pp->msi_irq[0]) {
-> +			irq = platform_get_irq_byname_optional(pdev, irq_name);
+> -			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-names = "msi";
+> +			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi", "msi1", "msi2", "msi3", "msi4", "msi5", "msi6", "msi7";
 
-This looks broken; you're requesting "msiXX", not "msi0".
+You must use "msi0" instead of "msi" or you only get 32 MSI regardless
+of what follows currently (and this wouldn't pass DT validation either).
 
-> +			if (irq == -ENXIO) {
-> +				num_ctrls = 1;
-> +				pp->num_vectors = min((u32)MAX_MSI_IRQS_PER_CTRL, pp->num_vectors);
-> +				dev_warn(dev, "No additional MSI IRQs, limiting amount of MSI vectors to %d\n",
-> +					 pp->num_vectors);
-> +			} else {
-> +				pp->msi_irq[0] = irq;
-> +			}
-> +		}
-> +
-> +		/* If we fallback to the single MSI ctrl IRQ, this loop will be skipped as num_ctrls is 1 */
-> +		for (ctrl = 1; ctrl < num_ctrls; ctrl++) {
-> +			if (pp->msi_irq[ctrl])
-> +				continue;
-> +
-> +			snprintf(irq_name, sizeof(irq_name), "msi%d", ctrl);
-> +			irq = platform_get_irq_byname(pdev, irq_name);
-> +			if (irq < 0)
-> +				return irq;
-> +
-> +			pp->msi_irq[ctrl] = irq;
-> +		}
-> +	}
-> +
->  	if (!pp->msi_irq[0]) {
->  		int irq = platform_get_irq_byname_optional(pdev, "msi");
+>  			#interrupt-cells = <1>;
+>  			interrupt-map-mask = <0 0 0 0x7>;
+>  			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
 
 Johan
