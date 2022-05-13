@@ -2,53 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DDC05262DF
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 15:17:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75EE05262E5
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 15:18:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380642AbiEMNRP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 09:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        id S1380655AbiEMNSL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 09:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380643AbiEMNRI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 09:17:08 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF5265F9
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 06:17:06 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id bu29so14567611lfb.0
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 06:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yqdAfmtIDWHLF/VJbRu/tBP/l22n+nezjJyshDnmIDw=;
-        b=cj2uBsbU8AWmv9OPTvRIlBu7taCtdFsVqWGmyf9sNXxollW8058dCw94vzS8sHhYn3
-         ndUPYVbNJlAkhACzNBNvN8P6hsmm1DmAIPEnc5IJAPCULjCTtujcrdbrer5gX/VuqC8y
-         Pg9C6k9J4dEqSwwkrPbkCEPisSwAFYCFkzkJkHrro38yErbWU5LQ2NqPIuGDRqvb68F/
-         jQCqZaz8EKkvqY5ZaF4JLzVmhisix+oElmmwFhArhwi8dzPdQ6iMCZOIKfBTAt3uZgZG
-         xKLYwjyUSeGFbl2FiC3TQtAe7W9j0Zsv/LuMFDLGjAvwl8zKm7Bk13ie6wK4BY1idxKZ
-         iN4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yqdAfmtIDWHLF/VJbRu/tBP/l22n+nezjJyshDnmIDw=;
-        b=BCaAkttz9A2iNQhbjg3+5J4lZiNjvqI90faUD+KLJ/M7cuc5tGoBFWpZS3oHtJWkBW
-         iHeZp4frrt/C4v0eBJmvugmjUUV+mX7HCKyUAikY4CibMGwBcCtdQ+8lBczgFRUkWJpi
-         cKBaoUnVh8DgKPDq2qXJ4aTAYk4isfbuIDm+E/+W0tU1zRmv48pC59WduIWtm+ZcYVFd
-         s6G6pA1Ky6ElVRYAm9keh0n66dBrnhruAfMT9nB3IzW4XvItmgFu/grQmXghxsWuiSqC
-         aKgRY8JY/O3eNbLV8nWlA1ee/jPJ0WQdpuj49hFkD0nY5dU88NXVJnHj+R5K3Qj7xqXw
-         KWig==
-X-Gm-Message-State: AOAM531Gjv14jc5NLm1BplYvhlv6yKrQbesptp03WUGZjEXCCg9Iwn1g
-        cF8ujl1gKHXGEUKAyjVEM17LCw==
-X-Google-Smtp-Source: ABdhPJz7658XluON6oKg1AsH1HZAUt/bIHXeQY8K5sd4ekrVYi2AuRG2hwy5CzeHZnZfX8HRiw8oqA==
-X-Received: by 2002:a05:6512:3b0f:b0:473:9dbb:a72c with SMTP id f15-20020a0565123b0f00b004739dbba72cmr3363370lfv.399.1652447826408;
-        Fri, 13 May 2022 06:17:06 -0700 (PDT)
-Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id u22-20020a2ea176000000b0024f3d1dae8fsm436991ljl.23.2022.05.13.06.17.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 May 2022 06:17:05 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
+        with ESMTP id S1380638AbiEMNSE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 09:18:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D081E3CE;
+        Fri, 13 May 2022 06:17:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7717F61FFB;
+        Fri, 13 May 2022 13:17:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2FC7C34100;
+        Fri, 13 May 2022 13:17:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652447850;
+        bh=T1QQEzF5u+mr9W1+YFwxQKA1GpTReldFhGanLnCFGkE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=drfPPSCy5Lgc7j0aijKhr/HDjQG5sKhwTgnQt4RskjZgLF1t5VwdMXxLeT9CVpi1v
+         o6QwhLoPH6KvwD5pTccd4ezKFDI0aGNJQcB9CN1KXLavzzPjRng/Xo9SLs9983GX1F
+         fUl5ft6GFp5KtclE0UhtQWSgNBmgsRwgdownnxq/5wGLe/WGv25l6Wt99UbEBywpt+
+         W5WaIl8gFAgYstHKlOLXqkCmLmH7j9f/vyR4OP9SdA5eoTcWMsYZj5qZFk0yYYpLMM
+         A68vN0jRmBDayc6RGKBr0S/iseJC/cJmCH+E+CpkRZT8d2wnlaxDtMr2j6o5NIq12j
+         ZsqgxHWmRms2g==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1npVAd-0002uJ-Vo; Fri, 13 May 2022 15:17:28 +0200
+Date:   Fri, 13 May 2022 15:17:27 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -58,19 +47,20 @@ To:     Andy Gross <agross@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Stanimir Varbanov <svarbanov@mm-sol.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Johan Hovold <johan@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v9 10/10] arm64: dts: qcom: sm8250: provide additional MSI interrupts
-Date:   Fri, 13 May 2022 16:16:55 +0300
-Message-Id: <20220513131655.2927616-11-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220513131655.2927616-1-dmitry.baryshkov@linaro.org>
-References: <20220513131655.2927616-1-dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v8 00/10] PCI: qcom: Fix higher MSI vectors handling
+Message-ID: <Yn5aZ8Hpmf0PpqKJ@hovoldconsulting.com>
+References: <20220512104545.2204523-1-dmitry.baryshkov@linaro.org>
+ <Yn4dvpgezdrKmSro@hovoldconsulting.com>
+ <c35595ff-f789-5452-d9a8-b5dfcb920141@linaro.org>
+ <4ea9b1f0-d9f0-cb9f-4b0e-d66606130061@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ea9b1f0-d9f0-cb9f-4b0e-d66606130061@linaro.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -79,42 +69,22 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On SM8250 each group of MSI interrupts is mapped to the separate host
-interrupt. Describe each of interrupts in the device tree for PCIe0
-host.
+On Fri, May 13, 2022 at 04:08:30PM +0300, Dmitry Baryshkov wrote:
+> On 13/05/2022 15:39, Dmitry Baryshkov wrote:
+> > On 13/05/2022 11:58, Johan Hovold wrote:
 
-Tested on Qualcomm RB5 platform with first group of MSI interrupts being
-used by the PME and attached ath11k WiFi chip using second group of MSI
-interrupts.
+> >> I've been using your v7 with an sc8280xp which only has four IRQs (and
+> >> hence 128 MSIs).
+> >>
+> >> Looks like this version of the series would not allow that anymore.
+> > 
+> > As a second thought, let's relax parsing needs.
+> 
+> Hmm, with num_vectors being specified in the qcom cfg data, this is not 
+> required anymore.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Right, but I'd prefer it the other way round; to use devicetree to
+describe the system and not duplicate that information in the driver if
+possible.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 410272a1e19b..523a035ffc5f 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -1807,8 +1807,16 @@ pcie0: pci@1c00000 {
- 			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
- 				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
- 
--			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "msi";
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi0", "msi1", "msi2", "msi3",
-+					  "msi4", "msi5", "msi6", "msi7";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
- 			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--- 
-2.35.1
-
+Johan
