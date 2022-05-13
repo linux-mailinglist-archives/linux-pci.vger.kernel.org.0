@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B1A852607D
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 13:01:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A633526080
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 13:01:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379634AbiEMLBB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 07:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34550 "EHLO
+        id S1379682AbiEMLBG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 07:01:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379651AbiEMLA5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 07:00:57 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CDE11C919
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 04:00:55 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d17so7632952plg.0
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 04:00:55 -0700 (PDT)
+        with ESMTP id S1379678AbiEMLBF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 07:01:05 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A3329C91
+        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 04:01:02 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id g184so7193612pgc.1
+        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 04:01:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uGswQ0aP97Suern/pqvhLGTEOIpF5J5h2MoXW5LuuBU=;
-        b=ZF7r2l+HwxQm5PA8mve2cF+rBwKjnM+0fSfGGdoNA3T0LJdycXkCGWLrykpa8sL/oD
-         08lIP8dZt0wAe2tK+75oTRz1risNDIOCOSiRaW+GZokpCuhe+9MrL2YynteMMnYHDR3H
-         ItIDcdINQ82V0AG+st+raJapxxBHOih2yAPagaFk64puhsJ/iztuWI2Rf4eKJ19ZFuSX
-         YL/pLIatMsl2o8QBgjy0eNGResBVvt2NP3Y80kDYZiv7AA+gsRPYm0wGgSd7CPa4mYRN
-         F4q7pPFCxNNeVHCsbD+3J+hjPwmsRQyClY9uud0L4zXlaFzZ+hz0uXVv3kgKtKaDXw60
-         Pa+Q==
+        bh=ZsD7LJRkuECyYX1jGlfTiXHU1Ijh0jPTLQ2k9fUhrL4=;
+        b=QiA79YYEX5J9Cz/ubTy3uRnX00TKZfSieKIylSPlqoMh6cybvG0v6NWiRbpuIbSfd4
+         Sg6gFMhz4XRhjovPrMvP4JHa9cpy1RtHVD3W8ZH5nonlK8GBPfG8TZM1Oigbjd8ktjPu
+         I5ajvo1NSSx0d6NQj58DvBg+rOuoKgiDFSFGVMJLmenRCGPLdU/EjXWFZJlTcNUvWUK/
+         4nvf5UFYfVAZPPDC1sApcVOtsIfEl16Wn32QPMG9AxzU3sBwVPoi6wTjYWscLKHSqWCF
+         GJjkosFZBfUJYOhl5VXrovgcrSniLe7jdBcmGv4ChD7xvrbSJSnxKcsgLoV67XeoRTD/
+         4gTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uGswQ0aP97Suern/pqvhLGTEOIpF5J5h2MoXW5LuuBU=;
-        b=y8bwBjcIJfBa9s7w7ojxhWdk7jDcNh7kj6CqOPo9IcJXa1ju05T8pv2ov63S4t+hml
-         Lcq4wEbdkhK199vRpYS2UQkhuofnBjWEhIyNY4+06hgdtYElxfucUz1Bt6NngtQsaTKQ
-         AZd5YYdZ3jONQ4v4I3UbxNW/z2tRSlaDAJT7mBd4qR1V2uRQSlJsbX+5LNvGzeBA2G7N
-         cNM++KDPSJ9KguPwc9RcV3z3Gbg8m1hL44CvP3En38GxdqpMZ1HC7Pe1kELKeCIRdunf
-         1ThFM+2jpQ/6Xcxz5k4E4AvkBY2bQzc8Q0btZ3jO+b0ebIWqxeODCw84lHZH5emJNrJo
-         jwQQ==
-X-Gm-Message-State: AOAM532wQi0rUtWushK0ab9dDVe7LPOu8Ba2lK7/o6x8Js6Es61Kfn/9
-        mmFp/Ff0wh0/4Osr3mJihrNC
-X-Google-Smtp-Source: ABdhPJyTPQtQvf4t/ey8cvG54O7pCIiYbK85D35VbK5tYExzPBijKVc7qymid6BgehggfTgPgOcVnw==
-X-Received: by 2002:a17:902:7586:b0:15e:c2fe:bad0 with SMTP id j6-20020a170902758600b0015ec2febad0mr3948667pll.72.1652439654573;
-        Fri, 13 May 2022 04:00:54 -0700 (PDT)
+        bh=ZsD7LJRkuECyYX1jGlfTiXHU1Ijh0jPTLQ2k9fUhrL4=;
+        b=SrbjBstUuH/R8HyrNUf8xuZBoX7vBifw08/ZxkK030E8UuFOQUo/yNvl5+XJx72Huz
+         YcDmnmT9PgHJS5pAAeX0UgzDTWaXSDLnRs32z/7GeWNRV7ct5j6cSX/FLNGMQHQQ+okF
+         kB4c4lOShJGJlAM9dh9lSI03oRila49XJgJW7Jt4gt8UxpLdeuysJB+JeWeTUue6vWiK
+         IPmm5HG+QQE2E04SU/G5OmsO1p6x+wQLSpOAoNUeul0Eg2DfLKg4B7D92uMjO0wuhKd+
+         Jeo6CwKhq8NRWhZfxbI02op+3v5S8hrt17u0zYilyg/uZ+Taos9aFGIBCY2YV7c62wZ3
+         e+fA==
+X-Gm-Message-State: AOAM530rCXRM9xNE0GyTvgr9owx60N2GKzqmN8r6hOZIGxcrFe35SG8T
+        fw/frqDdUG93hgIH5vNYsDyPe1z/6JNK
+X-Google-Smtp-Source: ABdhPJy6supPwd4jHaESPrjZJsyad5J2wl3TDO2EQ8PzZO62JGRs3jBDxNtnqMckk0JHMD7+cNctsA==
+X-Received: by 2002:a63:8143:0:b0:3da:eb5e:2833 with SMTP id t64-20020a638143000000b003daeb5e2833mr3514458pgd.426.1652439661640;
+        Fri, 13 May 2022 04:01:01 -0700 (PDT)
 Received: from localhost.localdomain ([117.202.184.202])
-        by smtp.gmail.com with ESMTPSA id u36-20020a631424000000b003db0f2d135esm1322120pgl.49.2022.05.13.04.00.48
+        by smtp.gmail.com with ESMTPSA id u36-20020a631424000000b003db0f2d135esm1322120pgl.49.2022.05.13.04.00.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 May 2022 04:00:54 -0700 (PDT)
+        Fri, 13 May 2022 04:01:01 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, kbusch@kernel.org,
         hch@lst.de
@@ -56,9 +56,9 @@ Cc:     linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
         quic_vbadigan@quicinc.com, quic_krichai@quicinc.com,
         quic_nitirawa@quicinc.com, vidyas@nvidia.com, sagi@grimberg.me,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/3] PCI: Add a flag to notify PCI drivers about powerdown during suspend
-Date:   Fri, 13 May 2022 16:30:25 +0530
-Message-Id: <20220513110027.31015-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 2/3] PCI: dwc: qcom: Set suspend_poweroff flag for SC7280
+Date:   Fri, 13 May 2022 16:30:26 +0530
+Message-Id: <20220513110027.31015-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220513110027.31015-1-manivannan.sadhasivam@linaro.org>
 References: <20220513110027.31015-1-manivannan.sadhasivam@linaro.org>
@@ -74,33 +74,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On some systems like Chromebooks based on Qcom chipsets, the OS may
-powerdown all PCIe devices during system suspend for aggressive
-powersaving. In that case, the PCI host controller drivers need to notify
-the PCI device drivers that the power will be taken off during system
-suspend so that the drivers can prepare the devices accordingly.
-
-One prime example is the PCI NVMe driver. This flag can be used by the
-driver to shutdown the NVMe device during suspend and recover it during
+For aggressive power saving on SC7280 SoCs, the power for the PCI devices
+will be taken off during system suspend. Hence, notify the same to the
+PCI device drivers using "suspend_poweroff" flag so that the drivers can
+prepare the PCI devices to handle the poweroff and recover them during
 resume.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- include/linux/pci.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 60adf42460ab..069caf1fe88d 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -578,6 +578,7 @@ struct pci_host_bridge {
- 	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
- 	unsigned int	size_windows:1;		/* Enable root bus sizing */
- 	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
-+	unsigned int	suspend_poweroff:1;	/* OS may poweroff devices during system suspend */
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 6ab90891801d..4b0ad2827f8f 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -199,6 +199,7 @@ struct qcom_pcie_cfg {
+ 	unsigned int has_ddrss_sf_tbu_clk:1;
+ 	unsigned int has_aggre0_clk:1;
+ 	unsigned int has_aggre1_clk:1;
++	unsigned int suspend_poweroff:1;
+ };
  
- 	/* Resource alignment requirements */
- 	resource_size_t (*align_resource)(struct pci_dev *dev,
+ struct qcom_pcie {
+@@ -1220,6 +1221,10 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 	if (pcie->cfg->pipe_clk_need_muxing)
+ 		clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
+ 
++	/* Indicate PCI device drivers that the power will be taken off during system suspend */
++	if (pcie->cfg->suspend_poweroff)
++		pci->pp.bridge->suspend_poweroff = true;
++
+ 	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+ 	if (ret < 0)
+ 		goto err_disable_regulators;
+@@ -1548,6 +1553,7 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
+ 	.ops = &ops_1_9_0,
+ 	.has_tbu_clk = true,
+ 	.pipe_clk_need_muxing = true,
++	.suspend_poweroff = true,
+ };
+ 
+ static const struct dw_pcie_ops dw_pcie_ops = {
 -- 
 2.25.1
 
