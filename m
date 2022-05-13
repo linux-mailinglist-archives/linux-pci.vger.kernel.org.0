@@ -2,113 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83F73525FE1
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 12:39:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D929552607A
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 13:00:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379487AbiEMKdj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 06:33:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39892 "EHLO
+        id S1377643AbiEMLAv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 07:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379445AbiEMKdg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 06:33:36 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 94D021A8DD5
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 03:33:34 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6959B1477;
-        Fri, 13 May 2022 03:33:34 -0700 (PDT)
-Received: from lpieralisi (unknown [10.57.2.233])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DADF3F5A1;
-        Fri, 13 May 2022 03:33:32 -0700 (PDT)
-Date:   Fri, 13 May 2022 11:33:28 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marc Zyngier <maz@kernel.org>, pali@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 00/18] PCI: aardvark controller changes BATCH 5
-Message-ID: <20220513103328.GB26886@lpieralisi>
-References: <20220220193346.23789-1-kabel@kernel.org>
+        with ESMTP id S1357605AbiEMLAu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 07:00:50 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0CE15A01
+        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 04:00:48 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id i1so7590585plg.7
+        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 04:00:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PNdOq8t7JPWMUm+zuKo42J05VFvuGcXIEWGUnieUQq8=;
+        b=Aby8aznXD9r0cpduz4gPRNbEOwt3jnfmn1L1cpN5i+xaJnDLAKGpkNeSk/S+x0nHvA
+         DtDAoalZtiCQUrNS6T/clwmhq1EARzkAX5hrLUaf4H6Js4uPhGkCNkdVWiHG4SEil1Ij
+         SKB3qCz/woLhiCRxQ6q0NY9Ka6SiCGvPkqGXUvbJn4jSInXfNspfJ+wBICwF4igTAZFx
+         uZ9pcc2cSPVuoo2jFRQrvseyy83Y3wrD/0YXISPrOM1gHtgosGY1e+v4sWLVfg5sdolw
+         O7Jv2cao2Q4qvkCUoKOtLJxtr9bpqedg6fOwuzilqlRMi8t3Meg/lPFVODGOzUQ+E2R+
+         vMIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PNdOq8t7JPWMUm+zuKo42J05VFvuGcXIEWGUnieUQq8=;
+        b=De1IkUksvFBMKPRfnvB3SFoAHc/Ywn8kQtcMEUjCcPG/UfM370DuMca08rXYPaenNa
+         drwQ1BFkbwKVZdEkM81YFg9JOe1wVb1galkmICLxwo6VeS+4SHHWixZGKRXEPgRwhTaz
+         7VXJJ5uSVC+3Phze3iaNaDgTWvUSksZl6a1muLbBOt6zoVO4zzDPFZyU7p9EOQ+LikPv
+         q9TLFJBWe/B34TfWj5jYhOn6tUY8CeIpnKIFWN4zf2KP8yprDiVrgOrDDDNeP009NMWM
+         jinIzxXCQXvTN7y5OW+vTusxZZaYBdYINdBpttWYw0lV7aisD8NU49OWEzPFyyCwtcXL
+         MI0Q==
+X-Gm-Message-State: AOAM532tyH2OkElXj9GPsxZtzv/Zu5raRtyTFbu6ciwOivdIs81GMNR/
+        VjgzXk6jyIVIPlzAjObJ7KFi
+X-Google-Smtp-Source: ABdhPJx/lj+9GtKbU69bsELbuMcfzZNECYpmx52MJZ5Pm+xKR/MzE5L/DF1hY44DChJqj90mR3eIwA==
+X-Received: by 2002:a17:903:11c7:b0:151:7290:ccc with SMTP id q7-20020a17090311c700b0015172900cccmr4386684plh.95.1652439648056;
+        Fri, 13 May 2022 04:00:48 -0700 (PDT)
+Received: from localhost.localdomain ([117.202.184.202])
+        by smtp.gmail.com with ESMTPSA id u36-20020a631424000000b003db0f2d135esm1322120pgl.49.2022.05.13.04.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 May 2022 04:00:47 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, kbusch@kernel.org,
+        hch@lst.de
+Cc:     linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        svarbanov@mm-sol.com, bjorn.andersson@linaro.org, axboe@fb.com,
+        quic_vbadigan@quicinc.com, quic_krichai@quicinc.com,
+        quic_nitirawa@quicinc.com, vidyas@nvidia.com, sagi@grimberg.me,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/3] PCI: Notify PCI drivers about powerdown during suspend
+Date:   Fri, 13 May 2022 16:30:24 +0530
+Message-Id: <20220513110027.31015-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220220193346.23789-1-kabel@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 20, 2022 at 08:33:28PM +0100, Marek Behún wrote:
-> Hello Lorenzo, Krzysztof,
-> 
-> here comes batch 5 of changes for Aardvark PCIe controller.
-> 
-> This batch
-> - adds support for AER
-> - adds support for DLLSC and hotplug interrupt
-> - adds support for sending slot power limit message
-> - adds enabling/disabling PCIe clock
-> - adds suspend support
-> - optimizes link training by adding it into separate worker
-> - optimizes GPIO resetting by asserting it only if it wasn't asserted
->   already
+Hi,
 
-I had a look and I can take patches 3 and 5 to cut the delta further,
-please let me know if that helps.
+This series adds support for notifying the PCI drivers like NVMe about the
+transition of PCI devices into powerdown mode during system suspend.
+
+Background
+----------
+
+On Qcom SC7280 based Chrome platforms, the OS will turn off the power to all
+PCIe devices during system suspend for aggressive powersaving. Currently, there
+is no way for the PCI device drivers to learn about this situation. Some of the
+drivers assume that the power will be retained and some others assume that the
+power may be taken down.
+
+We faced the issue with NVMe PCI driver, where the driver expects the NVMe
+device to be in APST (Autonomous Power State Transition) state for power saving
+during system suspend. So when the power goes down, the NVMe driver fails to
+bringup the device during resume.
+
+Previous work
+-------------
+
+We tried to fix this issue in a couple of ways:
+
+1. The NVMe PCI driver checks for the existence of "StorageD3Enable" ACPI
+property in the suspend path. If the property is found, the driver assumes that
+the device may go to poweroff state and shutdowns the device accordingly.
+
+As like the ACPI based systems, we also tried to get the support in place for
+DT based systems. But that didn't get accepted:
+https://lore.kernel.org/all/Yl+6V3pWuyRYuVV8@infradead.org/T/
+
+2. Keith Busch proposed a module params based approach. The parameter when set,
+will allow the driver to support APST during suspend. Absence of that parameter
+will let the driver shutdown the device.
+
+This also did not get accepted:
+https://lore.kernel.org/linux-nvme/20220201165006.3074615-1-kbusch@kernel.org/
+
+Proposal
+--------
+
+Christoph suggested to add a notification in the PCI/PM core to let the NVMe
+driver know that the device will go into powerdown state during suspend.
+https://lore.kernel.org/all/Yg0wklcJ3ed76Jbk@infradead.org/ 
+
+Hence in this series, a "suspend_poweroff" flag is introduced in the host bridge
+struct. When this flag is set by the PCI RC drivers, the PCI device driver like
+NVMe can shutdown the device during suspend.
+
+In the coming days, the usage of this flag could be extended to other PCI
+drivers as well.
+
+Testing
+-------
+
+This series has been tested on SC7280 IDP board connected to a NVMe PCI device.
 
 Thanks,
-Lorenzo
+Mani
 
-> Marek
-> 
-> Marek Behún (1):
->   arm64: dts: marvell: armada-37xx: Add clock to PCIe node
-> 
-> Miquel Raynal (2):
->   PCI: aardvark: Add clock support
->   PCI: aardvark: Add suspend to RAM support
-> 
-> Pali Rohár (13):
->   PCI: aardvark: Add support for AER registers on emulated bridge
->   PCI: Add PCI_EXP_SLTCAP_*_SHIFT macros
->   PCI: aardvark: Fix reporting Slot capabilities on emulated bridge
->   PCI: pciehp: Enable DLLSC interrupt only if supported
->   PCI: pciehp: Enable Command Completed Interrupt only if supported
->   PCI: aardvark: Add support for DLLSC and hotplug interrupt
->   PCI: Add PCI_EXP_SLTCTL_ASPL_DISABLE macro
->   PCI: Add function for parsing `slot-power-limit-milliwatt` DT property
->   dt-bindings: PCI: aardvark: Describe slot-power-limit-milliwatt
->   PCI: aardvark: Send Set_Slot_Power_Limit message
->   arm64: dts: armada-3720-turris-mox: Define slot-power-limit-milliwatt
->     for PCIe
->   PCI: aardvark: Run link training in separate worker
->   PCI: aardvark: Optimize PCIe card reset via GPIO
-> 
-> Russell King (2):
->   PCI: pci-bridge-emul: Re-arrange register tests
->   PCI: pci-bridge-emul: Add support for PCIe extended capabilities
-> 
->  .../devicetree/bindings/pci/aardvark-pci.txt  |   2 +
->  .../dts/marvell/armada-3720-turris-mox.dts    |   1 +
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   1 +
->  drivers/pci/controller/pci-aardvark.c         | 380 ++++++++++++++++--
->  drivers/pci/hotplug/pciehp_hpc.c              |  34 +-
->  drivers/pci/hotplug/pnv_php.c                 |  13 +-
->  drivers/pci/of.c                              |  64 +++
->  drivers/pci/pci-bridge-emul.c                 | 130 +++---
->  drivers/pci/pci-bridge-emul.h                 |  15 +
->  drivers/pci/pci.h                             |  15 +
->  include/uapi/linux/pci_regs.h                 |   4 +
->  11 files changed, 565 insertions(+), 94 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+Manivannan Sadhasivam (3):
+  PCI: Add a flag to notify PCI drivers about powerdown during suspend
+  PCI: dwc: qcom: Set suspend_poweroff flag for SC7280
+  nvme-pci: Make use of "suspend_poweroff" flag during system suspend
+
+ drivers/nvme/host/pci.c                | 3 ++-
+ drivers/pci/controller/dwc/pcie-qcom.c | 6 ++++++
+ include/linux/pci.h                    | 1 +
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
+-- 
+2.25.1
+
