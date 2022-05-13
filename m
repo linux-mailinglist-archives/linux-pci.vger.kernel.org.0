@@ -2,112 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EF52526083
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 13:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 790E952614A
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 13:45:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379693AbiEMLBP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 07:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35168 "EHLO
+        id S1380013AbiEMLpO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 07:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379683AbiEMLBN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 07:01:13 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F62C33EA7
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 04:01:08 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d22so7580132plr.9
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 04:01:08 -0700 (PDT)
+        with ESMTP id S1379988AbiEMLpF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 07:45:05 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D9F66AE8;
+        Fri, 13 May 2022 04:45:04 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id d19so14050150lfj.4;
+        Fri, 13 May 2022 04:45:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rZc+ZqV9Fkq91rBB6JPn5eaAWDfpttSNOSYA1C21ZVY=;
-        b=pPqBmjnZOoOPlVo0vS3Kq5A1Li96cT/0G84V1o8+RlSNVv7m0HEuPeYvCLSi1nkYoC
-         gwTrsOZWLoI+dCHJyxAVf1jg/Hd4WNlFvDvYxmSNF6G6A6m1W3OpWNA5nH8SwZDn0ZGB
-         WkTWI60LUZ6oZUKzdcUm0jJIUhayWiBdAR8zv2fsdYbsyNVpkbOowyf/peNBHj3ShshC
-         hzONZ0Y92wEv13CmZ1vpoL2VdNLp7mf+h8rkZPXzOK2F5NY/bNIjJqQPbmUtg6RrFI+W
-         ClCWj6S5Md5mPvHMMsA9g5485z2ewbeXK1NmqZCNpto4oV04yglFWSJVHnqziIA+yV0A
-         spqA==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=lrkOSYGyb2W5e8iUM5z5KtK2vG4OpEu1byRK8zMbpr4=;
+        b=hdk5ctyCFq20dAvLLQVvmATc9nh/gLK5FRKmtF0qJxZZtXibHJw9r45AlNa1rsEV7T
+         zwbd6akbuu2CharSzyM8gIkxHOZFeLfKMrdX0FIoh7XicFhmd2BX2I+g9AoKqZ4tmsmE
+         ndwmf0WYoer/+z+pK5HWQ2H5z2eTXC1jErOzjaVTHDFU/zfpwjS+KPtvqzMyv1WDPhbv
+         +PIkmHHiuZoRkhoa7JMi0LKsc4a0aMZR9rK8jjd2ZPi8G2xFXHKalylXNCUlCHaZwmo5
+         +WG5sfF/fm0dd85Be6STYv083tuIWFyV4reLUscOg82z/Q2jhL34aESg8Dt+OOYE0bAj
+         SpDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rZc+ZqV9Fkq91rBB6JPn5eaAWDfpttSNOSYA1C21ZVY=;
-        b=aIwtt95vRoSg2Wpo0/UwM/HMdHBvTl02bVOuWZqsGbRUdZWQTG0ybCd3wMx9pKW2Q3
-         RxNZAq41DJob3Ws7Ic0TrMOUKGirFdZPTHj+YZ/INGlRZaBHaaBJQRat4r/tmPX+8jj9
-         khTP3Z0Wnf7zlllNTR2ECq1dFe+KRbfHxplkCq4aCg7INg23yRCPzrVcHVQRYDSSthS4
-         E/BuCp9C4y16P4YS3E0q7VuW8Twm9A06yFClDL9X2RqA1cIUu30i8qE4xG4eGUOlb6bS
-         38Mv8TGtkha4JETU5J77mG60+rOPRiAeROYDWkfLa93lCY8jSbLKba1yTDBis2cgE6Jh
-         cKPA==
-X-Gm-Message-State: AOAM530j24vCWEYYMb8rvOd+pWc96cMQr84pGAbj4+V6j8f30EEA9IC4
-        2nMJdx1nGR9xp38hXDGvTaZ0
-X-Google-Smtp-Source: ABdhPJwD0Z+7FM+VHC2wrC77McNhcou7ndf9igJr4nAQPy42aOvFNAEgKU/2wJsekaBdW4P9tQhvCQ==
-X-Received: by 2002:a17:90b:1bc2:b0:1de:dac7:6124 with SMTP id oa2-20020a17090b1bc200b001dedac76124mr8423475pjb.162.1652439668454;
-        Fri, 13 May 2022 04:01:08 -0700 (PDT)
-Received: from localhost.localdomain ([117.202.184.202])
-        by smtp.gmail.com with ESMTPSA id u36-20020a631424000000b003db0f2d135esm1322120pgl.49.2022.05.13.04.01.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=lrkOSYGyb2W5e8iUM5z5KtK2vG4OpEu1byRK8zMbpr4=;
+        b=REcxcvEdy2dDaCmlzY0JPIrYOxA7kukC9F+LMc3BeWJUbCmUMRo2MRUctKp6kNRs6p
+         ud1X0XdhqNQI0YYNoUWIN2PZPZL4jkLsdxs+wf/jVDvBivKq/VtWZU8OAHgAyLwkgTgx
+         XJeAiXcVkGbyCuBYgNKUqH2NZ9xzD5Q2VcOUmo0dzA7LtXD5tNtm2huYNWMtfwiyWSK4
+         JWjfdRXC123P0j631ymHgDQAmb4FwgKCFSz8vETeoE1NwJIsWE3JpELm80IyVlw6UgqV
+         Utpztte0cu1EIzfdfz7ntR+chCBGHGTay9MXWj6g7yJ8Razb/DD1024PS7ANCJ+Rc5o5
+         66uA==
+X-Gm-Message-State: AOAM531JxuL2lEJbc8f3njXh1Wq5XTuZX5UTj0dXGjHNGcfQea6b99Jk
+        OsfiFWsgYMv7jB1F9Y4lrPw=
+X-Google-Smtp-Source: ABdhPJxChqikX4BilmRZa0+BBqRiME9trRNKbm4ZJLV3xG0dsMbRFGTdEGanqLwyuWZv1OWz16FShA==
+X-Received: by 2002:a05:6512:3045:b0:473:d457:1541 with SMTP id b5-20020a056512304500b00473d4571541mr3230896lfb.308.1652442302168;
+        Fri, 13 May 2022 04:45:02 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id f19-20020a19ae13000000b0047255d211b4sm346402lfc.227.2022.05.13.04.45.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 May 2022 04:01:08 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, kbusch@kernel.org,
-        hch@lst.de
-Cc:     linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        svarbanov@mm-sol.com, bjorn.andersson@linaro.org, axboe@fb.com,
-        quic_vbadigan@quicinc.com, quic_krichai@quicinc.com,
-        quic_nitirawa@quicinc.com, vidyas@nvidia.com, sagi@grimberg.me,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/3] nvme-pci: Make use of "suspend_poweroff" flag during system suspend
-Date:   Fri, 13 May 2022 16:30:27 +0530
-Message-Id: <20220513110027.31015-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220513110027.31015-1-manivannan.sadhasivam@linaro.org>
-References: <20220513110027.31015-1-manivannan.sadhasivam@linaro.org>
+        Fri, 13 May 2022 04:45:01 -0700 (PDT)
+Date:   Fri, 13 May 2022 14:44:58 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-clk@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC
+ fixes
+Message-ID: <20220513114458.lgnrrejnwolak5sj@mobilestation>
+References: <20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On some platforms, the power to the PCI devices will be taken off during
-system suspend. For these platforms, the PCI RC will set the
-"system_poweroff" flag to notify the PCI device drivers of the poweroff
-scenario.
+Hello Stephen, Michael
 
-Hence, make use of the flag in the system suspend path and if set, properly
-shutdown the device.
+The series has been here for about two months with no comments. Seeing
+the dependent patches won't be merged in before the next merge window,
+could you please merge this series in through your repo?
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/nvme/host/pci.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+-Sergey
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index d817ca17463e..381bf0c7cf8d 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3238,6 +3238,7 @@ static int nvme_suspend(struct device *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
- 	struct nvme_ctrl *ctrl = &ndev->ctrl;
- 	int ret = -EBUSY;
- 
-@@ -3257,7 +3258,7 @@ static int nvme_suspend(struct device *dev)
- 	 * state (which may not be possible if the link is up).
- 	 */
- 	if (pm_suspend_via_firmware() || !ctrl->npss ||
--	    !pcie_aspm_enabled(pdev) ||
-+	    !pcie_aspm_enabled(pdev) || bridge->suspend_poweroff ||
- 	    (ndev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND))
- 		return nvme_disable_prepare_reset(ndev, true);
- 
--- 
-2.25.1
-
+On Tue, May 03, 2022 at 11:57:18PM +0300, Serge Semin wrote:
+> This patchset is an initial one in the series created in the framework
+> of my Baikal-T1 PCIe/eDMA-related work:
+> 
+> [1: In-progress v3] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+> Link: https://lore.kernel.org/linux-pci/20220330144320.27039-1-Sergey.Semin@baikalelectronics.ru/
+> [2: In-progress v1] PCI: dwc: Various fixes and cleanups
+> Link: https://lore.kernel.org/linux-pci/20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru/
+> [3: In-progress v1] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+> Link: https://lore.kernel.org/linux-pci/20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru/
+> [4: In-progress v1] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+> Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+> 
+> Since some of the patches in the later patchsets depend on the
+> modifications introduced here, @Lorenzo could you please merge this series
+> through your PCIe subsystem repo? After getting all the required ack'es of
+> course.
+> 
+> Short summary regarding this patchset. A few more modifications are
+> introduced here to finally finish the Baikal-T1 CCU unit support up and
+> prepare the code before adding the Baikal-T1 PCIe/xGMAC support. First of
+> all it turned out I specified wrong DW xGMAC PTP reference clock divider
+> in my initial patches. It must be 8, not 10. Secondly I was wrong to add a
+> joint xGMAC Ref and PTP clock instead of having them separately defined.
+> The SoC manual describes these clocks as separate fixed clock wrappers.
+> Finally in order to close the SoC clock/reset support up we need to add
+> the DDR and PCIe interfaces reset controls support. It's done in two
+> steps. First I've moved the reset-controls-related code into a dedicated
+> module. Then the DDR/PCIe reset-control functionality is added.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220324010905.15589-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Resubmit the series with adding @Philipp to the list of the recipients.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220330144320.27039-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v3:
+> - Rebased from v5.17 onto v5.18-rc3.
+> - No comments. Just resend the series.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (4):
+>   clk: baikal-t1: Fix invalid xGMAC PTP clock divider
+>   clk: baikal-t1: Define shared xGMAC ref/ptp clocks parent
+>   clk: baikal-t1: Move reset-controls code into a dedicated module
+>   clk: baikal-t1: Add DDR/PCIe directly controlled resets support
+> 
+>  drivers/clk/baikal-t1/Kconfig       |  12 +-
+>  drivers/clk/baikal-t1/Makefile      |   1 +
+>  drivers/clk/baikal-t1/ccu-div.c     |   1 +
+>  drivers/clk/baikal-t1/ccu-div.h     |   6 +
+>  drivers/clk/baikal-t1/ccu-rst.c     | 373 ++++++++++++++++++++++++++++
+>  drivers/clk/baikal-t1/ccu-rst.h     |  64 +++++
+>  drivers/clk/baikal-t1/clk-ccu-div.c | 102 ++------
+>  include/dt-bindings/reset/bt1-ccu.h |   9 +
+>  8 files changed, 482 insertions(+), 86 deletions(-)
+>  create mode 100644 drivers/clk/baikal-t1/ccu-rst.c
+>  create mode 100644 drivers/clk/baikal-t1/ccu-rst.h
+> 
+> -- 
+> 2.35.1
+> 
