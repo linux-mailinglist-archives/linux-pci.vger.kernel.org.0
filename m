@@ -2,75 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 164B3525917
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 02:48:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB8895259B3
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 04:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359727AbiEMAs1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 May 2022 20:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
+        id S1376515AbiEMCWf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 May 2022 22:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348071AbiEMAs0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 20:48:26 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B9AC8878C;
-        Thu, 12 May 2022 17:48:25 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id cq17-20020a17090af99100b001dc0386cd8fso6330761pjb.5;
-        Thu, 12 May 2022 17:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dg1fc7OlGQJpLERCzJ1f6oXw5/nhnNMxJRqOYGHfxcg=;
-        b=gt6QgybfRsjz067uRVgKSLrmijypDYurNS7P0I98x5tetTYwSxgtkozDKhjfnCR1/p
-         wnkd2jdkrRHIAG5DfAzvyc8XLdU0OTtpHwYN3U4Be5kjTspsIDQQbUaFMmoKkOHy09yK
-         w3J+pdgXBcY6+7n088GYHhCBOkHHeoW2GClnvt9ZYQFdqHR2SVDh2Svcq+rUNQ5unf4a
-         cdi9Mhkx0BNoNGA1VEX62OMGfKPIdFJnitdrtA1Bc9dX0s9nW6tjffnhvmi+pOwLtcsZ
-         +85n1f41/9rXV76b2UByqUQiwAnHn6t/0RfYOrY2MhU9CEAHFKuX9YJs/wF4Vj7nLMSW
-         ZJpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dg1fc7OlGQJpLERCzJ1f6oXw5/nhnNMxJRqOYGHfxcg=;
-        b=1RXy2QStS/x2kSr2cQoe43eBGJ5YiqZnaNBzyjA2YBKunDCZIdWIXGcAraii7hdY6c
-         Y3TWXd4wjIH8m9WBGhppkb1UVJdmWssUDLfGSxi7/7xIVbwErRE/Ep1uk7pYCii/kspH
-         hpcosYitrEhH0OIi5JLiE4hSaAO7VN0RFdCxWlhkEhkp0RUrbA+t3yk/7IlanZ9IQv++
-         MGk6zhFQ2yoZ7TWqa+Oa3IKG1POYCySz1sqeDeJVy0e5SlNj8QCDy6OjkaZ9ydht+2Zs
-         MKrnHWawYx2/C+JHtBRPuqO5kwuCSVJ13U4c1gaOeToNObjM5efZun1D1VPkacnNs22L
-         iTeQ==
-X-Gm-Message-State: AOAM530JIOaNwKOoRE3UvIfSvk4R2vXnFWkNd65PgGiIaokbQG+Ax6I6
-        g/onE2j/fy1OhlHtSeWVJoA5KolCG90KcRwdKYs=
-X-Google-Smtp-Source: ABdhPJxcEcbakosD9qUznhLzNBCVuNg2PU9ppeEQF9frBypPMJqNNeYPKwQeUsi4tNnOzgtw+x/OCVSq+zb6/kn2MAE=
-X-Received: by 2002:a17:903:32c2:b0:15e:c1cc:2410 with SMTP id
- i2-20020a17090332c200b0015ec1cc2410mr2395133plr.127.1652402904155; Thu, 12
- May 2022 17:48:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220503005801.1714345-1-Frank.Li@nxp.com> <20220503005801.1714345-10-Frank.Li@nxp.com>
- <YnuBtEhttgxBrZD4@lpieralisi> <CAHrpEqTv+QF6QFTAoL8Qd6TNqxc+yXCBaF9xi84MXv1TPxJ9ig@mail.gmail.com>
- <YnvyrSTAxJmGxful@lpieralisi> <CAHrpEqSHO5aSQWYBqsuwFdQ16aD2dxJKbj99FirA6VtyFzWdxA@mail.gmail.com>
-In-Reply-To: <CAHrpEqSHO5aSQWYBqsuwFdQ16aD2dxJKbj99FirA6VtyFzWdxA@mail.gmail.com>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Thu, 12 May 2022 19:48:13 -0500
-Message-ID: <CAHrpEqSJvxE=s7555DYypGFg0RzyeR2kUjoRfM=nerqdGx5-fw@mail.gmail.com>
-Subject: Re: [PATCH v10 9/9] PCI: endpoint: Enable DMA controller tests for
- endpoints with DMA capabilities
+        with ESMTP id S1355770AbiEMCWe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 May 2022 22:22:34 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2072.outbound.protection.outlook.com [40.107.21.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742B4F68B1;
+        Thu, 12 May 2022 19:22:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nTMmF1f/rLHSrrY6xTQX7OuxdaB6JCiK6SSCmhpjY2k665gOWk6RUZSPFtPkQVE867ZanxvmgsPg9j/4BK6TQ+Ubxr0NEAabruIy3Xi7rKwKWQYfl2hHRAuaYQ+70JGIPtwCMjMdglhIzYgytHI59avL9tm7EKl/qhYbUzUJFbksfanbnNiMsbwI77jBEE6TaLUMD0ShwDw7tWwA5eu+jpgXLZ9/xlCNbdZW5MIcfhOwE5vhWYuPvQyFl4437/DyFz+q6sdDaxKEXGaNKIdt5q+M3qWagD4l/Xmknb1WRnKclb00Rqpp+qc7FMKhthPTH4RFkOPKaa6QvbFHRuHfbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WyVZC4Y5l/28cHcOmKhFH/VwMkXJm2+3WZB/QaoY4Nc=;
+ b=hphsoNaQDS+mNJA97mTrOA1GAnvfaFVVKELb0Uc1HtcFzjQEmvoJMXX16AE/iH86yTRFzoWrEG6ome0k1Nt1uR5s+t2+0/CZ4L6Glyb0wzor+6kdMVCRemmN6c8I99uKQTnKSUBwkqKA4UjCkAg2wM3eqaOqCHNzX9Q/lk3xLrT5i1RnmTUz49BbAhZLOY8UGRWvuV89jSwIkidV/xOeUYYWdgKHz7SbDNBd3ZNfG+CSWrhtLsQ0CAidTcfNLZx9uuY3MoflHnBZvRh0SRSVu16uBkgPuCZGs3BWEWjYzgqaNlTVVS7UOqn7nB3Oa+RQzS1rKjmJOkBsVDpdwyWzkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WyVZC4Y5l/28cHcOmKhFH/VwMkXJm2+3WZB/QaoY4Nc=;
+ b=j7PIpk6VQm8dNXwakbZwr4gIgZkW5twJRU1rxS6YXxowK2useq0fOQ1kqakfUXiDjDX9JpxQKUAmZeOe6XHUtCgoTUmKJK0ghA+GWFbGuiehNMAOXYUMXbK71FPNkqvDsYy8OBOzNZ5VA38lC8q6ogVX3jM1CFdeIlFJY6k1Oi4=
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by AM6PR04MB6407.eurprd04.prod.outlook.com (2603:10a6:20b:d9::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.14; Fri, 13 May
+ 2022 02:22:29 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::65e4:3df9:cbcc:7cf0]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::65e4:3df9:cbcc:7cf0%7]) with mapi id 15.20.5227.023; Fri, 13 May 2022
+ 02:22:29 +0000
+From:   Hongxing Zhu <hongxing.zhu@nxp.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+CC:     "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "alexander.stein@ew.tq-group.com" <alexander.stein@ew.tq-group.com>,
+        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v2 7/7] PCI: imx6: Add the iMX8MP PCIe support
+Thread-Topic: [PATCH v2 7/7] PCI: imx6: Add the iMX8MP PCIe support
+Thread-Index: AQHYMgQPVpBhfK4bZk2w4b8ydmjAAa0b0RSAgAClnqA=
+Date:   Fri, 13 May 2022 02:22:29 +0000
+Message-ID: <AS8PR04MB8676765583E72CB09C6CAE878CCA9@AS8PR04MB8676.eurprd04.prod.outlook.com>
+References: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
+ <1646644054-24421-8-git-send-email-hongxing.zhu@nxp.com>
+ <20220512160845.GB2506@lpieralisi>
+In-Reply-To: <20220512160845.GB2506@lpieralisi>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8796b095-8527-4657-4b29-08da34876de0
+x-ms-traffictypediagnostic: AM6PR04MB6407:EE_
+x-microsoft-antispam-prvs: <AM6PR04MB64077221C74F5665C6F2CFCF8CCA9@AM6PR04MB6407.eurprd04.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DV0u8iZEwF5FvMpHQUXD/CjgsnVBF0bhaMtYYptuNNqhhgEQPejDhyRvk54ioOGvzzEgDlAM+HJpc/UFMVV7nkSJGycpTrKqf1ZJpQzKOd0CQ/clegYjXm1v63OmW1sGhXUnh1N9imrWoSu+KW/syPhcj/HhTAORIj/NWvHM0Ni6LZyC8Jzox8e812l+kZZWEIT40JsER20DiDyeuCxWVdAJZbusIhwPYKYFBXfHczY8yYEQXphVHp9ZgYxyrbzBZzFP9hBHqHAG+bVArAL5IS3wMDt396rQY6lAnj7iInx+SKEVesQlog3beDN+ZgDlKYWlpEH79vTd+RO3BPcRoiigY8NHK6b5LwCLt/4EB/B0sZDE2Oqnax7soWBxohLtKMmwZkX7+TxYxPsMZO31JOb5rXHMwMAzKXEdqClK2nc2Zb0U71mq8qvc+A7YeM7Twn5h1kBfCahcI9RY2lJ8MCopLGc5GAkMyHjpMV5vPlKzp/uiTImyihB6OPpidBFUqrpeoi1fmi72Vq05AVz40P7fTXzzB0Hq+1DujPc2c4Hmh6xLqlSd1CFFvxHH6GCrnenGd5xpdgPCyONA8fgSqczPpaJDlwc+xP6DmTT0KOV6DTwpxKlv2kSpn8nL8sxgA+YIdE3/RhdllGCVJnhIP+dmjOP86SQQ27JkQrDF5Uep6+QXCmpKqpYzmU5VvgeKpAj48q6K6H6RUTyX01y2U1HvxZfAQ0I3M2aYIqM+XtU=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66946007)(66446008)(66556008)(33656002)(316002)(38070700005)(122000001)(38100700002)(44832011)(64756008)(66476007)(76116006)(54906003)(186003)(83380400001)(7416002)(9686003)(26005)(2906002)(7696005)(6916009)(55016003)(86362001)(8676002)(71200400001)(8936002)(52536014)(5660300002)(508600001)(53546011)(4326008)(6506007)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?gb2312?B?SnFWWHM2cjF5WnNXaU9CUHVjTUlBQ21Gc3dwUHN5NlB3Q2h6eVZYZVNjYm82?=
+ =?gb2312?B?dHhZa1IzeTJWN0hDVVpSU0pUb2xjSnJlbjV6aW1JQ3hWelVoekJlQlplVUIz?=
+ =?gb2312?B?SEYwK0hXTzNGOW1iODdaazNIZEl6UU83VkFpRGxwUmVVdHRIWjBUSlNFZEJY?=
+ =?gb2312?B?eUE2OFUwZTlFcll4YVNxQ0VHdm9WR0d4K0NyNE1VTlF6bnZiUHJLQ0Z6Tzcv?=
+ =?gb2312?B?cTRSbktwNGxWeVJpdXBibDdIV1FoYkpVb2x0SjNUb1FIZEJNRHZiNEdhaUE1?=
+ =?gb2312?B?VDcvOHRxKzhOaTNkdGlaanF2QlByeENyckg1VDQ0YThlallwbTJhUG9SYnRS?=
+ =?gb2312?B?cVpBcnpxRVEwOEFqWGxlVXUrLy8rZmo5UHNKMkZaMStUaSt0QWx6VkhNRzl5?=
+ =?gb2312?B?ZjFkbTB5QnRWT0hJK0hYRWZhT2VRQWlhR1Uxd0xENDZlN0FzWFMrZFZXS1lD?=
+ =?gb2312?B?OGozWGZCOWh5ak9ybGFtcWVGRFZJcVVJU2w4a254LzlXeXFoRzRIS0kyaGpO?=
+ =?gb2312?B?TjF4WDF0eHF2Q0xldTRqSGZ2a2M1U0NqSDNqTFU3S2JOSEgzQjIyZUpoVlVq?=
+ =?gb2312?B?K3Y3ZytXUHN5RFh5bWwrRVJjWE5LWEJtQW5mOEJPMVNVRXRXaXMzeGVrb0F1?=
+ =?gb2312?B?ZWRJWW5CTW5hVzNsQlgvQVlvcUFVQlo4djBIZmRjZk9NaHhwTDBwSndCUzBu?=
+ =?gb2312?B?WWl6OGVCUXpZMjdENUxxc29lVGdFQXg3SHB1dWNzNXNWelVIcFVkRHF4NHg5?=
+ =?gb2312?B?SG5NT3U2K05kY3E3eE8rditwK1c3cTRiak5XUmdyQktDRnhsWk43Q2xtYVZP?=
+ =?gb2312?B?aWlYTmVTeEwwMGQzNUFOZUZlQWJjOWl3bHd1bHd0aWdVYU9EVldzWVR5Ulpj?=
+ =?gb2312?B?c2YzOVQ2SU16ME1yWDNscWFjSmQwT0hoS0h2Z1p0akRzcExjc3VOd2laWXAy?=
+ =?gb2312?B?UGZDT2RDenNxWGRhU0pqZERwMStWVUFjTC9wekRmVTM0MDRQd2lQNXRLUUVn?=
+ =?gb2312?B?WEdJYWIveUFJV3pINzZOdFQvZEwwUjd0UzZwNndvREpjMGtsN0JnS3pxUmNH?=
+ =?gb2312?B?cFdaYllGQ1lYcGNzQzdRdlBLK24vT0FJSGN5THVpZGhraXRuOE91WWc2bEIr?=
+ =?gb2312?B?bGRJZzFONnR4RXRDdSs4NFk5cVhzR2M5c2M3ajYxT1d1Z2JqcjQ2YVpBTTI3?=
+ =?gb2312?B?ZnZxaml0eWhlcnJWbWlLYS84c05za0MxR2xJbHFTUTRRdDY0Z04waDdoeVhB?=
+ =?gb2312?B?Rk5EZlFXRVVsYVFuQVV3bUcrcUZtdUlKY0Iyamo5V05aayswc0FpYkt1UGtn?=
+ =?gb2312?B?aG81SGZMM21XazRDOG5oNXVBNlZrb0RiZllBL252ZmlEeDZpTGM1aVBqNDBB?=
+ =?gb2312?B?bFBMT0lqekVnTldxV2ZWdVNoSU01MjBvNU54U1FPbXRCS09qZlc2UTRZSUJs?=
+ =?gb2312?B?c0tiYnQxbHR1TkNtKzVMS2hGdlNSSFExTlVCTDNDQm5IUmx0QlpNU2lhZ080?=
+ =?gb2312?B?VTlzZ1VVVGp2UklnNmR3Y3FrbVZFcEtCV0dnR1hLM2Jlck9QTlBMQ2JCNVli?=
+ =?gb2312?B?VnEyR0dKVlhKSEoyUzFjYVZhUTZrcnQ0cnJUempJTUJvRHZjOU1iMWxjNGtz?=
+ =?gb2312?B?MHA1dHI5L1pkVURVZWRmZzVqbkNzNnJnV1cwNmtmTUgxNDZjOFpSOE1ydDFi?=
+ =?gb2312?B?cXFHdVlPejhiYnNwWXNPNkx0N05QdlVMc0NlMGE3TVg0ckZvdzhwQzZYbVJK?=
+ =?gb2312?B?UmUrZUI2TUxhSVBPcVRMR0NnTjZPSUhLZnNnUmJhOHl4WlBkbmJ6SXVIbjRF?=
+ =?gb2312?B?c2lZeUtRTldUYTRHMkt3MzNRblFkTWJDYklaSHB3RHUwdVA1a1JiUlNVdyti?=
+ =?gb2312?B?T1o4cDk4VlovSXJyMnNFTTFqM1FCUERjUGNDNDcwRGkxRzh3R1BGbkdXdkdE?=
+ =?gb2312?B?TmM2aThBZHRPcFptVWNoZ3k2KzkyUlplTXZ6VGJudHhxZWltVnl0R21kZFYx?=
+ =?gb2312?B?aURSYjRTamwrMUduY2RxQkovLzNORnlES1JBck5EL0NOTk1xNjRFR2dKd2tT?=
+ =?gb2312?B?S3g0bndWTjM0T1RJUmM3ZUVFR2o0Qm9WYkxiRUU2MmR3bk5CNGg5Uk9NbWVP?=
+ =?gb2312?B?Rkt6Q3N4TFh6cDhQUXF3eERZMFFjSC9FQkJOUzFXeldQUDd3Qk5MMjZBVnhx?=
+ =?gb2312?B?OXZYQzFDQ3c1MVBVTXY5aUxZWkNGZkhMV0dTRmpkdytQcHliODMrR1ZqOVkr?=
+ =?gb2312?B?SUpXSVJ6VW1hS25iN0dlMlUvbXhrNjBCZU5WYTBMOGhBMy9rRGdqeEdiWFk0?=
+ =?gb2312?B?THRuUXB1V1pwdEQ1aDljbldCaExLSDZsUGd2Z0s0Z2ZjNVFmSDI0dz09?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8796b095-8527-4657-4b29-08da34876de0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2022 02:22:29.4679
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AcT36APMEpMG0V0LKYltvAO65b+uhrmeaANdt9dSEffBJfwwbopVi/v/CLDPJlrzYiVMDY1BvXZUunpVhLoCug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6407
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,407 +142,111 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 11, 2022 at 2:12 PM Zhi Li <lznuaa@gmail.com> wrote:
->
-> On Wed, May 11, 2022 at 12:30 PM Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
-> >
-> > On Wed, May 11, 2022 at 11:18:20AM -0500, Zhi Li wrote:
-> > > On Wed, May 11, 2022 at 4:28 AM Lorenzo Pieralisi
-> > > <lorenzo.pieralisi@arm.com> wrote:
-> > > >
-> > > > [+Kishon]
-> > > >
-> > > > On Mon, May 02, 2022 at 07:58:01PM -0500, Frank Li wrote:
-> > > > > Some Endpoints controllers have DMA capabilities.  This DMA controller has
-> > > > > more efficiency then a general external DMA controller.  And this DMA
-> > > > > controller can bypass outbound memory address translation unit.
-> > > >
-> > > > I am sorry to be pedantic but which DMA controller ?
-> > > >
-> > > > Do you mean "DMA controllers embedded in Endpoint controllers" ?
-> > >
-> > > Yes.
-> > >
-> > > >
-> > > > This is a bit vague and overall you are patching pci-epf-test.c,
-> > > > that's the change that has to be explained.
-> > > >
-> > > > If Kishon can have a look that would be greatly appreciated too.
-> > > >
-> > > > When we agree on a proper commit log I can ACK the patch, the whole
-> > > > series can then go via the DMA engine tree.
-> > >
-> > > How about the below commit message? Is it clear?
-> >
-> > It is better but I have some suggestions below.
-> >
-> > > PCI: endpoint: Enable DMA controller tests for endpoints with DMA
-> > > capabilities
-> >
-> > "PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities"
-> >
-> > > Some PCI Endpoints controllers integrate an eDMA (embedded DMA).
-> > > eDMA has more efficiency than a general DMA controller.
-> >
-> > What does "has more efficiency" means ? You mean it can bypass the
-> > memory translation unit ?
->
-> Generally Memory to memory DMA work as
->  - DMA read from DDR into DMA controller FIFO,  AXI Read
->  - DMA write to PCI space from DMA controller FIFO, AXI write
->  - PCI EP controller converts AXI write to PCI TLP into PCI bus.
->
-> EP eDMA works as
->  - eDMA read from DDR,
->  - Convert PCI TLP into PCI bus.
->
-> a AXI write operator saved. so I think efficiency is higher than general DMA.
->
-> >
-> > > And eDMA can bypass
-> >
-> > Don't start a sentence with "And".
-> >
-> > > outbound memory address translation unit to access all RC memory space.
-> > >
-> > > This patch added eDMA support for pci-epf-test.
-> >
-> > "Add eDMA support for pci-epf-test".
-> >
-> > This patch is doing more than this though, doesn't it ?
-> >
-> > I would write (always use imperative statements):
-> >
-> > "Add DMA support for pci-epf-test.
-> >
-> > EPF endpoints can use, depending on HW availability, eDMA or general
-> > system DMA controllers to perform DMA.
-> >
-> > The test probes the EPF DMA channel capabilities."
-> >
-> > Then you can add the description below.
-> >
-> > >   - Separate DMA channel to TX and RX. eDMA channels have higher priority than
-> > >  general DMA channels.  If general memory to memory DMA channels are used,
-> > >  RX and TX channels are equal.
-> >
-> > What does "are equal" mean ? By the way, please remove double spaces
->
-> RX = TX.
->
-> > after a period. If you need to start a new paragraph add a new line.
-> >
-> > >  -  Add dma_addr_t dma_remote in in function
-> > > pci_epf_test_data_transfer() because
-> > > eDMA using remote RC physical address directly
-> > > -  Add enum dma_transfer_direction dir in function
-> > > pci_epf_test_data_transfer() because
-> > > eDMA chooses the correct RX/TX channel by dir.
-> > >
-> > > The overall steps are
-> > >
-> > >  1. Using dma_request_channel() and filter function to find correct
-> >
-> > s/Using/Execute
-> >
-> > >     eDMA RX and TX Channel. if channel not exist,  fallback to try allocate
-> >
-> > "If a channel does not exist"
-> >
-> > >     general memory to memory DMA  channel.
-> > >  2. Using dmaengine_slave_config() config remote side physical address.
-> >
-> > s/Using/Execute - "to configure remote"
-> >
-> > >  3. Using dmaengine_prep_slave_single() create transfer descriptor.
-> >
-> > s/Using/Execute - "to create"
-> >
-> >
-> > >  4. tx_submit();
-> >
-> > Execute tx_submit()
-> >
-> > >  5. dma_async_issue_pending();
-> >
-> > Execute dma_async_issue_pending()
-> >
-> > Overall, all you need to do describe is what the patch does, hopefully
-> > the comments above can help.
->
-> Updated commit message:
->
-> PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
->
-> Some PCI Endpoints controllers integrate an eDMA (embedded DMA).
-> eDMA only sends once a bus read/write command to complete once
-> data transfer. eDMA can bypass the outbound memory address translation
-> unit to access all RC memory space.
->
-> Add DMA support for pci-epf-test.
->
-> EPF test can use, depending on HW availability, eDMA or general system DMA
-> controllers to perform DMA. The test probes the EPF DMA channel capabilities.
->
-> Separate dma_chan to dma_chan_tx and dma_chan_rx. eDMA channels have
-> higher priority than general DMA channels. If general memory to memory DMA
-> hannels are used, dma_chan_rx = dma_chan_tx.
->
-> Add dma_addr_t dma_remote in in function pci_epf_test_data_transfer() because
-> eDMA using remote RC physical address directly
->
-> Add enum dma_transfer_direction dir in function pci_epf_test_data_transfer()
-> because eDMA chooses the correct RX/TX channel by dir.
->
-> The overall steps are
->
-> 1. Execute dma_request_channel() and filter function to find correct eDMA
-> RX and TX Channel. If a channel does not exist,  fallback to try to allocate
-> general memory to memory DMA  channel.
-> 2. Execute dmaengine_slave_config() to configure remote side physical address.
-> 3. Execute dmaengine_prep_slave_single() to create transfer descriptor.
-> 4. Execute tx_submit().
-> 5. Execute  dma_async_issue_pending()
->
-
-@Lorenzo Pieralisi  Are you satisfied with the above comment message?
-There are some big patch series depending on this patch series.
-
->
->
->
-> >
-> > Thanks,
-> > Lorenzo
-> >
-> > > > Thanks,
-> > > > Lorenzo
-> > > >
-> > > > >
-> > > > > The whole flow use standard DMA usage module
-> > > > >
-> > > > >  1. Using dma_request_channel() and filter function to find correct
-> > > > >     RX and TX Channel. if not exist,  fallback to try allocate
-> > > > >     general DMA controller channel.
-> > > > >  2. dmaengine_slave_config() config remote side physcial address.
-> > > > >  3. using dmaengine_prep_slave_single() create transfer descriptor.
-> > > > >  4. tx_submit();
-> > > > >  5. dma_async_issue_pending();
-> > > > >
-> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > ---
-> > > > > Change from v9 to v10:
-> > > > >  - rewrite commit message
-> > > > > Change from v4 to v9:
-> > > > >  - none
-> > > > > Change from v3 to v4:
-> > > > >  - reverse Xmas tree order
-> > > > >  - local -> dma_local
-> > > > >  - change error message
-> > > > >  - IS_ERR -> IS_ERR_OR_NULL
-> > > > >  - check return value of dmaengine_slave_config()
-> > > > > Change from v1 to v2:
-> > > > >  - none
-> > > > >
-> > > > >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
-> > > > >  1 file changed, 98 insertions(+), 10 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > > index 90d84d3bc868f..f26afd02f3a86 100644
-> > > > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > > @@ -52,9 +52,11 @@ struct pci_epf_test {
-> > > > >       enum pci_barno          test_reg_bar;
-> > > > >       size_t                  msix_table_offset;
-> > > > >       struct delayed_work     cmd_handler;
-> > > > > -     struct dma_chan         *dma_chan;
-> > > > > +     struct dma_chan         *dma_chan_tx;
-> > > > > +     struct dma_chan         *dma_chan_rx;
-> > > > >       struct completion       transfer_complete;
-> > > > >       bool                    dma_supported;
-> > > > > +     bool                    dma_private;
-> > > > >       const struct pci_epc_features *epc_features;
-> > > > >  };
-> > > > >
-> > > > > @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
-> > > > >   */
-> > > > >  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> > > > >                                     dma_addr_t dma_dst, dma_addr_t dma_src,
-> > > > > -                                   size_t len)
-> > > > > +                                   size_t len, dma_addr_t dma_remote,
-> > > > > +                                   enum dma_transfer_direction dir)
-> > > > >  {
-> > > > > +     struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> > > > > +     dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
-> > > > >       enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> > > > > -     struct dma_chan *chan = epf_test->dma_chan;
-> > > > >       struct pci_epf *epf = epf_test->epf;
-> > > > >       struct dma_async_tx_descriptor *tx;
-> > > > > +     struct dma_slave_config sconf = {};
-> > > > >       struct device *dev = &epf->dev;
-> > > > >       dma_cookie_t cookie;
-> > > > >       int ret;
-> > > > > @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> > > > >               return -EINVAL;
-> > > > >       }
-> > > > >
-> > > > > -     tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > > > > +     if (epf_test->dma_private) {
-> > > > > +             sconf.direction = dir;
-> > > > > +             if (dir == DMA_MEM_TO_DEV)
-> > > > > +                     sconf.dst_addr = dma_remote;
-> > > > > +             else
-> > > > > +                     sconf.src_addr = dma_remote;
-> > > > > +
-> > > > > +             if (dmaengine_slave_config(chan, &sconf)) {
-> > > > > +                     dev_err(dev, "DMA slave config fail\n");
-> > > > > +                     return -EIO;
-> > > > > +             }
-> > > > > +             tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> > > > > +     } else {
-> > > > > +             tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > > > > +     }
-> > > > > +
-> > > > >       if (!tx) {
-> > > > >               dev_err(dev, "Failed to prepare DMA memcpy\n");
-> > > > >               return -EIO;
-> > > > > @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> > > > >       return 0;
-> > > > >  }
-> > > > >
-> > > > > +struct epf_dma_filter {
-> > > > > +     struct device *dev;
-> > > > > +     u32 dma_mask;
-> > > > > +};
-> > > > > +
-> > > > > +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> > > > > +{
-> > > > > +     struct epf_dma_filter *filter = node;
-> > > > > +     struct dma_slave_caps caps;
-> > > > > +
-> > > > > +     memset(&caps, 0, sizeof(caps));
-> > > > > +     dma_get_slave_caps(chan, &caps);
-> > > > > +
-> > > > > +     return chan->device->dev == filter->dev
-> > > > > +             && (filter->dma_mask & caps.directions);
-> > > > > +}
-> > > > > +
-> > > > >  /**
-> > > > >   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-> > > > >   * @epf_test: the EPF test device that performs data transfer operation
-> > > > > @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> > > > >  {
-> > > > >       struct pci_epf *epf = epf_test->epf;
-> > > > >       struct device *dev = &epf->dev;
-> > > > > +     struct epf_dma_filter filter;
-> > > > >       struct dma_chan *dma_chan;
-> > > > >       dma_cap_mask_t mask;
-> > > > >       int ret;
-> > > > >
-> > > > > +     filter.dev = epf->epc->dev.parent;
-> > > > > +     filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> > > > > +
-> > > > > +     dma_cap_zero(mask);
-> > > > > +     dma_cap_set(DMA_SLAVE, mask);
-> > > > > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > > > > +     if (IS_ERR_OR_NULL(dma_chan)) {
-> > > > > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > > > > +             goto fail_back_tx;
-> > > > > +     }
-> > > > > +
-> > > > > +     epf_test->dma_chan_rx = dma_chan;
-> > > > > +
-> > > > > +     filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> > > > > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > > > > +
-> > > > > +     if (IS_ERR(dma_chan)) {
-> > > > > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > > > > +             goto fail_back_rx;
-> > > > > +     }
-> > > > > +
-> > > > > +     epf_test->dma_chan_tx = dma_chan;
-> > > > > +     epf_test->dma_private = true;
-> > > > > +
-> > > > > +     init_completion(&epf_test->transfer_complete);
-> > > > > +
-> > > > > +     return 0;
-> > > > > +
-> > > > > +fail_back_rx:
-> > > > > +     dma_release_channel(epf_test->dma_chan_rx);
-> > > > > +     epf_test->dma_chan_tx = NULL;
-> > > > > +
-> > > > > +fail_back_tx:
-> > > > >       dma_cap_zero(mask);
-> > > > >       dma_cap_set(DMA_MEMCPY, mask);
-> > > > >
-> > > > > @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> > > > >       }
-> > > > >       init_completion(&epf_test->transfer_complete);
-> > > > >
-> > > > > -     epf_test->dma_chan = dma_chan;
-> > > > > +     epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
-> > > > >
-> > > > >       return 0;
-> > > > >  }
-> > > > > @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
-> > > > >       if (!epf_test->dma_supported)
-> > > > >               return;
-> > > > >
-> > > > > -     dma_release_channel(epf_test->dma_chan);
-> > > > > -     epf_test->dma_chan = NULL;
-> > > > > +     dma_release_channel(epf_test->dma_chan_tx);
-> > > > > +     if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> > > > > +             epf_test->dma_chan_tx = NULL;
-> > > > > +             epf_test->dma_chan_rx = NULL;
-> > > > > +             return;
-> > > > > +     }
-> > > > > +
-> > > > > +     dma_release_channel(epf_test->dma_chan_rx);
-> > > > > +     epf_test->dma_chan_rx = NULL;
-> > > > > +
-> > > > > +     return;
-> > > > >  }
-> > > > >
-> > > > >  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> > > > > @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
-> > > > >                       goto err_map_addr;
-> > > > >               }
-> > > > >
-> > > > > +             if (epf_test->dma_private) {
-> > > > > +                     dev_err(dev, "Cannot transfer data using DMA\n");
-> > > > > +                     ret = -EINVAL;
-> > > > > +                     goto err_map_addr;
-> > > > > +             }
-> > > > > +
-> > > > >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > > > > -                                              src_phys_addr, reg->size);
-> > > > > +                                              src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
-> > > > >               if (ret)
-> > > > >                       dev_err(dev, "Data transfer failed\n");
-> > > > >       } else {
-> > > > > @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
-> > > > >
-> > > > >               ktime_get_ts64(&start);
-> > > > >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > > > > -                                              phys_addr, reg->size);
-> > > > > +                                              phys_addr, reg->size,
-> > > > > +                                              reg->src_addr, DMA_DEV_TO_MEM);
-> > > > >               if (ret)
-> > > > >                       dev_err(dev, "Data transfer failed\n");
-> > > > >               ktime_get_ts64(&end);
-> > > > > @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
-> > > > >               }
-> > > > >
-> > > > >               ktime_get_ts64(&start);
-> > > > > +
-> > > > >               ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> > > > > -                                              src_phys_addr, reg->size);
-> > > > > +                                              src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
-> > > > >               if (ret)
-> > > > >                       dev_err(dev, "Data transfer failed\n");
-> > > > >               ktime_get_ts64(&end);
-> > > > > --
-> > > > > 2.35.1
-> > > > >
+SGkgTG9yZW56bzoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jl
+bnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4NCj4gU2VudDogMjAyMsTq
+NdTCMTPI1SAwOjA5DQo+IFRvOiBIb25neGluZyBaaHUgPGhvbmd4aW5nLnpodUBueHAuY29tPg0K
+PiBDYzogcC56YWJlbEBwZW5ndXRyb25peC5kZTsgbC5zdGFjaEBwZW5ndXRyb25peC5kZTsgYmhl
+bGdhYXNAZ29vZ2xlLmNvbTsNCj4gcm9iaEBrZXJuZWwub3JnOyBzaGF3bmd1b0BrZXJuZWwub3Jn
+OyB2a291bEBrZXJuZWwub3JnOw0KPiBhbGV4YW5kZXIuc3RlaW5AZXcudHEtZ3JvdXAuY29tOyBs
+aW51eC1waHlAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4ga2VybmVsQHBl
+bmd1dHJvbml4LmRlOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIIHYyIDcvN10gUENJOiBpbXg2OiBBZGQgdGhlIGlNWDhNUCBQQ0llIHN1cHBv
+cnQNCj4gDQo+IE9uIE1vbiwgTWFyIDA3LCAyMDIyIGF0IDA1OjA3OjM0UE0gKzA4MDAsIFJpY2hh
+cmQgWmh1IHdyb3RlOg0KPiA+IEFkZCB0aGUgaS5NWDhNUCBQQ0llIHN1cHBvcnQuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBSaWNoYXJkIFpodSA8aG9uZ3hpbmcuemh1QG54cC5jb20+DQo+ID4g
+LS0tDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1pbXg2LmMgfCAxOSArKysr
+KysrKysrKysrKysrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCAx
+IGRlbGV0aW9uKC0pDQo+IA0KPiBJIGV4cGVjdCB0aGlzIHNlcmllcyB3aWxsIGV2ZW50dWFsbHkg
+Z28gdmlhIHRoZSBpbXg2IHBsYXRmb3JtIHRyZWUuDQo+IA0KPiBUbyBhdm9pZCB5b3Ugd2FpdGlu
+ZyBmb3IgbWUgd2hlbiB0aGlzIHNlcmllcyBpcyBkZWVtZWQgYWNjZXB0YWJsZToNCj4gDQo+IEFj
+a2VkLWJ5OiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4NCj4g
+DQo+IEkgd2lsbCBtYXJrIGl0IGFzICJoYW5kbGVkIGVsc2V3aGVyZSIgaW4gdGhlIFBDSSB0cmVl
+IHBhdGNod29yay4NCg0KVGhhbmtzIGZvciB5b3VyIGtpbmRseSBoZWxwLg0KTHVjYXMgaGFzIHNv
+bWUgc3VnZ2VzdGlvbnMgYW5kIGFkdmljZXMgYWJvdXQgdGhlIEhTSU9NSVggYml0cyBtYW5pcHVs
+YXRpb25zDQppbiB0aGUgUEhZIGRyaXZlciBvZiB0aGlzIHNlcmllcy4NCldvdWxkIGlzc3VlIHRo
+ZSBuZXh0IHZlcnNpb24sIGFmdGVyIGNvLW9wZXJhdGUgd2l0aCBMdWNhcyBhbmQgc2V0dGxlLWRv
+d24NCiB0aGF0IHBhcnQuDQoNCkJlc3QgUmVnYXJkcw0KUmljaGFyZA0KPiANCj4gTG9yZW56bw0K
+PiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWlteDYu
+Yw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWlteDYuYw0KPiA+IGluZGV4
+IGJiNjYyZjkwZDRmMy4uNGQzNGYwYzg4NTUwIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvZHdjL3BjaS1pbXg2LmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9s
+bGVyL2R3Yy9wY2ktaW14Ni5jDQo+ID4gQEAgLTUxLDYgKzUxLDcgQEAgZW51bSBpbXg2X3BjaWVf
+dmFyaWFudHMgew0KPiA+ICAJSU1YN0QsDQo+ID4gIAlJTVg4TVEsDQo+ID4gIAlJTVg4TU0sDQo+
+ID4gKwlJTVg4TVAsDQo+ID4gIH07DQo+ID4NCj4gPiAgI2RlZmluZSBJTVg2X1BDSUVfRkxBR19J
+TVg2X1BIWQkJCUJJVCgwKQ0KPiA+IEBAIC0zNzksNiArMzgwLDcgQEAgc3RhdGljIHZvaWQgaW14
+Nl9wY2llX2Fzc2VydF9jb3JlX3Jlc2V0KHN0cnVjdA0KPiBpbXg2X3BjaWUgKmlteDZfcGNpZSkN
+Cj4gPiAgCQlyZXNldF9jb250cm9sX2Fzc2VydChpbXg2X3BjaWUtPnBjaWVwaHlfcmVzZXQpOw0K
+PiA+ICAJCWZhbGx0aHJvdWdoOw0KPiA+ICAJY2FzZSBJTVg4TU06DQo+ID4gKwljYXNlIElNWDhN
+UDoNCj4gPiAgCQlyZXNldF9jb250cm9sX2Fzc2VydChpbXg2X3BjaWUtPmFwcHNfcmVzZXQpOw0K
+PiA+ICAJCWJyZWFrOw0KPiA+ICAJY2FzZSBJTVg2U1g6DQo+ID4gQEAgLTQwNyw3ICs0MDksOCBA
+QCBzdGF0aWMgdm9pZCBpbXg2X3BjaWVfYXNzZXJ0X2NvcmVfcmVzZXQoc3RydWN0DQo+ID4gaW14
+Nl9wY2llICppbXg2X3BjaWUpICBzdGF0aWMgdW5zaWduZWQgaW50IGlteDZfcGNpZV9ncnBfb2Zm
+c2V0KGNvbnN0DQo+ID4gc3RydWN0IGlteDZfcGNpZSAqaW14Nl9wY2llKSAgew0KPiA+ICAJV0FS
+Tl9PTihpbXg2X3BjaWUtPmRydmRhdGEtPnZhcmlhbnQgIT0gSU1YOE1RICYmDQo+ID4gLQkJaW14
+Nl9wY2llLT5kcnZkYXRhLT52YXJpYW50ICE9IElNWDhNTSk7DQo+ID4gKwkJaW14Nl9wY2llLT5k
+cnZkYXRhLT52YXJpYW50ICE9IElNWDhNTSAmJg0KPiA+ICsJCWlteDZfcGNpZS0+ZHJ2ZGF0YS0+
+dmFyaWFudCAhPSBJTVg4TVApOw0KPiA+ICAJcmV0dXJuIGlteDZfcGNpZS0+Y29udHJvbGxlcl9p
+ZCA9PSAxID8gSU9NVVhDX0dQUjE2IDogSU9NVVhDX0dQUjE0Ow0KPiA+IH0NCj4gPg0KPiA+IEBA
+IC00NDgsNiArNDUxLDcgQEAgc3RhdGljIGludCBpbXg2X3BjaWVfZW5hYmxlX3JlZl9jbGsoc3Ry
+dWN0IGlteDZfcGNpZQ0KPiAqaW14Nl9wY2llKQ0KPiA+ICAJCWJyZWFrOw0KPiA+ICAJY2FzZSBJ
+TVg4TU06DQo+ID4gIAljYXNlIElNWDhNUToNCj4gPiArCWNhc2UgSU1YOE1QOg0KPiA+ICAJCXJl
+dCA9IGNsa19wcmVwYXJlX2VuYWJsZShpbXg2X3BjaWUtPnBjaWVfYXV4KTsNCj4gPiAgCQlpZiAo
+cmV0KSB7DQo+ID4gIAkJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIGVuYWJsZSBwY2llX2F1eCBj
+bG9ja1xuIik7IEBAIC01MDMsNg0KPiA+ICs1MDcsNyBAQCBzdGF0aWMgaW50IGlteDZfcGNpZV9j
+bGtfZW5hYmxlKHN0cnVjdCBpbXg2X3BjaWUgKmlteDZfcGNpZSkNCj4gPg0KPiA+ICAJc3dpdGNo
+IChpbXg2X3BjaWUtPmRydmRhdGEtPnZhcmlhbnQpIHsNCj4gPiAgCWNhc2UgSU1YOE1NOg0KPiA+
+ICsJY2FzZSBJTVg4TVA6DQo+ID4gIAkJaWYgKHBoeV9wb3dlcl9vbihpbXg2X3BjaWUtPnBoeSkp
+DQo+ID4gIAkJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIHBvd2VyIG9uIFBIWVxuIik7DQo+ID4g
+IAkJYnJlYWs7DQo+ID4gQEAgLTYwMyw2ICs2MDgsNyBAQCBzdGF0aWMgaW50IGlteDZfcGNpZV9k
+ZWFzc2VydF9jb3JlX3Jlc2V0KHN0cnVjdA0KPiBpbXg2X3BjaWUgKmlteDZfcGNpZSkNCj4gPiAg
+CQlyZXNldF9jb250cm9sX2RlYXNzZXJ0KGlteDZfcGNpZS0+cGNpZXBoeV9yZXNldCk7DQo+ID4g
+IAkJYnJlYWs7DQo+ID4gIAljYXNlIElNWDhNTToNCj4gPiArCWNhc2UgSU1YOE1QOg0KPiA+ICAJ
+CWlmIChwaHlfaW5pdChpbXg2X3BjaWUtPnBoeSkpDQo+ID4gIAkJCWRldl9lcnIoZGV2LCAid2Fp
+dGluZyBmb3IgcGh5IHJlYWR5IHRpbWVvdXQhXG4iKTsNCj4gPiAgCQlicmVhazsNCj4gPiBAQCAt
+Njc4LDYgKzY4NCw3IEBAIHN0YXRpYyB2b2lkIGlteDZfcGNpZV9pbml0X3BoeShzdHJ1Y3QgaW14
+Nl9wY2llDQo+ID4gKmlteDZfcGNpZSkgIHsNCj4gPiAgCXN3aXRjaCAoaW14Nl9wY2llLT5kcnZk
+YXRhLT52YXJpYW50KSB7DQo+ID4gIAljYXNlIElNWDhNTToNCj4gPiArCWNhc2UgSU1YOE1QOg0K
+PiA+ICAJCS8qDQo+ID4gIAkJICogVGhlIFBIWSBpbml0aWFsaXphdGlvbiBoYWQgYmVlbiBkb25l
+IGluIHRoZSBQSFkNCj4gPiAgCQkgKiBkcml2ZXIsIGJyZWFrIGhlcmUgZGlyZWN0bHkuDQo+ID4g
+QEAgLTgyMyw2ICs4MzAsNyBAQCBzdGF0aWMgdm9pZCBpbXg2X3BjaWVfbHRzc21fZW5hYmxlKHN0
+cnVjdCBkZXZpY2UNCj4gKmRldikNCj4gPiAgCWNhc2UgSU1YN0Q6DQo+ID4gIAljYXNlIElNWDhN
+UToNCj4gPiAgCWNhc2UgSU1YOE1NOg0KPiA+ICsJY2FzZSBJTVg4TVA6DQo+ID4gIAkJcmVzZXRf
+Y29udHJvbF9kZWFzc2VydChpbXg2X3BjaWUtPmFwcHNfcmVzZXQpOw0KPiA+ICAJCWJyZWFrOw0K
+PiA+ICAJfQ0KPiA+IEBAIC05MzgsNiArOTQ2LDcgQEAgc3RhdGljIHZvaWQgaW14Nl9wY2llX2hv
+c3RfZXhpdChzdHJ1Y3QgcGNpZV9wb3J0DQo+ICpwcCkNCj4gPiAgCQlpbXg2X3BjaWVfY2xrX2Rp
+c2FibGUoaW14Nl9wY2llKTsNCj4gPiAgCQlzd2l0Y2ggKGlteDZfcGNpZS0+ZHJ2ZGF0YS0+dmFy
+aWFudCkgew0KPiA+ICAJCWNhc2UgSU1YOE1NOg0KPiA+ICsJCWNhc2UgSU1YOE1QOg0KPiA+ICAJ
+CQlpZiAocGh5X3Bvd2VyX29mZihpbXg2X3BjaWUtPnBoeSkpDQo+ID4gIAkJCQlkZXZfZXJyKGRl
+diwgInVuYWJsZSB0byBwb3dlciBvZmYgcGh5XG4iKTsNCj4gPiAgCQkJcGh5X2V4aXQoaW14Nl9w
+Y2llLT5waHkpOw0KPiA+IEBAIC05NzIsNiArOTgxLDcgQEAgc3RhdGljIHZvaWQgaW14Nl9wY2ll
+X2x0c3NtX2Rpc2FibGUoc3RydWN0IGRldmljZQ0KPiAqZGV2KQ0KPiA+ICAJCWJyZWFrOw0KPiA+
+ICAJY2FzZSBJTVg3RDoNCj4gPiAgCWNhc2UgSU1YOE1NOg0KPiA+ICsJY2FzZSBJTVg4TVA6DQo+
+ID4gIAkJcmVzZXRfY29udHJvbF9hc3NlcnQoaW14Nl9wY2llLT5hcHBzX3Jlc2V0KTsNCj4gPiAg
+CQlicmVhazsNCj4gPiAgCWRlZmF1bHQ6DQo+ID4gQEAgLTEwMjgsNiArMTAzOCw3IEBAIHN0YXRp
+YyBpbnQgaW14Nl9wY2llX3N1c3BlbmRfbm9pcnEoc3RydWN0IGRldmljZQ0KPiAqZGV2KQ0KPiA+
+ICAJaW14Nl9wY2llX2Nsa19kaXNhYmxlKGlteDZfcGNpZSk7DQo+ID4gIAlzd2l0Y2ggKGlteDZf
+cGNpZS0+ZHJ2ZGF0YS0+dmFyaWFudCkgew0KPiA+ICAJY2FzZSBJTVg4TU06DQo+ID4gKwljYXNl
+IElNWDhNUDoNCj4gPiAgCQlpZiAocGh5X3Bvd2VyX29mZihpbXg2X3BjaWUtPnBoeSkpDQo+ID4g
+IAkJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIHBvd2VyIG9mZiBQSFlcbiIpOw0KPiA+ICAJCXBo
+eV9leGl0KGlteDZfcGNpZS0+cGh5KTsNCj4gPiBAQCAtMTE3Nyw2ICsxMTg4LDcgQEAgc3RhdGlj
+IGludCBpbXg2X3BjaWVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikNCj4g
+PiAgCQl9DQo+ID4gIAkJYnJlYWs7DQo+ID4gIAljYXNlIElNWDhNTToNCj4gPiArCWNhc2UgSU1Y
+OE1QOg0KPiA+ICAJCWlteDZfcGNpZS0+cGNpZV9hdXggPSBkZXZtX2Nsa19nZXQoZGV2LCAicGNp
+ZV9hdXgiKTsNCj4gPiAgCQlpZiAoSVNfRVJSKGlteDZfcGNpZS0+cGNpZV9hdXgpKQ0KPiA+ICAJ
+CQlyZXR1cm4gZGV2X2Vycl9wcm9iZShkZXYsIFBUUl9FUlIoaW14Nl9wY2llLT5wY2llX2F1eCks
+IEBADQo+IC0xMzI3LDYNCj4gPiArMTMzOSwxMCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlteDZf
+cGNpZV9kcnZkYXRhIGRydmRhdGFbXSA9IHsNCj4gPiAgCQkudmFyaWFudCA9IElNWDhNTSwNCj4g
+PiAgCQkuZmxhZ3MgPSBJTVg2X1BDSUVfRkxBR19TVVBQT1JUU19TVVNQRU5ELA0KPiA+ICAJfSwN
+Cj4gPiArCVtJTVg4TVBdID0gew0KPiA+ICsJCS52YXJpYW50ID0gSU1YOE1QLA0KPiA+ICsJCS5m
+bGFncyA9IElNWDZfUENJRV9GTEFHX1NVUFBPUlRTX1NVU1BFTkQsDQo+ID4gKwl9LA0KPiA+ICB9
+Ow0KPiA+DQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGlteDZfcGNpZV9v
+Zl9tYXRjaFtdID0geyBAQCAtMTMzNiw2DQo+ID4gKzEzNTIsNyBAQCBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG9mX2RldmljZV9pZCBpbXg2X3BjaWVfb2ZfbWF0Y2hbXSA9IHsNCj4gPiAgCXsgLmNvbXBh
+dGlibGUgPSAiZnNsLGlteDdkLXBjaWUiLCAgLmRhdGEgPSAmZHJ2ZGF0YVtJTVg3RF0sICB9LA0K
+PiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLXBjaWUiLCAuZGF0YSA9ICZkcnZkYXRh
+W0lNWDhNUV0sIH0sDQo+ID4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg4bW0tcGNpZSIsIC5k
+YXRhID0gJmRydmRhdGFbSU1YOE1NXSwgfSwNCj4gPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGlt
+eDhtcC1wY2llIiwgLmRhdGEgPSAmZHJ2ZGF0YVtJTVg4TVBdLCB9LA0KPiA+ICAJe30sDQo+ID4g
+IH07DQo+ID4NCj4gPiAtLQ0KPiA+IDIuMjUuMQ0KPiA+DQo=
