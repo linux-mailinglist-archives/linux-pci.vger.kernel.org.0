@@ -2,60 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E641C526221
-	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 14:40:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 718D3526238
+	for <lists+linux-pci@lfdr.de>; Fri, 13 May 2022 14:44:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239666AbiEMMkF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 08:40:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40352 "EHLO
+        id S1354797AbiEMMoD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 08:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357809AbiEMMkE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 08:40:04 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B7708B098
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 05:40:01 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id j4so14287052lfh.8
-        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 05:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=WZDB7Z12eDc46BTLC2lfW32G/wF1AJbeefP857zfk1I=;
-        b=AXHG4xCifCU8eHr3vEVmEVz7CX1ab+ISwd6QZJXhvTQ077OK2ogJya3YTgriZv8BR4
-         Fg57x4oH2fk9fM8djQr7SQyu2KJG0ASZ3k4jhDvy2zxlHTecnJZwAmt2V+Y2SlVk5Krl
-         GBsU2ZEtg+BEbEzkcK6KqRgy3NjEYpZf6QRc432NggntsGLNXD7s6zjkhQzL5XrZyKCK
-         77Pqvf9mQLSahMgUR9MyNPKH1//EPXcrP4tirm/jk4NcAiB7muP9mrT+F/rg5bnIuvdL
-         Nyn+47x3QQuB8vekMTt2+l1CXWQpUFFJUyprxU8jPw0KCIa5o/JRD80rIajD778t1+D+
-         B1+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=WZDB7Z12eDc46BTLC2lfW32G/wF1AJbeefP857zfk1I=;
-        b=YUpOoP7OSG/EgeiauEX/SEhGPlB4h6yLWd1BtTAQXG6M0U55EkSfi/iVriNKHb7815
-         L+Ty7U0W2ugzi1CI+4PPnyN0IGWOS1mJkxqd2ptVNsTttXZF8cGcXTe5iAh582KtSC4k
-         Y8/eAdHhIwYZ7vE4RsSTJPGN+YtHQVRGkgrhCUdhVjjY7C6dVw5IH4qEjHdsDQRRe2/M
-         0jhExM8BAmrDad7tNUBRg6Ohlf/jV/iMmkkZ0s6LsJBtMVKonZL//4GsiUHokCxefEsC
-         HeCTdLh8AhwXICiVBuap0yfnqa0F6jkm67oZh+EBvslMc9U9nD4LtPxFtoZ1BRPLJ9/I
-         rSZw==
-X-Gm-Message-State: AOAM532G+H/gBkXv4zueYiqTq0S6rA5LHbmdFkTC/3RpajE+73aM0vc+
-        mgW9sMkFlSAaq/axX2Nmu12zig==
-X-Google-Smtp-Source: ABdhPJzzy191PGmD87/Teiyji239CVjb4mjOGOtcjLzQQh2m4VRudIAadvHZQC+uvLNg1xi6n+NDUQ==
-X-Received: by 2002:a05:6512:1684:b0:448:a0e6:9fa6 with SMTP id bu4-20020a056512168400b00448a0e69fa6mr3309307lfb.592.1652445599514;
-        Fri, 13 May 2022 05:39:59 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id h10-20020ac2596a000000b0047255d210fasm367963lfp.41.2022.05.13.05.39.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 May 2022 05:39:59 -0700 (PDT)
-Message-ID: <c35595ff-f789-5452-d9a8-b5dfcb920141@linaro.org>
-Date:   Fri, 13 May 2022 15:39:58 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v8 00/10] PCI: qcom: Fix higher MSI vectors handling
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
+        with ESMTP id S233016AbiEMMnB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 08:43:01 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA6F3B28C;
+        Fri, 13 May 2022 05:42:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 918EAB82F7A;
+        Fri, 13 May 2022 12:42:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACE8C34100;
+        Fri, 13 May 2022 12:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652445776;
+        bh=rq4IrFs2KMxDNqB8qpulFwyamBFal8cYbZelR7jrIZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KnZ7SMwtjEvLMhQzoq4HfOFsB2S4otPa/pC7IRjkwZN3J0ZnakykwvdPNnn/CTNue
+         cuCimYalbGsKDQpmPRBSCrKMuubOFR/9YBPYW+04qgkIjdaaHe0TKjs7F13rUWSv7D
+         aFIww71apsYLVXxp3XJzaeSa+lnOIijhdwxI5XidFGAppkmfrIf/4cKcDO7wCoxJ4e
+         OcdMGE4yTJVxutkrnfPDPuG7TvlX50Vm7xsFvDUJbonTJUOeIAD6pDggt/w4IXYhgq
+         zr4byr9WJ3uyWxbS40TyRF3lHWZcJhOXZLIwxjPKcx+JxTWFpQmBYzH9s1Bxe6Bh7G
+         L+1wtoUf/q7sQ==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1npUdA-0002dQ-I5; Fri, 13 May 2022 14:42:53 +0200
+Date:   Fri, 13 May 2022 14:42:52 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,15 +49,18 @@ Cc:     Andy Gross <agross@kernel.org>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 07/10] PCI: qcom: Handle MSIs routed to multiple GIC
+ interrupts
+Message-ID: <Yn5STCN4smibLubA@hovoldconsulting.com>
 References: <20220512104545.2204523-1-dmitry.baryshkov@linaro.org>
- <Yn4dvpgezdrKmSro@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <Yn4dvpgezdrKmSro@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+ <20220512104545.2204523-8-dmitry.baryshkov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220512104545.2204523-8-dmitry.baryshkov@linaro.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,45 +68,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13/05/2022 11:58, Johan Hovold wrote:
-> On Thu, May 12, 2022 at 01:45:35PM +0300, Dmitry Baryshkov wrote:
->> I have replied with my Tested-by to the patch at [2], which has landed
->> in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
->> Add support for handling MSIs from 8 endpoints"). However lately I
->> noticed that during the tests I still had 'pcie_pme=nomsi', so the
->> device was not forced to use higher MSI vectors.
->>
->> After removing this option I noticed that hight MSI vectors are not
->> delivered on tested platforms. After additional research I stumbled upon
->> a patch in msm-4.14 ([1]), which describes that each group of MSI
->> vectors is mapped to the separate interrupt. Implement corresponding
->> mapping.
->>
->> The first patch in the series is a revert of  [2] (landed in pci-next).
->> Either both patches should be applied or both should be dropped.
->>
->> Patchseries dependecies: [3] (for the schema change).
->>
->> Changes since v7:
->>   - Move code back to the dwc core driver (as required by Rob),
->>   - Change dt schema to require either a single "msi" interrupt or an
->>     array of "msi0", "msi1", ... "msi7" IRQs. Disallow specifying a
->>     part of the array (the DT should specify the exact amount of MSI IRQs
->>     allowing fallback to a single "msi" IRQ),
+On Thu, May 12, 2022 at 01:45:42PM +0300, Dmitry Baryshkov wrote:
+> On some of Qualcomm platforms each group of 32 MSI vectors is routed to the
+> separate GIC interrupt. Thus, to receive higher MSI vectors properly,
+> declare that the host should use split MSI IRQ handling on these
+> platforms.
 > 
-> Why this new constraint?
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> I've been using your v7 with an sc8280xp which only has four IRQs (and
-> hence 128 MSIs).
-> 
-> Looks like this version of the series would not allow that anymore.
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 2e5464edc36e..f79752d1d680 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -194,6 +194,7 @@ struct qcom_pcie_ops {
+>  
+>  struct qcom_pcie_cfg {
+>  	const struct qcom_pcie_ops *ops;
+> +	unsigned int has_split_msi_irq:1;
+>  	unsigned int pipe_clk_need_muxing:1;
+>  	unsigned int has_tbu_clk:1;
+>  	unsigned int has_ddrss_sf_tbu_clk:1;
 
-As a second thought, let's relax parsing needs.
+> @@ -1592,6 +1599,11 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  
+>  	pcie->cfg = pcie_cfg;
+>  
+> +	if (pcie->cfg->has_split_msi_irq) {
+> +		pp->num_vectors = MAX_MSI_IRQS;
+> +		pp->has_split_msi_irq = true;
+> +	}
 
-> 
-> Johan
+If all qcom platform that can support more than 32 MSI require multiple
+IRQs, how about adding num_vectors to the config instead and set
+pp->has_split_msi_irq when cfg->num_vectors is set (or unconditionally
+if you remove the corresponding warning you just added to the dwc host
+code)?
 
+At least some sc8280xp seem to only support 128 MSI (using 4 IRQs).
 
--- 
-With best wishes
-Dmitry
+> +
+>  	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
+>  	if (IS_ERR(pcie->reset)) {
+>  		ret = PTR_ERR(pcie->reset);
+
+Johan
