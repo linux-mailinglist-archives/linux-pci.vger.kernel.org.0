@@ -2,59 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4285A527371
-	for <lists+linux-pci@lfdr.de>; Sat, 14 May 2022 20:21:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFD58527408
+	for <lists+linux-pci@lfdr.de>; Sat, 14 May 2022 22:43:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230459AbiENSVb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 14 May 2022 14:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37182 "EHLO
+        id S229722AbiENUnu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 14 May 2022 16:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbiENSVb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 14 May 2022 14:21:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C5991ADB2;
-        Sat, 14 May 2022 11:21:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BD4AA610E8;
-        Sat, 14 May 2022 18:21:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8D4DC340EE;
-        Sat, 14 May 2022 18:21:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652552489;
-        bh=mhZUEmcVGHggSu08CnP5R9D+9RHg+gv8VjpGnK24Or0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q232022pTxOsc+aC9hRt59VvKDvEsy4iTzSMaRi7LDl64kW+ap/gWp/E0W8zmv/oG
-         VYLkCUFNKd6hx6s6WduZdkMObTB3XGyYkMC3wTodjPDcMfBZdDdoZ2Pamo8OOR2fca
-         hYHZiJB4J25Qg7jevEHf/JOJRSpe2bIN4CCNH8c0S8b4JG3cnRbrsh997rQ0RAPQJ1
-         Mh2B+q9ZvWveiWPywyN2SN6YYDM78zHTjiRmTTSdt7oSefnozscWL8B2ZVe/n1B++c
-         miW6818NB+XVQBMUxoDD+00Sdn3TzwaAC1Iidfd9/E/xN7vY7mmWNz/d5uxlHrSj4A
-         PV6HH61pN+25Q==
-Received: by pali.im (Postfix)
-        id AB56E2B57; Sat, 14 May 2022 20:21:25 +0200 (CEST)
-Date:   Sat, 14 May 2022 20:21:25 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ARM: Marvell: Update PCIe fixup
-Message-ID: <20220514182125.xfvnw7yj2rmxpi7l@pali>
-References: <20211101150405.14618-1-pali@kernel.org>
- <20211102171259.9590-1-pali@kernel.org>
- <20211109225332.kqyfm4h4kwcnhhhl@pali>
+        with ESMTP id S229556AbiENUnt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 14 May 2022 16:43:49 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3835815831
+        for <linux-pci@vger.kernel.org>; Sat, 14 May 2022 13:43:48 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id o22so13098693ljp.8
+        for <linux-pci@vger.kernel.org>; Sat, 14 May 2022 13:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=v62VZWh5zQMQj8G9NtipATuEu9X1kMOa29L98K+aYJ0=;
+        b=MyozKlrbXZbVXKqQFFX5h2WzJD4WscKLb1no7bXzcxBvjYJZ3r4UFtWu3nS8rAJTrg
+         VMPGRgDqEKT5aOKa//byAMIWgJcPtAcqHelesHxK90sOc1Mm5EPrN0ZQnnHD/O2/9Q/+
+         qwLgXsu6FtB3dyN1b+nN6k+UUDzvQCM8eAsAA5H3CuwGd1Rnp+QWD33BqOBhYAHAJR9h
+         92KmvJHYeRI66CndEDU6rxIyhJwxhDSZNmH6NGeTyzyEjZaAg6v0E3HBk2BCQwZPEBqQ
+         X01/4s5IpfHZGyQogcbohC8IyFqVafuhPG3l+r7W1LojpueZQ5QaMEIHiSY82eVh6opP
+         se4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=v62VZWh5zQMQj8G9NtipATuEu9X1kMOa29L98K+aYJ0=;
+        b=lc1qfCuILNPDTwEuOi3pzzWl/7qkx8KS9ZSedVWnSdexmSA07pyrJDn2/4vSaTzT4S
+         B0FgXkbHXN91AJcsNuvdxeDVDwpGBHPQFV3pUvcWHuTWTxGIJiZp7ZM51BphUFM0NBG6
+         nvnLDR82EKD601XtRnYoy+1TRN9F/aw2mFl9vxcmz/gRALOjuOe38mLHMK0L/D8M9VFx
+         oe54eCDme7imy93XXnORsb+/phs5QWKGXUEmGUTeB1ikhx7oTQBKj0fQbkbYou5C+YIG
+         eCUTJPG8cgrkezISGps/JOdJ1v65crahhRAOkNMcOcHEkPWfMTxFRtpwOWtaZw014KGT
+         Cj4g==
+X-Gm-Message-State: AOAM531A/zK6kbmRe3t8gVTmKQERGTwUQMHujcQVfvigPCztddHeJWvq
+        RDN/nDw9Covm1xfipI5Pybierw==
+X-Google-Smtp-Source: ABdhPJylhaA//YyukUFNU1Rqe/LUPZSyVbPExJhknnh9wZMcJQuMypd2gHavHFxWIHiVZJppE5m7Qw==
+X-Received: by 2002:a05:651c:158b:b0:250:a056:7e48 with SMTP id h11-20020a05651c158b00b00250a0567e48mr6939097ljq.64.1652561026599;
+        Sat, 14 May 2022 13:43:46 -0700 (PDT)
+Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id y15-20020a2e320f000000b0024f3d1daeedsm941204ljy.117.2022.05.14.13.43.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 May 2022 13:43:46 -0700 (PDT)
+Message-ID: <680c241f-671f-fafd-611b-277e08ba46d2@linaro.org>
+Date:   Sat, 14 May 2022 22:43:44 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211109225332.kqyfm4h4kwcnhhhl@pali>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [RFC v3 2/5] dt-bindings: soc: grf: add pcie30-{phy,pipe}-grf
+Content-Language: en-US
+To:     Frank Wunderlich <linux@fw-web.de>,
+        linux-rockchip@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+References: <20220514115946.8858-1-linux@fw-web.de>
+ <20220514115946.8858-3-linux@fw-web.de>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220514115946.8858-3-linux@fw-web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,150 +89,16 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 09 November 2021 23:53:32 Pali Rohár wrote:
-> On Tuesday 02 November 2021 18:12:58 Pali Rohár wrote:
-> > - The code relies on rc_pci_fixup being called, which only happens
-> >   when CONFIG_PCI_QUIRKS is enabled, so add that to Kconfig. Omitting
-> >   this causes a booting failure with a non-obvious cause.
-> > - Update rc_pci_fixup to set the class properly, copying the
-> >   more modern style from other places
-> > - Correct the rc_pci_fixup comment
-> > 
-> > This patch just re-applies commit 1dc831bf53fd ("ARM: Kirkwood: Update
-> > PCI-E fixup") for all other Marvell ARM platforms which have same buggy
-> > PCIe controller and do not use pci-mvebu.c controller driver yet.
-> > 
-> > Long-term goal for these Marvell ARM platforms should be conversion to
-> > pci-mvebu.c controller driver and removal of these fixups in arch code.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > Cc: Jason Gunthorpe <jgg@nvidia.com>
-> > Cc: stable@vger.kernel.org
+On 14/05/2022 13:59, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
 > 
-> Hello! Patch 2/2 was already applied into mips-next. Could you review
-> also this patch 1/2?
+> Add compatibles for PCIe v3 General Register Files.
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 
-PING?
 
-> > 
-> > ---
-> > Changes in v2:
-> > * Move MIPS change into separate patch
-> > * Add information that this patch is for platforms which do not use pci-mvebu.c
-> > ---
-> >  arch/arm/Kconfig              |  1 +
-> >  arch/arm/mach-dove/pcie.c     | 11 ++++++++---
-> >  arch/arm/mach-mv78xx0/pcie.c  | 11 ++++++++---
-> >  arch/arm/mach-orion5x/Kconfig |  1 +
-> >  arch/arm/mach-orion5x/pci.c   | 12 +++++++++---
-> >  5 files changed, 27 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > index fc196421b2ce..9f157e973555 100644
-> > --- a/arch/arm/Kconfig
-> > +++ b/arch/arm/Kconfig
-> > @@ -400,6 +400,7 @@ config ARCH_DOVE
-> >  	select GENERIC_IRQ_MULTI_HANDLER
-> >  	select GPIOLIB
-> >  	select HAVE_PCI
-> > +	select PCI_QUIRKS if PCI
-> >  	select MVEBU_MBUS
-> >  	select PINCTRL
-> >  	select PINCTRL_DOVE
-> > diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
-> > index ee91ac6b5ebf..ecf057a0f5ba 100644
-> > --- a/arch/arm/mach-dove/pcie.c
-> > +++ b/arch/arm/mach-dove/pcie.c
-> > @@ -135,14 +135,19 @@ static struct pci_ops pcie_ops = {
-> >  	.write = pcie_wr_conf,
-> >  };
-> >  
-> > +/*
-> > + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-> > + * is operating as a root complex this needs to be switched to
-> > + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-> > + * the device. Decoding setup is handled by the orion code.
-> > + */
-> >  static void rc_pci_fixup(struct pci_dev *dev)
-> >  {
-> > -	/*
-> > -	 * Prevent enumeration of root complex.
-> > -	 */
-> >  	if (dev->bus->parent == NULL && dev->devfn == 0) {
-> >  		int i;
-> >  
-> > +		dev->class &= 0xff;
-> > +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
-> >  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-> >  			dev->resource[i].start = 0;
-> >  			dev->resource[i].end   = 0;
-> > diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-mv78xx0/pcie.c
-> > index 636d84b40466..9362b5fc116f 100644
-> > --- a/arch/arm/mach-mv78xx0/pcie.c
-> > +++ b/arch/arm/mach-mv78xx0/pcie.c
-> > @@ -177,14 +177,19 @@ static struct pci_ops pcie_ops = {
-> >  	.write = pcie_wr_conf,
-> >  };
-> >  
-> > +/*
-> > + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-> > + * is operating as a root complex this needs to be switched to
-> > + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-> > + * the device. Decoding setup is handled by the orion code.
-> > + */
-> >  static void rc_pci_fixup(struct pci_dev *dev)
-> >  {
-> > -	/*
-> > -	 * Prevent enumeration of root complex.
-> > -	 */
-> >  	if (dev->bus->parent == NULL && dev->devfn == 0) {
-> >  		int i;
-> >  
-> > +		dev->class &= 0xff;
-> > +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
-> >  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-> >  			dev->resource[i].start = 0;
-> >  			dev->resource[i].end   = 0;
-> > diff --git a/arch/arm/mach-orion5x/Kconfig b/arch/arm/mach-orion5x/Kconfig
-> > index e94a61901ffd..7189a5b1ec46 100644
-> > --- a/arch/arm/mach-orion5x/Kconfig
-> > +++ b/arch/arm/mach-orion5x/Kconfig
-> > @@ -6,6 +6,7 @@ menuconfig ARCH_ORION5X
-> >  	select GPIOLIB
-> >  	select MVEBU_MBUS
-> >  	select FORCE_PCI
-> > +	select PCI_QUIRKS
-> >  	select PHYLIB if NETDEVICES
-> >  	select PLAT_ORION_LEGACY
-> >  	help
-> > diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion5x/pci.c
-> > index 76951bfbacf5..5145fe89702e 100644
-> > --- a/arch/arm/mach-orion5x/pci.c
-> > +++ b/arch/arm/mach-orion5x/pci.c
-> > @@ -509,14 +509,20 @@ static int __init pci_setup(struct pci_sys_data *sys)
-> >  /*****************************************************************************
-> >   * General PCIe + PCI
-> >   ****************************************************************************/
-> > +
-> > +/*
-> > + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-> > + * is operating as a root complex this needs to be switched to
-> > + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-> > + * the device. Decoding setup is handled by the orion code.
-> > + */
-> >  static void rc_pci_fixup(struct pci_dev *dev)
-> >  {
-> > -	/*
-> > -	 * Prevent enumeration of root complex.
-> > -	 */
-> >  	if (dev->bus->parent == NULL && dev->devfn == 0) {
-> >  		int i;
-> >  
-> > +		dev->class &= 0xff;
-> > +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
-> >  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-> >  			dev->resource[i].start = 0;
-> >  			dev->resource[i].end   = 0;
-> > -- 
-> > 2.20.1
-> > 
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+Best regards,
+Krzysztof
