@@ -2,220 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE75A526CBE
-	for <lists+linux-pci@lfdr.de>; Sat, 14 May 2022 00:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A793F526F20
+	for <lists+linux-pci@lfdr.de>; Sat, 14 May 2022 09:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384802AbiEMWBG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 May 2022 18:01:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
+        id S231664AbiENDrj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 May 2022 23:47:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384799AbiEMWAx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 18:00:53 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3A158E5B;
-        Fri, 13 May 2022 15:00:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652479252; x=1684015252;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=q+WglABce5zRgnS1yFpd1VSqyFIdxu1j5KiN7McuGb8=;
-  b=Z4C2Vof+3aFFzv/VLM1SRcn1g49KG4e23jG5UcvSjz4E/hE1r/DsFv6R
-   kV7MYVzDuno3qaZUMw/CJ9tS1Ssqq0nAMOYFVt/FgXkx6Ey0ywjBFkOfm
-   dFq5jl/8TspAxB/7MX+LpBihJvvc09jQNyZvkB6U481ntfBf/wpGntH6H
-   OrEDu0O+nvcSGiHIt5k1iI5ckhXJuf2sCOCIYmHLFI+mlOQF/DhnBsqUM
-   GZtfnh+U85a4QxRjZV/p+BJKtsbqmMTKqRaIzptmm+EgxHpYkuBxpvQHe
-   f/x/7S9tZKolSbQEwbHWlxfvCra69F22bUwPDQ+a+UnGQjFbj+8YEd1YK
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10346"; a="257971685"
-X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="257971685"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2022 15:00:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,223,1647327600"; 
-   d="scan'208";a="543451431"
-Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
-  by orsmga006.jf.intel.com with ESMTP; 13 May 2022 15:00:51 -0700
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Fri, 13 May 2022 15:00:50 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Fri, 13 May 2022 15:00:50 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Fri, 13 May 2022 15:00:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mv1+/pweT2gh+GZMl8qR902Mocz3s2ZC64RaoxGkv7eZxhWspcd/2SSQUAssV0zKQIfis6bMBFxWUjM7HQbkKg2Db0h4cJOftH8qSvntHPUao6lXYcEEUdRJ/ofzz7PHrR8Q17RO1+DMAvllbAVflEI6DXFXER/YcdFDIKd5qFuCc38ekUSzOOsQy7AkkZlls1hO8AXAgoxnmwaLqwR9jt1PeELiHWsiv7OYC8oSr5yfkMh0INw/8AcRRyV1GXGBHHa7ZpYf/ygs9TPNhUHdBuEBPrrRSrTzPJVi9tGDE4h2gx5JfTyy4jubUg/003SRABBszDANukyU60NjqbbW5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3tpnBRuj0tkiGEVaTlb5V968v53ptgK7hBHdVjJNp9U=;
- b=Wh6VDb6/8KgnzkhWNQQZm3/AsZdWrXV15/hDEgA9LP6FBkEa7gm5dbrRonvQypm8ezdNUlbxlCkjOVv9XMK1vlAHkfAyU9Ef2zzzVP3XSP1lvzZYycZMR+XGgh3Roe0PuhZo7frmZ3vfO6jDcsM4Cx5OHKIZK0d5lhGXzk6NscyVKQiSkJg25W0O6hfrdwXDjjeVYYwbGD4m0OaLhn7frTusaR1mTl16gbIwCPZRPBn3hLxmgavmExOOFYMiS3T0+Gb6+2s/FofczVL8U0nj8xDz9spov1MrNU85nfcDm6AKg8f/71NazWOMFGdyjXlsShFHLwF0PUqVnsGEUk+MSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ0PR11MB5070.namprd11.prod.outlook.com (2603:10b6:a03:2d5::13)
- by DM5PR1101MB2171.namprd11.prod.outlook.com (2603:10b6:4:4d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.14; Fri, 13 May
- 2022 22:00:48 +0000
-Received: from SJ0PR11MB5070.namprd11.prod.outlook.com
- ([fe80::88b8:b97a:4081:86a]) by SJ0PR11MB5070.namprd11.prod.outlook.com
- ([fe80::88b8:b97a:4081:86a%9]) with mapi id 15.20.5250.014; Fri, 13 May 2022
- 22:00:48 +0000
-From:   "Jingar, Rajvi" <rajvi.jingar@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Box <david.e.box@linux.intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH v5 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable PTM
-Thread-Topic: [PATCH v5 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable PTM
-Thread-Index: AQHYXA5UPJiB5F+tTEizlP3KdPFknK0bVgkAgABBM4CAAALHAIAADAkAgAHHxRA=
-Date:   Fri, 13 May 2022 22:00:48 +0000
-Message-ID: <SJ0PR11MB5070B095B8A28634B43A231F9ECA9@SJ0PR11MB5070.namprd11.prod.outlook.com>
-References: <CAJZ5v0g_p+Yb-VLo8b6-SYU17=GQOqZh2E5-52dkq-3rzU=57A@mail.gmail.com>
- <20220512183540.GA859016@bhelgaas>
-In-Reply-To: <20220512183540.GA859016@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f6f2d6a7-5267-470b-39bd-08da352c09cc
-x-ms-traffictypediagnostic: DM5PR1101MB2171:EE_
-x-microsoft-antispam-prvs: <DM5PR1101MB21714C0DF1B48F0926A827879ECA9@DM5PR1101MB2171.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ozcZ2y5hXBAlmHBgtV06c4vlDYon5HFdOvXyYTS/WR/dpZ+RUfVpuuQyAzezVA2i0vEv6QryyCXyMXMpK4ie2KqtArdGHpG3iMz4r+ojhvLA2u2wnnSzB9uhGdyZDyfwN2AG29pLy3jkaqCJ4UQO5+fUFTgTgnt/pcVDTvI9ZYA/x0ZEDt5VzR1vrNm/ZG5WJ49HB0vr8y42yVKV5xQic7bXi7jfEp6tDBYe0qhEExU3AAU6xw8faL+YP1VbKPsTx0y7i8RTRceKzlrkFPVT3bOnnOwpO3sT+UlevGXi+2y/CJ6LyV2VY2gjvuSfnuhPnwk4b8REinlBu5Uu0XcASmqByyGiokS7ym+ihEvgSRcxE7z4fVVpqV4NwoxwmaMLSKMQPl8B9iY8jRp8LK3wNOx21wzVuV+l6sWlpJ3LQy8JGdnRuYZATWxvHOcHEWWlHEGayYDzKtjbvH6z7SSM5lXAJ/otYQz4yZaO/ys1opcqOR9hlyQ0mlL8MOk0HzA+AfZiUkhEdlkVj+WVunYLmjH8VWYbbP597+LwZ2Cy9ih3F85pcezkoT+q+koOcrugoawVgEuqGbOA1PKcCpuL7+pTSqSvXvgGIZvNTM9lTqf+mVX2t6aljbCH/Ck0awryL17ROtg7kxC75Pkx46aoKqT3GAI2vF+34mP9L7eLTkcNs3aSpn2zuQwrl9ExLaQPBiUC4hOyq/XfsCbSWWUsqQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5070.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(66476007)(66446008)(66556008)(66946007)(26005)(55016003)(8676002)(4326008)(38100700002)(86362001)(71200400001)(38070700005)(9686003)(186003)(508600001)(2906002)(7696005)(52536014)(5660300002)(33656002)(8936002)(6506007)(53546011)(83380400001)(316002)(110136005)(54906003)(122000001)(82960400001)(76116006)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?zlA0QGqcHCLuhZDX2hW1XCAWSwL2CCmQ1+2skl7zhzsm2cwvuDAHB0WWziB2?=
- =?us-ascii?Q?vd97asNOzMK+cXy6fBCjUTKrXYG+hZUNlbPU1M3wRRJGaFypVM14zIVYD59f?=
- =?us-ascii?Q?PI53Zre8qHV/WBz3rdu4uaTlCyruW05D/g03NOgp/QNN0VYxRuzHHNe/f9H/?=
- =?us-ascii?Q?Ga7yfjhW3JqiibI4LR9wq0avKdxELSG3WvramJ4/oU6e3EZNLl2dpbFCf3Tw?=
- =?us-ascii?Q?bs7L+wlDsHw1YEC9C8gJdmUP1S/Gs9Nx0YMN4SVRfj54IhlUq23f3j8vML4Z?=
- =?us-ascii?Q?8DiPtI1HZeDyk/SuuTOZFN2vIlZX5nO70tRObQwoEs2gzf7UMNUbAfm5A8JO?=
- =?us-ascii?Q?zi+mgIZX3Qsb9pfkdk8hV+J8XL7yLMspn7n1HEcq2g7jinNF1X2X5mOBd1OJ?=
- =?us-ascii?Q?FAblGQOSmd6RQce+31bPA3vnbKRImUSSe18qoOzuQ4Zq0VbYEYxebyXhORZa?=
- =?us-ascii?Q?6c2Lc2LxgvgdUQZ2AEqirmdTyZbfw9WFPLWS1Otau/MHz92Ls/4Qwp4/vRcg?=
- =?us-ascii?Q?J7s+6LqzTMavWtQRds/UNbbNNaJgLP/h/75LeQH+kYDcwtktwn6ZvYbMGfCr?=
- =?us-ascii?Q?jz6h9CMJETdBMVBSTY76eM1S4l8EZ9HIs/2SWC3V9B+4dXCEmoP2uzfMsB9h?=
- =?us-ascii?Q?YyZMmWusYjS56s21B0Y2I+8l3W7dTGKtovZePpxWwrDhmjukr2BHMZdhUCQe?=
- =?us-ascii?Q?klmLYeb7+sMs9HHYUgUDrAfhUqlE5UShU6jME8k+2xutxvbhrCklByaBrg+/?=
- =?us-ascii?Q?LaIfTkkssrhDMh2Y2M1oD50UBDZk90KfP+XOGjXy6bRPLL4FEjXmJ8OD2mup?=
- =?us-ascii?Q?f7ZWNyfCbawFnzmg9mKjJvzkcHVdxz1vPORfAUg2HxPe1iNL59SPNpYkQujw?=
- =?us-ascii?Q?WOmXWBBLxD8g5YCNzKS20e3imql8mV5PDkCWxSvht9CaMft9+DTTPDksMY77?=
- =?us-ascii?Q?A/UsWCF61Gut5rGx056kc9wPCAOe2yTxqLqir8E+AEts0ZcitbhISSbN6Wdw?=
- =?us-ascii?Q?Bw8aPd0whCS2XL4d/gjtRFnGiAMsg0tOS+77MBjpY7D28cbk0ZFQnRPX/bV+?=
- =?us-ascii?Q?4UtQmEbU3ALtON1RLVaaqDm1T59jAj4etDiuvVi9JkVYHvGt8AFONWHLErQf?=
- =?us-ascii?Q?5gc97TvnMgo/rzEo8b8WHNlFQRDW3RxLFqbuImQbmNDatAIAiXVTZ+UlQJae?=
- =?us-ascii?Q?BV6yYDhnALY4mkKqiMNvQmw8Wr4b2f7WE7oiQa1x/7JApvr/YliFNVX8M30l?=
- =?us-ascii?Q?gHiU+n7c2Wb+tHAeHj0YI7gaoVFzGhLpDsAutIEYgX6soqXS+l3may1YCxWR?=
- =?us-ascii?Q?vCy1TfQsWkSshHB9PTj7I5RX8o+T2B6bHPzep8MqtBHbDpFlHbUtRyxBYyy7?=
- =?us-ascii?Q?P1fzJFU10BLTvsQcqdbUJkcUYPFL8yKCx7swiCIFXWMhSX+eoVHUVcYjwbyb?=
- =?us-ascii?Q?7da2zNL1rbtHQ8TyZSRHyy5IMbR2WCFXcYkcf1ejAdR6lfKD4paUZmqQQszD?=
- =?us-ascii?Q?RaY42+S+BcpM4/q3ngFQpWHTHOfYhgBJKJmAzKNPDc9rf5FOGvtKDhpcqpRX?=
- =?us-ascii?Q?/2RmurKKVx0fXLfSd3nxV7MVb9Z/EitTrNGGns/hJ2aa0R808s1S5GFevrjy?=
- =?us-ascii?Q?D3JV64XQRsWJAAw7kYz9aQgfFUKnlkpgPY3DynnCE3FxmYR/9DOOwRZY8BVx?=
- =?us-ascii?Q?4GS3Orf95kftYcH89KJz3WRIB5piks+4GO/FgoQecFQW7VMNDk3Bp7YrVeyN?=
- =?us-ascii?Q?vaArfRJZ4g=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231645AbiENDri (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 May 2022 23:47:38 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C3614D18
+        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 20:47:35 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-2f863469afbso108319507b3.0
+        for <linux-pci@vger.kernel.org>; Fri, 13 May 2022 20:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GlgtfqIsCtTv5Jauk4wjOqDSq6O7AkKJ3RvfO9y7TuY=;
+        b=Hd3y72OZxm4CV6vW7TxvqAtmoAy+5gV6r8Hf73b2YVQhbZh/HnO/aOE8OjMotWtJsU
+         pgzFZb7Pbdo2z3gPi9huhyKqFUGMLw3qTCbrVpuaAWUIFHWGbwySJWLcSD3x2HJrwRq3
+         9fXf4FixKmDUChFhx096IeeNMt3xcPz0/4o2aTvkQVRfQbAJc5UhQHyWxXSkV4gFPg33
+         SGpNyqOFMnggv210P+5AB5hDnM0fJ36oi+VoIRbJ9v2IN0RWG2s14SDXdE2Oc2HrLKAY
+         bja30YKLL/ESaJrKPVW74HGSsPp2CsdjFg4HM+oVywqUe7/hTlwWz89KB+xAYsV0Z17x
+         OmUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GlgtfqIsCtTv5Jauk4wjOqDSq6O7AkKJ3RvfO9y7TuY=;
+        b=C3FP70GS1ppzxGWzwePuYsBG3RMJ8FbleFWEIjaSKWH8yTjNKSDcY8317TvVvTwLCd
+         0ZY+xT9wiFn44QwoOownXyRQJwAq3CsAjqF1Xl28ixA1ibxHUWnfWpr0aG0/UxL0pyjx
+         KsNsLGcbMFS9P6KBbw9S/H9z3D+lzMYRPEGXe4Xo4EPQy6NyjVQWKK15zM6Fu0ep54jd
+         8Nxb1DFSzr+hCA10zVXrfTDyxnwWyYTfheFEfi086ob0fQYOXxGemwJ6pz23mqPiUwWr
+         HUnGtdVgjajQtIyq381idtZkrewj1N/BcWJay7o7pOO93qQl5y2hYL5wunKnosCWoLb9
+         3dGA==
+X-Gm-Message-State: AOAM5308r0zzz9ExgYlRGEVSd/50QEet5WcrExhDu9OHCaKX+4HuUTuU
+        J/9k4zywQSXX1Ym4IXd4azXlpN6mnNo50UDUj3Of5g==
+X-Google-Smtp-Source: ABdhPJyuCzmt9tIN7J1096gL4CtFK52NhgqgDXFCfNnRSovHU7C3BAMp6A67Zyxusp7zpb2DBDbNkL2qgI0VZxj+CYg=
+X-Received: by 2002:a0d:cfc5:0:b0:2dc:48db:dda1 with SMTP id
+ r188-20020a0dcfc5000000b002dc48dbdda1mr9063293ywd.83.1652500054045; Fri, 13
+ May 2022 20:47:34 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5070.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6f2d6a7-5267-470b-39bd-08da352c09cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2022 22:00:48.5402
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tH1npf3oDyaVADNTdpWpVNGm63Qv+pdlBNIT6DSTSNkdx4ipMTQA47IxpFstAT3pOMIC28UqUylyEliLt9v5vg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2171
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20211214221450.589884-1-luca@lucaceresoli.net>
+ <CAL_Jsq+GQTcx1EGKHug2ZcDZufrKM-4k6PB0vQeTCTG42MHzvA@mail.gmail.com>
+ <59a23c89-0810-eb28-acd9-7051ac34d438@lucaceresoli.net> <4579940c-27dc-733e-4022-ebea4671c839@lucaceresoli.net>
+ <CAL_JsqJ5nr6xJoTv3A6UPMMDXhWKcwSEUA3ux3kK8OMWQxdc6w@mail.gmail.com>
+ <YnvnNUrsCOUxMu8A@lpieralisi> <615718f9-151e-20fb-fcb0-56063ae61ca6@lucaceresoli.net>
+In-Reply-To: <615718f9-151e-20fb-fcb0-56063ae61ca6@lucaceresoli.net>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 13 May 2022 20:46:57 -0700
+Message-ID: <CAGETcx9r4e9PkUFNZ+vUfqOSO5=e9apmBj0+DyOkKEvc4CnsLQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: dra7xx: Fix link removal on probe error
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sekhar Nori <nsekhar@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Thursday, May 12, 2022 11:36 AM
-> To: Rafael J. Wysocki <rafael@kernel.org>
-> Cc: Jingar, Rajvi <rajvi.jingar@intel.com>; Wysocki, Rafael J
-> <rafael.j.wysocki@intel.com>; Bjorn Helgaas <bhelgaas@google.com>; David =
-Box
-> <david.e.box@linux.intel.com>; Linux PCI <linux-pci@vger.kernel.org>; Lin=
-ux
-> Kernel Mailing List <linux-kernel@vger.kernel.org>; Linux PM <linux-
-> pm@vger.kernel.org>
-> Subject: Re: [PATCH v5 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable=
- PTM
->=20
-> On Thu, May 12, 2022 at 07:52:36PM +0200, Rafael J. Wysocki wrote:
-> > On Thu, May 12, 2022 at 7:42 PM Bjorn Helgaas <helgaas@kernel.org> wrot=
-e:
-> > > On Thu, May 12, 2022 at 03:49:18PM +0200, Rafael J. Wysocki wrote:
->=20
-> > > > Something like this should suffice IMV:
-> > > >
-> > > > if (!dev_state_saved || pci_dev->current_state !=3D PCI_D3cold)
-> > > >
-> > > >         pci_disable_ptm(pci_dev);
-> > >
-> > > It makes sense to me that we needn't disable PTM if the device is in
-> > > D3cold.  But the "!dev_state_saved" condition depends on what the
-> > > driver did.  Why is that important?  Why should we not do the
-> > > following?
-> > >
-> > >   if (pci_dev->current_state !=3D PCI_D3cold)
-> > >     pci_disable_ptm(pci_dev);
-> >
-> > We can do this too.  I thought we could skip the power state check if
-> > dev_state_saved was unset, because then we would know that the power
-> > state was not D3cold.  It probably isn't worth the hassle though.
+On Thu, May 12, 2022 at 7:07 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
 >
+> Hi Lorenzo,
+>
+> On 11/05/22 18:41, Lorenzo Pieralisi wrote:
+> > On Sat, Jan 15, 2022 at 10:02:00AM -0600, Rob Herring wrote:
+> >> +Saravana
+> >>
+> >> On Tue, Jan 11, 2022 at 4:35 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+> >>>
+> >>> Hi Rob,
+> >>>
+> >>> On 16/12/21 10:08, Luca Ceresoli wrote:
+> >>>> Hi Rob,
+> >>>>
+> >>>> thanks for the quick feedback!
+> >>>>
+> >>>> On 14/12/21 23:42, Rob Herring wrote:
+> >>>>> On Tue, Dec 14, 2021 at 4:15 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+> >>>>>>
+> >>>>>> If a devm_phy_get() calls fails with phy_count==N (N > 0), then N links
+> >>>>>> have already been added by device_link_add() and won't be deleted by
+> >>>>>> device_link_del() because the code calls 'return' and not 'goto err_link'.
+> >>>>>>
+> >>>>>> Fix in a very simple way by doing all the devm_phy_get() calls before all
+> >>>>>> the device_link_add() calls.
+> >>>>>>
+> >>>>>> Fixes: 7a4db656a635 ("PCI: dra7xx: Create functional dependency between PCIe and PHY")
+> >>>>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> >>>>>> ---
+> >>>>>>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
+> >>>>>>  1 file changed, 2 insertions(+)
+> >>>>>>
+> >>>>>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> >>>>>> index f7f1490e7beb..2ccc53869e13 100644
+> >>>>>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> >>>>>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> >>>>>> @@ -757,7 +757,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+> >>>>>>                 phy[i] = devm_phy_get(dev, name);
+> >>>>>>                 if (IS_ERR(phy[i]))
+> >>>>>>                         return PTR_ERR(phy[i]);
+> >>>>>> +       }
+> >>>>>>
+> >>>>>> +       for (i = 0; i < phy_count; i++) {
+> >>>>>>                 link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
+> >>>>>
+> >>>>> I think this should happen automatically now with fw_devlink being
+> >>>>> enabled by default. Can you try?
+> >>>>
+> >>>> Do you mean removal should be done automatically? I think they are not
+> >>>> due to the DL_FLAG_STATELESS flag.
+> >>>
+> >>> I would love to have feedback because, as said, I think my patch is
+> >>> correct, but if I'm wrong (which might well be) I have to drop patch 1
+> >>> and rewrite patch 2 in a slightly more complex form.
+> >>
+> >> I mean that why do you need explicit dependency tracking here when
+> >> dependencies on a PHY should happen automatically now. IOW, what is
+> >> special about this driver and dependency?
+> >
+> > Any update on this patch ? I think patch 2 can be merged, please
+> > let me know if this one can be dropped.
+>
+> Thanks for the feedback! You would say yes, you can merge patch 2,
+> except it probably does not even apply as it is written in a way that is
+> based on the changes in patch 1.
+>
+> I could rewrite patch 2 to not depend on patch 1 of course, but it
+> wouldn't make code simpler, perhaps more complex. And moreover the
+> hardware that I used to have access to has phy_count==1 so I could never
+> test the failing case, and sadly now I have no access to that hardware.
 
-We see issue with certain platforms where only checking if device power=20
-state in D3Cold is not enough and the !dev_state_saved check is needed
-when disabling PTM. Device like nvme is relying on ASPM, it stays in D0 but=
-=20
-state is saved. Touching the config space wakes up the device which=20
-prevents the system from entering into low power state.
+Hi Luca,
 
-Following would fix the issue:
+The fw_devlink code to create device links from consumers to "phys"
+suppliers is pretty well exercised. Most/all Android devices running
+5.10+ kernels (including Pixel 6) use fw_devlink=on to be able to boot
+properly.
 
- if (!pci_dev->state_save) {
-                pci_save_state(pci_dev);
+So I'd be pretty confident in deleting the device_link_add/del() code
+in drivers/pci/controller/dwc/pci-dra7xx.c. The device links should
+already be there before the probe is even called.
 
-               pci_disable_ptm(pci_dev);
+Also, if you want to check if the device links (even the 1 phy one you
+have) are being created, you can look at /sys/class/devlink to see the
+list of all device links that are currently present. You can delete
+the code and then use this to check too.
 
-                if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
-                        pci_prepare_to_sleep(pci_dev);
-}
+-Saravana
 
-> Ah, thanks.  IMHO it's easier to analyze for correctness if we only
-> check the power state.
->=20
-> Bjorn
+>
+> --
+> Luca
