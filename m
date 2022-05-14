@@ -2,52 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49AE6527035
-	for <lists+linux-pci@lfdr.de>; Sat, 14 May 2022 11:14:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F67D5270E4
+	for <lists+linux-pci@lfdr.de>; Sat, 14 May 2022 14:00:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230312AbiENJOI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 14 May 2022 05:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33310 "EHLO
+        id S232047AbiENMAD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 14 May 2022 08:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230148AbiENJOH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 14 May 2022 05:14:07 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48807B8
-        for <linux-pci@vger.kernel.org>; Sat, 14 May 2022 02:14:05 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id CADAF1030F213;
-        Sat, 14 May 2022 11:14:00 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id A3A152ED3DC; Sat, 14 May 2022 11:14:00 +0200 (CEST)
-Date:   Sat, 14 May 2022 11:14:00 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        with ESMTP id S231640AbiENMAB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 14 May 2022 08:00:01 -0400
+Received: from mxout4.routing.net (mxout4.routing.net [IPv6:2a03:2900:1:a::9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A740983;
+        Sat, 14 May 2022 04:59:58 -0700 (PDT)
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+        by mxout4.routing.net (Postfix) with ESMTP id F10191007E5;
+        Sat, 14 May 2022 11:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1652529596;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Jp8Teq4Isc+9gmZReRzppDgzK1yE9IJ/3uRsTw6ryLw=;
+        b=oCp832NTVPSaEBRhBlPm8aZYMaEUSpQPU/3kx6pVPlYzmwxzuydQkVam2N3UHmA7WayaLP
+        386fK61d5ybZKWQhuwRJCw6PQnrjGPWO1rVJNW169kEYrOA2UhSI+6vmcW2QzTkGXKt9Nr
+        3yaSAdNYIG7ojFg4fXLYuLl69NgLFRc=
+Received: from localhost.localdomain (fttx-pool-217.61.148.252.bambit.de [217.61.148.252])
+        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id B4D82360502;
+        Sat, 14 May 2022 11:59:54 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-rockchip@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 06/18] PCI: pciehp: Enable DLLSC interrupt only if
- supported
-Message-ID: <20220514091400.GA20725@wunner.de>
-References: <20220220193346.23789-1-kabel@kernel.org>
- <20220220193346.23789-7-kabel@kernel.org>
- <20220509034216.GA26780@wunner.de>
- <20220513165729.wuaatfr2drsjwoos@pali>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: [RFC v3 0/5] RK3568 PCIe V3 support
+Date:   Sat, 14 May 2022 13:59:41 +0200
+Message-Id: <20220514115946.8858-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220513165729.wuaatfr2drsjwoos@pali>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+X-Mail-ID: c0d866d5-96cb-4e67-abe9-7c9f9293d3cc
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,43 +63,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 13, 2022 at 06:57:29PM +0200, Pali Rohár wrote:
-> To answer your questions: Config space of Aardvark Root Port does not
-> conform to PCIe base spec. It does not implement DLLLARC, nor DLLSCE and
-> lot of other bits. Plus it has Type 0 header (not Type 1). And due to
-> these reasons, pci-aardvark.c driver implements "emulation" of the
-> Root Port and implements some of the functionality via custom aardvark
-> registers. So Root Port would be presented to kernel and also to
-> userspace as PCI Bridge device with Type 1 header and with PCIe
-> registers required by linux kernel.
-> 
-> During my testing of kernel hotplug code last year, I figured out that
-> kernel was waiting for event which never happened. And so it was needed
-> to "fix" kernel to not try to enable DLLSCE because it did nothing.
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Could you please reproduce this and add the following on the command line:
+This series adds Rockchip PCIe V3 support found on rk3568 SOC.
 
-  log_buf_len=10M pciehp.pciehp_debug=1 dyndbg="file pciehp* +p"
-  ignore_loglevel
+It is based on "Enable rk356x PCIe controller" series of Peter Geis
+v9: https://patchwork.kernel.org/project/linux-rockchip/list/?series=636944
 
-Then open a bug at bugzilla.kernel.org, attach full dmesg output
-as well as full "lspci -vv" output and send the bugzilla link to me.
+Compared to PCIeV2 which uses the Naneng combphy, PCIe v3 uses a dedicated
+PCI-phy.
 
-(Obviously, revert patches 6 and 7 when trying to reproduce it.)
+New in this version is that lane-map is no separate patch and moved from
+PCIe- to phy-driver.
 
-So a PDC event should be sufficient to bring the slot up or down,
-a DLLSC event should not be necessary.  Enabling DLLSC should not
-make a difference on a controller which doesn't support it.
-I just double-checked the code and I do not see where we'd wait
-for a DLLSC event which never comes.
+Peter has tested m2-slot too and so the bifurcation.
 
-Don't worry, if we come to the conclusion that your proposed fix
-is the only solution, I'm fine with it, but at this point I'd
-like to get a better understanding what is really going on.
-Perhaps there is some other issue in pciehp that this patch
-just papers over.  Once you provide the dmesg debug output
-I'll be able to analyze that.
+The Phy-Patch is now changed to original author, but our changes are
+squashed in.
 
-Thanks!
+Frank Wunderlich (4):
+  dt-bindings: phy: rockchip: add PCIe v3 phy
+  dt-bindings: soc: grf: add pcie30-{phy,pipe}-grf
+  arm64: dts: rockchip: rk3568: Add PCIe v3 nodes
+  arm64: dts: rockchip: Add PCIe v3 nodes to BPI-R2-Pro
 
-Lukas
+Shawn Lin (1):
+  phy: rockchip: Support PCIe v3
+
+ .../bindings/phy/rockchip,pcie3-phy.yaml      |  82 +++++
+ .../devicetree/bindings/soc/rockchip/grf.yaml |   3 +
+ .../boot/dts/rockchip/rk3568-bpi-r2-pro.dts   |  90 +++++
+ arch/arm64/boot/dts/rockchip/rk3568.dtsi      | 122 +++++++
+ drivers/phy/rockchip/Kconfig                  |   9 +
+ drivers/phy/rockchip/Makefile                 |   1 +
+ .../phy/rockchip/phy-rockchip-snps-pcie3.c    | 317 ++++++++++++++++++
+ include/linux/phy/pcie.h                      |  12 +
+ 8 files changed, 636 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml
+ create mode 100644 drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+ create mode 100644 include/linux/phy/pcie.h
+
+-- 
+2.25.1
+
