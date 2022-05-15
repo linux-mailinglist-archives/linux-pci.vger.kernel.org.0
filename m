@@ -2,186 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8CC5527799
-	for <lists+linux-pci@lfdr.de>; Sun, 15 May 2022 15:00:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26033527805
+	for <lists+linux-pci@lfdr.de>; Sun, 15 May 2022 16:26:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232677AbiEOM7j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 May 2022 08:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
+        id S237084AbiEOO0Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 May 2022 10:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231362AbiEOM7i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 May 2022 08:59:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6B93A739;
-        Sun, 15 May 2022 05:59:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B8CE260ED7;
-        Sun, 15 May 2022 12:59:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF53C385B8;
-        Sun, 15 May 2022 12:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652619576;
-        bh=Er1icabn7IATRCtWvAKCaZjREXU9z20DohHXO16mmQM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=uTpCEPIgJCY5lRX9hVZ3eN/1yRQ0ujHoW9UKB2JHx4Y5QTrglRVb9vQUZH+sV6kZA
-         uf7IuLb+tmtLNPBFUT1kxSdRLAnTZAsq+tljBXQNIPao1/Wb50p3lhH3yI6EhTL3Lk
-         udzvKpY4fyPvegyofNS13yU1XWHpvAdnjo3ax45AxXJyOZL+f0m++PXAmMMSE8d5ar
-         EMRyUBNVEvAVoktqeymHBO0kXYNWreSgWqD4tGLwrl57p0q6Gw0U8dviFAt92AHdzm
-         QQ5QehFLLfevgJSHg0XBT9JrKA7HgOjF7/r/dqinZCHgGkid3GXp4jN4TaFpC6z9Yv
-         aZYF0EVkNIw+w==
-Received: by pali.im (Postfix)
-        id 503B77B8; Sun, 15 May 2022 14:59:32 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "PCI: aardvark: Rewrite IRQ code to chained IRQ handler"
-Date:   Sun, 15 May 2022 14:58:15 +0200
-Message-Id: <20220515125815.30157-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S237151AbiEOO0N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 May 2022 10:26:13 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE705E0F9
+        for <linux-pci@vger.kernel.org>; Sun, 15 May 2022 07:26:11 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id m6so13566992iob.4
+        for <linux-pci@vger.kernel.org>; Sun, 15 May 2022 07:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=ZSoUlf0cPEpL7jjk6Nyt81rsCpO1vJSuE6CFnE/F0mc=;
+        b=b0f/0zGlxeNvBazCWHGLnEogvpYVwdbHKraBidfsS+DkeWqlwrQIc3N1xeah/fVea+
+         UUdObxZ+WzVcdANTee84Dzmz4V361Es6A4m2OMgNl/blJb+l4TfYIHN1kAGywVPDu2Kj
+         BdSeR4I9ln2Eu42xsTHm+op99KhtmX+R33f0vu84er35mC4fxOyghJKiTvdiQuvfgLhj
+         /oq6MijwDgaUd/A9mQLTfCIbedS373eDvTiJuXjh+s3ok+1gXW65DBpcztaFeNORrKwo
+         1Yx6iTiodl/+nHw/OUUfkQCx5gNB6Q1FUKzvruaDD1If61XnfFlw2DxPdIueq+DhiAbO
+         ksDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=ZSoUlf0cPEpL7jjk6Nyt81rsCpO1vJSuE6CFnE/F0mc=;
+        b=4ErcnGfZ+Ml3R1uJknXU2b8jOxlvh3sWIW2Wh4vMMnqwt0iyX4L0pVFd/z5SZL0bS9
+         B/IpBVjc13aVvVeEoMZLMyiE+sjtyRUgSSXyDJtAgo/ksr1jK3vv9hIiLN9AI4UNxZar
+         VDBQ3jKzElB/yfnfoubIPGDHGzr51tTFlTOTXJQlzpbTr5g6PYdjYMZNMuxoE97q/jN7
+         C0lgY9P6dq9teSxC/srYEOYyXhRAkMGwGB/zVMlCE/OZCIRRB9W72iebdLg5WwbfIPgl
+         br/o8poK59RsiPjjwOkmQ98bY1Z2eUT9syt1l7yCLXga4ErooHZ84RzDgABv+ukgFTFu
+         bFlw==
+X-Gm-Message-State: AOAM5323299TO9Nftxhc3HcOaMrcBRJD+F7Tg/B6MM64rGg+9IhJoqPe
+        d11q8FP09o8ZpAqlXLvKaMB+CwEK53dvPnzq9xg=
+X-Google-Smtp-Source: ABdhPJzybqplS+ZUobLPmrJVOaclSJUS7jYcUxDQFT/Co8y/3rj2stEicX0BOd65DVwhvdT5DTp4HOHjMU3WMBAuCyo=
+X-Received: by 2002:a6b:3ec1:0:b0:65a:499f:23a4 with SMTP id
+ l184-20020a6b3ec1000000b0065a499f23a4mr5969547ioa.189.1652624771350; Sun, 15
+ May 2022 07:26:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Sender: soniaavis.ibrahim02@gmail.com
+Received: by 2002:a05:6638:34a6:0:0:0:0 with HTTP; Sun, 15 May 2022 07:26:10
+ -0700 (PDT)
+From:   Frances Patrick <francespatrick49@gmail.com>
+Date:   Sun, 15 May 2022 07:26:10 -0700
+X-Google-Sender-Auth: aKDpS_Rf5Xd8Vv0PW65YD52D9-I
+Message-ID: <CAPwBKQB_T+LRPRdJ_KENQ4AbUV2ss4wtSPLZVB2zbFosOCqN5w@mail.gmail.com>
+Subject: Donation to you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=2.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This reverts commit 1571d67dc190e50c6c56e8f88cdc39f7cc53166e.
+Hello, Dearest Friend,
 
-This commit broke support for setting interrupt affinity. It looks like
-that it is related to the chained IRQ handler. Revert this commit until
-issue with setting interrupt affinity is fixed.
-
-Fixes: 1571d67dc190 ("PCI: aardvark: Rewrite IRQ code to chained IRQ handler")
-Signed-off-by: Pali Rohár <pali@kernel.org>
-
----
-This commit was introduced in v5.18-rc1 and hence it is regression for 5.18
-release. After reverting this commit, it is possible to move aardvark
-interrupt from CPU0 to CPU1 by "echo 2 > /proc/irq/XX/smp_affinity" where
-XX is the interrupt number which can be find in /proc/interrupts on line
-with advk-pcie.
----
- drivers/pci/controller/pci-aardvark.c | 48 ++++++++++++---------------
- 1 file changed, 22 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 54651a1808cc..22ac607343bd 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -274,7 +274,6 @@ struct advk_pcie {
- 		u32 actions;
- 	} wins[OB_WIN_COUNT];
- 	u8 wins_count;
--	int irq;
- 	struct irq_domain *rp_irq_domain;
- 	struct irq_domain *irq_domain;
- 	struct irq_chip irq_chip;
-@@ -1664,26 +1663,21 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
- 	}
- }
- 
--static void advk_pcie_irq_handler(struct irq_desc *desc)
-+static irqreturn_t advk_pcie_irq_handler(int irq, void *arg)
- {
--	struct advk_pcie *pcie = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
--	u32 val, mask, status;
-+	struct advk_pcie *pcie = arg;
-+	u32 status;
- 
--	chained_irq_enter(chip, desc);
-+	status = advk_readl(pcie, HOST_CTRL_INT_STATUS_REG);
-+	if (!(status & PCIE_IRQ_CORE_INT))
-+		return IRQ_NONE;
- 
--	val = advk_readl(pcie, HOST_CTRL_INT_STATUS_REG);
--	mask = advk_readl(pcie, HOST_CTRL_INT_MASK_REG);
--	status = val & ((~mask) & PCIE_IRQ_ALL_MASK);
-+	advk_pcie_handle_int(pcie);
- 
--	if (status & PCIE_IRQ_CORE_INT) {
--		advk_pcie_handle_int(pcie);
-+	/* Clear interrupt */
-+	advk_writel(pcie, PCIE_IRQ_CORE_INT, HOST_CTRL_INT_STATUS_REG);
- 
--		/* Clear interrupt */
--		advk_writel(pcie, PCIE_IRQ_CORE_INT, HOST_CTRL_INT_STATUS_REG);
--	}
--
--	chained_irq_exit(chip, desc);
-+	return IRQ_HANDLED;
- }
- 
- static int advk_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-@@ -1763,7 +1757,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	struct advk_pcie *pcie;
- 	struct pci_host_bridge *bridge;
- 	struct resource_entry *entry;
--	int ret;
-+	int ret, irq;
- 
- 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(struct advk_pcie));
- 	if (!bridge)
-@@ -1849,9 +1843,17 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	if (IS_ERR(pcie->base))
- 		return PTR_ERR(pcie->base);
- 
--	pcie->irq = platform_get_irq(pdev, 0);
--	if (pcie->irq < 0)
--		return pcie->irq;
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	ret = devm_request_irq(dev, irq, advk_pcie_irq_handler,
-+			       IRQF_SHARED | IRQF_NO_THREAD, "advk-pcie",
-+			       pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to register interrupt\n");
-+		return ret;
-+	}
- 
- 	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
- 						       "reset-gpios", 0,
-@@ -1916,15 +1918,12 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	irq_set_chained_handler_and_data(pcie->irq, advk_pcie_irq_handler, pcie);
--
- 	bridge->sysdata = pcie;
- 	bridge->ops = &advk_pcie_ops;
- 	bridge->map_irq = advk_pcie_map_irq;
- 
- 	ret = pci_host_probe(bridge);
- 	if (ret < 0) {
--		irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
- 		advk_pcie_remove_rp_irq_domain(pcie);
- 		advk_pcie_remove_msi_irq_domain(pcie);
- 		advk_pcie_remove_irq_domain(pcie);
-@@ -1973,9 +1972,6 @@ static int advk_pcie_remove(struct platform_device *pdev)
- 	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_REG);
- 	advk_writel(pcie, PCIE_IRQ_ALL_MASK, HOST_CTRL_INT_STATUS_REG);
- 
--	/* Remove IRQ handler */
--	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
--
- 	/* Remove IRQ domains */
- 	advk_pcie_remove_rp_irq_domain(pcie);
- 	advk_pcie_remove_msi_irq_domain(pcie);
--- 
-2.20.1
-
+Two Million Euros has been donated to you by Frances and Patrick
+Connolly, we are from County Armagh in Northern Ireland, We won the
+New Year's Day EuroMillions draw of  =C2=A3115 million Euros Lottery
+jackpot which was drawn on New Year=E2=80=99s Day. Email for more details:
+francespatrick49@gmail.com Looking forward to hearing from you soon,
