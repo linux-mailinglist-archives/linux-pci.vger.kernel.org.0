@@ -2,408 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F2915274C0
-	for <lists+linux-pci@lfdr.de>; Sun, 15 May 2022 02:42:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BE60527757
+	for <lists+linux-pci@lfdr.de>; Sun, 15 May 2022 13:50:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231785AbiEOAmz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 14 May 2022 20:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59648 "EHLO
+        id S236569AbiEOLuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 May 2022 07:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230007AbiEOAmy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 14 May 2022 20:42:54 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5653193E
-        for <linux-pci@vger.kernel.org>; Sat, 14 May 2022 17:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652575373; x=1684111373;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KrkSM+E8s+lEBnyW0gV1rBsrVF9dBdsd+MBGiGzj+BY=;
-  b=gBubMGPvwhJujY0MHd5jNf7O0OBZ4HNkKTmyx8F19p9H4s9j4QwX3eEz
-   4scShPeTUCwmcaGVwRNgMCNhj6ENt9hjWDrioFqM+LGBH0fkFrFp9RYbe
-   ISR7aCjQ4JbVV2yAJrFJ37Mro+M6c+fQSzMrEMaXLCLnI1YMmmnRFWoi8
-   BRnCvvNYhLFhmSRgt2XBsM5nP2csPid9dNoP/8P0hGxrRgJAo0+OnWCbN
-   HmfHU4fhLotGb6hMBFGcExfOqEsS5OZyHeoZHHVf0f2W/PkR8Zi9IdbKs
-   NSNddnPCHXjkSPqsup309SSFKS6Qco9FM86+AXlz7ALcPACZxAANDimob
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10347"; a="270702947"
-X-IronPort-AV: E=Sophos;i="5.91,227,1647327600"; 
-   d="scan'208";a="270702947"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2022 17:42:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,227,1647327600"; 
-   d="scan'208";a="521920708"
-Received: from lkp-server01.sh.intel.com (HELO d1462bc4b09b) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 14 May 2022 17:42:51 -0700
-Received: from kbuild by d1462bc4b09b with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nq2LS-00019P-Dj;
-        Sun, 15 May 2022 00:42:50 +0000
-Date:   Sun, 15 May 2022 08:42:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/pm] BUILD SUCCESS
- 0f40ac35e4ecb16ab5bb672386a90e3cde13b186
-Message-ID: <62804c63.szivSJsp5N5lbDs5%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229941AbiEOLuY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 May 2022 07:50:24 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF3515FD5;
+        Sun, 15 May 2022 04:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1652615387;
+        bh=B54b8i/DJeeMKAG6eeLRs8Eg71xNxoV1yns596upSxo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=KZU3p+Wx1KBt/Lqv9OJbTi7Ehf3YdK1vP//M3q2xGBD0rekA1/r7t0037nVPPzgqg
+         OpkXodRp8QArExZJmHXpP23WW0wvJ5GXzn3lyWvJpZxQyvdjj+3LRFsCL9Q+D7O3Kb
+         bdSOJCr/Z0EaBW8OrHyet4TzApAZHrjf9oG9M6go=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.155.220] ([217.61.155.220]) by web-mail.gmx.net
+ (3c-app-gmx-bap15.server.lan [172.19.172.85]) (via HTTP); Sun, 15 May 2022
+ 13:49:47 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Message-ID: <trinity-02ad648c-f6f8-4383-b389-a0578d5a02d2-1652615387162@3c-app-gmx-bap15>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        Vinod Koul <vkoul@kernel.org>,
+        Johan Jonker <jbx6244@gmail.com>,
+        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Aw: Re: [RFC v3 1/5] dt-bindings: phy: rockchip: add PCIe v3 phy
+Content-Type: text/plain; charset=UTF-8
+Date:   Sun, 15 May 2022 13:49:47 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <1652570081.002742.3276245.nullmailer@robh.at.kernel.org>
+References: <20220514115946.8858-1-linux@fw-web.de>
+ <20220514115946.8858-2-linux@fw-web.de>
+ <1652570081.002742.3276245.nullmailer@robh.at.kernel.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:vyz+cZ1FBTfjDhfQEhv1JzESF6L56qiBrPOQZS9cHKD6f4k7h++sUqzAQ7FmgPedf81JC
+ U48uvEu/vudC4ZpfT/fIWI9vVoLc8tNndbfZsqX0t7UFqMM00+4CSKXxw2aARFB+ZM2nBFucDWCt
+ jm125jW3y59zpsu1G3UIRZWmMwTOzvONPEjvyTvOwLuHceoIsVsOxzZZEXsq1BgNyzcvRhugBlZt
+ AJJ87wLTUxaLMgyFoRqkwSdJUddjxr3JGhC2Sh1cgKGXyS918z8pOFI8yYFaIr48XVG7rG67/uDg
+ Uc=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:S/t/BYr4iXI=:8wqNb/mB9PaXLXn1njkTeV
+ hOHvGGfN3VE+cgjjRhr1zCt4qjbvjx1NmiPGQQYA28B5Z9ftYVAmN7zvzVa9t2M18+t8SIkRc
+ EIvVnlSitX6gs5p443xj8JynkKVYTYFAKKO2zv9J70EkEiGQIkXIpMjrlNtRt4jm7xsDprNEV
+ diKQwQrcGed0x09qWJ8Mlvc2zPk9ECCCdBtT+8EPE0eHu7GO2OdALNoe+YrpSP2Nt0e/rpkwD
+ 77lapCoazyx4Ee5jjTQ9HZCQBq8/hah+QiDNd6y/ShkOS+cl/DAbQNr0G8liqWE/TKEwY1PWL
+ 7TTQjRViOUHYkpXhHAQFZd73CCAslqZ6dyGssEI5ERtsmEjsLGkmh2P8zDBNWunETwUN28M/j
+ HvirtANDkBFM3Ybm6HImIb7CU6CQ/fZ2TKHYrDMPqqPqA7SqTMWmXArtq1uYo9GE4jBGPU3DW
+ Cl3ijgnJujsGqc+hfsesetmrCcM6T13jON1scUX1uMNNAciZL5n7kzcOLSw0fm/50eWlE2rf1
+ P+rf/7Z2FQ1prZduh0N1rM1rDFKeRGbjlDTpBpniEktom7Jd+qEtNQroC48NkzPktKa5M+vsy
+ OSMwYEqBocV/w8MSxZBSCsT5Vbu16h1mHYE0AlIscgWyd89cWtgef3aoJvYz1hITdNYeF0R7X
+ AuQgnB729Uw0tVZr04bsAGh7pnUfq0Gi6rtUA++edXIVVlnLte49gpShgrJ5mQWFHGWpvg/7u
+ 7V38Z4bgTTRHQCFZB38ikUMslJO/bM4BJzgjD6gK4io2xLPml/828389C0YEWkLUoCmotR89J
+ ZnC15/y
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm
-branch HEAD: 0f40ac35e4ecb16ab5bb672386a90e3cde13b186  PCI/PM: Replace pci_set_power_state() in pci_pm_thaw_noirq()
+Hi
 
-elapsed time: 13253m
+> Gesendet: Sonntag, 15. Mai 2022 um 01:14 Uhr
+> Von: "Rob Herring" <robh@kernel.org>
 
-configs tested: 320
-configs skipped: 6
+> On Sat, 14 May 2022 13:59:42 +0200, Frank Wunderlich wrote:
+> > From: Frank Wunderlich <frank-w@public-files.de>
+> >
+> > Add a new binding file for Rockchip PCIe v3 phy driver.
+> >
+> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> >
+> > ---
+> > v3:
+> > - drop quotes
+> > - drop rk3588
+> > - make clockcount fixed to 3
+> > - full path for binding header file
+> > - drop phy-mode and its header and add lane-map
+> >
+> > v2:
+> > dt-bindings: rename yaml for PCIe v3
+> > rockchip-pcie3-phy.yaml =3D> rockchip,pcie3-phy.yaml
+> >
+> > changes in pcie3 phy yaml
+> > - change clock names to ordered const list
+> > - extend pcie30-phymode description
+> > - add phy-cells to required properties
+> > - drop unevaluatedProperties
+> > - example with 1 clock each line
+> > - use default property instead of text describing it
+> > - update license
+> > ---
+> >  .../bindings/phy/rockchip,pcie3-phy.yaml      | 82 ++++++++++++++++++=
++
+> >  1 file changed, 82 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/rockchip,pci=
+e3-phy.yaml
+> >
+>
+> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_check=
+'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy=
+/rockchip,pcie3-phy.yaml: properties:clock-names: 'oneOf' conditional fail=
+ed, one must be fixed:
+> 	[{'const': 'refclk_m'}, {'const': 'refclk_n'}, {'const': 'pclk'}] is to=
+o long
+> 	[{'const': 'refclk_m'}, {'const': 'refclk_n'}, {'const': 'pclk'}] is to=
+o short
+> 	False schema does not allow 3
+> 	1 was expected
+> 	3 is greater than the maximum of 2
+> 	hint: "minItems" is only needed if less than the "items" list length
+> 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy=
+/rockchip,pcie3-phy.yaml: ignoring, error in schema: properties: clock-nam=
+es
+> Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.example.dtb:0:0=
+: /example-0/phy@fe8c0000: failed to match any schema with compatible: ['r=
+ockchip,rk3568-pcie3-phy']
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+seems this is fixed when i remove the "minItems: 3" from clock names (whic=
+h is already fixed length because of the list).
 
-gcc tested configs:
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-m68k                             allmodconfig
-xtensa                       common_defconfig
-arm                      jornada720_defconfig
-arm                        multi_v7_defconfig
-powerpc                      mgcoge_defconfig
-xtensa                    smp_lx200_defconfig
-ia64                      gensparse_defconfig
-sparc64                             defconfig
-m68k                       m5475evb_defconfig
-arm                        shmobile_defconfig
-m68k                        mvme16x_defconfig
-m68k                       m5249evb_defconfig
-arm                            pleb_defconfig
-mips                          rb532_defconfig
-riscv                               defconfig
-powerpc                     sequoia_defconfig
-arc                          axs103_defconfig
-sh                             sh03_defconfig
-sh                   sh7724_generic_defconfig
-m68k                          atari_defconfig
-powerpc                       eiger_defconfig
-mips                         tb0226_defconfig
-powerpc                      cm5200_defconfig
-ia64                         bigsur_defconfig
-powerpc                     redwood_defconfig
-mips                  decstation_64_defconfig
-h8300                       h8s-sim_defconfig
-sh                          kfr2r09_defconfig
-sh                           se7712_defconfig
-arm                        clps711x_defconfig
-sh                           se7705_defconfig
-mips                       bmips_be_defconfig
-sh                          landisk_defconfig
-csky                                defconfig
-xtensa                  nommu_kc705_defconfig
-s390                       zfcpdump_defconfig
-m68k                           sun3_defconfig
-arm                          exynos_defconfig
-powerpc                      ppc40x_defconfig
-powerpc                    adder875_defconfig
-arc                        nsim_700_defconfig
-sh                         ecovec24_defconfig
-sh                               allmodconfig
-sh                        dreamcast_defconfig
-mips                 decstation_r4k_defconfig
-powerpc64                        alldefconfig
-arc                        nsimosci_defconfig
-um                           x86_64_defconfig
-arm                        spear6xx_defconfig
-powerpc                        warp_defconfig
-powerpc                      tqm8xx_defconfig
-m68k                          hp300_defconfig
-ia64                          tiger_defconfig
-powerpc                           allnoconfig
-powerpc                     tqm8555_defconfig
-powerpc                     ep8248e_defconfig
-sh                             espt_defconfig
-arm                       multi_v4t_defconfig
-arm                             ezx_defconfig
-arm                        mini2440_defconfig
-xtensa                              defconfig
-arm                           sama5_defconfig
-nios2                         3c120_defconfig
-sh                          rsk7203_defconfig
-powerpc                  iss476-smp_defconfig
-sparc                            allyesconfig
-sh                         microdev_defconfig
-powerpc                 mpc837x_rdb_defconfig
-arc                     nsimosci_hs_defconfig
-mips                           jazz_defconfig
-um                               alldefconfig
-openrisc                    or1ksim_defconfig
-sparc                       sparc64_defconfig
-sh                          polaris_defconfig
-sh                        sh7763rdp_defconfig
-powerpc                         wii_defconfig
-arm                           viper_defconfig
-mips                     decstation_defconfig
-xtensa                  cadence_csp_defconfig
-arm                         assabet_defconfig
-h8300                            allyesconfig
-powerpc                     rainier_defconfig
-sparc                               defconfig
-sh                           se7750_defconfig
-sh                                  defconfig
-xtensa                  audio_kc705_defconfig
-mips                         mpc30x_defconfig
-arm                            zeus_defconfig
-arm                     eseries_pxa_defconfig
-powerpc                  storcenter_defconfig
-arm                         lubbock_defconfig
-sh                           se7343_defconfig
-parisc                generic-32bit_defconfig
-alpha                               defconfig
-powerpc                      pasemi_defconfig
-mips                           ci20_defconfig
-mips                         bigsur_defconfig
-sh                   rts7751r2dplus_defconfig
-i386                                defconfig
-sh                 kfr2r09-romimage_defconfig
-arm                         nhk8815_defconfig
-m68k                       m5208evb_defconfig
-mips                      fuloong2e_defconfig
-powerpc                      ep88xc_defconfig
-sh                          rsk7269_defconfig
-alpha                            alldefconfig
-m68k                        m5307c3_defconfig
-arm                      integrator_defconfig
-nios2                         10m50_defconfig
-arm                          gemini_defconfig
-powerpc                      pcm030_defconfig
-powerpc                       holly_defconfig
-sh                           se7721_defconfig
-alpha                            allyesconfig
-arm                          lpd270_defconfig
-mips                        vocore2_defconfig
-arm                             pxa_defconfig
-arm                         vf610m4_defconfig
-arc                           tb10x_defconfig
-microblaze                          defconfig
-mips                         db1xxx_defconfig
-powerpc                   currituck_defconfig
-mips                      maltasmvp_defconfig
-m68k                          sun3x_defconfig
-powerpc                      chrp32_defconfig
-arm                           sunxi_defconfig
-sh                        apsh4ad0a_defconfig
-sh                          lboxre2_defconfig
-mips                           ip32_defconfig
-arm                        mvebu_v7_defconfig
-powerpc                       maple_defconfig
-powerpc                      ppc6xx_defconfig
-sh                          sdk7786_defconfig
-arm                         lpc18xx_defconfig
-arm                         s3c6400_defconfig
-arm                           stm32_defconfig
-arm                       aspeed_g5_defconfig
-m68k                        stmark2_defconfig
-arm                         cm_x300_defconfig
-sh                   secureedge5410_defconfig
-arm                             rpc_defconfig
-powerpc                mpc7448_hpc2_defconfig
-nios2                            alldefconfig
-arm                       imx_v6_v7_defconfig
-openrisc                 simple_smp_defconfig
-mips                        bcm47xx_defconfig
-arm                        cerfcube_defconfig
-m68k                          multi_defconfig
-arc                              alldefconfig
-powerpc                     pq2fads_defconfig
-arm                         at91_dt_defconfig
-sh                     magicpanelr2_defconfig
-sh                          sdk7780_defconfig
-powerpc                      makalu_defconfig
-arc                         haps_hs_defconfig
-m68k                         amcore_defconfig
-mips                            ar7_defconfig
-arc                    vdk_hs38_smp_defconfig
-arm                       omap2plus_defconfig
-powerpc                      arches_defconfig
-ia64                             alldefconfig
-ia64                            zx1_defconfig
-powerpc64                           defconfig
-sh                               j2_defconfig
-powerpc                     asp8347_defconfig
-h8300                               defconfig
-h8300                    h8300h-sim_defconfig
-powerpc                    sam440ep_defconfig
-sh                           se7722_defconfig
-arm                          iop32x_defconfig
-openrisc                            defconfig
-powerpc                 mpc85xx_cds_defconfig
-mips                  maltasmvp_eva_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20220505
-arm                  randconfig-c002-20220506
-arm                  randconfig-c002-20220508
-arm                  randconfig-c002-20220507
-ia64                                defconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                             allyesconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nios2                            allyesconfig
-xtensa                           allyesconfig
-arc                                 defconfig
-s390                                defconfig
-s390                             allmodconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                             allyesconfig
-i386                             allyesconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220505
-s390                 randconfig-r044-20220505
-riscv                randconfig-r042-20220505
-arc                  randconfig-r043-20220507
-s390                 randconfig-r044-20220507
-riscv                randconfig-r042-20220507
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                                  kexec
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                               rhel-8.3
+needed to change type of lane-map to this:
 
-clang tested configs:
-x86_64                        randconfig-c007
-i386                          randconfig-c001
-powerpc              randconfig-c003-20220505
-riscv                randconfig-c006-20220505
-arm                  randconfig-c002-20220505
-powerpc              randconfig-c003-20220506
-riscv                randconfig-c006-20220506
-mips                 randconfig-c004-20220506
-arm                  randconfig-c002-20220506
-powerpc              randconfig-c003-20220507
-riscv                randconfig-c006-20220507
-mips                 randconfig-c004-20220507
-arm                  randconfig-c002-20220507
-powerpc              randconfig-c003-20220508
-riscv                randconfig-c006-20220508
-mips                 randconfig-c004-20220508
-arm                  randconfig-c002-20220508
-s390                 randconfig-c005-20220506
-mips                         tb0219_defconfig
-powerpc                     mpc5200_defconfig
-arm                       cns3420vb_defconfig
-arm                          collie_defconfig
-mips                      bmips_stb_defconfig
-powerpc                 mpc832x_rdb_defconfig
-arm                                 defconfig
-arm                        mvebu_v5_defconfig
-mips                      pic32mzda_defconfig
-i386                             allyesconfig
-mips                           mtx1_defconfig
-arm                         socfpga_defconfig
-powerpc                     ksi8560_defconfig
-mips                          ath25_defconfig
-mips                           rs90_defconfig
-powerpc                     pseries_defconfig
-arm                        vexpress_defconfig
-arm                     davinci_all_defconfig
-arm                    vt8500_v6_v7_defconfig
-powerpc                     skiroot_defconfig
-powerpc                 mpc8560_ads_defconfig
-powerpc                      walnut_defconfig
-arm                             mxs_defconfig
-arm                        neponset_defconfig
-mips                      malta_kvm_defconfig
-hexagon                             defconfig
-mips                       lemote2f_defconfig
-arm                      pxa255-idp_defconfig
-mips                          ath79_defconfig
-arm                            mmp2_defconfig
-arm                            dove_defconfig
-arm                         lpc32xx_defconfig
-arm                          ixp4xx_defconfig
-powerpc                 mpc8313_rdb_defconfig
-mips                   sb1250_swarm_defconfig
-arm                           spitz_defconfig
-mips                     cu1000-neo_defconfig
-arm                       aspeed_g4_defconfig
-powerpc                   lite5200b_defconfig
-mips                         tb0287_defconfig
-mips                malta_qemu_32r6_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-i386                 randconfig-a004-20220509
-i386                 randconfig-a006-20220509
-i386                 randconfig-a002-20220509
-i386                 randconfig-a003-20220509
-i386                 randconfig-a001-20220509
-i386                 randconfig-a005-20220509
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220506
-riscv                randconfig-r042-20220506
-hexagon              randconfig-r041-20220506
-hexagon              randconfig-r045-20220509
-hexagon              randconfig-r045-20220508
-riscv                randconfig-r042-20220508
-hexagon              randconfig-r041-20220509
-hexagon              randconfig-r041-20220508
-hexagon              randconfig-r045-20220505
-hexagon              randconfig-r041-20220505
+$ref: /schemas/types.yaml#/definitions/uint8-array
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+then it looks clean for it....
+
+-m causes many errors unrelated to this schema-file even if i pass
+DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/phy/rockchip,pcie3-phy=
+.yaml
+
+will wait a bit for other comments (for driver) till i send another versio=
+n. maybe you can confirm my changes are the right way to fix.
+
+regards Frank
