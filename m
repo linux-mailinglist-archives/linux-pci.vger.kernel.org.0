@@ -2,163 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 428DE528DE0
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 21:22:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3B975290C6
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 22:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345383AbiEPTWP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 15:22:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54870 "EHLO
+        id S232290AbiEPUXP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 16:23:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345387AbiEPTWK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 15:22:10 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9653E1AF19;
-        Mon, 16 May 2022 12:22:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1652728896;
-        bh=n3B1tFZFIsJ89uIoiL7dX/rVRMmDUZ1088RdBsJpfxE=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=iAqc3i/yie0yQ2RO4KjEodO6JlsmEeoCluKIjQQeD5VvGXK2FMakTvhlaCwZTxZSO
-         +AzMBHyTlzQIQMaEQ316PydcD87/HFx5pXYq2+cMNj7A9Gvv91zdDVmJwriY3yGh6i
-         6WBPQ5hsPF1ev6OmpV54UGGyP8a06ZCPvBlzup2c=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([80.245.74.14]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MGyxX-1o3ajL2Lzf-00E7Xg; Mon, 16
- May 2022 21:21:36 +0200
-Date:   Mon, 16 May 2022 21:21:31 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20220516173537.GA2942634-robh@kernel.org>
-References: <20220514115946.8858-1-linux@fw-web.de> <20220514115946.8858-2-linux@fw-web.de> <1652570081.002742.3276245.nullmailer@robh.at.kernel.org> <trinity-02ad648c-f6f8-4383-b389-a0578d5a02d2-1652615387162@3c-app-gmx-bap15> <20220516173537.GA2942634-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Re: [RFC v3 1/5] dt-bindings: phy: rockchip: add PCIe v3 phy
-Reply-to: frank-w@public-files.de
-To:     Rob Herring <robh@kernel.org>
-CC:     Frank Wunderlich <linux@fw-web.de>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Johan Jonker <jbx6244@gmail.com>,
-        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        with ESMTP id S1348697AbiEPUXE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 16:23:04 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685BC4A3FC;
+        Mon, 16 May 2022 13:09:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E3368B8160D;
+        Mon, 16 May 2022 20:09:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2867BC385AA;
+        Mon, 16 May 2022 20:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652731770;
+        bh=rwcIwbCFI9xFVXLkfNAUFzT4VPxeJBT8+qB230SdKEM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ftezJRbo0/tVNeSMt26nRCFDfOr225FNJlvyfi62lETLGfr27HJiM4UihlothMNG9
+         J72kkE9AtK6vjv0H5wvW+tUmzM/x9GVkmz81geXmMxQaV7txEzmslbv2TSOrcBCyuM
+         AvXqTdJfXxRRubydx0AkTHYhDQmmgN0J4vPqYMXyMrJFevl1M2gtRWpXXnl94epDEd
+         uLUuEjvfHJxT//N32djBasDQy5EwADpJSzNmmrPlW7tcwJngHMyC5B0saAFxpjYXli
+         7ZDaBGdLUuiYIkqXD6mHZx5c2BUgZngemO5RCLzrZneYFCzP7m9Brg2Lvh1sqNan2Z
+         Yk9aZIAkJd/kg==
+Date:   Mon, 16 May 2022 15:09:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Jingar, Rajvi" <rajvi.jingar@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <9496CAFB-6CB6-4BDA-A539-3A6E1B562299@public-files.de>
-X-Provags-ID: V03:K1:f5Irn2u3e6Zhnd5do173aOUv5ETb+hLAEAT30DBf0+1ZrVkoATS
- Fhws/gr/3BwWNsggKEhfSKQkuKdL2wcpALEinrn8h6gKmm20zJmzf3QTFk3lHJlZjBMttx8
- SBN/2jVpFWVUSFkg+pdar6rvQxC24N68914q1lpLgr6mh56mrI47hOdOOiqsN2BIO4LVmoA
- 55GtwGo3goKFxsQZm5N6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mRgqnWkK9Sg=:YTdRH5LtJInU/r+qpgpHTp
- RkdHzdHcEvxu7D7CwcHrfaWdoYRljfDrihJYlHodROSRLr7fcp7ZVLDwlAfAj2SQ7ABS6rvix
- FUSMNn7R1Uw/eep6ikgEjSetAPpQ3ovZr6hPl1H26FBChTQX8uEQg0fji9RBXE4hkMfLEYgRj
- qi1IThmmCXf8ruHD3NZF+MtfyAm+yMlowRrf/hAeb494As4sPPs8qjUjZ0uGZ8XKDzi0WPZGb
- pUfNnutYtGbnB129EOlQEMxbdeKCczFMhHimE/8ajesstSfHFzd1JNbjDmDcCg7rpzidmQdXr
- 4Z7wy/UB5TcHfzptUdOZZSWGOXNkGMPFiBVhusjhAY2scwkxwXAPd5G++7Q1ZBTagos7sp3pU
- 3g5r8paoFTrw0u/zBC5b7THS8qm7ojKQoY3ABU5rBo181Dcax8wW5R9Mwea4ylhEdbmRhL0WI
- HctnSZH8CP89tV+aFOIvDuWKV7y5Vs0MmczPLz95pmq/5AaEwzPCbbjbn2etye/9Rl7tih67O
- D/aHepkA7IUWi6rDA7GSPTa6cXxYNslD7+suV7ReIBLuIdKd3ptfM2xMsofZ6Vg1mwq1dEnVC
- pE4fe4ypJ6EZ1c14gUDANN8b3eGXA+3XqEuO0AqaM71t5Q4CM4rAmNcDXMcHtaVgtUJN7/Xbf
- MzdP+CJo81lBGDeth+6cW8nkP6ias3KfYPNg67lR8Zp7Sb/ErzQPZ3aW7eLTwHrYZsgaX1rvP
- QBBMBjBeK9gib4axMHxAX7UoCGuY2SNoNYqc63ymHbj2Vw8UJVw19bVtqdjXdFiuzZATlDzyX
- MP2H5mKv8T6PlnNdFzn85gFEqS3J07cyApRMrAjM5PFlK7DE4qs4+dspPeOBEHPa18BMnBHT/
- DufwIomMAa2L65GCXfO3zLkPu6ZRWp5vdMNbMvxXO52yCnLqn6beF8z5fRLkoTYh7Wr7nZ/Rs
- CnOGakp5eqt3eMJXbdyPlIBwfjg+0j05Z/hEX55/wYUxOlety08eHvKqD58ZzN2cG77jclmci
- xQ19HjerZpf+P4LlW+Y0ZJ/wm0PfvAjH1E0Xix1ywyrrXTHJrBNH95hpbZWZyOqELguiFVRlc
- flu7VLme4boB+0=
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        David Box <david.e.box@linux.intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable PTM
+Message-ID: <20220516200927.GA1046452@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SJ0PR11MB5070B095B8A28634B43A231F9ECA9@SJ0PR11MB5070.namprd11.prod.outlook.com>
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 16=2E Mai 2022 19:35:37 MESZ schrieb Rob Herring <robh@kernel=2Eorg>:
->On Sun, May 15, 2022 at 01:49:47PM +0200, Frank Wunderlich wrote:
->> Hi
->>=20
->> > Gesendet: Sonntag, 15=2E Mai 2022 um 01:14 Uhr
->> > Von: "Rob Herring" <robh@kernel=2Eorg>
->>=20
->> > On Sat, 14 May 2022 13:59:42 +0200, Frank Wunderlich wrote:
+On Fri, May 13, 2022 at 10:00:48PM +0000, Jingar, Rajvi wrote:
+> 
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Thursday, May 12, 2022 11:36 AM
+> > To: Rafael J. Wysocki <rafael@kernel.org>
+> > Cc: Jingar, Rajvi <rajvi.jingar@intel.com>; Wysocki, Rafael J
+> > <rafael.j.wysocki@intel.com>; Bjorn Helgaas <bhelgaas@google.com>; David Box
+> > <david.e.box@linux.intel.com>; Linux PCI <linux-pci@vger.kernel.org>; Linux
+> > Kernel Mailing List <linux-kernel@vger.kernel.org>; Linux PM <linux-
+> > pm@vger.kernel.org>
+> > Subject: Re: [PATCH v5 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable PTM
+> > 
+> > On Thu, May 12, 2022 at 07:52:36PM +0200, Rafael J. Wysocki wrote:
+> > > On Thu, May 12, 2022 at 7:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Thu, May 12, 2022 at 03:49:18PM +0200, Rafael J. Wysocki wrote:
+> > 
+> > > > > Something like this should suffice IMV:
+> > > > >
+> > > > > if (!dev_state_saved || pci_dev->current_state != PCI_D3cold)
+> > > > >
+> > > > >         pci_disable_ptm(pci_dev);
+> > > >
+> > > > It makes sense to me that we needn't disable PTM if the device is in
+> > > > D3cold.  But the "!dev_state_saved" condition depends on what the
+> > > > driver did.  Why is that important?  Why should we not do the
+> > > > following?
+> > > >
+> > > >   if (pci_dev->current_state != PCI_D3cold)
+> > > >     pci_disable_ptm(pci_dev);
+> > >
+> > > We can do this too.  I thought we could skip the power state
+> > > check if dev_state_saved was unset, because then we would know
+> > > that the power state was not D3cold.  It probably isn't worth
+> > > the hassle though.
+> 
+> We see issue with certain platforms where only checking if device
+> power state in D3Cold is not enough and the !dev_state_saved check
+> is needed when disabling PTM. Device like nvme is relying on ASPM,
+> it stays in D0 but state is saved. Touching the config space wakes
+> up the device which prevents the system from entering into low power
+> state.
 
->Documentation/devicetree/bindings/phy/rockchip,pcie3-phy=2Eyaml
->> > >
->> >
->> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m
->dt_binding_check'
->> > on your patch (DT_CHECKER_FLAGS is new in v5=2E13):
->> >
->> > yamllint warnings/errors:
->> >
->> > dtschema/dtc warnings/errors:
->> >
->/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/=
-rockchip,pcie3-phy=2Eyaml:
->properties:clock-names: 'oneOf' conditional failed, one must be fixed:
->> > 	[{'const': 'refclk_m'}, {'const': 'refclk_n'}, {'const': 'pclk'}]
->is too long
->> > 	[{'const': 'refclk_m'}, {'const': 'refclk_n'}, {'const': 'pclk'}]
->is too short
->> > 	False schema does not allow 3
->> > 	1 was expected
->> > 	3 is greater than the maximum of 2
->> > 	hint: "minItems" is only needed if less than the "items" list
->length
->> > 	from schema $id: http://devicetree=2Eorg/meta-schemas/items=2Eyaml#
->> >
->/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/=
-rockchip,pcie3-phy=2Eyaml:
->ignoring, error in schema: properties: clock-names
->> >
->Documentation/devicetree/bindings/phy/rockchip,pcie3-phy=2Eexample=2Edtb:=
-0:0:
->/example-0/phy@fe8c0000: failed to match any schema with compatible:
->['rockchip,rk3568-pcie3-phy']
->>=20
->> seems this is fixed when i remove the "minItems: 3" from clock names=20
->> (which is already fixed length because of the list)=2E
->
->Yes=2E
->
->> needed to change type of lane-map to this:
->>=20
->> $ref: /schemas/types=2Eyaml#/definitions/uint8-array
->
->Why? That's not a standard property though, so needs a 'rockchip'=20
->prefix=2E Though maybe a common property would be appropriate here=2E
+Correct me if I'm wrong: for NVMe devices, nvme_suspend() has already
+saved state and put the device in some low-power state.  Disabling PTM
+here is functionally OK but prevents a system low power state, so you
+want to leave PTM enabled.
 
-Originally it was a bool property named "rockchip,bifurcation" and we chan=
-ged it (after comments) to be a more generic property "lane-map" that can b=
-e re-used on other vendors/controllers/phys=2E
+But I must be missing something because pci_prepare_to_sleep()
+currently disables PTM for Root Ports.  If we leave PTM enabled on
+NVMe but disable it on the Root Port above it, any PTM Request from
+NVMe will cause an Unsupported Request error.
 
-Driver reads as u8 array and range is small enough for u8 even if used for=
- larger controllers (e=2Eg=2E PCIe x16)=2E
+Disabling PTM must be coordinated across PTM Requesters and PTM
+Responders.  That means the decision to disable cannot depend on
+driver-specific things like whether the driver has saved state.
 
->> then it looks clean for it=2E=2E=2E=2E
->>=20
->> -m causes many errors unrelated to this schema-file even if i pass
->>
->DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/phy/rockchip,pcie3-ph=
-y=2Eyaml
->
->The fix is fixing the remaining 40 or so '-m' errors=2E
-
-So now clean for you(r bot), too? Did only get a bunch of other unrelated =
-messages=2E
-
->Rob
-
-
-regards Frank
+> Following would fix the issue:
+> 
+>  if (!pci_dev->state_save) {
+>                 pci_save_state(pci_dev);
+> 
+>                pci_disable_ptm(pci_dev);
+> 
+>                 if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+>                         pci_prepare_to_sleep(pci_dev);
+> }
+> 
+> > Ah, thanks.  IMHO it's easier to analyze for correctness if we only
+> > check the power state.
+> > 
+> > Bjorn
