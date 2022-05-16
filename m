@@ -2,150 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72184528C00
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 19:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 821C2528C09
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 19:35:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344238AbiEPRaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 13:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58322 "EHLO
+        id S241348AbiEPRfl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 13:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231476AbiEPRay (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 13:30:54 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CDEDEF2;
-        Mon, 16 May 2022 10:30:53 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id oe17-20020a17090b395100b001df77d29587so1178335pjb.2;
-        Mon, 16 May 2022 10:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OTSZD7XY4xlhlXYWnr6RQDyqsnVaQBafjBNNdEbut20=;
-        b=ljoCpUurp4LDNznqFaSS3fU0aMtiMbgRZ6P7rLHQfTM7vNFaBZ//4Gs2TPrOjME2qV
-         Blyf4d/AbF3HxAU4LT2BXM3E2nxuGZ22IHb7Skw7giN2rHej05aDC8p3fvPTypB4CZ2+
-         4EpaRnUH7sirgAw3KVo9dxLIUYX/MJBQGJgALEOooZQLaJTlR4ZiJ8oFU2VXRPUk9UC+
-         XpzYTNZ8dDhFxdw/s0OJIleDgCrqppZ9Y0BpZc/1RyqvIsOGMIsNBOeUkk70RTiFYjNI
-         IcvK+jhjQaY6R5IlS6jT9/c0LoN+T4E3zSA5+CoJTjtwh23p92ZnxZZZ66VpnGzPLsQP
-         kyMg==
+        with ESMTP id S235848AbiEPRfl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 13:35:41 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC64FE0;
+        Mon, 16 May 2022 10:35:39 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id v65so19432070oig.10;
+        Mon, 16 May 2022 10:35:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OTSZD7XY4xlhlXYWnr6RQDyqsnVaQBafjBNNdEbut20=;
-        b=C6rxF+qAhtYw3uJMnphMnRBD/oSSTS/ieYycVfu6MmJibXnMH9qyz21MsCF0kp8woH
-         d7+mevHqY3srFGXIRY1wn+8q97ReNl9OO0Sj4xladMAnKayFtNDrtm8ZZnwoI6d9RGoi
-         dSTFAUZf04vQVuH/saBPK0LI4+GgIwBiP60ig5Htcbm2P+3i+p7CP0EgsH7ImjGnZ0oS
-         jmZCbuhWE7w2rKKctRGw8+nSjY/XsY7jLqhBFgcBiI1SjUIrDxFVBoeAVH9dWo3IkCeJ
-         14x391Br/Mp+oZho6erUjbFbLIdhzslzaRDQiErWm2SfdEayxNFGDrDCzJUrjjPB/8lH
-         sEdA==
-X-Gm-Message-State: AOAM530I1U2l9R0B2Zy5kNsYgoFzlNrwq8SPykdOgfniGdR2Be3QxDC3
-        fyFqoLoCxrpCAe1WPW7/ENk=
-X-Google-Smtp-Source: ABdhPJwFG7wwyVTvgM6A+HYDSQtwe3IUgtHKXP3afpbvRGISoW3hwz8dllSjmEus96jz4ohNxcrxMw==
-X-Received: by 2002:a17:903:4044:b0:161:823e:6f93 with SMTP id n4-20020a170903404400b00161823e6f93mr5155213pla.172.1652722253376;
-        Mon, 16 May 2022 10:30:53 -0700 (PDT)
-Received: from localhost.localdomain ([103.126.24.15])
-        by smtp.gmail.com with ESMTPSA id j16-20020a17090a589000b001df7c160875sm209215pji.25.2022.05.16.10.30.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 May 2022 10:30:52 -0700 (PDT)
-From:   "windy.bi.enflame" <windy.bi.enflame@gmail.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "windy.bi.enflame" <windy.bi.enflame@gmail.com>
-Subject: [PATCH] drivers/pci: wait downstream hierarchy ready instead of slot itself ready, after secondary bus reset
-Date:   Tue, 17 May 2022 01:30:47 +0800
-Message-Id: <20220516173047.123317-1-windy.bi.enflame@gmail.com>
-X-Mailer: git-send-email 2.36.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yRCFWuG9Oqb4uyJxObAmt3C9VXrpqbJosiPlLmLl9sI=;
+        b=EL75QSO/lgYeNiZgrLVbcg77+Bv4AXPDhgQnM6AMtVimqrFACrrRpr552wx4P6vN2O
+         P8ib7jaN3w1SepZKhFE2SXR7o/nbkWcBFbwi0tvJ9dLC1idY/9lwP6mTcXMq+5WGSV/X
+         5ehwlqMXNLZvVpElhj9kiBSyQqhVy5lmL6dMNFYHKFpJbuHfxw9opjxe9yvWbAO0IEEj
+         Us2abEo2VFSndd6V6A96WfDn+Lf7vL0AKznmXiwZCWlzS0Uf/Btzb60/9p5LkypXdP+i
+         PZh9osyEK8a7MmxE8abLr1rVWhEj6cPpIjY/LrMVozqz/WBS0lqFXr4BeI18uzVvUgtu
+         XvCQ==
+X-Gm-Message-State: AOAM533gNJBDBoYD4bXokjmaAcvTWSKdaLSSP8XvblsqdcERyflJd1N6
+        qt+GwudkRwm8tNna9wAmFg==
+X-Google-Smtp-Source: ABdhPJxuclwaDZzyOItOmmGD3yThwcNVeOZQs+WOMuvGRRbmejydML51xYl4owmx8halO8SP4Fl2pw==
+X-Received: by 2002:a05:6808:1703:b0:2f9:cd2d:41c5 with SMTP id bc3-20020a056808170300b002f9cd2d41c5mr14114818oib.77.1652722539072;
+        Mon, 16 May 2022 10:35:39 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id v2-20020a056870310200b000e686d1386csm5670158oaa.6.2022.05.16.10.35.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 May 2022 10:35:38 -0700 (PDT)
+Received: (nullmailer pid 2952486 invoked by uid 1000);
+        Mon, 16 May 2022 17:35:37 -0000
+Date:   Mon, 16 May 2022 12:35:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        Vinod Koul <vkoul@kernel.org>,
+        Johan Jonker <jbx6244@gmail.com>,
+        linux-rockchip@lists.infradead.org, linux-pci@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: Re: [RFC v3 1/5] dt-bindings: phy: rockchip: add PCIe v3 phy
+Message-ID: <20220516173537.GA2942634-robh@kernel.org>
+References: <20220514115946.8858-1-linux@fw-web.de>
+ <20220514115946.8858-2-linux@fw-web.de>
+ <1652570081.002742.3276245.nullmailer@robh.at.kernel.org>
+ <trinity-02ad648c-f6f8-4383-b389-a0578d5a02d2-1652615387162@3c-app-gmx-bap15>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <trinity-02ad648c-f6f8-4383-b389-a0578d5a02d2-1652615387162@3c-app-gmx-bap15>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-While I do reset test of a PCIe endpoint device on a server, I find that
-the EP device always been removed and re-inserted again by hotplug module,
- after secondary bus reset.
+On Sun, May 15, 2022 at 01:49:47PM +0200, Frank Wunderlich wrote:
+> Hi
+> 
+> > Gesendet: Sonntag, 15. Mai 2022 um 01:14 Uhr
+> > Von: "Rob Herring" <robh@kernel.org>
+> 
+> > On Sat, 14 May 2022 13:59:42 +0200, Frank Wunderlich wrote:
+> > > From: Frank Wunderlich <frank-w@public-files.de>
+> > >
+> > > Add a new binding file for Rockchip PCIe v3 phy driver.
+> > >
+> > > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> > >
+> > > ---
+> > > v3:
+> > > - drop quotes
+> > > - drop rk3588
+> > > - make clockcount fixed to 3
+> > > - full path for binding header file
+> > > - drop phy-mode and its header and add lane-map
+> > >
+> > > v2:
+> > > dt-bindings: rename yaml for PCIe v3
+> > > rockchip-pcie3-phy.yaml => rockchip,pcie3-phy.yaml
+> > >
+> > > changes in pcie3 phy yaml
+> > > - change clock names to ordered const list
+> > > - extend pcie30-phymode description
+> > > - add phy-cells to required properties
+> > > - drop unevaluatedProperties
+> > > - example with 1 clock each line
+> > > - use default property instead of text describing it
+> > > - update license
+> > > ---
+> > >  .../bindings/phy/rockchip,pcie3-phy.yaml      | 82 +++++++++++++++++++
+> > >  1 file changed, 82 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml
+> > >
+> >
+> > My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml: properties:clock-names: 'oneOf' conditional failed, one must be fixed:
+> > 	[{'const': 'refclk_m'}, {'const': 'refclk_n'}, {'const': 'pclk'}] is too long
+> > 	[{'const': 'refclk_m'}, {'const': 'refclk_n'}, {'const': 'pclk'}] is too short
+> > 	False schema does not allow 3
+> > 	1 was expected
+> > 	3 is greater than the maximum of 2
+> > 	hint: "minItems" is only needed if less than the "items" list length
+> > 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml: ignoring, error in schema: properties: clock-names
+> > Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.example.dtb:0:0: /example-0/phy@fe8c0000: failed to match any schema with compatible: ['rockchip,rk3568-pcie3-phy']
+> 
+> seems this is fixed when i remove the "minItems: 3" from clock names 
+> (which is already fixed length because of the list).
 
-After checking I find:
-1> "pciehp_reset_slot()" always disable slot's DLLSC interrupt before
-   doing reset and restore after reset, to try to filter the hotplug
-   event happened during reset.
-2> "pci_bridge_secondary_bus_reset()" sleep 1 seconad and "pci_dev_wait()"
-   until device ready with "PCIE_RESET_READY_POLL_MS" timeout.
-3> There is a PCIe switch between CPU and the EP devicem the topology as:
-   CPU <-> Switch <-> EP.
-4> While trigger sbr reset at the switch's downstream port, it needs 1.5
-   seconds for internal enumeration.
+Yes.
 
-About why 1.5 seconds ready time is not filtered by "pci_dev_wait()" with
-"PCIE_RESET_READY_POLL_MS" timeout, I find it is because in
-"pci_bridge_secondary_bus_reset()", the function is operating slot's
-config space to trigger sbr and also wait slot itself ready by input same
-"dev" parameter. Different from other resets like FLR which is triggered
-by operating the config space of EP device itself, sbr is triggered by
-up slot but need to wait downstream devices' ready, so I think function
-"pci_dev_wait()" works for resets like FLR but not for sbr.
+> needed to change type of lane-map to this:
+> 
+> $ref: /schemas/types.yaml#/definitions/uint8-array
 
-In this proposed patch, I'm changing the waiting function used in sbr to
-"pci_bridge_secondary_bus_wait()" which will wait all the downstream
-hierarchy ready with the same timeout setting "PCIE_RESET_READY_POLL_MS".
-In "pci_bridge_secondary_bus_wait()" the "subordinate" and
-"subordinate->devices" will be checked firstly, and then downstream
-devices' present state.
+Why? That's not a standard property though, so needs a 'rockchip' 
+prefix. Though maybe a common property would be appropriate here.
 
-Signed-off-by: windy.bi.enflame <windy.bi.enflame@gmail.com>
----
- drivers/pci/pci.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+> then it looks clean for it....
+> 
+> -m causes many errors unrelated to this schema-file even if i pass
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip,pcie3-phy.yaml
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9ecce435fb3f..d7ec3859268b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5002,6 +5002,29 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	}
- }
- 
-+int pci_bridge_secondary_bus_wait(struct pci_dev *bridge, int timeout)
-+{
-+	struct pci_dev *dev;
-+	int delay = 1;
-+
-+	if (!bridge->subordinate || list_empty(&bridge->subordinate->devices))
-+		return 0;
-+
-+	list_for_each_entry(dev, &bridge->subordinate->devices, bus_list) {
-+		while (!pci_device_is_present(dev)) {
-+			if (delay > timeout) {
-+				pci_warn(dev, "secondary bus not ready after %dms\n", delay);
-+				return -ENOTTY;
-+			}
-+
-+			msleep(delay);
-+			delay *= 2;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- void pci_reset_secondary_bus(struct pci_dev *dev)
- {
- 	u16 ctrl;
-@@ -5045,7 +5068,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
- {
- 	pcibios_reset_secondary_bus(dev);
- 
--	return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
-+	return pci_bridge_secondary_bus_wait(dev, PCIE_RESET_READY_POLL_MS);
- }
- EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
- 
--- 
-2.36.1
+The fix is fixing the remaining 40 or so '-m' errors.
 
+Rob
