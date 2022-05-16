@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F6945286D1
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 16:20:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34F1E5286E7
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 16:23:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244437AbiEPOUc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 10:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51370 "EHLO
+        id S244614AbiEPOXi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 16 May 2022 10:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242798AbiEPOU2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 10:20:28 -0400
+        with ESMTP id S244565AbiEPOXc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 10:23:32 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351B63B00C;
-        Mon, 16 May 2022 07:20:27 -0700 (PDT)
-Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L21Y13WBjz67KdQ;
-        Mon, 16 May 2022 22:17:25 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEA23B2AC;
+        Mon, 16 May 2022 07:23:22 -0700 (PDT)
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L21cN4Q2Zz67NY6;
+        Mon, 16 May 2022 22:20:20 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 16 May 2022 16:20:25 +0200
+ 15.1.2375.24; Mon, 16 May 2022 16:23:20 +0200
 Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 16 May
- 2022 15:20:24 +0100
-Date:   Mon, 16 May 2022 15:20:22 +0100
+ 2022 15:23:18 +0100
+Date:   Mon, 16 May 2022 15:23:17 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Yicong Yang <yangyicong@hisilicon.com>
 CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
@@ -41,17 +41,17 @@ CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
         <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
         <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
         <linuxarm@huawei.com>
-Subject: Re: [PATCH v8 5/8] perf tool: Add support for HiSilicon PCIe Tune
- and Trace device driver
-Message-ID: <20220516152022.00001ab9@Huawei.com>
-In-Reply-To: <20220516125223.32012-6-yangyicong@hisilicon.com>
+Subject: Re: [PATCH v8 6/8] perf tool: Add support for parsing HiSilicon
+ PCIe Trace packet
+Message-ID: <20220516152317.000029d8@Huawei.com>
+In-Reply-To: <20220516125223.32012-7-yangyicong@hisilicon.com>
 References: <20220516125223.32012-1-yangyicong@hisilicon.com>
-        <20220516125223.32012-6-yangyicong@hisilicon.com>
+        <20220516125223.32012-7-yangyicong@hisilicon.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.202.226.42]
 X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
@@ -65,90 +65,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 16 May 2022 20:52:20 +0800
+On Mon, 16 May 2022 20:52:21 +0800
 Yicong Yang <yangyicong@hisilicon.com> wrote:
 
 > From: Qi Liu <liuqi115@huawei.com>
 > 
-> HiSilicon PCIe tune and trace device (PTT) could dynamically tune
-> the PCIe link's events, and trace the TLP headers).
+> Add support for using 'perf report --dump-raw-trace' to parse PTT packet.
 > 
-> This patch add support for PTT device in perf tool, so users could
-> use 'perf record' to get TLP headers trace data.
+> Example usage:
+> 
+> Output will contain raw PTT data and its textual representation, such
+> as:
+> 
+> 0 0 0x5810 [0x30]: PERF_RECORD_AUXTRACE size: 0x400000  offset: 0
+> ref: 0xa5d50c725  idx: 0  tid: -1  cpu: 0
+> .
+> . ... HISI PTT data: size 4194304 bytes
+> .  00000000: 00 00 00 00                                 Prefix
+> .  00000004: 08 20 00 60                                 Header DW0
+> .  00000008: ff 02 00 01                                 Header DW1
+> .  0000000c: 20 08 00 00                                 Header DW2
+> .  00000010: 10 e7 44 ab                                 Header DW3
+> .  00000014: 2a a8 1e 01                                 Time
+> .  00000020: 00 00 00 00                                 Prefix
+> .  00000024: 01 00 00 60                                 Header DW0
+> .  00000028: 0f 1e 00 01                                 Header DW1
+> .  0000002c: 04 00 00 00                                 Header DW2
+> .  00000030: 40 00 81 02                                 Header DW3
+> .  00000034: ee 02 00 00                                 Time
+> ....
 > 
 > Signed-off-by: Qi Liu <liuqi115@huawei.com>
 > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-One query inline.
+From point of view of a reviewer who doesn't know this code well, this
+all looks sensible.  One trivial comment inline.
 
+Thanks,
 
-> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-> index 384c7cfda0fd..297fffedf45e 100644
-> --- a/tools/perf/arch/arm/util/auxtrace.c
-> +++ b/tools/perf/arch/arm/util/auxtrace.c
+Jonathan
 
-...
-
->  static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
->  					   int pmu_nr, struct evsel *evsel)
->  {
-> @@ -71,17 +120,21 @@ struct auxtrace_record
->  {
->  	struct perf_pmu	*cs_etm_pmu = NULL;
->  	struct perf_pmu **arm_spe_pmus = NULL;
-> +	struct perf_pmu **hisi_ptt_pmus = NULL;
->  	struct evsel *evsel;
->  	struct perf_pmu *found_etm = NULL;
->  	struct perf_pmu *found_spe = NULL;
-> +	struct perf_pmu *found_ptt = NULL;
->  	int auxtrace_event_cnt = 0;
->  	int nr_spes = 0;
-> +	int nr_ptts = 0;
->  
->  	if (!evlist)
->  		return NULL;
->  
->  	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
->  	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
-> +	hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
->  
->  	evlist__for_each_entry(evlist, evsel) {
->  		if (cs_etm_pmu && !found_etm)
-> @@ -89,9 +142,13 @@ struct auxtrace_record
->  
->  		if (arm_spe_pmus && !found_spe)
->  			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
+> diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
+> new file mode 100644
+> index 000000000000..2afc1a663c2a
+> --- /dev/null
 > +
-> +		if (arm_spe_pmus && !found_spe)
-
-		if (hisi_ptt_pmus && !found_ptt) ?
-
-Otherwise, I'm not sure what the purpose of the checking against spe is.
-
-> +			found_ptt = find_pmu_for_event(hisi_ptt_pmus, nr_ptts, evsel);
->  	}
->  
->  	free(arm_spe_pmus);
-> +	free(hisi_ptt_pmus);
->  
->  	if (found_etm)
->  		auxtrace_event_cnt++;
-> @@ -99,6 +156,9 @@ struct auxtrace_record
->  	if (found_spe)
->  		auxtrace_event_cnt++;
->  
-> +	if (found_ptt)
-> +		auxtrace_event_cnt++;
+> +static void hisi_ptt_free(struct perf_session *session)
+> +{
+> +	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
+> +					    auxtrace);
 > +
->  	if (auxtrace_event_cnt > 1) {
->  		pr_err("Concurrent AUX trace operation not currently supported\n");
->  		*err = -EOPNOTSUPP;
-> @@ -111,6 +171,9 @@ struct auxtrace_record
->  #if defined(__aarch64__)
->  	if (found_spe)
->  		return arm_spe_recording_init(err, found_spe);
+> +	session->auxtrace = NULL;
+> +	free(ptt);
+> +}
 > +
-> +	if (found_ptt)
-> +		return hisi_ptt_recording_init(err, found_ptt);
->  #endif
->  
+> +static bool hisi_ptt_evsel_is_auxtrace(struct perf_session *session,
+> +				       struct evsel *evsel)
+> +{
+> +	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt, auxtrace);
+
+Check for consistent wrapping of lines like this. This doesn't match the one just above.
+
+
+
