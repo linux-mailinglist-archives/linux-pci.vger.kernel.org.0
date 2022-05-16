@@ -2,106 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E93152929C
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 23:19:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A952A529295
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 23:19:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349381AbiEPVM4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 17:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
+        id S1349179AbiEPVNK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 17:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350114AbiEPVMM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 17:12:12 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845B9B4B5;
-        Mon, 16 May 2022 14:01:57 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id i66so20104892oia.11;
-        Mon, 16 May 2022 14:01:57 -0700 (PDT)
+        with ESMTP id S1349412AbiEPVM4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 17:12:56 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA1B3A0
+        for <linux-pci@vger.kernel.org>; Mon, 16 May 2022 14:05:56 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id i66so20116963oia.11
+        for <linux-pci@vger.kernel.org>; Mon, 16 May 2022 14:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/9SPlk7OLhnYukKBI3NvIEjsAgrJfYYekeMJ9zCWY3M=;
+        b=XubHDdmVLG8AAMxQzu+pSDivbey8ZMEIBauQLo3jC2H39gxObJGShkoT2bS1IMuYgw
+         ++lJTSyNqW1X6HlSZJN5/4eYpoV2NySo7vevESDV88ELK0ORZC9W9ckLvUb9zJB809Jd
+         RQEaJzxNm0zj/NAguhiMzJCsGzOdzcNZxGnjo+3laIXjvOWfN/SeyMCzmLOSlJ5fZdHw
+         s9eHdXtiCFi9cfsDrmh3Pxx/6A3p27T7l+U0c10TXQnLKFsDbcQQir7fBbLbQbPZ15q6
+         r9eWFflQhu/DWWTcM/DwJHlfQ37gfMruGY0JXOIuZiMZd+xOEzRginNrmImo+/WYg+kz
+         AvRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2Ok8Rgh5k5giQQ7VokGXvCm4kz6pM++MXJZ7vVWW924=;
-        b=zbd/5+UhksviBed/Z5QI24T4UajYMZ/ye/ymUTdkryk0iX/V4uPa8f95KXtfxG7Ypg
-         pbfQXYWguXlElBsXmQBflqCAH+62KUhrOXxwFf5aftp20wrKUDJ0rTpkwJDxAmNLcFtQ
-         l8TP4MlCAV6P8/Wme5Jnt5UGbadoO39B6Ny6owMmX9hId3YCABHqBE2gDOJnYZHU68hK
-         i9lcdwgLTWQb8VFAv1nuksBWW5zpd+gItP62U45TmVn1EhQwHMrI8qpat0Hy2FHGGOMW
-         52v0wTd4o2veGZysyttzyfG7XZiD+x27u26kHRajDQhqhU6hRqsH3ezhH7t+z008PY3v
-         KP9A==
-X-Gm-Message-State: AOAM530YqtfptrEgQf1btahxSdm7ve6VF35Nmj1sjg8+sEB14V/BqMdW
-        /frHmn/iKb8nr/bqB+UX1g==
-X-Google-Smtp-Source: ABdhPJwuZSwvSmcukd4UuOWWaX3nmI7sBx7mXyvnpspGDt9YChZJCyMKliPdy3dTZVnej56J+hT5Qw==
-X-Received: by 2002:aca:ac8c:0:b0:326:13f6:5f5c with SMTP id v134-20020acaac8c000000b0032613f65f5cmr9261961oie.287.1652734916537;
-        Mon, 16 May 2022 14:01:56 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id f25-20020a0568301c3900b006060322125csm4440786ote.44.2022.05.16.14.01.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 May 2022 14:01:55 -0700 (PDT)
-Received: (nullmailer pid 3279738 invoked by uid 1000);
-        Mon, 16 May 2022 21:01:54 -0000
-Date:   Mon, 16 May 2022 16:01:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/17] PCI: dwc: Add iATU regions size detection
- procedure
-Message-ID: <20220516210154.GH3209795-robh@kernel.org>
-References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
- <20220503214638.1895-13-Sergey.Semin@baikalelectronics.ru>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/9SPlk7OLhnYukKBI3NvIEjsAgrJfYYekeMJ9zCWY3M=;
+        b=TlqxSwz022ZeceuyPcfj7Sz12wm7nArSBIKWgG/lVdZzgB7iGm/jLmkOkqv04J/1oe
+         A/qgXc7Jz4ga7K2mT4gFAXhCLW4SxTwGQ2yPZYjtJDt5784RudKukQbrrRjm8zw4Bsq9
+         SJFmYeo0kAh9zT5EvXV8ioT/gNKq2fprKGrM+kU6giLf60VSZogYd9MKHIfZFZPraFv1
+         LbGgM4v7n91IQ2od5chSTEdh2g7NYEp663fJ+obkSRPDICoeBaL6e7j7HhuyYnOyjok1
+         oYzeUw14uEDb2gyQefP3+L1d1j9s8GoZZfa57JZiiY0BBzuUex3MKIjyG6lI9XP8Um34
+         +puw==
+X-Gm-Message-State: AOAM533ttdFBqKOuM0Ww0qo+do2ZnODteUoinbrPnXTr8Hn3m7dYJGAX
+        aod/orbxSwSzhfjJc3NLXwkkDH8BoPkJ0+3RZnUHqUf/xhY=
+X-Google-Smtp-Source: ABdhPJyQsPp9UugQDKyM/yRyzmWf38DwgW9VBgBkdkfv2PNI8fd/vkFinZKtPq5cnj3gxEJ3+EgTxgnBKHwN59gnlls=
+X-Received: by 2002:a54:4688:0:b0:325:9a36:ecfe with SMTP id
+ k8-20020a544688000000b003259a36ecfemr9516040oic.96.1652735155809; Mon, 16 May
+ 2022 14:05:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220503214638.1895-13-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+References: <bug-215925-41252@https.bugzilla.kernel.org/> <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
+ <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
+In-Reply-To: <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
+From:   Jim Quinlan <jim2101024@gmail.com>
+Date:   Mon, 16 May 2022 17:05:44 -0400
+Message-ID: <CANCKTBuOjJk6SRTHs+tXXWaC9cGsxkp9PM2rwpf+hs50S+cBfQ@mail.gmail.com>
+Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
+ 4 (CM4) breaks booting
+To:     Thorsten Leemhuis <regressions@leemhuis.info>
+Cc:     kibi@debian.org,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 12:46:33AM +0300, Serge Semin wrote:
-> Depending on the DWC PCIe RC/EP/DM IP-core configuration parameters the
-> controllers can be equipped not only with various number of inbound and
-> outbound iATU windows, but with varied regions settings like alignment
-> (which is also the minimum window size), minimum and maximum sizes. So to
-> speak if internal ATU is enabled for the denoted IP-cores then the former
-> settings will be defined by the CX_ATU_MIN_REGION_SIZE parameter while the
-> later one will be determined by the CX_ATU_MAX_REGION_SIZE configuration
-> parameter. Anyway having these parameters used in the driver will help to
-> verify whether the requested inbound or outbound memory mappings can be
-> fully created. Currently the driver doesn't perform any corresponding
-> checking.
-> 
-> Note 1. The extended iATU regions have been supported since DWC PCIe
-> v4.60a. There is no need in testing the upper limit register availability
-> for the older cores.
-> 
-> Note 2. The regions alignment is determined with using the fls() method
-> since the lower four bits of the ATU Limit register can be occupied with
-> the Circular Buffer Increment setting, which can be initialized with
-> zeros.
-> 
-> The (dma-)ranges verification will be added a bit later in one of the next
-> commits.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 33 +++++++++++++++++---
->  drivers/pci/controller/dwc/pcie-designware.h |  2 ++
->  2 files changed, 31 insertions(+), 4 deletions(-)
+Hi Bjorn, Thorsten,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I apologize -- I did not see this email until now; I think I have to
+work on my gmail filters and labels.
+
+I've just made a post on the Bugzilla website regarding this
+regression and have ideas on what may be causing the problem.
+Unfortunately, the error cannot be reproduced on my RPi4 or Broadcom
+STB version of the 2711.
+Hopefully Cyril can help me identify the issue.
+
+I will try to get a Fixup ASAP.
+
+Regards,
+Jim Quinlan
+Broadcom STB
+
+On Mon, May 9, 2022 at 3:44 AM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> Hi, this is your Linux kernel regression tracker. Partly top-posting to
+> mnake this easily accessible.
+>
+> Jim, what's up here? The regression was reported more than a week ago
+> and it seems nothing happened since then. Or was there progress and I
+> just missed it?
+>
+> Anyway:
+>
+> [TLDR: I'm adding this regression report to the list of tracked
+> regressions; all text from me you find below is based on a few templates
+> paragraphs you might have encountered already already in similar form.]
+>
+> On 02.05.22 20:38, Bjorn Helgaas wrote:
+> > On Sat, Apr 30, 2022 at 2:53 PM <bugzilla-daemon@kernel.org> wrote:
+> >>
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=3D215925
+> >>
+> >>             Bug ID: 215925
+> >>            Summary: PCIe regression on Raspberry Pi Compute Module 4 (=
+CM4)
+> >>                     breaks booting
+> >>            Product: Drivers
+> >>            Version: 2.5
+> >>     Kernel Version: v5.17-rc1
+> >>           Hardware: ARM
+> >>                 OS: Linux
+> >>               Tree: Mainline
+> >>             Status: NEW
+> >>           Severity: normal
+> >>           Priority: P1
+> >>          Component: PCI
+> >>           Assignee: drivers_pci@kernel-bugs.osdl.org
+> >>           Reporter: kibi@debian.org
+> >>         Regression: No
+> >>
+> >> Catching up with latest kernel releases in Debian, it turned out that =
+my
+> >> Raspberry Pi Compute Module 4, mounted on an official Compute Module 4=
+ IO
+> >> Board,
+> >> and booting from an SD card, no longer boots: this means a black scree=
+n on the
+> >> HDMI output, and no output on the serial console.
+> >>
+> >> Trying various releases, I confirmed that v5.16 was fine, and v5.17-rc=
+1 was the
+> >> first (pre)release that wasn't.
+> >>
+> >> After some git bisect, it turns out the cause seems to be the followin=
+g commit
+> >> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3D830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21):
+> >>
+> >> ```
+> >> commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21
+> >> Author: Jim Quinlan <jim2101024@gmail.com>
+> >> Date:   Thu Jan 6 11:03:27 2022 -0500
+> >>
+> >>     PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+> >> ```
+> >>
+> >> Starting with this commit, the kernel panics early (before 0.30 second=
+s), with
+> >> an `Asynchronous SError Interrupt`. The backtrace references various
+> >> `brcm_pcie_*` functions; I can share a picture or try and transcribe i=
+t
+> >> manually if that helps (nothing on the serial console=E2=80=A6).
+> >>
+> >> This commit is part of a branch that was ultimately merged as
+> >> d0a231f01e5b25bacd23e6edc7c979a18a517b2b; starting with this commit, t=
+here's
+> >> not even a backtrace anymore, the screen stays black after the usual =
+=E2=80=9Cboot-up
+> >> rainbow=E2=80=9D, and there's still nothing on the serial console.
+> >>
+> >> I confirmed that 88db8458086b1dcf20b56682504bdb34d2bca0e2 (on the mast=
+er side)
+> >> was still booting properly, and that 87c71931633bd15e9cfd51d4a4d9cd685=
+e8cdb55
+> >> (from the branch being merged into master) is the last commit showing =
+the
+> >> panic.
+> >>
+> >> Since d0a231f01e5b25bacd23e6edc7c979a18a517b2b is a merge commit that =
+includes
+> >> conflict resolutions in drivers/pci/controller/pcie-brcmstb.c, I suppo=
+se this
+> >> could be consistent with the initial panic being =E2=80=9Cupgraded=E2=
+=80=9D into an even more
+> >> serious issue.
+> >>
+> >> I've also verified that latest master (v5.18-rc4-396-g57ae8a492116) is=
+ still
+> >> affected by this issue.
+> >>
+> >> The regular Raspberry Pi 4 B doesn't seem to be affected by this issue=
+: the
+> >> exact same image on the same SD card (with latest master) boots fine o=
+n it.
+>
+> CCing the regression mailing list, as it should be in the loop for all
+> regressions, as explained here:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>
+> To be sure below issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+>
+> #regzbot ^introduced 830aa6f29f07a4e2f1a
+> #regzbot title pci: brcmstb: CM4 no longer boots from SD card
+> #regzbot ignore-activity
+> #regzbot from: Cyril Brulebois <kibi@debian.org>
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215925
+>
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply -- ideally with also
+> telling regzbot about it, as explained here:
+> https://linux-regtracking.leemhuis.info/tracked-regression/
+>
+> Reminder for developers: When fixing the issue, add 'Link:' tags
+> pointing to the report (the mail this one replied to), as the kernel's
+> documentation call for; above page explains why this is important for
+> tracked regressions.
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
