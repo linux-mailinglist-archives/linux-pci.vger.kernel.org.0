@@ -2,133 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC52C528B7F
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 19:01:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72184528C00
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 19:30:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236562AbiEPRBj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 13:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42430 "EHLO
+        id S1344238AbiEPRaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 13:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343928AbiEPRBh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 13:01:37 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 399071FA64
-        for <linux-pci@vger.kernel.org>; Mon, 16 May 2022 10:01:36 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id a23-20020a17090acb9700b001df4e9f4870so3512131pju.1
-        for <linux-pci@vger.kernel.org>; Mon, 16 May 2022 10:01:36 -0700 (PDT)
+        with ESMTP id S231476AbiEPRay (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 13:30:54 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CDEDEF2;
+        Mon, 16 May 2022 10:30:53 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id oe17-20020a17090b395100b001df77d29587so1178335pjb.2;
+        Mon, 16 May 2022 10:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kIsSnaw8orIslw424fHicKF35fPEwzrqGDoMb7keQtA=;
-        b=1iCaLn8jhpaxZfLnHCR1cqCMRHr/Klck6jGzgFQ7ljDFVZLzmWHoZfNYXPmS9j/g6U
-         ohYjH+DZo+bhDnNrdQgluvJ91PWqYm2kRJQ/g6Fr9x1igJ+x0Rf32c0UYwkQBApSfLht
-         wPyqNGTxaHyEWv6bqUI62wmJ8f6lYlw2R1an3bljVpsgZu6HO8HDDTtAOGwANcr/M6mp
-         TkBb5IyJt6KA9eyxIWNJ1xL4GWuSlfwRszxhFz2Bv3DkEbLBuEuxYtAVv239Shf/N9Ly
-         Ja247Lw4G1t9jCFLtd5WjNg7Yil3s5eToGwpc3S2MVgwHmJJfazyBl7EaJCLr8Ar2d7j
-         Eymw==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OTSZD7XY4xlhlXYWnr6RQDyqsnVaQBafjBNNdEbut20=;
+        b=ljoCpUurp4LDNznqFaSS3fU0aMtiMbgRZ6P7rLHQfTM7vNFaBZ//4Gs2TPrOjME2qV
+         Blyf4d/AbF3HxAU4LT2BXM3E2nxuGZ22IHb7Skw7giN2rHej05aDC8p3fvPTypB4CZ2+
+         4EpaRnUH7sirgAw3KVo9dxLIUYX/MJBQGJgALEOooZQLaJTlR4ZiJ8oFU2VXRPUk9UC+
+         XpzYTNZ8dDhFxdw/s0OJIleDgCrqppZ9Y0BpZc/1RyqvIsOGMIsNBOeUkk70RTiFYjNI
+         IcvK+jhjQaY6R5IlS6jT9/c0LoN+T4E3zSA5+CoJTjtwh23p92ZnxZZZ66VpnGzPLsQP
+         kyMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kIsSnaw8orIslw424fHicKF35fPEwzrqGDoMb7keQtA=;
-        b=3CBqsfDeaDPLCOmFWmBcitIdJIDYZ5OMB+KSzxRgF1rs2kAlOv2VC/cJjtFrj7Kx9x
-         BbqkaLGbTVK9ZC8DYdBM+6Z2+iKdHPmOJ1HOS02H1aiYwOZK3bEsdZiTO0ky6f3HUPl5
-         XS/0iqMv8Nk2Yx9+eapbWjxfxyQ4krNQ6b2NifElgwAcSZEvTbemlr20RuFGtFsBdzfo
-         lN2mStHhKgGRBY6N9BMHEEBzAeO6hexccd9oEHsY/kHzUDtHEdwHQUyLTIwCaCDAKuH4
-         9mxiBpYCKSGAHm7C0o9/5Ss5KpQgvbFzL3Wz5r9rVnKBSb9OoSql3Grht6qBlrxUYpcp
-         32cg==
-X-Gm-Message-State: AOAM530Zt2lMEvtHh5DoqF/DDaxkFcAtInc2r50atFwAMzFRzO1m90Jh
-        d9HkbnpYXGq0sxdIu8sVb4PRtQsjPqGAsSMZH6k+/X07AV9ZBQ==
-X-Google-Smtp-Source: ABdhPJxuaYM6L0XNs+yZqORMULtGWSrGNHDEzJk9QbNoMp20hWlrn9GFyIA4km+CEyh01Gk5SD4oBDkNJX+yffOb+es=
-X-Received: by 2002:a17:90b:388f:b0:1dc:6e0f:372b with SMTP id
- mu15-20020a17090b388f00b001dc6e0f372bmr20031688pjb.93.1652720495744; Mon, 16
- May 2022 10:01:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OTSZD7XY4xlhlXYWnr6RQDyqsnVaQBafjBNNdEbut20=;
+        b=C6rxF+qAhtYw3uJMnphMnRBD/oSSTS/ieYycVfu6MmJibXnMH9qyz21MsCF0kp8woH
+         d7+mevHqY3srFGXIRY1wn+8q97ReNl9OO0Sj4xladMAnKayFtNDrtm8ZZnwoI6d9RGoi
+         dSTFAUZf04vQVuH/saBPK0LI4+GgIwBiP60ig5Htcbm2P+3i+p7CP0EgsH7ImjGnZ0oS
+         jmZCbuhWE7w2rKKctRGw8+nSjY/XsY7jLqhBFgcBiI1SjUIrDxFVBoeAVH9dWo3IkCeJ
+         14x391Br/Mp+oZho6erUjbFbLIdhzslzaRDQiErWm2SfdEayxNFGDrDCzJUrjjPB/8lH
+         sEdA==
+X-Gm-Message-State: AOAM530I1U2l9R0B2Zy5kNsYgoFzlNrwq8SPykdOgfniGdR2Be3QxDC3
+        fyFqoLoCxrpCAe1WPW7/ENk=
+X-Google-Smtp-Source: ABdhPJwFG7wwyVTvgM6A+HYDSQtwe3IUgtHKXP3afpbvRGISoW3hwz8dllSjmEus96jz4ohNxcrxMw==
+X-Received: by 2002:a17:903:4044:b0:161:823e:6f93 with SMTP id n4-20020a170903404400b00161823e6f93mr5155213pla.172.1652722253376;
+        Mon, 16 May 2022 10:30:53 -0700 (PDT)
+Received: from localhost.localdomain ([103.126.24.15])
+        by smtp.gmail.com with ESMTPSA id j16-20020a17090a589000b001df7c160875sm209215pji.25.2022.05.16.10.30.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 May 2022 10:30:52 -0700 (PDT)
+From:   "windy.bi.enflame" <windy.bi.enflame@gmail.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "windy.bi.enflame" <windy.bi.enflame@gmail.com>
+Subject: [PATCH] drivers/pci: wait downstream hierarchy ready instead of slot itself ready, after secondary bus reset
+Date:   Tue, 17 May 2022 01:30:47 +0800
+Message-Id: <20220516173047.123317-1-windy.bi.enflame@gmail.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
- <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
- <20220507101848.GB31314@wunner.de> <20220509104806.00007c61@Huawei.com>
- <20220511191345.GA26623@wunner.de> <20220511191943.GB26623@wunner.de>
- <CAPcyv4hUKjt7QrA__wQ0KowfaxyQuMjHB5V-=rZBm=UbV4OvSg@mail.gmail.com> <20220514135521.GB14833@wunner.de>
-In-Reply-To: <20220514135521.GB14833@wunner.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 16 May 2022 10:01:26 -0700
-Message-ID: <CAPcyv4izKEGKw0L=QkTxp8MMfuWxzF9Rz4Bb_F0rRRiy_+2m8w@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Gavin Hindman <gavin.hindman@intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, CHUCK_LEVER <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 14, 2022 at 6:55 AM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Wed, May 11, 2022 at 12:43:34PM -0700, Dan Williams wrote:
-> > On Wed, May 11, 2022 at 12:20 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > > But the reset argument still stands:  That same section says that all
-> > > IDE streams transition to Insecure and all keys are invalidated upon
-> > > reset.
-> >
-> > Right, this isn't the only problem with reset vs ongoing CXL operations...
-> >
-> > https://lore.kernel.org/linux-cxl/164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com/
->
-> The above-linked cover letter refers to AER.
->
-> I believe with AER, the kernel is notified of an error via an interrupt
-> and asynchronously attempts recovery through a reset.
-> Obviously, an eternity may pass until the kernel gets around to do that
-> and whether accesses performed between the initial error and the reset
-> succeed is sort of undefined.  So it's kind of a "best effort" error
-> recovery.
->
-> With the advent of DPC, the situation has improved considerably as the
-> hardware (not the kernel) automatically disables the link upon occurrence
-> of the initial error.
+While I do reset test of a PCIe endpoint device on a server, I find that
+the EP device always been removed and re-inserted again by hotplug module,
+ after secondary bus reset.
 
-DPC, as far is I can see, is broken for CXL, any link going down
-causes the entire active interleaved memory range to be lost. Hence
-the "hopeful" designation in that patch set, if the link is going down
-to DPC the chance that the kernel runs long enough to even report the
-error is at risk.
+After checking I find:
+1> "pciehp_reset_slot()" always disable slot's DLLSC interrupt before
+   doing reset and restore after reset, to try to filter the hotplug
+   event happened during reset.
+2> "pci_bridge_secondary_bus_reset()" sleep 1 seconad and "pci_dev_wait()"
+   until device ready with "PCIE_RESET_READY_POLL_MS" timeout.
+3> There is a PCIe switch between CPU and the EP devicem the topology as:
+   CPU <-> Switch <-> EP.
+4> While trigger sbr reset at the switch's downstream port, it needs 1.5
+   seconds for internal enumeration.
 
-> Any subsequent accesses will fail and the kernel
-> does not perform a reset itself (the hardware already did that) but merely
-> attempts to bring the link back up.  That has made error recovery pretty
-> solid and NVMe drives now seamlessly recover from errors without the need
-> to unbind/rebind the driver.  Data centers heavily depend on that feature.
+About why 1.5 seconds ready time is not filtered by "pci_dev_wait()" with
+"PCIE_RESET_READY_POLL_MS" timeout, I find it is because in
+"pci_bridge_secondary_bus_reset()", the function is operating slot's
+config space to trigger sbr and also wait slot itself ready by input same
+"dev" parameter. Different from other resets like FLR which is triggered
+by operating the config space of EP device itself, sbr is triggered by
+up slot but need to wait downstream devices' ready, so I think function
+"pci_dev_wait()" works for resets like FLR but not for sbr.
 
-Works great for NVME.
+In this proposed patch, I'm changing the waiting function used in sbr to
+"pci_bridge_secondary_bus_wait()" which will wait all the downstream
+hierarchy ready with the same timeout setting "PCIE_RESET_READY_POLL_MS".
+In "pci_bridge_secondary_bus_wait()" the "subordinate" and
+"subordinate->devices" will be checked firstly, and then downstream
+devices' present state.
 
->
-> Perhaps if CXL.mem used DPC, it would be able to recover more reliably?
+Signed-off-by: windy.bi.enflame <windy.bi.enflame@gmail.com>
+---
+ drivers/pci/pci.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-So far all I can see are attempts to fail a bit more gracefully, but I
-would not consider this a reliable architecture for recovery:
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 9ecce435fb3f..d7ec3859268b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5002,6 +5002,29 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	}
+ }
+ 
++int pci_bridge_secondary_bus_wait(struct pci_dev *bridge, int timeout)
++{
++	struct pci_dev *dev;
++	int delay = 1;
++
++	if (!bridge->subordinate || list_empty(&bridge->subordinate->devices))
++		return 0;
++
++	list_for_each_entry(dev, &bridge->subordinate->devices, bus_list) {
++		while (!pci_device_is_present(dev)) {
++			if (delay > timeout) {
++				pci_warn(dev, "secondary bus not ready after %dms\n", delay);
++				return -ENOTTY;
++			}
++
++			msleep(delay);
++			delay *= 2;
++		}
++	}
++
++	return 0;
++}
++
+ void pci_reset_secondary_bus(struct pci_dev *dev)
+ {
+ 	u16 ctrl;
+@@ -5045,7 +5068,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+ {
+ 	pcibios_reset_secondary_bus(dev);
+ 
+-	return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
++	return pci_bridge_secondary_bus_wait(dev, PCIE_RESET_READY_POLL_MS);
+ }
+ EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+ 
+-- 
+2.36.1
 
-https://www.computeexpresslink.org/_files/ugd/0c1418_f63f7f1a9f474ba2b00f5e77429867cb.pdf
-
-> Circling back to the SPDM/IDE topic, while NVMe is now capable of
-> reliably recovering from errors, it does expect the kernel to handle
-> recovery within a few seconds.  I'm not sure we can continue to
-> guarantee that if the kernel depends on user space to perform
-> re-authentication with SPDM after reset.  That's another headache
-> that we could avoid with in-kernel SPDM authentication.
-
-What is missing from this conversation is what constitutes a device
-leaving the trusted compute boundary and is the existing attestation
-invalidated by a reset. I.e. perhaps the kernel can just do a
-keep-alive heartbeat after the reset with the already negotiated key
-to confirm the session is still valid.
