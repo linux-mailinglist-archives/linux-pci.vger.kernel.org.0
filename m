@@ -2,70 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30E695291E6
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 22:49:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75121529220
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 23:08:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242600AbiEPUpQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 16:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53262 "EHLO
+        id S242969AbiEPUyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 16:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348190AbiEPUo0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 16:44:26 -0400
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34854A923;
-        Mon, 16 May 2022 13:21:24 -0700 (PDT)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-e656032735so21755021fac.0;
-        Mon, 16 May 2022 13:21:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7BWSrE/CAz6evwVBMIyCTX6tuP5t5HfKZ2CcvdrLUcg=;
-        b=5mb/+I2Z3EDr1DoQus+g7rKSyKQH5yXxif9eZdVusTb6YcdmPmg/EivuYRdR7VIVwM
-         wqCmTvyO90BrmdRm73TCqTg0Kwn8F3oSKVQXO2ARgQWOLJ5DPuw4YrT4qxo3Oxnq4rtH
-         MVthOVdYmZCSw012cQy9EUDgnCnzUQxdc9ySQ1OnSmEStrxaawdBsojiNhYJeIMON25B
-         HeH0zptFjM9eK0afEMb8c/LeREkZL/NC16ass5ncSCIhjyI31o0R691PUJYjkYkqohol
-         Pjxw8JoBNMFNKdGx7cx1x00j2nxAlpaZytIrhHedid5vwZOa0K9dxUiDOtBmfn5so69+
-         a1eg==
-X-Gm-Message-State: AOAM533dGIFgaWGzYynRgmzhv4G0hLbpxOHCmnXYIZuLoCY7Jb8LXlcd
-        6uQ00it8RUzhd2SVjgDn0Q==
-X-Google-Smtp-Source: ABdhPJx86+zrTLxoRzsaXuUGjynUBidMelaIYYh+bDguzwxBJY8na2tPfh4198gC066v4n4xVCDcSw==
-X-Received: by 2002:a05:6870:80ca:b0:f1:8fad:d9d1 with SMTP id r10-20020a05687080ca00b000f18fadd9d1mr5193876oab.125.1652732484033;
-        Mon, 16 May 2022 13:21:24 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id z3-20020a05687041c300b000f174840b4fsm4607481oac.17.2022.05.16.13.21.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 May 2022 13:21:23 -0700 (PDT)
-Received: (nullmailer pid 3210266 invoked by uid 1000);
-        Mon, 16 May 2022 20:21:22 -0000
-Date:   Mon, 16 May 2022 15:21:22 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/17] PCI: dwc: Detect iATU settings after getting
- "addr_space" resource
-Message-ID: <20220516202122.GA3209795-robh@kernel.org>
-References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
- <20220503214638.1895-5-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S1348731AbiEPUyA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 16:54:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675D65549A;
+        Mon, 16 May 2022 13:28:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 364F261320;
+        Mon, 16 May 2022 20:28:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C59C385AA;
+        Mon, 16 May 2022 20:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652732908;
+        bh=gKKKp2IFlKGmu4OzI8+KOncEkeS2si8oUBWbBkn/28M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pGGDSo5lKN8IWry3pLK3c3Dxn8xdlGhp+HBX/A99quXoYoYQt9gzSIZuaxSrFiA47
+         TcgNTt+AapxXzkci2C7wTUWmg1iMGmArpfrINsy/7M/LWsAkawoBJ5OHm56AkfJD0e
+         iSx/2nAm6s9H3ZsNG9E+qm7F+Kmbfvx7xNY7TnGBv5tASX0bS4GlHbZpn2/FLIhg/E
+         wdCpBgpiK38Xv0CQNoZY3LvsqgSCkYlmZkni6FEZRBb2YUjKg2K41t59i60QFGAzAV
+         DGDIByQwuSYItNtYXMWk/SHTB2JzHkj4HKqoklLoO8ELmhkvznMjBiBekBhqASGbKk
+         XT7KOVwk/bwAw==
+Date:   Mon, 16 May 2022 15:28:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "windy.bi.enflame" <windy.bi.enflame@gmail.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] drivers/pci: wait downstream hierarchy ready instead of
+ slot itself ready, after secondary bus reset
+Message-ID: <20220516202825.GA1047972@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220503214638.1895-5-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <20220516173047.123317-1-windy.bi.enflame@gmail.com>
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,27 +54,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 12:46:25AM +0300, Serge Semin wrote:
-> The iATU detection procedure was introduced in the commit 281f1f99cf3a
-> ("PCI: dwc: Detect number of iATU windows"). A bit later the procedure
-> execution was moved to Host/EP-specific methods in the framework of commit
-> 8bcca2658558 ("PCI: dwc: Move iATU detection earlier"). The later
-> modification wasn't done in the most optimal way since the "addr_space"
-> CSR region resource doesn't depend on anything detected in the
-> dw_pcie_iatu_detect() method. Thus the detection can be postponed to be
-> executed after the resource request which can fail and make the detection
-> pointless. It will be also helpful for the dw_pcie_ep_init() method
-> readability since we are about to add the IP-core version and eDMA module
-> (a bit later) detection procedures.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> ---
-> 
-> Changelog v2:
-> - This is a new patch added on v2 iteration of the series.
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+[+cc Lukas, pciehp expert; Alex, reset person]
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for the testing, analysis, and patch!
+
+Run "git log --oneline drivers/pci/pci.c" and make your subject line
+similar.
+
+On Tue, May 17, 2022 at 01:30:47AM +0800, windy.bi.enflame wrote:
+> While I do reset test of a PCIe endpoint device on a server, I find that
+> the EP device always been removed and re-inserted again by hotplug module,
+>  after secondary bus reset.
+> 
+> After checking I find:
+> 1> "pciehp_reset_slot()" always disable slot's DLLSC interrupt before
+>    doing reset and restore after reset, to try to filter the hotplug
+>    event happened during reset.
+> 2> "pci_bridge_secondary_bus_reset()" sleep 1 seconad and "pci_dev_wait()"
+>    until device ready with "PCIE_RESET_READY_POLL_MS" timeout.
+> 3> There is a PCIe switch between CPU and the EP devicem the topology as:
+>    CPU <-> Switch <-> EP.
+> 4> While trigger sbr reset at the switch's downstream port, it needs 1.5
+>    seconds for internal enumeration.
+
+s/seconad/second/
+s/devicem/device/
+s/sbr/SBR/
+s/"pciehp_reset_slot()"/pciehp_reset_slot()/ also for other functions
+
+> About why 1.5 seconds ready time is not filtered by "pci_dev_wait()" with
+> "PCIE_RESET_READY_POLL_MS" timeout, I find it is because in
+> "pci_bridge_secondary_bus_reset()", the function is operating slot's
+> config space to trigger sbr and also wait slot itself ready by input same
+> "dev" parameter. Different from other resets like FLR which is triggered
+> by operating the config space of EP device itself, sbr is triggered by
+> up slot but need to wait downstream devices' ready, so I think function
+> "pci_dev_wait()" works for resets like FLR but not for sbr.
+> 
+> In this proposed patch, I'm changing the waiting function used in sbr to
+> "pci_bridge_secondary_bus_wait()" which will wait all the downstream
+> hierarchy ready with the same timeout setting "PCIE_RESET_READY_POLL_MS".
+> In "pci_bridge_secondary_bus_wait()" the "subordinate" and
+> "subordinate->devices" will be checked firstly, and then downstream
+> devices' present state.
+> 
+> Signed-off-by: windy.bi.enflame <windy.bi.enflame@gmail.com>
+
+See https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v5.17#n407
+regarding pseudonyms.
+
+> ---
+>  drivers/pci/pci.c | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9ecce435fb3f..d7ec3859268b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5002,6 +5002,29 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+>  	}
+>  }
+>  
+> +int pci_bridge_secondary_bus_wait(struct pci_dev *bridge, int timeout)
+> +{
+> +	struct pci_dev *dev;
+> +	int delay = 1;
+> +
+> +	if (!bridge->subordinate || list_empty(&bridge->subordinate->devices))
+> +		return 0;
+> +
+> +	list_for_each_entry(dev, &bridge->subordinate->devices, bus_list) {
+> +		while (!pci_device_is_present(dev)) {
+> +			if (delay > timeout) {
+> +				pci_warn(dev, "secondary bus not ready after %dms\n", delay);
+> +				return -ENOTTY;
+> +			}
+> +
+> +			msleep(delay);
+> +			delay *= 2;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  void pci_reset_secondary_bus(struct pci_dev *dev)
+>  {
+>  	u16 ctrl;
+> @@ -5045,7 +5068,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+>  {
+>  	pcibios_reset_secondary_bus(dev);
+>  
+> -	return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
+> +	return pci_bridge_secondary_bus_wait(dev, PCIE_RESET_READY_POLL_MS);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+>  
+> -- 
+> 2.36.1
+> 
