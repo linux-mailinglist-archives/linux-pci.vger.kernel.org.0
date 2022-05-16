@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F92D529266
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 23:08:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C1F52924F
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 23:08:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348356AbiEPU5a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 16:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35416 "EHLO
+        id S1348468AbiEPU7V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 16:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348265AbiEPU5V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 16:57:21 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C7012AD5;
-        Mon, 16 May 2022 13:32:49 -0700 (PDT)
-Received: by mail-ot1-f46.google.com with SMTP id a22-20020a9d3e16000000b00606aeb12ab6so10860154otd.7;
-        Mon, 16 May 2022 13:32:49 -0700 (PDT)
+        with ESMTP id S1348744AbiEPU7L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 16:59:11 -0400
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E884E3B8;
+        Mon, 16 May 2022 13:33:58 -0700 (PDT)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-d6e29fb3d7so21707980fac.7;
+        Mon, 16 May 2022 13:33:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ItbgX5Ok3d4mUH83iOjcDBrEskdt5/WbXvEVJ35+nXo=;
-        b=xaYBYSu1mqVsWtOOjQVGMTvKlv64PKrzHv8q2kUDbWqXi3H5PkcemQEgm3QaivRchu
-         xnOvgPkDK7detLNwX0xGMHWv0TPSez7aU3r3zEaKdLc3u91s4LEi03UKIqAF7cKusKyG
-         DpUmhH2E1AOLlN4plBciC1WKyt3n7EFhdpTqrSEdLP+lKvTHfHeX7ReQhuC25ILnKrVP
-         rUtfpL4hmpIUDURmlUvHoW1HtFk8XUPIHqWs84byfTL3hoB+P+H7lz6fG8VTrJyz3qOW
-         propErmSdD1qbZjhZDkuNcWcJCYfGoT4d7bvnAWQX00qqRiVOsAjY4U+XuoJs3YtKtdP
-         RDfQ==
-X-Gm-Message-State: AOAM532qS5UXAeFViVzFfrbASKaVy8GgF+8HrCBljiknrH4UmMa5/bE4
-        f9XiOKsuT6IeNkP26nooRw==
-X-Google-Smtp-Source: ABdhPJxJgbgeKLnSxefstRiJzopz/9sqludvNSTtKzMErkkG18IncBMYmAoKYvxRNiH8ngjIODjZ5A==
-X-Received: by 2002:a9d:5888:0:b0:606:10d2:2fc1 with SMTP id x8-20020a9d5888000000b0060610d22fc1mr6770760otg.29.1652733168373;
-        Mon, 16 May 2022 13:32:48 -0700 (PDT)
+        bh=UpweZgNa0hLyc/A6Rf8VvzxtaDPXp6xvIcWgr8Tj7kc=;
+        b=a4z52TCSgYOzZ1cPLnaxO5kLPSgVELLjXg+G4Pp9MIV0zYCRQ7nddGrMf7YNGyqsxV
+         CyFsWvpilr9ZE6zGdPgTvhoc5pSDpqWGKMe9f0R6xTj5X6HIdrDVi6+odm9yeQkoAoLi
+         PBTh6PaUlEevyFd5zTbTbPTt924qc/Ut/QiJPEgfTtN0wnFf+LyLQGbIjOzS9Wk5X16W
+         232zvIcYjUy7JuZl/PsUdnroG2ssXAfFkAvunTmQBqLEIj0cm4IpPYODLpMXV0Q7m+OW
+         LXpdxq8zr/uaydwuqBna8bYInBbfaBto1Ig1vodzsKathRmLwy+TBCtruDCG3BqGyeXC
+         ZBoQ==
+X-Gm-Message-State: AOAM530Vkm8J/GqxDEw3S+/j5t2Iyouaz/L1haUBNJ2QP9XHU/rCx4SB
+        ZtrekRO8i8iYP/jLjuVgFg==
+X-Google-Smtp-Source: ABdhPJzEdV42C2X0YEgqxKDvXZyDgLwO20FOCOruB+PdrGeZ8jFuDL06Jwp6831Kfl8Pr+HgeRuvbg==
+X-Received: by 2002:a05:6870:7006:b0:f1:b696:9d90 with SMTP id u6-20020a056870700600b000f1b6969d90mr1270151oae.230.1652733237916;
+        Mon, 16 May 2022 13:33:57 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id x28-20020a056830245c00b0060603221253sm4214786otr.35.2022.05.16.13.32.47
+        by smtp.gmail.com with ESMTPSA id r129-20020acada87000000b00325d7b6cab8sm4194137oig.16.2022.05.16.13.33.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 May 2022 13:32:47 -0700 (PDT)
-Received: (nullmailer pid 3229981 invoked by uid 1000);
-        Mon, 16 May 2022 20:32:46 -0000
-Date:   Mon, 16 May 2022 15:32:46 -0500
+        Mon, 16 May 2022 13:33:57 -0700 (PDT)
+Received: (nullmailer pid 3232168 invoked by uid 1000);
+        Mon, 16 May 2022 20:33:56 -0000
+Date:   Mon, 16 May 2022 15:33:56 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Jingoo Han <jingoohan1@gmail.com>,
@@ -53,51 +53,39 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/17] PCI: dwc: Add IP-core version detection
- procedure
-Message-ID: <20220516203246.GD3209795-robh@kernel.org>
+Subject: Re: [PATCH v2 07/17] PCI: dwc: Introduce Synopsys IP-core
+ versions/types interface
+Message-ID: <20220516203356.GE3209795-robh@kernel.org>
 References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
- <20220503214638.1895-7-Sergey.Semin@baikalelectronics.ru>
+ <20220503214638.1895-8-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220503214638.1895-7-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220503214638.1895-8-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 12:46:27AM +0300, Serge Semin wrote:
-> Since DWC PCIe v4.70a the controller version and version type can be read
-> from the PORT_LOGIC.PCIE_VERSION_OFF and PORT_LOGIC.PCIE_VERSION_TYPE_OFF
-> registers respectively. Seeing the generic code has got version-dependent
-> parts let's use these registers to find out the controller version.  The
-> detection procedure is executed for both RC and EP modes right after the
-> platform-specific initialization. We can't do that earlier since the
-> glue-drivers can perform the DBI-related setups there including the bus
-> reference clocks activation, without which the CSRs just can't be read.
-> 
-> Note the CSRs content is zero on the older DWC PCIe controller. In that
-> case we have no choice but to rely on the platform setup.
+On Wed, May 04, 2022 at 12:46:28AM +0300, Serge Semin wrote:
+> Instead of manual DW PCIe data version field comparison let's use a handy
+> macro-based interface in order to shorten out the statements, simplify the
+> corresponding parts, improve the code readability and maintainability in
+> perspective when more complex version-based dependencies need to
+> implemented. Similar approaches have already been implemented in the DWC
+> USB3 and DW SPI drivers (though with some IP-core evolution specifics).
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
 > ---
-> 
-> Changelog v2:
-> - Move the IP-core version detection procedure call from
->   dw_pcie_ep_init_complete() to dw_pcie_ep_init().
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   |  2 ++
->  .../pci/controller/dwc/pcie-designware-host.c |  2 ++
->  drivers/pci/controller/dwc/pcie-designware.c  | 24 +++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h  |  6 +++++
->  4 files changed, 34 insertions(+)
+>  drivers/pci/controller/dwc/pci-keystone.c    |  2 +-
+>  drivers/pci/controller/dwc/pcie-designware.c |  8 ++++----
+>  drivers/pci/controller/dwc/pcie-designware.h | 15 +++++++++++++++
+>  3 files changed, 20 insertions(+), 5 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
