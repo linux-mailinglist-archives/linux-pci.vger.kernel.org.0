@@ -2,174 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C2C85282F8
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 13:17:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AEA652849C
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 14:53:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236574AbiEPLRq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 07:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58192 "EHLO
+        id S243020AbiEPMxU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 08:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiEPLRn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 07:17:43 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2087.outbound.protection.outlook.com [40.107.93.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB6533349;
-        Mon, 16 May 2022 04:17:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IINLxNaCdZJ+g9+cUmnRuIkzkCpc2QBBPp5S2RnDb27JQBNdH0y0gWvO6Q3sQbptYsVpaEDNoYjLlqhmzGW5nCoXMiwsuDWdYZd8TQ9JnPcHy4iKdXcGW0sjA4WNteMsHAFFH7y8DCzcjb0KUtx+K7x90YFF4YOxEVDdZxyKfodNww06hxssxgf/6y3PBlFZjCQh6hfx/vQX1wJlQKknZKW3jgDIilDXbx/leSeh1VPvBOnYGj5b29mZ2UTJG+IMr9XtS+LAbsqVvLf5P565BJL7YWjLoZ+rt7Em36ujZ0hUares1tXJ3aCpzUmJ/9o0o7vvz2OzXgHQl654JBWgjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s1RxZjtQrJIJxiGB72D5VVVYWIa+cW7bPcYynWO/LkQ=;
- b=TvUzEQ8IALR2mHwcSLmYpj3fA51ORm/pNPS8nXdjejVEUqejZ/K116+az8gJnHTK97gTfg3TZxTEaemggRqUQ1tUI93smsDGc3NPvYza1jlkaZoTofy6zuOWhKn5zdz0qkZNgEWOIO1zL8YxHIIZWPL+1HfP8g3yJ9HX6gHuklhVM6AqbAyJswIyRUhaTW1C/ldULIqVfBNfdV9OkyOtXMHN16I/753m/O9+UVchRMS//f+B7DCTi9DvXYhBhKRKD/4i4X7GdMW3p9vW3rhydYX/LkJilUsAiCtLP9kmz3W7LY+HTDZjZ+p1bqXURURpgz1m8Lx8zt8cD5Lor2UfQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s1RxZjtQrJIJxiGB72D5VVVYWIa+cW7bPcYynWO/LkQ=;
- b=FjIwfGaQrsO6HxrfdHE+8xrx9Ntpz5PUfDP6no0MKzMUNYCLvoeaKBBg7Wn4EAFg/DNuEpN493Q+KXwdbSSMsZHqlu+45q3GaM54DbZm0euZ9S8ZsqDmflq29X1LDbw3A7z4B6+//ALVmRvHHDTkEmYY290qv2pYOHNb6Px6v0U=
-Received: from BN9P221CA0027.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::21)
- by BYAPR02MB5445.namprd02.prod.outlook.com (2603:10b6:a03:a4::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.18; Mon, 16 May
- 2022 11:17:39 +0000
-Received: from BN1NAM02FT056.eop-nam02.prod.protection.outlook.com
- (2603:10b6:408:10a:cafe::57) by BN9P221CA0027.outlook.office365.com
- (2603:10b6:408:10a::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.16 via Frontend
- Transport; Mon, 16 May 2022 11:17:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- BN1NAM02FT056.mail.protection.outlook.com (10.13.2.164) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5250.13 via Frontend Transport; Mon, 16 May 2022 11:17:38 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+        with ESMTP id S238790AbiEPMxS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 08:53:18 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9886838BE4;
+        Mon, 16 May 2022 05:53:15 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4L1zfK3Z0HzgYBd;
+        Mon, 16 May 2022 20:51:53 +0800 (CST)
+Received: from localhost.localdomain (10.67.164.66) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Mon, 16 May 2022 04:17:37 -0700
-Received: from smtp.xilinx.com (172.19.127.96) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Mon, 16 May 2022 04:17:37 -0700
-Envelope-to: linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org,
- lorenzo.pieralisi@arm.com,
- bhelgaas@google.com,
- robh@kernel.org
-Received: from [10.254.241.50] (port=33330)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1nqYjJ-0001at-LO; Mon, 16 May 2022 04:17:37 -0700
-Message-ID: <b9c36db0-fb4f-19d2-68af-25b926cd33b0@xilinx.com>
-Date:   Mon, 16 May 2022 13:17:35 +0200
+ 15.1.2375.24; Mon, 16 May 2022 20:53:12 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
+        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <acme@kernel.org>,
+        <jonathan.cameron@huawei.com>, <john.garry@huawei.com>
+CC:     <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mark.rutland@arm.com>, <joro@8bytes.org>,
+        <shameerali.kolothum.thodi@huawei.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
+Subject: [PATCH v8 0/8] Add support for HiSilicon PCIe Tune and Trace device
+Date:   Mon, 16 May 2022 20:52:15 +0800
+Message-ID: <20220516125223.32012-1-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v2] dt-bindings: PCI: xilinx-cpm: Fix reg property order
-Content-Language: en-US
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh@kernel.org>
-References: <20220516102217.25960-1-bharat.kumar.gogada@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-In-Reply-To: <20220516102217.25960-1-bharat.kumar.gogada@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b928f034-a8b9-4764-3eaf-08da372daf9f
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5445:EE_
-X-Microsoft-Antispam-PRVS: <BYAPR02MB54455D5623F95ADD42571E21C6CF9@BYAPR02MB5445.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hgTuSBZ3kATRnXJXVqcdwcbli39TlQ6sxxtyh9jbfANcY0rT5BxTeuMXhLJzh8cpOIhnA9yctTCU5Jzarc1WgWNn5ttluMPZsD/rn9zyKGsD7zB3bbHAzYKCbdvomcQHsHONFdKw8oMvc7AeQidgioIFFFUcXiIRDaq1VqAxW0e+tt3HllauhF08oivjFd5JYZiuADpZmBxdz+ISmF99GtElH+ymPka1Ih6s6n5nKv4KwNupZtkLCLufYxdrlWshRsGylmxQQnvxuHQEnKoIqmqls1Qj0ehC+1evHDE0UV0q49zWbrd7OC1sPkD6GwGDgEpmymDjmnXfZgT4hJ3FwUj8OnOOQSTfvuMuVtGDkHPJDLAnv98QVCn5MkfCAlB1xeIE4nAQZWkDHE4v6IfmROYnuATSjxcLKB6oLTrDv6dN2qPN9wE8CwdRCHBVN/5pZ4Zf/iT12SKdQvmthiwsQsKqZrlDh7hhzaPhHwRgHtrjfLCv9dCbulFVQ5f9H3LaTq3EzfmBDlGG3hYrcpAWMMQe+7r871w5vYHLOjaKf5SnC1f7uldpbSAWq0+xOvl9AeMexMZQbOxevjhB+I87hiKqeq+DPc70cZ2k9ojz4m7n5oYtPzVwAJAhCYyLl7CGsGHzvchaWHdtj+fCXXzwTkm0zZwEWPOrjWNaSxPBv5jS7w4XWXEoZ8kMWT/RMfzOkZhzawSqs855rsS4MzqR95ZWIbm9Ip3KvHNt/+4Bi/w=
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(7636003)(26005)(356005)(186003)(9786002)(316002)(44832011)(53546011)(110136005)(36860700001)(2906002)(8936002)(54906003)(83380400001)(47076005)(40460700003)(82310400005)(508600001)(36756003)(70206006)(70586007)(426003)(31686004)(5660300002)(4326008)(31696002)(2616005)(8676002)(336012)(50156003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2022 11:17:38.4601
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b928f034-a8b9-4764-3eaf-08da372daf9f
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT056.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5445
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.164.66]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
+integrated Endpoint (RCiEP) device, providing the capability
+to dynamically monitor and tune the PCIe traffic (tune),
+and trace the TLP headers (trace).
 
+PTT tune is designed for monitoring and adjusting PCIe link parameters.
+We provide several parameters of the PCIe link. Through the driver,
+user can adjust the value of certain parameter to affect the PCIe link
+for the purpose of enhancing the performance in certian situation.
 
-On 5/16/22 12:22, Bharat Kumar Gogada wrote:
-> All existing vendor DTSes are using "cpm_slcr" reg followed by "cfg" reg.
-> 
-> This order is also suggested by node name which is pcie@fca10000 which
-> suggests that cpm_slcr register should be the first.
-> 
-> Driver itself is using devm_platform_ioremap_resource_byname() for both
-> names that's why there is no functional change even on description which
-> are using current order.
-> 
-> But still prefer to change order to cover currently used description.
-> Fixes: e22fadb1d014 ("PCI: xilinx-cpm: Add YAML schemas for Versal CPM Root Port")
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
->   .../devicetree/bindings/pci/xilinx-versal-cpm.yaml     | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> index 32f4641085bc..cca395317a4c 100644
-> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> @@ -18,13 +18,13 @@ properties:
->   
->     reg:
->       items:
-> -      - description: Configuration space region and bridge registers.
->         - description: CPM system level control and status registers.
-> +      - description: Configuration space region and bridge registers.
->   
->     reg-names:
->       items:
-> -      - const: cfg
->         - const: cpm_slcr
-> +      - const: cfg
->   
->     interrupts:
->       maxItems: 1
-> @@ -86,9 +86,9 @@ examples:
->                          ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
->                                   <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
->                          msi-map = <0x0 &its_gic 0x0 0x10000>;
-> -                       reg = <0x6 0x00000000 0x0 0x10000000>,
-> -                             <0x0 0xfca10000 0x0 0x1000>;
-> -                       reg-names = "cfg", "cpm_slcr";
-> +                       reg = <0x0 0xfca10000 0x0 0x1000>,
-> +                             <0x6 0x00000000 0x0 0x10000000>;
-> +                       reg-names = "cpm_slcr", "cfg";
->                          pcie_intc_0: interrupt-controller {
->                                  #address-cells = <0>;
->                                  #interrupt-cells = <1>;
+PTT trace is designed for dumping the TLP headers to the memory, which
+can be used to analyze the transactions and usage condition of the PCIe
+Link. Users can choose filters to trace headers, by either requester
+ID, or those downstream of a set of Root Ports on the same core of the
+PTT device. It's also supported to trace the headers of certain type and
+of certain direction.
 
-Reviewed-by: Michal Simek <michal.simek@amd.com>
+The driver registers a PMU device for each PTT device. The trace can
+be used through `perf record` and the traced headers can be decoded
+by `perf report`. The perf command support for the device is also
+added in this patchset. The tune can be used through the sysfs
+attributes of related PMU device. See the documentation for the
+detailed usage.
 
-Thanks,
-Michal
+Change since v7:
+- Configure the DMA in probe rather than in runtime. Also use devres to manage
+  PMU device as we have no order problem now
+- Refactor the config validation function per John and Leo
+- Use a spinlock hisi_ptt::pmu_lock instead of mutex to serialize the perf process
+  in pmu::start as it's in atomic context
+- Only commit the traced data when stop, per Leo and James
+- Drop the filter dynamically updating patch from this series to simply the review
+  of the driver. That patch will be send separately.
+- add a cpumask sysfs attribute and handle the cpu hotplug events, follow the
+  uncore PMU convention
+- Other cleanups and fixes, both in driver and perf tool
+Link: https://lore.kernel.org/lkml/20220407125841.3678-1-yangyicong@hisilicon.com/
+
+Change since v6:
+- Fix W=1 errors reported by lkp test, thanks
+
+Change since v5:
+- Squash the PMU patch into PATCH 2 suggested by John
+- refine the commit message of PATCH 1 and some comments
+Link: https://lore.kernel.org/lkml/20220308084930.5142-1-yangyicong@hisilicon.com/
+
+Change since v4:
+Address the comments from Jonathan, John and Ma Ca, thanks.
+- Use devm* also for allocating the DMA buffers
+- Remove the IRQ handler stub in Patch 2
+- Make functions waiting for hardware state return boolean
+- Manual remove the PMU device as it should be removed first
+- Modifier the orders in probe and removal to make them matched well
+- Make available {directions,type,format} array const and non-global
+- Using the right filter list in filters show and well protect the
+  list with mutex
+- Record the trace status with a boolean @started rather than enum
+- Optimize the process of finding the PTT devices of the perf-tool
+Link: https://lore.kernel.org/linux-pci/20220221084307.33712-1-yangyicong@hisilicon.com/
+
+Change since v3:
+Address the comments from Jonathan and John, thanks.
+- drop members in the common struct which can be get on the fly
+- reduce buffer struct and organize the buffers with array instead of list
+- reduce the DMA reset wait time to avoid long time busy loop
+- split the available_filters sysfs attribute into two files, for root port
+  and requester respectively. Update the documentation accordingly
+- make IOMMU mapping check earlier in probe to avoid race condition. Also
+  make IOMMU quirk patch prior to driver in the series
+- Cleanups and typos fixes from John and Jonathan
+Link: https://lore.kernel.org/linux-pci/20220124131118.17887-1-yangyicong@hisilicon.com/
+
+Change since v2:
+- address the comments from Mathieu, thanks.
+  - rename the directory to ptt to match the function of the device
+  - spinoff the declarations to a separate header
+  - split the trace function to several patches
+  - some other comments.
+- make default smmu domain type of PTT device to identity
+  Drop the RMR as it's not recommended and use an iommu_def_domain_type
+  quirk to passthrough the device DMA as suggested by Robin. 
+Link: https://lore.kernel.org/linux-pci/20211116090625.53702-1-yangyicong@hisilicon.com/
+
+Change since v1:
+- switch the user interface of trace to perf from debugfs
+- switch the user interface of tune to sysfs from debugfs
+- add perf tool support to start trace and decode the trace data
+- address the comments of documentation from Bjorn
+- add RMR[1] support of the device as trace works in RMR mode or
+  direct DMA mode. RMR support is achieved by common APIs rather
+  than the APIs implemented in [1].
+Link: https://lore.kernel.org/lkml/1618654631-42454-1-git-send-email-yangyicong@hisilicon.com/
+[1] https://lore.kernel.org/linux-acpi/20210805080724.480-1-shameerali.kolothum.thodi@huawei.com/
+
+Qi Liu (3):
+  perf arm: Refactor event list iteration in auxtrace_record__init()
+  perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
+  perf tool: Add support for parsing HiSilicon PCIe Trace packet
+
+Yicong Yang (5):
+  iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to
+    identity
+  hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe
+    Tune and Trace device
+  hwtracing: hisi_ptt: Add tune function support for HiSilicon PCIe Tune
+    and Trace device
+  docs: trace: Add HiSilicon PTT device driver documentation
+  MAINTAINERS: Add maintainer for HiSilicon PTT driver
+
+ Documentation/trace/hisi-ptt.rst              |  307 +++++
+ Documentation/trace/index.rst                 |    1 +
+ MAINTAINERS                                   |    7 +
+ drivers/Makefile                              |    1 +
+ drivers/hwtracing/Kconfig                     |    2 +
+ drivers/hwtracing/ptt/Kconfig                 |   12 +
+ drivers/hwtracing/ptt/Makefile                |    2 +
+ drivers/hwtracing/ptt/hisi_ptt.c              | 1121 +++++++++++++++++
+ drivers/hwtracing/ptt/hisi_ptt.h              |  201 +++
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   21 +
+ tools/perf/arch/arm/util/auxtrace.c           |  116 +-
+ tools/perf/arch/arm/util/pmu.c                |    3 +
+ tools/perf/arch/arm64/util/Build              |    2 +-
+ tools/perf/arch/arm64/util/hisi-ptt.c         |  187 +++
+ tools/perf/util/Build                         |    2 +
+ tools/perf/util/auxtrace.c                    |    4 +
+ tools/perf/util/auxtrace.h                    |    1 +
+ tools/perf/util/hisi-ptt-decoder/Build        |    1 +
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   |  167 +++
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |   31 +
+ tools/perf/util/hisi-ptt.c                    |  193 +++
+ tools/perf/util/hisi-ptt.h                    |   19 +
+ 22 files changed, 2381 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/trace/hisi-ptt.rst
+ create mode 100644 drivers/hwtracing/ptt/Kconfig
+ create mode 100644 drivers/hwtracing/ptt/Makefile
+ create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+ create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+ create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
+ create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
+ create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+ create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
+ create mode 100644 tools/perf/util/hisi-ptt.c
+ create mode 100644 tools/perf/util/hisi-ptt.h
+
+-- 
+2.24.0
+
