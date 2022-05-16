@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D6DD5286C2
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 16:17:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F6945286D1
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 16:20:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234020AbiEPORb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 10:17:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
+        id S244437AbiEPOUc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 10:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233243AbiEPORa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 10:17:30 -0400
+        with ESMTP id S242798AbiEPOU2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 10:20:28 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667AF13CCC;
-        Mon, 16 May 2022 07:17:28 -0700 (PDT)
-Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L21Sn1vZGz67Mx2;
-        Mon, 16 May 2022 22:13:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351B63B00C;
+        Mon, 16 May 2022 07:20:27 -0700 (PDT)
+Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L21Y13WBjz67KdQ;
+        Mon, 16 May 2022 22:17:25 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 16 May 2022 16:17:25 +0200
+ 15.1.2375.24; Mon, 16 May 2022 16:20:25 +0200
 Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 16 May
- 2022 15:17:24 +0100
-Date:   Mon, 16 May 2022 15:17:22 +0100
+ 2022 15:20:24 +0100
+Date:   Mon, 16 May 2022 15:20:22 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Yicong Yang <yangyicong@hisilicon.com>
 CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
@@ -41,12 +41,12 @@ CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
         <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
         <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
         <linuxarm@huawei.com>
-Subject: Re: [PATCH v8 4/8] perf arm: Refactor event list iteration in
- auxtrace_record__init()
-Message-ID: <20220516151722.0000693a@Huawei.com>
-In-Reply-To: <20220516125223.32012-5-yangyicong@hisilicon.com>
+Subject: Re: [PATCH v8 5/8] perf tool: Add support for HiSilicon PCIe Tune
+ and Trace device driver
+Message-ID: <20220516152022.00001ab9@Huawei.com>
+In-Reply-To: <20220516125223.32012-6-yangyicong@hisilicon.com>
 References: <20220516125223.32012-1-yangyicong@hisilicon.com>
-        <20220516125223.32012-5-yangyicong@hisilicon.com>
+        <20220516125223.32012-6-yangyicong@hisilicon.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -65,107 +65,90 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 16 May 2022 20:52:19 +0800
+On Mon, 16 May 2022 20:52:20 +0800
 Yicong Yang <yangyicong@hisilicon.com> wrote:
 
 > From: Qi Liu <liuqi115@huawei.com>
 > 
-> Use find_pmu_for_event() to simplify logic in auxtrace_record__init().
-Possibly reword as 
-
-"Add find_pmu_for_event() and use to simplify logic in
-auxtrace_record_init(). find_pmu_for_event() will be
-reused in subsequent patches."
-
+> HiSilicon PCIe tune and trace device (PTT) could dynamically tune
+> the PCIe link's events, and trace the TLP headers).
+> 
+> This patch add support for PTT device in perf tool, so users could
+> use 'perf record' to get TLP headers trace data.
 > 
 > Signed-off-by: Qi Liu <liuqi115@huawei.com>
 > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-FWIW as this isn't an area I know much about. It seems
-like a good cleanup and functionally equivalent.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  tools/perf/arch/arm/util/auxtrace.c | 53 ++++++++++++++++++-----------
->  1 file changed, 34 insertions(+), 19 deletions(-)
-> 
+One query inline.
+
+
 > diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-> index 5fc6a2a3dbc5..384c7cfda0fd 100644
+> index 384c7cfda0fd..297fffedf45e 100644
 > --- a/tools/perf/arch/arm/util/auxtrace.c
 > +++ b/tools/perf/arch/arm/util/auxtrace.c
-> @@ -50,16 +50,32 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
->  	return arm_spe_pmus;
->  }
->  
-> +static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
-> +					   int pmu_nr, struct evsel *evsel)
-> +{
-> +	int i;
-> +
-> +	if (!pmus)
-> +		return NULL;
-> +
-> +	for (i = 0; i < pmu_nr; i++) {
-> +		if (evsel->core.attr.type == pmus[i]->type)
-> +			return pmus[i];
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  struct auxtrace_record
->  *auxtrace_record__init(struct evlist *evlist, int *err)
+
+...
+
+>  static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
+>  					   int pmu_nr, struct evsel *evsel)
 >  {
-> -	struct perf_pmu	*cs_etm_pmu;
-> +	struct perf_pmu	*cs_etm_pmu = NULL;
-> +	struct perf_pmu **arm_spe_pmus = NULL;
+> @@ -71,17 +120,21 @@ struct auxtrace_record
+>  {
+>  	struct perf_pmu	*cs_etm_pmu = NULL;
+>  	struct perf_pmu **arm_spe_pmus = NULL;
+> +	struct perf_pmu **hisi_ptt_pmus = NULL;
 >  	struct evsel *evsel;
-> -	bool found_etm = false;
-> +	struct perf_pmu *found_etm = NULL;
+>  	struct perf_pmu *found_etm = NULL;
 >  	struct perf_pmu *found_spe = NULL;
-> -	struct perf_pmu **arm_spe_pmus = NULL;
-> +	int auxtrace_event_cnt = 0;
+> +	struct perf_pmu *found_ptt = NULL;
+>  	int auxtrace_event_cnt = 0;
 >  	int nr_spes = 0;
-> -	int i = 0;
+> +	int nr_ptts = 0;
 >  
 >  	if (!evlist)
 >  		return NULL;
-> @@ -68,24 +84,23 @@ struct auxtrace_record
+>  
+>  	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
 >  	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+> +	hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
 >  
 >  	evlist__for_each_entry(evlist, evsel) {
-> -		if (cs_etm_pmu &&
-> -		    evsel->core.attr.type == cs_etm_pmu->type)
-> -			found_etm = true;
-> -
-> -		if (!nr_spes || found_spe)
-> -			continue;
-> -
-> -		for (i = 0; i < nr_spes; i++) {
-> -			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
-> -				found_spe = arm_spe_pmus[i];
-> -				break;
-> -			}
-> -		}
-> +		if (cs_etm_pmu && !found_etm)
-> +			found_etm = find_pmu_for_event(&cs_etm_pmu, 1, evsel);
+>  		if (cs_etm_pmu && !found_etm)
+> @@ -89,9 +142,13 @@ struct auxtrace_record
+>  
+>  		if (arm_spe_pmus && !found_spe)
+>  			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
 > +
 > +		if (arm_spe_pmus && !found_spe)
-> +			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
->  	}
-> +
->  	free(arm_spe_pmus);
->  
-> -	if (found_etm && found_spe) {
-> -		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
-> +	if (found_etm)
-> +		auxtrace_event_cnt++;
-> +
-> +	if (found_spe)
-> +		auxtrace_event_cnt++;
-> +
-> +	if (auxtrace_event_cnt > 1) {
-> +		pr_err("Concurrent AUX trace operation not currently supported\n");
->  		*err = -EOPNOTSUPP;
->  		return NULL;
->  	}
 
+		if (hisi_ptt_pmus && !found_ptt) ?
+
+Otherwise, I'm not sure what the purpose of the checking against spe is.
+
+> +			found_ptt = find_pmu_for_event(hisi_ptt_pmus, nr_ptts, evsel);
+>  	}
+>  
+>  	free(arm_spe_pmus);
+> +	free(hisi_ptt_pmus);
+>  
+>  	if (found_etm)
+>  		auxtrace_event_cnt++;
+> @@ -99,6 +156,9 @@ struct auxtrace_record
+>  	if (found_spe)
+>  		auxtrace_event_cnt++;
+>  
+> +	if (found_ptt)
+> +		auxtrace_event_cnt++;
+> +
+>  	if (auxtrace_event_cnt > 1) {
+>  		pr_err("Concurrent AUX trace operation not currently supported\n");
+>  		*err = -EOPNOTSUPP;
+> @@ -111,6 +171,9 @@ struct auxtrace_record
+>  #if defined(__aarch64__)
+>  	if (found_spe)
+>  		return arm_spe_recording_init(err, found_spe);
+> +
+> +	if (found_ptt)
+> +		return hisi_ptt_recording_init(err, found_ptt);
+>  #endif
+>  
