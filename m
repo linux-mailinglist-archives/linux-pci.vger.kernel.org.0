@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56148528B11
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 18:53:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC52C528B7F
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 19:01:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233927AbiEPQxN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 12:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47976 "EHLO
+        id S236562AbiEPRBj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 13:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231515AbiEPQxN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 12:53:13 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3791326109
-        for <linux-pci@vger.kernel.org>; Mon, 16 May 2022 09:53:10 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id a11so14580320pff.1
-        for <linux-pci@vger.kernel.org>; Mon, 16 May 2022 09:53:10 -0700 (PDT)
+        with ESMTP id S1343928AbiEPRBh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 13:01:37 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 399071FA64
+        for <linux-pci@vger.kernel.org>; Mon, 16 May 2022 10:01:36 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id a23-20020a17090acb9700b001df4e9f4870so3512131pju.1
+        for <linux-pci@vger.kernel.org>; Mon, 16 May 2022 10:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rjHF8zda0dHK9R6BiA7/mpdj4GqfMpRrnLZAGeQsbQ4=;
-        b=c8ASxvEJW5nax9QQU6iCpSG4ZYKojIo9eZP+PsckgkCDDLCf3AJp5KwBmXahcy47wU
-         jn5voZ3lSn7LiFGqDs3CQKjHF14Z8iQ2FqCJ4edMnkEaq91ohIlPypXBEp35zZRARmyO
-         T7qkgHBS4AduriourFmaolMdjMLl3YPlFVnVTih0YvMn55iqez9cR4Jp8QPc8pmhoQTw
-         EEXd8FylqkipG5usq/IskctgiXuELiztD01bJF56ZjhC1ZAKlhxSAjsLvYT4D1qSzuT1
-         ZITnkCuekyYPKPPM6n75H/VfYk8xokhgW6oX5IRLxJdcrEv4Bf3jk6jF3Iiqffb3LlqQ
-         /8tQ==
+        bh=kIsSnaw8orIslw424fHicKF35fPEwzrqGDoMb7keQtA=;
+        b=1iCaLn8jhpaxZfLnHCR1cqCMRHr/Klck6jGzgFQ7ljDFVZLzmWHoZfNYXPmS9j/g6U
+         ohYjH+DZo+bhDnNrdQgluvJ91PWqYm2kRJQ/g6Fr9x1igJ+x0Rf32c0UYwkQBApSfLht
+         wPyqNGTxaHyEWv6bqUI62wmJ8f6lYlw2R1an3bljVpsgZu6HO8HDDTtAOGwANcr/M6mp
+         TkBb5IyJt6KA9eyxIWNJ1xL4GWuSlfwRszxhFz2Bv3DkEbLBuEuxYtAVv239Shf/N9Ly
+         Ja247Lw4G1t9jCFLtd5WjNg7Yil3s5eToGwpc3S2MVgwHmJJfazyBl7EaJCLr8Ar2d7j
+         Eymw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rjHF8zda0dHK9R6BiA7/mpdj4GqfMpRrnLZAGeQsbQ4=;
-        b=rtMR3mlAJbScM1LVBfjOd7y19JzrU3BZ+AaNnpF/AcYrA9kWuj1ucUxydx07lPlZYB
-         uPw4Sk4nb3LJvtDaz/JKzAZMpFgcX4HLhY9A9L0RPlxhct7hZ/dIHiFPZOl9Z1ZD+Fmi
-         dozrkFmSyBw/G7GjYdoxcgFD4bcEjALbV7JHW6daKOxzA5FB4YXGlrp+S4a98HafzD4C
-         zckz9o5aZrp2Z8L2TL7BEC+3eJ7bplynH21hLtZ0VwnXWYC0d9JmzGqO7aNlVGw1KWkC
-         fu9SEvwku4Per5iJmV54vLxhzhlVurJBeDneSZaDl7ONL3iV9E2Dj9AanFRuO+l/0Gw9
-         QSzA==
-X-Gm-Message-State: AOAM532vCkK/d/yoWfGM6CzYFoQSHdQ7PCyQ2GpRcowSZs9gJvywMOYR
-        S3XteRh8EbYW9JYCs+D9GmTumczRFD6u9onLa4tQXsmZWjgYMA==
-X-Google-Smtp-Source: ABdhPJxDGqueclwPT3xn/oAhTGJ0M5G0ecdqKPoH5ncXJjXgBTEB25HB3Q68UL0Hh1+L5In9RqS9A4T8zwXjFaav0WY=
-X-Received: by 2002:a62:a105:0:b0:50d:c97b:3084 with SMTP id
- b5-20020a62a105000000b0050dc97b3084mr17987923pff.61.1652719989687; Mon, 16
- May 2022 09:53:09 -0700 (PDT)
+        bh=kIsSnaw8orIslw424fHicKF35fPEwzrqGDoMb7keQtA=;
+        b=3CBqsfDeaDPLCOmFWmBcitIdJIDYZ5OMB+KSzxRgF1rs2kAlOv2VC/cJjtFrj7Kx9x
+         BbqkaLGbTVK9ZC8DYdBM+6Z2+iKdHPmOJ1HOS02H1aiYwOZK3bEsdZiTO0ky6f3HUPl5
+         XS/0iqMv8Nk2Yx9+eapbWjxfxyQ4krNQ6b2NifElgwAcSZEvTbemlr20RuFGtFsBdzfo
+         lN2mStHhKgGRBY6N9BMHEEBzAeO6hexccd9oEHsY/kHzUDtHEdwHQUyLTIwCaCDAKuH4
+         9mxiBpYCKSGAHm7C0o9/5Ss5KpQgvbFzL3Wz5r9rVnKBSb9OoSql3Grht6qBlrxUYpcp
+         32cg==
+X-Gm-Message-State: AOAM530Zt2lMEvtHh5DoqF/DDaxkFcAtInc2r50atFwAMzFRzO1m90Jh
+        d9HkbnpYXGq0sxdIu8sVb4PRtQsjPqGAsSMZH6k+/X07AV9ZBQ==
+X-Google-Smtp-Source: ABdhPJxuaYM6L0XNs+yZqORMULtGWSrGNHDEzJk9QbNoMp20hWlrn9GFyIA4km+CEyh01Gk5SD4oBDkNJX+yffOb+es=
+X-Received: by 2002:a17:90b:388f:b0:1dc:6e0f:372b with SMTP id
+ mu15-20020a17090b388f00b001dc6e0f372bmr20031688pjb.93.1652720495744; Mon, 16
+ May 2022 10:01:35 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
  <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
  <20220507101848.GB31314@wunner.de> <20220509104806.00007c61@Huawei.com>
- <20220511191345.GA26623@wunner.de> <CAPcyv4idjqiY9CV=sghDbWqQS_PM2Z0xWxr2MsrMxS-XqU1F=w@mail.gmail.com>
- <20220514133114.GA14833@wunner.de>
-In-Reply-To: <20220514133114.GA14833@wunner.de>
+ <20220511191345.GA26623@wunner.de> <20220511191943.GB26623@wunner.de>
+ <CAPcyv4hUKjt7QrA__wQ0KowfaxyQuMjHB5V-=rZBm=UbV4OvSg@mail.gmail.com> <20220514135521.GB14833@wunner.de>
+In-Reply-To: <20220514135521.GB14833@wunner.de>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 16 May 2022 09:53:00 -0700
-Message-ID: <CAPcyv4gTrq8qWJhKkM2tEi05kMGwwN4Kt4Axh2y_PRf3FtrMrA@mail.gmail.com>
+Date:   Mon, 16 May 2022 10:01:26 -0700
+Message-ID: <CAPcyv4izKEGKw0L=QkTxp8MMfuWxzF9Rz4Bb_F0rRRiy_+2m8w@mail.gmail.com>
 Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
 To:     Lukas Wunner <lukas@wunner.de>
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
@@ -73,77 +73,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 14, 2022 at 6:31 AM Lukas Wunner <lukas@wunner.de> wrote:
+On Sat, May 14, 2022 at 6:55 AM Lukas Wunner <lukas@wunner.de> wrote:
 >
-> On Wed, May 11, 2022 at 12:42:24PM -0700, Dan Williams wrote:
-> > I think power-management effects relative to IDE is a soft spot of the
-> > specification.
->
-> When resuming from system sleep, the kernel restores a device's
-> config space in pci_pm_resume_noirq(), then calls the driver's
-> ->resume_noirq() callback.  The driver is free to assume that
-> the device is accessible und usable at that point.
->
-> IDE breaks that contract if establishment of an SPDM session
-> depends on user space.  We can't call out to user space for
-> authentication during the resume_noirq phase because interrupts
-> are still disabled.
->
-> Drivers would have to be aware that IDE has not yet been
-> re-established and refrain from accessing the device.
-> Any child devices of the PCI device cannot be resumed
-> until then.
-
-Suspend has larger issues with CXL:
-
-https://lore.kernel.org/linux-cxl/165066828317.3907920.5690432272182042556.stgit@dwillia2-desk3.amr.corp.intel.com/
-
-...so IDE is just one more problem on top that requires disabling
-suspend. Unless / until firmware takes responsibility for setting up
-IDE I am not seeing a clean option for allowing the link to go down.
-
-> Ideally we'd want IDE to be transparent to drivers.
-> That's impossible if their access to devices is forbidden
-> after system sleep for an indefinite amount of time.
->
-> Runtime PM has similar issues as system sleep if the device
-> was in D3cold.
->
-> Reliance on user space also entails a risk of deadlocks:
-> Let's say user space process A accesses a PCI device,
-> the kernel runtime resumes the device and calls out to
-> user space process B to authenticate it.  If A is holding
-> a resource that B requires, the two tasks deadlock and
-> the device never becomes accessible.
->
-> The more I think about it, the more attractive does Jonathan's
-> in-kernel SPDM approach look.  Performing SPDM authentication and
-> IDE setup in the kernel would allow us to retain all existing
-> assumptions and behavior around power management and reset recovery,
-> avoid driver awareness of IDE and avoid deadlocks.
-
-I agree with you that userspace coordination has these problems, but
-they are secondary to the larger problem that hosting memory behind
-PCI devices causes.
-
->
->
-> > > If setting up an SPDM session is dependent on user space, the kernel
-> > > would have to leave a device in an inoperable state after runtime resume
-> > > or reset, until user space gets around to initiate SPDM.
+> On Wed, May 11, 2022 at 12:43:34PM -0700, Dan Williams wrote:
+> > On Wed, May 11, 2022 at 12:20 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > But the reset argument still stands:  That same section says that all
+> > > IDE streams transition to Insecure and all keys are invalidated upon
+> > > reset.
 > >
-> > Yes, this seems acceptable from the perspective of server platforms
-> > that can make the power management vs security tradeoff.
+> > Right, this isn't the only problem with reset vs ongoing CXL operations...
+> >
+> > https://lore.kernel.org/linux-cxl/164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com/
 >
-> It seems likely that IDE will not only be used on server platforms.
+> The above-linked cover letter refers to AER.
+>
+> I believe with AER, the kernel is notified of an error via an interrupt
+> and asynchronously attempts recovery through a reset.
+> Obviously, an eternity may pass until the kernel gets around to do that
+> and whether accesses performed between the initial error and the reset
+> succeed is sort of undefined.  So it's kind of a "best effort" error
+> recovery.
+>
+> With the advent of DPC, the situation has improved considerably as the
+> hardware (not the kernel) automatically disables the link upon occurrence
+> of the initial error.
 
-I expect IDE outside of the server space will need to be platform
-firmware managed. OS managed IDE seems a stopgap to platform firmware
-validating devices to be within the trusted compute boundary.
+DPC, as far is I can see, is broken for CXL, any link going down
+causes the entire active interleaved memory range to be lost. Hence
+the "hopeful" designation in that patch set, if the link is going down
+to DPC the chance that the kernel runs long enough to even report the
+error is at risk.
 
-> I'll see to to it that I provide more review feedback to Jonathan's RFC
-> series so that we can move forward with this.
+> Any subsequent accesses will fail and the kernel
+> does not perform a reset itself (the hardware already did that) but merely
+> attempts to bring the link back up.  That has made error recovery pretty
+> solid and NVMe drives now seamlessly recover from errors without the need
+> to unbind/rebind the driver.  Data centers heavily depend on that feature.
+
+Works great for NVME.
+
 >
-> Thanks,
->
-> Lukas
+> Perhaps if CXL.mem used DPC, it would be able to recover more reliably?
+
+So far all I can see are attempts to fail a bit more gracefully, but I
+would not consider this a reliable architecture for recovery:
+
+https://www.computeexpresslink.org/_files/ugd/0c1418_f63f7f1a9f474ba2b00f5e77429867cb.pdf
+
+> Circling back to the SPDM/IDE topic, while NVMe is now capable of
+> reliably recovering from errors, it does expect the kernel to handle
+> recovery within a few seconds.  I'm not sure we can continue to
+> guarantee that if the kernel depends on user space to perform
+> re-authentication with SPDM after reset.  That's another headache
+> that we could avoid with in-kernel SPDM authentication.
+
+What is missing from this conversation is what constitutes a device
+leaving the trusted compute boundary and is the existing attestation
+invalidated by a reset. I.e. perhaps the kernel can just do a
+keep-alive heartbeat after the reset with the already negotiated key
+to confirm the session is still valid.
