@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A4352930A
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 23:42:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A38FF52939D
+	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 00:29:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347745AbiEPVmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 17:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53678 "EHLO
+        id S232373AbiEPW30 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 18:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240045AbiEPVmY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 17:42:24 -0400
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B8241FA9;
-        Mon, 16 May 2022 14:42:23 -0700 (PDT)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-d6e29fb3d7so21937019fac.7;
-        Mon, 16 May 2022 14:42:23 -0700 (PDT)
+        with ESMTP id S231352AbiEPW3Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 18:29:24 -0400
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1295B2E0B7;
+        Mon, 16 May 2022 15:29:23 -0700 (PDT)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-d39f741ba0so22050574fac.13;
+        Mon, 16 May 2022 15:29:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=miM/1tXgf+EMfrnuisvw3gl4b5yUK9GRE+3nbD24k6w=;
-        b=J2BS1ngDxjlrGHmbE/LPCY9+YtO8oCSwTdW3N+lslWL/66vec8FWgXGnLt/CtBA5R7
-         7m9Umn+ScVxiJny0jtxrDgfhDni8E6sDpQFh2KgxMJ018zIzwTVDeTdXOMVHTsvXss9l
-         Ssyc5ALkVxXBF22S7ID0gk29gzFDhZSW/EFIy1WErywpE/8jCLoZeUS8K4pHLY06wQAz
-         UVn6zUhVLnF4S1pi+YD+Phyjm9gLvfiZ1kZAUTHWaGRPtpXBvd7ZnDturorZ8TP2y9dE
-         qyVIodju8b27BtbV7lYIXpo6USDsEqAzEEUJ7sCuO7hXehP0Cw0iVOTMmW9NEOr18p+Y
-         y9/A==
-X-Gm-Message-State: AOAM5308wzzo/8sxCkZdd+Gj33xdE/eIn5uXcztgDPuww3o9zqMJK7vn
-        is+7TYYrxTmTEi3g8QCOKw==
-X-Google-Smtp-Source: ABdhPJwlfoPVrO/78d0K4Yx5rMPYvlNVxl1Ly43cRjbP3YvRizhf5gwB83n/72cjgdooIBzjkmASNg==
-X-Received: by 2002:a05:6871:1cb:b0:f1:b503:d187 with SMTP id q11-20020a05687101cb00b000f1b503d187mr1673725oad.164.1652737342264;
-        Mon, 16 May 2022 14:42:22 -0700 (PDT)
+        bh=yh0XlI6sXmeAe5luM19N0LQkxijUinkf8sEAUNmYP3Q=;
+        b=qS+ZKHOHLGJ8rP537lfXf64DFns50xjyGJfYspl7ecBhnDC7KX3WUZ4Q6jhp9mCLzc
+         naS+Zl1m1VkBAcPRDQVF7Qs7jOAm2exKxQkXGnI51dBTfj0+7m7Xi5PDhgALDe+HESuR
+         Cl1n0bKecYHCQ8E9VitYPu7sEgkB5245M1I2OGwK+FfQtDedOi7/z2ooKzkENJHwlgdR
+         zVCJkAeTlspycg8tMllFhYMAWXk8sIBvni+ddERjMWE58yNmOt0FUZfHP5JwuMCFSLgL
+         Cv7a1xh8PzbVLQODLITLs/VQHLBQdfd9li643BesfeLk6Y8yriCz9VflCZ5QaJo5/K2I
+         UWnA==
+X-Gm-Message-State: AOAM531Np0hNwpjwfoTP9JLf7IKeBMvmBW7J2rC5PGnAWCsKkU7c0+ha
+        wTNoTM8c+9C8SMImsLuU9w==
+X-Google-Smtp-Source: ABdhPJzLT9vxyhF1uirDEmBGXBu9ZLZamqOMw/AyDL+VxWaiVJrIVZNyky+QyzXlRh87Yu7ARSgqRw==
+X-Received: by 2002:a05:6870:179a:b0:f1:805a:dbec with SMTP id r26-20020a056870179a00b000f1805adbecmr7011164oae.25.1652740162306;
+        Mon, 16 May 2022 15:29:22 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id f72-20020a9d03ce000000b0060603221270sm4296518otf.64.2022.05.16.14.42.21
+        by smtp.gmail.com with ESMTPSA id e2-20020a056870a60200b000e99b1909d4sm5808505oam.25.2022.05.16.15.29.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 May 2022 14:42:21 -0700 (PDT)
-Received: (nullmailer pid 3347472 invoked by uid 1000);
-        Mon, 16 May 2022 21:42:20 -0000
-Date:   Mon, 16 May 2022 16:42:20 -0500
+        Mon, 16 May 2022 15:29:21 -0700 (PDT)
+Received: (nullmailer pid 3427730 invoked by uid 1000);
+        Mon, 16 May 2022 22:29:20 -0000
+Date:   Mon, 16 May 2022 17:29:20 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Jingoo Han <jingoohan1@gmail.com>,
@@ -53,68 +53,100 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 15/17] PCI: dwc: Introduce dma-ranges property support
- for RC-host
-Message-ID: <20220516214220.GB3296584-robh@kernel.org>
+Subject: Re: [PATCH v2 16/17] PCI: dwc: Introduce generic platform clocks and
+ resets sets
+Message-ID: <20220516222920.GC3296584-robh@kernel.org>
 References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
- <20220503214638.1895-16-Sergey.Semin@baikalelectronics.ru>
+ <20220503214638.1895-17-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220503214638.1895-16-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220503214638.1895-17-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 12:46:36AM +0300, Serge Semin wrote:
-> In accordance with the generic PCIe Root Port DT-bindings the "dma-ranges"
-> property has the same format as the "ranges" property. The only difference
-> is in their semantics. The "dma-ranges" property describes the PCIe-to-CPU
-> memory mapping in opposite to the CPU-to-PCIe mapping of the "ranges"
-> property. Even though the DW PCIe controllers are normally equipped with
-> internal Address Translation Unit which inbound and outbound tables can be
-> used to implement both properties semantics, it was surprise for me to
-> discover that the host-related part of the DW PCIe driver currently
-> supports the "ranges" property only while the "dma-ranges" windows are
-> just ignored. Having the "dma-ranges" supported in the driver would be
-> very handy for the platforms, that don't tolerate the 1:1 CPU-PCIe memory
-> mapping and require customized the PCIe memory layout. So let's fix that
-> by introducing the "dma-ranges" property support.
+On Wed, May 04, 2022 at 12:46:37AM +0300, Serge Semin wrote:
+> Currently almost each platform driver uses its own resets and clocks
+> naming in order to get the corresponding descriptors. It makes the code
+> harder to maintain and comprehend especially seeing the DWC PCIe core main
+> resets and clocks signals set hasn't changed much for about at least one
+> major IP-core release. So in order to organize things around these signals
+> we suggest to create a generic interface for them in accordance with the
+> naming introduced in the DWC PCIe IP-core reference manual:
 > 
-> First of all we suggest to rename the dw_pcie_prog_inbound_atu() method to
-> dw_pcie_prog_ep_inbound_atu() and create a new version of the
-> dw_pcie_prog_inbound_atu() function. Thus we'll have two methods for RC
-> and EP controllers respectively in the same way as it has been developed
-> for the outbound ATU setup methods.
+> Clocks:
+> - DBI - data bus interface clock (on some DWC PCIe platforms it's
+>   referred as "pclk", "pcie", "sys", "ahb", "cfg", "iface", "gio", "reg",
+>   "pcie_apb_sys");
+> - MSTR - AXI-bus master interface clock (some DWC PCIe glue drivers refer
+>   to this clock as "port", "bus", "pcie_bus",
+>   "bus_master/master_bus/axi_m", "pcie_aclk");
+> - SLV - AXI-bus slave interface clock (also called as "port", "bus",
+>   "pcie_bus", "bus_slave/slave_bus/axi_s", "pcie_aclk",
+>   "pcie_inbound_axi");
+> - PIPE - Core-PCS PIPE interface clock coming from external PHY (it's
+>   normally named by the platform drivers as just "pipe")
+> - CORE - primary clock of the controller (none of the platform drivers
+>   declare such a clock but in accordance with the ref. manual the devices
+>   may have it separately specified);
+> - AUX - Auxiliary PMC domain clock (it is named by some platforms as
+>   "pcie_aux" and just "aux")
+> - REF - Generic reference clock (it is a generic clock source, which can
+>   be used as a signal source for multiple interfaces, some platforms call
+>   it as "ref", "general", "pcie_phy", "pcie_phy_ref").
 > 
-> Secondly aside with the memory window index and type the new
-> dw_pcie_prog_inbound_atu() function will accept CPU address, PCIe address
-> and size as its arguments. These parameters define the PCIe and CPU memory
-> ranges which will be used to setup the respective inbound ATU mapping. The
-> passed parameters need to be verified against the ATU ranges constraints
-> in the same way as it is done for the outbound ranges.
+> Application resets:
+> - DBI - Data-bus interface reset (it's CSR interface clock and is normally
+>   called as "apb" though technically it's not APB but DWC PCIe-specific
+>   interface);
+>   apb, sys,
+> - MSTR -AXI-bus master reset (some platforms call it as "port", "apps",
+>   "bus", "axi_m");
+> - SLV - ABI-bus slave reset (some platforms call it as "port", "apps",
+>   "bus", "axi_s").
 > 
-> Finally the DMA-ranges detected for the PCIe controller need to be
-> converted into the inbound ATU entries during the host controller
-> initialization procedure. It will be done in the framework of the
-> dw_pcie_iatu_setup() method. Note before setting the inbound ranges up we
-> need to disable all the inbound ATU entries in order to prevent unexpected
-> PCIe TLPs translations defined by some third party software like
-> bootloader.
+> Core resets:
+> - NON_STICKY - Non-sticky CSR flags reset;
+> - STICKY - sticky CSR flags reset;
+> - PIPE - PIPE-interface (Core-PCS) logic reset (some platforms call it
+>   just "pipe");
+> - CORE - controller primary reset (resets everything except PMC module,
+>   some platforms refer to this signal as "soft", "pci");
+> - PHY - PCS/PHY block reset (strictly speaking it is normally connected to
+>   the out of the external block, but the reference manual says it must be
+>   available for the PMC working correctly, some existing platforms call it
+>   as "pciephy", "phy", "link");
+> - HOT - PMC hot reset signal (also called as sleep");
+> - PWR - cold reset signal (can be referred as "pwr", "turnoff").
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
->  .../pci/controller/dwc/pcie-designware-host.c | 32 ++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.c  | 57 ++++++++++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.h  |  6 +-
->  4 files changed, 90 insertions(+), 9 deletions(-)
+> As you can see each platform uses it's own naming for basically the same
+> set of the signals. In the framework of this commit we suggest to add a
+> set of the clocks and signals identifiers and corresponding names for each
+> denoted entity. The platforms will be able to use them to define local
+> mapping tables between the generic identifiers and the available set of
+> the clocks and resets. The tables can be then utilized to create the
+> corresponding bulk-arrays, which in its turn can be passed to the
+> clock/reset-bulk API methods to easily get/enable/disable/put,
+> get/reset/assert/deassert/put all the handlers at once or, if it's
+> required, manipulate with the handlers individually.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+No doubt there is way to much variation here (ummm, Qcom!). Some 
+standardization of names in (new) bindings would be good. That's where 
+we should be defining names IMO.
+
+On the driver side, I'd like to see the DW core handle clocks/resets/phys 
+at least for the easy cases of just turn on/off all the clocks and 
+toggle all resets. Perhaps even more minimally, move the clk/reset 
+struct pointers to the DWC core.
+
+IOW, I'm not sure this patch is really helpful without some of the above 
+happening. 
+
+Rob
