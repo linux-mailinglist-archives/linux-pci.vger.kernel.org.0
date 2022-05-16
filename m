@@ -2,55 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 150805291A3
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 22:48:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD77052903D
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 22:44:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231317AbiEPUjP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 16:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60668 "EHLO
+        id S1347688AbiEPUkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 16:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348733AbiEPUhC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 16:37:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B0945001E;
-        Mon, 16 May 2022 13:18:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 973B96124D;
-        Mon, 16 May 2022 20:18:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9343CC34115;
-        Mon, 16 May 2022 20:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652732299;
-        bh=+6uDV10Sc3DTLJDwxFmU67G8zR9GmxWTjZaSRJ32XLg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=e4kdVQ/Dpfon3rGXiGajSkfjR9K2FBo1wKLw+wBBNeMi+8vyzfTWecKzDAW3TzJ7z
-         hxID2Br1Mj8PN/ghRReXgpxOIUhovVXSC7q6OCnTP0fBTK+2B045Dd01UGJQ+/SBmD
-         0YmUSh87/GSaM70G2VJ7hhy2LGITABy1w11uDcGncZMALgUpekTZHVRDOwD7Z8oqBq
-         pw3kHdktEP7gZuRSm0gpVZGAMiF996gaYID9Axl6FPHNQ7xMB93+ks+STQmDifhLkq
-         ulNVvCjlwUGzbchx+0ihF8VPGYcos2W0d5K1dYo2vpVvIgdbOGqEw4LN0ye0tNN+mg
-         cn2fff1GBOWxg==
-Date:   Mon, 16 May 2022 15:18:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, kbusch@kernel.org,
-        hch@lst.de, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, svarbanov@mm-sol.com,
-        bjorn.andersson@linaro.org, axboe@fb.com,
-        quic_vbadigan@quicinc.com, quic_krichai@quicinc.com,
-        quic_nitirawa@quicinc.com, vidyas@nvidia.com, sagi@grimberg.me
-Subject: Re: [PATCH 1/3] PCI: Add a flag to notify PCI drivers about
- powerdown during suspend
-Message-ID: <20220516201817.GA1047280@bhelgaas>
+        with ESMTP id S1349511AbiEPUij (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 16:38:39 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B8A50468;
+        Mon, 16 May 2022 13:18:50 -0700 (PDT)
+Received: by mail-oi1-f180.google.com with SMTP id l16so20025809oil.6;
+        Mon, 16 May 2022 13:18:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fQwPmeMbnyVUc/1zZOzdiaGv8oZUwRX2AH24X74Xh80=;
+        b=A2x3lV8LGGh+z8ow3JABCYcrBFA6nrOPr8VI6T4UWrYBLobYhEsBxKh5lZlIWTlnBO
+         stvTidEPCOg7tDZcKLuL4WY60/lbMdMddj0NHAedYVngwspZwecYtUjj3hrKZzFI2bU1
+         E6CAxHo5d+X9CdwF20uK1z7co4klBOF88wEWwTsuUnZyzq3WCcIvzwOMpaZEMxRvj64X
+         QtXHO7z7s1CY0lggw40nO6F3RAR2e9USWFPNwuHtglC7XppufjI2ozZe0Rnvv0xiG6gC
+         qAv33VEROw0yjO9SsJ9mmwTmh0uEGFp5Dzkr/pHAq7UnN3Tutritnm9HYDS4e/dh89qd
+         JXxw==
+X-Gm-Message-State: AOAM531AlB5V7KcIl0r3qWxjK8Z5WIpSJu8JoUNPiv/mz7cjY2fH7NJL
+        JI4E3yLOpdKhfjyY1am43w==
+X-Google-Smtp-Source: ABdhPJxGMHHQtH6AccwOnAsP6opHqwuWr/lJDRPnbbFvlzXjbgT84u7Y4pK+INnmxljHHJb3NaIqug==
+X-Received: by 2002:a05:6808:130b:b0:326:d1ff:b56f with SMTP id y11-20020a056808130b00b00326d1ffb56fmr13702343oiv.222.1652732329632;
+        Mon, 16 May 2022 13:18:49 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g18-20020a9d6212000000b0060603221260sm4331069otj.48.2022.05.16.13.18.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 May 2022 13:18:49 -0700 (PDT)
+Received: (nullmailer pid 3205772 invoked by uid 1000);
+        Mon, 16 May 2022 20:18:47 -0000
+Date:   Mon, 16 May 2022 15:18:47 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 03/17] PCI: dwc: Add more verbose link-up message
+Message-ID: <20220516201847.GB3073005-robh@kernel.org>
+References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503214638.1895-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220513110027.31015-2-manivannan.sadhasivam@linaro.org>
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20220503214638.1895-4-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,40 +72,26 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 13, 2022 at 04:30:25PM +0530, Manivannan Sadhasivam wrote:
-> On some systems like Chromebooks based on Qcom chipsets, the OS may
-> powerdown all PCIe devices during system suspend for aggressive
-> powersaving. In that case, the PCI host controller drivers need to notify
-> the PCI device drivers that the power will be taken off during system
-> suspend so that the drivers can prepare the devices accordingly.
-
-"The OS may powerdown all PCIe devices ..." makes it sound like this
-is an OS policy decision.  Where exactly (what function) is that?
-
-Or if it's not an OS policy decision, but rather some property of the
-hardware, say that specifically.
-
-> One prime example is the PCI NVMe driver. This flag can be used by the
-> driver to shutdown the NVMe device during suspend and recover it during
-> resume.
+On Wed, May 04, 2022 at 12:46:24AM +0300, Serge Semin wrote:
+> Printing just "link up" isn't that much informative especially when it
+> comes to working with the PCI Express bus. Even if the link is up, due to
+> multiple reasons the bus performance can degrade to slower speeds or to
+> narrower width than both Root Port and its partner is capable of. In that
+> case it would be handy to know the link specifications as early as
+> possible. So let's add a more verbose message to the busy-wait link-state
+> method, which will contain the link speed generation and the PCIe bus
+> width in case if the link up state is discovered. Otherwise an error will
+> be printed to the system log.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
 > ---
->  include/linux/pci.h | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 60adf42460ab..069caf1fe88d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -578,6 +578,7 @@ struct pci_host_bridge {
->  	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
->  	unsigned int	size_windows:1;		/* Enable root bus sizing */
->  	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
-> +	unsigned int	suspend_poweroff:1;	/* OS may poweroff devices during system suspend */
->  
->  	/* Resource alignment requirements */
->  	resource_size_t (*align_resource)(struct pci_dev *dev,
-> -- 
-> 2.25.1
-> 
+> Changelog v2:
+> - Test the error condition first and return straight away if it comes true.
+>   The typical return is better to be unindented (@Joe).
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 22 ++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
