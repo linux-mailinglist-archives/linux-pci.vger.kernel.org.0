@@ -2,70 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DC2C529275
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 23:08:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BDE05292C0
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 23:19:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349063AbiEPVId (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 May 2022 17:08:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36224 "EHLO
+        id S1349188AbiEPVMy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 17:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349169AbiEPVIM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 17:08:12 -0400
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E955A4A3C8;
-        Mon, 16 May 2022 13:49:44 -0700 (PDT)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-edf9ddb312so21773769fac.8;
-        Mon, 16 May 2022 13:49:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dJ407RX9rra+MeG41XsuDhxD1nvVBeIHBR/vdQHMxFg=;
-        b=uGnV8i7EYk9xkRxbGIAMf418oeQ21KaYhYgowf2A8Vjd1QfUKN0nrw8E6GKqiwZu4Z
-         HDq7Q+CkWPNONUBqc5ecbQLl/2TB0k87rKSJsqOGfrK0ILY4Ih7UXk1JodpzHhPMMMEE
-         X/ieg0ezp8uETsPc4Xj2JNDoEBXJLvEgjujThQc0jbBFtnXVYY8Vb8claRIFIa172oXt
-         2y0DXKRWlFOyB0wav+uxASE0NCpab1+qvwMp92YmyiM4GtvZchi9Lfvh6R+KzS+USEGp
-         /kvL4iuBaPlhumU9vVvKTTr7lViMclSWluR7YV1rxd7F8aJnG9BI9HuNT+XzXcCUFLe/
-         ZcWg==
-X-Gm-Message-State: AOAM533L8IRKnD8E53wXa6Kb9BMPlr1SJYiY4zooFQ6Likc1YShOskbM
-        Hgbc8f/m+uCxXbhj4MgJFg==
-X-Google-Smtp-Source: ABdhPJwSZjeoTdSCcmGSB5osGq7WGCVKCO9I/IGTjq81+0ENZwa2gjhYxpSHG+AyOhA/zPGQj+g1IQ==
-X-Received: by 2002:a05:6870:b527:b0:ed:9cbd:e04a with SMTP id v39-20020a056870b52700b000ed9cbde04amr16246920oap.41.1652734184207;
-        Mon, 16 May 2022 13:49:44 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id s124-20020aca5e82000000b00325cda1ffb8sm4158039oib.55.2022.05.16.13.49.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 May 2022 13:49:43 -0700 (PDT)
-Received: (nullmailer pid 3259375 invoked by uid 1000);
-        Mon, 16 May 2022 20:49:42 -0000
-Date:   Mon, 16 May 2022 15:49:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S1349845AbiEPVLv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 17:11:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11211F62C;
+        Mon, 16 May 2022 13:59:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8DA1EB810D6;
+        Mon, 16 May 2022 20:59:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E53DC385AA;
+        Mon, 16 May 2022 20:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652734774;
+        bh=btHaRh7nhG2ZbH6Hgvqssi1bUIvxt7+K6QklIUGoEZg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=AE6pPRWxQMWCGVxxtPgPoH7/3dtCeE87EuMKI364rTl0KiDhiGm0sk08cEGSwnKq9
+         +StpIlCmeUiO+Op6Ca+KHCl7zB4aLHHA2eqCET9UVESbm8qdGMyr5LCu3YP+ld+RMn
+         pzLBd0e+s05r00WAOlZwCLekVChPJcu3cSogwNHizGq5KofKij/BAFWu7sEkbFoIJB
+         PUTZEmSVYXqV1bHQq1niQe/soA0HnNASYXJ24jdKochAu4NQoLgxyuQcp5uC5kNLmn
+         +KEq/NYfih4jnaVzlyt4eQOpTi2zxrqYvF5zffUl6WKM8lS86Xd8PjKxuAfIjFQCub
+         M5wmzgfQaS9HQ==
+Date:   Mon, 16 May 2022 15:59:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/17] PCI: dwc: Drop iATU regions enumeration -
- dw_pcie_region_type
-Message-ID: <20220516204942.GG3209795-robh@kernel.org>
-References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
- <20220503214638.1895-11-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH] Revert "PCI: aardvark: Rewrite IRQ code to chained IRQ
+ handler"
+Message-ID: <20220516205931.GA1050809@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220503214638.1895-11-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220515125815.30157-1-pali@kernel.org>
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,37 +59,139 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 04, 2022 at 12:46:31AM +0300, Serge Semin wrote:
-> There is no point in having the dw_pcie_region_type enumeration for almost
-> the same reasons as it was stated for dw_pcie_as_type. First of all it's
-> redundant since the driver already has a set of the macros declared which
-> describe the possible inbound and outbound iATU regions. Having an
-> addition abstraction just needlessly complicates the code. Secondly
-> checking the region type passed to the dw_pcie_disable_atu() method for
-> validity is pointless since the erroneous situation is just ignored in the
-> current method implementation. So to speak let's drop the redundant
-> dw_pcie_region_type enumeration replacing it with the direct iATU
-> direction macro usage.
+On Sun, May 15, 2022 at 02:58:15PM +0200, Pali Rohár wrote:
+> This reverts commit 1571d67dc190e50c6c56e8f88cdc39f7cc53166e.
 > 
-> Since the dw_pcie_disable_atu() method now directly accepts the
-> in-/outbound iATU region direction instead of the abstract region type we
-> need to change the argument name and the arguments order. The later change
-> makes the function prototype looking more logical since the passed index
-> indicates an iATU window within the regions with the corresponding
-> direction.
+> This commit broke support for setting interrupt affinity. It looks like
+> that it is related to the chained IRQ handler. Revert this commit until
+> issue with setting interrupt affinity is fixed.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Fixes: 1571d67dc190 ("PCI: aardvark: Rewrite IRQ code to chained IRQ handler")
+> Signed-off-by: Pali Rohár <pali@kernel.org>
 > 
 > ---
-> 
-> Changelog v2:
-> - Move this patch to being applied before the IB/OB iATU windows setup
->   simplification patch (@Rob).
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   |  4 +--
->  .../pci/controller/dwc/pcie-designware-host.c |  2 +-
->  drivers/pci/controller/dwc/pcie-designware.c  | 28 +++++--------------
->  drivers/pci/controller/dwc/pcie-designware.h  | 13 ++-------
->  4 files changed, 13 insertions(+), 34 deletions(-)
+> This commit was introduced in v5.18-rc1 and hence it is regression for 5.18
+> release. After reverting this commit, it is possible to move aardvark
+> interrupt from CPU0 to CPU1 by "echo 2 > /proc/irq/XX/smp_affinity" where
+> XX is the interrupt number which can be find in /proc/interrupts on line
+> with advk-pcie.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to for-linus for v5.18, thanks, Pali!
+
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 48 ++++++++++++---------------
+>  1 file changed, 22 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 54651a1808cc..22ac607343bd 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -274,7 +274,6 @@ struct advk_pcie {
+>  		u32 actions;
+>  	} wins[OB_WIN_COUNT];
+>  	u8 wins_count;
+> -	int irq;
+>  	struct irq_domain *rp_irq_domain;
+>  	struct irq_domain *irq_domain;
+>  	struct irq_chip irq_chip;
+> @@ -1664,26 +1663,21 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
+>  	}
+>  }
+>  
+> -static void advk_pcie_irq_handler(struct irq_desc *desc)
+> +static irqreturn_t advk_pcie_irq_handler(int irq, void *arg)
+>  {
+> -	struct advk_pcie *pcie = irq_desc_get_handler_data(desc);
+> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+> -	u32 val, mask, status;
+> +	struct advk_pcie *pcie = arg;
+> +	u32 status;
+>  
+> -	chained_irq_enter(chip, desc);
+> +	status = advk_readl(pcie, HOST_CTRL_INT_STATUS_REG);
+> +	if (!(status & PCIE_IRQ_CORE_INT))
+> +		return IRQ_NONE;
+>  
+> -	val = advk_readl(pcie, HOST_CTRL_INT_STATUS_REG);
+> -	mask = advk_readl(pcie, HOST_CTRL_INT_MASK_REG);
+> -	status = val & ((~mask) & PCIE_IRQ_ALL_MASK);
+> +	advk_pcie_handle_int(pcie);
+>  
+> -	if (status & PCIE_IRQ_CORE_INT) {
+> -		advk_pcie_handle_int(pcie);
+> +	/* Clear interrupt */
+> +	advk_writel(pcie, PCIE_IRQ_CORE_INT, HOST_CTRL_INT_STATUS_REG);
+>  
+> -		/* Clear interrupt */
+> -		advk_writel(pcie, PCIE_IRQ_CORE_INT, HOST_CTRL_INT_STATUS_REG);
+> -	}
+> -
+> -	chained_irq_exit(chip, desc);
+> +	return IRQ_HANDLED;
+>  }
+>  
+>  static int advk_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> @@ -1763,7 +1757,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+>  	struct advk_pcie *pcie;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource_entry *entry;
+> -	int ret;
+> +	int ret, irq;
+>  
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(struct advk_pcie));
+>  	if (!bridge)
+> @@ -1849,9 +1843,17 @@ static int advk_pcie_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pcie->base))
+>  		return PTR_ERR(pcie->base);
+>  
+> -	pcie->irq = platform_get_irq(pdev, 0);
+> -	if (pcie->irq < 0)
+> -		return pcie->irq;
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	ret = devm_request_irq(dev, irq, advk_pcie_irq_handler,
+> +			       IRQF_SHARED | IRQF_NO_THREAD, "advk-pcie",
+> +			       pcie);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register interrupt\n");
+> +		return ret;
+> +	}
+>  
+>  	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
+>  						       "reset-gpios", 0,
+> @@ -1916,15 +1918,12 @@ static int advk_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	irq_set_chained_handler_and_data(pcie->irq, advk_pcie_irq_handler, pcie);
+> -
+>  	bridge->sysdata = pcie;
+>  	bridge->ops = &advk_pcie_ops;
+>  	bridge->map_irq = advk_pcie_map_irq;
+>  
+>  	ret = pci_host_probe(bridge);
+>  	if (ret < 0) {
+> -		irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+>  		advk_pcie_remove_rp_irq_domain(pcie);
+>  		advk_pcie_remove_msi_irq_domain(pcie);
+>  		advk_pcie_remove_irq_domain(pcie);
+> @@ -1973,9 +1972,6 @@ static int advk_pcie_remove(struct platform_device *pdev)
+>  	advk_writel(pcie, PCIE_ISR1_ALL_MASK, PCIE_ISR1_REG);
+>  	advk_writel(pcie, PCIE_IRQ_ALL_MASK, HOST_CTRL_INT_STATUS_REG);
+>  
+> -	/* Remove IRQ handler */
+> -	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> -
+>  	/* Remove IRQ domains */
+>  	advk_pcie_remove_rp_irq_domain(pcie);
+>  	advk_pcie_remove_msi_irq_domain(pcie);
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
