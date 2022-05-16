@@ -2,398 +2,1325 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2743D5289F9
-	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 18:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB7B1528A31
+	for <lists+linux-pci@lfdr.de>; Mon, 16 May 2022 18:23:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237175AbiEPQMv convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 16 May 2022 12:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48462 "EHLO
+        id S1343542AbiEPQXS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 May 2022 12:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238418AbiEPQMu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 12:12:50 -0400
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2C038783;
-        Mon, 16 May 2022 09:12:49 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id v71so2804946ybi.4;
-        Mon, 16 May 2022 09:12:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qEqxnWrxCVe9LU1d252kjCh2wbd2c/RZQjkiUrmX/cE=;
-        b=fDo+JhHawCbZrJlyTr5SnlAH3wwatX5rlwHgcDxBzZm6q19nixYorntbAmJLRqmWo+
-         a90sikQX69KRopUM+L2IogQDvfGw4dcEEXhZtArNB0MvAp9OjKw7lALKHZeTAQ7zX3yv
-         0nx/2YVy/vU5ktxHwxPYqo15o+Z5u4pExZ6qvrQDwsaZh/xAkWUGSKLnRnt+NdEFgkYr
-         dC0dQNG1OzNyhu/e1V1Um2PO/13XcOkEHFVhlJr+M42a2Sn0it6lji5iLc2xmiWCRnAc
-         VstUNozajUrHymcavqge/N+87wzq7v1czVxti8OqLbAjVq1tpr8BZZ86ztEufhDrmTNu
-         OmrA==
-X-Gm-Message-State: AOAM531TA3QpBar3QbdC/YBGA9wsXN6wxiQ/YjJh5Oc37hqcnSpU9+j8
-        Z2jivIY0RExbMMoqGMTDifUO53nL3fzZ7+uCX60=
-X-Google-Smtp-Source: ABdhPJw/Qo2BEqJPfDJDZUeT5xLZT1mXle0HTx8OjP8Tw/2jof9Jewm8ew+7IcRal3ZcN+3sYEV9olfnw4R71dBddQw=
-X-Received: by 2002:a25:7717:0:b0:64d:854f:2da4 with SMTP id
- s23-20020a257717000000b0064d854f2da4mr7413092ybc.633.1652717568068; Mon, 16
- May 2022 09:12:48 -0700 (PDT)
+        with ESMTP id S238917AbiEPQXO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 May 2022 12:23:14 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647853916B;
+        Mon, 16 May 2022 09:23:11 -0700 (PDT)
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4L24L13nH4z6H7k5;
+        Tue, 17 May 2022 00:23:05 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 16 May 2022 18:23:08 +0200
+Received: from [10.47.25.151] (10.47.25.151) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 16 May
+ 2022 17:23:06 +0100
+Message-ID: <90aafbc1-b7f6-1cc9-8f94-c72f05150f70@huawei.com>
+Date:   Mon, 16 May 2022 17:23:05 +0100
 MIME-Version: 1.0
-References: <20220512202511.34197-1-hdegoede@redhat.com> <20220512202511.34197-2-hdegoede@redhat.com>
-In-Reply-To: <20220512202511.34197-2-hdegoede@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 16 May 2022 18:12:36 +0200
-Message-ID: <CAJZ5v0jaFciDpnw7_+2sU9SfUkKR-FNjGB=5ok397goLtfo6BQ@mail.gmail.com>
-Subject: Re: [PATCH v8 1/1] x86/PCI: Ignore E820 reservations for bridge
- windows on future systems
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Benoit_Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v8 2/8] hwtracing: hisi_ptt: Add trace function support
+ for HiSilicon PCIe Tune and Trace device
+To:     Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
+        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <acme@kernel.org>,
+        <jonathan.cameron@huawei.com>
+CC:     <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mark.rutland@arm.com>, <joro@8bytes.org>,
+        <shameerali.kolothum.thodi@huawei.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>
+References: <20220516125223.32012-1-yangyicong@hisilicon.com>
+ <20220516125223.32012-3-yangyicong@hisilicon.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220516125223.32012-3-yangyicong@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.25.151]
+X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 12, 2022 at 10:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Some BIOS-es contain bugs where they add addresses which are already
-> used in some other manner to the PCI host bridge window returned by
-> the ACPI _CRS method. To avoid this Linux by default excludes
-> E820 reservations when allocating addresses since 2010, see:
-> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-> space").
->
-> Recently (2019) some systems have shown-up with E820 reservations which
-> cover the entire _CRS returned PCI bridge memory window, causing all
-> attempts to assign memory to PCI BARs which have not been setup by the
-> BIOS to fail. For example here are the relevant dmesg bits from a
-> Lenovo IdeaPad 3 15IIL 81WE:
->
->  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
->  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
->
-> The ACPI specifications appear to allow this new behavior:
->
-> The relationship between E820 and ACPI _CRS is not really very clear.
-> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
->
->   This range of addresses is in use or reserved by the system and is
->   not to be included in the allocatable memory pool of the operating
->   system's memory manager.
->
-> and it may be used when:
->
->   The address range is in use by a memory-mapped system device.
->
-> Furthermore, sec 15.2 says:
->
->   Address ranges defined for baseboard memory-mapped I/O devices, such
->   as APICs, are returned as reserved.
->
-> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
-> and its apertures are in use and certainly should not be included in
-> the general allocatable pool, so the fact that some BIOS-es reports
-> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
->
-> So it seems that the excluding of E820 reserved addresses is a mistake.
->
-> Ideally Linux would fully stop excluding E820 reserved addresses,
-> but then various old systems will regress. Instead keep the old behavior
-> for old systems, while ignoring the E820 reservations for any future
-> systems.
->
-> That is ignore E820 reservations starting with systems with
-> a DMI BIOS year >= 2023.
->
-> And use DMI quirks for existing systems on which excluding E820
-> reservations from the _CRS returned bridge window is an issue.
->
-> Also add pci=no_e820 and pci=use_e820 options to allow overriding
-> the BIOS year + DMI matching logic.
->
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-> BugLink: https://bugs.launchpad.net/bugs/1878279
-> BugLink: https://bugs.launchpad.net/bugs/1880172
-> BugLink: https://bugs.launchpad.net/bugs/1884232
-> BugLink: https://bugs.launchpad.net/bugs/1921649
-> BugLink: https://bugs.launchpad.net/bugs/1931715
-> BugLink: https://bugs.launchpad.net/bugs/1932069
-> Cc: Benoit Grégoire <benoitg@coeus.ca>
-> Cc: Hui Wang <hui.wang@canonical.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On 16/05/2022 13:52, Yicong Yang wrote:
+> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex integrated
+> Endpoint(RCiEP) device, providing the capability to dynamically monitor and
+> tune the PCIe traffic and trace the TLP headers.
+> 
+> Add the driver for the device to enable the trace function. Register PMU
+> device of PTT trace, then users can use trace through perf command. The
+> driver makes use of perf AUX trace function and support the following
+> events to configure the trace:
+> 
+> - filter: select Root port or Endpoint to trace
+> - type: select the type of traced TLP headers
+> - direction: select the direction of traced TLP headers
+> - format: select the data format of the traced TLP headers
+> 
+> This patch initially add a basic driver of PTT trace.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Initially add basic trace support.
+
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+
+Generally this looks ok, apart from nitpicking below, so, FWIW:
+Reviewed-by: John Garry <john.garry@huawei.com>
 
 > ---
-> Changes in v8:
-> - Change the cut-off for no longer excluding E820 reservations from
->   the bridge window to BIOS year >= 2023 so that this only applies to
->   upcoming systems.
-> - Use DMI quirks for existing systems on which excluding E820
->   reservations from the _CRS returned bridge window is an issue.
->
-> Changes in v7:
-> - Re-add the pci=use_e820 and pci=no_e820 kernel cmdline options since it
->   turns out that some newer laptops still need pci=use_e820
-> - Add DMI quirks for known newer laptops which need pci=use_e820
->
-> Changes in v6:
-> - Remove the possibility to change the behavior from the commandline
->   because of worries that users may use this to paper over other problems
->
-> Changes in v5:
-> - Drop mention of Windows behavior from the commit msg, replace with a
->   reference to the specs
-> - Improve documentation in Documentation/admin-guide/kernel-parameters.txt
-> - Reword the big comment added, use "PCI host bridge window" in it and drop
->   all refences to Windows
->
-> Changes in v4:
-> - Rewrap the big comment block to fit in 80 columns
-> - Add Rafael's Acked-by
-> - Add Cc: stable@vger.kernel.org
->
-> Changes in v3:
-> - Commit msg tweaks (drop dmesg timestamps, typo fix)
-> - Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
-> - Add Mika's Reviewed-by
->
-> Changes in v2:
-> - Replace the per model DMI quirk approach with disabling E820 reservations
->   checking for all systems with a BIOS year >= 2018
-> - Add documentation for the new kernel-parameters to
->   Documentation/admin-guide/kernel-parameters.txt
-> ---
->  .../admin-guide/kernel-parameters.txt         |   9 ++
->  arch/x86/include/asm/pci_x86.h                |   2 +
->  arch/x86/pci/acpi.c                           | 109 +++++++++++++++++-
->  arch/x86/pci/common.c                         |   8 ++
->  4 files changed, 126 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 3f1cc5e317ed..2477b639d5c4 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4066,6 +4066,15 @@
->                                 please report a bug.
->                 nocrs           [X86] Ignore PCI host bridge windows from ACPI.
->                                 If you need to use this, please report a bug.
-> +               use_e820        [X86] Use E820 reservations to exclude parts of
-> +                               PCI host bridge windows. This is a workaround
-> +                               for BIOS defects in host bridge _CRS methods.
-> +                               If you need to use this, please report a bug to
-> +                               <linux-pci@vger.kernel.org>.
-> +               no_e820         [X86] Ignore E820 reservations for PCI host
-> +                               bridge windows. This is the default on modern
-> +                               hardware. If you need to use this, please report
-> +                               a bug to <linux-pci@vger.kernel.org>.
->                 routeirq        Do IRQ routing for all PCI devices.
->                                 This is normally done in pci_enable_device(),
->                                 so this option is a temporary workaround
-> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-> index a0627dfae541..ce3fd3311772 100644
-> --- a/arch/x86/include/asm/pci_x86.h
-> +++ b/arch/x86/include/asm/pci_x86.h
-> @@ -42,6 +42,8 @@ do {                                          \
->  #define PCI_ROOT_NO_CRS                0x100000
->  #define PCI_NOASSIGN_BARS      0x200000
->  #define PCI_BIG_ROOT_WINDOW    0x400000
-> +#define PCI_USE_E820           0x800000
-> +#define PCI_NO_E820            0x1000000
->
->  extern unsigned int pci_probe;
->  extern unsigned long pirq_table_addr;
-> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-> index 562c81a51ea0..125c55b58d7e 100644
-> --- a/arch/x86/pci/acpi.c
-> +++ b/arch/x86/pci/acpi.c
-> @@ -20,6 +20,7 @@ struct pci_root_info {
->  #endif
->  };
->
-> +static bool pci_use_e820 = true;
->  static bool pci_use_crs = true;
->  static bool pci_ignore_seg;
->
-> @@ -42,6 +43,13 @@ static int __init set_ignore_seg(const struct dmi_system_id *id)
->         return 0;
->  }
->
-> +static int __init set_no_e820(const struct dmi_system_id *id)
+>   drivers/Makefile                 |   1 +
+>   drivers/hwtracing/Kconfig        |   2 +
+>   drivers/hwtracing/ptt/Kconfig    |  12 +
+>   drivers/hwtracing/ptt/Makefile   |   2 +
+>   drivers/hwtracing/ptt/hisi_ptt.c | 964 +++++++++++++++++++++++++++++++
+>   drivers/hwtracing/ptt/hisi_ptt.h | 178 ++++++
+>   6 files changed, 1159 insertions(+)
+>   create mode 100644 drivers/hwtracing/ptt/Kconfig
+>   create mode 100644 drivers/hwtracing/ptt/Makefile
+>   create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>   create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+> 
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index 020780b6b4d2..662d50599467 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -175,6 +175,7 @@ obj-$(CONFIG_USB4)		+= thunderbolt/
+>   obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
+>   obj-y				+= hwtracing/intel_th/
+>   obj-$(CONFIG_STM)		+= hwtracing/stm/
+> +obj-$(CONFIG_HISI_PTT)		+= hwtracing/ptt/
+>   obj-$(CONFIG_ANDROID)		+= android/
+>   obj-$(CONFIG_NVMEM)		+= nvmem/
+>   obj-$(CONFIG_FPGA)		+= fpga/
+> diff --git a/drivers/hwtracing/Kconfig b/drivers/hwtracing/Kconfig
+> index 13085835a636..911ee977103c 100644
+> --- a/drivers/hwtracing/Kconfig
+> +++ b/drivers/hwtracing/Kconfig
+> @@ -5,4 +5,6 @@ source "drivers/hwtracing/stm/Kconfig"
+>   
+>   source "drivers/hwtracing/intel_th/Kconfig"
+>   
+> +source "drivers/hwtracing/ptt/Kconfig"
+> +
+>   endmenu
+> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
+> new file mode 100644
+> index 000000000000..6d46a09ffeb9
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/Kconfig
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config HISI_PTT
+> +	tristate "HiSilicon PCIe Tune and Trace Device"
+> +	depends on ARM64 || (COMPILE_TEST && 64BIT)
+> +	depends on PCI && HAS_DMA && HAS_IOMEM && PERF_EVENTS
+> +	help
+> +	  HiSilicon PCIe Tune and Trace device exists as a PCIe RCiEP
+> +	  device, and it provides support for PCIe traffic tuning and
+> +	  tracing TLP headers to the memory.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called hisi_ptt.
+> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
+> new file mode 100644
+> index 000000000000..908c09a98161
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+> new file mode 100644
+> index 000000000000..ef25ce98f664
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+> @@ -0,0 +1,964 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for HiSilicon PCIe tune and trace device
+> + *
+> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-iommu.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/iommu.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/vmalloc.h>
+> +
+> +#include "hisi_ptt.h"
+> +
+> +/* Dynamic CPU hotplug state used by PTT */
+> +static enum cpuhp_state hisi_ptt_pmu_online;
+> +
+> +static u16 hisi_ptt_get_filter_val(u16 devid, bool is_port)
 > +{
-> +       printk(KERN_INFO "PCI: %s detected: ignoring e820 regions\n", id->ident);
-> +       pci_use_e820 = false;
-> +       return 0;
+> +	if (is_port)
+> +		return BIT(HISI_PCIE_CORE_PORT_ID(devid & 0xff));
+> +
+> +	return devid;
 > +}
 > +
->  static const struct dmi_system_id pci_crs_quirks[] __initconst = {
->         /* http://bugzilla.kernel.org/show_bug.cgi?id=14183 */
->         {
-> @@ -136,6 +144,74 @@ static const struct dmi_system_id pci_crs_quirks[] __initconst = {
->                         DMI_MATCH(DMI_PRODUCT_NAME, "HP xw9300 Workstation"),
->                 },
->         },
+> +static bool hisi_ptt_wait_trace_hw_idle(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u32 val;
 > +
-> +       /*
-> +        * Most Lenovo models with "IIL" in their DMI_PRODUCT_VERSION have
-> +        * an E820 reservation which covers the entire _CRS returned 32 bit
-> +        * PCI bridge memory window, causing all attempts to assign memory to
-> +        * 32 bit PCI bars which have not been setup by the BIOS to fail.
-> +        * Specifically this often causes some of the I2C controllers to not
-> +        * work breaking touchpad support and/or this may cause issues when
-> +        * hotplugging thunderbolt connected devices.
-> +        *
-> +        * This DMI match entry covers the following DMI_PRODUCT_VERSION-s with
-> +        * an E820 reservation which covers the entire 32 bit bridge window:
-> +        * "IdeaPad 3 14IIL05", "IdeaPad 3 15IIL05", "IdeaPad 3 17IIL05",
-> +        * "IdeaPad 5 14IIL05", "IdeaPad 5 15IIL05",
-> +        * "IdeaPad Slim 7 14IIL05", "IdeaPad Slim 7 15IIL05",
-> +        * "Lenovo BS145-15IIL",
-> +        * "Lenovo IdeaPad S145-15IIL", "Lenovo IdeaPad S340-14IIL",
-> +        * "Lenovo IdeaPad S340-15IIL", "Lenovo IdeaPad C340-15IIL",
-> +        * "Lenovo V14-IIL", "Lenovo V15-IIL", "Lenovo V17-IIL",
-> +        * "Lenovo Yoga S740-14IIL", "Lenovo Yoga C940-14IIL",
-> +        * "Yoga Slim 7 14IIL05", "Yoga Slim 7 15IIL05"
-> +        *
-> +        * On some of these the bridge's _CRS method *sometimes* (under unknown
-> +        * conditions) has a 64 bit [mem 0x4000000000-0x7fffffffff window].
-> +        * This avoids some of the issues, but even then there are still issues
-> +        * with assigning some 32 bit only BARs such as some Thunderbolt devs,
-> +        * the 00:1f.5 BIOS SPI controller and BAR6 of some nvidia gfx.
-> +        *
-> +        * This entry also covers the following DMI_PRODUCT_VERSION-s which do
-> +        * not need pci_use_e820=false. This quirk is a no-op for these models,
-> +        * because there is no overlap between E820 regions and _CRS windows:
-> +        * "IdeaPad Flex 5 14IIL05", "IdeaPad Flex 5 15IIL05",
-> +        * "Lenovo ThinkBook 14-IIL", "Lenovo ThinkBook 15-IIL",
-> +        * "Lenovo Yoga S940-14IIL"
-> +        *
-> +        * This entry fixes issues reported in the following bugs:
-> +        * https://bugzilla.kernel.org/show_bug.cgi?id=206459
-> +        * https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-> +        * https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-> +        * https://bugs.launchpad.net/bugs/1878279
-> +        * https://bugs.launchpad.net/bugs/1880172
-> +        * https://bugs.launchpad.net/bugs/1921649
-> +        * https://bugs.launchpad.net/bugs/1931715
-> +        * https://bugs.launchpad.net/bugs/1932069
-> +        */
-> +       {
-> +               .callback = set_no_e820,
-> +               .ident = "Lenovo *IIL* product version",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "IIL"),
-> +               },
-> +       },
+> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_STS,
+> +					  val, val & HISI_PTT_TRACE_IDLE,
+> +					  HISI_PTT_WAIT_POLL_INTERVAL_US,
+> +					  HISI_PTT_WAIT_TRACE_TIMEOUT_US);
+> +}
 > +
-> +       /*
-> +        * The Acer Spin 5 (SP513-54N) has the same E820 reservation covering
-> +        * the entire _CRS 32 bit window issue as the Lenovo *IIL* models.
-> +        * https://bugs.launchpad.net/bugs/1884232
-> +        */
-> +       {
-> +               .callback = set_no_e820,
-> +               .ident = "Acer Spin 5 (SP513-54N)",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Spin SP513-54N"),
-> +               },
-> +       },
+> +static void hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u32 val;
 > +
->         {}
->  };
->
-> @@ -146,6 +222,24 @@ void __init pci_acpi_crs_quirks(void)
->         if (year >= 0 && year < 2008 && iomem_resource.end <= 0xffffffff)
->                 pci_use_crs = false;
->
-> +       /*
-> +        * Some BIOS-es contain bugs where they add addresses which are already
-> +        * used in some other manner to the PCI host bridge window returned by
-> +        * the ACPI _CRS method. To avoid this Linux by default excludes
-> +        * E820 reservations when allocating addresses since 2010.
-> +        * In 2019 some systems have shown-up with E820 reservations which cover
-> +        * the entire _CRS returned PCI host bridge window, causing all attempts
-> +        * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
-> +        *
-> +        * Ideally Linux would fully stop using E820 reservations, but then
-> +        * various old systems will regress. Instead stop using E820 reservations
-> +        * for new systems with a DMI BIOS year >= 2023;
-> +        * and use DMI quirks for existing systems on which excluding E820
-> +        * reservations is known to cause issues.
-> +        */
-> +       if (year >= 2023)
-> +               pci_use_e820 = false;
+> +	readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS,
+> +				  val, !val, HISI_PTT_RESET_POLL_INTERVAL_US,
+> +				  HISI_PTT_RESET_TIMEOUT_US);
+> +}
 > +
->         dmi_check_system(pci_crs_quirks);
->
->         /*
-> @@ -161,6 +255,15 @@ void __init pci_acpi_crs_quirks(void)
->                "if necessary, use \"pci=%s\" and report a bug\n",
->                pci_use_crs ? "Using" : "Ignoring",
->                pci_use_crs ? "nocrs" : "use_crs");
+> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+> +{
+> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	hisi_ptt->trace_ctrl.started = false;
+> +}
 > +
-> +       /* "pci=use_e820"/"pci=no_e820" on the kernel cmdline takes precedence */
-> +       if (pci_probe & PCI_NO_E820)
-> +               pci_use_e820 = false;
-> +       else if (pci_probe & PCI_USE_E820)
-> +               pci_use_e820 = true;
+> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	u32 val;
+> +	int i;
 > +
-> +       printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
-> +              pci_use_e820 ? "Using" : "Ignoring");
->  }
->
->  #ifdef CONFIG_PCI_MMCONFIG
-> @@ -301,8 +404,10 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
->
->         status = acpi_pci_probe_root_resources(ci);
->
-> -       resource_list_for_each_entry(entry, &ci->resources)
-> -               remove_e820_regions(&device->dev, entry->res);
-> +       if (pci_use_e820) {
-> +               resource_list_for_each_entry(entry, &ci->resources)
-> +                       remove_e820_regions(&device->dev, entry->res);
-> +       }
->
->         if (pci_use_crs) {
->                 resource_list_for_each_entry_safe(entry, tmp, &ci->resources)
-> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-> index 9e1e6b8d8876..ddb798603201 100644
-> --- a/arch/x86/pci/common.c
-> +++ b/arch/x86/pci/common.c
-> @@ -595,6 +595,14 @@ char *__init pcibios_setup(char *str)
->         } else if (!strcmp(str, "nocrs")) {
->                 pci_probe |= PCI_ROOT_NO_CRS;
->                 return NULL;
-> +       } else if (!strcmp(str, "use_e820")) {
-> +               pci_probe |= PCI_USE_E820;
-> +               add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-> +               return NULL;
-> +       } else if (!strcmp(str, "no_e820")) {
-> +               pci_probe |= PCI_NO_E820;
-> +               add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-> +               return NULL;
->  #ifdef CONFIG_PHYS_ADDR_T_64BIT
->         } else if (!strcmp(str, "big_root_window")) {
->                 pci_probe |= PCI_BIG_ROOT_WINDOW;
-> --
-> 2.36.0
->
+> +	/* Check device idle before start trace */
+> +	if (!hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
+> +		pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	ctrl->started = true;
+> +
+> +	/* Reset the DMA before start tracing */
+> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	val |= HISI_PTT_TRACE_CTRL_RST;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	hisi_ptt_wait_dma_reset_done(hisi_ptt);
+> +
+> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	val &= ~HISI_PTT_TRACE_CTRL_RST;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	/* Reset the index of current buffer */
+> +	hisi_ptt->trace_ctrl.buf_index = 0;
+> +
+> +	/* Zero the trace buffers */
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
+> +		memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
+> +
+> +	/* Clear the interrupt status */
+> +	writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
+> +
+> +	/* Set the trace control register */
+> +	val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
+> +	if (!hisi_ptt->trace_ctrl.is_port)
+> +		val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
+> +
+> +	/* Start the Trace */
+> +	val |= HISI_PTT_TRACE_CTRL_EN;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_ptt_update_aux(struct hisi_ptt *hisi_ptt, int index, bool stop)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	struct perf_output_handle *handle = &ctrl->handle;
+> +	struct perf_event *event = handle->event;
+> +	struct hisi_ptt_pmu_buf *buf;
+> +	size_t size;
+> +	void *addr;
+> +
+> +	buf = perf_get_aux(handle);
+> +	if (!buf || !handle->size)
+> +		return -EINVAL;
+> +
+> +	addr = ctrl->trace_buf[ctrl->buf_index].addr;
+> +
+> +	/*
+> +	 * If we're going to stop, read the size of already traced data from
+> +	 * HISI_PTT_TRACE_WR_STS. Otherwise we're coming from the interrupt,
+> +	 * the data size is always HISI_PTT_TRACE_BUF_SIZE.
+> +	 */
+> +	if (stop) {
+> +		u32 reg;
+> +
+> +		reg = readl(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS);
+> +		size = FIELD_GET(HISI_PTT_TRACE_WR_STS_WRITE, reg);
+> +	} else {
+> +		size = HISI_PTT_TRACE_BUF_SIZE;
+> +	}
+> +
+> +	memcpy(buf->base + buf->pos, addr, size);
+> +	buf->pos += size;
+> +
+> +	/*
+> +	 * Just commit the traced data if we're going to stop. Otherwise if the
+> +	 * resident AUX buffer cannot contain the data of next trace buffer,
+> +	 * apply a new one.
+> +	 */
+> +	if (stop) {
+> +		perf_aux_output_end(handle, buf->pos);
+> +	} else if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
+> +		perf_aux_output_end(handle, buf->pos);
+> +
+> +		buf = perf_aux_output_begin(handle, event);
+> +		if (!buf)
+> +			return -EINVAL;
+> +
+> +		buf->pos = handle->head % buf->length;
+> +		if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
+> +			perf_aux_output_end(handle, 0);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t hisi_ptt_isr(int irq, void *context)
+> +{
+> +	struct hisi_ptt *hisi_ptt = context;
+> +	u32 status, buf_idx;
+> +
+> +	status = readl(hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +	if (!(status & HISI_PTT_TRACE_INT_STAT_MASK))
+> +		return IRQ_NONE;
+> +
+> +	buf_idx = ffs(status) - 1;
+> +
+> +	/* Clear the interrupt status of buffer @buf_idx */
+> +	writel(status, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +
+> +	/*
+> +	 * Update the AUX buffer and cache the current buffer index,
+> +	 * as we need to know this and save the data when the trace
+> +	 * is ended out of the interrupt handler. End the trace
+> +	 * if the updating fails.
+> +	 */
+> +	if (hisi_ptt_update_aux(hisi_ptt, buf_idx, false))
+> +		hisi_ptt_trace_end(hisi_ptt);
+> +	else
+> +		hisi_ptt->trace_ctrl.buf_index = (buf_idx + 1) % HISI_PTT_TRACE_BUF_CNT;
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void hisi_ptt_irq_free_vectors(void *pdev)
+> +{
+> +	pci_free_irq_vectors(pdev);
+> +}
+> +
+> +static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct pci_dev *pdev = hisi_ptt->pdev;
+> +	int ret;
+> +
+> +	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
+> +	if (ret < 0) {
+> +		pci_err(pdev, "failed to allocate irq vector, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_irq_free_vectors, pdev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev,
+> +					pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ),
+> +					NULL, hisi_ptt_isr, 0,
+> +					DRV_NAME, hisi_ptt);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to request irq %d, ret = %d\n",
+> +			pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ), ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
+> +{
+> +	struct hisi_ptt_filter_desc *filter;
+> +	struct hisi_ptt *hisi_ptt = data;
+> +
+> +	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
+> +	if (!filter) {
+> +		pci_err(hisi_ptt->pdev, "failed to add filter %s\n", pci_name(pdev));
+> +		return -ENOMEM;
+> +	}
+> +
+> +	filter->devid = PCI_DEVID(pdev->bus->number, pdev->devfn);
+> +
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		filter->is_port = true;
+> +		list_add_tail(&filter->list, &hisi_ptt->port_filters);
+> +
+> +		/* Update the available port mask */
+> +		hisi_ptt->port_mask |= hisi_ptt_get_filter_val(filter->devid, true);
+> +	} else {
+> +		list_add_tail(&filter->list, &hisi_ptt->req_filters);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_release_filters(void *data)
+> +{
+> +	struct hisi_ptt_filter_desc *filter, *tmp;
+> +	struct hisi_ptt *hisi_ptt = data;
+> +
+> +	list_for_each_entry_safe(filter, tmp, &hisi_ptt->req_filters, list) {
+> +		list_del(&filter->list);
+> +		kfree(filter);
+> +	}
+> +
+> +	list_for_each_entry_safe(filter, tmp, &hisi_ptt->port_filters, list) {
+> +		list_del(&filter->list);
+> +		kfree(filter);
+> +	}
+> +}
+> +
+> +static int hisi_ptt_config_trace_buf(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	struct device *dev = &hisi_ptt->pdev->dev;
+> +	int i;
+> +
+> +	ctrl->trace_buf = devm_kcalloc(dev, HISI_PTT_TRACE_BUF_CNT,
+> +				       sizeof(*ctrl->trace_buf), GFP_KERNEL);
+> +	if (!ctrl->trace_buf)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
+> +		ctrl->trace_buf[i].addr = dmam_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+> +							     &ctrl->trace_buf[i].dma,
+> +							     GFP_KERNEL);
+> +		if (!ctrl->trace_buf[i].addr)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	/* Configure the trace DMA buffer */
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
+> +		writel(lower_32_bits(ctrl->trace_buf[i].dma),
+> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
+> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+> +		writel(upper_32_bits(ctrl->trace_buf[i].dma),
+> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
+> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+> +	}
+> +	writel(HISI_PTT_TRACE_BUF_SIZE, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct pci_dev *pdev = hisi_ptt->pdev;
+> +	struct pci_bus *bus;
+> +	int ret;
+> +	u32 reg;
+> +
+> +	INIT_LIST_HEAD(&hisi_ptt->port_filters);
+> +	INIT_LIST_HEAD(&hisi_ptt->req_filters);
+> +
+> +	ret = hisi_ptt_config_trace_buf(hisi_ptt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * The device range register provides the information about the
+> +	 * root ports which the RCiEP can control and trace. The RCiEP
+> +	 * and the root ports it support are on the same PCIe core, with
+
+  ports which it supports are on the same ..
+
+> +	 * same domain number but maybe different bus number. The device
+> +	 * range register will tell us which root ports we can support,
+> +	 * Bit[31:16] indicates the upper BDF numbers of the root port,
+> +	 * while Bit[15:0] indicates the lower.
+> +	 */
+> +	reg = readl(hisi_ptt->iobase + HISI_PTT_DEVICE_RANGE);
+> +	hisi_ptt->upper_bdf = FIELD_GET(HISI_PTT_DEVICE_RANGE_UPPER, reg);
+> +	hisi_ptt->lower_bdf = FIELD_GET(HISI_PTT_DEVICE_RANGE_LOWER, reg);
+> +
+> +	bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper_bdf));
+> +	if (bus)
+> +		pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_release_filters, hisi_ptt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	hisi_ptt->trace_ctrl.on_cpu = -1;
+> +	return 0;
+> +}
+> +
+> +static ssize_t available_root_port_filters_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int pos = 0;
+> +
+> +	if (list_empty(&hisi_ptt->port_filters)) {
+> +		pos = sysfs_emit(buf, "\n");
+> +		goto out;
+> +	}
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->port_filters, list) {
+> +		u16 devid = filter->devid;
+> +		pos += sysfs_emit_at(buf, pos, "%04x:%02x:%02x.%d\t0x%05lx\n",
+> +				     pci_domain_nr(hisi_ptt->pdev->bus),
+> +				     PCI_BUS_NUM(devid),
+> +				     PCI_SLOT(devid & 0xff),
+> +				     PCI_FUNC(devid & 0xff),
+> +				     hisi_ptt_get_filter_val(devid, true) |
+> +				     HISI_PTT_PMU_FILTER_IS_PORT);
+> +	}
+> +
+> +out:
+> +	return pos;
+> +}
+> +static DEVICE_ATTR_ADMIN_RO(available_root_port_filters);
+> +
+> +static ssize_t available_requester_filters_show(struct device *dev,
+> +						struct device_attribute *attr,
+> +						char *buf)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int pos = 0;
+> +
+> +	if (list_empty(&hisi_ptt->req_filters)) {
+> +		pos = sysfs_emit(buf, "\n");
+> +		goto out;
+
+nit: return immediately
+
+> +	}
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+> +		u16 devid = filter->devid;
+> +		pos += sysfs_emit_at(buf, pos, "%04x:%02x:%02x.%d\t0x%05x\n",
+> +				     pci_domain_nr(hisi_ptt->pdev->bus),
+> +				     PCI_BUS_NUM(devid),
+> +				     PCI_SLOT(devid & 0xff),
+> +				     PCI_FUNC(devid & 0xff),
+> +				     hisi_ptt_get_filter_val(devid, false));
+> +	}
+> +
+> +out:
+> +	return pos;
+> +}
+> +static DEVICE_ATTR_ADMIN_RO(available_requester_filters);
+> +
+> +static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+> +			    char *buf)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+> +	const cpumask_t *cpumask = cpumask_of_node(dev_to_node(&hisi_ptt->pdev->dev));
+> +
+> +	return cpumap_print_to_pagebuf(true, buf, cpumask);
+> +}
+> +static DEVICE_ATTR_RO(cpumask);
+> +
+> +static struct attribute *hisi_ptt_cpumask_attrs[] = {
+> +	&dev_attr_cpumask.attr,
+> +	NULL,
+
+nit: no need to ',' on sentinel
+
+> +};
+> +
+> +static const struct attribute_group hisi_ptt_cpumask_attr_group = {
+> +	.attrs = hisi_ptt_cpumask_attrs,
+> +};
+> +
+> +PMU_FORMAT_ATTR(filter,		"config:0-19");
+> +PMU_FORMAT_ATTR(direction,	"config:20-23");
+> +PMU_FORMAT_ATTR(type,		"config:24-31");
+> +PMU_FORMAT_ATTR(format,		"config:32-35");
+> +
+> +static struct attribute *hisi_ptt_pmu_format_attrs[] = {
+> +	&format_attr_filter.attr,
+> +	&format_attr_direction.attr,
+> +	&format_attr_type.attr,
+> +	&format_attr_format.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group hisi_ptt_pmu_format_group = {
+> +	.name = "format",
+> +	.attrs = hisi_ptt_pmu_format_attrs,
+> +};
+> +
+> +static struct attribute *hisi_ptt_pmu_filter_attrs[] = {
+> +	&dev_attr_available_root_port_filters.attr,
+> +	&dev_attr_available_requester_filters.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group hisi_ptt_pmu_filter_group = {
+> +	.attrs = hisi_ptt_pmu_filter_attrs,
+> +};
+> +
+> +static const struct attribute_group *hisi_ptt_pmu_groups[] = {
+> +	&hisi_ptt_cpumask_attr_group,
+> +	&hisi_ptt_pmu_format_group,
+> +	&hisi_ptt_pmu_filter_group,
+> +	NULL
+> +};
+> +
+> +static int hisi_ptt_trace_valid_direction(u32 val)
+> +{
+> +	/*
+> +	 * The supported value of the direction parameter. See hisi_ptt.rst
+> +	 * documentation for more details.
+> +	 */
+> +	static const u32 hisi_ptt_trace_available_direction[] = {
+> +		0,
+> +		1,
+> +		2,
+> +		3,
+> +	};
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_available_direction); i++) {
+> +		if (val == hisi_ptt_trace_available_direction[i])
+> +			return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int hisi_ptt_trace_valid_type(u32 val)
+> +{
+> +	/* Different types can be set simultaneously */
+> +	static const u32 hisi_ptt_trace_available_type[] = {
+> +		1,	/* posted_request */
+> +		2,	/* non-posted_request */
+> +		4,	/* completion */
+> +	};
+> +	int i;
+> +
+> +	if (!val)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Walk the available list and clear the valid bits of
+> +	 * the config. If there is any resident bit after the
+> +	 * walk then the config is invalid.
+> +	 */
+> +	for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_available_type); i++)
+> +		val &= ~hisi_ptt_trace_available_type[i];
+> +
+> +	if (val)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_ptt_trace_valid_format(u32 val)
+> +{
+> +	static const u32 hisi_ptt_trace_availble_format[] = {
+> +		0,	/* 4DW */
+> +		1,	/* 8DW */
+> +	};
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(hisi_ptt_trace_availble_format); i++) {
+> +		if (val == hisi_ptt_trace_availble_format[i])
+> +			return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int hisi_ptt_trace_valid_filter(struct hisi_ptt *hisi_ptt, u64 config)
+> +{
+> +	unsigned long val, port_mask = hisi_ptt->port_mask;
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int ret = -EINVAL;
+> +
+> +	hisi_ptt->trace_ctrl.is_port = FIELD_GET(HISI_PTT_PMU_FILTER_IS_PORT, config);
+> +	val = FIELD_GET(HISI_PTT_PMU_FILTER_VAL_MASK, config);
+> +
+> +	/*
+> +	 * Port filters are defined as bit mask. For port filters, check
+> +	 * the bits in the @val are within the range of hisi_ptt->port_mask
+> +	 * and whether it's empty or not, otherwise user has specified
+> +	 * some unsupported root ports.
+> +	 *
+> +	 * For Requester ID filters, walk the available filter list to see
+> +	 * whether we have one matched.
+> +	 */
+> +	if (!hisi_ptt->trace_ctrl.is_port) {
+> +		list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+> +			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port)) {
+> +				ret = 0;
+> +				break;
+> +			}
+> +		}
+> +	} else if (bitmap_subset(&val, &port_mask, BITS_PER_LONG)) {
+> +		ret = 0;
+> +	}
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_pmu_init_configs(struct hisi_ptt *hisi_ptt, struct perf_event *event)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	u32 val;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_FILTER_VAL_MASK, event->attr.config);
+> +	hisi_ptt->trace_ctrl.filter = val;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+> +	ctrl->direction = val;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+> +	ctrl->type = val;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+> +	ctrl->format = val;
+> +}
+> +
+> +static int hisi_ptt_pmu_event_init(struct perf_event *event)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (event->cpu < 0) {
+> +		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
+> +		return -ENOENT;
+> +
+> +	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_direction(val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_type(val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_format(val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static void *hisi_ptt_pmu_setup_aux(struct perf_event *event, void **pages,
+> +				    int nr_pages, bool overwrite)
+> +{
+> +	struct hisi_ptt_pmu_buf *buf;
+> +	struct page **pagelist;
+> +	int i;
+> +
+> +	if (overwrite) {
+> +		dev_warn(event->pmu->dev, "Overwrite mode is not supported\n");
+> +		return NULL;
+> +	}
+> +
+> +	/* If the pages size less than buffers, we cannot start trace */
+> +	if (nr_pages < HISI_PTT_TRACE_TOTAL_BUF_SIZE / PAGE_SIZE)
+> +		return NULL;
+> +
+> +	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+> +	if (!buf)
+> +		return NULL;
+> +
+> +	pagelist = kcalloc(nr_pages, sizeof(*pagelist), GFP_KERNEL);
+> +	if (!pagelist)
+> +		goto err;
+> +
+> +	for (i = 0; i < nr_pages; i++)
+> +		pagelist[i] = virt_to_page(pages[i]);
+> +
+> +	buf->base = vmap(pagelist, nr_pages, VM_MAP, PAGE_KERNEL);
+> +	if (!buf->base) {
+> +		kfree(pagelist);
+> +		goto err;
+> +	}
+> +
+> +	buf->nr_pages = nr_pages;
+> +	buf->length = nr_pages * PAGE_SIZE;
+> +	buf->pos = 0;
+> +
+> +	kfree(pagelist);
+> +	return buf;
+> +err:
+> +	kfree(buf);
+> +	return NULL;
+> +}
+> +
+> +static void hisi_ptt_pmu_free_aux(void *aux)
+> +{
+> +	struct hisi_ptt_pmu_buf *buf = aux;
+> +
+> +	vunmap(buf->base);
+> +	kfree(buf);
+> +}
+> +
+> +static void hisi_ptt_pmu_start(struct perf_event *event, int flags)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct perf_output_handle *handle = &hisi_ptt->trace_ctrl.handle;
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	struct device *dev = event->pmu->dev;
+> +	struct hisi_ptt_pmu_buf *buf;
+> +	int cpu = event->cpu;
+> +	int ret;
+> +
+> +	hwc->state = 0;
+> +
+> +	/* Serialize the perf process if user specified several CPUs */
+> +	spin_lock(&hisi_ptt->pmu_lock);
+> +	if (hisi_ptt->trace_ctrl.started) {
+> +		dev_dbg(dev, "trace has already started\n");
+> +		goto stop;
+> +	}
+> +
+> +	/*
+> +	 * Handle the interrupt on the same cpu which starts the trace to avoid
+> +	 * context mismatch. Otherwise we'll trigger the WARN from the perf
+> +	 * core in event_function_local().
+> +	 */
+> +	WARN_ON(irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+> +				 cpumask_of(cpu)));
+> +	hisi_ptt->trace_ctrl.on_cpu = cpu;
+> +
+> +	buf = perf_aux_output_begin(handle, event);
+> +	if (!buf) {
+> +		dev_dbg(dev, "aux output begin failed\n");
+> +		goto stop;
+> +	}
+> +
+> +	buf->pos = handle->head % buf->length;
+> +
+> +	hisi_ptt_pmu_init_configs(hisi_ptt, event);
+> +
+> +	ret = hisi_ptt_trace_start(hisi_ptt);
+> +	if (ret) {
+> +		dev_dbg(dev, "trace start failed, ret = %d\n", ret);
+> +		perf_aux_output_end(handle, 0);
+> +		goto stop;
+> +	}
+> +
+> +	spin_unlock(&hisi_ptt->pmu_lock);
+> +	return;
+> +stop:
+> +	event->hw.state |= PERF_HES_STOPPED;
+> +	spin_unlock(&hisi_ptt->pmu_lock);
+> +}
+> +
+> +static void hisi_ptt_pmu_stop(struct perf_event *event, int flags)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +
+> +	if (hwc->state & PERF_HES_STOPPED)
+> +		return;
+> +
+> +	spin_lock(&hisi_ptt->pmu_lock);
+> +	if (hisi_ptt->trace_ctrl.started) {
+> +		hisi_ptt_trace_end(hisi_ptt);
+> +		WARN(!hisi_ptt_wait_trace_hw_idle(hisi_ptt), "Device is still busy");
+> +		hisi_ptt_update_aux(hisi_ptt, hisi_ptt->trace_ctrl.buf_index, true);
+> +	}
+> +	spin_unlock(&hisi_ptt->pmu_lock);
+> +
+> +	hwc->state |= PERF_HES_STOPPED;
+> +	perf_event_update_userpage(event);
+> +	hwc->state |= PERF_HES_UPTODATE;
+> +}
+> +
+> +static int hisi_ptt_pmu_add(struct perf_event *event, int flags)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	int cpu = event->cpu;
+> +
+> +	/* Only allow the cpus on the device's node to add the event */
+> +	if (!cpumask_test_cpu(cpu, cpumask_of_node(dev_to_node(&hisi_ptt->pdev->dev))))
+> +		return 0;
+> +
+> +	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> +
+> +	if (flags & PERF_EF_START) {
+> +		hisi_ptt_pmu_start(event, PERF_EF_RELOAD);
+> +		if (hwc->state & PERF_HES_STOPPED)
+> +			return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_pmu_del(struct perf_event *event, int flags)
+> +{
+> +	hisi_ptt_pmu_stop(event, PERF_EF_UPDATE);
+> +}
+> +
+> +static void hisi_ptt_remove_cpuhp_instance(void *hotplug_node)
+> +{
+> +	cpuhp_state_remove_instance(hisi_ptt_pmu_online, hotplug_node);
+> +}
+> +
+> +static void hisi_ptt_unregister_pmu(void *pmu)
+> +{
+> +	perf_pmu_unregister(pmu);
+> +}
+> +
+> +static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u16 core_id, sicl_id;
+> +	char *pmu_name;
+> +	u32 reg;
+> +	int ret;
+> +
+> +	ret = cpuhp_state_add_instance(hisi_ptt_pmu_online, &hisi_ptt->hotplug_node);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(&hisi_ptt->pdev->dev,
+> +				       hisi_ptt_remove_cpuhp_instance,
+> +				       &hisi_ptt->hotplug_node);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spin_lock_init(&hisi_ptt->pmu_lock);
+> +
+> +	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
+> +		.module		= THIS_MODULE,
+> +		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
+> +		.task_ctx_nr	= perf_sw_context,
+> +		.attr_groups	= hisi_ptt_pmu_groups,
+> +		.event_init	= hisi_ptt_pmu_event_init,
+> +		.setup_aux	= hisi_ptt_pmu_setup_aux,
+> +		.free_aux	= hisi_ptt_pmu_free_aux,
+> +		.start		= hisi_ptt_pmu_start,
+> +		.stop		= hisi_ptt_pmu_stop,
+> +		.add		= hisi_ptt_pmu_add,
+> +		.del		= hisi_ptt_pmu_del,
+> +	};
+> +
+> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
+> +	core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
+> +	sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
+> +
+> +	pmu_name = devm_kasprintf(&hisi_ptt->pdev->dev, GFP_KERNEL, "hisi_ptt%u_%u",
+> +				  sicl_id, core_id);
+> +	if (!pmu_name)
+> +		return -ENOMEM;
+> +
+> +	ret = perf_pmu_register(&hisi_ptt->hisi_ptt_pmu, pmu_name, -1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_add_action_or_reset(&hisi_ptt->pdev->dev,
+> +					hisi_ptt_unregister_pmu,
+> +					&hisi_ptt->hisi_ptt_pmu);
+> +}
+> +
+> +/*
+> + * The DMA of PTT trace can only use direct mapping, due to some
+
+nit: drop ',' and use "mappings"
+
+> + * hardware restriction. Check whether there is an IOMMU or the
+> + * policy of the IOMMU domain is passthrough, otherwise the trace
+> + * cannot work.
+> + *
+> + * The PTT device is supposed to behind an ARM SMMUv3, which
+> + * should have passthrough the device by a quirk.
+> + */
+> +static int hisi_ptt_check_iommu_mapping(struct pci_dev *pdev)
+> +{
+> +	struct iommu_domain *iommu_domain;
+> +
+> +	iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
+> +	if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
+> +		return 0;
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int hisi_ptt_probe(struct pci_dev *pdev,
+> +			  const struct pci_device_id *id)
+> +{
+> +	struct hisi_ptt *hisi_ptt;
+> +	int ret;
+> +
+> +	ret = hisi_ptt_check_iommu_mapping(pdev);
+> +	if (ret) {
+> +		pci_err(pdev, "requires direct DMA mappings\n");
+> +		return ret;
+> +	}
+> +
+> +	hisi_ptt = devm_kzalloc(&pdev->dev, sizeof(*hisi_ptt), GFP_KERNEL);
+> +	if (!hisi_ptt)
+> +		return -ENOMEM;
+> +
+> +	hisi_ptt->pdev = pdev;
+> +	pci_set_drvdata(pdev, hisi_ptt);
+> +
+> +	ret = pcim_enable_device(pdev);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to enable device, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = pcim_iomap_regions(pdev, BIT(2), DRV_NAME);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to remap io memory, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	hisi_ptt->iobase = pcim_iomap_table(pdev)[2];
+> +
+> +	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
+> +	if (ret) {
+> +		pci_err(pdev, "failed to set 64 bit dma mask, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	pci_set_master(pdev);
+> +
+> +	ret = hisi_ptt_register_irq(hisi_ptt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = hisi_ptt_init_ctrls(hisi_ptt);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to init controls, ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = hisi_ptt_register_pmu(hisi_ptt);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to register PMU device, ret = %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pci_device_id hisi_ptt_id_tbl[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, 0xa12e) },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(pci, hisi_ptt_id_tbl);
+> +
+> +static struct pci_driver hisi_ptt_driver = {
+> +	.name = DRV_NAME,
+> +	.id_table = hisi_ptt_id_tbl,
+> +	.probe = hisi_ptt_probe,
+> +};
+> +
+> +static int hisi_ptt_cpu_teardown(unsigned int cpu, struct hlist_node *node)
+> +{
+> +	struct hisi_ptt *hisi_ptt;
+> +	int target, src;
+> +
+> +	hisi_ptt = hlist_entry_safe(node, struct hisi_ptt, hotplug_node);
+> +	src = hisi_ptt->trace_ctrl.on_cpu;
+> +
+> +	if (!hisi_ptt->trace_ctrl.started || src != cpu)
+> +		return 0;
+> +
+> +	target = cpumask_any(cpumask_of_node(dev_to_node(&hisi_ptt->pdev->dev)));
+> +	if (target < nr_cpumask_bits) {
+
+the comment for cpumask_any() hints to check against nr_cpu_ids - any 
+specific reason to check against nr_cpumask_bits?
+
+> +		dev_err(hisi_ptt->hisi_ptt_pmu.dev, "no available cpu for perf context migration\n");
+> +		return 0;
+> +	}
+> +
+> +	perf_pmu_migrate_context(&hisi_ptt->hisi_ptt_pmu, src, target);
+> +	WARN_ON(irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+> +				 cpumask_of(cpu)));
+> +	hisi_ptt->trace_ctrl.on_cpu = target;
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init hisi_ptt_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN, DRV_NAME, NULL,
+> +				      hisi_ptt_cpu_teardown);
+> +	if (ret < 0)
+> +		return ret;
+> +	hisi_ptt_pmu_online = ret;
+> +
+> +	ret = pci_register_driver(&hisi_ptt_driver);
+> +	if (ret)
+> +		cpuhp_remove_multi_state(hisi_ptt_pmu_online);
+> +
+> +	return ret;
+> +}
+> +module_init(hisi_ptt_init);
+> +
+> +static void __exit hisi_ptt_exit(void)
+> +{
+> +	pci_unregister_driver(&hisi_ptt_driver);
+> +	cpuhp_remove_multi_state(hisi_ptt_pmu_online);
+> +}
+> +module_exit(hisi_ptt_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Yicong Yang <yangyicong@hisilicon.com>");
+> +MODULE_DESCRIPTION("Driver for HiSilicon PCIe tune and trace device");
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
+> new file mode 100644
+> index 000000000000..2344e4195648
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.h
+> @@ -0,0 +1,178 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Driver for HiSilicon PCIe tune and trace device
+> + *
+> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+> + */
+> +
+> +#ifndef _HISI_PTT_H
+> +#define _HISI_PTT_H
+> +
+> +#include <linux/bits.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/list.h>
+> +#include <linux/pci.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/types.h>
+> +
+> +#define DRV_NAME "hisi_ptt"
+> +
+> +/*
+> + * The definition of the device registers and register fields.
+> + */
+> +#define HISI_PTT_TRACE_ADDR_SIZE	0x0800
+> +#define HISI_PTT_TRACE_ADDR_BASE_LO_0	0x0810
+> +#define HISI_PTT_TRACE_ADDR_BASE_HI_0	0x0814
+> +#define HISI_PTT_TRACE_ADDR_STRIDE	0x8
+> +#define HISI_PTT_TRACE_CTRL		0x0850
+> +#define   HISI_PTT_TRACE_CTRL_EN	BIT(0)
+> +#define   HISI_PTT_TRACE_CTRL_RST	BIT(1)
+> +#define   HISI_PTT_TRACE_CTRL_RXTX_SEL	GENMASK(3, 2)
+> +#define   HISI_PTT_TRACE_CTRL_TYPE_SEL	GENMASK(7, 4)
+> +#define   HISI_PTT_TRACE_CTRL_DATA_FORMAT	BIT(14)
+> +#define   HISI_PTT_TRACE_CTRL_FILTER_MODE	BIT(15)
+> +#define   HISI_PTT_TRACE_CTRL_TARGET_SEL	GENMASK(31, 16)
+> +#define HISI_PTT_TRACE_INT_STAT		0x0890
+> +#define   HISI_PTT_TRACE_INT_STAT_MASK	GENMASK(3, 0)
+> +#define HISI_PTT_TRACE_INT_MASK		0x0894
+> +#define HISI_PTT_TRACE_WR_STS		0x08a0
+> +#define   HISI_PTT_TRACE_WR_STS_WRITE	GENMASK(27, 0)
+> +#define   HISI_PTT_TRACE_WR_STS_BUFFER	GENMASK(29, 28)
+> +#define HISI_PTT_TRACE_STS		0x08b0
+> +#define   HISI_PTT_TRACE_IDLE		BIT(0)
+> +#define HISI_PTT_DEVICE_RANGE		0x0fe0
+> +#define   HISI_PTT_DEVICE_RANGE_UPPER	GENMASK(31, 16)
+> +#define   HISI_PTT_DEVICE_RANGE_LOWER	GENMASK(15, 0)
+> +#define HISI_PTT_LOCATION		0x0fe8
+> +#define   HISI_PTT_CORE_ID		GENMASK(15, 0)
+> +#define   HISI_PTT_SICL_ID		GENMASK(31, 16)
+> +
+> +/* Parameters of PTT trace DMA part. */
+> +#define HISI_PTT_TRACE_DMA_IRQ			0
+> +#define HISI_PTT_TRACE_BUF_CNT			4
+> +#define HISI_PTT_TRACE_BUF_SIZE			SZ_4M
+> +#define HISI_PTT_TRACE_TOTAL_BUF_SIZE		(HISI_PTT_TRACE_BUF_SIZE * \
+> +						 HISI_PTT_TRACE_BUF_CNT)
+> +/* Wait time for hardware DMA to reset */
+> +#define HISI_PTT_RESET_TIMEOUT_US	10UL
+> +#define HISI_PTT_RESET_POLL_INTERVAL_US	1UL
+> +/* Poll timeout and interval for waiting hardware work to finish */
+> +#define HISI_PTT_WAIT_TRACE_TIMEOUT_US	100UL
+> +#define HISI_PTT_WAIT_POLL_INTERVAL_US	10UL
+> +
+> +#define HISI_PCIE_CORE_PORT_ID(devfn)	(PCI_FUNC(devfn) << 1)
+> +
+> +/* Definition of the PMU configs */
+> +#define HISI_PTT_PMU_FILTER_IS_PORT	BIT(19)
+> +#define HISI_PTT_PMU_FILTER_VAL_MASK	GENMASK(15, 0)
+> +#define HISI_PTT_PMU_DIRECTION_MASK	GENMASK(23, 20)
+> +#define HISI_PTT_PMU_TYPE_MASK		GENMASK(31, 24)
+> +#define HISI_PTT_PMU_FORMAT_MASK	GENMASK(35, 32)
+> +
+> +/**
+> + * struct hisi_ptt_dma_buffer - Describe a single trace buffer of PTT trace.
+> + *                              The detail of the data format is described
+> + *                              in the documentation of PTT device.
+> + * @dma:   DMA address of this buffer visible to the device
+> + * @addr:  virtual address of this buffer visible to the cpu
+> + */
+> +struct hisi_ptt_dma_buffer {
+> +	dma_addr_t dma;
+> +	void *addr;
+> +};
+> +
+> +/**
+> + * struct hisi_ptt_trace_ctrl - Control and status of PTT trace
+> + * @trace_buf: array of the trace buffers for holding the trace data.
+> + *             the length will be HISI_PTT_TRACE_BUF_CNT.
+> + * @handle:    perf output handle of current trace session
+> + * @buf_index: the index of current using trace buffer
+> + * @on_cpu:    current tracing cpu
+> + * @started:   current trace status, true for started
+> + * @is_port:   whether we're tracing root port or not
+> + * @direction: direction of the TLP headers to trace
+> + * @filter:    filter value for tracing the TLP headers
+> + * @format:    format of the TLP headers to trace
+> + * @type:      type of the TLP headers to trace
+> + */
+> +struct hisi_ptt_trace_ctrl {
+> +	struct hisi_ptt_dma_buffer *trace_buf;
+> +	struct perf_output_handle handle;
+> +	u32 buf_index;
+> +	int on_cpu;
+> +	bool started;
+> +	bool is_port;
+> +	u32 direction:2;
+> +	u32 filter:16;
+> +	u32 format:1;
+> +	u32 type:4;
+> +};
+> +
+> +/**
+> + * struct hisi_ptt_filter_desc - Descriptor of the PTT trace filter
+> + * @list:    entry of this descriptor in the filter list
+> + * @is_port: the PCI device of the filter is a Root Port or not
+> + * @devid:   the PCI device's devid of the filter
+> + */
+> +struct hisi_ptt_filter_desc {
+> +	struct list_head list;
+> +	bool is_port;
+> +	u16 devid;
+> +};
+> +
+> +
+> +/**
+> + * struct hisi_ptt_pmu_buf - Descriptor of the AUX buffer of PTT trace
+> + * @length:   size of the AUX buffer
+> + * @nr_pages: number of pages of the AUX buffer
+> + * @base:     start address of AUX buffer
+> + * @pos:      position in the AUX buffer to commit traced data
+> + */
+> +struct hisi_ptt_pmu_buf {
+> +	size_t length;
+> +	int nr_pages;
+> +	void *base;
+> +	long pos;
+> +};
+> +
+> +/**
+> + * struct hisi_ptt - Per PTT device data
+> + * @trace_ctrl:   the control information of PTT trace
+> + * @hotplug_node: node for register cpu hotplug event
+> + * @hisi_ptt_pmu: the pum device of trace
+> + * @iobase:       base IO address of the device
+> + * @pdev:         pci_dev of this PTT device
+> + * @pmu_lock:     lock to serialize the perf process
+> + * @upper_bdf:    the upper BDF range of the PCI devices managed by this PTT device
+> + * @lower_bdf:    the lower BDF range of the PCI devices managed by this PTT device
+> + * @port_filters: the filter list of root ports
+> + * @req_filters:  the filter list of requester ID
+> + * @port_mask:    port mask of the managed root ports
+> + */
+> +struct hisi_ptt {
+> +	struct hisi_ptt_trace_ctrl trace_ctrl;
+> +	struct hlist_node hotplug_node;
+> +	struct pmu hisi_ptt_pmu;
+> +	void __iomem *iobase;
+> +	struct pci_dev *pdev;
+> +	spinlock_t pmu_lock;
+> +	u32 upper_bdf;
+> +	u32 lower_bdf;
+> +
+> +	/*
+> +	 * The trace TLP headers can either be filtered by certain
+> +	 * root port, or by the requester ID. Organize the filters
+> +	 * by @port_filters and @req_filters here. The mask of all
+> +	 * the valid ports is also cached for doing sanity check
+> +	 * of user input.
+> +	 */
+> +	struct list_head port_filters;
+> +	struct list_head req_filters;
+> +	u16 port_mask;
+> +};
+> +
+> +#define to_hisi_ptt(pmu) container_of(pmu, struct hisi_ptt, hisi_ptt_pmu)
+> +
+> +#endif /* _HISI_PTT_H */
+
