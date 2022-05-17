@@ -2,40 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F61552A204
-	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 14:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2B2852A20B
+	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 14:52:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346502AbiEQMwB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 08:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52352 "EHLO
+        id S1343506AbiEQMvw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 08:51:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346465AbiEQMvw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 08:51:52 -0400
+        with ESMTP id S1346440AbiEQMvv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 08:51:51 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B581E21834;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9D6682C662;
         Tue, 17 May 2022 05:51:45 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id CEBC0BD6;
-        Tue, 17 May 2022 15:52:37 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru CEBC0BD6
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id E878BBD7;
+        Tue, 17 May 2022 15:52:38 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru E878BBD7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baikalelectronics.ru; s=mail; t=1652791958;
-        bh=EOVES41k44a8aiGRCiFSCyFxTqVIh9wxi/EixTfGm+s=;
+        bh=tpvLBnqOsvw+Y9Lu79MzBU/091077M9EeMSrXis1gw0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=SmPmlx6qGvUsWFLTvFBJfzFDejvEAoC2dRctHcun3JnmN8GZfZUZMK2/izUdj2hrk
-         oFapl8BzqIDgJqsAQT6TIDMaEIMLm/ebchAE9yf0kj5UYWnTK19VNf84pQWNQf+Y0R
-         P2HfyudqP/iaiDo/3EThO/9FdP8Ir7USEovvT1EY=
+        b=lagX7xf7vcSXEeBdOj+Fn2hOfqi583SbYNCVU435nGXvIkRa9WC1bxqddqloOlxZx
+         cTYnOiCdxbg6GvXK2CTx8cA+T9SW24NMnuVYTiMq+ZaFAK3o9TgdWip2JBdXyTYu8p
+         u7FrdpIxpndpbd9bAlPXIiBS+7TUd6pwywrgbbIA=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 17 May 2022 15:51:40 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 17 May 2022 15:51:41 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>,
-        Shradha Todi <shradha.t@samsung.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
@@ -43,9 +41,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 05/13] PCI: dwc: Set INCREASE_REGION_SIZE flag based on limit address
-Date:   Tue, 17 May 2022 15:50:50 +0300
-Message-ID: <20220517125058.18488-6-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 06/13] PCI: dwc: Add braces to the multi-line if-else statements
+Date:   Tue, 17 May 2022 15:50:51 +0300
+Message-ID: <20220517125058.18488-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,138 +52,60 @@ Content-Type: text/plain
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_XBL,SPF_HELO_NONE,
-        SPF_PASS,T_FILL_THIS_FORM_SHORT,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-It was wrong to use the region size parameter in order to determine
-whether the INCREASE_REGION_SIZE flag needs to be set for the outbound
-iATU entry because in general there are cases when combining a region base
-address and size together produces the out of bounds upper range limit
-while upper_32_bits(size) still returns zero. So having a region size
-within the permitted values doesn't mean the region limit address will fit
-to the corresponding CSR. Here is the way iATU calculates the in- and
-outbound untranslated regions if the INCREASE_REGION_SIZE flag is cleared
-[1]:
+In accordance with [1] if there is at least one multi-line if-else
+clause in the statement, then each clause will need to be surrounded by
+the braces. The driver code violates that coding style rule in a few
+places. Let's fix it.
 
-  Start address:                      End address:
-63              31              0   63              31              0
-+---------------+---------------+   +---------------+---------------+
-|               |         |  0s |   |               |         |  Fs |
-+---------------+---------------+   +---------------+---------------+
-   upper base   |   lower base       !upper! base   | limit address
-     address          address           address
+[1] Documentation/process/coding-style.rst
 
-So the region start address is determined by the iATU lower and upper base
-address registers, while the region upper boundary is calculated based on
-the 32-bits limit address register and the upper part of the base address.
-In accordance with that logic for instance the range
-0xf0000000 @ 0x20000000 does have the size smaller than 4GB, but the
-actual limit address turns to be invalid forming the untranslated address
-map as [0xf0000000; 0x1000FFFF], which isn't what the original range was.
-In order to fix that we need to check whether the size after being added
-to the lower part of the base address causes the 4GB range overflow. If it
-does then we need to set the INCREASE_REGION_SIZE flag thus activating the
-extended limit address by means of an additional iATU CSR (upper limit
-address register) [2]:
-
-  Start address:                      End address:
-63              31              0   63      x       31              0
-+---------------+---------------+   +---------------+---------------+
-|               |         |  0s |   |       |       |         |  Fs |
-+---------------+---------------+   +---------------+---------------+
-   upper base   |  lower base         upper | upper | limit address
-     address         address          base  | limit |
-                                     address|address|
-
-Otherwise there is enough room in the 32-bits wide limit address register,
-and the flag can be left unset.
-
-Note the case when the size-based flag setting approach is correct implies
-requiring to have the size-aligned base addresses only. But that
-constraint isn't relevant to the PCIe ranges accepted by the kernel.
-There is also no point in implementing it either seeing the problem can be
-easily fixed by checking the whole limit address instead of the region
-size.
-
-[1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    v5.40a, March 2019, fig.3-36, p.175
-[2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    v5.40a, March 2019, fig.3-37, p.176
-
-Fixes: 5b4cf0f65324 ("PCI: dwc: Add upper limit address for outbound iATU")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
 ---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++--
+ drivers/pci/controller/dwc/pcie-designware.c    | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Changelog v2:
-- Fix the end address in the example of the patch log. It should be
-  0x1000FFFF and not 0x0000FFFF (@Manivannan).
----
- drivers/pci/controller/dwc/pcie-designware.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 0eda8236c125..7c9315fffe24 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -699,9 +699,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 
+ 	if (!pci->dbi_base2) {
+ 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+-		if (!res)
++		if (!res) {
+ 			pci->dbi_base2 = pci->dbi_base + SZ_4K;
+-		else {
++		} else {
+ 			pci->dbi_base2 = devm_pci_remap_cfg_resource(dev, res);
+ 			if (IS_ERR(pci->dbi_base2))
+ 				return PTR_ERR(pci->dbi_base2);
 diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 84fef21efdbc..347251bf87d0 100644
+index 347251bf87d0..ef995e006cf0 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.c
 +++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -287,8 +287,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
- 				 upper_32_bits(pci_addr));
- 	val = type | PCIE_ATU_FUNC_NUM(func_no);
--	val = upper_32_bits(size - 1) ?
--		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
-+	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr))
-+		val |= PCIE_ATU_INCREASE_REGION_SIZE;
- 	if (pci->version == 0x490A)
- 		val = dw_pcie_enable_ecrc(val);
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
-@@ -315,6 +315,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 					u64 pci_addr, u64 size)
- {
- 	u32 retries, val;
-+	u64 limit_addr;
+@@ -699,8 +699,9 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
+ 			pci->atu_size = SZ_4K;
  
- 	if (pci->ops && pci->ops->cpu_addr_fixup)
- 		cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
-@@ -325,6 +326,8 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 		return;
- 	}
+ 		dw_pcie_iatu_detect_regions_unroll(pci);
+-	} else
++	} else {
+ 		dw_pcie_iatu_detect_regions(pci);
++	}
  
-+	limit_addr = cpu_addr + size - 1;
-+
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT,
- 			   PCIE_ATU_REGION_OUTBOUND | index);
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_BASE,
-@@ -332,17 +335,18 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_BASE,
- 			   upper_32_bits(cpu_addr));
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_LIMIT,
--			   lower_32_bits(cpu_addr + size - 1));
-+			   lower_32_bits(limit_addr));
- 	if (pci->version >= 0x460A)
- 		dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_LIMIT,
--				   upper_32_bits(cpu_addr + size - 1));
-+				   upper_32_bits(limit_addr));
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET,
- 			   lower_32_bits(pci_addr));
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
- 			   upper_32_bits(pci_addr));
- 	val = type | PCIE_ATU_FUNC_NUM(func_no);
--	val = ((upper_32_bits(size - 1)) && (pci->version >= 0x460A)) ?
--		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
-+	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
-+	    pci->version >= 0x460A)
-+		val |= PCIE_ATU_INCREASE_REGION_SIZE;
- 	if (pci->version == 0x490A)
- 		val = dw_pcie_enable_ecrc(val);
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
+ 	dev_info(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
+ 		"enabled" : "disabled");
 -- 
 2.35.1
 
