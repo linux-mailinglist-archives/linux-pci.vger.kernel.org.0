@@ -2,149 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F8FD52AD1A
-	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 22:56:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B5E952ADD2
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 00:08:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350457AbiEQUzu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 16:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49390 "EHLO
+        id S230075AbiEQWIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 18:08:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236177AbiEQUzs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 16:55:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 71FDE22A
-        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 13:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652820943;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bjDVUYk4HAdG1tZM7dsKEhmRYaWZVB/tCHA1P3Bkphg=;
-        b=MZoehhNWPgnIkk1NPlvM3GnbazBxRtHYiCZmZi6JqyvsMXD7uJV9Hkw/JO7rSJ7Oe3KepR
-        QY+ssdlW9Dt9wNcp8djwzVxR04cBv7Boas384dMJd+qBRfLf7OxwicURg4hI0W5PcJSAuu
-        /fx2Woj/cTZdD2ykNxT5BR6YaHFORKk=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-531-7lsdJ2ckPpyZGxUT_0mhgA-1; Tue, 17 May 2022 16:55:41 -0400
-X-MC-Unique: 7lsdJ2ckPpyZGxUT_0mhgA-1
-Received: by mail-io1-f72.google.com with SMTP id r17-20020a0566022b9100b00654b99e71dbso13175624iov.3
-        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 13:55:41 -0700 (PDT)
+        with ESMTP id S230064AbiEQWIY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 18:08:24 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB32377FD
+        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 15:08:23 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2fed274f3fbso4266687b3.17
+        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 15:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=X9rd48IcOQMlJI4fL1LiOmaxrjRg+Q4uXQPcsoEgV+k=;
+        b=FlPd4Ema1RTlqOmUDneIdv1KEKzfvy5j81NCIQeDPZybHktJlCFTbLL4ZkCjfGPLVC
+         nMHR9eGulo22rP5seemivgemqbsWdMosN/8jIZz+5WRGX7iR97kNyjmLjJacDnOJnsdn
+         L+Rhi1RJ/5Vk2i2KnaG7WO10vJsTNBLaN4eITTnEPWFkpEzMB8yYbbm8Q3GEMOzVP5MQ
+         3HSQqqhUCeOpRHu4aKeQ6HDtK32bZIUNT2zL/+Kj+9UEztN8TtaM/gqYK841nJ9TcN5g
+         GMI5o9E8QNXP+KkedPoVP3OeQsAjzD9IDLkczE0Iu+oj9bEqvQO47sCQW8NfvLUrFFVE
+         NZ5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=bjDVUYk4HAdG1tZM7dsKEhmRYaWZVB/tCHA1P3Bkphg=;
-        b=gxYdqUsTTrmFAxDF8v+uxAnuzJjhjilvkq6DO1Zym+ZycEBE1oMxeUr6abf/FPMYrX
-         5ZsOhJmt+Y/YP/XDZvx9zaQ6OIeyJ/PZpPLRvwU+QkDTMjCxGKi8/SpoEGmNyJPMg1h2
-         oeIIg733WBXioUzKrBKzaFd13YKhDsZ+jSkqMWAaZjz+IusnBqe9fSlqzaMwe34TKxKR
-         nowxi5q7rcYxsgixa2H5y4i5/SHvR0WPL3K6ESdyjF22T6g7lLCyWiGRPMvMr1enw9ck
-         yoAW2woZKBJD88sVR4W4xo5cyFRlUx4W1wogWe3pZInYglmsedp2uiaEvpoqzFC3Ddk9
-         4ZGQ==
-X-Gm-Message-State: AOAM533ieXawaf8vAHvcyZYZypL7E3+KgYLPD5G9DWAqcz3H4Xo8vYKQ
-        xxmdBR//O6RqUMpH4j8/bsQzt2SbqpLJvnn54yf14UF7lFHI3LQSCyZfHos2sbDC7vtjYKiKSfs
-        AcxKz7vt4QU4eKzksQVbB
-X-Received: by 2002:a05:6638:4185:b0:32b:6a0d:90dc with SMTP id az5-20020a056638418500b0032b6a0d90dcmr12863693jab.193.1652820941093;
-        Tue, 17 May 2022 13:55:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz9BjoRLt6hzI2bLuSuOSH1OMVZ6HeJ3OXGYhShr0wiGLKOz5B/iPyuZS/yHg0uVPwGQJxgNw==
-X-Received: by 2002:a05:6638:4185:b0:32b:6a0d:90dc with SMTP id az5-20020a056638418500b0032b6a0d90dcmr12863678jab.193.1652820940861;
-        Tue, 17 May 2022 13:55:40 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id a2-20020a02ac02000000b0032e2996cadesm40325jao.66.2022.05.17.13.55.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 13:55:40 -0700 (PDT)
-Date:   Tue, 17 May 2022 14:55:39 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=X9rd48IcOQMlJI4fL1LiOmaxrjRg+Q4uXQPcsoEgV+k=;
+        b=v4qVIP0mpeLfDzF+NFa54RMNjVtgUS/8zPuc9HpPQhwYD8NYGpoEJdtSxH2pUdSWNG
+         vOIutLA9Tc+Pbqvi1r+TuGe8bENHdvQg2ZkS9HfwrAHSRa5me0g8ccrNyGBQExgD26eh
+         yw16ZJyQEzdYTSf97f4nIjJgQFVRmoE1dkb1wIgtdQGiNuLV8S2dFxNsULGVFWnVQAks
+         qE9CJDZ3o1wIoPGf8UNjYgUmLeoTL+ip6Ary1MpAXnuFxbRhsDunT+UHOAmAxaqXveq7
+         Pv7DmGPF3hK4SO3Bq2uhABvoL71Yw9eWTotU7HsnposVLzMV0tfnErDTXE+AgcFwLXq2
+         RyAg==
+X-Gm-Message-State: AOAM533nqb/12jCMP2VVt21CZQyJFP2+TBqTxNRr6/b+AB34Dj08+SAU
+        rmzDKP1JWZIdijPi1IXMXl5pTGMxO53PujA=
+X-Google-Smtp-Source: ABdhPJyAvSIgyxv8X2AWvhlPaUJR0PhTeRsTDBvxqVMgCBrF0GHmO5hdx8s6AygIcKEcbgRoxQnJXpmt/P1nufI=
+X-Received: from tansuresh.svl.corp.google.com ([2620:15c:2c5:13:3c9b:5345:708:1378])
+ (user=tansuresh job=sendgmr) by 2002:a05:6902:84:b0:63d:4a3d:eb5 with SMTP id
+ h4-20020a056902008400b0063d4a3d0eb5mr24596845ybs.145.1652825302496; Tue, 17
+ May 2022 15:08:22 -0700 (PDT)
+Date:   Tue, 17 May 2022 15:08:13 -0700
+Message-Id: <20220517220816.1635044-1-tansuresh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
+Subject: [PATCH v3 0/3] Asynchronous shutdown interface and example implementation
+From:   Tanjore Suresh <tansuresh@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 4/4] vfio/pci: Move the unused device into low power
- state with runtime PM
-Message-ID: <20220517145539.7265b41a.alex.williamson@redhat.com>
-In-Reply-To: <20220517144256.15991375.alex.williamson@redhat.com>
-References: <20220517100219.15146-1-abhsahu@nvidia.com>
-        <20220517100219.15146-5-abhsahu@nvidia.com>
-        <20220517144256.15991375.alex.williamson@redhat.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, Tanjore Suresh <tansuresh@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 17 May 2022 14:42:56 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+Problem:
 
-> On Tue, 17 May 2022 15:32:19 +0530
-> Abhishek Sahu <abhsahu@nvidia.com> wrote:
-> > 5. Since the runtime PM framework will provide the same functionality,
-> >    so directly writing into PCI PM config register can be replaced with
-> >    the use of runtime PM routines. Also, the use of runtime PM can help
-> >    us in more power saving.
-> > 
-> >    In the systems which do not support D3cold,
-> > 
-> >    With the existing implementation:
-> > 
-> >    // PCI device
-> >    # cat /sys/bus/pci/devices/0000\:01\:00.0/power_state
-> >    D3hot
-> >    // upstream bridge
-> >    # cat /sys/bus/pci/devices/0000\:00\:01.0/power_state
-> >    D0
-> > 
-> >    With runtime PM:
-> > 
-> >    // PCI device
-> >    # cat /sys/bus/pci/devices/0000\:01\:00.0/power_state
-> >    D3hot
-> >    // upstream bridge
-> >    # cat /sys/bus/pci/devices/0000\:00\:01.0/power_state
-> >    D3hot  
-> 
-> I'm not able to reproduce these results.  Output below abridged:
-> 
-> # lspci -t
-> -[0000:00]-+-00.0
->            +-01.0-[01]--+-00.0
->            |            \-00.1
-> 
-> # grep . /sys/bus/pci/devices/*/power_state
-> /sys/bus/pci/devices/0000:00:01.0/power_state:D0
-> /sys/bus/pci/devices/0000:01:00.0/power_state:D3hot
-> /sys/bus/pci/devices/0000:01:00.1/power_state:D3hot
-> 
-> # lspci -ks $DEV
-> 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v2/3rd Gen Core processor PCI Express Root Port (rev 09)
-> 	Kernel driver in use: pcieport
-> 01:00.0 VGA compatible controller: NVIDIA Corporation GM107 [GeForce GTX 750] (rev a2)
-> 	Subsystem: eVga.com. Corp. Device 2753
-> 	Kernel driver in use: vfio-pci
-> 01:00.1 Audio device: NVIDIA Corporation GM107 High Definition Audio Controller [GeForce 940MX] (rev a1)
-> 	Subsystem: eVga.com. Corp. Device 2753
-> 	Kernel driver in use: vfio-pci
-> 	Kernel modules: snd_hda_intel
-> 
-> Any debugging suggestions?  Thanks,
+Some of our machines are configured with  many NVMe devices and
+are validated for strict shutdown time requirements. Each NVMe
+device plugged into the system, typicaly takes about 4.5 secs
+to shutdown. A system with 16 such NVMe devices will takes
+approximately 80 secs to shutdown and go through reboot.
 
-Nevermind, I see a whole bunch of reasons in pci_bridge_d3_possible()
-that runtime-pm wouldn't support D3hot on this bridge/system.  Thanks,
+The current shutdown APIs as defined at bus level is defined to be
+synchronous. Therefore, more devices are in the system the greater
+the time it takes to shutdown. This shutdown time significantly
+contributes the machine reboot time.
 
-Alex
+Solution:
+
+This patch set proposes an asynchronous shutdown interface at bus level,
+modifies the core driver, device shutdown routine to exploit the
+new interface while maintaining backward compatibility with synchronous
+implementation already existing (Patch 1 of 3) and exploits new interface
+to enable all PCI-E based devices to use asynchronous interface semantics
+if necessary (Patch 2 of 3). The implementation at PCI-E level also works
+in a backward compatible way, to allow exiting device implementation
+to work with current synchronous semantics. Only show cases an example
+implementation for NVMe device to exploit this asynchronous shutdown
+interface. (Patch 3 of 3).
+
+Changelog:
+
+v2: - Replaced the shutdown_pre & shutdown_post entry point names with the
+      recommended names (async_shutdown_start and asynch_shutdown_end).
+
+    - Comment about ordering requirements between bridge shutdown versus
+      leaf/endpoint shutdown was agreed to be different when calling
+      async_shutdown_start and async_shutdown_end. Now this implements the
+      same order of calling both start and end entry points.
+
+v3: - This notes clarifies why power management framework was not
+      considered for implementing this shutdown optimization.
+      There is no code change done. This change notes clarfies
+      the reasoning only.
+
+      This patch is only for shutdown of the system. The shutdown
+      entry points are traditionally have different requirement
+      where all devices are brought to a quiescent state and then
+      system power may be removed (power down request scenarios)
+      and also the same entry point is used to shutdown all devices
+      and re-initialized and restarted (soft shutdown/reboot
+      scenarios).
+
+      Whereas, the device power management (dpm)  allows the device
+      to bring down any device configured in the system that may be
+      idle to various low power states that the device may support
+      in a selective manner and based on transitions that device
+      implementation allows. The power state transitions initiated
+      by the system can be achieved using 'dpm' interfaces already
+      specified.
+
+      Therefore the request to use the 'dpm' interface to achieve
+      this shutdown optimization is not the right approach as the
+      suggested interface is meant to solve an orthogonal requirement
+      and have historically been kept separate from the shutdown entry
+      points defined and its associated semantics.
+
+Tanjore Suresh (3):
+  driver core: Support asynchronous driver shutdown
+  PCI: Support asynchronous shutdown
+  nvme: Add async shutdown support
+
+ drivers/base/core.c        | 38 +++++++++++++++++-
+ drivers/nvme/host/core.c   | 28 +++++++++----
+ drivers/nvme/host/nvme.h   |  8 ++++
+ drivers/nvme/host/pci.c    | 80 ++++++++++++++++++++++++--------------
+ drivers/pci/pci-driver.c   | 20 ++++++++--
+ include/linux/device/bus.h | 12 ++++++
+ include/linux/pci.h        |  4 ++
+ 7 files changed, 149 insertions(+), 41 deletions(-)
+
+-- 
+2.36.0.550.gb090851708-goog
 
