@@ -2,142 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E120C52A5BC
-	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 17:11:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D75C752A5E5
+	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 17:19:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbiEQPLr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 11:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57868 "EHLO
+        id S245614AbiEQPTp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 11:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349703AbiEQPLp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 11:11:45 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1A653BFB0
-        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 08:11:43 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d17so17624469plg.0
-        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 08:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cmLXabcPdJC5+Jr+geeae2kzppnXJw8ILHcl1Qm7vBw=;
-        b=CMbAPHf6t+S5Kg1C4GszZxleCRPzPCJZatJ1Uhgf4vk0o6lS847ZRTFjB8hGXzHMWl
-         ll+/Pk58qJPLoniMeyG8G08xqU5f8Y1cYHkaDkQ68EI4RSuceZvg8L88QzT3nG1ggMQh
-         wpCPXtWUjd3VPVCZAzB0zNj9VYjpBbBGN0i5lSZugdLoFWYUYY403CgSeaPvbw/GJWfo
-         KoWb+QmOkyIhZFiG13zp7J2QOwQr5UeggVUWxzffet1NnT0TxQlosvVe3iY8p187yVk4
-         PGriacZsHbGjO6/cFvWrqRlURZJrIBSd0FdYh8B5fOKv/rRpHcFyySilRPJurX8HmkZ+
-         GF4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cmLXabcPdJC5+Jr+geeae2kzppnXJw8ILHcl1Qm7vBw=;
-        b=Ve//Sf7nprofLruog+1ZnXjCeDikrVh4thwe/VzM0q011idgW5tHuQl3I0P2p0wZFC
-         iULN5XMl7tSlyNAA8yD0XSyCKzMTnXzXFXQMB5RnZoWvtt0N8k+sue1pDrWGQzCtqGMV
-         1BU3J1Uy7SskHhfhqP/ajbf/JXRYNTqE1H0yYoCY6icUSdXGxfg7PhqzevSktYjxUvnA
-         kKCBIxgUwQ8GjC66DT2QypFdGiWJ0ctc3skw2p9SsZhMxGR65Hwh3nMPM6xZVDy5tzCo
-         Q5ZN/mEMOyUjSXCyecQk8vxmrGSFwNZytKlLBEZog2ROBqcGMrMpUddZncoBfa0Trkyc
-         oMkw==
-X-Gm-Message-State: AOAM530nWFgqt5UStBTldIdx2zrGQDm9Vnz+2Q6u5O2yEEIPn1LKjmE4
-        VPYz+kFRFI5G9vDSGwG/Tf7u
-X-Google-Smtp-Source: ABdhPJy/8+de+j926ut7sfC02FyPhUMi0LcfxLj34YwOAks7Rl82lL4Rj6Y5maOSEeF2PjT7605A/g==
-X-Received: by 2002:a17:902:dad1:b0:161:9abb:fb75 with SMTP id q17-20020a170902dad100b001619abbfb75mr6145785plx.135.1652800303244;
-        Tue, 17 May 2022 08:11:43 -0700 (PDT)
-Received: from thinkpad ([117.207.31.8])
-        by smtp.gmail.com with ESMTPSA id ja1-20020a170902efc100b001617e18e253sm4280263plb.143.2022.05.17.08.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 08:11:42 -0700 (PDT)
-Date:   Tue, 17 May 2022 20:41:34 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, kbusch@kernel.org,
-        hch@lst.de, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, svarbanov@mm-sol.com,
-        bjorn.andersson@linaro.org, axboe@fb.com,
-        quic_vbadigan@quicinc.com, quic_krichai@quicinc.com,
-        quic_nitirawa@quicinc.com, vidyas@nvidia.com, sagi@grimberg.me
-Subject: Re: [PATCH 2/3] PCI: dwc: qcom: Set suspend_poweroff flag for SC7280
-Message-ID: <20220517151134.GB4528@thinkpad>
-References: <20220513110027.31015-3-manivannan.sadhasivam@linaro.org>
- <20220516201950.GA1047412@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        with ESMTP id S1349827AbiEQPTn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 11:19:43 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2086.outbound.protection.outlook.com [40.107.22.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AFA3BA51;
+        Tue, 17 May 2022 08:19:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FshAzXl0NcjY5fILiZ28b8GYdD6XkCBHxr2ggwuxgNeWr+kXObtQjbf98u6e+vti1uSkzyKf39sxdjNm7NjKZMYHahlKXYON/WmwHRXGjMB7Xf78DSfbVJFEyJxc72M967cduLy9yguj7Xot9tDvD2K5HFIX4iF6bRRtP6mw6oMBtcCjnu+A5BTF0ZD521cvV3WOcEAu55G8w4kU9aLa9SqpoUMPW2Tc2cjUWqcJSpF7E5k69P0LGk5ngtSzwzwoG3asiA8ImlkehZqXCkY8blv0UaM4J5Ghq78cUV1f0KDkapOOa9UMoexlWwQ5G+RBepsT5041+F7hCBye3ncHiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=21xhV+/zbJSwDY8xKYR6L0PfAvBUscprZ4s5Kg7TwzU=;
+ b=gZEU1zjfQx82lGr9XgFcv5dSqyjkrI5zRwVyZ+sVHcR4JJpg6FZYlmsVeH5yaCBmxTXHu2zm/e6ugw0l4RIsq3rt/QYfs0Zo31QjwbxJQN34p9prQHEHh3Zijrzsk9k/gLaIaTKVYiPSdN5AEieRGlmcpRxbp3pmu2zbPUdmDYNgW7/BTG5gIt4haydrRL/BYbgm4NXQY6P7BPo6/5Qd20H+bhyrUmiF2VvOGJxFlBekfsn/AcqU0wslNtJwS7bu8vdH0PE2d1byfvI+7ShtiDSYSG+RfYUP4pkVSWjIMJHbwfo76w1SDPSzpbW7lA+yiPX49nUMUKYzQ6rARO/uSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=21xhV+/zbJSwDY8xKYR6L0PfAvBUscprZ4s5Kg7TwzU=;
+ b=ALfqgOT+xDIO53utZ5oyfzhGoQJCoX5HQPjq4ou/B4I5EWrkV1E93SKpkxIU/fKjhW2h605dQnCg8Qmx+94dy7idf7yV5TLOYsL5W3kOaYiaC1O5JhrbCtMedZ0WZ4FGuMo4/9S1WcXfFOJmy9OtCoUe551sSHuBTkV8tzUcH0c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by VI1PR04MB4367.eurprd04.prod.outlook.com (2603:10a6:803:4e::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.18; Tue, 17 May
+ 2022 15:19:38 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::adc5:45f8:fa40:1b8a]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::adc5:45f8:fa40:1b8a%7]) with mapi id 15.20.5186.021; Tue, 17 May 2022
+ 15:19:38 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        fancer.lancer@gmail.com, lznuaa@gmail.com, helgaas@kernel.org,
+        kishon@ti.com
+Cc:     vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com,
+        manivannan.sadhasivam@linaro.org, Sergey.Semin@baikalelectronics.ru
+Subject: [PATCH v11 0/8] Enable designware PCI EP EDMA locally
+Date:   Tue, 17 May 2022 10:19:07 -0500
+Message-Id: <20220517151915.2212838-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.35.1
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220516201950.GA1047412@bhelgaas>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0097.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c5::12) To PAXPR04MB9186.eurprd04.prod.outlook.com
+ (2603:10a6:102:232::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a535f839-f1cc-41a6-0913-08da3818a845
+X-MS-TrafficTypeDiagnostic: VI1PR04MB4367:EE_
+X-Microsoft-Antispam-PRVS: <VI1PR04MB4367815D696218284A7B3C1188CE9@VI1PR04MB4367.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6U6whgoB+P+J90QHwXjjB2RPOA0S2gTSaEjl6YeS4GRBf2l5HwfShEQbe5bh6ymvIud2EXLJBju5N0/jNbj4ZbNBkWjZr7iOcpFkTm5cbZM5oW6ekhXVUe5B18VGMfb1rMoijIx21KUh0BMSoI+myOSFj+tdJmyjoCLHzrQLyiFJtZka0TA++hBFYpGKDjDeYrwQmc6dIX2zX2rpwcsML9rRsp8lpJ9PmthDWUQ8mBFc/kNOITWRLFxh1V5GmR68FfcHzQ4qD00p2B8rMFvotuILHEM0yCwGPbLHFAqkHd/LVO00hImT3Zwq47XKVhfDBRBx7exaavCeLH6PlRg7KwvvjQxNTAKTiv4dnPpVX6S4qDELjz4jKMfRfU7v39WxY5Ts9lCCAeNhZVnnhRypEwfPbnQ4A6QGw9DM2hrVsWPBCpA/RIIfxEKXPjuxUpejOFUfEvrYeAGTeebkptawITRxenXaXfS2eV/j7AaACU0dcFa/tTEhqYVHk528UtHwRJHBW29Vr6l/uXuUAixYePj7mB42U9wJrugFtpADnlwW8sNgDWG2Pv4aTJJTWm0RJqzPFYHMWDXjoqM3jWkGaneyU+qwcK4HgS90DQVOlJGr4pvRdkRAgx/bcnq7gk7ohmFjtjK2Ua6aFyDp2VRaEtdlnnNL1AtkCWzV67KA60X0mkvHnZo/NmGYLwohaP2jFttI2amvneBcHmhqs4HpTr8FpDQYHDKE4hIsBVeVRA0Yxy3k33z8pV0vHTZ38Avk77IR/GRWyIqvK/2xPg/eHlCsVA3x84ENi5GfoErt+f5EZOzHUrgtJnmj1OFnaMzE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(36756003)(6666004)(52116002)(86362001)(83380400001)(7416002)(921005)(6486002)(38350700002)(316002)(508600001)(6512007)(26005)(6506007)(2906002)(186003)(5660300002)(1076003)(2616005)(66556008)(66946007)(66476007)(4326008)(8676002)(8936002)(38100700002)(966005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?v/7bcH8AWoi9923pNwwesIIiNk7CcksFsRxIzsMsTTybVGpPhBa3jjWwOFtz?=
+ =?us-ascii?Q?qFP9ajQY/f7cgbVXoywSGSZIfmUH1gIFMLMPHi78FlFSt/JWyB92HhE/hKvE?=
+ =?us-ascii?Q?OhWg+94o35OnVpgoJvatmulrdfeaTarU935nrYG50f1B0wkjoQuLM6BtXm1O?=
+ =?us-ascii?Q?WPn2gWLGuAd4IA5B9zfuYkiRBoUOLp590Xsp+Ax+XLGU3XXhozYkGObXQgAh?=
+ =?us-ascii?Q?+73WESPk8x2EKDiznuILh8JdR66JhWIuf6yIXvLVZH5XQ3lDUE42jIr2bQ+2?=
+ =?us-ascii?Q?CiKjb3cEXD9vAzkL1rdNbpIxYo9eotGdVJbNbrVptW5T2Md1k36lzsbbrsYM?=
+ =?us-ascii?Q?zpy5Iq0Qmst0JVyX6kfHWSL5DrxE94XNUhz5Vbro8EpXqBWdSsVoinZL3cus?=
+ =?us-ascii?Q?QtkFsEgs8rI3ZAZ2SDKIgQ9xFr+xF5jt4ga9L16xFEDImXiJ+GP/t14WMa8y?=
+ =?us-ascii?Q?yZhiVdxjr2wUszNfIP4ejBbKYN+cn+agmcNWNwABiBuVN+ta6jE8r2Lpxjqb?=
+ =?us-ascii?Q?69ojlS7IAqVxsL7x91NCrq0cg4FlLcRogrZBfTpX7kXcBaSXMTjr+SXbURnT?=
+ =?us-ascii?Q?fQpkk/wDEgHFQDpYtvZRbjJ03rsItS+Gxtyfj+xH6nagu548ljZkr9bbgwMp?=
+ =?us-ascii?Q?hdKHoGXHxDbidJiFtNWtqQkPNapAiGaWVFgJZd3JCF2b8nE2XtuMmODKC/YK?=
+ =?us-ascii?Q?INr/BvYuBuE2NfBo9RalvWv/3ObZ3nqfkWWKSmMF7xv1NZJUXsObnw4qA6A5?=
+ =?us-ascii?Q?CLldM5cwYkwSmTFAPK9xjowDoe/VtYC0MS17SZem/2fnB8M1aIrS6N3l/9CQ?=
+ =?us-ascii?Q?6Ju/M6+leo7uM5r1p/JKbb3l4IOvGpgfQGtXwwfFXQZyCYUySJyVK/1gJcfJ?=
+ =?us-ascii?Q?0VZtHm2CWicPUN60wI2fB344ZjOjef8LsPMTgTg1xq7pZcVpyZOPPmB6QJWq?=
+ =?us-ascii?Q?PRzq211QUYfnPq172qRGHLKRcpbrUSrZNqxwCuJkj/42JhkrEPH73FrufzWt?=
+ =?us-ascii?Q?QKJC1ypnjMEFkdFFPY80uRb78TCHg8JjV/ymO/YoXbGgS93CTurVMMds7Nt7?=
+ =?us-ascii?Q?SKKay2N2gNCx6hOQGLZgAJtLzep/LgKYsuCwchv5W7CLtDHZ7DzLaSIUtFwS?=
+ =?us-ascii?Q?6yz7WuyqrN6bxfxCVw7yWRvcjC2n1+82wm1YeS6w70vkPD8k60FTTPtr5GCZ?=
+ =?us-ascii?Q?8U/vczNCZ3mSuVYFk1DpEzYIZX14uOpmRx58QXzT/XKXP95dZq6TeI0TZK2N?=
+ =?us-ascii?Q?Iua0PqTz/YqfwIS3rQB/IcsA5Vb/3LCDkkeLKCfXrZ1R4H0DE112ruA2LA6s?=
+ =?us-ascii?Q?H3RRk/sj+bkpGl2afLTpbp55UmZnARhAaX1dmuUfbjv7xGujGO49fss6B6ve?=
+ =?us-ascii?Q?WSkHr3LFWJNba6nyJuuI7ap9e4Yi3oLjtsOgTwGkOl4+OeN86L/aCO3yzWin?=
+ =?us-ascii?Q?0wsYASOpaWtv+pxilm7HVtIR/L2RUQUVtMA6BvO0CZCKfrO9I5+JDMU2mBd/?=
+ =?us-ascii?Q?6mr/dzhUO3eCe0L2IcFxZLZI/+AqWaFhmlGpZTd90v7XQpIYqAlvNE0feHky?=
+ =?us-ascii?Q?1QyS8MnlCUMHy5DYeo9EqrsdVK7mHeZuXDaDnizs86UQzBY1sJzRdp6nxdRH?=
+ =?us-ascii?Q?zWCisPEcuVA1Xu5sIylRZW/VlzDNR8M/3NCgAFwjVBM609676DBhhd3xOB3L?=
+ =?us-ascii?Q?pJV+F0t7z5LwCb2sskr+rqcOPoTL8cFec2DqIHVGQTgYwZQ6HikThhDZnskh?=
+ =?us-ascii?Q?qGscbii3cQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a535f839-f1cc-41a6-0913-08da3818a845
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2022 15:19:38.2156
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JIDb658srbUJg4lkfd1IgenG6qxsEZ7X2rIgSqn7bSRojgF9YSmBzpyE7SGFH5DFoO9Vf+sNMQh0dPYA8R2JDQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4367
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 16, 2022 at 03:19:50PM -0500, Bjorn Helgaas wrote:
-> On Fri, May 13, 2022 at 04:30:26PM +0530, Manivannan Sadhasivam wrote:
-> > For aggressive power saving on SC7280 SoCs, the power for the PCI devices
-> > will be taken off during system suspend. Hence, notify the same to the
-> > PCI device drivers using "suspend_poweroff" flag so that the drivers can
-> > prepare the PCI devices to handle the poweroff and recover them during
-> > resume.
-> 
-> No doubt "power ... will be taken off during system suspend" is true,
-> but this isn't very informative.  Is this a property of SC7280?  A
-> choice made by the SC7280 driver?  Why is this not applicable to other
-> systems?
-> 
+Default Designware EDMA just probe remotely at host side.
+This patch allow EDMA driver can probe at EP side.
 
-The SC7280's RPMh firmware is cutting off the PCIe power domain during system
-suspend. And as I explained in previous patch, the RC driver itself may put the
-devices in D3cold conditionally on this platform. The reason is to save power
-as this chipset is being used in Chromebooks.
+1. Clean up patch
+   dmaengine: dw-edma: Detach the private data and chip info structures
+   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+   dmaengine: dw-edma: Change rg_region to reg_base in struct
+   dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
 
-Thanks,
-Mani
+2. Enhance EDMA driver to allow prode eDMA at EP side
+   dmaengine: dw-edma: Add support for chip specific flags
+   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
+flags (this patch removed at v11 because dma tree already have fixed
+patch)
 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 6ab90891801d..4b0ad2827f8f 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -199,6 +199,7 @@ struct qcom_pcie_cfg {
-> >  	unsigned int has_ddrss_sf_tbu_clk:1;
-> >  	unsigned int has_aggre0_clk:1;
-> >  	unsigned int has_aggre1_clk:1;
-> > +	unsigned int suspend_poweroff:1;
-> >  };
-> >  
-> >  struct qcom_pcie {
-> > @@ -1220,6 +1221,10 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-> >  	if (pcie->cfg->pipe_clk_need_muxing)
-> >  		clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
-> >  
-> > +	/* Indicate PCI device drivers that the power will be taken off during system suspend */
-> > +	if (pcie->cfg->suspend_poweroff)
-> > +		pci->pp.bridge->suspend_poweroff = true;
-> > +
-> >  	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
-> >  	if (ret < 0)
-> >  		goto err_disable_regulators;
-> > @@ -1548,6 +1553,7 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
-> >  	.ops = &ops_1_9_0,
-> >  	.has_tbu_clk = true,
-> >  	.pipe_clk_need_muxing = true,
-> > +	.suspend_poweroff = true,
-> >  };
-> >  
-> >  static const struct dw_pcie_ops dw_pcie_ops = {
-> > -- 
-> > 2.25.1
-> > 
+3. Bugs fix at EDMA driver when probe eDMA at EP side
+   dmaengine: dw-edma: Fix programming the source & dest addresses for
+ep
+   dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+
+4. change pci-epf-test to use EDMA driver to transfer data.
+   PCI: endpoint: Add embedded DMA controller test
+
+5. Using imx8dxl to do test, but some EP functions still have not
+upstream yet. So below patch show how probe eDMA driver at EP
+controller driver.
+https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+
+
+Frank Li (6):
+  dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+  dmaengine: dw-edma: Detach the private data and chip info structures
+  dmaengine: dw-edma: Change rg_region to reg_base in struct
+    dw_edma_chip
+  dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+    dw_edma_chip
+  dmaengine: dw-edma: Add support for chip specific flags
+  PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
+
+Serge Semin (2):
+  dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+  dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
+    semantics
+
+ drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
+ drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
+ drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+ drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
+ drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++--
+ include/linux/dma/edma.h                      |  59 +++++++-
+ 9 files changed, 313 insertions(+), 180 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.35.1
+
