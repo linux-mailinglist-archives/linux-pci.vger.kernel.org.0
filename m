@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89C1152AAB1
-	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 20:27:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FCDE52AC5C
+	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 22:03:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349529AbiEQS1S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 14:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36336 "EHLO
+        id S1349812AbiEQUDF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 16:03:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238899AbiEQS1S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 14:27:18 -0400
+        with ESMTP id S233668AbiEQUDE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 16:03:04 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC24038797
-        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 11:27:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 298FD3C720
+        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 13:03:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652812035;
+        s=mimecast20190719; t=1652817782;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=808kPoCVZ9QBXQQ50NY9PebUEFZ1B+K2Bsp/en8vgGY=;
-        b=hIpYi/sGN2DecSuoV+aN+/5uy97WasBMnQL/n4kbh3XyBo3J2E4ufENMgixlxA7jfbwPyq
-        NSG5GKRT4CCuW2QxV837+nuhLlAjJdFkVPD56gWrlx0tybTB4tsQsuIPvEc3mpfEifh+1m
-        79SrGJrgyTzkl3S1Q8OSGSJEmuOjDy0=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=dZvQF1GwCmP4prUQjVWzJaiNAyuFxuT+W3i/r8i+LWA=;
+        b=iXA6fvP7qtd01YwbV8wxwokQFKAS5ANoOHImNpEtlB69IsBaUh1N8mUMPcU5cgUi0PQH4M
+        mQZa11iYLsZjDHas8xBLN0K0zED74YPmc4NlN7T5RULuYpxcS3hPdn/XtGFOOS6rBQfxQo
+        9jvolQ/p3I4T+g7EIQEU8VD0CvdkIqA=
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
+ [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-258-g248QEN4Pv2TDZg9C7B9jw-1; Tue, 17 May 2022 14:27:14 -0400
-X-MC-Unique: g248QEN4Pv2TDZg9C7B9jw-1
-Received: by mail-io1-f70.google.com with SMTP id g16-20020a05660226d000b00638d8e1828bso12917486ioo.13
-        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 11:27:14 -0700 (PDT)
+ us-mta-618-HjsYhyx_Mtexbm2Ek_-jjA-1; Tue, 17 May 2022 16:03:01 -0400
+X-MC-Unique: HjsYhyx_Mtexbm2Ek_-jjA-1
+Received: by mail-il1-f199.google.com with SMTP id g11-20020a056e021a2b00b002cf48b48824so34537ile.21
+        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 13:03:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:organization:mime-version:content-transfer-encoding;
-        bh=808kPoCVZ9QBXQQ50NY9PebUEFZ1B+K2Bsp/en8vgGY=;
-        b=38lSlCyVUoj1fBzU5qVk2+GOcREYQW4pYVzB9kpDAYxSg47kr/YfklYU/zJ5oBzqhG
-         F/j9RgamZHKzDNSOK6FXaWevHMCmkd6wDIPgGwZ6RqkyCkBTwIW3TGTMgxd0DrKfCfH2
-         isPas1qMd4tmzyWEB43Q8BmKJGTowfChvoJ0jJQx+Iw87MVEAKJvFV9VdWCNG7SM9/+C
-         a6McmyxXtaPB3cBv0lXCh1xVmzzKUmWz85W+KvDpUJF2iYI3LVWRrYa/cEUeLo8xlUxB
-         62Wq6nJ4Xvi6dB8h3gd0g3tF9NifqZ/HVDdmF7JzbEM1Acm3922Kww4Icko7Scc2R34E
-         Gu3Q==
-X-Gm-Message-State: AOAM530IWLgrpHe7yeTPmLBH/sA9JwNpsyt3hUBb5LjN0kFCLKM3BCN4
-        bw49ThXdopr16Bg2+M3UhQVp80t6augxeaFKC7eXLUp7UzEegsSe8ID4QNJuXTpLn/JYTuKSDIL
-        O1SeN6dI0PBkTQB3jRiSa
-X-Received: by 2002:a05:6638:140d:b0:32b:c643:e334 with SMTP id k13-20020a056638140d00b0032bc643e334mr13045260jad.125.1652812033714;
-        Tue, 17 May 2022 11:27:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwXPnig6pt33JX7CJmiZk9MZj+x43/FCA6lZpbkCX+oaIPq/UYqAVOL24lvn/cJscVyWc3kyA==
-X-Received: by 2002:a05:6638:140d:b0:32b:c643:e334 with SMTP id k13-20020a056638140d00b0032bc643e334mr13045242jad.125.1652812033478;
-        Tue, 17 May 2022 11:27:13 -0700 (PDT)
+        bh=dZvQF1GwCmP4prUQjVWzJaiNAyuFxuT+W3i/r8i+LWA=;
+        b=BnpZ+eo5Bkq5inD2IsxSu74Ej+QRYZ+w6BXlxncrakH6b6QrWXChtUkltZz1yWoYUQ
+         V4bVewth7mi4VjVuwXp8UXeEXVxNjZvX9iQLYwM8Yo/9JQuJUprDrsEo40UXclNvLEZh
+         MPhlvlez0SWt/vapzqmYNFe6nfB+aszDh9QDsetMQ50uVnuzAEo+lod6nKtMYVN4D+TF
+         gRVpZjWrj4AOeUkpBMPwzV2wT1ezZTyh4LWnPkFyvkV2QCFRmoUtJTsenzdv59hriWBK
+         Pst1W8Mt5PrVSEG9bS0NrnXuPW5BF/ZNo4drKTcChS/U/ndlnywsypbtBfkuAboS6t87
+         mYjw==
+X-Gm-Message-State: AOAM530QGPkhYiyexmqgD/DuvWXFQL5Z9kHINzGRLvPxcmbeGI78xEcT
+        YFytrB+PlyMSAhFob44dH/5EYs9Pxfr8YBdelx2HVqF/RzNnWhPnVLe+jWTUyo5Y+npC+J5dS96
+        DOGfzVzKoNTKJ3G2SXn2k
+X-Received: by 2002:a05:6602:2b8e:b0:5e9:74e7:6b01 with SMTP id r14-20020a0566022b8e00b005e974e76b01mr11249799iov.127.1652817780435;
+        Tue, 17 May 2022 13:03:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyntAUeW4lha2aGOg3y8Bptsqwfn5SzFR5laZVpBDYf/r+hBmSUEVPPsIAvMAoK3MIR7YXk7w==
+X-Received: by 2002:a05:6602:2b8e:b0:5e9:74e7:6b01 with SMTP id r14-20020a0566022b8e00b005e974e76b01mr11249785iov.127.1652817780260;
+        Tue, 17 May 2022 13:03:00 -0700 (PDT)
 Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id r4-20020a02c844000000b0032e2dce10aesm1885083jao.160.2022.05.17.11.27.10
+        by smtp.gmail.com with ESMTPSA id z11-20020a056638214b00b0032b3a78174asm14307jaj.14.2022.05.17.13.02.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 11:27:12 -0700 (PDT)
-Date:   Tue, 17 May 2022 12:27:10 -0600
+        Tue, 17 May 2022 13:02:59 -0700 (PDT)
+Date:   Tue, 17 May 2022 14:02:59 -0600
 From:   Alex Williamson <alex.williamson@redhat.com>
 To:     Abhishek Sahu <abhsahu@nvidia.com>
 Cc:     Cornelia Huck <cohuck@redhat.com>,
@@ -67,19 +67,19 @@ Cc:     Cornelia Huck <cohuck@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
         <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 2/4] vfio/pci: Change the PF power state to D0 before
- enabling VFs
-Message-ID: <20220517122710.093c9c19.alex.williamson@redhat.com>
-In-Reply-To: <20220517100219.15146-3-abhsahu@nvidia.com>
+Subject: Re: [PATCH v4 4/4] vfio/pci: Move the unused device into low power
+ state with runtime PM
+Message-ID: <20220517140259.1021cf85.alex.williamson@redhat.com>
+In-Reply-To: <20220517100219.15146-5-abhsahu@nvidia.com>
 References: <20220517100219.15146-1-abhsahu@nvidia.com>
-        <20220517100219.15146-3-abhsahu@nvidia.com>
+        <20220517100219.15146-5-abhsahu@nvidia.com>
 Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,85 +87,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 17 May 2022 15:32:17 +0530
+On Tue, 17 May 2022 15:32:19 +0530
 Abhishek Sahu <abhsahu@nvidia.com> wrote:
-
-> According to [PCIe v5 9.6.2] for PF Device Power Management States
-> 
->  "The PF's power management state (D-state) has global impact on its
->   associated VFs. If a VF does not implement the Power Management
->   Capability, then it behaves as if it is in an equivalent
->   power state of its associated PF.
-> 
->   If a VF implements the Power Management Capability, the Device behavior
->   is undefined if the PF is placed in a lower power state than the VF.
->   Software should avoid this situation by placing all VFs in lower power
->   state before lowering their associated PF's power state."
-> 
-> From the vfio driver side, user can enable SR-IOV when the PF is in D3hot
-> state. If VF does not implement the Power Management Capability, then
-> the VF will be actually in D3hot state and then the VF BAR access will
-> fail. If VF implements the Power Management Capability, then VF will
-> assume that its current power state is D0 when the PF is D3hot and
-> in this case, the behavior is undefined.
-> 
-> To support PF power management, we need to create power management
-> dependency between PF and its VF's. The runtime power management support
-> may help with this where power management dependencies are supported
-> through device links. But till we have such support in place, we can
-> disallow the PF to go into low power state, if PF has VF enabled.
-> There can be a case, where user first enables the VF's and then
-> disables the VF's. If there is no user of PF, then the PF can put into
-> D3hot state again. But with this patch, the PF will still be in D0
-> state after disabling VF's since detecting this case inside
-> vfio_pci_core_sriov_configure() requires access to
-> struct vfio_device::open_count along with its locks. But the subsequent
-> patches related to runtime PM will handle this case since runtime PM
-> maintains its own usage count.
-> 
-> Also, vfio_pci_core_sriov_configure() can be called at any time
-> (with and without vfio pci device user), so the power state change
-> needs to be protected with the required locks.
-> 
-> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
 > diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index b9f222ca48cf..4fe9a4efc751 100644
+> index 4fe9a4efc751..5ea1b3099036 100644
 > --- a/drivers/vfio/pci/vfio_pci_core.c
 > +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -217,6 +217,10 @@ int vfio_pci_set_power_state(struct vfio_pci_core_device *vdev, pci_power_t stat
->  	bool needs_restore = false, needs_save = false;
->  	int ret;
+> @@ -156,7 +156,7 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_core_device *vdev)
+>  }
 >  
-> +	/* Prevent changing power state for PFs with VFs enabled */
-> +	if (pci_num_vf(pdev) && state > PCI_D0)
-> +		return -EBUSY;
-> +
->  	if (vdev->needs_pm_restore) {
->  		if (pdev->current_state < PCI_D3hot && state >= PCI_D3hot) {
->  			pci_save_state(pdev);
-> @@ -1960,6 +1964,13 @@ int vfio_pci_core_sriov_configure(struct vfio_pci_core_device *vdev,
->  		}
->  		list_add_tail(&vdev->sriov_pfs_item, &vfio_pci_sriov_pfs);
->  		mutex_unlock(&vfio_pci_sriov_pfs_mutex);
-> +
-> +		/*
-> +		 * The PF power state should always be higher than the VF power
-> +		 * state. If PF is in the low power state, then change the
-> +		 * power state to D0 first before enabling SR-IOV.
-> +		 */
-> +		vfio_pci_lock_and_set_power_state(vdev, PCI_D0);
+>  struct vfio_pci_group_info;
+> -static bool vfio_pci_dev_set_try_reset(struct vfio_device_set *dev_set);
+> +static void vfio_pci_dev_set_try_reset(struct vfio_device_set *dev_set);
+>  static int vfio_pci_dev_set_hot_reset(struct vfio_device_set *dev_set,
+>  				      struct vfio_pci_group_info *groups);
+>  
+> @@ -275,6 +275,19 @@ void vfio_pci_lock_and_set_power_state(struct vfio_pci_core_device *vdev,
+>  	up_write(&vdev->memory_lock);
+>  }
+>  
+> +#ifdef CONFIG_PM
 
-But we need to hold memory_lock across the next function or else
-userspace could race a write to the PM register to set D3 before
-pci_num_vf() can protect us.  Thanks,
+Neither of the CONFIG_PM checks added are actually needed afaict, both
+struct dev_pm_ops and the pm pointer on struct device_driver are defined
+regardless.  Thanks,
 
 Alex
-
->  		ret = pci_enable_sriov(pdev, nr_virtfn);
->  		if (ret)
->  			goto out_del;
 
