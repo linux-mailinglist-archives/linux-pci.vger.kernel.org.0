@@ -2,142 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32FA3529ED8
-	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 12:08:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D2C8529F28
+	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 12:17:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239621AbiEQKHw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 06:07:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34914 "EHLO
+        id S241000AbiEQKRX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 06:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245760AbiEQKFl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 06:05:41 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02E949C9F;
-        Tue, 17 May 2022 03:05:11 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id y32so30390182lfa.6;
-        Tue, 17 May 2022 03:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=25GtIoitw+ZTlzSdukQ7WOPmbkJJHbA+G1F2JqOUPCg=;
-        b=OD/oBRJQvC09yFulvynVFmg5bIQgbGkZh5k15Ylg2dYQR/LVFqVH5v2UBGviF1S2+R
-         1Gj0BSqWsra1NjlBMun1RetI2YgmIGm5zHF8TnRwNCgU6gPc1WvPPErI6Z/cfo7MOlo5
-         I2hVY0N9fVt9Ui62nZpice02zg83O1TIdgO5+upw1IPyNFH47kZYsLAc2pB09nE2zF0W
-         jnrklqqpBsdK0sqFkFNpCXllL2zUhMzfZ9D9La76wohjWLHSECu/1cI46IbRyBSl26bG
-         LrjhqS6ZC4IBQ+p74Czp5xdFmDS7K5XeBBFzubUbI/TkfZM6MvS/My6TFFIPSYu0N7o6
-         tCuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=25GtIoitw+ZTlzSdukQ7WOPmbkJJHbA+G1F2JqOUPCg=;
-        b=by7k7hXWtmA4zDTa7k9RdYNI7i+WnxJRa6Jt4x61aSa27ImHr8Z4HfNNhqcxhDlFgm
-         bUtvns6d2DVAYsUi3J7gTbx07zBE2kftzMIfZvX9KdaRMSuppUOzMMSLquJzZlsljOYe
-         4qIvkj14OZ5QU5yUDJO5YMXrMlEWwBeZb5vkh3UgAACPX4jN83lU7GwDqrp3Ogj6RcYe
-         vVzKFmAZAFby4J+aFTd0FnQNJwfYCq1mOxneSnUV6VKmKyvyUIrbvj9JR/+g0e28tMdT
-         BeCnaOJH6zqm4kWvZ2EBAq/snBhSBpNrL4hXC/Sv+uxJeP3khxEm34QwOOGPqmmAcRqi
-         V3GA==
-X-Gm-Message-State: AOAM5338ctLcFDoIXI06pC+J143k9deMdDrwx0IFVPE+K1dt1jp8bR7E
-        lgC3I1REggWO/c6Z1Ncmgcc=
-X-Google-Smtp-Source: ABdhPJxLVyTObUX+R4E5Tn6dZ4YNA2w3W0p4AvbybfDxgisgorYGKfA4XMH8NTFJdPuV3IVe2suFiA==
-X-Received: by 2002:a05:6512:3090:b0:473:a636:dbee with SMTP id z16-20020a056512309000b00473a636dbeemr16124368lfd.119.1652781909895;
-        Tue, 17 May 2022 03:05:09 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id a3-20020ac25e63000000b0047255d211acsm1541267lfr.219.2022.05.17.03.05.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 03:05:09 -0700 (PDT)
-Date:   Tue, 17 May 2022 13:05:07 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
+        with ESMTP id S1344382AbiEQKQu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 06:16:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6554E1D335;
+        Tue, 17 May 2022 03:13:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 01F49615A2;
+        Tue, 17 May 2022 10:13:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C545C385B8;
+        Tue, 17 May 2022 10:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1652782428;
+        bh=pwPflkY6883sgamo1V6UO6qAd1DW0795Cg7hqZS4LZg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ykhO7ngSFIqUuUkptf+X/kohsqKTZ54ModnsOpD4KyVBRPnV3KZ5tnhFcybG2L3DY
+         cYhO76EsdNFgojIIAqxdBJAMBXqfDMj53iZCT19Xv4sz0xbDgT9X3XwUzjtGW+QAvg
+         lUn62ixjbTT4bKKKNvRnrEYbH5eETCMFNs3l07U0=
+Date:   Tue, 17 May 2022 12:13:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tanjore Suresh <tansuresh@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-clk@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC
- fixes
-Message-ID: <20220517100507.2ng3se7bbl2eqbz3@mobilestation>
-References: <20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru>
- <20220512001156.x6kqyhi3vjjpqch6@mobilestation>
- <20220512152705.GA2506@lpieralisi>
- <20220512171150.GA164627@thinkpad>
- <20220512211431.r23r6daua36lty7d@mobilestation>
- <20220517074020.56093C34100@smtp.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] driver core: Support asynchronous driver shutdown
+Message-ID: <YoN1VC0v4RNFC+0s@kroah.com>
+References: <20220412224348.1038613-1-tansuresh@google.com>
+ <20220412224348.1038613-2-tansuresh@google.com>
+ <CAJZ5v0ivNq3aYCEcxPYMosLJCAyWiAnucwOCmRBzkM=sbyPWgQ@mail.gmail.com>
+ <CALVARr6v5hcY0Vcf1izPUX-tXNJyyNXBMANbKX4CW9wfRf-pYQ@mail.gmail.com>
+ <YmzqrqfVLQ9/4KXp@kroah.com>
+ <CALVARr50MWexNpCf_PoZ4-pdnexiZiibz7Nd0PH+b-EVnBUN6w@mail.gmail.com>
+ <CALVARr71u8VD0+zaWbm=6A-1_6gO=bYUm7OM4K5b6kOVz09XOA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220517074020.56093C34100@smtp.kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CALVARr71u8VD0+zaWbm=6A-1_6gO=bYUm7OM4K5b6kOVz09XOA@mail.gmail.com>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 17, 2022 at 12:40:18AM -0700, Stephen Boyd wrote:
-> Quoting Serge Semin (2022-05-12 14:14:31)
-> > On Thu, May 12, 2022 at 10:41:50PM +0530, Manivannan Sadhasivam wrote:
-> > > On Thu, May 12, 2022 at 04:27:05PM +0100, Lorenzo Pieralisi wrote:
-> > > > So in short, this series has to go through the usual clock tree review
-> > > > process.
-> > > > 
-> > 
-> > I do know the normal procedure. But if patches concern different
-> > subsystems but for some reason inter-depended somehow it's ok to merge
-> > them in via a single repo. In my case the platform clock driver has
-> > been updated in a way so to support the reset-controls utilized in the
-> > PCIe driver altered in another patchset. So I didn't want to leave the
-> > kernel not working in the framework of my platform on any git hash
-> > state. That's why I asked to merge the patchsets in via the same repo.
-> > The kernel would be still buildable though.
-> > 
+On Wed, May 11, 2022 at 02:02:08PM -0700, Tanjore Suresh wrote:
+> Greg
 > 
+> On Mon, May 2, 2022 at 12:13 PM Tanjore Suresh <tansuresh@google.com> wrote:
+> >
+> > On Sat, Apr 30, 2022 at 12:52 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > A: http://en.wikipedia.org/wiki/Top_post
+> > > Q: Were do I find info about this thing called top-posting?
+> > > A: Because it messes up the order in which people normally read text.
+> > > Q: Why is top-posting such a bad thing?
+> > > A: Top-posting.
+> > > Q: What is the most annoying thing in e-mail?
+> > >
+> > > A: No.
+> > > Q: Should I include quotations after my reply?
+> > >
+> > > http://daringfireball.net/2007/07/on_top
+> > >
+> > > On Fri, Apr 29, 2022 at 11:03:07AM -0700, Tanjore Suresh wrote:
+> > > > Rafael,
+> > > >
+> > > > That is a good observation, however, many of the use cases in data
+> > > > centers (deployment of devices in data centers) do not exploit device
+> > > > power management. Therefore, I'm not sure that is the right way to
+> > > > design this.
+> > >
+> > > Yes it is, enable device power management and use that interface please.
+> > > Devices in data centers should of course be doing the same thing as
+> > > everyone else, as it actually saves real money in power costs.  To not
+> > > do so is very odd.
+> > >
+> >
+> > I guess we are intermixing the  terminology of device power management
+> > with shutdown.
+> > My second, third reasoning in my previous e-mail, thought it brings
+> > out that difference. Maybe not.
+> > I will try one more time, my thought process on this one.
+> >
+> > This patch is only for shutdown. The shutdown can be done in a system
+> > in various flavors,
+> > (this may include a power being pulled from the system components when
+> > all the devices
+> > are quiescent and it can also be soft shutdown, where power is not
+> > removed from the system, but system
+> > could be attempting a reboot)
+> >
+> > The device power management allows the device to bring down any
+> > devices that may be idle to various power states that
+> > device may support in a selective manner & based on the transition
+> > allowed by the device. Such a transition initiated by
+> > the system can be achieved using the 'dpm' interface for runtime power
+> > management (more for extending laptop battery life).
+> > It can also be exploited for system sleep models (suspend and resume -
+> > where state is preserved and restarted from where it left off
+> > --> More applicable for laptops/desktops). That does not mean data
+> > center devices cannot exploit, but they worry about slight latency
+> > variation in any
+> > I/O initiated to any device. Such power management could introduce
+> > more latency when it transitions from one state to another.
+> > Therefore, the use case is more apt for Laptops, in certain cases
+> > desktops in my opinion or understanding.
+> >
+> > The shutdown entry point has been traditionally different and the
+> > semantics is that the whole system is going down to a
+> > quiescent state and power may be pulled or may not be, IMO, i am
+> > seeing both are independent requirements, in my view.
+> > Let me know if I am mistaken. I am not sure why we should break the
+> > shutdown semantics as understood by driver developers and
+> > overload it with dpm requirements?
+> >
+> 
+> I have not seen additional comments, I request your help
+> in moving this further, please. If i have missed something,
+> Please let me know.
 
-> Is it going to be broken if I merge the clk patches through clk tree?
+Please rebase and resubmit your series with the extra information you
+have provided here in the changelog text so we can review it again.  The
+patch series is long gone from my queue, sorry.
 
-No. It won't be broken.
+thanks,
 
-> Has it ever worked?
-
-It has and is working well except some minor fixes provided in this
-petchset:
-[PATCH v3 1/4] clk: baikal-t1: Fix invalid xGMAC PTP clock divider
-[PATCH v3 2/4] clk: baikal-t1: Define shared xGMAC ref/ptp clocks parent
-
-> Does the kernel still boot, just PCIe fails if the
-> patches are applied?
-
-Yes, the kernel will be bootable. There won't be any problem if the patches
-in this series are applied because it is self-consistent. As I
-said in the cover letter there is an implicit dependency of another series
-"[PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support"
-(https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/T/#me3c5c248adad9760702b545bd4bacd89d5f8a2bd)
-from this one. In particular the functionality implemented in the
-patch
-"[PATCH v2 17/17] PCI: dwc: Add Baikal-T1 PCIe controller support"
-(https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/T/#m219e11c38c4ab8db0c2520c4050366d641598600)
-depends on the patches 3 and 4 of this patchset. But the
-dependency is implicit hidden under the DT clock/reset bindings layer.
-The Baikal-T1 PCIe platform driver will just fail to probe the host
-controller device if this series isn't applied. So the clock/reset
-patchset can be freely merged in via the clk tree especially seeing
-the PCIe Host/EP subsystem maintainer is going to be AFK from
-Wednesday and my series will sadly but likely hang up in limbo for a
-while.
-
--Sergey
-
+greg k-h
