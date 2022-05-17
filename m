@@ -2,71 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B59A52AE98
-	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 01:31:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7786252AED6
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 01:52:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231771AbiEQXbO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 19:31:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44200 "EHLO
+        id S232094AbiEQXwP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 19:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231644AbiEQXbN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 19:31:13 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173B61144F;
-        Tue, 17 May 2022 16:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652830272; x=1684366272;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZvWg2m8AU3kkk/4wo0jJSvqlfvdU8fxfo2bGmpnIOOs=;
-  b=QROGc7KTrV1vbgKltw5Dxr39xMUMC1SHQZDTfnsgg+Gjk4szrdzUwDVr
-   fTAsF7rgBBqGdmRhncl3cEfuNxXDM4ty2dKcvOKu+q8eO06dv4loQwBV5
-   Dec0SKGIGoRaTRhoo5JMO6gWqnEiZSxByEb3lzHCAA/UgJjZyktlqTy87
-   qnhsBeIzuedOmkjA1yRxKI4FogDiL40BmI4OXOuJ6JMDm4awgfdTRKJw0
-   m9sp3JFeSzL7mqxVcv8hJS62mw7doJ640z5wJrb214QF5r8UA7cr2JiS+
-   NRiCepcalzzY7ThM8NmXxgumZhU0ooILJG6B/pGVzB8Ita0TscEeDpQgG
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="357791692"
-X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
-   d="scan'208";a="357791692"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 16:31:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
-   d="scan'208";a="897930650"
-Received: from lkp-server02.sh.intel.com (HELO 242b25809ac7) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 17 May 2022 16:31:08 -0700
-Received: from kbuild by 242b25809ac7 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nr6eh-0001ZM-Rp;
-        Tue, 17 May 2022 23:31:07 +0000
-Date:   Wed, 18 May 2022 07:30:40 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Abhishek Sahu <abhsahu@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     kbuild-all@lists.01.org, Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
-        Abhishek Sahu <abhsahu@nvidia.com>
-Subject: Re: [PATCH v4 1/4] vfio/pci: Invalidate mmaps and block the access
- in D3hot power state
-Message-ID: <202205180721.m3Z4ar57-lkp@intel.com>
-References: <20220517100219.15146-2-abhsahu@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220517100219.15146-2-abhsahu@nvidia.com>
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S232022AbiEQXwO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 19:52:14 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA1B741339;
+        Tue, 17 May 2022 16:52:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 74BBFB81D67;
+        Tue, 17 May 2022 23:52:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0A553C34117;
+        Tue, 17 May 2022 23:52:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652831531;
+        bh=spYIMVPV55N3AgdMlDTGz8M6k1WuTg+xQApxQCdZtNs=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=h1bXy9WiypVJqCB87dygxFOiAH6gbD/QyvxcIIP/SKbkFUumpFz210BvM72wVN5Kt
+         lyRpTlqA9vAxUSpjxF5szDhefDwzGT43Cy0qiE+ECdjB9d2jcI06NMvQksytp4mLP0
+         dZ+mJTywH5iwPT54f/QCDh9rzZuFkYD2UfR3ptdTEm0uydoWTUqJoBbMR++Ygnn8GD
+         NrcvBuHDAddL9GUEmRvkterw4/zKFEUV7LjJftSWXoI8q3TD2YYPF1b8jpoLo56rPb
+         y0MiCRPWPEbq2XOMJLULFImNw2ccAHy44zbMkT1BG7CuZL+njrvMeTQOvmWqf1gU/g
+         7RPcZzBM25rPg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E6003F0389D;
+        Tue, 17 May 2022 23:52:10 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI fixes for v5.18
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220517203530.GA1102878@bhelgaas>
+References: <20220517203530.GA1102878@bhelgaas>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220517203530.GA1102878@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.18-fixes-1
+X-PR-Tracked-Commit-Id: a3b69dd0ad6265c29c4b6fb381cd76fb3bebdf8c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 210e04ff768142b96452030c4c2627512b30ad95
+Message-Id: <165283153093.29538.8971651599965342621.pr-tracker-bot@kernel.org>
+Date:   Tue, 17 May 2022 23:52:10 +0000
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stefan Gottwald <gottwald@igel.com>,
+        Steev Klimaszewski <steev@kali.org>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,60 +67,15 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Abhishek,
+The pull request you sent on Tue, 17 May 2022 15:35:30 -0500:
 
-Thank you for the patch! Perhaps something to improve:
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.18-fixes-1
 
-[auto build test WARNING on awilliam-vfio/next]
-[also build test WARNING on v5.18-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/210e04ff768142b96452030c4c2627512b30ad95
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Abhishek-Sahu/vfio-pci-power-management-changes/20220517-180527
-base:   https://github.com/awilliam/linux-vfio.git next
-config: x86_64-randconfig-s021-20220516 (https://download.01.org/0day-ci/archive/20220518/202205180721.m3Z4ar57-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.2.0-20) 11.2.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.4-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/2c439fb0dc917fb8bcf3cf432c8d73d51cfb16b0
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Abhishek-Sahu/vfio-pci-power-management-changes/20220517-180527
-        git checkout 2c439fb0dc917fb8bcf3cf432c8d73d51cfb16b0
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/vfio/pci/
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/vfio/pci/vfio_pci_config.c:411:20: sparse: sparse: restricted pci_power_t degrades to integer
-   drivers/vfio/pci/vfio_pci_config.c:411:38: sparse: sparse: restricted pci_power_t degrades to integer
-
-vim +411 drivers/vfio/pci/vfio_pci_config.c
-
-   397	
-   398	/* Caller should hold memory_lock semaphore */
-   399	bool __vfio_pci_memory_enabled(struct vfio_pci_core_device *vdev)
-   400	{
-   401		struct pci_dev *pdev = vdev->pdev;
-   402		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
-   403	
-   404		/*
-   405		 * Memory region cannot be accessed if device power state is D3.
-   406		 *
-   407		 * SR-IOV VF memory enable is handled by the MSE bit in the
-   408		 * PF SR-IOV capability, there's therefore no need to trigger
-   409		 * faults based on the virtual value.
-   410		 */
- > 411		return pdev->current_state < PCI_D3hot &&
-   412		       (pdev->no_command_memory || (cmd & PCI_COMMAND_MEMORY));
-   413	}
-   414	
+Thank you!
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
