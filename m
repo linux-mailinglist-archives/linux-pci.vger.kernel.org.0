@@ -2,160 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA44052A56D
-	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 16:54:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08C6652A614
+	for <lists+linux-pci@lfdr.de>; Tue, 17 May 2022 17:22:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240458AbiEQOyi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 10:54:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48064 "EHLO
+        id S245174AbiEQPWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 11:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349450AbiEQOyf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 10:54:35 -0400
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7BB50447;
-        Tue, 17 May 2022 07:54:32 -0700 (PDT)
-Received: by mail-io1-f43.google.com with SMTP id e194so19447192iof.11;
-        Tue, 17 May 2022 07:54:32 -0700 (PDT)
+        with ESMTP id S234922AbiEQPWN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 11:22:13 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A2512AF7;
+        Tue, 17 May 2022 08:22:09 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id c24so22447910lfv.11;
+        Tue, 17 May 2022 08:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fbo8oC5Oc7cRZaskT+wPfgGDuC/Nuq0YfREb/t0hDRc=;
+        b=WgT+PiN1OBL+XGb1RWydMs3KKooX1pVjTZGsxkHXeXQYick9AzvG+v6qxfnijYk7V3
+         z1f/k3aVW/plbXmSWmD3y5FwFjC+FLLZ/CQJroUZItJchHatTfk2Q/5qfMTivVi1XwIX
+         v5z595b8KisVh5jNVcNFpqaMkDC7R8H8DW2i+EDo25hDWxdCjjDXTyOREPa3va839KGj
+         vT1vXuRqtApgUPAX4YSFmliGxzEBae/TwRqXylPnAvJdRLRz/xllo6p3GaRNnm6IjEPv
+         EcAjDAY8EgrEIfqBFferbDsjiQ1q152zOz02OzsvFZ7ZJl4BsC72uN6yRBntwC0EKZWE
+         qd5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H8nn88xQh9eGLKIffo1TE6yNWGKhqJHXOhxiPgSDN0E=;
-        b=TJbJUVog3vcrz0zoSnCUaSiO+S4a0kT/cl95I3D1/KcKPTcGZ3sgpl1gJkFdViso1j
-         KGL+KrmPp4XdbEytUsywYZcFcDA6haUbmlR3BNqTNbGGiJDZyZNYmE218noTLNAW7vud
-         TcuHf7DSPemojfGMnvs/JvqQBIlj8e8hNK23QJTfD5TYSl8oaE87GaYHMfyz8X0wpvHj
-         rwJMIbOiik7lTuJFFw86xk2578inwTNtRWDid27kI/FF0h6DjLql+YUjSGRsrdAHCYst
-         OpLv8asCPeE1jj3ZDuE9rQ6a+qML28qOmZnbbPdDytvmE3MncsMsfLIOkr3FPPIaWMUA
-         8c8g==
-X-Gm-Message-State: AOAM533WfNqFLrWqRlWpNtK7T91G7SArSdJLeyxxanwTvuc/saidNy2I
-        rtVjL2Hmcc5a9WaGTdaQ8pMKUC6+HngB4cICo2o=
-X-Google-Smtp-Source: ABdhPJyUbjhY69ilI/s9mBNDVH5iERYUtRrDzsbW/o8lztqPEGggfJCDCG4DcINQoLOPIxgyFBXYTR3Y9cWQF9ak7V0=
-X-Received: by 2002:a05:6602:2082:b0:657:ad1c:795e with SMTP id
- a2-20020a056602208200b00657ad1c795emr10733535ioa.187.1652799272034; Tue, 17
- May 2022 07:54:32 -0700 (PDT)
+        bh=Fbo8oC5Oc7cRZaskT+wPfgGDuC/Nuq0YfREb/t0hDRc=;
+        b=day58hBnxgeuZxHRFWjnw9Q6cGWgs07LUwlK1Sn9uADAvcucDaUmdd5fdajqzDUqkR
+         1C/cICQ6tyyH9tC9exuv55+6fnKt3Rlbine0Lu554o0FfgUMvjZLekfql5LXARLbHZSp
+         pxsEp3ynnj+ANj8bpz0jVQuMvZhpbmL8xGnXPU343EB7Hu+iELXrhZwLFgFxklST/DNt
+         lVvjDIleMLh6GLt0UnzKeRKLFpCgi3z0jtaCBZHk00MYsvGFb8K1zL3qAyfTEqdBpgBk
+         hYeLspiwoV10c28/yI9eG3UsZdNEb1Kxm+DD6aDNshn5jj5WWXXBWnq0pCAkj01TQILj
+         rbdA==
+X-Gm-Message-State: AOAM530u9tHWNMxDSki4fD8Oig/G2h9D4oezw3JjMEYITyqNc297hQZr
+        w4R0urnVkxWG26bUGmibOPJIs7I5F2EZ6fVRJV0=
+X-Google-Smtp-Source: ABdhPJzL8/Z7dCMCGs6vR/evkPvO+yZIEug/rw3iVXpizzpuSCszvoOe9+RC2WQp5FYMX34Hckn0sCDMBQzRnxRV94E=
+X-Received: by 2002:a05:6512:33c3:b0:473:d099:919 with SMTP id
+ d3-20020a05651233c300b00473d0990919mr17484451lfg.430.1652800928167; Tue, 17
+ May 2022 08:22:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAJZ5v0g6GdKfN4b5uwHEhh4hBuG=haVHaXc-XuMQLe8Wd41Y3g@mail.gmail.com>
- <20220517144846.GA1068039@bhelgaas>
-In-Reply-To: <20220517144846.GA1068039@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 17 May 2022 16:54:20 +0200
-Message-ID: <CAJZ5v0iNaAd=yP3DgDVVpffKU6kt+nSpPeqxWJyRddaX5K4FRA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable PTM
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Jingar, Rajvi" <rajvi.jingar@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Box <david.e.box@linux.intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <20220516173047.123317-1-windy.bi.enflame@gmail.com>
+ <20220516202825.GA1047972@bhelgaas> <20220516165740.6256af51.alex.williamson@redhat.com>
+In-Reply-To: <20220516165740.6256af51.alex.williamson@redhat.com>
+From:   windy Bi <windy.bi.enflame@gmail.com>
+Date:   Tue, 17 May 2022 22:56:24 +0800
+Message-ID: <CAGdb+H3vcbE8EmdMyaE9oHRrEOCfii=hCDtkgXPCTo2KFdbQFA@mail.gmail.com>
+Subject: Re: [PATCH] drivers/pci: wait downstream hierarchy ready instead of
+ slot itself ready, after secondary bus reset
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 17, 2022 at 4:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+Hi Bjorn, Alex
+
+Thank you for reviewing the patch and comments below, I will amend the
+violation of
+submission rule in patch V2.
+
+Thanks
+
+On Tue, May 17, 2022 at 6:57 AM Alex Williamson
+<alex.williamson@redhat.com> wrote:
 >
-> On Mon, May 16, 2022 at 10:59:32PM +0200, Rafael J. Wysocki wrote:
-> > On Mon, May 16, 2022 at 10:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, May 13, 2022 at 10:00:48PM +0000, Jingar, Rajvi wrote:
-> > > > > -----Original Message-----
-> > > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > Sent: Thursday, May 12, 2022 11:36 AM
-> > > > > To: Rafael J. Wysocki <rafael@kernel.org>
-> > > > > Cc: Jingar, Rajvi <rajvi.jingar@intel.com>; Wysocki, Rafael J
-> > > > > <rafael.j.wysocki@intel.com>; Bjorn Helgaas <bhelgaas@google.com>; David Box
-> > > > > <david.e.box@linux.intel.com>; Linux PCI <linux-pci@vger.kernel.org>; Linux
-> > > > > Kernel Mailing List <linux-kernel@vger.kernel.org>; Linux PM <linux-
-> > > > > pm@vger.kernel.org>
-> > > > > Subject: Re: [PATCH v5 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable PTM
-> > > > >
-> > > > > On Thu, May 12, 2022 at 07:52:36PM +0200, Rafael J. Wysocki wrote:
-> > > > > > On Thu, May 12, 2022 at 7:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > On Thu, May 12, 2022 at 03:49:18PM +0200, Rafael J. Wysocki wrote:
-> > > > >
-> > > > > > > > Something like this should suffice IMV:
-> > > > > > > >
-> > > > > > > > if (!dev_state_saved || pci_dev->current_state != PCI_D3cold)
-> > > > > > > >
-> > > > > > > >         pci_disable_ptm(pci_dev);
-> > > > > > >
-> > > > > > > It makes sense to me that we needn't disable PTM if the device is in
-> > > > > > > D3cold.  But the "!dev_state_saved" condition depends on what the
-> > > > > > > driver did.  Why is that important?  Why should we not do the
-> > > > > > > following?
-> > > > > > >
-> > > > > > >   if (pci_dev->current_state != PCI_D3cold)
-> > > > > > >     pci_disable_ptm(pci_dev);
-> > > > > >
-> > > > > > We can do this too.  I thought we could skip the power state
-> > > > > > check if dev_state_saved was unset, because then we would know
-> > > > > > that the power state was not D3cold.  It probably isn't worth
-> > > > > > the hassle though.
-> > > >
-> > > > We see issue with certain platforms where only checking if device
-> > > > power state in D3Cold is not enough and the !dev_state_saved check
-> > > > is needed when disabling PTM. Device like nvme is relying on ASPM,
-> > > > it stays in D0 but state is saved. Touching the config space wakes
-> > > > up the device which prevents the system from entering into low power
-> > > > state.
-> > >
-> > > Correct me if I'm wrong: for NVMe devices, nvme_suspend() has already
-> > > saved state and put the device in some low-power state.  Disabling PTM
-> > > here is functionally OK but prevents a system low power state, so you
-> > > want to leave PTM enabled.
-> > >
-> > > But I must be missing something because pci_prepare_to_sleep()
-> > > currently disables PTM for Root Ports.  If we leave PTM enabled on
-> > > NVMe but disable it on the Root Port above it, any PTM Request from
-> > > NVMe will cause an Unsupported Request error.
-> > >
-> > > Disabling PTM must be coordinated across PTM Requesters and PTM
-> > > Responders.  That means the decision to disable cannot depend on
-> > > driver-specific things like whether the driver has saved state.
-> >
-> > Setting state_saved generally informs pci_pm_suspend_noirq() that the
-> > device has already been handled and it doesn't need to do anything to
-> > it.
-> >
-> > But you are right that PTM should be disabled on downstream devices as
-> > well as on the ports that those devices are connected to and it can be
-> > done even if the given device has already been handled, so the
-> > state_saved value is technically irrelevant.
-> >
-> > That's why I suggested to check if the power state is between D0 and
-> > D3cold (exclusive) and only disable PTM if that is the case.  It is
-> > pointless to disable PTM for devices in D3cold and it may be harmful
-> > for devices that are left in D0.
+> On Mon, 16 May 2022 15:28:25 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> "... it may be harmful for devices that are left in D0" -- I want to
-> understand this better.  It sounds like nvme_suspend() leaves the
-> device in some device-specific low-power flavor of D0, and subsequent
-> config accesses take it out of that low-power situation?
-
-That's my understanding of it.
-
-> If that's the case, it sounds a little brittle.  I don't think it's
-> obvious that "pci_dev->state_saved was set by the driver" means "no
-> config accesses allowed in pci_pm_suspend_noirq()."
-
-Well, yes and no.  The device may be in D3cold then, so
-pci_pm_suspend_noirq() should at least check that before accessing its
-config space.
-
-> And pci_pm_suspend_noirq() calls quirks via pci_fixup_device(), which are
-> very likely to do config accesses.
+> > [+cc Lukas, pciehp expert; Alex, reset person]
+> >
+> > Thanks for the testing, analysis, and patch!
+> >
+> > Run "git log --oneline drivers/pci/pci.c" and make your subject line
+> > similar.
+> >
+> > On Tue, May 17, 2022 at 01:30:47AM +0800, windy.bi.enflame wrote:
+> > > While I do reset test of a PCIe endpoint device on a server, I find that
+> > > the EP device always been removed and re-inserted again by hotplug module,
+> > >  after secondary bus reset.
+> > >
+> > > After checking I find:
+> > > 1> "pciehp_reset_slot()" always disable slot's DLLSC interrupt before
+> > >    doing reset and restore after reset, to try to filter the hotplug
+> > >    event happened during reset.
+> > > 2> "pci_bridge_secondary_bus_reset()" sleep 1 seconad and "pci_dev_wait()"
+> > >    until device ready with "PCIE_RESET_READY_POLL_MS" timeout.
+> > > 3> There is a PCIe switch between CPU and the EP devicem the topology as:
+> > >    CPU <-> Switch <-> EP.
+> > > 4> While trigger sbr reset at the switch's downstream port, it needs 1.5
+> > >    seconds for internal enumeration.
+> >
+> > s/seconad/second/
+> > s/devicem/device/
+> > s/sbr/SBR/
+> > s/"pciehp_reset_slot()"/pciehp_reset_slot()/ also for other functions
+> >
+> > > About why 1.5 seconds ready time is not filtered by "pci_dev_wait()" with
+> > > "PCIE_RESET_READY_POLL_MS" timeout, I find it is because in
+> > > "pci_bridge_secondary_bus_reset()", the function is operating slot's
+> > > config space to trigger sbr and also wait slot itself ready by input same
+> > > "dev" parameter. Different from other resets like FLR which is triggered
+> > > by operating the config space of EP device itself, sbr is triggered by
+> > > up slot but need to wait downstream devices' ready, so I think function
+> > > "pci_dev_wait()" works for resets like FLR but not for sbr.
 >
-> Maybe PTM needs to be disabled earlier, e.g., in pci_pm_suspend()?  I
-> don't think PTM uses any interrupts, so there's probably no reason
-> interrupts need to be disabled before disabling PTM.
+> Is the unexpected hotplug occurring then because the device is not
+> ready after the 1s sleep after the sbr and we re-trigger the hotplug
+> controller which then triggers because the link status is still down?
 
-That certainly is worth investigation.  For one, I don't see any
-obvious downsides of doing so.
+Yes, the device becomes accessible at ~1.5s after SBR while hotplug
+interrupt was re-enabled after 1s sleep. Then the hotplug event at 1.5s
+was been judged as real hotplug.
+
+>
+> > > In this proposed patch, I'm changing the waiting function used in sbr to
+> > > "pci_bridge_secondary_bus_wait()" which will wait all the downstream
+> > > hierarchy ready with the same timeout setting "PCIE_RESET_READY_POLL_MS".
+> > > In "pci_bridge_secondary_bus_wait()" the "subordinate" and
+> > > "subordinate->devices" will be checked firstly, and then downstream
+> > > devices' present state.
+> > >
+> > > Signed-off-by: windy.bi.enflame <windy.bi.enflame@gmail.com>
+> >
+> > See https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v5.17#n407
+> > regarding pseudonyms.
+> >
+> > > ---
+> > >  drivers/pci/pci.c | 25 ++++++++++++++++++++++++-
+> > >  1 file changed, 24 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index 9ecce435fb3f..d7ec3859268b 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -5002,6 +5002,29 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+> > >     }
+> > >  }
+> > >
+> > > +int pci_bridge_secondary_bus_wait(struct pci_dev *bridge, int timeout)
+> > > +{
+> > > +   struct pci_dev *dev;
+> > > +   int delay = 1;
+> > > +
+> > > +   if (!bridge->subordinate || list_empty(&bridge->subordinate->devices))
+> > > +           return 0;
+> > > +
+> > > +   list_for_each_entry(dev, &bridge->subordinate->devices, bus_list) {
+> > > +           while (!pci_device_is_present(dev)) {
+> > > +                   if (delay > timeout) {
+> > > +                           pci_warn(dev, "secondary bus not ready after %dms\n", delay);
+> > > +                           return -ENOTTY;
+> > > +                   }
+> > > +
+> > > +                   msleep(delay);
+> > > +                   delay *= 2;
+> > > +           }
+> > > +   }
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +
+> > >  void pci_reset_secondary_bus(struct pci_dev *dev)
+> > >  {
+> > >     u16 ctrl;
+> > > @@ -5045,7 +5068,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+> > >  {
+> > >     pcibios_reset_secondary_bus(dev);
+> > >
+> > > -   return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
+>
+> I assume pci_dev_wait here was always a no-op because we're testing the
+> wrong device, maybe this should be marked as:
+>
+> Fixes: 6b2f1351af56 ("PCI: Wait for device to become ready after secondary bus reset")
+
+I think so too, will mark it if we all aligned.
+
+>
+> > > +   return pci_bridge_secondary_bus_wait(dev, PCIE_RESET_READY_POLL_MS);
+>
+> The theory looks reasonable to me, but I'd hope we cold get a better
+> commit log and improve the dev_warn message.  It seems to make sense to
+> use pci_device_is_present() since we shouldn't be dealing with VFs
+> after a bus reset, but I wonder if we want to enumerate all the missing
+> devices.  Since the timeout has passed, we shouldn't incur any extra
+> delays beyond the first device that doesn't re-appear.  Thanks,
+>
+> Alex
+
+Thanks for your suggestion. I thought to enumerate all the missing
+devices because SBR affects all the downstream hierarchy and
+devices need to be re-enumerated as possible as we can.
+I agree that we shouldn't incur any extra delays once the timeout has
+already passed, since SBR fails as long as one device fails.
+
+>
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+> > >
+> > > --
+> > > 2.36.1
+> > >
+> >
+>
