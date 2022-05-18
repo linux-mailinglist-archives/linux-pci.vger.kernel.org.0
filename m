@@ -2,83 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC6552C231
-	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 20:27:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD19552C265
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 20:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241461AbiERS0a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 May 2022 14:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59804 "EHLO
+        id S241389AbiERS3X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 May 2022 14:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241446AbiERS0Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 14:26:24 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C027190D37
-        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 11:26:23 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id b32so3546497ljf.1
-        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 11:26:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=od5uWvVsPOq4I2jfpLO/cfL7S5BDWB+6iI2HjhmFDi8=;
-        b=YFi7YoiK2sCoELwEdEVKRfjqdXWbA905k1dvjTeVLCplX6bNiQP/OQNji20m5/I8PT
-         5/bpQ3GAVS1nt9PKEIIiGeJIu5HxotShLdncl6eM1JtDb8bnHdRi3r4u7Zia5EevqpcY
-         KAaHQDZGdTRrlIflRuhVU2RCL9TeDjGnSNelx9v+ffLnYHtc0/NXegxhtdNdCh8wRu6K
-         E+OmwCQezZG4k2VQMex1HglxK1OLmX8SYInqAkOKU2dD/JyCZNjo2mmAzTyjwwAhQtyr
-         giX6MbX+FhuP2LNH38gojAT/2wComJtGQiP/qcPFNp/xi0cQ0fn06ntCIqNOYEyUu83p
-         7Zjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=od5uWvVsPOq4I2jfpLO/cfL7S5BDWB+6iI2HjhmFDi8=;
-        b=tpYUbJQcjAYjhfg7Skz1eEqGOHbiQbpvwkxXRYfIL/kB+4EIauzT4Ml1UFm+GlBx7q
-         zxZLgo7fD2ywtiHChn7CSxbR8vFEGcN4NkkSieSH6Oe9Cz2jwGYhEKEPWu9P0Hzwg8eX
-         Hr2q4OgQbBie22LRysLsBIJHUcPnonvhayKrjRDryWvIgGViowNS06d3p9BwSZECawmi
-         S35251nc/Zz1OFFZIwatpVKvZagFU1wkyFMUPXHk15WHo91VAL/sxrOgZVVXO7ZGVzCT
-         SW47PjByh2pgij6nOD8zz01rdussThgLPB+xCPSFtaV0o481WBCmUy7Jzn41QTa8uFDC
-         JA5w==
-X-Gm-Message-State: AOAM5329qp02tayy6pYCOhE1ofu7jHEQ5nBgXgAcmV/it8Up9kfmUeq6
-        y00r87q++PI2bfzi5RPkGRusxQ==
-X-Google-Smtp-Source: ABdhPJxENUsQBLAa4UkhjQW3jk2j4PMM065g3mgcmn31EqwZri4gX76qk8umBhxThR46lEc7Pnx8FQ==
-X-Received: by 2002:a2e:91cf:0:b0:24f:11ea:d493 with SMTP id u15-20020a2e91cf000000b0024f11ead493mr385182ljg.408.1652898381751;
-        Wed, 18 May 2022 11:26:21 -0700 (PDT)
-Received: from ?IPV6:2001:470:dd84:abc0::8a5? ([2001:470:dd84:abc0::8a5])
-        by smtp.gmail.com with ESMTPSA id h12-20020a19700c000000b00477baba9504sm22360lfc.40.2022.05.18.11.26.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 May 2022 11:26:21 -0700 (PDT)
-Message-ID: <783bbf39-779d-3ac8-a965-9d98ec1993ec@linaro.org>
-Date:   Wed, 18 May 2022 21:26:16 +0300
+        with ESMTP id S241376AbiERS3X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 14:29:23 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8188820B550
+        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 11:29:21 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F07A23A;
+        Wed, 18 May 2022 11:29:21 -0700 (PDT)
+Received: from lpieralisi (unknown [10.57.3.195])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70DC53F73D;
+        Wed, 18 May 2022 11:29:20 -0700 (PDT)
+Date:   Wed, 18 May 2022 19:29:14 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        kbuild-all@lists.01.org, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [lpieralisi-pci:pci/aardvark 2/2]
+ drivers/pci/controller/pci-aardvark.c:1071:54: error:
+ 'PCI_EXP_SLTCAP_PSN_SHIFT' undeclared; did you mean 'PCI_EXP_SLTCAP_PSN'?
+Message-ID: <20220518182914.GA5823@lpieralisi>
+References: <202205190153.mz8wMTVG-lkp@intel.com>
+ <20220518200443.3a3d3e10@thinkpad>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v6 3/5] clk: qcom: gcc-sm8450: use new
- clk_regmap_pipe_src_ops for PCIe pipe clocks
-Content-Language: en-GB
-To:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20220513175339.2981959-1-dmitry.baryshkov@linaro.org>
- <20220513175339.2981959-4-dmitry.baryshkov@linaro.org>
- <CAE-0n53wjtJpUeMswrkQq1mAQEEfXiUhuvq4W4t=7gMpkbsiNQ@mail.gmail.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <CAE-0n53wjtJpUeMswrkQq1mAQEEfXiUhuvq4W4t=7gMpkbsiNQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220518200443.3a3d3e10@thinkpad>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,49 +47,150 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/05/2022 20:59, Stephen Boyd wrote:
-> Quoting Dmitry Baryshkov (2022-05-13 10:53:37)
->> diff --git a/drivers/clk/qcom/gcc-sm8450.c b/drivers/clk/qcom/gcc-sm8450.c
->> index 593a195467ff..a140a89b73b4 100644
->> --- a/drivers/clk/qcom/gcc-sm8450.c
->> +++ b/drivers/clk/qcom/gcc-sm8450.c
->> @@ -239,17 +218,21 @@ static const struct clk_parent_data gcc_parent_data_11[] = {
->>          { .fw_name = "bi_tcxo" },
->>   };
->>
->> -static struct clk_regmap_mux gcc_pcie_0_pipe_clk_src = {
->> +static struct clk_regmap_phy_mux gcc_pcie_0_pipe_clk_src = {
->>          .reg = 0x7b060,
->>          .shift = 0,
->>          .width = 2,
->> -       .parent_map = gcc_parent_map_4,
->> +       .phy_src_val = 0, /* pipe_clk */
+On Wed, May 18, 2022 at 08:04:43PM +0200, Marek Behún wrote:
+> seems that patch 04/18 is needed. Was it merged into another repository?
+
+I thought it could be dropped sorry, at least that's what I asked on the
+mailing list:
+
+https://lore.kernel.org/linux-pci/20220428111644.n3cfa6ba6etljycw@pali
+
+That patch needs Bjorn's ACK so I have to drop the patches and
+rebuild the branch when and if Bjorn acks it.
+
+Lorenzo
+
+> Marek
 > 
-> Make a define? PCIE0_PIPE_CLK_SRC_VAL and drop the comment?
-
-This value can change between the muxes. Thus I'd prefer not to do this.
-Compare it with the parent_maps, where we do not use defines for the 
-'val' part.
-
 > 
->> +       .ref_src_val = 2, /* bi_tcxo */
->>          .clkr = {
->>                  .hw.init = &(struct clk_init_data){
->>                          .name = "gcc_pcie_0_pipe_clk_src",
->> -                       .parent_data = gcc_parent_data_4,
->> -                       .num_parents = ARRAY_SIZE(gcc_parent_data_4),
->> -                       .ops = &clk_regmap_mux_closest_ops,
->> +                       .parent_data = &(const struct clk_parent_data){
->> +                               .fw_name = "pcie_0_pipe_clk",
->> +                       },
->> +                       .num_parents = 1,
->> +                       .flags = CLK_SET_RATE_PARENT,
->> +                       .ops = &clk_regmap_phy_mux_ops,
->>                  },
->>          },
->>   };
-
-
--- 
-With best wishes
-Dmitry
+> On Thu, 19 May 2022 01:26:22 +0800
+> kernel test robot <lkp@intel.com> wrote:
+> 
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/aardvark
+> > head:   bf8dd34079057e2c761eb914b70b49f4a455fc18
+> > commit: bf8dd34079057e2c761eb914b70b49f4a455fc18 [2/2] PCI: aardvark: Fix reporting Slot capabilities on emulated bridge
+> > config: ia64-buildonly-randconfig-r003-20220518 (https://download.01.org/0day-ci/archive/20220519/202205190153.mz8wMTVG-lkp@intel.com/config)
+> > compiler: ia64-linux-gcc (GCC) 11.3.0
+> > reproduce (this is a W=1 build):
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/commit/?id=bf8dd34079057e2c761eb914b70b49f4a455fc18
+> >         git remote add lpieralisi-pci https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
+> >         git fetch --no-tags lpieralisi-pci pci/aardvark
+> >         git checkout bf8dd34079057e2c761eb914b70b49f4a455fc18
+> >         # save the config file
+> >         mkdir build_dir && cp config build_dir/.config
+> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/
+> > 
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> >    In file included from arch/ia64/include/asm/pgtable.h:153,
+> >                     from include/linux/pgtable.h:6,
+> >                     from arch/ia64/include/asm/uaccess.h:40,
+> >                     from include/linux/uaccess.h:11,
+> >                     from arch/ia64/include/asm/sections.h:11,
+> >                     from include/linux/interrupt.h:21,
+> >                     from drivers/pci/controller/pci-aardvark.c:13:
+> >    arch/ia64/include/asm/mmu_context.h: In function 'reload_context':
+> >    arch/ia64/include/asm/mmu_context.h:127:48: warning: variable 'old_rr4' set but not used [-Wunused-but-set-variable]
+> >      127 |         unsigned long rr0, rr1, rr2, rr3, rr4, old_rr4;
+> >          |                                                ^~~~~~~
+> >    In file included from include/linux/byteorder/little_endian.h:5,
+> >                     from arch/ia64/include/uapi/asm/byteorder.h:5,
+> >                     from include/asm-generic/bitops/le.h:6,
+> >                     from arch/ia64/include/asm/bitops.h:446,
+> >                     from include/linux/bitops.h:33,
+> >                     from include/linux/thread_info.h:27,
+> >                     from include/asm-generic/preempt.h:5,
+> >                     from ./arch/ia64/include/generated/asm/preempt.h:1,
+> >                     from include/linux/preempt.h:78,
+> >                     from include/linux/rcupdate.h:27,
+> >                     from include/linux/rculist.h:11,
+> >                     from include/linux/pid.h:5,
+> >                     from include/linux/sched.h:14,
+> >                     from include/linux/delay.h:23,
+> >                     from drivers/pci/controller/pci-aardvark.c:11:
+> >    drivers/pci/controller/pci-aardvark.c: In function 'advk_sw_pci_bridge_init':
+> > >> drivers/pci/controller/pci-aardvark.c:1071:54: error: 'PCI_EXP_SLTCAP_PSN_SHIFT' undeclared (first use in this function); did you mean 'PCI_EXP_SLTCAP_PSN'?  
+> >     1071 |         bridge->pcie_conf.slotcap = cpu_to_le32(1 << PCI_EXP_SLTCAP_PSN_SHIFT);
+> >          |                                                      ^~~~~~~~~~~~~~~~~~~~~~~~
+> >    include/uapi/linux/byteorder/little_endian.h:34:51: note: in definition of macro '__cpu_to_le32'
+> >       34 | #define __cpu_to_le32(x) ((__force __le32)(__u32)(x))
+> >          |                                                   ^
+> >    drivers/pci/controller/pci-aardvark.c:1071:37: note: in expansion of macro 'cpu_to_le32'
+> >     1071 |         bridge->pcie_conf.slotcap = cpu_to_le32(1 << PCI_EXP_SLTCAP_PSN_SHIFT);
+> >          |                                     ^~~~~~~~~~~
+> >    drivers/pci/controller/pci-aardvark.c:1071:54: note: each undeclared identifier is reported only once for each function it appears in
+> >     1071 |         bridge->pcie_conf.slotcap = cpu_to_le32(1 << PCI_EXP_SLTCAP_PSN_SHIFT);
+> >          |                                                      ^~~~~~~~~~~~~~~~~~~~~~~~
+> >    include/uapi/linux/byteorder/little_endian.h:34:51: note: in definition of macro '__cpu_to_le32'
+> >       34 | #define __cpu_to_le32(x) ((__force __le32)(__u32)(x))
+> >          |                                                   ^
+> >    drivers/pci/controller/pci-aardvark.c:1071:37: note: in expansion of macro 'cpu_to_le32'
+> >     1071 |         bridge->pcie_conf.slotcap = cpu_to_le32(1 << PCI_EXP_SLTCAP_PSN_SHIFT);
+> >          |                                     ^~~~~~~~~~~
+> > 
+> > 
+> > vim +1071 drivers/pci/controller/pci-aardvark.c
+> > 
+> >   1028	
+> >   1029	/*
+> >   1030	 * Initialize the configuration space of the PCI-to-PCI bridge
+> >   1031	 * associated with the given PCIe interface.
+> >   1032	 */
+> >   1033	static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+> >   1034	{
+> >   1035		struct pci_bridge_emul *bridge = &pcie->bridge;
+> >   1036	
+> >   1037		bridge->conf.vendor =
+> >   1038			cpu_to_le16(advk_readl(pcie, PCIE_CORE_DEV_ID_REG) & 0xffff);
+> >   1039		bridge->conf.device =
+> >   1040			cpu_to_le16(advk_readl(pcie, PCIE_CORE_DEV_ID_REG) >> 16);
+> >   1041		bridge->conf.class_revision =
+> >   1042			cpu_to_le32(advk_readl(pcie, PCIE_CORE_DEV_REV_REG) & 0xff);
+> >   1043	
+> >   1044		/* Support 32 bits I/O addressing */
+> >   1045		bridge->conf.iobase = PCI_IO_RANGE_TYPE_32;
+> >   1046		bridge->conf.iolimit = PCI_IO_RANGE_TYPE_32;
+> >   1047	
+> >   1048		/* Support 64 bits memory pref */
+> >   1049		bridge->conf.pref_mem_base = cpu_to_le16(PCI_PREF_RANGE_TYPE_64);
+> >   1050		bridge->conf.pref_mem_limit = cpu_to_le16(PCI_PREF_RANGE_TYPE_64);
+> >   1051	
+> >   1052		/* Support interrupt A for MSI feature */
+> >   1053		bridge->conf.intpin = PCI_INTERRUPT_INTA;
+> >   1054	
+> >   1055		/*
+> >   1056		 * Aardvark HW provides PCIe Capability structure in version 2 and
+> >   1057		 * indicate slot support, which is emulated.
+> >   1058		 */
+> >   1059		bridge->pcie_conf.cap = cpu_to_le16(2 | PCI_EXP_FLAGS_SLOT);
+> >   1060	
+> >   1061		/*
+> >   1062		 * Set Presence Detect State bit permanently since there is no support
+> >   1063		 * for unplugging the card nor detecting whether it is plugged. (If a
+> >   1064		 * platform exists in the future that supports it, via a GPIO for
+> >   1065		 * example, it should be implemented via this bit.)
+> >   1066		 *
+> >   1067		 * Set physical slot number to 1 since there is only one port and zero
+> >   1068		 * value is reserved for ports within the same silicon as Root Port
+> >   1069		 * which is not our case.
+> >   1070		 */
+> > > 1071		bridge->pcie_conf.slotcap = cpu_to_le32(1 << PCI_EXP_SLTCAP_PSN_SHIFT);  
+> >   1072		bridge->pcie_conf.slotsta = cpu_to_le16(PCI_EXP_SLTSTA_PDS);
+> >   1073	
+> >   1074		/* Indicates supports for Completion Retry Status */
+> >   1075		bridge->pcie_conf.rootcap = cpu_to_le16(PCI_EXP_RTCAP_CRSVIS);
+> >   1076	
+> >   1077		bridge->has_pcie = true;
+> >   1078		bridge->data = pcie;
+> >   1079		bridge->ops = &advk_pci_bridge_emul_ops;
+> >   1080	
+> >   1081		return pci_bridge_emul_init(bridge, 0);
+> >   1082	}
+> >   1083	
+> > 
+> 
