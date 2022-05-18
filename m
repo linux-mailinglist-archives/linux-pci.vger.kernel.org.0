@@ -2,103 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB76F52BCEA
-	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 16:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF87852BC08
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 16:16:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237964AbiERN3A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 May 2022 09:29:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55098 "EHLO
+        id S238103AbiERNoC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 May 2022 09:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238148AbiERN2l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 09:28:41 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964641BE116
-        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 06:28:10 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id bh5so1761837plb.6
-        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 06:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cyJx2Ikk3M6UREufrh2Jxx8zfYV2z4VljnQeZDclXoY=;
-        b=nAIZWcCQB0vEb9Hi5ushwVJZSD3o0Tc6//fRfTNV7FBk5tCIzKAoqjzGPrE1mdIWXY
-         DQTe3O40KH/Ja4N36vW17qmplhql2M75ZNPepdcNiNnN4Pauuhu0I+p704bP+5jPtY7G
-         kI3kj70JEr2G6C4P2Z5epOLsdSSX4B6UKyn+f2o6EYBIE/F//87hCW6GRqSjlqGd2mSN
-         RuzZDH/hurmV0y++ddqDJ4eGDDVbtqhplvDFcFS3wTLLz9GFyT3YT2/OD7FdRaKbRLbD
-         TVTerhPsWMEDIKL42XkFCDljIQ84D1h96PsHD19F6YTrxNsarsxVo577uAsEnTTVYOQu
-         M0sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cyJx2Ikk3M6UREufrh2Jxx8zfYV2z4VljnQeZDclXoY=;
-        b=xajElBO8359m4ejZJm7YE5N8EYsZcZkxyf43ajMMV+WUOXeb4LYmleecQJFg+3s+gZ
-         F180uVX2RWuQMAgr555/ny7hZBVxgAI29AmPkD9jGisjZwPSLBGOiY6GSy/7useTVZ2N
-         3mYdVEzMU4h9iy/qeAWu6m5Is4BVrRIhgu0PU+xsVYXLppzGzkI0YHwEVQa1u2WjkgAz
-         4zPU8A8NN43B0osAVSyidu8n05tMX4USsMePnPL6Nxhftb6RxujyGBu0xrx98fMd1sXR
-         0YZko93rhV+I4eC/YB4S9WFXth6YsPe1NYYX5dkfn71lg4aaEp0i6dzarDFrV8ogj2FR
-         laZg==
-X-Gm-Message-State: AOAM533xbgNYbYJNEP9FQyFtGSwE3aqPAut679LkvybuLfOY6evYcZq/
-        2ShGCzsOWlKGg7mTcjCWrqvc
-X-Google-Smtp-Source: ABdhPJzB+pOxRPGTV08iwOjpsuVMYv3p58e06J814Q36NWj7SUgbEYF+KcxLnJLZX577FAOHqLDTdQ==
-X-Received: by 2002:a17:90b:50b:b0:1dc:a0b1:c783 with SMTP id r11-20020a17090b050b00b001dca0b1c783mr42309190pjz.49.1652880484629;
-        Wed, 18 May 2022 06:28:04 -0700 (PDT)
-Received: from thinkpad ([117.217.181.192])
-        by smtp.gmail.com with ESMTPSA id bf7-20020a170902b90700b0015f2e3e495asm1653407plb.239.2022.05.18.06.27.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 06:28:04 -0700 (PDT)
-Date:   Wed, 18 May 2022 18:57:57 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, kbusch@kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        svarbanov@mm-sol.com, bjorn.andersson@linaro.org, axboe@fb.com,
-        quic_vbadigan@quicinc.com, quic_krichai@quicinc.com,
-        quic_nitirawa@quicinc.com, vidyas@nvidia.com, sagi@grimberg.me,
-        linux-pm@vger.kernel.org, rafael@kernel.org,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>
-Subject: Re: [PATCH v2 3/3] PCI: qcom: Add system PM support
-Message-ID: <20220518132757.GC4791@thinkpad>
-References: <20220518131913.26974-1-manivannan.sadhasivam@linaro.org>
- <20220518131913.26974-4-manivannan.sadhasivam@linaro.org>
- <20220518132358.GA26902@lst.de>
+        with ESMTP id S238141AbiERNoA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 09:44:00 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D35919CEE4;
+        Wed, 18 May 2022 06:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Ev3tPtzlYMQf8tLGdACd44jMIDv9Fh/Rr/emg2hh5uA=; b=P8KAPphVTpNM7ibcjB0zCxCAAc
+        /pKUNIeIKhRVF/WoU4WxzyGEGQ2H5/mhcMn4lWud9j8Y8XnJ6+iWc6W3cBC4ay+dq4mspkGM4CIpE
+        lJMPAeitQvXOpqGijyzSBwibbKde8yX2kqzEX/zsOz3j9qaIa5pjW1ZVJDZy+S686rciinjp09Nmf
+        F0GwNoetfoCQBWe+VWL5j4ZYOjaN3sFuhccs1M/J+QsfLFZG1VDojNocXRcgQbmuJPD2pTJ3LPG5b
+        XQeP8NbSdCjCSCUdL9rSOEPzF6N2NoO0zquXmzqxO4nH3s4cPSXYqN+wQgqBnGP1/tny1XK7EnGqZ
+        UKE0ABrw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nrJxj-002Lef-Dp; Wed, 18 May 2022 13:43:39 +0000
+Date:   Wed, 18 May 2022 06:43:39 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Gavin Hindman <gavin.hindman@intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, CHUCK_LEVER <chuck.lever@oracle.com>
+Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
+Message-ID: <YoT4C77Yem37NUUR@infradead.org>
+References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
+ <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
+ <20220507101848.GB31314@wunner.de>
+ <20220509104806.00007c61@Huawei.com>
+ <20220511191345.GA26623@wunner.de>
+ <20220511191943.GB26623@wunner.de>
+ <CAPcyv4hUKjt7QrA__wQ0KowfaxyQuMjHB5V-=rZBm=UbV4OvSg@mail.gmail.com>
+ <20220514135521.GB14833@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220518132358.GA26902@lst.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220514135521.GB14833@wunner.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 18, 2022 at 03:23:58PM +0200, Christoph Hellwig wrote:
-> On Wed, May 18, 2022 at 06:49:13PM +0530, Manivannan Sadhasivam wrote:
-> > From: Prasad Malisetty <quic_pmaliset@quicinc.com>
-> > 
-> > Add suspend and resume callbacks to handle system suspend and resume in
-> > the Qcom PCIe controller driver. When the system suspends, PME turnoff
-> > message will be sent to the device and the RC driver will wait for the
-> > device to enter L23 Ready state. After that, the PHY will be powered down
-> > and clocks/regulators will be disabled.
-> 
-> So what about just not doing this stupid power disabling to start
-> with?  Unlike x86 where we do not have choice due to the BIOS, we
-> apparently do here.  And disabling power is the wrong thing to do at
-> least for SSDs as it massively increases the wear on the NAND.
+On Sat, May 14, 2022 at 03:55:21PM +0200, Lukas Wunner wrote:
+> Circling back to the SPDM/IDE topic, while NVMe is now capable of
+> reliably recovering from errors, it does expect the kernel to handle
+> recovery within a few seconds.  I'm not sure we can continue to
+> guarantee that if the kernel depends on user space to perform
+> re-authentication with SPDM after reset.  That's another headache
+> that we could avoid with in-kernel SPDM authentication.
 
-That's the requirement the Chromebook based on SC7280 has. I will check
-internally and get back.
-
-Thanks,
-Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+I wonder if we need kernel bundled and tightly controlled userspace
+code for these kinds of things (also for NVMe/NFS TLS).  That is,
+bundle a userspace ELF file or files with a module which is unpacked
+to or accessible by a ramfs-style file systems.  Then allow executing
+it without any interaction with the normal userspace, and non-pagable
+memory.  That way we can reuse existing userspace code, have really
+nice address space isolation but avoid all the deadlock potential
+of normal userspace code.  And I don't think it would be too hard to
+implement either.
