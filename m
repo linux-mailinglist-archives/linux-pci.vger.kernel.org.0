@@ -2,146 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16EA252C627
-	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 00:18:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C1A852C724
+	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 01:01:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbiERWSe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 May 2022 18:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
+        id S231137AbiERW6Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 May 2022 18:58:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbiERWSe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 18:18:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2423C209B7B;
-        Wed, 18 May 2022 15:18:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B592261624;
-        Wed, 18 May 2022 22:18:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0345C385A9;
-        Wed, 18 May 2022 22:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652912312;
-        bh=1BE7QoEPoRv0SPcn20p4AnFm8hcFxjR8MT1AIyyGM5E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eWelHZ0gWDLOdAb4yIc8otFLq/7/SstVjEPMrNM5OY/ixhWrfGsLoOJrA7cqGaUc+
-         OOT5LJFUhIh39Uadm23ojBqe1kIz33mRCBucZOj7kwEw89qf9l8rJfsZyL00MEg8fw
-         EBMDxY0/0QDdEvOnzrGp5EAIq4hielcEeJFD33evSn0R05BHwx7yLaEBlyPRMMjzBA
-         dgWHntw69PJYQFVW0xsALZ6gdsFX//zK3JfsSKSlfc4UPynE0zoilgGi3pRS2622Kb
-         8gPrWUiA3mkQuKBpCVNc/ye/2FLPe1/lq47+1fyLWxioFrTVfZ0mI/OUJd/A3JRGU/
-         H9KOU66/TWDsA==
-Date:   Wed, 18 May 2022 17:18:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Cyril Brulebois <kibi@debian.org>,
-        Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, james.dutton@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe
- linkup
-Message-ID: <20220518221830.GA12467@bhelgaas>
+        with ESMTP id S231374AbiERW5W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 18:57:22 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAA588AE7C
+        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 15:57:07 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id q135so6124497ybg.10
+        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 15:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
+        b=ovbcf3BPb/ZrA/FpQ+ZjErGDIEZ9sF3fYOxqsE4Z0xdiTlYY9UY36hS3ty6MLllddq
+         FdZzNc2PcFHW5cwKZ0FlQqx6F8uTY06Ab/cmT+eL89dkm6I4fHT5v6DDGzwY+fqIjM8b
+         RjeYQt93Ckr4p0lPVWY342OwWKznH6xDl4nV36uj7bwrBPcHFh3ePzF5GNEmu/mQBhIV
+         GwWDekgJIDWSV60014hyLdzt2NtjUStY8MI6SiwBWMH8LEBnRGkE0W6Db0zUE9IYWmDQ
+         Ifd6nbhkESdcIbQrjo3sdEfmdPtb1VAIHCw/LAZv1DOtvQwqLYnhML4dVDmuoYeMmVFn
+         q7TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
+        b=gzE9TOesVGE2KinDWe7hu6ht65V8egBLrZmGLwlRLIuOXdoWGfQh1s4L4n9GdhtaQO
+         3xGb1fIesUKERWckESz1VlA++32oZFuH8jW6jyaQ8E8wRMT0f9eY5d+lI2vrXkdnypUU
+         0J0uIP/EY8Ibxm623m3Wb+eWXRBj8e1EPoM9cK9wtNI0Pw+qk+aKWTwbS2W7/1S7P8dM
+         RrUi4EAC7Z8KTYflX7a6TB2Vb5PPjEoJVq5mtcCvJ4YUnvdT/Pi0lRjhorgEAz86DNSh
+         jzRa5dWwDNHCgxXWPWrHkY+z2GrQMl3OnUup0vDaZUXd5ukR2vOIvUctNCiuJg794ENW
+         pcSA==
+X-Gm-Message-State: AOAM533l/qUlsPX/D7ivyjIAfi5oO5ZMXNLKoMhzJ4WdWbyFpK+XDMrl
+        /NNRSJOFf1qHu48BOyg0LH+FFmn8Nq2JWv8yF+xtr/UGQHxE0ZMM2zfeOqah
+X-Google-Smtp-Source: ABdhPJyyLDAg+sVdsLTxwEXiZ5avjedwK/uWMP/Y3UWcChEjwDE+iXuY4kOycHY8vIqM/rcV0hLTcVdg0IN0RAQYgBc=
+X-Received: by 2002:a5b:f87:0:b0:64a:9aa6:e181 with SMTP id
+ q7-20020a5b0f87000000b0064a9aa6e181mr1852277ybh.157.1652914614913; Wed, 18
+ May 2022 15:56:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220518194211.20143-1-jim2101024@gmail.com>
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a05:7000:7143:0:0:0:0 with HTTP; Wed, 18 May 2022 15:56:53
+ -0700 (PDT)
+Reply-To: tonywenn@asia.com
+From:   Tony Wen <weboutloock4@gmail.com>
+Date:   Thu, 19 May 2022 06:56:53 +0800
+Message-ID: <CAE2_YrD=5bo8j9+ah-xptEBBV-HEC4=Gb0SRHf996phiopc3WQ@mail.gmail.com>
+Subject: engage
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b33 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4864]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [weboutloock4[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [weboutloock4[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.4 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Cyril]
-
-Cyril, if you have a chance to test this and verify that it fixes the
-regression, we may still be able to squeeze this into v5.18.
-
-I can add the Reported-by and Tested-by tags myself.
-
-On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
-> commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-> 
-> introduced a regression on the PCIe RPi4 Compute Module.  If the PCIe
-> endpoint node described in [2] was missing, no linkup would be attempted,
-> and subsequent accesses would cause a panic because this particular PCIe HW
-> causes a CPU abort on illegal accesses (instead of returning 0xffffffff).
-> 
-> We fix this by allowing the DT endpoint subnode to be missing.  This is
-> important for platforms like the CM4 which have a standard PCIe socket and
-> the endpoint device is unknown.
-> 
-> Please do not accept this commit until someone with a CM4 has tested
-> this solution; I have only emulated the problem and fix on different
-> platform.
-> 
-> Note that a bisection identified
-> 
-> commit 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
-> 
-> as the first failing commit.  This commit is a regression, but is unrelated
-> and was fixed by a subsequent commit in the original patchset.
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> [2] Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> 
-> Fixes: 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-> Fixes: 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index ba5c120816b2..adca74e235cb 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -540,16 +540,18 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
->  
->  static int brcm_pcie_add_bus(struct pci_bus *bus)
->  {
-> -	struct device *dev = &bus->dev;
->  	struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
->  	int ret;
->  
-> -	if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
-> +	/* Only busno==1 requires us to linkup */
-> +	if ((int)bus->number != 1)
->  		return 0;
->  
->  	ret = pci_subdev_regulators_add_bus(bus);
-> -	if (ret)
-> +	if (ret) {
-> +		pcie->refusal_mode = true;
->  		return ret;
-> +	}
->  
->  	/* Grab the regulators for suspend/resume */
->  	pcie->sr = bus->dev.driver_data;
-> 
-> base-commit: ef1302160bfb19f804451d0e919266703501c875
-> prerequisite-patch-id: 23a425390a4226bd70bbff459148c80f5e28379c
-> prerequisite-patch-id: e3f2875124b46b2b1cf9ea28883bf0c864b79479
-> prerequisite-patch-id: 9cdd706ee2038c7b393c4d65ff76a1873df1ca03
-> prerequisite-patch-id: 332ac90be6e4e4110e27bdd1caaff212c129f547
-> prerequisite-patch-id: 32a74f87cbfe9e8d52c34a4edeee6d271925665a
-> prerequisite-patch-id: f57cdf7ec7080bb8c95782bc7c3ec672db8ec1ce
-> prerequisite-patch-id: 18dc9236aed47f708f5c854afd832f3c80be5ea7
-> prerequisite-patch-id: dd147c6854c4ca12a9a8bd4f5714968a59d60e4e
-> -- 
-> 2.17.1
-> 
+Can I engage your services?
