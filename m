@@ -2,83 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E813B52C32D
-	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 21:19:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E43B552C33A
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 21:24:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241802AbiERTTO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 May 2022 15:19:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
+        id S241891AbiERTWe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 May 2022 15:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241800AbiERTTO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 15:19:14 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083D81B5F87
-        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 12:19:11 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id bu29so5392749lfb.0
-        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 12:19:10 -0700 (PDT)
+        with ESMTP id S241829AbiERTWd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 15:22:33 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2078.outbound.protection.outlook.com [40.107.96.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5D1D14C762;
+        Wed, 18 May 2022 12:22:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dskzI4tjINEaWkkaAbQQcg70UaR8zAeFHP7E5FyrtuNU7z33aiY31EwvOQOuzjFGCH7QSpIeqiiJfjYotBs5eT1jpdgxF9OwfQIN2h8v+Viln+573QnGPW52eSS1RNNWN3vMDsspQ5Iz/YQrAXrNyHAAPCWfWe/2vl6wgNwbJ2U+v0foMqQr9K/O6D48+/Kd59OWSIcjYHi/Px/zCufDChIVCQHzMqrQK7WKTjU5+bKnSS4jm1PL8JfEKKy7tEI1T8AdH9SLOCmRPxlB4FtMKneAr27fa+6RWpuGgZbGYPDOYtV47ibomiZwd9+kd4EcnYv5ebCCqEOPJCqJZp2wUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bb7XMGlD0sfsnTMl5CvumuJKGGemDeTchlrsWtTvTcg=;
+ b=nbGlhssGwi6hR18j/XrTH5f0hV+Py7XwivQSzx/jHBQOL9SrGywlpZAyaiz41ZULOfZUCp/6twP+D5pxSk7xz3xvP0Et4SQA7C2tqDh4AR3xt9xvN1jnsDv0KehA66/M0qfW+pvfPd5kwU7bOynFwkIHAvYJLrYzU/UcAuygNiDqZ8j0SE1KiWSLgMqFADzZSTKUFYlOczo80AE9qAzSHnGlZBAqOsIoV1IB89JLZko1wudFczh3Su49niV0qW2EbRdmkF2GRScv7gZ1BM3UrCf8B+zM1jUw0TK1uDliH6f6PJWYtebZPTYC4hDRcHMHCCWMoi8ZYnQFfjhcUCkpAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=bootlin.com smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=wvaWzADdM7DSnsBh4ZAoxyMLzUUhSncSX5FP71iYjVw=;
-        b=Z8gML/o1hRUDPMKBQF3J+hxlHRQjbgRezUGsNFhzYshnHrDtnN5CKiMLS3+AeoK8MQ
-         6+ZAMO62DkxqCgpCwMm/HfF+1CqhAYnlze04dZwLj1HaD7ezxwUhKxkr9op9bv/wyBrG
-         HkfamvtTe1GpixzfiT6KDMUlbnyZoaFw4rUb3iCYXgIpLxAX62+sfwLflSN9OEN+EWQM
-         FgAMLvzvVyj5dAFmlLkFBE3SQSxAfMlZ8Bxn3a1ie8/ocBbBxXc+0EfHpB6+mLKdiQub
-         uDeFTk8EBNqqtosaqpIQ0su8Ey2wFyf3uIOgn7kc0FhX+ULZDRKKXU66bcRAWQMc/x41
-         TRDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=wvaWzADdM7DSnsBh4ZAoxyMLzUUhSncSX5FP71iYjVw=;
-        b=oQfHTHgRAXxfkIKpIQlp1BpL/qTa5bHgP/C8VWasGpvDb/aRlArVgBlsYx7UwXkRLS
-         Fasre1tY+Ias8FEuH0KV2UvX3r7XGcBoJ7FBjy/6eEGIlDuAsqBdKatF9r9/AU8DwNcX
-         WGEmAStVsz8YQlSw55Wr/rusFeuFitPLaJ1hCObHSINzS5cD0r83ZcM7pLqhfU47JGvp
-         dJ++XVb2tCAq1j5gK/1jml1C4HGGlvGBp2i17aNC4bLIdpSkf8kgr0KGj+VjvOsK1KO9
-         lo3BDApLj8+uWypbOHd1Mx4J78mFbA/N2E0S4K2+ngKR7uYWY9b59xaOPxLiZ7RYqmAx
-         iJSQ==
-X-Gm-Message-State: AOAM5338j86lp2926/4q/lZ9euHb3JGV9wScFsRf3RBqH8qmAFRGbejU
-        8oGeAFjx/GHBua6k3CP8VqKwV7IEqcqH2g==
-X-Google-Smtp-Source: ABdhPJzJSLZnoa2/JlL2grPwpJnM3CN6awJYDRZFGpqtIdAaPJYFgMmAcWEBTZQPDbHr+XCSzjji6g==
-X-Received: by 2002:ac2:4ac9:0:b0:471:f6da:640d with SMTP id m9-20020ac24ac9000000b00471f6da640dmr665727lfp.286.1652901549250;
-        Wed, 18 May 2022 12:19:09 -0700 (PDT)
-Received: from ?IPV6:2001:470:dd84:abc0::8a5? ([2001:470:dd84:abc0::8a5])
-        by smtp.gmail.com with ESMTPSA id d25-20020ac24c99000000b00477b624c0a8sm31111lfl.180.2022.05.18.12.19.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 May 2022 12:19:08 -0700 (PDT)
-Message-ID: <23cb9c6e-129f-df79-b734-aac1a92264a9@linaro.org>
-Date:   Wed, 18 May 2022 22:19:07 +0300
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bb7XMGlD0sfsnTMl5CvumuJKGGemDeTchlrsWtTvTcg=;
+ b=EsrE4LAIS4JFIsd6OfwUaWJFPsdMt7ge3CMk5gWDBQJ9I3ne3KAvCC6DMdIa2crl+8bQRNzmByk0/j+TJqk2SuvxmnaUtOZgj3zEv2e9VDhrUh1j1yqtsklPBS/odw7+TvUUwaEutRbccLskMub75b6D25seY69uZqxB5txNQJY=
+Received: from SA9PR03CA0007.namprd03.prod.outlook.com (2603:10b6:806:20::12)
+ by BY5PR02MB6644.namprd02.prod.outlook.com (2603:10b6:a03:20b::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.13; Wed, 18 May
+ 2022 19:22:28 +0000
+Received: from SN1NAM02FT0036.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:806:20:cafe::d0) by SA9PR03CA0007.outlook.office365.com
+ (2603:10b6:806:20::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.13 via Frontend
+ Transport; Wed, 18 May 2022 19:22:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com; pr=C
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT0036.mail.protection.outlook.com (10.97.4.102) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5273.14 via Frontend Transport; Wed, 18 May 2022 19:22:27 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Wed, 18 May 2022 12:22:11 -0700
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Wed, 18 May 2022 12:22:11 -0700
+Envelope-to: clement.leger@bootlin.com,
+ helgaas@kernel.org,
+ robh+dt@kernel.org,
+ frowand.list@gmail.com,
+ pantelis.antoniou@konsulko.com,
+ bhelgaas@google.com,
+ allan.nielsen@microchip.com,
+ horatiu.vultur@microchip.com,
+ steen.hegelund@microchip.com,
+ thomas.petazonni@bootlin.com,
+ alexandre.belloni@bootlin.com,
+ broonie@kernel.org,
+ andriy.shevchenko@linux.intel.com,
+ kuba@kernel.org,
+ hdegoede@redhat.com,
+ andrew@lunn.ch,
+ devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org,
+ robh@kernel.org
+Received: from [172.19.74.144] (port=43354)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <lizhi.hou@xilinx.com>)
+        id 1nrPFH-000C3d-Ml; Wed, 18 May 2022 12:22:07 -0700
+Message-ID: <c2f6d576-b48b-d1a7-2e4d-bbedea969f52@xilinx.com>
+Date:   Wed, 18 May 2022 12:22:07 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v6 2/5] clk: qcom: regmap: add PHY clock source
- implementation
-Content-Language: en-GB
-To:     Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 2/3] PCI: of: create DT nodes for PCI devices if they do
+ not exists
+Content-Language: en-US
+To:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20220513175339.2981959-1-dmitry.baryshkov@linaro.org>
- <20220513175339.2981959-3-dmitry.baryshkov@linaro.org>
- <20220518175808.EC29AC385A5@smtp.kernel.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <20220518175808.EC29AC385A5@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        Allan Nielsen <allan.nielsen@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Thomas Petazzoni <thomas.petazonni@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andrew Lunn <andrew@lunn.ch>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>
+References: <20220427094502.456111-3-clement.leger@bootlin.com>
+ <20220503225353.GA415393@bhelgaas> <20220504154303.5cdf8cc2@fixe.home>
+From:   Lizhi Hou <lizhi.hou@xilinx.com>
+In-Reply-To: <20220504154303.5cdf8cc2@fixe.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 02b1782a-f26a-4400-1ed6-08da3903bf03
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6644:EE_
+X-Microsoft-Antispam-PRVS: <BY5PR02MB664439D04F11BD75AEC9A195A1D19@BY5PR02MB6644.namprd02.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bmDtyR3YKwH8tGOLkI/3lXczMkeiNqJiQt0pfQdxfUilG0YqhlzVjMIWH4POzHGdm27d7VA0fomZsxeKx2EXsUcR7T4ZVaGumYhVZmTqxHBR7I0dmkdrJY/Ubdv4yWYzCTDWia1YHaaMfte0ICztfWslWa6UBGxe9+771iqoAYZqZevGqj7bkK9eJy3TRWs2lHVCjEGjaQ968Vata/A7dhh1DUQXPJPF6LXO5JrQc1GuawH841CQH2QgME00W/hnTG4gz75p5KLjTn4HZOhQQil12Umb99e00lIPKY/1P9XWkzbKa54datP1oQEv5lGy4ngOqGZffHv4+m8XBLJNiXwBtH1AUA7qMJko9FaYYZJvCVWwF67T+sGzTsYsSAXjru6s8Wz2j7obJfxFSJlJFGIUAh0xw8U/ojf3o4t50II/hFMGiGMS1J+2u+UqyN0vuj2qJIi68tNVvtYbgeRU31LXXJcm9lDQWtMIso0v/QseBuwkB6rFOolC9VVeFk3GSIGavJtPrMa90mqHKM/xBHDAhfDZNY2//7+fF72ccxk2JCwQf/xzKebNSQi4Rd2AZyjPHlSpmrDrGAC1wwfAb1+73ojaECXuwt6oG5o0Iktlqe3XGhWQvGsNuAxrHRYY7OnRK3MD+L6Mw1p4wfmg45lagyydpGV1S+yGf3GvlPAwVFKEn5iYwxUY+QZB0NoVz4VXR9SDr4ssXCSUmiKpTwXd/SuyE+ujydEXOPePx+a10ch4aeLyxrjXQCe0hpdGpgRXIitz4mKqzvH/RDPHHQ49yD6xRCTmYKIq608wwpx9hmABKtbSrSb8O1kukUY8xnrddsDjvL9yRPyIcs+69TK9hPVISqRNv09UKIsaojs=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(4326008)(31696002)(83380400001)(40460700003)(26005)(54906003)(110136005)(316002)(426003)(336012)(7636003)(70206006)(356005)(70586007)(47076005)(66574015)(53546011)(2616005)(31686004)(186003)(2906002)(82310400005)(966005)(36756003)(8936002)(36860700001)(508600001)(8676002)(9786002)(7416002)(44832011)(5660300002)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2022 19:22:27.7746
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02b1782a-f26a-4400-1ed6-08da3903bf03
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0036.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6644
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,164 +143,59 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/05/2022 20:58, Stephen Boyd wrote:
-> Quoting Dmitry Baryshkov (2022-05-13 10:53:36)
->> diff --git a/drivers/clk/qcom/clk-regmap-phy-mux.c b/drivers/clk/qcom/clk-regmap-phy-mux.c
->> new file mode 100644
->> index 000000000000..d7a45f7fa1aa
->> --- /dev/null
->> +++ b/drivers/clk/qcom/clk-regmap-phy-mux.c
->> @@ -0,0 +1,62 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2022, Linaro Ltd.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/bitops.h>
->> +#include <linux/regmap.h>
->> +#include <linux/export.h>
-> 
-> clk-provider.h for clk_hw/clk_ops usage. It helps with grep to identify
-> clk providers.
-> 
->> +
->> +#include "clk-regmap-phy-mux.h"
-> 
-> Same for clk-regmap.h, avoid include hell.
-> 
->> +
->> +static inline struct clk_regmap_phy_mux *to_clk_regmap_phy_mux(struct clk_hw *hw)
->> +{
->> +       return container_of(to_clk_regmap(hw), struct clk_regmap_phy_mux, clkr);
->> +}
->> +
->> +static int phy_mux_is_enabled(struct clk_hw *hw)
->> +{
->> +       struct clk_regmap_phy_mux *phy_mux = to_clk_regmap_phy_mux(hw);
->> +       struct clk_regmap *clkr = to_clk_regmap(hw);
->> +       unsigned int mask = GENMASK(phy_mux->width + phy_mux->shift - 1, phy_mux->shift);
->> +       unsigned int val;
->> +
->> +       regmap_read(clkr->regmap, phy_mux->reg, &val);
->> +       val = (val & mask) >> phy_mux->shift;
-> 
-> Can this use FIELD_GET?
-> 
->> +
->> +       WARN_ON(val != phy_mux->phy_src_val && val != phy_mux->ref_src_val);
->> +
->> +       return val == phy_mux->phy_src_val;
->> +}
->> +
->> +static int phy_mux_enable(struct clk_hw *hw)
->> +{
->> +       struct clk_regmap_phy_mux *phy_mux = to_clk_regmap_phy_mux(hw);
->> +       struct clk_regmap *clkr = to_clk_regmap(hw);
->> +       unsigned int mask = GENMASK(phy_mux->width + phy_mux->shift - 1, phy_mux->shift);
->> +       unsigned int val;
->> +
->> +       val = phy_mux->phy_src_val << phy_mux->shift;
-> 
-> Can this use FIELD_PREP?
-> 
->> +
->> +       return regmap_update_bits(clkr->regmap, phy_mux->reg, mask, val);
->> +}
->> +
->> +static void phy_mux_disable(struct clk_hw *hw)
->> +{
->> +       struct clk_regmap_phy_mux *phy_mux = to_clk_regmap_phy_mux(hw);
->> +       struct clk_regmap *clkr = to_clk_regmap(hw);
->> +       unsigned int mask = GENMASK(phy_mux->width + phy_mux->shift - 1, phy_mux->shift);
->> +       unsigned int val;
->> +
->> +       val = phy_mux->ref_src_val << phy_mux->shift;
->> +
->> +       regmap_update_bits(clkr->regmap, phy_mux->reg, mask, val);
->> +}
->> +
->> +const struct clk_ops clk_regmap_phy_mux_ops = {
->> +       .enable = phy_mux_enable,
->> +       .disable = phy_mux_disable,
->> +       .is_enabled = phy_mux_is_enabled,
->> +};
->> +EXPORT_SYMBOL_GPL(clk_regmap_phy_mux_ops);
->> diff --git a/drivers/clk/qcom/clk-regmap-phy-mux.h b/drivers/clk/qcom/clk-regmap-phy-mux.h
->> new file mode 100644
->> index 000000000000..6260912191c5
->> --- /dev/null
->> +++ b/drivers/clk/qcom/clk-regmap-phy-mux.h
->> @@ -0,0 +1,37 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (c) 2022, Linaro Ltd.
->> + * Author: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> + */
->> +
->> +#ifndef __QCOM_CLK_REGMAP_PHY_MUX_H__
->> +#define __QCOM_CLK_REGMAP_PHY_MUX_H__
->> +
->> +#include <linux/clk-provider.h>
->> +#include "clk-regmap.h"
->> +
->> +/*
->> + * A special clock implementation for PHY pipe and symbols clock sources.
-> 
-> Remove "special" please. Everything is special :)
 
-ack for the docs changes, will send shortly.
+On 5/4/22 06:43, Clément Léger wrote:
+> Le Tue, 3 May 2022 17:53:53 -0500,
+> Bjorn Helgaas <helgaas@kernel.org> a écrit :
+>
+>> In subject:
+>>
+>>    PCI: of: Create DT nodes ... if they do not exist
+>>
+>> The subject could be read as saying that you're going to create DT
+>> nodes before the PCI devices exist, but I think you mean that when we
+>> enumerate a PCI devices, we're *always* going to create a DT node for
+>> it, even if the DT didn't mention it.
+> Hi Bjorn,
+>
+> Indeed ! I'll modify that.
 
-> 
->> + *
->> + * If the clock is running off the from-PHY source, report it as enabled.
-> 
-> from-PHY is @phy_src_val? Maybe add that information like "from-PHY
-> source (@phy_src_val)"
-> 
->> + * Report it as disabled otherwise (if it uses reference source).
-> 
-> Same for @ref_src_val
-> 
->> + *
->> + * This way the PHY will disable the pipe clock before turning off the GDSC,
->> + * which in turn would lead to disabling corresponding pipe_clk_src (and thus
->> + * it being parked to a safe, reference clock source). And vice versa, after
->> + * enabling the GDSC the PHY will enable the pipe clock, which would cause
->> + * pipe_clk_src to be switched from a safe source to the working one.
-> 
-> Might as well make it into real kernel-doc at the same time.
-> 
->> + */
->> +
->> +struct clk_regmap_phy_mux {
->> +       u32                     reg;
->> +       u32                     shift;
->> +       u32                     width;
-> 
-> Technically neither of these need to be u32 and could be u8 to save a
-> byte or two. The other thing is that possibly the width and shift never
-> changes? The RCG layout is pretty well fixed. Does hardcoding it work?
+Linking the dynamic generated dt node to PCIe device through 
+pci_dev->dev.of_node may cause issues. Kernel and driver code may check 
+of_node pointer and run complete different code path if of_node is not 
+NULL.
 
-It seems, I can hardcode shift=0 and width=2.
+For example:  in of_irq_parse_pci(): 
+https://elixir.bootlin.com/linux/v5.18-rc2/source/drivers/pci/of.c#L492
 
-> 
->> +       u32                     phy_src_val;
->> +       u32                     ref_src_val;
-> 
-> I feel like "_val" is redundant. Just "ref_src" and "phy_src"? Shorter
-> is nice.
+I encountered different issues when I tried to create a prototype. And I 
+have sent all may questions/thoughts through 
+https://lore.kernel.org/lkml/79e4c876-e5a4-861f-cfbc-c75ed1a07ddd@xilinx.com/#t
 
-I had this since I wanted to point that these are 'values', not the 
-enum-ed sources. But I can drop this now.
-
-> 
->> +       struct clk_regmap       clkr;
->> +};
->> +
->> +extern const struct clk_ops clk_regmap_phy_mux_ops;
+I am wondering what would be the right way to resolve it?
 
 
--- 
-With best wishes
-Dmitry
+Thanks,
+
+Lizhi
+
+>
+>> Maybe something like:
+>>
+>>    PCI: of: Create DT node for every PCI device
+>>
+>> although I see Rob thinks this should be done on demand instead of
+>> doing it for every device, which sounds sensible to me.
+> Agreed, I'll rework this series.
+>
+> Thanks,
+>
+>> On Wed, Apr 27, 2022 at 11:45:01AM +0200, Clément Léger wrote:
+>>> In order to apply overlays to PCI device nodes, the nodes must first
+>>> exist. This commit add support to populate a skeleton tree for PCI bus
+>>> and devices. These nodes can then be used by drivers to apply overlays.
+>> s/This commit add support/Add support/
+>>
+>> Bjorn
+>
+>
