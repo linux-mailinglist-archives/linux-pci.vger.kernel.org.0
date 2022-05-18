@@ -2,87 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D732B52BC83
-	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 16:16:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63E7352BE3D
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 17:26:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238227AbiERNrp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 May 2022 09:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53976 "EHLO
+        id S239133AbiERPJA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 May 2022 11:09:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238078AbiERNrk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 09:47:40 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ECEF1A7D02;
-        Wed, 18 May 2022 06:47:39 -0700 (PDT)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24IDjXnC013126;
-        Wed, 18 May 2022 13:47:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=EDe/+pdzlxIoBylO7CAv63QnQqy0iQVd6S+YcTCmEBY=;
- b=G1D0L0FCriobg+ImnRFkAn0ORxAHPPDveSX/tTZvI28TNaxUOHFitEKLdahI5hEsXcYb
- yqKCRIaySxd0xD/41y0vsU6YHvgh+o2iFYhGuyJ6apnQ3kl8sCz6IoU9SZUdjRVWTqml
- Q2KiRoix8dIysD0cdOfdLs1x3Plp2jPyWPJLB8tK3tLjvUgZ/Z8vYdTPbN/SpUmmUlI1
- X6DK7mBYvpFWzdCHe2mbJc5a9bswjmHeSZMvptaiteZK57YxOB2lZgSDLBgNGTnduhFL
- 7g+0Ik8ryVjSYLZOmPNB2MpCNMWHKjTNBJKmshevJ9Al7JKwtme5WFYvlDTxRqPvXlL8 YA== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g51y8g1gj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 13:47:23 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24IDgQxu023010;
-        Wed, 18 May 2022 13:47:21 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 3g2429dstn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 13:47:20 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24IDlIQc49938932
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 May 2022 13:47:18 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BBFCAA405B;
-        Wed, 18 May 2022 13:47:18 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40AF3A4054;
-        Wed, 18 May 2022 13:47:18 +0000 (GMT)
-Received: from sig-9-145-66-197.uk.ibm.com (unknown [9.145.66.197])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 18 May 2022 13:47:18 +0000 (GMT)
-Message-ID: <87df1eda7d8e28f49a92def8bfe4d549494d2db0.camel@linux.ibm.com>
-Subject: Re: [RFC v2 29/39] rtc: add HAS_IOPORT dependencies
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>
-Date:   Wed, 18 May 2022 15:47:17 +0200
-In-Reply-To: <YoQeagVSRyaeA+vd@mail.local>
-References: <20220429135108.2781579-1-schnelle@linux.ibm.com>
-         <20220429135108.2781579-52-schnelle@linux.ibm.com>
-         <YoQeagVSRyaeA+vd@mail.local>
+        with ESMTP id S239087AbiERPI7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 11:08:59 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81A4178542
+        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 08:08:58 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id fw21-20020a17090b129500b001df9f62edd6so2550171pjb.0
+        for <linux-pci@vger.kernel.org>; Wed, 18 May 2022 08:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pAOqA96aToO86xRKYS8qEzOGQS2kjgufaDi6zqwGWHU=;
+        b=O5xf+78qJhBHBcQ1CwJqcQ438s2ghvqvjXK4zlGjV2hTmpoNr2FDX8aKjDlMliuwhk
+         bPZyUfKFKL2YZsA0K/m3RnX/X0rhVMzKNcpKaxRTHVp6haXLuqIlfgcc9lbl2EaSRLlA
+         nTxDb9MkN9LlDfKRMEnzrZsnM6N4LlJfic+rsomjjxTkYMyZ20GXCerQlWJmhKWtVq6j
+         RaG8gIhHxPSYXNMMGk7naphxKx5duxHZFEjtd5vtJCpTB1vc16g8ROEqNA4IzGKwPtdw
+         20ifpFt3ESIseO9gyTSmcahllZJS/VOUcRiEnpVWiepnOgS6ku1L5OFeyesWIBZDapDB
+         QUpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pAOqA96aToO86xRKYS8qEzOGQS2kjgufaDi6zqwGWHU=;
+        b=FUjenyLjlUxCjvoPRLPEcYAnY+AjJ7CvficoS5S/rGH7YEJNOf3Qy21NMTguq5w3R3
+         txnBaJBmFCxrI4sbHZoCTIxdwWB5Wykyf6QRtpV/9HYxUNFrqzObDLyQlcGF7uP4Sjd4
+         NyhKer0gbLX+Zb86yVn93CnZtU6LBjQcpGSXgOMcpZs1fWXBnbMC8zcSQA45IYpvbJt1
+         48BSB9F820zPApRj5LSnebb/4fSyvA3GZLIaFHH3BOJ5aor9zZMTKhYzN5ukoPTdAsQu
+         eLg0eAVSx1P3BmpEVuKP1Y/bppcTpk271qZZmiNbGc7iyGcrFqOD8RH9FuSy8jvW3x3M
+         TUpQ==
+X-Gm-Message-State: AOAM532nQhdtS6fRgY2EXsG5c3WUcOt/B1YNYpQPVH6ACj9kVxlQLjqW
+        XqH8hOTom2vaiC2DVLx2Ze51iN0xX4+k+Aicvlrshg==
+X-Google-Smtp-Source: ABdhPJwhxMNnK7nG2eB3nT+2rJn4Rnr7ZBkWavdd1dpNrBulUMGOcRCebYPLvRZ8zt6Ji5T+F8TOMcqIk8Sfr+z4YDE=
+X-Received: by 2002:a17:902:da8b:b0:15e:c0e8:d846 with SMTP id
+ j11-20020a170902da8b00b0015ec0e8d846mr189626plx.34.1652886538210; Wed, 18 May
+ 2022 08:08:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
+ <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
+ <20220507101848.GB31314@wunner.de> <20220509104806.00007c61@Huawei.com>
+ <20220511191345.GA26623@wunner.de> <20220511191943.GB26623@wunner.de>
+ <CAPcyv4hUKjt7QrA__wQ0KowfaxyQuMjHB5V-=rZBm=UbV4OvSg@mail.gmail.com>
+ <20220514135521.GB14833@wunner.de> <YoT4C77Yem37NUUR@infradead.org>
+In-Reply-To: <YoT4C77Yem37NUUR@infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 May 2022 08:08:47 -0700
+Message-ID: <CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Gavin Hindman <gavin.hindman@intel.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, CHUCK_LEVER <chuck.lever@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: DT_VBPgHxa1GyeLQG_GScPNPzU4blgvU
-X-Proofpoint-ORIG-GUID: DT_VBPgHxa1GyeLQG_GScPNPzU4blgvU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-18_05,2022-05-17_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- spamscore=0 malwarescore=0 bulkscore=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=620 impostorscore=0 mlxscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205180079
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -90,19 +74,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2022-05-18 at 00:15 +0200, Alexandre Belloni wrote:
-> Hi,
-> 
-> On 29/04/2022 15:50:49+0200, Niklas Schnelle wrote:
-> > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> > not being declared. We thus need to add HAS_IOPORT as dependency for
-> > those drivers using them.
-> > 
-> 
-> I'm fine taking that this cycle if there are no dependencies. Should I?
-> 
+On Wed, May 18, 2022 at 6:44 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Sat, May 14, 2022 at 03:55:21PM +0200, Lukas Wunner wrote:
+> > Circling back to the SPDM/IDE topic, while NVMe is now capable of
+> > reliably recovering from errors, it does expect the kernel to handle
+> > recovery within a few seconds.  I'm not sure we can continue to
+> > guarantee that if the kernel depends on user space to perform
+> > re-authentication with SPDM after reset.  That's another headache
+> > that we could avoid with in-kernel SPDM authentication.
+>
+> I wonder if we need kernel bundled and tightly controlled userspace
+> code for these kinds of things (also for NVMe/NFS TLS).  That is,
+> bundle a userspace ELF file or files with a module which is unpacked
+> to or accessible by a ramfs-style file systems.  Then allow executing
+> it without any interaction with the normal userspace, and non-pagable
+> memory.  That way we can reuse existing userspace code, have really
+> nice address space isolation but avoid all the deadlock potential
+> of normal userspace code.  And I don't think it would be too hard to
+> implement either.
 
-I'd say the dependency here is the first patch in the series and we
-don't seem to have full consensus on this yet. So as of now I sadly
-don't think so.
+Yes, I also want something like this for mitigating the vulnerability
+surface of things like PRM [1], where platform vendors are looking to
+move more runtime helpers out of SMM mode and into ring0. I would
+rather see those routines move all the way into ring3.
 
+[1]: https://uefi.org/sites/default/files/resources/Platform%20Runtime%20Mechanism%20-%20with%20legal%20notice.pdf
