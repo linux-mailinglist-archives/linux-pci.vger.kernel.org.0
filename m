@@ -2,64 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E024B52B6C6
-	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 12:12:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22ED952B732
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 12:13:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234227AbiERJbP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 May 2022 05:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41040 "EHLO
+        id S234603AbiERJsG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 May 2022 05:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234247AbiERJbN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 05:31:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9904D369EB;
-        Wed, 18 May 2022 02:30:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EEBA661750;
-        Wed, 18 May 2022 09:30:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F751C385A5;
-        Wed, 18 May 2022 09:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652866258;
-        bh=b4q3S3ZcO++qVR3+aQzsJTMPphy/skbkPZkqxWVncyY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mgpRgGOy1a/znb9d0DcSINs7GhDv52mrkrt7T1oYOgrfhGKyFHrHz/nwAKLf/tbr/
-         x244g17W59LFsC1/mOp+eP8kWq0l4hfT+nF2w4x2UCh5k/48VTl2K/g1aNRO/R4NDR
-         ykc3yeOkZ4YTU+4AY9uOGZ6tVRqFOoRPC/EoTLUOeNwiUk+NlQRZTihCUFOWUdoltK
-         zySoeo9FndIR04I6Y7or1b8eqeY/gPkrETEdwER7Z7eju6kZgDwwzqtihIoDowzj1i
-         ApdoyJI40lC40GNnx5GKRBe/tbJUqnQK+C2rfSocvpNKFoqq7cRaJ1z+v7paKPC3P9
-         mefs8Hdn8IvoQ==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1nrG1C-0003Ne-Bg; Wed, 18 May 2022 11:30:59 +0200
-Date:   Wed, 18 May 2022 11:30:58 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v10 02/10] PCI: dwc: Propagate error from
- dma_mapping_error()
-Message-ID: <YoS80vek6UrN1XbG@hovoldconsulting.com>
-References: <20220513172622.2968887-1-dmitry.baryshkov@linaro.org>
- <20220513172622.2968887-3-dmitry.baryshkov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220513172622.2968887-3-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        with ESMTP id S234575AbiERJsD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 May 2022 05:48:03 -0400
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B1C10FC1;
+        Wed, 18 May 2022 02:47:59 -0700 (PDT)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C8AC9200D9E;
+        Wed, 18 May 2022 11:47:57 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 82D08200D7D;
+        Wed, 18 May 2022 11:47:57 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id E6A8E180031D;
+        Wed, 18 May 2022 17:47:55 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, festevam@gmail.com
+Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: [RFC 1/2] PCI: imx6: Make sure the DBI register can be changed
+Date:   Wed, 18 May 2022 17:35:27 +0800
+Message-Id: <1652866528-13220-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -68,36 +43,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 13, 2022 at 08:26:14PM +0300, Dmitry Baryshkov wrote:
-> If dma mapping fails, dma_mapping_error() will return an error.
-> Propagate it to the dw_pcie_host_init() return value rather than
-> incorrectly returning 0 in this case.
-> 
-> Fixes: 07940c369a6b ("PCI: dwc: Fix MSI page leakage in suspend/resume")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 2fa86f32d964..a9a31e9e7b6e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -396,8 +396,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  						      sizeof(pp->msi_msg),
->  						      DMA_FROM_DEVICE,
->  						      DMA_ATTR_SKIP_CPU_SYNC);
-> -			if (dma_mapping_error(pci->dev, pp->msi_data)) {
-> -				dev_err(pci->dev, "Failed to map MSI data\n");
-> +			ret = dma_mapping_error(pci->dev, pp->msi_data);
-> +			if (ret) {
-> +				dev_err(pci->dev, "Failed to map MSI data: %d\n", ret);
->  				pp->msi_data = 0;
->  				goto err_free_msi;
->  			}
+The PCIE_DBI_RO_WR_EN bit should be set when write some DBI registers.
+To make sure that the DBI registers are writable, set the
+PCIE_DBI_RO_WR_EN properly when touch the DBI registers.
 
-This has already been fixed by commit 88557685cd72 ("PCI: dwc: Fix
-setting error return on MSI DMA mapping failure"), which prevents the
-series from applying cleanly.
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Johan
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 6619e3caffe2..30641d2dda14 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -797,10 +797,12 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+ 	 * started in Gen2 mode, there is a possibility the devices on the
+ 	 * bus will not be detected at all.  This happens with PCIe switches.
+ 	 */
++	dw_pcie_dbi_ro_wr_en(pci);
+ 	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+ 	tmp &= ~PCI_EXP_LNKCAP_SLS;
+ 	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
+ 	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
++	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+ 	/* Start LTSSM. */
+ 	imx6_pcie_ltssm_enable(dev);
+@@ -809,6 +811,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+ 
+ 	if (pci->link_gen == 2) {
+ 		/* Allow Gen2 mode after the link is up. */
++		dw_pcie_dbi_ro_wr_en(pci);
+ 		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+ 		tmp &= ~PCI_EXP_LNKCAP_SLS;
+ 		tmp |= PCI_EXP_LNKCAP_SLS_5_0GB;
+@@ -821,6 +824,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+ 		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+ 		tmp |= PORT_LOGIC_SPEED_CHANGE;
+ 		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
++		dw_pcie_dbi_ro_wr_dis(pci);
+ 
+ 		if (imx6_pcie->drvdata->flags &
+ 		    IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE) {
+-- 
+2.25.1
+
