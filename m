@@ -2,64 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7786252AED6
-	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 01:52:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6CE752B041
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 03:55:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232094AbiEQXwP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 19:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
+        id S233961AbiERBzm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 21:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232022AbiEQXwO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 19:52:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA1B741339;
-        Tue, 17 May 2022 16:52:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 74BBFB81D67;
-        Tue, 17 May 2022 23:52:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0A553C34117;
-        Tue, 17 May 2022 23:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652831531;
-        bh=spYIMVPV55N3AgdMlDTGz8M6k1WuTg+xQApxQCdZtNs=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=h1bXy9WiypVJqCB87dygxFOiAH6gbD/QyvxcIIP/SKbkFUumpFz210BvM72wVN5Kt
-         lyRpTlqA9vAxUSpjxF5szDhefDwzGT43Cy0qiE+ECdjB9d2jcI06NMvQksytp4mLP0
-         dZ+mJTywH5iwPT54f/QCDh9rzZuFkYD2UfR3ptdTEm0uydoWTUqJoBbMR++Ygnn8GD
-         NrcvBuHDAddL9GUEmRvkterw4/zKFEUV7LjJftSWXoI8q3TD2YYPF1b8jpoLo56rPb
-         y0MiCRPWPEbq2XOMJLULFImNw2ccAHy44zbMkT1BG7CuZL+njrvMeTQOvmWqf1gU/g
-         7RPcZzBM25rPg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E6003F0389D;
-        Tue, 17 May 2022 23:52:10 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v5.18
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220517203530.GA1102878@bhelgaas>
-References: <20220517203530.GA1102878@bhelgaas>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220517203530.GA1102878@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.18-fixes-1
-X-PR-Tracked-Commit-Id: a3b69dd0ad6265c29c4b6fb381cd76fb3bebdf8c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 210e04ff768142b96452030c4c2627512b30ad95
-Message-Id: <165283153093.29538.8971651599965342621.pr-tracker-bot@kernel.org>
-Date:   Tue, 17 May 2022 23:52:10 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S233969AbiERBzi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 21:55:38 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FF054BDC;
+        Tue, 17 May 2022 18:55:35 -0700 (PDT)
+X-UUID: 220dc296169e4cf399570465aad54c37-20220518
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.5,REQID:3324cc5a-4676-45a4-afec-ce54a28106ca,OB:0,LO
+        B:0,IP:0,URL:5,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACT
+        ION:release,TS:0
+X-CID-META: VersionHash:2a19b09,CLOUDID:7e718ee2-edbf-4bd4-8a34-dfc5f7bb086d,C
+        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
+        ,QS:0,BEC:nil
+X-UUID: 220dc296169e4cf399570465aad54c37-20220518
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1859978881; Wed, 18 May 2022 09:55:30 +0800
+Received: from mtkmbs07n1.mediatek.inc (172.21.101.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Wed, 18 May 2022 09:55:29 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 18 May 2022 09:55:29 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 18 May 2022 09:55:28 +0800
+Message-ID: <7a10b1d7fc294093f26555a8b5a8748a3c0e1c9f.camel@mediatek.com>
+Subject: Re: [PATCH v2] PCI: mediatek-gen3: Print LTSSM state when PCIe link
+ down
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stefan Gottwald <gottwald@igel.com>,
-        Steev Klimaszewski <steev@kali.org>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <jieyy.yang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
+        <jian.yang@mediatek.com>
+Date:   Wed, 18 May 2022 09:55:28 +0800
+In-Reply-To: <32f5308e629cef3692c57c4c55442b0f2f25634f.camel@mediatek.com>
+References: <20220329030715.7975-1-jianjun.wang@mediatek.com>
+         <32f5308e629cef3692c57c4c55442b0f2f25634f.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,15 +72,103 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Tue, 17 May 2022 15:35:30 -0500:
+Hi Maintainers,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.18-fixes-1
+Gentle ping for this patch, if there is anything I can do to get this
+patch merged, please let me know.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/210e04ff768142b96452030c4c2627512b30ad95
+Thanks.
 
-Thank you!
+On Fri, 2022-04-22 at 14:33 +0800, Jianjun Wang wrote:
+> Hi Maintainers,
+> 
+> Just gentle ping for this patch, if there is anything I can do to get
+> this patch merged, please let me know.
+> 
+> Thanks.
+> 
+> On Tue, 2022-03-29 at 11:07 +0800, Jianjun Wang wrote:
+> > Print current LTSSM state when PCIe link down instead of the
+> > register
+> > value, make it easier to get the link status.
+> > 
+> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > Reviewed-by: AngeloGioacchino Del Regno <
+> > angelogioacchino.delregno@collabora.com>
+> > ---
+> > Changes in v2:
+> > Print both of the register value and the LTSSM state.
+> > ---
+> >  drivers/pci/controller/pcie-mediatek-gen3.c | 41
+> > ++++++++++++++++++++-
+> >  1 file changed, 40 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > index 6745076a02b9..c24e03c198b7 100644
+> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > @@ -153,6 +153,37 @@ struct mtk_gen3_pcie {
+> >  	DECLARE_BITMAP(msi_irq_in_use, PCIE_MSI_IRQS_NUM);
+> >  };
+> >  
+> > +/* LTSSM state in PCIE_LTSSM_STATUS_REG bit[28:24] */
+> > +static const char *const ltssm_str[] = {
+> > +	"detect.quiet",			/* 0x00 */
+> > +	"detect.active",		/* 0x01 */
+> > +	"polling.active",		/* 0x02 */
+> > +	"polling.compliance",		/* 0x03 */
+> > +	"polling.configuration",	/* 0x04 */
+> > +	"config.linkwidthstart",	/* 0x05 */
+> > +	"config.linkwidthaccept",	/* 0x06 */
+> > +	"config.lanenumwait",		/* 0x07 */
+> > +	"config.lanenumaccept",		/* 0x08 */
+> > +	"config.complete",		/* 0x09 */
+> > +	"config.idle",			/* 0x0A */
+> > +	"recovery.receiverlock",	/* 0x0B */
+> > +	"recovery.equalization",	/* 0x0C */
+> > +	"recovery.speed",		/* 0x0D */
+> > +	"recovery.receiverconfig",	/* 0x0E */
+> > +	"recovery.idle",		/* 0x0F */
+> > +	"L0",				/* 0x10 */
+> > +	"L0s",				/* 0x11 */
+> > +	"L1.entry",			/* 0x12 */
+> > +	"L1.idle",			/* 0x13 */
+> > +	"L2.idle",			/* 0x14 */
+> > +	"L2.transmitwake",		/* 0x15 */
+> > +	"disable",			/* 0x16 */
+> > +	"loopback.entry",		/* 0x17 */
+> > +	"loopback.active",		/* 0x18 */
+> > +	"loopback.exit",		/* 0x19 */
+> > +	"hotreset",			/* 0x1A */
+> > +};
+> > +
+> >  /**
+> >   * mtk_pcie_config_tlp_header() - Configure a configuration TLP
+> > header
+> >   * @bus: PCI bus to query
+> > @@ -327,8 +358,16 @@ static int mtk_pcie_startup_port(struct
+> > mtk_gen3_pcie *pcie)
+> >  				 !!(val & PCIE_PORT_LINKUP), 20,
+> >  				 PCI_PM_D3COLD_WAIT * USEC_PER_MSEC);
+> >  	if (err) {
+> > +		const char *ltssm_state;
+> > +		int ltssm_index;
+> > +
+> >  		val = readl_relaxed(pcie->base +
+> > PCIE_LTSSM_STATUS_REG);
+> > -		dev_err(pcie->dev, "PCIe link down, ltssm reg val:
+> > %#x\n", val);
+> > +		ltssm_index = PCIE_LTSSM_STATE(val);
+> > +		ltssm_state = ltssm_index >= ARRAY_SIZE(ltssm_str) ?
+> > +			      "Unknown state" : ltssm_str[ltssm_index];
+> > +		dev_err(pcie->dev,
+> > +			"PCIe link down, current ltssm state: %s
+> > (%#x)\n",
+> > +			ltssm_state, val);
+> >  		return err;
+> >  	}
+> >  
+> 
+> 
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
