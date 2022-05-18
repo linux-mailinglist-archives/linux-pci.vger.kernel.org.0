@@ -2,69 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6CE752B041
-	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 03:55:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3657052B0EC
+	for <lists+linux-pci@lfdr.de>; Wed, 18 May 2022 05:52:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233961AbiERBzm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 May 2022 21:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50450 "EHLO
+        id S229448AbiERDwi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 May 2022 23:52:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233969AbiERBzi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 21:55:38 -0400
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FF054BDC;
-        Tue, 17 May 2022 18:55:35 -0700 (PDT)
-X-UUID: 220dc296169e4cf399570465aad54c37-20220518
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.5,REQID:3324cc5a-4676-45a4-afec-ce54a28106ca,OB:0,LO
-        B:0,IP:0,URL:5,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACT
-        ION:release,TS:0
-X-CID-META: VersionHash:2a19b09,CLOUDID:7e718ee2-edbf-4bd4-8a34-dfc5f7bb086d,C
-        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
-        ,QS:0,BEC:nil
-X-UUID: 220dc296169e4cf399570465aad54c37-20220518
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1859978881; Wed, 18 May 2022 09:55:30 +0800
-Received: from mtkmbs07n1.mediatek.inc (172.21.101.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
- Wed, 18 May 2022 09:55:29 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 18 May 2022 09:55:29 +0800
-Received: from mhfsdcap04 (10.17.3.154) by mtkcas10.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 18 May 2022 09:55:28 +0800
-Message-ID: <7a10b1d7fc294093f26555a8b5a8748a3c0e1c9f.camel@mediatek.com>
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Print LTSSM state when PCIe link
- down
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Ryder Lee <ryder.lee@mediatek.com>,
+        with ESMTP id S229575AbiERDw3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 May 2022 23:52:29 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E2081986
+        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 20:52:26 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 31so1014058pgp.8
+        for <linux-pci@vger.kernel.org>; Tue, 17 May 2022 20:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=G71rbip7/LLYSXlMxn5Fb4jLrk7Bgah6j7mSed9BosI=;
+        b=sS7XbaBcd1qpF0aCh0W2Jwgv70gwT4Ug0J3sCEDc1Q9lDkS++RyzbRyStmZ5YOO0BX
+         XjJWDmUc1oenXcbEW1kpShGyImvl9t80wsK6WmFP7pxQM703lalbo7lhC5+/6KX6QpAP
+         4yaz6x5yJEyrqqIXwfQwo2lMu+XDzA3Cf1ZZ+RcfmAa4R14tslDJg1kj8SiKysAd1LSD
+         XTtOQ1BalipuNZ5Mknq4zLt/Ye+g5JUi+EMYjR8yJtbHSa0vCBIJ2jiDij9GhP2b1fOX
+         FvJiGQF644dAnQOBJ2XOYOms9j4vrlnnm/R8lh5nFLdDOEW1Zei1VlX/8uxH7R1oQcgT
+         GjLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=G71rbip7/LLYSXlMxn5Fb4jLrk7Bgah6j7mSed9BosI=;
+        b=y28vS0x/TgiicyXoDzxrBstdigM24KFcN8U+7L2jyuBaY4NQ8H26+Ia2X+75o63l2s
+         2a9daySQq4XoSMTFrLm8Jk+QZg1a0bLsoAeoWfg8EEeDDlFbLsQARYMVMDiKmUEzAcCt
+         Rtt7BObDNdpaRgQBiuJPIA1/DL73vejHhCN00pUuquG5BTr5YgC8TkOleYZOCYDssv5v
+         hH5+XDDSckmLde8mWD/05rPcaqYgfUDtklqjMK05wqOqzDwlm2Au9Q1kfopNzZN+wGTB
+         qLNxDxhAR2NYs3lBJPXTliTV47tNe4/nRrlh3sM9ma7grYjqXesnM4Tam0hw5YPjtQkX
+         vKpA==
+X-Gm-Message-State: AOAM531cPCEo+USF0Fo8jrLxQsO0hyrMZEc2UXExbuH/vtsNiuPVyLfe
+        PNf9W+SIwVoJO9589UcJRsG0
+X-Google-Smtp-Source: ABdhPJyn0zWz/SCS7bu223+7utEv5bkwaN8Pb4hOqt4M5DSib9uBdw4PMShPcABUrkoa8U5FuQRDLg==
+X-Received: by 2002:a05:6a00:170a:b0:50d:3e40:9e0 with SMTP id h10-20020a056a00170a00b0050d3e4009e0mr25613004pfc.48.1652845945391;
+        Tue, 17 May 2022 20:52:25 -0700 (PDT)
+Received: from thinkpad ([117.207.31.8])
+        by smtp.gmail.com with ESMTPSA id b12-20020a170903228c00b0015e8d4eb29csm377690plh.230.2022.05.17.20.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 May 2022 20:52:24 -0700 (PDT)
+Date:   Wed, 18 May 2022 09:22:11 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        "Rob Herring" <robh@kernel.org>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <jieyy.yang@mediatek.com>,
-        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
-        <jian.yang@mediatek.com>
-Date:   Wed, 18 May 2022 09:55:28 +0800
-In-Reply-To: <32f5308e629cef3692c57c4c55442b0f2f25634f.camel@mediatek.com>
-References: <20220329030715.7975-1-jianjun.wang@mediatek.com>
-         <32f5308e629cef3692c57c4c55442b0f2f25634f.camel@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jens Axboe <axboe@fb.com>,
+        Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>,
+        quic_krichai@quicinc.com, Nitin Rawat <quic_nitirawa@quicinc.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rajat Jain <rajatja@google.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Rama Krishna <quic_ramkri@quicinc.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Kalle Valo <kvalo@kernel.org>
+Subject: Re: [PATCH 2/3] PCI: dwc: qcom: Set suspend_poweroff flag for SC7280
+Message-ID: <20220518035211.GA4791@thinkpad>
+References: <20220517151134.GB4528@thinkpad>
+ <20220517171857.GA1083896@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220517171857.GA1083896@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,103 +92,110 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Maintainers,
-
-Gentle ping for this patch, if there is anything I can do to get this
-patch merged, please let me know.
-
-Thanks.
-
-On Fri, 2022-04-22 at 14:33 +0800, Jianjun Wang wrote:
-> Hi Maintainers,
+On Tue, May 17, 2022 at 12:18:57PM -0500, Bjorn Helgaas wrote:
+> [+cc Prasad, Andy, Rob, Krzysztof, Rajat, Saheed, Rama, Stephen,
+> Dmitry, Kalle for connection to https://lore.kernel.org/lkml/CAE-0n53ho2DX2rqQMvvKAuDCfsWW62TceTaNPzv5Mn_NQ-U6dA@mail.gmail.com/T/]
 > 
-> Just gentle ping for this patch, if there is anything I can do to get
-> this patch merged, please let me know.
+> Subject line convention for this file is "PCI: qcom:" (not "PCI: dwc:
+> qcom:").
 > 
-> Thanks.
+> Find this from "git log --oneline drivers/pci/controller/dwc/pcie-qcom.c".
 > 
-> On Tue, 2022-03-29 at 11:07 +0800, Jianjun Wang wrote:
-> > Print current LTSSM state when PCIe link down instead of the
-> > register
-> > value, make it easier to get the link status.
+> On Tue, May 17, 2022 at 08:41:34PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, May 16, 2022 at 03:19:50PM -0500, Bjorn Helgaas wrote:
+> > > On Fri, May 13, 2022 at 04:30:26PM +0530, Manivannan Sadhasivam wrote:
+> > > > For aggressive power saving on SC7280 SoCs, the power for the
+> > > > PCI devices will be taken off during system suspend. Hence,
+> > > > notify the same to the PCI device drivers using
+> > > > "suspend_poweroff" flag so that the drivers can prepare the PCI
+> > > > devices to handle the poweroff and recover them during resume.
+> > > 
+> > > No doubt "power ... will be taken off during system suspend" is
+> > > true, but this isn't very informative.  Is this a property of
+> > > SC7280?  A choice made by the SC7280 driver?  Why is this not
+> > > applicable to other systems?
 > > 
-> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > Reviewed-by: AngeloGioacchino Del Regno <
-> > angelogioacchino.delregno@collabora.com>
-> > ---
-> > Changes in v2:
-> > Print both of the register value and the LTSSM state.
-> > ---
-> >  drivers/pci/controller/pcie-mediatek-gen3.c | 41
-> > ++++++++++++++++++++-
-> >  1 file changed, 40 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > index 6745076a02b9..c24e03c198b7 100644
-> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > @@ -153,6 +153,37 @@ struct mtk_gen3_pcie {
-> >  	DECLARE_BITMAP(msi_irq_in_use, PCIE_MSI_IRQS_NUM);
-> >  };
-> >  
-> > +/* LTSSM state in PCIE_LTSSM_STATUS_REG bit[28:24] */
-> > +static const char *const ltssm_str[] = {
-> > +	"detect.quiet",			/* 0x00 */
-> > +	"detect.active",		/* 0x01 */
-> > +	"polling.active",		/* 0x02 */
-> > +	"polling.compliance",		/* 0x03 */
-> > +	"polling.configuration",	/* 0x04 */
-> > +	"config.linkwidthstart",	/* 0x05 */
-> > +	"config.linkwidthaccept",	/* 0x06 */
-> > +	"config.lanenumwait",		/* 0x07 */
-> > +	"config.lanenumaccept",		/* 0x08 */
-> > +	"config.complete",		/* 0x09 */
-> > +	"config.idle",			/* 0x0A */
-> > +	"recovery.receiverlock",	/* 0x0B */
-> > +	"recovery.equalization",	/* 0x0C */
-> > +	"recovery.speed",		/* 0x0D */
-> > +	"recovery.receiverconfig",	/* 0x0E */
-> > +	"recovery.idle",		/* 0x0F */
-> > +	"L0",				/* 0x10 */
-> > +	"L0s",				/* 0x11 */
-> > +	"L1.entry",			/* 0x12 */
-> > +	"L1.idle",			/* 0x13 */
-> > +	"L2.idle",			/* 0x14 */
-> > +	"L2.transmitwake",		/* 0x15 */
-> > +	"disable",			/* 0x16 */
-> > +	"loopback.entry",		/* 0x17 */
-> > +	"loopback.active",		/* 0x18 */
-> > +	"loopback.exit",		/* 0x19 */
-> > +	"hotreset",			/* 0x1A */
-> > +};
-> > +
-> >  /**
-> >   * mtk_pcie_config_tlp_header() - Configure a configuration TLP
-> > header
-> >   * @bus: PCI bus to query
-> > @@ -327,8 +358,16 @@ static int mtk_pcie_startup_port(struct
-> > mtk_gen3_pcie *pcie)
-> >  				 !!(val & PCIE_PORT_LINKUP), 20,
-> >  				 PCI_PM_D3COLD_WAIT * USEC_PER_MSEC);
-> >  	if (err) {
-> > +		const char *ltssm_state;
-> > +		int ltssm_index;
-> > +
-> >  		val = readl_relaxed(pcie->base +
-> > PCIE_LTSSM_STATUS_REG);
-> > -		dev_err(pcie->dev, "PCIe link down, ltssm reg val:
-> > %#x\n", val);
-> > +		ltssm_index = PCIE_LTSSM_STATE(val);
-> > +		ltssm_state = ltssm_index >= ARRAY_SIZE(ltssm_str) ?
-> > +			      "Unknown state" : ltssm_str[ltssm_index];
-> > +		dev_err(pcie->dev,
-> > +			"PCIe link down, current ltssm state: %s
-> > (%#x)\n",
-> > +			ltssm_state, val);
-> >  		return err;
-> >  	}
-> >  
+> > The SC7280's RPMh firmware is cutting off the PCIe power domain
+> > during system suspend. And as I explained in previous patch, the RC
+> > driver itself may put the devices in D3cold conditionally on this
+> > platform. The reason is to save power as this chipset is being used
+> > in Chromebooks.
 > 
+> It looks like this should be squashed into the patch you mentioned:
+> https://lore.kernel.org/lkml/CAE-0n53ho2DX2rqQMvvKAuDCfsWW62TceTaNPzv5Mn_NQ-U6dA@mail.gmail.com/T/
+> 
+> If Prasad's patch is applied without this, devices will be powered
+> off, but nvme will not be prepared for it.  Apparently something would
+> be broken in that case?
 > 
 
+Yes, but Prasad's patch is not yet reviewed so likely not get merged until
+further respins.
+
+> Also, I think this patch should be reordered so the nvme driver is
+> prepared for suspend_poweroff before the qcom driver starts setting
+> it.  Otherwise there's a window where qcom sets suspend_poweroff and
+> powers off devices, but nvme doesn't know about it, and I assume
+> something will be broken in that case?
+> 
+
+As per my understanding, patches in a series should not have build dependency
+but they may depend on each other for functionality.
+
+But I don't have any issue in reordering the patches. Will do.
+
+> Please mention RPMh in the commit log, along with the specific
+> connection with system suspend, i.e., what OS action enables RPMh to
+> cut power.
+> 
+
+Okay, will do.
+
+Thanks,
+Mani
+
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > ---
+> > > >  drivers/pci/controller/dwc/pcie-qcom.c | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > index 6ab90891801d..4b0ad2827f8f 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > @@ -199,6 +199,7 @@ struct qcom_pcie_cfg {
+> > > >  	unsigned int has_ddrss_sf_tbu_clk:1;
+> > > >  	unsigned int has_aggre0_clk:1;
+> > > >  	unsigned int has_aggre1_clk:1;
+> > > > +	unsigned int suspend_poweroff:1;
+> > > >  };
+> > > >  
+> > > >  struct qcom_pcie {
+> > > > @@ -1220,6 +1221,10 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> > > >  	if (pcie->cfg->pipe_clk_need_muxing)
+> > > >  		clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
+> > > >  
+> > > > +	/* Indicate PCI device drivers that the power will be taken off during system suspend */
+> > > > +	if (pcie->cfg->suspend_poweroff)
+> > > > +		pci->pp.bridge->suspend_poweroff = true;
+> > > > +
+> > > >  	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+> > > >  	if (ret < 0)
+> > > >  		goto err_disable_regulators;
+> > > > @@ -1548,6 +1553,7 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
+> > > >  	.ops = &ops_1_9_0,
+> > > >  	.has_tbu_clk = true,
+> > > >  	.pipe_clk_need_muxing = true,
+> > > > +	.suspend_poweroff = true,
+> > > >  };
+> > > >  
+> > > >  static const struct dw_pcie_ops dw_pcie_ops = {
+> > > > -- 
+> > > > 2.25.1
+> > > > 
+> > 
+> > -- 
+> > மணிவண்ணன் சதாசிவம்
+
+-- 
+மணிவண்ணன் சதாசிவம்
