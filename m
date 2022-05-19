@@ -2,146 +2,246 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 973EB52DB2C
-	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 19:26:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2453152DC4A
+	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 20:04:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237612AbiESR0R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 May 2022 13:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
+        id S233562AbiESSEd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 May 2022 14:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242823AbiESRZ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 13:25:58 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DB6F332;
-        Thu, 19 May 2022 10:25:42 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id oe17-20020a17090b395100b001df77d29587so9369262pjb.2;
-        Thu, 19 May 2022 10:25:42 -0700 (PDT)
+        with ESMTP id S231237AbiESSEc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 14:04:32 -0400
+Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355C557B3D;
+        Thu, 19 May 2022 11:04:31 -0700 (PDT)
+Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-edf3b6b0f2so7685491fac.9;
+        Thu, 19 May 2022 11:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=brt3Yeauzwa5CMMxNRUyLq/zIk6506yKuvqwwF5DMC8=;
-        b=JSJdcqdSDHPjGSo+xJVkbFOfu6AOq9y9IhGph92HdwJ9MI/md7HGxr+0wkTaI+xCTl
-         4t96zC4F+ojZ6FCrrCQrG1mWOmOzNaR8Ktxz6/dolYM9VvRhqhqMRkvlPffCpt9VwykO
-         s2msXPGgxgbtioNQwfUaqOs9xfTQjgR+MUSf+TavLIkvPQ3C4E86pKabt8uM0tPzqP9W
-         FfOlJYzShD+Dg/Of9SseQ9vyGLfvezn4cnwWRhEow0rOASJZz0I6E0SKaWcrR8KjqaKr
-         e3OgDZUH8v1FkJ3np7ID3xTI+Du8pLJycLmew+44eYLIPrDcarYPLfLyFrFL2hYo7+QG
-         HoOg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ac+RQQyS8m3R/YRla76MBJC/2wCOQ77Ox9vvKC22in8=;
+        b=KG0KUtyYvnjFjgAo9ZbMqZFIRqckE3H77XI6u40oIH5pnAqVgKs24sr5souiKfqwZ0
+         eo6HWwuu3XrcLs0AF9dSPR1Vw6QBBDPPQlZZ58MjNCnJKRwd1+3zYjmwDsxafHYmu74H
+         fArinfpDTlFWZ26LEam46duEhxQY3/1kSGJT2COASBJscuMu1zxQgfLSXdoQCg2i6vO3
+         KO4aHhfktLUAjAlxlQUye8UjBZD08o2WXN9FVUQeaPSe+R3OiJRAcrPMixmkzU+vpj4j
+         f8O7USAVld1RbYnN8TbK+6x53gHT3AcrRr0YxVuvyFR+kvuKdqN3+xadB4VfvqHvGnIc
+         +rTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=brt3Yeauzwa5CMMxNRUyLq/zIk6506yKuvqwwF5DMC8=;
-        b=gpepObByyqoC1Ev+gMSONyJ33nyq0bmA4PWTTs3ijB+tEYZYJIvjic/HbZYhvzrwrZ
-         C8QJOpsJ81B/fAZyuHgCiUQrVkH1es9gC9mvTidGcHp/pYOwtNpkvpx70vtVA6Raa3oB
-         VXDZqBe3C7T0mHUXS3qMnNgo+1KjVJ7kASzaRQdLSRB1GTW5U2Lvs+71+9iZpUIRPd3/
-         yBtHK+2MmFIebzHFB+JCYP9b8wkG0+kFBR1cueT5vERVMg1j9hjvn+DLbwG8TIMKhIan
-         q0nGAnzODt3o/Qt5nOSf3EEtSAF0VUht9Ak0x98sR3AKyRlsWi0DgxyHqA9eb8Y8Yl61
-         xInw==
-X-Gm-Message-State: AOAM530EjPZj59lXcrBDWNN8ClRLMLeAMtqLaAXryNpggQUBzZZ5GgWW
-        kyGgC25qXHM1WV1UkaR1fAC2Y/lTaUqR
-X-Google-Smtp-Source: ABdhPJyRNZ55YmuAKFNKOY/V8a+Mw2JojTXrQcsM6jyTPrXRQTybLjqXiyjSo1Fyqw9hTeU1Y0M+/w==
-X-Received: by 2002:a17:90b:3903:b0:1df:d0b4:3b54 with SMTP id ob3-20020a17090b390300b001dfd0b43b54mr5463906pjb.40.1652981141801;
-        Thu, 19 May 2022 10:25:41 -0700 (PDT)
-Received: from zaphod.evilpiepirate.org (068-119-229-002.res.spectrum.com. [68.119.229.2])
-        by smtp.gmail.com with ESMTPSA id y4-20020a655a04000000b003c6ab6ba06csm3859126pgs.79.2022.05.19.10.25.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 May 2022 10:25:41 -0700 (PDT)
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@vger.kernel.org,
-        pmladek@suse.com, rostedt@goodmis.org, senozhatsky@chromium.org
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        andriy.shevchenko@linux.intel.com, willy@infradead.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v2 28/28] PCI/P2PDMA: Convert to printbuf
-Date:   Thu, 19 May 2022 13:24:21 -0400
-Message-Id: <20220519172421.162394-29-kent.overstreet@gmail.com>
-X-Mailer: git-send-email 2.36.0
-In-Reply-To: <20220519172421.162394-1-kent.overstreet@gmail.com>
-References: <20220519172421.162394-1-kent.overstreet@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ac+RQQyS8m3R/YRla76MBJC/2wCOQ77Ox9vvKC22in8=;
+        b=K1/gbE0ts1R+eA8jOdS+60LlABtU+0TFdqhZ5Y0pyOvwcqr8N/tG6EDlgtBTCXxbeg
+         gYWODaYzcm8jHu8wavvS2N7k4gRgFbQssG9AXafVQl1PIP9MhUEZ9LtQMheYN40YstVU
+         TJNLcVsQ5zTRpitXZZppL6FvspidErgrA66E6GMbuLptwsMTOCljIkC4jkz416Q64mBH
+         7ZZdGfuYIVWb2XbQrqf9oJhh3m7dh2/EaEM0vePYF7Re2SOwVSDNd32ZZOw1rSCqEiW3
+         Px66xVwBLJX6OFf8aYRID7i4KGDITVe/2itLB2RhNrZstgUQVBo7Uh69eOultTsUaipH
+         4sJg==
+X-Gm-Message-State: AOAM531MEhTAdxS2onhNTNlvLMN+ECngIelc9CvStPKFzLdmiutYTq1L
+        wsDGn/2EomKSBYzQX/X/bJvUfbsbHFSkFSWtMzLkyAPwKGtqRA==
+X-Google-Smtp-Source: ABdhPJwVHU2GGx4rK43KLGKk99G5D7szID68cIIrTXkzpzlyJbYyq7gM+z7XRJa8CbKlg4M839b10q+pkHHvIKgjUxg=
+X-Received: by 2002:a05:6870:3508:b0:f1:f7ab:acfe with SMTP id
+ k8-20020a056870350800b000f1f7abacfemr2227100oah.96.1652983470531; Thu, 19 May
+ 2022 11:04:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220518194211.20143-1-jim2101024@gmail.com> <20220519161053.GA24069@bhelgaas>
+In-Reply-To: <20220519161053.GA24069@bhelgaas>
+From:   Jim Quinlan <jim2101024@gmail.com>
+Date:   Thu, 19 May 2022 14:04:18 -0400
+Message-ID: <CANCKTBsmtTwNcAYR6bkM4b__sJXXd1U++KrMTgkDbuiyX=UKLQ@mail.gmail.com>
+Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe linkup
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        James Dutton <james.dutton@gmail.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This converts from seq_buf to printbuf. We're using printbuf in external
-buffer mode, so it's a direct conversion, aside from some trivial
-refactoring in cpu_show_meltdown() to make the code more consistent.
+On Thu, May 19, 2022 at 12:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+to Rob for my naive DT questions]
+>
+> On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
+> > commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+> >
+> > introduced a regression on the PCIe RPi4 Compute Module.  If the PCIe
+> > endpoint node described in [2] was missing, no linkup would be attempted,
+> > and subsequent accesses would cause a panic because this particular PCIe HW
+> > causes a CPU abort on illegal accesses (instead of returning 0xffffffff).
+> >
+> > We fix this by allowing the DT endpoint subnode to be missing.  This is
+> > important for platforms like the CM4 which have a standard PCIe socket and
+> > the endpoint device is unknown.
+>
+> I assume you're referring specifically to making this optional in the
+> DT:
+>
+>     /* PCIe endpoint */
+>     pci-ep@0,0 {
+>             assigned-addresses =
+>                 <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
+>             reg = <0x0 0x0 0x0 0x0 0x0>;
+>             compatible = "pci14e4,1688";
+>     };
+>
+Actually, both that and the node that contains it, i.e. pci@0,0.
 
-Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/pci/p2pdma.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+> I don't really understand what's going on here, but I assume this
+> describes a [14e4:1688] device, which the PCI database says is a
+> NetXtreme BCM5761 10/100/1000BASE-T Ethernet
+> (https://pci-ids.ucw.cz/read/PC/14e4/1688)
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 1015274bd2..0d5c993386 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -17,7 +17,7 @@
- #include <linux/memremap.h>
- #include <linux/percpu-refcount.h>
- #include <linux/random.h>
--#include <linux/seq_buf.h>
-+#include <linux/printbuf.h>
- #include <linux/xarray.h>
- 
- enum pci_p2pdma_map_type {
-@@ -281,12 +281,9 @@ static int pci_bridge_has_acs_redir(struct pci_dev *pdev)
- 	return 0;
- }
- 
--static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
-+static void pr_bus_devfn(struct printbuf *buf, struct pci_dev *pdev)
- {
--	if (!buf)
--		return;
--
--	seq_buf_printf(buf, "%s;", pci_name(pdev));
-+	pr_buf(buf, "%s;", pci_name(pdev));
- }
- 
- static bool cpu_supports_p2pdma(void)
-@@ -454,13 +451,11 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 	struct pci_dev *a = provider, *b = client, *bb;
- 	bool acs_redirects = false;
- 	struct pci_p2pdma *p2pdma;
--	struct seq_buf acs_list;
- 	int acs_cnt = 0;
- 	int dist_a = 0;
- 	int dist_b = 0;
- 	char buf[128];
--
--	seq_buf_init(&acs_list, buf, sizeof(buf));
-+	struct printbuf acs_list = PRINTBUF_EXTERN(buf, sizeof(buf));
- 
- 	/*
- 	 * Note, we don't need to take references to devices returned by
-@@ -471,7 +466,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 		dist_b = 0;
- 
- 		if (pci_bridge_has_acs_redir(a)) {
--			seq_buf_print_bus_devfn(&acs_list, a);
-+			pr_bus_devfn(&acs_list, a);
- 			acs_cnt++;
- 		}
- 
-@@ -500,7 +495,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 			break;
- 
- 		if (pci_bridge_has_acs_redir(bb)) {
--			seq_buf_print_bus_devfn(&acs_list, bb);
-+			pr_bus_devfn(&acs_list, bb);
- 			acs_cnt++;
- 		}
- 
--- 
-2.36.0
+Yes.  I use an assortment of PCIe endpoint devices for testing.
+>
+> Why do you *ever* need this stanza?  "git grep pci-ep
+> Documentation/devicetree/bindings/pci/" says no other DT has one.
 
+You'll find one in
+"Documentation/devicetree/bindings/pci/nvidia,tegra-pcie.txt", line
+~240, although this
+is a board DTS example.  They use "pci@0,0" for endpoint 02:00.0,
+whereas I find "pci-ep" to
+be more descriptive.
+
+Note that  the "pci-ep@0,0" node is in the "example" section of
+brcm,stb-pcie.yaml; but nothing
+says it is required.  I believe it was added it because a reviewer
+asked me to, but if I remember
+incorrectly,  it does illustrate that "pcie@0,0" is not the endpoint
+device node as many would think.
+
+Note that the regression occurred because "pci@0,0" was missing, not
+"pci-ep@0,0" as I first thought.
+
+>
+> If the link does come up, I assume normal PCI enumeration would
+> discover the [14e4:1688] or whatever device is plugged into a CM4
+> socket, and it would read and assign BARs as needed.  Why do we need
+> to describe any of this in the DT?
+The only  reason one needs to describe this node is  when a regulator is
+under the root port, in my case pci@0,0.  In the example this is
+
+                            vpcie3v3-supply = <&vreg7>;
+
+This was the entire reason behind the original patchset.
+>
+> If the link doesn't come up, it looks like you set the "refusal_mode"
+> so subsequent config accesses fail gracefully instead of with a CPU
+> abort.
+Yes.
+>
+> [Tangent: since you never clear "refusal_mode", I assume there's no
+> possibility of hot-adding a device.  A device must be put in the slot
+> before power-up, right?]
+Yes, we do not have the HW functionality to support hotplug.
+
+>
+> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=215925
+> > [2] Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> >
+> > Fixes: 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+> > Fixes: 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
+> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index ba5c120816b2..adca74e235cb 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -540,16 +540,18 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+> >
+> >  static int brcm_pcie_add_bus(struct pci_bus *bus)
+> >  {
+> > -     struct device *dev = &bus->dev;
+> >       struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
+> >       int ret;
+> >
+> > -     if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
+> > +     /* Only busno==1 requires us to linkup */
+> > +     if ((int)bus->number != 1)
+>
+> It's a big leap from "DT endpoint is optional" to "bus->number == 1 if
+> DT endpoint is missing" (if that's even what it means).  Help me
+> connect the dots here.
+The brcm_pcie_add_bus() function returned immediately and skipped linkup
+when (!dev->of_node). That clause was removed from that function, which
+is the true fix for the regression,  but you can see thiscondition
+is still tested in pci_subdev_regulators_add_bus().
+
+I added the "busno != 1" as an added precaution,
+as the brcmstb RC driver only cares about pcie linkup and turning on
+regulators when busno==1.
+
+If this regulator mechanism becomes a feature any RC driver may use --
+as it was in
+v8 of the original patch but was moved to pcie-brcamstb only to avoid conflicts
+with Pali's upcoming RC functionality improvements -- I would probably consider
+removing the busno==1 clause.
+
+Regards and thanks,
+Jim Quinlan
+Broadcom S
+
+
+>
+> I *guess* this is really saying "we only want to bring the link up for
+> RPs"?
+>
+> And "bus->number == 1" assumes the RP is on bus 0, there's only one
+> RP, and that RP's secondary bus is 1?  So it's only in that case
+> (we're adding the secondary bus of the RP), that we need to manually
+> bring up the link?
+>
+> >               return 0;
+> >
+> >       ret = pci_subdev_regulators_add_bus(bus);
+> > -     if (ret)
+> > +     if (ret) {
+> > +             pcie->refusal_mode = true;
+>
+> Is this related?  It doesn't *look* related to making the DT endpoint
+> optional.
+>
+> >               return ret;
+> > +     }
+> >
+> >       /* Grab the regulators for suspend/resume */
+> >       pcie->sr = bus->dev.driver_data;
+> >
+> > base-commit: ef1302160bfb19f804451d0e919266703501c875
+> > prerequisite-patch-id: 23a425390a4226bd70bbff459148c80f5e28379c
+> > prerequisite-patch-id: e3f2875124b46b2b1cf9ea28883bf0c864b79479
+> > prerequisite-patch-id: 9cdd706ee2038c7b393c4d65ff76a1873df1ca03
+> > prerequisite-patch-id: 332ac90be6e4e4110e27bdd1caaff212c129f547
+> > prerequisite-patch-id: 32a74f87cbfe9e8d52c34a4edeee6d271925665a
+> > prerequisite-patch-id: f57cdf7ec7080bb8c95782bc7c3ec672db8ec1ce
+> > prerequisite-patch-id: 18dc9236aed47f708f5c854afd832f3c80be5ea7
+> > prerequisite-patch-id: dd147c6854c4ca12a9a8bd4f5714968a59d60e4e
+> > --
+> > 2.17.1
+> >
