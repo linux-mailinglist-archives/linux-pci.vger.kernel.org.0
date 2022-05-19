@@ -2,69 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F10652D75D
-	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 17:22:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F8ED52D9E7
+	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 18:11:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240831AbiESPWT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 May 2022 11:22:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
+        id S241628AbiESQLQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 May 2022 12:11:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240834AbiESPWO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 11:22:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 588BB63BD0
-        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652973730;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1ga+pMSw4nCAG4T6JtURNSSSM6yGJYnLTOmMdWB8RbA=;
-        b=Dh3gcZB4qJjBmt+qzdHpAAGpuvKFLw/9pVm/KtHrADj5tBWvGEHgXljpTyDCIxXHP/4/3p
-        PDVSgu23S867o8MI5Ztd5+yJZw1FPsY5nImbs2z98xt6XJ/rsVcqg3eNeEk3v8y9V8WxwT
-        OIhpIwX1DDJnWD3lcw5DKrf2aDuavWs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-492-KHB65mE8MGW1siHPSrgNnA-1; Thu, 19 May 2022 11:22:07 -0400
-X-MC-Unique: KHB65mE8MGW1siHPSrgNnA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S241849AbiESQK7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 12:10:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5AC14013;
+        Thu, 19 May 2022 09:10:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 161E285A5BB;
-        Thu, 19 May 2022 15:22:06 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C79B31121314;
-        Thu, 19 May 2022 15:22:03 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Benoit=20Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v9 3/3] x86/PCI: Ignore E820 reserved regions for bridge windows on future systems
-Date:   Thu, 19 May 2022 17:21:50 +0200
-Message-Id: <20220519152150.6135-4-hdegoede@redhat.com>
-In-Reply-To: <20220519152150.6135-1-hdegoede@redhat.com>
-References: <20220519152150.6135-1-hdegoede@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5849761BFB;
+        Thu, 19 May 2022 16:10:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85AF7C34100;
+        Thu, 19 May 2022 16:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652976655;
+        bh=altMU1x5dkULV65LqvjrW52Px3VtLs4XMJvIVnKnHWk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sUtc1K9UagbRyfhUiKz9v9PGOqfIf38DRORdTyH/Znl0GZp9Sc5oZl+Cy2hdiAb2u
+         LmL6LVdp0jtl0JGiKrnqhQ8x4oBfd/RrTUGnmfULdamzu2PpVrLvwjPEtslNGyZoL8
+         X/rnDplhSSXuyFv/8DgxoTnI7frHAVr62/sAGEojNSpqLwu8vc9T38JVazYDGa7Yhv
+         30CK4gAy8ulbsaeGA8OT53F30r5TGWH6p3bncIulcKhaL+uBRQv+WLlPQahI7T908O
+         NZnmHpv8n2WSk11UIhLCHoMdGydmwC9ui9SFsHwlp15uPMUUKOA/2HJ4xQu4tE1HsW
+         xwq5fGMbkjb0w==
+Date:   Thu, 19 May 2022 11:10:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>, Rob Herring <robh@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, james.dutton@gmail.com,
+        kibi@debian.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe
+ linkup
+Message-ID: <20220519161053.GA24069@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220518194211.20143-1-jim2101024@gmail.com>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,151 +64,116 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some BIOS-es contain bugs where they add addresses which are already
-used in some other manner to the PCI host bridge window returned by
-the ACPI _CRS method. To avoid this Linux by default excludes
-E820 reserved regions when allocating addresses since 2010, see:
-commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-space").
+[+to Rob for my naive DT questions]
 
-Recently (2019) some systems have shown-up with E820 reserved regions
-which cover the entire _CRS returned PCI bridge memory window, causing
-all attempts to assign memory to PCI BARs which have not been setup by
-the BIOS to fail. For example here are the relevant dmesg bits from
-a Lenovo IdeaPad 3 15IIL 81WE:
+On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
+> commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+> 
+> introduced a regression on the PCIe RPi4 Compute Module.  If the PCIe
+> endpoint node described in [2] was missing, no linkup would be attempted,
+> and subsequent accesses would cause a panic because this particular PCIe HW
+> causes a CPU abort on illegal accesses (instead of returning 0xffffffff).
+> 
+> We fix this by allowing the DT endpoint subnode to be missing.  This is
+> important for platforms like the CM4 which have a standard PCIe socket and
+> the endpoint device is unknown.
 
- [mem 0x000000004bc50000-0x00000000cfffffff] reserved
- pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
- pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
- pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
+I assume you're referring specifically to making this optional in the
+DT:
 
-The ACPI specifications appear to allow this new behavior:
+    /* PCIe endpoint */
+    pci-ep@0,0 {
+            assigned-addresses =
+                <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
+            reg = <0x0 0x0 0x0 0x0 0x0>;
+            compatible = "pci14e4,1688";
+    };
 
-The relationship between E820 and ACPI _CRS is not really very clear.
-ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
+I don't really understand what's going on here, but I assume this
+describes a [14e4:1688] device, which the PCI database says is a
+NetXtreme BCM5761 10/100/1000BASE-T Ethernet
+(https://pci-ids.ucw.cz/read/PC/14e4/1688)
 
-  This range of addresses is in use or reserved by the system and is
-  not to be included in the allocatable memory pool of the operating
-  system's memory manager.
+Why do you *ever* need this stanza?  "git grep pci-ep
+Documentation/devicetree/bindings/pci/" says no other DT has one.
 
-and it may be used when:
+If the link does come up, I assume normal PCI enumeration would
+discover the [14e4:1688] or whatever device is plugged into a CM4
+socket, and it would read and assign BARs as needed.  Why do we need
+to describe any of this in the DT?
 
-  The address range is in use by a memory-mapped system device.
+If the link doesn't come up, it looks like you set the "refusal_mode"
+so subsequent config accesses fail gracefully instead of with a CPU
+abort.
 
-Furthermore, sec 15.2 says:
+[Tangent: since you never clear "refusal_mode", I assume there's no
+possibility of hot-adding a device.  A device must be put in the slot
+before power-up, right?]
 
-  Address ranges defined for baseboard memory-mapped I/O devices, such
-  as APICs, are returned as reserved.
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215925
+> [2] Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> 
+> Fixes: 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+> Fixes: 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index ba5c120816b2..adca74e235cb 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -540,16 +540,18 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+>  
+>  static int brcm_pcie_add_bus(struct pci_bus *bus)
+>  {
+> -	struct device *dev = &bus->dev;
+>  	struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
+>  	int ret;
+>  
+> -	if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
+> +	/* Only busno==1 requires us to linkup */
+> +	if ((int)bus->number != 1)
 
-A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
-and its apertures are in use and certainly should not be included in
-the general allocatable pool, so the fact that some BIOS-es reports
-the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
+It's a big leap from "DT endpoint is optional" to "bus->number == 1 if
+DT endpoint is missing" (if that's even what it means).  Help me
+connect the dots here.
 
-So it seems that removing/clipping E820 reserved regions from the PCI
-host bridge windows is a mistake.
+I *guess* this is really saying "we only want to bring the link up for
+RPs"?
 
-Outright removing the code that clips E820 entries is known to cause
-regressions on various existing systems. Some examples of such systems:
+And "bus->number == 1" assumes the RP is on bus 0, there's only one
+RP, and that RP's secondary bus is 1?  So it's only in that case
+(we're adding the secondary bus of the RP), that we need to manually
+bring up the link?
 
-Asus C523NA (Coral) Chromebook
-Dell Precision T3500, for details see:
-https://bugzilla.kernel.org/show_bug.cgi?id=16228
-Lenovo ThinkPad X1 gen 2, for details see:
-https://bugzilla.redhat.com/show_bug.cgi?id=2029207
+>  		return 0;
+>  
+>  	ret = pci_subdev_regulators_add_bus(bus);
+> -	if (ret)
+> +	if (ret) {
+> +		pcie->refusal_mode = true;
 
-To avoid regressions stop clipping E820 entries on future systems
-(DMI BIOS year >= 2023) only.
+Is this related?  It doesn't *look* related to making the DT endpoint
+optional.
 
-Quoting from:
-https://lore.kernel.org/linux-pci/20220518220754.GA7911@bhelgaas/
-
-The decision to do this is based on weighing to following pro/cons:
-
-Without a date check, we'll continue clipping by default:
-
-  - Future systems like Lenovo *IIL*, Acer Spin, and Clevo Barebones
-    will require new quirks to disable clipping.
-
-  - The problem here is E820 entries that cover entire _CRS windows
-    that should not be clipped out.
-
-  - I think these E820 entries are legal per spec, and it would be
-    hard to get BIOS vendors to change them.
-
-  - We will discover new systems that need clipping disabled piecemeal
-    as they are released.
-
-  - Future systems like Lenovo X1 Carbon and the Chromebooks (probably
-    anything using coreboot) will just work and we will not notice new
-    ones that rely on the clipping.
-
-  - BIOS updates will not require new quirks unless they change the
-    DMI model string.
-
-With a date check that disables clipping, e.g., "no clipping when
-date >= 2023":
-
-  - Future systems like Lenovo *IIL*, Acer Spin, and Clevo Barebones
-    will just work without new quirks.
-
-  - Future systems like Lenovo X1 Carbon and the Chromebooks will
-    require new quirks to *enable* clipping.
-
-  - The problem here is that _CRS contains regions that are not usable
-    by PCI devices, and we rely on the E820 kludge to clip them out.
-
-  - I think this use of E820 is clearly a firmware bug, so we have a
-    fighting chance of getting it changed eventually.
-
-  - BIOS updates after the cutoff date *will* require quirks, but only
-    for systems like Lenovo X1 Carbon and Chromebooks that we already
-    think have broken firmware.
-
-It seems to me like it's better to add quirks for firmware that we think
-is broken than for firmware that seems unusual but correct.
-
-Cc: Benoit Grégoire <benoitg@coeus.ca>
-Cc: Hui Wang <hui.wang@canonical.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v9:
-- Split making use_e820=false the default for BIOS year >= 2023 out
-  into this new patch
----
- arch/x86/pci/acpi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index b88bdfba7908..82b1c93ac04b 100644
---- a/arch/x86/pci/acpi.c
-+++ b/arch/x86/pci/acpi.c
-@@ -234,6 +234,24 @@ void __init pci_acpi_crs_quirks(void)
- 	if (year >= 0 && year < 2008 && iomem_resource.end <= 0xffffffff)
- 		pci_use_crs = false;
- 
-+	/*
-+	 * Some BIOS-es contain bugs where they add addresses which are already
-+	 * used in some other manner to the PCI host bridge window returned by
-+	 * the ACPI _CRS method. To avoid this Linux by default excludes
-+	 * E820 reservations when allocating addresses since 2010.
-+	 * In 2019 some systems have shown-up with E820 reservations which cover
-+	 * the entire _CRS returned PCI host bridge window, causing all attempts
-+	 * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
-+	 *
-+	 * Ideally Linux would fully stop using E820 reservations, but then
-+	 * various old systems will regress. Instead stop using E820 reservations
-+	 * for new systems with a DMI BIOS year >= 2023;
-+	 * and use DMI quirks for existing systems on which excluding E820
-+	 * reservations is known to cause issues.
-+	 */
-+	if (year >= 2023)
-+		pci_use_e820 = false;
-+
- 	dmi_check_system(pci_crs_quirks);
- 
- 	/*
--- 
-2.36.0
-
+>  		return ret;
+> +	}
+>  
+>  	/* Grab the regulators for suspend/resume */
+>  	pcie->sr = bus->dev.driver_data;
+> 
+> base-commit: ef1302160bfb19f804451d0e919266703501c875
+> prerequisite-patch-id: 23a425390a4226bd70bbff459148c80f5e28379c
+> prerequisite-patch-id: e3f2875124b46b2b1cf9ea28883bf0c864b79479
+> prerequisite-patch-id: 9cdd706ee2038c7b393c4d65ff76a1873df1ca03
+> prerequisite-patch-id: 332ac90be6e4e4110e27bdd1caaff212c129f547
+> prerequisite-patch-id: 32a74f87cbfe9e8d52c34a4edeee6d271925665a
+> prerequisite-patch-id: f57cdf7ec7080bb8c95782bc7c3ec672db8ec1ce
+> prerequisite-patch-id: 18dc9236aed47f708f5c854afd832f3c80be5ea7
+> prerequisite-patch-id: dd147c6854c4ca12a9a8bd4f5714968a59d60e4e
+> -- 
+> 2.17.1
+> 
