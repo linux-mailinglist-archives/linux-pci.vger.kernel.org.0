@@ -2,135 +2,242 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E42352D6E0
-	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 17:06:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5587552D750
+	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 17:21:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237679AbiESPGr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 May 2022 11:06:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58722 "EHLO
+        id S240775AbiESPV2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 May 2022 11:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240661AbiESPGm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 11:06:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 413DB4EA28
-        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652972801;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6cukqKLlYVO6UiHSZMrtRJgoast0/luZetDqiqEdUko=;
-        b=JuRsPyE/6yd87aXDGGXsCXMbaSPJxtbOuowTigP+hV2HGuoLuoS14E7lUPXeWhdTVsobjV
-        IE4yHbZyctXnh7YasNo+HbNNsQxhOD5A4KshRNMNc3+YX0PIzVPnKjKgp99a1SjCB/ICt/
-        RaEW76AZtSBDUn+V6wi1Jyx6icaamC4=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-19-fxOUkwWdPgKXyJRL6S0KFA-1; Thu, 19 May 2022 11:06:39 -0400
-X-MC-Unique: fxOUkwWdPgKXyJRL6S0KFA-1
-Received: by mail-ej1-f72.google.com with SMTP id pj21-20020a170906d79500b006fea2020e78so346888ejb.11
-        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:06:39 -0700 (PDT)
+        with ESMTP id S240774AbiESPV1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 11:21:27 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5E3B5D651
+        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:21:24 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id p8so5429174pfh.8
+        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=f7JvL7cRkHT6WvutknshyJqSAWWIC/d0uwyuRrudqYU=;
+        b=Z1mk4v9YuvgOIrCHJjmolzc/lLfDnPywp1hhLdGlK7MTB+PC43JVUfbB9FmvcEmCsk
+         6YfN0lcZgphn3bTvXNwVr8f9f3GGOKUr1mRlMqE5yoFgDC7IncPAlL0BUuiyt8p+3Tzj
+         7LxXMnJFxb956R76saXYRUQWnOQ5JSf26+A0noChJTc6aHDv+cLX2EEXwDLDKAppZ4Wv
+         2ci9waakk7Fx5tt/+D0nSmLhSbxy5kvQ096vvn5lNwIWxRwfOxXRJrvOVmXav6YeeDqr
+         er05XKIns1tDNWh2Epgxk3OylV5mqAjGlUbX7exoqGnju0SFZ0WKCdCy+bt5bEFp0BAJ
+         aFYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=6cukqKLlYVO6UiHSZMrtRJgoast0/luZetDqiqEdUko=;
-        b=wCLjdECMy8ip5Nv4Ja37wvGSQn1W42fVRJFHFnH+IjKknZYaN5CRJHeg9hlZLPOTZT
-         DIuBhwRR7dYfx/qHPgHhG1RT2usGLzm6f7tb3owO9fnMgQAoCjGV6hRyNN+GY0HDXpkY
-         InTCAKV6woHnSfuY1OX21f1yEkY4bqoclq/FUMI7qLl9dVwL1HFivPOBDRvSxbqb2Yw3
-         YCJpAZu8hsQ9Sz1HbSWqSlDsh0hBicncEqrKU0tlfBkXtvf5YfYfsM9wGMq5A2xpCnPL
-         +eXDi15RGP7uMfIt74lDn99iOvHoJ/9v7PFtrzF06uZgS8xAaUegI7UgkW02+qgLYxB+
-         h7+w==
-X-Gm-Message-State: AOAM531LJwAbzpu0cf+0O8F8GL9x3CjbSKZUQolutkPzCmmRz7kIlabU
-        qMZ3uycS77+ZMvEZuSd0ncol+CGJQpDhHJRW5OFS4meO8JPqjhNyCq4PxQzC1fad6brh4toVPiI
-        p0CLwyskg5DkI4cxNxNRQ
-X-Received: by 2002:a17:906:ece3:b0:6f3:da10:138a with SMTP id qt3-20020a170906ece300b006f3da10138amr4833736ejb.438.1652972798596;
-        Thu, 19 May 2022 08:06:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxNOoQNKVItf73DSDM0VafoQHW0cH49Hzz2nXR7wvug3z2zrL8Tzk3+pUB5ClBDB3sbRS2J6Q==
-X-Received: by 2002:a17:906:ece3:b0:6f3:da10:138a with SMTP id qt3-20020a170906ece300b006f3da10138amr4833709ejb.438.1652972798316;
-        Thu, 19 May 2022 08:06:38 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id c6-20020a056402120600b0042aa6a43ccdsm2953894edw.28.2022.05.19.08.06.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 May 2022 08:06:37 -0700 (PDT)
-Message-ID: <4f10c3aa-5eca-ee00-6b9e-f152ffdcca7f@redhat.com>
-Date:   Thu, 19 May 2022 17:06:37 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v7 1/1] x86/PCI: Ignore E820 reservations for bridge
- windows on newer systems
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=f7JvL7cRkHT6WvutknshyJqSAWWIC/d0uwyuRrudqYU=;
+        b=F/GaRXb5Kfj9HtyCpO1jnSz7158OvmBENtF7l/ZGzXQf20Yvljnxd0HOlAn3bJ6ds5
+         CnJ5Y3kZLyWVG4a6DXFPMX8DkGaSGngZYZSOUCkxhnz0WY7IwH7pOh9YMi16+mAzLqx6
+         iJuVEZxBzXrFQo3y3eM/+60+X3J8LzzW7R91XhsShrv/YOtyqWg2fLk0LX+sBlmP6FqF
+         IkPW43NukQ1JeA4SMn4GYhsxehdq7E/SvpjUhhetv9gXCxHImEg1LBmNze/5ndvd1imY
+         iwBUoajnqyugXUV9NKcIGN1ad0xQlW76J0KUdJEljKCN0ynslG6quFeykR8nj1lUAWDs
+         d0WA==
+X-Gm-Message-State: AOAM532SLgtBMSNoFKN7hujE1bOvnyKoVlGgXFswKxSnisdB/XjR9to5
+        Xbj0z6UCAoP++j9rhWu84Q2C
+X-Google-Smtp-Source: ABdhPJyzNILDqts1I1/yQsoDMSaGDmbHzF/pvIgIKP2WfCmx2laD+skx/l/ZFL4KHzRXTQq4cuPrZw==
+X-Received: by 2002:a65:5688:0:b0:3c2:1015:988e with SMTP id v8-20020a655688000000b003c21015988emr4428491pgs.280.1652973684315;
+        Thu, 19 May 2022 08:21:24 -0700 (PDT)
+Received: from thinkpad ([117.202.185.140])
+        by smtp.gmail.com with ESMTPSA id o15-20020a17090ad24f00b001dc1950ead5sm5685089pjw.38.2022.05.19.08.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 May 2022 08:21:23 -0700 (PDT)
+Date:   Thu, 19 May 2022 20:51:16 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20220519144923.GA22233@bhelgaas>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220519144923.GA22233@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v2 15/17] PCI: dwc: Introduce dma-ranges property support
+ for RC-host
+Message-ID: <20220519152116.GA210475@thinkpad>
+References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503214638.1895-16-Sergey.Semin@baikalelectronics.ru>
+ <20220512135708.GC35848@thinkpad>
+ <20220512194135.ku73pae2xdvyocx7@mobilestation>
+ <20220517172042.GC4528@thinkpad>
+ <20220518192623.fl3ogcxlurcd6okd@mobilestation>
+ <20220519074053.GA24064@workstation>
+ <20220519105238.7bgdigyxvg2cdct6@mobilestation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220519105238.7bgdigyxvg2cdct6@mobilestation>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Thu, May 19, 2022 at 01:52:38PM +0300, Serge Semin wrote:
 
-On 5/19/22 16:49, Bjorn Helgaas wrote:
-> On Thu, May 19, 2022 at 04:29:43PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 5/19/22 16:14, Bjorn Helgaas wrote:
->>> On Thu, May 19, 2022 at 04:01:48PM +0200, Hans de Goede wrote:
->>>
->>>> Ok, I'll go and prepare a v9 and I will submit that later today.
->>>
->>> Would it be practical to split into three patches?
->>>
->>>   1) Add command-line args
->>>   2) Add DMI quirks
->>>   3) Add date check
->>>
->>> It seems easier to assimilate and document in smaller pieces, if
->>> that's possible.
->>
->> Ack, will do. Note this will cause quite a bit of copy/paste
->> in the commit msg to explain why these changes are necessary.
+[...]
+
+> > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > > > index 747e252c09e6..33718ed6c511 100644
+> > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > > > @@ -397,8 +397,61 @@ static inline void dw_pcie_writel_atu_ib(struct dw_pcie *pci, u32 index, u32 reg
+> > > > > > >  	dw_pcie_writel_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg, val);
+> > > > > > >  }
+> > > > > > >  
+> > > > > > > -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > > > > > -			     int type, u64 cpu_addr, u8 bar)
+> > > > > > > +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> > > > > > > +			     u64 cpu_addr, u64 pci_addr, u64 size)
+> > > > > > > +{
+> > > > > > > +	u64 limit_addr = pci_addr + size - 1;
+> > > > > > > +	u32 retries, val;
+> > > > > > > +
+> > > > > > > +	if ((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit) ||
+> > > > > > > +	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
+> > > > > > > +	    !IS_ALIGNED(pci_addr, pci->region_align) ||
+> > > > > > > +	    !IS_ALIGNED(size, pci->region_align) ||
+> > > > > > 
+> > > > > 
+> > > > > > Why do you want the size to be aligned? What if I want to transfer a small size
+> > > > > > buffer?
+> > > > > > 
+> > > > > > Same question applies to outbound programming as well.
+> > > > > 
+> > > > > You can't program a region with the unaligned size by the DW PCIe CSRs
+> > > > > design. The limit address lower bits are read-only and fixed with
+> > > > > one's in accordance with the IP-core synthesize parameter
+> > > > > CX_ATU_MIN_REGION_SIZE. So the mapping is always performed in the
+> > > > > CX_ATU_MIN_REGION_SIZE chunks.
+> > > > > 
+> > > > > IATU_LIMIT_ADDR_OFF_{IN,OUT}BOUND.LIMIT_ADDR_HW = 
+> > > > > {(CX_ATU_MIN_REGION_SIZE == 65536) ? "0xffff" :
+> > > > >  (CX_ATU_MIN_REGION_SIZE == 32768) ? "0x7fff" :
+> > > > >  (CX_ATU_MIN_REGION_SIZE == 16384) ? "0x3fff" :
+> > > > >  (CX_ATU_MIN_REGION_SIZE == 8192)  ? "0x1fff" :
+> > > > >  (CX_ATU_MIN_REGION_SIZE == 4096)  ? "0xfff" : "0xffff"}
+> > > > > 
+> > > > 
+> > > 
+> > > > Right. Even though the minimum size that could be mapped is 4k, I could still
+> > > > use that 4k size for mapping small buffers also. So you should not be erroring
+> > > > out here if the size is not aligned. 
+> > > 
+> > > Why would you need to do that? Even if you do and the operation
+> > > doesn't return an error (or at least splash the syslog with a
+> > > warning), the hardware would expand the mapping up to the aligned size
+> > > anyway. Such implicit behavior would have given your software an
+> > > impression that the mapping was performed in the way you asked with
+> > > the size you specified so the upper part of the unaligned range is
+> > > free to be used for something else. If the range is accessed, instead
+> > > of a bus error or silent IO termination it may cause unexpected result
+> > > of creating random PCIe bus traffic. So I'd rather have the
+> > > code/platform setup fixed right from the start instead of waiting for
+> > > the hard to find bug cause.
+> > > 
+> > 
 > 
-> OK, if the repetition gets excessive I can squash them back
-> together.  Hopefully the main explanation can go in the first patch,
-> the second can just mention the fact that these machines need the
-> exception, and the third can focus on the plan for the future.
+> > The application I'm working on is MHI bus. As per the design, it needs to copy
+> > 16byte data to ring buffers in the host memory. If I use iATU, then I
+> > cannot copy those small data with the size alignment.
+> 
+> First of all I don't see any driver using the DW PCIe iATU mapping
+> functions directly. They are only utilized in the framework of the
+> "ranges" and "dma-ranges" DT properties.
 
-I'm almost done with prepping v9 and atm there is a 17 line
-introduction of the problem which is shared between all 3
-patches in the commit msg.
+Not true. The PCI_EPF_TEST and PCI_EPF_NTB applications use iATU mpping function
+through EPC ops.
 
-I personally don't think this is too bad, but feel free to
-shorten it a bit in patch 2 + 3 before merging these.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/endpoint/functions/pci-epf-test.c#n250
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/endpoint/pci-epc-core.c#n476
 
-I think the split makes sense, so I would prefer you amending
-the commit msg over squashing them back together again.
+Now that I've referred, we need to check if these drivers still work on top of
+your patches. These are not supported on my platform, so perhaps Frank can
+test?
 
-Regards,
+> If the application you are
+> referring to your private code, then it can't be a justification.
 
-Hans
+I should have mentioned it, but my application is not private. It is partly
+available in linux-next:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/bus/mhi/ep/ring.c#n47
+https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/tree/drivers/pci/endpoint/functions/pci-epf-mhi.c?h=tracking-qcomlt-sdx55-drivers#n121
+
+> Secondly if your application uses them then what about just extending
+> the mapping range size while still access the lowest 15 bytes only? In
+> that case you would create a more comprehensive software which would
+> be aware of the hardware constraints.
+> 
+
+Hmm... I'm already doing a similar hack for getting the aligned address due to
+iATU limitation, but I think doing the same for size should also work.
+
+Thinking again, I agree with the alignment check. Thanks for the explanations.
+But let's make sure the existing EPF drivers still work.
+
+Thanks,
+Mani
+
+> > 
+> > > > I know that it is a waste of memory but that doesn't mean that it won't work.
+> > > 
+> > > The correct statement in this case would be "it won't work in a way
+> > > you expected, but with the implicit side effect applied to the memory
+> > > above the requested one."
+> > > 
+> > 
+> 
+> > Agree but that would only happen when the application does out of bound
+> > access and in that case the issue is with the application.
+> 
+> Not only in that case, but anyway how would such application be aware
+> of the out of bounds access? Returning an error in case if the
+> requested mapping can't be performed with the specified parameters is
+> a possible solution. So the application would be aware of the hardware
+> constraints and be sure it perceives them right. Otherwise the
+> consequences of the out of bounds access would be very unexpected
+> since the mapping is performed only for the small buffer.
+> 
+> -Sergey
+> 
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > -Sergey
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > Mani
+> > > > 
+> > > > > -Sergey
+> > > > > 
+> > > > > > 
+> > > > > > Thanks,
+> > > > > > Mani
+> > > > > > 
+> > > > > > -- 
+> > > > > > மணிவண்ணன் சதாசிவம்
+> > > > 
+> > > > -- 
+> > > > மணிவண்ணன் சதாசிவம்
+
+-- 
+மணிவண்ணன் சதாசிவம்
