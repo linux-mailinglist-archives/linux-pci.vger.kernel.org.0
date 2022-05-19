@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AACD752D75B
-	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 17:22:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F10652D75D
+	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 17:22:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240822AbiESPWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 May 2022 11:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
+        id S240831AbiESPWT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 May 2022 11:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240823AbiESPWO (ORCPT
+        with ESMTP id S240834AbiESPWO (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 11:22:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D406E62BCB
-        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:22:08 -0700 (PDT)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 588BB63BD0
+        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:22:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652973727;
+        s=mimecast20190719; t=1652973730;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oM1TAfDo454ZLZga5b5Ef/+sLf4snjsN/4e+Dfq5QSw=;
-        b=JITw7mDguXxN/o9tUdUDV/CplSy8FjbEvPjhc1MmR6KpIty6iUveaHrPWZS/gBXjK+Gehm
-        guzXPLqnJf2cJnfZEyI2p/0UvuSCOh37DaQ4l3t3nY1pmZqNVJOa2v8h4Ky4hvq/VkTVQ7
-        N7e20fFBdxwCXCUomJojHRW1fXurCHQ=
+        bh=1ga+pMSw4nCAG4T6JtURNSSSM6yGJYnLTOmMdWB8RbA=;
+        b=Dh3gcZB4qJjBmt+qzdHpAAGpuvKFLw/9pVm/KtHrADj5tBWvGEHgXljpTyDCIxXHP/4/3p
+        PDVSgu23S867o8MI5Ztd5+yJZw1FPsY5nImbs2z98xt6XJ/rsVcqg3eNeEk3v8y9V8WxwT
+        OIhpIwX1DDJnWD3lcw5DKrf2aDuavWs=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-541--Jr999ykOGKIaJ6pkFEgbQ-1; Thu, 19 May 2022 11:22:04 -0400
-X-MC-Unique: -Jr999ykOGKIaJ6pkFEgbQ-1
+ us-mta-492-KHB65mE8MGW1siHPSrgNnA-1; Thu, 19 May 2022 11:22:07 -0400
+X-MC-Unique: KHB65mE8MGW1siHPSrgNnA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 92D3C18E0BC8;
-        Thu, 19 May 2022 15:22:03 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 161E285A5BB;
+        Thu, 19 May 2022 15:22:06 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EFC91121314;
-        Thu, 19 May 2022 15:22:01 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C79B31121314;
+        Thu, 19 May 2022 15:22:03 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -53,9 +53,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         linux-pci@vger.kernel.org, x86@kernel.org,
         linux-kernel@vger.kernel.org,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v9 2/3] x86/PCI: Add DMI quirks to ignore E820 reserved regions on some systems
-Date:   Thu, 19 May 2022 17:21:49 +0200
-Message-Id: <20220519152150.6135-3-hdegoede@redhat.com>
+Subject: [PATCH v9 3/3] x86/PCI: Ignore E820 reserved regions for bridge windows on future systems
+Date:   Thu, 19 May 2022 17:21:50 +0200
+Message-Id: <20220519152150.6135-4-hdegoede@redhat.com>
 In-Reply-To: <20220519152150.6135-1-hdegoede@redhat.com>
 References: <20220519152150.6135-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -90,140 +90,133 @@ a Lenovo IdeaPad 3 15IIL 81WE:
  pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
  pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
 
-Outright removing the code to remove E820 reserved regions when
-allocating address space is known to cause regressions on various
-existing systems.
+The ACPI specifications appear to allow this new behavior:
 
-Instead disable the removal of E820 reserved regions on models where
-this is known to cause the above problem using DMI quirks.
+The relationship between E820 and ACPI _CRS is not really very clear.
+ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=214259
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-BugLink: https://bugs.launchpad.net/bugs/1878279
-BugLink: https://bugs.launchpad.net/bugs/1880172
-BugLink: https://bugs.launchpad.net/bugs/1884232
-BugLink: https://bugs.launchpad.net/bugs/1921649
-BugLink: https://bugs.launchpad.net/bugs/1931715
-BugLink: https://bugs.launchpad.net/bugs/1932069
+  This range of addresses is in use or reserved by the system and is
+  not to be included in the allocatable memory pool of the operating
+  system's memory manager.
+
+and it may be used when:
+
+  The address range is in use by a memory-mapped system device.
+
+Furthermore, sec 15.2 says:
+
+  Address ranges defined for baseboard memory-mapped I/O devices, such
+  as APICs, are returned as reserved.
+
+A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
+and its apertures are in use and certainly should not be included in
+the general allocatable pool, so the fact that some BIOS-es reports
+the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
+
+So it seems that removing/clipping E820 reserved regions from the PCI
+host bridge windows is a mistake.
+
+Outright removing the code that clips E820 entries is known to cause
+regressions on various existing systems. Some examples of such systems:
+
+Asus C523NA (Coral) Chromebook
+Dell Precision T3500, for details see:
+https://bugzilla.kernel.org/show_bug.cgi?id=16228
+Lenovo ThinkPad X1 gen 2, for details see:
+https://bugzilla.redhat.com/show_bug.cgi?id=2029207
+
+To avoid regressions stop clipping E820 entries on future systems
+(DMI BIOS year >= 2023) only.
+
+Quoting from:
+https://lore.kernel.org/linux-pci/20220518220754.GA7911@bhelgaas/
+
+The decision to do this is based on weighing to following pro/cons:
+
+Without a date check, we'll continue clipping by default:
+
+  - Future systems like Lenovo *IIL*, Acer Spin, and Clevo Barebones
+    will require new quirks to disable clipping.
+
+  - The problem here is E820 entries that cover entire _CRS windows
+    that should not be clipped out.
+
+  - I think these E820 entries are legal per spec, and it would be
+    hard to get BIOS vendors to change them.
+
+  - We will discover new systems that need clipping disabled piecemeal
+    as they are released.
+
+  - Future systems like Lenovo X1 Carbon and the Chromebooks (probably
+    anything using coreboot) will just work and we will not notice new
+    ones that rely on the clipping.
+
+  - BIOS updates will not require new quirks unless they change the
+    DMI model string.
+
+With a date check that disables clipping, e.g., "no clipping when
+date >= 2023":
+
+  - Future systems like Lenovo *IIL*, Acer Spin, and Clevo Barebones
+    will just work without new quirks.
+
+  - Future systems like Lenovo X1 Carbon and the Chromebooks will
+    require new quirks to *enable* clipping.
+
+  - The problem here is that _CRS contains regions that are not usable
+    by PCI devices, and we rely on the E820 kludge to clip them out.
+
+  - I think this use of E820 is clearly a firmware bug, so we have a
+    fighting chance of getting it changed eventually.
+
+  - BIOS updates after the cutoff date *will* require quirks, but only
+    for systems like Lenovo X1 Carbon and Chromebooks that we already
+    think have broken firmware.
+
+It seems to me like it's better to add quirks for firmware that we think
+is broken than for firmware that seems unusual but correct.
+
 Cc: Benoit Grégoire <benoitg@coeus.ca>
 Cc: Hui Wang <hui.wang@canonical.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v9:
-- Split the addition of DMI quirks out into this new patch
-- Add a DMI quirk for the TUXEDO Book XUX7 - Gen12
+- Split making use_e820=false the default for BIOS year >= 2023 out
+  into this new patch
 ---
- arch/x86/pci/acpi.c | 87 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+ arch/x86/pci/acpi.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index 7bde3df68e4c..b88bdfba7908 100644
+index b88bdfba7908..82b1c93ac04b 100644
 --- a/arch/x86/pci/acpi.c
 +++ b/arch/x86/pci/acpi.c
-@@ -43,6 +43,13 @@ static int __init set_ignore_seg(const struct dmi_system_id *id)
- 	return 0;
- }
+@@ -234,6 +234,24 @@ void __init pci_acpi_crs_quirks(void)
+ 	if (year >= 0 && year < 2008 && iomem_resource.end <= 0xffffffff)
+ 		pci_use_crs = false;
  
-+static int __init set_no_e820(const struct dmi_system_id *id)
-+{
-+	printk(KERN_INFO "PCI: %s detected: ignoring e820 regions\n", id->ident);
-+	pci_use_e820 = false;
-+	return 0;
-+}
-+
- static const struct dmi_system_id pci_crs_quirks[] __initconst = {
- 	/* http://bugzilla.kernel.org/show_bug.cgi?id=14183 */
- 	{
-@@ -137,6 +144,86 @@ static const struct dmi_system_id pci_crs_quirks[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP xw9300 Workstation"),
- 		},
- 	},
-+
 +	/*
-+	 * Most Lenovo models with "IIL" in their DMI_PRODUCT_VERSION have
-+	 * an E820 reservation which covers the entire _CRS returned 32 bit
-+	 * PCI bridge memory window, causing all attempts to assign memory to
-+	 * 32 bit PCI bars which have not been setup by the BIOS to fail.
-+	 * Specifically this often causes some of the I2C controllers to not
-+	 * work breaking touchpad support and/or this may cause issues when
-+	 * hotplugging thunderbolt connected devices.
++	 * Some BIOS-es contain bugs where they add addresses which are already
++	 * used in some other manner to the PCI host bridge window returned by
++	 * the ACPI _CRS method. To avoid this Linux by default excludes
++	 * E820 reservations when allocating addresses since 2010.
++	 * In 2019 some systems have shown-up with E820 reservations which cover
++	 * the entire _CRS returned PCI host bridge window, causing all attempts
++	 * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
 +	 *
-+	 * This DMI match entry covers the following DMI_PRODUCT_VERSION-s with
-+	 * an E820 reservation which covers the entire 32 bit bridge window:
-+	 * "IdeaPad 3 14IIL05", "IdeaPad 3 15IIL05", "IdeaPad 3 17IIL05",
-+	 * "IdeaPad 5 14IIL05", "IdeaPad 5 15IIL05",
-+	 * "IdeaPad Slim 7 14IIL05", "IdeaPad Slim 7 15IIL05",
-+	 * "Lenovo BS145-15IIL",
-+	 * "Lenovo IdeaPad S145-15IIL", "Lenovo IdeaPad S340-14IIL",
-+	 * "Lenovo IdeaPad S340-15IIL", "Lenovo IdeaPad C340-15IIL",
-+	 * "Lenovo V14-IIL", "Lenovo V15-IIL", "Lenovo V17-IIL",
-+	 * "Lenovo Yoga S740-14IIL", "Lenovo Yoga C940-14IIL",
-+	 * "Yoga Slim 7 14IIL05", "Yoga Slim 7 15IIL05"
-+	 *
-+	 * On some of these the bridge's _CRS method *sometimes* (under unknown
-+	 * conditions) has a 64 bit [mem 0x4000000000-0x7fffffffff window].
-+	 * This avoids some of the issues, but even then there are still issues
-+	 * with assigning some 32 bit only BARs such as some Thunderbolt devs,
-+	 * the 00:1f.5 BIOS SPI controller and BAR6 of some nvidia gfx.
-+	 *
-+	 * This entry also covers the following DMI_PRODUCT_VERSION-s which do
-+	 * not need pci_use_e820=false. This quirk is a no-op for these models,
-+	 * because there is no overlap between E820 regions and _CRS windows:
-+	 * "IdeaPad Flex 5 14IIL05", "IdeaPad Flex 5 15IIL05",
-+	 * "Lenovo ThinkBook 14-IIL", "Lenovo ThinkBook 15-IIL",
-+	 * "Lenovo Yoga S940-14IIL"
-+	 *
-+	 * This entry fixes issues reported in the following bugs:
-+	 * https://bugzilla.kernel.org/show_bug.cgi?id=206459
-+	 * https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-+	 * https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-+	 * https://bugs.launchpad.net/bugs/1878279
-+	 * https://bugs.launchpad.net/bugs/1880172
-+	 * https://bugs.launchpad.net/bugs/1921649
-+	 * https://bugs.launchpad.net/bugs/1931715
-+	 * https://bugs.launchpad.net/bugs/1932069
++	 * Ideally Linux would fully stop using E820 reservations, but then
++	 * various old systems will regress. Instead stop using E820 reservations
++	 * for new systems with a DMI BIOS year >= 2023;
++	 * and use DMI quirks for existing systems on which excluding E820
++	 * reservations is known to cause issues.
 +	 */
-+	{
-+		.callback = set_no_e820,
-+		.ident = "Lenovo *IIL* product version",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "IIL"),
-+		},
-+	},
++	if (year >= 2023)
++		pci_use_e820 = false;
 +
-+	/*
-+	 * The Acer Spin 5 (SP513-54N) has the same E820 reservation covering
-+	 * the entire _CRS 32 bit window issue as the Lenovo *IIL* models.
-+	 * https://bugs.launchpad.net/bugs/1884232
-+	 */
-+	{
-+		.callback = set_no_e820,
-+		.ident = "Acer Spin 5 (SP513-54N)",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Spin SP513-54N"),
-+		},
-+	},
-+
-+	/*
-+	 * Clevo X170KM-G barebones have the same E820 reservation covering
-+	 * the entire _CRS 32 bit window issue as the Lenovo *IIL* models.
-+	 * https://bugzilla.kernel.org/show_bug.cgi?id=214259
-+	 */
-+	{
-+		.callback = set_no_e820,
-+		.ident = "Clevo X170KM-G Barebone",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "X170KM-G"),
-+		},
-+	},
- 	{}
- };
+ 	dmi_check_system(pci_crs_quirks);
  
+ 	/*
 -- 
 2.36.0
 
