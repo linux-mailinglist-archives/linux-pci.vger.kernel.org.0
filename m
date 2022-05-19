@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF4A252D759
-	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 17:22:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AACD752D75B
+	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 17:22:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240846AbiESPWP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 May 2022 11:22:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35696 "EHLO
+        id S240822AbiESPWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 May 2022 11:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239671AbiESPWJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 11:22:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E197760BB0
-        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:22:05 -0700 (PDT)
+        with ESMTP id S240823AbiESPWO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 11:22:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D406E62BCB
+        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 08:22:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652973725;
+        s=mimecast20190719; t=1652973727;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cnHThqQ82zUOTwQcaOOSceqH/BBsaIZ9ekeI9RMRKmA=;
-        b=Gdvaswdba1QsbGV4C3becTRukQU2h6ISgSIsVedWU0iUcxsH/EYlkfVuS+24FOPIPKl4Fd
-        dVl/1Cu7JwhdBS9PVjNR6a5vaNv7AUPJwTLPj9kCYPWFeSy6BAlN1mezZYx1okfV3/+WEG
-        +ENWHEkP8MwTEASqpEp3Mrvn361FMGA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=oM1TAfDo454ZLZga5b5Ef/+sLf4snjsN/4e+Dfq5QSw=;
+        b=JITw7mDguXxN/o9tUdUDV/CplSy8FjbEvPjhc1MmR6KpIty6iUveaHrPWZS/gBXjK+Gehm
+        guzXPLqnJf2cJnfZEyI2p/0UvuSCOh37DaQ4l3t3nY1pmZqNVJOa2v8h4Ky4hvq/VkTVQ7
+        N7e20fFBdxwCXCUomJojHRW1fXurCHQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-210-nTXZEp17Pe6SwCGKtjJnEQ-1; Thu, 19 May 2022 11:22:01 -0400
-X-MC-Unique: nTXZEp17Pe6SwCGKtjJnEQ-1
+ us-mta-541--Jr999ykOGKIaJ6pkFEgbQ-1; Thu, 19 May 2022 11:22:04 -0400
+X-MC-Unique: -Jr999ykOGKIaJ6pkFEgbQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 18C9038332A1;
-        Thu, 19 May 2022 15:22:01 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 92D3C18E0BC8;
+        Thu, 19 May 2022 15:22:03 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC9111121314;
-        Thu, 19 May 2022 15:21:58 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EFC91121314;
+        Thu, 19 May 2022 15:22:01 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -53,9 +53,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         linux-pci@vger.kernel.org, x86@kernel.org,
         linux-kernel@vger.kernel.org,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v9 1/3] x86/PCI: Add kernel cmdline options to use/ignore E820 reserved regions
-Date:   Thu, 19 May 2022 17:21:48 +0200
-Message-Id: <20220519152150.6135-2-hdegoede@redhat.com>
+Subject: [PATCH v9 2/3] x86/PCI: Add DMI quirks to ignore E820 reserved regions on some systems
+Date:   Thu, 19 May 2022 17:21:49 +0200
+Message-Id: <20220519152150.6135-3-hdegoede@redhat.com>
 In-Reply-To: <20220519152150.6135-1-hdegoede@redhat.com>
 References: <20220519152150.6135-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -90,160 +90,140 @@ a Lenovo IdeaPad 3 15IIL 81WE:
  pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
  pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
 
-Add a pci=no_e820 kernel cmdline option for debugging/workaround
-purposes. Also add a matching pci=use_e820 option to re-enable
-the use of E820 reserved regions when they end up being disabled
-by default by further patches in this patch-set.
+Outright removing the code to remove E820 reserved regions when
+allocating address space is known to cause regressions on various
+existing systems.
 
+Instead disable the removal of E820 reserved regions on models where
+this is known to cause the above problem using DMI quirks.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=214259
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
+BugLink: https://bugs.launchpad.net/bugs/1878279
+BugLink: https://bugs.launchpad.net/bugs/1880172
+BugLink: https://bugs.launchpad.net/bugs/1884232
+BugLink: https://bugs.launchpad.net/bugs/1921649
+BugLink: https://bugs.launchpad.net/bugs/1931715
+BugLink: https://bugs.launchpad.net/bugs/1932069
 Cc: Benoit Grégoire <benoitg@coeus.ca>
 Cc: Hui Wang <hui.wang@canonical.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v9:
-- Split making use_e820=false the default for BIOS year >= 2023 out into
-  a separate patch
-- Split the addition of DMI quirks out into a separate patch
-  (leaving just the kernel cmdline option)
-
-Changes in v8:
-- Change the cut-off for no longer excluding E820 reservations from
-  the bridge window to BIOS year >= 2023 so that this only applies to
-  upcoming systems.
-- Use DMI quirks for existing systems on which excluding E820
-  reservations from the _CRS returned bridge window is an issue.
-
-Changes in v7:
-- Re-add the pci=use_e820 and pci=no_e820 kernel cmdline options since it
-  turns out that some newer laptops still need pci=use_e820
-- Add DMI quirks for known newer laptops which need pci=use_e820
-
-Changes in v6:
-- Remove the possibility to change the behavior from the commandline
-  because of worries that users may use this to paper over other problems
-
-Changes in v5:
-- Drop mention of Windows behavior from the commit msg, replace with a
-  reference to the specs
-- Improve documentation in Documentation/admin-guide/kernel-parameters.txt
-- Reword the big comment added, use "PCI host bridge window" in it and drop
-  all refences to Windows
-
-Changes in v4:
-- Rewrap the big comment block to fit in 80 columns
-- Add Rafael's Acked-by
-- Add Cc: stable@vger.kernel.org
-
-Changes in v3:
-- Commit msg tweaks (drop dmesg timestamps, typo fix)
-- Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
-- Add Mika's Reviewed-by
-
-Changes in v2:
-- Replace the per model DMI quirk approach with disabling E820 reservations
-  checking for all systems with a BIOS year >= 2018
-- Add documentation for the new kernel-parameters to
-  Documentation/admin-guide/kernel-parameters.txt
+- Split the addition of DMI quirks out into this new patch
+- Add a DMI quirk for the TUXEDO Book XUX7 - Gen12
 ---
- Documentation/admin-guide/kernel-parameters.txt |  9 +++++++++
- arch/x86/include/asm/pci_x86.h                  |  2 ++
- arch/x86/pci/acpi.c                             | 16 ++++++++++++++--
- arch/x86/pci/common.c                           |  8 ++++++++
- 4 files changed, 33 insertions(+), 2 deletions(-)
+ arch/x86/pci/acpi.c | 87 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 3f1cc5e317ed..2477b639d5c4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4066,6 +4066,15 @@
- 				please report a bug.
- 		nocrs		[X86] Ignore PCI host bridge windows from ACPI.
- 				If you need to use this, please report a bug.
-+		use_e820	[X86] Use E820 reservations to exclude parts of
-+				PCI host bridge windows. This is a workaround
-+				for BIOS defects in host bridge _CRS methods.
-+				If you need to use this, please report a bug to
-+				<linux-pci@vger.kernel.org>.
-+		no_e820		[X86] Ignore E820 reservations for PCI host
-+				bridge windows. This is the default on modern
-+				hardware. If you need to use this, please report
-+				a bug to <linux-pci@vger.kernel.org>.
- 		routeirq	Do IRQ routing for all PCI devices.
- 				This is normally done in pci_enable_device(),
- 				so this option is a temporary workaround
-diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-index a0627dfae541..ce3fd3311772 100644
---- a/arch/x86/include/asm/pci_x86.h
-+++ b/arch/x86/include/asm/pci_x86.h
-@@ -42,6 +42,8 @@ do {						\
- #define PCI_ROOT_NO_CRS		0x100000
- #define PCI_NOASSIGN_BARS	0x200000
- #define PCI_BIG_ROOT_WINDOW	0x400000
-+#define PCI_USE_E820		0x800000
-+#define PCI_NO_E820		0x1000000
- 
- extern unsigned int pci_probe;
- extern unsigned long pirq_table_addr;
 diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index 562c81a51ea0..7bde3df68e4c 100644
+index 7bde3df68e4c..b88bdfba7908 100644
 --- a/arch/x86/pci/acpi.c
 +++ b/arch/x86/pci/acpi.c
-@@ -20,6 +20,7 @@ struct pci_root_info {
- #endif
- };
- 
-+static bool pci_use_e820 = true;
- static bool pci_use_crs = true;
- static bool pci_ignore_seg;
- 
-@@ -161,6 +162,15 @@ void __init pci_acpi_crs_quirks(void)
- 	       "if necessary, use \"pci=%s\" and report a bug\n",
- 	       pci_use_crs ? "Using" : "Ignoring",
- 	       pci_use_crs ? "nocrs" : "use_crs");
-+
-+	/* "pci=use_e820"/"pci=no_e820" on the kernel cmdline takes precedence */
-+	if (pci_probe & PCI_NO_E820)
-+		pci_use_e820 = false;
-+	else if (pci_probe & PCI_USE_E820)
-+		pci_use_e820 = true;
-+
-+	printk(KERN_INFO "PCI: %s E820 reservations for host bridge windows\n",
-+	       pci_use_e820 ? "Using" : "Ignoring");
+@@ -43,6 +43,13 @@ static int __init set_ignore_seg(const struct dmi_system_id *id)
+ 	return 0;
  }
  
- #ifdef	CONFIG_PCI_MMCONFIG
-@@ -301,8 +311,10 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
++static int __init set_no_e820(const struct dmi_system_id *id)
++{
++	printk(KERN_INFO "PCI: %s detected: ignoring e820 regions\n", id->ident);
++	pci_use_e820 = false;
++	return 0;
++}
++
+ static const struct dmi_system_id pci_crs_quirks[] __initconst = {
+ 	/* http://bugzilla.kernel.org/show_bug.cgi?id=14183 */
+ 	{
+@@ -137,6 +144,86 @@ static const struct dmi_system_id pci_crs_quirks[] __initconst = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "HP xw9300 Workstation"),
+ 		},
+ 	},
++
++	/*
++	 * Most Lenovo models with "IIL" in their DMI_PRODUCT_VERSION have
++	 * an E820 reservation which covers the entire _CRS returned 32 bit
++	 * PCI bridge memory window, causing all attempts to assign memory to
++	 * 32 bit PCI bars which have not been setup by the BIOS to fail.
++	 * Specifically this often causes some of the I2C controllers to not
++	 * work breaking touchpad support and/or this may cause issues when
++	 * hotplugging thunderbolt connected devices.
++	 *
++	 * This DMI match entry covers the following DMI_PRODUCT_VERSION-s with
++	 * an E820 reservation which covers the entire 32 bit bridge window:
++	 * "IdeaPad 3 14IIL05", "IdeaPad 3 15IIL05", "IdeaPad 3 17IIL05",
++	 * "IdeaPad 5 14IIL05", "IdeaPad 5 15IIL05",
++	 * "IdeaPad Slim 7 14IIL05", "IdeaPad Slim 7 15IIL05",
++	 * "Lenovo BS145-15IIL",
++	 * "Lenovo IdeaPad S145-15IIL", "Lenovo IdeaPad S340-14IIL",
++	 * "Lenovo IdeaPad S340-15IIL", "Lenovo IdeaPad C340-15IIL",
++	 * "Lenovo V14-IIL", "Lenovo V15-IIL", "Lenovo V17-IIL",
++	 * "Lenovo Yoga S740-14IIL", "Lenovo Yoga C940-14IIL",
++	 * "Yoga Slim 7 14IIL05", "Yoga Slim 7 15IIL05"
++	 *
++	 * On some of these the bridge's _CRS method *sometimes* (under unknown
++	 * conditions) has a 64 bit [mem 0x4000000000-0x7fffffffff window].
++	 * This avoids some of the issues, but even then there are still issues
++	 * with assigning some 32 bit only BARs such as some Thunderbolt devs,
++	 * the 00:1f.5 BIOS SPI controller and BAR6 of some nvidia gfx.
++	 *
++	 * This entry also covers the following DMI_PRODUCT_VERSION-s which do
++	 * not need pci_use_e820=false. This quirk is a no-op for these models,
++	 * because there is no overlap between E820 regions and _CRS windows:
++	 * "IdeaPad Flex 5 14IIL05", "IdeaPad Flex 5 15IIL05",
++	 * "Lenovo ThinkBook 14-IIL", "Lenovo ThinkBook 15-IIL",
++	 * "Lenovo Yoga S940-14IIL"
++	 *
++	 * This entry fixes issues reported in the following bugs:
++	 * https://bugzilla.kernel.org/show_bug.cgi?id=206459
++	 * https://bugzilla.redhat.com/show_bug.cgi?id=1871793
++	 * https://bugzilla.redhat.com/show_bug.cgi?id=1868899
++	 * https://bugs.launchpad.net/bugs/1878279
++	 * https://bugs.launchpad.net/bugs/1880172
++	 * https://bugs.launchpad.net/bugs/1921649
++	 * https://bugs.launchpad.net/bugs/1931715
++	 * https://bugs.launchpad.net/bugs/1932069
++	 */
++	{
++		.callback = set_no_e820,
++		.ident = "Lenovo *IIL* product version",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "IIL"),
++		},
++	},
++
++	/*
++	 * The Acer Spin 5 (SP513-54N) has the same E820 reservation covering
++	 * the entire _CRS 32 bit window issue as the Lenovo *IIL* models.
++	 * https://bugs.launchpad.net/bugs/1884232
++	 */
++	{
++		.callback = set_no_e820,
++		.ident = "Acer Spin 5 (SP513-54N)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Spin SP513-54N"),
++		},
++	},
++
++	/*
++	 * Clevo X170KM-G barebones have the same E820 reservation covering
++	 * the entire _CRS 32 bit window issue as the Lenovo *IIL* models.
++	 * https://bugzilla.kernel.org/show_bug.cgi?id=214259
++	 */
++	{
++		.callback = set_no_e820,
++		.ident = "Clevo X170KM-G Barebone",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "X170KM-G"),
++		},
++	},
+ 	{}
+ };
  
- 	status = acpi_pci_probe_root_resources(ci);
- 
--	resource_list_for_each_entry(entry, &ci->resources)
--		remove_e820_regions(&device->dev, entry->res);
-+	if (pci_use_e820) {
-+		resource_list_for_each_entry(entry, &ci->resources)
-+			remove_e820_regions(&device->dev, entry->res);
-+	}
- 
- 	if (pci_use_crs) {
- 		resource_list_for_each_entry_safe(entry, tmp, &ci->resources)
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 9e1e6b8d8876..ddb798603201 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -595,6 +595,14 @@ char *__init pcibios_setup(char *str)
- 	} else if (!strcmp(str, "nocrs")) {
- 		pci_probe |= PCI_ROOT_NO_CRS;
- 		return NULL;
-+	} else if (!strcmp(str, "use_e820")) {
-+		pci_probe |= PCI_USE_E820;
-+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-+		return NULL;
-+	} else if (!strcmp(str, "no_e820")) {
-+		pci_probe |= PCI_NO_E820;
-+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-+		return NULL;
- #ifdef CONFIG_PHYS_ADDR_T_64BIT
- 	} else if (!strcmp(str, "big_root_window")) {
- 		pci_probe |= PCI_BIG_ROOT_WINDOW;
 -- 
 2.36.0
 
