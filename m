@@ -2,61 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F8ED52D9E7
-	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 18:11:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A388452DAEE
+	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 19:11:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241628AbiESQLQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 May 2022 12:11:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57954 "EHLO
+        id S238374AbiESRGa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 May 2022 13:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241849AbiESQK7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 12:10:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5AC14013;
-        Thu, 19 May 2022 09:10:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5849761BFB;
-        Thu, 19 May 2022 16:10:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85AF7C34100;
-        Thu, 19 May 2022 16:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652976655;
-        bh=altMU1x5dkULV65LqvjrW52Px3VtLs4XMJvIVnKnHWk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sUtc1K9UagbRyfhUiKz9v9PGOqfIf38DRORdTyH/Znl0GZp9Sc5oZl+Cy2hdiAb2u
-         LmL6LVdp0jtl0JGiKrnqhQ8x4oBfd/RrTUGnmfULdamzu2PpVrLvwjPEtslNGyZoL8
-         X/rnDplhSSXuyFv/8DgxoTnI7frHAVr62/sAGEojNSpqLwu8vc9T38JVazYDGa7Yhv
-         30CK4gAy8ulbsaeGA8OT53F30r5TGWH6p3bncIulcKhaL+uBRQv+WLlPQahI7T908O
-         NZnmHpv8n2WSk11UIhLCHoMdGydmwC9ui9SFsHwlp15uPMUUKOA/2HJ4xQu4tE1HsW
-         xwq5fGMbkjb0w==
-Date:   Thu, 19 May 2022 11:10:53 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>, Rob Herring <robh@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, james.dutton@gmail.com,
-        kibi@debian.org, bcm-kernel-feedback-list@broadcom.com,
-        james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe
- linkup
-Message-ID: <20220519161053.GA24069@bhelgaas>
+        with ESMTP id S233921AbiESRG3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 13:06:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B386E41328
+        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 10:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652979986;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fRL5o/FQVle6yNv8MI9P3EbCDe/tXM8yzChiqerKbfo=;
+        b=BuzvswUQL7U8jPACMK+J8CwEFhbfGG2pDDusC9oGN8b3PpwZBobswmWw5Kz2Xc6hU4v/iu
+        xjugkkm1qfqWRJQHRjZg6P/ehLVH1PODEnFwSrq0trOhCa7YjkLhemwzU42unujogi7HGn
+        OCYsJJVRzWfXCStlE0B2zajKcZjC8+c=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-633-fLV32e-pOraaQ7zdo5mqDg-1; Thu, 19 May 2022 13:06:25 -0400
+X-MC-Unique: fLV32e-pOraaQ7zdo5mqDg-1
+Received: by mail-il1-f200.google.com with SMTP id x3-20020a056e021bc300b002d13f8bad89so3497090ilv.18
+        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 10:06:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=fRL5o/FQVle6yNv8MI9P3EbCDe/tXM8yzChiqerKbfo=;
+        b=UruwhXD4Gh+PbdsnrpUW2FKJpuuz+C1EsquvmYCOIW62lHdBrCGm83qXl3v5hzsJUd
+         xmoaBEXJL4j7i1jr6u2w+v36acJY6eGc/wDPs7iGiEzRA2/eBYC0jBXwFsQaWc6oiQk1
+         pLmjQlDM4oVFMKxK3r3A/x4zdwGMWkpwAgHFfLCxMLLlogThCn3RszHgHaz0pNt+RWhR
+         ENnCo+/Ex1JJslj68d70x0A00Yy8TBuy2H0jVzMnbTFH1I9RGLUjuihEXJx/edPXPOr/
+         afyW/QjKtTh9pZLxftHI23RImOJLRIWCRcyMwvHqXlmLjUjlBj8uCpRMbgb4IcBBuVED
+         a5MQ==
+X-Gm-Message-State: AOAM530sece/tfVH4KAJfg6QdU9mk29x0NuBHJby11gJG4W+y7RtAMv+
+        Cj9vpwjqEeHucFrOney4xae46y0t+PJSCViy51paqz4gz6+8pUcPefxzVcystsYRq/qTqtYAqxi
+        9oCXi/mkVrDkwUM91oxHl
+X-Received: by 2002:a05:6e02:17ca:b0:2d1:409f:b088 with SMTP id z10-20020a056e0217ca00b002d1409fb088mr3352190ilu.92.1652979984720;
+        Thu, 19 May 2022 10:06:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyyFo4F3ERGBEdtU5xkpoaJeFSgi4OWnY2QMaC/0WPrUhvtcrp0n83HluBTJpmKGEgTGWOXig==
+X-Received: by 2002:a05:6e02:17ca:b0:2d1:409f:b088 with SMTP id z10-20020a056e0217ca00b002d1409fb088mr3352176ilu.92.1652979984493;
+        Thu, 19 May 2022 10:06:24 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id v189-20020a6bc5c6000000b0065a47e16f3asm858586iof.12.2022.05.19.10.06.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 May 2022 10:06:24 -0700 (PDT)
+Date:   Thu, 19 May 2022 11:06:22 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Sheng Bi <windy.bi.enflame@gmail.com>
+Cc:     helgaas@kernel.org, bhelgaas@google.com, lukas@wunner.de,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Fix no-op wait after secondary bus reset
+Message-ID: <20220519110622.6fd065d2.alex.williamson@redhat.com>
+In-Reply-To: <20220518115432.76183-1-windy.bi.enflame@gmail.com>
+References: <20220516165740.6256af51.alex.williamson@redhat.com>
+        <20220518115432.76183-1-windy.bi.enflame@gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220518194211.20143-1-jim2101024@gmail.com>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,116 +78,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Rob for my naive DT questions]
+On Wed, 18 May 2022 19:54:32 +0800
+Sheng Bi <windy.bi.enflame@gmail.com> wrote:
 
-On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
-> commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+> pci_bridge_secondary_bus_reset() triggers SBR followed by 1 second sleep,
+> and then uses pci_dev_wait() for waiting device ready. The dev parameter
+> passes to the wait function is currently the bridge itself, but not the
+> device been reset.
 > 
-> introduced a regression on the PCIe RPi4 Compute Module.  If the PCIe
-> endpoint node described in [2] was missing, no linkup would be attempted,
-> and subsequent accesses would cause a panic because this particular PCIe HW
-> causes a CPU abort on illegal accesses (instead of returning 0xffffffff).
+> If we call pci_bridge_secondary_bus_reset() to trigger SBR to a device,
+> there is 1 second sleep but not waiting device ready, since the bridge
+> is always ready while resetting downstream devices. pci_dev_wait() here
+> is a no-op actually. This would be risky in the case which the device
+> becomes ready after more than 1 second, especially while hotplug enabled.
+> The late coming hotplug event after 1 second will trigger hotplug module
+> to remove/re-insert the device.
 > 
-> We fix this by allowing the DT endpoint subnode to be missing.  This is
-> important for platforms like the CM4 which have a standard PCIe socket and
-> the endpoint device is unknown.
-
-I assume you're referring specifically to making this optional in the
-DT:
-
-    /* PCIe endpoint */
-    pci-ep@0,0 {
-            assigned-addresses =
-                <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
-            reg = <0x0 0x0 0x0 0x0 0x0>;
-            compatible = "pci14e4,1688";
-    };
-
-I don't really understand what's going on here, but I assume this
-describes a [14e4:1688] device, which the PCI database says is a
-NetXtreme BCM5761 10/100/1000BASE-T Ethernet
-(https://pci-ids.ucw.cz/read/PC/14e4/1688)
-
-Why do you *ever* need this stanza?  "git grep pci-ep
-Documentation/devicetree/bindings/pci/" says no other DT has one.
-
-If the link does come up, I assume normal PCI enumeration would
-discover the [14e4:1688] or whatever device is plugged into a CM4
-socket, and it would read and assign BARs as needed.  Why do we need
-to describe any of this in the DT?
-
-If the link doesn't come up, it looks like you set the "refusal_mode"
-so subsequent config accesses fail gracefully instead of with a CPU
-abort.
-
-[Tangent: since you never clear "refusal_mode", I assume there's no
-possibility of hot-adding a device.  A device must be put in the slot
-before power-up, right?]
-
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> [2] Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> Instead of waiting ready of bridge itself, changing to wait all the
+> downstream devices become ready with timeout PCIE_RESET_READY_POLL_MS
+> after SBR, considering all downstream devices are affected during SBR.
+> Once one of the devices doesn't reappear within the timeout, return
+> -ENOTTY to indicate SBR doesn't complete successfully.
 > 
-> Fixes: 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-> Fixes: 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> Fixes: 6b2f1351af56 ("PCI: Wait for device to become ready after secondary bus reset")
+> Signed-off-by: Sheng Bi <windy.bi.enflame@gmail.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  drivers/pci/pci.c | 30 +++++++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index ba5c120816b2..adca74e235cb 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -540,16 +540,18 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index eb7c0a08ff57..32b7a5c1fa3a 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5049,6 +5049,34 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+>  	}
+>  }
 >  
->  static int brcm_pcie_add_bus(struct pci_bus *bus)
->  {
-> -	struct device *dev = &bus->dev;
->  	struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
->  	int ret;
->  
-> -	if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
-> +	/* Only busno==1 requires us to linkup */
-> +	if ((int)bus->number != 1)
+> +static int pci_bridge_secondary_bus_wait(struct pci_dev *bridge, int timeout)
+> +{
+> +	struct pci_dev *dev;
+> +	int delay = 0;
+> +
+> +	if (!bridge->subordinate || list_empty(&bridge->subordinate->devices))
+> +		return 0;
+> +
+> +	list_for_each_entry(dev, &bridge->subordinate->devices, bus_list) {
+> +		while (!pci_device_is_present(dev)) {
+> +			if (delay > timeout) {
+> +				pci_warn(dev, "not ready %dms after secondary bus reset; giving up\n",
+> +					delay);
+> +				return -ENOTTY;
+> +			}
+> +
+> +			msleep(20);
+> +			delay += 20;
 
-It's a big leap from "DT endpoint is optional" to "bus->number == 1 if
-DT endpoint is missing" (if that's even what it means).  Help me
-connect the dots here.
+Your previous version used the same exponential back-off as used in
+pci_dev_wait(), why the change here to poll at 20ms intervals?  Thanks,
 
-I *guess* this is really saying "we only want to bring the link up for
-RPs"?
+Alex
 
-And "bus->number == 1" assumes the RP is on bus 0, there's only one
-RP, and that RP's secondary bus is 1?  So it's only in that case
-(we're adding the secondary bus of the RP), that we need to manually
-bring up the link?
-
->  		return 0;
->  
->  	ret = pci_subdev_regulators_add_bus(bus);
-> -	if (ret)
-> +	if (ret) {
-> +		pcie->refusal_mode = true;
-
-Is this related?  It doesn't *look* related to making the DT endpoint
-optional.
-
->  		return ret;
+> +		}
+> +
+> +		if (delay > 1000)
+> +			pci_info(dev, "ready %dms after secondary bus reset\n",
+> +				delay);
 > +	}
+> +
+> +	return 0;
+> +}
+> +
+>  void pci_reset_secondary_bus(struct pci_dev *dev)
+>  {
+>  	u16 ctrl;
+> @@ -5092,7 +5120,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+>  {
+>  	pcibios_reset_secondary_bus(dev);
 >  
->  	/* Grab the regulators for suspend/resume */
->  	pcie->sr = bus->dev.driver_data;
+> -	return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
+> +	return pci_bridge_secondary_bus_wait(dev, PCIE_RESET_READY_POLL_MS);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+>  
 > 
-> base-commit: ef1302160bfb19f804451d0e919266703501c875
-> prerequisite-patch-id: 23a425390a4226bd70bbff459148c80f5e28379c
-> prerequisite-patch-id: e3f2875124b46b2b1cf9ea28883bf0c864b79479
-> prerequisite-patch-id: 9cdd706ee2038c7b393c4d65ff76a1873df1ca03
-> prerequisite-patch-id: 332ac90be6e4e4110e27bdd1caaff212c129f547
-> prerequisite-patch-id: 32a74f87cbfe9e8d52c34a4edeee6d271925665a
-> prerequisite-patch-id: f57cdf7ec7080bb8c95782bc7c3ec672db8ec1ce
-> prerequisite-patch-id: 18dc9236aed47f708f5c854afd832f3c80be5ea7
-> prerequisite-patch-id: dd147c6854c4ca12a9a8bd4f5714968a59d60e4e
-> -- 
-> 2.17.1
-> 
+> base-commit: 617c8a1e527fadaaec3ba5bafceae7a922ebef7e
+
