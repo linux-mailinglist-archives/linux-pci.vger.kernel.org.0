@@ -2,187 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 511F552EF79
-	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 17:43:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40DC552EFE8
+	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 18:02:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243998AbiETPnE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 May 2022 11:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40350 "EHLO
+        id S1351231AbiETQCy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 May 2022 12:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345047AbiETPnD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 11:43:03 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4760E57100;
-        Fri, 20 May 2022 08:43:02 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24KFXR64022587;
-        Fri, 20 May 2022 15:42:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=ltoq1olNR8WJYwxw4Bm2LDNO1mEZyrvJflXQNQaCZjM=;
- b=M9Rfi0p8njY3uH9Z2+uQp88gbOpM8Rrl8gs9Ywk6yM+3CpA75Ji6DolFJkecr6tLhYFw
- oRUdUrQrUSKAAdNSqZI1mOCVDSplpztmjrWCrStnHMZiJWNCmFgwuNGUWfFsjqZNA/04
- eavbWM/pX+phmP7VtmI7usSsjDSOv8UOYADRMzWhZFBv/6Pu4GOqaFq0ZkRXGMi53/Xl
- uj1Qm6Hl+mOdSLyWVr6+39XPRm2ETh/SzHInZ42TbZlTigB2G0wbmYi8/DXbHDgS+mel
- 3s9CMuOGsrZC81VsDpc1hD3yhgBqnLL6JqoYJxMXSDq0HTBwmhwNhPcPAlsej+YVQ8CK 3g== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g24ytyecr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 May 2022 15:42:44 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24KFQqIM019903;
-        Fri, 20 May 2022 15:42:43 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3g22v6fppv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 May 2022 15:42:43 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YYMZt2+pV3QZIVZy1YSuMPVBYTQ5gJbMuIMeuwzW7UiZGFh1XEYwwtV9aeDjdIgFe78Gdxn/hc37e6Omi1YtB0NhhTwx3rYJHYaVwgyinx2iFvsP9PDqbZsNC6C/6e7474XgD//3QamdMtVT7dU3h4DyVg97qEIyRIXW57sDSNgT7OCIsf9sNRvLHoP/EWTuL+u1c/ChuFvFzcRVZ7jeFgJugEv90Evm6k39BjQRz6PgoLVHvGMZS19Mv35pAKlfTBamyEuFR8yuMREfbb34VwBwGHHFjuLtzquA92tkqKXuT8PDM+RgrF2+3HQOmS/EVvefbQchqDhB5YRy2Rplyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ltoq1olNR8WJYwxw4Bm2LDNO1mEZyrvJflXQNQaCZjM=;
- b=MTlx6pgWlz8axf3QFClU3pGfRsHNkoTepBhSVQSQjowLqHB4QGogrjsyzkfHPJo3ueH64lZuy72JNX6eCcitNXZ9xxQ8/3vRyAZ3u7XDMEC2SKQTwcWh4EYyUjRoH8RFynHCmxl2CknlerSsa9/McsSLWQJgMbd6GWhqW/44tLNORC7L/TEZcpRDSgNIBbcNQfJD1fBGeTi0muOrDJtGXfOgTty9/c/YWOmXjBT6jPZDI84yNpJc0vlV8jKFD3EzTbBEA48JdfhQZdZeqftFgVbW7efsbJDZf8UcTJT8m0ewcvU4Z1mNYYFXnae58FuXGcfWqkammYJwWBD7rZmCjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        with ESMTP id S239950AbiETQCx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 12:02:53 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56FA54BEB;
+        Fri, 20 May 2022 09:02:51 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id v8so13164467lfd.8;
+        Fri, 20 May 2022 09:02:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ltoq1olNR8WJYwxw4Bm2LDNO1mEZyrvJflXQNQaCZjM=;
- b=vWT4jcr458GdsnxvJ52ww1aCB7nHDMruJkD0pwL3OkJKIgDUrtjYvacTkmlRGTTZcgMFP46DfT0GlsQOnwkWF9a7A42/gMoQJ+kC7kgVdvqmQckV+nJec8cc24G3cmgikn+tNfSDMfjeC12LkWXl3xjOJHVpN7d4bMGhkafMXMA=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BN0PR10MB5013.namprd10.prod.outlook.com (2603:10b6:408:120::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.16; Fri, 20 May
- 2022 15:42:41 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f%9]) with mapi id 15.20.5273.017; Fri, 20 May 2022
- 15:42:41 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Lukas Wunner <lukas@wunner.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Gavin Hindman <gavin.hindman@intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/1] DOE usage with pcie/portdrv
-Thread-Topic: [RFC PATCH 0/1] DOE usage with pcie/portdrv
-Thread-Index: AQHYYZpUtjXIlIqUW027xRTonVwuYa0TNHkAgAMcFgCAA8sefoAEVZ+AgAZGDoCAAp4oAIAApmkAgAABWQA=
-Date:   Fri, 20 May 2022 15:42:41 +0000
-Message-ID: <93582FA1-3450-4D1A-94CB-7C90118DEA64@oracle.com>
-References: <20220503153449.4088-1-Jonathan.Cameron@huawei.com>
- <CAPcyv4geBaTkoJ+Gefgq6RaKHtB3NMh5ruZ-1yV_i0UVaw3SWA@mail.gmail.com>
- <20220507101848.GB31314@wunner.de> <20220509104806.00007c61@Huawei.com>
- <20220511191345.GA26623@wunner.de> <20220511191943.GB26623@wunner.de>
- <CAPcyv4hUKjt7QrA__wQ0KowfaxyQuMjHB5V-=rZBm=UbV4OvSg@mail.gmail.com>
- <20220514135521.GB14833@wunner.de> <YoT4C77Yem37NUUR@infradead.org>
- <20220520054214.GB22631@wunner.de>
- <CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com>
-In-Reply-To: <CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0cc5d5e0-91c3-455b-5df9-08da3a776038
-x-ms-traffictypediagnostic: BN0PR10MB5013:EE_
-x-microsoft-antispam-prvs: <BN0PR10MB50135F7ED697BA24C52C5F8293D39@BN0PR10MB5013.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8O9hSQcHAVLOJYGH71cJNs2KQOtsXrwpSL0X4EhpiD0335FZossV415dmczWTBqzma7QmUKGeGy6i0Ld5HdOe3sbYpdlfusXp6jBuE+bfgrPrBJUrBTQg22xdtgGyF8LviO5uY2alLG05PgF3XoKV6OrWGjFJURMXJuIJj3RIOx/cYb9ZK/R86Zyw0leXFfZNdFuvDxGLZhODW7l9UgDUK7PQZR0iWOqaElXczqdoOq6Xb7UI7BpPKq269JnOlsublp81Y9DybfSwdSrHiArBap+9NJt0PxguNNq1qFb3XCv4AeTuG7tu0OP0ka9bTXNhmsn8yjtQlrcIO9E8Qa+yfIPeoS4E3nxoUfY6XutNQa9CjJ+QEkv7PDrXp970OS2uKk2A+UikQ+B7xvRW12xN4X4kLUBxTvSaBRTERgFfrUAzI/Xn0/2GqPN2IgfxcJtq3fnbhNiN6hu68F1oq31zgtFgcmRajbqSiNaKbVKODTkj8mNJO83U/gY2Fz+2Vwv7l/RreHxyavjqFjaua7cFv01LbvH1zlqOAJR0NKZPnUyRPjz4sMmx8BQeD8+MPbcLIyUOfX0/rcV6xeZ7ndMPuIFX32Hxz/r6xNea2niQAw8YMVejnhl8ARtwMFUVNSv0Jxrc7ih75bKbi5QVO+FmgVryMw5Btav2wbkIivJHMOm6sttgFYA+D8kSwPS1BUc3JW/jCgOhbKDM88bidktMKew6+mGTY4AQ9wLU0OsOJAVZqDGL8TvxFwWm6CiqVxc
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(86362001)(5660300002)(186003)(38070700005)(2616005)(38100700002)(2906002)(53546011)(4744005)(83380400001)(4326008)(71200400001)(6506007)(6512007)(26005)(36756003)(91956017)(33656002)(508600001)(6486002)(8936002)(76116006)(66446008)(122000001)(64756008)(316002)(6916009)(54906003)(8676002)(66476007)(66556008)(66946007)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?G3p2aWccXI3tvTStXHrcnQbkuwaC5OBcXqzSIBe8Ii6A4QzAEfJ0CwcNYccN?=
- =?us-ascii?Q?GKnwBFuEyNNpb58ViRQ1YC11XHlJuxeI57F5z4vIABDHRjbXzwtcn09VaiRS?=
- =?us-ascii?Q?T7paTp+LsqCrhSKh6NfocvTl8HE92UARqFqyMnnsiM3kfcSvcMjcUpmlHqIt?=
- =?us-ascii?Q?aYwsYkeic0bWWwcCj0BWNr3z8dmZX8K85PMOQ+/RTHkmO1/omMKHBKieL6kW?=
- =?us-ascii?Q?RCGQqdjmd90IJa+61+VNc7VbqxgHRz26kUfMVZprfbRUjVKTzXHPCcWJxxHL?=
- =?us-ascii?Q?o+ae+G91CLvmm85nfDXHrqiBSqR0L4sqP8zKTMfqsr0rdZdiRv7n5543cxfm?=
- =?us-ascii?Q?wOMk/1PhAZ0wRl2e7NdENLCjRK6A2cYEjBGmDNT4mwbrWguJtQXo2VpJc3CN?=
- =?us-ascii?Q?pkxZZVWIX74Po21TirJderh9c4+bz0yBiGf7kMIF3hR0qWizoJRHBMdASx4z?=
- =?us-ascii?Q?A9OCMRy20m/KehCrxHF2Y/wjgwPZQXrNRPRAAQn1koFpURSWda8Lc9wggooZ?=
- =?us-ascii?Q?nEC0odnTzhK3M9e1rULavX4Gp19L5YtcairOD56yUUX/QDOHR28aiOUyAlpR?=
- =?us-ascii?Q?heJY0/seqiRkVBxTy9YP8u92QdlxcQA9dr6qRJwdl1hoPZ09YFKE/8aZvV2X?=
- =?us-ascii?Q?hIcA6zSuXM3GcbHJHhVW2Tr3aGwZi/5W4PAhP1kxxdE3KlOh/BgX7g9uqnf+?=
- =?us-ascii?Q?6VTtKhlvF/Nfre0Jj7wla7evUPB67zriTam6NlPzj+cyYJBYYbXYXGKaA6hj?=
- =?us-ascii?Q?1oEatSyA7Q94YXBATFbaiKNH50Hf71TzCCTnFRtJQuO7q/iDyk0Te6XWkT4I?=
- =?us-ascii?Q?wzCjGSOpGqB2s2LdXZP1rITC6Wj4r+cCLgswpOiFJAw3WLmbD3pHtDedeasN?=
- =?us-ascii?Q?dl5iGNQNH+Rle4+NB0jW/i804XpwX2ycRgYoFnJtVctXQY5id8YxoDa9BzUK?=
- =?us-ascii?Q?lDyRFrjfvlF77kxBaIfjiNOpga/pCRHXkL5stVoqVUm6Y/xrW/wfDebDLKc7?=
- =?us-ascii?Q?HY+956DcSpo6pD9xrqSNKvOnSbxX3MIgFhjCl+0kp886Jz6lfAAoUJP43TmV?=
- =?us-ascii?Q?YWg5uSNEnZb6pwnAtSYiGzyF0SAmk+eqW5eD3aCz5NDM4vSlGoO4G1J/VU41?=
- =?us-ascii?Q?C8XdUbfq3F5vLtnPpJ2JL0V1b1BKSYM5FPYmn8vFGb0ecPkYWFUUNgsapM1U?=
- =?us-ascii?Q?rVCNdHW9Cs4isRbbILRjoQIohhMwR6Zab4A+MX+pEG1z5xHRAQsBhC2UnRbr?=
- =?us-ascii?Q?q9mwJpkNaSaL09RQvK86ni1PPCKKZgmiErZeYfVt68g47hiM3F9FkigmMqI6?=
- =?us-ascii?Q?fttCF6uzzdd+GUS8ikHyDo9SDy+yUoRuoQoadCvQR93UCnhcIN2uC/OaCPCS?=
- =?us-ascii?Q?QtB/APjCj1gA306KiJOjMO06OSLIt1HexkIGOfCD8zYr4gCruiWVvkyX0xYo?=
- =?us-ascii?Q?6yoemoFssnoHPHqsfPZQPEdfbfHgUwpqlQqWmNs4KQ7QOWh3bZvR/qsbPNrh?=
- =?us-ascii?Q?IrEDe8Eq5WkKYuXgssEi0Hhp7PPhjdOs4cZ9KMpQEKD00p8sLfTMyTXm9Enq?=
- =?us-ascii?Q?9Pj2QJ2rX+6msudrEuFN5pS4CN86ZjFrlJb7G11Uph3AXn5DHtNeLM0NEglb?=
- =?us-ascii?Q?MYrcZsEyO3tYXotX03IzmaqXJBW7C/01lhy7gZsJJlf/+MR1sp+Py541j9An?=
- =?us-ascii?Q?dt8qy4agI4rM5UqiaJTazXmlhprOCg12qV7UVWH0t47wwoKYnLENyYCQz5HW?=
- =?us-ascii?Q?sJGBo+hNHnnjWu8bmQsM5JqyhLBpYJ8=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D36A74B3A74CC643A66BFB0FBB13B699@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LkSGf2bxH59WTVp83FSY5qiWK4pwS5blQmXLKyjSPY8=;
+        b=LzZ6uTIeyrfaKNl5cUwwZFfQvtAC3G4sg2F+8g0tpdPj3a30M7PcedfpSmZG2JQh2V
+         QDOHcZN5lPVhVZtsz8VJgniYDuJce1KaaPCM6PLcwNRXpvKzbMSHPs7zuDRRnULQp8NX
+         q4FMcsrqiejZ6LmQ5sd08XNREBDUnariDaESgLhDUwnUSAV/qyUavRSgIRzCxQcEEWCM
+         uUgkP+XKQ1y1m69r1yHxRoHzHnjpHCdGti/85+RKXrnPdgtowx4e2Yechk9n/ggyb+fq
+         Va6w5J5tqm4nQjffYz0tAkCvL/jBpaO1tSu8a5z589JwJUyKO89aQRL7CcFv7nG8h3Pa
+         VR/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LkSGf2bxH59WTVp83FSY5qiWK4pwS5blQmXLKyjSPY8=;
+        b=RSu9w2+U8xQ7SApll2fkJkwEy8BlMWve8YXuDRoDN8cDcPLu9qU79GJ3pJzB1NDbxs
+         M5X2QNghlxeJTbr/94MsNTSXbgzOJFZFwQ0UroDxXrBnIctw2O5GKPFD0+Tfu2Z9y+Rq
+         RS2ueaXl/bICMkrI+tcmuUgd3Yz3jLbTXrBEQtuo8QLdNMGiCltQ5x6C1o42NRTSmvNB
+         z0GwYQUjK9i8TKTOM90EhWOK5B2so7xHf8nHek8tRoAyNdr9jOHVBQHrBCeKG2BoLbvd
+         CUTi1bTethJLYQ6K5qUQ6+lydKMhLPyvnape3WhUBcB/s6mRB3KZZIx514UU5AwvBPNa
+         Km3Q==
+X-Gm-Message-State: AOAM5312iarPEUtMH6zmUsxF/IJe/4jXEjpQJWfIMdFdlAVcpQpFOnrE
+        2Gh7dxj+RYKOiYdVS49ELq8ZZX22fQKpZA==
+X-Google-Smtp-Source: ABdhPJy19kEdrGjfue1GtCczQo4F+DapVsY3piSITa4hnXnRq2NVBcozhD80EXbDIrUP8RV2FvDKXA==
+X-Received: by 2002:a19:4303:0:b0:473:f5fb:27b2 with SMTP id q3-20020a194303000000b00473f5fb27b2mr7341009lfa.626.1653062570085;
+        Fri, 20 May 2022 09:02:50 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id t5-20020a2e9545000000b00250a19f8b47sm355024ljh.126.2022.05.20.09.02.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 May 2022 09:02:49 -0700 (PDT)
+Date:   Fri, 20 May 2022 19:02:46 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 16/17] PCI: dwc: Introduce generic platform clocks and
+ resets sets
+Message-ID: <20220520160246.guczq52v2ycfgc6c@mobilestation>
+References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503214638.1895-17-Sergey.Semin@baikalelectronics.ru>
+ <20220516222920.GC3296584-robh@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cc5d5e0-91c3-455b-5df9-08da3a776038
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2022 15:42:41.5703
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q1KS4/hY5lYZOCPDHnOZBDQ71Wkl3ZxsNbhDWvNMux6cJ6P366QgsQcqzqrS+y8Oxwm6Q4xOl8UWF6LwvD4b5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5013
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.874
- definitions=2022-05-20_04:2022-05-20,2022-05-20 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=960 spamscore=0
- bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2205200105
-X-Proofpoint-GUID: uQ52l4iaDIMLERyH4E90GY9fNiEZG9o-
-X-Proofpoint-ORIG-GUID: uQ52l4iaDIMLERyH4E90GY9fNiEZG9o-
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220516222920.GC3296584-robh@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, May 16, 2022 at 05:29:20PM -0500, Rob Herring wrote:
+> On Wed, May 04, 2022 at 12:46:37AM +0300, Serge Semin wrote:
+> > Currently almost each platform driver uses its own resets and clocks
+> > naming in order to get the corresponding descriptors. It makes the code
+> > harder to maintain and comprehend especially seeing the DWC PCIe core main
+> > resets and clocks signals set hasn't changed much for about at least one
+> > major IP-core release. So in order to organize things around these signals
+> > we suggest to create a generic interface for them in accordance with the
+> > naming introduced in the DWC PCIe IP-core reference manual:
+> > 
+> > Clocks:
+> > - DBI - data bus interface clock (on some DWC PCIe platforms it's
+> >   referred as "pclk", "pcie", "sys", "ahb", "cfg", "iface", "gio", "reg",
+> >   "pcie_apb_sys");
+> > - MSTR - AXI-bus master interface clock (some DWC PCIe glue drivers refer
+> >   to this clock as "port", "bus", "pcie_bus",
+> >   "bus_master/master_bus/axi_m", "pcie_aclk");
+> > - SLV - AXI-bus slave interface clock (also called as "port", "bus",
+> >   "pcie_bus", "bus_slave/slave_bus/axi_s", "pcie_aclk",
+> >   "pcie_inbound_axi");
+> > - PIPE - Core-PCS PIPE interface clock coming from external PHY (it's
+> >   normally named by the platform drivers as just "pipe")
+> > - CORE - primary clock of the controller (none of the platform drivers
+> >   declare such a clock but in accordance with the ref. manual the devices
+> >   may have it separately specified);
+> > - AUX - Auxiliary PMC domain clock (it is named by some platforms as
+> >   "pcie_aux" and just "aux")
+> > - REF - Generic reference clock (it is a generic clock source, which can
+> >   be used as a signal source for multiple interfaces, some platforms call
+> >   it as "ref", "general", "pcie_phy", "pcie_phy_ref").
+> > 
+> > Application resets:
+> > - DBI - Data-bus interface reset (it's CSR interface clock and is normally
+> >   called as "apb" though technically it's not APB but DWC PCIe-specific
+> >   interface);
+> >   apb, sys,
+> > - MSTR -AXI-bus master reset (some platforms call it as "port", "apps",
+> >   "bus", "axi_m");
+> > - SLV - ABI-bus slave reset (some platforms call it as "port", "apps",
+> >   "bus", "axi_s").
+> > 
+> > Core resets:
+> > - NON_STICKY - Non-sticky CSR flags reset;
+> > - STICKY - sticky CSR flags reset;
+> > - PIPE - PIPE-interface (Core-PCS) logic reset (some platforms call it
+> >   just "pipe");
+> > - CORE - controller primary reset (resets everything except PMC module,
+> >   some platforms refer to this signal as "soft", "pci");
+> > - PHY - PCS/PHY block reset (strictly speaking it is normally connected to
+> >   the out of the external block, but the reference manual says it must be
+> >   available for the PMC working correctly, some existing platforms call it
+> >   as "pciephy", "phy", "link");
+> > - HOT - PMC hot reset signal (also called as sleep");
+> > - PWR - cold reset signal (can be referred as "pwr", "turnoff").
+> > 
+> > As you can see each platform uses it's own naming for basically the same
+> > set of the signals. In the framework of this commit we suggest to add a
+> > set of the clocks and signals identifiers and corresponding names for each
+> > denoted entity. The platforms will be able to use them to define local
+> > mapping tables between the generic identifiers and the available set of
+> > the clocks and resets. The tables can be then utilized to create the
+> > corresponding bulk-arrays, which in its turn can be passed to the
+> > clock/reset-bulk API methods to easily get/enable/disable/put,
+> > get/reset/assert/deassert/put all the handlers at once or, if it's
+> > required, manipulate with the handlers individually.
+> 
+
+> No doubt there is way to much variation here (ummm, Qcom!). Some 
+> standardization of names in (new) bindings would be good. That's where 
+> we should be defining names IMO.
+
+That's what my patchset starts from. See the {reset,clock,reg}-names
+properties definitions in the snps,dw-pcie-common.yaml schema being added
+in the framework of the patch
+[PATCH v2 01/17] dt-bindings: PCI: dwc: Define common and native DT bindings
+in this series.
+
+> 
+> On the driver side, I'd like to see the DW core handle clocks/resets/phys 
+> at least for the easy cases of just turn on/off all the clocks and 
+> toggle all resets. Perhaps even more minimally, move the clk/reset 
+> struct pointers to the DWC core.
 
 
-> On May 20, 2022, at 11:37 AM, Dan Williams <dan.j.williams@intel.com> wro=
-te:
->=20
-> Otherwise, a
-> ring3/ userspace helper that can live in non-pageable memory to avoid
-> scenarios like this sounds like a capability that would be worth
-> having regardless.
+If it was that easy I would have done that in the first place.) Even
+though there is well defined set of the clocks and resets a normal DW
+PCIe RP/EP controller can have (see the list in the patch log), the
+way they are toggled and the signal sources due to the controller
+complexity in the most of the cases is platform-dependent.  Just
+enabling and de-asserting all of them likely will never work. So such
+function would be just useless. In addition to that there are signals
+like app_ltssm_enable or phy/link reset request which needs to be
+checked at some point of the reset procedure. The way these signals
+are available in the system is also platform-dependent (syscon,
+additional CSRs blocks, etc). Thirdly there can be PHY viewport CSRs
+available in the DW PCIe Port Logic CSRs which can be used on the
+platforms to tune the PHY settings up during the cold reset process.
+Finally the platform-specific timings between the reset signals
+assertion/de-assertion need to be preserved. Taking all of that into
+account would cause having a very complicated generic clock/reset
+handling procedure.
 
-TLS has a similar issue: We would like to support TLS-protected network
-storage for the root filesystem. The user space agent that handles TLS
-handshakes would therefore need to reside in non-pageable memory to
-prevent a deadlock if a new handshake is needed to access the root's
-backing store. But then so would the certificate trust chain and any
-handshake configuration information.
+Synopsys provides a Verilog module called DWC_pcie_clkrst.v/CLK_RST.v
+which can be used by the platform engineers to implement the clocks
+generation and cold/hot reset without much software interference. But
+it isn't always possible to predict the timings being required on the
+real silicon. So the hw engineers mainly omit such module and rely on the
+software to implement the proper reset procedure, which due to many
+reasons (PHY settings, timings, etc) mostly differs from SoC-to-SoC.
 
+So to speak I don't think that we can (should?) create some truly
+generic at least cold start procedure due to too many variables at
+stake (though the one implemented in my Baikal-T1 PCIe driver, last
+patch in the series, follows the cold procedure described in the hw
+reference manual). At least IMO it won't be possible without many
+hooks inside such method with platform-dependent signals checking and
+delays. So the only generic thing that we can indeed implement is to
+have the clock and reset structure pointers inside the DWC core and
+create a generic platform resources request/release methods. Even in
+that case these methods can't be called from the generic
+host/end-point probe procedure and need to be invoked from the
+platform-specific host_init/host_deinit methods by the platforms
+themself. It's because there are so many platforms already
+implemented. If I try to consolidate all their resource
+request/release parts in a single method, it most likely cause the
+regression.
 
---
-Chuck Lever
+What do you think if I would just create the arrays with pointers to the
+generic clk/reset structures in the DWC private data, implement their
+request (release won't be required due to devm-methods utilization)
+procedure and use it in the framework of my driver only for now?
 
+> 
+> IOW, I'm not sure this patch is really helpful without some of the above 
+> happening.
 
+Well, I've provided a driver (the last patch in this series) which
+design can be used as a reference to implement the clocks/reset
+request procedure with a help of the submitted in this patch tables.
+But if you are agree with creating a generic resource request method,
+the clocks/reset request part of it can be re-designed, simplified
+and moved to that method.
 
+-Sergey
+
+> 
+> Rob
