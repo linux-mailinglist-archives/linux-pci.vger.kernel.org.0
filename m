@@ -2,210 +2,278 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 144FA52F20B
-	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 20:07:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C684652F288
+	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 20:21:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352407AbiETSHO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 May 2022 14:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
+        id S1347559AbiETSVb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 May 2022 14:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237434AbiETSHN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 14:07:13 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F10D18C052
-        for <linux-pci@vger.kernel.org>; Fri, 20 May 2022 11:07:11 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id u23so15681169lfc.1
-        for <linux-pci@vger.kernel.org>; Fri, 20 May 2022 11:07:11 -0700 (PDT)
+        with ESMTP id S1352674AbiETSVQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 14:21:16 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A22E934640;
+        Fri, 20 May 2022 11:21:14 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id l13so9048197lfp.11;
+        Fri, 20 May 2022 11:21:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=mAvXka/K4vTJUVKh3HywAZKjh1VdtKdtrBO8nUgt5Kg=;
-        b=PCNc9mYnLFMk26nSYKsrGsijruCcAel2lWQCYv9ECe28Fo9kSEsSMMaTSQM6ge+ABP
-         osBN3Jq7eGDCxyxDubAUNSy/QdOrMbPd8m8a2jjy1d++mWkBOmHtUZvyKF40o+UgVF+b
-         MKXCHwBSiRSfFBklCPeE0Yn/8veTWixIekjBLXWziP7q6nnp39oJpWvCKZGkAcMSuIgY
-         H92FAPwmaK1N2DceUhzwqz4cvuvhZuRrXS7j0QTvXhCJTzlsGEZxbUhn53whzDupCLUg
-         w1P9Ygz0ed2axHdtch68jpb2AQspu+M/JeD2J9IVTBAdzIy9TN8u6dwg9jPs+zuw0qNM
-         18cw==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+Hf/TTjZvIJgguQoReoeCBPpae2wzrfZLm0W7rE7A40=;
+        b=YpC7BxbfU0JQGV/+eRko+YdAwCAyJWToP03qAA7tL9zkTPcRUsmK5IrV2+r3wRmXDV
+         jwxO7fo47sqh6ANjEBoUBO6QiXT4apk5AG8hcUwN6DE1jra63QC8fHGAUoARohKJUpch
+         e1JA/TeGyAgfcexCzt2UyILgMpGPLUXDC7SB+ZPgg7JOKx2SYbtgUMrT5n4289ux7y+2
+         rmsgqr5PdfEcveDZFQAmaA/u7anrtwfEcLJ+WVsAIN6o/3kvUR89mwxNE8IA/+FX9qer
+         V83n9iU3l8h1T2dSEwdSnqbjyFC3d5g9cfPoRrtdyiUKc5J8hQbFHep70XcMqRpXBb6L
+         lshA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=mAvXka/K4vTJUVKh3HywAZKjh1VdtKdtrBO8nUgt5Kg=;
-        b=viGAUDJmba+069CgAes+Hr9KaCZq0PVWYxp3uw/9xWiyW08lwFxTpzsx6Nqcjq8Iwp
-         pukXCkr4+h++YtjlKAf9EH6N+J+61PLQyc0RJb0hnbg59n5dLsdlPnX/ttrhAxdzdMlF
-         GlWyuj9i6Ak50KArQqtAzYsxfkxn6b7XRemBkL10Y0bfMuV2dD48d7jgWdcLI5u8394k
-         dUIDrCqyTF+ERR7Yg6/NP2ITIQVM9H0dD2BmSPaWEDUrd+ZhzksdF3IVcL0VcgQ/0gMl
-         b6AbAzeP0RDgk/h91fQDh2PPiUVY7I8pH1+1CZfGBu8fvwKEs2/5KYf48uQaPZgdj3u9
-         QN+w==
-X-Gm-Message-State: AOAM530cnFluTxzIL1LGCTdShYmgabUoSniTXVQ5RWMd5L89TFSkHDPU
-        LI+reD+8ZxYsidc2VluhfbC+Fw==
-X-Google-Smtp-Source: ABdhPJwBww574ZY9b1SAauSjxGUH1kZvIesP7vieS+Ben2OWqZcPw3ilAvLP2FM61MpucttomLTlfQ==
-X-Received: by 2002:a05:6512:a92:b0:45c:6b70:c892 with SMTP id m18-20020a0565120a9200b0045c6b70c892mr7719027lfu.124.1653070029620;
-        Fri, 20 May 2022 11:07:09 -0700 (PDT)
-Received: from ?IPV6:2001:470:dd84:abc0::8a5? ([2001:470:dd84:abc0::8a5])
-        by smtp.gmail.com with ESMTPSA id q11-20020ac25fcb000000b0047255d211bcsm740429lfg.235.2022.05.20.11.07.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 May 2022 11:07:09 -0700 (PDT)
-Message-ID: <ad3c5881-9e59-795d-0735-f23ba815a31b@linaro.org>
-Date:   Fri, 20 May 2022 21:07:07 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v10 06/10] PCI: dwc: Handle MSIs routed to multiple GIC
- interrupts
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+Hf/TTjZvIJgguQoReoeCBPpae2wzrfZLm0W7rE7A40=;
+        b=Hek1AJ7yikxdPSKdZRvbsrjHHxv4H5rexDW4fTCVkZutXfOnIlo/N9vGS67ctlqPYG
+         LLdO0rnHt6mhU7jkaPp0hxgyiBLqa4h82Qbv0e7FSBvGXNUEMKBPYvgAxQ+mf8H4d1Xb
+         VxJrSl0R2jBsoHH80FpCHeS5xf7yx1b+LuPAN+OQROjuuBpw8rfHk8Ef0H7R6AAdNCwO
+         Ig8B8cbFD6QugJbmDsB5+/TvlxO+blriqLLDhBAWmksFPugq0YM1cFWR08rb4mcJmCyZ
+         AbpdbTZKRPmIqQsV/ds2LKnG1MH4JqVkgweJkIxhMaBH+/N8CQJmL5Gj37pUnsR8uOfI
+         xmrQ==
+X-Gm-Message-State: AOAM531NQvEdwFLPjwp9b4RML/iBP3Uve1gKftPFDXwjwyKX/y6qprOW
+        4swlLE0N8U7M4Jl+ScUMzDM=
+X-Google-Smtp-Source: ABdhPJwE5ODuzJITkeLRjFs05/WQ+swUSj5paxBMU3uTDRK+Rqp/y7eo4bkwpMZ/tmzzx2oO+o3lAA==
+X-Received: by 2002:ac2:593b:0:b0:477:a3d8:4042 with SMTP id v27-20020ac2593b000000b00477a3d84042mr7783794lfi.640.1653070872772;
+        Fri, 20 May 2022 11:21:12 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id j29-20020ac2551d000000b004725b99d2fdsm748207lfk.164.2022.05.20.11.21.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 May 2022 11:21:12 -0700 (PDT)
+Date:   Fri, 20 May 2022 21:21:10 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-References: <20220513172622.2968887-1-dmitry.baryshkov@linaro.org>
- <20220513172622.2968887-7-dmitry.baryshkov@linaro.org>
- <YoS/wwkZoaFc76u1@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <YoS/wwkZoaFc76u1@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 15/17] PCI: dwc: Introduce dma-ranges property support
+ for RC-host
+Message-ID: <20220520182110.z7boelenloaxzvwo@mobilestation>
+References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503214638.1895-16-Sergey.Semin@baikalelectronics.ru>
+ <20220512135708.GC35848@thinkpad>
+ <20220512194135.ku73pae2xdvyocx7@mobilestation>
+ <20220517172042.GC4528@thinkpad>
+ <20220518192623.fl3ogcxlurcd6okd@mobilestation>
+ <20220519074053.GA24064@workstation>
+ <20220519105238.7bgdigyxvg2cdct6@mobilestation>
+ <20220519152116.GA210475@thinkpad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220519152116.GA210475@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/05/2022 12:43, Johan Hovold wrote:
-> On Fri, May 13, 2022 at 08:26:18PM +0300, Dmitry Baryshkov wrote:
->> On some of Qualcomm platforms each group of 32 MSI vectors is routed to the
->> separate GIC interrupt. Implement support for such configurations by
->> parsing "msi0" ... "msiN" interrupts and attaching them to the chained
->> handler.
->>
->> Note, that if DT doesn't list an array of MSI interrupts and uses single
->> "msi" IRQ, the driver will limit the amount of supported MSI vectors
->> accordingly (to 32).
->>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> ---
->>   .../pci/controller/dwc/pcie-designware-host.c | 38 ++++++++++++++++++-
->>   drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->>   2 files changed, 38 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index 70f0435907c1..320a968dd366 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -288,6 +288,11 @@ static void dw_pcie_msi_init(struct pcie_port *pp)
->>   	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI, upper_32_bits(msi_target));
->>   }
->>   
->> +static const char * const split_msi_names[] = {
->> +	"msi0", "msi1", "msi2", "msi3",
->> +	"msi4", "msi5", "msi6", "msi7",
->> +};
->> +
->>   static int dw_pcie_msi_host_init(struct pcie_port *pp)
->>   {
->>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> @@ -300,17 +305,48 @@ static int dw_pcie_msi_host_init(struct pcie_port *pp)
->>   	for (ctrl = 0; ctrl < num_ctrls; ctrl++)
->>   		pp->irq_mask[ctrl] = ~0;
->>   
->> +	if (pp->has_split_msi_irq) {
+On Thu, May 19, 2022 at 08:51:16PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, May 19, 2022 at 01:52:38PM +0300, Serge Semin wrote:
 > 
-> You don't need to add this configuration parameter as it can be inferred
-> from the devicetree (e.g. if "msi0" is specified).
+> [...]
 > 
->> +		/*
->> +		 * Parse as many IRQs as described in the DTS. If there are
->> +		 * none, fallback to the single "msi" IRQ.
->> +		 */
->> +		for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
->> +			int irq;
->> +
->> +			if (pp->msi_irq[ctrl])
->> +				continue;
->> +
->> +			irq = platform_get_irq_byname(pdev, split_msi_names[ctrl]);
+> > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > > > > index 747e252c09e6..33718ed6c511 100644
+> > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > > > > @@ -397,8 +397,61 @@ static inline void dw_pcie_writel_atu_ib(struct dw_pcie *pci, u32 index, u32 reg
+> > > > > > > >  	dw_pcie_writel_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg, val);
+> > > > > > > >  }
+> > > > > > > >  
+> > > > > > > > -int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > > > > > > -			     int type, u64 cpu_addr, u8 bar)
+> > > > > > > > +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> > > > > > > > +			     u64 cpu_addr, u64 pci_addr, u64 size)
+> > > > > > > > +{
+> > > > > > > > +	u64 limit_addr = pci_addr + size - 1;
+> > > > > > > > +	u32 retries, val;
+> > > > > > > > +
+> > > > > > > > +	if ((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit) ||
+> > > > > > > > +	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
+> > > > > > > > +	    !IS_ALIGNED(pci_addr, pci->region_align) ||
+> > > > > > > > +	    !IS_ALIGNED(size, pci->region_align) ||
+> > > > > > > 
+> > > > > > 
+> > > > > > > Why do you want the size to be aligned? What if I want to transfer a small size
+> > > > > > > buffer?
+> > > > > > > 
+> > > > > > > Same question applies to outbound programming as well.
+> > > > > > 
+> > > > > > You can't program a region with the unaligned size by the DW PCIe CSRs
+> > > > > > design. The limit address lower bits are read-only and fixed with
+> > > > > > one's in accordance with the IP-core synthesize parameter
+> > > > > > CX_ATU_MIN_REGION_SIZE. So the mapping is always performed in the
+> > > > > > CX_ATU_MIN_REGION_SIZE chunks.
+> > > > > > 
+> > > > > > IATU_LIMIT_ADDR_OFF_{IN,OUT}BOUND.LIMIT_ADDR_HW = 
+> > > > > > {(CX_ATU_MIN_REGION_SIZE == 65536) ? "0xffff" :
+> > > > > >  (CX_ATU_MIN_REGION_SIZE == 32768) ? "0x7fff" :
+> > > > > >  (CX_ATU_MIN_REGION_SIZE == 16384) ? "0x3fff" :
+> > > > > >  (CX_ATU_MIN_REGION_SIZE == 8192)  ? "0x1fff" :
+> > > > > >  (CX_ATU_MIN_REGION_SIZE == 4096)  ? "0xfff" : "0xffff"}
+> > > > > > 
+> > > > > 
+> > > > 
+> > > > > Right. Even though the minimum size that could be mapped is 4k, I could still
+> > > > > use that 4k size for mapping small buffers also. So you should not be erroring
+> > > > > out here if the size is not aligned. 
+> > > > 
+> > > > Why would you need to do that? Even if you do and the operation
+> > > > doesn't return an error (or at least splash the syslog with a
+> > > > warning), the hardware would expand the mapping up to the aligned size
+> > > > anyway. Such implicit behavior would have given your software an
+> > > > impression that the mapping was performed in the way you asked with
+> > > > the size you specified so the upper part of the unaligned range is
+> > > > free to be used for something else. If the range is accessed, instead
+> > > > of a bus error or silent IO termination it may cause unexpected result
+> > > > of creating random PCIe bus traffic. So I'd rather have the
+> > > > code/platform setup fixed right from the start instead of waiting for
+> > > > the hard to find bug cause.
+> > > > 
+> > > 
+> > 
+> > > The application I'm working on is MHI bus. As per the design, it needs to copy
+> > > 16byte data to ring buffers in the host memory. If I use iATU, then I
+> > > cannot copy those small data with the size alignment.
+> > 
+> > First of all I don't see any driver using the DW PCIe iATU mapping
+> > functions directly. They are only utilized in the framework of the
+> > "ranges" and "dma-ranges" DT properties.
 > 
-> You need to use platform_get_irq_byname_optional() here or an error will
-> still printed if the number of "msi" interrupts is less than 8.
-> 
->> +			if (irq == -ENXIO) {
->> +				num_ctrls = ctrl;
->> +				break;
->> +			} else if (irq < 0) {
->> +				return dev_err_probe(dev, irq,
->> +						     "Failed to parse MSI IRQ '%s'\n",
->> +						     split_msi_names[ctrl]);
->> +			}
->> +
->> +			pp->msi_irq[ctrl] = irq;
->> +		}
->> +
->> +		if (num_ctrls == 0)
->> +			num_ctrls = 1;
->> +	}
->> +
->>   	if (!pp->msi_irq[0]) {
->>   		int irq = platform_get_irq_byname_optional(pdev, "msi");
->>   
->>   		if (irq < 0) {
->>   			irq = platform_get_irq(pdev, 0);
->>   			if (irq < 0)
->> -				return irq;
->> +				return dev_err_probe(dev, irq, "Failed to parse MSI irq\n");
->>   		}
->>   		pp->msi_irq[0] = irq;
->>   	}
->>   
->> +	pp->num_vectors = min_t(u32, pp->num_vectors, num_ctrls * MAX_MSI_IRQS_PER_CTRL);
->> +	dev_dbg(dev, "Using %d MSI vectors\n", pp->num_vectors);
-> 
-> Can you rework the handling of num_vectors == 0 (in dw_pcie_host_init())
-> so that the number is always inferred from the number of "msi"
-> interrupts without having to pass in num_vectors == MAX_MSI_IRQS?
 
-It wasn't that easy, but I think I ended up doing it properly.
+> Not true. The PCI_EPF_TEST and PCI_EPF_NTB applications use iATU mpping function
+> through EPC ops.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/endpoint/functions/pci-epf-test.c#n250
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/endpoint/pci-epc-core.c#n476
+> 
+> Now that I've referred, we need to check if these drivers still work on top of
+> your patches. These are not supported on my platform, so perhaps Frank can
+> test?
+
+Wow, you are right. I've missed the epf drivers completely. They don't
+take the buffer size alignment into account. This patch and the
+range-related patch most likely will regress both of these drivers.(
+Alas they can't be fixed that easily.
+
+1) drivers/pci/endpoint/functions/pci-epf-test.c retrieves size from
+the user-space by means of an ioctl implemented in the
+drivers/misc/pci_endpoint_test.c char-device driver (see what is
+written at the PCI_ENDPOINT_TEST_SIZE offset). It doesn't make
+sure that aside with the base address the size needs to be also
+aligned.
+
+2) drivers/pci/endpoint/functions/pci-epf-ntb.c uses the size based on
+the NTB entity. It's either Door-Bell entry or a Memory Window. If the
+Door-bell/MSI-X part can be more or less easily fixed, the MW-part
+can't because the PCIe-bus part of the EP-function implementation
+doesn't provide such information. After fixing that I would have also
+needed to fix the drivers/ntb/hw/epf/ntb_hw_epf.c driver so the
+callback method mw_get_align() would return the size alignment
+constraint.
+
+So to speak without corresponding HW at hand I won't be able to
+successfully fix them.
 
 > 
-> That is
+> > If the application you are
+> > referring to your private code, then it can't be a justification.
 > 
-> 	num_vectors == 0 && "msi" => num_vectors = MSI_DEF_NUM_VECTORS (32)
-> 	num_vectors == 0 && "msi0".."msin" => num_vectors = n * MAX_MSI_IRQS_PER_CTRL (n * 32)
+> I should have mentioned it, but my application is not private. It is partly
+> available in linux-next:
 > 
->> +
->>   	pp->msi_irq_chip = &dw_pci_msi_bottom_irq_chip;
->>   
->>   	ret = dw_pcie_allocate_domains(pp);
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index 9c1a38b0a6b3..3aa840a5b19c 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -179,6 +179,7 @@ struct dw_pcie_host_ops {
->>   
->>   struct pcie_port {
->>   	bool			has_msi_ctrl:1;
->> +	bool			has_split_msi_irq:1;
->>   	u64			cfg0_base;
->>   	void __iomem		*va_cfg0_base;
->>   	u32			cfg0_size;
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/bus/mhi/ep/ring.c#n47
+> https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/tree/drivers/pci/endpoint/functions/pci-epf-mhi.c?h=tracking-qcomlt-sdx55-drivers#n121
 > 
-> Johan
+> > Secondly if your application uses them then what about just extending
+> > the mapping range size while still access the lowest 15 bytes only? In
+> > that case you would create a more comprehensive software which would
+> > be aware of the hardware constraints.
+> > 
+> 
 
+> Hmm... I'm already doing a similar hack for getting the aligned address due to
+> iATU limitation, but I think doing the same for size should also work.
+> 
+> Thinking again, I agree with the alignment check. Thanks for the explanations.
+> But let's make sure the existing EPF drivers still work.
 
--- 
-With best wishes
-Dmitry
+Don't bother with re-developing our code. Since I can't fix the
+denoted client drivers we have no choice but to do as you say and drop
+the size alignment check. Thanks for pointing this out.
+
+-Sergey
+
+> 
+> Thanks,
+> Mani
+> 
+> > > 
+> > > > > I know that it is a waste of memory but that doesn't mean that it won't work.
+> > > > 
+> > > > The correct statement in this case would be "it won't work in a way
+> > > > you expected, but with the implicit side effect applied to the memory
+> > > > above the requested one."
+> > > > 
+> > > 
+> > 
+> > > Agree but that would only happen when the application does out of bound
+> > > access and in that case the issue is with the application.
+> > 
+> > Not only in that case, but anyway how would such application be aware
+> > of the out of bounds access? Returning an error in case if the
+> > requested mapping can't be performed with the specified parameters is
+> > a possible solution. So the application would be aware of the hardware
+> > constraints and be sure it perceives them right. Otherwise the
+> > consequences of the out of bounds access would be very unexpected
+> > since the mapping is performed only for the small buffer.
+> > 
+> > -Sergey
+> > 
+> > > 
+> > > Thanks,
+> > > Mani
+> > > 
+> > > > -Sergey
+> > > > 
+> > > > > 
+> > > > > Thanks,
+> > > > > Mani
+> > > > > 
+> > > > > > -Sergey
+> > > > > > 
+> > > > > > > 
+> > > > > > > Thanks,
+> > > > > > > Mani
+> > > > > > > 
+> > > > > > > -- 
+> > > > > > > மணிவண்ணன் சதாசிவம்
+> > > > > 
+> > > > > -- 
+> > > > > மணிவண்ணன் சதாசிவம்
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
