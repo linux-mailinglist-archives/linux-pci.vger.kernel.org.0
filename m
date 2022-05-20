@@ -2,136 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD41C52EA09
-	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 12:37:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DED9D52EAD0
+	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 13:31:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346138AbiETKhA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 May 2022 06:37:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44014 "EHLO
+        id S1348550AbiETLb4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 May 2022 07:31:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343908AbiETKg7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 06:36:59 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17EE43D1E6;
-        Fri, 20 May 2022 03:36:57 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id p4so12196830lfg.4;
-        Fri, 20 May 2022 03:36:57 -0700 (PDT)
+        with ESMTP id S241444AbiETLby (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 07:31:54 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E318A175AE
+        for <linux-pci@vger.kernel.org>; Fri, 20 May 2022 04:31:50 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id f9so15151984ejc.0
+        for <linux-pci@vger.kernel.org>; Fri, 20 May 2022 04:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kJ3gaWI7ls+cENHBhyRJBXNyvaYoDTFV2ZamYkNuQtk=;
-        b=BOC1E2lE5UsAVwhOHz0x3YJp39K2ujW746Ya3goMOmV9XCG64s40HclxPIvjLXpyHt
-         XwTxdMze0EjyKQjeJCeXNY4dQQ82ZpR2vuB9UzYmwt3tLaogQ4SxLk4Lr4OuOwF7hi+f
-         SdA52IeSeMYcH1QonwQCmxxNlbG3iUxM9Q11FlVjVLRXkIMm2tjfK/j1WSipkIYpo3H+
-         S7v+Op5+STHIY8mivYEjaZM7BmYLE6W57bcBj/zGGaqjKyzidkRSJ0cC6SrbJ1ZIqL66
-         iu5T/82R8EuYZVBbNcCBhe+cJQo+v5+8GozV7U+0E8dMr4/81NkGZwXvRWTtebQL3NfV
-         N6Jg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0NvptFqrj7j0InVdvvMmgqzBzN84J9LRB794rQxkFdY=;
+        b=re4Sm8tWAvFHp6bKgAYMf09Z79Kgi3OEdhOIiBZ7/Rn2QXbgu5Ly14y4/nQN7Y/aTo
+         VlgbB9yG7Rlr2cuoabCyBxc2bGDLVKK0lXBLnASl6zsHCcOeA+1KzIBeqFsR+y75i5XZ
+         XvFFiPa9GJ2QyyaAdSmJuFi5RyYukwsFD78F77Gu/KxBhoXO8QeL/xhxXqgh8n2pVQ16
+         5uSsdoWXuRrwj+2ip8smJzRExeR9DRqgQ7nZOdTto/19ei6AXbORk/Mx4Jr1TH0FheIZ
+         Rjk53cTk2OReyJUGfCv97XHsZ5d+q5q5c0jA2xxlOnKUomCD8mRuslxc9zsWStq2ZrCv
+         ptCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kJ3gaWI7ls+cENHBhyRJBXNyvaYoDTFV2ZamYkNuQtk=;
-        b=ycYwt4Ej1B83NLh1YlsozQsA9IQ1pd5X9816sgLpAjO/moCVrmgJmUSNB3VSb2reHD
-         EIFGKAjfmuvgbhk4ocbC22gXChxpQYlfudZ726IRKG1AzhwhjnuXDr7VpaPOIVoAjqU1
-         GIVdM+WER23qY/+HDtF1UhI6S2+VXKgPKMVq9bQmgw0mHChIB4VIfCC+fFRR/HD3mThf
-         l5ChSuKlYhssOxs7fpTCTD+9cB7eF6tbBU3j03udXxmh7joE3EyxBdbL6vlHJ2+9MxEV
-         0TAXZOzdHJcIrz3xbPD4+YcRr9ZXQxhPr1Y9P67J02BBXorjHuNXYylCdc8I3xwFd4cX
-         dtFA==
-X-Gm-Message-State: AOAM5305RNoUGlbn08HhZRKXdqowUzzKJySp/fneCSK0ehSfsjAiwIMh
-        BVwx4QH/HqjnKXZ0H22k4kQ=
-X-Google-Smtp-Source: ABdhPJwecc1nic2z9tHROgs5vxB6dyKh3HqMjdx6kvQ2QR53xiVhDVy/U6Wa1UGa7W/Tk6FPnREvwQ==
-X-Received: by 2002:a19:2d0c:0:b0:477:b461:2648 with SMTP id k12-20020a192d0c000000b00477b4612648mr6400254lfj.35.1653043015462;
-        Fri, 20 May 2022 03:36:55 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id g4-20020a2ea4a4000000b0024f3d1dae97sm271176ljm.31.2022.05.20.03.36.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 May 2022 03:36:54 -0700 (PDT)
-Date:   Fri, 20 May 2022 13:36:52 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rahul Tanwar <rtanwar@maxlinear.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 14/17] PCI: dwc: Check iATU in/outbound ranges setup
- methods status
-Message-ID: <20220520103652.37f6fygtwfmre4ot@mobilestation>
-References: <20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru>
- <20220503214638.1895-15-Sergey.Semin@baikalelectronics.ru>
- <20220516213506.GA3296584-robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0NvptFqrj7j0InVdvvMmgqzBzN84J9LRB794rQxkFdY=;
+        b=3MR9bmGuxpBJhnKJUavMoNlUBl8TmCouWD78CWEtwoBjJY/yQfepF3KkNPgFcYWRzr
+         TxoZaK7wYZAHYp275dXcxTkSY0YVdRVqelFnRHArvlbZ3Pz4Xppm8mLbSzY6CEYpq1hH
+         /Kf5wOqcG0MEvPkdqGX0ifRTgJV2tVwC5X5c/tO/hXDi0ZDLydUjkCqU3sHAbBB2EjQ5
+         gI8hWdePi3SlNhj4GBavzLnpv8NqwrXynLSdKKt3xw7W1WwOpSba37VDXruzuMgRz2oK
+         JjSC4sNgDPOJW0JbYweJNnJc8s+ycz9sJ9mYq34v3yyBkrFVGCGgzTql6E1SGV2lW9Yh
+         rogA==
+X-Gm-Message-State: AOAM533YbFxLqV2dk9DyAA7Q4LkQCc51qyoagHJKCxJWCAMZdN6RXM/G
+        5cRNEBw4dBSS64aaZnnWdhlv4IR76JkrxymK4xEKhQ==
+X-Google-Smtp-Source: ABdhPJyAADo7d4aXCmDNCVnTVXprJXf99iw8JPsCwtJN6tP2yH5Av5Yx22hVAD/QFIma8grUrwXZC/mCf6Av3T8PJbw=
+X-Received: by 2002:a17:907:6eab:b0:6fe:b5e2:7b0e with SMTP id
+ sh43-20020a1709076eab00b006feb5e27b0emr1053811ejc.736.1653046309443; Fri, 20
+ May 2022 04:31:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220516213506.GA3296584-robh@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220519211411.2200720-1-robh@kernel.org>
+In-Reply-To: <20220519211411.2200720-1-robh@kernel.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 20 May 2022 13:31:38 +0200
+Message-ID: <CAMRc=McjvTE27BMbN-_W+Fdd7CJcswZQYsB-4N8cj=WfAQ9QOQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Fix properties without any type
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Peter Rosin <peda@axentia.se>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        chrome-platform@lists.linux.dev,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-serial@vger.kernel.org,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 16, 2022 at 04:35:06PM -0500, Rob Herring wrote:
-> On Wed, May 04, 2022 at 12:46:35AM +0300, Serge Semin wrote:
-> > Let's make the DWC PCIe RC/EP safer and more verbose for the invalid or
-> > failed inbound and outbound iATU windows setups. Needless to say that
-> > silently ignoring iATU regions setup errors may cause unpredictable
-> > errors. For instance if for some reason a cfg or IO window fails to be
-> > activated, then any CFG/IO requested won't reach target PCIe devices and
-> > the corresponding accessors will return platform-specific random values.
-> > 
-> > First of all we need to convert dw_pcie_ep_outbound_atu() method to check
-> > whether the specified outbound iATU range is successfully setup. That
-> > method is called by the pci_epc_ops.map_addr callback. Thus we'll make the
-> > EP-specific CPU->PCIe memory mappings saver.
-> > 
-> > Secondly since the iATU outbound range programming method now returns the
-> > operation status, it will be handy to take that status into account in the
-> > pci_ops.{map_bus,read,write} methods. Thus any failed mapping will be
-> > immediately noticeable by the PCIe CFG operations requesters.
-> > 
-> > Finally we need to convert the dw_pcie_setup_rc() method to returning the
-> > operation status, since the iATU outbound ranges setup procedure may now
-> > fail. It will be especially handy in case if the DW PCIe RC DT-node has
-> > invalid/unsupported (dma-)ranges property. Note since the suggested
-> > modification causes having too wide code indentation, it is reasonable
-> > from maintainability and readability points of view to move the outbound
-> > ranges setup procedure in the separate function.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > ---
-> >  .../pci/controller/dwc/pcie-designware-ep.c   |   9 +-
-> >  .../pci/controller/dwc/pcie-designware-host.c | 149 ++++++++++++------
-> >  drivers/pci/controller/dwc/pcie-designware.h  |   5 +-
-> >  drivers/pci/controller/dwc/pcie-intel-gw.c    |   6 +-
-> 
+On Thu, May 19, 2022 at 11:14 PM Rob Herring <robh@kernel.org> wrote:
+>
+> Now that the schema tools can extract type information for all
+> properties (in order to decode dtb files), finding properties missing
+> any type definition is fairly trivial though not yet automated.
+>
+> Fix the various property schemas which are missing a type. Most of these
+> tend to be device specific properties which don't have a vendor prefix.
+> A vendor prefix is how we normally ensure a type is defined.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../arm/hisilicon/controller/hip04-bootwrapper.yaml       | 5 +++--
+>  .../bindings/display/bridge/toshiba,tc358768.yaml         | 1 +
+>  .../devicetree/bindings/display/panel/panel-timing.yaml   | 5 +++++
+>  .../bindings/display/panel/raydium,rm67191.yaml           | 1 +
+>  .../bindings/display/panel/samsung,s6e8aa0.yaml           | 1 +
+>  .../devicetree/bindings/gpio/fairchild,74hc595.yaml       | 1 +
+>  .../devicetree/bindings/input/google,cros-ec-keyb.yaml    | 1 +
+>  .../devicetree/bindings/input/matrix-keymap.yaml          | 4 ++++
+>  Documentation/devicetree/bindings/media/i2c/adv7604.yaml  | 3 ++-
+>  Documentation/devicetree/bindings/mux/reg-mux.yaml        | 8 ++++++--
+>  Documentation/devicetree/bindings/net/cdns,macb.yaml      | 1 +
+>  Documentation/devicetree/bindings/net/ingenic,mac.yaml    | 1 +
+>  .../devicetree/bindings/net/ti,davinci-mdio.yaml          | 1 +
+>  .../devicetree/bindings/net/wireless/ti,wlcore.yaml       | 2 ++
+>  .../devicetree/bindings/pci/snps,dw-pcie-ep.yaml          | 6 ++++--
+>  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml   | 2 ++
+>  .../devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml    | 2 ++
+>  Documentation/devicetree/bindings/power/avs/qcom,cpr.yaml | 1 +
+>  .../devicetree/bindings/power/supply/battery.yaml         | 7 ++++++-
+>  .../devicetree/bindings/power/supply/charger-manager.yaml | 1 +
+>  Documentation/devicetree/bindings/rng/st,stm32-rng.yaml   | 1 +
+>  Documentation/devicetree/bindings/serial/8250.yaml        | 1 +
+>  .../devicetree/bindings/sound/audio-graph-card2.yaml      | 3 +++
+>  .../devicetree/bindings/sound/imx-audio-hdmi.yaml         | 3 +++
+>  Documentation/devicetree/bindings/usb/smsc,usb3503.yaml   | 1 +
+>  25 files changed, 55 insertions(+), 8 deletions(-)
+>
 
-> I worry that this could regress some platforms that happened to work 
-> before. But only one way to find out...
+For GPIO:
 
-You are right. It may especially in the framework of the outbound iATU
-windows setup procedure due to the new alignment constraints added in
-the previous patch. But in that case the returned failure is well
-justified by the consequences of the improper windows setup. Anyway
-let's hope the regression won't happen.
-
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Thanks.
-
--Sergey
-
-> 
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
