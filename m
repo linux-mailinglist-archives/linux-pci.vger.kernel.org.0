@@ -2,207 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0194352E250
-	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 04:00:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DD1F52E2C7
+	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 05:01:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344646AbiETB7A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 May 2022 21:59:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34910 "EHLO
+        id S1343978AbiETDA7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 May 2022 23:00:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344645AbiETB67 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 21:58:59 -0400
+        with ESMTP id S1344936AbiETDA6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 23:00:58 -0400
 Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFC2EBEBA
-        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 18:58:57 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id bu29so12048377lfb.0
-        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 18:58:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 624802494A;
+        Thu, 19 May 2022 20:00:56 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id d15so12131328lfk.5;
+        Thu, 19 May 2022 20:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=L3xLjgH+8H4EuxOCFISCfGIFUbJpaGjNZmkPZUl6M0Q=;
-        b=k+kTD0BsQCqxWnJPhXthgz2W6eu3qIVt77qqLex2Bm3TCaOzDhrZtAgExVL6khTO+o
-         oXddtjn+sECi0SDCRC2JVCSfKRZUs7HOkmVJgZ016IFRjd5WnFnyYitpJYbbbCV3CqGX
-         28AX8N5PBW0LTf2zhJR1OsxxigkffC+L4DGrb7QJZDGQf9gw3g0EoiYj8f55LfSOXx5Y
-         9ssSdZvZHdTbwJmHAkBsE/o+tasyZBit3G6wW3r6iTLvvTvwGC+bzQoL6X4YTM4/tIWh
-         ENK19yf9cWCpI8ByxGQft4AWBf4k9702SvUjZWe0qahuhJn23lTEUCajOPgCyeZZWs1N
-         qMKA==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=octF3L3s7sydh3Lri04JtKL9Flbqols+7/iLfIisCyY=;
+        b=NqoaH6Mc7/OOqRQltCRS8pd72n8MJo0az00PWGZZ58uNqNKx/wBZUpjlAeB5YxeeAc
+         D9lNwfF+oFuXhae+TVixbLa2ffYX+FroITjQEghvqJ9Qw76YSrYOTsvnbXJ4B2PITVF5
+         a2kys8aKQRyepMbQfr6uo3C7yLcOoTjKz/bIuzcu9StoDphqCkZIhuXYo3MVzkmLXBOl
+         lRJrWKFVpa5rpCjfWfjQiE7LsH8kvB3mebWeSUM0qOv/L+zdwYJfgJWBq2KOtgu3eMRZ
+         er8ev63pvSGoUtivHkvr9pxWgGM3vEeKGqWNlJb8ajVRzvLfrke9MZtnKkKI7uEiYuut
+         kHmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=L3xLjgH+8H4EuxOCFISCfGIFUbJpaGjNZmkPZUl6M0Q=;
-        b=ysWGLUD2PBYL9t5PA5n6HeCGu0ce8uMdxqe0y4u7hcTaSf3pg06vT0WJL/YZPWCyCV
-         wWmG0rC0wcmQ1Vpgqwe5qBMGUGlLIfVh5SB2N4A0fXE3ysElzlJyeWyynk4WfbRGlsb/
-         EC/fFRjGLWvVuWDMtauvbNGyWQixiVhPHGas5Zsl0aZUeNbN7SgUmRlWeFEP3qIBO+8Q
-         1bxu/78Y7pGB9eYM+NMAehcD2XAHey+6hi+28Wq3ntWhLm2c8myWH/ZP0/i8PO0zp6O3
-         gw5gO/6XgIqyBb2G/IGeU6yvSQXMXYJwdhJe1XagNZParmpqdmSNL0wneo3xeDvs0nzf
-         pn7g==
-X-Gm-Message-State: AOAM531I4Oya283yt88aq43wffNPV9G9xYZcdIa1sEL/zJDtpKihyOzR
-        8WqPFMlRLl8Q/dfYd8iafgxt4g==
-X-Google-Smtp-Source: ABdhPJxPgbBdldNejWDEpLjukmM3vcPsaxAe8mGP1132d9rKDzXNSGjh6VcswmPGM0ApTWZTuHl2Sg==
-X-Received: by 2002:a19:c20b:0:b0:477:bec9:4f99 with SMTP id l11-20020a19c20b000000b00477bec94f99mr5352313lfc.274.1653011935961;
-        Thu, 19 May 2022 18:58:55 -0700 (PDT)
-Received: from eriador.lan ([2001:470:dd84:abc0::8a5])
-        by smtp.gmail.com with ESMTPSA id u28-20020ac24c3c000000b0047255d21192sm467370lfq.193.2022.05.19.18.58.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 May 2022 18:58:55 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>
-Subject: [PATCH v7 6/6] PCI: qcom: Drop manual pipe_clk_src handling
-Date:   Fri, 20 May 2022 04:58:44 +0300
-Message-Id: <20220520015844.1190511-7-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220520015844.1190511-1-dmitry.baryshkov@linaro.org>
-References: <20220520015844.1190511-1-dmitry.baryshkov@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=octF3L3s7sydh3Lri04JtKL9Flbqols+7/iLfIisCyY=;
+        b=tq+xj/k4PUYF+AXb7ItUJJWHBb4oEaEbNJgeL/ZlER7G2zVr4Nc5HyyGiQ9z24jz6z
+         gTNSAac5DP7/K7tIHBW3yxtspL8i4poO+8rRYO2T5XS1q70gasTOAwshMPUzr7qfq1YJ
+         vjpPfM8xK6bQeNRXA1QcU9o4j4EQQQFY54bwxVAKTxn12xvuvllEgcwH7yPn/4ecQIjm
+         xzKqpOHdWFo6AgLXKw3hRPjWzBUSwVbJFBehEUAcc9B4kqanGwQmifjcWkVNN8QqpaQg
+         aC9uw/5rNWNDjShyYdCpGjK0ex39ZSR/m/GPiZWvXHfsHxp0KDwhNe9HVUQ6wCl30l4+
+         ++dw==
+X-Gm-Message-State: AOAM530bbk15Iq59xtCk/QGALNethoBE50Hqbsa0g8vDV69BrNF3ka7Q
+        E3DG3ZkYxcW+G0ps6WRkE5BX1MbH54wRjaQsh/EOHQEzBjs=
+X-Google-Smtp-Source: ABdhPJz1T0X7NVqyHAUCqGcRKKadO+LL19xo4SPj4nddVDRFm4DbZqXHJVsTK3ViY1ETeB9iU9aOcD4JiU3qeilhkRw=
+X-Received: by 2002:a05:6512:3f96:b0:477:c0fe:9b05 with SMTP id
+ x22-20020a0565123f9600b00477c0fe9b05mr5249778lfa.109.1653015654603; Thu, 19
+ May 2022 20:00:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220516165740.6256af51.alex.williamson@redhat.com>
+ <20220518115432.76183-1-windy.bi.enflame@gmail.com> <20220519110622.6fd065d2.alex.williamson@redhat.com>
+In-Reply-To: <20220519110622.6fd065d2.alex.williamson@redhat.com>
+From:   windy Bi <windy.bi.enflame@gmail.com>
+Date:   Fri, 20 May 2022 11:00:42 +0800
+Message-ID: <CAGdb+H00q3xhCfw-x+DG624sMuuKqaRwRpPWDJCYs2iLsBCyVw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Fix no-op wait after secondary bus reset
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Manual reparenting of pipe_clk_src is being replaced with the parking of
-the clock with clk_disable()/clk_enable() in the phy driver. Drop
-redundant code switching of the pipe clock between the PHY clock source
-and the safe bi_tcxo.
+On Fri, May 20, 2022 at 1:06 AM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+>
+> On Wed, 18 May 2022 19:54:32 +0800
+> Sheng Bi <windy.bi.enflame@gmail.com> wrote:
+>
+> > pci_bridge_secondary_bus_reset() triggers SBR followed by 1 second sleep,
+> > and then uses pci_dev_wait() for waiting device ready. The dev parameter
+> > passes to the wait function is currently the bridge itself, but not the
+> > device been reset.
+> >
+> > If we call pci_bridge_secondary_bus_reset() to trigger SBR to a device,
+> > there is 1 second sleep but not waiting device ready, since the bridge
+> > is always ready while resetting downstream devices. pci_dev_wait() here
+> > is a no-op actually. This would be risky in the case which the device
+> > becomes ready after more than 1 second, especially while hotplug enabled.
+> > The late coming hotplug event after 1 second will trigger hotplug module
+> > to remove/re-insert the device.
+> >
+> > Instead of waiting ready of bridge itself, changing to wait all the
+> > downstream devices become ready with timeout PCIE_RESET_READY_POLL_MS
+> > after SBR, considering all downstream devices are affected during SBR.
+> > Once one of the devices doesn't reappear within the timeout, return
+> > -ENOTTY to indicate SBR doesn't complete successfully.
+> >
+> > Fixes: 6b2f1351af56 ("PCI: Wait for device to become ready after secondary bus reset")
+> > Signed-off-by: Sheng Bi <windy.bi.enflame@gmail.com>
+> > ---
+> >  drivers/pci/pci.c | 30 +++++++++++++++++++++++++++++-
+> >  1 file changed, 29 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index eb7c0a08ff57..32b7a5c1fa3a 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -5049,6 +5049,34 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+> >       }
+> >  }
+> >
+> > +static int pci_bridge_secondary_bus_wait(struct pci_dev *bridge, int timeout)
+> > +{
+> > +     struct pci_dev *dev;
+> > +     int delay = 0;
+> > +
+> > +     if (!bridge->subordinate || list_empty(&bridge->subordinate->devices))
+> > +             return 0;
+> > +
+> > +     list_for_each_entry(dev, &bridge->subordinate->devices, bus_list) {
+> > +             while (!pci_device_is_present(dev)) {
+> > +                     if (delay > timeout) {
+> > +                             pci_warn(dev, "not ready %dms after secondary bus reset; giving up\n",
+> > +                                     delay);
+> > +                             return -ENOTTY;
+> > +                     }
+> > +
+> > +                     msleep(20);
+> > +                     delay += 20;
+>
+> Your previous version used the same exponential back-off as used in
+> pci_dev_wait(), why the change here to poll at 20ms intervals?  Thanks,
+>
+> Alex
 
-Cc: Prasad Malisetty <quic_pmaliset@quicinc.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 39 +-------------------------
- 1 file changed, 1 insertion(+), 38 deletions(-)
+Many thanks for your time. The change is to get a more accurate
+timeout, to align with
+previous statement "we shouldn't incur any extra delay once timeout has passed".
+Previous binary exponential back-off incurred probable unexpected
+extra delay, like
+60,000 ms timeout but actual 65,535 ms, and the difference probably
+goes worse by
+timeout setting changes. Thanks,
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 91e58edc7ea9..e83085e1bf4b 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -164,9 +164,6 @@ struct qcom_pcie_resources_2_7_0 {
- 	int num_clks;
- 	struct regulator_bulk_data supplies[2];
- 	struct reset_control *pci_reset;
--	struct clk *pipe_clk_src;
--	struct clk *phy_pipe_clk;
--	struct clk *ref_clk_src;
- };
- 
- union qcom_pcie_resources {
-@@ -192,7 +189,6 @@ struct qcom_pcie_ops {
- 
- struct qcom_pcie_cfg {
- 	const struct qcom_pcie_ops *ops;
--	unsigned int pipe_clk_need_muxing:1;
- 	unsigned int has_tbu_clk:1;
- 	unsigned int has_ddrss_sf_tbu_clk:1;
- 	unsigned int has_aggre0_clk:1;
-@@ -1158,20 +1154,6 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	if (ret < 0)
- 		return ret;
- 
--	if (pcie->cfg->pipe_clk_need_muxing) {
--		res->pipe_clk_src = devm_clk_get(dev, "pipe_mux");
--		if (IS_ERR(res->pipe_clk_src))
--			return PTR_ERR(res->pipe_clk_src);
--
--		res->phy_pipe_clk = devm_clk_get(dev, "phy_pipe");
--		if (IS_ERR(res->phy_pipe_clk))
--			return PTR_ERR(res->phy_pipe_clk);
--
--		res->ref_clk_src = devm_clk_get(dev, "ref");
--		if (IS_ERR(res->ref_clk_src))
--			return PTR_ERR(res->ref_clk_src);
--	}
--
- 	return 0;
- }
- 
-@@ -1189,10 +1171,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 		return ret;
- 	}
- 
--	/* Set TCXO as clock source for pcie_pipe_clk_src */
--	if (pcie->cfg->pipe_clk_need_muxing)
--		clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
--
- 	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
- 	if (ret < 0)
- 		goto err_disable_regulators;
-@@ -1254,18 +1232,8 @@ static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
- 
- 	clk_bulk_disable_unprepare(res->num_clks, res->clks);
--	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
--}
- 
--static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
--{
--	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
--
--	/* Set pipe clock as clock source for pcie_pipe_clk_src */
--	if (pcie->cfg->pipe_clk_need_muxing)
--		clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
--
--	return 0;
-+	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
- }
- 
- static int qcom_pcie_link_up(struct dw_pcie *pci)
-@@ -1441,7 +1409,6 @@ static const struct qcom_pcie_ops ops_2_7_0 = {
- 	.init = qcom_pcie_init_2_7_0,
- 	.deinit = qcom_pcie_deinit_2_7_0,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
--	.post_init = qcom_pcie_post_init_2_7_0,
- };
- 
- /* Qcom IP rev.: 1.9.0 */
-@@ -1450,7 +1417,6 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
- 	.init = qcom_pcie_init_2_7_0,
- 	.deinit = qcom_pcie_deinit_2_7_0,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
--	.post_init = qcom_pcie_post_init_2_7_0,
- 	.config_sid = qcom_pcie_config_sid_sm8250,
- };
- 
-@@ -1488,7 +1454,6 @@ static const struct qcom_pcie_cfg sm8250_cfg = {
- static const struct qcom_pcie_cfg sm8450_pcie0_cfg = {
- 	.ops = &ops_1_9_0,
- 	.has_ddrss_sf_tbu_clk = true,
--	.pipe_clk_need_muxing = true,
- 	.has_aggre0_clk = true,
- 	.has_aggre1_clk = true,
- };
-@@ -1496,14 +1461,12 @@ static const struct qcom_pcie_cfg sm8450_pcie0_cfg = {
- static const struct qcom_pcie_cfg sm8450_pcie1_cfg = {
- 	.ops = &ops_1_9_0,
- 	.has_ddrss_sf_tbu_clk = true,
--	.pipe_clk_need_muxing = true,
- 	.has_aggre1_clk = true,
- };
- 
- static const struct qcom_pcie_cfg sc7280_cfg = {
- 	.ops = &ops_1_9_0,
- 	.has_tbu_clk = true,
--	.pipe_clk_need_muxing = true,
- };
- 
- static const struct qcom_pcie_cfg sc8180x_cfg = {
--- 
-2.35.1
+windy
 
+>
+> > +             }
+> > +
+> > +             if (delay > 1000)
+> > +                     pci_info(dev, "ready %dms after secondary bus reset\n",
+> > +                             delay);
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  void pci_reset_secondary_bus(struct pci_dev *dev)
+> >  {
+> >       u16 ctrl;
+> > @@ -5092,7 +5120,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+> >  {
+> >       pcibios_reset_secondary_bus(dev);
+> >
+> > -     return pci_dev_wait(dev, "bus reset", PCIE_RESET_READY_POLL_MS);
+> > +     return pci_bridge_secondary_bus_wait(dev, PCIE_RESET_READY_POLL_MS);
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+> >
+> >
+> > base-commit: 617c8a1e527fadaaec3ba5bafceae7a922ebef7e
+>
