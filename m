@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2716152E91D
-	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 11:44:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BE5552E932
+	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 11:44:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347860AbiETJmq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 May 2022 05:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34050 "EHLO
+        id S1347839AbiETJmr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 May 2022 05:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347835AbiETJmn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 05:42:43 -0400
+        with ESMTP id S1347838AbiETJmo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 05:42:44 -0400
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D61701498CD;
-        Fri, 20 May 2022 02:42:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D441498DC;
+        Fri, 20 May 2022 02:42:27 -0700 (PDT)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPA id B1EA41C0010;
-        Fri, 20 May 2022 09:42:19 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPA id 762811C0015;
+        Fri, 20 May 2022 09:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1653039742;
+        t=1653039746;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=E+wBIttrMTwzTgAXDWmn71GDy198lvRu0VhpdGU+5b4=;
-        b=G5PdQpAu887/K/5/zqHowISzhW2hKkCfg5i1RFUkYyNcz5L/0xkcPBrCQPNsIffVWwzTWM
-        6YqbOA8H5g+fFXLmJrdtoOsaJ3L2J8NyaIH2CU472W/xlbQuabiiUmfXFvE4GiajitfMas
-        d/lnkZa7oq8igVqkFaHQdrq9oFC20NIpfpyNWJha+OQ9zcs9+ngqJLq9kFvnHOI7bgg/YR
-        JC5pKcbAOVEhWp2pJ3+33UvJMbaCV49UP4tvs0c6uXQDE9UCMVk0sT09T/YXSrlOl+xmqD
-        UKgWFtF1JgDaev9+wBOJEOYNDGSX8ib8wPxYVQrjZRFsY4JeJ1gsB11b8fuNuw==
+        bh=oAMsDVvTiaLCVhxn/JVH0pxqslPhba8QbfwBEnkBzCU=;
+        b=fPbwg++BkIMJuEKso3Lt0SdwKl5MmKSGVZXZ5rtqD6n6lkD3nrzxhYLjv+d/ux4yDR1WjK
+        sQ30s1BBfPgy3GMQ/YzfxwUn+hfjLYt+SAd6udlXE4thk9IllXIwWFndsWEU95vDDiG/yp
+        1LQZnmYNFJ/tp+XGo4jNAMgxBb0GpeAGRB9podaNxbYae3Xhz8Gb+1D0AhFs5X+JYR7OIj
+        8CmkGt7DEeu1zJRKmg90Pjt4nEpFDAP2KoY4HZoDS3fmooWpIEDqRAmnKu7FFtwkgjGABV
+        zRkVuZqy9y6zNdhm6Y/aAzxVcuC8V/Yhu66GYdu9S+eS3ubXbzTaw8ayoZNodg==
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
@@ -46,9 +46,9 @@ Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
         Clement Leger <clement.leger@bootlin.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH v6 2/6] dt-bindings: PCI: renesas,pci-rcar-gen2: Add device tree support for r9a06g032
-Date:   Fri, 20 May 2022 11:41:51 +0200
-Message-Id: <20220520094155.313784-3-herve.codina@bootlin.com>
+Subject: [PATCH v6 3/6] PCI: rcar-gen2: Add RZ/N1 SOCs family compatible string
+Date:   Fri, 20 May 2022 11:41:52 +0200
+Message-Id: <20220520094155.313784-4-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220520094155.313784-1-herve.codina@bootlin.com>
 References: <20220520094155.313784-1-herve.codina@bootlin.com>
@@ -64,109 +64,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add internal PCI bridge support for the r9a06g032 SOC. The Renesas
-RZ/N1D (R9A06G032) internal PCI bridge is compatible with the one
-present in the R-Car Gen2 family.
-Compared to the R-Car Gen2 family, it needs three clocks instead of
-one.
+Add the Renesas RZ/N1 SOCs family support to the Renesas R-Car Gen2
+PCI bridge driver.
 
-The 'resets' property for the RZ/N1 family is not required.
+The Renesas RZ/N1 SOCs internal PCI bridge is compatible with the one
+available in the R-Car Gen2 family.
+
+Tested with the RZ/N1D (R9A06G032) SOC.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../bindings/pci/renesas,pci-rcar-gen2.yaml   | 50 +++++++++++++++----
- 1 file changed, 40 insertions(+), 10 deletions(-)
+ drivers/pci/controller/pci-rcar-gen2.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml b/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
-index 494eb975c146..0f18cceba3d5 100644
---- a/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
-+++ b/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
-@@ -15,9 +15,6 @@ description: |
-   AHB. There is one bridge instance per USB port connected to the internal
-   OHCI and EHCI controllers.
+diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
+index 35804ea394fd..839695791757 100644
+--- a/drivers/pci/controller/pci-rcar-gen2.c
++++ b/drivers/pci/controller/pci-rcar-gen2.c
+@@ -328,6 +328,7 @@ static const struct of_device_id rcar_pci_of_match[] = {
+ 	{ .compatible = "renesas,pci-r8a7791", },
+ 	{ .compatible = "renesas,pci-r8a7794", },
+ 	{ .compatible = "renesas,pci-rcar-gen2", },
++	{ .compatible = "renesas,pci-rzn1", },
+ 	{ },
+ };
  
--allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
--
- properties:
-   compatible:
-     oneOf:
-@@ -32,6 +29,10 @@ properties:
-               - renesas,pci-r8a7793      # R-Car M2-N
-               - renesas,pci-r8a7794      # R-Car E2
-           - const: renesas,pci-rcar-gen2 # R-Car Gen2 and RZ/G1
-+      - items:
-+          - enum:
-+              - renesas,pci-r9a06g032     # RZ/N1D
-+          - const: renesas,pci-rzn1       # RZ/N1
- 
-   reg:
-     items:
-@@ -41,13 +42,9 @@ properties:
-   interrupts:
-     maxItems: 1
- 
--  clocks:
--    items:
--      - description: Device clock
-+  clocks: true
- 
--  clock-names:
--    items:
--      - const: pclk
-+  clock-names: true
- 
-   resets:
-     maxItems: 1
-@@ -106,13 +103,46 @@ required:
-   - interrupt-map
-   - interrupt-map-mask
-   - clocks
--  - resets
-   - power-domains
-   - bus-range
-   - "#address-cells"
-   - "#size-cells"
-   - "#interrupt-cells"
- 
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - renesas,pci-rzn1
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: Internal bus clock (AHB) for HOST
-+            - description: Internal bus clock (AHB) Power Management
-+            - description: PCI clock for USB subsystem
-+        clock-names:
-+          items:
-+            - const: hclkh
-+            - const: hclkpm
-+            - const: pciclk
-+      required:
-+        - clock-names
-+    else:
-+      properties:
-+        clocks:
-+          items:
-+            - description: Device clock
-+        clock-names:
-+          items:
-+            - const: pclk
-+      required:
-+        - resets
-+
- unevaluatedProperties: false
- 
- examples:
 -- 
 2.35.1
 
