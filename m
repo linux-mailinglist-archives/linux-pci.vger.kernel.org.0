@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9925B52E624
-	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 09:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D9E452E629
+	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 09:23:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346361AbiETHXE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 May 2022 03:23:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54638 "EHLO
+        id S1346371AbiETHXG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 May 2022 03:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344416AbiETHXC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 03:23:02 -0400
+        with ESMTP id S1346348AbiETHXE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 03:23:04 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B85514ACB3;
-        Fri, 20 May 2022 00:23:00 -0700 (PDT)
-Received: from kwepemi100018.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L4J7y1KFZzhXbJ;
-        Fri, 20 May 2022 15:22:06 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9213514ACB9;
+        Fri, 20 May 2022 00:23:02 -0700 (PDT)
+Received: from kwepemi100016.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L4J800KcXzhYR4;
+        Fri, 20 May 2022 15:22:08 +0800 (CST)
 Received: from kwepemm600017.china.huawei.com (7.193.23.234) by
- kwepemi100018.china.huawei.com (7.221.188.35) with Microsoft SMTP Server
+ kwepemi100016.china.huawei.com (7.221.188.123) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 20 May 2022 15:22:58 +0800
+ 15.1.2375.24; Fri, 20 May 2022 15:23:00 +0800
 Received: from localhost.localdomain (10.175.112.125) by
  kwepemm600017.china.huawei.com (7.193.23.234) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 20 May 2022 15:22:56 +0800
+ 15.1.2375.24; Fri, 20 May 2022 15:22:58 +0800
 From:   Peng Liu <liupeng256@huawei.com>
 To:     <bhelgaas@google.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
         <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
@@ -41,9 +41,9 @@ To:     <bhelgaas@google.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
         <linux-ia64@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>
-Subject: [PATCH v2 1/2] numa: create node_available() helper
-Date:   Fri, 20 May 2022 07:37:46 +0000
-Message-ID: <20220520073747.1184091-2-liupeng256@huawei.com>
+Subject: [PATCH v2 2/2] null_blk: fix wrong use of nr_online_nodes
+Date:   Fri, 20 May 2022 07:37:47 +0000
+Message-ID: <20220520073747.1184091-3-liupeng256@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220520073747.1184091-1-liupeng256@huawei.com>
 References: <20220520073747.1184091-1-liupeng256@huawei.com>
@@ -63,108 +63,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Lots of code does
-	node != NUMA_NO_NODE && !node_online(node)
-or
-	node == NUMA_NO_NODE || node_online(node)
-so create node_available() to do this to simplify code.
+Certain systems are designed to have sparse/discontiguous nodes,
+a valid node may be greater than nr_online_nodes. So, the use of
+"nid >= nr_online_nodes" to judge if a node is online is wrong.
 
+Node id is a basic parameter of the system, a user-configured node
+must be checked as early as possible. Otherwise, it may cause panic
+when calling some vulnerable functions such as node_online which
+will cause panic if a very big node is received.
+
+Check g_home_node once users config it, and use node_available to
+make node-checking compatible with sparse/discontiguous nodes.
+
+Fixes: 7ff684a683d7 ("null_blk: prevent crash from bad home_node value")
 Signed-off-by: Peng Liu <liupeng256@huawei.com>
+Suggested-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- arch/ia64/hp/common/sba_iommu.c | 2 +-
- arch/x86/pci/acpi.c             | 2 +-
- drivers/acpi/arm64/iort.c       | 2 +-
- drivers/pci/pci-sysfs.c         | 2 +-
- include/linux/nodemask.h        | 3 +++
- mm/mempolicy.c                  | 2 +-
- 6 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/block/null_blk/main.c | 45 ++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 17 deletions(-)
 
-diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
-index 8ad6946521d8..da3a010bb5fb 100644
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@ -1969,7 +1969,7 @@ sba_map_ioc_to_node(struct ioc *ioc, acpi_handle handle)
- 	unsigned int node;
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index c441a4972064..312903f3a09e 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -97,7 +97,33 @@ module_param_named(poll_queues, g_poll_queues, int, 0444);
+ MODULE_PARM_DESC(poll_queues, "Number of IOPOLL submission queues");
  
- 	node = acpi_get_node(handle);
--	if (node != NUMA_NO_NODE && !node_online(node))
-+	if (!node_available(node))
- 		node = NUMA_NO_NODE;
+ static int g_home_node = NUMA_NO_NODE;
+-module_param_named(home_node, g_home_node, int, 0444);
++
++static int null_param_store_val(const char *str, int *val, int min, int max)
++{
++	int ret, new_val;
++
++	ret = kstrtoint(str, 10, &new_val);
++	if (ret)
++		return -EINVAL;
++
++	if (new_val < min || new_val > max)
++		return -EINVAL;
++
++	*val = new_val;
++	return 0;
++}
++
++static int null_set_home_node(const char *str, const struct kernel_param *kp)
++{
++	return null_param_store_val(str, &g_home_node, 0, MAX_NUMNODES - 1);
++}
++
++static const struct kernel_param_ops null_home_node_param_ops = {
++	.set	= null_set_home_node,
++	.get	= param_get_int,
++};
++
++device_param_cb(home_node, &null_home_node_param_ops, &g_home_node, 0444);
+ MODULE_PARM_DESC(home_node, "Home node for the device");
  
- 	ioc->node = node;
-diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index 052f1d78a562..d4909daa44d9 100644
---- a/arch/x86/pci/acpi.c
-+++ b/arch/x86/pci/acpi.c
-@@ -254,7 +254,7 @@ static int pci_acpi_root_get_node(struct acpi_pci_root *root)
- 			dev_info(&device->dev, FW_BUG "no _PXM; falling back to node %d from hardware (may be inconsistent with ACPI node numbers)\n",
- 				node);
- 	}
--	if (node != NUMA_NO_NODE && !node_online(node))
-+	if (!node_available(node))
- 		node = NUMA_NO_NODE;
+ #ifdef CONFIG_BLK_DEV_NULL_BLK_FAULT_INJECTION
+@@ -120,21 +146,6 @@ MODULE_PARM_DESC(init_hctx, "Fault injection to fail hctx init. init_hctx=<inter
  
- 	return node;
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index f2f8f05662de..bdf690010b97 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1251,7 +1251,7 @@ static int  __init arm_smmu_v3_set_proximity(struct device *dev,
- 	if (smmu->flags & ACPI_IORT_SMMU_V3_PXM_VALID) {
- 		int dev_node = pxm_to_node(smmu->pxm);
+ static int g_queue_mode = NULL_Q_MQ;
  
--		if (dev_node != NUMA_NO_NODE && !node_online(dev_node))
-+		if (!node_available(dev_node))
- 			return -EINVAL;
- 
- 		set_dev_node(dev, dev_node);
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index c263ffc5884a..502490d26c1d 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -344,7 +344,7 @@ static ssize_t numa_node_store(struct device *dev,
- 	if ((node < 0 && node != NUMA_NO_NODE) || node >= MAX_NUMNODES)
- 		return -EINVAL;
- 
--	if (node != NUMA_NO_NODE && !node_online(node))
-+	if (!node_available(node))
- 		return -EINVAL;
- 
- 	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index 567c3ddba2c4..e7d30807df5b 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -70,6 +70,7 @@
-  *
-  * int node_online(node)		Is some node online?
-  * int node_possible(node)		Is some node possible?
-+ * int node_available(node)		Node online or NUMA_NO_NODE
-  *
-  * node_set_online(node)		set bit 'node' in node_online_map
-  * node_set_offline(node)		clear bit 'node' in node_online_map
-@@ -510,6 +511,8 @@ static inline int node_random(const nodemask_t *mask)
- #define num_possible_nodes()	num_node_state(N_POSSIBLE)
- #define node_online(node)	node_state((node), N_ONLINE)
- #define node_possible(node)	node_state((node), N_POSSIBLE)
-+#define node_available(node) \
-+		((node) == NUMA_NO_NODE || node_state((node), N_ONLINE))
- 
- #define for_each_node(node)	   for_each_node_state(node, N_POSSIBLE)
- #define for_each_online_node(node) for_each_node_state(node, N_ONLINE)
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 8c74107a2b15..7a31b006c5e8 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -141,7 +141,7 @@ int numa_map_to_online_node(int node)
+-static int null_param_store_val(const char *str, int *val, int min, int max)
+-{
+-	int ret, new_val;
+-
+-	ret = kstrtoint(str, 10, &new_val);
+-	if (ret)
+-		return -EINVAL;
+-
+-	if (new_val < min || new_val > max)
+-		return -EINVAL;
+-
+-	*val = new_val;
+-	return 0;
+-}
+-
+ static int null_set_queue_mode(const char *str, const struct kernel_param *kp)
  {
- 	int min_dist = INT_MAX, dist, n, min_node;
+ 	return null_param_store_val(str, &g_queue_mode, NULL_Q_BIO, NULL_Q_MQ);
+@@ -2107,7 +2118,7 @@ static int __init null_init(void)
+ 		g_max_sectors = BLK_DEF_MAX_SECTORS;
+ 	}
  
--	if (node == NUMA_NO_NODE || node_online(node))
-+	if (node_available(node))
- 		return node;
- 
- 	min_node = node;
+-	if (g_home_node != NUMA_NO_NODE && g_home_node >= nr_online_nodes) {
++	if (!node_available(g_home_node)) {
+ 		pr_err("invalid home_node value\n");
+ 		g_home_node = NUMA_NO_NODE;
+ 	}
 -- 
 2.25.1
 
