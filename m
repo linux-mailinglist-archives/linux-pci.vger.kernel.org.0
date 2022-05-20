@@ -2,77 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2AAE52DF17
-	for <lists+linux-pci@lfdr.de>; Thu, 19 May 2022 23:20:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5142E52E241
+	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 04:00:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245107AbiESVUK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 May 2022 17:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49606 "EHLO
+        id S1344586AbiETB6w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 May 2022 21:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231966AbiESVUI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 17:20:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF53ED726;
-        Thu, 19 May 2022 14:20:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 52B84B8250B;
-        Thu, 19 May 2022 21:20:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C6FC385AA;
-        Thu, 19 May 2022 21:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652995205;
-        bh=SvQDWvHaw/Ro4+sDEA3LzYO4ioj59uSH1d5BBRvD684=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lZPvgxQ/0GEOJbdI/RsIgFr7yLZfcUJvpqzkwIfYr6DnYL+2Rhom2zrrp9ZJYTqpF
-         2BbR9KFYoHbcXxtwZrm5jEIxoonOr6uHesOrfW2SzdnjGAFe7wRyLtBeOLomEHF142
-         GyhjeqDrl/+/XblALv6RzMdFZz//uCum30g8tGHTm+Jh2eHBkWU+fpxNxNOYIVKpdO
-         Yz+zapxuT0saXPNbmmikHL5VGRFl3k5i/okcNGRFGOcWY43CajAV5gIwlk5K91/tPl
-         FY3nh2Cq1LMWd9FJmk7x7tKje3C8gCWlhNIHrrazJdMY61SXsJMc302TGt3KV0Bc7z
-         VYeES8NTlFwKw==
-Date:   Thu, 19 May 2022 22:19:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Rosin <peda@axentia.se>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-media@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Fix properties without any type
-Message-ID: <Yoa0egr9vhTHcxjp@sirena.org.uk>
-References: <20220519211411.2200720-1-robh@kernel.org>
+        with ESMTP id S1344621AbiETB6u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 May 2022 21:58:50 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1BFFEBEBA
+        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 18:58:48 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id u7so7438709ljd.11
+        for <linux-pci@vger.kernel.org>; Thu, 19 May 2022 18:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rI7Y4P9SCkMcqvtK5Rv4N2uvGcPonNFOcit2B7JJbwg=;
+        b=bCrGTseHMnu40q7z4FTSUPlil5+yLztnKlgGkTZTRiNTQGRiOogYiZhAGBDhIwyN+u
+         I2Aw71dgFZ/v32Mak0VE48W0XB07yf6yDzzCkhXlunndeSqX0bU7p6Y/pUros4PpBAgW
+         NVeOokZUHXUkjqoKfUzGBnsHx/CQ4TsamPwKhX9o7GDPypXF2CJyEqgfCMHw11LIW429
+         v1TS3WU6LDBPqjmpGLUzA427+sVpNPJ0MiMXV3gBGEFq4ZKXrj+W5DkL64WEZHodbjnv
+         /j9l8rh5+oq/BWq7ibeCKkUB0emFqsm/kBUlhL+Nvio3XI44ajuE11bhPTKL3USOSMrB
+         qT3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rI7Y4P9SCkMcqvtK5Rv4N2uvGcPonNFOcit2B7JJbwg=;
+        b=rhUEkEnAJ7u0BRpihLhNxGxVlYpAEziHRfITmMBKNSfraS8YkjiHTOOT9BwcwfuoVS
+         7IhSvEpfF7d4JFl2R1c9MirCsadxVPKgZsEbTsSj0KlndrjyYKdLXlxxXTfeKQgjYB3Y
+         czpWmSKj4TB0qZDFsa1PV3MASIIUbK67UQ+8pmKX119uROYuVySVJ/tmkHAQOmhI5fuc
+         e6yxnrjkIJ45tCM+DHffFCaokTNvqAVyfA6i/T5LBRh6OueSQ8uMQEePAOaBBOFD9I48
+         Ptxy78HisD28FpkOO1h8K5ZtwH5f51yGV8JW+VpCcqxgxklCJPr6ao+Qn53WAQLQywpu
+         z8fw==
+X-Gm-Message-State: AOAM533L0Dq7lokZ/52LmffnqBXpmWl8yitRIkf9hvZuDE/JWWwIcUSS
+        B7o/BPxLdho+bTPp/W87pRWGKg==
+X-Google-Smtp-Source: ABdhPJwz10pUK4fM57T//QKpNJQzy9Obh6zw03R3lVoB6SGuKxxbmYxwHQi/xkle2R0Ioda8PrGqxA==
+X-Received: by 2002:a2e:9159:0:b0:253:a141:4cd1 with SMTP id q25-20020a2e9159000000b00253a1414cd1mr4313093ljg.145.1653011927067;
+        Thu, 19 May 2022 18:58:47 -0700 (PDT)
+Received: from eriador.lan ([2001:470:dd84:abc0::8a5])
+        by smtp.gmail.com with ESMTPSA id u28-20020ac24c3c000000b0047255d21192sm467370lfq.193.2022.05.19.18.58.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 May 2022 18:58:46 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v7 0/6] PCI: qcom: Rework pipe_clk/pipe_clk_src handling
+Date:   Fri, 20 May 2022 04:58:38 +0300
+Message-Id: <20220520015844.1190511-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eXFy+XxgE7404o6q"
-Content-Disposition: inline
-In-Reply-To: <20220519211411.2200720-1-robh@kernel.org>
-X-Cookie: Some restrictions may apply.
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,36 +75,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+PCIe pipe clk (and some other clocks) must be parked to the "safe"
+source (bi_tcxo) when corresponding GDSC is turned off and on again.
+Currently this is handcoded in the PCIe driver by reparenting the
+gcc_pipe_N_clk_src clock.
 
---eXFy+XxgE7404o6q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Instead of doing it manually, follow the approach used by
+clk_rcg2_shared_ops and implement this parking in the enable() and
+disable() clock operations for respective pipe clocks.
 
-On Thu, May 19, 2022 at 04:14:11PM -0500, Rob Herring wrote:
-> Now that the schema tools can extract type information for all
-> properties (in order to decode dtb files), finding properties missing
-> any type definition is fairly trivial though not yet automated.
->=20
-> Fix the various property schemas which are missing a type. Most of these
-> tend to be device specific properties which don't have a vendor prefix.
-> A vendor prefix is how we normally ensure a type is defined.
+Changes since v6:
+ - Switched the ops to use GENMASK/FIELD_GET/FIELD_PUT (Stephen),
+ - As all pipe/symbol clock source clocks have the same register (and
+   parents) layout, hardcode all the values. If the need arises, this
+   can be changed later (Stephen),
+ - Fixed commit messages and comments (suggested by Johan),
+ - Added revert for the clk_regmap_mux_safe that have been already
+   picked up by Bjorn.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Changes since v5:
+ - Rename the clock to clk-regmap-phy-mux and the enable/disable values
+   to phy_src_val and ref_src_val respectively (as recommended by
+   Johan).
 
---eXFy+XxgE7404o6q
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v4:
+ - Renamed the clock to clk-regmap-pipe-src,
+ - Added mention of PCIe2 PHY to the commit message,
+ - Expanded commit messages to mention additional pipe clock details.
 
------BEGIN PGP SIGNATURE-----
+Changes since v3:
+ - Replaced the clock multiplexer implementation with branch-like clock.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmKGtHkACgkQJNaLcl1U
-h9CTcgf/YrxaonL9unlOXD9rVNzVh2gBFZV2wTefQuNDSwkIM40MNQLcoafgcXo5
-gFwpnXnCULN4HW9E4gsxeDnj3lcvR/bPgnNtrHetwyPKH/I99KJSgtm6605GyKWF
-4d5cVzASF5iCk9z6tn51f2x6jCCLVkVoAOOohCc3nYr1YbXRtQSnKKS8vYaNyqVq
-/sELkTEEdwMdl9AML+9S0amyFoPS92ZdcFlFWZIjjzPmidXQxZuL7tGvs9O56vj+
-QUESokWc4u2ziIcTQT9X0XXb9dDJjhXWaFiHNc38F7o+ad3kBXAhgzzBzMC/6fLI
-/352XipOMFDBOV9MMA03nK4kEtXQBA==
-=MbOe
------END PGP SIGNATURE-----
+Changes since v2:
+ - Added is_enabled() callback
+ - Added default parent to the pipe clock configuration
 
---eXFy+XxgE7404o6q--
+Changes since v1:
+ - Rebased on top of [1].
+ - Removed erroneous Fixes tag from the patch 4.
+
+Changes since RFC:
+ - Rework clk-regmap-mux fields. Specify safe parent as P_* value rather
+   than specifying the register value directly
+ - Expand commit message to the first patch to specially mention that
+   it is required only on newer generations of Qualcomm chipsets.
+
+Dmitry Baryshkov (6):
+  PCI: qcom: Remove unnecessary pipe_clk handling
+  clk: qcom: regmap: add PHY clock source implementation
+  clk: qcom: gcc-sm8450: use new clk_regmap_phy_mux_ops for PCIe pipe
+    clocks
+  clk: qcom: gcc-sc7280: use new clk_regmap_phy_mux_ops for PCIe pipe
+    clocks
+  Revert "clk: qcom: regmap-mux: add pipe clk implementation"
+  PCI: qcom: Drop manual pipe_clk_src handling
+
+ drivers/clk/qcom/Makefile              |  1 +
+ drivers/clk/qcom/clk-regmap-mux.c      | 78 -------------------------
+ drivers/clk/qcom/clk-regmap-mux.h      |  3 -
+ drivers/clk/qcom/clk-regmap-phy-mux.c  | 53 +++++++++++++++++
+ drivers/clk/qcom/clk-regmap.h          | 17 ++++++
+ drivers/clk/qcom/gcc-sc7280.c          | 70 +++++++---------------
+ drivers/clk/qcom/gcc-sm8450.c          | 72 +++++++----------------
+ drivers/pci/controller/dwc/pcie-qcom.c | 81 +-------------------------
+ 8 files changed, 118 insertions(+), 257 deletions(-)
+ create mode 100644 drivers/clk/qcom/clk-regmap-phy-mux.c
+
+-- 
+2.35.1
+
