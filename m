@@ -2,87 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36C7B52E79F
-	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 10:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B142852E8A9
+	for <lists+linux-pci@lfdr.de>; Fri, 20 May 2022 11:21:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347279AbiETIdJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 May 2022 04:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47556 "EHLO
+        id S1344185AbiETJVW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 May 2022 05:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347179AbiETIci (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 04:32:38 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED3315A764
-        for <linux-pci@vger.kernel.org>; Fri, 20 May 2022 01:31:53 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id i23so8876623ljb.4
-        for <linux-pci@vger.kernel.org>; Fri, 20 May 2022 01:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=h3WJYFfGayadW9G5lFwAxq1g0Bjs/Evwf1QVMN3FYqs=;
-        b=OUxy/ZYaZONP+Q+vdt5vpARqAjqGs2HdOgXpm+qsSQ7l6Tl7vI+yC2OYFETOw2A5rp
-         IuFVSo+PmbCE1plCVq8QmhJDtZc+enypE/U+B6G4+QptS//s4R/q3sYIWtDWUO3n5Si3
-         PS/kHG79FMPfUJynDg+56VnlciTQKzQlEaTwi9QtQmJReX10pupNqvmB9HGW5Es1kK1f
-         tXaYLhVHMcHYcRtS+3qf3HnZyUfOjt1+qPw9YaSRvPluan5AOcJQySDBbACUEK59fDNf
-         PNDU+CxLprUY3US3HeuMXluL9aKqGX//ZDMjgk38F+EFt2jjPyOG3xAr3UMcUP/dW7Jc
-         u6HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=h3WJYFfGayadW9G5lFwAxq1g0Bjs/Evwf1QVMN3FYqs=;
-        b=dhc54TDG+DE/XGrpRRnnDGVLTmcXaQbOl7JXs0U6wbP85nWJuiqotLiiQ5/uHb211b
-         BeTjyhTy8+IrLlq8tSWtgqT7b96aS6LxjThMWPDjZujwlIb8GJynTgRxzNB4PWGa6LIN
-         e1QmxVBTgCSNlowYFqJs79Z2/D+amlvWmRGf+8nPSsL+Buq9uVdgEfPUgyMS5MqBhSRw
-         RQFCeoUVxOpRDmBJLZKqehl2uT/aytkPPrGurti8xtILFaQBSxkJVCO19AQZrjKegFHh
-         INwsmcrgYh3uhN+VQ1s32HeAtPmzyAThThEYxdT1WzyAhAVXM+0PWjS+iJckeypvVIO0
-         VQ/Q==
-X-Gm-Message-State: AOAM533eayvhEXS9wcE08K7fq8QFAKgmk6wc8d2l+cKAvyR9UlTkKeAL
-        P5+tBsdwXxaIt751iIfASWCeFQ==
-X-Google-Smtp-Source: ABdhPJxwX2pN5Rk7XCYypLFb7esRRrkZ0ZlxbJJ18ePBDVmnZOZ1ME9l/zqrP6uQg9uDNcJ0gl32bg==
-X-Received: by 2002:a05:651c:160b:b0:247:f955:1b18 with SMTP id f11-20020a05651c160b00b00247f9551b18mr5076472ljq.427.1653035511499;
-        Fri, 20 May 2022 01:31:51 -0700 (PDT)
-Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id k17-20020a2e8891000000b00253d84812edsm229678lji.2.2022.05.20.01.31.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 May 2022 01:31:51 -0700 (PDT)
-Message-ID: <8ef52427-b63c-1386-12e9-7a36367dc888@linaro.org>
-Date:   Fri, 20 May 2022 10:31:49 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: renesas,pci-rcar-gen2: Add
- device tree support for r9a06g032
-Content-Language: en-US
-To:     Herve Codina <herve.codina@bootlin.com>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        with ESMTP id S236358AbiETJVV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 May 2022 05:21:21 -0400
+X-Greylist: delayed 1434 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 20 May 2022 02:21:19 PDT
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1516.securemx.jp [210.130.202.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E542DAB6;
+        Fri, 20 May 2022 02:21:19 -0700 (PDT)
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1516) id 24K8vQSw029845; Fri, 20 May 2022 17:57:26 +0900
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 24K8uskm030850; Fri, 20 May 2022 17:56:54 +0900
+X-Iguazu-Qid: 34trvzMrv8epPT65NT
+X-Iguazu-QSIG: v=2; s=0; t=1653037014; q=34trvzMrv8epPT65NT; m=wCqfnp8vQEQyhU528pIyqI4BbH8Xu5y1VmAO4hRtlXU=
+Received: from imx12-a.toshiba.co.jp (imx12-a.toshiba.co.jp [61.202.160.135])
+        by relay.securemx.jp (mx-mr1510) id 24K8uqbh040873
+        (version=TLSv1.2 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 20 May 2022 17:56:53 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-References: <20220429134143.628428-1-herve.codina@bootlin.com>
- <20220429134143.628428-4-herve.codina@bootlin.com>
- <29ba3db6-e5c7-06d3-29d9-918ee5b34555@linaro.org>
- <20220520102329.6b0a58d0@bootlin.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220520102329.6b0a58d0@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        Rob Herring <robh@kernel.org>
+Cc:     linux-pci@vger.kernel.org, yuji2.ishikawa@toshiba.co.jp,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH] dt-bindings: pci: toshiba,visconti-pcie: Update the common clock properties
+Date:   Fri, 20 May 2022 17:56:48 +0900
+X-TSB-HOP2: ON
+Message-Id: <20220520085648.620703-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+X-Mailer: git-send-email 2.36.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -90,28 +48,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20/05/2022 10:23, Herve Codina wrote:
-> The yaml has the following structure and so has 2 AllOf:
->   ...
->   allOf:
->   - $ref: /schemas/pci/pci-bus.yaml#
->   
->   properties:
->     compatible:
->   ...
->   allOf:
->   - if:
+The clock for this driver switched to the common clock controller driver.
+Therefore, update common clock properties for PCIe controller in the binding
+document.
 
-(...)
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pci/toshiba,visconti-pcie.yaml         | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> Is having a 'allOf' for schemas inclusion and a 'allOf' for conditionnal
-> parts allowed ?
+diff --git a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+index 30b6396d83c8..b9d0484606cc 100644
+--- a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+@@ -69,6 +69,7 @@ unevaluatedProperties: false
+ 
+ examples:
+   - |
++    #include <dt-bindings/clock/toshiba,tmpv770x.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+@@ -102,7 +103,7 @@ examples:
+                  0 0 0 2 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH
+                  0 0 0 3 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH
+                  0 0 0 4 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
+-            clocks = <&extclk100mhz>, <&clk600mhz>, <&clk25mhz>;
++            clocks = <&extclk100mhz>, <&pismu TMPV770X_CLK_PCIE_MSTR>, <&pismu TMPV770X_CLK_PCIE_AUX>;
+             clock-names = "ref", "core", "aux";
+             max-link-speed = <2>;
+         };
+-- 
+2.36.0
 
-Only one allOf for all of such (ref + if), located before
-additionalProperties:
-https://elixir.bootlin.com/linux/v5.18-rc7/source/Documentation/devicetree/bindings/example-schema.yaml#L211
 
-
-Best regards,
-Krzysztof
