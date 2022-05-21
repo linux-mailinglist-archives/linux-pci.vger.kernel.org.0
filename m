@@ -2,136 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 680F452FA09
-	for <lists+linux-pci@lfdr.de>; Sat, 21 May 2022 10:36:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14DFD52FA1C
+	for <lists+linux-pci@lfdr.de>; Sat, 21 May 2022 10:50:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238994AbiEUIgZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 May 2022 04:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56276 "EHLO
+        id S237529AbiEUItj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 May 2022 04:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238936AbiEUIgY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 May 2022 04:36:24 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270C536310;
-        Sat, 21 May 2022 01:36:24 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id c2so9111268plh.2;
-        Sat, 21 May 2022 01:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ei1w+gAULw3a4Sp90/wPAPVRhqkQXbusQfV0z240l4M=;
-        b=E+7bjb/QwmEkUO8deR/PhBs6U3gxuFDSHnbQU7gNn3QKPN5mF5qRPTZ0GWj4l8In3L
-         4CRgnUMOcbQlDkqioBvhvd1qNGKDjF6Ee1CXwHfqv7aJwjfS8h63grHDSlmaCp4fLwfM
-         kNjWHzEvFnz+pXk+OmQrrDVb6ceE2aYycr6917ddc/9/wh8Z/llY2Ii1XhQkb49vjGTw
-         fqrQC31FXiDfugJcYscTRQU0PLWKXFRBlgNw2hqtSy3QW5V+XU+uwTDZqrZqbo41Ql4C
-         GqgPEr0rJKaEvkSIaCnoD5ZlU8KYD2g6n1Is53prmCWsPY0hgXBLaEnpvUmoc6jueFfR
-         qHaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ei1w+gAULw3a4Sp90/wPAPVRhqkQXbusQfV0z240l4M=;
-        b=Uh5B0GjgnhomGRlr3TZq3rjS8zq7c6twpZTKU3bJ5bWA45tmV1lMfXlORsWCBS3/j+
-         evwg3L4zTVrIERfS/54fYhDw50cyV9xqBargpfLA/107LBC1ffT3Dll4FtsvyQvfOo5L
-         D6F1/QqvNAHOzh45NfTq+gEjbHn+qyTo6Qyv8GQKsvOWp3yyjru+D84Qv9dWTgNfMS7s
-         XwG6fNeziHONVUhdsezcl+o9MkFTWlVgnq7H+zZI+NTvXAWMuLfBrsqY7HfLuVoTqdXt
-         FPeFkspG0AlT0kzCaVYsXrViSx9yWwWzHe3AnIQXhZMJq3UZy1U+QQM+jTZzVxtiEbpx
-         fI2w==
-X-Gm-Message-State: AOAM533PO+Mmz8CH0e294bLOCI6urANqIIj67QUao7SCtghiDa1DPn9Q
-        kxua4Jx0wNadR+J7zLqBrxptcfoRjBnThIsRm8Q=
-X-Google-Smtp-Source: ABdhPJwca2rFA5Q4M2AyfKg+2grC+dgJOl8pPVHGfhRhV0GOIoUoBTya/l9pec68R6KTBNux4R19JJmJXZDZZU9gGbg=
-X-Received: by 2002:a17:903:40cb:b0:162:6ea:a2 with SMTP id
- t11-20020a17090340cb00b0016206ea00a2mr1789753pld.34.1653122183639; Sat, 21
- May 2022 01:36:23 -0700 (PDT)
+        with ESMTP id S229490AbiEUIth (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 May 2022 04:49:37 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8CE0166471
+        for <linux-pci@vger.kernel.org>; Sat, 21 May 2022 01:49:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653122976; x=1684658976;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tvmfzWeXGATrqh5+Si6oGy/Og3ncuskSe+lmEUc5hs4=;
+  b=jhYcQx9HVIafPTB3w7U+UQrXsNShWBq4myPWsjSHjj/auh5+vdGj6GJD
+   QJlDXc7FGcPpKkBFOfOogWFlEfXlMQFAjeqMf9uEcVIwf54jidyoeCeji
+   zkGjLnBfB5nvQxU8MCTctDSlg8v5clqD8/OmpgLnqX3sOpaxcJ6ZTDlYP
+   eNN0U4AkcYmyLZKMafFw+peGpEp0vAXhJyhXVIuVlFfjXo7tQ/slZ0Ixy
+   NZtpD88Pq5NTRKlbP+nPmz+j3DzAkC7GlH9DriZiYEp8fyEyDC5Q4wp94
+   G4pnuono9jjZDW2xptNec1qI/sVSj0ZTSRQOmlarTh2Rkk2SgQq9RhndW
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10353"; a="252712604"
+X-IronPort-AV: E=Sophos;i="5.91,242,1647327600"; 
+   d="scan'208";a="252712604"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 01:49:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,242,1647327600"; 
+   d="scan'208";a="743842905"
+Received: from lkp-server02.sh.intel.com (HELO 242b25809ac7) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 21 May 2022 01:49:34 -0700
+Received: from kbuild by 242b25809ac7 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nsKnm-00068s-70;
+        Sat, 21 May 2022 08:49:34 +0000
+Date:   Sat, 21 May 2022 16:48:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [lpieralisi-pci:pci/aardvark] BUILD REGRESSION
+ bf8dd34079057e2c761eb914b70b49f4a455fc18
+Message-ID: <6288a77a.fQ6QjQGk2hOuZQSi%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20220516165740.6256af51.alex.williamson@redhat.com>
- <20220518115432.76183-1-windy.bi.enflame@gmail.com> <20220520064148.GA20418@wunner.de>
-In-Reply-To: <20220520064148.GA20418@wunner.de>
-From:   Sheng Bi <windy.bi.enflame@gmail.com>
-Date:   Sat, 21 May 2022 16:36:10 +0800
-Message-ID: <CAGdb+H2_pX4TzG=sJ8XE6KiyWW9niJQawCbcDN2byxDfybukiA@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Fix no-op wait after secondary bus reset
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 20, 2022 at 2:41 PM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Wed, May 18, 2022 at 07:54:32PM +0800, Sheng Bi wrote:
-> > +static int pci_bridge_secondary_bus_wait(struct pci_dev *bridge, int timeout)
-> > +{
-> > +     struct pci_dev *dev;
-> > +     int delay = 0;
-> > +
-> > +     if (!bridge->subordinate || list_empty(&bridge->subordinate->devices))
-> > +             return 0;
-> > +
-> > +     list_for_each_entry(dev, &bridge->subordinate->devices, bus_list) {
-> > +             while (!pci_device_is_present(dev)) {
-> > +                     if (delay > timeout) {
-> > +                             pci_warn(dev, "not ready %dms after secondary bus reset; giving up\n",
-> > +                                     delay);
-> > +                             return -ENOTTY;
-> > +                     }
-> > +
-> > +                     msleep(20);
-> > +                     delay += 20;
-> > +             }
-> > +
-> > +             if (delay > 1000)
-> > +                     pci_info(dev, "ready %dms after secondary bus reset\n",
-> > +                             delay);
-> > +     }
-> > +
-> > +     return 0;
-> > +}
->
-> An alternative approach you may want to consider is to call
-> pci_dev_wait() in the list_for_each_entry loop, but instead of
-> passing it a constant timeout you'd pass the remaining time.
->
-> Get the current time before and after each pci_dev_wait() call
-> from "jiffies", calculate the difference, convert to msecs with
-> jiffies_to_msecs() and subtract from the "timeout" parameter
-> passed in by the caller, then simply pass "timeout" to each
-> pci_dev_wait() call.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git pci/aardvark
+branch HEAD: bf8dd34079057e2c761eb914b70b49f4a455fc18  PCI: aardvark: Fix reporting Slot capabilities on emulated bridge
 
-Thanks for your proposal, which can avoid doing duplicated things as
-pci_dev_wait().
+Error/Warning: (recently discovered and may have been fixed)
 
-If so, I also want to align the polling things mentioned in the
-question from Alex, since pci_dev_wait() is also used for reset
-functions other than SBR. To Bjorn, Alex, Lucas, how do you think if
-we need to change the polling in pci_dev_wait() to 20ms intervals, or
-keep binary exponential back-off with probable unexpected extra
-timeout delay.
+drivers/pci/controller/pci-aardvark.c:1070:54: error: 'PCI_EXP_SLTCAP_PSN_SHIFT' undeclared (first use in this function); did you mean 'PCI_EXP_SLTCAP_PSN'?
+drivers/pci/controller/pci-aardvark.c:1071:54: error: 'PCI_EXP_SLTCAP_PSN_SHIFT' undeclared (first use in this function); did you mean 'PCI_EXP_SLTCAP_PSN'?
 
->
-> As a side note, traversing the bus list normally requires
-> holding the pci_bus_sem for reading.  But it's probably unlikely
-> that devices are added/removed concurrently to a bus reset
-> and we're doing it wrong pretty much everywhere in the
-> PCI reset code, so...
+Error/Warning ids grouped by kconfigs:
 
-Yeah... I think that is why I saw different coding there. I would
-prefer a separate thread for estimating which ones are real risks.
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- arc-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- arm-allmodconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- arm-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- arm64-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- arm64-defconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- ia64-allmodconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- ia64-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- ia64-buildonly-randconfig-r003-20220518
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- microblaze-buildonly-randconfig-r001-20220518
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- mips-allmodconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- mips-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- parisc-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- powerpc-allmodconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- powerpc-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- powerpc-buildonly-randconfig-r004-20220518
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- riscv-allmodconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- riscv-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- s390-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+|-- sparc-allyesconfig
+|   `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
+`-- xtensa-allyesconfig
+    `-- drivers-pci-controller-pci-aardvark.c:error:PCI_EXP_SLTCAP_PSN_SHIFT-undeclared-(first-use-in-this-function)
 
->
-> (I fixed up one of the reset functions with 10791141a6cf,
-> but plenty of others remain...)
->
-> Thanks,
->
-> Lukas
+elapsed time: 3878m
+
+configs tested: 63
+configs skipped: 3
+
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+parisc                           alldefconfig
+powerpc                 mpc834x_mds_defconfig
+mips                            gpr_defconfig
+ia64                                defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+riscv                             allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+arc                                 defconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
+
+clang tested configs:
+hexagon              randconfig-r045-20220518
+hexagon              randconfig-r041-20220518
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
