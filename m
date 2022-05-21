@@ -2,95 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B23E52FD87
-	for <lists+linux-pci@lfdr.de>; Sat, 21 May 2022 17:03:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9882B52FE3A
+	for <lists+linux-pci@lfdr.de>; Sat, 21 May 2022 18:43:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244529AbiEUPDv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 May 2022 11:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51614 "EHLO
+        id S234058AbiEUQnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 May 2022 12:43:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244678AbiEUPDt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 May 2022 11:03:49 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB2C291562
-        for <linux-pci@vger.kernel.org>; Sat, 21 May 2022 08:03:45 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id t25so18765316lfg.7
-        for <linux-pci@vger.kernel.org>; Sat, 21 May 2022 08:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=4qCtL0+bm+n7u/HXMR/ejdT6S5mFrpV8yho83BhRO5s=;
-        b=y5RaZjFHrW8w0QDRcNsylDIFb53EJ2po4JTV2FpNAdkAYoZdu1qF5axrhsPQuGATng
-         IRhb46WEpzowjRCtShPff9kYW6hHmeuNWcNUVWWram5Vsu13pwjOphSj50HlavWfE75o
-         fl8HJqVUjSx8QbwUjbHsCAWiX5BauC0NO2ZKYDPS4ebr9JVbKM3hZESP+xBd6W4RKh33
-         MjPK1gRmYo1vuibvD7RGvzYvB0fQWdgtoSLYcw2VHu54BnbEvJcolLEa1EoGN8BAPKCL
-         xL8v5PmCr8qaYJ68UOqWoeB4NePuVP6tv4mkCntQBpW2qZmf/QlRL9lcpkc3pjzue05U
-         zOAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=4qCtL0+bm+n7u/HXMR/ejdT6S5mFrpV8yho83BhRO5s=;
-        b=0ELTiSqctrWRX7TnX1+Jw5g3GagFAJ2vf7K/ezYYjFNT7QK8WhzScF6tvHTb43EzpV
-         vUSzW68Ebl7HXyfaG8KXrzAr555poMmvpymu3Hyz5yj8T+Zlv2BpbBI1WnHoWl1DVuN/
-         e/zRMAV/5t8klLvoGF0KLFqK0BZc8j/b29yO0sj+LsPnCodrjFokRG8CLF6cHfvD/Mpp
-         kg4gO6C3YEutcJGvzW8ToIV7ZR7dG9A2Rkj1tnu22oyJ7epLFwpnrY0zHEFJTGlQhfI2
-         Y1xayBwIoEjvwlLlbNtgR2p78/8cvco7OUCKhD2ZCasMwYi1EqJ+K4qogDwtuMqaAgrQ
-         VZkA==
-X-Gm-Message-State: AOAM532rxZyRwLGQb3bVablGcTYyn/rxe1dLVRZxuGjJHoNycKuZ5Hli
-        VQtYMd7JgfF5pZ62GEQhz1zfiw==
-X-Google-Smtp-Source: ABdhPJxtHDtDb6cleVJCc0ulh0XswzEKTSNzq7RDBh7mwPl4obmqj7ZYfKIcfiHfX3+2J00L6fmtSQ==
-X-Received: by 2002:ac2:4f0c:0:b0:477:cb8e:bd8b with SMTP id k12-20020ac24f0c000000b00477cb8ebd8bmr5791149lfr.209.1653145423865;
-        Sat, 21 May 2022 08:03:43 -0700 (PDT)
-Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id p20-20020ac24ed4000000b0047255d210easm1087910lfr.25.2022.05.21.08.03.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 May 2022 08:03:43 -0700 (PDT)
-Message-ID: <6ae55a29-0b29-f53c-c9bd-fae929f3caf7@linaro.org>
-Date:   Sat, 21 May 2022 17:03:41 +0200
+        with ESMTP id S230294AbiEUQnJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 May 2022 12:43:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4494D344D7;
+        Sat, 21 May 2022 09:43:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7FA83608D6;
+        Sat, 21 May 2022 16:43:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4213CC385A5;
+        Sat, 21 May 2022 16:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653151386;
+        bh=az64NAXmbt4SZ0Idjh2q6rIuye3/f5hZ/eibgzKipTc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EPB+gH2T3lz6z9Mhd+CRPKJqp/Uk6n6Gm12lVIgQgBJzsiTs5jeValjrGoSZhyNkM
+         gES8SDqGvn1BvV75+/tnFM40KdVGpbf2STgC5SA/+1iTaRPY1JeRgHOv8P52ZfXCO4
+         xYoPzRmwhJKKbDjNN50EqhZNQdO5PMSnEOpGdJd31lzdgfTLtwTPIDEkm3V2a0JjTa
+         BQ8rCRWtz+aO5mVoD4VG62MLM/a72TDM+GPzjxW0Nd41VPGL7ZN+n9RB8Z3Y67vW1Q
+         SXqrY0oYrdp2A2hfcx+tWxCzhn2PecmecAnB3rkM9IRiCTlh7R6+ln04vbBPepWg5e
+         fM5OEk2H8cXxg==
+Date:   Sat, 21 May 2022 11:43:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, james.dutton@gmail.com,
+        kibi@debian.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe
+ linkup
+Message-ID: <20220521164303.GA106705@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH] dt-bindings: Fix properties without any type
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Peter Rosin <peda@axentia.se>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-media@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org
-References: <20220519211411.2200720-1-robh@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220519211411.2200720-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220518194211.20143-1-jim2101024@gmail.com>
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -98,184 +66,127 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 19/05/2022 23:14, Rob Herring wrote:
-> Now that the schema tools can extract type information for all
-> properties (in order to decode dtb files), finding properties missing
-> any type definition is fairly trivial though not yet automated.
+[+cc Rafael, linux-pm because I think there are interesting power
+management questions here]
+
+On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
+> commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
 > 
-> Fix the various property schemas which are missing a type. Most of these
-> tend to be device specific properties which don't have a vendor prefix.
-> A vendor prefix is how we normally ensure a type is defined.
+> introduced a regression on the PCIe RPi4 Compute Module.  If the PCIe
+> endpoint node described in [2] was missing, no linkup would be attempted,
+> and subsequent accesses would cause a panic because this particular PCIe HW
+> causes a CPU abort on illegal accesses (instead of returning 0xffffffff).
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> We fix this by allowing the DT endpoint subnode to be missing.  This is
+> important for platforms like the CM4 which have a standard PCIe socket and
+> the endpoint device is unknown.
+
+I think the problem here is that on the CM, we try to enumerate
+devices that are not powered up, isn't it?  The commit log should say
+something about that power situation and how the driver learns about
+the power regulators instead of just pointing at an DT endpoint node.
+
+I guess the intent of this patch is to turn on the power to downstream
+devices before enumerating them?  What happens if we turn on the power
+but don't find any downstream devices?  From looking at the code, I
+assume we just leave the power on.  Maybe that's what you want, I
+dunno.
+
+I added Rafael because this seems vaguely similar to runtime power
+management, and if we can integrate with that somehow, I'd sure like
+to avoid building a parallel infrastructure for it.
+
+The current path we're on is to move some of this code that's
+currently in pcie-brcmstb.c to the PCIe portdrv [0].  I'm a little
+hesitant about that because ACPI does just fine without it.  If we're
+adding new DT functionality that could not be implemented via ACPI,
+that's one thing.  But I'm not convinced this is that new.
+
+That's a longer term question.  In the short term we need to fix the
+regression.  More specifics about that below.
+
+[0] https://lore.kernel.org/r/20211110221456.11977-6-jim2101024@gmail.com
+
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215925
+> [2] Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> 
+> Fixes: 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+> Fixes: 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 > ---
->  .../arm/hisilicon/controller/hip04-bootwrapper.yaml       | 5 +++--
->  .../bindings/display/bridge/toshiba,tc358768.yaml         | 1 +
->  .../devicetree/bindings/display/panel/panel-timing.yaml   | 5 +++++
->  .../bindings/display/panel/raydium,rm67191.yaml           | 1 +
->  .../bindings/display/panel/samsung,s6e8aa0.yaml           | 1 +
->  .../devicetree/bindings/gpio/fairchild,74hc595.yaml       | 1 +
->  .../devicetree/bindings/input/google,cros-ec-keyb.yaml    | 1 +
->  .../devicetree/bindings/input/matrix-keymap.yaml          | 4 ++++
->  Documentation/devicetree/bindings/media/i2c/adv7604.yaml  | 3 ++-
->  Documentation/devicetree/bindings/mux/reg-mux.yaml        | 8 ++++++--
->  Documentation/devicetree/bindings/net/cdns,macb.yaml      | 1 +
->  Documentation/devicetree/bindings/net/ingenic,mac.yaml    | 1 +
->  .../devicetree/bindings/net/ti,davinci-mdio.yaml          | 1 +
->  .../devicetree/bindings/net/wireless/ti,wlcore.yaml       | 2 ++
->  .../devicetree/bindings/pci/snps,dw-pcie-ep.yaml          | 6 ++++--
->  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml   | 2 ++
->  .../devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml    | 2 ++
->  Documentation/devicetree/bindings/power/avs/qcom,cpr.yaml | 1 +
->  .../devicetree/bindings/power/supply/battery.yaml         | 7 ++++++-
->  .../devicetree/bindings/power/supply/charger-manager.yaml | 1 +
->  Documentation/devicetree/bindings/rng/st,stm32-rng.yaml   | 1 +
->  Documentation/devicetree/bindings/serial/8250.yaml        | 1 +
->  .../devicetree/bindings/sound/audio-graph-card2.yaml      | 3 +++
->  .../devicetree/bindings/sound/imx-audio-hdmi.yaml         | 3 +++
->  Documentation/devicetree/bindings/usb/smsc,usb3503.yaml   | 1 +
->  25 files changed, 55 insertions(+), 8 deletions(-)
+>  drivers/pci/controller/pcie-brcmstb.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/controller/hip04-bootwrapper.yaml b/Documentation/devicetree/bindings/arm/hisilicon/controller/hip04-bootwrapper.yaml
-> index 7378159e61df..483caf0ce25b 100644
-> --- a/Documentation/devicetree/bindings/arm/hisilicon/controller/hip04-bootwrapper.yaml
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/controller/hip04-bootwrapper.yaml
-> @@ -17,14 +17,15 @@ properties:
->        - const: hisilicon,hip04-bootwrapper
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index ba5c120816b2..adca74e235cb 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -540,16 +540,18 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
 >  
->    boot-method:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->      description: |
->        Address and size of boot method.
->        [0]: bootwrapper physical address
->        [1]: bootwrapper size
->        [2]: relocation physical address
->        [3]: relocation size
-> -    minItems: 1
-> -    maxItems: 2
-> +    minItems: 2
-> +    maxItems: 4
+>  static int brcm_pcie_add_bus(struct pci_bus *bus)
+>  {
+> -	struct device *dev = &bus->dev;
+>  	struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
+>  	int ret;
 >  
->  required:
->    - compatible
-> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
-> index 3bd670b8e5cd..0b6f5bef120f 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
-> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
-> @@ -58,6 +58,7 @@ properties:
+> -	if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
+> +	/* Only busno==1 requires us to linkup */
+> +	if ((int)bus->number != 1)
+>  		return 0;
 >  
->              properties:
->                data-lines:
-> +                $ref: /schemas/types.yaml#/definitions/uint32
->                  enum: [ 16, 18, 24 ]
+>  	ret = pci_subdev_regulators_add_bus(bus);
+> -	if (ret)
+> +	if (ret) {
+> +		pcie->refusal_mode = true;
+>  		return ret;
+> +	}
 >  
->        port@1:
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-timing.yaml b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
-> index 7749de95ee40..229e3b36ee29 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
-> @@ -146,6 +146,7 @@ properties:
->        Horizontal sync pulse.
->        0 selects active low, 1 selects active high.
->        If omitted then it is not used by the hardware
-> +    $ref: /schemas/types.yaml#/definitions/uint32
->      enum: [0, 1]
->  
->    vsync-active:
-> @@ -153,6 +154,7 @@ properties:
->        Vertical sync pulse.
->        0 selects active low, 1 selects active high.
->        If omitted then it is not used by the hardware
-> +    $ref: /schemas/types.yaml#/definitions/uint32
->      enum: [0, 1]
->  
->    de-active:
-> @@ -160,6 +162,7 @@ properties:
->        Data enable.
->        0 selects active low, 1 selects active high.
->        If omitted then it is not used by the hardware
-> +    $ref: /schemas/types.yaml#/definitions/uint32
->      enum: [0, 1]
->  
->    pixelclk-active:
-> @@ -169,6 +172,7 @@ properties:
->        sample data on rising edge.
->        Use 1 to drive pixel data on rising edge and
->        sample data on falling edge
-> +    $ref: /schemas/types.yaml#/definitions/uint32
->      enum: [0, 1]
->  
->    syncclk-active:
-> @@ -179,6 +183,7 @@ properties:
->        sample sync on rising edge of pixel clock.
->        Use 1 to drive sync on rising edge and
->        sample sync on falling edge of pixel clock
-> +    $ref: /schemas/types.yaml#/definitions/uint32
->      enum: [0, 1]
->  
->    interlaced:
-> diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
-> index 745dd247c409..617aa8c8c03a 100644
-> --- a/Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
-> @@ -24,6 +24,7 @@ properties:
->  
->    dsi-lanes:
->      description: Number of DSI lanes to be used must be <3> or <4>
-> +    $ref: /schemas/types.yaml#/definitions/uint32
->      enum: [3, 4]
->  
->    v3p3-supply:
-> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.yaml b/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.yaml
-> index ca959451557e..1cdc91b3439f 100644
-> --- a/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.yaml
-> @@ -36,6 +36,7 @@ properties:
->  
->    init-delay:
->      description: delay after initialization sequence [ms]
-> +    $ref: /schemas/types.yaml#/definitions/uint32
->  
->    panel-width-mm:
->      description: physical panel width [mm]
-> diff --git a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
-> index 5fe19fa5f67c..a99e7842ca17 100644
-> --- a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
-> @@ -26,6 +26,7 @@ properties:
->      const: 2
->  
->    registers-number:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
->      description: Number of daisy-chained shift registers
->  
->    enable-gpios:
-> diff --git a/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml b/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
-> index e8f137abb03c..aa61fe64be63 100644
-> --- a/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
-> +++ b/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
-> @@ -31,6 +31,7 @@ properties:
->      type: boolean
->  
->    function-row-physmap:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->      minItems: 1
->      maxItems: 15
->      description: |
-> diff --git a/Documentation/devicetree/bindings/input/matrix-keymap.yaml b/Documentation/devicetree/bindings/input/matrix-keymap.yaml
-> index 6699d5e32dca..9f703bb51e12 100644
-> --- a/Documentation/devicetree/bindings/input/matrix-keymap.yaml
-> +++ b/Documentation/devicetree/bindings/input/matrix-keymap.yaml
-> @@ -27,6 +27,10 @@ properties:
->        column and linux key-code. The 32-bit big endian cell is packed as:
->            row << 24 | column << 16 | key-code
->  
-> +  linux,no-autorepeat:
-> +    type: boolean
-> +    description: Disable keyrepeat
+>  	/* Grab the regulators for suspend/resume */
+>  	pcie->sr = bus->dev.driver_data;
 
-This should be rather a separate patch - it's documenting a missing
-property, not only a type.
+IIUC, this path:
 
-Best regards,
-Krzysztof
+  pci_alloc_child_bus
+    brcm_pcie_add_bus                   # .add_bus method
+      pci_subdev_regulators_add_bus     # in pcie-brcmstb.c for now
+        alloc_subdev_regulators         # in pcie-brcmstb.c for now
+        regulator_bulk_get
+        regulator_bulk_enable
+      brcm_pcie_linkup			# bring link up
+
+is basically so we can leave power to downstream devices off, then
+turn it on when we're ready to enumerate those downstream devices.
+
+I think the brcmstb root bus is always bus 0, it only has a single
+Root Port on the root bus, and it always leads to bus 1, so it sort of
+makes sense that we only need to turn on power when we're about to
+scan "bus->number == 1".
+
+But this power management seems like a pattern that other controllers
+will use.  Other controllers will have several Root Ports, so checking
+the bus number won't work for them.  Instead of checking the bus
+number, I think brcmstb should check more directly for a power
+regulator.
+
+Tangent 1: I think this means a downstream device goes from D3cold to
+D0uninitialized?  Does this code account for the required delays
+accesses to the device?  I see some in brcm_pcie_linkup(), but I don't
+see anything that looks like Tpvperl (the time PERST# must remain
+asserted after power becomes valid) or Tperst (when asserted, PERST#
+must remain asserted at least this long) (both from PCIe r6.0, sec
+6.6.1).
+
+Tangent 2: "brcm_pcie_link_up()" makes sense -- it's the conventional
+name for the simple boolean function that tells us whether the link is
+up.  "brcm_pcie_linkup()", which *brings* the link up, is confusing
+because it's too similar to "brcm_pcie_link_up()".  The conventional
+name for this would be "brcm_pcie_start_link()".
+
+Tangent 3: There are fewer than 20 forward function declarations in
+drivers/pci/controller/, and 9 of them are in pcie-brcmstb.c.  It's a
+lot easier to maintain all these drivers if they use a common style.
+Generally speaking, Linux code orders function definitions to avoid
+the need for forward declarations.
+
+Bjorn
