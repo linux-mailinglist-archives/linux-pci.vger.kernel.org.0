@@ -2,263 +2,328 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10A4E52FED9
-	for <lists+linux-pci@lfdr.de>; Sat, 21 May 2022 20:54:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18F2E53000F
+	for <lists+linux-pci@lfdr.de>; Sun, 22 May 2022 02:36:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234483AbiEUSv7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 May 2022 14:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38764 "EHLO
+        id S230389AbiEVAfJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 May 2022 20:35:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344774AbiEUSv4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 May 2022 14:51:56 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05CCA5C359;
-        Sat, 21 May 2022 11:51:55 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id v66so13485863oib.3;
-        Sat, 21 May 2022 11:51:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iVL4I5m+wb94H8NYF6zCO0ltg5mRlY60c0R22l/iI+A=;
-        b=CnSWn5tWuaro/W8HifGINIM6J08IrorqwDiBFEh0twJ5xg6tcdtXrDIDyCGy++un+4
-         ORI8IfjGjth1rmsOV5dWV/R5edptaHXrS19xoj/nvUkPf/wigy74oq4TLp9bNHbxaHAj
-         9VPzuq/1vXuSy4kgYX5KEyJf1jfDCew6Jfvj56Y5pl6ISCbckXKJwd03yjq/sSrZ/Bm7
-         2gt+GyZtuykoxy/oqRpy+ju+yESnpF14Q2kfsbnp26YtxLjsEDA7PdBbLgFAdJIVSbmf
-         4HOuF9npSWsOKO6jSLCrVPLVBSG3hBX7FhsK7gzOvLNSxnVGH7/LUrifAh4HTiL2WsXs
-         2Vww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iVL4I5m+wb94H8NYF6zCO0ltg5mRlY60c0R22l/iI+A=;
-        b=RjigCg59XV8HBMJT1+83EBDkli16v1qmREaxuYCRWkoZ1iFprXMpy3+E2qantqL6fu
-         7RAOl28ngHCOVMyjCcjpDzdUoDbLE+jM4KwedZ92bIBHm+djA+b2r20tgqNA2Hp7stbW
-         xIsyTOlhAg/Obyt9vE/tgS+qzgqBSEiJbZ/KpicspAyi34BBxBj2wKEp4iU3JwKIEko8
-         Zm1BNrQUa7Rymg4oZeTrGuH/CbxEsTVe9m2ACIs+TvnJhFJ27W0D3SyImHGUc8HaAeo1
-         z+zh/x4dlaGNYzzLbY/o1e4MlZXDF9A/J1PWuYX/mwTdpil7u6z32ooUFAiU24iSEd8j
-         ENtg==
-X-Gm-Message-State: AOAM532esmUEK9HTpMK2KZ1VVflsrsUgWg8gFvxOUfHfVa3lCgqltnSu
-        FeNLS9hXinqNZLoIQK7PfRUbMApUJID8q+xRkGI=
-X-Google-Smtp-Source: ABdhPJz9GCCHInZssTuhbKPJnao681PuLaqBKrfaVBud1jisvwLRtYh9utUbkj1Z7DIJpk7HQmopaI+jZDLldFQIYFM=
-X-Received: by 2002:a05:6808:148e:b0:326:abe8:af49 with SMTP id
- e14-20020a056808148e00b00326abe8af49mr8611096oiw.73.1653159114268; Sat, 21
- May 2022 11:51:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220518194211.20143-1-jim2101024@gmail.com> <20220521164303.GA106705@bhelgaas>
-In-Reply-To: <20220521164303.GA106705@bhelgaas>
-From:   Jim Quinlan <jim2101024@gmail.com>
-Date:   Sat, 21 May 2022 14:51:42 -0400
-Message-ID: <CANCKTBvqp7_MSG3aMpp6pmNoPUnYpH0c+8-r7Pzgebuzb4sZPA@mail.gmail.com>
-Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe linkup
+        with ESMTP id S1348708AbiEVAfA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 May 2022 20:35:00 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA4541991
+        for <linux-pci@vger.kernel.org>; Sat, 21 May 2022 17:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653179698; x=1684715698;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MihnmeMIptVkSVO1n3Ks/pCzENZywGcQpHfQjUmcsXA=;
+  b=mEuDyPnOQ4N1lSX8x2bRiq8ThNNWoJ9dO2dqQW9G/d+c7aqF7zPFi0Hy
+   Kh76BMNHUG4h8p9V8WAMkywoQAuOWTL671MO+m1lEC3UgcZc8hRA9qUBi
+   GH5PJpyz2J+HzezY+2F8xPs/COe4PWZmGRKm1VACyhBz8OkHefbnS5TlM
+   3Q3K8X+BKQIhSozgRl5HGEIb1yhz3cjWJ8hprxsqftXEteQzfozvPme7W
+   lh87rih1dgRNsJ0CnR0ic6KnZLpkTB4mqGttC7rQo8pgtvl/wnDtOCcI7
+   I9w6UH3hlydo32DU8c2K8KAGF1fxAnHVxGEy+9wDQrtN9eNXyPESq7gTn
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10354"; a="359325017"
+X-IronPort-AV: E=Sophos;i="5.91,243,1647327600"; 
+   d="scan'208";a="359325017"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 17:34:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,243,1647327600"; 
+   d="scan'208";a="744063096"
+Received: from lkp-server02.sh.intel.com (HELO 242b25809ac7) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 21 May 2022 17:34:56 -0700
+Received: from kbuild by 242b25809ac7 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nsZYe-0006mG-6c;
+        Sun, 22 May 2022 00:34:56 +0000
+Date:   Sun, 22 May 2022 08:34:21 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        James Dutton <james.dutton@gmail.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ bd11b0c88586d05d9054ea1db845c18984eb64bc
+Message-ID: <6289850d.cMsNP9Vsv0UDzNHs%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 21,
-2CONFIG_INITRAMFS_SOURCE="/work3/jq921458/cpio/54-arm64-rootfs.cpio022
-at 12:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rafael, linux-pm because I think there are interesting power
-> management questions here]
->
-> On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
-> > commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-> >
-> > introduced a regression on the PCIe RPi4 Compute Module.  If the PCIe
-> > endpoint node described in [2] was missing, no linkup would be attempted,
-> > and subsequent accesses would cause a panic because this particular PCIe HW
-> > causes a CPU abort on illegal accesses (instead of returning 0xffffffff).
-> >
-> > We fix this by allowing the DT endpoint subnode to be missing.  This is
-> > important for platforms like the CM4 which have a standard PCIe socket and
-> > the endpoint device is unknown.
->
-> I think the problem here is that on the CM, we try to enumerate
-> devices that are not powered up, isn't it?  The commit log should say
-> something about that power situation and how the driver learns aboutCONFIG_INITRAMFS_SOURCE="/work3/jq921458/cpio/54-arm64-rootfs.cpio
-> the power regulators instead of just pointing at an DT endpoint node.
-Hi Bjorn,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: bd11b0c88586d05d9054ea1db845c18984eb64bc  Merge branch 'remotes/lorenzo/pci/vmd'
 
-This is incorrect.  The regression occurred because the code mistakenly
-skips PCIe-linkup if the PCI portdrv DT node  does not exist. With our
-RC HW, doing a config space access to bus 1  w/o first linking up results
-in a  CPU abort.  This regression has nothing to do with EP power at all.
+elapsed time: 3010m
 
-The RPi does not use the "PCIe regulator" feature of my original patchset.
-It is currently used only by our STB and Cable Modem  products.
+configs tested: 242
+configs skipped: 4
 
->
-> I guess the intent of this patch is to turn on the power to downstream
-> devices before enumerating them?
-Are you referring to my original patchset or the one I just submitted?
- If the former,
-yes.  If the latter, no.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->  What happens if we turn on the power
-> but don't find any downstream devices?
-They are turned off to conserve power.
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+powerpc64                           defconfig
+arc                                 defconfig
+powerpc                     asp8347_defconfig
+m68k                            mac_defconfig
+ia64                            zx1_defconfig
+ia64                      gensparse_defconfig
+arm                            pleb_defconfig
+sh                            titan_defconfig
+sh                            migor_defconfig
+arm                      footbridge_defconfig
+s390                          debug_defconfig
+xtensa                    xip_kc705_defconfig
+sh                               j2_defconfig
+um                                  defconfig
+um                               alldefconfig
+powerpc                    sam440ep_defconfig
+arm                        shmobile_defconfig
+powerpc                      cm5200_defconfig
+mips                      maltasmvp_defconfig
+mips                           ci20_defconfig
+s390                             allyesconfig
+xtensa                          iss_defconfig
+ia64                        generic_defconfig
+powerpc                      chrp32_defconfig
+mips                  maltasmvp_eva_defconfig
+riscv                            allyesconfig
+powerpc                      pcm030_defconfig
+sh                   sh7770_generic_defconfig
+h8300                    h8300h-sim_defconfig
+arm                        mini2440_defconfig
+xtensa                           allyesconfig
+m68k                            q40_defconfig
+sh                           se7721_defconfig
+arm                           tegra_defconfig
+ia64                          tiger_defconfig
+sh                           se7750_defconfig
+mips                  decstation_64_defconfig
+arm                            zeus_defconfig
+h8300                            allyesconfig
+arm                          badge4_defconfig
+arm                        cerfcube_defconfig
+arm                           corgi_defconfig
+xtensa                  audio_kc705_defconfig
+arm                            lart_defconfig
+sh                          r7785rp_defconfig
+sh                        sh7763rdp_defconfig
+powerpc                     sequoia_defconfig
+sh                         microdev_defconfig
+arm                      jornada720_defconfig
+powerpc                        cell_defconfig
+sh                                  defconfig
+powerpc                    klondike_defconfig
+arm                       imx_v6_v7_defconfig
+sh                           se7206_defconfig
+powerpc                        warp_defconfig
+mips                       capcella_defconfig
+powerpc                 linkstation_defconfig
+arm                           h3600_defconfig
+parisc                generic-64bit_defconfig
+sh                           se7619_defconfig
+alpha                               defconfig
+arm                           h5000_defconfig
+arm                        multi_v7_defconfig
+ia64                         bigsur_defconfig
+sh                          landisk_defconfig
+alpha                            allyesconfig
+arm                        realview_defconfig
+arm                            qcom_defconfig
+sh                           se7343_defconfig
+nios2                            alldefconfig
+arc                        nsimosci_defconfig
+powerpc                     stx_gp3_defconfig
+sparc64                          alldefconfig
+i386                                defconfig
+powerpc                      ep88xc_defconfig
+h8300                       h8s-sim_defconfig
+powerpc                     mpc83xx_defconfig
+powerpc                 mpc834x_mds_defconfig
+sh                          urquell_defconfig
+m68k                       m5208evb_defconfig
+mips                             allyesconfig
+m68k                       bvme6000_defconfig
+x86_64                           alldefconfig
+powerpc                 canyonlands_defconfig
+sh                   rts7751r2dplus_defconfig
+powerpc                   motionpro_defconfig
+arc                          axs103_defconfig
+powerpc                       eiger_defconfig
+s390                       zfcpdump_defconfig
+arm                           sama5_defconfig
+m68k                             allyesconfig
+m68k                          hp300_defconfig
+mips                         mpc30x_defconfig
+powerpc                 mpc837x_mds_defconfig
+arm                           viper_defconfig
+sh                          sdk7786_defconfig
+powerpc                 mpc837x_rdb_defconfig
+h8300                     edosk2674_defconfig
+arc                           tb10x_defconfig
+m68k                          multi_defconfig
+arm                             pxa_defconfig
+m68k                        mvme147_defconfig
+arm                        keystone_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                generic_kc705_defconfig
+powerpc                       holly_defconfig
+arc                          axs101_defconfig
+powerpc                     rainier_defconfig
+powerpc                      mgcoge_defconfig
+mips                     loongson1b_defconfig
+arc                         haps_hs_defconfig
+sh                               allmodconfig
+sh                   secureedge5410_defconfig
+m68k                           sun3_defconfig
+m68k                          sun3x_defconfig
+sh                        sh7757lcr_defconfig
+powerpc                      ppc6xx_defconfig
+m68k                          amiga_defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220519
+arm                  randconfig-c002-20220522
+ia64                                defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+riscv                             allnoconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+nios2                            allyesconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220522
+s390                 randconfig-r044-20220522
+riscv                randconfig-r042-20220522
+arc                  randconfig-r043-20220519
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-> From looking at the code, I
-> assume we just leave the power on.  Maybe that's what you want, I
-> dunno.
-For STB and Cable Modem products we do not leave the power on.  In
-fact, our Cable
-Modem group was the first to request this feature.   It appears that the RPi CM4
-always keeps endpoint power on but I do not know for sure.
+clang tested configs:
+powerpc              randconfig-c003-20220519
+x86_64                        randconfig-c007
+riscv                randconfig-c006-20220519
+mips                 randconfig-c004-20220519
+i386                          randconfig-c001
+arm                  randconfig-c002-20220519
+s390                 randconfig-c005-20220519
+arm                  randconfig-c002-20220522
+s390                 randconfig-c005-20220522
+powerpc              randconfig-c003-20220522
+riscv                randconfig-c006-20220522
+mips                 randconfig-c004-20220522
+powerpc                          g5_defconfig
+hexagon                             defconfig
+mips                      pic32mzda_defconfig
+arm                          ep93xx_defconfig
+mips                     loongson2k_defconfig
+mips                      malta_kvm_defconfig
+arm                              alldefconfig
+arm                          ixp4xx_defconfig
+powerpc                      pmac32_defconfig
+powerpc                     tqm5200_defconfig
+i386                             allyesconfig
+powerpc                    socrates_defconfig
+mips                           ip22_defconfig
+arm                         mv78xx0_defconfig
+powerpc                    ge_imp3a_defconfig
+arm                         s5pv210_defconfig
+powerpc                 mpc8560_ads_defconfig
+powerpc                   bluestone_defconfig
+powerpc                      katmai_defconfig
+powerpc                        icon_defconfig
+powerpc                      ppc44x_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arm                       spear13xx_defconfig
+mips                           rs90_defconfig
+powerpc                          allmodconfig
+powerpc                 mpc8272_ads_defconfig
+arm                         palmz72_defconfig
+mips                            e55_defconfig
+arm                        mvebu_v5_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                    gamecube_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220519
+hexagon              randconfig-r041-20220519
+hexagon              randconfig-r045-20220522
+hexagon              randconfig-r041-20220522
+riscv                randconfig-r042-20220519
+s390                 randconfig-r044-20220519
+hexagon              randconfig-r045-20220521
+hexagon              randconfig-r041-20220521
+s390                 randconfig-r044-20220521
+riscv                randconfig-r042-20220521
 
->
-> I added Rafael because this seems vaguely similar to runtime power
-> management, and if we can integrate with that somehow, I'd sure like
-> to avoid building a parallel infrastructure for it.
->
-> The current path we're on is to move some of this code that's
-> currently in pcie-brcmstb.c to the PCIe portdrv [0].  I'm a little
-> hesitant about that because ACPI does just fine without it.  If we're
-> adding new DT functionality that could not be implemented via ACPI,
-> that's one thing.  But I'm not convinced this is that new.
-AFAICT, Broadcom STB and Cable Modem products do not have/use/want ACPI.
-We are fine with keeping this "PCIe regulator" feature private to our driver and
-giving you speedy and full support in maintaining it.
-
-> That's a longer term question.  In the short term we need to fix the
-> regression.  More specifics about that below.
->
-> [0] https://lore.kernel.org/r/20211110221456.11977-6-jim2101024@gmail.com
->
-> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> > [2] Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> >
-> > Fixes: 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-> > Fixes: 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > index ba5c120816b2..adca74e235cb 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -540,16 +540,18 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
-> >
-> >  static int brcm_pcie_add_bus(struct pci_bus *bus)
-> >  {
-> > -     struct device *dev = &bus->dev;
-> >       struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
-> >       int ret;
-> >
-> > -     if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
-> > +     /* Only busno==1 requires us to linkup */
-> > +     if ((int)bus->number != 1)
-> >               return 0;
-> >
-> >       ret = pci_subdev_regulators_add_bus(bus);
-> > -     if (ret)
-> > +     if (ret) {
-> > +             pcie->refusal_mode = true;
-> >               return ret;
-> > +     }
-> >
-> >       /* Grab the regulators for suspend/resume */
-> >       pcie->sr = bus->dev.driver_data;
->
-> IIUC, this path:
->
->   pci_alloc_child_bus
->     brcm_pcie_add_bus                   # .add_bus method
->       pci_subdev_regulators_add_bus     # in pcie-brcmstb.c for now
->         alloc_subdev_regulators         # in pcie-brcmstb.c for now
->         regulator_bulk_get
->         regulator_bulk_enable
->       brcm_pcie_linkup                  # bring link up
->
-> is basically so we can leave power to downstream devices off, then
-> turn it on when we're ready to enumerate those downstream devices.
-Yes  -- it is the "chicken-and-egg" problem.  Ideally, we would like
-for the endpoint
-driver to turn on its own regulators, but even to know which endpoint
-driver to probe
-we must turn on the regulator to establish linkup.
-
-> I think the brcmstb root bus is always bus 0, it only has a single
-> Root Port on the root bus, and it always leads to bus 1, so it sort of
-> makes sense that we only need to turn on power when we're about to
-> scan "bus->number == 1".
-Correct.
-
->
-> But this power management seems like a pattern that other controllers
-> will use.  Other controllers will have several Root Ports, so checking
-> the bus number won't work for them.  Instead of checking the bus
-> number, I think brcmstb should check more directly for a power
-> regulator.
-I agree.  That is why I said that we should consider removing the "busno==1"
-conditional if we want this feature for general use.  If you want,
-I can submit a V2 that removes this conditional.
-
-I'm guessing here but I think the Rockchip folks could use this "pcie
-regulator"  feature.
-They got regulator DT properties in their PCIe RC DT node upstreamed
-but we were denied for trying the same approach.
-
->
-> Tangent 1: I think this means a downstream device goes from D3cold to
-> D0uninitialized?  Does this code account for the required delays
-> accesses to the device?  I see some in brcm_pcie_linkup(), but I don't
-> see anything that looks like Tpvperl (the time PERST# must remain
-> asserted after power becomes valid) or Tperst (when asserted, PERST#
-> must remain asserted at least this long) (both from PCIe r6.0, sec
-> 6.6.1).
-I have a series of patches coming up that address some of these concerns.
-Can we please take this up then but allow us to escape "revert jail" first?
-I promise I will copy your tangents and address all of them with the
-future patchset.
-
->
-> Tangent 2: "brcm_pcie_link_up()" makes sense -- it's the conventional
-> name for the simple boolean function that tells us whether the link is
-> up.  "brcm_pcie_linkup()", which *brings* the link up, is confusing
-> because it's too similar to "brcm_pcie_link_up()".  The conventional
-> name for this would be "brcm_pcie_start_link()".
-I will fix this in the future patchset.
-
->
-> Tangent 3: There are fewer than 20 forward function declarations in
-> drivers/pci/controller/, and 9 of them are in pcie-brcmstb.c.  It's a
-> lot easier to maintain all these drivers if they use a common style.
-> Generally speaking, Linux code orders function definitions to avoid
-> the need for forward declarations.
-I will improve the situation in the future patchset
-
-Regards,
-Jim Quinlan
-Broadcom STB
->
-> Bjorn
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
