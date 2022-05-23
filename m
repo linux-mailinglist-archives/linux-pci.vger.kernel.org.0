@@ -2,80 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D279C531A71
-	for <lists+linux-pci@lfdr.de>; Mon, 23 May 2022 22:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3210253197B
+	for <lists+linux-pci@lfdr.de>; Mon, 23 May 2022 22:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242924AbiEWSUv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 May 2022 14:20:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54224 "EHLO
+        id S241115AbiEWS2F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 May 2022 14:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243923AbiEWSSq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 May 2022 14:18:46 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8B4B82D9
-        for <linux-pci@vger.kernel.org>; Mon, 23 May 2022 10:57:30 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id w14so26842075lfl.13
-        for <linux-pci@vger.kernel.org>; Mon, 23 May 2022 10:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=3JUxPxSVnYumG4wMpN+SiUT7prCdQ8x6bZcRTYUwMTw=;
-        b=tT4JXu3U2N5URrBf7XXpDgcDRX6QwnwnGsM+FJYMVrugAn/0ck50LC3Ck7f2WUG+b3
-         UdAuio8E4dbFsYHRzMIGnxcdwMDc3zPMNIqIFp4vmTKKJcCdS2XelNJiyduKfqKFOtey
-         OdifCeoBGIWr1JVXay928xA6/rHPdCXVpIfDdO6bN2eMsw8zUlQ5bikeBjTAemuM47z7
-         rINIIjiw2cqBLXkSjwotSBhrVlCQ6fYlbNAQZolbb2xyi34eioyAjEAJ2vHfWeBjToeq
-         NGN00Ps+8W6qR/f7S6Fj3yMemCKVr5XWJeDWzBLex7aXwm1zQkMWFnmWHnyEuOHuDMXt
-         zf+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=3JUxPxSVnYumG4wMpN+SiUT7prCdQ8x6bZcRTYUwMTw=;
-        b=0+NWDcW0rP3tngNnNtHzs+KOJzYW6FMyW1pxs5ov6mG8MYa8DuDy7IiJCHSEZscoIh
-         qCe/04asWnLFKeBegPzmvSyjByqJBzgC5/PkyE4TcjRgm7oaG0eFugPBQQgDCCu1rf5I
-         YuBuUxCQ5jOH9kY/e6rFH/BLIy/xzmX1lSmlWv5lSo4U9+8nYrWtMqkrcdFDuttnGbkM
-         NdThlYTaGXVKT+SaPaoWsejoqE7Nw7pGdq6YxreUdagkmAkvBWwWgR0AX2QmkR7NEACf
-         8jmBk+2gtamR247gH9IK+02+B2IWFOoTD01ezqh2E7t0a9/l5BwkCiTp6g1lii3SVtur
-         z74A==
-X-Gm-Message-State: AOAM530xQMtHxtCUuW3YCQg4PBMmyvgoPCAmExYewnK51huAVfsU+ysK
-        XFen6sytxEhA3vOUIF05xRTSFw==
-X-Google-Smtp-Source: ABdhPJyb1n/Iwdio+i6AZEAt1gAFenNdwifbYFK0I53gke8ob0YjzFXoB+g2ameOvrxDPWTp6quhOA==
-X-Received: by 2002:a05:6512:1188:b0:473:a4b3:8479 with SMTP id g8-20020a056512118800b00473a4b38479mr17300845lfr.247.1653328575928;
-        Mon, 23 May 2022 10:56:15 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id j14-20020ac2454e000000b00477cab3374asm1982977lfm.303.2022.05.23.10.56.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 May 2022 10:56:14 -0700 (PDT)
-Message-ID: <2270763e-78f7-9537-c6f3-31c1341f98dc@linaro.org>
-Date:   Mon, 23 May 2022 20:56:13 +0300
+        with ESMTP id S245692AbiEWS1P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 May 2022 14:27:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE143132A21;
+        Mon, 23 May 2022 11:02:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C088D614C2;
+        Mon, 23 May 2022 18:02:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54EAC385A9;
+        Mon, 23 May 2022 18:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653328942;
+        bh=QEl52dvCC8QaJVDSZmkaFchJfe6XIe/vEqrYqi/jpWY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mqro+aXCOktBy5CLViVFAwUnSQ7mo3ctkBqilYmJ6jxH3bPPg8KovJoDYGmVzGXnb
+         08fa0r6se2o9ktLoXhMpWMiMWx7u8xwkfYfNAWPsFQLjZJyjSdaZJH72t4E5LdoT7h
+         lHS8hWsyHTvalveCg66zW5BRj2zb1e8WgfT7fUAVOcqF9sIWtWA4FjhuPhK02aeOdp
+         XOfNY2+nBcOBDoNaWuKes02szxQe0IM7Cf0WEFZ7+LbKmHi0NieJs1GO933pCL/nPf
+         cToPRn65st7nM2gfz5cmuEBYP+xnOo/+9oNs+aPi9Zyrt/1ODP4FwWXabnwehV3L75
+         tCsEHAyujJs0g==
+Date:   Mon, 23 May 2022 13:02:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        manivannan.sadhasivam@linaro.org, Sergey.Semin@baikalelectronics.ru
+Subject: Re: [PATCH v11 0/8] Enable designware PCI EP EDMA locally
+Message-ID: <20220523180219.GA168248@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v7 0/8] PCI: qcom: Rework pipe_clk/pipe_clk_src handling
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20220521005343.1429642-1-dmitry.baryshkov@linaro.org>
- <YotL2rqv8N9+jmpV@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <YotL2rqv8N9+jmpV@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220523110647.ndhijpwgtaf2rkar@mobilestation>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,38 +57,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23/05/2022 11:54, Johan Hovold wrote:
-> On Sat, May 21, 2022 at 03:53:35AM +0300, Dmitry Baryshkov wrote:
->> PCIe pipe clk (and some other clocks) must be parked to the "safe"
->> source (bi_tcxo) when corresponding GDSC is turned off and on again.
->> Currently this is handcoded in the PCIe driver by reparenting the
->> gcc_pipe_N_clk_src clock.
->>
->> Instead of doing it manually, follow the approach used by
->> clk_rcg2_shared_ops and implement this parking in the enable() and
->> disable() clock operations for respective pipe clocks.
->>
->> Changes since v7:
->>   - Brought back the struct clk_regmap_phy_mux (Johan)
->>   - Fixed includes (Stephen)
+On Mon, May 23, 2022 at 02:06:47PM +0300, Serge Semin wrote:
+> Hello Vinod,
 > 
-> So this is v8, but Subject still reads v7.
+> On Tue, May 17, 2022 at 10:19:07AM -0500, Frank Li wrote:
+> > Default Designware EDMA just probe remotely at host side.
+> > This patch allow EDMA driver can probe at EP side.
+> > 
+> > 1. Clean up patch
+> >    dmaengine: dw-edma: Detach the private data and chip info structures
+> >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> >    dmaengine: dw-edma: Change rg_region to reg_base in struct
+> >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> > 
+> > 2. Enhance EDMA driver to allow prode eDMA at EP side
+> >    dmaengine: dw-edma: Add support for chip specific flags
+> >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
+> > flags (this patch removed at v11 because dma tree already have fixed
+> > patch)
+> > 
+> > 3. Bugs fix at EDMA driver when probe eDMA at EP side
+> >    dmaengine: dw-edma: Fix programming the source & dest addresses for
+> > ep
+> >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> > 
+> > 4. change pci-epf-test to use EDMA driver to transfer data.
+> >    PCI: endpoint: Add embedded DMA controller test
+> > 
+> > 5. Using imx8dxl to do test, but some EP functions still have not
+> > upstream yet. So below patch show how probe eDMA driver at EP
+> > controller driver.
+> > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
 > 
-> It looks like you also dropped the CLK_SET_RATE_PARENT flags in this
-> version.
+> The series has been hanging out on review for over three months now.
+> It has got to v11 and has been tested on at least two platforms. The
+> original driver maintainer has been silent for all that time (most
+> likely Gustavo dropped the driver maintaining role). Could you please
+> merge it in seeing no comments have been posted for the last several
+> weeks? The PCI Host/EP controller drivers maintainer suggested to get
+> this series via the DMA-engine tree:
+> https://lore.kernel.org/linux-pci/YnqlRShJzvma2SKM@lpieralisi/
+> which is obviously right seeing it mainly concerns the DW eDMA driver.
+> Though after that Lorenzo disappeared as quickly as popped up.)
+> 
+> There is one more series depending on the changes in this
+> patchset:
+> https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+> Me and Frank already settled all the conflicts and inter-dependencies,
+> so at least his series is more than ready to be merged in into the
+> kernel repo. It would be very good to get it accepted on this merge
+> window so to have the kernel v5.19 with all this changes available.
 
-Yes. It was not there originally. And I don't think we really set the 
-rate for the pipe clock (and support setting it for the phy's pipe output).
+Since the v5.19 merge window is already open, it seems doubtful that
+anybody would merge this so late in the cycle.
 
-> 
-> For the series:
-> 
-> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-> Tested-by: Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-> 
-> Johan
+If Gustavo isn't available or willing to merge it, it looks like Vinod
+(maintainer of drivers/dma) would be the next logical candidate.
 
+I suspect Vinod would appreciate an ack or reviewed-by from Kishon for 
+the last patch because he maintains pci-epf-test.c.
 
--- 
-With best wishes
-Dmitry
+I have a couple trivial comments on the pci-epf-test.c (I'll respond
+there), but I'm not qualified to ack it.
+
+Bjorn
