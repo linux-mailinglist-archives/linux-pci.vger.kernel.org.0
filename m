@@ -2,118 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D770C5312CE
-	for <lists+linux-pci@lfdr.de>; Mon, 23 May 2022 18:23:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 393B353123A
+	for <lists+linux-pci@lfdr.de>; Mon, 23 May 2022 18:22:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236796AbiEWOC5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 May 2022 10:02:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40244 "EHLO
+        id S235959AbiEWOUq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 May 2022 10:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236759AbiEWOC4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 May 2022 10:02:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B9CF57B04;
-        Mon, 23 May 2022 07:02:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D5C0561157;
-        Mon, 23 May 2022 14:02:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335C5C385A9;
-        Mon, 23 May 2022 14:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653314573;
-        bh=RkSQAvT6iGaYqMCtUKQAEe+1+01nDpIt7OqDZcU8qY0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O2kcypZI41hTazZ6CAz411upsqV43DcV+23+7En2GCLoIbQ59eCkHZeRZfKNqIEOY
-         819CX17eKNIAG8WGmctn/QonH3Rqb2CcjW9tXcLqeaCRNhcJcgEIKNIk+kj2vM3tFa
-         LxzDiUdHrsPBvtK3KeEj6cjr5/GqjJAFePMGu21QSRkSnpybMBq2qw3Erpbj5+U13n
-         2Gqp7XGgB8bKKNC2OiD471qd1pUbmI6yy4kyXozVooUIvMJ0gtCfZSzYrBl1nJpACX
-         i2wGXHgc3ON1gwJ6Kq4JiNwf1yMLTQQxwi/AKyPIcym3eYOyRWSncMqEAlFu2E9aHR
-         BC0KkeAG3pD9A==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1nt8e2-0000sB-9O; Mon, 23 May 2022 16:02:50 +0200
-Date:   Mon, 23 May 2022 16:02:50 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v11 3/7] PCI: dwc: Handle MSIs routed to multiple GIC
- interrupts
-Message-ID: <YouUCuzjo5u+OEXS@hovoldconsulting.com>
-References: <20220520183114.1356599-1-dmitry.baryshkov@linaro.org>
- <20220520183114.1356599-4-dmitry.baryshkov@linaro.org>
- <Yos9fkgxAN1jJ4jO@hovoldconsulting.com>
- <8ce50a9f-241d-c37a-15e9-1a97d410f61e@linaro.org>
+        with ESMTP id S235987AbiEWOUp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 May 2022 10:20:45 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B5C75A17A;
+        Mon, 23 May 2022 07:20:43 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 4D8E1100D5844;
+        Mon, 23 May 2022 16:20:42 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 13E602ED3E7; Mon, 23 May 2022 16:20:42 +0200 (CEST)
+Date:   Mon, 23 May 2022 16:20:42 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Sheng Bi <windy.bi.enflame@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Fix no-op wait after secondary bus reset
+Message-ID: <20220523142042.GA19286@wunner.de>
+References: <20220516165740.6256af51.alex.williamson@redhat.com>
+ <20220518115432.76183-1-windy.bi.enflame@gmail.com>
+ <20220520064148.GA20418@wunner.de>
+ <CAGdb+H2_pX4TzG=sJ8XE6KiyWW9niJQawCbcDN2byxDfybukiA@mail.gmail.com>
+ <20220521124910.GA13556@wunner.de>
+ <CAGdb+H19bfbXM1cPJvhh6gixJbF7Sk=v53d9VpvWY8HEs0mSKg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8ce50a9f-241d-c37a-15e9-1a97d410f61e@linaro.org>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <CAGdb+H19bfbXM1cPJvhh6gixJbF7Sk=v53d9VpvWY8HEs0mSKg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 23, 2022 at 04:39:56PM +0300, Dmitry Baryshkov wrote:
-> On 23/05/2022 10:53, Johan Hovold wrote:
-> > On Fri, May 20, 2022 at 09:31:10PM +0300, Dmitry Baryshkov wrote:
-
-> >> +static int dw_pcie_parse_split_msi_irq(struct pcie_port *pp)
-> >> +{
-> >> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> >> +	struct device *dev = pci->dev;
-> >> +	struct platform_device *pdev = to_platform_device(dev);
-> >> +	int irq;
-> >> +	u32 ctrl;
-> >> +
-> >> +	irq = platform_get_irq_byname_optional(pdev, split_msi_names[0]);
-> >> +	if (irq == -ENXIO)
-> >> +		return -ENXIO;
-> > 
-> > You still need to check for other errors and -EPROBE_DEFER here.
+On Sun, May 22, 2022 at 01:37:50AM +0800, Sheng Bi wrote:
+> On Sat, May 21, 2022 at 8:49 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > On Sat, May 21, 2022 at 04:36:10PM +0800, Sheng Bi wrote:
+> > > If so, I also want to align the polling things mentioned in the
+> > > question from Alex, since pci_dev_wait() is also used for reset
+> > > functions other than SBR. To Bjorn, Alex, Lucas, how do you think if
+> > > we need to change the polling in pci_dev_wait() to 20ms intervals, or
+> > > keep binary exponential back-off with probable unexpected extra
+> > > timeout delay.
+> >
+> > The exponential backoff should probably be capped at some point
+> > to avoid excessive wait delays.  I guess the rationale for
+> > exponential backoff is to not poll too frequently.
+> > Capping at 20 msec or 100 msec may be reasonable, i.e.:
+> >
+> > -               delay *= 2;
+> > +               delay = min(delay * 2, 100);
 > 
-> I think even the if (irq < 0) return irq; will work here.
+> Capping at 20 or 100 msec seems reasonable to me. Btw, since 20 msec
+> is not a long time in these scenarios, how about changing to a fixed
+> 20 msec interval?
 
-No need to print errors unless -EPROBEDEFER as you do below?
+The callers of pci_dev_wait() seem to wait for the spec-defined
+delay and only call pci_dev_wait() to allow for an additional period
+that non-compliant devices may need.  That extra delay can be expected
+to be low, which is why it makes sense to start with a short poll interval
+and gradually extend it.  So the algorithm seems to be reasonable and
+I wouldn't recommend changing it to a constant interval unless that
+fixes something which is currently broken.
 
-> >> +
-> >> +	pp->msi_irq[0] = irq;
-> >> +
-> >> +	/* Parse as many IRQs as described in the DTS. */
-> > 
-> > s/DTS/devicetree/
-> > 
-> >> +	for (ctrl = 1; ctrl < MAX_MSI_CTRLS; ctrl++) {
-> >> +		irq = platform_get_irq_byname_optional(pdev, split_msi_names[ctrl]);
-> >> +		if (irq == -ENXIO)
-> >> +			break;
-> >> +		if (irq < 0)
-> >> +			return dev_err_probe(dev, irq,
-> >> +					     "Failed to parse MSI IRQ '%s'\n",
-> >> +					     split_msi_names[ctrl]);
-> >> +
-> >> +		pp->msi_irq[ctrl] = irq;
-> >> +	}
-> >> +
-> >> +	pp->num_vectors = ctrl * MAX_MSI_IRQS_PER_CTRL;
-> >> +
-> >> +	return 0;
-> >> +}
+Thanks,
 
-Johan
+Lukas
