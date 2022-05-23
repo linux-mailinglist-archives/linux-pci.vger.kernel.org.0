@@ -2,118 +2,272 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 716AC5311F5
-	for <lists+linux-pci@lfdr.de>; Mon, 23 May 2022 18:21:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E1B853181A
+	for <lists+linux-pci@lfdr.de>; Mon, 23 May 2022 22:53:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238288AbiEWP7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 May 2022 11:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
+        id S239268AbiEWQ4W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 May 2022 12:56:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238287AbiEWP7j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 May 2022 11:59:39 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874FD13F8C;
-        Mon, 23 May 2022 08:59:38 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id z25so1398780pfr.1;
-        Mon, 23 May 2022 08:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rWxANZwiWxjY7oEsXTVwMbfOrUKsgscWMIFvRo3MrvA=;
-        b=E1xNhK6Upsw0ZUh99teWH8au6Io9PBLwuE/c4tpF8a+zsv3UQl0KETRa1lqqnvbgWL
-         Pd8tObJLx1JRUwNdN5boLTBmTPncS+y50Iu8H+9vXxXFplb8MqP55/sloeSqW057UNvo
-         xnmUTMefwOGabbcJ9HvIaGkiy3kw8DyevTW/wyiT6z7i2pkOtJcFLZ8gEkTkD5dXA2W+
-         PYmv78BCvbbRY27BAv7oTEUo9axMgDwtt/wgIykOwA6nzNWFfJ36mwvUTYS+roGvd2SL
-         x81lNhlVTgn2hg+I9HeGatRU8Ck7xhXlS1//vzL+XjTVWJVb6BxI8eHvCIfTShMESZ5A
-         DczA==
+        with ESMTP id S239229AbiEWQ4O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 May 2022 12:56:14 -0400
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E40F4E40;
+        Mon, 23 May 2022 09:56:12 -0700 (PDT)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-edeb6c3642so19212178fac.3;
+        Mon, 23 May 2022 09:56:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rWxANZwiWxjY7oEsXTVwMbfOrUKsgscWMIFvRo3MrvA=;
-        b=UYHipf2mdGPAsrKM1Uis26KQ6Jk0gwZTLMTzJJYXoBenIypHF/HQKlsQ0mG07RYz5i
-         F+MP+6jCQ5NbEBUX1/8J7tcP3MmTboUh7rvSD6t71Qtfob3fUIdBdzzmRXmQiD/JrGVS
-         XqI8MEHDsPTLdG5iVknluBZv0/aDYJ0eknR3f9QDggOvqSNkAua4oonx0OvQyMxT4Pmb
-         ebbftTEtg73QPYjG3BJqMXbleiVxCYMBvtadL/rm9nP+xUwGjaU+l4fAC8XzZuxyZCrG
-         8mT6f+X4gVvnkSrWeU1K5Qcr2XA+YIHo8dklvp65nYyHp45/HBIgT6zYFFBCePXQBpmh
-         bNWQ==
-X-Gm-Message-State: AOAM532l5N7mxXDBCCSn42N8hVQ4V8ZTmM+j1LZcYUu4DXa/ij4/TbnO
-        UDakiyeN/pJ+XbMdvwV3MI9AtIw6YOMhZ4wWAbk=
-X-Google-Smtp-Source: ABdhPJy0XNmt9jGyIiTXD/bSqHP+LfQiWrd20vM4ZnFCT++jqLNdDrSCT37JvnwMRMVRUlulBuY+OztPCu3Lwr8+Lhs=
-X-Received: by 2002:a05:6a00:1501:b0:510:7ab8:71c8 with SMTP id
- q1-20020a056a00150100b005107ab871c8mr24123220pfu.63.1653321578047; Mon, 23
- May 2022 08:59:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FfAOhZNasQcy6TRDHmB8U+mc653MKDmGV3a61UnarkE=;
+        b=4KkfVM5goTSkVfLLz4yJUTYK9jwLwzP8f/PpRo8aB8IkJKQi4ENdB4cz/bZLj0eHjb
+         YEXOmwJPZz219J0oESUvV2cbqkJIpqB2mqP/ypOKRIxZB5Q9ecba77zNia8ciYFPTPbk
+         vrPNx2dzj7Nu7sb5kIUa1SknUEJwHpW4RVMX3HI+Rcflbis/zJ+RO3KVWPHkHoMAjboW
+         RPDv58ohM5ox6JZFx3SnjCEC6tUT4eWwAHijPFqTXLOB6kbQmb/HSuAr60U1UXZA/cFV
+         IF9PfZ6TLKCtKhg8wZAkXPMRJlyHYLB34KalgVgU4A29QzcRkpiOUSSNuUBlkObVOCfG
+         wCkw==
+X-Gm-Message-State: AOAM533vkLoWrjdNEctnWHVHHnoq5MUMqieCqa4zrXOERLLWtvOXgsOu
+        fOCXzySz8awOAEzcFjzLRA==
+X-Google-Smtp-Source: ABdhPJzG3ZFQrmj1v1yitS4jTC5DzQZmWnfRLp9MNvhBwUQ6yufF6JdEMRoPfxaQK0q/QMOIiKOBDg==
+X-Received: by 2002:a05:6870:5823:b0:f2:2dfd:8df0 with SMTP id r35-20020a056870582300b000f22dfd8df0mr6004573oap.157.1653324972043;
+        Mon, 23 May 2022 09:56:12 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id eb38-20020a056870a8a600b000edf5a12baasm3976216oab.46.2022.05.23.09.56.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 May 2022 09:56:11 -0700 (PDT)
+Received: (nullmailer pid 1750116 invoked by uid 1000);
+        Mon, 23 May 2022 16:56:09 -0000
+Date:   Mon, 23 May 2022 11:56:09 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Peter Rosin <peda@axentia.se>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org, chrome-platform@lists.linux.dev,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Fix properties without any type
+Message-ID: <20220523165609.GA1743214-robh@kernel.org>
+References: <20220519211411.2200720-1-robh@kernel.org>
+ <6ae55a29-0b29-f53c-c9bd-fae929f3caf7@linaro.org>
 MIME-Version: 1.0
-References: <20220516165740.6256af51.alex.williamson@redhat.com>
- <20220518115432.76183-1-windy.bi.enflame@gmail.com> <20220520064148.GA20418@wunner.de>
- <CAGdb+H2_pX4TzG=sJ8XE6KiyWW9niJQawCbcDN2byxDfybukiA@mail.gmail.com>
- <20220521124910.GA13556@wunner.de> <CAGdb+H19bfbXM1cPJvhh6gixJbF7Sk=v53d9VpvWY8HEs0mSKg@mail.gmail.com>
- <20220523142042.GA19286@wunner.de>
-In-Reply-To: <20220523142042.GA19286@wunner.de>
-From:   Sheng Bi <windy.bi.enflame@gmail.com>
-Date:   Mon, 23 May 2022 23:59:23 +0800
-Message-ID: <CAGdb+H0qnC4noBa_=N3oQW88+dgXYtA7gqJ5qiD2g7Ywd+2K=Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Fix no-op wait after secondary bus reset
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ae55a29-0b29-f53c-c9bd-fae929f3caf7@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 23, 2022 at 10:20 PM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Sun, May 22, 2022 at 01:37:50AM +0800, Sheng Bi wrote:
-> > On Sat, May 21, 2022 at 8:49 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > > On Sat, May 21, 2022 at 04:36:10PM +0800, Sheng Bi wrote:
-> > > > If so, I also want to align the polling things mentioned in the
-> > > > question from Alex, since pci_dev_wait() is also used for reset
-> > > > functions other than SBR. To Bjorn, Alex, Lucas, how do you think if
-> > > > we need to change the polling in pci_dev_wait() to 20ms intervals, or
-> > > > keep binary exponential back-off with probable unexpected extra
-> > > > timeout delay.
-> > >
-> > > The exponential backoff should probably be capped at some point
-> > > to avoid excessive wait delays.  I guess the rationale for
-> > > exponential backoff is to not poll too frequently.
-> > > Capping at 20 msec or 100 msec may be reasonable, i.e.:
-> > >
-> > > -               delay *= 2;
-> > > +               delay = min(delay * 2, 100);
-> >
-> > Capping at 20 or 100 msec seems reasonable to me. Btw, since 20 msec
-> > is not a long time in these scenarios, how about changing to a fixed
-> > 20 msec interval?
->
-> The callers of pci_dev_wait() seem to wait for the spec-defined
-> delay and only call pci_dev_wait() to allow for an additional period
-> that non-compliant devices may need.  That extra delay can be expected
-> to be low, which is why it makes sense to start with a short poll interval
-> and gradually extend it.  So the algorithm seems to be reasonable and
-> I wouldn't recommend changing it to a constant interval unless that
-> fixes something which is currently broken.
->
-> Thanks,
->
-> Lukas
+On Sat, May 21, 2022 at 05:03:41PM +0200, Krzysztof Kozlowski wrote:
+> On 19/05/2022 23:14, Rob Herring wrote:
+> > Now that the schema tools can extract type information for all
+> > properties (in order to decode dtb files), finding properties missing
+> > any type definition is fairly trivial though not yet automated.
+> > 
+> > Fix the various property schemas which are missing a type. Most of these
+> > tend to be device specific properties which don't have a vendor prefix.
+> > A vendor prefix is how we normally ensure a type is defined.
+> > 
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../arm/hisilicon/controller/hip04-bootwrapper.yaml       | 5 +++--
+> >  .../bindings/display/bridge/toshiba,tc358768.yaml         | 1 +
+> >  .../devicetree/bindings/display/panel/panel-timing.yaml   | 5 +++++
+> >  .../bindings/display/panel/raydium,rm67191.yaml           | 1 +
+> >  .../bindings/display/panel/samsung,s6e8aa0.yaml           | 1 +
+> >  .../devicetree/bindings/gpio/fairchild,74hc595.yaml       | 1 +
+> >  .../devicetree/bindings/input/google,cros-ec-keyb.yaml    | 1 +
+> >  .../devicetree/bindings/input/matrix-keymap.yaml          | 4 ++++
+> >  Documentation/devicetree/bindings/media/i2c/adv7604.yaml  | 3 ++-
+> >  Documentation/devicetree/bindings/mux/reg-mux.yaml        | 8 ++++++--
+> >  Documentation/devicetree/bindings/net/cdns,macb.yaml      | 1 +
+> >  Documentation/devicetree/bindings/net/ingenic,mac.yaml    | 1 +
+> >  .../devicetree/bindings/net/ti,davinci-mdio.yaml          | 1 +
+> >  .../devicetree/bindings/net/wireless/ti,wlcore.yaml       | 2 ++
+> >  .../devicetree/bindings/pci/snps,dw-pcie-ep.yaml          | 6 ++++--
+> >  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml   | 2 ++
+> >  .../devicetree/bindings/pinctrl/canaan,k210-fpioa.yaml    | 2 ++
+> >  Documentation/devicetree/bindings/power/avs/qcom,cpr.yaml | 1 +
+> >  .../devicetree/bindings/power/supply/battery.yaml         | 7 ++++++-
+> >  .../devicetree/bindings/power/supply/charger-manager.yaml | 1 +
+> >  Documentation/devicetree/bindings/rng/st,stm32-rng.yaml   | 1 +
+> >  Documentation/devicetree/bindings/serial/8250.yaml        | 1 +
+> >  .../devicetree/bindings/sound/audio-graph-card2.yaml      | 3 +++
+> >  .../devicetree/bindings/sound/imx-audio-hdmi.yaml         | 3 +++
+> >  Documentation/devicetree/bindings/usb/smsc,usb3503.yaml   | 1 +
+> >  25 files changed, 55 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/hisilicon/controller/hip04-bootwrapper.yaml b/Documentation/devicetree/bindings/arm/hisilicon/controller/hip04-bootwrapper.yaml
+> > index 7378159e61df..483caf0ce25b 100644
+> > --- a/Documentation/devicetree/bindings/arm/hisilicon/controller/hip04-bootwrapper.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/hisilicon/controller/hip04-bootwrapper.yaml
+> > @@ -17,14 +17,15 @@ properties:
+> >        - const: hisilicon,hip04-bootwrapper
+> >  
+> >    boot-method:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> >      description: |
+> >        Address and size of boot method.
+> >        [0]: bootwrapper physical address
+> >        [1]: bootwrapper size
+> >        [2]: relocation physical address
+> >        [3]: relocation size
+> > -    minItems: 1
+> > -    maxItems: 2
+> > +    minItems: 2
+> > +    maxItems: 4
+> >  
+> >  required:
+> >    - compatible
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+> > index 3bd670b8e5cd..0b6f5bef120f 100644
+> > --- a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+> > +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+> > @@ -58,6 +58,7 @@ properties:
+> >  
+> >              properties:
+> >                data-lines:
+> > +                $ref: /schemas/types.yaml#/definitions/uint32
+> >                  enum: [ 16, 18, 24 ]
+> >  
+> >        port@1:
+> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-timing.yaml b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
+> > index 7749de95ee40..229e3b36ee29 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/panel-timing.yaml
+> > @@ -146,6 +146,7 @@ properties:
+> >        Horizontal sync pulse.
+> >        0 selects active low, 1 selects active high.
+> >        If omitted then it is not used by the hardware
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >      enum: [0, 1]
+> >  
+> >    vsync-active:
+> > @@ -153,6 +154,7 @@ properties:
+> >        Vertical sync pulse.
+> >        0 selects active low, 1 selects active high.
+> >        If omitted then it is not used by the hardware
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >      enum: [0, 1]
+> >  
+> >    de-active:
+> > @@ -160,6 +162,7 @@ properties:
+> >        Data enable.
+> >        0 selects active low, 1 selects active high.
+> >        If omitted then it is not used by the hardware
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >      enum: [0, 1]
+> >  
+> >    pixelclk-active:
+> > @@ -169,6 +172,7 @@ properties:
+> >        sample data on rising edge.
+> >        Use 1 to drive pixel data on rising edge and
+> >        sample data on falling edge
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >      enum: [0, 1]
+> >  
+> >    syncclk-active:
+> > @@ -179,6 +183,7 @@ properties:
+> >        sample sync on rising edge of pixel clock.
+> >        Use 1 to drive sync on rising edge and
+> >        sample sync on falling edge of pixel clock
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >      enum: [0, 1]
+> >  
+> >    interlaced:
+> > diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
+> > index 745dd247c409..617aa8c8c03a 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
+> > @@ -24,6 +24,7 @@ properties:
+> >  
+> >    dsi-lanes:
+> >      description: Number of DSI lanes to be used must be <3> or <4>
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >      enum: [3, 4]
+> >  
+> >    v3p3-supply:
+> > diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.yaml b/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.yaml
+> > index ca959451557e..1cdc91b3439f 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa0.yaml
+> > @@ -36,6 +36,7 @@ properties:
+> >  
+> >    init-delay:
+> >      description: delay after initialization sequence [ms]
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >  
+> >    panel-width-mm:
+> >      description: physical panel width [mm]
+> > diff --git a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
+> > index 5fe19fa5f67c..a99e7842ca17 100644
+> > --- a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
+> > +++ b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
+> > @@ -26,6 +26,7 @@ properties:
+> >      const: 2
+> >  
+> >    registers-number:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> >      description: Number of daisy-chained shift registers
+> >  
+> >    enable-gpios:
+> > diff --git a/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml b/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
+> > index e8f137abb03c..aa61fe64be63 100644
+> > --- a/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
+> > +++ b/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
+> > @@ -31,6 +31,7 @@ properties:
+> >      type: boolean
+> >  
+> >    function-row-physmap:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> >      minItems: 1
+> >      maxItems: 15
+> >      description: |
+> > diff --git a/Documentation/devicetree/bindings/input/matrix-keymap.yaml b/Documentation/devicetree/bindings/input/matrix-keymap.yaml
+> > index 6699d5e32dca..9f703bb51e12 100644
+> > --- a/Documentation/devicetree/bindings/input/matrix-keymap.yaml
+> > +++ b/Documentation/devicetree/bindings/input/matrix-keymap.yaml
+> > @@ -27,6 +27,10 @@ properties:
+> >        column and linux key-code. The 32-bit big endian cell is packed as:
+> >            row << 24 | column << 16 | key-code
+> >  
+> > +  linux,no-autorepeat:
+> > +    type: boolean
+> > +    description: Disable keyrepeat
+> 
+> This should be rather a separate patch - it's documenting a missing
+> property, not only a type.
 
-Thanks Lukas!
+Yes, I've dropped this hunk while applying.
 
-From my perspective, there is nothing broken so far, but a theoretical
-unexpected extra delay while the timeout has passed. So I will keep
-pci_dev_wait() as previously with exponential backoff in this patch,
-and change the pci_bridge_secondary_bus_wait() with "jiffies" and
-pci_dev_wait().
-
-Thanks,
-
-windy
+Rob
