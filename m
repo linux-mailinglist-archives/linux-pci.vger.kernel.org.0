@@ -2,141 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8859B530FAB
-	for <lists+linux-pci@lfdr.de>; Mon, 23 May 2022 15:19:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E778531485
+	for <lists+linux-pci@lfdr.de>; Mon, 23 May 2022 18:25:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233492AbiEWNDt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 May 2022 09:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46886 "EHLO
+        id S236378AbiEWN2l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 May 2022 09:28:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235830AbiEWNDs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 May 2022 09:03:48 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E7762C5
-        for <linux-pci@vger.kernel.org>; Mon, 23 May 2022 06:03:45 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id c19so12373682lfv.5
-        for <linux-pci@vger.kernel.org>; Mon, 23 May 2022 06:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=z71NrWZ4zknsDrIoo+iB7dCvZtP2uMdNm3QPfhAif8o=;
-        b=bzd1qj/qFKT8OfqgUqAT3Wtl+EmZf7RH0b71HR/rrXg8NYApV+cGqSsZ+AZV1V7rud
-         9ySbTNcdwNtJIoHRuyQX5bQxvsNdJENR3BC1hgHyooGer/9nIJjCpCKjNxpRKMqQ9W/A
-         IPQBEGPFJLoQPL7Fl7RiTgbRFCEq2VnZlHO9aFBDQH1aydu8ZTsj0xa9XQOQy/tJ1r53
-         j5DHW2fuqbA+sGi8IMlHjwcM2FrfzGOvjtfpyGce7NTiWd9j4qHpH0JsTjIaGDEHb3Wz
-         FnAoSBkQWGH23lna51WTqbWpLOnainyACCGSdLrCkHZ+fBjR1AytIi+4qVeKiS0R5+2H
-         ziwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=z71NrWZ4zknsDrIoo+iB7dCvZtP2uMdNm3QPfhAif8o=;
-        b=XQ4I0cdc0MOldro7iLkNLr2GHqhLubPHkMO1dKCjzwpa86bw4HGu+Joq6VnJXcKe/U
-         T6SvYTXrppKUdgu1sL3VSfSriwzusjzkYB3nPqW1EgP4KjxaWWsiENxdUrcICxf0APFp
-         9nvPT8yoXBjWlb4IUx4xq9/SFLEwaHSg8v5WscrqVe4UWK6QERgBDMltm6vzkygo/IdF
-         WS0oHLtSDLzT0hKWQ5MhQLN48EvyLFWwqWtZb6eKMdNhzsCChxwdCD4k+HFMWA8Y4hcY
-         j8OYrqrP6EuzaXK1+e+qNQUyxHxtz0cHO+OBgf+V7piEhMklBvm2Pjvmay/j3+U9+Cst
-         tlWA==
-X-Gm-Message-State: AOAM531a3RYKJNfIZ4/l0Qo2CUzGgX98YPD8Ns/Lw0nETzMHGxFss2mM
-        Z0XRV/SlO6NrP7eVlsuAdsf1Dw==
-X-Google-Smtp-Source: ABdhPJyq6y9OSMA4U7e6i2YMcuLgOdxRayWbuMH/9MhLJwISF/h6mzK0bZFByAbvBLNQzUdsZ7wHag==
-X-Received: by 2002:a05:6512:2256:b0:473:d27f:dd93 with SMTP id i22-20020a056512225600b00473d27fdd93mr16900739lfu.512.1653311024297;
-        Mon, 23 May 2022 06:03:44 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id f10-20020ac2508a000000b0047255d2115csm1968683lfm.139.2022.05.23.06.03.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 May 2022 06:03:43 -0700 (PDT)
-Message-ID: <1af9f5ff-2115-1809-15b1-fea306a11877@linaro.org>
-Date:   Mon, 23 May 2022 16:03:43 +0300
+        with ESMTP id S236373AbiEWN2Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 May 2022 09:28:25 -0400
+Received: from hostingweb31-40.netsons.net (hostingweb31-40.netsons.net [89.40.174.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60D53DA5C;
+        Mon, 23 May 2022 06:28:15 -0700 (PDT)
+Received: from [77.244.183.192] (port=63488 helo=[192.168.178.75])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1nt86W-0004R3-V3; Mon, 23 May 2022 15:28:13 +0200
+Message-ID: <30b9a2fe-7f9e-bc85-8ecb-d2137c243c36@lucaceresoli.net>
+Date:   Mon, 23 May 2022 15:28:09 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v11 0/7] PCI: qcom: Fix higher MSI vectors handling
-Content-Language: en-GB
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 1/2] PCI: dra7xx: Fix link removal on probe error
+Content-Language: it-IT
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-References: <20220520183114.1356599-1-dmitry.baryshkov@linaro.org>
- <Yos6zKHUKywKcmzy@hovoldconsulting.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <Yos6zKHUKywKcmzy@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Sekhar Nori <nsekhar@ti.com>,
+        Android Kernel Team <kernel-team@android.com>
+References: <20211214221450.589884-1-luca@lucaceresoli.net>
+ <CAL_Jsq+GQTcx1EGKHug2ZcDZufrKM-4k6PB0vQeTCTG42MHzvA@mail.gmail.com>
+ <59a23c89-0810-eb28-acd9-7051ac34d438@lucaceresoli.net>
+ <4579940c-27dc-733e-4022-ebea4671c839@lucaceresoli.net>
+ <CAL_JsqJ5nr6xJoTv3A6UPMMDXhWKcwSEUA3ux3kK8OMWQxdc6w@mail.gmail.com>
+ <YnvnNUrsCOUxMu8A@lpieralisi>
+ <615718f9-151e-20fb-fcb0-56063ae61ca6@lucaceresoli.net>
+ <CAGETcx9r4e9PkUFNZ+vUfqOSO5=e9apmBj0+DyOkKEvc4CnsLQ@mail.gmail.com>
+ <ebd3f89b-3487-a610-7583-4ffda01a0dd6@lucaceresoli.net>
+ <CAGETcx-GWqV2Teq0ufK2946rtB7Q-5Y=uzLN_kMbZ+57Aq127A@mail.gmail.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+In-Reply-To: <CAGETcx-GWqV2Teq0ufK2946rtB7Q-5Y=uzLN_kMbZ+57Aq127A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23/05/2022 10:42, Johan Hovold wrote:
-> On Fri, May 20, 2022 at 09:31:07PM +0300, Dmitry Baryshkov wrote:
->> I have replied with my Tested-by to the patch at [2], which has landed
->> in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
->> Add support for handling MSIs from 8 endpoints"). However lately I
->> noticed that during the tests I still had 'pcie_pme=nomsi', so the
->> device was not forced to use higher MSI vectors.
->>
->> After removing this option I noticed that hight MSI vectors are not
->> delivered on tested platforms. After additional research I stumbled upon
->> a patch in msm-4.14 ([1]), which describes that each group of MSI
->> vectors is mapped to the separate interrupt. Implement corresponding
->> mapping.
->>
->> The first patch in the series is a revert of  [2] (landed in pci-next).
->> Either both patches should be applied or both should be dropped.
->>
->> Patchseries dependecies: [3] (for the schema change).
->>
->> Changes since v10:
->>   - Remove has_split_msi_irqs flag. Trust DT and use split MSI IRQs if
->>     they are described in the DT. This removes the need for the
->>     pcie-qcom.c changes (everything is handled by the core (suggested by
->>     Johan).
-> 
-> You could also mention the rebase and fixed warnings with less than
-> eight msi.
->   
->> [1] https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/commit/671a3d5f129f4bfe477152292ada2194c8440d22
->> [2] https://lore.kernel.org/linux-arm-msm/20211214101319.25258-1-manivannan.sadhasivam@linaro.org/
->> [3] https://lore.kernel.org/linux-arm-msm/20220422211002.2012070-1-dmitry.baryshkov@linaro.org/
->>
->>
->> Dmitry Baryshkov (7):
->>    PCI: dwc: Convert msi_irq to the array
->>    PCI: dwc: split MSI IRQ parsing/allocation to a separate function
->>    PCI: dwc: Handle MSIs routed to multiple GIC interrupts
->>    PCI: dwc: Implement special ISR handler for split MSI IRQ setup
->>    dt-bindings: PCI: qcom: Support additional MSI interrupts
->>    arm64: dts: qcom: sm8250: provide additional MSI interrupts
->>    dt-bindings: mfd: qcom,qca639x: add binding for QCA639x defvice
-> 
-> Looks like you used the wrong offsets from HEAD or something when
-> generating the series as the first two patches ([1] above, which is not
-> yet in linux-next, and the dw_pcie_free_msi() fix) are now missing and
-> the last patch is new and unrelated.
+Hi Saravana,
 
-Ugh. Please excuse me.
-
+On 19/05/22 22:25, Saravana Kannan wrote:
+> On Tue, May 17, 2022 at 12:32 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>>
+>> Hi Saravana,
+>>
+>> On 14/05/22 05:46, Saravana Kannan wrote:
+>>> On Thu, May 12, 2022 at 7:07 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>>>>
+>>>> Hi Lorenzo,
+>>>>
+>>>> On 11/05/22 18:41, Lorenzo Pieralisi wrote:
+>>>>> On Sat, Jan 15, 2022 at 10:02:00AM -0600, Rob Herring wrote:
+>>>>>> +Saravana
+>>>>>>
+>>>>>> On Tue, Jan 11, 2022 at 4:35 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>>>>>>>
+>>>>>>> Hi Rob,
+>>>>>>>
+>>>>>>> On 16/12/21 10:08, Luca Ceresoli wrote:
+>>>>>>>> Hi Rob,
+>>>>>>>>
+>>>>>>>> thanks for the quick feedback!
+>>>>>>>>
+>>>>>>>> On 14/12/21 23:42, Rob Herring wrote:
+>>>>>>>>> On Tue, Dec 14, 2021 at 4:15 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>>>>>>>>>>
+>>>>>>>>>> If a devm_phy_get() calls fails with phy_count==N (N > 0), then N links
+>>>>>>>>>> have already been added by device_link_add() and won't be deleted by
+>>>>>>>>>> device_link_del() because the code calls 'return' and not 'goto err_link'.
+>>>>>>>>>>
+>>>>>>>>>> Fix in a very simple way by doing all the devm_phy_get() calls before all
+>>>>>>>>>> the device_link_add() calls.
+>>>>>>>>>>
+>>>>>>>>>> Fixes: 7a4db656a635 ("PCI: dra7xx: Create functional dependency between PCIe and PHY")
+>>>>>>>>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>>>>>>>>> ---
+>>>>>>>>>>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
+>>>>>>>>>>  1 file changed, 2 insertions(+)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+>>>>>>>>>> index f7f1490e7beb..2ccc53869e13 100644
+>>>>>>>>>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+>>>>>>>>>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+>>>>>>>>>> @@ -757,7 +757,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+>>>>>>>>>>                 phy[i] = devm_phy_get(dev, name);
+>>>>>>>>>>                 if (IS_ERR(phy[i]))
+>>>>>>>>>>                         return PTR_ERR(phy[i]);
+>>>>>>>>>> +       }
+>>>>>>>>>>
+>>>>>>>>>> +       for (i = 0; i < phy_count; i++) {
+>>>>>>>>>>                 link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
+>>>>>>>>>
+>>>>>>>>> I think this should happen automatically now with fw_devlink being
+>>>>>>>>> enabled by default. Can you try?
+>>>>>>>>
+>>>>>>>> Do you mean removal should be done automatically? I think they are not
+>>>>>>>> due to the DL_FLAG_STATELESS flag.
+>>>>>>>
+>>>>>>> I would love to have feedback because, as said, I think my patch is
+>>>>>>> correct, but if I'm wrong (which might well be) I have to drop patch 1
+>>>>>>> and rewrite patch 2 in a slightly more complex form.
+>>>>>>
+>>>>>> I mean that why do you need explicit dependency tracking here when
+>>>>>> dependencies on a PHY should happen automatically now. IOW, what is
+>>>>>> special about this driver and dependency?
+>>>>>
+>>>>> Any update on this patch ? I think patch 2 can be merged, please
+>>>>> let me know if this one can be dropped.
+>>>>
+>>>> Thanks for the feedback! You would say yes, you can merge patch 2,
+>>>> except it probably does not even apply as it is written in a way that is
+>>>> based on the changes in patch 1.
+>>>>
+>>>> I could rewrite patch 2 to not depend on patch 1 of course, but it
+>>>> wouldn't make code simpler, perhaps more complex. And moreover the
+>>>> hardware that I used to have access to has phy_count==1 so I could never
+>>>> test the failing case, and sadly now I have no access to that hardware.
+>>>
+>>> Hi Luca,
+>>>
+>>> The fw_devlink code to create device links from consumers to "phys"
+>>> suppliers is pretty well exercised. Most/all Android devices running
+>>> 5.10+ kernels (including Pixel 6) use fw_devlink=on to be able to boot
+>>> properly.
+>>>
+>>> So I'd be pretty confident in deleting the device_link_add/del() code
+>>> in drivers/pci/controller/dwc/pci-dra7xx.c. The device links should
+>>> already be there before the probe is even called.
+>>>
+>>> Also, if you want to check if the device links (even the 1 phy one you
+>>> have) are being created, you can look at /sys/class/devlink to see the
+>>> list of all device links that are currently present. You can delete
+>>> the code and then use this to check too.
+>>
+>> Thank you for your feedback. Unfortunately as I said I have no access to
+>> the hardware, and won't have anymore. I don't think it is a good idea to
+>> send a patch that I cannot test on real hardware, especially since it is
+>> for a generic hardware that thus might affect others. But I would be
+>> glad to review any such patch that might be sent, FWIW.
 > 
-> Johan
+> Just to make sure I'm on the same page. I thought you at least had a
+> device where phy_count = 1. But looks like you are saying you don't?
 
+I used to have access to a hardware with phy_count = 1 on a former job,
+but I don't have it anymore and won't have it since I left that job
+position.
+
+> If all you want to check is "phys" have device links created for them
+> for whatever random DT device that has a "phys" property, then I can
+> test and confirm that for you on whatever platform I have. But if you
+> want a test specifically for the device that corresponds to the driver
+> you were fixing, then I can't. Let me know.
+
+Honestly, I'm afraid I don't have much time to invest in trying to
+recollect all the details and motivations for this patchset. Likely I
+spotted this by code inspection while debugging other issues (I had a
+non-working PCIe device, but it was not the host fault). If you think
+there is little value in these patches, I'm OK in dropping them.
 
 -- 
-With best wishes
-Dmitry
+Luca
