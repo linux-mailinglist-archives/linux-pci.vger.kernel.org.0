@@ -2,109 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 424D6534502
-	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 22:36:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77ABD53457C
+	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 23:01:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345084AbiEYUg1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 May 2022 16:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44796 "EHLO
+        id S1344392AbiEYVB2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 May 2022 17:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244637AbiEYUg0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 16:36:26 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C8018B31
-        for <linux-pci@vger.kernel.org>; Wed, 25 May 2022 13:36:24 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id rs12so32191609ejb.13
-        for <linux-pci@vger.kernel.org>; Wed, 25 May 2022 13:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=jF4MxsPSKKSAh34A0y7fWqFeFSCCDQ9NCjS0um7aELU=;
-        b=Go2lvrc9m32tOzCZybYeZlninKGkjlKPFCs4o3KvlBPV9ktV/ambG1PdliAVJSmxjm
-         lx90jlelZ5BWCdKoap1zwMllIM2bW+BEBxHQNAiCM4aauI7lwDB4mOQJhKnjY3C5UjqQ
-         5ojPH6m5jfcis0lwvm8U54B4ECPKBPbZLN+lPown9147egvnJ45uzGQujZwO12fn5NgF
-         HSYpYba50F4VnGPw2apFrqhbopWX1Z3/dPPyMwzpBa1MMy/UZhEAznEHft3viPn7pEx3
-         gGd2/IpOCuWmMQE69YgLJsEIWTfmbyIvnVl1Z1y85Zp7uSRY5pNL/rPtmNCPZ5ZxEqlA
-         7Vuw==
+        with ESMTP id S1344387AbiEYVB0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 17:01:26 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2CE35DC7;
+        Wed, 25 May 2022 14:01:25 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id v9so209oie.5;
+        Wed, 25 May 2022 14:01:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=jF4MxsPSKKSAh34A0y7fWqFeFSCCDQ9NCjS0um7aELU=;
-        b=n8VPueuRToapn8hrMlPJwCXeGs2B71ERvve8PsjrMDzTwlY+8fX5Oacz2loKuLJv+K
-         kYFSNtKuz9Wm2AuPXsI/k17XuOZjJIxuBpiiFwmU/JyQ2P1fzvBqn1vsmzO7cVUPyAZl
-         xG8OFbR0o81+D8DZbCRGC/aUVjXX/fUEWcmONB3GeW2HIT+5+Gu28O2z6XRTziTGjy4S
-         8cga7N40uVQ1RcAwRz3oxCeVJIkhFF6I32EOxPmqiRg+qyWZIWsS+q+s/FOwi3QUB9RM
-         gUZI+kcPIJFGS1EBAIt7QAgHqeqZoCfVWbiaXxishNbeQKAVNfCUYXnpVZlQpc5s17R8
-         afdg==
-X-Gm-Message-State: AOAM532FS4ciQZa+mUJ4TMsSjpNtivQv0SbObVTL6IqdeXKdaiNzkT9D
-        +EEoUnj74x8/NMdvQVEB0Qvm2U39Dp31cXmDH+s=
-X-Google-Smtp-Source: ABdhPJxV8JcgHBRVCuZUtyiFEMUlo0/h++X44FtW2qB2tCICTzKUSkYLLhBJC1CobZF0GHS5kQiJ33VJWT9rFfULY+4=
-X-Received: by 2002:a17:907:1629:b0:6fe:bfe2:5289 with SMTP id
- hb41-20020a170907162900b006febfe25289mr20427003ejc.723.1653510983236; Wed, 25
- May 2022 13:36:23 -0700 (PDT)
+        bh=NERPmbwTzBChrPsowWF6RmFptD7+Ry/DNfWY86KTjjU=;
+        b=z/1dQUVzwtzYw/ORW5MI1uz4k4fK8OywHfQmLMv02MoLiVrZN/Ag+gohnxuitPPZBP
+         I84zVMNLtCjTvAv510oYNXwSDt+WD5Qpr8L++my8ZRKwb+TeBBXPNGdJlYcZSeOStP42
+         gD/4LCOygcKb5ru6NQYgMOiONy8IV4jdC7RdHUaJpppmTGk+4WfydfR62qbM7dG+Kboj
+         W4XanN+LsfmW5OKmG9PxgVZWPGXXAHf05t9NAAQqdHBeibxI8mlSfOZ3wPdBXgP4qMln
+         idKki0iIKIfaIwYzjMokJQMJVY4yoIlSWswSTpcQtkPAIDKCPR2eqcIO8aPu/fjDBlXF
+         KSdw==
+X-Gm-Message-State: AOAM530NEXV4wvOaiC4avSJKgDGkw7B7xr/98oy/KdKFF3vwQ+7fnVoE
+        JG9JXjoamisAwliY58A8WQ==
+X-Google-Smtp-Source: ABdhPJxaVFL7Fsh+968JB8tK+h2m4gzaufKRBXVWxvM+S6/Z8jChESAgY1ZPw1Ue0VOYEUpSj1zuVA==
+X-Received: by 2002:a05:6808:1a1e:b0:326:3846:c4a1 with SMTP id bk30-20020a0568081a1e00b003263846c4a1mr6597279oib.80.1653512484496;
+        Wed, 25 May 2022 14:01:24 -0700 (PDT)
+Received: from xps15.. (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.googlemail.com with ESMTPSA id t16-20020a9d5910000000b00606aa4d5fcfsm6508340oth.29.2022.05.25.14.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 May 2022 14:01:23 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: PCI: socionext,uniphier-pcie: Add missing child interrupt controller
+Date:   Wed, 25 May 2022 16:01:16 -0500
+Message-Id: <20220525210117.2489333-1-robh@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Received: by 2002:ab4:a26b:0:0:0:0:0 with HTTP; Wed, 25 May 2022 13:36:22
- -0700 (PDT)
-From:   Luisa Donstin <luisadonstin@gmail.com>
-Date:   Wed, 25 May 2022 22:36:22 +0200
-Message-ID: <CA+QBM2rV_0fKNiDG=fEY8SfdVPQSsqbcXQ4=Up56bumJMU+eOQ@mail.gmail.com>
-Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
-To:     contact@firstdiamondbk.com
-Cc:     info@firstdiamondbk.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Guten Tag,
+The Socionext interrupt controller internal to the the PCI block isn't
+documented which causes warnings when unevaluatedProperties check is
+also fixed. Add the 'interrupt-controller' child node and properties and
+fixup the example so that interrupt properties can be parsed.
 
-Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/pci/socionext,uniphier-pcie.yaml | 23 ++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-haben ?
+diff --git a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
+index f5926d0fb085..638b99db0433 100644
+--- a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie.yaml
+@@ -51,6 +51,19 @@ properties:
+   phy-names:
+     const: pcie-phy
+ 
++  interrupt-controller:
++    type: object
++    additionalProperties: false
++
++    properties:
++      interrupt-controller: true
++
++      '#interrupt-cells':
++        const: 1
++
++      interrupts:
++        maxItems: 1
++
+ required:
+   - compatible
+   - reg
+@@ -62,6 +75,13 @@ unevaluatedProperties: false
+ 
+ examples:
+   - |
++    bus {
++        gic: interrupt-controller {
++            interrupt-controller;
++            #interrupt-cells = <3>;
++        };
++    };
++
+     pcie: pcie@66000000 {
+         compatible = "socionext,uniphier-pcie";
+         reg-names = "dbi", "link", "config";
+@@ -80,6 +100,7 @@ examples:
+         phys = <&pcie_phy>;
+         #interrupt-cells = <1>;
+         interrupt-names = "dma", "msi";
++        interrupt-parent = <&gic>;
+         interrupts = <0 224 4>, <0 225 4>;
+         interrupt-map-mask = <0 0 0  7>;
+         interrupt-map = <0 0 0  1  &pcie_intc 0>,
+@@ -87,7 +108,7 @@ examples:
+                         <0 0 0  3  &pcie_intc 2>,
+                         <0 0 0  4  &pcie_intc 3>;
+ 
+-        pcie_intc: legacy-interrupt-controller {
++        pcie_intc: interrupt-controller {
+             interrupt-controller;
+             #interrupt-cells = <1>;
+             interrupt-parent = <&gic>;
+-- 
+2.34.1
 
-Ich habe versucht, Sie per E-Mail zu erreichen.
-
-Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
-
-Danke
-
-Luisa Donstin
-
-luisadonstin@gmail.com
-
-
-
-
-
-
-
-
-
-----------------------------------
-
-
-
-
-Good Afternoon,
-
-I was just wondering if you got my Previous E-mail
-have ?
-
-I tried to reach you by E-mail.
-
-Please come back to me quickly, it is very Important.
-
-Thanks
-
-Luisa Donstin
-
-luisadonstin@gmail.com
