@@ -2,163 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24A06533F64
-	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 16:41:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB00B53409E
+	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 17:47:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238750AbiEYOlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 May 2022 10:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48640 "EHLO
+        id S233597AbiEYPqO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 May 2022 11:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232246AbiEYOlR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 10:41:17 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF612C665;
-        Wed, 25 May 2022 07:41:16 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id 202so12409247pfu.0;
-        Wed, 25 May 2022 07:41:16 -0700 (PDT)
+        with ESMTP id S231421AbiEYPqN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 11:46:13 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2FE13D4F;
+        Wed, 25 May 2022 08:46:11 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id o10-20020a17090a4e8a00b001df2fcdc165so2029497pjh.0;
+        Wed, 25 May 2022 08:46:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qqyWCcuw6resJt3dcFv8smtgAfhH3RRn9K5xICLuJIs=;
-        b=YYzOJd5WsdmRXSVKxp2N5jKtSJyJyDcgLW27+7R4tABBBM0nSvFvZCl6NUwNZGQ4aW
-         ApcOuM+8vaa3jSTRFTTGYBewIv5bJxbR/baPKPv5a5ciVTaULzlITt1fynbCIhVm1vJf
-         pboEeN55ngZcqNFtmtHlPxeeJvdP9X9ktTv2m1FDww7QavyC6sC6XDGHd76Hzk97HlYM
-         u8nvgWzrVXmQdNLouh2FuCQ3f3X7NywUCLk5+t7rng5Z57JUrPGvBquuU7HDOi51I0UW
-         bWt1ce4o+VvzWNmuiulh9i6zPz2UoeeMt6OMNZGkOp+Rwb9Xp6ZYhtOlqtPGxvP+vDz9
-         jI3g==
+        h=message-id:date:mime-version:user-agent:subject:to:cc:references
+         :from:in-reply-to:content-transfer-encoding;
+        bh=DBX0l584xDMl/Ef/FGlK2tWkFKGbgMNoeEk7074fjeg=;
+        b=Oo0YWmwEh28DfaENHh9KTeje2wuGU88LQG5grV0Jt46DqXFmjVE54S+AsQYJferP11
+         MFV/bGDeq9Po8SyJ6J54OTGLHu2kKS0w4MZ2EAxDyWlYwAijKtvr53dn3V7nlndP0ufC
+         ZKQy7tZU+GqHUVHvukY26lVrnVyIHCFVCb5W7CeYMfGt57ClAtFuF+KnaZBh0M0bJmGH
+         DOBbowHQ9gLTvZxIoIQo31704thY6ZUGd+YTFdzpPyFXTTf4+e6T9GyhwlBM0nNaMtZW
+         T/1nEupZd7dkr8QmVpPK+8Iqei2NwK2pPy9bkqlGPltquxm3n/+3eqZG/JJiypkthbBR
+         t3fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qqyWCcuw6resJt3dcFv8smtgAfhH3RRn9K5xICLuJIs=;
-        b=hDjuqRO63MThnfJGPjZ6KTryiNjTuKBMZnpkssxnwlZhTP71NG1iocD960qgQDG7a2
-         eByB/gPg68hG33Ix1EOqzIYDiQ9w2N8yglXadnydBR4A6H1lYacnQ4y0gm0a3adY0gHy
-         gWdt33NQ89grnkax3LUSCw/ADa80A3INP3R31jFVwixXxgj6tedlIJTHrRBI0p1wLsyj
-         SlP93kY0RE+5Bj9OuISmJIVn/kxRQaS3dKq275gLb78H5MZjYpvQXg1QpgqHuD3oRZzs
-         mQ8YnWd5o3Izi++b9PafpYODH1J9z5/QFW6c1ZrJzPjhpl9D/5yhIT3nQHJlttS6VwR/
-         FLNA==
-X-Gm-Message-State: AOAM530D00O9vKX7IerSy4cqoMjn3Y4Q71xEt4FCZurxjRv2u5pRSFZC
-        bVaL3KJgyFxK6oWcCxXUryRvVEwVTjvPRCM9A6k=
-X-Google-Smtp-Source: ABdhPJySy9jnDTIo1EhsJGZgSUNIPGPdFe1qEmwBRlGi1vzg5cKDbDc4N78b0y8LKpFiWCMHVUSyPzS4LyLN/2958aM=
-X-Received: by 2002:a63:8f51:0:b0:3f6:2298:eaf3 with SMTP id
- r17-20020a638f51000000b003f62298eaf3mr28389400pgn.402.1653489675624; Wed, 25
- May 2022 07:41:15 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :to:cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=DBX0l584xDMl/Ef/FGlK2tWkFKGbgMNoeEk7074fjeg=;
+        b=uWN4GjcyiO9xJDVYVlolFgGqvxxx88abqk/6WvyCtWGyp2YU6op7SSweXGjsJE7Usl
+         cSCrA8EOrQ7GAM1X0YpswnDhrwpHKtKH33bNQUYhUocPlo2CpQfJtRHDsj9oVrPtBR2b
+         ctMeaFnnQH/BZgYKvI9W+S52+FA6SSxGBe9ETsmrbQm4nOJbotTF6UyX/sYfaaBQvPsr
+         e56+e3UW+Yh0EdrUddl6VOiOErKCVv4eRattDN5sQ/4NED6iQWLJtE9+ee7SuLL9igzw
+         hUIgsgj47uQZ2yQlqod6qXfxtPW25pSxbEzUe3FXBfqRGqJBqgMY0f3YXPijcxy8UkVL
+         KSww==
+X-Gm-Message-State: AOAM530J/h0axYogxkL5GIkx/m7bjQB9LdYxPed8GKQbDmyrOizZQJwX
+        z2uXoFA9kw6sqjE6DDO+hl9h3+Xwvdf0tNEf
+X-Google-Smtp-Source: ABdhPJxG5GBW5VYSoq0okEwpk2Gx+15It0mHlPomu7qC5qgMZjjgpNf4fQ9Sw7Ds0TY6rO0En5OSHg==
+X-Received: by 2002:a17:903:248:b0:155:e8c6:8770 with SMTP id j8-20020a170903024800b00155e8c68770mr32148403plh.129.1653493571118;
+        Wed, 25 May 2022 08:46:11 -0700 (PDT)
+Received: from [0.0.0.0] ([192.109.233.222])
+        by smtp.gmail.com with ESMTPSA id o26-20020a629a1a000000b0050dc76281b4sm12041397pfe.142.2022.05.25.08.46.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 May 2022 08:46:10 -0700 (PDT)
+Message-ID: <3c80a21f-865a-83a1-1abe-dd7180002d55@gmail.com>
+Date:   Wed, 25 May 2022 23:46:03 +0800
 MIME-Version: 1.0
-References: <20220524152159.2370739-1-Frank.Li@nxp.com> <20220525092306.wuansog6fe2ika3b@mobilestation>
-In-Reply-To: <20220525092306.wuansog6fe2ika3b@mobilestation>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Wed, 25 May 2022 09:41:04 -0500
-Message-ID: <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com>
-Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [RESEND PATCH v5] PCI: Make sure the bus bridge powered on when
+ scanning bus
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Yicong Yang <yangyicong@hisilicon.com>
+References: <20220524205842.GA269611@bhelgaas>
+From:   Yicong Yang <yangyccccc@gmail.com>
+In-Reply-To: <20220524205842.GA269611@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 25, 2022 at 4:23 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+在 2022/5/25 4:58, Bjorn Helgaas 写道:
+> On Tue, May 17, 2022 at 08:43:19PM +0800, Yicong Yang wrote:
+>> When the bus bridge is runtime suspended, we'll fail to rescan
+>> the devices through sysfs as we cannot access the configuration
+>> space correctly when the bridge is in D3hot.
+> Is the "D3hot" above a typo?  I think devices are supposed to respond
+> to config accesses when in D3hot.  PCIe r6.0, sec 5.3.1.4.1:
 >
-> Hello Vinod
->
-> On Tue, May 24, 2022 at 10:21:51AM -0500, Frank Li wrote:
-> > Default Designware EDMA just probe remotely at host side.
-> > This patch allow EDMA driver can probe at EP side.
-> >
-> > 1. Clean up patch
-> >    dmaengine: dw-edma: Detach the private data and chip info structures
-> >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> >    dmaengine: dw-edma: Change rg_region to reg_base in struct
-> >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> >
-> > 2. Enhance EDMA driver to allow prode eDMA at EP side
-> >    dmaengine: dw-edma: Add support for chip specific flags
-> >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
-> > flags (this patch removed at v11 because dma tree already have fixed
-> > patch)
-> >
-> > 3. Bugs fix at EDMA driver when probe eDMA at EP side
-> >    dmaengine: dw-edma: Fix programming the source & dest addresses for
-> > ep
-> >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> >
-> > 4. change pci-epf-test to use EDMA driver to transfer data.
-> >    PCI: endpoint: Add embedded DMA controller test
-> >
-> > 5. Using imx8dxl to do test, but some EP functions still have not
-> > upstream yet. So below patch show how probe eDMA driver at EP
-> > controller driver.
-> > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
->
-> This series has been on review for over three months now. It has got
-> several acks, rb and tb tags from me, Manivannan and Kishon (the last
-> patch in the series). Seeing Gustavo hasn't been active for all that time
-> at all and hasn't performed any review for more than a year the
-> probability of getting his attention soon enough is almost zero. Thus
-> could you please give your acks if you are ok with the series content. Due
-> to having several more patchsets dependent on this one, Bjorn has agreed
-> to merge this series in through the PCI tree:
-> https://lore.kernel.org/linux-pci/20220524155201.GA247821@bhelgaas/
-> So the only thing we need is your ack tags.
->
-> @Frank. Should there be a new patchset revision could you please add a
-> request to merge the series in to the PCI tree? I am a bit tired repeating
-> the same messages each time the new mailing review lap.)
+>   Configuration and Message requests are the only TLPs accepted by a
+>   Function in the D3Hot state. ...
 
-The key is to need Vinod to say something
 
-Best regards
-Frank Li.
+It's right that we can access the bridge's configuration space
+when it's in D3hot. But we need to access the configuration space of
+downstream devices in a rescan, which is inaccessible in the upstream
+bridge's D3hot state. So the "D3hot" state in the commit is qualified
+to the *bridge*.
+
 
 >
-> -Sergey
+>   Functions that are in D3Hot are permitted to be transitioned by
+>   software (writing to their PMCSR PowerState field) to the D0active
+>   state or the D0uninitialized state. Functions that are in D3Hot must
+>   respond to Configuration Space accesses as long as power and clock
+>   are supplied so that they can be returned to D0 by software.
 >
-> >
-> > Frank Li (6):
-> >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> >   dmaengine: dw-edma: Detach the private data and chip info structures
-> >   dmaengine: dw-edma: Change rg_region to reg_base in struct
-> >     dw_edma_chip
-> >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> >     dw_edma_chip
-> >   dmaengine: dw-edma: Add support for chip specific flags
-> >   PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
-> >
-> > Serge Semin (2):
-> >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
-> >     semantics
-> >
-> >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
-> >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
-> >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
-> >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
-> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
-> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 112 ++++++++++++--
-> >  include/linux/dma/edma.h                      |  59 +++++++-
-> >  9 files changed, 317 insertions(+), 180 deletions(-)
-> >
-> > --
-> > 2.35.1
-> >
+>> It can be reproduced like:
+>>
+>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+>>
+>> 0000:80:00.0 is a Root Port and it is runtime-suspended, so
+>> 0000:81:00.1 is unreachable after a rescan.
+>>
+>> Power up the bridge when scanning the child bus and allow it to
+>> suspend again by adding pm_runtime_get_sync()/pm_runtime_put()
+>> in pci_scan_child_bus_extend().
+>>
+>> Cc: Rafael J. Wysocki <rafael@kernel.org>
+>> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>> ---
+>>  drivers/pci/probe.c | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 17a969942d37..b108e72b6586 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -2859,11 +2859,20 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>>  	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+>>  	unsigned int start = bus->busn_res.start;
+>>  	unsigned int devfn, fn, cmax, max = start;
+>> +	struct pci_dev *bridge = bus->self;
+>>  	struct pci_dev *dev;
+>>  	int nr_devs;
+>>  
+>>  	dev_dbg(&bus->dev, "scanning bus\n");
+>>  
+>> +	/*
+>> +	 * Make sure the bus bridge is powered on, otherwise we may not be
+>> +	 * able to scan the devices as we may fail to access the configuration
+>> +	 * space of subordinates.
+>> +	 */
+>> +	if (bridge)
+>> +		pm_runtime_get_sync(&bridge->dev);
+>> +
+>>  	/* Go find them, Rover! */
+>>  	for (devfn = 0; devfn < 256; devfn += 8) {
+>>  		nr_devs = pci_scan_slot(bus, devfn);
+>> @@ -2976,6 +2985,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>>  		}
+>>  	}
+>>  
+>> +	if (bridge)
+>> +		pm_runtime_put(&bridge->dev);
+>> +
+>>  	/*
+>>  	 * We've scanned the bus and so we know all about what's on
+>>  	 * the other side of any bridges that may be on this bus plus
+>> -- 
+>> 2.24.0
+>>
