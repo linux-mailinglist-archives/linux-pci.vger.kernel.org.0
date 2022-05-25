@@ -2,170 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55CA65340CA
-	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 17:54:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBEAA534213
+	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 19:13:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234580AbiEYPx2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 May 2022 11:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53902 "EHLO
+        id S245630AbiEYRN4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 May 2022 13:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231952AbiEYPx2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 11:53:28 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58889403DB;
-        Wed, 25 May 2022 08:53:27 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id cs3-20020a17090af50300b001e0808b5838so4542490pjb.1;
-        Wed, 25 May 2022 08:53:27 -0700 (PDT)
+        with ESMTP id S241157AbiEYRNz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 13:13:55 -0400
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A49A6A045;
+        Wed, 25 May 2022 10:13:51 -0700 (PDT)
+Received: by mail-oi1-x232.google.com with SMTP id v66so25764351oib.3;
+        Wed, 25 May 2022 10:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:to:cc:references
-         :from:in-reply-to:content-transfer-encoding;
-        bh=AoNvuKNojUkIN9rTU0d/T+skMmKYpLiILH0Q+8N5x8c=;
-        b=qdLV6nnVrWzqXkbfgBHahNZgl9uFcAQcA9NzmJfYKNkAbCrWRuR+x4YaOpbqy6X1/U
-         fyfVBlkPb55Y5B3A8AD6V3P+yvQ12nYMEOJYNuzuy4YAl8bNuNh6DX/gQZ7ZnXw9Ncup
-         w0xf+phg1dkx9NGFk8MDA3UW6TrJdCf0b9SuTdzqN6rkOeW+lh8KuRKTt0CFsBSIIocl
-         OO9CvwjHpobfU21TekafAXeqsNotcNEx4i7LYIRUx/+XPWWUWDyG0mTOjTvaJjp3XqMA
-         Ghv4lC3ugEgqsBgHfQw6zp6cYgfc02xOMU40UyPD3IeqmoQwLALR9+otiVDwn49HKLxs
-         vl2Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2VhfMHntHxmSu4vdA7es7dFU9dUngjl1nXJAN7GN/r8=;
+        b=kZKGzScoXhHCugo7nNQ3aTo4ayafls9LAV0Wuq4fg4ETAYxfvGs92hvMUkGnjxebhO
+         kz77QcfMRiAO4DGVdoZL49u3cU9TGlzdNiAOorusfjEs9ZhNnwjA3O0G2/JpAn34XlS6
+         biptInj2AoI9zZyx6MeFQ64vGIcCZe1jxDeAqpytkypEfI9e9wEQlBfjW3Af7q9jjT/T
+         0z/226gX/uerttVjB9nodKCuRTHgsHRJOkOE1CcKh88VB0t81kAM2FR85Ndn5J7LjTKO
+         +U+kTN2FtWpL/8zfwiDDsluNtVMvVVhsOSZlrJjHU5zhQKF19xGWPE9nfWoWaW6ZAimr
+         Jogw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :to:cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=AoNvuKNojUkIN9rTU0d/T+skMmKYpLiILH0Q+8N5x8c=;
-        b=6bwXuIMxvQbom4VXnc+yY1NwykWliSL6/62QuS0e7JFb09zy+3SSGSu4UPJHlMd+L/
-         uY0nPXoLt0qXpm5ojcwltVVSuJTKb/miSLVi4zPK26r1PAzY36144aGOoIdAwCSm4HBK
-         a3wRWP60XpGycrFWHc1Yia4Z17P7OD30Kitvxr/mYVp79lmr9zaXiNFrAU9CS0R3EHyx
-         Poc1S5MLAiMl+23xz0Gyvt6PYTV9x4X6vIh83nWjyzdClCqSmQqYYDxV0xPX3/fMPD1c
-         Tvb7JfT47OWalgD35ZSNM5FfswP7buP2HZH6KCgPjBMjnZktw2g6kGksR6qqe4hgGP1H
-         /6XA==
-X-Gm-Message-State: AOAM5300VjeWsgFKGnIvLxr3o0hj3RHoRo9y7cHgrpy6rIo1aR2OLszn
-        tz5nYAFqI/2FjsNi22Yveko=
-X-Google-Smtp-Source: ABdhPJxS/Z84HFyYwFBGT/UsNbXdj3wDEkYi5aBaB/xJTKcOhHhK+kv7leF+l35T4y7LYDx64MiMBA==
-X-Received: by 2002:a17:902:db11:b0:163:53b3:493a with SMTP id m17-20020a170902db1100b0016353b3493amr4543543plx.96.1653494006898;
-        Wed, 25 May 2022 08:53:26 -0700 (PDT)
-Received: from [0.0.0.0] ([192.109.233.222])
-        by smtp.gmail.com with ESMTPSA id d6-20020a170903230600b0015f086e4aa5sm9675557plh.291.2022.05.25.08.53.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 May 2022 08:53:26 -0700 (PDT)
-Message-ID: <8baed9ba-bb50-d4cf-c8c0-78d7d36f0cd2@gmail.com>
-Date:   Wed, 25 May 2022 23:53:15 +0800
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2VhfMHntHxmSu4vdA7es7dFU9dUngjl1nXJAN7GN/r8=;
+        b=H1nk9Y3+ZZKH6t5f134beehUjqBp+osJeVK/UrzbYNqRjsdYpbjmBw1OcIUsArjws8
+         WM7eVDXzj0ynVXyX7Ouv6bFqlsVUPUWDIwjg3K4i1Zwac263dnrVD92l6kfedKlzQHR1
+         yXgqVEWMACLsS4d0aMrDHViZSnRh5wJMQtWACX0xp1382faa/AZm+/H2dMaf/Mo7//P9
+         AA/OG2jqJ0Oa53ZLR++0L0MWLYIVaCZ72Msl+xKCysSYSJowaveiovOBaU+BQa9ywrML
+         uhoyk/Q5deDMlyfS3JZkMzysyOgYj0uzAht9qCQHEea07teWsgo1VHntFZO3LmqEFyRz
+         hzwA==
+X-Gm-Message-State: AOAM532ZKFYXZksVPlyswl0UUbsi8s8a2EX+//L/qS3TyeKR656To8Mo
+        4FLd4U/I8kZ7j/MKIcSA/rUT2zxhwMmlxFMn6Xs=
+X-Google-Smtp-Source: ABdhPJwAsAcUOElLy2daHM0hVO0+sJA1juSodv5/fTJ9HEOfvONqpQ34BaWqr5s+o3Iy3vKPxYDSPvPVZQ4TBMA1GVY=
+X-Received: by 2002:a54:4688:0:b0:325:9a36:ecfe with SMTP id
+ k8-20020a544688000000b003259a36ecfemr6136170oic.96.1653498830747; Wed, 25 May
+ 2022 10:13:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [RESEND PATCH v5] PCI: Make sure the bus bridge powered on when
- scanning bus
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Yicong Yang <yangyicong@hisilicon.com>,
+References: <CANCKTBvqp7_MSG3aMpp6pmNoPUnYpH0c+8-r7Pzgebuzb4sZPA@mail.gmail.com>
+ <20220523221036.GA130515@bhelgaas> <CANCKTBsEjkbdWCB4D22iamPr7YP0qUX=M1dZNNgxkfk1EwjjZQ@mail.gmail.com>
+ <20220524235605.rz3cyw7akw3327ip@mraw.org>
+In-Reply-To: <20220524235605.rz3cyw7akw3327ip@mraw.org>
+From:   Jim Quinlan <jim2101024@gmail.com>
+Date:   Wed, 25 May 2022 13:13:38 -0400
+Message-ID: <CANCKTBvieyc-adXFrBrRm5k85Dr700=GmLBvdfLWhbkgN0Pw+Q@mail.gmail.com>
+Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe linkup
+To:     Cyril Brulebois <kibi@debian.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20220525141930.GA290827@bhelgaas>
-From:   Yicong Yang <yangyccccc@gmail.com>
-In-Reply-To: <20220525141930.GA290827@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
-        HK_RANDOM_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        James Dutton <james.dutton@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-在 2022/5/25 22:19, Bjorn Helgaas 写道:
-> On Wed, May 25, 2022 at 01:27:21PM +0200, Rafael J. Wysocki wrote:
->> On Tue, May 24, 2022 at 10:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>> On Tue, May 17, 2022 at 08:43:19PM +0800, Yicong Yang wrote:
->>>> When the bus bridge is runtime suspended, we'll fail to rescan
->>>> the devices through sysfs as we cannot access the configuration
->>>> space correctly when the bridge is in D3hot.
->>> Is the "D3hot" above a typo?  I think devices are supposed to respond
->>> to config accesses when in D3hot.  PCIe r6.0, sec 5.3.1.4.1:
->>>
->>>   Configuration and Message requests are the only TLPs accepted by a
->>>   Function in the D3Hot state. ...
->>>
->>>   Functions that are in D3Hot are permitted to be transitioned by
->>>   software (writing to their PMCSR PowerState field) to the D0active
->>>   state or the D0uninitialized state. Functions that are in D3Hot must
->>>   respond to Configuration Space accesses as long as power and clock
->>>   are supplied so that they can be returned to D0 by software.
->> That applies to the device itself, though, and not to the bus under it.
->>
->> In general, a bridge in D3hot causes the bus segment on the other side
->> of it to be inaccessible even for config space accesses AFAICS.
-> Oh, thank you!  That was the piece I was missing.  I'll tweak the
-> commit log to say something like:
+On Tue, May 24, 2022 at 7:56 PM Cyril Brulebois <kibi@debian.org> wrote:
 >
->   A bridge in a non-D0 power state does not forward config accesses to
->   its secondary side (PCIe r6.0, sec 5.3.1).  Make sure the bridge is
->   in D0 while we enumerate devices below it.
+> Hi Jim,
+>
+> Jim Quinlan <jim2101024@gmail.com> (2022-05-24):
+> > Yes. One repo did not have this node (Cyril/debina?), one did
+> > (https://github.com/raspberrypi/firmware/tree/master/boot).
+> > Of course there is nothing wrong with omitting the node; it should
+> > have pcie linkup regardless.
+>
+> I work/debug stuff on Debian systems, but Debian's just shipping what's
+> in mainline. Raspberry people maintain their own vendor DTBs.
+>
+> > Unless you object, I plan on sending you a v2 of my regression fix
+> > which will correct the commit message, change the "if (busno == 1)"
+> > conditional to only guard the pcie linkup call, and add further
+> > comments.
+> >
+> > I have noted and will also address your other concerns and suggestions
+> > in a future patchset as I think it is best that I get my hands on a
+> > CM4 board before I submit any more changes.
+>
+> For the record, I'm still happy to be cc'ed so that I spend time testing
+> further patches, be it the short-term regression fix (for inclusion in
+> master, but also checking it fixes linux-5.17.y and now linux-5.18.y,
+> if stable maintainers would welcome the extra testing), or the future
+> patchset.
+>
+> I can't guarantee you'll have an answer in a few hours like that
+> happened during the past few days (during which I prioritized testing
+> over anything else so as not to be a blocker in case it could be
+> squeezed into v5.18). But I'm still willing to allocate some time to
+> make sure the CM4 keeps working, even if you don't get your hands on
+> such systems right away.
 
-Thanks for the illustration and tweaking of this. I should have qualified
-the "devices" in the commit with downstream or secondary to make it
-less ambiguous.
+I really appreciate the help, thank you.  We have ordered a CM4 and I
+will be testing on  it prior to sending pullreqs.
 
->>>> It can be reproduced like:
->>>>
->>>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
->>>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
->>>>
->>>> 0000:80:00.0 is a Root Port and it is runtime-suspended, so
->>>> 0000:81:00.1 is unreachable after a rescan.
->>>>
->>>> Power up the bridge when scanning the child bus and allow it to
->>>> suspend again by adding pm_runtime_get_sync()/pm_runtime_put()
->>>> in pci_scan_child_bus_extend().
->>>>
->>>> Cc: Rafael J. Wysocki <rafael@kernel.org>
->>>> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
->>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->>>> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>> ---
->>>>  drivers/pci/probe.c | 12 ++++++++++++
->>>>  1 file changed, 12 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->>>> index 17a969942d37..b108e72b6586 100644
->>>> --- a/drivers/pci/probe.c
->>>> +++ b/drivers/pci/probe.c
->>>> @@ -2859,11 +2859,20 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->>>>       unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
->>>>       unsigned int start = bus->busn_res.start;
->>>>       unsigned int devfn, fn, cmax, max = start;
->>>> +     struct pci_dev *bridge = bus->self;
->>>>       struct pci_dev *dev;
->>>>       int nr_devs;
->>>>
->>>>       dev_dbg(&bus->dev, "scanning bus\n");
->>>>
->>>> +     /*
->>>> +      * Make sure the bus bridge is powered on, otherwise we may not be
->>>> +      * able to scan the devices as we may fail to access the configuration
->>>> +      * space of subordinates.
->>>> +      */
->>>> +     if (bridge)
->>>> +             pm_runtime_get_sync(&bridge->dev);
->>>> +
->>>>       /* Go find them, Rover! */
->>>>       for (devfn = 0; devfn < 256; devfn += 8) {
->>>>               nr_devs = pci_scan_slot(bus, devfn);
->>>> @@ -2976,6 +2985,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->>>>               }
->>>>       }
->>>>
->>>> +     if (bridge)
->>>> +             pm_runtime_put(&bridge->dev);
->>>> +
->>>>       /*
->>>>        * We've scanned the bus and so we know all about what's on
->>>>        * the other side of any bridges that may be on this bus plus
->>>> --
->>>> 2.24.0
->>>>
+Regards,
+Jim Quinlan
+Broadcom ST
+
+
+>
+>
+> Cheers,
+> --
+> Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+> D-I release manager -- Release team member -- Freelance Consultant
