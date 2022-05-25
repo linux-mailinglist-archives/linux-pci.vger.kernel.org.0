@@ -2,161 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD21E533748
-	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 09:22:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38A7E5338E4
+	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 10:56:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238814AbiEYHV6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 May 2022 03:21:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
+        id S231390AbiEYI43 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 May 2022 04:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235495AbiEYHV5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 03:21:57 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314B63B3;
-        Wed, 25 May 2022 00:21:53 -0700 (PDT)
-Received: from [192.168.1.107] ([37.4.249.139]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mf0yy-1nN9XI2M5S-00gYvK; Wed, 25 May 2022 09:21:26 +0200
-Message-ID: <427974aa-2152-8397-65df-6808de3d3b5e@i2se.com>
-Date:   Wed, 25 May 2022 09:21:24 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe
- linkup
-Content-Language: en-US
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        with ESMTP id S229546AbiEYI42 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 04:56:28 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42FE3F67;
+        Wed, 25 May 2022 01:56:27 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id h10so2395811ljb.6;
+        Wed, 25 May 2022 01:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=80aPqe+7Pw6vDZHIq4vmZmpzPyTskcXhhyN+lLUN030=;
+        b=lnCZ97/1gpYTqqBwOO5aCiGlgYpDFzAdVm9dP47LqKGSWmHFYo6f0TOyKFjrjqFG3t
+         VmfUNv5i9FRtx4jcSDF8cUOhNmZ+6evNl6L66zpOFreqtnJVe016NTy0IUDaZJgpZfnv
+         tEDK19nwOkEaMFMF13lgoP0vYtLP9LH+Tz4u+5UERF+fGrUTbDqShxON803ze+X8V+MA
+         k2Tj1Y7lg+bDFA9aKo8KCuI4GhpWvcGuoSOilNXaVS6ICQljhamzLhIQqDLzp1dfbcv/
+         lCQ6gRWjqW1mZf96GC4Icn9J8FqsF77iwKMdWQ7qNPv3CUEXr/qa2ZwqAV57X03PG8+K
+         n4qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=80aPqe+7Pw6vDZHIq4vmZmpzPyTskcXhhyN+lLUN030=;
+        b=uBOnARVIZljwNvV4KHAQqAIS1dEASyWNKUaWh8BPoTbmk8UmcZvAkGmuv0S/Nq0epP
+         qpxu0yukKy32zFJc1WQYgiBomO72I/lNjgY1yOr0HPm8FTu4vPK60U5J2UAt7GywZMdN
+         6kdaQvNySqusfa+2IBujcpoaRaKGk+FhgwC48LSbDRTZ4XeuZN2RNlJmgB2pbzXcj9lX
+         msHuRRixve0D8iqeyH0C9m7+rG08LUqWh/jBaEVI3uJfJhBYTBjuXpxa9O6X3WyzBLoG
+         cSzf2tFq7YqnYhWOzuGuD0Q/Fsow+38JGB+X+gRbJNIUHiH9bijsI5QmBc0vlkLfg3W9
+         AK7g==
+X-Gm-Message-State: AOAM533ElzIoX95qANKoDUvLfFY+LenWPGrehzUhHZ7OEJFLzPFLUVCM
+        GF6H2Cl9gqp4SxV0AWYZFbU=
+X-Google-Smtp-Source: ABdhPJxLVekLSEbQ5D9mfU6jcjvQKQZmERaUxmy/PahOXSMioMIo0S9I4CeYSQs6pkEjLyLBIGpx0g==
+X-Received: by 2002:a05:651c:510:b0:254:11c:8376 with SMTP id o16-20020a05651c051000b00254011c8376mr2997413ljp.45.1653468985455;
+        Wed, 25 May 2022 01:56:25 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id w9-20020a05651c102900b002509783c8f8sm2996277ljm.83.2022.05.25.01.56.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 May 2022 01:56:24 -0700 (PDT)
+Date:   Wed, 25 May 2022 11:56:21 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        James Dutton <james.dutton@gmail.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-References: <CANCKTBvqp7_MSG3aMpp6pmNoPUnYpH0c+8-r7Pzgebuzb4sZPA@mail.gmail.com>
- <20220523221036.GA130515@bhelgaas>
- <CANCKTBsEjkbdWCB4D22iamPr7YP0qUX=M1dZNNgxkfk1EwjjZQ@mail.gmail.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <CANCKTBsEjkbdWCB4D22iamPr7YP0qUX=M1dZNNgxkfk1EwjjZQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:f0Q2OR5Ta0dr7CnmCGZvho+BbpygkgKR6q6eP3GZZYTHeWI4m+u
- DGPZqAbJylyPwROwLzjIIBTy/1dDetp6cSZzyMrm0bHViOolt7njTrUk+lUraDcIU4IsVgo
- RnAuyA/3wlPD033YrJo9AceacxRdMNyWP/gzmolxmIXmPZO2B+icLVeRyKuz7NLL+vhzDF7
- oEDkTlpcT21JtcQdhp9Ww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HV8TcJvspQw=:Nmsn/lw7cZw0UQJnyOq/Nt
- cjlSg881Mur6B4zJiXep1sagc+9KzVv8bk/UUpZ0ZxedOkczgm9Nvc23ZPk9ljvgd0Jhfpm5C
- WA40mI82Xjpl3NbxPe8HaTpAJ1Khkc7kv17ue4bGZyGxGbb7Iq0JDVuyf5h0G6ULOJcO4LtZN
- nATKk6MUJ/GiO0wA0os9RC/8pLd4CMYgadZEmNZEYbZotjibHej+GB5WSBE8kZqnmxv2wrk44
- la7zEGoRH+4FBpvkergkHJAJeeI+p+I7tz4c/ZUWzvagAQ8djNvRZvWVzpu1tiepOYcm9AjBs
- KaBQesekUuBXG2u6o7UPnsQuf9vRSSDpmqztEJNAezNFYKZx0PVEF05i3Nds7ZuK7oNiPQOtJ
- I+3X+Zouj+Hk+0CwRD5VQP3qmA38KTwjknvvY40ccDRL/gH4NlHaNrz5gWPL13rInnmNqUMJ8
- bWB9YB71nB9ZDXYJT3r00cY3V0L1Bhw1zKd1M65R4Ut7SqNuDE1AthU355dmKwFjMoy+o+RlJ
- 4NkhLyGb4gq1EDA/TR/fnTCir5HWiobwnDu22DNG8TjJgiw6+zF4BJY/2Q4mRNOu+uYBOgcuW
- OsnkgE0jYuSE/2+ScNuusymyiIVHXVOOkBPsouy1CGvJSIfHdltlLs5vAhk+e1uS+1xxgvVi+
- GvPO2qvuRVBFU2wXZ4RkKHjS2Y62843lhfXQiuyWQhorq8I2BAI34MhtzWctKES3syfOsbepS
- gfI4Rh1aKTZGG1OLu9yEt0MGHIVHU+392r/qHA5yW2b2l+XuIEMwhn/q6cc=
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 23/26] dmaengine: dw-edma: Bypass dma-ranges mapping
+ for the local setup
+Message-ID: <20220525085621.xvxnbvsddp6uqwpm@mobilestation>
+References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503225104.12108-24-Sergey.Semin@baikalelectronics.ru>
+ <20220524131959.GA5745@thinkpad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220524131959.GA5745@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jim,
+On Tue, May 24, 2022 at 06:49:59PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, May 04, 2022 at 01:51:01AM +0300, Serge Semin wrote:
+> > DW eDMA doesn't perform any translation of the traffic generated on the
+> > CPU/Application side. It just generates read/write AXI-bus requests with
+> > the specified addresses. But in case if the dma-ranges DT-property is
+> > specified for a platform device node, Linux will use it to map the CPU
+> > memory regions into the DMAable bus ranges. This isn't what we want for
+> > the eDMA embedded into the locally accessed DW PCIe Root Port and
+> > End-point. In order to work that around let's set the chan_dma_dev flag
+> > for each DW eDMA channel thus forcing the client drivers to getting a
+> > custom dma-ranges-less parental device for the mappings.
+> > 
+> > Note it will only work for the client drivers using the
+> > dmaengine_get_dma_device() method to get the parental DMA device.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - Fix the comment a bit to being clearer. (@Manivannan)
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-core.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index 6a8282eaebaf..908607785401 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -716,6 +716,21 @@ static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+> >  	if (chan->status != EDMA_ST_IDLE)
+> >  		return -EBUSY;
+> >  
+> > +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
+> > +	 * controlled from the CPU/Application side since in that case
+> > +	 * the local memory address is left untranslated.
+> > +	 */
+> > +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> > +		dchan->dev->chan_dma_dev = true;
+> > +
+> > +		dchan->dev->device.dma_coherent = chan->dw->chip->dev->dma_coherent;
+> 
 
-Am 24.05.22 um 18:54 schrieb Jim Quinlan:
-> On Mon, May 23, 2022 at 6:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->> On Sat, May 21, 2022 at 02:51:42PM -0400, Jim Quinlan wrote:
->>> On Sat, May 21,
->>> 2CONFIG_INITRAMFS_SOURCE="/work3/jq921458/cpio/54-arm64-rootfs.cpio022
->>> at 12:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>> On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
->>>>> commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice
->>>>> voltage regulators")
->>>>>
->>>>> introduced a regression on the PCIe RPi4 Compute Module.  If the
->>>>> PCIe endpoint node described in [2] was missing, no linkup would
->>>>> be attempted, and subsequent accesses would cause a panic
->>>>> because this particular PCIe HW causes a CPU abort on illegal
->>>>> accesses (instead of returning 0xffffffff).
->>>>>
->>>>> We fix this by allowing the DT endpoint subnode to be missing.
->>>>> This is important for platforms like the CM4 which have a
->>>>> standard PCIe socket and the endpoint device is unknown.
->>>> I think the problem here is that on the CM, we try to enumerate
->>>> devices that are not powered up, isn't it?  The commit log should
->>>> say something about that power situation and how the driver learns
->>>> about the power regulators instead of just pointing at an DT
->>>> endpoint node.
->>> This is incorrect.  The regression occurred because the code
->>> mistakenly skips PCIe-linkup if the PCI portdrv DT node does not
->>> exist. With our RC HW, doing a config space access to bus 1 w/o
->>> first linking up results in a CPU abort.  This regression has
->>> nothing to do with EP power at all.
->> OK, I think I'm starting to see, but I'm still missing some things.
->>
->> 67211aadcb4b ("PCI: brcmstb: Add mechanism to turn on subdev
->> regulators") added pci_subdev_regulators_add_bus() as an .add_bus()
->> method.  This is called by pci_alloc_child_bus(), and if the DT
->> describes any regulators for the bridge leading to the new child bus,
->> we turn them on.
->>
->> Then 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage
->> regulators") added brcm_pcie_add_bus() and made *it* the .add_bus()
->> method.  It turns on the regulators and brings the link up, but it
->> skips both if there's no DT node for the bridge to the new bus.
-> Hi Bjorn,
->
-> Yes, I meant it to skip the turning on of the regulators if the DT
-> node was missing
-> but I failed to notice that it would also skip the pcie linkup as well.  As you
-> may have guessed, all of my test systems have the PCIe root port
-> DT node.
->
->> I guess RPi4 CM has no DT node to describe regulators, so we skip both
->> turning them on *and* bringing the link up?
-> Yes. One repo did not have this node (Cyril/debina?), one did
-> (https://github.com/raspberrypi/firmware/tree/master/boot).
-> Of course there is nothing wrong with omitting the node; it should
-> have pcie linkup regardless.
-Please ignore the vendor tree, because you only have to care about 
-mainline kernel and DT here.
->
->> But above you say it's the *endpoint* node that doesn't exist.  The
->> existing code looks like it's checking for the *bridge* node
->> (bus->dev->of_node).  We haven't even enumerated the devices on the
->> child bus, so we don't know about them at this point.
-> You are absolutely correct and I must change the commit message
-> to say the "root port DT node".   I'm sorry; this mistake likely did not
-> help you understand the fix. :-(
->
->> What happens if there is a DT node for the bridge, but it doesn't
->> describe any regulators?  I assume regulator_bulk_get() will fail, and
->> it looks like that might still keep us from bringing the link up?
-> The regulator_bulk_get()  func does not fail if the regulators are not
-> present.  Instead it "gets"
-> a dummy device and issues a warning per missing regulator.
-> A version of my pullreq submitted code to prescan the DT node and call
-> regulator_bulk_get() with
-> only the names of the regulators present, but IIRC this was NAKd.
-> Hopefully I will not be swamped with RPi developers'  emails when they
-> think these warnings are an issue.
+> I happen to test this series on Qcom ARM32 machine and it errors out during the
+> compilation due to "dma_coherent" not available on !SWIOTLB ARM32 configs.
 
-This won't be the first driver complaining about missing regulators and 
-won't be the last one. So don't expect an email from me ;-)
+Nice catch! Thanks. I'll fix it in the next patchset version.
 
-Best regards
+-Sergey
 
+> 
+> Thanks,
+> Mani
+> 
+> > +		dma_coerce_mask_and_coherent(&dchan->dev->device,
+> > +					     dma_get_mask(chan->dw->chip->dev));
+> > +		dchan->dev->device.dma_parms = chan->dw->chip->dev->dma_parms;
+> > +	} else {
+> > +		dchan->dev->chan_dma_dev = false;
+> > +	}
+> > +
+> >  	pm_runtime_get(chan->dw->chip->dev);
+> >  
+> >  	return 0;
+> > -- 
+> > 2.35.1
+> > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
