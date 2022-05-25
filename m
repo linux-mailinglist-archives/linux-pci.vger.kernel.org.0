@@ -2,64 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85B7F534621
-	for <lists+linux-pci@lfdr.de>; Wed, 25 May 2022 23:57:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 615C1534634
+	for <lists+linux-pci@lfdr.de>; Thu, 26 May 2022 00:07:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232363AbiEYV5o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 May 2022 17:57:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
+        id S1344578AbiEYWHo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 May 2022 18:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbiEYV5n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 17:57:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93CD4B8BFA;
-        Wed, 25 May 2022 14:57:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 16C4C61AC2;
-        Wed, 25 May 2022 21:57:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 299DAC385B8;
-        Wed, 25 May 2022 21:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653515861;
-        bh=LX20+QZZxM2G5xQ2EcmXl+cIxppSf56YnZwziPZLmts=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dBv2TKRnilrhMIZdMoLxLfq2KT55fIqOzS1KPIrHU31yeDkVvV4XvNoQf8/tLAPgs
-         GiKBZf/iVZIw0rF/4kBQc7Pw0UnvBbKXwjGyDv2+ChG9kbZ8k/IiSEydRKC5QZ3QK0
-         1fNBy8mD8G01y1dnkpWDgczJMIzrGsRXgUxtCekQR6fwimyEIOxmn4ssaWa1hD+ebW
-         toestfEK530B5GYBXnHZTKBPXjVyh2nvSdAhX7XQs43811cJbxdg4hAHSWI/KuLe5D
-         FwhLZJFTvsgsahpdRb/+u8OU/Z4YWk6mJUG7jAazzIILfdT7gIx0Rk3XI5SHSBSwYv
-         jFlx9gD9eE70g==
-Date:   Wed, 25 May 2022 16:57:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        James Dutton <james.dutton@gmail.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe
- linkup
-Message-ID: <20220525215739.GA275957@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANCKTBsEjkbdWCB4D22iamPr7YP0qUX=M1dZNNgxkfk1EwjjZQ@mail.gmail.com>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        with ESMTP id S234479AbiEYWHm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 May 2022 18:07:42 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2507911176
+        for <linux-pci@vger.kernel.org>; Wed, 25 May 2022 15:07:38 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id m32-20020a05600c3b2000b0039756bb41f2so71238wms.3
+        for <linux-pci@vger.kernel.org>; Wed, 25 May 2022 15:07:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jrtc27.com; s=gmail.jrtc27.user;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Q7sKJrWCeWlhDVlmgSMW2NcMhM9lTStJjQlrUPtXIXA=;
+        b=eopDrfIHJM8IF7mRG8hA1fo2Z2Wv/QglL0DtGpj2qBJXnvOnh1uFoTbEHVqbkZr0hi
+         1O2KEk/Z9GSg59UhdSmK3b5z3iVSpalv+n1BwIci6d50WLLJInpEBSGAw4ky71skcvD3
+         /b3NE+1mQei8LSfhnv+8SaHZvIbv7uB50EyBNoO8jdsEisPSiaNB0on7Qtwfa6I2YuiZ
+         GCbv4e0aOQZctw6zlpkceuWHL3kV8Yso/gqdhaZRhoFUH8r3QRigsVls1uRN5+AABNuZ
+         wnVVqB0tjHY354zrffCBXnjwbQ3PE3ULsXel0OiEr4U8q824qwvFh3Ssnth61pUZV7CM
+         z9Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Q7sKJrWCeWlhDVlmgSMW2NcMhM9lTStJjQlrUPtXIXA=;
+        b=fapBuiqFJWyXi4I52+BWykkuDH6nEiWL31r2wHywboDgrtatTW+IWdfKoOhOe8iKHa
+         udIH+4yZazgMva59i+f/yt1j2wCxEFIZGSP49H5z+JOkGQlWsBzHtE4mvoZITO7gy4Uv
+         b65v2dtfrB1dXk7NOkxgmC6HBxcRqGCY9J1u8kZMCmuh7HB7q1YoSrNi3czQTa30/QNC
+         1lknTwveaXa6BQmktJpha6haG1SFW0IHgrq0KWxA2Q6X8B//8apGl4bxXtbHBoGCJIKe
+         nuWowXoAEqQuXVeaWMnx8SHIqTbjTsjrSQXkDs3OgJ38gwygee53w33UnACp28j26MYl
+         4sRg==
+X-Gm-Message-State: AOAM532OEuQAqG+YBaGEPdGy/SB+86rPSUHkBbVCrpYj9qsR3MTmg3W5
+        Zvggxm4OrFiGzTlAtVV2k/mU+2rdByNMAA==
+X-Google-Smtp-Source: ABdhPJxRatrP6XqsNDLEYgx/Gmo8kTof4rjho1S2HneKMFITFunNGJP1JxO1h65VIohlIXxM0NUT5A==
+X-Received: by 2002:a7b:cb4b:0:b0:397:3dd8:917a with SMTP id v11-20020a7bcb4b000000b003973dd8917amr10399106wmj.20.1653516456713;
+        Wed, 25 May 2022 15:07:36 -0700 (PDT)
+Received: from smtpclient.apple (global-5-141.nat-2.net.cam.ac.uk. [131.111.5.141])
+        by smtp.gmail.com with ESMTPSA id c15-20020a056000184f00b0020feb9c44c2sm95151wri.20.2022.05.25.15.07.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 May 2022 15:07:36 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.80.82.1.1\))
+Subject: Re: [linux-next:master] BUILD REGRESSION
+ 8cb8311e95e3bb58bd84d6350365f14a718faa6d
+From:   Jessica Clarke <jrtc27@jrtc27.com>
+In-Reply-To: <20220525145056.953631743a4c494aabf000dc@linux-foundation.org>
+Date:   Wed, 25 May 2022 23:07:35 +0100
+Cc:     kernel test robot <lkp@intel.com>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-riscv@lists.infradead.org,
+        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-parport@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-mm@kvack.org, linux-fbdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, bpf@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, alsa-devel@alsa-project.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F0E25DFF-8256-48FF-8B88-C0E3730A3E5E@jrtc27.com>
+References: <628ea118.wJYf60YnZco0hs9o%lkp@intel.com>
+ <20220525145056.953631743a4c494aabf000dc@linux-foundation.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+X-Mailer: Apple Mail (2.3696.80.82.1.1)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -68,99 +80,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 24, 2022 at 12:54:48PM -0400, Jim Quinlan wrote:
-> On Mon, May 23, 2022 at 6:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Sat, May 21, 2022 at 02:51:42PM -0400, Jim Quinlan wrote:
-> > > On Sat, May 21,
-> > > 2CONFIG_INITRAMFS_SOURCE="/work3/jq921458/cpio/54-arm64-rootfs.cpio022
-> > > at 12:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
-> > > > > commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice
-> > > > > voltage regulators")
-> > > > >
-> > > > > introduced a regression on the PCIe RPi4 Compute Module.  If the
-> > > > > PCIe endpoint node described in [2] was missing, no linkup would
-> > > > > be attempted, and subsequent accesses would cause a panic
-> > > > > because this particular PCIe HW causes a CPU abort on illegal
-> > > > > accesses (instead of returning 0xffffffff).
-> > > > >
-> > > > > We fix this by allowing the DT endpoint subnode to be missing.
-> > > > > This is important for platforms like the CM4 which have a
-> > > > > standard PCIe socket and the endpoint device is unknown.
+On 25 May 2022, at 22:50, Andrew Morton <akpm@linux-foundation.org> =
+wrote:
+>=20
+> On Thu, 26 May 2022 05:35:20 +0800 kernel test robot <lkp@intel.com> =
+wrote:
+>=20
+>> tree/branch: =
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git =
+master
+>> branch HEAD: 8cb8311e95e3bb58bd84d6350365f14a718faa6d  Add linux-next =
+specific files for 20220525
+>>=20
+>> Error/Warning reports:
+>>=20
+>> ...
+>>=20
+>> Unverified Error/Warning (likely false positive, please contact us if =
+interested):
+>=20
+> Could be so.
+>=20
+>> mm/shmem.c:1948 shmem_getpage_gfp() warn: should '(((1) << 12) / 512) =
+<< folio_order(folio)' be a 64 bit type?
+>=20
+> I've been seeing this one for a while.  And from this report I can't
+> figure out what tool emitted it.  Clang?
+>=20
+>>=20
+>> ...
+>>=20
+>> |-- i386-randconfig-m021
+>> |   `-- =
+mm-shmem.c-shmem_getpage_gfp()-warn:should-((()-)-)-folio_order(folio)-be-=
+a-bit-type
+>=20
+> If you're going to use randconfig then shouldn't you make the config
+> available?  Or maybe quote the KCONFIG_SEED - presumably there's a way
+> for others to regenerate.
+>=20
+> Anyway, the warning seems wrong to me.
+>=20
+>=20
+> #define PAGE_SIZE               (_AC(1,UL) << PAGE_SHIFT)
+>=20
+> #define BLOCKS_PER_PAGE  (PAGE_SIZE/512)
+>=20
+> 	inode->i_blocks +=3D BLOCKS_PER_PAGE << folio_order(folio);
+>=20
+> so the RHS here should have unsigned long type.  Being able to =
+generate
+> the cpp output would be helpful.  That requires the .config.
 
-> > But above you say it's the *endpoint* node that doesn't exist.  The
-> > existing code looks like it's checking for the *bridge* node
-> > (bus->dev->of_node).  We haven't even enumerated the devices on the
-> > child bus, so we don't know about them at this point.
->
-> You are absolutely correct and I must change the commit message
-> to say the "root port DT node".   I'm sorry; this mistake likely did not
-> help you understand the fix. :-(
+This is i386, so an unsigned long is 32-bit, but i_blocks is a blkcnt_t
+i.e. a u64, which makes the shift without a cast of the LHS fishy.
 
-Great, that will help me out!  I think including the relevant DT
-snippet would also make it more concrete and might conceivably be
-helpful to somebody working around it on a kernel without the fix.
+Jess
 
-> > What happens if there is a DT node for the bridge, but it doesn't
-> > describe any regulators?  I assume regulator_bulk_get() will fail, and
-> > it looks like that might still keep us from bringing the link up?
->
-> The regulator_bulk_get() func does not fail if the regulators are
-> not present.  Instead it "gets" a dummy device and issues a warning
-> per missing regulator.  A version of my pullreq submitted code to
-> prescan the DT node and call regulator_bulk_get() with only the
-> names of the regulators present, but IIRC this was NAKd.  Hopefully
-> I will not be swamped with RPi developers' emails when they think
-> these warnings are an issue.
-
-Ah, I see, this is the IS_ERR (but not -ENODEV) NORMAL_GET case in
-_regulator_get().  You might get some emails, but I guess it must be a
-fairly common situation :)
-
-> > > >  What happens if we turn on the power but don't find any
-> > > >  downstream devices?
-> > >
-> > > They are turned off to conserve power.
-> ...
-
-> When brcm_pcie_add_bus() is invoked, we will "get" and enable any
-> regulators that are present in the DT node.  If the busno==1, we will
-> will also attempt pcie-linkup.  If PCIe linkup fails, which can happen for
-> multiple reasons but most due to a  missing device, we turn
-> on "refusal" mode to prevent our unforgiving PCIe HW from causing an
-> abort on any subsequent PCIe config-space accesses.
-
-> Further, a failed linkup will have brcm_pcie_probe() stopping and
-> removing the root bus, which in turn invokes  brcm_pcie_remove_bus()
-> (actually named pci_subdev_regulators_remove_bus() as it may someday
-> find its way into bus.c), which invokes regulator_bulk_disable() on
-> any regulators that were enabled by the probe.
-
-Ah, thanks!  This is the detail I missed.  If pci_host_probe()
-succeeds and the link is down, we call brcm_pcie_remove() (the
-driver's .remove() method).  That's unusual and possibly unique among
-native host bridge drivers.  I'm not sure that's the best pattern
-here.  Most drivers can't do that because they expect multiple devices
-on the root bus.  And the Root Port is still a functional device on
-its own, even if its link is down.  Users likely expect to see it in
-lspci and manipulate it via setpci.  It may have AER logs with clues
-about why the link didn't come up.
-
-Again something for future discussion, not for this regression.
-
-> Unless you object, I plan on sending you a v2 of my regression fix
-> which will correct the commit message, change the "if (busno == 1)"
-> conditional to only guard the pcie linkup call, and add further
-> comments.
-
-I don't really *like* comparing "busno == 1" because the root bus
-number is programmable on most devices.  It would be more obvious if
-we could test for a Root Port directly.  But maybe it's the best we
-can do for now.
-
-Someday it seems like we should figure out how to make the PCI core
-smart enough to turn on any regulators for devices below the Root Port
-when we put the Root Port in D0.  But I don't know how to do that or
-even whether it's feasible.
-
-Bjorn
