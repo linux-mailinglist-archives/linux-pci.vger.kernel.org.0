@@ -2,95 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F5FC534F97
-	for <lists+linux-pci@lfdr.de>; Thu, 26 May 2022 14:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1DB953502C
+	for <lists+linux-pci@lfdr.de>; Thu, 26 May 2022 15:48:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239811AbiEZMqc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 May 2022 08:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45634 "EHLO
+        id S231330AbiEZNsm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 May 2022 09:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239939AbiEZMqa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 May 2022 08:46:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E481C136;
-        Thu, 26 May 2022 05:46:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 52F7761A7C;
-        Thu, 26 May 2022 12:46:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B123BC34116;
-        Thu, 26 May 2022 12:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653569187;
-        bh=aX3XkTNFlbddfM2Uz7FkBiXfKfSrDGVietK6gQgDZCM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=B0ofxPknLB25PRikCSM7JL2+HYZFxCccCBk/ytV+jnoPy8FCWWj45nqSnDmL/CXlf
-         WnE797DjnXyaKAVoGBV7QnDpKkvdOjhqn19BVljcYXPfmPhcn1RXT39rcf29R7coEC
-         06pdXoQkd+SjQuhBGgade787urI7WT7wy2x2mjhothB8J3FYKC0n5WYc7nLzu7FiTN
-         ZMhuHwhTKW6uuMDh71F/tCGSCm7sTbkg3mCi6GHHsApuCI3tV80A3ng/zEU3i/1MAp
-         sTCOqyK/HkaodGygf0qC1580ELm5uQ6k5YgMjuhJD4uXs0wccTn3VZ5UNLZA71qwQ1
-         J4DHqAxtFfEWw==
-Received: by mail-ej1-f50.google.com with SMTP id y13so2845532eje.2;
-        Thu, 26 May 2022 05:46:27 -0700 (PDT)
-X-Gm-Message-State: AOAM5330szRZVbqr7qg5kksG2thX9MP6a/s1Oq/g9gBpKQOUss0GBXfk
-        4/Wax34Snq4venM6+dBl7m4d2MRXUs9NigyzGg==
-X-Google-Smtp-Source: ABdhPJxdAvZ5Z3oR1GucLvBj6d6cfGXYzMzHQadqJjpxVYxGkdqtexgfAKaP9HSSbaBey8Xgwc/lhfdaEAWDD/9EmGI=
-X-Received: by 2002:a17:906:ae43:b0:6fe:a207:5cc3 with SMTP id
- lf3-20020a170906ae4300b006fea2075cc3mr29379554ejb.19.1653569185897; Thu, 26
- May 2022 05:46:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220525210117.2489333-1-robh@kernel.org> <35c700f6-ce67-89d5-0f29-426acd33efa9@socionext.com>
-In-Reply-To: <35c700f6-ce67-89d5-0f29-426acd33efa9@socionext.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 26 May 2022 07:46:12 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJqdLrhjCiQ3a1PZvfnW715HhXNMQZea2H78T4U2BqDzA@mail.gmail.com>
-Message-ID: <CAL_JsqJqdLrhjCiQ3a1PZvfnW715HhXNMQZea2H78T4U2BqDzA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: PCI: socionext,uniphier-pcie: Add missing
- child interrupt controller
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231132AbiEZNsl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 May 2022 09:48:41 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AA627B1A;
+        Thu, 26 May 2022 06:48:40 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id D9671320095C;
+        Thu, 26 May 2022 09:48:36 -0400 (EDT)
+Received: from imap47 ([10.202.2.97])
+  by compute2.internal (MEProxy); Thu, 26 May 2022 09:48:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=cc:cc:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1653572916; x=1653659316; bh=NY
+        IVhGFaH21Cr/Vp3OtFhX0ZaD6txFbd1zpyaA0rArY=; b=iQdmEFfx2FdO1MLAeW
+        jQobK/4JiiJAst/v6oT8eeU6NcPfbhmh+D/kJBp+dwiREv/XbQij6Kc6mgaXJVKz
+        cO8eIKfZu7uTz5ZLXjTqS/HH+0YF7siLGGKRwk4kJZhz0SZk4hYCdMIjyq3bEk8Q
+        DLSfoQUHDNOnSDGX48GBPLrC3jR6Umi44txeZdOQOHLGpc/1T6Zny0fB/PJmrsHx
+        0S7nGbfsZ72f8iNdocA2uuW9t/tKdLZEOOmPsfyEVlZUXo8KgG1xnkefsc/9jg05
+        QEzWT85rDt2Td2nP0Xje3da6UffTGTtHqm6jj7xHE6Z6YdQa4XQ0dj80yFurkuti
+        W5lg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1653572916; x=1653659316; bh=NYIVhGFaH21Cr/Vp3OtFhX0ZaD6t
+        xFbd1zpyaA0rArY=; b=iYhQMtBJ0eLzsXh2lRIhOI/Izn/pVF68W14ULfHSKMt5
+        4A9pHrqMYyc/TSm98fg+roHJbCKbMacZGPAhocAiMNT9tlOqORP3xY0hu9L6F609
+        Hwp3xeZ0QavigR14J/fPR1hKXM6Jve1M5AgPiNMkCk2wBAJEYG8y0yTqSe0gXL+/
+        bEBw/ZuSe+wlMbfYDWtQKPzLcAO02TD9K+ezWJZ6GIkoevE0qp/oq0imeX6fdY6S
+        QfyLpLzy/IbV+ku+pD5WYM+dCLP9VUM1RZCk13zaVRQ3KRAGUPLyEbI04cMo3lx+
+        NzAC8SEqCRobEzGs6c+BP0pwTMIXG0wq3CV1wAVtXA==
+X-ME-Sender: <xms:M4WPYuFM_XOwYaqUYGd3CCgCesTRFYA5fjDBTq3sXTyukzamRBF2uQ>
+    <xme:M4WPYvX9TTsnOswMWkxmbT63bfZ3g8zg1xWVL3AYey6NYi8ZyAo2ToS6p4jXM6IZa
+    F6NV1P0ym1ob-0Vlqs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrjeejgdeikecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfuvhgv
+    nhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtffrrg
+    htthgvrhhnpeelvefggeffheevtdeivefhkeehfeettdejteduveeiheevveeilefghfei
+    veeiueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hsvhgvnhesshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:M4WPYoKXm912CSVbpJOFGCJQ_VfeNpOPYmIV5o-bJez0vuhlP5tUxw>
+    <xmx:M4WPYoG6GdLV5SUIcWuh27Taj9T3t14prX0zzZMkPeHD_pCHomDRSA>
+    <xmx:M4WPYkUTtJthoRWnkXK4rjlkzi-thUrPTOTXMOirzLe9XNCAxRtXSA>
+    <xmx:NIWPYnHvNpCzbk2jJ-eJvV1PpdJUY5ppGD5H94_9u3jJQ3M5I5QlWA>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id A2726A60072; Thu, 26 May 2022 09:48:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-591-gfe6c3a2700-fm-20220427.001-gfe6c3a27
+Mime-Version: 1.0
+Message-Id: <a3636e0e-a804-4701-9240-225a3131b16a@www.fastmail.com>
+In-Reply-To: <20220526014107.2871787-1-robh@kernel.org>
+References: <20220526014107.2871787-1-robh@kernel.org>
+Date:   Thu, 26 May 2022 15:48:15 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Rob Herring" <robh@kernel.org>,
+        "Hector Martin" <marcan@marcan.st>,
+        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        "Mark Kettenis" <kettenis@openbsd.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: apple: Add missing 'power-domains' property
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 26, 2022 at 4:02 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> Hi Rob,
->
-> On 2022/05/26 6:01, Rob Herring wrote:
-> > The Socionext interrupt controller internal to the the PCI block isn't
-> > documented which causes warnings when unevaluatedProperties check is
-> > also fixed. Add the 'interrupt-controller' child node and properties and
-> > fixup the example so that interrupt properties can be parsed.
->
-> Surely internal interrupt controller isn't described, and should be documented.
-> And the child node name "legacy-interrupt-controller" also should be fixed.
->
-> Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Hi,
 
-Thanks.
 
+On Thu, May 26, 2022, at 03:41, Rob Herring wrote:
+> The 'unevaluatedProperties' schema checks is not fully working and doesn't
+> catch some cases where there's a $ref to another schema. A fix is pending,
+> but results in new warnings in examples.
 >
-> BTW I can't reproduce such warnings with my environment.
-> Can you show the command line to reproduce the warnings?
+> The Apple PCIe host has 3 power domains at least according to the example.
+> Add the 'power-domains' property to the schema.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Ideally, we'd define what each power domain is, but I don't know what
+> they are.
+> ---
 
-"causes warnings when unevaluatedProperties check is also fixed"
+I think the example is just wrong (or outdated) and we only need a single
+power-domain for pcie.
 
-You won't. I have a fix in dtschema pending, but first all the
-warnings that appear need to be fixed.
+The hierarchy is ps_pcie_ref -> ps_apcie -> ps_apcie_gp and the pcie
+node then only depends on ps_apcie_gp.
 
-Rob
+
+
+
+Sven
