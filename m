@@ -2,85 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1DB953502C
-	for <lists+linux-pci@lfdr.de>; Thu, 26 May 2022 15:48:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 884F353509F
+	for <lists+linux-pci@lfdr.de>; Thu, 26 May 2022 16:28:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231330AbiEZNsm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 May 2022 09:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
+        id S1347632AbiEZO2y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 May 2022 10:28:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbiEZNsl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 May 2022 09:48:41 -0400
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AA627B1A;
-        Thu, 26 May 2022 06:48:40 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id D9671320095C;
-        Thu, 26 May 2022 09:48:36 -0400 (EDT)
-Received: from imap47 ([10.202.2.97])
-  by compute2.internal (MEProxy); Thu, 26 May 2022 09:48:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-         h=cc:cc:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1653572916; x=1653659316; bh=NY
-        IVhGFaH21Cr/Vp3OtFhX0ZaD6txFbd1zpyaA0rArY=; b=iQdmEFfx2FdO1MLAeW
-        jQobK/4JiiJAst/v6oT8eeU6NcPfbhmh+D/kJBp+dwiREv/XbQij6Kc6mgaXJVKz
-        cO8eIKfZu7uTz5ZLXjTqS/HH+0YF7siLGGKRwk4kJZhz0SZk4hYCdMIjyq3bEk8Q
-        DLSfoQUHDNOnSDGX48GBPLrC3jR6Umi44txeZdOQOHLGpc/1T6Zny0fB/PJmrsHx
-        0S7nGbfsZ72f8iNdocA2uuW9t/tKdLZEOOmPsfyEVlZUXo8KgG1xnkefsc/9jg05
-        QEzWT85rDt2Td2nP0Xje3da6UffTGTtHqm6jj7xHE6Z6YdQa4XQ0dj80yFurkuti
-        W5lg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1653572916; x=1653659316; bh=NYIVhGFaH21Cr/Vp3OtFhX0ZaD6t
-        xFbd1zpyaA0rArY=; b=iYhQMtBJ0eLzsXh2lRIhOI/Izn/pVF68W14ULfHSKMt5
-        4A9pHrqMYyc/TSm98fg+roHJbCKbMacZGPAhocAiMNT9tlOqORP3xY0hu9L6F609
-        Hwp3xeZ0QavigR14J/fPR1hKXM6Jve1M5AgPiNMkCk2wBAJEYG8y0yTqSe0gXL+/
-        bEBw/ZuSe+wlMbfYDWtQKPzLcAO02TD9K+ezWJZ6GIkoevE0qp/oq0imeX6fdY6S
-        QfyLpLzy/IbV+ku+pD5WYM+dCLP9VUM1RZCk13zaVRQ3KRAGUPLyEbI04cMo3lx+
-        NzAC8SEqCRobEzGs6c+BP0pwTMIXG0wq3CV1wAVtXA==
-X-ME-Sender: <xms:M4WPYuFM_XOwYaqUYGd3CCgCesTRFYA5fjDBTq3sXTyukzamRBF2uQ>
-    <xme:M4WPYvX9TTsnOswMWkxmbT63bfZ3g8zg1xWVL3AYey6NYi8ZyAo2ToS6p4jXM6IZa
-    F6NV1P0ym1ob-0Vlqs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrjeejgdeikecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfuvhgv
-    nhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtffrrg
-    htthgvrhhnpeelvefggeffheevtdeivefhkeehfeettdejteduveeiheevveeilefghfei
-    veeiueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hsvhgvnhesshhvvghnphgvthgvrhdruggvvh
-X-ME-Proxy: <xmx:M4WPYoKXm912CSVbpJOFGCJQ_VfeNpOPYmIV5o-bJez0vuhlP5tUxw>
-    <xmx:M4WPYoG6GdLV5SUIcWuh27Taj9T3t14prX0zzZMkPeHD_pCHomDRSA>
-    <xmx:M4WPYkUTtJthoRWnkXK4rjlkzi-thUrPTOTXMOirzLe9XNCAxRtXSA>
-    <xmx:NIWPYnHvNpCzbk2jJ-eJvV1PpdJUY5ppGD5H94_9u3jJQ3M5I5QlWA>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id A2726A60072; Thu, 26 May 2022 09:48:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-591-gfe6c3a2700-fm-20220427.001-gfe6c3a27
-Mime-Version: 1.0
-Message-Id: <a3636e0e-a804-4701-9240-225a3131b16a@www.fastmail.com>
-In-Reply-To: <20220526014107.2871787-1-robh@kernel.org>
-References: <20220526014107.2871787-1-robh@kernel.org>
-Date:   Thu, 26 May 2022 15:48:15 +0200
-From:   "Sven Peter" <sven@svenpeter.dev>
-To:     "Rob Herring" <robh@kernel.org>,
-        "Hector Martin" <marcan@marcan.st>,
-        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        "Mark Kettenis" <kettenis@openbsd.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: apple: Add missing 'power-domains' property
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        with ESMTP id S1347639AbiEZO2t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 May 2022 10:28:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A2B2C6E6D;
+        Thu, 26 May 2022 07:28:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=k7apNoi1g1YhGHKMlKvo5ejDwWGQrfqPL3Ty5xTWm5Q=; b=jt2D3c7xgVZUKhGsBafhmm2sFE
+        7iHXpIRdAmkRqKCTrByt8vvIu4Y3EGktUCpnmPTFxq5LEtvIgLU7neTQ7C/IsI99LeEY7HaXKuYy7
+        5ZrEicxpMCl0i/enkPZwHxhNQ3wSCLz0PWMpopuxkJst9ua3Mey2ATEpeisJ/smtNzknhVcxsQdkT
+        dSKtJhfNJpH19fcWEk13NeBfTP6RD6LPE68nShdvuaPUklK12w19DAh/i1OVAzpUZ0A5rCLZKasUp
+        WeWqziAdu0JgzoPn8WlmbMtIWF1JBvKksSw7KZdNfdrklRu0O6zxydJrgJF+gvKG7sfmTWPCyIS6G
+        yc+jDrmg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nuETR-001JAt-Fo; Thu, 26 May 2022 14:28:25 +0000
+Date:   Thu, 26 May 2022 15:28:25 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jessica Clarke <jrtc27@jrtc27.com>,
+        kernel test robot <lkp@intel.com>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-riscv@lists.infradead.org,
+        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-parport@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-mm@kvack.org, linux-fbdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, bpf@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, alsa-devel@alsa-project.org
+Subject: Re: [linux-next:master] BUILD REGRESSION
+ 8cb8311e95e3bb58bd84d6350365f14a718faa6d
+Message-ID: <Yo+OiR6abzVksVTM@casper.infradead.org>
+References: <628ea118.wJYf60YnZco0hs9o%lkp@intel.com>
+ <20220525145056.953631743a4c494aabf000dc@linux-foundation.org>
+ <F0E25DFF-8256-48FF-8B88-C0E3730A3E5E@jrtc27.com>
+ <20220525152006.e87d3fa50aca58fdc1b43b6a@linux-foundation.org>
+ <Yo7U8kglHlcvQ0Ri@casper.infradead.org>
+ <20220526084832.GC2146@kadam>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220526084832.GC2146@kadam>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,30 +63,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Thu, May 26, 2022 at 11:48:32AM +0300, Dan Carpenter wrote:
+> On Thu, May 26, 2022 at 02:16:34AM +0100, Matthew Wilcox wrote:
+> > Bizarre this started showing up now.  The recent patch was:
+> > 
+> > -       info->alloced += compound_nr(page);
+> > -       inode->i_blocks += BLOCKS_PER_PAGE << compound_order(page);
+> > +       info->alloced += folio_nr_pages(folio);
+> > +       inode->i_blocks += BLOCKS_PER_PAGE << folio_order(folio);
+> > 
+> > so it could tell that compound_order() was small, but folio_order()
+> > might be large?
+> 
+> The old code also generates a warning on my test system.  Smatch thinks
+> both compound_order() and folio_order() are 0-255.  I guess because of
+> the "unsigned char compound_order;" in the struct page.
 
-
-On Thu, May 26, 2022, at 03:41, Rob Herring wrote:
-> The 'unevaluatedProperties' schema checks is not fully working and doesn't
-> catch some cases where there's a $ref to another schema. A fix is pending,
-> but results in new warnings in examples.
->
-> The Apple PCIe host has 3 power domains at least according to the example.
-> Add the 'power-domains' property to the schema.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Ideally, we'd define what each power domain is, but I don't know what
-> they are.
-> ---
-
-I think the example is just wrong (or outdated) and we only need a single
-power-domain for pcie.
-
-The hierarchy is ps_pcie_ref -> ps_apcie -> ps_apcie_gp and the pcie
-node then only depends on ps_apcie_gp.
-
-
-
-
-Sven
+It'd be nice if we could annotate that as "contains a value between
+1 and BITS_PER_LONG - PAGE_SHIFT".  Then be able to optionally enable
+a checker that ensures that's true on loads/stores.  Maybe we need a
+language that isn't C :-P  Ada can do this ... I don't think Rust can.
