@@ -2,144 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCC45536736
-	for <lists+linux-pci@lfdr.de>; Fri, 27 May 2022 20:56:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BE5C53674C
+	for <lists+linux-pci@lfdr.de>; Fri, 27 May 2022 21:03:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243537AbiE0Szu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 May 2022 14:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48056 "EHLO
+        id S1354292AbiE0TDP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 May 2022 15:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351455AbiE0Szk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 May 2022 14:55:40 -0400
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACE64D251;
-        Fri, 27 May 2022 11:55:39 -0700 (PDT)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-2ff7b90e635so56537067b3.5;
-        Fri, 27 May 2022 11:55:39 -0700 (PDT)
+        with ESMTP id S1344647AbiE0TDP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 May 2022 15:03:15 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0CB5C76E
+        for <linux-pci@vger.kernel.org>; Fri, 27 May 2022 12:03:13 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id j6so5524347qkp.9
+        for <linux-pci@vger.kernel.org>; Fri, 27 May 2022 12:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UcvAlwIFPvCWC2QoKEFkU5cKb9BXBnxHAgM+z3+VvoE=;
+        b=pCvvJmfpoo0WDFfVQYDyZGy4qzndOFVtgtSqVXTrWRGEyBqzBA7UAXhKvpkD0Q9/6I
+         MSCpLxGE9cFQ1cGdQAtYz+UeGuecy1S3YR7ZbQ9wbQYDjQVRsaTuBol2dHTD44aSUBRR
+         IycaJl0ihzjjIE0NocdjmVE2xhgAzy3ISwyDQK8gAI5+MC0ECVrWBJsD5Ckxr01Dq6tm
+         NfD6L2oXhGqyHayMYe3j/EFrEVhX3h/t4cx5QraZ38JTD9HD3wAryzP4gzJYXUsnDZYo
+         kHgGnIpoEzZEBX8KlbDHtvDbydY35MkFThf2P8sBKcZrGoTNzHOqvBFv/Fi48v3KK05/
+         5Huw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AiXxBvT5jxe4DGf49rxfmcwLST9ROwPRMdTz8X7oj7c=;
-        b=jtGiyF1yLiWYPFajExqePQ0LWM1I2ZnKhOJoXUyjkVDih1q3aaxLViB3rnhbvoBK3w
-         Pu32Zq46APQO/5bU32Buz7C7YojuwPAzjT65jvIXbBy04ySrVRVaglA2Kzhz+No2NvcL
-         3DwZuWM2pfC1m9uUIdj+hSm7lZyo0//aLCmUdAQM/ojvb9S0eKVOXuIGmq0HFrKD4Kug
-         1Dw2s2YNCGzcrvlYsYZjYYNDpSfQq5AXN0fiEHVa9GLMacaOglH5XAcvEzOzFxSAnAqj
-         EdoCO8cM8a5wgl1yD7ob/HwyTWZn6LdZVwQBgPOc8Ksb64bHoLZae/KWFaAswqV7ek+b
-         k2eQ==
-X-Gm-Message-State: AOAM530K/WFbUh5ZJKX/VA0rlBJmuj9IuNihleDj6/6D1xXA8zRi58ad
-        rY7r7JUB6oXUsvcLYddusW4cwd/wFWlgYzKpjUw=
-X-Google-Smtp-Source: ABdhPJyzekDhy/kwQrCFpa2Go5HoqkV1wJDHQV2O8qnmcW16Da65NIQ459mws4JqQV+oLgovjeqwVECMRQv9j5VeeNQ=
-X-Received: by 2002:a81:4ed6:0:b0:307:224f:eed3 with SMTP id
- c205-20020a814ed6000000b00307224feed3mr3825315ywb.301.1653677739110; Fri, 27
- May 2022 11:55:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UcvAlwIFPvCWC2QoKEFkU5cKb9BXBnxHAgM+z3+VvoE=;
+        b=5PByM+uC6d1MlyxMwQWuWWAtIlbbFt9I4Qu3m+PhYzi6JqcHSBZD+TcKsi+aKe2HOk
+         7bE9pLgMouOWVffVj930oCjxdb+2ICCHzTdLtfQu0k4a8td/hQ0XvV1CWhPJZmIpJmb5
+         KylLVXvn5VlcOemodYb9bTM2/9eBmuo+v7LEHthCgEQlTsamaYvOmxb7SdpjcnWi68MI
+         bLdIIoFexq3oduCgenuCraeaLD1BmL39YUgbS2zcB75o9vBGpXTdWKm1ThsCrUN0eW+r
+         4SrO2sVlIOpbbBnmyokAxW+nfI1L1B5HAw9F5l2XBC/S4/kdfkoZcHaDV7a5jiBgSTwY
+         fZLA==
+X-Gm-Message-State: AOAM533SJZGSXLkFMtuSMNs4YYbEecFV8ELRzBVATC9h61ortx3BmipC
+        6tDepApWC2iJ97tW50KJgw2lCQ==
+X-Google-Smtp-Source: ABdhPJyO25WugHG0nEenLRCgTZGSyoFZr8oLpCObiI0Q0Dbj3autEreqfFCD221s7ojQxz7nAKospA==
+X-Received: by 2002:a05:620a:298e:b0:6a0:94d2:2e2d with SMTP id r14-20020a05620a298e00b006a094d22e2dmr30141554qkp.353.1653678192374;
+        Fri, 27 May 2022 12:03:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id 22-20020a05620a079600b0069fe1dfbeffsm3024426qka.92.2022.05.27.12.03.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 May 2022 12:03:10 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1nufEp-00Dd1y-Rg; Fri, 27 May 2022 16:03:07 -0300
+Date:   Fri, 27 May 2022 16:03:07 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+Message-ID: <20220527190307.GG2960187@ziepe.ca>
+References: <20220407154717.7695-1-logang@deltatee.com>
+ <20220407154717.7695-21-logang@deltatee.com>
+ <20220527125501.GD2960187@ziepe.ca>
+ <a2590e27-41e8-59dc-3576-b5b8d716a198@deltatee.com>
 MIME-Version: 1.0
-References: <11980172.O9o76ZdvQC@kreacher> <20220526221258.GA409855@bhelgaas>
-In-Reply-To: <20220526221258.GA409855@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 27 May 2022 20:55:28 +0200
-Message-ID: <CAJZ5v0gSxvg7USAvc2UrsrAdFs+UKBw8PGQapey3zuyrQRb4tA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: PM: Quirk bridge D3 on Elo i2
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Stefan Gottwald <gottwald@igel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2590e27-41e8-59dc-3576-b5b8d716a198@deltatee.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 27, 2022 at 12:13 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Mar 31, 2022 at 07:38:51PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > If one of the PCIe root ports on Elo i2 is put into D3cold and then
-> > back into D0, the downstream device becomes permanently inaccessible,
-> > so add a bridge D3 DMI quirk for that system.
-> >
-> > This was exposed by commit 14858dcc3b35 ("PCI: Use
-> > pci_update_current_state() in pci_enable_device_flags()"), but before
-> > that commit the root port in question had never been put into D3cold
-> > for real due to a mismatch between its power state retrieved from the
-> > PCI_PM_CTRL register (which was accessible even though the platform
-> > firmware indicated that the port was in D3cold) and the state of an
-> > ACPI power resource involved in its power management.
-> >
-> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215715
-> > Reported-by: Stefan Gottwald <gottwald@igel.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/pci/pci.c |   10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > Index: linux-pm/drivers/pci/pci.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pci.c
-> > +++ linux-pm/drivers/pci/pci.c
-> > @@ -2920,6 +2920,16 @@ static const struct dmi_system_id bridge
-> >                       DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
-> >                       DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
-> >               },
-> > +             /*
-> > +              * Downstream device is not accessible after putting a root port
-> > +              * into D3cold and back into D0 on Elo i2.
-> > +              */
-> > +             .ident = "Elo i2",
-> > +             .matches = {
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Elo Touch Solutions"),
-> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Elo i2"),
-> > +                     DMI_MATCH(DMI_PRODUCT_VERSION, "RevB"),
-> > +             },
-> >       },
->
-> This has already made it to Linus' and some stable trees, but I think
-> we need the following touchup.  I plan to send it right after my v5.19
-> pull request.
+On Fri, May 27, 2022 at 09:35:07AM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 2022-05-27 06:55, Jason Gunthorpe wrote:
+> > On Thu, Apr 07, 2022 at 09:47:16AM -0600, Logan Gunthorpe wrote:
+> >> +static void pci_p2pdma_unmap_mappings(void *data)
+> >> +{
+> >> +	struct pci_dev *pdev = data;
+> >> +	struct pci_p2pdma *p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
+> >> +
+> >> +	/* Ensure no new pages can be allocated in mappings */
+> >> +	p2pdma->active = false;
+> >> +	synchronize_rcu();
+> >> +
+> >> +	unmap_mapping_range(p2pdma->inode->i_mapping, 0, 0, 1);
+> >> +
+> >> +	/*
+> >> +	 * On some architectures, TLB flushes are done with call_rcu()
+> >> +	 * so to ensure GUP fast is done with the pages, call synchronize_rcu()
+> >> +	 * before freeing them.
+> >> +	 */
+> >> +	synchronize_rcu();
+> >> +	pci_p2pdma_free_mappings(p2pdma->inode->i_mapping);
+> > 
+> > With the series from Felix getting close this should get updated to
+> > not set pte_devmap and use proper natural refcounting without any of
+> > this stuff.
+> 
+> Can you send a link? I'm not sure what you are referring to.
 
-Ouch, sorry.
+IIRC this is the last part:
 
-> commit a99f6bb133df ("PCI/PM: Fix bridge_d3_blacklist[] Elo i2 overwrite of Gigabyte X299")
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Thu May 26 16:52:23 2022 -0500
->
->     PCI/PM: Fix bridge_d3_blacklist[] Elo i2 overwrite of Gigabyte X299
->
->     92597f97a40b ("PCI/PM: Avoid putting Elo i2 PCIe Ports in D3cold") omitted
->     braces around the new Elo i2 entry, so it overwrote the existing Gigabyte
->     X299 entry.
->
->     Found by:
->
->       $ make W=1 drivers/pci/pci.o
->         CC      drivers/pci/pci.o
->       drivers/pci/pci.c:2974:12: error: initialized field overwritten [-Werror=override-init]
->        2974 |   .ident = "Elo i2",
->             |            ^~~~~~~~
->
->     Fixes: 92597f97a40b ("PCI/PM: Avoid putting Elo i2 PCIe Ports in D3cold")
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->     Cc: stable@vger.kernel.org  # v5.15+
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d25122fbe98a..5b400a742621 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2920,6 +2920,8 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
->                         DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
->                         DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
->                 },
-> +       },
-> +       {
->                 /*
->                  * Downstream device is not accessible after putting a root port
->                  * into D3cold and back into D0 on Elo i2.
+https://lore.kernel.org/linux-mm/20220524190632.3304-1-alex.sierra@amd.com/
+
+And the earlier bit with Christoph's pieces looks like it might get
+merged to v5.19..
+
+The general idea is once pte_devmap is not set then all the
+refcounting works the way it should. This is what all new ZONE_DEVICE
+users should do..
+
+Jason
