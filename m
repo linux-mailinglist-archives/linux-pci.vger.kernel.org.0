@@ -2,52 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A4C1536920
-	for <lists+linux-pci@lfdr.de>; Sat, 28 May 2022 01:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8004A53692C
+	for <lists+linux-pci@lfdr.de>; Sat, 28 May 2022 01:28:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234286AbiE0XJ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 May 2022 19:09:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42336 "EHLO
+        id S1355169AbiE0X2C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 May 2022 19:28:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347750AbiE0XJ1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 May 2022 19:09:27 -0400
+        with ESMTP id S235741AbiE0X2B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 May 2022 19:28:01 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54CC128142;
-        Fri, 27 May 2022 16:09:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F20762A5;
+        Fri, 27 May 2022 16:28:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 417B561A25;
-        Fri, 27 May 2022 23:09:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D241C385A9;
-        Fri, 27 May 2022 23:09:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F90E61A5F;
+        Fri, 27 May 2022 23:28:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68C6AC385A9;
+        Fri, 27 May 2022 23:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653692965;
-        bh=1rzN+bAWacln+c9+oIr/WfPrvgFyPswcn+/x5ki1D8s=;
+        s=k20201202; t=1653694079;
+        bh=tsZOyDdsn/R3PNVK/DQdKGBDnPHlMZFoXEP8WTRvpiQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XQfOP1oBjn+bSTPwmvl9rp7HhYMlS0BRHzG91S8KF+qoR4NBBiNOeOSNYYo1GL3DM
-         d7ojVNwW8tc/QBvqrQERHd88uZVeeICoUAcnfcKOJDqwIcjJB0kracHA/ImhsPamQU
-         EWwReyPcUISEC5iOsKaObv5kF+h7HBGNIuzkxwhfFWMjHKWTpjlsFjkEzYZ7PEEOyU
-         SpTGgEhanhmpPC9XCuU62htqF7YB2F8chg59pJj8P9BN4oUHKDn7nVluw08Dyaa1i5
-         M8Cii+iOfK3fvf6Mlk6AIziqN4tbQrYJR6yxJ2m5jWd/xVvHVM2Eo9sCgJ8XvJktkY
-         bfT3FZDlc9UuA==
-Date:   Fri, 27 May 2022 18:09:23 -0500
+        b=efWgDNo+o/YTK0ZMvEGzbW/HvGG4IleYaiYe1wKIgtfQDoxJGtVPz3Dg1RP50TToS
+         TdMSOdrg8oPkKML2qm6L9wUpIC5fG1OLAOX43VxsyDnQRlHwanQSEkTqG4jw1+K6Ho
+         vLkFmg7IhNMjqW/qy9WGZ1W9VQMmD7IIhcekRjfjDqqPNaHkZDwpy9ks2RVAUzK2bO
+         51kR5Gjx3w0QxaotMrl+e5D7/D6TO6RKezcH/ATfoIwyxXTQT3KYHo8yZT8I4ba0Ny
+         JPhPNWbOvR9AtV+OKD9R+C6nvfjXpro6G30G27JjE4mACI42tsMwSnp6o7MFHz35wz
+         SbQ5EQlzieeEQ==
+Date:   Fri, 27 May 2022 18:27:57 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH v1 06/11] PCI/PM: Write 0 to PMCSR in pci_power_up() in
- all cases
-Message-ID: <20220527230923.GA513506@bhelgaas>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        James Dutton <james.dutton@gmail.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe
+ linkup
+Message-ID: <20220527232757.GA515159@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220527225148.GA511276@bhelgaas>
+In-Reply-To: <20220525215739.GA275957@bhelgaas>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,95 +68,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 27, 2022 at 05:51:48PM -0500, Bjorn Helgaas wrote:
-> On Fri, May 27, 2022 at 08:52:17PM +0200, Rafael J. Wysocki wrote:
-> > On Thu, May 26, 2022 at 9:46 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > On Thu, May 26, 2022 at 11:54:22AM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, May 05, 2022 at 08:10:43PM +0200, Rafael J. Wysocki wrote:
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >
-> > > > > Make pci_power_up() write 0 to the device's PCI_PM_CTRL register in
-> > > > > order to put it into D0 regardless of the power state returned by
-> > > > > the previous read from that register which should not matter.
-> > > > >
-> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > ---
-> > > > >  drivers/pci/pci.c |   11 +++--------
-> > > > >  1 file changed, 3 insertions(+), 8 deletions(-)
-> > > > >
-> > > > > Index: linux-pm/drivers/pci/pci.c
-> > > > > ===================================================================
-> > > > > --- linux-pm.orig/drivers/pci/pci.c
-> > > > > +++ linux-pm/drivers/pci/pci.c
-> > > > > @@ -1230,15 +1230,10 @@ int pci_power_up(struct pci_dev *dev)
-> > > > >     }
-> > > > >
-> > > > >     /*
-> > > > > -    * If we're (effectively) in D3, force entire word to 0. This doesn't
-> > > > > -    * affect PME_Status, disables PME_En, and sets PowerState to 0.
-> > > > > +    * Force the entire word to 0. This doesn't affect PME_Status, disables
-> > > > > +    * PME_En, and sets PowerState to 0.
-> > > > >      */
-> > > > > -   if (state == PCI_D3hot)
-> > > > > -           pmcsr = 0;
-> > > > > -   else
-> > > > > -           pmcsr &= ~PCI_PM_CTRL_STATE_MASK;
-> > > > > -
-> > > > > -   pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, pmcsr);
-> > > > > +   pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, 0);
-> > > >
-> > > > Can you reassure me why this is safe and useful?
-> > > >
-> > > > This is a 16-bit write that includes (PCIe r6.0, sec 7.5.2.2):
-> > > >
-> > > >   0x0003 PowerState     RW
-> > > >   0x0004                RsvdP
-> > > >   0x0008 No_Soft_Reset  RO
-> > > >   0x00f0                RsvdP
-> > > >   0x0100 PME_En         RW/RWS
-> > > >   0x1e00 Data_Select    RW, VF ROZ
-> > > >   0x6000 Data_Scale     RO, VF ROZ
-> > > >   0x8000 PME_Status     RW1CS
-> > > >
-> > > > We intend to set PowerState to 0 (D0), apparently intend to clear
-> > > > PME_En, and PME_Status is "write 1 to clear" to writing 0 does
-> > > > nothing, so those look OK.
-> > > >
-> > > > But the RsvdP fields are reserved for future RW bits and should be
-> > > > preserved, and it looks like clearing Data_Select could potentially
-> > > > break the Data Register power consumption reporting (which I don't
-> > > > think we support today).
-> > > >
-> > > > It seems like maybe we should do this instead:
-> > > >
-> > > >   pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL,
-> > > >                         pmcsr & ~PCI_PM_CTRL_STATE_MASK)
-> > > >
-> > > > to just unconditionally clear PowerState?
-> > >
-> > > Or I guess this, since we want to clear PME_En as well?
-> > >
-> > >   pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, pmcsr &
-> > >                         ~(PCI_PM_CTRL_STATE_MASK | PCI_PM_CTRL_PME_ENABLE));
-> > 
-> > Yes.
-> > 
-> > Also, this patch actually only makes a difference if the device is
-> > going into D0 from D1 or D2, because we have always written 0 to the
-> > PMCSR during transitions from D3hot.
-> > 
-> > It is inconsistent and confusing to do different things depending on
-> > the initial power state here and the code is simpler when 0 is written
-> > regardless.
+On Wed, May 25, 2022 at 04:57:39PM -0500, Bjorn Helgaas wrote:
+> On Tue, May 24, 2022 at 12:54:48PM -0400, Jim Quinlan wrote:
+> > On Mon, May 23, 2022 at 6:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Sat, May 21, 2022 at 02:51:42PM -0400, Jim Quinlan wrote:
+> > > > On Sat, May 21,
+> > > > 2CONFIG_INITRAMFS_SOURCE="/work3/jq921458/cpio/54-arm64-rootfs.cpio022
+> > > > at 12:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
+> > > > > > commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice
+> > > > > > voltage regulators")
+> > > > > >
+> > > > > > introduced a regression on the PCIe RPi4 Compute Module.  If the
+> > > > > > PCIe endpoint node described in [2] was missing, no linkup would
+> > > > > > be attempted, and subsequent accesses would cause a panic
+> > > > > > because this particular PCIe HW causes a CPU abort on illegal
+> > > > > > accesses (instead of returning 0xffffffff).
+> > > > > >
+> > > > > > We fix this by allowing the DT endpoint subnode to be missing.
+> > > > > > This is important for platforms like the CM4 which have a
+> > > > > > standard PCIe socket and the endpoint device is unknown.
 > 
-> I agree that depending on the initial power state is confusing (it
-> confused me :)).
+> > > But above you say it's the *endpoint* node that doesn't exist.  The
+> > > existing code looks like it's checking for the *bridge* node
+> > > (bus->dev->of_node).  We haven't even enumerated the devices on the
+> > > child bus, so we don't know about them at this point.
+> >
+> > You are absolutely correct and I must change the commit message
+> > to say the "root port DT node".   I'm sorry; this mistake likely did not
+> > help you understand the fix. :-(
 > 
-> What would you think of replacing this patch with the one below?
+> Great, that will help me out!  I think including the relevant DT
+> snippet would also make it more concrete and might conceivably be
+> helpful to somebody working around it on a kernel without the fix.
 
-Well, I don't know why I sent this, since I had already sent the pull
-request.  Not thinking clearly, I guess.  Anyway, your original patch
-is now upstream.  Sorry for the distraction.
+Where are we at with this?  Linus just merged my pull request, and I'd
+really like to get this resolved before -rc1 (expected June 5 or so),
+which means I'd like to ask him to pull the fix early next week.
+
+The alternative is to ask him to pull these reverts, which have
+actually been in -next since May 11:
+
+  4246970a3bcb ("Revert "PCI: brcmstb: Split brcm_pcie_setup() into two funcs"")
+  f35b19f02e01 ("Revert "PCI: brcmstb: Add mechanism to turn on subdev regulators"")
+  ae65b283d7a4 ("Revert "PCI: brcmstb: Add control of subdevice voltage regulators"")
+  d938b26e9b14 ("Revert "PCI: brcmstb: Do not turn off WOL regulators on suspend"")
 
 Bjorn
