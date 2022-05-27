@@ -2,49 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16F24537418
-	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 06:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AAD95364C1
+	for <lists+linux-pci@lfdr.de>; Fri, 27 May 2022 17:35:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbiE3E1Z convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 30 May 2022 00:27:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57194 "EHLO
+        id S1347997AbiE0PfV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 May 2022 11:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbiE3E1Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 00:27:25 -0400
-X-Greylist: delayed 37105 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 29 May 2022 21:27:24 PDT
-Received: from srv1.ensanne.nl (srv1.ensanne.nl [185.27.141.228])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 109014ECF8;
-        Sun, 29 May 2022 21:27:23 -0700 (PDT)
-Received: from [156.146.34.48] (helo=[192.168.4.104])
-        by srv1.ensanne.nl with esmtpa (Exim 4.94.2)
-        (envelope-from <ensanne@cybertrade.co.za>)
-        id 1nuZnj-0007b1-KZ; Fri, 27 May 2022 15:14:48 +0200
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S243719AbiE0PfU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 May 2022 11:35:20 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E00FC4FA;
+        Fri, 27 May 2022 08:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=iVJ9fBLNdTiKEt9G340BRFfSyp3FLS4feBnXCUGEiYw=; b=LK0tOmWxLk3f/jP34DJDcVbw9k
+        7FkvN62gBPKgtF5GHbzQjRxhicgPqm2Y0f6rnJC1wzsiq1VPMUwE7lbhyg2Wb2wmOtwdosFsCyBev
+        C+pH6Z+zfZFV7DK2Lq/L4Fx9Tzo2Esnbtf4idNVxuPx/hUdAsdtZJB+bGTuxqU8ZC6esYn25HCHlP
+        C7mzMuI1d9VM5EbOwJRlj828gX7M9YfiT/tDp8fR8eVX8rPBMx/i1jYJg8S3l83aYSY8Rbxegbl79
+        BKGvmLPOAVF+yorF40Wo/OhfP9diUw8Y3r/R2PGBoTMq+LtTE3+tHiLIwGLa7GSO7vvraU/8nFe0e
+        5weL+HIA==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1nubze-0093NF-Rc; Fri, 27 May 2022 09:35:15 -0600
+Message-ID: <a2590e27-41e8-59dc-3576-b5b8d716a198@deltatee.com>
+Date:   Fri, 27 May 2022 09:35:07 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Re: blessed deal.
-To:     Recipients <ensanne@cybertrade.co.za>
-From:   "United States Marine Corps" <ensanne@cybertrade.co.za>
-Date:   Fri, 27 May 2022 16:14:18 +0300
-Reply-To: nnbb101@qq.com
-Message-ID: <GENERATED-WASMISSING-1nuZnj-0007b1-KZ@srv1.ensanne.nl>
-X-ACL-Warn: Adding Message-ID header because it is missing!
-X-Authenticated-Id: info@ensanne.nl
-X-Spam-Status: No, score=4.4 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Content-Language: en-CA
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220407154717.7695-1-logang@deltatee.com>
+ <20220407154717.7695-21-logang@deltatee.com>
+ <20220527125501.GD2960187@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20220527125501.GD2960187@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: jgg@ziepe.ca, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, dan.j.williams@intel.com, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, bhelgaas@google.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v6 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
 
-Did you see my blessed deal message in your favor???
 
-Sgt Irene.
-United States Marine Corps (USMC)
+On 2022-05-27 06:55, Jason Gunthorpe wrote:
+> On Thu, Apr 07, 2022 at 09:47:16AM -0600, Logan Gunthorpe wrote:
+>> +static void pci_p2pdma_unmap_mappings(void *data)
+>> +{
+>> +	struct pci_dev *pdev = data;
+>> +	struct pci_p2pdma *p2pdma = rcu_dereference_protected(pdev->p2pdma, 1);
+>> +
+>> +	/* Ensure no new pages can be allocated in mappings */
+>> +	p2pdma->active = false;
+>> +	synchronize_rcu();
+>> +
+>> +	unmap_mapping_range(p2pdma->inode->i_mapping, 0, 0, 1);
+>> +
+>> +	/*
+>> +	 * On some architectures, TLB flushes are done with call_rcu()
+>> +	 * so to ensure GUP fast is done with the pages, call synchronize_rcu()
+>> +	 * before freeing them.
+>> +	 */
+>> +	synchronize_rcu();
+>> +	pci_p2pdma_free_mappings(p2pdma->inode->i_mapping);
+> 
+> With the series from Felix getting close this should get updated to
+> not set pte_devmap and use proper natural refcounting without any of
+> this stuff.
+
+Can you send a link? I'm not sure what you are referring to.
+
+Thanks,
+
+Logan
