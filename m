@@ -2,53 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9912E536722
-	for <lists+linux-pci@lfdr.de>; Fri, 27 May 2022 20:52:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCC45536736
+	for <lists+linux-pci@lfdr.de>; Fri, 27 May 2022 20:56:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238626AbiE0Swh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 May 2022 14:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43200 "EHLO
+        id S243537AbiE0Szu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 May 2022 14:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354445AbiE0Swg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 May 2022 14:52:36 -0400
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D275F21251;
-        Fri, 27 May 2022 11:52:29 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-306b5b452b1so24076257b3.1;
-        Fri, 27 May 2022 11:52:29 -0700 (PDT)
+        with ESMTP id S1351455AbiE0Szk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 May 2022 14:55:40 -0400
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACE64D251;
+        Fri, 27 May 2022 11:55:39 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-2ff7b90e635so56537067b3.5;
+        Fri, 27 May 2022 11:55:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PxtMQkxOsmxAx60o1Fx3MWQVX3yhClhlLKmqWp5oFv4=;
-        b=ftt7e5sA+2IIRA4SY10Kz327SG3cyPm3SErGPPfwk25ZU5TzwYm1DXI6IxK1z1iqkV
-         NEpaCCTqoRAtbkuK4p2ipwgSp4S5GAn+JdcNriaHt6wnVWhAd7+zu0GeFLcZJlmnhXyt
-         vkogweCoue+ZVMjigU9geYjr07xplwxSb2XZ6cnv0OUPPtFiGFjptvt4uwdUrs+q1A5T
-         voKec9YOsRgXdMqSDV4379AL+rOqTjjTKzRpPpdaBAbmxW0YivID5kMjn66O7RNJr1I8
-         p+WkVvG7Mv9NE7kjRWKpBr7LziJn8h/svsPsuUkeHboDXp33tY39+CXJ8nM/9EDbGJIp
-         8GFg==
-X-Gm-Message-State: AOAM533/g+8qv5ZlsYWugF6oVpesMeB0UFqVvY8xVqaV1ZlmROCSycY+
-        iGbQwjwFB39b+TCRI5xrPWOtQ4a//GPXjFSkrkY=
-X-Google-Smtp-Source: ABdhPJwrGwEytu43boU8pDUt2wpBGnryMJ/qzpbF1oRyr58yMLSW+l3GZ3N9x9ZvYwLsXdCgdE9Ow33zhqfjep92Rv8=
+        bh=AiXxBvT5jxe4DGf49rxfmcwLST9ROwPRMdTz8X7oj7c=;
+        b=jtGiyF1yLiWYPFajExqePQ0LWM1I2ZnKhOJoXUyjkVDih1q3aaxLViB3rnhbvoBK3w
+         Pu32Zq46APQO/5bU32Buz7C7YojuwPAzjT65jvIXbBy04ySrVRVaglA2Kzhz+No2NvcL
+         3DwZuWM2pfC1m9uUIdj+hSm7lZyo0//aLCmUdAQM/ojvb9S0eKVOXuIGmq0HFrKD4Kug
+         1Dw2s2YNCGzcrvlYsYZjYYNDpSfQq5AXN0fiEHVa9GLMacaOglH5XAcvEzOzFxSAnAqj
+         EdoCO8cM8a5wgl1yD7ob/HwyTWZn6LdZVwQBgPOc8Ksb64bHoLZae/KWFaAswqV7ek+b
+         k2eQ==
+X-Gm-Message-State: AOAM530K/WFbUh5ZJKX/VA0rlBJmuj9IuNihleDj6/6D1xXA8zRi58ad
+        rY7r7JUB6oXUsvcLYddusW4cwd/wFWlgYzKpjUw=
+X-Google-Smtp-Source: ABdhPJyzekDhy/kwQrCFpa2Go5HoqkV1wJDHQV2O8qnmcW16Da65NIQ459mws4JqQV+oLgovjeqwVECMRQv9j5VeeNQ=
 X-Received: by 2002:a81:4ed6:0:b0:307:224f:eed3 with SMTP id
- c205-20020a814ed6000000b00307224feed3mr3811628ywb.301.1653677548809; Fri, 27
- May 2022 11:52:28 -0700 (PDT)
+ c205-20020a814ed6000000b00307224feed3mr3825315ywb.301.1653677739110; Fri, 27
+ May 2022 11:55:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220526165422.GA338382@bhelgaas> <20220526194601.GA344086@bhelgaas>
-In-Reply-To: <20220526194601.GA344086@bhelgaas>
+References: <11980172.O9o76ZdvQC@kreacher> <20220526221258.GA409855@bhelgaas>
+In-Reply-To: <20220526221258.GA409855@bhelgaas>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 27 May 2022 20:52:17 +0200
-Message-ID: <CAJZ5v0iteW2K0c7pS+ar1K_iL9L3ujQx=-ZRdrZFzxvkMVZorA@mail.gmail.com>
-Subject: Re: [PATCH v1 06/11] PCI/PM: Write 0 to PMCSR in pci_power_up() in
- all cases
+Date:   Fri, 27 May 2022 20:55:28 +0200
+Message-ID: <CAJZ5v0gSxvg7USAvc2UrsrAdFs+UKBw8PGQapey3zuyrQRb4tA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: PM: Quirk bridge D3 on Elo i2
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Stefan Gottwald <gottwald@igel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
@@ -60,82 +58,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 26, 2022 at 9:46 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Fri, May 27, 2022 at 12:13 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Thu, May 26, 2022 at 11:54:22AM -0500, Bjorn Helgaas wrote:
-> > On Thu, May 05, 2022 at 08:10:43PM +0200, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Make pci_power_up() write 0 to the device's PCI_PM_CTRL register in
-> > > order to put it into D0 regardless of the power state returned by
-> > > the previous read from that register which should not matter.
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >  drivers/pci/pci.c |   11 +++--------
-> > >  1 file changed, 3 insertions(+), 8 deletions(-)
-> > >
-> > > Index: linux-pm/drivers/pci/pci.c
-> > > ===================================================================
-> > > --- linux-pm.orig/drivers/pci/pci.c
-> > > +++ linux-pm/drivers/pci/pci.c
-> > > @@ -1230,15 +1230,10 @@ int pci_power_up(struct pci_dev *dev)
-> > >     }
-> > >
-> > >     /*
-> > > -    * If we're (effectively) in D3, force entire word to 0. This doesn't
-> > > -    * affect PME_Status, disables PME_En, and sets PowerState to 0.
-> > > +    * Force the entire word to 0. This doesn't affect PME_Status, disables
-> > > +    * PME_En, and sets PowerState to 0.
-> > >      */
-> > > -   if (state == PCI_D3hot)
-> > > -           pmcsr = 0;
-> > > -   else
-> > > -           pmcsr &= ~PCI_PM_CTRL_STATE_MASK;
-> > > -
-> > > -   pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, pmcsr);
-> > > +   pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, 0);
+> On Thu, Mar 31, 2022 at 07:38:51PM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > >
-> > Can you reassure me why this is safe and useful?
+> > If one of the PCIe root ports on Elo i2 is put into D3cold and then
+> > back into D0, the downstream device becomes permanently inaccessible,
+> > so add a bridge D3 DMI quirk for that system.
 > >
-> > This is a 16-bit write that includes (PCIe r6.0, sec 7.5.2.2):
+> > This was exposed by commit 14858dcc3b35 ("PCI: Use
+> > pci_update_current_state() in pci_enable_device_flags()"), but before
+> > that commit the root port in question had never been put into D3cold
+> > for real due to a mismatch between its power state retrieved from the
+> > PCI_PM_CTRL register (which was accessible even though the platform
+> > firmware indicated that the port was in D3cold) and the state of an
+> > ACPI power resource involved in its power management.
 > >
-> >   0x0003 PowerState     RW
-> >   0x0004                RsvdP
-> >   0x0008 No_Soft_Reset  RO
-> >   0x00f0                RsvdP
-> >   0x0100 PME_En         RW/RWS
-> >   0x1e00 Data_Select    RW, VF ROZ
-> >   0x6000 Data_Scale     RO, VF ROZ
-> >   0x8000 PME_Status     RW1CS
+> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215715
+> > Reported-by: Stefan Gottwald <gottwald@igel.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/pci/pci.c |   10 ++++++++++
+> >  1 file changed, 10 insertions(+)
 > >
-> > We intend to set PowerState to 0 (D0), apparently intend to clear
-> > PME_En, and PME_Status is "write 1 to clear" to writing 0 does
-> > nothing, so those look OK.
-> >
-> > But the RsvdP fields are reserved for future RW bits and should be
-> > preserved, and it looks like clearing Data_Select could potentially
-> > break the Data Register power consumption reporting (which I don't
-> > think we support today).
-> >
-> > It seems like maybe we should do this instead:
-> >
-> >   pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL,
-> >                         pmcsr & ~PCI_PM_CTRL_STATE_MASK)
-> >
-> > to just unconditionally clear PowerState?
+> > Index: linux-pm/drivers/pci/pci.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/pci.c
+> > +++ linux-pm/drivers/pci/pci.c
+> > @@ -2920,6 +2920,16 @@ static const struct dmi_system_id bridge
+> >                       DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
+> >                       DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
+> >               },
+> > +             /*
+> > +              * Downstream device is not accessible after putting a root port
+> > +              * into D3cold and back into D0 on Elo i2.
+> > +              */
+> > +             .ident = "Elo i2",
+> > +             .matches = {
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Elo Touch Solutions"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Elo i2"),
+> > +                     DMI_MATCH(DMI_PRODUCT_VERSION, "RevB"),
+> > +             },
+> >       },
 >
-> Or I guess this, since we want to clear PME_En as well?
+> This has already made it to Linus' and some stable trees, but I think
+> we need the following touchup.  I plan to send it right after my v5.19
+> pull request.
+
+Ouch, sorry.
+
+> commit a99f6bb133df ("PCI/PM: Fix bridge_d3_blacklist[] Elo i2 overwrite of Gigabyte X299")
+> Author: Bjorn Helgaas <bhelgaas@google.com>
+> Date:   Thu May 26 16:52:23 2022 -0500
 >
->   pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, pmcsr &
->                         ~(PCI_PM_CTRL_STATE_MASK | PCI_PM_CTRL_PME_ENABLE));
-
-Yes.
-
-Also, this patch actually only makes a difference if the device is
-going into D0 from D1 or D2, because we have always written 0 to the
-PMCSR during transitions from D3hot.
-
-It is inconsistent and confusing to do different things depending on
-the initial power state here and the code is simpler when 0 is written
-regardless.
+>     PCI/PM: Fix bridge_d3_blacklist[] Elo i2 overwrite of Gigabyte X299
+>
+>     92597f97a40b ("PCI/PM: Avoid putting Elo i2 PCIe Ports in D3cold") omitted
+>     braces around the new Elo i2 entry, so it overwrote the existing Gigabyte
+>     X299 entry.
+>
+>     Found by:
+>
+>       $ make W=1 drivers/pci/pci.o
+>         CC      drivers/pci/pci.o
+>       drivers/pci/pci.c:2974:12: error: initialized field overwritten [-Werror=override-init]
+>        2974 |   .ident = "Elo i2",
+>             |            ^~~~~~~~
+>
+>     Fixes: 92597f97a40b ("PCI/PM: Avoid putting Elo i2 PCIe Ports in D3cold")
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Cc: stable@vger.kernel.org  # v5.15+
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d25122fbe98a..5b400a742621 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2920,6 +2920,8 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
+>                         DMI_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
+>                         DMI_MATCH(DMI_BOARD_NAME, "X299 DESIGNARE EX-CF"),
+>                 },
+> +       },
+> +       {
+>                 /*
+>                  * Downstream device is not accessible after putting a root port
+>                  * into D3cold and back into D0 on Elo i2.
