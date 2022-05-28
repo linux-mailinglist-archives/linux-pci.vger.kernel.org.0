@@ -2,49 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8383A536EBC
-	for <lists+linux-pci@lfdr.de>; Sun, 29 May 2022 00:50:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ABD8536EBE
+	for <lists+linux-pci@lfdr.de>; Sun, 29 May 2022 00:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbiE1Woc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 May 2022 18:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46548 "EHLO
+        id S229995AbiE1Wof (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 May 2022 18:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229594AbiE1Wob (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 May 2022 18:44:31 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F1CFB36D6;
-        Sat, 28 May 2022 15:44:30 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id c2so7209587plh.2;
-        Sat, 28 May 2022 15:44:30 -0700 (PDT)
+        with ESMTP id S229594AbiE1Woe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 May 2022 18:44:34 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F057B36D6;
+        Sat, 28 May 2022 15:44:32 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id b135so7371605pfb.12;
+        Sat, 28 May 2022 15:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=92XKyxi0NzOHImwEaY7u1Ue336ZJHzFbI2q0mbjzPnY=;
-        b=HU4T4ua91/qz2/rQFff1E1UI5JiHLClbkXnlpC8NqDiWAa84xo/g1fe07kZIfzFOo+
-         /RsfCN69Q3au2zRKFcafl566xASs/UxE3n4FuJe3a80d7R+5HDBsQ5y7Eo7+OX9F9EB/
-         p3Ni7F+EY9UzQSMR5GvIUVO/dhFVPmA85l6ZcjSnKjfS58E2J51kf5tabwdMkZ0w4Zgf
-         Unv1/Pl+TkYZdekbDArWpecjxVXQw3LBazPJGksFHeprBRSfkMZqdnSlM6qMPzvmPQo0
-         /8CuJF8FfmVw5+2hN0sR+YG7D3hTGBJ740YpTRU8pmB8NGzYig+EQ/XTL0r0Z6zGzx2u
-         Lpyg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=jKLY2zuvZewS/BwLmJvq6qxpOINA6m+jHazoY1CR+1E=;
+        b=eYyugB7SlJeyfJ8Meaw2RV0Z7j7t43v2JfETGz+J9TpkrtImv7fWN8BqZ65UN2n5Zu
+         Jm/w/rDTsmvrhSXQ5P/7kg3WeCP1JCNi4oSl/3Nf/rWoaqS45qHu1AwPQHbwwpljEjt0
+         hly0K3X5y0Id0Nd4VeILDg2lX4Pw+kj1BtjvH69YZfhhWdO7Z2HCKe1fZ/n9A7BgsZ9h
+         fB2RXRIPO3hunYRrjBQQM+oKYmNatsSmqDsDEiCCo9MD3iLT7K4IJ+OJJgY6pZq64pDn
+         q1yQyURG7ThiNQee3MJw1lKuh+7XCXqs3xdthpzO2/ZmmKUT11yZwQZDylr/axzEAQTu
+         WFiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=92XKyxi0NzOHImwEaY7u1Ue336ZJHzFbI2q0mbjzPnY=;
-        b=FOgM3Srj8r+6QHnj0/SCLNo3hv/63XP9Y9zWbhRhBnxdtQpMs66Q/mgS/DNF1DCInO
-         llpN0WW6KF56GV+O2cFi4LePU9kAbdQSZlQvgtpGuAdvk3VEYydEmQa2WaUCZgxn6NQ/
-         tT1gxv7WVYUbsTbllyAYBZDHfXTDmgHTFNrckk9OerQIxepcV+z/rnnkwgoVKjbJap3o
-         lNsMcDAiscBKw/6boJ/ZIviWbqHUXr3OJ8yKFZnFsmRZA3dX9hgOe0bRzm1b9w8sAwoF
-         eUih5ob0fAveeu95AyFpDFceGgr1esGJM1SDyiYX1HB2z7V9Sax1T4Vdl4iMEygX41ds
-         MMng==
-X-Gm-Message-State: AOAM533ZXHgzJuaFnVukxrzWk8bUp6+VwUaAuQCIUoz/5BBkbhSkvEoy
-        K1/qTMfG9j+693tIPmL2Qz5w/Jn2JU7B9g==
-X-Google-Smtp-Source: ABdhPJxNOCI6gSDXeX1bi05aN85XmFKr3fAXik7FqEDBRdq4LSNWh5XkwWUaDywR1aLePLvzOfjYwg==
-X-Received: by 2002:a17:90b:3b89:b0:1e0:c079:9dd1 with SMTP id pc9-20020a17090b3b8900b001e0c0799dd1mr15313601pjb.230.1653777869095;
-        Sat, 28 May 2022 15:44:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=jKLY2zuvZewS/BwLmJvq6qxpOINA6m+jHazoY1CR+1E=;
+        b=wyXC34GFvdqX79jP3wRUPT2LX969qkpY0wCdnYG3KDVjx/3wjslZuGmHCl/NLcmAAf
+         xlcn7F8tURXDYJAsj9WuJCGcEQc0Iz0UeRIiUanX2Sw4bZuKwXNDUPx2xlr758XaMi+f
+         T+L5SW4gzhUbHlerUIMJBnIMiT/wMuBxbrNKC1cO3C8mA0m0vstTnAHHMrhKGqYaPqKI
+         9gK7JVxkxTBnJdIPs9i152gmviASyyx2upZpV3WnTNsL+AxcvazLFosjziSdxkBs4VC7
+         SVZJ3zaF4ktwoetvcru7MVp0Bw1K4lPXhdOS8S8RpR1t8QmkIkEHm2XneN49j2SQYeqR
+         u0Ig==
+X-Gm-Message-State: AOAM532G9cPLfYa0UMEHbiL+fUy8WKaGNaw2PC9RDGQQa2TcWMefNYcm
+        HL4n8Rtqz4dNA08mjJ3aT3tgoqtGFZsS5Q==
+X-Google-Smtp-Source: ABdhPJyA/BKlk4Roppn6E2jXmyTWjXLBOuYK4p6OT1DEZxmNyaYvzQPTIaEJqaWY8mTvJ3QnALuFhA==
+X-Received: by 2002:a63:5a23:0:b0:3f2:678b:8de8 with SMTP id o35-20020a635a23000000b003f2678b8de8mr42486377pgb.226.1653777871733;
+        Sat, 28 May 2022 15:44:31 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id x22-20020a170902b41600b001635a8f9dfdsm6159514plr.26.2022.05.28.15.44.26
+        by smtp.gmail.com with ESMTPSA id x22-20020a170902b41600b001635a8f9dfdsm6159514plr.26.2022.05.28.15.44.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 May 2022 15:44:28 -0700 (PDT)
+        Sat, 28 May 2022 15:44:31 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -52,18 +53,21 @@ To:     linux-pci@vger.kernel.org,
         Cyril Brulebois <kibi@debian.org>,
         bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
         james.quinlan@broadcom.com
-Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list),
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 0/1] PCI: brcmstb: Fix regression regarding missing PCIe linkup
-Date:   Sat, 28 May 2022 18:44:22 -0400
-Message-Id: <20220528224423.7017-1-jim2101024@gmail.com>
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/1] PCI: brcmstb: Fix regression regarding missing PCIe linkup
+Date:   Sat, 28 May 2022 18:44:23 -0400
+Message-Id: <20220528224423.7017-2-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220528224423.7017-1-jim2101024@gmail.com>
+References: <20220528224423.7017-1-jim2101024@gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -74,47 +78,124 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-v2 -- Replace using the condition "bus->number == 1" and instead
-      use "pci_is_root_bus(bus->parent)".  Although I initially
-      planned to get/enable regulators under and port device,
-      this became more complicated for this regression fix.
-   -- Corrected the commit message in v1 to say "Root Port DT
-      node" rather than "Endpoint DT node".
-   -- brcm_pcie_add_bus() now returns 0 if there is an error in
-      error in calling pci_subdev_regulators_add_bus().  Instead,
-      we dev_err() and turn on our refusal mode instead.
-   -- The pci_subdev_regulators_remove_bus() function now calls
-      regulator_bulk_free() in addtion to regulator_bulk_disable().
-      I noticed that this call was missing after Bjorn had me detail
-      the call graph for removing the bus when pcie link-up failed.
-   -- Rewrote and added some comments.
+commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
 
-v1 -- Original
+introduced a regression on the PCIe RPi4 Compute Module.  If the PCIe
+root port DT node described in [2] was missing, no linkup would be attempted,
+and subsequent accesses would cause a panic because this particular PCIe HW
+causes a CPU abort on illegal accesses (instead of returning 0xffffffff).
 
-Jim Quinlan (1):
-  PCI: brcmstb: Fix regression regarding missing PCIe linkup
+We fix this by allowing the DT root port node to be missing, as it behaved
+before the original patchset messed things up.
 
+In addition, two small changes are made:
+
+  1. Having pci_subdev_regulators_remove_bus() call
+     regulator_bulk_free() in addtion to regulator_bulk_disable().
+  2. Having brcm_pcie_add_bus() return 0 if there is an
+     error in calling pci_subdev_regulators_add_bus().
+     Instead, we dev_err() and turn on our refusal mode instead.
+
+It would be best if this commit were tested by someone with a Rpi CM4
+platform, as that is how the regression was found.  I have only emulated
+the problem and fix on different platform.
+
+Note that a bisection identified
+
+commit 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
+
+as the first failing commit.  This commit is a regression, but is unrelated
+and was fixed by a subsequent commit in the original patchset.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=215925
+[2] Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+
+Fixes: 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+Fixes: 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
+Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+---
  drivers/pci/controller/pcie-brcmstb.c | 43 +++++++++++++++++++--------
  1 file changed, 30 insertions(+), 13 deletions(-)
 
-
-base-commit: ef1302160bfb19f804451d0e919266703501c875
-prerequisite-patch-id: 23a425390a4226bd70bbff459148c80f5e28379c
-prerequisite-patch-id: e3f2875124b46b2b1cf9ea28883bf0c864b79479
-prerequisite-patch-id: 9cdd706ee2038c7b393c4d65ff76a1873df1ca03
-prerequisite-patch-id: 332ac90be6e4e4110e27bdd1caaff212c129f547
-prerequisite-patch-id: 32a74f87cbfe9e8d52c34a4edeee6d271925665a
-prerequisite-patch-id: f57cdf7ec7080bb8c95782bc7c3ec672db8ec1ce
-prerequisite-patch-id: 18dc9236aed47f708f5c854afd832f3c80be5ea7
-prerequisite-patch-id: dd147c6854c4ca12a9a8bd4f5714968a59d60e4e
-prerequisite-patch-id: 0905430e81a95900a1366916fe2940b848317a7c
-prerequisite-patch-id: 710896210c50354d87f6025fe0bd1b89981138eb
-prerequisite-patch-id: 97d3886cb911cb12ef3d514fdfff2a0ab11e8570
-prerequisite-patch-id: 241f1e1878fc177d941f4982ca12779a29feb62b
-prerequisite-patch-id: d856608825e2294297db5d7f88f8c180f3e5a1f2
-prerequisite-patch-id: 92bcbc9772fb4d248157bcf35e799ac37be8ee45
-prerequisite-patch-id: 6f4b1aac459bb54523ade0e87c04e9d6c45bd9f5
-prerequisite-patch-id: 090ee7a3112a4ecb03805b23ed10e2c96b3b34ed
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index ba5c120816b2..0839325f79ab 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -540,29 +540,42 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+ 
+ static int brcm_pcie_add_bus(struct pci_bus *bus)
+ {
+-	struct device *dev = &bus->dev;
+-	struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
++	struct brcm_pcie *pcie;
+ 	int ret;
+ 
+-	if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
++	/*
++	 * Right now we only alloc/enable regulators and initiate pcie link
++	 * when under the root port bus of the current domain.  In the
++	 * future we may want to alloc/enable regulators under any port
++	 * device (e.g. a switch).
++	 */
++	if (!bus->parent || !pci_is_root_bus(bus->parent))
+ 		return 0;
+ 
+ 	ret = pci_subdev_regulators_add_bus(bus);
+-	if (ret)
+-		return ret;
++	if (ret) {
++		dev_err(pcie->dev, "failed to alloc/enable regulators\n");
++		goto err;
++	}
+ 
+-	/* Grab the regulators for suspend/resume */
++	/* Save the regulators for RC suspend/resume */
++	pcie = (struct brcm_pcie *) bus->sysdata;
+ 	pcie->sr = bus->dev.driver_data;
+ 
++	/* Attempt PCIe link-up */
++	if (brcm_pcie_linkup(pcie) == 0)
++		return 0;
++err:
+ 	/*
+-	 * If we have failed linkup there is no point to return an error as
+-	 * currently it will cause a WARNING() from pci_alloc_child_bus().
+-	 * We return 0 and turn on the "refusal_mode" so that any further
+-	 * accesses to the pci_dev just get 0xffffffff
++	 * If we have failed linkup or have an error when turning on
++	 * regulators, there is no point to return an error value to the
++	 * caller (pci_alloc_child_bus()) as it will summarily execute a
++	 * WARNING().  Instead, we turn on our "refusal_mode" and return 0
++	 * so that any further PCIe accesses succeed but do nothing (reads
++	 * return 0xffffffff).  If we do not turn on refusal mode, our
++	 * unforgiving PCIe HW will signal a CPU abort.
+ 	 */
+-	if (brcm_pcie_linkup(pcie) != 0)
+-		pcie->refusal_mode = true;
+-
++	pcie->refusal_mode = true;
+ 	return 0;
+ }
+ 
+@@ -570,13 +583,17 @@ static void pci_subdev_regulators_remove_bus(struct pci_bus *bus)
+ {
+ 	struct device *dev = &bus->dev;
+ 	struct subdev_regulators *sr = dev->driver_data;
++	struct brcm_pcie *pcie;
+ 
+ 	if (!sr || !bus->parent || !pci_is_root_bus(bus->parent))
+ 		return;
+ 
+ 	if (regulator_bulk_disable(sr->num_supplies, sr->supplies))
+ 		dev_err(dev, "failed to disable regulators for downstream device\n");
++	regulator_bulk_free(sr->num_supplies, sr->supplies);
+ 	dev->driver_data = NULL;
++	pcie = (struct brcm_pcie *) bus->sysdata;
++	pcie->sr = NULL;
+ }
+ 
+ /* Limits operation to a specific generation (1, 2, or 3) */
 -- 
 2.17.1
 
