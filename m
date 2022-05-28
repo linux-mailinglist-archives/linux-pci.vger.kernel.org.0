@@ -2,208 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 004C7536A39
-	for <lists+linux-pci@lfdr.de>; Sat, 28 May 2022 04:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FA00536BDD
+	for <lists+linux-pci@lfdr.de>; Sat, 28 May 2022 11:19:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352508AbiE1C0m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 May 2022 22:26:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39374 "EHLO
+        id S244603AbiE1JTs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 May 2022 05:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234738AbiE1C0l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 May 2022 22:26:41 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E723190C;
-        Fri, 27 May 2022 19:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653704799; x=1685240799;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=khUH6vszZsy4AF5ZynvIyQU7qpFD2NmUUG/bJcOTCT0=;
-  b=bDDbYy3cPGOB9sSUV4n+KtkCRfqINdaYhoZCoS8NML6ceuamdtDFebmc
-   NVPSrjnCf0NPcYBU1+j6FCEHPrCXaP6bNLdTmXUuJua9209wnlAZpdegH
-   jHK0k7RKFT9wF+o7zlGU1nAvC7pohsk4+zKGJMCYRGp74v3Igm0tThcft
-   nRfD/PYloXYcUVDc0E8lB5ACgkv5K4BTP/7SFiabz9+c/r3hY48OjSqwJ
-   NEBEfcv4KMroBnLjDmnR2ImRRUqOpQQzWK55ACMwLBDpFJovXhS88TpI3
-   bopbMjrjsEEM3+4BYe+peMGeSjRbr7WTN2QQ39VYuVerluiIS7Ibr9qxP
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10360"; a="274624183"
-X-IronPort-AV: E=Sophos;i="5.91,257,1647327600"; 
-   d="scan'208";a="274624183"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2022 19:26:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,257,1647327600"; 
-   d="scan'208";a="604204638"
-Received: from lkp-server01.sh.intel.com (HELO db63a1be7222) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 27 May 2022 19:26:34 -0700
-Received: from kbuild by db63a1be7222 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1num9x-0005Nl-Iw;
-        Sat, 28 May 2022 02:26:33 +0000
-Date:   Sat, 28 May 2022 10:25:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     keliu <liuke94@huawei.com>, scott.branden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, gustavo.pimentel@synopsys.com,
-        kishon@ti.com, lorenzo.pieralisi@arm.com, kw@linux.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        keliu <liuke94@huawei.com>
-Subject: Re: [PATCH] drivers: misc: Directly use ida_alloc()/free()
-Message-ID: <202205281008.BUCRO77S-lkp@intel.com>
-References: <20220527083953.2636843-1-liuke94@huawei.com>
+        with ESMTP id S1348569AbiE1JTr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 May 2022 05:19:47 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B41101DA5B;
+        Sat, 28 May 2022 02:19:44 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id l20-20020a17090a409400b001dd2a9d555bso6373899pjg.0;
+        Sat, 28 May 2022 02:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=qyK+J/hMtuTUruA03PI6DqGG/StA1icCX4LUIGhocgc=;
+        b=qH8W6PWPfinC6W1dsB4Sh5n9Avx4kcrU4u9XphkM2vutqAIZIZfuxvSgEku6RuyGUH
+         xOsWr5B0fZM8kd/Eyvujie2EKIuzLNSvPL4su90pOnHxFOjEO2H+GvM31W5sps0oh+6n
+         d7iDS3eoURZkBgQy/jIwy6CmdOQzQ8cy4jM50sBNNrO94vuz9img9JYhu3hlHHYe7In7
+         9QanKQQDiRaZme05dowaMoHM/gXt1IbuU/YCXEfGGndC17K6Cs4tH14v6H0IyslLkThB
+         BFH6/y/UyDRBfFU98RUxJy9LYGwIWObnh7sErMYOv+x48u8/U83Vf557WibMsF6K5g0M
+         EU1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=qyK+J/hMtuTUruA03PI6DqGG/StA1icCX4LUIGhocgc=;
+        b=aBlNhVg/6GXQ0lXUpFSoiN4T1zeuMxuFQi4cyDDHeCHOjgoDz304r6qh4yvEIeCNIO
+         8n5M69oHBsa3+YNN241K9FX1f5KbMwOtdcB480UaotBMGcA66txrkh5HM4RWh5ryKeGK
+         WbxwxgbZ7pUkEgeLmrgXFxt7ALifftSta++HzDeHt6mNbze0BQwzVfQMMRz53qBlYYNy
+         r0WpTtk13ud2uZa9ZlmFhL3MaWg8+49UoBBFVGzioNNgzCmxlZbVoQPZra1yO8/XkkHv
+         y63D94UWaYcXljPicVQyMtGDWvKUj3oPyQG+u1ixRysfB5f549GSZqlSbk7uu0NMhnIF
+         KBRw==
+X-Gm-Message-State: AOAM531uAiCkSzo7MfbcA9IkBw4QPS10K6O9r9Lu9iDZvYQeVBPgvWsc
+        cpvyvoh0B3sveGd5y40p9oU=
+X-Google-Smtp-Source: ABdhPJz8YrzZDOOQcB3GYgrLZBT1lADYS4fKl4Nj0eDpS1sI6mRcXpUiCWa3V+ND/KF5ciK8FwKHEA==
+X-Received: by 2002:a17:90b:314b:b0:1e0:5517:1730 with SMTP id ip11-20020a17090b314b00b001e055171730mr12521555pjb.57.1653729584100;
+        Sat, 28 May 2022 02:19:44 -0700 (PDT)
+Received: from [172.16.4.4] ([219.142.146.208])
+        by smtp.gmail.com with ESMTPSA id b8-20020a170903228800b001639e80eb55sm2742984plh.139.2022.05.28.02.19.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 May 2022 02:19:43 -0700 (PDT)
+Message-ID: <bd03ca71-1875-2e94-8040-533034f76ee5@gmail.com>
+Date:   Sat, 28 May 2022 17:19:38 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220527083953.2636843-1-liuke94@huawei.com>
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] PCI: mediatek-gen3: Fix refcount leak in
+ mtk_pcie_init_irq_domains
+Content-Language: en-US
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     bhelgaas@google.com, jianjun.wang@mediatek.com, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, maz@kernel.org,
+        robh@kernel.org, ryder.lee@mediatek.com
+References: <20220526110246.53502-1-linmq006@gmail.com>
+ <20220527084525.7170-1-miles.chen@mediatek.com>
+From:   Miaoqian Lin <linmq006@gmail.com>
+In-Reply-To: <20220527084525.7170-1-miles.chen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi keliu,
+Hi Miles,
 
-Thank you for the patch! Yet something to improve:
+On 2022/5/27 16:45, Miles Chen wrote:
+> Hi Miaoqian,
+>
+>> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+>> ---
+>> drivers/pci/controller/pcie-mediatek-gen3.c | 1 +
+>> 1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+>> index 3e8d70bfabc6..da8e9db0abdf 100644
+>> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+>> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+>> @@ -600,6 +600,7 @@ static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
+>> 						  &intx_domain_ops, pcie);
+>> 	if (!pcie->intx_domain) {
+>> 		dev_err(dev, "failed to create INTx IRQ domain\n");
+>> +		of_node_put(intc_node);
+>> 		return -ENODEV;
+>> 	}
+> Thanks for doing this.
+>
+> I checked mtk_pcie_init_irq_domains() and there are multiple exit paths like
+> err_msi_domain and err_msi_bottom_domain and the normal path which also
+> need of_node_put(intc_node).
 
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on v5.18 next-20220527]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Thanks for your reply,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/keliu/drivers-misc-Directly-use-ida_alloc-free/20220527-162050
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git 90de6805267f8c79cd2b1a36805071e257c39b5c
-config: x86_64-randconfig-a005 (https://download.01.org/0day-ci/archive/20220528/202205281008.BUCRO77S-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 134d7f9a4b97e9035150d970bd9e376043c4577e)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/f8f84e5642ea1ff2fb220c002a35c7d74ec14323
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review keliu/drivers-misc-Directly-use-ida_alloc-free/20220527-162050
-        git checkout f8f84e5642ea1ff2fb220c002a35c7d74ec14323
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/
+I didn't add of_node_put() in other paths because I am not sure if the reference passed through irq_domain_add_linear(), since intc_node is passed to irq_domain_add_linear().
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+__irq_domain_add() keeps &node->fwnode in the irq_domain structure.
 
-All errors (new ones prefixed by >>):
+and use fwnode_handle_get() to get the reference of fwnode, but I still uncertain.
 
->> drivers/misc/dw-xdata-pcie.c:336:7: error: call to undeclared function 'ida_'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-           id = ida_(&xdata_ida, GFP_KERNEL);
-                ^
-   1 error generated.
+If the reference don't needed anymore after irq_domain_add_linear(),
 
+your suggestion looks fine, and I will submit v2.
 
-vim +/ida_ +336 drivers/misc/dw-xdata-pcie.c
-
-   287	
-   288	static int dw_xdata_pcie_probe(struct pci_dev *pdev,
-   289				       const struct pci_device_id *pid)
-   290	{
-   291		struct device *dev = &pdev->dev;
-   292		struct dw_xdata *dw;
-   293		char name[24];
-   294		u64 addr;
-   295		int err;
-   296		int id;
-   297	
-   298		/* Enable PCI device */
-   299		err = pcim_enable_device(pdev);
-   300		if (err) {
-   301			dev_err(dev, "enabling device failed\n");
-   302			return err;
-   303		}
-   304	
-   305		/* Mapping PCI BAR regions */
-   306		err = pcim_iomap_regions(pdev, BIT(BAR_0), pci_name(pdev));
-   307		if (err) {
-   308			dev_err(dev, "xData BAR I/O remapping failed\n");
-   309			return err;
-   310		}
-   311	
-   312		pci_set_master(pdev);
-   313	
-   314		/* Allocate memory */
-   315		dw = devm_kzalloc(dev, sizeof(*dw), GFP_KERNEL);
-   316		if (!dw)
-   317			return -ENOMEM;
-   318	
-   319		/* Data structure initialization */
-   320		mutex_init(&dw->mutex);
-   321	
-   322		dw->rg_region.vaddr = pcim_iomap_table(pdev)[BAR_0];
-   323		if (!dw->rg_region.vaddr)
-   324			return -ENOMEM;
-   325	
-   326		dw->rg_region.paddr = pdev->resource[BAR_0].start;
-   327	
-   328		dw->max_wr_len = pcie_get_mps(pdev);
-   329		dw->max_wr_len >>= 2;
-   330	
-   331		dw->max_rd_len = pcie_get_readrq(pdev);
-   332		dw->max_rd_len >>= 2;
-   333	
-   334		dw->pdev = pdev;
-   335	
- > 336		id = ida_(&xdata_ida, GFP_KERNEL);
-   337		if (id < 0) {
-   338			dev_err(dev, "xData: unable to get id\n");
-   339			return id;
-   340		}
-   341	
-   342		snprintf(name, sizeof(name), DW_XDATA_DRIVER_NAME ".%d", id);
-   343		dw->misc_dev.name = kstrdup(name, GFP_KERNEL);
-   344		if (!dw->misc_dev.name) {
-   345			err = -ENOMEM;
-   346			goto err_ida_remove;
-   347		}
-   348	
-   349		dw->misc_dev.minor = MISC_DYNAMIC_MINOR;
-   350		dw->misc_dev.parent = dev;
-   351		dw->misc_dev.groups = xdata_groups;
-   352	
-   353		writel(0x0, &(__dw_regs(dw)->RAM_addr));
-   354		writel(0x0, &(__dw_regs(dw)->RAM_port));
-   355	
-   356		addr = dw->rg_region.paddr + DW_XDATA_EP_MEM_OFFSET;
-   357		writel(lower_32_bits(addr), &(__dw_regs(dw)->addr_lsb));
-   358		writel(upper_32_bits(addr), &(__dw_regs(dw)->addr_msb));
-   359		dev_dbg(dev, "xData: target address = 0x%.16llx\n", addr);
-   360	
-   361		dev_dbg(dev, "xData: wr_len = %zu, rd_len = %zu\n",
-   362			dw->max_wr_len * 4, dw->max_rd_len * 4);
-   363	
-   364		/* Saving data structure reference */
-   365		pci_set_drvdata(pdev, dw);
-   366	
-   367		/* Register misc device */
-   368		err = misc_register(&dw->misc_dev);
-   369		if (err) {
-   370			dev_err(dev, "xData: failed to register device\n");
-   371			goto err_kfree_name;
-   372		}
-   373	
-   374		return 0;
-   375	
-   376	err_kfree_name:
-   377		kfree(dw->misc_dev.name);
-   378	
-   379	err_ida_remove:
-   380		ida_free(&xdata_ida, id);
-   381	
-   382		return err;
-   383	}
-   384	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> Maybe we can move the of_node_put(intc_node) to #54 below and cover
+> all possible paths?
+>
+>
+> cheers,
+> Miles
+>
+> e.g.,
+>
+> static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
+> {
+> 	struct device *dev = pcie->dev;
+> 	struct device_node *intc_node, *node = dev->of_node;
+> 	int ret;
+>
+> 	raw_spin_lock_init(&pcie->irq_lock);
+>
+> 	/* Setup INTx */
+> 	intc_node = of_get_child_by_name(node, "interrupt-controller");
+> 	if (!intc_node) {
+> 		dev_err(dev, "missing interrupt-controller node\n");
+> 		return -ENODEV;
+> 	}
+>
+> 	pcie->intx_domain = irq_domain_add_linear(intc_node, PCI_NUM_INTX,
+> 						  &intx_domain_ops, pcie);
+> 	of_node_put(intc_node);
+> 	if (!pcie->intx_domain) {
+> 		dev_err(dev, "failed to create INTx IRQ domain\n");
+> 		return -ENODEV;
+> 	}
+>
+> 	/* Setup MSI */
+> 	mutex_init(&pcie->lock);
+>
+> 	pcie->msi_bottom_domain = irq_domain_add_linear(node, PCIE_MSI_IRQS_NUM,
+> 				  &mtk_msi_bottom_domain_ops, pcie);
+> 	if (!pcie->msi_bottom_domain) {
+> 		dev_err(dev, "failed to create MSI bottom domain\n");
+> 		ret = -ENODEV;
+> 		goto err_msi_bottom_domain;
+> 	}
+>
+> 	pcie->msi_domain = pci_msi_create_irq_domain(dev->fwnode,
+> 						     &mtk_msi_domain_info,
+> 						     pcie->msi_bottom_domain);
+> 	if (!pcie->msi_domain) {
+> 		dev_err(dev, "failed to create MSI domain\n");
+> 		ret = -ENODEV;
+> 		goto err_msi_domain;
+> 	}
+>
+> 	return 0;
+>
+> err_msi_domain:
+> 	irq_domain_remove(pcie->msi_bottom_domain);
+> err_msi_bottom_domain:
+> 	irq_domain_remove(pcie->intx_domain);
+>
+> 	return ret;
+> }
+>> -- 
+>> 2.25.1
+>
