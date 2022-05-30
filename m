@@ -2,58 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7DCE5371F0
-	for <lists+linux-pci@lfdr.de>; Sun, 29 May 2022 19:36:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92768537384
+	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 04:19:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231396AbiE2Rgc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 May 2022 13:36:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54332 "EHLO
+        id S232176AbiE3CTj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 May 2022 22:19:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231407AbiE2Rga (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 May 2022 13:36:30 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DB211465;
-        Sun, 29 May 2022 10:36:28 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1nvMq1-0005v5-9X; Sun, 29 May 2022 19:36:25 +0200
-Message-ID: <ee5c8d64-c6a3-ad43-f6fc-098a2ae3dce1@leemhuis.info>
-Date:   Sun, 29 May 2022 19:36:24 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Fix regression regarding missing
- PCIe linkup
-Content-Language: en-US
-To:     Jim Quinlan <jim2101024@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        James Dutton <james.dutton@gmail.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        with ESMTP id S229960AbiE3CTi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 May 2022 22:19:38 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC22663C1;
+        Sun, 29 May 2022 19:19:33 -0700 (PDT)
+X-UUID: 9b1ce6ba15f24f7fb15322853dbd4716-20220530
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.5,REQID:33c55451-4baa-461d-bc87-8d188f040082,OB:0,LO
+        B:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACTI
+        ON:release,TS:0
+X-CID-META: VersionHash:2a19b09,CLOUDID:3dabb1b8-3c45-407b-8f66-25095432a27a,C
+        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:0,File:nil
+        ,QS:0,BEC:nil
+X-UUID: 9b1ce6ba15f24f7fb15322853dbd4716-20220530
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1326517318; Mon, 30 May 2022 10:19:25 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.792.15; Mon, 30 May 2022 10:19:24 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.792.3 via Frontend Transport; Mon, 30 May 2022 10:19:23 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     <linmq006@gmail.com>
+CC:     <bhelgaas@google.com>, <jianjun.wang@mediatek.com>, <kw@linux.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20220528224423.7017-1-jim2101024@gmail.com>
- <20220528224423.7017-2-jim2101024@gmail.com>
- <CANCKTBvyUOHJgh1=kFdyRFxWX5D4POnn0wmHYj-eNUQEP6esvA@mail.gmail.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CANCKTBvyUOHJgh1=kFdyRFxWX5D4POnn0wmHYj-eNUQEP6esvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653845788;9339f1b1;
-X-HE-SMSGID: 1nvMq1-0005v5-9X
-X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <matthias.bgg@gmail.com>,
+        <maz@kernel.org>, <miles.chen@mediatek.com>, <robh@kernel.org>,
+        <ryder.lee@mediatek.com>
+Subject: Re: [PATCH] PCI: mediatek-gen3: Fix refcount leak in mtk_pcie_init_irq_domains
+Date:   Mon, 30 May 2022 10:19:23 +0800
+Message-ID: <20220530021923.31601-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <bd03ca71-1875-2e94-8040-533034f76ee5@gmail.com>
+References: <bd03ca71-1875-2e94-8040-533034f76ee5@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,RDNS_NONE,
+        SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -61,52 +62,35 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+Hi Miaoqian,
 
-On 29.05.22 18:52, Jim Quinlan wrote:
-> On Sat, May 28, 2022 at 6:44 PM Jim Quinlan <jim2101024@gmail.com> wrote:
+>>> 						  &intx_domain_ops, pcie);
+>>> 	if (!pcie->intx_domain) {
+>>> 		dev_err(dev, "failed to create INTx IRQ domain\n");
+>>> +		of_node_put(intc_node);
+>>> 		return -ENODEV;
+>>> 	}
+>> Thanks for doing this.
 >>
->> commit 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-> 
->> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
->> introduced a regression on the PCIe RPi4 Compute Module.  If the PCIe
->> root port DT node described in [2] was missing, no linkup would be attempted,
->> and subsequent accesses would cause a panic because this particular PCIe HW
->> causes a CPU abort on illegal accesses (instead of returning 0xffffffff).
->>
->> We fix this by allowing the DT root port node to be missing, as it behaved
->> before the original patchset messed things up.
->>
->> In addition, two small changes are made:
->>
->>   1. Having pci_subdev_regulators_remove_bus() call
->>      regulator_bulk_free() in addtion to regulator_bulk_disable().
->>   2. Having brcm_pcie_add_bus() return 0 if there is an
->>      error in calling pci_subdev_regulators_add_bus().
->>      Instead, we dev_err() and turn on our refusal mode instead.
->>
->> It would be best if this commit were tested by someone with a Rpi CM4
->> platform, as that is how the regression was found.  I have only emulated
->> the problem and fix on different platform.
->>
->> Note that a bisection identified
->>
->> commit 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
->>
->> as the first failing commit.  This commit is a regression, but is unrelated
->> and was fixed by a subsequent commit in the original patchset.
->>
->> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215925
->> [2] Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>
->> Fixes: 93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
->> Fixes: 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> Thorston -- I forgot to replace the bugzilla link; I'll get it on V3.  -- Jim
+>> I checked mtk_pcie_init_irq_domains() and there are multiple exit paths like
+>> err_msi_domain and err_msi_bottom_domain and the normal path which also
+>> need of_node_put(intc_node).
+>
+>Thanks for your reply,
+>
+>I didn't add of_node_put() in other paths because I am not sure if the reference passed through irq_domain_add_linear(), since intc_node is passed to irq_domain_add_linear().
+>
+>__irq_domain_add() keeps &node->fwnode in the irq_domain structure.
+>
+>and use fwnode_handle_get() to get the reference of fwnode, but I still uncertain.
+>
+>If the reference don't needed anymore after irq_domain_add_linear(),
+>
+>your suggestion looks fine, and I will submit v2.
 
-Don't worry to much about these details that might matter for regzbot
-normally (the automatic handling of links to bugzilla ticket is sadly
-dysfunctional currently anyway). Just getting the issue fixed in the
-not-to-distant future is what I mainly care about. :-D
 
-Ciao
-Thorsten
+Thanks for your reply, I think we can do similar things like
+rtl8365mb_irq_setup() in drivers/net/dsa/realtek/rtl8365mb.c
+
+Thanks,
+Miles
