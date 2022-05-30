@@ -2,54 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D310537AF1
-	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 15:01:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 848E653853D
+	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 17:47:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236286AbiE3NBq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 May 2022 09:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
+        id S242080AbiE3Pr3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 May 2022 11:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233847AbiE3NBn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 09:01:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A885F94;
-        Mon, 30 May 2022 06:01:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S242366AbiE3PrL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 11:47:11 -0400
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C72222A18;
+        Mon, 30 May 2022 08:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+        t=1653922822; bh=s1QiOz9wspSFr3MKcctc4iYPmhaFi0B1Ir77QXPhGkQ=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=XfTYcoObJmrg/JDjGJc1MTn8iRm6p9KRmLhJGb19BxuVDXKKtNE0cQ2gWHsF9L+p0
+         dIpeX7wWK2a9S4ui6qfeVUc2FQZiqJyJIw5ZbLpSGeapzW6+8zzFTniivYOrQZqCSp
+         2f7dkspWYhoyPbx9PLNCS+9mqHuvG4xR3MX9aq/M=
+Received: from [192.168.9.172] (unknown [101.88.28.48])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 333C060DD8;
-        Mon, 30 May 2022 13:01:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9256DC3411F;
-        Mon, 30 May 2022 13:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653915698;
-        bh=P31uo602B0Lw3sp32uTNYyaSbPsuU19TeHSt9/MJjyI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fAaR0zTawFiHbHpKN5pzKPk+m99MGmCVzLz5sm2Oe043iPI2mRlzm19OnVfUGJQ+q
-         hjxqRzlOaEDqfGDhQFcQEOhENj41lCAx82me6SDWpaH0BBVWcSrZWGtRvkaSIE5PsN
-         Nta3N/ZMKjhueE68+BCp74+MUB3+Sz/0D9vicpRX8np6E/nv1P/fZIntobbe62/bDz
-         GNMqfnu6OgS2CZ3bQ4/+OEayxmysUqlvUSLHvrfIhkzGcB0M/om5Av6hWX0OM+DGWw
-         O91gx/9RQjXjm5n+F1tpfSNGqXhMI8NvX3nxxE9zXgNjd0Ux8Ig3YntNQcdmg3rBg7
-         2lrCDG/rRUW7g==
-Received: by mail-ua1-f54.google.com with SMTP id q1so3804844uao.1;
-        Mon, 30 May 2022 06:01:38 -0700 (PDT)
-X-Gm-Message-State: AOAM533s12IQrVDKYy3h8/CHc6vkZO6URorwOlORD3S/W1VULj8JazVN
-        FKCduYhwEhwkXh/7OdAUTJ31rBapEyqeR36qEho=
-X-Google-Smtp-Source: ABdhPJyhqQ9qgd1r5/qcNoED52QOHpIhyWBhd2usCvKUVn8AsyE5OajEl3nhKMAILqXIBpnc17BmTEG5fiUwQuc9EqE=
-X-Received: by 2002:ab0:2bc9:0:b0:362:8750:8032 with SMTP id
- s9-20020ab02bc9000000b0036287508032mr19067906uar.118.1653915697481; Mon, 30
- May 2022 06:01:37 -0700 (PDT)
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id EB8A86011F;
+        Mon, 30 May 2022 23:00:21 +0800 (CST)
+Message-ID: <358025d1-28e6-708b-d23d-3f22ae12a800@xen0n.name>
+Date:   Mon, 30 May 2022 23:00:21 +0800
 MIME-Version: 1.0
-References: <CAK8P3a2_52JPnBWNvTTkFVwLxPAa7=NaQ4whwC1UeH_NYHeUKQ@mail.gmail.com>
- <CAK8P3a0SpU1n+29KQxzKnPRvzmDE=L0V9RUpKxhemv=74kevcQ@mail.gmail.com>
- <df5c406c-eec6-c340-2847-49670b7fe8bf@xen0n.name> <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Mon, 30 May 2022 21:01:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6sNr-yo8brBFtzziH6k9Tby0dFp7yehK55SfH5HjZ8hQ@mail.gmail.com>
-Message-ID: <CAAhV-H6sNr-yo8brBFtzziH6k9Tby0dFp7yehK55SfH5HjZ8hQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0a1
 Subject: Re: [GIT PULL] asm-generic changes for 5.19
-To:     Arnd Bergmann <arnd@kernel.org>
+To:     Huacai Chen <chenhuacai@kernel.org>,
+        Arnd Bergmann <arnd@kernel.org>
 Cc:     WANG Xuerui <kernel@xen0n.name>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-arch <linux-arch@vger.kernel.org>,
@@ -66,55 +50,70 @@ Cc:     WANG Xuerui <kernel@xen0n.name>,
         linux-pci <linux-pci@vger.kernel.org>,
         Ard Biesheuvel <ardb@kernel.org>,
         Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAK8P3a2_52JPnBWNvTTkFVwLxPAa7=NaQ4whwC1UeH_NYHeUKQ@mail.gmail.com>
+ <CAK8P3a0SpU1n+29KQxzKnPRvzmDE=L0V9RUpKxhemv=74kevcQ@mail.gmail.com>
+ <df5c406c-eec6-c340-2847-49670b7fe8bf@xen0n.name>
+ <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
+ <CAAhV-H6sNr-yo8brBFtzziH6k9Tby0dFp7yehK55SfH5HjZ8hQ@mail.gmail.com>
+Content-Language: en-US
+From:   WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <CAAhV-H6sNr-yo8brBFtzziH6k9Tby0dFp7yehK55SfH5HjZ8hQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Arnd,
+On 5/30/22 21:01, Huacai Chen wrote:
+> Hi, Arnd,
+>
+> On Mon, May 30, 2022 at 4:21 PM Arnd Bergmann <arnd@kernel.org> wrote:
+>> On Sun, May 29, 2022 at 3:10 PM WANG Xuerui <kernel@xen0n.name> wrote:
+>>> But what for the users and downstream projects? Do the users owning
+>>> LoongArch hardware (me included) and projects/companies porting their
+>>> offerings have to pay for Loongson's mistakes and wait another [2mo,
+>>> 1yr], "ideally" also missing the glibc 2.36 release too?
+>> ...
+>>> Lastly, I'd like to clarify, that this is by no means a
+>>> passive-aggressive statement to make the community look like "the bad
+>>> guy", or to make Loongson "look bad"; I just intend to provide a
+>>> hopefully fresh perspective from a/an {end user, hobbyist kernel
+>>> developer, distro developer, native Chinese speaker with a hopefully
+>>> decent grasp of English}'s view.
+>> Your feedback has been extremely valuable, as always. I definitely
+>> don't want to hold up merging the port for the glibc-2.36 release. If
+>> that is a risk, and if merging the architecture port without the drivers
+>> helps with that, I agree we should just do that. This will also help
+>> with build testing and any treewide changes that are going to be
+>> done on top of v5.19-rc1.
+>>
+>> For the continuous maintenance, would you be available as an
+>> additional Reviewer or co-maintainer to be listed in the maintainers
+>> file? I think in general it is a good idea to have at least one maintainer
+>> that is not directly part of the organization that owns the product,
+>> and you are clearly the best person outside of loongson technology
+>> for this.
+> Yes, Xuerui is very suitable as a Reviewer.
 
-On Mon, May 30, 2022 at 4:21 PM Arnd Bergmann <arnd@kernel.org> wrote:
->
-> On Sun, May 29, 2022 at 3:10 PM WANG Xuerui <kernel@xen0n.name> wrote:
-> > But what for the users and downstream projects? Do the users owning
-> > LoongArch hardware (me included) and projects/companies porting their
-> > offerings have to pay for Loongson's mistakes and wait another [2mo,
-> > 1yr], "ideally" also missing the glibc 2.36 release too?
-> ...
-> > Lastly, I'd like to clarify, that this is by no means a
-> > passive-aggressive statement to make the community look like "the bad
-> > guy", or to make Loongson "look bad"; I just intend to provide a
-> > hopefully fresh perspective from a/an {end user, hobbyist kernel
-> > developer, distro developer, native Chinese speaker with a hopefully
-> > decent grasp of English}'s view.
->
-> Your feedback has been extremely valuable, as always. I definitely
-> don't want to hold up merging the port for the glibc-2.36 release. If
-> that is a risk, and if merging the architecture port without the drivers
-> helps with that, I agree we should just do that. This will also help
-> with build testing and any treewide changes that are going to be
-> done on top of v5.19-rc1.
->
-> For the continuous maintenance, would you be available as an
-> additional Reviewer or co-maintainer to be listed in the maintainers
-> file? I think in general it is a good idea to have at least one maintainer
-> that is not directly part of the organization that owns the product,
-> and you are clearly the best person outside of loongson technology
-> for this.
-Yes, Xuerui is very suitable as a Reviewer.
+Thanks for the recognition from both of you; it is my honor and pleasure 
+to contribute to the LoongArch port and to Linux in general.
 
-Huacai
->
-> Regarding the irqchip driver, merging those is entirely up to Marc and
-> Thomas. Marc already brought up the precedent of merging arch/arm64
-> without the required irqchip driver support, and if it turns out that he
-> find the latest driver submission acceptable, that might still make it in
-> through the irqchip tree.
->
->         Arnd
+As I'm still not entirely satisfied with my kernel development skills, 
+plus my day job is not kernel-related nor Loongson/LoongArch-related at 
+all, listing me as reviewer should be enough for now. I will take care 
+of the arch as long as I have the hardware.
+
+BTW, there were already several breakages when rebasing the previous 
+revision (I believe it's commit 215da6d2dac0 ("MAINTAINERS: Add 
+maintainer information for LoongArch")) on top of linus' tree. Now I see 
+the loongarch-next HEAD is already rebased on top of what I believe to 
+be the current main branch, however I vaguely remember that it's not 
+good to base one's patches on top of "some random commit", so I wonder 
+whether the current branch state is appropriate for a PR?
+
