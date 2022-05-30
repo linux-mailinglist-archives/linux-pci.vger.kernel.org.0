@@ -2,144 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35CF6537AA0
-	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 14:25:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D310537AF1
+	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 15:01:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236129AbiE3MZx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 May 2022 08:25:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39246 "EHLO
+        id S236286AbiE3NBq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 May 2022 09:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235757AbiE3MZw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 08:25:52 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2063.outbound.protection.outlook.com [40.107.223.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1680E793B8;
-        Mon, 30 May 2022 05:25:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wl7yMFmXYwzZHZr53YwpHH4ky7LpM2czNQaJ3EqAgtginH7Y1JDJz5OXO64hpVOEeSmIMB5sHlCc3fy8m3Nzr0FnSeO+fwDx0LZkk6PGPiM8MiW3Pq/m24sXuTPcdKUNWMbbyFetfELoWn6OIxnuL8lDfzob6wZyHML7xOTyFgriyDYxpr+Z+G3ayJES0tL/UBi8M2brzd2afB1GeZxt7tHyHFPeqK9+OQ3oDQ3xEhRMFKgp0fLZXr3y0bSEHRDo1xX5tkeC9CauQpVuj2x16uJn8wDo8+i2VEK99Cak0xnUY7LRv/0Qi2n/rwsEpwmMLmCNDjlm0oPAzaG3XcYgeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q/FTsu6I5mESxaRTipXwTbMFUvin4ulgcqpIMu/1rSk=;
- b=XUH63dnmgn57E4dmrNOzSJPNAnbR65kY3ASe87Qs8R+KsLzD1eC+HyCRMgokbjLAsXesczdmAFgfphGoNaZ2EOOECgp7O5R+YLpNh+OUaN13Ey2Vy20nC7hJuuwcwUMFmPmfsPajvbI7tPue/sT8o9yG594qrIDQEyV7RgVkJnEgF6lTtKyVXIVKBHim3ITgj9QyxvF2fzdYj+4w3Vzo68BNTpK6E/4fvq3U7XeFQu+pGV8n3k06poO9W6Ql4TPSsN+osIyGoCHS4zezVhmxnKidY4eiyN0/1mzoyNRPI+TTMSLFVpYLiFdHq8dJeoKTiTgnInlJfXzFTqbme4vq2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q/FTsu6I5mESxaRTipXwTbMFUvin4ulgcqpIMu/1rSk=;
- b=T6/c5euZ34S6LipMphL4SBXdWk4sSbs/3uMnpv5KOBJ2L8PHFYASe6dr+bxlNhfA2iONPZBXbNKked+CLJwSZv8Lvr/Intrcltcw/9hF4j1x8kYN/tPApkwLdsbRuCKBTokudyOwVeVLO2gAbX2x9U+WBNHQ2QsrnSHIxDD2U5i6hqhY77rWFAcG+TrAwH2kssYwQQl9rtUQxPJJNwbWRgA8zvbXbP+Xzmn7y6tRK0dXjaKROXgbXyam3mTmqXEJMmazUTltbTU4ajYCSpaLWeaAcpQc8B1/UCqyaQtJghUDLBhBSJkxXZzQDM8hO5MzUl7oRLuejsDax8jC8asbdA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by SJ0PR12MB5405.namprd12.prod.outlook.com (2603:10b6:a03:3af::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13; Mon, 30 May
- 2022 12:25:47 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::2484:51da:d56f:f1a5]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::2484:51da:d56f:f1a5%7]) with mapi id 15.20.5293.019; Mon, 30 May 2022
- 12:25:47 +0000
-Date:   Mon, 30 May 2022 09:25:46 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] vfio/pci: Add the support for PCI D3cold state
-Message-ID: <20220530122546.GZ1343366@nvidia.com>
-References: <20220425092615.10133-1-abhsahu@nvidia.com>
- <20220425092615.10133-9-abhsahu@nvidia.com>
- <20220504134551.70d71bf0.alex.williamson@redhat.com>
- <9e44e9cc-a500-ab0d-4785-5ae26874b3eb@nvidia.com>
- <20220509154844.79e4915b.alex.williamson@redhat.com>
- <68463d9b-98ee-b9ec-1a3e-1375e50a2ad2@nvidia.com>
- <42518bd5-da8b-554f-2612-80278b527bf5@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42518bd5-da8b-554f-2612-80278b527bf5@nvidia.com>
-X-ClientProxiedBy: BL0PR05CA0024.namprd05.prod.outlook.com
- (2603:10b6:208:91::34) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        with ESMTP id S233847AbiE3NBn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 09:01:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A885F94;
+        Mon, 30 May 2022 06:01:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 333C060DD8;
+        Mon, 30 May 2022 13:01:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9256DC3411F;
+        Mon, 30 May 2022 13:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653915698;
+        bh=P31uo602B0Lw3sp32uTNYyaSbPsuU19TeHSt9/MJjyI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fAaR0zTawFiHbHpKN5pzKPk+m99MGmCVzLz5sm2Oe043iPI2mRlzm19OnVfUGJQ+q
+         hjxqRzlOaEDqfGDhQFcQEOhENj41lCAx82me6SDWpaH0BBVWcSrZWGtRvkaSIE5PsN
+         Nta3N/ZMKjhueE68+BCp74+MUB3+Sz/0D9vicpRX8np6E/nv1P/fZIntobbe62/bDz
+         GNMqfnu6OgS2CZ3bQ4/+OEayxmysUqlvUSLHvrfIhkzGcB0M/om5Av6hWX0OM+DGWw
+         O91gx/9RQjXjm5n+F1tpfSNGqXhMI8NvX3nxxE9zXgNjd0Ux8Ig3YntNQcdmg3rBg7
+         2lrCDG/rRUW7g==
+Received: by mail-ua1-f54.google.com with SMTP id q1so3804844uao.1;
+        Mon, 30 May 2022 06:01:38 -0700 (PDT)
+X-Gm-Message-State: AOAM533s12IQrVDKYy3h8/CHc6vkZO6URorwOlORD3S/W1VULj8JazVN
+        FKCduYhwEhwkXh/7OdAUTJ31rBapEyqeR36qEho=
+X-Google-Smtp-Source: ABdhPJyhqQ9qgd1r5/qcNoED52QOHpIhyWBhd2usCvKUVn8AsyE5OajEl3nhKMAILqXIBpnc17BmTEG5fiUwQuc9EqE=
+X-Received: by 2002:ab0:2bc9:0:b0:362:8750:8032 with SMTP id
+ s9-20020ab02bc9000000b0036287508032mr19067906uar.118.1653915697481; Mon, 30
+ May 2022 06:01:37 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1106305f-ae42-48fd-3f5a-08da423786ab
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB5405:EE_
-X-Microsoft-Antispam-PRVS: <SJ0PR12MB54059C9D74A02E825F93ACF3C2DD9@SJ0PR12MB5405.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: W4L5Y4MgaClIa8OLxHKmM/EQp9+iwAOKEq2QYe13BSaQYnb5WGk8fPj74llgCDL1dl+aOAeOjdST6MiUdCHAqEOC93Odp2f15ciGGyG1MFSw48nkEyxfeA5+4QXwWhrbtDrX+KDuJfKAtUJBx4441lV1igS/0C8o4W66TOil3vYAQRICa0aW82/Yz4FkBOmYAzddjEAbV+XoDmuUb4Ge74iuH8OY4gYUQ63NjvhGZ+yNvKo1sX/U6aChjzuHZq2+4Qp7JLlMWc12GrtX0x6aOujQWXuKgwlFFgtXNlYtVCN2uRCUH0bXQmgnHr8dk/1q9xRhumBuORkoPiCQmFDI9z531XZjLR2wWCWif0rf5mxPUOuliWt6YCCP2VXkqmmiD8TU2my3MmxdRke7CWg6atcrv7xrzXPEetYnWGYIVzZSqLBDoi0FlFnNdrLUhnsZ5Ufz7tYejJ42MaXtsJWsWjQYMyN7vtQ8vFE3N6wvV1LmM/bs/KQuCcu7dsrIDWIgalKpg+as3yBdKKmyhndWPYHzNK6EaTXeMJmErhYIYCPoWx/XFuykRZvc2TP18bN9zKZOvM5YB8sl27n5SyrFT9ZI9VmysZk6tVz+cn1L1kIenfrkqlPftP/zYnUgqlROeQwg2OK2Eq6x0Wjlisq9V3mfOa2fi1TzYUF6/1GNM7bMWlwZbr7BnUauOohpZBI6171THVCi05T7905Cfm3LvA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(1076003)(38100700002)(186003)(2616005)(8676002)(316002)(4326008)(54906003)(6636002)(37006003)(36756003)(6862004)(66476007)(83380400001)(8936002)(6486002)(7416002)(6506007)(86362001)(508600001)(4744005)(33656002)(5660300002)(26005)(6512007)(2906002)(66556008)(66946007)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?937IzUEY9ZjEkeAJUoey6dulkGmPiDf9NUhRY9HZTI3TsedHDNo8PgSXNf3a?=
- =?us-ascii?Q?xHgA/cKX06aNg1tYZNWSOjiH3TFWVUh1lhJZmTXa837ZcsrVHKsZccT5nbXT?=
- =?us-ascii?Q?osDj0EycLihTyMHGGHP14oipNA+6zMM4tmpR9GXvNNiDrZf0nZ7HYQ99apaC?=
- =?us-ascii?Q?B/eNGEA8iGk0BvLU58YZmA7Vo8DdAJltZtgPSpZaYsP10MaBpEPRJTgPUlZl?=
- =?us-ascii?Q?lfhdY/Q544tp2EDoNOhnh12SReaAL3NlKVGT2380Oqwc3fHd/Rg3c66Rp3KG?=
- =?us-ascii?Q?jAwq25WVlyvzrLVFuRTAcFRHHfQ6Xfu/dOgkQlamdToyOtn+C88SW1JHaO5/?=
- =?us-ascii?Q?ObMtwYD0AQOyHnK3kovL/f7LzPOT1zH8r4oNO1SPUNIM9lVCX7D8QAzwkE9/?=
- =?us-ascii?Q?qQiphEQq5XU9TvScWUuqZHXsBzm+nqMPe3Jw4zTwssTwOo9CeQiIyiy/2Re+?=
- =?us-ascii?Q?QzJT0aShuE+K1XF6OIPMjXG6BAB1JrNAqTFQ9xDPuWUzJNv2Py0Ks2nlZoO9?=
- =?us-ascii?Q?luQjiI/MEeQmejWkNjY9SxcdMMM7cCZAu0P1GSVryaiGhmR3PolzxfNJ84d6?=
- =?us-ascii?Q?r6uyajqqXxsXIffYzr5RJPv5tYeSmnSk/Qqt6tQJyTNmV9v0TzIbhbdx1yDP?=
- =?us-ascii?Q?l7T7A/Nx81xtevlcp72zhcg3w4CC1k506o1/fVWR2m1y8Gqg1L2fJ/kk1CuT?=
- =?us-ascii?Q?mAMRiUeLxsVUrbKq43iFrqjOV+sSnwXYry22W7GMMXQg+zpt96mRyRy3Pn2V?=
- =?us-ascii?Q?csVWaN/CEO9bHuoqxgxiyhevPp2p9ieHNkCaNOgeOXWDH/68tCgSZqDjoqxI?=
- =?us-ascii?Q?ZL09FtZNOgPKHe1au0qEiO4ka4ylivEqFv/J2pH4e0BnRj+S9aMrK+Dt93fg?=
- =?us-ascii?Q?7syv2T5i72BuGurhwxRweLf2USKSTMz2I+dKa0jqYI3JZJC6UTzHeFaOegdm?=
- =?us-ascii?Q?lpRzaYIPV2cYwm0XiYPGfogY18aEQdnH7xgvwjunopfYSrKh/UpPPuqBUxzk?=
- =?us-ascii?Q?As/vLt/B1IMNzA44dKoqDv/jFCBSB08ZbLxHy8DiYjoYLTdpQxBIZsPEMv6w?=
- =?us-ascii?Q?r4PZr/zm1Sy3JuYhSI0YKYS2VD5qRxmkWYYZN/lvPkMihzycJOmk+XBZvq2j?=
- =?us-ascii?Q?lBLD+6Em+EjSgqrX9GMBvBw+9ZqiD0S1tjC3jULpBzGjAN5ShSIntic+5n2z?=
- =?us-ascii?Q?S9UCllwTP/QBMiMNMlWWjV2mUNQjMUD0DSWcj6uB6AWo6PpSIFBLU0ZESkW9?=
- =?us-ascii?Q?17Up4+PHbzjI8yHgmNkT1Fd0gdwAtTNieaF7UExE4hZlVebZxlqj5c/9zQS7?=
- =?us-ascii?Q?nYLgKvLdNVrtohjurpJ79Lzw2PTXld+hRdWWM0v6117FHyC3VRLkGRTb8SpI?=
- =?us-ascii?Q?D59/CmV30jWT3WPH+NpI/+B8zpAU8tQb+stI94wdpPZ3BLTU+k6tl7AmZ3Ic?=
- =?us-ascii?Q?i7/7qzGL3K+YvXhA0Hg6+VHkmhOVW6f2P5eT+dHNU/dzmo+qnV2i015tVuC+?=
- =?us-ascii?Q?dkt455wzGYJvajhaVxry25sP7jpf/EZBL7VQi6PBFkbolJh4cbW+s4zoO09D?=
- =?us-ascii?Q?m+8BUhlMylp8u4fSM15V4FMCegnAp8++BK7kpDYl5gdpDcRGAzTbyove2NFF?=
- =?us-ascii?Q?/oeudqmrwF4SG4CLZiM7I6AkgJ5ehqol2KwAbdZdp63sYoIjDQ+9rrqQrIhj?=
- =?us-ascii?Q?3HnBdDo7k2O6T83+cWMm6qdAEobsEno9ddJzt3w6RVL8NF643CwlRpe0pjH0?=
- =?us-ascii?Q?cgs2TW7Gbg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1106305f-ae42-48fd-3f5a-08da423786ab
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2022 12:25:47.7756
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sh1l+cBpcZa/3sIHJ/vdmom1CNe46ksXlz91Jl8ataZeZiIPQmoBKWkeHS3xuibE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5405
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <CAK8P3a2_52JPnBWNvTTkFVwLxPAa7=NaQ4whwC1UeH_NYHeUKQ@mail.gmail.com>
+ <CAK8P3a0SpU1n+29KQxzKnPRvzmDE=L0V9RUpKxhemv=74kevcQ@mail.gmail.com>
+ <df5c406c-eec6-c340-2847-49670b7fe8bf@xen0n.name> <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
+From:   Huacai Chen <chenhuacai@kernel.org>
+Date:   Mon, 30 May 2022 21:01:25 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6sNr-yo8brBFtzziH6k9Tby0dFp7yehK55SfH5HjZ8hQ@mail.gmail.com>
+Message-ID: <CAAhV-H6sNr-yo8brBFtzziH6k9Tby0dFp7yehK55SfH5HjZ8hQ@mail.gmail.com>
+Subject: Re: [GIT PULL] asm-generic changes for 5.19
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     WANG Xuerui <kernel@xen0n.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        libc-alpha@sourceware.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        musl@lists.openwall.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 30, 2022 at 04:45:59PM +0530, Abhishek Sahu wrote:
+Hi, Arnd,
 
->  1. In real use case, config or any other ioctl should not come along
->     with VFIO_DEVICE_FEATURE_POWER_MANAGEMENT ioctl request.
->  
->  2. Maintain some 'access_count' which will be incremented when we
->     do any config space access or ioctl.
+On Mon, May 30, 2022 at 4:21 PM Arnd Bergmann <arnd@kernel.org> wrote:
+>
+> On Sun, May 29, 2022 at 3:10 PM WANG Xuerui <kernel@xen0n.name> wrote:
+> > But what for the users and downstream projects? Do the users owning
+> > LoongArch hardware (me included) and projects/companies porting their
+> > offerings have to pay for Loongson's mistakes and wait another [2mo,
+> > 1yr], "ideally" also missing the glibc 2.36 release too?
+> ...
+> > Lastly, I'd like to clarify, that this is by no means a
+> > passive-aggressive statement to make the community look like "the bad
+> > guy", or to make Loongson "look bad"; I just intend to provide a
+> > hopefully fresh perspective from a/an {end user, hobbyist kernel
+> > developer, distro developer, native Chinese speaker with a hopefully
+> > decent grasp of English}'s view.
+>
+> Your feedback has been extremely valuable, as always. I definitely
+> don't want to hold up merging the port for the glibc-2.36 release. If
+> that is a risk, and if merging the architecture port without the drivers
+> helps with that, I agree we should just do that. This will also help
+> with build testing and any treewide changes that are going to be
+> done on top of v5.19-rc1.
+>
+> For the continuous maintenance, would you be available as an
+> additional Reviewer or co-maintainer to be listed in the maintainers
+> file? I think in general it is a good idea to have at least one maintainer
+> that is not directly part of the organization that owns the product,
+> and you are clearly the best person outside of loongson technology
+> for this.
+Yes, Xuerui is very suitable as a Reviewer.
 
-Please don't open code locks - if you need a lock then write a proper
-lock. You can use the 'try' variants to bail out in cases where that
-is appropriate.
-
-Jason
+Huacai
+>
+> Regarding the irqchip driver, merging those is entirely up to Marc and
+> Thomas. Marc already brought up the precedent of merging arch/arm64
+> without the required irqchip driver support, and if it turns out that he
+> find the latest driver submission acceptable, that might still make it in
+> through the irqchip tree.
+>
+>         Arnd
