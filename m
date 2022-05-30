@@ -2,44 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55AC85376DD
-	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 10:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 712155376CE
+	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 10:50:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232260AbiE3IYq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 May 2022 04:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
+        id S233731AbiE3IV3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 May 2022 04:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbiE3IYp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 04:24:45 -0400
-X-Greylist: delayed 355 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 30 May 2022 01:24:41 PDT
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:101:465::107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C0670366
-        for <linux-pci@vger.kernel.org>; Mon, 30 May 2022 01:24:41 -0700 (PDT)
-Received: from smtp2.mailbox.org (unknown [91.198.250.124])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        with ESMTP id S233572AbiE3IVT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 04:21:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87FA06D19E;
+        Mon, 30 May 2022 01:21:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4LBSwf2KNvz9sTq;
-        Mon, 30 May 2022 10:18:42 +0200 (CEST)
-Message-ID: <f15c1c2c-0987-7b26-3fe4-38d449a35531@denx.de>
-Date:   Mon, 30 May 2022 10:18:41 +0200
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 236D660E8E;
+        Mon, 30 May 2022 08:21:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83626C3411E;
+        Mon, 30 May 2022 08:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653898877;
+        bh=6mZJiJbmBP5nIWsu49+CXVUX8jQfK+UvVFjRNgWXebw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XaoiQTO07UWKTKa7DvAu3E1TqyqCrZvDMjSawN2jqjs76oebLWXuHNyMMHpEHCuW2
+         RWVc8AQkaQdSALmWN1qEnP0U8+tmhvdUUIDC3u1bZpg/H6AlLeWXqRxTX/vimIu5bw
+         OXy7mEv0vYi2vsR/WO2VshcjWhH9onv5cq3HaCOzUDMYDdSqutECZxfI+ZI4FnTXlx
+         PNqKIZPahp6AyssPmubpmLdigj+1u+H946fyAVrYADTUucMm/fFuIBWV9X6L1Zmr14
+         QpLIbLZkXFgalB1GAGy3ay5uv7IuaVB4BOqOQrDUDblPJ+kvhE44AXYO5EfX0654Vb
+         Oc99QbaK00vFw==
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-30c1b401711so38155747b3.2;
+        Mon, 30 May 2022 01:21:17 -0700 (PDT)
+X-Gm-Message-State: AOAM530PAd9NbmwcjyGNwsNsNXlbx4pNk0C7Y1eP7B/M3yqeHOIbnB71
+        KAYKCayUz6DR6nrKuQd/NV4ac5wnAgu2nGBnXLk=
+X-Google-Smtp-Source: ABdhPJwtYtcRJBvW0OhdeYiTGlxOaw+f4fu0VS7H8dnFKjbyUOJjLxz2DuwfUfrH0XZz0QtT75LFMu05vESNYppoiso=
+X-Received: by 2002:a81:488c:0:b0:302:549f:ffbc with SMTP id
+ v134-20020a81488c000000b00302549fffbcmr21167071ywa.495.1653898876538; Mon, 30
+ May 2022 01:21:16 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 1/2] PCI/portdrv: Add option to setup IRQs for
- platform-specific Service Errors
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-References: <20220528000943.GA518055@bhelgaas>
-From:   Stefan Roese <sr@denx.de>
-In-Reply-To: <20220528000943.GA518055@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4LBSwf2KNvz9sTq
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NEUTRAL,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <CAK8P3a2_52JPnBWNvTTkFVwLxPAa7=NaQ4whwC1UeH_NYHeUKQ@mail.gmail.com>
+ <CAK8P3a0SpU1n+29KQxzKnPRvzmDE=L0V9RUpKxhemv=74kevcQ@mail.gmail.com> <df5c406c-eec6-c340-2847-49670b7fe8bf@xen0n.name>
+In-Reply-To: <df5c406c-eec6-c340-2847-49670b7fe8bf@xen0n.name>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Mon, 30 May 2022 10:20:59 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
+Message-ID: <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
+Subject: Re: [GIT PULL] asm-generic changes for 5.19
+To:     WANG Xuerui <kernel@xen0n.name>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        libc-alpha@sourceware.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        musl@lists.openwall.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-acpi@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+        linux-pci@vger.kernel.org, ardb@kernel.org,
+        Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,169 +73,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28.05.22 02:09, Bjorn Helgaas wrote:
-> In subject line, I assume you mean "System Errors" instead of "Service
-> Errors"?
+On Sun, May 29, 2022 at 3:10 PM WANG Xuerui <kernel@xen0n.name> wrote:
+> But what for the users and downstream projects? Do the users owning
+> LoongArch hardware (me included) and projects/companies porting their
+> offerings have to pay for Loongson's mistakes and wait another [2mo,
+> 1yr], "ideally" also missing the glibc 2.36 release too?
+...
+> Lastly, I'd like to clarify, that this is by no means a
+> passive-aggressive statement to make the community look like "the bad
+> guy", or to make Loongson "look bad"; I just intend to provide a
+> hopefully fresh perspective from a/an {end user, hobbyist kernel
+> developer, distro developer, native Chinese speaker with a hopefully
+> decent grasp of English}'s view.
 
-Background: I took over submitting this patchset from Bharat. Here his
-last revision:
-https://www.spinics.net/lists/kernel/msg2960164.html
+Your feedback has been extremely valuable, as always. I definitely
+don't want to hold up merging the port for the glibc-2.36 release. If
+that is a risk, and if merging the architecture port without the drivers
+helps with that, I agree we should just do that. This will also help
+with build testing and any treewide changes that are going to be
+done on top of v5.19-rc1.
 
-Just to explain, that I didn't choose the naming.
+For the continuous maintenance, would you be available as an
+additional Reviewer or co-maintainer to be listed in the maintainers
+file? I think in general it is a good idea to have at least one maintainer
+that is not directly part of the organization that owns the product,
+and you are clearly the best person outside of loongson technology
+for this.
 
-To answer your question I personally think too, that "System Errors" is
-more appropriate than "Service Errors". But still this patchset replaces
-or better enhances the already present pcie_init_service_irqs() by a
-platform-specific version. I can only suspect, that this is the
-reasoning for this "Service" naming.
+Regarding the irqchip driver, merging those is entirely up to Marc and
+Thomas. Marc already brought up the precedent of merging arch/arm64
+without the required irqchip driver support, and if it turns out that he
+find the latest driver submission acceptable, that might still make it in
+through the irqchip tree.
 
-> On Fri, Jan 14, 2022 at 08:58:33AM +0100, Stefan Roese wrote:
->> From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
->>
->> As per section 6.2.4.1.2, 6.2.6 in PCIe r4.0 (and later versions),
->> platform-specific System Errors like AER can be delivered via platform-
->> specific interrupt lines.
-> 
-> IIUC, this refers to the top left branch in Figure 6-3 of PCIe r6.0,
-> sec 6.2.6, which shows "System Error (platform specific)" controlled
-> by "System Error Enables (one per error class) in the Root Control
-> register," i.e., the PCI_EXP_RTCTL_SECEE, PCI_EXP_RTCTL_SENFEE, and
-> PCI_EXP_RTCTL_SEFEE bits.
-> 
-> Where are those enable bits set?  The only references I see are to
-> them being cleared via SYSTEM_ERROR_INTR_ON_MESG_MASK in
-> aer_enable_rootport().
-
-Interesting, thanks. Again, I didn't write the original commit text,
-so my comments are a bit "limited" here. Perhaps Bharat might have
-something add here?
-
->> This patch adds the init_platform_service_irqs() hook to struct
->> pci_host_bridge, making it possible that platforms may implement this
->> function to hook IRQs for these platform-specific System Errors, like
->> AER.
->>
->> If these platform-specific service IRQs have been successfully
->> installed via pcie_init_platform_service_irqs(),
->> pcie_init_service_irqs() is skipped.
->>
->> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
->> Signed-off-by: Stefan Roese <sr@denx.de>
->> Cc: Bjorn Helgaas <helgaas@kernel.org>
->> Cc: Pali Rohár <pali@kernel.org>
->> Cc: Michal Simek <michal.simek@xilinx.com>
->> ---
->>   drivers/pci/pcie/portdrv_core.c | 39 ++++++++++++++++++++++++++++++++-
->>   include/linux/pci.h             |  2 ++
->>   2 files changed, 40 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
->> index e7dcb1f23210..27b990cedb4c 100644
->> --- a/drivers/pci/pcie/portdrv_core.c
->> +++ b/drivers/pci/pcie/portdrv_core.c
->> @@ -190,6 +190,31 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
->>   	return 0;
->>   }
->>   
->> +/**
->> + * pcie_init_platform_service_irqs - initialize platform service irqs for
->> + * platform-specific System Errors
->> + * @dev: PCI Express port to handle
->> + * @irqs: Array of irqs to populate
->> + * @mask: Bitmask of capabilities
-> 
-> s/irqs/IRQs/ above (twice) for consistency.
-
-Yes.
-
->> + * Return value: -ENODEV, in case no platform-specific IRQ is available
->> + */
->> +static int pcie_init_platform_service_irqs(struct pci_dev *dev,
->> +					   int *irqs, int mask)
->> +{
->> +	struct pci_host_bridge *bridge;
->> +
->> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
->> +		bridge = pci_find_host_bridge(dev->bus);
->> +		if (bridge && bridge->init_platform_service_irqs) {
->> +			return bridge->init_platform_service_irqs(dev, irqs,
->> +								  mask);
->> +		}
->> +	}
->> +
->> +	return -ENODEV;
->> +}
->> +
->>   /**
->>    * get_port_device_capability - discover capabilities of a PCI Express port
->>    * @dev: PCI Express port to examine
->> @@ -335,7 +360,19 @@ int pcie_port_device_register(struct pci_dev *dev)
->>   		irq_services |= PCIE_PORT_SERVICE_DPC;
->>   	irq_services &= capabilities;
->>   
->> -	if (irq_services) {
->> +	/*
->> +	 * Some platforms have dedicated interrupts from root complex to
->> +	 * interrupt controller for PCIe platform-specific System Errors
->> +	 * like AER/PME etc., check if the platform registered with any such
->> +	 * IRQ.
-> 
-> I don't see "PME etc" mentioned in the spec sections you cite.
-> 6.2.4.1.2 and 6.2.6 only cover interrupts in response to error
-> Messages.  Are there other sections that cover PME and whatever other
-> interrupts you have in mind?
-
-Bharat?
-
-> 6.7.3.4 ("Software Notification of Hot-Plug Events") talks about PME
-> and Hot-Plug Event interrupts, but these aren't errors, and I only see
-> signaling via INTx, MSI, or MSI-X.  Is there provision for a different
-> method?
-
-Here the quote from Bharat's original cover letter:
-"Some platforms have dedicated IRQ lines for PCIe services like AER/PME
-etc. The root complex on these platform will use these seperate IRQ
-lines to report AER/PME etc., interrupts and will not generate MSI/
-MSI-X/INTx interrupts for these services.
-These patches will add new method for these kind of platforms to
-register the platform IRQ number with respective PCIe services."
-
-To sum it up, on our Xilinx ZynqMP platform this patch series is needed
-to deliver AER related interrupts. As this SoC needs this platform
-specific IRQ line for signalling of these events.
-
->> +	 */
->> +	status = pcie_init_platform_service_irqs(dev, irqs, capabilities);
->> +
->> +	/*
->> +	 * Only install service irqs, when the platform-specific hook was
->> +	 * unsuccessful
-> 
-> s/irqs/IRQs/ again.
-
-Yes.
-
-Thanks,
-Stefan
-
->> +	 */
->> +	if (irq_services && status) {
->>   		/*
->>   		 * Initialize service IRQs. Don't use service devices that
->>   		 * require interrupts if there is no way to generate them.
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 18a75c8e615c..fb8aad3cb460 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -554,6 +554,8 @@ struct pci_host_bridge {
->>   	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
->>   	int (*map_irq)(const struct pci_dev *, u8, u8);
->>   	void (*release_fn)(struct pci_host_bridge *);
->> +	int (*init_platform_service_irqs)(struct pci_dev *dev, int *irqs,
->> +					  int plat_mask);
->>   	void		*release_data;
->>   	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
->>   	unsigned int	no_ext_tags:1;		/* No Extended Tags */
->> -- 
->> 2.34.1
->>
+        Arnd
