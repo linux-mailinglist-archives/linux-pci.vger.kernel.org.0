@@ -2,146 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89DF85374C4
-	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 09:23:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA7C95374E4
+	for <lists+linux-pci@lfdr.de>; Mon, 30 May 2022 09:23:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232753AbiE3G21 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 May 2022 02:28:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
+        id S231933AbiE3Gsz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 May 2022 02:48:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232694AbiE3G2Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 02:28:25 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8096E12630;
-        Sun, 29 May 2022 23:28:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 35AC5B80B9D;
-        Mon, 30 May 2022 06:28:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C580FC341CB;
-        Mon, 30 May 2022 06:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653892101;
-        bh=XDzSIoHWePkmP+hpw6NVJQ2xptrOcdraIZACeo0G99g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QcJjk/Inplt4PZq9fjYRnwhB9hUn6LTrjwBSL6gpDtXYnyadjF+DGlGse6l1zTloW
-         kCzkvEfOizdurZrM9A3+xqlPnxZGHVDNaALT9IibCphP/bN8mh4XcHTZUQ2nWmx4bD
-         1uz7rNyx+o3r2XV6XgdtWTYR4CZEfuiK88ZUe88mo6yQfPG4celZl9OzmJV7tS42x6
-         DVGxWyiPH/hFI1lb47pKaDa5uERPNS9UwYMpCGW8r8BKc/NrjtN64PHXd2yG/ClUT6
-         RXTuGOgZRcbaSrUCqPgbzl0iSTuWMvID1Jvsbye0r/0uXIO5EWmwRECloRm0gD+Yjr
-         4KsgaK3Uk6QNw==
-Received: by mail-vs1-f51.google.com with SMTP id b7so9931572vsq.1;
-        Sun, 29 May 2022 23:28:21 -0700 (PDT)
-X-Gm-Message-State: AOAM533M0XK43njrW1enHlotiZ/tElsQYuOWj0M/HJ7oTJEPR2hYY4uM
-        JKmARiT8Ewy0oHVlAIPpuzoMHHhpY8+PBRw3CAc=
-X-Google-Smtp-Source: ABdhPJxEAsyCh28072V1AnS6ZttgQlEUduuZqZSfbFoSlejtUq2u+WNsxkkpfH04f8xnjxHcuhayk+gBn3uuHKqnFdg=
-X-Received: by 2002:a67:e899:0:b0:337:932a:2fc5 with SMTP id
- x25-20020a67e899000000b00337932a2fc5mr18547320vsn.40.1653892100644; Sun, 29
- May 2022 23:28:20 -0700 (PDT)
+        with ESMTP id S231725AbiE3Gsy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 May 2022 02:48:54 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AC950B28;
+        Sun, 29 May 2022 23:48:54 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id y189so9766416pfy.10;
+        Sun, 29 May 2022 23:48:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kzFFxChRf7RgMYcMJ2ll5DY8vkYnacLX8rZwLOdfqa8=;
+        b=musOaD+e8VR3WVlAfkK5uKKyxkR+shVmejo5NWKByI75Uu3nTCkw0n/od0vocI2Y7u
+         zB8S0/T21sOShBFD5iiqVFIgG6aSrIk5/F8UjfsW+QvNhEki23PnkrSVx9HDWTSWf2qU
+         8QE0gj3kvFfiwxrQOZpJrJ5RpoBG9qz9vIs0GMmfCxnNynvnqxl92C0YCdfe7n8+/Mci
+         nLYN4kQZN1DySeEfspZp4ZVtCn59f4Kz1pzelDGOUmDzRaSS3L879dZrxEGwRf+jKobg
+         3KtmWmwHfKnqfG7t3TU/ZoFNayog8PscZk49H7GytwjPTPx2Qr5xJhdIz3e2Xbd/tsmc
+         pgBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kzFFxChRf7RgMYcMJ2ll5DY8vkYnacLX8rZwLOdfqa8=;
+        b=M0RZ9/VszdhTXV/NjYbzV6oQyogiB4PE+men3ncNg3Elv/m3kF9GK1UKPw4pVqVuK2
+         Egg4qCxNmgLIhQCpAEC7GKXP7vDHunr0zY6qYNLiLYVkt/1hVGCDF1BQHlQ9PlKHFxvN
+         NJX1tKV+Yk4Tp/G1vXG7cGtDGCmYYge339pmaG8iXi9BdTEhEtrMC7wpIRFSohJVZek4
+         yYaOaPvgrhTEklAstEog3sMt/LkrGMuYtrlQc1noRS66Fn5sPZOH14eiqO4j8tjt5cxC
+         s9FTk1sjIY38n37PZZX23iHtdhQb1yIMiH+o3w7lT0pD6He4gjQbcnXT9VMZ+T/Nknqy
+         6aHw==
+X-Gm-Message-State: AOAM532QXSJ8YIrl2fj2me2rVIZsz5OPalDmnxk/CIb2V81+4sG+37H/
+        Sg48JDuiATOD46uAb4Oxfag=
+X-Google-Smtp-Source: ABdhPJxFqpNKl8VvLOwz6v8FfeXv5UDp72W5VWnmYNXP0X2DVfcSqFfEpd3ke0JpZuPugL7BR1W7fw==
+X-Received: by 2002:a62:c186:0:b0:518:900c:837 with SMTP id i128-20020a62c186000000b00518900c0837mr41044044pfg.50.1653893333580;
+        Sun, 29 May 2022 23:48:53 -0700 (PDT)
+Received: from localhost.localdomain ([202.120.234.246])
+        by smtp.googlemail.com with ESMTPSA id h28-20020a63211c000000b003fbaae74971sm5826704pgh.72.2022.05.29.23.48.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 May 2022 23:48:53 -0700 (PDT)
+From:   Miaoqian Lin <linmq006@gmail.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linmq006@gmail.com
+Subject: [PATCH v2] PCI: mediatek-gen3: Fix refcount leak in mtk_pcie_init_irq_domains
+Date:   Mon, 30 May 2022 10:48:06 +0400
+Message-Id: <20220530064807.34534-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CAK8P3a2_52JPnBWNvTTkFVwLxPAa7=NaQ4whwC1UeH_NYHeUKQ@mail.gmail.com>
- <CAK8P3a0SpU1n+29KQxzKnPRvzmDE=L0V9RUpKxhemv=74kevcQ@mail.gmail.com> <875ylomq3m.wl-maz@kernel.org>
-In-Reply-To: <875ylomq3m.wl-maz@kernel.org>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Mon, 30 May 2022 14:28:09 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4icDqABQiT4ckKdsmfVzqBKjxncDt9649c2ijOD093gw@mail.gmail.com>
-Message-ID: <CAAhV-H4icDqABQiT4ckKdsmfVzqBKjxncDt9649c2ijOD093gw@mail.gmail.com>
-Subject: Re: [GIT PULL] asm-generic changes for 5.19
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Arnd Bergmann <arnd@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        WANG Xuerui <kernel@xen0n.name>, libc-alpha@sourceware.org,
-        musl@lists.openwall.com, Ard Biesheuvel <ardb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, May 29, 2022 at 9:21 PM Marc Zyngier <maz@kernel.org> wrote:
->
-> On Sun, 29 May 2022 12:24:29 +0100,
-> Arnd Bergmann <arnd@kernel.org> wrote:
-> >
-> > On Thu, May 26, 2022 at 5:00 PM Arnd Bergmann <arnd@kernel.org> wrote:
-> > > - A series to add a generic ticket spinlock that can be shared by most
-> > >   architectures with a working cmpxchg or ll/sc type atomic, including
-> > >   the conversion of riscv, csky and openrisc. This series is also a
-> > >   prerequisite for the loongarch64 architecture port that will come as
-> > >   a separate pull request.
-> >
-> > An update on Loongarch: I was originally planning to  send Linus a
-> > pull request with
-> > the branch with the contents from
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
-> >
-> > but I saw that this includes both the architecture code and some
-> > device drivers (irqchip, pci, acpi) that are essential for the
-> > kernel to actually boot. At least the irqchip driver has not passed
-> > review because it uses a nonstandard way to integrate into ACPI, and
-> > the PCI stuff may or may not be ready but has no Reviewed-by or
-> > Acked-by tags from the maintainers. I clearly don't want to bypass
-> > the subsystem maintainers on those drivers by sending a pull request
-> > for the current branch.
->
-> It seems that there is now a new contributor on the irqchip front, and
-> the current approach *should* be better than the "copy MIPS and run"
-> approach that was previously taken. I'm still to find time to review
-> the new series (I just came back from a week off), but hopefully next
-> week.
->
-> > My feeling is that there is also no point in merging a port without
-> > the drivers as it cannot work on any hardware. On the other hand,
-> > the libc submissions (glibc and musl) are currently blocked while
-> > they are waiting for the kernel port to get merged.
->
-> I'd tend to agree. But if on the other hand the userspace ABI is
-> clearly defined, I think it could make sense to go for it (if I
-> remember well, we merged arm64 without any support irqchip support,
-> and the arm64 GIC support appeared later in the game).
-(adding linux-pci and linux-acpi maintainers to Cc)
+of_get_child_by_name() returns a node pointer with refcount
+incremented, we should use of_node_put() on it when not need anymore.
+Add missing of_node_put() to avoid refcount leak.
 
-Hi Bjorn and Rafael,
+Fixes: 814cceebba9b ("PCI: mediatek-gen3: Add INTx support")
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+---
+changes in v2:
+- move of_node_put(intc_node) right after irq_domain_add_linear to cover
+normal path and error paths.
 
-I'd like to confirm the review status of the respective LoongArch
-patchsets ([1], [2]), to see if we can make it into this merge window.
+v1 link: https://lore.kernel.org/all/20220526110246.53502-1-linmq006@gmail.com/
+---
+ drivers/pci/controller/pcie-mediatek-gen3.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Specifically:
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 3e8d70bfabc6..19a01daad304 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -598,6 +598,7 @@ static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
+ 
+ 	pcie->intx_domain = irq_domain_add_linear(intc_node, PCI_NUM_INTX,
+ 						  &intx_domain_ops, pcie);
++	of_node_put(intc_node);
+ 	if (!pcie->intx_domain) {
+ 		dev_err(dev, "failed to create INTx IRQ domain\n");
+ 		return -ENODEV;
+-- 
+2.25.1
 
-I'd like to confirm with Bjorn, if the PCI patches are in a reasonable
-shape and can get an Acked-by.
-
-And Rafael: would you sync with the ACPICA repos to bring in the
-LoongArch changes upstreamed there?
-
-[1]: https://lore.kernel.org/linux-pci/20220430084846.3127041-1-chenhuacai@loongson.cn/T/#t
-[2]: https://lore.kernel.org/linux-acpi/20220306111838.810959-1-chenhuacai@loongson.cn/T/#t
-
-Thanks,
-Huacai
-
->
-> Thanks,
->
->         M.
->
-> --
-> Without deviation from the norm, progress is not possible.
