@@ -2,175 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 810375392E9
-	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 16:02:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 402ED5393CE
+	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 17:19:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245314AbiEaOC4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 May 2022 10:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36880 "EHLO
+        id S1344272AbiEaPTc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 May 2022 11:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238994AbiEaOCz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 10:02:55 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9759C5DE4B;
-        Tue, 31 May 2022 07:02:54 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id e24so5127291pjt.0;
-        Tue, 31 May 2022 07:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q0Hh7aCIsbmWJUeM91f0XG111LTI0m02XSIDQdP3p8o=;
-        b=qIdddx20RRVQsqi2bBon4e5xP53QUVXYAcKla4mKOICMRHf9/YvdsIdxp33VcbGRiw
-         sh9QgZfTxntO4UktBd/cdCHjqIGnDtpboKNUJpjtHzJbA+RdudatPcsvIKi5iVQdgvpy
-         C5hImeVpMvccnNwwBDyehkIWcWQ6L8QaBRczL8tB0MqbsJy1GNeMAwJXPOpffzjnYAlt
-         G7qr7qvEj3OO0wfs7j14zbzWAus4DesU3wcMrtdwnFh2R+b+8itWDftZ+wfUVtnyJCiD
-         l0cVftYnizzrpln5/JF0rQVrk9f9/bvbvTbVEnnhkLXr7tB2mymbzGy48K66TydEI/5I
-         dQWQ==
+        with ESMTP id S237532AbiEaPT3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 11:19:29 -0400
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADB98633A3;
+        Tue, 31 May 2022 08:19:27 -0700 (PDT)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-f2cd424b9cso18768420fac.7;
+        Tue, 31 May 2022 08:19:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q0Hh7aCIsbmWJUeM91f0XG111LTI0m02XSIDQdP3p8o=;
-        b=eRTRlX8Gqd4uOQ4hYggl0OKrc64wXwVz9kyNu+kcvxAl8QZNwFJ5O0VS7xhicznDf9
-         cXxI3uh4GX+oDZC+vtqErJTsgHwXxhAHBWUP3TmKSEjpOOEntIvHSACdU6BGJ4fzB95L
-         wdtQZIp7uMMPcrohiZLSnZwMbTskCO9XvRaNIWsJapeIXHLieehECo4xeM28AldCwU7l
-         ym4towSYhiKBxMt0a6M8nkPae3Bhg45+1DRY1el/LyaUa1A5VoPSUB5B3KVhuZQjnzvv
-         rDmwTz9ineRyTAuSwFx8lPS7C/4SlkrVh3Ltn0vWaYDWVnHxKAHmgoNcNJ5NrcZvF7Y9
-         Vk5g==
-X-Gm-Message-State: AOAM530+CLqUIOXC7J+pkFMMahohq0MWzMNmEoUugDBRlr8Y/Eb74kdj
-        JRFajNlsMV7mCN+/l2Frosxz+6BOwsakTt8iTrU=
-X-Google-Smtp-Source: ABdhPJyc7OKAhKtBgVceW2S6K5uMqrZZMd7/HcJeOJVW5Jr5QwyQMKFeAyO86lhFCnP21nhfEE8oYp+242DlouIAVK0=
-X-Received: by 2002:a17:90b:17c6:b0:1e0:28bf:d429 with SMTP id
- me6-20020a17090b17c600b001e028bfd429mr29302482pjb.239.1654005773933; Tue, 31
- May 2022 07:02:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220524152159.2370739-1-Frank.Li@nxp.com> <20220525092306.wuansog6fe2ika3b@mobilestation>
- <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com>
-In-Reply-To: <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Tue, 31 May 2022 09:02:42 -0500
-Message-ID: <CAHrpEqRMpq+-H97Jm2F0c=0ey_3NsqgCvbTiBDA=vz2p4K+uZQ@mail.gmail.com>
-Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oX9QTG72uvUjCp13va2yVca12L+ce3N3hvWeuX63b8U=;
+        b=NQPkSrA1z5M2C6EGzUseBfKcf5ytqRz/lKQ1o9MpSJFadBpyLyYDP8KZUw5/RYzv66
+         fXBS9uNZ6q5g5wfGYZATmB+W6HO59A100B49LkH/T6+QN0HV1qnzG252N4J77TU9Wjve
+         GiUrD4VkmX1hqz0MSbCXt1cQAZ2JMIHOJRoWq8yxzURdNidLfESoEua+ac9a2Pne3YQA
+         RXEZwU4eFqQ8Sk4x752FtHnZ4tUX5NGqTp/+6PJ78os+UQ8poSt77AFopfJ74qkC3MlS
+         CbsQaIqcIoiohf8vf5SSl44morwxYkzr887d1VCzTmXk0jJdlihdeZNER+Shet9psRtB
+         eNwg==
+X-Gm-Message-State: AOAM531ncOH9IN4ZZ91ARqxfyXH8ReFXWEGXziMFIsYAB5mZmY+hUNKc
+        kqL7/Vo24EtKqH7DYKjq+w==
+X-Google-Smtp-Source: ABdhPJxzf77LSthNLbFbo6lAtfLsdhW9KdO0DslxaCAPtiz6bqPIjJN5tlyfz4GR3oz2XNVGywKivQ==
+X-Received: by 2002:a05:6870:15c3:b0:ed:9d61:a56c with SMTP id k3-20020a05687015c300b000ed9d61a56cmr13966693oad.152.1654010367023;
+        Tue, 31 May 2022 08:19:27 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id bq17-20020a05680823d100b0032b99637366sm5813658oib.25.2022.05.31.08.19.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 May 2022 08:19:26 -0700 (PDT)
+Received: (nullmailer pid 1783581 invoked by uid 1000);
+        Tue, 31 May 2022 15:19:26 -0000
+Date:   Tue, 31 May 2022 10:19:26 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: socionext,uniphier-pcie: Add missing
+ child interrupt controller
+Message-ID: <20220531151926.GE1742958-robh@kernel.org>
+References: <20220525210117.2489333-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220525210117.2489333-1-robh@kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 25, 2022 at 9:41 AM Zhi Li <lznuaa@gmail.com> wrote:
->
-> On Wed, May 25, 2022 at 4:23 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > Hello Vinod
-> >
-> > On Tue, May 24, 2022 at 10:21:51AM -0500, Frank Li wrote:
-> > > Default Designware EDMA just probe remotely at host side.
-> > > This patch allow EDMA driver can probe at EP side.
-> > >
-> > > 1. Clean up patch
-> > >    dmaengine: dw-edma: Detach the private data and chip info structures
-> > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > >
-> > > 2. Enhance EDMA driver to allow prode eDMA at EP side
-> > >    dmaengine: dw-edma: Add support for chip specific flags
-> > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
-> > > flags (this patch removed at v11 because dma tree already have fixed
-> > > patch)
-> > >
-> > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
-> > >    dmaengine: dw-edma: Fix programming the source & dest addresses for
-> > > ep
-> > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> > >
-> > > 4. change pci-epf-test to use EDMA driver to transfer data.
-> > >    PCI: endpoint: Add embedded DMA controller test
-> > >
-> > > 5. Using imx8dxl to do test, but some EP functions still have not
-> > > upstream yet. So below patch show how probe eDMA driver at EP
-> > > controller driver.
-> > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
-> >
-> > This series has been on review for over three months now. It has got
-> > several acks, rb and tb tags from me, Manivannan and Kishon (the last
-> > patch in the series). Seeing Gustavo hasn't been active for all that time
-> > at all and hasn't performed any review for more than a year the
-> > probability of getting his attention soon enough is almost zero. Thus
-> > could you please give your acks if you are ok with the series content. Due
-> > to having several more patchsets dependent on this one, Bjorn has agreed
-> > to merge this series in through the PCI tree:
-> > https://lore.kernel.org/linux-pci/20220524155201.GA247821@bhelgaas/
-> > So the only thing we need is your ack tags.
-> >
-> > @Frank. Should there be a new patchset revision could you please add a
-> > request to merge the series in to the PCI tree? I am a bit tired repeating
-> > the same messages each time the new mailing review lap.)
->
-> The key is to need Vinod to say something
->
-> Best regards
-> Frank Li.
+On Wed, May 25, 2022 at 04:01:16PM -0500, Rob Herring wrote:
+> The Socionext interrupt controller internal to the the PCI block isn't
+> documented which causes warnings when unevaluatedProperties check is
+> also fixed. Add the 'interrupt-controller' child node and properties and
+> fixup the example so that interrupt properties can be parsed.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/pci/socionext,uniphier-pcie.yaml | 23 ++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
 
-@Vinod Kou:
-       These patches were well reviewed by Serge Semin,  Bjorn,
-Manivannan Sadhasivam, Kishon Vijay Abraham and tested on 3 platforms.
-       Pending on your opinion because it touch file under /driver/dma/dw_edma/*
-
-best regards
-Frank Li
-
->
-> >
-> > -Sergey
-> >
-> > >
-> > > Frank Li (6):
-> > >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > >   dmaengine: dw-edma: Detach the private data and chip info structures
-> > >   dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > >     dw_edma_chip
-> > >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > >     dw_edma_chip
-> > >   dmaengine: dw-edma: Add support for chip specific flags
-> > >   PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
-> > >
-> > > Serge Semin (2):
-> > >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> > >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
-> > >     semantics
-> > >
-> > >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
-> > >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
-> > >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
-> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
-> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
-> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 112 ++++++++++++--
-> > >  include/linux/dma/edma.h                      |  59 +++++++-
-> > >  9 files changed, 317 insertions(+), 180 deletions(-)
-> > >
-> > > --
-> > > 2.35.1
-> > >
+Applied, thanks.
