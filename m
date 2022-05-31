@@ -2,96 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C356539560
-	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 19:21:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C06AC539566
+	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 19:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344312AbiEaRVz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 May 2022 13:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59658 "EHLO
+        id S233775AbiEaRZS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 May 2022 13:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242921AbiEaRVy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 13:21:54 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5145BE5B;
-        Tue, 31 May 2022 10:21:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654017713; x=1685553713;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=R5JfpM7H4eup/6oG0EDoqUqrbb8Ht/9aCZoxZVszKps=;
-  b=BRW4cyutBEpFzeXbC4E65vOXGWRIdG9PGI2ybmcjQmhrRncUYAlM5CI0
-   Eb/CaMeCZvL5IveeyrRvJB3xyI88z6+/AwOfAE+4xiLWKhpLh0V7xLHj4
-   fBHOsMzFSMLgefhDdxShDKhVMLzGfy/2tEIkBVsNFvO3QK6Edeo3z4V0o
-   4m5KpZH/RJmVkQF3oe7ZUWYbMjnDzY/OQvNDYV+aNEv+vstzFbrQAwsGM
-   +YVKk9RNK2QBN4ZgxBm5K0HEMMAzJqRsA8fbn2KFbDiPBUYDz6of4Bo4A
-   jIRQZJL+haIYOzjNNjc7G34P6Wy/KJtwq9NlsITaBZgcMuz9W7DD/BLsm
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="262961166"
-X-IronPort-AV: E=Sophos;i="5.91,265,1647327600"; 
-   d="scan'208";a="262961166"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 10:21:31 -0700
-X-IronPort-AV: E=Sophos;i="5.91,265,1647327600"; 
-   d="scan'208";a="576504827"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.41])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 10:21:31 -0700
-Date:   Tue, 31 May 2022 10:21:46 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     "Weiny, Ira" <ira.weiny@intel.com>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        with ESMTP id S229930AbiEaRZR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 13:25:17 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B58990CDB;
+        Tue, 31 May 2022 10:25:14 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 88C0D21D73;
+        Tue, 31 May 2022 17:25:12 +0000 (UTC)
+Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id AF12121FBC;
+        Tue, 31 May 2022 17:25:11 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1654017912; a=rsa-sha256;
+        cv=none;
+        b=cxqqB8RqZa/iqtbv3opLLeabodEeIzywVNEUnNzM4n4IfUQJNoA7hMkTMU57az/ZGVAVtJ
+        2vCpnYvpzJsz3TeZYJ86V8zHGVVO9atnK2OjYkS1YhFs76mBQ/JBJ1facXLqxfDMNgAnRo
+        rqf91E20yFPaFZ6/GeLmeJLHWe5MMJ0a0UX0XIp0W9ln9PPUL8AIWFoxxmJLW0rXynycRz
+        kkpSKpNBMaTaXd54BObZEold1tVrLLD2ziqnfYDTU0+aQhkZDHCTlb6v6Adv2n5asmarm0
+        4VhWJr7zEN86FP84PHZCE1dlojgxHeQewMHyPjuLcO/dMHQtjPPimx76vbwc4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1654017911;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=r+iCa0G+5l2oLU1hDQ/hBTD6TF0JVzAdaVROMvYsjVE=;
+        b=4TTVmdGiPIRoLS9XG4JT7NaviDgGlfKfE04QrOUnkHp33gh27z9updHaqU5gR+A4J5ZTG3
+        poxHLaaORVYaPpbqS5+uxQJS+1pC7y7jukTuYkBxgt/nSiOoNK1h/JHz+WTsQatOVXpBOR
+        aeAlDPVq3ccE1iTLKLeL24LmNIVj3/ZvSZ8o+zOHuLtvjBY5gtg9MfzSjTQ+7xn0tZopLk
+        FKCpzypFJ6FBES4ir3oBkG/bRVICi9DQ/Vx4ETRclH0OurIyxHha81vHPTlQe8fJfhKRGO
+        ZkHqqEzS8cEmrjfSZWrIyAan6WDIig2uzeRCFZAEYBEmPATfZkisn/UYe3GLUA==
+ARC-Authentication-Results: i=1;
+        rspamd-77f9f854d9-qwfs7;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Spot-Shade: 0915ff0469342c1d_1654017912229_2223760134
+X-MC-Loop-Signature: 1654017912229:940560900
+X-MC-Ingress-Time: 1654017912229
+Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.124.238.93 (trex/6.7.1);
+        Tue, 31 May 2022 17:25:12 +0000
+Received: from offworld (unknown [104.36.31.105])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LCK0k4vtNz3H;
+        Tue, 31 May 2022 10:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1654017911;
+        bh=r+iCa0G+5l2oLU1hDQ/hBTD6TF0JVzAdaVROMvYsjVE=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=XnO2M8HGW2PIyFH2/jOoBnuxVxx3UQY8Wxz3K+c1Evlx/w4aVVgXSTgWvUcFJBwj+
+         md+dndlhRZu127yWldNWwDFRWWyb21PiEp8LAgFm6QWYaWG7zU1PMhP64LXjJBcy2B
+         uDeUTIcKCD1BkCWA6PT9GjVA4fh3cIgmv51ycKt12PN7Qnpyeu/NVQDQk8ag/dOalu
+         km0YOD1WKToOk+dQCTgl7o663ZvheqEHhHXVvbjmnNume6BwabmrVjuTv+00SkGnXf
+         QqkjXPTbc32IkaAmhSE5JCSQTOsgNmqY7cHKQt2I6EBKxRHMUe+YnqVSRkdS8feb5+
+         YjV7jQ0SdrYLQ==
+Date:   Tue, 31 May 2022 10:25:07 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     "ira.weiny@intel.com" <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Ben Widawsky <ben@bwidawsk.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V9 7/9] cxl/port: Introduce cxl_cdat_valid()
-Message-ID: <20220531172146.GB1457068@alison-desk>
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        a.manzanares@samsung.com
+Subject: Re: [PATCH v9 3/9] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <20220531172507.5ert5tgwellpe7fx@offworld>
 References: <20220531152632.1397976-1-ira.weiny@intel.com>
- <20220531152632.1397976-8-ira.weiny@intel.com>
+ <20220531152632.1397976-4-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220531152632.1397976-8-ira.weiny@intel.com>
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220531152632.1397976-4-ira.weiny@intel.com>
+User-Agent: NeoMutt/20220429
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 31, 2022 at 08:26:30AM -0700, Ira Weiny wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The CDAT data is protected by a checksum and should be the proper
-> length.
-> 
-> Introduce cxl_cdat_valid() to validate the data.  While at it check and
-> store the sequence number.
-> 
-Store it for ?
+On Tue, 31 May 2022, ira.weiny@intel.com wrote:
 
->  
-> +static bool cxl_cdat_valid(struct device *dev, struct cxl_cdat *cdat)
-> +{
+>+static void doe_statemachine_work(struct work_struct *work)
+>+{
+>+	struct delayed_work *w = to_delayed_work(work);
+>+	struct pci_doe_mb *doe_mb = container_of(w, struct pci_doe_mb,
+>+						 statemachine);
+>+	struct pci_dev *pdev = doe_mb->pdev;
+>+	int offset = doe_mb->cap_offset;
+>+	struct pci_doe_task *task;
+>+	u32 val;
+>+	int rc;
+>+
+>+	mutex_lock(&doe_mb->task_lock);
+>+	task = doe_mb->cur_task;
+>+	mutex_unlock(&doe_mb->task_lock);
 
-snip
+Instead of a mutex, would it be better to use a rwsem here to protect
+the state machine and allow for concurrent reads for the work callback?
+It is a general interface and a trivial change, but not sure how much
+performance is cared about.
 
-> +
-> +	seq = FIELD_GET(CDAT_HEADER_DW3_SEQUENCE, table[3]);
-> +	/* Store the sequence for now. */
-> +	if (cdat->seq != seq) {
-> +		dev_info(dev, "CDAT seq change %x -> %x\n", cdat->seq, seq);
-> +		cdat->seq = seq;
-> +	}
-> +
-
-Wondering when does/will this sequence number come into play?
-
-> 
+Thanks,
+Davidlohr
