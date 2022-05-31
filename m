@@ -2,45 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEE9F53953F
-	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 19:07:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD3D3539527
+	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 19:01:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346387AbiEaRHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 May 2022 13:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37150 "EHLO
+        id S1346263AbiEaRBD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 May 2022 13:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346436AbiEaRHl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 13:07:41 -0400
+        with ESMTP id S1346264AbiEaRA7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 13:00:59 -0400
 Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F149C8DDCC;
-        Tue, 31 May 2022 10:07:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6803719D1;
+        Tue, 31 May 2022 10:00:56 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 0DFE66C1FA6;
-        Tue, 31 May 2022 17:00:17 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id 51CC112272D;
+        Tue, 31 May 2022 17:00:55 +0000 (UTC)
 Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 0A8136C2114;
-        Tue, 31 May 2022 17:00:16 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1654016416; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 8F872121BFF;
+        Tue, 31 May 2022 17:00:54 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1654016454; a=rsa-sha256;
         cv=none;
-        b=QX2ksRbCwwylwUewYYzBAn4DV+az79n5Rc9lTFVsaETiYMaq9qBuFcwTLz+ouF+jbYtBJ8
-        bPeD0CoaU7fCDvQTA6us8lRyeV3Olet+GPxfMFSzlbNHG3uRWKnqN8WZIJ+vungxJxHv3M
-        O8zn+lqyjTjHGqfwYvo8fI5UH6S6VosRbV8H9WkFp5MN8zWjSi0GeO0ZHox03hXuBQC4Qp
-        VIEXZRYkTxHROea9SJpt/dNu+du9FWJWZExzbquW/tLtuV5pG+L+LcSIaocHfDhzjEj1/W
-        kj33rWiYJSQziEt2o4XOnbTN664gVeUxamKZ1W1zzdRKuBjMyBjMw2SX5kcTGg==
+        b=F24bZ2ZwmHsonA8zMYYh9wcTT+ZHuZgK7eAFxQQ7gqszgOCD31xlzGwJBkxQHSkuAFEX2q
+        mqQHpUoLvnvlpWFfCNtPz564lFVba2s/DQmAGCEaJlZ/Ny8lBjSgq0ncgFgrMyPlMEVIxr
+        7j1DMQEoXy35EENRze1ybKVxUU95/BdW79T6ygmd25CbHSITgqs8waUkSxh9gdpsK7gWqC
+        zA2JtVXh+N4iSFMce3LjXD5zdsvVdIO6FFgGQqqn0/eUYoFC6Wzbnt/eWMpWuU7ORctE50
+        QdFgl4c1DMjPoMUsmgGoxGaFC9yMFIXr4MhrJQCJydtSzP4SYKneCBjYuyTZYw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1654016416;
+        s=arc-2022; t=1654016454;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=xh6g3OnYgOARYnrm0HnNILhGZu8yEtDYkR54Gfjgl7k=;
-        b=4XA4G6+Het4QS/uEmG2Hffy7DMrUxMqgmUM+6bNTM7moCCJcZ1VAuwy76mqxELGjkvlCci
-        lXdYwWywsMhZv4EO6wDWlEjJ+/6um7/tUsw1VQCG1JK0hfsHe5+KWpt437SNAwRfaE3xsl
-        urS0DFGX98Fusme77gHCrHeksbzODQR33ozW9QnWq9aWHNcaKEfDjbWFEIXH7A+u9PzfIu
-        aj9m5WVaIR/92r0p9iBT+29/859hjm31RxZy0jHy854jiHVxHAahYrMDEarUq4lOwG/ou0
-        rLu1/uM0DEIOSwSZRW2wRGpFaByBpl4ImAk3B+xWgNu4NSeF6Esz2mGIXJoVRQ==
+        bh=L8tIRiYdKR8dkInFL+mBDdM1pWuIUReLUu5JEdcTNZw=;
+        b=mhA7DFOiSviphsLOUCO/Wewevj14cHOIvH40fnTjq3oM9Lg0r52sPlgm2/tVptbtYtDmxJ
+        pw9yClpoZaf4zjRGiCR13R7+w1m8n4go0hvZKvc3/mNKgGIW9SnD5+XLDeVtXUYBvnIFCv
+        ABlAKFv8qB71qrmqheHKAViiT5IejQl501ZaWtQ179uIosBfn8wVUdxETSSWx4poIAMA15
+        sK22tGWNVt8qChCkEP6wJbO3UT6KAcYEko3LlhYVZ4E11vy7t7+G0Oem+d7jCsPx2uWqf7
+        dbb9yj2hw6XYynaiNcObw+QoUJsIxzxLPgQrPMzRl3IwCuylOOJIM0Y5cqweWg==
 ARC-Authentication-Results: i=1;
         rspamd-77f9f854d9-ttcbd;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
@@ -48,32 +48,32 @@ X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Society-Skirt: 7e4acaf972c84e96_1654016416565_595515388
-X-MC-Loop-Signature: 1654016416565:4149019227
-X-MC-Ingress-Time: 1654016416565
+X-Little-Obese: 0f30987b704e9737_1654016455114_2615898830
+X-MC-Loop-Signature: 1654016455114:3157736382
+X-MC-Ingress-Time: 1654016455114
 Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.105.211.140 (trex/6.7.1);
-        Tue, 31 May 2022 17:00:16 +0000
+        by 100.96.96.15 (trex/6.7.1);
+        Tue, 31 May 2022 17:00:55 +0000
 Received: from offworld (unknown [104.36.31.105])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LCJRy34rRz3H;
-        Tue, 31 May 2022 10:00:14 -0700 (PDT)
+        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LCJSj2l7Pz2q;
+        Tue, 31 May 2022 10:00:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1654016415;
-        bh=xh6g3OnYgOARYnrm0HnNILhGZu8yEtDYkR54Gfjgl7k=;
+        s=dreamhost; t=1654016454;
+        bh=L8tIRiYdKR8dkInFL+mBDdM1pWuIUReLUu5JEdcTNZw=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=F4lT6yesUDFDgcPAs9cdLLpTsFA5xC0blgAX71tJOj7IUjAmo8fkG98E556WoOYIb
-         HWuEqcdGhxKWt3ShUP7m6e4XR4MkYgrx8q67klmn9xmtz6s9pdS8LjwgOgGDOBpTQn
-         RWP4S9G9kzIO7MGchFKkzVC2ZsZdF5vaWcRizWnuwR7iJe+6/6CBk87zEIDbwYhBAB
-         RypbhRdrbuZTxhROk30hABEI06ah8Oz70dAn5Sbi4kt4Iixlt8cBHCE2mzODbUUebS
-         XjBQOARdTp4xx/0zhUWUdxVGk0D+oCCDzXcFCLJgiaLfj6dHU6nRAy5L8OIMxr7cJ7
-         DrpNXkUy27bxw==
-Date:   Tue, 31 May 2022 10:00:11 -0700
+        b=Y1Uqo+d0AROmuT9BeMcf/BMccawNRMsb7krIHUBLMq36SszQcMjlZ3z6ZyAcZc6cw
+         FwJ66iR8mSIr4hTMGUFY164/1jdGouF1etAdov0+iuSKrttsgVTmRqW+g0/0hpoqbv
+         dK5XFf1t4zaSUo/8OID7JDCwVu9IOr5vqpYLe33LUO6QKp0UdJX/KrAe9oXxK+79fr
+         /tMWTIKOcEiAxRaN8PinqDbEOeoP4qaIQ40d2AHu+dA/ZJOMrIKTnMJsBkhOYqGqiJ
+         661qAwZCqyUV8frALYyjHf206SX0QaKF//rOC8tU6KR1kRZaBB+fdbMa0PKvaDTgk/
+         t8iFGO68c8Bfw==
+Date:   Tue, 31 May 2022 10:00:50 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     "ira.weiny@intel.com" <ira.weiny@intel.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -85,14 +85,14 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
         linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         a.manzanares@samsung.com
-Subject: Re: [PATCH v9 1/9] PCI: Add vendor ID for the PCI SIG
-Message-ID: <20220531170011.4rm654khkff66j2h@offworld>
+Subject: Re: [PATCH v9 2/9] PCI: Replace magic constant for PCI Sig Vendor ID
+Message-ID: <20220531170050.ue6hizqjugz2g4wl@offworld>
 References: <20220531152632.1397976-1-ira.weiny@intel.com>
- <20220531152632.1397976-2-ira.weiny@intel.com>
+ <20220531152632.1397976-3-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220531152632.1397976-2-ira.weiny@intel.com>
+In-Reply-To: <20220531152632.1397976-3-ira.weiny@intel.com>
 User-Agent: NeoMutt/20220429
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -106,34 +106,38 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Tue, 31 May 2022, ira.weiny@intel.com wrote:
 
->From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>From: Ira Weiny <ira.weiny@intel.com>
 >
->This ID is used in DOE headers to identify protocols that are defined
->within the PCI Express Base Specification, PCIe r6.0, sec 6.30.1.1 table
->6-32.
+>Replace the magic value in pci_bus_crs_vendor_id() with
+>PCI_VENDOR_ID_PCI_SIG.
 >
->Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 >Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+>Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
 >---
-> include/linux/pci_ids.h | 1 +
-> 1 file changed, 1 insertion(+)
+>Changes from V6
+>	Simplify commit message
+>---
+> drivers/pci/probe.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 >
->diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->index 0178823ce8c2..8af3b86206b1 100644
->--- a/include/linux/pci_ids.h
->+++ b/include/linux/pci_ids.h
->@@ -151,6 +151,7 @@
-> #define PCI_CLASS_OTHERS		0xff
+>diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>index 17a969942d37..6280e780a48c 100644
+>--- a/drivers/pci/probe.c
+>+++ b/drivers/pci/probe.c
+>@@ -2312,7 +2312,7 @@ EXPORT_SYMBOL(pci_alloc_dev);
 >
-> /* Vendors and devices.  Sort key: vendor first, device next. */
->+#define PCI_VENDOR_ID_PCI_SIG		0x0001
+> static bool pci_bus_crs_vendor_id(u32 l)
+> {
+>-	return (l & 0xffff) == 0x0001;
+>+	return (l & 0xffff) == PCI_VENDOR_ID_PCI_SIG;
+> }
 >
-> #define PCI_VENDOR_ID_LOONGSON		0x0014
->
+> static bool pci_bus_wait_crs(struct pci_bus *bus, int devfn, u32 *l,
 >
 >-- 
 >2.35.1
