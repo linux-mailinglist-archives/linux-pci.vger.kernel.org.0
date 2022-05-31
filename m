@@ -2,203 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 865B1539746
-	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 21:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EDCF53974E
+	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 21:47:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243570AbiEaTor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 May 2022 15:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39428 "EHLO
+        id S242918AbiEaTqm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 May 2022 15:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347629AbiEaTo3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 15:44:29 -0400
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam08on2078.outbound.protection.outlook.com [40.107.102.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235CCA7753;
-        Tue, 31 May 2022 12:43:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MD4zkwkdCOcgMLJJOsaDpi8Niladn1pvoo7ZRMh5nYPhtF36imEczwsb8otIUMUqJ+WP7a+IiQ28THdvwi7p8opW58u04+OuUuwNdnIzJFKkplAr0UMX4XnFzVGr65PZiTFs/BLlM8kcoMrpzZTtu4x0LiaKgtEGr+18Y/4HE/jJ7tG8oDL0ezC5cAnFjHpTm4BeYZD3OuzdP9+BAfPhWaO7OapoLd+Sc7hs8h6KDwC2T1vFkCPp8SFe6sQrEc4h3v4MJUVhIFcTzN25V3FDNlJ5iwmll4vSXuWMn1gldOhUxzXu4MjjwTssDsVZpRw0iWx+RMM3/oQzFNIE7xcMgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xogse79Npl/d1yCY89DojkmiFL474IRpOZPcy+Iqqw8=;
- b=DocBnC/AxpTKxKSHP0hN3MJ+fBgGUaGziHTxmrTmCtjzRSMkac6fttY62RQU6OUxwOC0vW+9+dVGx1lxjNE9NIv9/R9yX0NgCEh7SErPZD3Ur9FC/aiZl0XBfQRG7bo9ENNDInxwHbRuFq2kA8AG5xK7UJi0oRtBzsLPmnYCW1pV51mmukMpX0NtRNPyCUtY9u6Z6Z1tUYj4C+nm/8IsPhtOKlXzTL58HyxObRh6hJYSWEgbOAI/hUmoSRy8REplTPGFXRnEVWi3syP+ReQ66WfOOj9dhCvBA9KaOkLwxoUav6W8GZXuL3MZ4Bh8S4E87mzTLUAsrfYxXoUAojq5oA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xogse79Npl/d1yCY89DojkmiFL474IRpOZPcy+Iqqw8=;
- b=OXICDtCFnP21V9vetsFrxrspFUJ9Dzsl4+KOPWk6L9yIAZriqFfp2sQJRB/s9QderbuNcrNdhDxTkAmHcQ2PLVV8RaAWRxD0b4R7+d9idbdX540XZTk0srT7YAMfi1+KJWl18IksZEpDOBNUFJI/W3k9srKjI/Z+d7u1mDow7+iDJlLVzuh4Xs6aA/6f1fRyisksgKzQmQTZiKAwymB+328KtW/yGnWokuBEwJ5Hbitx4e+aFKfaOpm9+BAEQGm8slVXM8/Ik6m4xPvIxW9lDy0g6qys9b+ELyGHLU8LFTUeMsaMJLbkz4yAg0dHHIQrU8cSNBqgTbc8JzYtwzYjWQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by BY5PR12MB3859.namprd12.prod.outlook.com (2603:10b6:a03:1a8::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.12; Tue, 31 May
- 2022 19:43:07 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::2484:51da:d56f:f1a5]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::2484:51da:d56f:f1a5%9]) with mapi id 15.20.5314.012; Tue, 31 May 2022
- 19:43:06 +0000
-Date:   Tue, 31 May 2022 16:43:04 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        with ESMTP id S242945AbiEaTqm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 15:46:42 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C57BDF;
+        Tue, 31 May 2022 12:46:41 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id r65so13680827oia.9;
+        Tue, 31 May 2022 12:46:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Oap3nD3B2RMKJZbp1rzvvdgE3lcyL1foSb5mHMQ6p08=;
+        b=b07nnY7ZuczD1JLduQqd/NxjPQYQSYGdbXE37PcoCDE+bGScyxiLH8D2i+BDJ0qUCE
+         lGc/VWP6Sho2V8mYdSUcX7yFK1GljHROztKm4vTxhVH89637Z85iJUCxorqO1dTLBwOg
+         4PrU30EK7A4YZOK26Y28Uji5hAEo9WHYvAqFuGtAG4NMKBeiHE76LLx4d6ZTbwbvTX3r
+         AHqSBXCpjkL3pufHdjYyWTaU0hP0jjDwayPQw36+hHYZtu4KiGGcIqZajf6cJ3QJmBos
+         wOgnYiIzPCV5cy2kZ1TbUHdSsnBdNzbDXU/y36ItKjhj0iPwFQiVM3fMUImQjVenEKX6
+         ldzg==
+X-Gm-Message-State: AOAM5335Kjl9JhS/6c01E6HP4JTjwG7DDk5kQkWiPFr01nUHgEUCN19N
+        A5eK/IgWjrCPOlcg4BSpwg==
+X-Google-Smtp-Source: ABdhPJx3JD85SLuE7QUjAkBXQ8a+GqhL3vvQu7XquyZqVdiwqA5/hRB0tqClL8AdBFFVfbTzj7HoAQ==
+X-Received: by 2002:a05:6808:1592:b0:32b:aa3d:39aa with SMTP id t18-20020a056808159200b0032baa3d39aamr13224226oiw.241.1654026400478;
+        Tue, 31 May 2022 12:46:40 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id y24-20020a056808061800b0032c14a97747sm3008367oih.56.2022.05.31.12.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 May 2022 12:46:40 -0700 (PDT)
+Received: (nullmailer pid 2166285 invoked by uid 1000);
+        Tue, 31 May 2022 19:46:39 -0000
+Date:   Tue, 31 May 2022 14:46:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] vfio/pci: Add the support for PCI D3cold state
-Message-ID: <20220531194304.GN1343366@nvidia.com>
-References: <20220425092615.10133-1-abhsahu@nvidia.com>
- <20220425092615.10133-9-abhsahu@nvidia.com>
- <20220504134551.70d71bf0.alex.williamson@redhat.com>
- <9e44e9cc-a500-ab0d-4785-5ae26874b3eb@nvidia.com>
- <20220509154844.79e4915b.alex.williamson@redhat.com>
- <68463d9b-98ee-b9ec-1a3e-1375e50a2ad2@nvidia.com>
- <42518bd5-da8b-554f-2612-80278b527bf5@nvidia.com>
- <20220530122546.GZ1343366@nvidia.com>
- <c73d537b-a653-bf79-68cd-ddc8f0f62a25@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c73d537b-a653-bf79-68cd-ddc8f0f62a25@nvidia.com>
-X-ClientProxiedBy: YT1PR01CA0103.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2c::12) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        James Dutton <james.dutton@gmail.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: brcmstb: Fix regression regarding missing PCIe
+ linkup
+Message-ID: <20220531194639.GB1808817-robh@kernel.org>
+References: <20220526192512.GH54904-robh@kernel.org>
+ <20220526205355.GA344519@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 020aa98f-292c-4405-4803-08da433dc856
-X-MS-TrafficTypeDiagnostic: BY5PR12MB3859:EE_
-X-Microsoft-Antispam-PRVS: <BY5PR12MB3859F52DF879B3F615F9002DC2DC9@BY5PR12MB3859.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NPiAdQplkqotMch7rsaoRXyHmIH1fScX8wU3mSg/7PLBIhHlamNwgo2HvNSSsfYL+8qusP2hYvDeBO6sOMQ9IjugQwXwUlejEzDOuteB8xNX78ni7z6NyJzBzjoBixN8cNgvvFnAw6FuuYE6m19PtiKgleFSxPsn2wEJp/v20eT41O7PYw1CbSJBjFUx1EmAb8lFOAoFSKRKNwKPIOd9Bh5EujAl3Jxd4VURjm+ARYM+ekoTbwV7+QdRbyGHVv17wBd0vxpKqLCzYVNZQkGoJSo5ay7SdAW8AvPT2T8pndhK4FBMVhbEZUnTlUTJlrUaI7qZOTZv4CBp4jM0Bz3+6sBtriGZp52TicS5cCX1dZR+DFgtkRsAfAwdA6TmNFlj0IY7PpUgA/3PuUktV+mBfl+KIRjtR6z77WSqD1Sjy1yeKnitj3UrjBhMPJr77/LjawPamtp9IjrsbiQYkvhNsZlqRk2yzElz5cWaPwTBHw+kbXN+ot+M2KYT04DvYWDcWWX6Kz5OUMSYBacPO8LB5i/+rnyw8lf12IHZCbBrRVlph5ED41GE0Ctq8SUH7jPYq09OovJfNtutcOmbp+uan9X00PQl4MboHz8HXsDCODSOuzeTZQURJzBIvd9MerD7uMnhetGD1d+JojlHn5GxiFpKKy+ezOr6u05HGHv3n3i5X09Za+p09Lnwzgfd4LnQTLsXFKc5wTLS6BX58/TDAg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6862004)(5660300002)(7416002)(38100700002)(8936002)(54906003)(6636002)(37006003)(1076003)(2616005)(186003)(6486002)(508600001)(6512007)(53546011)(6506007)(26005)(316002)(66946007)(8676002)(4326008)(66476007)(83380400001)(66556008)(33656002)(2906002)(36756003)(86362001)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RGpSb1VMMnhDSmh0N0pwV2VnV3NLWHhsNDlXS0ljK3pLT2RUaUN3T0NSVW5F?=
- =?utf-8?B?YmlYV0pNcnZ5TXVQWEh4emtiUzBoYlB0dENwNW9rRUpCU3V5dFY5MmRxT3U1?=
- =?utf-8?B?cU9mNUZtcjRRTGNaS0QxOWo0NUhnYnNGQlhzbHBwMUt0T0ozeHJoblBnZ2Vv?=
- =?utf-8?B?SE1WQ20wUEFMNGVqMkxjRS93bURpTERsWE96bXpxMUZqM2ZtOVBVZTRYRlA5?=
- =?utf-8?B?blc1d1BRUEV1UnVLS3MyS3E0WnFXSGdtMFYvdWdoeW5SR0JBNWxDM0FVakgw?=
- =?utf-8?B?UksvY29rK01oMGxHUWJoMDdFbDdXMVhUQ0ZaUlNaOUdSLzZBZ0ovak9Ca2Nr?=
- =?utf-8?B?c2sra0FwNE96d1VvZDJmc2lsM2IreE9GeVI0QlFhWEVqdUtPSkJ6VlJpWVpu?=
- =?utf-8?B?ekp5a05EQ3Rsd21tM1Q1SmtiR1NZUDdRS1pDM2FkQkRUd0IwLzlVZE5BSVdq?=
- =?utf-8?B?UmQ2Rno1Z2p4WnpuRW5qTWtEYXB6STNmVDZKa0JGZGhjMzJWY0pCWnVjZ1o0?=
- =?utf-8?B?OVBZMUxYZWxWbHJqaVFwTndjMTF2WFJ3OVNwMWUxNVdPMDExSjBhVjJNeEZq?=
- =?utf-8?B?YTY2bHE4RnV1OWo4VWM5ZExuTCtUTWQyUTJzcTJZSHZFcWovTENuRTBZR2Zj?=
- =?utf-8?B?cUpNQXd6T0ZUSmdiNEZLdWxYK3kxRXZyb2ZjeWdJRmFGOXFpQUFJdmxTbisy?=
- =?utf-8?B?R0x2OUEzSExFL1hRUXYvV0NWaWtXVDMxZXdOUVhFeWQ4R3VxMXhBdWQxbFVw?=
- =?utf-8?B?bG9pMUdITGZwTlVwUzM5Tms1Y29yNkxNZmI3SWVpL1FndzRXS1RXSFBiZXhk?=
- =?utf-8?B?WkZFR205VVhnMFREMFhNYno5REV6eW81ZjNvYUNIbzlmUkM5YkJMckNvRXhU?=
- =?utf-8?B?RUhYc29WemdxdmttR0NlSDNNdXJFZ3IxVFBjMTZjQ0JvamYvSzJHdXAzUnVK?=
- =?utf-8?B?SSswTlVGMjRtSUYxbFdhVWcvd1BrTWw0Qk1vVzh3NUxONEJ2OEd6NnNObkUv?=
- =?utf-8?B?Q0FhaWZTbmdyNDZtSnUwT043Q0daYlNwMXZ4WVBOWlk2bXhUeDZSTXJtWVpj?=
- =?utf-8?B?eWE3UUhTRHdvOVVPT01vY3kwNENxbFVWNElZYnFiYlhSKzkrcXJYWmFaNFAv?=
- =?utf-8?B?SVZvRkdSSit4KzkvWVFsUE45QXBJL0FCK1ZyZlhCR3l2WE9WRVh4b3V4dzIx?=
- =?utf-8?B?bktNeXk0aXZEeHJaZEpxZmVncVpLWDE1Q3BEV0h0dGhaL1cwcVZJYWZwbkE0?=
- =?utf-8?B?Y3E5T3l4NzFCelE2cVlOM3UvY0Z0VXJCaUhKR2dIOTJ6TmJDTU4venl4S0o1?=
- =?utf-8?B?L3RRdURYSG9aNGhCR3k1NmhtREE5QS9SN1FnWUw2L3pnSXhwekdkVXRZU2Mz?=
- =?utf-8?B?MTUyS29FL2dncGpiRVpLTVJQOHhEWWxoSWQ5RHV0OEdRTFBJeFVUaFFzd1Vh?=
- =?utf-8?B?M0lFL2V4eE5KeitmSTNCaXhJanlJQVhpSklra2psVktPVW5RaGRBS3pROFRn?=
- =?utf-8?B?ZTJCL2ROLzRqbHY0RkhNVDV0ajZKM2x3MFU3MTJEZkV6cW1FNnRmc0ZEdlZs?=
- =?utf-8?B?eUY1THhFZnB4bFRtNXlSc0lFRG5KNHhxeTRld1cvK2VQZzBPMEdaZjJkWkxX?=
- =?utf-8?B?U1RDWm5VMXNaM3NHQlNvSERFdWtaVWw3ZmlmeFJuR2hyRmFqUC9ORVZGNUlG?=
- =?utf-8?B?OWdMM25RL0s4RU8rVEJ6L0h2T3AxZUFzQ2E1QWc5ZVpYWlVjMzhQbXFMdC9Q?=
- =?utf-8?B?eVBVa3UrdG5aWkxlL1NDMm4yanI3ZklPWUtOMUNZRWQxRkc2dGRVYTJWTGJW?=
- =?utf-8?B?dVNqeGpIWW1PWWQ1eFVPVXU0YmswUXNvT0YzNzFvWXhYNlAxc3VzWUtUMW5G?=
- =?utf-8?B?MkprZ3l3OEYvK0VRME1pOG5tLzN0M2VhRjh3NWJBTXQ0bEFuVzIxbkx0Z2th?=
- =?utf-8?B?cktkcUVOZisxeHNsVzkraXhPUndJaVgvSFVEZlRvZnNRbzhMek41UzdHYURO?=
- =?utf-8?B?ZlBjRnJTMXFVRGcyTDlZRUpuVlQyUWU1NlRXeGhSUjFsc0l0enZ4blp0akFL?=
- =?utf-8?B?OW5mS1VQblBBRUJJYVY3YkFiTlhSMzY0MnJOaHNyV3FrMFpnUTVGMlpiR3Fx?=
- =?utf-8?B?SVJzUnJMOXQ2ZW9Fd1RUUy84S2NIYkhLU2dKbFBLeDNEb0lxczlnekVGRVds?=
- =?utf-8?B?ZmFYdmNRSGJoN3ZNZWxUejVkTHhaMzNXWnA4Q3BTbGdGbFNEVzd0RUw1QmRv?=
- =?utf-8?B?emN1TWNDUnBvU3JPNlpiUjFKVGtrbS9ma1R1TnBjbjI2aUhnRE4vVU1kdm1H?=
- =?utf-8?B?K1ZFbmQ1c1hEVXRnTFEwNjhFeHVKM3lqcDY0dUJ1T2sxdk1OWXl0Zz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 020aa98f-292c-4405-4803-08da433dc856
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2022 19:43:06.3103
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 84SwpyaT75gvRc4UGN0UiD+E/zIojJWBtEwawT3FFRuBkomrUcoglzOUd+UjJKHZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3859
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220526205355.GA344519@bhelgaas>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 31, 2022 at 05:44:11PM +0530, Abhishek Sahu wrote:
-> On 5/30/2022 5:55 PM, Jason Gunthorpe wrote:
-> > On Mon, May 30, 2022 at 04:45:59PM +0530, Abhishek Sahu wrote:
-> > 
-> >>  1. In real use case, config or any other ioctl should not come along
-> >>     with VFIO_DEVICE_FEATURE_POWER_MANAGEMENT ioctl request.
-> >>  
-> >>  2. Maintain some 'access_count' which will be incremented when we
-> >>     do any config space access or ioctl.
-> > 
-> > Please don't open code locks - if you need a lock then write a proper
-> > lock. You can use the 'try' variants to bail out in cases where that
-> > is appropriate.
-> > 
-> > Jason
+On Thu, May 26, 2022 at 03:53:55PM -0500, Bjorn Helgaas wrote:
+> On Thu, May 26, 2022 at 02:25:12PM -0500, Rob Herring wrote:
+> > On Mon, May 23, 2022 at 05:10:36PM -0500, Bjorn Helgaas wrote:
+> > > On Sat, May 21, 2022 at 02:51:42PM -0400, Jim Quinlan wrote:
+> > > > On Sat, May 21,
+> > > > 2CONFIG_INITRAMFS_SOURCE="/work3/jq921458/cpio/54-arm64-rootfs.cpio022
+> > > > at 12:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > On Wed, May 18, 2022 at 03:42:11PM -0400, Jim Quinlan wrote:
 > 
->  Thanks Jason for providing your inputs.
+> > > > > I added Rafael because this seems vaguely similar to runtime power
+> > > > > management, and if we can integrate with that somehow, I'd sure like
+> > > > > to avoid building a parallel infrastructure for it.
+> > > > >
+> > > > > The current path we're on is to move some of this code that's
+> > > > > currently in pcie-brcmstb.c to the PCIe portdrv [0].  I'm a little
+> > > > > hesitant about that because ACPI does just fine without it.  If we're
+> > > > > adding new DT functionality that could not be implemented via ACPI,
+> > > > > that's one thing.  But I'm not convinced this is that new.
+> > > >
+> > > > AFAICT, Broadcom STB and Cable Modem products do not have/use/want
+> > > > ACPI.  We are fine with keeping this "PCIe regulator" feature
+> > > > private to our driver and giving you speedy and full support in
+> > > > maintaining it.
+> > > 
+> > > I don't mean that you should use ACPI, only that ACPI platforms can do
+> > > this sort of power control using the existing PCI core infrastructure,
+> > > and maybe there's a way for OF/DT platforms to hook into that same
+> > > infrastructure to minimize the driver-specific work.  E.g., maybe
+> > > there's a way to extend platform_pci_set_power_state() and similar to
+> > > manage these regulators.
+> > 
+> > The big difference is ACPI abstracts how to control power for a device. 
+> > The OS just knows D0, D3, etc. states. For DT, there is no such 
+> > abstraction. You need device specific code to do device specific power 
+> > management.
 > 
->  In that case, should I introduce new rw_semaphore (For example
->  power_lock) and move ‘platform_pm_engaged’ under ‘power_lock’ ?
+> I'm thinking about the PCI side of the host controller, which should
+> live by the PCI rules.  There are device-specific ways to control
+> power, clocks, resets, etc on the PCI side, but drivers for PCI
+> devices (as opposed to drivers for the host controllers) can't really
+> call that code directly.
 
-Possibly, this is better than an atomic at least
+Yes, there are PCI specific ways to handle some of this when it is 
+signals or power for standard PCI slots. But then it's also possible 
+that you have a soldered down device that has extra or different 
+interfaces.
 
->  1. At the beginning of config space access or ioctl, we can take the
->     lock
->  
->      down_read(&vdev->power_lock);
+When this Broadcom thread was reviewed originally, I was the one pushing 
+this towards doing this in the portdrv. That seems like the more 
+logical place at least to control the root port state even if we need 
+host controller specific routines to do the work. It's all related to 
+how do we separate out host bridge and root port operations. 
 
-You can also do down_read_trylock() here and bail out as you were
-suggesting with the atomic.
+> There are some exceptions, but generally speaking I don't think PCI
+> drivers that use generic power management need to use PCI_D0,
+> PCI_D3hot, etc directly.  Generic PM uses interfaces like
+> pci_pm_suspend() that keep most of the PCI details in the PCI core
+> instead of the endpoint driver, e.g., [3].
 
-trylock doesn't have lock odering rules because it can't sleep so it
-gives a bit more flexability when designing the lock ordering.
+Yeah, I think that's a different issue.
 
-Though userspace has to be able to tolerate the failure, or never make
-the request.
 
->          down_write(&vdev->power_lock);
->          ...
->          switch (vfio_pm.low_power_state) {
->          case VFIO_DEVICE_LOW_POWER_STATE_ENTER:
->                  ...
->                          vfio_pci_zap_and_down_write_memory_lock(vdev);
->                          vdev->power_state_d3 = true;
->                          up_write(&vdev->memory_lock);
+> The PCI core has a bunch of interfaces:
 > 
->          ...
->          up_write(&vdev->power_lock);
+>   platform_pci_power_manageable()
+>   platform_pci_set_power_state()
+>   platform_pci_get_power_state()
+>   platform_pci_choose_state()
+> 
+> that currently mostly use ACPI.  So I'm wondering whether there's some
+> way to extend those platform_*() interfaces to call the native host
+> controller device-specific power control code via an ops structure.
+> 
+> Otherwise it feels like the native host controller drivers are in a
+> different world than the generic PM world, and we'll end up with every
+> host controller driver reimplementing things.
+> 
+> For example, how would we runtime suspend a Root Port and turn off
+> power for PCI devices below it?  Obviously that requires
+> device-specific code to control the power.  Do we have some common
+> interface to it, or do we have to trap config writes to PCI_PM_CTRL or
+> something?
 
-And something checks the power lock before allowing the memor to be
-re-enabled?
+Shrug. Honestly, the PCI specific power management stuff is not 
+something I've studied. I'm a bit more fluent runtime PM.
 
->  4.  For ioctl access, as mentioned previously I need to add two
->      callbacks functions (one for start and one for end) in the struct
->      vfio_device_ops and call the same at start and end of ioctl from
->      vfio_device_fops_unl_ioctl().
+Somewhat related to all this is this thread[4] where I've suggested that 
+the right way to save power when there's no link (or child device 
+really) is using runtime PM rather than just failing probe. We also 
+don't need each host controller doing their own conformance test hacks 
+either.
 
-Not sure I followed this..
 
-Jason
+> [3] https://git.kernel.org/linus/cd97b7e0d780
+> 
+> > > > > [0] https://lore.kernel.org/r/20211110221456.11977-6-jim2101024@gmail.com
+> 
+> > > > > IIUC, this path:
+> > > > >
+> > > > >   pci_alloc_child_bus
+> > > > >     brcm_pcie_add_bus                   # .add_bus method
+> > > > >       pci_subdev_regulators_add_bus     # in pcie-brcmstb.c for now
+> > > > >         alloc_subdev_regulators         # in pcie-brcmstb.c for now
+> > > > >         regulator_bulk_get
+> > > > >         regulator_bulk_enable
+> > > > >       brcm_pcie_linkup                  # bring link up
+> > > > >
+> > > > > is basically so we can leave power to downstream devices off, then
+> > > > > turn it on when we're ready to enumerate those downstream devices.
+> > > >
+> > > > Yes  -- it is the "chicken-and-egg" problem.  Ideally, we would like
+> > > > for the endpoint driver to turn on its own regulators, but even to
+> > > > know which endpoint driver to probe we must turn on the regulator to
+> > > > establish linkup.
+> > > 
+> > > I don't think having an endpoint driver turn on power to its device is
+> > > the right goal.  
+> > 
+> > DT requires device specific code to control a specific device. That 
+> > belongs in the driver for that device.
+> 
+> I must be talking about something different than you are.  I see that
+> brcmstb has device-specific code to control the brcmstb device as well
+> as power for PCI devices downstream from that device.
+> 
+> When I read "endpoint driver" I think of a PCIe Endpoint device like a
+> NIC.  That's just a random PCI device, and I read "endpoint driver to
+> turn on its own regulators" as suggesting that the NIC driver (e1000,
+> etc) would turn on power to the NIC.  Is that the intent?
+
+Yes! A NIC as an add-in card doesn't need anything because it's just a 
+standard PCI connector with standard power sequencing. But take that 
+same NIC chip and solder it down on a board. Then the board designers 
+start cost saving and remove components. For example, there's no need 
+for standard PCI supply to chip supply regulators (e.g. 12V/3.3V to 
+whatever the chip has). Who needs an EEPROM with a MAC address either.
+
+I think there's roughly 2 cases we're dealing with. The platform 
+specific ways to do power control on standard PCIe slots/connectors, and 
+then non-standard connections that need downstream device specific ways 
+to do power management (including powering on to be discovered). The 
+line is blurred a bit because the latter case needs some of the former 
+case (at least any in-band PCI power management). The problem I see all 
+the time (not just PCI) is people trying to implement something 
+generic/common rather than device specific which then makes its way into 
+bindings. The only way something generic works is if there's a spec 
+behind it. For PCI slots there is, but it is important we distinguish 
+the 2 cases.
+
+Rob
+
+[4] https://lore.kernel.org/linux-pci/YksDJfterGl9uPjs@robh.at.kernel.org/
