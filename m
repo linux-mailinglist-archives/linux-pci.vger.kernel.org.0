@@ -2,126 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4E1D5392E2
-	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 16:01:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 810375392E9
+	for <lists+linux-pci@lfdr.de>; Tue, 31 May 2022 16:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344953AbiEaOBm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 May 2022 10:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
+        id S245314AbiEaOC4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 May 2022 10:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241048AbiEaOBl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 10:01:41 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E24B2E;
-        Tue, 31 May 2022 07:01:39 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id u12-20020a17090a1d4c00b001df78c7c209so2800757pju.1;
-        Tue, 31 May 2022 07:01:39 -0700 (PDT)
+        with ESMTP id S238994AbiEaOCz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 10:02:55 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9759C5DE4B;
+        Tue, 31 May 2022 07:02:54 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id e24so5127291pjt.0;
+        Tue, 31 May 2022 07:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Mrb04JIXyqFQ3QOJ4ljFjUENecQCixeg6qU8fHaKeZk=;
-        b=obmR59m0Y0vY2NPUoD6WSZci9Ko+JC2tIToDAe4VBgkSuyXRWScFXBhpc/TGFu4ZJH
-         0KqnwtrlMx0ODAJTwmUvhk0Mf3fffWaH68i6GXQhUfFygeCHcsr5dTR+RSX4O/6fGyC1
-         s7GNfZ27SlwB8Sb4JaplTUwawtiFdoQ6go/zaaKo5JZAy1Az4Wh4t6ybDfhbnysvEv5E
-         BOmLvezqVqTiu76Upwot5elJ/4u3bE2w4OYD3hV35WoSNgNCAsciv7CotPOVbHiCxkD+
-         opMEQwLjyw4R3HMJpMxGDw1rcWV1jKhHwSCvTtvidbwWZif+Es7otGe4KP/UqS6lIQFJ
-         KRhQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q0Hh7aCIsbmWJUeM91f0XG111LTI0m02XSIDQdP3p8o=;
+        b=qIdddx20RRVQsqi2bBon4e5xP53QUVXYAcKla4mKOICMRHf9/YvdsIdxp33VcbGRiw
+         sh9QgZfTxntO4UktBd/cdCHjqIGnDtpboKNUJpjtHzJbA+RdudatPcsvIKi5iVQdgvpy
+         C5hImeVpMvccnNwwBDyehkIWcWQ6L8QaBRczL8tB0MqbsJy1GNeMAwJXPOpffzjnYAlt
+         G7qr7qvEj3OO0wfs7j14zbzWAus4DesU3wcMrtdwnFh2R+b+8itWDftZ+wfUVtnyJCiD
+         l0cVftYnizzrpln5/JF0rQVrk9f9/bvbvTbVEnnhkLXr7tB2mymbzGy48K66TydEI/5I
+         dQWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Mrb04JIXyqFQ3QOJ4ljFjUENecQCixeg6qU8fHaKeZk=;
-        b=m6O5Emo3Qb7kP72Cm32kqU1Utfl2YzA7FaZAGsS5R1sVbzVWc5gC/bD9ogQ+1AIw3j
-         SD1apj3Mf/3w/qH9K0/dlx2ZsVQOw+npJmBq77quZgPPDOwEOrYbK2O8o27fXOTgadZi
-         evjYBSjicjKj6Ngs05zrbQOEjwH8PGml7dBMU5IJvEkLVaUCOBiiZtF/XIeio+PiraUw
-         k7/c1OG8Pd3W3eSC4q4RJSNOUahyOoXffT79Hm7r5vB6RlEAT7hRh6j0wkqwV0r8vTLK
-         T/Ak1l8EHEsA2yu1CcEIQEkQD1izlu0DeyAPRzgwf7hb7d1gzMAGd8z7vDriZvcj2twz
-         Eetg==
-X-Gm-Message-State: AOAM532pESMoW/68nbnZ8doMqDoTnbYNHFLhslKTAV98rtz/fJuxgcbm
-        lmkXWwDZEmhBN8JI7yVZ8tY=
-X-Google-Smtp-Source: ABdhPJzFnIkAf7SzEujOh3vbwx4zBDuoIj5QBUHpQkAIlLjI2rtJTa7RIM9vMNmPLUHXlHMlt1UTug==
-X-Received: by 2002:a17:90a:9318:b0:1e0:b957:ffda with SMTP id p24-20020a17090a931800b001e0b957ffdamr29249871pjo.199.1654005699256;
-        Tue, 31 May 2022 07:01:39 -0700 (PDT)
-Received: from [172.16.4.4] ([219.142.146.208])
-        by smtp.gmail.com with ESMTPSA id d5-20020aa78685000000b0050dc76281e6sm10642401pfo.192.2022.05.31.07.01.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 May 2022 07:01:38 -0700 (PDT)
-Message-ID: <d6ba61ed-7a78-126a-de0d-e3e88c51bbd9@gmail.com>
-Date:   Tue, 31 May 2022 22:01:32 +0800
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q0Hh7aCIsbmWJUeM91f0XG111LTI0m02XSIDQdP3p8o=;
+        b=eRTRlX8Gqd4uOQ4hYggl0OKrc64wXwVz9kyNu+kcvxAl8QZNwFJ5O0VS7xhicznDf9
+         cXxI3uh4GX+oDZC+vtqErJTsgHwXxhAHBWUP3TmKSEjpOOEntIvHSACdU6BGJ4fzB95L
+         wdtQZIp7uMMPcrohiZLSnZwMbTskCO9XvRaNIWsJapeIXHLieehECo4xeM28AldCwU7l
+         ym4towSYhiKBxMt0a6M8nkPae3Bhg45+1DRY1el/LyaUa1A5VoPSUB5B3KVhuZQjnzvv
+         rDmwTz9ineRyTAuSwFx8lPS7C/4SlkrVh3Ltn0vWaYDWVnHxKAHmgoNcNJ5NrcZvF7Y9
+         Vk5g==
+X-Gm-Message-State: AOAM530+CLqUIOXC7J+pkFMMahohq0MWzMNmEoUugDBRlr8Y/Eb74kdj
+        JRFajNlsMV7mCN+/l2Frosxz+6BOwsakTt8iTrU=
+X-Google-Smtp-Source: ABdhPJyc7OKAhKtBgVceW2S6K5uMqrZZMd7/HcJeOJVW5Jr5QwyQMKFeAyO86lhFCnP21nhfEE8oYp+242DlouIAVK0=
+X-Received: by 2002:a17:90b:17c6:b0:1e0:28bf:d429 with SMTP id
+ me6-20020a17090b17c600b001e028bfd429mr29302482pjb.239.1654005773933; Tue, 31
+ May 2022 07:02:53 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] PCI: mediatek-gen3: Fix refcount leak in
- mtk_pcie_init_irq_domains
-Content-Language: en-US
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     bhelgaas@google.com, jianjun.wang@mediatek.com, kw@linux.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, maz@kernel.org,
-        robh@kernel.org, ryder.lee@mediatek.com
-References: <6cf820cf-a2e7-c93e-3c00-08bc366f2eb2@gmail.com>
- <20220530073556.1831-1-miles.chen@mediatek.com>
-From:   Miaoqian Lin <linmq006@gmail.com>
-In-Reply-To: <20220530073556.1831-1-miles.chen@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220524152159.2370739-1-Frank.Li@nxp.com> <20220525092306.wuansog6fe2ika3b@mobilestation>
+ <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com>
+In-Reply-To: <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Tue, 31 May 2022 09:02:42 -0500
+Message-ID: <CAHrpEqRMpq+-H97Jm2F0c=0ey_3NsqgCvbTiBDA=vz2p4K+uZQ@mail.gmail.com>
+Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Miles
-
-On 2022/5/30 15:35, Miles Chen wrote:
-> Hi Miaoqian,
+On Wed, May 25, 2022 at 9:41 AM Zhi Li <lznuaa@gmail.com> wrote:
 >
->> Hi, Miles
->>
->> On 2022/5/30 10:19, Miles Chen wrote:
->>> Hi Miaoqian,
->>>
->>>>>> 						  &intx_domain_ops, pcie);
->>>>>> 	if (!pcie->intx_domain) {
->>>>>> 		dev_err(dev, "failed to create INTx IRQ domain\n");
->>>>>> +		of_node_put(intc_node);
->>>>>> 		return -ENODEV;
->>>>>> 	}
->>>>> Thanks for doing this.
->>>>>
->>>>> I checked mtk_pcie_init_irq_domains() and there are multiple exit paths like
->>>>> err_msi_domain and err_msi_bottom_domain and the normal path which also
->>>>> need of_node_put(intc_node).
->>>> Thanks for your reply,
->>>>
->>>> I didn't add of_node_put() in other paths because I am not sure if the reference passed through irq_domain_add_linear(), since intc_node is passed to irq_domain_add_linear().
->>>>
->>>> __irq_domain_add() keeps &node->fwnode in the irq_domain structure.
->>>>
->>>> and use fwnode_handle_get() to get the reference of fwnode, but I still uncertain.
->>>>
->>>> If the reference don't needed anymore after irq_domain_add_linear(),
->>>>
->>>> your suggestion looks fine, and I will submit v2.
->>> Thanks for your reply, I think we can do similar things like
->>> rtl8365mb_irq_setup() in drivers/net/dsa/realtek/rtl8365mb.c
->> I checked rtl8365mb_irq_setup(), it calls of_node_put() by goto statement for error paths.
->>
->> and calls of_node_put() before return 0 in normal path. I didn't see the same problem.
-> Sorry for the confusing. I meant that we can do the same thing - 
-> it calls of_node_put() by goto statement for error paths
-> and calls of_node_put() before return 0 in normal path. :-)
+> On Wed, May 25, 2022 at 4:23 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> >
+> > Hello Vinod
+> >
+> > On Tue, May 24, 2022 at 10:21:51AM -0500, Frank Li wrote:
+> > > Default Designware EDMA just probe remotely at host side.
+> > > This patch allow EDMA driver can probe at EP side.
+> > >
+> > > 1. Clean up patch
+> > >    dmaengine: dw-edma: Detach the private data and chip info structures
+> > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
+> > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> > >
+> > > 2. Enhance EDMA driver to allow prode eDMA at EP side
+> > >    dmaengine: dw-edma: Add support for chip specific flags
+> > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
+> > > flags (this patch removed at v11 because dma tree already have fixed
+> > > patch)
+> > >
+> > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
+> > >    dmaengine: dw-edma: Fix programming the source & dest addresses for
+> > > ep
+> > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> > >
+> > > 4. change pci-epf-test to use EDMA driver to transfer data.
+> > >    PCI: endpoint: Add embedded DMA controller test
+> > >
+> > > 5. Using imx8dxl to do test, but some EP functions still have not
+> > > upstream yet. So below patch show how probe eDMA driver at EP
+> > > controller driver.
+> > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+> >
+> > This series has been on review for over three months now. It has got
+> > several acks, rb and tb tags from me, Manivannan and Kishon (the last
+> > patch in the series). Seeing Gustavo hasn't been active for all that time
+> > at all and hasn't performed any review for more than a year the
+> > probability of getting his attention soon enough is almost zero. Thus
+> > could you please give your acks if you are ok with the series content. Due
+> > to having several more patchsets dependent on this one, Bjorn has agreed
+> > to merge this series in through the PCI tree:
+> > https://lore.kernel.org/linux-pci/20220524155201.GA247821@bhelgaas/
+> > So the only thing we need is your ack tags.
+> >
+> > @Frank. Should there be a new patchset revision could you please add a
+> > request to merge the series in to the PCI tree? I am a bit tired repeating
+> > the same messages each time the new mailing review lap.)
+>
+> The key is to need Vinod to say something
+>
+> Best regards
+> Frank Li.
 
-I'll sent a v2 for this: https://lore.kernel.org/all/20220530064807.34534-1-linmq006@gmail.com/
+@Vinod Kou:
+       These patches were well reviewed by Serge Semin,  Bjorn,
+Manivannan Sadhasivam, Kishon Vijay Abraham and tested on 3 platforms.
+       Pending on your opinion because it touch file under /driver/dma/dw_edma/*
 
-following your original suggestion.
+best regards
+Frank Li
 
-> Thanks,
-> Miles
+>
+> >
+> > -Sergey
+> >
+> > >
+> > > Frank Li (6):
+> > >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> > >   dmaengine: dw-edma: Detach the private data and chip info structures
+> > >   dmaengine: dw-edma: Change rg_region to reg_base in struct
+> > >     dw_edma_chip
+> > >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> > >     dw_edma_chip
+> > >   dmaengine: dw-edma: Add support for chip specific flags
+> > >   PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
+> > >
+> > > Serge Semin (2):
+> > >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+> > >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
+> > >     semantics
+> > >
+> > >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
+> > >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
+> > >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
+> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
+> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
+> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 112 ++++++++++++--
+> > >  include/linux/dma/edma.h                      |  59 +++++++-
+> > >  9 files changed, 317 insertions(+), 180 deletions(-)
+> > >
+> > > --
+> > > 2.35.1
+> > >
