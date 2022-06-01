@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3017453A63C
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 15:52:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10FB453A6A4
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 15:55:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344238AbiFANw0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 09:52:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51158 "EHLO
+        id S1353573AbiFANyw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 09:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353367AbiFANwX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 09:52:23 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E447C31DC6;
-        Wed,  1 Jun 2022 06:52:20 -0700 (PDT)
+        with ESMTP id S1353735AbiFANyT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 09:54:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E95D8CB0F;
+        Wed,  1 Jun 2022 06:54:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 85E72B81911;
-        Wed,  1 Jun 2022 13:52:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E422C3411D;
-        Wed,  1 Jun 2022 13:52:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BA203615C7;
+        Wed,  1 Jun 2022 13:53:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B52C341C5;
+        Wed,  1 Jun 2022 13:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654091538;
-        bh=y+ZCPCbodZGnjXfv4nC2fCqOJ8w4vtn6X4gFvwYmG9Q=;
+        s=k20201202; t=1654091600;
+        bh=Q2EBRsgfT+PTS/7GnCfPNIMf+eKY8QMFmv+If5+/aew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRYSjrTmJRxpClvcJYygpqrZmpsNM2ZeZZKugfwnbQMMS3tstiOTZftQUy5pFc1E1
-         39LaLGT9iUyYHH52dvQhtiMAp0OlB5kPzPE+UBWV/N+85R09erPwfM652cfSkJll/7
-         4Hoq+utWLAplFisqBRLl3c6gliwg5q1hFqMUIq7zNsjkEORL/r0j0gRJqsiDeYHl/Y
-         2bRE/hqHt9A6VGPUKBf2QBPHdtuBGxMaPFHXil34tvGn7Kz0hUMi9WhEMcbeZ424xU
-         SMyGGQ0LrIuJVJG0bpLNeE+0HZcac6PRbYSHG42F97YxgJ25fei375LuOT8Q21xilG
-         GXtzjEHkbZAqg==
+        b=i7mFgnzkCelxJD/WLUUINWnIbMypIv2SG1WHougO0O1bXFYzrP0hRYvNgje2e8/b8
+         wvQ2AC3cofhbq9ZH9uWby70hoqgxNGbdY7D9YEbMoyZOuIdEdl5ZOhf5J2V1rFrTw+
+         9wH9o29YH0Om6PZVlUqmA+XTyVsce+h9sj/324ndcEMdcY1vYhUr666hcGrnuLWCyr
+         KUUIvZvIXszEF9urP3PrPePVdAGtH/4sPmZ4XQgWHTkHgAKdMTHYF+/226rIoafZCh
+         G6ePycHcngC2ev4PoQMCobbVzglqtFcd5ebhmY8TwYHznOGYk//IujlIXu/5tScaNU
+         Mx9Y29uGzZZlw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 02/49] PCI/ASPM: Make Intel DG2 L1 acceptable latency unlimited
-Date:   Wed,  1 Jun 2022 09:51:26 -0400
-Message-Id: <20220601135214.2002647-2-sashal@kernel.org>
+Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, daire.mcnamara@microchip.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.18 29/49] PCI: microchip: Add missing chained_irq_enter()/exit() calls
+Date:   Wed,  1 Jun 2022 09:51:53 -0400
+Message-Id: <20220601135214.2002647-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220601135214.2002647-1-sashal@kernel.org>
 References: <20220601135214.2002647-1-sashal@kernel.org>
@@ -57,87 +57,80 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Conor Dooley <conor.dooley@microchip.com>
 
-[ Upstream commit 03038d84ace72678a9944524508f218a00377dc0 ]
+[ Upstream commit 30097efa334a706f9021b9aee6efcddcfa44a78a ]
 
-Intel DG2 discrete graphics PCIe endpoints advertise L1 acceptable exit
-latency to be < 1us even though they can actually tolerate unlimited exit
-latencies just fine. Quirk the L1 acceptable exit latency for these
-endpoints to be unlimited so ASPM L1 can be enabled.
+Two of the chained IRQ handlers miss their
+chained_irq_enter()/chained_irq_exit() calls, so add them in to avoid
+potentially lost interrupts.
 
-[bhelgaas: use FIELD_GET/FIELD_PREP, wordsmith comment & commit log]
-Link: https://lore.kernel.org/r/20220405093810.76613-1-mika.westerberg@linux.intel.com
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Reported by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lore.kernel.org/linux-pci/87h76b8nxc.wl-maz@kernel.org
+Link: https://lore.kernel.org/r/20220511095504.2273799-1-conor.dooley@microchip.com
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ drivers/pci/controller/pcie-microchip-host.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index da829274fc66..41aeaa235132 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -12,6 +12,7 @@
-  * file, where their drivers can use them.
-  */
+diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+index 29d8e81e4181..8175abed0f05 100644
+--- a/drivers/pci/controller/pcie-microchip-host.c
++++ b/drivers/pci/controller/pcie-microchip-host.c
+@@ -406,6 +406,7 @@ static void mc_pcie_enable_msi(struct mc_pcie *port, void __iomem *base)
+ static void mc_handle_msi(struct irq_desc *desc)
+ {
+ 	struct mc_pcie *port = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct device *dev = port->dev;
+ 	struct mc_msi *msi = &port->msi;
+ 	void __iomem *bridge_base_addr =
+@@ -414,6 +415,8 @@ static void mc_handle_msi(struct irq_desc *desc)
+ 	u32 bit;
+ 	int ret;
  
-+#include <linux/bitfield.h>
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/export.h>
-@@ -5895,3 +5896,49 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1533, rom_bar_overlap_defect);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1536, rom_bar_overlap_defect);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1537, rom_bar_overlap_defect);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1538, rom_bar_overlap_defect);
++	chained_irq_enter(chip, desc);
 +
-+#ifdef CONFIG_PCIEASPM
-+/*
-+ * Several Intel DG2 graphics devices advertise that they can only tolerate
-+ * 1us latency when transitioning from L1 to L0, which may prevent ASPM L1
-+ * from being enabled.  But in fact these devices can tolerate unlimited
-+ * latency.  Override their Device Capabilities value to allow ASPM L1 to
-+ * be enabled.
-+ */
-+static void aspm_l1_acceptable_latency(struct pci_dev *dev)
-+{
-+	u32 l1_lat = FIELD_GET(PCI_EXP_DEVCAP_L1, dev->devcap);
+ 	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
+ 	if (status & PM_MSI_INT_MSI_MASK) {
+ 		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
+@@ -424,6 +427,8 @@ static void mc_handle_msi(struct irq_desc *desc)
+ 						    bit);
+ 		}
+ 	}
 +
-+	if (l1_lat < 7) {
-+		dev->devcap |= FIELD_PREP(PCI_EXP_DEVCAP_L1, 7);
-+		pci_info(dev, "ASPM: overriding L1 acceptable latency from %#x to 0x7\n",
-+			 l1_lat);
-+	}
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f80, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f81, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f82, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f83, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f84, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f85, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f86, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f87, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4f88, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5690, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5691, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5692, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5693, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5694, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x5695, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a0, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a1, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a2, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a3, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a4, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a5, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56a6, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b0, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
-+#endif
++	chained_irq_exit(chip, desc);
+ }
+ 
+ static void mc_msi_bottom_irq_ack(struct irq_data *data)
+@@ -563,6 +568,7 @@ static int mc_allocate_msi_domains(struct mc_pcie *port)
+ static void mc_handle_intx(struct irq_desc *desc)
+ {
+ 	struct mc_pcie *port = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	struct device *dev = port->dev;
+ 	void __iomem *bridge_base_addr =
+ 		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+@@ -570,6 +576,8 @@ static void mc_handle_intx(struct irq_desc *desc)
+ 	u32 bit;
+ 	int ret;
+ 
++	chained_irq_enter(chip, desc);
++
+ 	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
+ 	if (status & PM_MSI_INT_INTX_MASK) {
+ 		status &= PM_MSI_INT_INTX_MASK;
+@@ -581,6 +589,8 @@ static void mc_handle_intx(struct irq_desc *desc)
+ 						    bit);
+ 		}
+ 	}
++
++	chained_irq_exit(chip, desc);
+ }
+ 
+ static void mc_ack_intx_irq(struct irq_data *data)
 -- 
 2.35.1
 
