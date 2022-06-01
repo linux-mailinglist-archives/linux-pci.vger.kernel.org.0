@@ -2,248 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47C6153AA2D
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 17:36:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC17C53AA9D
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 18:01:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355616AbiFAPfu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 11:35:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
+        id S1355111AbiFAQAt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 12:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355615AbiFAPfr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 11:35:47 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E0DA3090;
-        Wed,  1 Jun 2022 08:35:45 -0700 (PDT)
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LCtQr5DCPz685ZG;
-        Wed,  1 Jun 2022 23:31:16 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 1 Jun 2022 17:35:42 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 1 Jun
- 2022 16:35:41 +0100
-Date:   Wed, 1 Jun 2022 16:35:40 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Ben Widawsky" <ben@bwidawsk.net>, <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V9 6/9] cxl/port: Read CDAT table
-Message-ID: <20220601163540.00006978@Huawei.com>
-In-Reply-To: <20220531152632.1397976-7-ira.weiny@intel.com>
-References: <20220531152632.1397976-1-ira.weiny@intel.com>
-        <20220531152632.1397976-7-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml739-chm.china.huawei.com (10.201.108.189) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1353330AbiFAQAs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 12:00:48 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F35339AE6B;
+        Wed,  1 Jun 2022 09:00:46 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id A04C85C0194;
+        Wed,  1 Jun 2022 12:00:45 -0400 (EDT)
+Received: from imap47 ([10.202.2.97])
+  by compute2.internal (MEProxy); Wed, 01 Jun 2022 12:00:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=cc:cc:content-transfer-encoding:content-type:date:date:from
+        :from:in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1654099245; x=
+        1654185645; bh=ZYH3e3AgsGaCCagzNdu3Jkw0DftFDdw0eqZmZz620FY=; b=h
+        rhLyaFAsAk33UB/oN3XtNLwDt9df2T2yFMjiX+UtxljZY+RtO4N6LNy7OriLZgxt
+        C6m87CPGqJaCNEgU2+Ue9YGq3TVTHuSHGtp7mdIG/U/CDRwUwnI11GCN4qw+kNOd
+        HKYWWXwCyMihOmp9n0XbkKhWtwX6qs6F01FhR1uhsqFGGM+Sjw6owectHumA6Ave
+        UL31N1mO2+rUaivIJ//S/JOycQc2PpVb4qpiiu5EADnJRt7qtS8Y2+q+kgGbcncN
+        87xl6RRuqjtUl5vRM7jSParz8iEE0oM28P2+5+CuibFlkM79abyzYs4Asafg0qEy
+        pg+aZH/4+v9zLKWLox8vw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1654099245; x=
+        1654185645; bh=ZYH3e3AgsGaCCagzNdu3Jkw0DftFDdw0eqZmZz620FY=; b=o
+        lfBoW3j//UwVE763/l0acB/7KF3NJ/Qhkw0cBJ/vreTKo+4pHz0oClg0OMRQGPZj
+        GBm4u8rT8/uwsjKSFJlDxYzzrOKgYnuZtUPmpQhpXVm2uISkVxP7uhWPsNwLYTWZ
+        dHuiUpVdT+plohMGRbk4cr51ZeQvETgXKHHNqYcCHdkhQBv8V20WQbJ/IFYybYma
+        YDLZS7ZiAc3+69DSSaHiWQd1kGrszu0j/IQq7KxJyVcrVT2hLVjadJiEsAWYjhwM
+        XfNhwRWMM6jjtjTl8CJNRSal7VzEf9XrqSJlLmrWvu7pIE3TGafgdQQJ84GzIU9e
+        fCs0uRgKDEiNMhpV/YbMw==
+X-ME-Sender: <xms:LI2XYhOpCGuL7clCVLSlkrFl2vEYNGgBrtupc3CB-igEaOT_2I65yQ>
+    <xme:LI2XYj8rEfoNjCx8EQVSflx7o8_99q_pqPAMtNA32WQuDz4Eqfv6e5TKUfK6RzWRb
+    AT_3WM3Ul95gHK8GEc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrledtgdelgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhhmtderreejnecuhfhrohhmpedfufhv
+    vghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrf
+    grthhtvghrnhepgfevveetfeevkeetfffhjefgveehteffjeeghefgjeefteeltdejgeff
+    jeeuhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epshhvvghnsehsvhgvnhhpvghtvghrrdguvghv
+X-ME-Proxy: <xmx:LI2XYgRcnl00r3EUy_LYnwLJlRqnj8nvVoo_DH430PGgaxb9CxO3SA>
+    <xmx:LI2XYtsxrLP7QIEo3bk3vPEsv5JATke3IEDPuBYP5Ut1zf_es6Ad_g>
+    <xmx:LI2XYpfAQ1Ht4EuBWNMUTOaBRaYxRoTc_uQQYhBlLmv9-IYsgvwoTw>
+    <xmx:LY2XYjsDqMtLfR-h-Ax0sBOjRkza02uxaS8vXQHPonxUBPpulCM_fg>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 550D4A60072; Wed,  1 Jun 2022 12:00:44 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-591-gfe6c3a2700-fm-20220427.001-gfe6c3a27
+Mime-Version: 1.0
+Message-Id: <9F092ADE-6890-40A0-8506-D19B4C49BB5F@svenpeter.dev>
+In-Reply-To: <20220531215815.2408477-1-robh@kernel.org>
+References: <20220531215815.2408477-1-robh@kernel.org>
+Date:   Wed, 01 Jun 2022 18:00:44 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Rob Herring" <robh@kernel.org>
+Cc:     "Hector Martin" <marcan@marcan.st>,
+        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        "Mark Kettenis" <kettenis@openbsd.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: PCI: apple: Add missing 'power-domains' property
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 31 May 2022 08:26:29 -0700
-ira.weiny@intel.com wrote:
+> On 31. May 2022, at 23:58, Rob Herring <robh@kernel.org> wrote:
+>=20
+> =EF=BB=BFThe 'unevaluatedProperties' schema checks is not fully workin=
+g and doesn't
+> catch some cases where there's a $ref to another schema. A fix is pend=
+ing,
+> but results in new warnings in examples.
+>=20
+> The Apple PCIe host schema is missing 'power-domains' in the schema.
+> The example has 3 power domains. However, this is wrong too as actual
+> dts files have a single power domain and Sven confirmed 1 is correct.
+>=20
+> Cc: Sven Peter <sven@svenpeter.dev>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> The OS will need CDAT data from CXL devices to properly set up
-> interleave sets.  Currently this is supported through a DOE mailbox
-> which supports CDAT.
-> 
-> Cache the CDAT data for later parsing.  Provide a sysfs binary attribute
-> to allow dumping of the CDAT.
-> 
-> Binary dumping is modeled on /sys/firmware/ACPI/tables/
-> 
-> The ability to dump this table will be very useful for emulation of real
-> devices once they become available as QEMU CXL type 3 device emulation will
-> be able to load this file in.
-> 
-> This does not support table updates at runtime. It will always provide
-> whatever was there when first cached. Handling of table updates can be
-> implemented later.
-> 
-> Finally create a complete list of DOE defines within cdat.h for code
-> wishing to decode the CDAT table.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-
-Fun question of ownership inline...
-
-...
-
-> +void read_cdat_data(struct cxl_port *port)
-> +{
-> +	struct device *dev = &port->dev;
-> +	size_t cdat_length;
-> +	int ret;
-> +
-> +	if (cxl_cdat_get_length(port, &cdat_length))
-> +		return;
-> +
-> +	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
-
-boom. See below for why :)
-
-> +	if (!port->cdat.table) {
-> +		ret = -ENOMEM;
-> +		goto error;
-> +	}
-> +
-> +	port->cdat.length = cdat_length;
-> +	ret = cxl_cdat_read_table(port, &port->cdat);
-> +	if (ret) {
-> +		devm_kfree(dev, port->cdat.table);
-> +		port->cdat.table = NULL;
-> +		port->cdat.length = 0;
-> +		ret = -EIO;
-> +		goto error;
-> +	}
-> +
-> +	return;
-> +error:
-> +	dev_err(dev, "CDAT data read error (%d)\n", ret);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 2e2bd65c1024..aa4229ddc1bc 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -320,7 +320,48 @@ static void cxl_port_release(struct device *dev)
->  	kfree(port);
->  }
->  
-> +static ssize_t cdat_read(struct file *filp, struct kobject *kobj,
-> +			 struct bin_attribute *bin_attr, char *buf,
-> +			 loff_t offset, size_t count)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cxl_port *port = to_cxl_port(dev);
-> +
-> +	if (!port->cdat.table)
-> +		return 0;
-> +
-> +	return memory_read_from_buffer(buf, count, &offset,
-> +				       port->cdat.table,
-> +				       port->cdat.length);
-> +}
-> +
-> +static BIN_ATTR_RO(cdat, 0);
-> +
-> +static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
-> +					      struct bin_attribute *attr, int i)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cxl_port *port = to_cxl_port(dev);
-> +
-> +	if ((attr == &bin_attr_cdat) && port->cdat.table)
-> +		return 0400;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct bin_attribute *cxl_cdat_bin_attributes[] = {
-> +	&bin_attr_cdat,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group cxl_cdat_attribute_group = {
-> +	.name = "CDAT",
-> +	.bin_attrs = cxl_cdat_bin_attributes,
-> +	.is_bin_visible = cxl_port_bin_attr_is_visible,
-> +};
-> +
->  static const struct attribute_group *cxl_port_attribute_groups[] = {
-> +	&cxl_cdat_attribute_group,o
->  	&cxl_base_attribute_group,
->  	NULL,
->  };
-> @@ -462,6 +503,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
->  		return port;
->  
->  	cxl_find_cdat_mb(port);
-> +	/* Cache the data early to ensure is_visible() works */
-> +	read_cdat_data(port);
-
-This uses port as the 'device' for devm_ calls.
-Unfortunately if the port driver isn't loaded, it still "successfully" runs.
-Then if the port driver is probed, you get both a bunch of errors due to
-devm_ allocations on a device before the driver is loaded.
-
-For extra fun it tries to probe the ports multiple times without freeing
-the index which is 'interesting'. We had this happen a while ago (unrelated
-to DOE) but this may be unrelated (or maybe related to the region stuff
-I'm carrying on my test tree)
-
-As to the question of what the correct fix is...
-Maybe move them into the port driver probe but then is_visible
-won't work.  Or pass a pointer to the struct device *host down
-into read_cdat_data and __read_cdat_data calls to handle the
-allocation. (I tried this and it seems superficially fine).
-
-Jonathan
-
-
-
->  
->  	dev = &port->dev;
->  	if (is_cxl_memdev(uport))
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 0a86be589ffc..531b77d296c7 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -8,6 +8,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/bitops.h>
->  #include <linux/io.h>
-> +#include "cdat.h"
->  
->  /**
->   * DOC: cxl objects
-> @@ -268,6 +269,7 @@ struct cxl_nvdimm {
->   * @dead: last ep has been removed, force port re-creation
->   * @depth: How deep this port is relative to the root. depth 0 is the root.
->   * @cdat_mb: Mailbox which supports the CDAT protocol
-> + * @cdat: Cached CDAT data
->   */
->  struct cxl_port {
->  	struct device dev;
-> @@ -280,6 +282,7 @@ struct cxl_port {
->  	bool dead;
->  	unsigned int depth;
->  	struct pci_doe_mb *cdat_mb;
-> +	struct cxl_cdat cdat;
->  };
->  
->  /**
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 366b21bd1a01..35f0d4892eaa 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -75,4 +75,5 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->  struct cxl_dev_state;
->  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
->  void cxl_find_cdat_mb(struct cxl_port *port);
-> +void read_cdat_data(struct cxl_port *port);
->  #endif /* __CXL_PCI_H__ */
-
+Reviewed-by: Sven Peter <sven@svenpeter.dev>
