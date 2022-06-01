@@ -2,151 +2,350 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F1853B01B
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 00:51:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4BB953B07C
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 02:34:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232305AbiFAWbB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 18:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53606 "EHLO
+        id S230455AbiFAXCE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 19:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232301AbiFAWbB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 18:31:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D7ED101CB;
-        Wed,  1 Jun 2022 15:30:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 12B9660C98;
-        Wed,  1 Jun 2022 22:30:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1C1C385A5;
-        Wed,  1 Jun 2022 22:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654122658;
-        bh=Is0lHUzMG8//soZVMgz0ruaa6kON13kwXAtlgdtJw6s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nGsYQX3k61YJkwTPy7HflD3pb9VyTIcNuEwF6KgKAgIfAXRZWcDtnrSLg994KU1mc
-         Wew5o1hEVzoOUJjWmMmTW6AbA6NK364G4371JXHvAOVC5kPYnQW9ZLE2z4hQAmBUio
-         H0zbgpAAcL5GUlmjy8vcAc1iVGNANcpIFFT7rMkny31SGA02nBZefeW4YTw/cpJW/Z
-         Hfdx58KX+G0MGoKv5vGWpEXfjhBFshZDQ4pSd9JPl545mjFgH/Pg0F2xNe/dN9Cx+n
-         FjtijbkCrnHOkD7qWqzI0zieHUo6bmmpXfZpH9wvlAI0EWi7EALMHUWpaM6dkIUCrg
-         9hZ0e247MZ4fQ==
-Date:   Wed, 1 Jun 2022 17:30:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Clemens Ladisch <clemens@ladisch.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        with ESMTP id S232487AbiFAXCD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 19:02:03 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 578B35DD0B;
+        Wed,  1 Jun 2022 16:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654124521; x=1685660521;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oi2jkSGPrFS1UBjfoVd4uU8KXe2HD/zSiJtdnwRKxh8=;
+  b=FpdStbt1PQdq3SDXdY63l1GHZLTb5cyPiLFtVnk0RpkMMnScxD38YrsR
+   +E/xgEET5LhzChARV6D1GuknkeGN8hyQFyVALFOkeUdCeVyw6+iSc8AaZ
+   xtcBxzXvaat/NXxb6NErCgxFW7ff9SWGIvgP2ImpmJVB/r3NW9tllqPkm
+   WBbMosMrXwfI/0iFeF8FeAED3t5ZsuLDxt3DQ8oP8U+nHPjif4Z50Zfso
+   5zN3FGRIz9TcA7A9+dhsSjvCN5ZkI3DZpy4GyTOeuZP3cAkMdsonueP3B
+   IhQjGsUZ3EdT72fd88zfYMJeO+cWmDRn/lFtoIJhEbqBg5EiQQNiW7fBN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="263394050"
+X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
+   d="scan'208";a="263394050"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 16:01:59 -0700
+X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
+   d="scan'208";a="577189437"
+Received: from cwmurphy-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.32.23])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 16:01:58 -0700
+Date:   Wed, 1 Jun 2022 16:01:57 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Ben Widawsky <ben@bwidawsk.net>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org,
-        Gabriel Craciunescu <nix.or.die@googlemail.com>,
-        babu.moger@amd.com
-Subject: Re: [PATCH 1/2] x86/amd_nb: Add AMD Family 19h A0-AF IDs
-Message-ID: <20220601223056.GA10215@bhelgaas>
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V9 4/9] cxl/pci: Create PCI DOE mailbox's for memory
+ devices
+Message-ID: <Ypfv5WIRL9+0kafj@iweiny-desk3>
+References: <20220531152632.1397976-1-ira.weiny@intel.com>
+ <20220531152632.1397976-5-ira.weiny@intel.com>
+ <20220531175020.efqfth7ubbyhoubp@mail.bwidawsk.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220601172121.18612-1-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220531175020.efqfth7ubbyhoubp@mail.bwidawsk.net>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 01, 2022 at 12:21:18PM -0500, Mario Limonciello wrote:
-> commit 4fb0abfee424 ("x86/amd_nb: Add AMD Family 19h Models (10h-1Fh)
-> and (A0h-AFh) PCI IDs") had claimed to add the IDs for models A0h-AFh,
-> but it appears to only have added the models 10h-1Fh.
+On Tue, May 31, 2022 at 10:50:20AM -0700, Ben Widawsky wrote:
+> On 22-05-31 08:26:27, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > DOE mailbox objects will be needed for various mailbox communications
+> > with each memory device.
+> > 
+> > Iterate each DOE mailbox capability and create PCI DOE mailbox objects
+> > as found.
+> > 
+> > It is not anticipated that this is the final resting place for the
+> > iteration of the DOE devices.  The support of ports may drive this code
+> > into the pcie side.  In this imagined architecture the CXL port driver
+> > would then query into the PCI device for the DOE mailbox array.
 > 
-> Add the actual IDs for A0-AF which are needed for SMN communication to
-> work properly in amd_nb.
+> Not sure if direction has changed, but initially it would have been the cxl_pci
+> driver who would query this and pass it along when the port driver probes.
+> Personally, I've never had an issue with non cxl_pci drivers using PCI
+> interfaces and semantics, but it is something we've taken specific care to
+> avoid.
+
+I really struggled with this and this is why the comment above was added.  I
+agree with you but I think this actually belongs somewhere in the PCI code
+eventually and the cxl_port should be grabbing the CDAT mailbox from there.
+
+I really think that having the PCIe port driver iterate the DOE mailboxes and
+then having either CXL or PCIe find the mailboxes they are interested in is the
+way to go.
+
+But this supports mailbox end points for now.
+
 > 
-> Fixes: 4fb0abfee424 ("x86/amd_nb: Add AMD Family 19h Models (10h-1Fh) and (A0h-AFh) PCI IDs")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  arch/x86/kernel/amd_nb.c | 5 +++++
->  include/linux/pci_ids.h  | 1 +
->  2 files changed, 6 insertions(+)
+> > 
+> > For now this is good enough for the endpoints and the split is similar
+> > to the envisioned architecture where getting the mailbox array is
+> > separated from the various protocol needs.  For example, it is not
+> > anticipated that the CDAT code will need to move because it is only
+> > needed by the cxl_ports.
+> > 
+> > Likewise irq's are separated out in a similar design pattern to the
+> > PCIe port driver.  But a much simpler irq enabling flag is used and only
+> > DOE interrupts are supported.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from V8:
+> > 	Move PCI_DOE selection to CXL_BUS to support future patches
+> > 	which move queries into the port code.
+> > 	Remove Auxiliary device arch
+> > 	Squash the functionality of the auxiliary driver into this
+> > 	patch.
+> > 	Split out the irq handling a bit.
+> > 
+> > Changes from V7:
+> > 	Minor code clean ups
+> > 	Rebased on cxl-pending
+> > 
+> > Changes from V6:
+> > 	Move all the auxiliary device stuff to the CXL layer
+> > 
+> > Changes from V5:
+> > 	Split the CXL specific stuff off from the PCI DOE create
+> > 	auxiliary device code.
+> > ---
+> >  drivers/cxl/Kconfig  |   1 +
+> >  drivers/cxl/cxlmem.h |   6 +++
+> >  drivers/cxl/pci.c    | 111 +++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 118 insertions(+)
+> > 
+> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> > index f64e3984689f..7adaaf80b302 100644
+> > --- a/drivers/cxl/Kconfig
+> > +++ b/drivers/cxl/Kconfig
+> > @@ -2,6 +2,7 @@
+> >  menuconfig CXL_BUS
+> >  	tristate "CXL (Compute Express Link) Devices Support"
+> >  	depends on PCI
+> > +	select PCI_DOE
+> >  	help
+> >  	  CXL is a bus that is electrically compatible with PCI Express, but
+> >  	  layers three protocols on that signalling (CXL.io, CXL.cache, and
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index 60d10ee1e7fc..4d2764b865ab 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -191,6 +191,8 @@ struct cxl_endpoint_dvsec_info {
+> >   * @component_reg_phys: register base of component registers
+> >   * @info: Cached DVSEC information about the device.
+> >   * @serial: PCIe Device Serial Number
+> > + * @doe_mbs: PCI DOE mailbox array
+> > + * @num_mbs: Number of DOE mailboxes
+> >   * @mbox_send: @dev specific transport for transmitting mailbox commands
+> >   *
+> >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+> > @@ -224,6 +226,10 @@ struct cxl_dev_state {
+> >  	resource_size_t component_reg_phys;
+> >  	u64 serial;
+> >  
+> > +	bool doe_use_irq;
+> > +	struct pci_doe_mb **doe_mbs;
+> > +	int num_mbs;
+> > +
+> >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+> >  };
+> >  
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 5a0ae46d4989..131f89dec8e7 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -8,6 +8,7 @@
+> >  #include <linux/mutex.h>
+> >  #include <linux/list.h>
+> >  #include <linux/pci.h>
+> > +#include <linux/pci-doe.h>
+> >  #include <linux/io.h>
+> >  #include "cxlmem.h"
+> >  #include "cxlpci.h"
+> > @@ -386,6 +387,113 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+> >  	return rc;
+> >  }
+> >  
+> > +static void cxl_pci_free_irq_vectors(void *data)
+> > +{
+> > +	pci_free_irq_vectors(data);
+> > +}
+> > +
+> > +static void cxl_doe_destroy_mb(void *ds)
+> > +{
+> > +	struct cxl_dev_state *cxlds = ds;
+> > +	int i;
+> > +
+> > +	for (i = 0; i < cxlds->num_mbs; i++) {
+> > +		if (cxlds->doe_mbs[i])
+> > +			pci_doe_destroy_mb(cxlds->doe_mbs[i]);
+> > +	}
+> > +}
+> > +
+> > +static void cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds)
+> > +{
+> > +	struct device *dev = cxlds->dev;
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +	int num_irqs = 0;
+> > +	int off = 0;
+> > +	int rc;
+> > +
+> > +	/* Account for all the DOE vectors needed */
+> > +	pci_doe_for_each_off(pdev, off) {
+> > +		int irq = pci_doe_get_irq_num(pdev, off);
+> > +
+> > +		if (irq < 0)
+> > +			continue;
+> > +		num_irqs = max(num_irqs, irq + 1);
 > 
-> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-> index 190e0f763375..cc8c7cfa9068 100644
-> --- a/arch/x86/kernel/amd_nb.c
-> +++ b/arch/x86/kernel/amd_nb.c
-> @@ -25,11 +25,13 @@
->  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
->  #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F4 0x144c
->  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
-> +#define PCI_DEVICE_ID_AMD_19H_MA0H_ROOT	0x14b5
->  #define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
->  #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F4 0x14b1
->  #define PCI_DEVICE_ID_AMD_19H_M40H_ROOT	0x14b5
->  #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F4 0x167d
->  #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F4 0x166e
-> +#define PCI_DEVICE_ID_AMD_19H_MA0H_DF_F4 0x1728
->  
->  /* Protect the PCI config register pairs used for SMN. */
->  static DEFINE_MUTEX(smn_mutex);
-> @@ -43,6 +45,7 @@ static const struct pci_device_id amd_root_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_ROOT) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_MA0H_ROOT) },
->  	{}
->  };
->  
-> @@ -67,6 +70,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F3) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_MA0H_DF_F3) },
->  	{}
->  };
->  
-> @@ -85,6 +89,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F4) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_MA0H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
->  	{}
->  };
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 0178823ce8c2..05b4c67a8a2a 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -560,6 +560,7 @@
->  #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F3 0x14b0
->  #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F3 0x167c
->  #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F3 0x166d
-> +#define PCI_DEVICE_ID_AMD_19H_MA0H_DF_F3 0x1727
+> This seems overly complicated. Isn't it just num_irqs++?
 
-This file is nominally sorted by numeric device ID inside the vendor
-section, but that has really deteriorated over time.
+See Jonathan's comment.  But I'll change it to 'max_irqs'.
 
-I can't quite figure out the rationale for deciding whether to put
-things in amd_nb.c vs pci_ids.h.  The IDs in amd_nb.c look basically
-the same as this one.
-
-Normally we put things in pci_ids.h if they are used more than one
-place.  PCI_DEVICE_ID_AMD_19H_MA0H_DF_F3 looks like it's only used in
-one place.
-
->  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
->  #define PCI_DEVICE_ID_AMD_LANCE		0x2000
->  #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
-> -- 
-> 2.34.1
 > 
+> > +	}
+> > +
+> > +	/*
+> > +	 * Allocate enough vectors for the DOE's
+> > +	 */
+> > +	rc = pci_alloc_irq_vectors(pdev, num_irqs, num_irqs, PCI_IRQ_MSI |
+> > +							     PCI_IRQ_MSIX);
+> > +	if (rc != num_irqs) {
+> > +		pci_err(pdev, "Not enough interrupts; use polling\n");
+> > +		/* Some got allocated; clean them up */
+> > +		if (rc > 0)
+> > +			cxl_pci_free_irq_vectors(pdev);
+> > +		cxlds->doe_use_irq = false;
+> > +		return;
+> > +	}
+> > +
+> > +	rc = devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
+> > +	if (rc) {
+> > +		cxlds->doe_use_irq = false;
+> > +		return;
+> > +	}
+> > +
+> > +	cxlds->doe_use_irq = true;
+> 
+> If you named it doe_poll, you could avoid having to do anything at the end of
+> the function... If you felt like it.
+> 
+> if (failure)
+> 	return;
+> if (other_failure)
+> 	return;
+> 
+> cxld->do_use_poll = false;
+
+Actually I could just set false at the top and return on error.
+
+Thanks for the suggestion.
+
+> 
+> > +}
+> > +
+> > +/**
+> > + * devm_cxl_pci_create_doe - Scan and set up DOE mailboxes
+> > + *
+> > + * @cxlds: The CXL device state
+> > + *
+> > + * RETURNS: 0 on success -ERRNO on failure.
+> > + */
+> > +static int devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+> > +{
+> > +	struct device *dev = cxlds->dev;
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +	u16 off = 0;
+> > +	int num_mbs = 0;
+> > +	int rc;
+> > +
+> > +	pci_doe_for_each_off(pdev, off)
+> > +		num_mbs++;
+> > +
+> 
+> Do you want to bail here if num_mbs == 0?
+
+I do!  Thanks.  I need to skip using irq's above if none are found too.
+
+> 
+> > +	cxlds->doe_mbs = devm_kcalloc(dev, num_mbs, sizeof(*cxlds->doe_mbs),
+> > +				      GFP_KERNEL);
+> > +	if (!cxlds->doe_mbs)
+> > +		return -ENOMEM;
+> > +
+> > +	pci_doe_for_each_off(pdev, off) {
+> > +		struct pci_doe_mb *doe_mb;
+> > +		int irq = -1;
+> > +
+> > +		if (cxlds->doe_use_irq)
+> > +			irq = pci_doe_get_irq_num(pdev, off);
+> > +
+> > +		doe_mb = pci_doe_create_mb(pdev, off, irq);
+> > +		if (IS_ERR(doe_mb)) {
+> > +			pci_err(pdev,
+> > +				"Failed to create MB object for MB @ %x\n",
+> > +				off);
+> > +			doe_mb = NULL;
+> > +		}
+> > +
+> > +		cxlds->doe_mbs[cxlds->num_mbs] = doe_mb;
+> > +		cxlds->num_mbs++;
+> > +	}
+> > +
+> > +	rc = devm_add_action_or_reset(dev, cxl_doe_destroy_mb, cxlds);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	pci_info(pdev, "Configured %d DOE mailbox's\n", cxlds->num_mbs);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  {
+> >  	struct cxl_register_map map;
+> > @@ -454,6 +562,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (IS_ERR(cxlmd))
+> >  		return PTR_ERR(cxlmd);
+> >  
+> > +	cxl_alloc_irq_vectors(cxlds);
+> > +	devm_cxl_pci_create_doe(cxlds);
+> 
+> If you're not going to check the return value, just make the functions void.
+
+Yea too much rework and I forgot this.
+
+Thanks,
+Ira
+
+> 
+> > +
+> >  	if (range_len(&cxlds->pmem_range) && IS_ENABLED(CONFIG_CXL_PMEM))
+> >  		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
+> >  
+> > -- 
+> > 2.35.1
+> > 
