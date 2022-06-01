@@ -2,54 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26B3A539B3B
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 04:24:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CB09539B40
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 04:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241907AbiFACWT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 May 2022 22:22:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
+        id S1344772AbiFACYg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 May 2022 22:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240621AbiFACWS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 22:22:18 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940592B264
-        for <linux-pci@vger.kernel.org>; Tue, 31 May 2022 19:22:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 25525B81757
-        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 02:22:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91DADC385A9;
-        Wed,  1 Jun 2022 02:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654050132;
-        bh=2j5iP7QckkMamZAC8IQxp5FXHwq7dZp6G1zs3iMVU4o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=orvhk6iQIrAdR2mIbkjDbSVAz+N4CFrT0iyVoopGIW1vIwdMUw1iO+W15X+XbpAtb
-         Dwaew3sVuw/LAv6GEPjPY8mvwQdoWi9CObMjAZ3NoLvo45PvzEXwPam+ZUaF4YJLCo
-         jeCN5w4RfdrwgUFmR6DkV7fHl936boj9GRtLqTULMHLomBF9s0rs+jjQwJ3+gh+fqy
-         xUamKuD8Xu/JFPNvuKEnE+jgO96/yn8r9LEG1Z0/58V0JeK1hkEbh9pGxkrh1KED2D
-         EFKo70fWaoa58XkMId7jemABkCdQyn/kOiS566gT3kCPR7CropJKibeIHNe7ne/HN4
-         RyBRmsJrXL7IQ==
-Date:   Tue, 31 May 2022 21:22:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S231981AbiFACYf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 May 2022 22:24:35 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 956D4813C9;
+        Tue, 31 May 2022 19:24:33 -0700 (PDT)
+X-UUID: 211da42d91a44990afe845ce4b852967-20220601
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.5,REQID:b2244a64-0e7d-480b-a2c6-97d44ba3868a,OB:10,L
+        OB:0,IP:0,URL:5,TC:0,Content:-5,EDM:0,RT:0,SF:45,FILE:0,RULE:Release_Ham,A
+        CTION:release,TS:45
+X-CID-INFO: VERSION:1.1.5,REQID:b2244a64-0e7d-480b-a2c6-97d44ba3868a,OB:10,LOB
+        :0,IP:0,URL:5,TC:0,Content:-5,EDM:0,RT:0,SF:45,FILE:0,RULE:Release_Ham,ACT
+        ION:release,TS:45
+X-CID-META: VersionHash:2a19b09,CLOUDID:c6727814-f88c-475e-badf-d9ee54230b8f,C
+        OID:6e042c94bdec,Recheck:0,SF:28|17|19|48,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:1,File:nil,QS:0,BEC:nil
+X-UUID: 211da42d91a44990afe845ce4b852967-20220601
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 520400493; Wed, 01 Jun 2022 10:24:24 +0800
+Received: from mtkmbs07n1.mediatek.inc (172.21.101.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Wed, 1 Jun 2022 10:24:23 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.186) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 1 Jun 2022 10:24:22 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkmbs11n1.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.3 via Frontend
+ Transport; Wed, 1 Jun 2022 10:24:22 +0800
+Message-ID: <f95d10d69758014c9b1631718afa7dc72a68aa79.camel@mediatek.com>
+Subject: Re: [PATCH v2] PCI: mediatek-gen3: Print LTSSM state when PCIe link
+ down
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH V13 4/6] PCI: loongson: Improve the MRRS quirk for LS7A
-Message-ID: <20220601022210.GA796391@bhelgaas>
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <jieyy.yang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
+        <jian.yang@mediatek.com>
+Date:   Wed, 1 Jun 2022 10:24:21 +0800
+In-Reply-To: <7a10b1d7fc294093f26555a8b5a8748a3c0e1c9f.camel@mediatek.com>
+References: <20220329030715.7975-1-jianjun.wang@mediatek.com>
+         <32f5308e629cef3692c57c4c55442b0f2f25634f.camel@mediatek.com>
+         <7a10b1d7fc294093f26555a8b5a8748a3c0e1c9f.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220430084846.3127041-5-chenhuacai@loongson.cn>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,135 +76,113 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Apr 30, 2022 at 04:48:44PM +0800, Huacai Chen wrote:
-> In new revision of LS7A, some PCIe ports support larger value than 256,
-> but their maximum supported MRRS values are not detectable. Moreover,
-> the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> will actually set a big value in its driver. So the only possible way
-> is configure MRRS of all devices in BIOS, and add a pci host bridge bit
-> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+Hello Maintainers,
+
+Is there anything I can do to get this patch merged?
+
+Thanks.
+
+On Wed, 2022-05-18 at 09:55 +0800, Jianjun Wang wrote:
+> Hi Maintainers,
 > 
-> However, according to PCIe Spec, it is legal for an OS to program any
-> value for MRRS, and it is also legal for an endpoint to generate a Read
-> Request with any size up to its MRRS. As the hardware engineers say, the
-> root cause here is LS7A doesn't break up large read requests. In detail,
-> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
-> request with a size that's "too big" ("too big" means larger than the
-> PCIe ports can handle, which means 256 for some ports and 4096 for the
-> others, and of course this is a problem in the LS7A's hardware design).
-
-This seems essentially similar to ks_pcie_quirk() [1].  Why are they
-different, and why do you need no_inc_mrrs, when keystone doesn't?
-
-Or *does* keystone need it and we just haven't figured that out yet?
-Are all callers of pcie_set_readrq() vulnerable to issues there?
-
-Whatever we do should be as uniform as possible across host
-controllers.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-keystone.c?id=v5.18#n528
-
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/pci/controller/pci-loongson.c | 44 +++++++++------------------
->  drivers/pci/pci.c                     |  6 ++++
->  include/linux/pci.h                   |  1 +
->  3 files changed, 22 insertions(+), 29 deletions(-)
+> Gentle ping for this patch, if there is anything I can do to get this
+> patch merged, please let me know.
 > 
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 48316daa1f23..83447264048a 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -67,37 +67,23 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->  			DEV_LS7A_LPC, system_bus_quirk);
->  
-> -static void loongson_mrrs_quirk(struct pci_dev *dev)
-> +static void loongson_mrrs_quirk(struct pci_dev *pdev)
->  {
-> -	struct pci_bus *bus = dev->bus;
-> -	struct pci_dev *bridge;
-> -	static const struct pci_device_id bridge_devids[] = {
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> -		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> -		{ 0, },
-> -	};
-> -
-> -	/* look for the matching bridge */
-> -	while (!pci_is_root_bus(bus)) {
-> -		bridge = bus->self;
-> -		bus = bus->parent;
-> -		/*
-> -		 * Some Loongson PCIe ports have a h/w limitation of
-> -		 * 256 bytes maximum read request size. They can't handle
-> -		 * anything larger than this. So force this limit on
-> -		 * any devices attached under these ports.
-> -		 */
-> -		if (pci_match_id(bridge_devids, bridge)) {
-> -			if (pcie_get_readrq(dev) > 256) {
-> -				pci_info(dev, "limiting MRRS to 256\n");
-> -				pcie_set_readrq(dev, 256);
-> -			}
-> -			break;
-> -		}
-> -	}
-> +	/*
-> +	 * Some Loongson PCIe ports have h/w limitations of maximum read
-> +	 * request size. They can't handle anything larger than this. So
-> +	 * force this limit on any devices attached under these ports.
-> +	 */
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-> +
-> +	bridge->no_inc_mrrs = 1;
->  }
-> -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> +			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
->  
->  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
->  {
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9ecce435fb3f..72a15bf9eee8 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5993,6 +5993,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  {
->  	u16 v;
->  	int ret;
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
->  
->  	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
->  		return -EINVAL;
-> @@ -6011,6 +6012,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  
->  	v = (ffs(rq) - 8) << 12;
->  
-> +	if (bridge->no_inc_mrrs) {
-> +		if (rq > pcie_get_readrq(dev))
-> +			return -EINVAL;
-> +	}
-> +
->  	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
->  						  PCI_EXP_DEVCTL_READRQ, v);
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 60adf42460ab..d146eb28e6da 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -569,6 +569,7 @@ struct pci_host_bridge {
->  	void		*release_data;
->  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
->  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-> +	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
->  	unsigned int	native_aer:1;		/* OS may use PCIe AER */
->  	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
->  	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
-> -- 
-> 2.27.0
+> Thanks.
 > 
+> On Fri, 2022-04-22 at 14:33 +0800, Jianjun Wang wrote:
+> > Hi Maintainers,
+> > 
+> > Just gentle ping for this patch, if there is anything I can do to
+> > get
+> > this patch merged, please let me know.
+> > 
+> > Thanks.
+> > 
+> > On Tue, 2022-03-29 at 11:07 +0800, Jianjun Wang wrote:
+> > > Print current LTSSM state when PCIe link down instead of the
+> > > register
+> > > value, make it easier to get the link status.
+> > > 
+> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > > Reviewed-by: AngeloGioacchino Del Regno <
+> > > angelogioacchino.delregno@collabora.com>
+> > > ---
+> > > Changes in v2:
+> > > Print both of the register value and the LTSSM state.
+> > > ---
+> > >  drivers/pci/controller/pcie-mediatek-gen3.c | 41
+> > > ++++++++++++++++++++-
+> > >  1 file changed, 40 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > index 6745076a02b9..c24e03c198b7 100644
+> > > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > @@ -153,6 +153,37 @@ struct mtk_gen3_pcie {
+> > >  	DECLARE_BITMAP(msi_irq_in_use, PCIE_MSI_IRQS_NUM);
+> > >  };
+> > >  
+> > > +/* LTSSM state in PCIE_LTSSM_STATUS_REG bit[28:24] */
+> > > +static const char *const ltssm_str[] = {
+> > > +	"detect.quiet",			/* 0x00 */
+> > > +	"detect.active",		/* 0x01 */
+> > > +	"polling.active",		/* 0x02 */
+> > > +	"polling.compliance",		/* 0x03 */
+> > > +	"polling.configuration",	/* 0x04 */
+> > > +	"config.linkwidthstart",	/* 0x05 */
+> > > +	"config.linkwidthaccept",	/* 0x06 */
+> > > +	"config.lanenumwait",		/* 0x07 */
+> > > +	"config.lanenumaccept",		/* 0x08 */
+> > > +	"config.complete",		/* 0x09 */
+> > > +	"config.idle",			/* 0x0A */
+> > > +	"recovery.receiverlock",	/* 0x0B */
+> > > +	"recovery.equalization",	/* 0x0C */
+> > > +	"recovery.speed",		/* 0x0D */
+> > > +	"recovery.receiverconfig",	/* 0x0E */
+> > > +	"recovery.idle",		/* 0x0F */
+> > > +	"L0",				/* 0x10 */
+> > > +	"L0s",				/* 0x11 */
+> > > +	"L1.entry",			/* 0x12 */
+> > > +	"L1.idle",			/* 0x13 */
+> > > +	"L2.idle",			/* 0x14 */
+> > > +	"L2.transmitwake",		/* 0x15 */
+> > > +	"disable",			/* 0x16 */
+> > > +	"loopback.entry",		/* 0x17 */
+> > > +	"loopback.active",		/* 0x18 */
+> > > +	"loopback.exit",		/* 0x19 */
+> > > +	"hotreset",			/* 0x1A */
+> > > +};
+> > > +
+> > >  /**
+> > >   * mtk_pcie_config_tlp_header() - Configure a configuration TLP
+> > > header
+> > >   * @bus: PCI bus to query
+> > > @@ -327,8 +358,16 @@ static int mtk_pcie_startup_port(struct
+> > > mtk_gen3_pcie *pcie)
+> > >  				 !!(val & PCIE_PORT_LINKUP), 20,
+> > >  				 PCI_PM_D3COLD_WAIT * USEC_PER_MSEC);
+> > >  	if (err) {
+> > > +		const char *ltssm_state;
+> > > +		int ltssm_index;
+> > > +
+> > >  		val = readl_relaxed(pcie->base +
+> > > PCIE_LTSSM_STATUS_REG);
+> > > -		dev_err(pcie->dev, "PCIe link down, ltssm reg val:
+> > > %#x\n", val);
+> > > +		ltssm_index = PCIE_LTSSM_STATE(val);
+> > > +		ltssm_state = ltssm_index >= ARRAY_SIZE(ltssm_str) ?
+> > > +			      "Unknown state" : ltssm_str[ltssm_index];
+> > > +		dev_err(pcie->dev,
+> > > +			"PCIe link down, current ltssm state: %s
+> > > (%#x)\n",
+> > > +			ltssm_state, val);
+> > >  		return err;
+> > >  	}
+> > >  
+> > 
+> > 
+> 
+> 
+
