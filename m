@@ -2,83 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9AC153AE57
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 22:51:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78FC853AED0
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 00:49:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbiFAUpp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 16:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43894 "EHLO
+        id S230257AbiFAUxp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 16:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbiFAUpW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 16:45:22 -0400
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5025426271D;
-        Wed,  1 Jun 2022 13:32:21 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id v22so4924389ybd.5;
-        Wed, 01 Jun 2022 13:32:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Mi2KakMLN5Oolk1j9IuMk3Qtihd6Doqcyb4Wzf1iGb8=;
-        b=61Z+F7FfX1RTSXCWowX8VUIC3KzVuBfD3m75Cjl5bQltO0Fil4mRfmnTo0Ma5V4qfX
-         EUGQtT7wY/alYb72p/8asn23T25AzM+Lc5dCWeZ+HU2oE8+hgoSatWujwq5F5etLwTDN
-         IcDL76auIF23Fx53sZOwmeArmsy2b24aeSLN/Yti43TA6KtQDTLMk0z0fIX3ci/oSyxQ
-         tsTBiNa4riZNh93yb+fHzGoebmOXYG/0md/TUfxKra/28X95f3qQw1886NOtqUgKiW3g
-         2Tdx2XxU6kqpDitpkmLVVgfis5FF7lkfjJhHQSL8FDYiIkw+e5k5gUk5q6BLJYhdWpYH
-         zEHQ==
-X-Gm-Message-State: AOAM532w1UEJk5CU4x2IJvlfGkNlJ0P/BwZewF1Rdn6zkJEkD3OHDLMS
-        Qxm941MIh+PVqUknpcL0LOzq0MLVHQ==
-X-Google-Smtp-Source: ABdhPJwqckOQJ3oMBSt13P0tpXRYlnNBp7YUsO7ydUCg7j9OhqxwYVxJIbSGKXig+2EFQEhRTAc4tw==
-X-Received: by 2002:a05:6830:45:b0:60b:196a:c0d7 with SMTP id d5-20020a056830004500b0060b196ac0d7mr637703otp.314.1654113324745;
-        Wed, 01 Jun 2022 12:55:24 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id v1-20020a056830090100b00605fd407259sm1228404ott.3.2022.06.01.12.55.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jun 2022 12:55:24 -0700 (PDT)
-Received: (nullmailer pid 328210 invoked by uid 1000);
-        Wed, 01 Jun 2022 19:55:23 -0000
-Date:   Wed, 1 Jun 2022 14:55:23 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        michals@xilinx.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: PCI: xilinx-cpm: Fix reg property order
-Message-ID: <20220601195523.GA328031-robh@kernel.org>
-References: <20220516102217.25960-1-bharat.kumar.gogada@xilinx.com>
+        with ESMTP id S230254AbiFAUxo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 16:53:44 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C950421112A;
+        Wed,  1 Jun 2022 13:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654116822; x=1685652822;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FfeLxW/HpQLw+GEfWrr/3Qjls87VQ3SLjaDsiWsQoDk=;
+  b=OxzaRPYEpYp8GgEoQcyGnQspp09wGeLUMfp7fH+NeL/4ocI2ai16dnl9
+   eNPPuOi8V2H3z+u4b6nWBMI+tdw8/LGl8QefRv1Cy3IC9+J9AknPPCD33
+   tRxZVk0VQL/LhSiCCRz+zFtuBMxGEhW5UBVITaU8kgyq10NrtS9412rGo
+   HyIPBtSTSfdKXJWnqF43oJoNXbDlNdfstbuZwXLMwa18CIKntv+tTL0tD
+   IwLbJhva/dQsWv41EGc/9omTnI7n5OgHz8szWFZ6x32Si9cJvVClRM6ZK
+   le9slYXD9SOSQJ3O25yNR61LWazYAD/YbD2GjEb2YbPtimZwT0kRM0eM9
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="301077358"
+X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
+   d="scan'208";a="301077358"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 13:17:38 -0700
+X-IronPort-AV: E=Sophos;i="5.91,269,1647327600"; 
+   d="scan'208";a="720946603"
+Received: from cwmurphy-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.32.23])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 13:17:38 -0700
+Date:   Wed, 1 Jun 2022 13:17:38 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 03/10] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <YpfJYujerG2hM4vU@iweiny-desk3>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+ <20220414203237.2198665-4-ira.weiny@intel.com>
+ <20220530190657.GA14765@wunner.de>
+ <20220531113350.0000421e@Huawei.com>
+ <YpbWCYujYDEkMm1B@iweiny-desk3>
+ <20220601071808.GA19924@wunner.de>
+ <Ypee328j+l6ZdbUT@iweiny-desk3>
+ <20220601175647.GA21509@wunner.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220516102217.25960-1-bharat.kumar.gogada@xilinx.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220601175647.GA21509@wunner.de>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 16 May 2022 15:52:17 +0530, Bharat Kumar Gogada wrote:
-> All existing vendor DTSes are using "cpm_slcr" reg followed by "cfg" reg.
+On Wed, Jun 01, 2022 at 07:56:47PM +0200, Lukas Wunner wrote:
+> On Wed, Jun 01, 2022 at 10:16:15AM -0700, Ira Weiny wrote:
+> > On Wed, Jun 01, 2022 at 09:18:08AM +0200, Lukas Wunner wrote:
+> > > You only need to re-check the Data Object Ready bit on the last-but-one
+> > > dword in case the function was reset concurrently.  Per sec. 6.30.2,
+> > > "An FLR to a Function must result in the aborting of any DOE transfer
+> > > in progress."
+> > 
+> > I think I disagree.  Even if we do that and an FLR comes before the last read
+> > the last read could be 0's.
 > 
-> This order is also suggested by node name which is pcie@fca10000 which
-> suggests that cpm_slcr register should be the first.
+> PCIe r6.0, Table 7-316 says:
 > 
-> Driver itself is using devm_platform_ioremap_resource_byname() for both
-> names that's why there is no functional change even on description which
-> are using current order.
+>   "If there is no additional data object ready for transfer, the
+>    DOE instance must clear this bit after the entire data object has been
+>    transferred, as indicated by software writing to the DOE Read Data
+>    Mailbox Register after reading the final DW of the data object."
 > 
-> But still prefer to change order to cover currently used description.
-> Fixes: e22fadb1d014 ("PCI: xilinx-cpm: Add YAML schemas for Versal CPM Root Port")
+> Remember that you *read* a dword from the mailbox and then acknowledge
+> reception to the mailbox by *writing* a dword to the mailbox.
 > 
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
->  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml     | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+> So you check that the Data Object Ready bit is set before acknowledging
+> the final dword with a register write.  That's race-free.
+
+Ok.
+
+> 
+> (I realize me talking about the "last-but-one dword" above was quite
+> unclear, sorry about that.)
 > 
 
-Applied, thanks!
+Ah yes.  Ok, I'll put in a check before the final write.
+
+Ira
