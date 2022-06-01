@@ -2,59 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6395253AC08
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 19:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C41EC53AC46
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 19:57:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356390AbiFARev (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 13:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40784 "EHLO
+        id S244093AbiFAR5C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 13:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354976AbiFARer (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 13:34:47 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C8CBA5026;
-        Wed,  1 Jun 2022 10:34:46 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9F29B68AA6; Wed,  1 Jun 2022 19:34:41 +0200 (CEST)
-Date:   Wed, 1 Jun 2022 19:34:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        with ESMTP id S1356532AbiFAR46 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 13:56:58 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914E36574;
+        Wed,  1 Jun 2022 10:56:49 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id E68A830002502;
+        Wed,  1 Jun 2022 19:56:47 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id DB547350DAF; Wed,  1 Jun 2022 19:56:47 +0200 (CEST)
+Date:   Wed, 1 Jun 2022 19:56:47 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: Re: [PATCH 09/15] swiotlb: make the swiotlb_init interface more
- useful
-Message-ID: <20220601173441.GB27582@lst.de>
-References: <20220404050559.132378-1-hch@lst.de> <20220404050559.132378-10-hch@lst.de> <YpehC7BwBlnuxplF@dev-arch.thelio-3990X>
+Subject: Re: [PATCH V8 03/10] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <20220601175647.GA21509@wunner.de>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+ <20220414203237.2198665-4-ira.weiny@intel.com>
+ <20220530190657.GA14765@wunner.de>
+ <20220531113350.0000421e@Huawei.com>
+ <YpbWCYujYDEkMm1B@iweiny-desk3>
+ <20220601071808.GA19924@wunner.de>
+ <Ypee328j+l6ZdbUT@iweiny-desk3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YpehC7BwBlnuxplF@dev-arch.thelio-3990X>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <Ypee328j+l6ZdbUT@iweiny-desk3>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Can you send me the full dmesg and the content of
-/sys/kernel/debug/swiotlb/io_tlb_nslabs for a good and a bad boot?
+On Wed, Jun 01, 2022 at 10:16:15AM -0700, Ira Weiny wrote:
+> On Wed, Jun 01, 2022 at 09:18:08AM +0200, Lukas Wunner wrote:
+> > You only need to re-check the Data Object Ready bit on the last-but-one
+> > dword in case the function was reset concurrently.  Per sec. 6.30.2,
+> > "An FLR to a Function must result in the aborting of any DOE transfer
+> > in progress."
+> 
+> I think I disagree.  Even if we do that and an FLR comes before the last read
+> the last read could be 0's.
 
-Thanks!
+PCIe r6.0, Table 7-316 says:
+
+  "If there is no additional data object ready for transfer, the
+   DOE instance must clear this bit after the entire data object has been
+   transferred, as indicated by software writing to the DOE Read Data
+   Mailbox Register after reading the final DW of the data object."
+
+Remember that you *read* a dword from the mailbox and then acknowledge
+reception to the mailbox by *writing* a dword to the mailbox.
+
+So you check that the Data Object Ready bit is set before acknowledging
+the final dword with a register write.  That's race-free.
+
+(I realize me talking about the "last-but-one dword" above was quite
+unclear, sorry about that.)
+
+Thanks,
+
+Lukas
