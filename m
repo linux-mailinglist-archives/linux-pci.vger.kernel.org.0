@@ -2,320 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D5E353A13D
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 11:50:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B6E653A3AA
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 13:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348743AbiFAJt2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 05:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52588 "EHLO
+        id S241627AbiFALOe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 07:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240188AbiFAJt1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 05:49:27 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2060.outbound.protection.outlook.com [40.107.220.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D2A221819;
-        Wed,  1 Jun 2022 02:49:23 -0700 (PDT)
+        with ESMTP id S244616AbiFALOd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 07:14:33 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5828DA2053;
+        Wed,  1 Jun 2022 04:14:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654082072; x=1685618072;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=w6rb1yArUXFgTeXBnoYpCKfZMoBKGxsNXhDhK0wxxm8=;
+  b=bbTfO+QOkI/99bNaBfSrowxnmuqYkzqLNO3QIfmrwZDTe5g5YUB6HqLb
+   QnaU3926OYffNBpaBCc7bCrho9HTblG62Pzfi3gFA1rtOD8fflwRrtl0z
+   f8bXzBHVT0wMJeeI4vWAfo57uroDefW1yjUjMCrCzYNbok+U6Ea4FQNHc
+   cUNqeL3WBMqqn8FuQUHjRL/r6H4OvpUEpZZqjvgmQhQki9gQZ8AXtMJ8L
+   H7n+sxR/vle2atspCN0o89zo6ldKQUKv0W95RDEodyHgTXtusZC6Xqv4m
+   Eu7CcaYaWvTsL/sYjy8uNuGElfVFDtJznzwQhn5vLz2drVMKuEHDcjEQZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="255424425"
+X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
+   d="scan'208";a="255424425"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 04:14:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
+   d="scan'208";a="633486096"
+Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Jun 2022 04:14:32 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Wed, 1 Jun 2022 04:14:31 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Wed, 1 Jun 2022 04:14:31 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Wed, 1 Jun 2022 04:14:31 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S28hEqQCYlIFz2N0MA69WYeUs4nuV5IMMNLv+ijUqLCu1+siR7q9kPpZ/wzHM2Ji3DtXnQFmkMW7uaLiO4PyMOhBf7F8/gLDM3NOFMTOOa6fm1f0voWDPfiJgdThxIdsBXazn+YC5HmvVR7F25VRzqp5Fe3Oq0J2Cw6kDBHkWkyaHZ1810aHpT8VNZaDw3b+VhUxW/uRONtogYBurkTUUp8mwM7uhhygsniUvTk8t8oYsGo/e3m3OIUX+s8qjSxiuC8k+CRxLaJiCQnBqx5VrBe9CqwMNqJ/0LJ2ghckD95zz9pcR2MmgVeG/rpLcBEFNm2nTp3ouGDWyk1wJ5X11g==
+ b=Bmx3fY5WoIJFyesR/CH88DnMhDJE/98n5ccUPbqjVu6SpmLhPOtlxpavAwqtsCl7H/r+NWFoAolZb9MxisuM2R892Viw+gaWGZC/uCTu0IadJtgKLCrqWYaqXO83U87YblBGpkGhRqzm73O3OtzwGsPkccXzRvuMKZxESRrcyBtJEA8rhfVHOziCqsxAmiAH5SPg2dZ51G1TfrGb09zBRplwWPb5QwtqDzQH/kTUcKRClaBSSv12C5zWmiXsfvTqAV903KsFx1ulcoBSXV5ri6DgH/rOMKipoU+aAMA69+zpWUiqUSi/2MtYbVjs7FwyPp+j72pnHKCFNggUk+BDBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xl5+0lazUBTg0sakyJbNPsF9l3GwSXCMctuIX/EqIbU=;
- b=gw3Rc+KIkoQAYTagJHN2ySnylNbEKCwpygi7SZinq0doq+o8yt9+YxodH+4pZeADqNViBDRr8dA44ktgxYQvfq6c//cpykGZGXovYY3bUbAbz7QuEylJGsAqdnq34x4E82Ol/qTMgRHmmZqpUfl9N2h+hLjI6x+sWTy1lxbwIwdXnoVBEUr2vvr7Ktf0kvuSAWpWT+3kd8BDUz0JGZn2h9GfpkLkMT0dvgNoder3CA00BPzEDjj+kumA8Gp7VX/qpYF7P5qEqoCuH6eTI0NyHsszdeycMME0VQHBPoKvveSOSzcFg4dVhKko97v8bE9qAQ5DVfenJL3NdZQS6FecdQ==
+ bh=maQlKXck+QGosqd6rj6GvRAHERSlbS1qIVnRuenIZ9g=;
+ b=Sdp/R9+P0fb8H7ukBIpPhQIYVBDMMk7ClufWtdQ6qnNeIv6zyl5FVWilj0hnICaPV7wCABhW6tYXqY09PIYe1dxjBcm6E52HNV+LvXOhUp82DpoZkglmGPHMqY//LMuax3vDqXLeiDkYtDOkj1uvQd0Px/n0oOX9J4SkgdZ63oG0InfXPl0pEL5eItWQmLpl3GgIvysmHD16oDLVdNU5ewPIui1+KHToxnfFCYlZwLsbArm3udFfxtkbnZ925ZurnQIGn+xM6Vm8ZjMzmExTFCjpOaM5Qouyzp/QU5tNs3iszGY6RkWGV8IXZxNaJtRzFrkNVjQGHJP+d9IN6lwVbg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xl5+0lazUBTg0sakyJbNPsF9l3GwSXCMctuIX/EqIbU=;
- b=px5zxRbP+ZkFPjYsdRmreosP0uw+wWLXiqS6sqwJVeEC5R8r7CfoG97joAQ8FUkWOACLRU7ns/gMu4XmFBnQYiUZ2RFalw3pbAryjkDvxtxel33CPVcU0B4c+DIaZHI/9v3yH2NpBfEowyzJN1a8ScSydRj5bV6cJjD0ottL1D/9mkdRhcduHvkcV48QQUpUvOYtBWxFQ0qhUwiFb7VqC44YDHrarCIG4H0e1q8YzcABr8QP6TgDAYgHSHx8THDgame73KnX6mz/4kbvmFWnA5eRbfPVW3jTe5HO9x2IxT5Fqy9uRpiYJrh/tu2kOdDZJlZw66HFTQaxwPSNPd150g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL1PR12MB5304.namprd12.prod.outlook.com (2603:10b6:208:314::13)
- by MN2PR12MB4783.namprd12.prod.outlook.com (2603:10b6:208:3e::10) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from PH7PR11MB5862.namprd11.prod.outlook.com (2603:10b6:510:134::6)
+ by MWHPR1101MB2144.namprd11.prod.outlook.com (2603:10b6:301:51::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.13; Wed, 1 Jun
- 2022 09:49:21 +0000
-Received: from BL1PR12MB5304.namprd12.prod.outlook.com
- ([fe80::b844:73a2:d4b8:c057]) by BL1PR12MB5304.namprd12.prod.outlook.com
- ([fe80::b844:73a2:d4b8:c057%4]) with mapi id 15.20.5314.013; Wed, 1 Jun 2022
- 09:49:20 +0000
-Message-ID: <00b6e380-ecf4-1eaf-f950-2c418bdb6cac@nvidia.com>
-Date:   Wed, 1 Jun 2022 15:19:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v3 8/8] vfio/pci: Add the support for PCI D3cold state
+ 2022 11:14:30 +0000
+Received: from PH7PR11MB5862.namprd11.prod.outlook.com
+ ([fe80::3d7c:1798:1b2e:f538]) by PH7PR11MB5862.namprd11.prod.outlook.com
+ ([fe80::3d7c:1798:1b2e:f538%3]) with mapi id 15.20.5293.017; Wed, 1 Jun 2022
+ 11:14:30 +0000
+From:   "Mohan, Subramanian" <subramanian.mohan@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "nirmal.patel@linux.intel.com" <nirmal.patel@linux.intel.com>,
+        "jonathan.derrick@linux.dev" <jonathan.derrick@linux.dev>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Sangannavar, Mallikarjunappa" 
+        <mallikarjunappa.sangannavar@intel.com>,
+        "Thokala, Srikanth" <srikanth.thokala@intel.com>
+Subject: RE: [PATCH] PCI: vmd: Use devm_kasprintf instead of simple kasprintf
+Thread-Topic: [PATCH] PCI: vmd: Use devm_kasprintf instead of simple kasprintf
+Thread-Index: AQHYdR3Tp8Htu1XVkUWnASKhV7DpSq06ZPhA
+Date:   Wed, 1 Jun 2022 11:14:30 +0000
+Message-ID: <PH7PR11MB5862B80BADAFD6A16C56B476F7DF9@PH7PR11MB5862.namprd11.prod.outlook.com>
+References: <20220531132617.20517-1-subramanian.mohan@intel.com>
+ <20220531183920.GA770895@bhelgaas>
+In-Reply-To: <20220531183920.GA770895@bhelgaas>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20220425092615.10133-1-abhsahu@nvidia.com>
- <20220425092615.10133-9-abhsahu@nvidia.com>
- <20220504134551.70d71bf0.alex.williamson@redhat.com>
- <9e44e9cc-a500-ab0d-4785-5ae26874b3eb@nvidia.com>
- <20220509154844.79e4915b.alex.williamson@redhat.com>
- <68463d9b-98ee-b9ec-1a3e-1375e50a2ad2@nvidia.com>
- <42518bd5-da8b-554f-2612-80278b527bf5@nvidia.com>
- <20220530122546.GZ1343366@nvidia.com>
- <c73d537b-a653-bf79-68cd-ddc8f0f62a25@nvidia.com>
- <20220531194304.GN1343366@nvidia.com>
- <20220531165209.1c18854f.alex.williamson@redhat.com>
-X-Nvconfidentiality: public
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-In-Reply-To: <20220531165209.1c18854f.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0PR01CA0033.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:b8::15) To BL1PR12MB5304.namprd12.prod.outlook.com
- (2603:10b6:208:314::13)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.6.500.17
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ee2ce9ac-bcdd-494a-aca1-08da43bfe5e4
+x-ms-traffictypediagnostic: MWHPR1101MB2144:EE_
+x-microsoft-antispam-prvs: <MWHPR1101MB2144141DF7BD775FA3E51263F7DF9@MWHPR1101MB2144.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uEF4eHWRfe4nv9+FSSgk6cp2DfJrTYjgMrI11GDqb6/hJlJ1KTGRqHlRFU73DK/1k8GaWq/1To3KOX3pUAmAHTYFvJKESaRHBc9Oii+kVRM3P28uLmmWJIdjkVHxoyEnzkUbZnsED9oW+QO5fhZNSD5C0a9bgg8UKxawsHMXDoqnwSEuB1OUqlxBmddPYPNErCGduQu52h9DCcgEB8cW/Pg31myynjx6Jn6QeH2bKcy42BIvjZnO6cbdppMxh4NX/7wyVT5isGRBkkUvGJRgTl9R+E2fA5yyz0qX7ogGapWyG0hBx+R6Gb2AziBr593sff57dCYZBghaFE67lEWscF4bWitCIabdstXT1qt4IMjUnAIOMPEuXxfYLZpSKGLhFF0VyuqYrgP591mZkzH7DKDxDlioEpprDdcRRdnjU1p+XI1kfmOUnN4N0oTnULMNj/QIn4Y1YYfSj75sfckp9B1AVYgA1wqMhbQQRZ03xHzJTPeW/bjzSQaOsv0QfFtSVCdWcujMB8tw5ukm9z94EyD5ceXvkHCG2kU5Lzky9q2nSGg235SnOwAsh5vODXOnlSgn74b3BI3cNEcf4Nh7l3xiIlm+1dW+tz6bXaGRpfabG5bA2uBVvza8b0K5A3IDqnnLFBM36E8F1SzQwh+ue1zKKyMOJcbuGknsxE35O62bllD30UmQcfO12ndw8I68UinqHh1r6Mr7rsi3UQQZLw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5862.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(8936002)(52536014)(55236004)(53546011)(66476007)(6506007)(7696005)(66556008)(38070700005)(316002)(66446008)(71200400001)(5660300002)(38100700002)(2906002)(186003)(9686003)(26005)(54906003)(8676002)(33656002)(4326008)(508600001)(64756008)(82960400001)(55016003)(76116006)(83380400001)(66946007)(86362001)(122000001)(6916009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?18/N1dXiUusEexhiRrHHc9YDhgL3RCe1+lztp/cECP+XVdu74Ke6AQImMAVq?=
+ =?us-ascii?Q?LaSCFyzgNRyb4OHRwmVpiHyzvk6u3GNqZH9zZuQeNnsJZNUqQKpDHG4mI8ED?=
+ =?us-ascii?Q?nou/9yk3L9Rc0FI3l6QP65Ur4yvwCUK+ZVWV31XEzrL5hbZ09xJqq3OH5fA6?=
+ =?us-ascii?Q?SeIlkvuXo9ZinM39cSFdSoaC1TC5tfJB9t7qarfp9T/BFI+MalyP0jSmOXoK?=
+ =?us-ascii?Q?5v6SzDakfjwqDzaeYDcy6qiWQgwn9doWzzfvwqisMpXtLnj8OBRabN9dKl/n?=
+ =?us-ascii?Q?IY0RvAtDCiSsqpCQ+W4u2ZCXJHSPZSQWURMrkv1PPYe3Jty/o9u43V2DQeVQ?=
+ =?us-ascii?Q?3FLYZEGQC5wKuOZuRPaTMgBkUl4FDdvzUiWxp3vlOnJStmBHq3osm9CNhlSD?=
+ =?us-ascii?Q?hRlqkl3S9jmBm6UGd78IOMPr/FEOG8wvCsLPN0BBU1B2HvVfzAg3H7ZnayQw?=
+ =?us-ascii?Q?ybmJri0AGs71ucuSZ5mz4+VmVaLyiUyxaThQRkJ4Vd7LAWq4vNq50SVbCiDJ?=
+ =?us-ascii?Q?jyN6nrBtP4qZQ8zRyu/xkXPSM02WbcOrbso2ZpH81Yk3Ii8+rxCgsXXiB+do?=
+ =?us-ascii?Q?V8lpsgoafGKauOkrAX9aq7OXE1eBDRy6vY25QQmq3k6l+5np/jEROHo+2sV8?=
+ =?us-ascii?Q?9hhBy36GEEySKhNdTBVebiFwmuQuFUrJrJaWvJ2JtlxhZIKPVkGwmtThQZxC?=
+ =?us-ascii?Q?lIhkZuCoCkFUpoyaubYs0tlxgEWWJ4WB+VGpCb6t31YbDRSaxBweqmNu7LZz?=
+ =?us-ascii?Q?WyrO891wVmbp4JC6dnkCkhq6m4E5G8npbdLG6XLNkinNlN7SiJaBW3A0tKqR?=
+ =?us-ascii?Q?JL8/J9wfSoJsdvO5iyeRZPjQPmFh4CtiVDl5aZdpowB8B07lGpyZ9u7mfYN+?=
+ =?us-ascii?Q?GACPGLmXheDf4BMGuYD7l0XBT7GDqo7xqriXI51YucNBzzjIhoKtxoIKEb+J?=
+ =?us-ascii?Q?KGZWIorbhYW8joW1Bd73zERATASiK3Gg6sulT7GPuz8hRuZedR1Vib8n/XGc?=
+ =?us-ascii?Q?6W1f1d5S11y4zJWNEQYAzQ+hpnIQe0DSpInY383cU1CZmmAslCkWOqgtCF8H?=
+ =?us-ascii?Q?j0aLDoE2Bjo34byrStG9AF4StcNY6pN7DfZiW6xaow/NIFwUwLuNmeg1iSYF?=
+ =?us-ascii?Q?f46nbs4S7XZ/b3gPIMPELHueoSep4sV+7CEKwm6lhW4YEc1MsowZsvR0oa+M?=
+ =?us-ascii?Q?y76J4a0i3Od4l0PUfT2hL9b58hGKeNk2OVfToOXKCIrv18PDwHRrGUGctqJt?=
+ =?us-ascii?Q?DWTBeFEDwgKTaAsotbc+PCsWvVnfjULCMA5N/xCeQpyuWhiYwUUhURyPoU+p?=
+ =?us-ascii?Q?0kflqYn+kJ8cZmAsxif43777LNwXYTGHESNow6oGoCoY4UcPD7MQxxCD/soA?=
+ =?us-ascii?Q?iTijZTdADAuJ8EsiMbq/xNgKqIk8WEorrevvGAeOzsmugPLQJ1Bj5y0ksbbI?=
+ =?us-ascii?Q?MPcHl1YMjpMBQ4aafxognEsoJZ70NFqR9URyvqBFVxnbuccSYjaNcHsLWoao?=
+ =?us-ascii?Q?bRf5UGUgFURtNlg7H9Vvid/iZUw8+Au9RmyNOgHDzxFDcXRDphM5z6SwmzUj?=
+ =?us-ascii?Q?bcAwgUTHIuuPKa8A3eAxo1++zwa9v2q6EEReMIie+H/hWlSyrjvpgjUYNVsR?=
+ =?us-ascii?Q?YLLkcMVsbT26GwEKJBgeXR+AkvifT0sdk+HBsLjIfWvHj942SaK0tHgaOKVe?=
+ =?us-ascii?Q?PSckdY5sy5RNCPfomFHnpPZnxiW5YJCaUE72jXBk5Sq5/91xypynnCJ/DEbF?=
+ =?us-ascii?Q?XTmq1RJPPaZHY8bcA9Z1G8sJUTE3wLs=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9167450c-8bd9-475a-57cc-08da43b40031
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4783:EE_
-X-Microsoft-Antispam-PRVS: <MN2PR12MB478310328CB20BC43016958FCCDF9@MN2PR12MB4783.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pz4AWlIdRkz1oi9VkD+FHt2hF3nfPsDw+abM4f8DUAKUYoeZ7y0zUdVROvFPQoPmk9rxwhfaPKrCRNvtzwFnVXhLMn55kWR46Lm1hjTOA0RFi2LtGFsslOzrcZXqtzZtKmNLELzyI1i1wvqJ9yuGnw6ChrZ/1Cb0HW64flm8pLcBoZtksJQNZYXKvqTCbpUnxGzPQeANCyqscBQwwqkSEQ0fbfLJHJzmuaUGYfl9/JSysktAAC8fNEQQkqGqEfejmFnxBgRzvuK89fk5hO8f870ZrcDpin5wPVB1ljCb7JKt12muyKjSAwTAbPBQGFtTz1AlUUGhmXPnTVnRzQLV2/DtIAzot5ZbVNB2reXzU/G48QQ3brTei+7ItTRD+l6wuW7jvzaf1/RKNtDIOxleKjrwlC/LmWurAnSdAtMtfRshGlWbk0aR6A+3wKrrYF+c9Eqii+UhZcKh+ACNmFYkwaHlH7z2ZTm4ZWblJETjpqoQSdBXNYR1LaBeByj0dj8rXkPoKwE3wsHPl3vaGPRCemkVJQzlJIO2AW/XSbxGlc5iMaGQeir5Ue9Gi8DjJVQZE0sDjGR6mEnhkp5Kx8r6KA/BYoIUi+tR3YLDO32JbBH6f4S6JKVmOiCrt/L3MFE1LMNdjuz36T1BaXOoZfcyarjQ2Xcu+cRZnwiH3TwIXORHww8hMGyFkAbiT426q8QVVNv7sRufM3RFTOfeHE4FCH7eMyvb+PWvZHoMAA1o+4yK3UygacmbIow1PzXRSfIH+fdfO6Oy5TX8JOxPw0XeTg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5304.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(86362001)(31696002)(66556008)(66476007)(66946007)(4326008)(8676002)(316002)(38100700002)(6636002)(110136005)(508600001)(54906003)(186003)(2616005)(55236004)(53546011)(6666004)(6506007)(6512007)(2906002)(26005)(36756003)(8936002)(31686004)(83380400001)(7416002)(5660300002)(6486002)(32563001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WlhyNVdNeXhEZmx3OTVTdzhIMTgzT3JXOVR0VjNIRlE1Q1AwVU0rdVNZWkIr?=
- =?utf-8?B?S2Y1d3o2eGg4T3FpMGtvcm9sY1hsN1ZNbm45ZFdkaEs4bUwreWtiaXBPUTBM?=
- =?utf-8?B?bS9USitkSDNhczRpN3ZKL210MEdHS2kvV09hTFlLS2thR1J5c2VDM0l1amRL?=
- =?utf-8?B?bnhYcDlXemZqTkxjejN0VGF3TEpkL0NpcUNpZWhYWDl3bkJTM0JPZnozTVBC?=
- =?utf-8?B?WnJmM2UyVTlWWmxKeTFMOTRYUjJUVmhsbXlJSTB5N2dXdXhML0hDT09Cd0VP?=
- =?utf-8?B?T25GUlR6bXNpY3lvNFkxRitESXlBaVhWQXE0L2hmaHViQWFSSkx6cERzV3g5?=
- =?utf-8?B?QXQxQUt5czNrT3NaUlFGbkVMS1d0M3ZRcnExdmZmU1BpQjRhUmpYUXJoNmU0?=
- =?utf-8?B?VHQ4YjF1WkF0VU1NRExHV3V2cjlEcnVHZ0doSUt4SndqbzFrYzViYmxRU2Uy?=
- =?utf-8?B?bEgxa0JzeXk3SmVINngrT1h6T2ptL1J2Snk4czhTaFd5UnN4UzR4Z0hZSTVi?=
- =?utf-8?B?ZEZoSXFyVjcyT05qdjQ2ZXZhVGJFek1QWm1iQzVScVl2SEMrejRycTltNCt3?=
- =?utf-8?B?TU55RXd2c1VxYzBsZEU1Y3h2T1RJTUJ1L001d1NaNXp4aGFEL29zVno2RlBW?=
- =?utf-8?B?WXRDQ1BUOTIvTSswKzM5VGlHOVEyRldyODRjdWFjZllhRHJVK0N5T1VvS2VW?=
- =?utf-8?B?RjVUS05zdnE3dlc5cHVOcHB6Z2s4d2VGdWN1c25Td1lweE1QTFU2ZkJlY3hz?=
- =?utf-8?B?RER0MUR3MHlsUmRzUEdXWWJQU0lMSlBwNFhRejJyMlV0TFowMFJNbmNKZlFo?=
- =?utf-8?B?TWw1WUc0NzdwZjlDVFhReWdGK1kwWU1qcVgrUHVVN213ZjdhVkVKUkU1V1Zp?=
- =?utf-8?B?SGN1em8vSHYxNTQvaEt6SG12aVFPWTNMblBaRmdja1FaS3BtNENxRklVTTRi?=
- =?utf-8?B?UXFVM1crY25hdkwwNUUyTnU1U2EwNHlsaC9CZklPYno4c0wxa0dUVG9BaUdH?=
- =?utf-8?B?WGRrZncrREk2Y3dmNUR0ampFQTlUUjYxcWttUzFPMWtmZWZpM1dkTzE3dG42?=
- =?utf-8?B?MGIvbUxxU1lmVUNoVjFQKzNvQlF2MXRCS0xBcTUxVytTV2R0YzRnUFpDL3do?=
- =?utf-8?B?aWxNajdIaXQxRDdLYU0zSDNja2Y5cDJCYXhiM0U3S05kMXZvL0FEYXg0NGtB?=
- =?utf-8?B?VTI0WUpXT2FOckx0YUZGQ2lZOElJV2RiRGs4TkN4Vi80aXh4cXYvU0N0RmE2?=
- =?utf-8?B?S05GS2JmL1BvOEF4Vk9KQlVlMEtzS21RcUxhOVVNeDc3eDRhRmxzSXVoMk1B?=
- =?utf-8?B?aFArMW9TWGxrbGhNbitvdDF6YzQ0LzREdW9nRGJmWEJuTUNJQkI3cnpGRjAx?=
- =?utf-8?B?ZGN5NnVoQVNkMnpRWlB3M1lXanZqNUpWdGRpcmZZcDZab0RVekJzcG55ZVc2?=
- =?utf-8?B?TWkycjFRYTh1RG16WHZVSEpFeUpVeFQwS1EzUlpZSXdWVFBjbU8rM3ZWNU1K?=
- =?utf-8?B?cFJKZzc4ZFRKSnFiZjYxSWVxMXlHcHVBVVdKdWE3ZXJuTnR4aDVqRlp3V3Nj?=
- =?utf-8?B?QWJRVXVCUUIrZnNSNFlQY0JYcGZTRGhiaDdobmdqTnhob0dYMmFIYzFOT2hy?=
- =?utf-8?B?MTJ2MWI0MDNGTExXcGRTNkhtWU9teEdHWEU2elBHS2ZtVVhGYXoyRXZaK2F3?=
- =?utf-8?B?enNaMGg2YkxVZzJEWStuQ0RxQXBBdWVXS2tLcWVyczlQUUpnSXIrYU5qanll?=
- =?utf-8?B?V1hyUHVnd2hWQkgzOHdrSWZXU2RnT2ZueUZ4MFQwNkg0R2NLVU1PNm5zQWlN?=
- =?utf-8?B?elMzTk1vR0pmcHRiZWZhWE83VHpzQjBWa0ZVWEl1dDVEMVBrYTJTWHNsZjBo?=
- =?utf-8?B?MDhQMTBpS0s4QTIrWGlvaVJTeENpQnlkODdTZUxUQ3dQN21vbStpZmJYaXJN?=
- =?utf-8?B?M1JiSG11cWNHTzI5TTBQUXlXaitTeDhqVUtYemxJUFFpZk5aQjBzUGwwalZ3?=
- =?utf-8?B?NUpVTDA0T2VxS0N3VW1mYmQ1eHI3aXBvSjN1SGhVaFYveW1LeFUyU2tsUkNk?=
- =?utf-8?B?WVZSQWxNZ0xxaTdNMHEwVXN6cTVRZDJMOXNncmxvbzFqT2VIQ1duYUFRUXE0?=
- =?utf-8?B?RG9iZDhIK1lsVTN6WkhFS1ZVZGRxQXk4S1ZBa01NemtabUNoMUJNUitvQzFJ?=
- =?utf-8?B?WlFueDU5Q2FUWHpNNjlVSWVDNUU2YnFBbVBFOE1lNy9KU3MwUXJBOU42d3I2?=
- =?utf-8?B?OW1VTEYvTU1tczlZMXVrT2RnZ0tLYWxVb0Y4dkVqZDFqMldkMUhiUnhVU3Zy?=
- =?utf-8?B?UDJyaFZZdnJKQW9sQklsNXZZN00yYXMwUTY1Y252cS9oNEJzVVpRUT09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9167450c-8bd9-475a-57cc-08da43b40031
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5304.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2022 09:49:20.6816
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5862.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee2ce9ac-bcdd-494a-aca1-08da43bfe5e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2022 11:14:30.0661
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nXDM4FXI9faf1O/6nCQgW27vplk27kBexy/Fvct5OvghjjOf4KR3RVj4VG84KkPGvlsOLeLS9MgoC/MY+vmYVg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4783
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vcBYuseU0PZhC62+9z44xqhzcq/dlSRVwasG9uCUlCp1YQNPEQSp3Ufm3tM4L8M/G/fCX7n9S2EraCU6lJ525KSZLVBoMreLmoLyc9i23Vk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2144
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/1/2022 4:22 AM, Alex Williamson wrote:
-> On Tue, 31 May 2022 16:43:04 -0300
-> Jason Gunthorpe <jgg@nvidia.com> wrote:
-> 
->> On Tue, May 31, 2022 at 05:44:11PM +0530, Abhishek Sahu wrote:
->>> On 5/30/2022 5:55 PM, Jason Gunthorpe wrote:  
->>>> On Mon, May 30, 2022 at 04:45:59PM +0530, Abhishek Sahu wrote:
->>>>   
->>>>>  1. In real use case, config or any other ioctl should not come along
->>>>>     with VFIO_DEVICE_FEATURE_POWER_MANAGEMENT ioctl request.
->>>>>  
->>>>>  2. Maintain some 'access_count' which will be incremented when we
->>>>>     do any config space access or ioctl.  
->>>>
->>>> Please don't open code locks - if you need a lock then write a proper
->>>> lock. You can use the 'try' variants to bail out in cases where that
->>>> is appropriate.
->>>>
->>>> Jason  
->>>
->>>  Thanks Jason for providing your inputs.
->>>
->>>  In that case, should I introduce new rw_semaphore (For example
->>>  power_lock) and move ‘platform_pm_engaged’ under ‘power_lock’ ?  
->>
->> Possibly, this is better than an atomic at least
->>
->>>  1. At the beginning of config space access or ioctl, we can take the
->>>     lock
->>>  
->>>      down_read(&vdev->power_lock);  
->>
->> You can also do down_read_trylock() here and bail out as you were
->> suggesting with the atomic.
->>
->> trylock doesn't have lock odering rules because it can't sleep so it
->> gives a bit more flexability when designing the lock ordering.
->>
->> Though userspace has to be able to tolerate the failure, or never make
->> the request.
->>
-
- Thanks Alex and Jason for providing your inputs.
-
- Using down_read_trylock() along with Alex suggestion seems fine.
- In real use case, config space access should not happen when the
- device is in low power state so returning error should not
- cause any issue in this case.
-
->>>          down_write(&vdev->power_lock);
->>>          ...
->>>          switch (vfio_pm.low_power_state) {
->>>          case VFIO_DEVICE_LOW_POWER_STATE_ENTER:
->>>                  ...
->>>                          vfio_pci_zap_and_down_write_memory_lock(vdev);
->>>                          vdev->power_state_d3 = true;
->>>                          up_write(&vdev->memory_lock);
->>>
->>>          ...
->>>          up_write(&vdev->power_lock);  
->>
->> And something checks the power lock before allowing the memor to be
->> re-enabled?
->>
->>>  4.  For ioctl access, as mentioned previously I need to add two
->>>      callbacks functions (one for start and one for end) in the struct
->>>      vfio_device_ops and call the same at start and end of ioctl from
->>>      vfio_device_fops_unl_ioctl().  
->>
->> Not sure I followed this..
-> 
-> I'm kinda lost here too.
 
 
- I have summarized the things below
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Wednesday, June 1, 2022 12:09 AM
+> To: Mohan, Subramanian <subramanian.mohan@intel.com>
+> Cc: nirmal.patel@linux.intel.com; jonathan.derrick@linux.dev;
+> lorenzo.pieralisi@arm.com; robh@kernel.org; kw@linux.com;
+> bhelgaas@google.com; linux-kernel@vger.kernel.org; linux-
+> pci@vger.kernel.org; Sangannavar, Mallikarjunappa
+> <mallikarjunappa.sangannavar@intel.com>; Thokala, Srikanth
+> <srikanth.thokala@intel.com>
+> Subject: Re: [PATCH] PCI: vmd: Use devm_kasprintf instead of simple
+> kasprintf
+>=20
+> On Tue, May 31, 2022 at 06:56:17PM +0530, subramanian.mohan@intel.com
+> wrote:
+> > From: Subramanian Mohan <subramanian.mohan@intel.com>
+> >
+> > Use devm_kasprintf instead of simple kasprintf to free the allocated
+> > memory automatically when the device is freed.
+>=20
+> I guess this is pure simplification, not a bug fix, since we *did* free t=
+he buffer
+> in the error path and in vmd_remove(), right?
+>
 
- 1. In the current patch (v3 8/8), if config space access or ioctl was
-    being made by the user when the device is already in low power state,
-    then it was waking the device. This wake up was happening with
-    pm_runtime_resume_and_get() API in vfio_pci_config_rw() and
-    vfio_device_fops_unl_ioctl() (with patch v3 7/8 in this patch series).
+Yes this is simplification and not bug fix.
 
- 2. Now, it has been decided to return error instead of waking the
-    device if the device is already in low power state.
+Thanks,
+Subbu
 
- 3. Initially I thought to add following code in config space path
-    (and similar in ioctl)
-
-        vfio_pci_config_rw() {
-            ...
-            down_read(&vdev->memory_lock);
-            if (vdev->platform_pm_engaged)
-            {
-                up_read(&vdev->memory_lock);
-                return -EIO;
-            }
-            ...
-        }
-
-     And then there was a possibility that the physical config happens
-     when the device in D3cold in case of race condition.
-
- 4.  So, I wanted to add some mechanism so that the low power entry
-     ioctl will be serialized with other ioctl or config space. With this
-     if low power entry gets scheduled first then config/other ioctls will
-     get failure, otherwise low power entry will wait.
-
- 5.  For serializing this access, I need to ensure that lock is held
-     throughout the operation. For config space I can add the code in
-     vfio_pci_config_rw(). But for ioctls, I was not sure what is the best
-     way since few ioctls (VFIO_DEVICE_FEATURE_MIGRATION,
-     VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE etc.) are being handled in the
-     vfio core layer itself.
-
- The memory_lock and the variables to track low power in specific to
- vfio-pci so I need some mechanism by which I add low power check for
- each ioctl. For serialization, I need to call function implemented in
- vfio-pci before vfio core layer makes the actual ioctl to grab the
- locks. Similarly, I need to release the lock once vfio core layer
- finished the actual ioctl. I have mentioned about this problem in the
- above point (point 4 in my earlier mail).
-
-> A couple replies back there was some concern
-> about race scenarios with multiple user threads accessing the device.
-> The ones concerning non-deterministic behavior if a user is
-> concurrently changing power state and performing other accesses are a
-> non-issue, imo.  
-
- What does non-deterministic behavior here mean.
- Is it for user side that user will see different result
- (failure or success) during race condition or in the kernel side
- (as explained in point 3 above where physical config access
- happens when the device in D3cold) ? My concern here is for later
- part where this config space access in D3cold can cause fatal error
- on the system side as we have seen for memory disablement.
-
-> I think our goal is only to expand the current
-> memory_lock to block accesses, including config space, while the device
-> is in low power, or some approximation bounded by the entry/exit ioctl.
-> 
-> I think the remaining issues is how to do that relative to the fact
-> that config space access can change the memory enable state and would
-> therefore need to upgrade the memory_lock read-lock to a write-lock.
-> For that I think we can simply drop the read-lock, acquire the
-> write-lock, and re-test the low power state.  If it has changed, that
-> suggests the user has again raced changing power state with another
-> access and we can simply drop the lock and return -EIO.
-> 
-
- Yes. This looks better option. So, just to confirm, I can take the
- memory_lock read-lock at the starting of vfio_pci_config_rw() and
- release it just before returning from vfio_pci_config_rw() and
- for memory related config access, we will release this lock and
- re-aquiring again write version of this. Once memory write happens,
- then we can downgrade this write lock to read lock ?
-
- Also, what about IOCTLs. How can I take and release memory_lock for
- ioctl. is it okay to go with Patch 7 where we call
- pm_runtime_resume_and_get() before each ioctl or we need to do the
- same low power check for ioctl also ?
- In Later case, I am not sure how should I do the implementation so
- that all other ioctl are covered from vfio core layer itself.
-
- Thanks,
- Abhishek
-
-> If I'm still misunderstanding, please let me know.  Thanks,
-> 
-> Alex
-> 
+> > Suggested-by: Srikanth Thokala <srikanth.thokala@intel.com>
+> > Signed-off-by: Subramanian Mohan <subramanian.mohan@intel.com>
+> > Acked-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> > ---
+> >  drivers/pci/controller/vmd.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/vmd.c
+> > b/drivers/pci/controller/vmd.c index eb05cceab964..7a72948e001f 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -897,7 +897,8 @@ static int vmd_probe(struct pci_dev *dev, const
+> struct pci_device_id *id)
+> >  	if (vmd->instance < 0)
+> >  		return vmd->instance;
+> >
+> > -	vmd->name =3D kasprintf(GFP_KERNEL, "vmd%d", vmd->instance);
+> > +	vmd->name =3D devm_kasprintf(&dev->dev, GFP_KERNEL, "vmd%d",
+> > +				   vmd->instance);
+> >  	if (!vmd->name) {
+> >  		err =3D -ENOMEM;
+> >  		goto out_release_instance;
+> > @@ -935,7 +936,6 @@ static int vmd_probe(struct pci_dev *dev, const
+> > struct pci_device_id *id)
+> >
+> >   out_release_instance:
+> >  	ida_simple_remove(&vmd_instance_ida, vmd->instance);
+> > -	kfree(vmd->name);
+> >  	return err;
+> >  }
+> >
+> > @@ -958,7 +958,6 @@ static void vmd_remove(struct pci_dev *dev)
+> >  	vmd_detach_resources(vmd);
+> >  	vmd_remove_irq_domain(vmd);
+> >  	ida_simple_remove(&vmd_instance_ida, vmd->instance);
+> > -	kfree(vmd->name);
+> >  }
+> >
+> >  #ifdef CONFIG_PM_SLEEP
+> > --
+> > 2.17.1
+> >
 
