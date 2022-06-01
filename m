@@ -2,46 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55FA853A942
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 16:36:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47C6153AA2D
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 17:36:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352179AbiFAOgJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 10:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
+        id S1355616AbiFAPfu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 11:35:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235282AbiFAOgI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 10:36:08 -0400
+        with ESMTP id S1355615AbiFAPfr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 11:35:47 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3679D2409F;
-        Wed,  1 Jun 2022 07:36:05 -0700 (PDT)
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LCs610H4kz67xBN;
-        Wed,  1 Jun 2022 22:31:37 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E0DA3090;
+        Wed,  1 Jun 2022 08:35:45 -0700 (PDT)
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LCtQr5DCPz685ZG;
+        Wed,  1 Jun 2022 23:31:16 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Wed, 1 Jun 2022 16:36:02 +0200
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 1 Jun 2022 17:35:42 +0200
 Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 1 Jun
- 2022 15:36:01 +0100
-Date:   Wed, 1 Jun 2022 15:35:59 +0100
+ 2022 16:35:41 +0100
+Date:   Wed, 1 Jun 2022 16:35:40 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben@bwidawsk.net>
-CC:     <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V9 4/9] cxl/pci: Create PCI DOE mailbox's for memory
- devices
-Message-ID: <20220601153559.0000273b@Huawei.com>
-In-Reply-To: <20220531175020.efqfth7ubbyhoubp@mail.bwidawsk.net>
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Ben Widawsky" <ben@bwidawsk.net>, <linux-kernel@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V9 6/9] cxl/port: Read CDAT table
+Message-ID: <20220601163540.00006978@Huawei.com>
+In-Reply-To: <20220531152632.1397976-7-ira.weiny@intel.com>
 References: <20220531152632.1397976-1-ira.weiny@intel.com>
-        <20220531152632.1397976-5-ira.weiny@intel.com>
-        <20220531175020.efqfth7ubbyhoubp@mail.bwidawsk.net>
+        <20220531152632.1397976-7-ira.weiny@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -60,167 +58,192 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 31 May 2022 10:50:20 -0700
-Ben Widawsky <ben@bwidawsk.net> wrote:
+On Tue, 31 May 2022 08:26:29 -0700
+ira.weiny@intel.com wrote:
 
-> On 22-05-31 08:26:27, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > DOE mailbox objects will be needed for various mailbox communications
-> > with each memory device.
-> > 
-> > Iterate each DOE mailbox capability and create PCI DOE mailbox objects
-> > as found.
-> > 
-> > It is not anticipated that this is the final resting place for the
-> > iteration of the DOE devices.  The support of ports may drive this code
-> > into the pcie side.  In this imagined architecture the CXL port driver
-> > would then query into the PCI device for the DOE mailbox array.  
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> Not sure if direction has changed, but initially it would have been the cxl_pci
-> driver who would query this and pass it along when the port driver probes.
-> Personally, I've never had an issue with non cxl_pci drivers using PCI
-> interfaces and semantics, but it is something we've taken specific care to
-> avoid.
+> The OS will need CDAT data from CXL devices to properly set up
+> interleave sets.  Currently this is supported through a DOE mailbox
+> which supports CDAT.
 > 
-> > 
-> > For now this is good enough for the endpoints and the split is similar
-> > to the envisioned architecture where getting the mailbox array is
-> > separated from the various protocol needs.  For example, it is not
-> > anticipated that the CDAT code will need to move because it is only
-> > needed by the cxl_ports.
-> > 
-> > Likewise irq's are separated out in a similar design pattern to the
-> > PCIe port driver.  But a much simpler irq enabling flag is used and only
-> > DOE interrupts are supported.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ---
-> > Changes from V8:
-> > 	Move PCI_DOE selection to CXL_BUS to support future patches
-> > 	which move queries into the port code.
-> > 	Remove Auxiliary device arch
-> > 	Squash the functionality of the auxiliary driver into this
-> > 	patch.
-> > 	Split out the irq handling a bit.
-> > 
-> > Changes from V7:
-> > 	Minor code clean ups
-> > 	Rebased on cxl-pending
-> > 
-> > Changes from V6:
-> > 	Move all the auxiliary device stuff to the CXL layer
-> > 
-> > Changes from V5:
-> > 	Split the CXL specific stuff off from the PCI DOE create
-> > 	auxiliary device code.
-> > ---
-> >  drivers/cxl/Kconfig  |   1 +
-> >  drivers/cxl/cxlmem.h |   6 +++
-> >  drivers/cxl/pci.c    | 111 +++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 118 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > index f64e3984689f..7adaaf80b302 100644
-> > --- a/drivers/cxl/Kconfig
-> > +++ b/drivers/cxl/Kconfig
-> > @@ -2,6 +2,7 @@
-> >  menuconfig CXL_BUS
-> >  	tristate "CXL (Compute Express Link) Devices Support"
-> >  	depends on PCI
-> > +	select PCI_DOE
-> >  	help
-> >  	  CXL is a bus that is electrically compatible with PCI Express, but
-> >  	  layers three protocols on that signalling (CXL.io, CXL.cache, and
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 60d10ee1e7fc..4d2764b865ab 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -191,6 +191,8 @@ struct cxl_endpoint_dvsec_info {
-> >   * @component_reg_phys: register base of component registers
-> >   * @info: Cached DVSEC information about the device.
-> >   * @serial: PCIe Device Serial Number
-> > + * @doe_mbs: PCI DOE mailbox array
-> > + * @num_mbs: Number of DOE mailboxes
-> >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> >   *
-> >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> > @@ -224,6 +226,10 @@ struct cxl_dev_state {
-> >  	resource_size_t component_reg_phys;
-> >  	u64 serial;
-> >  
-> > +	bool doe_use_irq;
-> > +	struct pci_doe_mb **doe_mbs;
-> > +	int num_mbs;
-> > +
-> >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> >  };
-> >  
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 5a0ae46d4989..131f89dec8e7 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/mutex.h>
-> >  #include <linux/list.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/pci-doe.h>
-> >  #include <linux/io.h>
-> >  #include "cxlmem.h"
-> >  #include "cxlpci.h"
-> > @@ -386,6 +387,113 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> >  	return rc;
-> >  }
-> >  
-> > +static void cxl_pci_free_irq_vectors(void *data)
-> > +{
-> > +	pci_free_irq_vectors(data);
-> > +}
-> > +
-> > +static void cxl_doe_destroy_mb(void *ds)
-> > +{
-> > +	struct cxl_dev_state *cxlds = ds;
-> > +	int i;
-> > +
-> > +	for (i = 0; i < cxlds->num_mbs; i++) {
-> > +		if (cxlds->doe_mbs[i])
-> > +			pci_doe_destroy_mb(cxlds->doe_mbs[i]);
-> > +	}
-> > +}
-> > +
-> > +static void cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds)
-> > +{
-> > +	struct device *dev = cxlds->dev;
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	int num_irqs = 0;
-> > +	int off = 0;
-> > +	int rc;
-> > +
-> > +	/* Account for all the DOE vectors needed */
-> > +	pci_doe_for_each_off(pdev, off) {
-> > +		int irq = pci_doe_get_irq_num(pdev, off);
-> > +
-> > +		if (irq < 0)
-> > +			continue;
-> > +		num_irqs = max(num_irqs, irq + 1);  
+> Cache the CDAT data for later parsing.  Provide a sysfs binary attribute
+> to allow dumping of the CDAT.
 > 
-> This seems overly complicated. Isn't it just num_irqs++?
+> Binary dumping is modeled on /sys/firmware/ACPI/tables/
+> 
+> The ability to dump this table will be very useful for emulation of real
+> devices once they become available as QEMU CXL type 3 device emulation will
+> be able to load this file in.
+> 
+> This does not support table updates at runtime. It will always provide
+> whatever was there when first cached. Handling of table updates can be
+> implemented later.
+> 
+> Finally create a complete list of DOE defines within cdat.h for code
+> wishing to decode the CDAT table.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
 
-nope.  
+Fun question of ownership inline...
 
-There is no guarantee the irq values are near zero or contiguous.
+...
 
-If irq is 33 for example, it pretty much implies that there are 34 or more irq
-vectors used for something on this device, but we don't know what the rest are for.
+> +void read_cdat_data(struct cxl_port *port)
+> +{
+> +	struct device *dev = &port->dev;
+> +	size_t cdat_length;
+> +	int ret;
+> +
+> +	if (cxl_cdat_get_length(port, &cdat_length))
+> +		return;
+> +
+> +	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
 
-Trick is used in portdrv to deal with enabling all the irqs needed for the various
-supported services, which might not be all the irqs the hardware provides.
+boom. See below for why :)
 
-Maybe worth renaming num_irqs as max_irq or something like that and postpone the +1 to
-where it is used?
+> +	if (!port->cdat.table) {
+> +		ret = -ENOMEM;
+> +		goto error;
+> +	}
+> +
+> +	port->cdat.length = cdat_length;
+> +	ret = cxl_cdat_read_table(port, &port->cdat);
+> +	if (ret) {
+> +		devm_kfree(dev, port->cdat.table);
+> +		port->cdat.table = NULL;
+> +		port->cdat.length = 0;
+> +		ret = -EIO;
+> +		goto error;
+> +	}
+> +
+> +	return;
+> +error:
+> +	dev_err(dev, "CDAT data read error (%d)\n", ret);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 2e2bd65c1024..aa4229ddc1bc 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -320,7 +320,48 @@ static void cxl_port_release(struct device *dev)
+>  	kfree(port);
+>  }
+>  
+> +static ssize_t cdat_read(struct file *filp, struct kobject *kobj,
+> +			 struct bin_attribute *bin_attr, char *buf,
+> +			 loff_t offset, size_t count)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct cxl_port *port = to_cxl_port(dev);
+> +
+> +	if (!port->cdat.table)
+> +		return 0;
+> +
+> +	return memory_read_from_buffer(buf, count, &offset,
+> +				       port->cdat.table,
+> +				       port->cdat.length);
+> +}
+> +
+> +static BIN_ATTR_RO(cdat, 0);
+> +
+> +static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
+> +					      struct bin_attribute *attr, int i)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct cxl_port *port = to_cxl_port(dev);
+> +
+> +	if ((attr == &bin_attr_cdat) && port->cdat.table)
+> +		return 0400;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct bin_attribute *cxl_cdat_bin_attributes[] = {
+> +	&bin_attr_cdat,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group cxl_cdat_attribute_group = {
+> +	.name = "CDAT",
+> +	.bin_attrs = cxl_cdat_bin_attributes,
+> +	.is_bin_visible = cxl_port_bin_attr_is_visible,
+> +};
+> +
+>  static const struct attribute_group *cxl_port_attribute_groups[] = {
+> +	&cxl_cdat_attribute_group,o
+>  	&cxl_base_attribute_group,
+>  	NULL,
+>  };
+> @@ -462,6 +503,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+>  		return port;
+>  
+>  	cxl_find_cdat_mb(port);
+> +	/* Cache the data early to ensure is_visible() works */
+> +	read_cdat_data(port);
+
+This uses port as the 'device' for devm_ calls.
+Unfortunately if the port driver isn't loaded, it still "successfully" runs.
+Then if the port driver is probed, you get both a bunch of errors due to
+devm_ allocations on a device before the driver is loaded.
+
+For extra fun it tries to probe the ports multiple times without freeing
+the index which is 'interesting'. We had this happen a while ago (unrelated
+to DOE) but this may be unrelated (or maybe related to the region stuff
+I'm carrying on my test tree)
+
+As to the question of what the correct fix is...
+Maybe move them into the port driver probe but then is_visible
+won't work.  Or pass a pointer to the struct device *host down
+into read_cdat_data and __read_cdat_data calls to handle the
+allocation. (I tried this and it seems superficially fine).
 
 Jonathan
 
-> 
-> > +	}
+
+
+>  
+>  	dev = &port->dev;
+>  	if (is_cxl_memdev(uport))
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 0a86be589ffc..531b77d296c7 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -8,6 +8,7 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+>  #include <linux/io.h>
+> +#include "cdat.h"
+>  
+>  /**
+>   * DOC: cxl objects
+> @@ -268,6 +269,7 @@ struct cxl_nvdimm {
+>   * @dead: last ep has been removed, force port re-creation
+>   * @depth: How deep this port is relative to the root. depth 0 is the root.
+>   * @cdat_mb: Mailbox which supports the CDAT protocol
+> + * @cdat: Cached CDAT data
+>   */
+>  struct cxl_port {
+>  	struct device dev;
+> @@ -280,6 +282,7 @@ struct cxl_port {
+>  	bool dead;
+>  	unsigned int depth;
+>  	struct pci_doe_mb *cdat_mb;
+> +	struct cxl_cdat cdat;
+>  };
+>  
+>  /**
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 366b21bd1a01..35f0d4892eaa 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -75,4 +75,5 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+>  struct cxl_dev_state;
+>  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
+>  void cxl_find_cdat_mb(struct cxl_port *port);
+> +void read_cdat_data(struct cxl_port *port);
+>  #endif /* __CXL_PCI_H__ */
+
