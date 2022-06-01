@@ -2,172 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 240A853AB34
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 18:44:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E90AB53AB64
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 18:56:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356182AbiFAQoj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 12:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38684 "EHLO
+        id S1351569AbiFAQzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 12:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356180AbiFAQog (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 12:44:36 -0400
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F17D89E9DA;
-        Wed,  1 Jun 2022 09:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-        t=1654101870; bh=D86uvLtUnid4ac7RPV6LXcQ6KwoBx2mBLbHHxLqwrus=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=rCSys+WSoaWiFQDm31CP75+HYXB6/F1uJSD8F2HZfW31dKUPSaK3hTAq2ub1Skgxq
-         4F+g0b2xTlO92waMrhrZ/d/Zv2R5bQVlDwHuk33MfL+SrYXR0/2yCTLOVQJhNTjTcE
-         UB+cQ/tIApWLxneHte7BXvPhqhkz3K4LQXZagY88=
-Received: from [192.168.9.172] (unknown [101.88.28.48])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 5D2C460104;
-        Thu,  2 Jun 2022 00:44:30 +0800 (CST)
-Message-ID: <47b559c0-b1e8-e800-0491-2431e2083dad@xen0n.name>
-Date:   Thu, 2 Jun 2022 00:44:30 +0800
+        with ESMTP id S1351331AbiFAQzm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 12:55:42 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFF79E9E0;
+        Wed,  1 Jun 2022 09:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654102542; x=1685638542;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=73mc9UeFg58ka932G9d5Vhn6ii7yZChtzbk6FVFDixA=;
+  b=FiRQhHIe7y4rkj4KBb8VCynHNDzTipwleFNqCpVfpKEgPGE1exw894NX
+   TMYfXQ4zKWLpvPEHUgv98SKJJIx25v+7VKi4BDgE/c5DxVQeqRcXZPqYK
+   5DqyTzPiviaxgB2l/uS6mVe21fvuJjtN1CmTRavoldv7mW4lPsxiBFUuP
+   TSzSNTKkUaOvLbsPNrS/80w6Gcb8shLbGjXiqiZIPGgcFoHhCIdIvh4pZ
+   sYneSxW290LvqgLung0E64GzBL6j8ldPx6f9lAZCe7DfVQYuTF4+Cy6nO
+   occajMI46O5naEOgDeoOyEWLpT3LoxtGsm/VNQbGWe1o82UQ3WpMN8o39
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="275733973"
+X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
+   d="scan'208";a="275733973"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 09:55:38 -0700
+X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
+   d="scan'208";a="552399086"
+Received: from cwmurphy-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.32.23])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 09:55:37 -0700
+Date:   Wed, 1 Jun 2022 09:55:37 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        a.manzanares@samsung.com
+Subject: Re: [PATCH v9 3/9] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <YpeaCSvFo1Mqvsgv@iweiny-desk3>
+References: <20220531152632.1397976-1-ira.weiny@intel.com>
+ <20220531152632.1397976-4-ira.weiny@intel.com>
+ <20220531172507.5ert5tgwellpe7fx@offworld>
+ <20220531175652.qog7xaqmypy36whu@offworld>
+ <Ypbw3d/vUyMHGcBW@iweiny-desk3>
+ <20220601135909.mvnam4vvfmofpsdb@offworld>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:103.0) Gecko/20100101
- Thunderbird/103.0a1
-Subject: Re: [musl] Re: [GIT PULL] asm-generic changes for 5.19
-Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>
-Cc:     WANG Xuerui <kernel@xen0n.name>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        musl@lists.openwall.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Huacai Chen <chenhuacai@loongson.cn>
-References: <CAK8P3a2_52JPnBWNvTTkFVwLxPAa7=NaQ4whwC1UeH_NYHeUKQ@mail.gmail.com>
- <CAK8P3a0SpU1n+29KQxzKnPRvzmDE=L0V9RUpKxhemv=74kevcQ@mail.gmail.com>
- <df5c406c-eec6-c340-2847-49670b7fe8bf@xen0n.name>
- <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
- <CAAhV-H6sNr-yo8brBFtzziH6k9Tby0dFp7yehK55SfH5HjZ8hQ@mail.gmail.com>
- <358025d1-28e6-708b-d23d-3f22ae12a800@xen0n.name>
- <CAK8P3a1ge2bZS13ahm_LdO3jEcbtR4w3do-gLjggKvppqnBDkw@mail.gmail.com>
- <CAAhV-H5NCUpR6aBtR9d7c9vW2KiHpk3iFQxj7BeTSS0boMz8PQ@mail.gmail.com>
- <CAK8P3a2JgrW5a7_udCUWen-gOnJgVeRV2oAd-uq4VSuYkFUqNQ@mail.gmail.com>
- <CAAhV-H6wfmdcV=a4L43dcabsvO+JbOebCX3_6PV+p85NjA9qhQ@mail.gmail.com>
- <CAK8P3a0c_tbHov_b6cz-_Tj6VD3OWLwpGJf_2rj-nitipSKdYQ@mail.gmail.com>
- <CAAhV-H4_qqQtTp2=mJF=OV+qcKzA0j8SPWKRMR-LJgC0zNfatQ@mail.gmail.com>
- <832c3ae8-6c68-db2c-2c7f-0a5cd3071543@xen0n.name>
- <CAK8P3a1Mg=Mr6aig25Kk9+Qf_E6DPMs0Yd-ozcvmY11kvCU74Q@mail.gmail.com>
- <CAMj1kXFijHBnQVPR=O85u78n6A1Ev_24k=vns4yPQ=d-aiAC8Q@mail.gmail.com>
-From:   WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <CAMj1kXFijHBnQVPR=O85u78n6A1Ev_24k=vns4yPQ=d-aiAC8Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220601135909.mvnam4vvfmofpsdb@offworld>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ard,
+On Wed, Jun 01, 2022 at 06:59:09AM -0700, Davidlohr Bueso wrote:
+> On Tue, 31 May 2022, Ira Weiny wrote:
+> > Thinking about it I don't see a benefit to a rwlock.  We don't have multiple
+> > readers.
+> 
+> ... but you have concurrent workqueues reading the value of cur_task.
 
-On 6/2/22 00:01, Ard Biesheuvel wrote:
-> On Wed, 1 Jun 2022 at 09:41, Arnd Bergmann <arnd@kernel.org> wrote:
->> On Wed, Jun 1, 2022 at 7:52 AM WANG Xuerui <kernel@xen0n.name> wrote:
->>> On 6/1/22 00:01, Huacai Chen wrote:
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
->>>> has been updated. Now this branch droped irqchip drivers and pci
->>>> drivers. But the existing irqchip drivers need some small adjustment
->>>> to avoid build errors [1], and I hope Marc can give an Acked-by.
->>>> Thanks.
->>>>
->>>> This branch can be built with defconfig and allmodconfig (except
->>>> drivers/platform/surface/aggregator/controller.c, because it requires
->>>> 8bit/16bit cmpxchg, which I was told to remove their support).
->>>>
->>>> [1] https://lore.kernel.org/lkml/e7cf33a170d0b4e98e53744f60dbf922@kernel.org/T/#t
->>> I see the loongarch-next HEAD has been updated and it's now purely arch
->>> changes aside from the two trivial irqchip cleanups. Some other changes
->>> to the v11 patchset [1] are included, but arguably minor enough to not
->>> invalidate previous Reviewed-by tags.
->> Very nice! I don't see exactly how the previous build bugs were addressed,
->> but I can confirm that this version builds. Regarding the two irqchip patches,
->> 621e7015b529 ("irqchip/loongson-liointc: Fix build error for LoongArch") is
->> a good way to work around the mips oddity, and I have no problem taking
->> that through the asm-generic tree. The other one, f54b4a166023 ("irqchip:
->>   Adjust Kconfig for Loongson"), looks mostly unnecessary, and I think only
->> the LOONGSON_HTPIC change should be included here, while I would
->> leave out the COMPILE_TEST changes and instead have the driver
->> changes take care of making it possible to keep building it on x86, possibly
->> doing
->>
->>          depends on MACH_LOONGSON64 || (COMPILE_TEST && ACPI)
->>
->> in the future, after the loongarch64 ACPI support is merged.
->>
->>> After some small tweaks:
->>>
->>> - adding "#include <asm/irqflags.h>" to arch/loongarch/include/asm/ptrace.h,
->>> - adding an arch/loongarch/include/uapi/asm/bpf_perf_event.h with the
->>> same content as arch/arm64's, and
->>> - adding "depends on ARM64 || X86" to
->>> drivers/platform/surface/aggregator/Kconfig,
->>>
->>> the current loongarch-next HEAD (commit
->>> 36552a24f70d21b7d63d9ef490561dbdc13798d7) now passes allmodconfig build
->>> (with CONFIG_WERROR disabled; my Gentoo-flavored gcc-12 seems to emit
->>> warnings on a few drivers).
->> The only one of these issues that I see is the surface aggregator one.
->> I think we can address all three as follow-up fixes after -rc1 if the port
->> gets merged and these are still required.
->>
->>> The majority of userspace ABI has been stable for a few months already,
->>> after the addition of orig_a0 and removal of newfstatat; the necessary
->>> changes to switch to statx are already reviewed [2] / merged [3], and
->>> have been integrated into the LoongArch port of Gentoo for a while. Eric
->>> looked at the v11 and gave comments, and changes were made according to
->>> the suggestions, but it'd probably better to get a proper Reviewed-by.
->> Right.
->>
->>> Among the rest of patches, I think maybe the EFI/boot protocol part
->>> still need approval/ack from the EFI maintainer. However because the
->>> current port isn't going to be able to run on any real hardware, maybe
->>> that part could be done later; I'm not sure if the unacknowledged EFI
->>> bits should be removed as well.
->> Ard, do you have any last comments on this?
->>
-> It would be nice if the questions I raised against the previous
-> revision (v11) were addressed (or at least answered) first. In
-> general, I think this is feeling a bit rushed and IMHO we should
-> probably defer this to the next cycle.
+No, concurrent workqueues are reading the value of different DOE mailboxes'
+cur_task.  Each mailbox has it's own lock for its current task.
 
-Actually I think Huacai did reply to your review on v11: 
-https://lore.kernel.org/all/CAAhV-H7KAg8RxN7M=WiOOh0fDhEKTyqrwp6V-SC0cyR0iMrdeg@mail.gmail.com/. 
-It's a bit unfortunate that he probably didn't justify some of the 
-approaches enough, and it's especially unfortunate that some of the 
-points (like maybe the kernel version string in the EFI stub header) are 
-result of their internal discussion, which I presume to be especially 
-hard to change due to their particularly worrying corporate dynamics...
+This is a multiple writers to a single reader pattern.  The lock serializes
+driver requests (possibly from different threads) into the single mailbox as
+well as signaling when the cur_task is done; retire_cur_task().
 
-But again, my point is that the userspace ABI in particular is *not* 
-rushed -- it has been brewing since v1 of the port which is already 
-several months ago, and multiple distro-building efforts are already 
-underway. We (LoongArch distro packagers) want to freeze the userspace 
-ABI so that many downstream efforts wouldn't be blocked by the merging 
-of kernel port.
+At the same time multiple mailboxes can be running parallel.
 
-As the boot protocol is technically not part of the userspace ABI that 
-toolchains care about, and we already know it'll be a rather 
-standards-compliant UEFI implementation even if this part gets dropped 
-for brewing one more cycle, would taking this part out work for you?
+I don't think taking the lock in doe_statemachine_work() is technically
+necessary.   But I left it there for completeness because if the queue depth is
+increased like it was in Jonathans original code the locking around cur_task
+will need to be adjusted in this area.
 
+Ira
+
+> 
+> Thanks,
+> Davidlohr
