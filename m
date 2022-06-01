@@ -2,117 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A525E53A915
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 16:23:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD9E253A871
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 16:09:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355475AbiFAOX3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 10:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
+        id S1354274AbiFAOJD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 10:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355312AbiFAOXJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 10:23:09 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7273F506E;
-        Wed,  1 Jun 2022 07:12:39 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 43A4B6A259B;
-        Wed,  1 Jun 2022 14:12:35 +0000 (UTC)
-Received: from pdx1-sub0-mail-a312.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id B903E6A28B2;
-        Wed,  1 Jun 2022 14:12:34 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1654092754; a=rsa-sha256;
-        cv=none;
-        b=zvgdgSUGTwWUAEBXEtSBvYNZ7TtJIAtaRp5H6GYMGomhImSYKfinkKKKe3eVmEP+fSQ8qr
-        F71raoKMNSHN8E3mHNh03tU0eiCrxXrVuueBxIEB8A5/9fo5pZt/CRpAYBEOj8Kemh28ob
-        xV0R889ak7SZs2p8cIsOtRwd70Z4qi99RfbFNxuHnC3ed+luOS+m9BsOu9SmRR5PXMZBfV
-        3mEgESG4GeD40nSA1OaS0SgKLStjCtm27siCV0/nY4DVjJp/SkKFbyfSU5ZIIYYzcGkvAY
-        82cHXR9VgaurNVwLs6ue9TbI9dS2iy6qMbUNizTzZyO48zGkauzHWUk9GyMZrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1654092754;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=yLYJaL9ORR9PYZ13P2JQqpUzPce3UQH19Ih6BN8oryg=;
-        b=0909y5q2CRn5v5TR0y7rq6Jj2CwZJREDe79Es0ZI3qiWyB0Iqv3pTVQ9O7C3bDPzHwnAQh
-        Rv0V9ZVp6ymkChqy0LbzO7tGUIR4mDHV/HIevg16cPMZet1m/V75K6kVxUewxjkQAdVtUH
-        kccRSrBfr5Fkd+yGGph1w8l6CBJlkijkBvZRIczRXrE9i3imEXx0UBXWT9VRw2cKZroKje
-        vxaDPg90vy+u71LylIw0gQXgGNFOQdWx6PSKg3zjyQtacNAWm/qSkX1xN0e488NNT8XCGc
-        6kC5xtjJzS7/FIgj9NPUjG25w76ZJXxUF/KWvNc2tvRPDEUPs0vnS+8tKbLr4Q==
-ARC-Authentication-Results: i=1;
-        rspamd-54ff499d4f-g4gpm;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Celery-Illegal: 52844d101a27ad83_1654092754999_416677461
-X-MC-Loop-Signature: 1654092754999:3585670684
-X-MC-Ingress-Time: 1654092754999
-Received: from pdx1-sub0-mail-a312.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.116.106.119 (trex/6.7.1);
-        Wed, 01 Jun 2022 14:12:34 +0000
-Received: from offworld (unknown [104.36.31.105])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S1354456AbiFAOG2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 10:06:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A90BA9A6;
+        Wed,  1 Jun 2022 07:00:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a312.dreamhost.com (Postfix) with ESMTPSA id 4LCrh11Kq1z2q;
-        Wed,  1 Jun 2022 07:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1654092754;
-        bh=uKVBDmeDT/2dQS6ktQaex3oOWU37YZa72inB1fxgwGI=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=jDlowyjFNsH2P2j4LwIiL0zuUbCC4TalwZm5TssLk3ms94qNuNDXlfZpJqx0Z0v3p
-         9V+p/9Ql3HLPxI98jmT3nzYESO4fE7LlIvgfVLQqeBfGq82y5otUfxSn3QJYyqrIn+
-         Yjna+xqGq/z+y5N34yK3eXMKIC5pVcM6owL9zWmVB0JRVZ9Ogu7WSV4BurE2JM8Xin
-         1tmSG+b0HChMdOALdXKlFMr2i6ZRQ0CVzdPVcHt/Ab2waTogOMQQje35x3T45F9FnP
-         LOsJqJqM4L/zZJx5t04n/DZupj6uX/TRDdG1FaC36ux+dge50eUZkJDd65eZCbg0MK
-         aotmCpXdBg5tw==
-Date:   Wed, 1 Jun 2022 06:59:09 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EDECA615B2;
+        Wed,  1 Jun 2022 14:00:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AFA4C385A5;
+        Wed,  1 Jun 2022 14:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654092009;
+        bh=r9U7jUpfO1R5w4kmQhKW5ns+fP6NnOjs2mPhPNkAiJk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D/wgaIbLr89s3pSCQZzngnVtSQDwI+Q8uOKugvVupPk8y09U+jfaXt7KMFKsoBppd
+         IrCpqhj8JI2Ke+LggEXW4yv6RdwaPSERVbGxc+gwjLjyNDsEserNhHlgeTZmACdcbw
+         7w+DNgvE4ckSftFPiehCqQBXrQkXr+/OlhNlvwROixRolkvQdK/Gmo/RUaEKOheYeA
+         v0hFxYz1eEopkYACyRjfqkG+cO0tGXCsHBL7pcPLUsfri70obihCZgUy7rSj/uj7cj
+         6pRUWRj+1QiP5gCB1w+wGmPQS9iCZN6sbaLintUzBemYTpTYA1VdLw01hb0P6xaEIu
+         /0mbDeAAg8U/A==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yicong Yang <yangyicong@hisilicon.com>,
+        Jay Zhou <jianjay.zhou@huawei.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        a.manzanares@samsung.com
-Subject: Re: [PATCH v9 3/9] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <20220601135909.mvnam4vvfmofpsdb@offworld>
-References: <20220531152632.1397976-1-ira.weiny@intel.com>
- <20220531152632.1397976-4-ira.weiny@intel.com>
- <20220531172507.5ert5tgwellpe7fx@offworld>
- <20220531175652.qog7xaqmypy36whu@offworld>
- <Ypbw3d/vUyMHGcBW@iweiny-desk3>
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/15] PCI: Avoid pci_dev_lock() AB/BA deadlock with sriov_numvfs_store()
+Date:   Wed,  1 Jun 2022 09:59:45 -0400
+Message-Id: <20220601135951.2005085-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220601135951.2005085-1-sashal@kernel.org>
+References: <20220601135951.2005085-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Ypbw3d/vUyMHGcBW@iweiny-desk3>
-User-Agent: NeoMutt/20220429
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 31 May 2022, Ira Weiny wrote:
->Thinking about it I don't see a benefit to a rwlock.  We don't have multiple
->readers.
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-... but you have concurrent workqueues reading the value of cur_task.
+[ Upstream commit a91ee0e9fca9d7501286cfbced9b30a33e52740a ]
 
-Thanks,
-Davidlohr
+The sysfs sriov_numvfs_store() path acquires the device lock before the
+config space access lock:
+
+  sriov_numvfs_store
+    device_lock                 # A (1) acquire device lock
+    sriov_configure
+      vfio_pci_sriov_configure  # (for example)
+        vfio_pci_core_sriov_configure
+          pci_disable_sriov
+            sriov_disable
+              pci_cfg_access_lock
+                pci_wait_cfg    # B (4) wait for dev->block_cfg_access == 0
+
+Previously, pci_dev_lock() acquired the config space access lock before the
+device lock:
+
+  pci_dev_lock
+    pci_cfg_access_lock
+      dev->block_cfg_access = 1 # B (2) set dev->block_cfg_access = 1
+    device_lock                 # A (3) wait for device lock
+
+Any path that uses pci_dev_lock(), e.g., pci_reset_function(), may
+deadlock with sriov_numvfs_store() if the operations occur in the sequence
+(1) (2) (3) (4).
+
+Avoid the deadlock by reversing the order in pci_dev_lock() so it acquires
+the device lock before the config space access lock, the same as the
+sriov_numvfs_store() path.
+
+[bhelgaas: combined and adapted commit log from Jay Zhou's independent
+subsequent posting:
+https://lore.kernel.org/r/20220404062539.1710-1-jianjay.zhou@huawei.com]
+Link: https://lore.kernel.org/linux-pci/1583489997-17156-1-git-send-email-yangyicong@hisilicon.com/
+Also-posted-by: Jay Zhou <jianjay.zhou@huawei.com>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/pci.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 293b3e3b0083..0c03836245bd 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4667,18 +4667,18 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
+ 
+ static void pci_dev_lock(struct pci_dev *dev)
+ {
+-	pci_cfg_access_lock(dev);
+ 	/* block PM suspend, driver probe, etc. */
+ 	device_lock(&dev->dev);
++	pci_cfg_access_lock(dev);
+ }
+ 
+ /* Return 1 on successful lock, 0 on contention */
+ static int pci_dev_trylock(struct pci_dev *dev)
+ {
+-	if (pci_cfg_access_trylock(dev)) {
+-		if (device_trylock(&dev->dev))
++	if (device_trylock(&dev->dev)) {
++		if (pci_cfg_access_trylock(dev))
+ 			return 1;
+-		pci_cfg_access_unlock(dev);
++		device_unlock(&dev->dev);
+ 	}
+ 
+ 	return 0;
+@@ -4686,8 +4686,8 @@ static int pci_dev_trylock(struct pci_dev *dev)
+ 
+ static void pci_dev_unlock(struct pci_dev *dev)
+ {
+-	device_unlock(&dev->dev);
+ 	pci_cfg_access_unlock(dev);
++	device_unlock(&dev->dev);
+ }
+ 
+ static void pci_dev_save_and_disable(struct pci_dev *dev)
+-- 
+2.35.1
+
