@@ -2,161 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E92D53A46A
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 13:53:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77C4A53A47D
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 14:00:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351355AbiFALxM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 07:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36462 "EHLO
+        id S1351657AbiFAMAU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 08:00:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243564AbiFALxM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 07:53:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E2DF255AC
-        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 04:53:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C74B161474
-        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 11:53:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D03C3411D;
-        Wed,  1 Jun 2022 11:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654084389;
-        bh=U8/XssiFVkvdQInfLffLxd2/VURnsJ6bULBQVv+zSNg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iOPb1vpOy06dvO6sXBUFTzosNIrJWQ99e5rQ0p7bKpgkKpyBSaQuFfy3qjEx2zAOC
-         Fce7fXOxNeCjKdtMRGA0E+PAfPxHPi0qAHBMRZ9kiaY73Fym80EWBf9mTLnbNxzqgn
-         6KUeSJB76Ganz8aHV7PEZ3t8CI/Do/JoXiUXzBcopBHUhp6ymr+R3bNTB43mwMHBI1
-         Ii16W6Cw/snthz3oZMeqkIXJX5yvxGkv8mgEACs/woQUfNrHNAM9FJ/rr29PjM5W4c
-         LKojeID6aK9IUIftQk83w5z+xDPsN/i19P+Lz/CGO8nXyAhDiB+VHz+mVZFdcydZ7i
-         FKz8iDEw8pfFA==
-Received: by pali.im (Postfix)
-        id A8461891; Wed,  1 Jun 2022 13:53:05 +0200 (CEST)
-Date:   Wed, 1 Jun 2022 13:53:05 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Stefan Roese <sr@denx.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4 1/2] PCI/portdrv: Add option to setup IRQs for
- platform-specific Service Errors
-Message-ID: <20220601115305.oywgc2bflmof42aa@pali>
-References: <20220531213158.GA780032@bhelgaas>
- <f3731342-3ddb-1eff-3a6e-51bb1defc469@denx.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f3731342-3ddb-1eff-3a6e-51bb1defc469@denx.de>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S238350AbiFAMAR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 08:00:17 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77CDCDC
+        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 05:00:15 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3707B5C020C;
+        Wed,  1 Jun 2022 08:00:12 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute4.internal (MEProxy); Wed, 01 Jun 2022 08:00:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1654084812; x=
+        1654171212; bh=vRdiy8zLnoAxVa/+vcYtbT+GYF2q4/9FVfuuYyjTCqw=; b=s
+        EA3YA2rLRYFsLCWXIVjMCPQGEKVhzOtqRdmBKA8dsC26SVmCPyoIVnsr+e9WIdE4
+        ljvsgwJ1oN9MGtutx7qmVo2DWtYhWLCvjvx1nuDebi8RNYXW91918zKvjganRzga
+        kNnPKwylW/VAy3M9PhsipWuNWrgiGN08bjbCtundRTXyhrSpn4+dHwx4sVaYIw3M
+        RSVIneG7WHkXyB048FDExVqYGoSAWUCSnpz+zcawU9Os/l3vHIZPVLYkQQKUmfad
+        mZEsc0OlCiGxbnJ/sszw2fuPA5+c/pP842KbmxxpqR1bUoR4U2vCbV6ZVc1KYDFp
+        JQqVZY27Hjfmkuitd4Fzw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1654084812; x=
+        1654171212; bh=vRdiy8zLnoAxVa/+vcYtbT+GYF2q4/9FVfuuYyjTCqw=; b=V
+        uX/gO9yREE00Xog5IVcL4DQDDqtUaYdBfKGJ0NMIIw/RTxg33ZX4TVoSXX+aZh56
+        BYHyVcuOBRb5lihAWFcQypmzSt0LxlY86wro45rPzReCtI4p6tVR8zBK0E72ErAR
+        7Ii4j8UPKgjAIcrV+bkbR+ws0W1xFmD3zf6TNsE5ciN/FNzR4LBQjlCg+6c/Shna
+        jwozOzA3yY0XXRLlIEolZGDucrNVGSMkYd/pcI67ks0YCMJ2x+X/jnC8aK6tigFs
+        toBTJUkm+NrxBvLDTeqaLJUUpDZMfl+8PQLEAP/ffO2Hl5HvJaASBnHFcBrd9Oq5
+        fGvvD7Fj/nbF3k7SO7kxw==
+X-ME-Sender: <xms:ylSXYoZkOpgTT7p8Oxl3Ar8X7r_zsw3gTbDes8c0e--_-8SYW2Kcjg>
+    <xme:ylSXYjZNq27diZYtnKum364ohuatzaE5bl8BBaf79YL1hMa5G1r3OfC5NcJl-eB67
+    zDQn8fCTjpuFqcqAJU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrledtgdegiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepkeelveffhedtiefgkeefhffftdduffdvueevtdffteeh
+    ueeihffgteelkeelkeejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigr
+    nhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:y1SXYi-8dv-eLATt5DvFwtnUPB2YmISQWiTHALm821yu-Xy26HQJnQ>
+    <xmx:y1SXYirG1_QScb4Jf_c4NMzjf5IhRwFj6_3A-pM_niUd99B2pwjB8A>
+    <xmx:y1SXYjrg5HJxY9ab_6KFc7sUELBC_ig_IROZcvadTtUTbQSg_QqEQw>
+    <xmx:zFSXYkf3wZO8D6RhsQoSwGgjcFZF-UEWgiC22-naR0Ol6l2WF01Fsg>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id A696036A006D; Wed,  1 Jun 2022 08:00:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-591-gfe6c3a2700-fm-20220427.001-gfe6c3a27
+Mime-Version: 1.0
+Message-Id: <06d1f3d1-2864-458a-a1f0-ed3047b1cddf@www.fastmail.com>
+In-Reply-To: <20220601022210.GA796391@bhelgaas>
+References: <20220601022210.GA796391@bhelgaas>
+Date:   Wed, 01 Jun 2022 12:59:50 +0100
+From:   "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>,
+        "Huacai Chen" <chenhuacai@loongson.cn>
+Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Xuefeng Li" <lixuefeng@loongson.cn>,
+        "Huacai Chen" <chenhuacai@gmail.com>
+Subject: Re: [PATCH V13 4/6] PCI: loongson: Improve the MRRS quirk for LS7A
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 01 June 2022 13:47:12 Stefan Roese wrote:
-> On 31.05.22 23:31, Bjorn Helgaas wrote:
-> > On Mon, May 30, 2022 at 10:32:06AM +0200, Pali Rohár wrote:
-> > > On Monday 30 May 2022 10:18:41 Stefan Roese wrote:
-> > > > On 28.05.22 02:09, Bjorn Helgaas wrote:
-> > > > > In subject line, I assume you mean "System Errors" instead of "Service
-> > > > > Errors"?
-> > > > 
-> > > > Background: I took over submitting this patchset from Bharat. Here his
-> > > > last revision:
-> > > > https://www.spinics.net/lists/kernel/msg2960164.html
-> > 
-> > Here's the link to the more usable lore archive:
-> > https://lore.kernel.org/all/1542206878-24587-1-git-send-email-bharat.kumar.gogada@xilinx.com/
-> > 
-> > > > To answer your question I personally think too, that "System Errors" is
-> > > > more appropriate than "Service Errors". But still this patchset replaces
-> > > > or better enhances the already present pcie_init_service_irqs() by a
-> > > > platform-specific version. I can only suspect, that this is the
-> > > > reasoning for this "Service" naming.
-> > > 
-> > > Hello! Based on the below text "Here the quote from Bharat's original
-> > > cover letter:" I think that the better naming should be: "Service
-> > > interrupts". Because it adds support for interrupts from PCIe services
-> > > like AER, PME or HP. Only AER are errors, other IRQs are just services.
-> > 
-> > The question I'm trying to answer is whether this series concerns the
-> > "System Error" mechanism or the "Error Interrupt" mechanism.  We
-> > should figure out which one this is and use the correct name.
-> > 
-> > The sec 6.2.4.1.2 cited below clearly refers to the AER Root Error
-> > Command register, which controls interrupt generation via INTx, MSI,
-> > or MSI-X, i.e., the standard "Error Interrupt" shown on the RIGHT side
-> > of Figure 6-3 in sec 6.2.6.
-> > 
-> > The "System Error" signaling on the LEFT side of Figure 6-3 would be
-> > controlled by the Root Control register in the PCIe capability.
-> 
-> "System Error" is probably incorrect. You've already stated, that
-> these error bits are generally disabled in the PCI_EXP_RTCTL reg in
-> aer_enable_rootport():
-> 
-> 	/* Disable system error generation in response to error messages */
-> 	pcie_capability_clear_word(pdev, PCI_EXP_RTCTL,
-> 				   SYSTEM_ERROR_INTR_ON_MESG_MASK);
-> 
-> This leaves "Error Interrupt", but I might be wrong here.
-> 
-> > It should be easy to use setpci to set/clear these two sets of enable
-> > bits and figure out which path is of interest here.
-> 
-> Here the value of the PCI_EXP_RTCTL register at runtime:
-> # setpci -v -s 00:00.0 CAP_EXP+0x1c.w
-> 0000:00:00.0 (cap 10 @60) @7c = 0010
-> 
-> So all "System Error" enable bits are disabled.
-> 
-> Please let me know if I should make some other "setpci" tests.
-> 
-> > > > > On Fri, Jan 14, 2022 at 08:58:33AM +0100, Stefan Roese wrote:
-> > > > > > From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > 
-> > > > > > As per section 6.2.4.1.2, 6.2.6 in PCIe r4.0 (and later versions),
-> > > > > > platform-specific System Errors like AER can be delivered via platform-
-> > > > > > specific interrupt lines.
-> > 
-> > > > > ...
-> > > > > 6.7.3.4 ("Software Notification of Hot-Plug Events") talks about PME
-> > > > > and Hot-Plug Event interrupts, but these aren't errors, and I only see
-> > > > > signaling via INTx, MSI, or MSI-X.  Is there provision for a different
-> > > > > method?
-> > > > 
-> > > > Here the quote from Bharat's original cover letter:
-> > > > "Some platforms have dedicated IRQ lines for PCIe services like AER/PME
-> > > > etc. The root complex on these platform will use these seperate IRQ
-> > > > lines to report AER/PME etc., interrupts and will not generate MSI/
-> > > > MSI-X/INTx interrupts for these services.
-> > > 
-> > > This is the best explanation of this change.
-> > 
-> > As far as I can tell, "dedicated IRQ lines for services like AER/PME
-> > etc" would violate the PCIe spec.
-> 
-> AFAICT this is the case here.
-> 
-> >  That's OK, we can work around that
-> > sort of thing, but it needs to be clearly called out as some kind of
-> > quirk and not mixed in with things like System Error signaling, which
-> > is allowed to be platform-specific.
-> 
-> Agreed. So how to process with this patchset? Should I reword the
-> patch subject line (and the commit text and comments) to something like:
-> 
-> Add option to setup IRQs for platform-specific Error Interrupt ?
-> 
-> Thanks,
-> Stefan
 
-I think it should be named "Service Interrupt" or something like that as
-it is bound only to _errors_ but to any platform-specific interrupt.
+
+=E5=9C=A82022=E5=B9=B46=E6=9C=881=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
+=8D=883:22=EF=BC=8CBjorn Helgaas=E5=86=99=E9=81=93=EF=BC=9A
+> On Sat, Apr 30, 2022 at 04:48:44PM +0800, Huacai Chen wrote:
+>> In new revision of LS7A, some PCIe ports support larger value than 25=
+6,
+>> but their maximum supported MRRS values are not detectable. Moreover,
+>> the current loongson_mrrs_quirk() cannot avoid devices increasing its
+>> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
+>> will actually set a big value in its driver. So the only possible way
+>> is configure MRRS of all devices in BIOS, and add a pci host bridge b=
+it
+>> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+>>=20
+>> However, according to PCIe Spec, it is legal for an OS to program any
+>> value for MRRS, and it is also legal for an endpoint to generate a Re=
+ad
+>> Request with any size up to its MRRS. As the hardware engineers say, =
+the
+>> root cause here is LS7A doesn't break up large read requests. In deta=
+il,
+>> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory R=
+ead
+>> request with a size that's "too big" ("too big" means larger than the
+>> PCIe ports can handle, which means 256 for some ports and 4096 for the
+>> others, and of course this is a problem in the LS7A's hardware design=
+).
+>
+> This seems essentially similar to ks_pcie_quirk() [1].  Why are they
+> different, and why do you need no_inc_mrrs, when keystone doesn't?
+>
+> Or *does* keystone need it and we just haven't figured that out yet?
+> Are all callers of pcie_set_readrq() vulnerable to issues there?
+
+Yes actually keystone may need to set this flag as well.
+
+I think Huacai missed a point in his commit message about why he removed
+the process of walking through the bus and set proper MRRS. That=E2=80=99s
+because Loongson=E2=80=99s firmware will set proper MRRS and the only th=
+ing
+that Kernel needs to do is leave it as is. no_inc_mrrs is introduced for
+this purpose.
+
+In keystone=E2=80=99s case it=E2=80=99s likely that their firmware won=E2=
+=80=99t do such thing, so
+their workaround shouldn=E2=80=99t be removed.
+And  no_inc_mrrs should be set for them to prevent device drivers modify=
+ing
+MRRS afterwards.
+
+Thanks
+- Jiaxun
+
+>
+> Whatever we do should be as uniform as possible across host
+> controllers.
+>
+> [1]=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/drivers/pci/controller/dwc/pci-keystone.c?id=3Dv5.18#n528
+>
+--=20
+- Jiaxun
