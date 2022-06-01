@@ -2,58 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 009A7539C53
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 06:48:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0314539C5C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 06:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242053AbiFAEru (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 00:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48618 "EHLO
+        id S236473AbiFAExx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 00:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234905AbiFAEru (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 00:47:50 -0400
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD603969C;
-        Tue, 31 May 2022 21:47:42 -0700 (PDT)
-X-UUID: ef36d7d6d9254b4ab4bd99f1e3c5bb15-20220601
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.5,REQID:23316a26-42bd-42f8-85e8-b5bd763b2579,OB:0,LO
-        B:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACTI
-        ON:release,TS:0
-X-CID-META: VersionHash:2a19b09,CLOUDID:32fc158a-32d7-4fc0-b2ef-8776ac194f8f,C
-        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
-        ,QS:0,BEC:nil
-X-UUID: ef36d7d6d9254b4ab4bd99f1e3c5bb15-20220601
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1341377555; Wed, 01 Jun 2022 12:47:37 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.792.15; Wed, 1 Jun 2022 12:47:36 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.792.3 via Frontend Transport; Wed, 1 Jun 2022 12:47:36 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     <linmq006@gmail.com>
-CC:     <bhelgaas@google.com>, <jianjun.wang@mediatek.com>, <kw@linux.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        <lorenzo.pieralisi@arm.com>, <matthias.bgg@gmail.com>,
-        <maz@kernel.org>, <miles.chen@mediatek.com>, <robh@kernel.org>,
-        <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v3] PCI: mediatek-gen3: Fix refcount leak in mtk_pcie_init_irq_domains
-Date:   Wed, 1 Jun 2022 12:47:36 +0800
-Message-ID: <20220601044736.8440-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20220601041259.56185-1-linmq006@gmail.com>
-References: <20220601041259.56185-1-linmq006@gmail.com>
+        with ESMTP id S229831AbiFAExv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 00:53:51 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5BEF9D06A;
+        Tue, 31 May 2022 21:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654059230; x=1685595230;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q2BPmfI7+VWxsW5xSu/b2ZDNOg6Dpg5wYC/5y7r5YRU=;
+  b=h/lpOwb2KcUeQDeOo0cLgN3QgChP+EjKbVNym5MViqZYdb/k/SdGdcKe
+   ADYZITfrkt/+LGNxfm4uMfuPjUe+x+kXV5qfH8LX3uQZw9GvbRuRahw5G
+   c+dwOmCS87YvpAhHdEk2AcH3XZcFoqXm0poSgH2sy4hrTZIvPrnsRMz+k
+   jdEgEfrTAPIdFijL+7bL20gH3v/n5WUt6HCDSHTcisSYwi1MVaVRpMiq6
+   KN/owp6lOezE0KSGIJKApXB1ek9R1ZxT6ihiqB3hR+IA7WchoTE0QvWur
+   YwPkVOLykacArRX9yJmMVpQLAx7C2eprIE94LMgCLkgtnB0byKso3yJbi
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="275481252"
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="275481252"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 21:53:50 -0700
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="576753246"
+Received: from mdossant-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.154.135])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 21:53:50 -0700
+Date:   Tue, 31 May 2022 21:53:49 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <ben@bwidawsk.net>, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        a.manzanares@samsung.com
+Subject: Re: [PATCH v9 3/9] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <Ypbw3d/vUyMHGcBW@iweiny-desk3>
+References: <20220531152632.1397976-1-ira.weiny@intel.com>
+ <20220531152632.1397976-4-ira.weiny@intel.com>
+ <20220531172507.5ert5tgwellpe7fx@offworld>
+ <20220531175652.qog7xaqmypy36whu@offworld>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220531175652.qog7xaqmypy36whu@offworld>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,28 +69,59 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Miaoqian, 
+On Tue, May 31, 2022 at 10:56:52AM -0700, Davidlohr Bueso wrote:
+> On Tue, 31 May 2022, Davidlohr Bueso wrote:
+> 
+> > On Tue, 31 May 2022, ira.weiny@intel.com wrote:
+> > 
+> > > +static void doe_statemachine_work(struct work_struct *work)
+> > > +{
+> > > +	struct delayed_work *w = to_delayed_work(work);
+> > > +	struct pci_doe_mb *doe_mb = container_of(w, struct pci_doe_mb,
+> > > +						 statemachine);
+> > > +	struct pci_dev *pdev = doe_mb->pdev;
+> > > +	int offset = doe_mb->cap_offset;
+> > > +	struct pci_doe_task *task;
+> > > +	u32 val;
+> > > +	int rc;
+> > > +
+> > > +	mutex_lock(&doe_mb->task_lock);
+> > > +	task = doe_mb->cur_task;
+> > > +	mutex_unlock(&doe_mb->task_lock);
+> > 
+> > Instead of a mutex, would it be better to use a rwsem here to protect
+> > the state machine and allow for concurrent reads for the work callback?
+> > It is a general interface and a trivial change, but not sure how much
+> > performance is cared about.
+> 
+> Actually why is this a sleeping lock at all? Afaict all critical regions
+> are short and just deal with loads and stores of oe_mb->task_lock (and
+> pci_doe_submit_task also checks the doe_mb->flags with the lock held).
+> This could be a spinlock or similarly a rwlock.
 
->of_get_child_by_name() returns a node pointer with refcount
->incremented, we should use of_node_put() on it when not need anymore.
->Add missing of_node_put() to avoid refcount leak.
->
->Fixes: 814cceebba9b ("PCI: mediatek-gen3: Add INTx support")
->Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+This is a good point...  My only excuse is that task_lock used to lock more
+than just the cur_task so I suspect that I just kept it as a mutex after a
+rework at some point with out thinking about this deeper.
 
-Thanks for scanning the refcont leak and submitting this!
+Thinking about it I don't see a benefit to a rwlock.  We don't have multiple
+readers.
 
-Reviewed-by: Miles Chen <miles.chen@mediatek.com>
+But I've just looked at this code again and I'm not sure that the exclusion is
+correct with regard to the state machine.  I think the state needs to be IDLE
+before retire_cur_task() is called or the state machine could be in an invalid
+state when the next task runs.  I think there is a bug in the DOE_WAIT_ABORT*
+cases when not error and not busy.  In that case there is a race with the next
+task getting run the state being DOE_WAIT_ABORT*.  In the timeout case we will
+call the mailbox dead.
 
->---
->changes in v2:
->- move of_node_put(intc_node) right after irq_domain_add_linear to cover
->normal path and error paths.
->---
->changes in v3:
->- call of_node_put() in error paths with goto, and call of_node_put() before
->  return 0 in normal path. Since this function has a goto part to handle
->  resources, so put them together, as suggested by Miles Chen <miles.chen@mediatek.com>
->
->v1 link: https://lore.kernel.org/all/20220526110246.53502-1-linmq006@gmail.com/
->v2 link: https://lore.kernel.org/all/20220530064807.34534-1-linmq006@gmail.com/
+I can't remember if Jonathan originally locked the state machine or the
+task or both.
+
+I think I have fixed it but, I'll look at it again in the morning.
+
+Thanks,
+Ira
+
+> 
+> Thanks,
+> Davidlohr
