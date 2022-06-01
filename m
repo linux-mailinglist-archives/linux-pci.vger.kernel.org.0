@@ -2,47 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29BEA53A782
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 16:02:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B4D53A81C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 16:08:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354152AbiFAOCC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 10:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54772 "EHLO
+        id S1354409AbiFAOGm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 10:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355183AbiFAOBX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 10:01:23 -0400
+        with ESMTP id S1354624AbiFAOFD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 10:05:03 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA8E9CF79;
-        Wed,  1 Jun 2022 06:57:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96729E9EB;
+        Wed,  1 Jun 2022 06:58:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 36E14B8175B;
-        Wed,  1 Jun 2022 13:57:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E8B1C3411D;
-        Wed,  1 Jun 2022 13:57:15 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3A698B81A79;
+        Wed,  1 Jun 2022 13:58:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19230C36AF9;
+        Wed,  1 Jun 2022 13:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654091835;
-        bh=nXNs2TKaYBe3HGWE0Y7zWPQB9J0WpS5ZjTFwM5df4Yo=;
+        s=k20201202; t=1654091911;
+        bh=PInb+dUPQKGb+cDWT7JHyl16dOt/brmkR8T/Z09YEmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZMgVo8HKVqLqKH3MeCibf/byLem0xEw4btBII3h45fp5axWMijBDL0UKydf/NOFt
-         StMoaVh8dEJiKPQlHv2lWvKw/l9XcXeX0xXmEVVeevJSikItbz9gb0ZWwGNZs0Yx/G
-         qq/FzrbVYShvL0wo/Q7A1CGObu93NsmD6hvXRYDTSFcD5sEroBFIAax58tBoOj8Ync
-         GbQJ46B57ldLm/iUk+fgUZhin43CvscaVQiStzDOYZGBctVhBg0I8u+p3IscPM4rMI
-         1aYAegVqyHfgabch+GnQHWih4u/+jZsCvAwTrp8YKVdZ8eHo/ZwBNl8YZaEdoz+My3
-         VemVYcJMYuKaw==
+        b=feUlrnZLEZSDt4firXU5OGbcRfh1/q/YKGJh7jN+cO8m2JtMNvQ80TdP4lsO5luzd
+         Ra6E2gUDZBsdBtrRCvWY/VmxRHyey/XQtVRspjEulv9G17OwMhtLsuQJxF1OopCHSF
+         TEscKnsB340OpaVc8ZaouBFgXMP3prqQZLBCf9OZnZxvTXzUXVnL2BXTpzH7nWGuxg
+         M0bRzz+TKbHs6QNpdN1/3F1TBzAueE8dKgso54Qrw3KrDIr9Ct/ctzT9E1Ro0+xF+K
+         DRjz+jDwQZU7XUZuuRc6W3mvTBuLye8VUORASNR9wdnwgfCG9vaoOUe3Pd8ED+751o
+         MiqJuvELaIrTA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yicong Yang <yangyicong@hisilicon.com>,
         Jay Zhou <jianjay.zhou@huawei.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 25/37] PCI: Avoid pci_dev_lock() AB/BA deadlock with sriov_numvfs_store()
-Date:   Wed,  1 Jun 2022 09:56:10 -0400
-Message-Id: <20220601135622.2003939-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 18/26] PCI: Avoid pci_dev_lock() AB/BA deadlock with sriov_numvfs_store()
+Date:   Wed,  1 Jun 2022 09:57:51 -0400
+Message-Id: <20220601135759.2004435-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220601135622.2003939-1-sashal@kernel.org>
-References: <20220601135622.2003939-1-sashal@kernel.org>
+In-Reply-To: <20220601135759.2004435-1-sashal@kernel.org>
+References: <20220601135759.2004435-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -103,10 +103,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 0380543d10fd..09815cbc18f9 100644
+index cda17c615148..6ebbe06f0b08 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -5079,18 +5079,18 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
+@@ -4975,18 +4975,18 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
  
  static void pci_dev_lock(struct pci_dev *dev)
  {
@@ -117,7 +117,7 @@ index 0380543d10fd..09815cbc18f9 100644
  }
  
  /* Return 1 on successful lock, 0 on contention */
- int pci_dev_trylock(struct pci_dev *dev)
+ static int pci_dev_trylock(struct pci_dev *dev)
  {
 -	if (pci_cfg_access_trylock(dev)) {
 -		if (device_trylock(&dev->dev))
@@ -129,16 +129,16 @@ index 0380543d10fd..09815cbc18f9 100644
  	}
  
  	return 0;
-@@ -5099,8 +5099,8 @@ EXPORT_SYMBOL_GPL(pci_dev_trylock);
+@@ -4994,8 +4994,8 @@ static int pci_dev_trylock(struct pci_dev *dev)
  
- void pci_dev_unlock(struct pci_dev *dev)
+ static void pci_dev_unlock(struct pci_dev *dev)
  {
 -	device_unlock(&dev->dev);
  	pci_cfg_access_unlock(dev);
 +	device_unlock(&dev->dev);
  }
- EXPORT_SYMBOL_GPL(pci_dev_unlock);
  
+ static void pci_dev_save_and_disable(struct pci_dev *dev)
 -- 
 2.35.1
 
