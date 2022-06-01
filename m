@@ -2,159 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADD84539E9B
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 09:42:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B4E9539FF6
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Jun 2022 10:59:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350347AbiFAHmC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Jun 2022 03:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35250 "EHLO
+        id S243543AbiFAI7G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Jun 2022 04:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346393AbiFAHly (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 03:41:54 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423EC65B9;
-        Wed,  1 Jun 2022 00:41:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0504CB8184A;
-        Wed,  1 Jun 2022 07:41:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A7FC36AE2;
-        Wed,  1 Jun 2022 07:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654069309;
-        bh=x4AIh+8q3rwHWHDzV5VGJkJYLLDH7ynhZZhfLnEb+8g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f38QWAmT3Lba2A3sBJrOOy+sbERvR52YnVrVyOkc70a+cykluMt/EwKYPWff9s4Q7
-         fQb/vRHE7IhLBYWrF4Usip+yBpvWX5/ORzxQtuAb+tO+Ne3eAhJ1tdUojRy+fUqRPg
-         3U2kltQxqVSIIt4GjUq8U8/lO2FOapPQCBsQDNPgDRYael1JXUlQ+iYOEzaWtTUVwD
-         8Nm7VufhCXSC3v3giaD9D8v08nhbhzlICHQjufyUzGNPjA5Whbb8OJvMgxDJBTzCe9
-         2XKbLDTOozmfFVp4SrJw0LqKPSQBG+RzNmRevVR8J4WoJD28DG3PBt9y1yjig3m1Ba
-         B3ZkVzVvXhK0Q==
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-2ec42eae76bso9118007b3.10;
-        Wed, 01 Jun 2022 00:41:49 -0700 (PDT)
-X-Gm-Message-State: AOAM5309uqVIFwxbfTPDYvjqvJBugjzv7RPlQYus9Sy+FhSlDc5IOVEz
-        yshUDsDikQ/xXC8U6fcyivEQ5WM/kPkjYPdXbT0=
-X-Google-Smtp-Source: ABdhPJyjOONnyJpMnxwuZX80GyUim9f3pxgvQNDhKxagtl+rn8W3Zcqx8LrJG4sPZuMnrG1jw0k3rHUJoO3UT+XkIcs=
-X-Received: by 2002:a81:6d8c:0:b0:30f:777:3eab with SMTP id
- i134-20020a816d8c000000b0030f07773eabmr1979670ywc.135.1654069308563; Wed, 01
- Jun 2022 00:41:48 -0700 (PDT)
+        with ESMTP id S1349855AbiFAI7E (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Jun 2022 04:59:04 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C1162110
+        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 01:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654073935; x=1685609935;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LyymACIH67Np3RuM2LWnf+HiPcgoV3ojUIElpsq2WvA=;
+  b=W5zZAnuO2iNffaxV0K3ZcwhwSr0q5F7kAILTpkB8wCIsdN/bGJIBcjnG
+   1q02hfXtBqE0wS6aNp+G/iLBvpTlUQjtG2gJoiNnN0XG2jlPce0HiayxX
+   /yUfmRFl+AzE5zoKRzL4LoeVae18dHXvGR3tjywFoQHcwrq/uBMnP2+Zx
+   IwcFKmfwNOxEcbau8TVlIZj80fWHNTK/rv/A8AhqL3J+HSbRZBXZA03md
+   NRo80ESXkAPI1ViB3suwh7hoJiF1K/YcOZ4dESBwe7doB16PtGa2B/4f3
+   8tLjhx/ebMyXRT7GGw7Ba8J/Me2/9I++97XJYeHs6cghNRRqG6tfkyQLe
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="336179228"
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="336179228"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 01:58:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,266,1647327600"; 
+   d="scan'208";a="706968997"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 01 Jun 2022 01:58:53 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nwKBo-0003lu-NG;
+        Wed, 01 Jun 2022 08:58:52 +0000
+Date:   Wed, 01 Jun 2022 16:58:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:for-linus] BUILD SUCCESS
+ 833e53a4ffe92e742e99347c68d99dc33986598b
+Message-ID: <62972a49.WErkxxNpTWBiEhcV%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <CAK8P3a2_52JPnBWNvTTkFVwLxPAa7=NaQ4whwC1UeH_NYHeUKQ@mail.gmail.com>
- <CAK8P3a0SpU1n+29KQxzKnPRvzmDE=L0V9RUpKxhemv=74kevcQ@mail.gmail.com>
- <df5c406c-eec6-c340-2847-49670b7fe8bf@xen0n.name> <CAK8P3a3awFdB1-G65DC38NBuSTvo6SvFTaS0m9YBxunHjHjQvQ@mail.gmail.com>
- <CAAhV-H6sNr-yo8brBFtzziH6k9Tby0dFp7yehK55SfH5HjZ8hQ@mail.gmail.com>
- <358025d1-28e6-708b-d23d-3f22ae12a800@xen0n.name> <CAK8P3a1ge2bZS13ahm_LdO3jEcbtR4w3do-gLjggKvppqnBDkw@mail.gmail.com>
- <CAAhV-H5NCUpR6aBtR9d7c9vW2KiHpk3iFQxj7BeTSS0boMz8PQ@mail.gmail.com>
- <CAK8P3a2JgrW5a7_udCUWen-gOnJgVeRV2oAd-uq4VSuYkFUqNQ@mail.gmail.com>
- <CAAhV-H6wfmdcV=a4L43dcabsvO+JbOebCX3_6PV+p85NjA9qhQ@mail.gmail.com>
- <CAK8P3a0c_tbHov_b6cz-_Tj6VD3OWLwpGJf_2rj-nitipSKdYQ@mail.gmail.com>
- <CAAhV-H4_qqQtTp2=mJF=OV+qcKzA0j8SPWKRMR-LJgC0zNfatQ@mail.gmail.com> <832c3ae8-6c68-db2c-2c7f-0a5cd3071543@xen0n.name>
-In-Reply-To: <832c3ae8-6c68-db2c-2c7f-0a5cd3071543@xen0n.name>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Wed, 1 Jun 2022 09:41:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1Mg=Mr6aig25Kk9+Qf_E6DPMs0Yd-ozcvmY11kvCU74Q@mail.gmail.com>
-Message-ID: <CAK8P3a1Mg=Mr6aig25Kk9+Qf_E6DPMs0Yd-ozcvmY11kvCU74Q@mail.gmail.com>
-Subject: Re: [musl] Re: [GIT PULL] asm-generic changes for 5.19
-To:     WANG Xuerui <kernel@xen0n.name>
-Cc:     Huacai Chen <chenhuacai@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        musl@lists.openwall.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 1, 2022 at 7:52 AM WANG Xuerui <kernel@xen0n.name> wrote:
-> On 6/1/22 00:01, Huacai Chen wrote:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
-> > has been updated. Now this branch droped irqchip drivers and pci
-> > drivers. But the existing irqchip drivers need some small adjustment
-> > to avoid build errors [1], and I hope Marc can give an Acked-by.
-> > Thanks.
-> >
-> > This branch can be built with defconfig and allmodconfig (except
-> > drivers/platform/surface/aggregator/controller.c, because it requires
-> > 8bit/16bit cmpxchg, which I was told to remove their support).
-> >
-> > [1] https://lore.kernel.org/lkml/e7cf33a170d0b4e98e53744f60dbf922@kernel.org/T/#t
->
-> I see the loongarch-next HEAD has been updated and it's now purely arch
-> changes aside from the two trivial irqchip cleanups. Some other changes
-> to the v11 patchset [1] are included, but arguably minor enough to not
-> invalidate previous Reviewed-by tags.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: 833e53a4ffe92e742e99347c68d99dc33986598b  MAINTAINERS: Update Lorenzo Pieralisi's email address
 
-Very nice! I don't see exactly how the previous build bugs were addressed,
-but I can confirm that this version builds. Regarding the two irqchip patches,
-621e7015b529 ("irqchip/loongson-liointc: Fix build error for LoongArch") is
-a good way to work around the mips oddity, and I have no problem taking
-that through the asm-generic tree. The other one, f54b4a166023 ("irqchip:
- Adjust Kconfig for Loongson"), looks mostly unnecessary, and I think only
-the LOONGSON_HTPIC change should be included here, while I would
-leave out the COMPILE_TEST changes and instead have the driver
-changes take care of making it possible to keep building it on x86, possibly
-doing
+elapsed time: 727m
 
-        depends on MACH_LOONGSON64 || (COMPILE_TEST && ACPI)
+configs tested: 117
+configs skipped: 3
 
-in the future, after the loongarch64 ACPI support is merged.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> After some small tweaks:
->
-> - adding "#include <asm/irqflags.h>" to arch/loongarch/include/asm/ptrace.h,
-> - adding an arch/loongarch/include/uapi/asm/bpf_perf_event.h with the
-> same content as arch/arm64's, and
-> - adding "depends on ARM64 || X86" to
-> drivers/platform/surface/aggregator/Kconfig,
->
-> the current loongarch-next HEAD (commit
-> 36552a24f70d21b7d63d9ef490561dbdc13798d7) now passes allmodconfig build
-> (with CONFIG_WERROR disabled; my Gentoo-flavored gcc-12 seems to emit
-> warnings on a few drivers).
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+sh                  sh7785lcr_32bit_defconfig
+arm64                            alldefconfig
+sh                   sh7770_generic_defconfig
+sh                          lboxre2_defconfig
+powerpc                     pq2fads_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                     tqm8555_defconfig
+mips                       capcella_defconfig
+arm                           tegra_defconfig
+arm                        shmobile_defconfig
+sh                          rsk7201_defconfig
+arc                           tb10x_defconfig
+sh                          sdk7786_defconfig
+arm                        realview_defconfig
+powerpc                     stx_gp3_defconfig
+ia64                         bigsur_defconfig
+sh                        dreamcast_defconfig
+parisc                generic-64bit_defconfig
+sh                          r7780mp_defconfig
+mips                         bigsur_defconfig
+arm                        cerfcube_defconfig
+parisc64                            defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220531
+ia64                                defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+riscv                             allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc                              defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220531
+s390                 randconfig-r044-20220531
+riscv                randconfig-r042-20220531
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                                  kexec
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-The only one of these issues that I see is the surface aggregator one.
-I think we can address all three as follow-up fixes after -rc1 if the port
-gets merged and these are still required.
+clang tested configs:
+mips                 randconfig-c004-20220531
+x86_64                        randconfig-c007
+i386                          randconfig-c001
+s390                 randconfig-c005-20220531
+arm                  randconfig-c002-20220531
+powerpc              randconfig-c003-20220531
+riscv                randconfig-c006-20220531
+mips                        workpad_defconfig
+arm                     am200epdkit_defconfig
+powerpc                 mpc8560_ads_defconfig
+powerpc                     tqm5200_defconfig
+arm                           sama7_defconfig
+arm                         shannon_defconfig
+mips                malta_qemu_32r6_defconfig
+powerpc                     skiroot_defconfig
+powerpc                    ge_imp3a_defconfig
+mips                         tb0287_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+hexagon              randconfig-r041-20220531
+hexagon              randconfig-r045-20220531
 
-> The majority of userspace ABI has been stable for a few months already,
-> after the addition of orig_a0 and removal of newfstatat; the necessary
-> changes to switch to statx are already reviewed [2] / merged [3], and
-> have been integrated into the LoongArch port of Gentoo for a while. Eric
-> looked at the v11 and gave comments, and changes were made according to
-> the suggestions, but it'd probably better to get a proper Reviewed-by.
-
-Right.
-
-> Among the rest of patches, I think maybe the EFI/boot protocol part
-> still need approval/ack from the EFI maintainer. However because the
-> current port isn't going to be able to run on any real hardware, maybe
-> that part could be done later; I'm not sure if the unacknowledged EFI
-> bits should be removed as well.
-
-Ard, do you have any last comments on this?
-
-> Arnd, what do you think about the current branch's status? Do Huacai
-> need to send a quick final v12 to gather tags?
-
-I think that would be good, yes.
-
-        Arnd
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
