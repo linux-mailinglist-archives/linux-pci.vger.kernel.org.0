@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04DAD53BC58
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E8C653BC67
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:23:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235345AbiFBQUp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 12:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36960 "EHLO
+        id S236917AbiFBQX3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 12:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234815AbiFBQUp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:20:45 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E66A168997
-        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 09:20:43 -0700 (PDT)
+        with ESMTP id S236659AbiFBQX3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:23:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C776715A3D
+        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 09:23:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A17CCB81F7B
-        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 16:20:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 130EEC34114;
-        Thu,  2 Jun 2022 16:20:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 62F5461590
+        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 16:23:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC6AC385A5;
+        Thu,  2 Jun 2022 16:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654186841;
-        bh=RWecuZ793zKrWapXtLimrcEuj8YxwuWwynvq51ju7p8=;
+        s=k20201202; t=1654187006;
+        bh=GEzEbsjaZRmvrXF9Ds6TvkRVO/ISEYsq5UHZcU4vjeU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BY0g5Xf0myB+EnWKRCRrdh/ach9la7CP73E97t6H6suB0NZKsxUfIypRi5JlkSz5k
-         Uvu+FJzFSOTVTOywlhdMntYPted8UN4E3PB3PgXcysXzhVf19QFwFIe5VvPlTIrCag
-         Y537T7vXTHxztI1xxMux4rFYwm8u06Ec0usiGmzixg76313dXjx0JHxioncWIc1x+T
-         6tbF4uoDI3j6U8FwphH0VO8ADdik5FpC1aN8tMHEjX6q1JP9d6bnX9IfM6TufhL8rM
-         zRemmsjXcLW0wK4MPe6F1dUKpsmCmQTHsU+OyXtmVLUeG7K+G/d7mtKvNTg8+GTzZB
-         CtzfGLJuexk0w==
-Date:   Thu, 2 Jun 2022 11:20:39 -0500
+        b=YaCSajEkOL3ZCKv01P14/ukIL/L1XRrm5D2nk0BRgRkVJ/VuvSH5BsH7TTC1g8OJB
+         bnDcTSVgZUkTlZRTKU0Y8VU4VI2UQ/5evC+vsUyzeCTsjyKB90ygAnyWJ6PLD95/2L
+         a+X4Dj3URMcptYbo+2E0q9H+xRxT+vd+iR38WZuBczs5uweAHWWrBnG9R84JuOVr/g
+         RwdovuOcYtRpxaCLkIpKBVYaF44tkzHFZapwf3jlBDR6cwZXkUPfUt3bn+oMFrXC5/
+         ubORbVoYxCheWJlBFoyBSjEQXkFBiT+1Y98QZEC0cbYumW5UwWEK9laLDAYJhkd0YK
+         NS3IXeWefn7dg==
+Date:   Thu, 2 Jun 2022 11:23:24 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Huacai Chen <chenhuacai@gmail.com>
 Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -41,18 +41,13 @@ Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci <linux-pci@vger.kernel.org>,
         Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
-Subject: Re: [PATCH V13 4/6] PCI: loongson: Improve the MRRS quirk for LS7A
-Message-ID: <20220602162039.GA20136@bhelgaas>
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH V13 3/6] PCI: loongson: Don't access unexisting devices
+Message-ID: <20220602162324.GA21622@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <06d1f3d1-2864-458a-a1f0-ed3047b1cddf@www.fastmail.com>
+In-Reply-To: <CAAhV-H5c5ytuaG5dk+bXwRKiM1Mxfut_2uaZfFK1JUiO2VkqZA@mail.gmail.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -63,60 +58,69 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Jingoo, Gustavo, Kishon, Krzysztof]
-
-On Wed, Jun 01, 2022 at 12:59:50PM +0100, Jiaxun Yang wrote:
-> 在2022年6月1日六月 上午3:22，Bjorn Helgaas写道：
-> > On Sat, Apr 30, 2022 at 04:48:44PM +0800, Huacai Chen wrote:
-> >> In new revision of LS7A, some PCIe ports support larger value than 256,
-> >> but their maximum supported MRRS values are not detectable. Moreover,
-> >> the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> >> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> >> will actually set a big value in its driver. So the only possible way
-> >> is configure MRRS of all devices in BIOS, and add a pci host bridge bit
-> >> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
-> >> 
-> >> However, according to PCIe Spec, it is legal for an OS to program any
-> >> value for MRRS, and it is also legal for an endpoint to generate a Read
-> >> Request with any size up to its MRRS. As the hardware engineers say, the
-> >> root cause here is LS7A doesn't break up large read requests. In detail,
-> >> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
-> >> request with a size that's "too big" ("too big" means larger than the
-> >> PCIe ports can handle, which means 256 for some ports and 4096 for the
-> >> others, and of course this is a problem in the LS7A's hardware design).
-> >
-> > This seems essentially similar to ks_pcie_quirk() [1].  Why are they
-> > different, and why do you need no_inc_mrrs, when keystone doesn't?
-> >
-> > Or *does* keystone need it and we just haven't figured that out yet?
-> > Are all callers of pcie_set_readrq() vulnerable to issues there?
+On Thu, Jun 02, 2022 at 12:28:40PM +0800, Huacai Chen wrote:
+> Hi, Bjorn,
 > 
-> Yes actually keystone may need to set this flag as well.
-> 
-> I think Huacai missed a point in his commit message about why he removed
-> the process of walking through the bus and set proper MRRS. That’s
-> because Loongson’s firmware will set proper MRRS and the only thing
-> that Kernel needs to do is leave it as is. no_inc_mrrs is introduced for
-> this purpose.
-
-I'd really like to have a single implementation of whatever quirk
-works around this.  I don't think we should have multiple copies just
-because we assume some firmware takes care of part of this for us.
-
-> In keystone’s case it’s likely that their firmware won’t do such thing, so
-> their workaround shouldn’t be removed.
-> And  no_inc_mrrs should be set for them to prevent device drivers modifying
-> MRRS afterwards.
-
-I have the vague impression that this issue is related to an arm64 AXI
-bus property [2] or maybe a DesignWare controller property [3], so
-this might affect several PCIe controller drivers.
-
-> > Whatever we do should be as uniform as possible across host
-> > controllers.
+> On Wed, Jun 1, 2022 at 7:14 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Sat, Apr 30, 2022 at 04:48:43PM +0800, Huacai Chen wrote:
+> > > On LS2K/LS7A, some unexisting devices don't return 0xffffffff when
+> > > scanning. This is a hardware flaw but we can only avoid it by software
+> > > now.
 > >
-> > [1] 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-keystone.c?id=v5.18#n528
+> > What happens in other situations that normally cause Unsupported
+> > Request or similar errors?  For example, memory reads/writes to a
+> > device in D3hot should cause an Unsupported Request error.  I'm
+> > wondering whether other error handling assumptions might be broken
+> > on LS2K/LS7A.
+>
+> Hardware engineers told me that the problem is due to pin
+> multiplexing, under some configurations, a PCI device is unusable but
+> the read request doesn't return 0xffffffff.
 
-[2] https://lore.kernel.org/all/20211126083119.16570-4-kishon@ti.com/
-[3] https://lore.kernel.org/all/m3r1f08p83.fsf@t19.piap.pl/
+What happens if a driver does a mem read to a device that's in D3hot?
+
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> > >  drivers/pci/controller/pci-loongson.c | 11 +++++++++--
+> > >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> > > index adbfa4a2330f..48316daa1f23 100644
+> > > --- a/drivers/pci/controller/pci-loongson.c
+> > > +++ b/drivers/pci/controller/pci-loongson.c
+> > > @@ -138,6 +138,8 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
+> > >                              int where)
+> > >  {
+> > >       unsigned char busnum = bus->number;
+> > > +     unsigned int device = PCI_SLOT(devfn);
+> > > +     unsigned int function = PCI_FUNC(devfn);
+> > >       struct loongson_pci *priv = pci_bus_to_loongson_pci(bus);
+> > >
+> > >       if (pci_is_root_bus(bus))
+> > > @@ -147,8 +149,13 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
+> > >        * Do not read more than one device on the bus other than
+> > >        * the host bus. For our hardware the root bus is always bus 0.
+> > >        */
+> > > -     if (priv->data->flags & FLAG_DEV_FIX &&
+> > > -                     !pci_is_root_bus(bus) && PCI_SLOT(devfn) > 0)
+> > > +     if ((priv->data->flags & FLAG_DEV_FIX) && bus->self) {
+> > > +             if (!pci_is_root_bus(bus) && (device > 0))
+> > > +                     return NULL;
+> > > +     }
+> > > +
+> > > +     /* Don't access unexisting devices */
+> > > +     if (pci_is_root_bus(bus) && (device >= 9 && device <= 20 && function > 0))
+> >
+> > Yuck.  This is pretty nasty magic.  If this is something that might be
+> > fixed in future versions of the hardware, maybe you should factor this
+> > out into a function pointer in loongson_pci_data or something.
+> OK, seems providing a pdev_is_existant() is better.
+> 
+> Huacai
+> >
+> > >               return NULL;
+> > >
+> > >       /* CFG0 can only access standard space */
+> > > --
+> > > 2.27.0
+> > >
