@@ -2,56 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06FF553B283
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 06:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D782753B2BD
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 06:29:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbiFBESZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 00:18:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59992 "EHLO
+        id S229730AbiFBE2z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 00:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiFBESY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 00:18:24 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE165EDDD
-        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 21:18:23 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id f12so2695100ilj.1
-        for <linux-pci@vger.kernel.org>; Wed, 01 Jun 2022 21:18:23 -0700 (PDT)
+        with ESMTP id S229674AbiFBE2v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 00:28:51 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4639D62A2C
+        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 21:28:50 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id h18so2695137ilj.7
+        for <linux-pci@vger.kernel.org>; Wed, 01 Jun 2022 21:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=p4T4wm5J/GeyXB6+xr0MQzq9TS2FAigMuMi/ZAyxUPQ=;
-        b=bx6HKYDxpU8EGJQsoWFxK9RX0pu1O/OGkIDUNGV32uwgDAyOw5u4oIXLHtGIpSwVwt
-         l5Stb20r7dfY2Dg7iVq3BRcKJsTVY7gxqWWXlzG/Noszcrx4+vlAWpXgAJp/vezieAfK
-         MvL/NqHZCLiPJwnnNgs0ZITr9OZvKjBaq7+HsEfVXOAZ/6UFVsHOLSRzt1H1sHjbQt1H
-         pC2xwQ76VwmcjMPQjXtzuHNDlkCBCeUrPGnlpRoK0uH32FEMIs3EKzhghCBrKRPf31VT
-         7puwAA3mlI044lrwnTzRu8kTsuD55IazPnifq5DaHbvVccGiuQK+ZlBhJ1OnV64sELMn
-         DaHg==
+        bh=FFqjWV2Ith82CnZrH8dD4ZFb6IS0NIVNKzvmGau+WJ4=;
+        b=HaB/VBetc4zrPwsBU021Xh7S8nPC7puqH2WPN8J0U81JuV+1OXDuPrYY6ZPSldxYME
+         PNdmLBFEhGM9JYbsyv/r5E+kDKuTSBxep++t3HfcYfWqp4VQKFwL7bZyOqXQngztH7lw
+         GrtMDEZIles+Cy2U669M10WKe1Mg890Nee6u0VAGu1WpOF2LVRwQHaiHCK5tNJgtNcrV
+         FVrCW3kvvzj98ykZwgNrYxYGTPPk8WNroSq0EVGLz7AJuEAsdl/nZfjsXuld60JxTUGZ
+         0KqDO0ZdsimVQ2hnxETpZG6JnRQIrM+2LdhY6Zr6z4x8wLCVaFBUWVmSlM0K4ay4+Pm8
+         RrDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p4T4wm5J/GeyXB6+xr0MQzq9TS2FAigMuMi/ZAyxUPQ=;
-        b=WK/r+uUZX09b9VMDwBP+0iU9tM70duGd7NS0a7Ii21VoXWIFAwhnQxE1vhiCp1Vtch
-         KCNeTjA8GPwkUZyhF2IoKy+PjMC1+QfpHF3Mo1Y+6qq7kbPLlJmLdan8xiwe/jN42duo
-         8c1i/xZEN4HXNSwVR7SZBSbI92F7SXz+eN8HG66IMArYeA28PrbNXg5Mt2Rjjg5SNFsV
-         sPnx2cpmuAqwdOlnrdYZBVhtP7sGaTe/gGIbRB6sOWv5MpcscdldMibIFRSxcOlFTjEW
-         uxAeD4sv6C+MguCEN1inJxs+v0nJ+7jXO+J1ahfKinkFW2tE2YTsVf+DP3zynBRDitjm
-         xA1A==
-X-Gm-Message-State: AOAM530OoECug4TkpQPfRACIunq24aG/7dTWnbGCxekbW+tKS5vCsBm8
-        6cE0Z5qSYgf7hvKPAlGIwdvSFk1lki1ri3djKQ0=
-X-Google-Smtp-Source: ABdhPJx041YUx417mLtxkypa9K6m3/s50fNgUXbTsPnSy2cz7UlaPuQYkwtcWquof7J15D+OtK0klWoQQw7RognSdmE=
-X-Received: by 2002:a92:d10e:0:b0:2d3:a495:d535 with SMTP id
- a14-20020a92d10e000000b002d3a495d535mr2017833ilb.54.1654143502827; Wed, 01
- Jun 2022 21:18:22 -0700 (PDT)
+        bh=FFqjWV2Ith82CnZrH8dD4ZFb6IS0NIVNKzvmGau+WJ4=;
+        b=sOE2H5E8dZznPEDLYJ7+5icfo3MGxNblM1OuBxlGQyirfwTqUnzlWfuFYxAH+Owy5V
+         K4WLTrCYrLAu2RQFkemx7IXh5E7jwCPyYNaFAYZ0h+nr6f7MD2mQC/gBoVe1vUEw75Ia
+         yoGVyq73++QbH2ROukQ03Lw6MVekIa5a2bus1dwLMeZdCRB0Cn2JvFaUehRZEYMI3s5m
+         GyAroJOlVEcq8T4vxzodZ8YeMw3xVcs0FZdU6CjL8Tu0hwAvyFNrgZCF2wVmANcSotX8
+         BIehDqgViuSC2Zk3lgLu2qgT2hluu+qE5exVmPHDLakEq1MxU09pfVmFvLztkfGe1jJ5
+         rwFw==
+X-Gm-Message-State: AOAM531WCZXRWQEbK8KfI5/l/tLk/3PkUge3Lyv/0apgbL/hLED1AFxh
+        tPM/iJNFNLQ3CLx7ryigf+6+Z9yWrQDHzZRrMBo=
+X-Google-Smtp-Source: ABdhPJy6uk+uYcXnJnaXGZoAoOdjPJ/9jaKnTzMP2O7XfZPbbsSA9ttV9Erc7QdNULLnFtFsJHvuwWRifC/xTThHRk0=
+X-Received: by 2002:a92:194c:0:b0:2c8:2a07:74e7 with SMTP id
+ e12-20020a92194c000000b002c82a0774e7mr2088892ilm.272.1654144129684; Wed, 01
+ Jun 2022 21:28:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220430084846.3127041-2-chenhuacai@loongson.cn> <20220601020806.GA793482@bhelgaas>
-In-Reply-To: <20220601020806.GA793482@bhelgaas>
+References: <20220430084846.3127041-4-chenhuacai@loongson.cn> <20220531231407.GA795410@bhelgaas>
+In-Reply-To: <20220531231407.GA795410@bhelgaas>
 From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Thu, 2 Jun 2022 12:18:13 +0800
-Message-ID: <CAAhV-H7xJMpQiS4GCuVdit-y5GiAwJ-BpT_Mm0T1UVmHBHkM6w@mail.gmail.com>
-Subject: Re: [PATCH V13 1/6] PCI: loongson: Use generic 8/16/32-bit config ops
- on LS2K/LS7A
+Date:   Thu, 2 Jun 2022 12:28:40 +0800
+Message-ID: <CAAhV-H5c5ytuaG5dk+bXwRKiM1Mxfut_2uaZfFK1JUiO2VkqZA@mail.gmail.com>
+Subject: Re: [PATCH V13 3/6] PCI: loongson: Don't access unexisting devices
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -74,28 +73,70 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi, Bjorn,
 
-On Wed, Jun 1, 2022 at 10:08 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Wed, Jun 1, 2022 at 7:14 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Sat, Apr 30, 2022 at 04:48:41PM +0800, Huacai Chen wrote:
-> > LS2K/LS7A support 8/16/32-bits PCI config access operations via CFG1, so
-> > we can disable CFG0 for them and safely use pci_generic_config_read()/
-> > pci_generic_config_write() instead of pci_generic_config_read32()/pci_
-> > generic_config_write32().
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> On Sat, Apr 30, 2022 at 04:48:43PM +0800, Huacai Chen wrote:
+> > On LS2K/LS7A, some unexisting devices don't return 0xffffffff when
+> > scanning. This is a hardware flaw but we can only avoid it by software
+> > now.
 >
-> After removing cast below,
+> s/unexisting/non-existant/ (many occurrences: subject line, commit
+> log, comments below)
 OK, thanks.
+
+>
+> What happens in other situations that normally cause Unsupported
+> Request or similar errors?  For example, memory reads/writes to a
+> device in D3hot should cause an Unsupported Request error.  I'm
+> wondering whether other error handling assumptions might be broken
+> on LS2K/LS7A.
+Hardware engineers told me that the problem is due to pin
+multiplexing, under some configurations, a PCI device is unusable but
+the read request doesn't return 0xffffffff.
+
+>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  drivers/pci/controller/pci-loongson.c | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> > index adbfa4a2330f..48316daa1f23 100644
+> > --- a/drivers/pci/controller/pci-loongson.c
+> > +++ b/drivers/pci/controller/pci-loongson.c
+> > @@ -138,6 +138,8 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
+> >                              int where)
+> >  {
+> >       unsigned char busnum = bus->number;
+> > +     unsigned int device = PCI_SLOT(devfn);
+> > +     unsigned int function = PCI_FUNC(devfn);
+> >       struct loongson_pci *priv = pci_bus_to_loongson_pci(bus);
+> >
+> >       if (pci_is_root_bus(bus))
+> > @@ -147,8 +149,13 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
+> >        * Do not read more than one device on the bus other than
+> >        * the host bus. For our hardware the root bus is always bus 0.
+> >        */
+> > -     if (priv->data->flags & FLAG_DEV_FIX &&
+> > -                     !pci_is_root_bus(bus) && PCI_SLOT(devfn) > 0)
+> > +     if ((priv->data->flags & FLAG_DEV_FIX) && bus->self) {
+> > +             if (!pci_is_root_bus(bus) && (device > 0))
+> > +                     return NULL;
+> > +     }
+> > +
+> > +     /* Don't access unexisting devices */
+> > +     if (pci_is_root_bus(bus) && (device >= 9 && device <= 20 && function > 0))
+>
+> Yuck.  This is pretty nasty magic.  If this is something that might be
+> fixed in future versions of the hardware, maybe you should factor this
+> out into a function pointer in loongson_pci_data or something.
+OK, seems providing a pdev_is_existant() is better.
 
 Huacai
 >
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->
-> > @@ -193,20 +220,20 @@ static int loongson_pci_probe(struct platform_device *pdev)
+> >               return NULL;
 > >
-> >       priv = pci_host_bridge_priv(bridge);
-> >       priv->pdev = pdev;
-> > -     priv->flags = (unsigned long)of_device_get_match_data(dev);
-> > +     priv->data = (struct loongson_pci_data *)of_device_get_match_data(dev);
->
-> No cast needed.
+> >       /* CFG0 can only access standard space */
+> > --
+> > 2.27.0
+> >
