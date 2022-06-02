@@ -2,63 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18D9553BA9B
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 16:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A04E53BB5E
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 17:09:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235791AbiFBOVX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 10:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32882 "EHLO
+        id S236374AbiFBPIx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 11:08:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232088AbiFBOVW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 10:21:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E9C725D5D9;
-        Thu,  2 Jun 2022 07:21:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C3795B81F5D;
-        Thu,  2 Jun 2022 14:21:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 812E9C385A5;
-        Thu,  2 Jun 2022 14:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654179679;
-        bh=IiJxTBcEwl7M5vIZS8teso/henc5AJqsVFL+AueJTAE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MhSDMXnA9TMiAPAoEYzQgCs+A92HzGKHckeOllnT5D7A72ZFaHbYE/kVcX7pV30fx
-         Bg/v8Z/O/W0ih95pa3+A5Zd8xxvkcWk8pWdW4nfoROrSbc0rFRk9rOTgGmefA/Q9Rs
-         F+C5ZbojAqRP0njyUfkLGlGpzMIDW+VxwsQEdPQ7HD94g9oexZqMW0HOzYUZGUcJpU
-         9qcp/gitEp/uYUeoX+M8imMX7zV0N4n6sAkayQBa31AuieDgn7PW+BX+9xqX2E27Ad
-         sI6Q6qdlTR6Pwm6qo6fV8bdaMEsAXu6oG8K5zxQYe+PrG4hAlmE6lusTFchtiTX7Gf
-         XiUyIKrz9La5Q==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1nwlhM-0007nD-Fh; Thu, 02 Jun 2022 16:21:16 +0200
-Date:   Thu, 2 Jun 2022 16:21:16 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S236386AbiFBPIw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 11:08:52 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B30706B7D6;
+        Thu,  2 Jun 2022 08:08:51 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id m82so6824384oif.13;
+        Thu, 02 Jun 2022 08:08:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pHVMppeew5tvngB9V7RVRiVw3/EcQO9cXfk5fahNvLU=;
+        b=fBxcKX6i+esqGFur/dZk6XvOGTQNB4GYwtI9V+JmIS9Yw7q1pFS0UETlEPSepPLrpB
+         SRDu417ZJxiTn1YPUu/Na0cAuKnegfbp7wXvhLtOZ8DvLPDCa4GVt9vDZ5/HxwHHr/WP
+         AM6mMeI1RTgBdRBznhlieHvlX7tcAaJ4a0EINyx956F84s8nQOx4w8+MQKb3Aw6SxXse
+         znmmAxnJ/d3RH/52PFjKykvo0PaeoqTLy9nYozTYe7l6CQZzMNAkRM5xdtYzKB3EExAI
+         P3O3UMhUTYHvZflT3fBh8nENCKUfyFYh1/xGbGp0QrSAD8ieDFseBB0OVsMz1xtgV9fs
+         XwkQ==
+X-Gm-Message-State: AOAM530rPQRLldzk8qBa4AU27AfkyXbsDCdjMxa9TvZ/Y6XxYup1Oscm
+        Q6TKx93n+PUrtlAFZXaxfA==
+X-Google-Smtp-Source: ABdhPJwI6NXiIW3dX0C54wwELhLgM1CsiWXpZ2l+oWAZfXgMWDCL7fHj3aUVKFwUwLojjrteAyY0kA==
+X-Received: by 2002:a05:6808:13d4:b0:32e:3651:bbb1 with SMTP id d20-20020a05680813d400b0032e3651bbb1mr1707443oiw.86.1654182530993;
+        Thu, 02 Jun 2022 08:08:50 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id s11-20020a4adb8b000000b0035eb4e5a6d2sm2326257oou.40.2022.06.02.08.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jun 2022 08:08:50 -0700 (PDT)
+Received: (nullmailer pid 2330349 invoked by uid 1000);
+        Thu, 02 Jun 2022 15:08:50 -0000
+Date:   Thu, 2 Jun 2022 10:08:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Sven Peter <sven@svenpeter.dev>,
+        Hector Martin <marcan@marcan.st>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v12 0/8] PCI: qcom: Fix higher MSI vectors handling
-Message-ID: <YpjHXIbCoLC394dJ@hovoldconsulting.com>
-References: <20220523181836.2019180-1-dmitry.baryshkov@linaro.org>
+        devicetree@vger.kernel.org, Mark Kettenis <kettenis@openbsd.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: PCI: apple: Add missing 'power-domains'
+ property
+Message-ID: <20220602150850.GA2330255-robh@kernel.org>
+References: <20220531215815.2408477-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220523181836.2019180-1-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20220531215815.2408477-1-robh@kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,33 +67,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 23, 2022 at 09:18:28PM +0300, Dmitry Baryshkov wrote:
-> I have replied with my Tested-by to the patch at [2], which has landed
-> in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
-> Add support for handling MSIs from 8 endpoints"). However lately I
-> noticed that during the tests I still had 'pcie_pme=nomsi', so the
-> device was not forced to use higher MSI vectors.
+On Tue, 31 May 2022 16:58:14 -0500, Rob Herring wrote:
+> The 'unevaluatedProperties' schema checks is not fully working and doesn't
+> catch some cases where there's a $ref to another schema. A fix is pending,
+> but results in new warnings in examples.
 > 
-> After removing this option I noticed that hight MSI vectors are not
-> delivered on tested platforms. After additional research I stumbled upon
-> a patch in msm-4.14 ([1]), which describes that each group of MSI
-> vectors is mapped to the separate interrupt. Implement corresponding
-> mapping.
+> The Apple PCIe host schema is missing 'power-domains' in the schema.
+> The example has 3 power domains. However, this is wrong too as actual
+> dts files have a single power domain and Sven confirmed 1 is correct.
 > 
-> The first patch in the series is a revert of  [2] (landed in pci-next).
-> Either both patches should be applied or both should be dropped.
+> Cc: Sven Peter <sven@svenpeter.dev>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+>  - Correct the power-domains to be 1 and update the example
+> ---
+>  Documentation/devicetree/bindings/pci/apple,pcie.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> Patchseries dependecies: [3] (for the schema change).
-> 
-> Changes since v11 (suggested by Johan):
->  - Added back reporting errors for the "msi0" interrupt,
->  - Stopped overriding num_vectors field if it is less than the amount of
->    MSI vectors deduced from interrupt list,
->  - Added a warning (and an override) if the host specifies more MSI
->    vectors than available,
->  - Moved has_split_msi_irq variable to the patch where it is used.
 
-You forgot to CC me this version. Please remember to keep reviewers on
-CC.
-
-Johan
+Applied, thanks!
