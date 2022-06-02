@@ -2,104 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4857353BCE8
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 852F753BD1C
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 19:19:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237292AbiFBQzT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 12:55:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35008 "EHLO
+        id S236551AbiFBRTT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 13:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237395AbiFBQzS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:55:18 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BE0E280B04;
-        Thu,  2 Jun 2022 09:55:17 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 252ElSe0030355;
-        Thu, 2 Jun 2022 16:55:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : reply-to : to : cc : date : in-reply-to : references : content-type
- : mime-version : content-transfer-encoding; s=pp1;
- bh=3QGpyi15ADQCpJqFxbfSJxJ4l8rD4MAyDEb7SZzXCj8=;
- b=LKVwfCdR/gdDCMqaYq7lGuc0q3jIodDSqDS17Av/8LOX0k26neKYHdEZZYT86kQ13EVV
- o1bPU6o43rpEPpx3H6gLLEIZ2RFXp5JjLxv/kSKTmDejIlSap0EKOpM1dp0gHAz8vSZ1
- xxLp1s5jBhFVPm7P0Jtf6kXust9njJxC9iFPt7nyYDcFSoDcp/ZXRysbxXZcS/3sJsCw
- mnZq9fNGveojqhVjSBlC18ZUK+ZtChNztizaVYqZzdIyXiaJLPExGB8kOfzw75J/I4zu
- v/v0WEAxmJbv2uvbosXoneMMFakosbff7bLfnzhOEs3jvLUYegbPZnsXs1NDRkF2+l30 Jg== 
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gey95aa8b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jun 2022 16:55:13 +0000
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 252Gq6jH003656;
-        Thu, 2 Jun 2022 16:55:12 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01dal.us.ibm.com with ESMTP id 3gcxt5urq9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jun 2022 16:55:12 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 252GtBWd32833926
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Jun 2022 16:55:11 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D82678072;
-        Thu,  2 Jun 2022 16:55:11 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BFC957806B;
-        Thu,  2 Jun 2022 16:55:10 +0000 (GMT)
-Received: from [IPv6:2601:5c4:4300:c551:a71:90ff:fec2:f05b] (unknown [9.211.86.50])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Jun 2022 16:55:10 +0000 (GMT)
-Message-ID: <575d1720aa070bf46097510a6c29c2e91276ff7d.camel@linux.ibm.com>
-Subject: Re: Fwd: [Bug 216059] New: Scsi host number of Adaptec RAID
- controller changes upon a PCIe hotplug and re-insert
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     bjorn@helgaas.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        sagar.biradar@microchip.com
-Date:   Thu, 02 Jun 2022 12:55:09 -0400
-In-Reply-To: <CABhMZUXf1hD-phj5p2BB62WC9eK9SRZUOutsfSinUKf_bWCC2g@mail.gmail.com>
-References: <bug-216059-41252@https.bugzilla.kernel.org/>
-         <CABhMZUXf1hD-phj5p2BB62WC9eK9SRZUOutsfSinUKf_bWCC2g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 
+        with ESMTP id S235222AbiFBRTS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 13:19:18 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8206E20873B
+        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 10:19:17 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id u8so3984299qvj.2
+        for <linux-pci@vger.kernel.org>; Thu, 02 Jun 2022 10:19:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=s4YbZJYHvK3nVAxdvdm+/MuYfvjkcChJJ4+lAokhsws=;
+        b=oY3UkNUXzvT4gdwz2capbciaRVMUwQe4uTXMNLZq5rB+SzgWV5Y9KoY1sDKwk8gWEZ
+         3+Q6uw1zQKFy/Unx4HtSstHVhLVkyZWxIMc80Ov1HAVUKCwD358EREeYDHhZDZ8k2MZs
+         bhOn53kb4QxCMIITNdm+0c1NDnpndPfQjTJuD8TnE5Uv3cFfjqWJqQft0Z4nj9YH3uBX
+         nPBbjR1L9pvnoVrAHHIKs0Q9BrMid/o8PxXfUbP6XGG/0m5N+an4nPqyjM2uURiJ8hW5
+         nebfcv+yWDiGXnYLe+dR4uJdRKeLgQOn7tZfDT3mAn3r317E5qS4d++iGATXbWfBN5kK
+         ZpSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=s4YbZJYHvK3nVAxdvdm+/MuYfvjkcChJJ4+lAokhsws=;
+        b=1OzuXrA5o/hnFQKyvkhqCeUrSWgL9OVe+K6IeCSS8VpkOPOmOjYbkxKnRHWCmz3Sbo
+         bE3oD7tYVdnrpC3S40JpSqgpf3zn7zHp/u8PHAz9f8btlNlh9CT32dV/GoJiQu2d4FPm
+         axN+jFSuNzGbk8kUCFFJyKgpGvqz5t/T7TfEHAQeFXHtexhe5+QN4cn7lrYvNjBNby6i
+         IsUoxJ4n47mI4ehiLwfbxk9ndIf3uUcjOVnpB1cQfpTocoZAZt3xIVcr6QZfQjfLJWaF
+         cFpxJMRTS/2sUTn1PJ9j9kBPSCVHs5seuSEPXIB3uX8euPUm2f8a/+FsfaWODxSSzCL2
+         83HA==
+X-Gm-Message-State: AOAM5312HzpLjnlWUyQg2+UfJP3YjMGqdizCEy/AS0tsKhjeL+xZAapH
+        V3+hT1TLnPtFAt/64hY/MCR5Sg==
+X-Google-Smtp-Source: ABdhPJyTeRjkxp4FkIVBkBdxqYlIi1Ql4U5vaRWOEfB4UJA8nUT6ExwG7uYWv1AjNIltcvnn29cQ7w==
+X-Received: by 2002:ad4:5b81:0:b0:465:ded8:780 with SMTP id 1-20020ad45b81000000b00465ded80780mr6281647qvp.119.1654190356566;
+        Thu, 02 Jun 2022 10:19:16 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id p200-20020a3742d1000000b0069fc13ce1e7sm3510487qka.24.2022.06.02.10.18.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jun 2022 10:18:55 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1nwoSV-00GUM1-QB; Thu, 02 Jun 2022 14:18:07 -0300
+Date:   Thu, 2 Jun 2022 14:18:07 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+Message-ID: <20220602171807.GM2960187@ziepe.ca>
+References: <20220407154717.7695-1-logang@deltatee.com>
+ <20220407154717.7695-21-logang@deltatee.com>
+ <20220527125501.GD2960187@ziepe.ca>
+ <a2590e27-41e8-59dc-3576-b5b8d716a198@deltatee.com>
+ <20220527190307.GG2960187@ziepe.ca>
+ <d336cfe8-2451-04c3-a2ce-0e8e47afd1e3@deltatee.com>
+ <20220602000038.GK2960187@ziepe.ca>
+ <400baba7-1cd6-09d4-4de9-2a73f08afc79@deltatee.com>
+ <20220602163059.GL2960187@ziepe.ca>
+ <28824558-4fd5-e054-6c8d-5e045d52f795@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 1RauoihfGJJue41cmpYcEBvCBbb67pAz
-X-Proofpoint-ORIG-GUID: 1RauoihfGJJue41cmpYcEBvCBbb67pAz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-02_05,2022-06-02_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
- clxscore=1011 adultscore=0 bulkscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2204290000 definitions=main-2206020068
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28824558-4fd5-e054-6c8d-5e045d52f795@deltatee.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2022-06-02 at 11:46 -0500, Bjorn Helgaas wrote:
-> From bugzilla.  Reported against PCI, but I think the SCSI host
-> number is determined by SCSI, not by PCI, so I don't see a PCI issue
-> here.
+On Thu, Jun 02, 2022 at 10:45:55AM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> 
+> On 2022-06-02 10:30, Jason Gunthorpe wrote:
+> > On Thu, Jun 02, 2022 at 10:16:10AM -0600, Logan Gunthorpe wrote:
+> > 
+> >>> Just stuff the pages into the mmap, and your driver unprobe will
+> >>> automatically block until all the mmaps are closed - no different than
+> >>> having an open file descriptor or something.
+> >>
+> >> Oh is that what we want?
+> > 
+> > Yes, it is the typical case - eg if you have a sysfs file open unbind
+> > hangs indefinitely. Many drivers can't unbind while they have open file
+> > descriptors/etc.
+> > 
+> > A couple drivers go out of their way to allow unbinding while a live
+> > userspace exists but this can get complicated. Usually there should be
+> > a good reason.
+> 
+> This is not my experience. All the drivers I've worked with do not block
+> unbind with open file descriptors (at least for char devices). I know,
+> for example, that having a file descriptor open of /dev/nvmeX does not
+> cause unbinding to block.
 
-Agree this is SCSI.  However, can we be clear about what the
-expectation is?  Host Number looks like it should be expected to change
-on hot plug/hot unplug, so what is the actual problem?
+So there are lots of bugs in the kernel, and I've seen many drivers
+that think calling cdev_device_del() is all they need to do - and then
+happily allow cdev ioctl's/etc on a de-initialized driver struct.
 
-I get that the driver not releasing the host is causing this, but even
-if it did do instant release, when you hot plug two SCSI devices, you
-stand a good chance of getting a different host number anyway.
+Drivers that do take care of this usually have to put a lock around
+all their fops to serialize against unbind. RDMA uses SRCU, iirc TPM
+used a rwlock. But this is tricky and hurts fops performance.
 
-James
+I don't know what nvme did to protect against this, I didn't notice
+an obvious lock.
 
+> I figured this was the expectation as the userspace process doing
+> the unbind won't be able to be interrupted seeing there's no way to
+> fail on that path. Though, it certainly would make things a lot
+> easier if the unbind can block indefinitely as it usually requires
+> some complicated locking.
 
+As I said, this is what sysfs does today and I don't see that ever
+changing. If you userspace has a sysfs file open then the driver
+unbind hangs until the file is closed.
+
+So, doing as bad as sysfs seems like a reasonable baseline to me.
+
+> Do you have an example of this? What mechanisms are developers using to
+> block unbind with open file descriptors?
+
+Sysfs maintains a refcount with a bias that is basically a fancied
+rwlock. Most places use some kind of refcount triggering a
+completion. Sleep on the completion until refcount is 0 on unbind kind
+of thing.
+
+Jason
