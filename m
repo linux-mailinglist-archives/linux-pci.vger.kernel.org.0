@@ -2,66 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29F8853B27F
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 06:17:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06FF553B283
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 06:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229706AbiFBER2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 00:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56412 "EHLO
+        id S229574AbiFBESZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 00:18:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229724AbiFBER1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 00:17:27 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC345EDDD
-        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 21:17:24 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id p1so2671516ilj.9
-        for <linux-pci@vger.kernel.org>; Wed, 01 Jun 2022 21:17:24 -0700 (PDT)
+        with ESMTP id S229597AbiFBESY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 00:18:24 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE165EDDD
+        for <linux-pci@vger.kernel.org>; Wed,  1 Jun 2022 21:18:23 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id f12so2695100ilj.1
+        for <linux-pci@vger.kernel.org>; Wed, 01 Jun 2022 21:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lBq0mAlcVmKfMDt+bZA6c7kUkxklw8APStcTJx4g33s=;
-        b=Omj2SSxyHbQ4akq7xj/lhIh/r7CFkTRrnTmKWqDIg/BQPOWMiTCLA+IAoj9RV8/w0D
-         QiKgQLrzp6dDOA1oWXOKq94WxVBjakEmDGDnFUDNqC2nUfdfpxmvKugJUVNeSVfLnLIg
-         JXQf9eLX0+82BjDMZTN8tO7Cm5hJWcTNk3y5inSs6tFZEBFmxzHVo9JpG8I4do2yfxhD
-         OOl2cfAfQYgpN4NeJsMHroBFAaNWV3iIdeP0qpjlGNoA0DMyFO01guJF68+RDvGLwock
-         F7qfN9dmOW1CYW0ucnlqIK2RMo0/EgSM/3V2gKgdsEkRoT0kRWrlz6mhLlHQlLPTGd8D
-         /MZQ==
+         :cc;
+        bh=p4T4wm5J/GeyXB6+xr0MQzq9TS2FAigMuMi/ZAyxUPQ=;
+        b=bx6HKYDxpU8EGJQsoWFxK9RX0pu1O/OGkIDUNGV32uwgDAyOw5u4oIXLHtGIpSwVwt
+         l5Stb20r7dfY2Dg7iVq3BRcKJsTVY7gxqWWXlzG/Noszcrx4+vlAWpXgAJp/vezieAfK
+         MvL/NqHZCLiPJwnnNgs0ZITr9OZvKjBaq7+HsEfVXOAZ/6UFVsHOLSRzt1H1sHjbQt1H
+         pC2xwQ76VwmcjMPQjXtzuHNDlkCBCeUrPGnlpRoK0uH32FEMIs3EKzhghCBrKRPf31VT
+         7puwAA3mlI044lrwnTzRu8kTsuD55IazPnifq5DaHbvVccGiuQK+ZlBhJ1OnV64sELMn
+         DaHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lBq0mAlcVmKfMDt+bZA6c7kUkxklw8APStcTJx4g33s=;
-        b=tCNlVlyI6dZrzxZkC9THE67v3pJxuGDAErT17VZ8JijcYxyfJHsGBVCGKgBMJ5uHgs
-         wecz9kRxAb0LQWyp2/f+oB5PPk7Qy1Vn/Abpvsq5ntwaXZLbgkspVZTkojiidNlnvs0Q
-         ap8tjiLpa5+iO+7vECFF2ZGUuqcPmHS1DXeITQN2VQehXC5nuZzjcocoNIc10chw5NRa
-         IHds+v2ZxK5ur6RXSSDQlij1kKcF554JCRPNA7wq1dyqMnws8aM6Brt54TiQYr4I8vtY
-         yDT2yi/oQKohf+k7hC5vFjuiry09tqmcEBi6CDgODjL6XToyejXHj0MCcPcLlidkiuaY
-         oQZA==
-X-Gm-Message-State: AOAM530gsM/XjHI9AzZkNhGglSlM/3uIE+Z+D8Dk7qOszfEbmNvG6gEp
-        ZcB8sodrfUf9/3lr4HJNDc4+e+1eSilpUc+DoCI=
-X-Google-Smtp-Source: ABdhPJwgoI/QGiOA+P+BQGXaty3HpNXisn6ILbkJ2yfCeNB+0CExYtM7/tYJ508g0L0BhD6quWFcElKVDA1HJ3ySRa4=
-X-Received: by 2002:a92:194c:0:b0:2c8:2a07:74e7 with SMTP id
- e12-20020a92194c000000b002c82a0774e7mr2070428ilm.272.1654143443594; Wed, 01
- Jun 2022 21:17:23 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=p4T4wm5J/GeyXB6+xr0MQzq9TS2FAigMuMi/ZAyxUPQ=;
+        b=WK/r+uUZX09b9VMDwBP+0iU9tM70duGd7NS0a7Ii21VoXWIFAwhnQxE1vhiCp1Vtch
+         KCNeTjA8GPwkUZyhF2IoKy+PjMC1+QfpHF3Mo1Y+6qq7kbPLlJmLdan8xiwe/jN42duo
+         8c1i/xZEN4HXNSwVR7SZBSbI92F7SXz+eN8HG66IMArYeA28PrbNXg5Mt2Rjjg5SNFsV
+         sPnx2cpmuAqwdOlnrdYZBVhtP7sGaTe/gGIbRB6sOWv5MpcscdldMibIFRSxcOlFTjEW
+         uxAeD4sv6C+MguCEN1inJxs+v0nJ+7jXO+J1ahfKinkFW2tE2YTsVf+DP3zynBRDitjm
+         xA1A==
+X-Gm-Message-State: AOAM530OoECug4TkpQPfRACIunq24aG/7dTWnbGCxekbW+tKS5vCsBm8
+        6cE0Z5qSYgf7hvKPAlGIwdvSFk1lki1ri3djKQ0=
+X-Google-Smtp-Source: ABdhPJx041YUx417mLtxkypa9K6m3/s50fNgUXbTsPnSy2cz7UlaPuQYkwtcWquof7J15D+OtK0klWoQQw7RognSdmE=
+X-Received: by 2002:a92:d10e:0:b0:2d3:a495:d535 with SMTP id
+ a14-20020a92d10e000000b002d3a495d535mr2017833ilb.54.1654143502827; Wed, 01
+ Jun 2022 21:18:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220601022210.GA796391@bhelgaas> <06d1f3d1-2864-458a-a1f0-ed3047b1cddf@www.fastmail.com>
-In-Reply-To: <06d1f3d1-2864-458a-a1f0-ed3047b1cddf@www.fastmail.com>
+References: <20220430084846.3127041-2-chenhuacai@loongson.cn> <20220601020806.GA793482@bhelgaas>
+In-Reply-To: <20220601020806.GA793482@bhelgaas>
 From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Thu, 2 Jun 2022 12:17:13 +0800
-Message-ID: <CAAhV-H4N6pub_83YY1ym4oWf=qeMFR7B=i0DaJCiLx848BPYAg@mail.gmail.com>
-Subject: Re: [PATCH V13 4/6] PCI: loongson: Improve the MRRS quirk for LS7A
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Huacai Chen <chenhuacai@loongson.cn>,
+Date:   Thu, 2 Jun 2022 12:18:13 +0800
+Message-ID: <CAAhV-H7xJMpQiS4GCuVdit-y5GiAwJ-BpT_Mm0T1UVmHBHkM6w@mail.gmail.com>
+Subject: Re: [PATCH V13 1/6] PCI: loongson: Use generic 8/16/32-bit config ops
+ on LS2K/LS7A
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -74,73 +74,28 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi, Bjorn,
 
-On Wed, Jun 1, 2022 at 8:00 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+On Wed, Jun 1, 2022 at 10:08 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
->
->
-> =E5=9C=A82022=E5=B9=B46=E6=9C=881=E6=97=A5=E5=85=AD=E6=9C=88 =E4=B8=8A=E5=
-=8D=883:22=EF=BC=8CBjorn Helgaas=E5=86=99=E9=81=93=EF=BC=9A
-> > On Sat, Apr 30, 2022 at 04:48:44PM +0800, Huacai Chen wrote:
-> >> In new revision of LS7A, some PCIe ports support larger value than 256=
-,
-> >> but their maximum supported MRRS values are not detectable. Moreover,
-> >> the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> >> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> >> will actually set a big value in its driver. So the only possible way
-> >> is configure MRRS of all devices in BIOS, and add a pci host bridge bi=
-t
-> >> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
-> >>
-> >> However, according to PCIe Spec, it is legal for an OS to program any
-> >> value for MRRS, and it is also legal for an endpoint to generate a Rea=
-d
-> >> Request with any size up to its MRRS. As the hardware engineers say, t=
-he
-> >> root cause here is LS7A doesn't break up large read requests. In detai=
-l,
-> >> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Re=
-ad
-> >> request with a size that's "too big" ("too big" means larger than the
-> >> PCIe ports can handle, which means 256 for some ports and 4096 for the
-> >> others, and of course this is a problem in the LS7A's hardware design)=
-.
+> On Sat, Apr 30, 2022 at 04:48:41PM +0800, Huacai Chen wrote:
+> > LS2K/LS7A support 8/16/32-bits PCI config access operations via CFG1, so
+> > we can disable CFG0 for them and safely use pci_generic_config_read()/
+> > pci_generic_config_write() instead of pci_generic_config_read32()/pci_
+> > generic_config_write32().
 > >
-> > This seems essentially similar to ks_pcie_quirk() [1].  Why are they
-> > different, and why do you need no_inc_mrrs, when keystone doesn't?
-> >
-> > Or *does* keystone need it and we just haven't figured that out yet?
-> > Are all callers of pcie_set_readrq() vulnerable to issues there?
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 >
-> Yes actually keystone may need to set this flag as well.
->
-> I think Huacai missed a point in his commit message about why he removed
-> the process of walking through the bus and set proper MRRS. That=E2=80=99=
-s
-> because Loongson=E2=80=99s firmware will set proper MRRS and the only thi=
-ng
-> that Kernel needs to do is leave it as is. no_inc_mrrs is introduced for
-> this purpose.
->
-> In keystone=E2=80=99s case it=E2=80=99s likely that their firmware won=E2=
-=80=99t do such thing, so
-> their workaround shouldn=E2=80=99t be removed.
-> And  no_inc_mrrs should be set for them to prevent device drivers modifyi=
-ng
-> MRRS afterwards.
-Yes, the fact is the same as Jiaxun says.
+> After removing cast below,
+OK, thanks.
 
 Huacai
 >
-> Thanks
-> - Jiaxun
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 >
+> > @@ -193,20 +220,20 @@ static int loongson_pci_probe(struct platform_device *pdev)
 > >
-> > Whatever we do should be as uniform as possible across host
-> > controllers.
-> >
-> > [1]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/pci/controller/dwc/pci-keystone.c?id=3Dv5.18#n528
-> >
-> --
-> - Jiaxun
+> >       priv = pci_host_bridge_priv(bridge);
+> >       priv->pdev = pdev;
+> > -     priv->flags = (unsigned long)of_device_get_match_data(dev);
+> > +     priv->data = (struct loongson_pci_data *)of_device_get_match_data(dev);
+>
+> No cast needed.
