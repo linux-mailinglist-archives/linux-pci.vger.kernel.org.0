@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97B2153BA8F
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 16:18:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18D9553BA9B
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 16:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233218AbiFBOSb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 10:18:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49504 "EHLO
+        id S235791AbiFBOVX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 10:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232088AbiFBOSb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 10:18:31 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1333C14084B;
-        Thu,  2 Jun 2022 07:18:30 -0700 (PDT)
+        with ESMTP id S232088AbiFBOVW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 10:21:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E9C725D5D9;
+        Thu,  2 Jun 2022 07:21:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B914EB81F60;
-        Thu,  2 Jun 2022 14:18:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56EFCC385A5;
-        Thu,  2 Jun 2022 14:18:27 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C3795B81F5D;
+        Thu,  2 Jun 2022 14:21:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 812E9C385A5;
+        Thu,  2 Jun 2022 14:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654179507;
-        bh=eRDPmv4c+U9nynMolfy/A09s2kdNZCpH6noPD5U/wOg=;
+        s=k20201202; t=1654179679;
+        bh=IiJxTBcEwl7M5vIZS8teso/henc5AJqsVFL+AueJTAE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eylHqOT2Dkwv9k40DXpO3x/oKCSrkDdYa0wD10+LzJHxQQh1F000mVNOnHZAw8p4r
-         Ji6gH5B3uZls6kLBspVxy1FqepkT5TGzB+gYrvJ9BoeRNIZG/fk98UXQoR2YbHhQV1
-         q3gRmcKTVSET2/tioTMfgi32mS9DjVlMOGSSmHFY7OVRx3JA7HC2nr+RHeSdUje05W
-         JVrBDIPN1b86l71e8/+G1RMFBIb1Tx3egW4kUREHHZCx9xoA2KSQuHeOxfCfzKr7e7
-         1UVH0dT/KgbfTaHfZAVblMn4qfbdMDb3KFpeigGzjA6rN9FAFmlUKjqch53oBH6ziL
-         lVMc+znUaFKvQ==
+        b=MhSDMXnA9TMiAPAoEYzQgCs+A92HzGKHckeOllnT5D7A72ZFaHbYE/kVcX7pV30fx
+         Bg/v8Z/O/W0ih95pa3+A5Zd8xxvkcWk8pWdW4nfoROrSbc0rFRk9rOTgGmefA/Q9Rs
+         F+C5ZbojAqRP0njyUfkLGlGpzMIDW+VxwsQEdPQ7HD94g9oexZqMW0HOzYUZGUcJpU
+         9qcp/gitEp/uYUeoX+M8imMX7zV0N4n6sAkayQBa31AuieDgn7PW+BX+9xqX2E27Ad
+         sI6Q6qdlTR6Pwm6qo6fV8bdaMEsAXu6oG8K5zxQYe+PrG4hAlmE6lusTFchtiTX7Gf
+         XiUyIKrz9La5Q==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan@kernel.org>)
-        id 1nwlea-0007mB-7g; Thu, 02 Jun 2022 16:18:24 +0200
-Date:   Thu, 2 Jun 2022 16:18:24 +0200
+        id 1nwlhM-0007nD-Fh; Thu, 02 Jun 2022 16:21:16 +0200
+Date:   Thu, 2 Jun 2022 16:21:16 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -49,15 +49,13 @@ Cc:     Andy Gross <agross@kernel.org>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v12 5/8] PCI: dwc: Handle MSIs routed to multiple GIC
- interrupts
-Message-ID: <YpjGsOT2y2IDTHAU@hovoldconsulting.com>
+Subject: Re: [PATCH v12 0/8] PCI: qcom: Fix higher MSI vectors handling
+Message-ID: <YpjHXIbCoLC394dJ@hovoldconsulting.com>
 References: <20220523181836.2019180-1-dmitry.baryshkov@linaro.org>
- <20220523181836.2019180-6-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220523181836.2019180-6-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220523181836.2019180-1-dmitry.baryshkov@linaro.org>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -68,137 +66,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 23, 2022 at 09:18:33PM +0300, Dmitry Baryshkov wrote:
-> On some of Qualcomm platforms each group of 32 MSI vectors is routed to the
-> separate GIC interrupt. Implement support for such configurations by
-> parsing "msi0" ... "msiN" interrupts and attaching them to the chained
-> handler.
+On Mon, May 23, 2022 at 09:18:28PM +0300, Dmitry Baryshkov wrote:
+> I have replied with my Tested-by to the patch at [2], which has landed
+> in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
+> Add support for handling MSIs from 8 endpoints"). However lately I
+> noticed that during the tests I still had 'pcie_pme=nomsi', so the
+> device was not forced to use higher MSI vectors.
 > 
-> Note, that if DT doesn't list an array of MSI interrupts and uses single
-> "msi" IRQ, the driver will limit the amount of supported MSI vectors
-> accordingly (to 32).
+> After removing this option I noticed that hight MSI vectors are not
+> delivered on tested platforms. After additional research I stumbled upon
+> a patch in msm-4.14 ([1]), which describes that each group of MSI
+> vectors is mapped to the separate interrupt. Implement corresponding
+> mapping.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  .../pci/controller/dwc/pcie-designware-host.c | 61 +++++++++++++++++--
->  1 file changed, 57 insertions(+), 4 deletions(-)
+> The first patch in the series is a revert of  [2] (landed in pci-next).
+> Either both patches should be applied or both should be dropped.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index a076abe6611c..98a57249ecaf 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -288,6 +288,47 @@ static void dw_pcie_msi_init(struct pcie_port *pp)
->  	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI, upper_32_bits(msi_target));
->  }
->  
-> +static const char * const split_msi_names[] = {
-> +	"msi0", "msi1", "msi2", "msi3",
-> +	"msi4", "msi5", "msi6", "msi7",
-> +};
-> +
-> +static int dw_pcie_parse_split_msi_irq(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct device *dev = pci->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	int irq;
-> +	u32 ctrl, max_vectors;
-> +
-> +	/* Parse as many IRQs as described in the devicetree. */
-> +	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++) {
-> +		irq = platform_get_irq_byname_optional(pdev, split_msi_names[ctrl]);
-> +		if (irq == -ENXIO)
-> +			break;
-> +		if (irq < 0)
-> +			return dev_err_probe(dev, irq,
-> +					     "Failed to parse MSI IRQ '%s'\n",
-> +					     split_msi_names[ctrl]);
-> +
-> +		pp->msi_irq[ctrl] = irq;
-> +	}
-> +
-> +	/* If there were no "msiN" IRQs at all, fallback to the standard "msi" IRQ. */
-> +	if (ctrl == 0)
-> +		return -ENXIO;
-> +
-> +	max_vectors = ctrl * MAX_MSI_IRQS_PER_CTRL;
-> +	if (pp->num_vectors > max_vectors) {
-> +		dev_warn(dev, "Exceeding number of MSI vectors, limiting to %d\n", max_vectors);
+> Patchseries dependecies: [3] (for the schema change).
+> 
+> Changes since v11 (suggested by Johan):
+>  - Added back reporting errors for the "msi0" interrupt,
+>  - Stopped overriding num_vectors field if it is less than the amount of
+>    MSI vectors deduced from interrupt list,
+>  - Added a warning (and an override) if the host specifies more MSI
+>    vectors than available,
+>  - Moved has_split_msi_irq variable to the patch where it is used.
 
-%u
+You forgot to CC me this version. Please remember to keep reviewers on
+CC.
 
-break line after last comma?
-
-> +		pp->num_vectors = max_vectors;
-> +	}
-> +	if (!pp->num_vectors)
-> +		pp->num_vectors = max_vectors;
-> +
-> +	return 0;
-> +}
-> +
->  static int dw_pcie_msi_host_init(struct pcie_port *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -296,21 +337,32 @@ static int dw_pcie_msi_host_init(struct pcie_port *pp)
->  	int ret;
->  	u32 ctrl, num_ctrls;
->  
-> -	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-> -	for (ctrl = 0; ctrl < num_ctrls; ctrl++)
-> +	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
->  		pp->irq_mask[ctrl] = ~0;
->  
-> +	if (!pp->msi_irq[0]) {
-> +		ret = dw_pcie_parse_split_msi_irq(pp);
-> +		if (ret < 0 && ret != -ENXIO)
-> +			return ret;
-> +	}
-> +
-> +	if (!pp->num_vectors)
-> +		pp->num_vectors = MSI_DEF_NUM_VECTORS;
-> +	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-> +
->  	if (!pp->msi_irq[0]) {
->  		int irq = platform_get_irq_byname_optional(pdev, "msi");
->  
->  		if (irq < 0) {
->  			irq = platform_get_irq(pdev, 0);
->  			if (irq < 0)
-> -				return irq;
-> +				return dev_err_probe(dev, irq, "Failed to parse MSI irq\n");
->  		}
->  		pp->msi_irq[0] = irq;
->  	}
->  
-> +	dev_dbg(dev, "Using %d MSI vectors\n", pp->num_vectors);
-> +
->  	pp->msi_irq_chip = &dw_pci_msi_bottom_irq_chip;
->  
->  	ret = dw_pcie_allocate_domains(pp);
-> @@ -407,7 +459,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  				     of_property_read_bool(np, "msi-parent") ||
->  				     of_property_read_bool(np, "msi-map"));
->  
-> -		if (!pp->num_vectors) {
-> +		/* for the has_msi_ctrl the default assignment is handled inside dw_pcie_msi_host_init() */
-
-Add the missing "case" after "has_msi_ctrl".
-
-s/inside/in/
-
-Please make this a multiline comment split at < 80 chars.
-
-And follow the comment style of the driver and start with a capital
-letter.
-
-> +		if (!pp->has_msi_ctrl && !pp->num_vectors) {
->  			pp->num_vectors = MSI_DEF_NUM_VECTORS;
->  		} else if (pp->num_vectors > MAX_MSI_IRQS) {
->  			dev_err(dev, "Invalid number of vectors\n");
-
-Looks good now otherwise. 
-
-But please consider Rob's suggestion for generating the interrupt names.
-
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Johan
