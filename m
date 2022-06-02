@@ -2,182 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9926853BCB3
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:46:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E30D53BCCF
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:49:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236841AbiFBQqc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 12:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53928 "EHLO
+        id S235563AbiFBQtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 12:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237194AbiFBQqb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:46:31 -0400
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A2064E8;
-        Thu,  2 Jun 2022 09:46:30 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-30fdbe7467cso22138367b3.1;
-        Thu, 02 Jun 2022 09:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=v48pnG2l3DW4OPOrjRPoqO44bNZ75GO+I5VRu3byFf4=;
-        b=jd67vL8gNQGDRrxFc+veQ+Mp9vWXg3NIZJIrud1GP50t2tnvew5PAmKoYn7Eh7zOz8
-         P0kN8ycfO728HIaemHFjliFUh4EZKTN5ODHGwlWoMezJfEPokb1+0RCvUk75HnsOizAQ
-         F1RsO6Sw0G3Bt/FkDY0uJrbvOnBLDH8S79qJLkLMk5Au2HXp7YyNB4rkpLHRmXuaYqLV
-         jfNtXEsVSnnSQx0fpqyQdqisCSLN+5LVxO54lqlCBj9F4i0vKfvfJR2jyhrDug4GzNIf
-         j/jv/fxB+OD6o7XbQVTtg8inuEczF7ndkwMtEQbk/XK6heveyLnmeA2QcjcB0j6fUnSD
-         bqNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=v48pnG2l3DW4OPOrjRPoqO44bNZ75GO+I5VRu3byFf4=;
-        b=n9KPZw0hHmcVDW9ve+9/Yy/eskDNmko3BtByFgocFKiSmlETd+nwFUep6In/j8a7Zz
-         Gm7zST19gzh6ewsYRazegJx/6xJMqlu1HMaCfxxMUZEeRa8OBY+hUORVGXG6Fru8Dg5/
-         uGLd7Aazw4u49PpvNOq5s3dyZhjXVIYKhYMliGNcdg7diMZN2t1gv0Kzz6mmjbnsf9r5
-         7YNyjA2MwFVPvHcwSGOOZ8J1mJuUO9Wm3FEKkBSJxyX5fn/kPtdMJiwNp221EkqofFJd
-         o6eGlV8/o+uIXNd/sRKxDNUonO84ycOhgG+DEvV7i7B+ULslKFELHZTlhErwQGCjWzHH
-         33iA==
-X-Gm-Message-State: AOAM530qasKstr7O/QGT8jQhX7ctkK9e0smLzihpjQbNuHPIR75rTIYz
-        JFiolFXjzEjgEzEYXyti3lwOU9tEUNMEct69uwU=
-X-Google-Smtp-Source: ABdhPJzZLwbfOVVpsEW0mkvB+lROwtV2O9r0GW22vMfMdHvdctDB5l6BeOJeP6YueHkxYD1EkzHNQ0S5X1t0QRViBuA=
-X-Received: by 2002:a81:47d4:0:b0:2ff:c3d1:c158 with SMTP id
- u203-20020a8147d4000000b002ffc3d1c158mr6487227ywa.388.1654188389901; Thu, 02
- Jun 2022 09:46:29 -0700 (PDT)
+        with ESMTP id S237251AbiFBQtX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:49:23 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80CEF137464;
+        Thu,  2 Jun 2022 09:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=G4jNGHaxScm6QRbg+/bUKEbD3ZVb5hKMPQYYoCPSz9U=; b=PTeaYAOF/4ng1MbqblI0wc/ZgX
+        i5VfwwrtyjYWA/pvSZh6UV7JKtQ9wG/KjAY6EFS4AgDOzIxqxJGmEIpWadj3Ho28i4xmqfhYntJAO
+        JrdI3Y++iHNLCQ1JdqlaHPgjmYyrKWmS/Fp7YazQGJ0ieFbhkp+YrrMxy8wv7mKcAjUfRXmV9EQE4
+        a4AFx87aKsvRfY1XjqZMtlTGWurF7mn+aqy5D/6ZF2Eziu4rlwNKpcJYAdKLbRdXleAhhHCDdc7Kq
+        mwkvfJr+Rq28q712EFrfu8CgUPgSO2xy86e4KyfCtbPG5OAFoNzTk/TMHic0abIyw8cAxRgYjyQUl
+        CvFCr70w==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1nwo0a-00EODR-OS; Thu, 02 Jun 2022 10:49:17 -0600
+Message-ID: <51cc6645-2504-6d01-5626-238ed6ffff04@deltatee.com>
+Date:   Thu, 2 Jun 2022 10:49:15 -0600
 MIME-Version: 1.0
-References: <bug-216059-41252@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216059-41252@https.bugzilla.kernel.org/>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Thu, 2 Jun 2022 11:46:18 -0500
-Message-ID: <CABhMZUXf1hD-phj5p2BB62WC9eK9SRZUOutsfSinUKf_bWCC2g@mail.gmail.com>
-Subject: Fwd: [Bug 216059] New: Scsi host number of Adaptec RAID controller
- changes upon a PCIe hotplug and re-insert
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        sagar.biradar@microchip.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Content-Language: en-CA
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220407154717.7695-1-logang@deltatee.com>
+ <20220407154717.7695-21-logang@deltatee.com>
+ <20220527125501.GD2960187@ziepe.ca>
+ <a2590e27-41e8-59dc-3576-b5b8d716a198@deltatee.com>
+ <20220527190307.GG2960187@ziepe.ca>
+ <d336cfe8-2451-04c3-a2ce-0e8e47afd1e3@deltatee.com>
+ <20220602000038.GK2960187@ziepe.ca>
+ <400baba7-1cd6-09d4-4de9-2a73f08afc79@deltatee.com>
+ <20220602163059.GL2960187@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20220602163059.GL2960187@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: jgg@ziepe.ca, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, dan.j.williams@intel.com, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, bhelgaas@google.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v6 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From bugzilla.  Reported against PCI, but I think the SCSI host number
-is determined by SCSI, not by PCI, so I don't see a PCI issue here.
-
----------- Forwarded message ---------
-From: <bugzilla-daemon@kernel.org>
-Date: Thu, Jun 2, 2022 at 1:53 AM
-Subject: [Bug 216059] New: Scsi host number of Adaptec RAID controller
-changes upon a PCIe hotplug and re-insert
-To: <bjorn@helgaas.com>
 
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216059
+On 2022-06-02 10:30, Jason Gunthorpe wrote:
+> On Thu, Jun 02, 2022 at 10:16:10AM -0600, Logan Gunthorpe wrote:
+> 
+>>> Just stuff the pages into the mmap, and your driver unprobe will
+>>> automatically block until all the mmaps are closed - no different than
+>>> having an open file descriptor or something.
+>>
+>> Oh is that what we want?
+> 
+> Yes, it is the typical case - eg if you have a sysfs file open unbind
+> hangs indefinitely. Many drivers can't unbind while they have open file
+> descriptors/etc.
+> 
+> A couple drivers go out of their way to allow unbinding while a live
+> userspace exists but this can get complicated. Usually there should be
+> a good reason.
+> 
+> The module will already be refcounted anyhow because the mmap points
+> to a char file which holds a module reference - meaning a simple rmmod
+> of the driver shouldn't work already..
 
-            Bug ID: 216059
-           Summary: Scsi host number of Adaptec RAID controller changes
-                    upon a PCIe hotplug and re-insert
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 4.18.11
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: sagar.biradar@microchip.com
-        Regression: No
+Also, I just tried it... If I open a sysfs file for an nvme device (ie.
+/sys/class/nvme/nvme4/cntlid) and unbind the device, it does not block.
+A subsequent read on that file descriptor returns ENODEV. Which is what
+I would have expected.
 
-Created attachment 301088
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301088&action=3Dedit
-The attachments contain the log files which capture before and after cases =
-for
-a hotplug host number change
-
-Summary:
-This issue talks of the smartpqi driver for Adaptec controller, PCIe hotplu=
-g
-and the corresponding SCSI host number
-
-
-The Linux message log shows the host number (e.g. [14:2:0:0] storage -
-/dev/sg27) unexpectedly changing when PCIe hot remove is rapidly followed b=
-y
-PCIe hot add. The problem appears when the two PCIe events occur in quick
-succession (i.e. less than 2 minutes). Because of the timing factor, the is=
-sue
-can appear to be intermittent. The problem has been root caused as a kernel
-issue.
-
-
-
-Investigation:
-Kernel (4.18.11-hotplug-patch) debug prints were added in  the =E2=80=9Cscs=
-i_add_host(
-)=E2=80=9D and =E2=80=9Cscsi_remove_host ( )=E2=80=9D routines. Per the deb=
-ug prints in the log, the
-scsi host number is released after the PCIe hot add event, which forces the
-kernel use a different host number.
-
-(debug prints)
-Line 48: [ 1811.461055] smartpqi 0000:b3:00.0: Debuggg . . .
-pqi_unregister_scsi function, before scsi_remove_host, shost->host_num=3D14
-//smartpqi requests host num 14 to be removed
-Line 83: [ 2012.125750]  (null): Debuggg . . shost->host_no before dev_set_=
-name
-=3D host15
-Line 84: [ 2012.126709] smartpqi 0000:b3:00.0: Debuggg . . . before
-scsi_add_host, shost->host_num=3D15 //upon hot add, kernel allocates host n=
-umber
-15, it should be 14
-Line 132: [ 2014.181784] scsi host14: Debuggg . . in scsi_host_dev_release
-function shost_host_no to be removed =3D 14 //kernel finally frees host num=
-ber
-14, but it=E2=80=99s too late
-
-
-
-Conclusion:
-The kernel is not releasing the host number immediately when the smartpqi
-driver calls the scsi_remove_host() routine. If the PCIe cable is added bac=
-k
-within 2 minutes, the kernel can unexpectedly return a different host numbe=
-r.
-This can lead to applications accessing the wrong device.
-This is a Linux kernel issue and we will be raising a bugzilla on the linux
-kernel.
-
-
-
-Questions:
-Will this be a problem for Amazon? (Wouldn=E2=80=99t they take several minu=
-tes to do
-this, they have to be very careful when hot plugging?)
-Do we need to consider other customers that might use PCIe hot plug in the
-future?
-The problem is observed in kernel V4.18.11, but would V5.04/V5.10 make a
-difference (should we test it ourselves)?
-
-
-
-Consequence:
-Application accesses wrong device. Rebooting system may still result in wro=
-ng
-host number.
-
---
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.
+Logan
