@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E8C653BC67
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:23:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 338E553BC87
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236917AbiFBQX3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 12:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49246 "EHLO
+        id S236935AbiFBQ3l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 12:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236659AbiFBQX3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:23:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C776715A3D
-        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 09:23:27 -0700 (PDT)
+        with ESMTP id S237058AbiFBQ3j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:29:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B216A2632B4
+        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 09:29:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 62F5461590
-        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 16:23:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC6AC385A5;
-        Thu,  2 Jun 2022 16:23:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C984615B3
+        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 16:29:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59BC2C385A5;
+        Thu,  2 Jun 2022 16:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654187006;
-        bh=GEzEbsjaZRmvrXF9Ds6TvkRVO/ISEYsq5UHZcU4vjeU=;
+        s=k20201202; t=1654187377;
+        bh=J1PrWlIrY2xAUApKjn8//ZkQZSRmjNdlWOBUQAicRYc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=YaCSajEkOL3ZCKv01P14/ukIL/L1XRrm5D2nk0BRgRkVJ/VuvSH5BsH7TTC1g8OJB
-         bnDcTSVgZUkTlZRTKU0Y8VU4VI2UQ/5evC+vsUyzeCTsjyKB90ygAnyWJ6PLD95/2L
-         a+X4Dj3URMcptYbo+2E0q9H+xRxT+vd+iR38WZuBczs5uweAHWWrBnG9R84JuOVr/g
-         RwdovuOcYtRpxaCLkIpKBVYaF44tkzHFZapwf3jlBDR6cwZXkUPfUt3bn+oMFrXC5/
-         ubORbVoYxCheWJlBFoyBSjEQXkFBiT+1Y98QZEC0cbYumW5UwWEK9laLDAYJhkd0YK
-         NS3IXeWefn7dg==
-Date:   Thu, 2 Jun 2022 11:23:24 -0500
+        b=S2jYOGVgG+5o/KQq6U8NkEUrAFg26Zu253xA5LppV+bJBenq9WGCZ4D7Fk7LM5rtU
+         O2hXFpiU2yisNZjhTzKBVG7BitT2AhvwWEAF56Ik5rqT/oCKro6qZWojN6gsEGOBE6
+         EBPxligc70vdJTn3njryv0JRiq4nsY0dm8+7Cf04r6o1J/pV4Wy8CfAaAu6yaMde42
+         sx1IsMVH3KqXCdFxIP+oIm/XDOP1AN6+s7/w5GlV23JYBU5R/tpaxtbBMpGflnDBY6
+         hvUZehcWCwtAOu2IumKBKv9xgdq3MonbkjCIde6i2xoCs/Mv/27GYh0Q87hYVJuznW
+         TEz+dbqEPVjzg==
+Date:   Thu, 2 Jun 2022 11:29:35 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Huacai Chen <chenhuacai@gmail.com>
 Cc:     Huacai Chen <chenhuacai@loongson.cn>,
@@ -42,12 +42,12 @@ Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         linux-pci <linux-pci@vger.kernel.org>,
         Xuefeng Li <lixuefeng@loongson.cn>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH V13 3/6] PCI: loongson: Don't access unexisting devices
-Message-ID: <20220602162324.GA21622@bhelgaas>
+Subject: Re: [PATCH V13 5/6] PCI: Add quirk for LS7A to avoid reboot failure
+Message-ID: <20220602162935.GA21834@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H5c5ytuaG5dk+bXwRKiM1Mxfut_2uaZfFK1JUiO2VkqZA@mail.gmail.com>
+In-Reply-To: <CAAhV-H49bwGf8=qs3GSLv-7wZHv_mW05kY4OktgvDviuscgVrg@mail.gmail.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,69 +58,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 02, 2022 at 12:28:40PM +0800, Huacai Chen wrote:
+On Thu, Jun 02, 2022 at 08:48:20PM +0800, Huacai Chen wrote:
 > Hi, Bjorn,
 > 
-> On Wed, Jun 1, 2022 at 7:14 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Sat, Apr 30, 2022 at 04:48:43PM +0800, Huacai Chen wrote:
-> > > On LS2K/LS7A, some unexisting devices don't return 0xffffffff when
-> > > scanning. This is a hardware flaw but we can only avoid it by software
-> > > now.
+> On Wed, Jun 1, 2022 at 7:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 > >
-> > What happens in other situations that normally cause Unsupported
-> > Request or similar errors?  For example, memory reads/writes to a
-> > device in D3hot should cause an Unsupported Request error.  I'm
-> > wondering whether other error handling assumptions might be broken
-> > on LS2K/LS7A.
+> > On Sat, Apr 30, 2022 at 04:48:45PM +0800, Huacai Chen wrote:
+> > > Commit cc27b735ad3a75574a ("PCI/portdrv: Turn off PCIe services
+> > > during shutdown") causes poweroff/reboot failure on systems with
+> > > LS7A chipset.  We found that if we remove "pci_command &=
+> > > ~PCI_COMMAND_MASTER;" in do_pci_disable_device(), it can work
+> > > well. The hardware engineer says that the root cause is that CPU
+> > > is still accessing PCIe devices while poweroff/reboot, and if we
+> > > disable the Bus Master Bit at this time, the PCIe controller
+> > > doesn't forward requests to downstream devices, and also doesn't
+> > > send TIMEOUT to CPU, which causes CPU wait forever (hardware
+> > > deadlock). This behavior is a PCIe protocol violation (Bus
+> > > Master should not be involved in CPU MMIO transactions), and it
+> > > will be fixed in new revisions of hardware (add timeout
+> > > mechanism for CPU read request, whether or not Bus Master bit is
+> > > cleared).
+> >
+> > LS7A might have bugs in that clearing Bus Master Enable prevents the
+> > root port from forwarding Memory or I/O requests in the downstream
+> > direction.
+> >
+> > But this feels like a bit of a band-aid because we don't know exactly
+> > what those requests are.  If we're removing the Root Port, I assume we
+> > think we no longer need any devices *below* the Root Port.
+> >
+> > If that's not the case, e.g., if we still need to produce console
+> > output or save state to a device, we probably should not be removing
+> > the Root Port at all.
 >
-> Hardware engineers told me that the problem is due to pin
-> multiplexing, under some configurations, a PCI device is unusable but
-> the read request doesn't return 0xffffffff.
+> Do you mean it is better to skip the whole pcie_port_device_remove()
+> instead of just removing the "clear bus master" operation for the
+> buggy hardware?
 
-What happens if a driver does a mem read to a device that's in D3hot?
+No, that's not what I want at all.  That's just another band-aid to
+avoid a problem without understanding what the problem is.
 
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > >  drivers/pci/controller/pci-loongson.c | 11 +++++++++--
-> > >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> > > index adbfa4a2330f..48316daa1f23 100644
-> > > --- a/drivers/pci/controller/pci-loongson.c
-> > > +++ b/drivers/pci/controller/pci-loongson.c
-> > > @@ -138,6 +138,8 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
-> > >                              int where)
-> > >  {
-> > >       unsigned char busnum = bus->number;
-> > > +     unsigned int device = PCI_SLOT(devfn);
-> > > +     unsigned int function = PCI_FUNC(devfn);
-> > >       struct loongson_pci *priv = pci_bus_to_loongson_pci(bus);
-> > >
-> > >       if (pci_is_root_bus(bus))
-> > > @@ -147,8 +149,13 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devf
-> > >        * Do not read more than one device on the bus other than
-> > >        * the host bus. For our hardware the root bus is always bus 0.
-> > >        */
-> > > -     if (priv->data->flags & FLAG_DEV_FIX &&
-> > > -                     !pci_is_root_bus(bus) && PCI_SLOT(devfn) > 0)
-> > > +     if ((priv->data->flags & FLAG_DEV_FIX) && bus->self) {
-> > > +             if (!pci_is_root_bus(bus) && (device > 0))
-> > > +                     return NULL;
-> > > +     }
-> > > +
-> > > +     /* Don't access unexisting devices */
-> > > +     if (pci_is_root_bus(bus) && (device >= 9 && device <= 20 && function > 0))
-> >
-> > Yuck.  This is pretty nasty magic.  If this is something that might be
-> > fixed in future versions of the hardware, maybe you should factor this
-> > out into a function pointer in loongson_pci_data or something.
-> OK, seems providing a pdev_is_existant() is better.
-> 
-> Huacai
-> >
-> > >               return NULL;
-> > >
-> > >       /* CFG0 can only access standard space */
-> > > --
-> > > 2.27.0
-> > >
+My point is that apparently we remove a Root Port (which means we've
+already removed any devices under it), and then we try to use a device
+below the Root Port.  That seems broken.  I want to understand why we
+try to use a device after we've removed it.
+
+If the scenario ends up being legitimate and unavoidable, fine -- we
+can figure out a quirk to work around the fact the LS7A doesn't allow
+that access after we clear Bus Master Enable.  But right now the
+scenario smells like a latent bug, and leaving bus mastering enabled 
+just avoids it without fixing it.
+
+Bjorn
