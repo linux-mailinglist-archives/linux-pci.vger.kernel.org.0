@@ -2,51 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB06753BE2E
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 20:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACB3E53BE8D
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 21:18:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236819AbiFBStU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 14:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47944 "EHLO
+        id S238429AbiFBTSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 15:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238246AbiFBStT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 14:49:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BB832F;
-        Thu,  2 Jun 2022 11:49:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BF946B820E3;
-        Thu,  2 Jun 2022 18:49:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11B66C385A5;
-        Thu,  2 Jun 2022 18:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654195755;
-        bh=qdr08bJsfb0RZF+BBb1++E5vfQO1D8e8sXs7QcL6m+k=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EdZOx0fgkqW/TRJPufu/Xyy9YCzLNCBoURxrcjwkBmf4MoV3Ck8FXr3dTuRNfC3aO
-         XC4u0V9WgREHvn6RN6ogVGc0+klOBn1C2UUgxXUEisaFTHB6FElmgzjOLqw4aQ4riG
-         7Zr6xgOtzLWG1BjNhJp2BjwULNjaaeG3lMNLb/q5sSD7xyGJStoPBA3hgHWb27NkXB
-         lhXZxhQxwWXa0wny4wO0GuhePZFeBpfKXp1ijI333VOsL/JpbudKr4tWCmMmWwkIAu
-         wadOiHGmIevhIt9AfVLvKwfW6h8B1KM1JnyA+h64+723DoLZQqXUw5NFU1G46E4Ecw
-         sVpSLpWJQKqFQ==
-Date:   Thu, 2 Jun 2022 13:49:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S238445AbiFBTSQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 15:18:16 -0400
+Received: from hobbes.mraw.org (hobbes.mraw.org [195.154.31.160])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CD33CFDE;
+        Thu,  2 Jun 2022 12:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mraw.org;
+        s=mail2022; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=d4XvQZuUNWiiJkWzK1Brb0QRzliyWqwmPdPvqncZkG8=; b=kro9Z27A4pnNzk/523zcxKFZM3
+        uJcVdPbhN+y/epB9sf3fbg2Ztaut4regb6t74HySs9ZT27dNtG+/eyI0Edf6PSuPYv2XojG4VPdf6
+        ROjZtLX0poOcaVbbPAJx59HUpIfuTsqWauLDZO8/l5nyZuD1XmUpmlQ5RwrFOHuHZ6Ca0JXE9YL87
+        7eucgmbEZYtEoKt0hga39vjnNeAoRr7LGJBQmhcLfp5I4m10E5dxtk8Hb7TGh8xiRVuXsEOPcE//3
+        vA6hmxXkkz9Vqi3mDagdt+NOrr5+ou4XwLycJk9y5MGWeQ09hbD5gdnaTsoRGw/87Q1Pm8hl4HOJp
+        qOsOKKTQ==;
+Received: from 82-64-171-251.subs.proxad.net ([82.64.171.251] helo=mraw.org)
+        by hobbes.mraw.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <kibi@debian.org>)
+        id 1nwqKV-008WAr-7i; Thu, 02 Jun 2022 21:17:59 +0200
+Date:   Thu, 2 Jun 2022 21:17:57 +0200
+From:   Cyril Brulebois <kibi@debian.org>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, james.dutton@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Jim Quinlan <jim2101024@gmail.com>
-Subject: [GIT PULL] PCI fixes for v5.19
-Message-ID: <20220602184913.GA36164@bhelgaas>
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Fix regression regarding missing
+ PCIe linkup
+Message-ID: <20220602191757.pqictbfarmvlf72f@mraw.org>
+Organization: Debian
+References: <20220528224423.7017-1-jim2101024@gmail.com>
+ <20220528224423.7017-2-jim2101024@gmail.com>
+ <20220529011526.4lzuvkv5zclwntce@mraw.org>
+ <d7a5a0d8-5d27-548f-bc94-0e7d116cc3f2@i2se.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="e6x3pkp6gefd6bwh"
 Content-Disposition: inline
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <d7a5a0d8-5d27-548f-bc94-0e7d116cc3f2@i2se.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,43 +69,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The following changes since commit 3cc30140dbe2df9b5ac000898e0ae3d1df980f2c:
 
-  Merge tag 'pci-v5.19-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci (2022-05-27 15:25:10 -0700)
+--e6x3pkp6gefd6bwh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-are available in the Git repository at:
+Hi Stefan,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.19-fixes-1
+Stefan Wahren <stefan.wahren@i2se.com> (2022-05-30):
+> i think we should better trust the results based on the v5.18 tag. During
+> the merge window, regressions from other subsystems are possible.
 
-for you to fetch changes up to 833e53a4ffe92e742e99347c68d99dc33986598b:
+Alright, that looks like a great plan.
 
-  MAINTAINERS: Update Lorenzo Pieralisi's email address (2022-05-31 15:06:19 -0500)
+Before getting your answer, I had tried taking the reboot part out of
+the equation, but I found out that even cold boots might fail with the
+mmc storage.
 
-----------------------------------------------------------------
-PCI fixes:
+I haven't been able to conduct a systematic testing of the patch on top
+of the v5.18 tag yet (say, 10 or 20 cold boots, and the same with
+reboots) due to strong work constraints these past few days, but that's
+definitely still on my short term todo list (hopefully before the end of
+the week).
 
-  - Revert brcmstb patches that broke booting on Raspberry Pi Compute
-    Module 4 (Bjorn Helgaas)
+Sorry I didn't manage to get that lined up before Bjorn's pull request.
 
-  - Fix bridge_d3_blacklist[] error that overwrote the existing Gigabyte
-    X299 entry instead of adding a new one (Bjorn Helgaas)
 
-  - Update Lorenzo Pieralisi's email address in MAINTAINERS (Lorenzo
-    Pieralisi)
+Cheers,
+--=20
+Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+D-I release manager -- Release team member -- Freelance Consultant
 
-----------------------------------------------------------------
-Bjorn Helgaas (5):
-      Revert "PCI: brcmstb: Do not turn off WOL regulators on suspend"
-      Revert "PCI: brcmstb: Add control of subdevice voltage regulators"
-      Revert "PCI: brcmstb: Add mechanism to turn on subdev regulators"
-      Revert "PCI: brcmstb: Split brcm_pcie_setup() into two funcs"
-      PCI/PM: Fix bridge_d3_blacklist[] Elo i2 overwrite of Gigabyte X299
+--e6x3pkp6gefd6bwh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Lorenzo Pieralisi (1):
-      MAINTAINERS: Update Lorenzo Pieralisi's email address
+-----BEGIN PGP SIGNATURE-----
 
- .mailmap                              |   1 +
- MAINTAINERS                           |  16 +--
- drivers/pci/controller/pcie-brcmstb.c | 257 ++++------------------------------
- drivers/pci/pci.c                     |   2 +
- 4 files changed, 41 insertions(+), 235 deletions(-)
+iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmKZDOEACgkQ/5FK8MKz
+VSAxHw//UqQVStG4n6PM9GwjjAexTX9ACfI8AU1/Hz9oPvhlcB95cjd/LnJUm2yP
+y2xSb5A19sNey7lYh3jga7Q2mh6nuu+lw7gqt2NfrHwN4ni/EP+0xrBbleMgEooh
+NW7xVd3aF1E7zTGGsIgl8H0CgfI2Mv+EhY/gXdV32iPw3puLYC6x28NICKsVlImr
+BoMbMVEK8gWjxT0SLxRiTj11doR+Dccbely2DNSrIe+p/aSiH5nTtAsnagz0eYym
+sijizAkR7luWZb+Q8MUpGpD9Ptp0oXITGKsBAPTHPotnrTE2DcF1k9PXLdKm72/L
+hJdWamlj3Biuz9q6uOAMqFGFBLxqEr58p/S0ph89CRXuK1w97xpfhUn9lmyGI50W
+YsrQhg86cKmRIF7gX2Ax/OceS3WabTXuk77zm+8IhF99DUt8wxWML1H8Xbqo8CMG
+09f6Rfa/FOfHVB3avbdqVHJ7LYqb6F9iqW02QLbMwlJmhEKB7VAeSbty1S+dqcHn
+JEWLieJ9PRETIzp66BEs5BRrivJGFv0lGD8joDOKFZf3VH2tzLwH71aaAgK4yXA0
+jRy6HlGyVt0SLWgFXltuI6MCh771PEmPA7kOmb8uDrM4LmN4h/BYk8XjYDNrUHa+
+Hd+XcATSfWkJQSTMuVfNfwFDVFqRVaSwjLy+UwcmTmqCA+wQLC8=
+=JkNy
+-----END PGP SIGNATURE-----
+
+--e6x3pkp6gefd6bwh--
