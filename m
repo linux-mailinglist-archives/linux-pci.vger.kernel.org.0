@@ -2,151 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B636E53C030
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 23:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0B1953C094
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 00:05:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238896AbiFBVFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 17:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
+        id S239528AbiFBWFU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 18:05:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239356AbiFBVFt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 17:05:49 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E273527C;
-        Thu,  2 Jun 2022 14:05:48 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id l9-20020a056830268900b006054381dd35so4266567otu.4;
-        Thu, 02 Jun 2022 14:05:48 -0700 (PDT)
+        with ESMTP id S236145AbiFBWFR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 18:05:17 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA64344C8
+        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 15:05:16 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 7so5023086pga.12
+        for <linux-pci@vger.kernel.org>; Thu, 02 Jun 2022 15:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=HGr/+ymyczZCHw1APWris6lQW2YQvCdg22oqh/0jGeA=;
-        b=oAFasd9GCb80UlOnD8ktOGBBXm//vGHyTigWKupoKRuESokdf5g57nMovIVR09q4gj
-         4O2dkfFWSs7ZN99ll4mP3Zj80Oy5/uDK7uodA7GUKsQfI7SVfpkRXHCJ8QuDVildyx/2
-         zcyQCWL06W71MARQtw0dv6T91L2EBBOFmFMM/Qv1iiWDk5g0yoybuSHqHdotlHJ66M45
-         SdvjGLQabE1CPUDTyZIgP81UYI4PtzhOqUsvU/LxE5tRgSmNJBWXvXzda7Bjcdiuf5Ds
-         ZICVKVNm5CL7o0T8RhyWIsMrL7XoJH7doOlgD+LLAM5571coGzHSyEoeagq99guJheBD
-         WarA==
+        bh=g981gwU+QbTg1CTVTnIejpAqiSS5b7TknMhPk3HO7t0=;
+        b=f+xLJvXfZ7e0YYIiiG8/GcUc8u5hceELJk7W0M5Z8D0q6oLUhThpXVrRVn4y0jhhvC
+         Ut6IybYQv8Mv7pD8rhq6L0fhXEcKCpqK5E4EcpolBLU6gbuIZ/agRNZGeJ/J+3q7Y/0C
+         KMrlYVsCiohb3vs++/UFKwcvaDr+OZhULyIF1n4JPP7FIb5MmJzOIH0Mu8BXBB/yWujM
+         dtmgdw8M7+TUOyU3oQo2P9SyhzTEHYH9g429NAnTkfO2V6zryGGxZcIbIqqrX8PrOdoo
+         QHCdFrdmVyUDhefMW3/KPJh+xRq0JAktWEE71h4yPSIu3kg3Tv1hF+Wq+bgDp0hywitT
+         6B2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=HGr/+ymyczZCHw1APWris6lQW2YQvCdg22oqh/0jGeA=;
-        b=tEsG/Go7CQuSqPPBUHQN5dU//Cm2B+sLqaRKXBOvyFGIkC/i6hTCoU7YgBinWvqymN
-         CyhJGXRJd5jepWGSmTGFaVeoXWkGdYxN8LniqnK7MbzrgSeNg2ITgVD7uyXm9f/sORfX
-         b2bDHIf6SMOCmz61itmocu+0S1r+UANKWNefQqeJcAyHYnfxtzBFIgJoo+DV5gyjHTIC
-         FG6C+46WXhdDk4Mcpl7JD2b3L2TXcD24tIC80wVHQ7q3blt5km9+66wd+hOzF8MdEi6C
-         5uR/kXXJrN0myNqk7mfUyHZeHdSnUtb1Ay8NSMSWzLZQfwCVqwmrXu3OAPml+B4Vf76Z
-         OR6A==
-X-Gm-Message-State: AOAM531uADMn66PY3N86A/ptchSVxqyxfXLjh0HiTY+7oFlZG8iJKpkK
-        AIplQcP68fj6G1mHSOh4InA=
-X-Google-Smtp-Source: ABdhPJySSK14us5JjYsqa+GuIo/MKS6M/M+wxgYB8/dNy8IQOvxhybAtTW5jPp/i5RnAjtEcw+Sy8w==
-X-Received: by 2002:a05:6830:3107:b0:60b:3c30:865c with SMTP id b7-20020a056830310700b0060b3c30865cmr2827446ots.335.1654203947453;
-        Thu, 02 Jun 2022 14:05:47 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w5-20020a056808140500b00326cb6225f8sm3050312oiv.44.2022.06.02.14.05.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jun 2022 14:05:46 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <371592c1-28e6-6c77-f820-9bb6f6236f42@roeck-us.net>
-Date:   Thu, 2 Jun 2022 14:05:44 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 2/6] x86/amd_nb: Add Family 19h model 70h-7Fh IDs
-Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Babu Moger <babu.moger@amd.com>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-Cc:     linux-hwmon@vger.kernel.org
-References: <20220602201137.1415-1-mario.limonciello@amd.com>
- <20220602201137.1415-3-mario.limonciello@amd.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <20220602201137.1415-3-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=g981gwU+QbTg1CTVTnIejpAqiSS5b7TknMhPk3HO7t0=;
+        b=vJi++K1bqGshhnqrDWrA98WvhBCxHwkLitJBr5FWe8iTfwNIucp9sJGPY3rFJKt/ga
+         7vMtdtvFH/TggY7BCejlldxtklf0C/RMBJpIheWHygz1dQaO2mfP1zix4FwssSO75AUa
+         GAociNRwAU6l7lAp9c8u9lqT7FxYPTAt8a941t7+Rezc72rslA6sg+D7vjkRdBJSx/ln
+         UliM+RcVd7Pj8RH1i4QXyPe4TGHNu8xCTd4WxHx6AHQzh/8VUtNLVZlogH1wQOapc8NY
+         n7gs95QBhZ8n/5O+3pdSCNU8DqHoir+ziw0w/SRP2ixJMcH+yxOO+e+3HZdzykOLZRxY
+         p5ZA==
+X-Gm-Message-State: AOAM532MXXX/tA3A400ghfPpLUBWGqk+97tbkFDWM3Uk2o2mpcoAPeF8
+        4XHe0Qm4cex5efHzJKJ6UgTuwg==
+X-Google-Smtp-Source: ABdhPJxjSFUzsf4lkLoMfmFY1WMKhCTegBCaUe/romqfX3cM5aFA6cCJrrqxQjntq/bZuusWI+FpQw==
+X-Received: by 2002:a65:5385:0:b0:3fa:52e3:6468 with SMTP id x5-20020a655385000000b003fa52e36468mr6077685pgq.366.1654207515548;
+        Thu, 02 Jun 2022 15:05:15 -0700 (PDT)
+Received: from localhost ([12.3.194.138])
+        by smtp.gmail.com with ESMTPSA id k5-20020a17090a39c500b001df6f26c64esm6362810pjf.13.2022.06.02.15.05.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jun 2022 15:05:14 -0700 (PDT)
+Date:   Thu, 02 Jun 2022 15:05:14 -0700 (PDT)
+X-Google-Original-Date: Thu, 02 Jun 2022 15:05:13 PDT (-0700)
+Subject:     Re: [PATCH v4 1/1] MAINTAINERS: add polarfire rng, pci and clock drivers
+In-Reply-To: <20220602163152.GA22276@bhelgaas>
+CC:     Conor.Dooley@microchip.com, Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, akpm@linux-foundation.org,
+        sboyd@kernel.org, linux-pci@vger.kernel.org,
+        mturquette@baylibre.com, Paul Walmsley <paul.walmsley@sifive.com>,
+        kw@linux.com, linux-clk@vger.kernel.org, aou@eecs.berkeley.edu,
+        lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Daire.McNamara@microchip.com,
+        Lewis.Hanly@microchip.com, Cyril.Jean@microchip.com,
+        robh@kernel.org
+From:   Palmer Dabbelt <palmer@rivosinc.com>
+To:     helgaas@kernel.org
+Message-ID: <mhng-0b996c2b-86e2-4997-86ee-5510337ee460@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/2/22 13:11, Mario Limonciello wrote:
-> Add support for SMN communication on Family 19h Model 70h.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+On Thu, 02 Jun 2022 09:31:52 PDT (-0700), helgaas@kernel.org wrote:
+> On Thu, Jun 02, 2022 at 04:39:08AM +0000, Conor.Dooley@microchip.com wrote:
+>> On 02/06/2022 02:55, Palmer Dabbelt wrote:
+>
+>> > I'm adding a bunch of subsystem maintainers just to check again.  I
+>> > don't have any problem with it, just not really a RISC-V thing and don't
+>> > wan to make a mess.  I've stashed it over at palmer/pcsoc-maintainers
+>> > for now.
+>> >
+>> > Sorry if I'm being overly pedantic about this one...
+>>
+>> I don't mind. Maybe this should go via Andrew next cycle or w/e?
+>> There's obviously no hurry etc
+>
+> My turn to be overly pedantic :)  IMHO there's no benefit in delaying
+> MAINTAINERS updates.  There's zero risk, and delaying only means
+> people will miss out on bug reports and other things they should learn
+> about.
 
-I can not apply this series without the context patches (which I wasn't
-copied on), so I assume the idea is to push this through the x86 tree.
-This is ok with me.
+If by "delay" you mean wait until a merge window, then I definately 
+agree -- that's just more cofusing for folks to have defacto 
+maintainership outside of the tree, might as well get these in.  It's 
+not like a MAINTAINERS update is going to introduce a regression or 
+anything.
 
-I can not apply this patch without the context patch (which I wasn't
-copied on), so I assume the idea is to push this through the x86
-tree. This is ok with me.
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->   arch/x86/kernel/amd_nb.c | 4 ++++
->   include/linux/pci_ids.h  | 1 +
->   2 files changed, 5 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-> index 60c7bd525237..15295f5d9aca 100644
-> --- a/arch/x86/kernel/amd_nb.c
-> +++ b/arch/x86/kernel/amd_nb.c
-> @@ -32,6 +32,8 @@
->   #define PCI_DEVICE_ID_AMD_19H_M40H_ROOT	0x14b5
->   #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F4 0x167d
->   #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F4 0x166e
-> +#define PCI_DEVICE_ID_AMD_19H_M70H_ROOT	0x14e8
-> +#define PCI_DEVICE_ID_AMD_19H_M70H_DF_F4 0x14f4
->   
->   /* Protect the PCI config register pairs used for SMN. */
->   static DEFINE_MUTEX(smn_mutex);
-> @@ -46,6 +48,7 @@ static const struct pci_device_id amd_root_ids[] = {
->   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_MA0H_ROOT) },
->   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_ROOT) },
->   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_ROOT) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M70H_ROOT) },
->   	{}
->   };
->   
-> @@ -71,6 +74,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
->   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F3) },
->   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F3) },
->   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F3) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M70H_DF_F3) },
->   	{}
->   };
->   
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index ec1c226d13e6..32a1f85ff0de 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -561,6 +561,7 @@
->   #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F3 0x14b0
->   #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F3 0x167c
->   #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F3 0x166d
-> +#define PCI_DEVICE_ID_AMD_19H_M70H_DF_F3 0x14f3
->   #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
->   #define PCI_DEVICE_ID_AMD_LANCE		0x2000
->   #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
-
+I'm just delaying because I just want to wait to make sure folks from 
+the subsystems are OK with the updates, as these aren't really anything 
+to do with RISC-V so it's not really my decision to make.
