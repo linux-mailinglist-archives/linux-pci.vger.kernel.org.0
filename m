@@ -2,79 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A215953BC94
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D581953BCB7
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 18:46:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234043AbiFBQcB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 12:32:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57016 "EHLO
+        id S237195AbiFBQqM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 12:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237085AbiFBQcA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:32:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A036522299;
-        Thu,  2 Jun 2022 09:31:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4507EB82045;
-        Thu,  2 Jun 2022 16:31:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19E4C385A5;
-        Thu,  2 Jun 2022 16:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654187515;
-        bh=o1/UE/2FwTyImP8FROwobph4vczO7LLicB4FbxHXr7A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UIKsVABSlpXDB38aEPeRquKYp3dPPsOF/LCpsU11H05idiT3aYRnCWYsJ9R2kXDYQ
-         GIGb5zSnPtzMFEzZh67z/LoxnFkh2c6O3zp6OKHdQTo9lesDvCLaS4GsPalSO16ydv
-         7o02kQ8JYdNsVzJFx8/Rrh9akGcttUELkYanUqXV2e6jRfjeFQKTV112XBc8sB7055
-         ZeWBU8QVHDmS9mtJpQrD5yKc+qlyPHxfgYq6mjrVWLg5fSX4KOp/4QK6gcC9b6qt29
-         LhQ4quilGSjD4w8nh5IoOA9Djd79noUc9lNoUf1QypERewVzw0PBeix7p6rc6oYDmg
-         +mDBbvJKjsO8g==
-Date:   Thu, 2 Jun 2022 11:31:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Conor.Dooley@microchip.com
-Cc:     palmer@rivosinc.com, gregkh@linuxfoundation.org, arnd@arndb.de,
-        akpm@linux-foundation.org, sboyd@kernel.org,
-        linux-pci@vger.kernel.org, mturquette@baylibre.com,
-        paul.walmsley@sifive.com, kw@linux.com, linux-clk@vger.kernel.org,
-        aou@eecs.berkeley.edu, lorenzo.pieralisi@arm.com,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Daire.McNamara@microchip.com, Lewis.Hanly@microchip.com,
-        Cyril.Jean@microchip.com, robh@kernel.org
-Subject: Re: [PATCH v4 1/1] MAINTAINERS: add polarfire rng, pci and clock
- drivers
-Message-ID: <20220602163152.GA22276@bhelgaas>
+        with ESMTP id S237183AbiFBQqE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 12:46:04 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DCC2B12FC;
+        Thu,  2 Jun 2022 09:46:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=yHMITh+N130iuSnYvU2I4WotSms4ADBqIIhjmWEL4ZQ=; b=O6Xl4kM8MUO00BCgiQ9hWPp+gB
+        2m7ZVz8sHNAOQKpiy5iEU/brZWoHl9L3YI08j4vZrZwZONQy6WWyOSXW66i+Zcv9QKlOeesm8TgjQ
+        pABnUdHP29eKXg17nEZ/MnWYIcmY/29mOmJme4RbBeYYarSUthGM7iOo3qpUFKlkgq37Ue76GJEjA
+        MfSw6YBYC+/0IQghP6E8FIRiZlTGbFFCXvUfzWrCRinU718CfdX6Eh08/4ZrDvJWXnPQwmRp+4WdA
+        1qxJEJvrytnpdt9tHqZk0bsYRw6b+C0O39SAOTytYjPcg2eYDgsp57ejuIJbnxeryaQkNoi8uOxrW
+        ueUPAsxQ==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1nwnxQ-00EOAT-Fz; Thu, 02 Jun 2022 10:46:01 -0600
+Message-ID: <28824558-4fd5-e054-6c8d-5e045d52f795@deltatee.com>
+Date:   Thu, 2 Jun 2022 10:45:55 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fffa1761-9636-f6bc-fff3-54b6a60f5c8d@microchip.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Content-Language: en-CA
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220407154717.7695-1-logang@deltatee.com>
+ <20220407154717.7695-21-logang@deltatee.com>
+ <20220527125501.GD2960187@ziepe.ca>
+ <a2590e27-41e8-59dc-3576-b5b8d716a198@deltatee.com>
+ <20220527190307.GG2960187@ziepe.ca>
+ <d336cfe8-2451-04c3-a2ce-0e8e47afd1e3@deltatee.com>
+ <20220602000038.GK2960187@ziepe.ca>
+ <400baba7-1cd6-09d4-4de9-2a73f08afc79@deltatee.com>
+ <20220602163059.GL2960187@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20220602163059.GL2960187@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: jgg@ziepe.ca, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, dan.j.williams@intel.com, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, bhelgaas@google.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v6 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 02, 2022 at 04:39:08AM +0000, Conor.Dooley@microchip.com wrote:
-> On 02/06/2022 02:55, Palmer Dabbelt wrote:
 
-> > I'm adding a bunch of subsystem maintainers just to check again.  I
-> > don't have any problem with it, just not really a RISC-V thing and don't
-> > wan to make a mess.  I've stashed it over at palmer/pcsoc-maintainers
-> > for now.
-> > 
-> > Sorry if I'm being overly pedantic about this one...
+
+
+On 2022-06-02 10:30, Jason Gunthorpe wrote:
+> On Thu, Jun 02, 2022 at 10:16:10AM -0600, Logan Gunthorpe wrote:
 > 
-> I don't mind. Maybe this should go via Andrew next cycle or w/e?
-> There's obviously no hurry etc
+>>> Just stuff the pages into the mmap, and your driver unprobe will
+>>> automatically block until all the mmaps are closed - no different than
+>>> having an open file descriptor or something.
+>>
+>> Oh is that what we want?
+> 
+> Yes, it is the typical case - eg if you have a sysfs file open unbind
+> hangs indefinitely. Many drivers can't unbind while they have open file
+> descriptors/etc.
+> 
+> A couple drivers go out of their way to allow unbinding while a live
+> userspace exists but this can get complicated. Usually there should be
+> a good reason.
 
-My turn to be overly pedantic :)  IMHO there's no benefit in delaying
-MAINTAINERS updates.  There's zero risk, and delaying only means
-people will miss out on bug reports and other things they should learn
-about.
+This is not my experience. All the drivers I've worked with do not block
+unbind with open file descriptors (at least for char devices). I know,
+for example, that having a file descriptor open of /dev/nvmeX does not
+cause unbinding to block. I figured this was the expectation as the
+userspace process doing the unbind won't be able to be interrupted
+seeing there's no way to fail on that path. Though, it certainly would
+make things a lot easier if the unbind can block indefinitely as it
+usually requires some complicated locking.
 
-Bjorn
+Do you have an example of this? What mechanisms are developers using to
+block unbind with open file descriptors?
+
+Logan
