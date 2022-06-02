@@ -2,66 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACB3E53BE8D
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 21:18:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF4C53BF2C
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Jun 2022 21:57:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238429AbiFBTSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 15:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33320 "EHLO
+        id S239018AbiFBT5w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 15:57:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238445AbiFBTSQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 15:18:16 -0400
-Received: from hobbes.mraw.org (hobbes.mraw.org [195.154.31.160])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CD33CFDE;
-        Thu,  2 Jun 2022 12:18:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mraw.org;
-        s=mail2022; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=d4XvQZuUNWiiJkWzK1Brb0QRzliyWqwmPdPvqncZkG8=; b=kro9Z27A4pnNzk/523zcxKFZM3
-        uJcVdPbhN+y/epB9sf3fbg2Ztaut4regb6t74HySs9ZT27dNtG+/eyI0Edf6PSuPYv2XojG4VPdf6
-        ROjZtLX0poOcaVbbPAJx59HUpIfuTsqWauLDZO8/l5nyZuD1XmUpmlQ5RwrFOHuHZ6Ca0JXE9YL87
-        7eucgmbEZYtEoKt0hga39vjnNeAoRr7LGJBQmhcLfp5I4m10E5dxtk8Hb7TGh8xiRVuXsEOPcE//3
-        vA6hmxXkkz9Vqi3mDagdt+NOrr5+ou4XwLycJk9y5MGWeQ09hbD5gdnaTsoRGw/87Q1Pm8hl4HOJp
-        qOsOKKTQ==;
-Received: from 82-64-171-251.subs.proxad.net ([82.64.171.251] helo=mraw.org)
-        by hobbes.mraw.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <kibi@debian.org>)
-        id 1nwqKV-008WAr-7i; Thu, 02 Jun 2022 21:17:59 +0200
-Date:   Thu, 2 Jun 2022 21:17:57 +0200
-From:   Cyril Brulebois <kibi@debian.org>
-To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, james.dutton@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        with ESMTP id S239021AbiFBT5v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 15:57:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1382D21E;
+        Thu,  2 Jun 2022 12:57:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AF514B81F31;
+        Thu,  2 Jun 2022 19:57:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B421C34114;
+        Thu,  2 Jun 2022 19:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654199868;
+        bh=J3nzQJ2G5GUnpqid20W9LzfsX1dhp5znOLrD1Ct0mhc=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=gEWHH3m52ImQLjRxQSdag6AAqK//82AI75/smt9dsJiuakDbGxuSizb+S/HjShGgl
+         4ZfnGyuy1vj3h2sRRB/HyQUAm73uGkM198bkkn+SSQ49CEnCP2/QbT3AKMoIOrS0HE
+         FKpPO3h0t8H4yYJ/Et/y1Y6Ykn+++dp7M+H7Ziav6F/w6/xthdmsTfbG5SgQb8mtrw
+         FcIN39iOoBueLzmCbWDOh+J6BeXUanLY+axcqjgyAWepajRS2X7HZKo/r24fwLJN3u
+         YdTCnZ1dpAZHSvYUD3QKRh+3eYyaavesI7r/w6QNBrVgQwsL2jL0Vh673JrTlFLGpX
+         vjpKYlUGS+9VA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 39555F03945;
+        Thu,  2 Jun 2022 19:57:48 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI fixes for v5.19
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220602184913.GA36164@bhelgaas>
+References: <20220602184913.GA36164@bhelgaas>
+X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220602184913.GA36164@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.19-fixes-1
+X-PR-Tracked-Commit-Id: 833e53a4ffe92e742e99347c68d99dc33986598b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c399c85d60a4295bd911d366399a97df2865fb86
+Message-Id: <165419986822.9476.1311560009781878411.pr-tracker-bot@kernel.org>
+Date:   Thu, 02 Jun 2022 19:57:48 +0000
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Fix regression regarding missing
- PCIe linkup
-Message-ID: <20220602191757.pqictbfarmvlf72f@mraw.org>
-Organization: Debian
-References: <20220528224423.7017-1-jim2101024@gmail.com>
- <20220528224423.7017-2-jim2101024@gmail.com>
- <20220529011526.4lzuvkv5zclwntce@mraw.org>
- <d7a5a0d8-5d27-548f-bc94-0e7d116cc3f2@i2se.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="e6x3pkp6gefd6bwh"
-Content-Disposition: inline
-In-Reply-To: <d7a5a0d8-5d27-548f-bc94-0e7d116cc3f2@i2se.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Jim Quinlan <jim2101024@gmail.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,56 +64,15 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+The pull request you sent on Thu, 2 Jun 2022 13:49:13 -0500:
 
---e6x3pkp6gefd6bwh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.19-fixes-1
 
-Hi Stefan,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c399c85d60a4295bd911d366399a97df2865fb86
 
-Stefan Wahren <stefan.wahren@i2se.com> (2022-05-30):
-> i think we should better trust the results based on the v5.18 tag. During
-> the merge window, regressions from other subsystems are possible.
+Thank you!
 
-Alright, that looks like a great plan.
-
-Before getting your answer, I had tried taking the reboot part out of
-the equation, but I found out that even cold boots might fail with the
-mmc storage.
-
-I haven't been able to conduct a systematic testing of the patch on top
-of the v5.18 tag yet (say, 10 or 20 cold boots, and the same with
-reboots) due to strong work constraints these past few days, but that's
-definitely still on my short term todo list (hopefully before the end of
-the week).
-
-Sorry I didn't manage to get that lined up before Bjorn's pull request.
-
-
-Cheers,
---=20
-Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
-D-I release manager -- Release team member -- Freelance Consultant
-
---e6x3pkp6gefd6bwh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmKZDOEACgkQ/5FK8MKz
-VSAxHw//UqQVStG4n6PM9GwjjAexTX9ACfI8AU1/Hz9oPvhlcB95cjd/LnJUm2yP
-y2xSb5A19sNey7lYh3jga7Q2mh6nuu+lw7gqt2NfrHwN4ni/EP+0xrBbleMgEooh
-NW7xVd3aF1E7zTGGsIgl8H0CgfI2Mv+EhY/gXdV32iPw3puLYC6x28NICKsVlImr
-BoMbMVEK8gWjxT0SLxRiTj11doR+Dccbely2DNSrIe+p/aSiH5nTtAsnagz0eYym
-sijizAkR7luWZb+Q8MUpGpD9Ptp0oXITGKsBAPTHPotnrTE2DcF1k9PXLdKm72/L
-hJdWamlj3Biuz9q6uOAMqFGFBLxqEr58p/S0ph89CRXuK1w97xpfhUn9lmyGI50W
-YsrQhg86cKmRIF7gX2Ax/OceS3WabTXuk77zm+8IhF99DUt8wxWML1H8Xbqo8CMG
-09f6Rfa/FOfHVB3avbdqVHJ7LYqb6F9iqW02QLbMwlJmhEKB7VAeSbty1S+dqcHn
-JEWLieJ9PRETIzp66BEs5BRrivJGFv0lGD8joDOKFZf3VH2tzLwH71aaAgK4yXA0
-jRy6HlGyVt0SLWgFXltuI6MCh771PEmPA7kOmb8uDrM4LmN4h/BYk8XjYDNrUHa+
-Hd+XcATSfWkJQSTMuVfNfwFDVFqRVaSwjLy+UwcmTmqCA+wQLC8=
-=JkNy
------END PGP SIGNATURE-----
-
---e6x3pkp6gefd6bwh--
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
