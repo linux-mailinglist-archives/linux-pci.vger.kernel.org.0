@@ -2,73 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0B1953C094
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 00:05:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C763753C0FF
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 00:48:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239528AbiFBWFU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 18:05:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43094 "EHLO
+        id S239777AbiFBWrP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 18:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236145AbiFBWFR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 18:05:17 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA64344C8
-        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 15:05:16 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 7so5023086pga.12
-        for <linux-pci@vger.kernel.org>; Thu, 02 Jun 2022 15:05:16 -0700 (PDT)
+        with ESMTP id S239757AbiFBWrO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 18:47:14 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C26D11A
+        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 15:47:13 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id rq11so12715387ejc.4
+        for <linux-pci@vger.kernel.org>; Thu, 02 Jun 2022 15:47:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g981gwU+QbTg1CTVTnIejpAqiSS5b7TknMhPk3HO7t0=;
-        b=f+xLJvXfZ7e0YYIiiG8/GcUc8u5hceELJk7W0M5Z8D0q6oLUhThpXVrRVn4y0jhhvC
-         Ut6IybYQv8Mv7pD8rhq6L0fhXEcKCpqK5E4EcpolBLU6gbuIZ/agRNZGeJ/J+3q7Y/0C
-         KMrlYVsCiohb3vs++/UFKwcvaDr+OZhULyIF1n4JPP7FIb5MmJzOIH0Mu8BXBB/yWujM
-         dtmgdw8M7+TUOyU3oQo2P9SyhzTEHYH9g429NAnTkfO2V6zryGGxZcIbIqqrX8PrOdoo
-         QHCdFrdmVyUDhefMW3/KPJh+xRq0JAktWEE71h4yPSIu3kg3Tv1hF+Wq+bgDp0hywitT
-         6B2A==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/pu75bWmrBbYHAw0OFfUcO0avMr1ot5HtxjbiP+g2b0=;
+        b=bQTQJT0Q14fCxBGXzBNMiNwAgJmsUptbojmJ5kDmOcKl44mnQAWrNnh97RUMzzYDkv
+         FH39yoZizrisDYwdKloMDZZaVw598diyW5L5GCQK5XSzdzEEBCHagagbbCtgHfuf/uj3
+         Ksu/fE/XQabHkViVTOIEvEMuo/VXEZjpR2SoOvLi+dxorRQNX9j6ncG2PsuGnJO++0vA
+         XSOWuB+WJGkqFMP319FD1E/XbIFjsxg9kBPDe4OK7Qb5WJ41M7HwfW0IzaXa/UIHYv00
+         b6RpautIHtBd4XQCGKt9UCoMWzZAnCEDcshtoLhZpdHDPdmh9Mu1NXmqrXYq8H+u8dJi
+         xWIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=g981gwU+QbTg1CTVTnIejpAqiSS5b7TknMhPk3HO7t0=;
-        b=vJi++K1bqGshhnqrDWrA98WvhBCxHwkLitJBr5FWe8iTfwNIucp9sJGPY3rFJKt/ga
-         7vMtdtvFH/TggY7BCejlldxtklf0C/RMBJpIheWHygz1dQaO2mfP1zix4FwssSO75AUa
-         GAociNRwAU6l7lAp9c8u9lqT7FxYPTAt8a941t7+Rezc72rslA6sg+D7vjkRdBJSx/ln
-         UliM+RcVd7Pj8RH1i4QXyPe4TGHNu8xCTd4WxHx6AHQzh/8VUtNLVZlogH1wQOapc8NY
-         n7gs95QBhZ8n/5O+3pdSCNU8DqHoir+ziw0w/SRP2ixJMcH+yxOO+e+3HZdzykOLZRxY
-         p5ZA==
-X-Gm-Message-State: AOAM532MXXX/tA3A400ghfPpLUBWGqk+97tbkFDWM3Uk2o2mpcoAPeF8
-        4XHe0Qm4cex5efHzJKJ6UgTuwg==
-X-Google-Smtp-Source: ABdhPJxjSFUzsf4lkLoMfmFY1WMKhCTegBCaUe/romqfX3cM5aFA6cCJrrqxQjntq/bZuusWI+FpQw==
-X-Received: by 2002:a65:5385:0:b0:3fa:52e3:6468 with SMTP id x5-20020a655385000000b003fa52e36468mr6077685pgq.366.1654207515548;
-        Thu, 02 Jun 2022 15:05:15 -0700 (PDT)
-Received: from localhost ([12.3.194.138])
-        by smtp.gmail.com with ESMTPSA id k5-20020a17090a39c500b001df6f26c64esm6362810pjf.13.2022.06.02.15.05.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jun 2022 15:05:14 -0700 (PDT)
-Date:   Thu, 02 Jun 2022 15:05:14 -0700 (PDT)
-X-Google-Original-Date: Thu, 02 Jun 2022 15:05:13 PDT (-0700)
-Subject:     Re: [PATCH v4 1/1] MAINTAINERS: add polarfire rng, pci and clock drivers
-In-Reply-To: <20220602163152.GA22276@bhelgaas>
-CC:     Conor.Dooley@microchip.com, Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, akpm@linux-foundation.org,
-        sboyd@kernel.org, linux-pci@vger.kernel.org,
-        mturquette@baylibre.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        kw@linux.com, linux-clk@vger.kernel.org, aou@eecs.berkeley.edu,
-        lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Daire.McNamara@microchip.com,
-        Lewis.Hanly@microchip.com, Cyril.Jean@microchip.com,
-        robh@kernel.org
-From:   Palmer Dabbelt <palmer@rivosinc.com>
-To:     helgaas@kernel.org
-Message-ID: <mhng-0b996c2b-86e2-4997-86ee-5510337ee460@palmer-ri-x1c9>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/pu75bWmrBbYHAw0OFfUcO0avMr1ot5HtxjbiP+g2b0=;
+        b=Bm/tDPUHRRm4SOBz0iEd0bBxI9S326b/HSdHSw2WHxru9Sge8aOL9jFLfFIM3kmlvK
+         FMsz+UWHX1wGt4V6CcS6vtCBmEbKrqFey73bVd32uWkkNNZfkSeaRExkV0vMrFXT7XbX
+         izwXVI5eu5MaZut9liWiw6N5yrQu29ddDJbr/Dx+dduM8sm3gwlZ87ZAy/ME76BlEYaA
+         ur2Nt7cC7lkKLqp7QbielJySK5YAR+4vg25BlwWnQgyGGFa38XdpYzo0aN9K74PqKTpj
+         DIEubtWYAxrIfS80A8WvMf4XUuEMAzw7A2JtOQiealj7fz4V4NFkQ/RBc1aPVP3ba+Tr
+         2mjg==
+X-Gm-Message-State: AOAM532QBxG00fylWUl2MOsUyy8XySgPTCZU1YGrghD2jk6Q9CiniUqT
+        iXAQ/JJ7VLPhXv3S+2JApQuAvddtGYbQtp+VZrjVmA==
+X-Google-Smtp-Source: ABdhPJyDBimCwFU8GwUejJSnaLwopZ8mdmlNAnudYa0MFtBeTfetuVO2kGArO4IQ552v3S3vxozxlofhswmJmORlHLI=
+X-Received: by 2002:a17:907:7ba9:b0:6fe:5636:1636 with SMTP id
+ ne41-20020a1709077ba900b006fe56361636mr6433385ejc.463.1654210031999; Thu, 02
+ Jun 2022 15:47:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220525223316.388490-1-willmcvicker@google.com>
+In-Reply-To: <20220525223316.388490-1-willmcvicker@google.com>
+From:   Will McVicker <willmcvicker@google.com>
+Date:   Thu, 2 Jun 2022 15:46:56 -0700
+Message-ID: <CABYd82YK9M6ZP8znpCxCA2RXUrjPiWen6_+Y+41V3DtBpEkK4A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] PCI: dwc: Fix MSI msi_msg dma mapping
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "Cc: Android Kernel" <kernel-team@android.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-15.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,31 +74,83 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 02 Jun 2022 09:31:52 PDT (-0700), helgaas@kernel.org wrote:
-> On Thu, Jun 02, 2022 at 04:39:08AM +0000, Conor.Dooley@microchip.com wrote:
->> On 02/06/2022 02:55, Palmer Dabbelt wrote:
+On Wed, May 25, 2022 at 3:33 PM Will McVicker <willmcvicker@google.com> wrote:
 >
->> > I'm adding a bunch of subsystem maintainers just to check again.  I
->> > don't have any problem with it, just not really a RISC-V thing and don't
->> > wan to make a mess.  I've stashed it over at palmer/pcsoc-maintainers
->> > for now.
->> >
->> > Sorry if I'm being overly pedantic about this one...
->>
->> I don't mind. Maybe this should go via Andrew next cycle or w/e?
->> There's obviously no hurry etc
+> As of commit 07940c369a6b ("PCI: dwc: Fix MSI page leakage in
+> suspend/resume"), the PCIe designware host driver has been using the
+> driver data allocation for the msi_msg dma mapping which can result in
+> a DMA_MAPPING_ERROR due to the DMA overflow check in
+> dma_direct_map_page() when the address is greater than 32-bits (reported
+> in [1]). The commit was trying to address a memory leak on
+> suspend/resume by moving the MSI mapping to dw_pcie_host_init(), but
+> subsequently dropped the page allocation thinking it wasn't needed.
 >
-> My turn to be overly pedantic :)  IMHO there's no benefit in delaying
-> MAINTAINERS updates.  There's zero risk, and delaying only means
-> people will miss out on bug reports and other things they should learn
-> about.
+> To fix the DMA mapping issue as well as make msi_msg DMA'able, let's
+> switch back to allocating a 32-bit page for the msi_msg. To avoid the
+> suspend/resume leak, we can allocate the page in dw_pcie_host_init()
+> since that function shouldn't be called during suspend/resume.
+>
+> [1] https://lore.kernel.org/all/Yo0soniFborDl7+C@google.com/
+>
+> Signed-off-by: Will McVicker <willmcvicker@google.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+>  drivers/pci/controller/dwc/pcie-designware.h      |  2 +-
+>  2 files changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 2fa86f32d964..3655c6f88bf1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -267,8 +267,9 @@ static void dw_pcie_free_msi(struct pcie_port *pp)
+>                 struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>                 struct device *dev = pci->dev;
+>
+> -               dma_unmap_single_attrs(dev, pp->msi_data, sizeof(pp->msi_msg),
+> -                                      DMA_FROM_DEVICE, DMA_ATTR_SKIP_CPU_SYNC);
+> +               dma_unmap_page(dev, pp->msi_data, PAGE_SIZE, DMA_FROM_DEVICE);
+> +               if (pp->msi_page)
+> +                       __free_page(pp->msi_page);
+>         }
+>  }
+>
+> @@ -392,12 +393,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                         if (ret)
+>                                 dev_warn(pci->dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+>
+> -                       pp->msi_data = dma_map_single_attrs(pci->dev, &pp->msi_msg,
+> -                                                     sizeof(pp->msi_msg),
+> -                                                     DMA_FROM_DEVICE,
+> -                                                     DMA_ATTR_SKIP_CPU_SYNC);
+> +                       pp->msi_page = alloc_page(GFP_DMA32);
+> +                       pp->msi_data = dma_map_page(pci->dev, pp->msi_page, 0, PAGE_SIZE,
+> +                                                   DMA_FROM_DEVICE);
+>                         if (dma_mapping_error(pci->dev, pp->msi_data)) {
+>                                 dev_err(pci->dev, "Failed to map MSI data\n");
+> +                               __free_page(pp->msi_page);
+> +                               pp->msi_page = NULL;
+>                                 pp->msi_data = 0;
+>                                 goto err_free_msi;
+>                         }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 7d6e9b7576be..b5f528536358 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -190,8 +190,8 @@ struct pcie_port {
+>         int                     msi_irq;
+>         struct irq_domain       *irq_domain;
+>         struct irq_domain       *msi_domain;
+> -       u16                     msi_msg;
+>         dma_addr_t              msi_data;
+> +       struct page             *msi_page;
+>         struct irq_chip         *msi_irq_chip;
+>         u32                     num_vectors;
+>         u32                     irq_mask[MAX_MSI_CTRLS];
+> --
+> 2.36.1.124.g0e6072fb45-goog
+>
 
-If by "delay" you mean wait until a merge window, then I definately 
-agree -- that's just more cofusing for folks to have defacto 
-maintainership outside of the tree, might as well get these in.  It's 
-not like a MAINTAINERS update is going to introduce a regression or 
-anything.
+Friendly ping for review.
 
-I'm just delaying because I just want to wait to make sure folks from 
-the subsystems are OK with the updates, as these aren't really anything 
-to do with RISC-V so it's not really my decision to make.
+Thanks,
+Will
