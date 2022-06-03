@@ -2,95 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E6F153D235
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 21:08:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A5B53D37E
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jun 2022 00:13:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349035AbiFCTIu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Jun 2022 15:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40042 "EHLO
+        id S1349317AbiFCWNB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Jun 2022 18:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343735AbiFCTIt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 15:08:49 -0400
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA9B73917A
-        for <linux-pci@vger.kernel.org>; Fri,  3 Jun 2022 12:08:46 -0700 (PDT)
-Received: by mail-oo1-xc30.google.com with SMTP id c17-20020a4ac311000000b0040ea8bf80f2so1620939ooq.1
-        for <linux-pci@vger.kernel.org>; Fri, 03 Jun 2022 12:08:46 -0700 (PDT)
+        with ESMTP id S1349314AbiFCWNA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 18:13:00 -0400
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2FA718E02
+        for <linux-pci@vger.kernel.org>; Fri,  3 Jun 2022 15:12:58 -0700 (PDT)
+Received: by mail-io1-xd31.google.com with SMTP id h72so462046iof.11
+        for <linux-pci@vger.kernel.org>; Fri, 03 Jun 2022 15:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=uQm69jIgbOTyn1ClmnjZvF1mQyllP9AbcSxz7NY1e74=;
-        b=peMTcS2J0bkhcQfLpXY5HI+ynpJKNL1j7TT3n6xhnGINfudOzs/Wy5e9dOkvukoucU
-         QNydhfLVmiD4XxjbixY4MdYa0ULFfRmO+C8wExU9wYO734rkxFtFvLbBSYiVES+YUsWx
-         kg5nWq72UAX3I5at0ImMcE8uK3uCDT6FwR74Xfp+R86JbeLJqZWmVf1xdMp6z7SnM/yw
-         tP/12eTd0FRWERzniS9Ywa+QbfrWGQCDNrQkWB3LdqvrmccIu2JJWl7q1B8AAnYB2qf4
-         z+w90BsW60aRRW+4F2qwj8D0FsuoSPnNqveyuDudklGNo/81PwLtg+pvXRLQCTNkByGE
-         WgRw==
+        d=purestorage.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YQaA0ysz+S1FZGYLa7EUyi8nddJMkVXVtwd4BwqcCVE=;
+        b=HV4UoRzWQTlgPnhbgwevANk/jO/pR2mdRCjEqrQhcd5tWSRAUreuEBlIgi0N7EUe5A
+         l4HXBsnEQLSSf3cI4CB6HWibojnau5wf0TBFvkKNvZAPcAbyAXQ2P8f/k9jT7lqGe+wt
+         tVoesIjkL5kxbVbPY9AiNmv4RUob7joWxnksc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=uQm69jIgbOTyn1ClmnjZvF1mQyllP9AbcSxz7NY1e74=;
-        b=8Ekw+iK+B9Rg1TZLwio3cs/0D69sZvwgPZQPjomuLbnPUh2JdqdlEbqU4InKmWjjK5
-         U4nZgDw2wjTB5YSPKzRiHJqBBaiR8P1ndC5jXPb9zgjGA38w/URdy8cq3tUR1FIFKAs4
-         RKEhWJ4uaeVSh6V7HL2V6soiOse+tyrOxudhX4BZ6iGgTPheSEjOyBHhp2Dnm9uhCm6L
-         j9ys+ft+ccjeGFAsWcBboz4cEkPHcB7twxcjwSBs01H/B77CBfoV8109q+8PgpWjy/SF
-         dwYWVgNuADexy+hcmBpn2/nxHjY7IPl3/ZtJJMU5678Bs0hkZF8ohEplzF1ccjPFOCwS
-         hTgA==
-X-Gm-Message-State: AOAM5335a9l/KxeN/5Bn4jNEbPuLfuME93DPTnkVKg8zmSAChytxuSlN
-        tGpf4bknPRxsv/RdWxaTFyNfvtGgltMhCoT+59I=
-X-Google-Smtp-Source: ABdhPJzPqr9ZJ75Di+tbMESnTfkIbH6PQ3O3mesgCBPuOrGJp0v+tITSgNkU3WRdfpwQIjwRVbypZGhoNlkRJn+M2B4=
-X-Received: by 2002:a4a:eac7:0:b0:40e:5c32:42f with SMTP id
- s7-20020a4aeac7000000b0040e5c32042fmr4794281ooh.52.1654283326102; Fri, 03 Jun
- 2022 12:08:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YQaA0ysz+S1FZGYLa7EUyi8nddJMkVXVtwd4BwqcCVE=;
+        b=p5Xh0+/bwM9zYMS8kpfwVfDeILSn8XkzvJuyfYwoKXONhaHb5uSNL9+mnZfFdyKPPC
+         usGfoSaolQgXvCJAz7yRqEK93YAoOih/YdymWRVh3/Eyi+mNkuq8d0x5jcoxl5XpAdIV
+         fD8U4KWdkeltrGOOpb+sQNKPli7/M7+zFi+z3WKEo39zUo9RApGdTgL5WNtaAYjsmktV
+         SMZbeJtTu+UqrxdR936vPxOzbkukLtDndh78Jqy58z/tGT2ghv7kuCLDCGkxJCNMOkTP
+         yehGl8OkkvmcXRpAgRgjJEUjmH/Bm1AFnlsz3MREWLc1k7QZM4xnJLnQIWTRZMpGfizR
+         90MA==
+X-Gm-Message-State: AOAM531iNqjwLdG3jm0zUpCX/Lk7mUzsFoCR4NL8dHmsHqFVovWJD/L/
+        JM0qQ0XleByXJFXWMh45quKFMg==
+X-Google-Smtp-Source: ABdhPJwRZzdUFPObenCqqK8QSOyTpq8ELKioDcBezTTqdyBLuX1Qc4YsdPX8WvzjpdZYUeiXr7NzNw==
+X-Received: by 2002:a05:6602:1653:b0:665:6f74:db21 with SMTP id y19-20020a056602165300b006656f74db21mr5723622iow.33.1654294378143;
+        Fri, 03 Jun 2022 15:12:58 -0700 (PDT)
+Received: from irdv-mkhalfella.dev.purestorage.com ([208.88.158.129])
+        by smtp.googlemail.com with ESMTPSA id e10-20020a92a00a000000b002d3ded31668sm2901016ili.41.2022.06.03.15.12.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Jun 2022 15:12:57 -0700 (PDT)
+From:   Mohamed Khalfella <mkhalfella@purestorage.com>
+To:     mkhalfella@purestorage.com
+Cc:     bhelgaas@google.com, ebadger@purestorage.com, helgaas@kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, msaggi@purestorage.com,
+        oohall@gmail.com, rajatja@google.com, ruscur@russell.cc,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] PCI/AER: Iterate over error counters instead of error
+Date:   Fri,  3 Jun 2022 22:12:47 +0000
+Message-Id: <20220603221247.5118-1-mkhalfella@purestorage.com>
+X-Mailer: git-send-email 2.29.0
+In-Reply-To: <20220510211756.5237-1-mkhalfella@purestorage.com>
+References: <20220510211756.5237-1-mkhalfella@purestorage.com>
 MIME-Version: 1.0
-Sender: sujitnoo030@gmail.com
-Received: by 2002:a05:6358:c21:b0:a3:41b9:b883 with HTTP; Fri, 3 Jun 2022
- 12:08:45 -0700 (PDT)
-From:   "Mr. Jimmy Moore" <jimmymoore265@gmail.com>
-Date:   Fri, 3 Jun 2022 20:08:45 +0100
-X-Google-Sender-Auth: HJSPW36J7I-RtMMQntEJbYelM4Y
-Message-ID: <CAAJKTSX1Vg6CQtPch_nYOb3yfkEh7HdqQvGydTEaGrrF2S6TTw@mail.gmail.com>
-Subject: UNITED NATIONS COVID-19 COMPENSATION FUND.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLY,LOTS_OF_MONEY,MILLION_USD,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
-        T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
-X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-UNITED NATIONS COVID-19 OVERDUE COMPENSATION UNIT.
-REFERENCE PAYMENT CODE: 8525595
-BAILOUT AMOUNT:$3.5 MILLION USD
-ADDRESS: NEW YORK, NY 10017, UNITED STATES
+Is there any chance for this to land in 5.19?
 
-Dear award recipient, Covid-19 Compensation Funds.
+On 5/10/22 14:17, Mohamed Khalfella wrote:
+> > Thanks for catching this; it definitely looks like a real issue!  I
+> > guess you're probably seeing junk in the sysfs files?
+> 
+> That is correct. The initial report was seeing junk when reading sysfs
+> files. As descibed, this is happening because we reading data past the
+> end of the stats counters array.
+> 
+> 
+> > I think maybe we should populate the currently NULL entries in the
+> > string[] arrays and simplify the code here, e.g.,
+> > 
+> > static const char *aer_correctable_error_string[] = {
+> >        "RxErr",                        /* Bit Position 0       */
+> >        "dev_cor_errs_bit[1]",
+> >	...
+> >
+> >  if (stats[i])
+> >    len += sysfs_emit_at(buf, len, "%s %llu\n", strings_array[i], stats[i]);
+> 
+> Doing it this way will change the output format. In this case we will show
+> stats only if their value is greater than zero. The current code shows all the
+> stats those have names (regardless of their value) plus those have non-zero
+> values.
+> 
+> >> @@ -1342,6 +1342,11 @@ static int aer_probe(struct pcie_device *dev)
+> >>  	struct device *device = &dev->device;
+> >>  	struct pci_dev *port = dev->port;
+> >>
+> >> +	BUILD_BUG_ON(ARRAY_SIZE(aer_correctable_error_string) <
+> >> +		     AER_MAX_TYPEOF_COR_ERRS);
+> >> +	BUILD_BUG_ON(ARRAY_SIZE(aer_uncorrectable_error_string) <
+> >> +		     AER_MAX_TYPEOF_UNCOR_ERRS);
+> >
+> > And make these check for "!=" instead of "<".
 
-You are receiving this correspondence because we have finally reached
-a consensus with the UN, IRS, and IMF that your total fund worth $3.5
-Million Dollars of Covid-19 Compensation payment shall be delivered to
-your nominated mode of receipt, and you are expected to pay the sum of
-$12,000 for levies owed to authorities after receiving your funds.
+I am happy to remove these BUILD_BUG_ON() if you think it is a good
+idea to do so.
 
-You have a grace period of 2 weeks to pay the $12,000 levy after you
-have received your Covid-19 Compensation total sum of $3.5 Million. We
-shall proceed with the payment of your bailout grant only if you agree
-to the terms and conditions stated.
-
-Contact Dr. Mustafa Ali, for more information by email at:(
-mustafaliali180@gmail.com ) Your consent in this regard would be
-highly appreciated.
-
-Best Regards,
-Mr. Jimmy Moore.
-Undersecretary-General United Nations
-Office of Internal Oversight-UNIOS
-UN making the world a better place
+> 
+> This will require unnecessarily extending stats arrays to have 32 entries
+> in order to match names arrays. If you don't feel strogly about changing
+> "<" to "!=", I prefer to keep the code as it is. 
