@@ -2,152 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1475B53C68C
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 09:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2B3E53C692
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 09:59:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242655AbiFCHzX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Jun 2022 03:55:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49432 "EHLO
+        id S237453AbiFCH7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Jun 2022 03:59:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237453AbiFCHzX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 03:55:23 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D156135DC1;
-        Fri,  3 Jun 2022 00:55:21 -0700 (PDT)
+        with ESMTP id S242668AbiFCH7S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 03:59:18 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD21A35DCE
+        for <linux-pci@vger.kernel.org>; Fri,  3 Jun 2022 00:59:15 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id h23so11401684lfe.4
+        for <linux-pci@vger.kernel.org>; Fri, 03 Jun 2022 00:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1654242922; x=1685778922;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=idd1rNj/CX3H0NOTNJzw+JpUrFbH6zOoQ/T+QLi/PZg=;
-  b=dgSCgdHIlLH9b/SEqOSnzVr1lxcd1X96WmuBSZm/LUihPNqaavs/eR/Q
-   Z0Qw6SOkx7ZCimzp9h+8p4AVwqC2vQ3hk/7Zq55BoDDBS5GX055g/BvdG
-   nilYvHuvkABIN9TvkxT52umfsvcW1Qk2CCHsFptfFsgCPRYOUJm1jsXg6
-   s=;
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 03 Jun 2022 00:55:22 -0700
-X-QCInternal: smtphost
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Jun 2022 00:55:04 -0700
-X-QCInternal: smtphost
-Received: from hu-krichai-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.110.37])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 03 Jun 2022 13:24:44 +0530
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id 33E644151; Fri,  3 Jun 2022 13:24:43 +0530 (+0530)
-From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
-To:     helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_hemantk@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=trapM3KIYQ0IQi6DX47BuIAgKDllMEKOabAF1mkHxFs=;
+        b=Z/79kozT2/6g1BV/WFgdxXwt8knEgJUn1YHloYgrMGePc0XddwMPOwqRLGo2ewgkcN
+         8h/Y+y2zcCn3+UfG+fjFEReDAvwSqljc3u5zbXemK+yUEnsTHAFqjREhe1W5JWtJQ2oY
+         RzWopWZdCRJtBNF7ogpLJo/lcuN3fXc/ghImVfr1xM03VGRMIkk0PIxGhajj5QQHDr16
+         pBg0XAcQ1jARl0WQoMXGnGmP+RQLGnct6ZmWlTDuNBLdjyyRY7YW/PpkJubg+8MVDg6A
+         h4lf+NiCUr8cbs3NrcXqbD9yc2UGEE81MW8SU+dUmfVlB/qpA+mMDWPfkPv0fFAXG5DU
+         cmCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=trapM3KIYQ0IQi6DX47BuIAgKDllMEKOabAF1mkHxFs=;
+        b=0yb9d7ysgOHHtEKtn5VCWpxgaItU+ECrkkQ+Sxzopp6n1tlXdDljYWwV9s9IlD/zHO
+         HJHPoE1hicE41Z0+sCGPpXcMNbtHtkl8kPDM+30NcD9gpjrmb+szVjmcy6GrJTJeEzu6
+         tqvRa65qn1K2A83qHeL/zRG5bywC1fznitD3MdvPhz1UTK7mS8t+V521xwutADQggZgM
+         i7tzY4XE9FSukk2Xbvtn148kzLk0mou3yiq8Z8iJXkGsZdCXmR9QoC1vS5aj2MKxTHri
+         DA0Q18PJgGC0G7/UU6w7DmF+xaHNyWWaulf+BnFCl7MNAvKpxYP6ft3GUZlgOPtSYu/i
+         ehZw==
+X-Gm-Message-State: AOAM531O10kFpgPASlmZKQWJ1N9UxGOHFmqPEhsiyhJsW5/WEJPPXYXs
+        RK5/l7pnp8lioEXzhZcTkfhP6ZhO6YLq+QGY
+X-Google-Smtp-Source: ABdhPJwhi04aaFzgO2Njb02gkEU/pJws3GqS/mwstjhtP7iGSfZ+ggStYY5XcLU99jn0WTBZFAQv0Q==
+X-Received: by 2002:a05:6512:1041:b0:478:afc6:5846 with SMTP id c1-20020a056512104100b00478afc65846mr5927012lfb.132.1654243154045;
+        Fri, 03 Jun 2022 00:59:14 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id bp2-20020a056512158200b00477c5940bbasm1438428lfb.265.2022.06.03.00.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jun 2022 00:59:13 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rajat Jain <rajatja@google.com>
-Subject: [PATCH v4] PCI/ASPM: Update LTR threshold based upon reported max latencies
-Date:   Fri,  3 Jun 2022 13:24:19 +0530
-Message-Id: <1654242861-15695-1-git-send-email-quic_krichai@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1646679549-12494-1-git-send-email-quic_pmaliset@quicinc.com>
-References: <1646679549-12494-1-git-send-email-quic_pmaliset@quicinc.com>
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v9 0/5] PCI: qcom: Rework pipe_clk/pipe_clk_src handling
+Date:   Fri,  3 Jun 2022 10:59:03 +0300
+Message-Id: <20220603075908.1853011-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Prasad Malisetty <quic_pmaliset@quicinc.com>
+PCIe pipe clk (and some other clocks) must be parked to the "safe"
+source (bi_tcxo) when corresponding GDSC is turned off and on again.
+Currently this is handcoded in the PCIe driver by reparenting the
+gcc_pipe_N_clk_src clock.
 
-In ASPM driver, LTR threshold scale and value are updated based on
-tcommon_mode and t_poweron values. In kioxia NVMe L1.2 is failing due to
-LTR threshold scale and value are greater values than max snoop/non-snoop
-value.
+Instead of doing it manually, follow the approach used by
+clk_rcg2_shared_ops and implement this parking in the enable() and
+disable() clock operations for respective pipe clocks.
 
-Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
-reported snoop/no-snoop values is greather than or equal to
-LTR_L1.2_THRESHOLD value.
+Changes since v8:
+ - Readded .name to changed entries in gcc-sc7280 driver to restore
+   compatibility with older DTS,
+ - Rebased on top of linux-next, dropping reverts,
+ - Verified to include all R-b tags (excuse me, Johan, I missed them
+   in the previous iteration).
 
-Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
----
+Changes since v7:
+ - Brought back the struct clk_regmap_phy_mux (Johan)
+ - Fixed includes (Stephen)
+ - Dropped CLK_SET_RATE_PARENT flags from changed pipe clocks, they are
+   not set in the current code and they are useless as the PHY's clock
+   has fixed rate.
 
-I am taking this patch forward as prasad is no more working with our org.
-changes since v3:
-	- Changed the logic to include this condition "snoop/nosnoop
-	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
+Changes since v6:
+ - Switched the ops to use GENMASK/FIELD_GET/FIELD_PUT (Stephen),
+ - As all pipe/symbol clock source clocks have the same register (and
+   parents) layout, hardcode all the values. If the need arises, this
+   can be changed later (Stephen),
+ - Fixed commit messages and comments (suggested by Johan),
+ - Added revert for the clk_regmap_mux_safe that have been already
+   picked up by Bjorn.
+
+Changes since v5:
+ - Rename the clock to clk-regmap-phy-mux and the enable/disable values
+   to phy_src_val and ref_src_val respectively (as recommended by
+   Johan).
+
+Changes since v4:
+ - Renamed the clock to clk-regmap-pipe-src,
+ - Added mention of PCIe2 PHY to the commit message,
+ - Expanded commit messages to mention additional pipe clock details.
+
+Changes since v3:
+ - Replaced the clock multiplexer implementation with branch-like clock.
+
 Changes since v2:
-	- Replaced LTRME logic with max snoop/no-snoop latencies check.
-Changes since v1:
-	- Added missing variable declaration in v1 patch
----
- drivers/pci/pcie/aspm.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ - Added is_enabled() callback
+ - Added default parent to the pipe clock configuration
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index a96b742..c8f6253 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -461,14 +461,36 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
- {
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
- 	u32 val1, val2, scale1, scale2;
-+	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
- 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
- 	u32 ctl1 = 0, ctl2 = 0;
- 	u32 pctl1, pctl2, cctl1, cctl2;
- 	u32 pl1_2_enables, cl1_2_enables;
-+	u16 ltr;
-+	u16 max_snoop_lat, max_nosnoop_lat;
- 
- 	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
- 		return;
- 
-+	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
-+	if (!ltr)
-+		return;
-+
-+	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
-+	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
-+
-+	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
-+	max_snp_val = (max_snoop_lat & PCI_LTR_VALUE_MASK);
-+
-+	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
-+	max_nsnp_val = (max_nosnoop_lat & PCI_LTR_VALUE_MASK);
-+
-+	/* choose the greater max scale value between snoop and no snoop value*/
-+	max_scale = (max_snp_scale > max_nsnp_scale) ? max_snp_scale: max_nsnp_scale;
-+
-+	/* choose the greater max value between snoop and no snoop scales */
-+	max_val = (max_snp_val > max_nsnp_val) ? max_snp_val: max_nsnp_val;
-+
- 	/* Choose the greater of the two Port Common_Mode_Restore_Times */
- 	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
- 	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
-@@ -501,6 +523,16 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
- 	 */
- 	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
- 	encode_l12_threshold(l1_2_threshold, &scale, &value);
-+
-+	/*
-+	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
-+	 * snoop/no-snoop values are greather than or equal to LTR_L1.2_THRESHOLD value.
-+	 */
-+	if (scale > max_scale)
-+		scale = max_scale;
-+	if (value > max_val)
-+		value = max_val;
-+
- 	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
- 
- 	/* Some broken devices only support dword access to L1 SS */
+Changes since v1:
+ - Rebased on top of [1].
+ - Removed erroneous Fixes tag from the patch 4.
+
+Changes since RFC:
+ - Rework clk-regmap-mux fields. Specify safe parent as P_* value rather
+   than specifying the register value directly
+ - Expand commit message to the first patch to specially mention that
+   it is required only on newer generations of Qualcomm chipsets.
+
+Dmitry Baryshkov (5):
+  clk: qcom: regmap: add PHY clock source implementation
+  clk: qcom: gcc-sm8450: use new clk_regmap_phy_mux_ops for PCIe pipe
+    clocks
+  clk: qcom: gcc-sc7280: use new clk_regmap_phy_mux_ops for PCIe pipe
+    clocks
+  PCI: qcom: Remove unnecessary pipe_clk handling
+  PCI: qcom: Drop manual pipe_clk_src handling
+
+ drivers/clk/qcom/Makefile              |  1 +
+ drivers/clk/qcom/clk-regmap-phy-mux.c  | 62 ++++++++++++++++++++
+ drivers/clk/qcom/clk-regmap-phy-mux.h  | 33 +++++++++++
+ drivers/clk/qcom/gcc-sc7280.c          | 47 +++++----------
+ drivers/clk/qcom/gcc-sm8450.c          | 49 +++++-----------
+ drivers/pci/controller/dwc/pcie-qcom.c | 81 +-------------------------
+ 6 files changed, 125 insertions(+), 148 deletions(-)
+ create mode 100644 drivers/clk/qcom/clk-regmap-phy-mux.c
+ create mode 100644 drivers/clk/qcom/clk-regmap-phy-mux.h
+
 -- 
-2.7.4
+2.35.1
+
+
+Dmitry Baryshkov (5):
+  clk: qcom: regmap: add PHY clock source implementation
+  clk: qcom: gcc-sm8450: use new clk_regmap_phy_mux_ops for PCIe pipe
+    clocks
+  clk: qcom: gcc-sc7280: use new clk_regmap_phy_mux_ops for PCIe pipe
+    clocks
+  PCI: qcom: Remove unnecessary pipe_clk handling
+  PCI: qcom: Drop manual pipe_clk_src handling
+
+ drivers/clk/qcom/Makefile              |  1 +
+ drivers/clk/qcom/clk-regmap-phy-mux.c  | 62 ++++++++++++++++++++
+ drivers/clk/qcom/clk-regmap-phy-mux.h  | 33 +++++++++++
+ drivers/clk/qcom/gcc-sc7280.c          | 47 +++++----------
+ drivers/clk/qcom/gcc-sm8450.c          | 49 +++++-----------
+ drivers/pci/controller/dwc/pcie-qcom.c | 81 +-------------------------
+ 6 files changed, 125 insertions(+), 148 deletions(-)
+ create mode 100644 drivers/clk/qcom/clk-regmap-phy-mux.c
+ create mode 100644 drivers/clk/qcom/clk-regmap-phy-mux.h
+
+-- 
+2.35.1
 
