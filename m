@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18C1D53C345
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 04:35:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73FAF53C346
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 04:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbiFCCfA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Jun 2022 22:35:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58898 "EHLO
+        id S233586AbiFCCiQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Jun 2022 22:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229795AbiFCCe7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 22:34:59 -0400
+        with ESMTP id S231260AbiFCCiP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Jun 2022 22:38:15 -0400
 Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E93037A85
-        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 19:34:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039F729802
+        for <linux-pci@vger.kernel.org>; Thu,  2 Jun 2022 19:38:12 -0700 (PDT)
 Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220603023455epoutp01e196d536c17acb572c5e99cc1d66fb99~0_6-GtmJg1163211632epoutp01i
-        for <linux-pci@vger.kernel.org>; Fri,  3 Jun 2022 02:34:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220603023455epoutp01e196d536c17acb572c5e99cc1d66fb99~0_6-GtmJg1163211632epoutp01i
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220603023810epoutp013eff962035a714759a4341ba272effe7~0_90Q41k11132711327epoutp01k
+        for <linux-pci@vger.kernel.org>; Fri,  3 Jun 2022 02:38:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220603023810epoutp013eff962035a714759a4341ba272effe7~0_90Q41k11132711327epoutp01k
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1654223695;
-        bh=ZUokobq8TTHCsINVEHnsXvQBsCVykUvAS8a4QpLstIM=;
+        s=mail20170921; t=1654223890;
+        bh=9trulpcdSesZZKQAGOdkh4j3g+UCCNaHjmwu99XZIU4=;
         h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=j1ukzw88tmFSHto9KnsAewxdzjxhLxHZW87ajYSDUfCrIL2yL/1W60fRRG8BJJtcy
-         kSh9Ojq9isT4Zj69Q5nmvpsPbwFP5XMt7sg5HisYZhO9ycf2aVnCwSt9Ik+9ORyJFD
-         BcGNZYTRYBIvs5NpSVC7WrrKeGEoore/2GqyI8xM=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20220603023454epcas2p36d6b218a39170785ed8b5350243f7f6a~0_6_RIH743270332703epcas2p3M;
-        Fri,  3 Jun 2022 02:34:54 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.89]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4LDn6458NCz4x9Pq; Fri,  3 Jun
-        2022 02:34:52 +0000 (GMT)
-X-AuditID: b6c32a48-495ff700000025de-10-6299734ca5a2
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FB.41.09694.C4379926; Fri,  3 Jun 2022 11:34:52 +0900 (KST)
+        b=rQpNiXKe+OaL1lS3G2R2TGvAbxdnDV+n9Ffv6AEaBeRxn8mE7faX8eU947NnIeTYt
+         Udylp1iJwrTAH8CYiCWETx1TTh1kWY020JL5dRpmEYdaZBjBNMUjP9ixzKLr/o4tot
+         IvhgzOLGvmc/HoAnSetOC/3vlQZAVXLbHWAKDDbg=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20220603023809epcas2p26bf50b11dc5f5d38bec896377b95a6a8~0_9zpmm1j1567515675epcas2p26;
+        Fri,  3 Jun 2022 02:38:09 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.92]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4LDn9p0gWpz4x9Q0; Fri,  3 Jun
+        2022 02:38:06 +0000 (GMT)
+X-AuditID: b6c32a46-f75ff70000002624-5a-6299740de092
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1D.83.09764.D0479926; Fri,  3 Jun 2022 11:38:05 +0900 (KST)
 Mime-Version: 1.0
-Subject: [PATCH v2 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
+Subject: [PATCH v2 4/5] phy: Add ARTPEC-8 PCIe PHY driver
 Reply-To: wangseok.lee@samsung.com
 Sender: Wangseok Lee <wangseok.lee@samsung.com>
 From:   Wangseok Lee <wangseok.lee@samsung.com>
@@ -67,44 +67,43 @@ X-Drm-Type: N,general
 X-Msg-Generator: Mail
 X-Msg-Type: PERSONAL
 X-Reply-Demand: N
-Message-ID: <20220603023452epcms2p22b81cfd1ee4866d5a6663c089ded6eac@epcms2p2>
-Date:   Fri, 03 Jun 2022 11:34:52 +0900
-X-CMS-MailID: 20220603023452epcms2p22b81cfd1ee4866d5a6663c089ded6eac
+Message-ID: <20220603023805epcms2p7b77f0f972e76818b7f6c0eabc3b74340@epcms2p7>
+Date:   Fri, 03 Jun 2022 11:38:05 +0900
+X-CMS-MailID: 20220603023805epcms2p7b77f0f972e76818b7f6c0eabc3b74340
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 X-CPGSPASS: Y
 X-CPGSPASS: Y
 CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAJsWRmVeSWpSXmKPExsWy7bCmua5P8cwkg3crlS2WNGVYvDykaTH/
+X-Brightmail-Tracker: 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
-        ToF5gV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGhZenWAo2X2Os2HnbvIHx5CbGLkZODgkBE4ne
-        h3/Yuhi5OIQEdjBK/OpeDZTg4OAVEJT4u0MYpEZYwE3i98WvTCC2kICSxI4185gh4voS11d0
-        s4LYbAK6Ev8WvwSbIyJwlkni5t3trCAOs8AcFonrzR9YIbbxSsxof8oCYUtLbF++FewKTgE/
-        iXNfutgg4hoSP5b1MkPYohI3V79lh7HfH5sPdbWIROu9s1A1ghIPfu6GiktJLHhyCGpXtcT+
-        v7+ZIOwGRon++6kgj0kAXb3jujFImFfAV+Lnx7lga1kEVCVO/H0AdZqLxKSr/WDjmQXkJba/
-        ncMM0sosoCmxfpc+xBRliSO3WGCeatj4mx2dzSzAJ9Fx+C9cfMe8J1DHqEnMW7mTeQKj8ixE
-        QM9CsmsWwq4FjMyrGMVSC4pz01OLjQpM4JGbnJ+7iRGctLU8djDOfvtB7xAjEwfjIUYJDmYl
-        Ed6SXVOThHhTEiurUovy44tKc1KLDzGaAn05kVlKNDkfmDfySuINTSwNTMzMDM2NTA3MlcR5
-        vVI2JAoJpCeWpGanphakFsH0MXFwSjUwrV9xds+Wf6/eVhQtnRGQJ9V7XODHJEvl81FVq5hO
-        hHQ5b931OnDaHZFvshV3oqPP7C4zk3aqkTRl6dYyDF6pn2Hy5LH5ng8ZvYU39Y1kjmk4d72Z
-        eWVP+oRGLdVHqd3P+9hPWu6+90s5+MlDxyBNVee8J+2HwxoTbFOlt34tNuUKZDi6I+LRUtai
-        hrszy89PdbfyXfZC4d4GtvMXj6znmPX3TxgvR/ThNI/lfMu49Q7bvI478ujPRYnd4h7ipx6q
-        uN3xrbsyoTVBuyPDupQr7Lf/RokWy4/nniQvnrB6qufk4/J9cZeWL9GaO8sg2y1iH8e9pbLr
-        L9o/8Mqsv78mu5hFx/eqYmaN7iuWn9vtlViKMxINtZiLihMBEWB32WMEAAA=
+        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
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
 X-CMS-RootMailID: 20220603015431epcms2p6203908cebe6a320854136559a32b54cb
 References: <20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p6>
-        <CGME20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p2>
+        <CGME20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p7>
 X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -114,950 +113,880 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Add support Axis, ARTPEC-8 SoC.
 ARTPEC-8 is the SoC platform of Axis Communications.
 This is based on arm64 and support GEN4 & 2lane.
-This PCIe controller is based on DesignWare Hardware core
-and uses DesignWare core functions to implement the driver.
+This driver provides PHY interface for ARTPEC-8 SoC PCIe controller,
+based on Samsung PCIe PHY IP.
 
-changes since v1 :
-improvement review comment of Krzysztof on driver code.
--debug messages for probe or other functions.
--Inconsistent coding style (different indentation in structure members).
--Inconsistent code (artpec8_pcie_get_subsystem_resources() gets device
-  from pdev and from pci so you have two same pointers;
-  or artpec8_pcie_get_ep_mem_resources() stores dev 
-  as local variable but uses instead pdev->dev).
--Not using devm_platform_ioremap_resource().
--Printing messages in interrupt handlers.
--Several local/static structures or array are not const.
+Main changes since v1 [1]:
+-change folder name of phy driver to axis from artpec
 
 Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
 ---
- drivers/pci/controller/dwc/Kconfig        |  31 ++
- drivers/pci/controller/dwc/Makefile       |   1 +
- drivers/pci/controller/dwc/pcie-artpec8.c | 864 ++++++++++++++++++++++++++++++
- 3 files changed, 896 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-artpec8.c
+ drivers/phy/Kconfig                 |   1 +
+ drivers/phy/Makefile                |   1 +
+ drivers/phy/axis/Kconfig            |   9 +
+ drivers/phy/axis/Makefile           |   2 +
+ drivers/phy/axis/phy-artpec8-pcie.c | 806 ++++++++++++++++++++++++++++++++++++
+ 5 files changed, 819 insertions(+)
+ create mode 100644 drivers/phy/axis/Kconfig
+ create mode 100644 drivers/phy/axis/Makefile
+ create mode 100644 drivers/phy/axis/phy-artpec8-pcie.c
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 62ce3ab..4aa6da8 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -222,6 +222,37 @@ config PCIE_ARTPEC6_EP
- 	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
- 	  endpoint mode. This uses the DesignWare core.
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 300b0f2..92b8232 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -73,6 +73,7 @@ config PHY_CAN_TRANSCEIVER
  
-+config PCIE_ARTPEC8
-+	bool "Axis ARTPEC-8 PCIe controller"
-+
-+config PCIE_ARTPEC8_HOST
-+	bool "Axis ARTPEC-8 PCIe controller Host Mode"
-+	depends on ARCH_ARTPEC
-+	depends on PCI_MSI_IRQ_DOMAIN
-+	depends on PCI_ENDPOINT
-+	select PCI_EPF_TEST
-+	select PCIE_DW_HOST
-+	select PCIE_ARTPEC8
-+	help
-+	  Say 'Y' here to enable support for the PCIe controller in the
-+	  ARTPEC-8 SoC to work in host mode.
-+	  This PCIe controller is based on DesignWare Hardware core.
-+	  And uses DesignWare core functions to implement the driver.
-+
-+config PCIE_ARTPEC8_EP
-+	bool "Axis ARTPEC-8 PCIe controller Endpoint Mode"
-+	depends on ARCH_ARTPEC
-+	depends on PCI_ENDPOINT
-+	depends on PCI_ENDPOINT_CONFIGFS
-+	select PCI_EPF_TEST
-+	select PCIE_DW_EP
-+	select PCIE_ARTPEC8
-+	help
-+	  Say 'Y' here to enable support for the PCIe controller in the
-+	  ARTPEC-8 SoC to work in endpoint mode.
-+	  This PCIe controller is based on DesignWare Hardware core.
-+	  And uses DesignWare core functions to implement the driver.
-+
- config PCIE_ROCKCHIP_DW_HOST
- 	bool "Rockchip DesignWare PCIe controller"
- 	select PCIE_DW
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 8ba7b67..b361022 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -25,6 +25,7 @@ obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
- obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
- obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
- obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
-+obj-$(CONFIG_PCIE_ARTPEC8) += pcie-artpec8.o
- 
- # The following drivers are for devices that use the generic ACPI
- # pci_root.c driver but don't support standard ECAM config access.
-diff --git a/drivers/pci/controller/dwc/pcie-artpec8.c b/drivers/pci/controller/dwc/pcie-artpec8.c
+ source "drivers/phy/allwinner/Kconfig"
+ source "drivers/phy/amlogic/Kconfig"
++source "drivers/phy/axis/Kconfig"
+ source "drivers/phy/broadcom/Kconfig"
+ source "drivers/phy/cadence/Kconfig"
+ source "drivers/phy/freescale/Kconfig"
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 01e9eff..808c055e 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
+ obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
+ obj-y					+= allwinner/	\
+ 					   amlogic/	\
++					   axis/		\
+ 					   broadcom/	\
+ 					   cadence/	\
+ 					   freescale/	\
+diff --git a/drivers/phy/axis/Kconfig b/drivers/phy/axis/Kconfig
 new file mode 100644
-index 0000000..d9ae9bf
+index 0000000..7198b93
 --- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-artpec8.c
-@@ -0,0 +1,864 @@
++++ b/drivers/phy/axis/Kconfig
+@@ -0,0 +1,9 @@
++config PHY_ARTPEC8_PCIE
++	bool "ARTPEC-8 PCIe PHY driver"
++	depends on OF && (ARCH_ARTPEC8 || COMPILE_TEST)
++	select GENERIC_PHY
++	help
++	  Enable PCIe PHY support for ARTPEC-8 SoC.
++	  This driver provides PHY interface for ARTPEC-8 SoC
++	  PCIe controller.
++	  This is based on Samsung PCIe PHY IP.
+diff --git a/drivers/phy/axis/Makefile b/drivers/phy/axis/Makefile
+new file mode 100644
+index 0000000..45d853c
+--- /dev/null
++++ b/drivers/phy/axis/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_PHY_ARTPEC8_PCIE)		+= phy-artpec8-pcie.o
+diff --git a/drivers/phy/axis/phy-artpec8-pcie.c b/drivers/phy/axis/phy-artpec8-pcie.c
+new file mode 100644
+index 0000000..2742301
+--- /dev/null
++++ b/drivers/phy/axis/phy-artpec8-pcie.c
+@@ -0,0 +1,806 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * PCIe controller driver for Axis ARTPEC-8 SoC
++ * PHY provider for ARTPEC-8 PCIe controller
 + *
 + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
 + *		http://www.samsung.com
 + *
 + * Author: Jaeho Cho <jaeho79.cho@samsung.com>
-+ * This file is based on driver/pci/controller/dwc/pci-exynos.c
 + */
 +
 +#include <linux/clk.h>
-+#include <linux/module.h>
++#include <linux/io.h>
++#include <linux/init.h>
 +#include <linux/mfd/syscon.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+#include <linux/resource.h>
-+#include <linux/types.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
 +#include <linux/phy/phy.h>
++#include <linux/regmap.h>
++#include <linux/debugfs.h>
 +
-+#include "pcie-designware.h"
++/* ARTPEC-8 PCIe PHY registers */
++/* CMN registers */
++#define PCIE_PHY_CMN_REG004		0x10
++#define PCIE_PHY_CMN_REG00B		0x2C
++#define PCIE_PHY_CMN_REG016		0x58
++#define PCIE_PHY_CMN_REG01C		0x70
++#define PCIE_PHY_CMN_REG021		0x84
++#define PCIE_PHY_CMN_REG024		0x90
++#define PCIE_PHY_CMN_REG025		0x94
++#define PCIE_PHY_CMN_REG0E6		0x398
++#define PCIE_PHY_CMN_REG0E7		0x39C
++#define PCIE_PHY_CMN_REG0E8		0x3A0
++#define PCIE_PHY_CMN_REG0E9		0x3A4
++#define PCIE_PHY_CMN_REG0EA		0x3A8
++#define PCIE_PHY_CMN_REG0EB		0x3AC
++#define PCIE_PHY_CMN_REG0EC		0x3B0
++#define PCIE_PHY_CMN_REG0EE		0x3B8
++#define PCIE_PHY_CMN_REG0EF		0x3BC
++#define PCIE_PHY_CMN_REG0F1		0x3C4
++#define PCIE_PHY_CMN_REG0F3		0x3CC
++#define PCIE_PHY_CMN_REG0F4		0x3D0
 +
-+#define to_artpec8_pcie(x)	dev_get_drvdata((x)->dev)
++#define PCIE_PHY_CMN_REG101		0x404
++#define OV_I_CMN_RSTN			BIT(4)
++#define OV_I_INIT_RSTN			BIT(6)
 +
-+/* Gen3 Control Register */
-+#define PCIE_GEN3_RELATED_OFF		0x890
-+/* Disables equilzation feature */
-+#define PCIE_GEN3_EQUALIZATION_DISABLE	(0x1 << 16)
-+#define PCIE_GEN3_EQ_PHASE_2_3		(0x1 << 9)
-+#define PCIE_GEN3_RXEQ_PH01_EN		(0x1 << 12)
-+#define PCIE_GEN3_RXEQ_RGRDLESS_RXTS	(0x1 << 13)
++#define PCIE_PHY_CMN_REG131		0x4C4
++#define PCIE_PHY_CMN_REG17B		0x5EC
++#define PCIE_PHY_CMN_REG17D		0x5F4
++#define PCIE_PHY_CMN_REG190		0x640
++#define PCIE_PHY_CMN_REG191		0x644
++#define PCIE_PHY_CMN_REG192		0x648
++#define PCIE_PHY_CMN_REG1C7		0x71C
++#define PCIE_PHY_CMN_REG1DF		0x77C
++#define PCIE_PHY_CMN_REG1E0		0x780
 +
-+#define FAST_LINK_MODE			(7)
++#define PCIE_PHY_CMN_REG0B1		0x2C4
++#define ANA_ROPLL_REF_DIG_CLK_SEL	BIT(2)
 +
-+/* PCIe ELBI registers */
-+#define PCIE_IRQ0_STS			0x000
-+#define PCIE_IRQ1_STS			0x004
-+#define PCIE_IRQ2_STS			0x008
-+#define PCIE_IRQ5_STS			0x00C
-+#define PCIE_IRQ0_EN			0x010
-+#define PCIE_IRQ1_EN			0x014
-+#define PCIE_IRQ2_EN			0x018
-+#define PCIE_IRQ5_EN			0x01C
-+#define IRQ_MSI_ENABLE			BIT(20)
-+#define PCIE_APP_LTSSM_ENABLE		0x054
-+#define PCIE_ELBI_LTSSM_ENABLE		0x1
-+#define PCIE_ELBI_CXPL_DEBUG_00_31	0x2C8
-+#define PCIE_ELBI_CXPL_DEBUG_32_63	0x2CC
-+#define PCIE_ELBI_SMLH_LINK_UP		BIT(4)
-+#define PCIE_ARTPEC8_DEVICE_TYPE	0x080
-+#define DEVICE_TYPE_EP			0x0
-+#define DEVICE_TYPE_LEG_EP		0x1
-+#define DEVICE_TYPE_RC			0x4
-+#define PCIE_ELBI_SLV_AWMISC		0x828
-+#define PCIE_ELBI_SLV_ARMISC		0x820
-+#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
-+#define LTSSM_STATE_MASK		0x3f
-+#define LTSSM_STATE_L0			0x11
++/* External clock */
++#define PCIE_PHY_CMN_REG14D		0x534
++#define PCIE_AUX_RX_MODE_EXTEND		BIT(7)
 +
-+/* FSYS SYSREG Offsets */
++#define PCIE_PHY_CMN_REG0D9		0x364
++#define ANA_AUX_EXT_REF_CLK_SEL		BIT(4)
++
++#define PCIE_PHY_CMN_REG10F		0x43C
++#define AUX_PLL_EN_EXTEND		BIT(4)
++
++#define PCIE_PHY_CMN_REG11E		0x478
++#define AUX2_PLL_EN_EXTEND		BIT(3)
++
++#define PCIE_PHY_CMN_REG0D4		0x350
++#define OV_S_ANA_AUX_EN			BIT(3)
++#define OV_I_ANA_AUX_EN			BIT(2)
++
++/* LANE registers */
++#define PCIE_PHY_TRSV_REG22D		0x8B4
++#define PCIE_PHY_TRSV_REG23E		0x8F8
++#define PCIE_PHY_TRSV_REG2A5		0xA94
++#define PCIE_PHY_TRSV_REG3E3		0xF8C
++#define PCIE_PHY_TRSV_REG3ED		0xFB4
++#define PCIE_PHY_TRSV_REG20B		0x82C
++#define PCIE_PHY_TRSV_REG20C		0x830
++#define PCIE_PHY_TRSV_REG234		0x8D0
++#define PCIE_PHY_TRSV_REG235		0x8D4
++#define PCIE_PHY_TRSV_REG237		0x8DC
++#define PCIE_PHY_TRSV_REG239		0x8E4
++#define PCIE_PHY_TRSV_REG23A		0x8E8
++#define PCIE_PHY_TRSV_REG23B		0x8EC
++#define PCIE_PHY_TRSV_REG24B		0x92C
++#define PCIE_PHY_TRSV_REG25D		0x974
++#define PCIE_PHY_TRSV_REG262		0x988
++#define PCIE_PHY_TRSV_REG271		0x9C4
++#define PCIE_PHY_TRSV_REG272		0x9C8
++#define PCIE_PHY_TRSV_REG27C		0x9F0
++#define PCIE_PHY_TRSV_REG27D		0x9F4
++#define PCIE_PHY_TRSV_REG27E		0x9F8
++#define PCIE_PHY_TRSV_REG284		0xA10
++#define PCIE_PHY_TRSV_REG289		0xA24
++#define PCIE_PHY_TRSV_REG28A		0xA28
++#define PCIE_PHY_TRSV_REG28B		0xA2C
++#define PCIE_PHY_TRSV_REG28C		0xA30
++#define PCIE_PHY_TRSV_REG28E		0xA38
++#define PCIE_PHY_TRSV_REG28F		0xA3C
++#define PCIE_PHY_TRSV_REG290		0xA40
++#define PCIE_PHY_TRSV_REG291		0xA44
++#define PCIE_PHY_TRSV_REG292		0xA48
++#define PCIE_PHY_TRSV_REG294		0xA50
++#define PCIE_PHY_TRSV_REG295		0xA54
++#define PCIE_PHY_TRSV_REG296		0xA58
++#define PCIE_PHY_TRSV_REG297		0xA5C
++#define PCIE_PHY_TRSV_REG298		0xA60
++#define PCIE_PHY_TRSV_REG29B		0xA6C
++#define PCIE_PHY_TRSV_REG29C		0xA70
++#define PCIE_PHY_TRSV_REG29D		0xA74
++#define PCIE_PHY_TRSV_REG29E		0xA78
++#define PCIE_PHY_TRSV_REG2AA		0xAA8
++#define PCIE_PHY_TRSV_REG2AE		0xAB8
++#define PCIE_PHY_TRSV_REG2C2		0xB08
++#define PCIE_PHY_TRSV_REG2C6		0xB18
++#define PCIE_PHY_TRSV_REG2C7		0xB1C
++#define PCIE_PHY_TRSV_REG2CB		0xB2C
++#define PCIE_PHY_TRSV_REG2CC		0xB30
++#define PCIE_PHY_TRSV_REG2CD		0xB34
++#define PCIE_PHY_TRSV_REG2CE		0xB38
++#define PCIE_PHY_TRSV_REG2D0		0xB40
++#define PCIE_PHY_TRSV_REG2CF		0xB3C
++#define PCIE_PHY_TRSV_REG2E0		0xB80
++#define PCIE_PHY_TRSV_REG2E9		0xBA4
++#define PCIE_PHY_TRSV_REG2EA		0xBA8
++#define PCIE_PHY_TRSV_REG2EB		0xBAC
++#define PCIE_PHY_TRSV_REG315		0xC54
++#define PCIE_PHY_TRSV_REG317		0xC5C
++#define PCIE_PHY_TRSV_REG319		0xC64
++#define PCIE_PHY_TRSV_REG364		0xD90
++#define PCIE_PHY_TRSV_REG36C		0xDB0
++#define PCIE_PHY_TRSV_REG36D		0xDB4
++#define PCIE_PHY_TRSV_REG37E		0xDF8
++#define PCIE_PHY_TRSV_REG37F		0xDFC
++#define PCIE_PHY_TRSV_REG38F		0xE3C
++#define PCIE_PHY_TRSV_REG391		0xE44
++#define PCIE_PHY_TRSV_REG39C		0xE70
++#define PCIE_PHY_TRSV_REG3A8		0xEA0
++#define PCIE_PHY_TRSV_REG3E0		0xF80
++#define PCIE_PHY_TRSV_REG3E1		0xF84
++#define PCIE_PHY_TRSV_REG3E7		0xF9C
++#define PCIE_PHY_TRSV_REG3E9		0xFA4
++#define PCIE_PHY_TRSV_REG3EA		0xFA8
++#define PCIE_PHY_TRSV_REG3EE		0xFB8
++#define PCIE_PHY_TRSV_REG3EF		0xFBC
++#define PCIE_PHY_TRSV_REG3F0		0xFC0
++
++#define PCIE_PHY_TRSV_REG2C0		0xB00
++#define LN_EQ_CTRL_RX_DATA_HOLD		BIT(5)
++
++/* RX Preset registers */
++#define PCIE_PHY_CMN_REG17E		0x5F8
++#define PCIE_PHY_CMN_REG180		0x600
++#define PCIE_PHY_CMN_REG181		0x604
++#define PCIE_PHY_CMN_REG182		0x608
++#define PCIE_PHY_CMN_REG183		0x60C
++#define PCIE_PHY_CMN_REG184		0x610
++#define PCIE_PHY_CMN_REG185		0x614
++#define PCIE_PHY_CMN_REG186		0x618
++#define PCIE_PHY_CMN_REG187		0x61C
++
++
++/* ARTPEC-8 PCIe PCS registers */
++#define PCIE_PCS_OUT_VEC_4		0x154
++#define B1_DYNAMIC			BIT(3)
++
++/* ARTPEC-8 SYS REG registers */
 +#define FSYS_PCIE_CON			0x424
-+#define PCIE_PERSTN			BIT(5)
-+#define FSYS_PCIE_DBI_ADDR_CON		0x428
-+#define FSYS_PCIE_DBI_ADDR_OVR_CDM	0x00
-+#define FSYS_PCIE_DBI_ADDR_OVR_SHADOW	0x12
-+#define FSYS_PCIE_DBI_ADDR_OVR_ATU	0x36
++#define PCIE_PHY_LCPLL_REFCLK_SEL	0x3
++#define PCIE_PHY_ROPLL_REFCLK_SEL	(0x3UL << 2)
++#define ROPLL_REFCLK_NOT_AVAILABLE	(0x2UL << 2)
++#define PCIE_PHY_LN0_REFCLK_PAD_EN	BIT(10)
++#define PCIE_PHY_LN1_REFCLK_PAD_EN	BIT(11)
++#define PCIE_PHY_PWR_OFF		BIT(7)
 +
-+/* PMU SYSCON Offsets */
-+#define PMU_SYSCON_PCIE_ISOLATION	0x3200
++/* ARTPEC-8 Sub Controller registers */
++#define SFR_INIT_RSTN			0x1404
++#define SFR_CMN_RSTN			0x1408
 +
-+/* BUS P/S SYSCON Offsets */
-+#define BUS_SYSCON_BUS_PATH_ENABLE	0x0
++#define PCIE_PHY_LN0_REG_START		0x800
++#define PCIE_PHY_LN0_REG_END		0xFCC
++#define OFFSET_PER_LANE			0x800
 +
-+int artpec8_pcie_dbi_addr_con[] = {
-+	FSYS_PCIE_DBI_ADDR_CON
++enum artpec8_pcie_phy_num_lanes {
++	LANE0 = 0,
++	LANE1,
++	LANE_MAX
 +};
 +
-+struct artpec8_pcie {
-+	struct dw_pcie			*pci;
-+	struct clk			*pipe_clk;
-+	struct clk			*dbi_clk;
-+	struct clk			*mstr_clk;
-+	struct clk			*slv_clk;
-+	const struct artpec8_pcie_pdata	*pdata;
-+	void __iomem			*elbi_base;
-+	struct regmap			*sysreg;
-+	struct regmap			*pmu_syscon;
-+	struct regmap			*bus_s_syscon;
-+	struct regmap			*bus_p_syscon;
-+	enum dw_pcie_device_mode	mode;
-+	int				link_id;
-+	/* For Generic PHY Framework */
-+	struct phy			*phy;
++struct artpec8_pcie_phy_data {
++	const struct phy_ops	*ops;
 +};
 +
-+struct artpec8_pcie_res_ops {
-+	int (*get_mem_resources)(struct platform_device *pdev,
-+				 struct artpec8_pcie *artpec8_ctrl);
-+	int (*get_clk_resources)(struct platform_device *pdev,
-+				 struct artpec8_pcie *artpec8_ctrl);
-+	int (*init_clk_resources)(struct artpec8_pcie *artpec8_ctrl);
-+	void (*deinit_clk_resources)(struct artpec8_pcie *artpec8_ctrl);
++struct artpec8_pcie_phy {
++	const struct artpec8_pcie_phy_data *drv_data;
++	void __iomem *phy_base;
++	void __iomem *pcs_base;
++	void __iomem *elbi_base;
++	struct clk *soc_pll_clk;
++	struct regmap *sysreg;
++	u32 lcpll_ref_clk;
++	const char *mode;
++	u32 num_lanes;
 +};
 +
-+struct artpec8_pcie_pdata {
-+	const struct dw_pcie_ops		*dwc_ops;
-+	const struct dw_pcie_host_ops			*host_ops;
-+	const struct artpec8_pcie_res_ops	*res_ops;
-+	enum dw_pcie_device_mode		mode;
++enum artpec8_pcie_ref_clk {
++	REF_CLK_FROM_XO = 0,
++	REF_CLK_FROM_IO,
++	REF_CLK_RESERVED,
++	REF_CLK_FROM_SOC_PLL,
++	REF_CLK_MAX
 +};
 +
-+enum artpec8_pcie_isolation {
-+	PCIE_CLEAR_ISOLATION = 0,
-+	PCIE_SET_ISOLATION = 1
++struct artpec8_pcie_phy_tune_reg {
++	u32 offset;
++	u32 val;
 +};
 +
-+enum artpec8_pcie_reg_bit {
-+	PCIE_REG_BIT_LOW = 0,
-+	PCIE_REG_BIT_HIGH = 1
++/* ARTPEC-8 PCIe Gen4 x2 PHY CMN register settings */
++struct artpec8_pcie_phy_tune_reg cmn_regs[] = {
++	{PCIE_PHY_CMN_REG004, 0x65},
++	{PCIE_PHY_CMN_REG00B, 0x18},
++	{PCIE_PHY_CMN_REG016, 0x0E},
++	{PCIE_PHY_CMN_REG01C, 0x4F},
++	{PCIE_PHY_CMN_REG021, 0x01},
++	{PCIE_PHY_CMN_REG024, 0x58},
++	{PCIE_PHY_CMN_REG025, 0x98},
++	{PCIE_PHY_CMN_REG0E6, 0x00},
++	{PCIE_PHY_CMN_REG0E7, 0x00},
++	{PCIE_PHY_CMN_REG0E8, 0x3F},
++	{PCIE_PHY_CMN_REG0E9, 0x3F},
++	{PCIE_PHY_CMN_REG0EA, 0xFF},
++	{PCIE_PHY_CMN_REG0EB, 0xFF},
++	{PCIE_PHY_CMN_REG0EC, 0x42},
++	{PCIE_PHY_CMN_REG0EE, 0x3F},
++	{PCIE_PHY_CMN_REG0EF, 0x7F},
++	{PCIE_PHY_CMN_REG0F1, 0x02},
++	{PCIE_PHY_CMN_REG0F3, 0xFF},
++	{PCIE_PHY_CMN_REG0F4, 0xFF},
++	{PCIE_PHY_CMN_REG131, 0x01},
++	{PCIE_PHY_CMN_REG17B, 0xC0},
++	{PCIE_PHY_CMN_REG17D, 0xAF},
++	{PCIE_PHY_CMN_REG190, 0x27},
++	{PCIE_PHY_CMN_REG191, 0x0F},
++	{PCIE_PHY_CMN_REG192, 0x3F},
++	{PCIE_PHY_CMN_REG1C7, 0x05},
++	{PCIE_PHY_CMN_REG1DF, 0x28},
++	{PCIE_PHY_CMN_REG1E0, 0x28},
 +};
 +
-+static void artpec8_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size, u32 val);
-+static u32 artpec8_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size);
-+static void artpec8_pcie_writel(void __iomem *base, u32 val, u32 reg);
++/* ARTPEC-8 PCIe Gen4 x2 PHY lane register settings */
++struct artpec8_pcie_phy_tune_reg lane_regs[] = {
++	{PCIE_PHY_TRSV_REG22D, 0x00},
++	{PCIE_PHY_TRSV_REG23E, 0x00},
++	{PCIE_PHY_TRSV_REG2A5, 0x73},
++	{PCIE_PHY_TRSV_REG3E3, 0x7B},
++	{PCIE_PHY_TRSV_REG3ED, 0x4B},
++	{PCIE_PHY_TRSV_REG20B, 0x02},
++	{PCIE_PHY_TRSV_REG20C, 0xEA},
++	{PCIE_PHY_TRSV_REG234, 0x7A},
++	{PCIE_PHY_TRSV_REG235, 0x1C},
++	{PCIE_PHY_TRSV_REG237, 0x10},
++	{PCIE_PHY_TRSV_REG239, 0x68},
++	{PCIE_PHY_TRSV_REG23A, 0xC0},
++	{PCIE_PHY_TRSV_REG23B, 0x0B},
++	{PCIE_PHY_TRSV_REG24B, 0x00},
++	{PCIE_PHY_TRSV_REG25D, 0x07},
++	{PCIE_PHY_TRSV_REG262, 0x07},
++	{PCIE_PHY_TRSV_REG271, 0x23},
++	{PCIE_PHY_TRSV_REG272, 0x5E},
++	{PCIE_PHY_TRSV_REG27C, 0x8C},
++	{PCIE_PHY_TRSV_REG27D, 0x5B},
++	{PCIE_PHY_TRSV_REG27E, 0x2C},
++	{PCIE_PHY_TRSV_REG284, 0x33},
++	{PCIE_PHY_TRSV_REG289, 0xD4},
++	{PCIE_PHY_TRSV_REG28A, 0xCC},
++	{PCIE_PHY_TRSV_REG28B, 0xD9},
++	{PCIE_PHY_TRSV_REG28C, 0xDC},
++	{PCIE_PHY_TRSV_REG28E, 0xC6},
++	{PCIE_PHY_TRSV_REG28F, 0x90},
++	{PCIE_PHY_TRSV_REG290, 0x4D},
++	{PCIE_PHY_TRSV_REG291, 0x19},
++	{PCIE_PHY_TRSV_REG292, 0x1C},
++	{PCIE_PHY_TRSV_REG294, 0x05},
++	{PCIE_PHY_TRSV_REG295, 0x10},
++	{PCIE_PHY_TRSV_REG296, 0x0C},
++	{PCIE_PHY_TRSV_REG297, 0x19},
++	{PCIE_PHY_TRSV_REG298, 0x04},
++	{PCIE_PHY_TRSV_REG29B, 0x03},
++	{PCIE_PHY_TRSV_REG29C, 0x1B},
++	{PCIE_PHY_TRSV_REG29D, 0x1B},
++	{PCIE_PHY_TRSV_REG29E, 0x1F},
++	{PCIE_PHY_TRSV_REG2AA, 0x00},
++	{PCIE_PHY_TRSV_REG2AE, 0x1F},
++	{PCIE_PHY_TRSV_REG2C2, 0x25},
++	{PCIE_PHY_TRSV_REG2C6, 0x10},
++	{PCIE_PHY_TRSV_REG2C7, 0x06},
++	{PCIE_PHY_TRSV_REG2CB, 0x10},
++	{PCIE_PHY_TRSV_REG2CC, 0x06},
++	{PCIE_PHY_TRSV_REG2CD, 0x20},
++	{PCIE_PHY_TRSV_REG2CE, 0x27},
++	{PCIE_PHY_TRSV_REG2D0, 0x10},
++	{PCIE_PHY_TRSV_REG2CF, 0x0A},
++	{PCIE_PHY_TRSV_REG2E0, 0x01},
++	{PCIE_PHY_TRSV_REG2E9, 0x11},
++	{PCIE_PHY_TRSV_REG2EA, 0x05},
++	{PCIE_PHY_TRSV_REG2EB, 0x4C},
++	{PCIE_PHY_TRSV_REG315, 0x18},
++	{PCIE_PHY_TRSV_REG317, 0x86},
++	{PCIE_PHY_TRSV_REG319, 0x8E},
++	{PCIE_PHY_TRSV_REG364, 0x00},
++	{PCIE_PHY_TRSV_REG36C, 0x03},
++	{PCIE_PHY_TRSV_REG36D, 0x04},
++	{PCIE_PHY_TRSV_REG37E, 0x06},
++	{PCIE_PHY_TRSV_REG37F, 0x04},
++	{PCIE_PHY_TRSV_REG38F, 0x40},
++	{PCIE_PHY_TRSV_REG391, 0x8B},
++	{PCIE_PHY_TRSV_REG39C, 0xFF},
++	{PCIE_PHY_TRSV_REG3A8, 0x02},
++	{PCIE_PHY_TRSV_REG3E0, 0x93},
++	{PCIE_PHY_TRSV_REG3E1, 0x79},
++	{PCIE_PHY_TRSV_REG3E7, 0xF5},
++	{PCIE_PHY_TRSV_REG3E9, 0x75},
++	{PCIE_PHY_TRSV_REG3EA, 0x0D},
++	{PCIE_PHY_TRSV_REG3EE, 0xE2},
++	{PCIE_PHY_TRSV_REG3EF, 0x6F},
++	{PCIE_PHY_TRSV_REG3F0, 0x3D}
++};
++#define PCIE_PHY_CMN_REG17E		0x5F8
++#define PCIE_PHY_CMN_REG180		0x600
++#define PCIE_PHY_CMN_REG181		0x604
++#define PCIE_PHY_CMN_REG182		0x608
++#define PCIE_PHY_CMN_REG183		0x60C
++#define PCIE_PHY_CMN_REG184		0x610
++#define PCIE_PHY_CMN_REG185		0x614
++#define PCIE_PHY_CMN_REG186		0x618
++#define PCIE_PHY_CMN_REG187		0x61C
 +
-+static int artpec8_pcie_get_subsystem_resources(struct platform_device *pdev,
-+					struct artpec8_pcie *artpec8_ctrl)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	/* External Local Bus interface(ELBI) Register */
-+	artpec8_ctrl->elbi_base = devm_platform_ioremap_resource_byname(pdev, "elbi");
-+	if (IS_ERR(artpec8_ctrl->elbi_base)) {
-+		dev_err(dev, "failed to map elbi_base\n");
-+		return PTR_ERR(artpec8_ctrl->elbi_base);
-+	}
-+
-+	/* fsys sysreg regmap handle */
-+	artpec8_ctrl->sysreg =
-+		syscon_regmap_lookup_by_phandle(dev->of_node,
-+			"samsung,fsys-sysreg");
-+	if (IS_ERR(artpec8_ctrl->sysreg)) {
-+		dev_err(dev, "fsys sysreg regmap lookup failed.\n");
-+		return PTR_ERR(artpec8_ctrl->sysreg);
-+	}
-+
-+	/* pmu syscon regmap handle */
-+	artpec8_ctrl->pmu_syscon = syscon_regmap_lookup_by_phandle(dev->of_node,
-+			"samsung,syscon-phandle");
-+	if (IS_ERR(artpec8_ctrl->pmu_syscon)) {
-+		dev_err(dev, "pmu syscon regmap lookup failed.\n");
-+		return PTR_ERR(artpec8_ctrl->pmu_syscon);
-+	}
-+
-+	/* bus s syscon regmap handle */
-+	artpec8_ctrl->bus_s_syscon =
-+		syscon_regmap_lookup_by_phandle(dev->of_node,
-+			"samsung,syscon-bus-s-fsys");
-+	if (IS_ERR(artpec8_ctrl->bus_s_syscon)) {
-+		dev_err(dev, "bus_s_syscon regmap lookup failed.\n");
-+		return PTR_ERR(artpec8_ctrl->bus_s_syscon);
-+	}
-+
-+	/* bus p syscon regmap handle */
-+	artpec8_ctrl->bus_p_syscon =
-+		syscon_regmap_lookup_by_phandle(dev->of_node,
-+			"samsung,syscon-bus-p-fsys");
-+	if (IS_ERR(artpec8_ctrl->bus_p_syscon)) {
-+		dev_err(dev, "bus_p_syscon regmap lookup failed.\n");
-+		return PTR_ERR(artpec8_ctrl->bus_p_syscon);
-+	}
-+
-+	return 0;
-+}
-+
-+static int artpec8_pcie_get_rc_mem_resources(struct platform_device *pdev,
-+					     struct artpec8_pcie *artpec8_ctrl)
-+{
-+	struct dw_pcie *pci = artpec8_ctrl->pci;
-+
-+	/* Data Bus Interface(DBI) Register */
-+	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
-+	if (IS_ERR(pci->dbi_base))
-+		return PTR_ERR(pci->dbi_base);
-+
-+	return 0;
-+}
-+
-+static int artpec8_pcie_get_ep_mem_resources(struct platform_device *pdev,
-+					  struct artpec8_pcie *artpec8_ctrl)
-+{
-+	struct dw_pcie_ep *ep;
-+	struct dw_pcie *pci = artpec8_ctrl->pci;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+
-+	ep = &pci->ep;
-+
-+	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
-+	if (IS_ERR(pci->dbi_base)) {
-+		dev_err(dev, "failed to map ep_dbics\n");
-+		return -ENOMEM;
-+	}
-+
-+	pci->dbi_base2 = devm_platform_ioremap_resource_byname(pdev, "dbi2");
-+	if (IS_ERR(pci->dbi_base2)) {
-+		dev_err(dev, "failed to map ep_dbics2\n");
-+		return -ENOMEM;
-+	}
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-+	if (!res)
-+		return -EINVAL;
-+	ep->phys_base = res->start;
-+	ep->addr_size = resource_size(res);
-+
-+	return 0;
-+}
-+
-+static int artpec8_pcie_get_clk_resources(struct platform_device *pdev,
-+				       struct artpec8_pcie *artpec8_ctrl)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	artpec8_ctrl->pipe_clk = devm_clk_get(dev, "pipe_clk");
-+	if (IS_ERR(artpec8_ctrl->pipe_clk)) {
-+		dev_err(dev, "couldn't get pipe clock\n");
-+		return -EINVAL;
-+	}
-+
-+	artpec8_ctrl->dbi_clk = devm_clk_get(dev, "dbi_clk");
-+	if (IS_ERR(artpec8_ctrl->dbi_clk)) {
-+		dev_info(dev, "couldn't get dbi clk\n");
-+		return -EINVAL;
-+	}
-+
-+	artpec8_ctrl->slv_clk = devm_clk_get(dev, "slv_clk");
-+	if (IS_ERR(artpec8_ctrl->slv_clk)) {
-+		dev_err(dev, "couldn't get slave clock\n");
-+		return -EINVAL;
-+	}
-+
-+	artpec8_ctrl->mstr_clk = devm_clk_get(dev, "mstr_clk");
-+	if (IS_ERR(artpec8_ctrl->mstr_clk)) {
-+		dev_info(dev, "couldn't get master clk\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int artpec8_pcie_init_clk_resources(struct artpec8_pcie *artpec8_ctrl)
-+{
-+	clk_prepare_enable(artpec8_ctrl->pipe_clk);
-+	clk_prepare_enable(artpec8_ctrl->dbi_clk);
-+	clk_prepare_enable(artpec8_ctrl->mstr_clk);
-+	clk_prepare_enable(artpec8_ctrl->slv_clk);
-+
-+	return 0;
-+}
-+
-+static void artpec8_pcie_deinit_clk_resources(struct artpec8_pcie *artpec8_ctrl)
-+{
-+	clk_disable_unprepare(artpec8_ctrl->slv_clk);
-+	clk_disable_unprepare(artpec8_ctrl->mstr_clk);
-+	clk_disable_unprepare(artpec8_ctrl->dbi_clk);
-+	clk_disable_unprepare(artpec8_ctrl->pipe_clk);
-+}
-+
-+static const struct artpec8_pcie_res_ops artpec8_pcie_rc_res_ops = {
-+	.get_mem_resources	= artpec8_pcie_get_rc_mem_resources,
-+	.get_clk_resources	= artpec8_pcie_get_clk_resources,
-+	.init_clk_resources	= artpec8_pcie_init_clk_resources,
-+	.deinit_clk_resources	= artpec8_pcie_deinit_clk_resources,
++struct artpec8_pcie_phy_tune_reg rx_preset_regs[] = {
++	/* 0 */
++	{PCIE_PHY_CMN_REG17E, 0x00},
++	{PCIE_PHY_CMN_REG180, 0x23},
++	{PCIE_PHY_CMN_REG181, 0x44},
++	{PCIE_PHY_CMN_REG182, 0x61},
++	{PCIE_PHY_CMN_REG183, 0x55},
++	{PCIE_PHY_CMN_REG184, 0x14},
++	{PCIE_PHY_CMN_REG185, 0x23},
++	{PCIE_PHY_CMN_REG186, 0x1A},
++	{PCIE_PHY_CMN_REG187, 0x04},
++	{PCIE_PHY_CMN_REG17E, 0x04},
++	{PCIE_PHY_CMN_REG17E, 0x00},
++	/* 1 */
++	{PCIE_PHY_CMN_REG17E, 0x08},
++	{PCIE_PHY_CMN_REG181, 0x42},
++	{PCIE_PHY_CMN_REG17E, 0x0C},
++	{PCIE_PHY_CMN_REG17E, 0x08},
++	/* 2 */
++	{PCIE_PHY_CMN_REG17E, 0x10},
++	{PCIE_PHY_CMN_REG181, 0x40},
++	{PCIE_PHY_CMN_REG17E, 0x14},
++	{PCIE_PHY_CMN_REG17E, 0x10},
++	/* 3 */
++	{PCIE_PHY_CMN_REG17E, 0x18},
++	{PCIE_PHY_CMN_REG181, 0x45},
++	{PCIE_PHY_CMN_REG17E, 0x1C},
++	{PCIE_PHY_CMN_REG17E, 0x18},
++	/* 4 */
++	{PCIE_PHY_CMN_REG17E, 0x20},
++	{PCIE_PHY_CMN_REG181, 0x46},
++	{PCIE_PHY_CMN_REG17E, 0x24},
++	{PCIE_PHY_CMN_REG17E, 0x20},
++	/* 5 */
++	{PCIE_PHY_CMN_REG17E, 0x28},
++	{PCIE_PHY_CMN_REG181, 0x48},
++	{PCIE_PHY_CMN_REG17E, 0x2C},
++	{PCIE_PHY_CMN_REG17E, 0x28},
++	/* 6 */
++	{PCIE_PHY_CMN_REG17E, 0x30},
++	{PCIE_PHY_CMN_REG181, 0x4A},
++	{PCIE_PHY_CMN_REG17E, 0x34},
++	{PCIE_PHY_CMN_REG17E, 0x30},
++	/* 7 */
++	{PCIE_PHY_CMN_REG17E, 0x38},
++	{PCIE_PHY_CMN_REG181, 0x4C},
++	{PCIE_PHY_CMN_REG17E, 0x3C},
++	{PCIE_PHY_CMN_REG17E, 0x38},
++	/* 8 */
++	{PCIE_PHY_CMN_REG17E, 0x40},
++	{PCIE_PHY_CMN_REG180, 0x20},
++	{PCIE_PHY_CMN_REG181, 0x20},
++	{PCIE_PHY_CMN_REG182, 0x01},
++	{PCIE_PHY_CMN_REG17E, 0x44},
++	{PCIE_PHY_CMN_REG17E, 0x40},
++	/* 9 */
++	{PCIE_PHY_CMN_REG17E, 0x48},
++	{PCIE_PHY_CMN_REG180, 0x20},
++	{PCIE_PHY_CMN_REG181, 0x21},
++	{PCIE_PHY_CMN_REG182, 0x01},
++	{PCIE_PHY_CMN_REG17E, 0x4C},
++	{PCIE_PHY_CMN_REG17E, 0x48},
++	/* 10 */
++	{PCIE_PHY_CMN_REG17E, 0x50},
++	{PCIE_PHY_CMN_REG180, 0x24},
++	{PCIE_PHY_CMN_REG181, 0x80},
++	{PCIE_PHY_CMN_REG182, 0x41},
++	{PCIE_PHY_CMN_REG183, 0xAF},
++	{PCIE_PHY_CMN_REG184, 0x26},
++	{PCIE_PHY_CMN_REG185, 0x34},
++	{PCIE_PHY_CMN_REG186, 0x24},
++	{PCIE_PHY_CMN_REG187, 0x06},
++	{PCIE_PHY_CMN_REG17E, 0x54},
++	{PCIE_PHY_CMN_REG17E, 0x50},
++	/* 11 */
++	{PCIE_PHY_CMN_REG17E, 0x58},
++	{PCIE_PHY_CMN_REG181, 0x81},
++	{PCIE_PHY_CMN_REG17E, 0x5C},
++	{PCIE_PHY_CMN_REG17E, 0x58},
++	/* 12 */
++	{PCIE_PHY_CMN_REG17E, 0x60},
++	{PCIE_PHY_CMN_REG181, 0x82},
++	{PCIE_PHY_CMN_REG17E, 0x64},
++	{PCIE_PHY_CMN_REG17E, 0x60},
++	/* 13 */
++	{PCIE_PHY_CMN_REG17E, 0x68},
++	{PCIE_PHY_CMN_REG181, 0x83},
++	{PCIE_PHY_CMN_REG17E, 0x6C},
++	{PCIE_PHY_CMN_REG17E, 0x68},
++	/* 14 */
++	{PCIE_PHY_CMN_REG17E, 0x70},
++	{PCIE_PHY_CMN_REG181, 0x84},
++	{PCIE_PHY_CMN_REG17E, 0x74},
++	{PCIE_PHY_CMN_REG17E, 0x70},
++	/* 15 */
++	{PCIE_PHY_CMN_REG17E, 0x78},
++	{PCIE_PHY_CMN_REG180, 0x24},
++	{PCIE_PHY_CMN_REG181, 0x85},
++	{PCIE_PHY_CMN_REG182, 0x80},
++	{PCIE_PHY_CMN_REG183, 0x7F},
++	{PCIE_PHY_CMN_REG184, 0x2D},
++	{PCIE_PHY_CMN_REG185, 0x34},
++	{PCIE_PHY_CMN_REG186, 0x24},
++	{PCIE_PHY_CMN_REG187, 0x05},
++	{PCIE_PHY_CMN_REG17E, 0x7C},
++	{PCIE_PHY_CMN_REG17E, 0x78},
++	/* 16 */
++	{PCIE_PHY_CMN_REG17E, 0x80},
++	{PCIE_PHY_CMN_REG181, 0x86},
++	{PCIE_PHY_CMN_REG17E, 0x84},
++	{PCIE_PHY_CMN_REG17E, 0x80},
++	/* 17 */
++	{PCIE_PHY_CMN_REG17E, 0x88},
++	{PCIE_PHY_CMN_REG181, 0x87},
++	{PCIE_PHY_CMN_REG17E, 0x8C},
++	{PCIE_PHY_CMN_REG17E, 0x88},
++	/* 18 */
++	{PCIE_PHY_CMN_REG17E, 0x90},
++	{PCIE_PHY_CMN_REG181, 0x88},
++	{PCIE_PHY_CMN_REG17E, 0x94},
++	{PCIE_PHY_CMN_REG17E, 0x90},
++	/* 19 */
++	{PCIE_PHY_CMN_REG17E, 0x98},
++	{PCIE_PHY_CMN_REG181, 0x89},
++	{PCIE_PHY_CMN_REG17E, 0x9C},
++	{PCIE_PHY_CMN_REG17E, 0x98},
 +};
 +
-+static const struct artpec8_pcie_res_ops artpec8_pcie_ep_res_ops = {
-+	.get_mem_resources	= artpec8_pcie_get_ep_mem_resources,
-+	.get_clk_resources	= artpec8_pcie_get_clk_resources,
-+	.init_clk_resources	= artpec8_pcie_init_clk_resources,
-+	.deinit_clk_resources	= artpec8_pcie_deinit_clk_resources,
-+};
 +
-+static void artpec8_pcie_writel(void __iomem *base, u32 val, u32 reg)
++static void artpec8_pcie_phy_reg_writel(void __iomem *base, u32 val, u32 reg)
 +{
 +	writel(val, base + reg);
-+}
++};
 +
-+static u32 artpec8_pcie_readl(void __iomem *base, u32 reg)
++static u32 artpec8_pcie_phy_reg_readl(void __iomem *base, u32 reg)
 +{
 +	return readl(base + reg);
++};
++
++static void artpec8_pcie_phy_reg_update(void __iomem *base, u32 mask,
++					u32 update, u32 reg)
++{
++	u32 val;
++
++	val = artpec8_pcie_phy_reg_readl(base, reg);
++	val &= ~(mask);
++	val |= update;
++	artpec8_pcie_phy_reg_writel(base, val, reg);
++};
++
++static void artpec8_pcie_enable_ref_clk_from_xo(struct artpec8_pcie_phy
++						*pciephy)
++{
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_LCPLL_REFCLK_SEL,
++			   REF_CLK_FROM_XO);
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_ROPLL_REFCLK_SEL,
++			   ROPLL_REFCLK_NOT_AVAILABLE);
++};
++
++static void artpec8_pcie_enable_ref_clk_from_io(struct artpec8_pcie_phy
++						*pciephy)
++{
++	artpec8_pcie_phy_reg_update(pciephy->phy_base,
++				    PCIE_AUX_RX_MODE_EXTEND, 0,
++				    PCIE_PHY_CMN_REG14D);
++	artpec8_pcie_phy_reg_update(pciephy->phy_base,
++				    ANA_AUX_EXT_REF_CLK_SEL, 0,
++				    PCIE_PHY_CMN_REG0D9);
++	artpec8_pcie_phy_reg_update(pciephy->phy_base,
++					AUX_PLL_EN_EXTEND, 0,
++				    PCIE_PHY_CMN_REG10F);
++	artpec8_pcie_phy_reg_update(pciephy->phy_base,
++					AUX2_PLL_EN_EXTEND, 0,
++				    PCIE_PHY_CMN_REG11E);
++	artpec8_pcie_phy_reg_update(pciephy->phy_base,
++					OV_S_ANA_AUX_EN, OV_S_ANA_AUX_EN,
++					PCIE_PHY_CMN_REG0D4);
++	artpec8_pcie_phy_reg_update(pciephy->phy_base,
++					OV_I_ANA_AUX_EN, OV_I_ANA_AUX_EN,
++					PCIE_PHY_CMN_REG0D4);
++
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_LCPLL_REFCLK_SEL,
++			   REF_CLK_FROM_IO);
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_ROPLL_REFCLK_SEL,
++			   ROPLL_REFCLK_NOT_AVAILABLE);
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_LN0_REFCLK_PAD_EN,
++			   PCIE_PHY_LN0_REFCLK_PAD_EN);
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_LN1_REFCLK_PAD_EN,
++			   PCIE_PHY_LN1_REFCLK_PAD_EN);
 +}
 +
-+static int artpec8_pcie_config_phy_power_isolation(struct dw_pcie *pci,
-+						enum artpec8_pcie_reg_bit val)
++static void artpec8_pcie_enable_ref_clk_from_soc_pll(struct artpec8_pcie_phy
++						    *pciephy)
 +{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+	int ret;
-+
-+	ret = regmap_write(artpec8_ctrl->pmu_syscon, PMU_SYSCON_PCIE_ISOLATION,
-+			   val);
-+
-+	return ret;
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_LCPLL_REFCLK_SEL,
++			   REF_CLK_FROM_SOC_PLL);
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_ROPLL_REFCLK_SEL,
++			   ROPLL_REFCLK_NOT_AVAILABLE);
 +}
 +
-+static int artpec8_pcie_config_bus_enable(struct dw_pcie *pci,
-+						enum artpec8_pcie_reg_bit val)
++static void artpec8_pcie_lane_control(struct phy *phy, u32 lane0_reg, u32 mask,
++				      u32 val)
 +{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+	int ret;
++	struct artpec8_pcie_phy *pciephy = phy_get_drvdata(phy);
++	u32 lanex_reg = lane0_reg;
++	int i;
 +
-+	ret = regmap_write(artpec8_ctrl->bus_p_syscon,
-+			   BUS_SYSCON_BUS_PATH_ENABLE, val);
-+	if (ret)
-+		return ret;
++	if (lane0_reg < PCIE_PHY_LN0_REG_START ||
++	    lane0_reg > PCIE_PHY_LN0_REG_END) {
++		return;
++	}
 +
-+	ret = regmap_write(artpec8_ctrl->bus_s_syscon,
-+			   BUS_SYSCON_BUS_PATH_ENABLE, val);
-+	if (ret)
-+		return ret;
-+
-+	return ret;
++	for (i = 0; i < pciephy->num_lanes; i++) {
++		lanex_reg += OFFSET_PER_LANE * i;
++		artpec8_pcie_phy_reg_update(pciephy->phy_base, mask, val,
++					    lanex_reg);
++	}
 +}
 +
-+static int artpec8_pcie_config_isolation(struct dw_pcie *pci,
-+					 enum artpec8_pcie_isolation val)
++static void artpec8_pcie_phy_tune(struct artpec8_pcie_phy *pciephy)
 +{
-+	int ret;
-+	/* reg_val[0] : for phy power isolation */
-+	/* reg_val[1] : for bus enable */
-+	enum artpec8_pcie_reg_bit reg_val[2];
++	int i, count;
 +
-+	switch (val) {
-+	case PCIE_CLEAR_ISOLATION:
-+		reg_val[0] = PCIE_REG_BIT_LOW;
-+		reg_val[1] = PCIE_REG_BIT_HIGH;
++	/* init cmn registers */
++	count = ARRAY_SIZE(cmn_regs);
++	for (i = 0; i < count; i++) {
++		artpec8_pcie_phy_reg_writel(pciephy->phy_base,
++					    cmn_regs[i].val,
++					    cmn_regs[i].offset);
++	}
++
++	/* init lane registers */
++	count = ARRAY_SIZE(lane_regs);
++	for (i = 0; i < count; i++) {
++		artpec8_pcie_phy_reg_writel(pciephy->phy_base,
++					    lane_regs[i].val,
++					    lane_regs[i].offset);
++		artpec8_pcie_phy_reg_writel(pciephy->phy_base,
++					    lane_regs[i].val,
++					    lane_regs[i].offset +
++					    OFFSET_PER_LANE);
++	}
++
++	/* rx preset registers */
++	count = ARRAY_SIZE(rx_preset_regs);
++	for (i = 0; i < count; i++) {
++		artpec8_pcie_phy_reg_writel(pciephy->phy_base,
++					    rx_preset_regs[i].val,
++					    rx_preset_regs[i].offset);
++	}
++}
++
++static int artpec8_pcie_phy_init(struct phy *phy)
++{
++	struct artpec8_pcie_phy *pciephy = phy_get_drvdata(phy);
++
++	/* reset init_rstn and cmn_rstn */
++	artpec8_pcie_phy_reg_update(pciephy->phy_base,
++		OV_I_CMN_RSTN | OV_I_INIT_RSTN, 0, PCIE_PHY_CMN_REG101);
++
++	/* reference clock selection */
++	switch (pciephy->lcpll_ref_clk) {
++	case REF_CLK_FROM_XO:
++		artpec8_pcie_enable_ref_clk_from_xo(pciephy);
 +		break;
-+	case PCIE_SET_ISOLATION:
-+		reg_val[0] = PCIE_REG_BIT_HIGH;
-+		reg_val[1] = PCIE_REG_BIT_LOW;
++	case REF_CLK_FROM_IO:
++		artpec8_pcie_enable_ref_clk_from_io(pciephy);
++		break;
++	case REF_CLK_FROM_SOC_PLL:
++		artpec8_pcie_enable_ref_clk_from_soc_pll(pciephy);
 +		break;
 +	default:
-+		return -EINVAL;
++		break;
 +	}
 +
-+	ret = artpec8_pcie_config_phy_power_isolation(pci, reg_val[0]);
-+	if (ret)
-+		return ret;
++	/* release i_init_rstn */
++	artpec8_pcie_phy_reg_update(pciephy->phy_base, OV_I_INIT_RSTN,
++				    OV_I_INIT_RSTN, PCIE_PHY_CMN_REG101);
 +
-+	ret = artpec8_pcie_config_bus_enable(pci, reg_val[1]);
-+	if (ret)
-+		return ret;
++	/* phy initial settings */
++	artpec8_pcie_phy_tune(pciephy);
 +
-+	return ret;
-+}
++	/* pll_en should be set to off when PM_STATE is P1.CPM */
++	if (!strncmp(pciephy->mode, "pcie_ep", strlen("pcie_ep"))) {
++		artpec8_pcie_phy_reg_update(pciephy->pcs_base, B1_DYNAMIC,
++					    B1_DYNAMIC, PCIE_PCS_OUT_VEC_4);
++	}
 +
-+static int artpec8_pcie_config_perstn(struct dw_pcie *pci,
-+				      enum artpec8_pcie_reg_bit val)
-+{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+	unsigned int bits;
-+	int ret;
-+
-+	if (val == PCIE_REG_BIT_HIGH)
-+		bits = PCIE_PERSTN;
-+	else
-+		bits = 0;
-+
-+	ret = regmap_update_bits(artpec8_ctrl->sysreg, FSYS_PCIE_CON,
-+				 PCIE_PERSTN, bits);
-+
-+	return ret;
-+}
-+
-+static void artpec8_pcie_stop_link(struct dw_pcie *pci)
-+{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+	u32 val;
-+
-+	val = artpec8_pcie_readl(artpec8_ctrl->elbi_base,
-+				 PCIE_APP_LTSSM_ENABLE);
-+
-+	val &= ~PCIE_ELBI_LTSSM_ENABLE;
-+	artpec8_pcie_writel(artpec8_ctrl->elbi_base, val,
-+			PCIE_APP_LTSSM_ENABLE);
-+}
-+
-+static int artpec8_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+	u32 val;
-+
-+	dw_pcie_dbi_ro_wr_en(pci);
-+
-+	/* Equalization disable */
-+	val = artpec8_pcie_read_dbi(pci, pci->dbi_base, PCIE_GEN3_RELATED_OFF,
-+				    4);
-+	artpec8_pcie_write_dbi(pci, pci->dbi_base, PCIE_GEN3_RELATED_OFF, 4,
-+			       val | PCIE_GEN3_EQUALIZATION_DISABLE);
-+
-+	dw_pcie_dbi_ro_wr_dis(pci);
-+
-+	/* assert LTSSM enable */
-+	val = artpec8_pcie_readl(artpec8_ctrl->elbi_base,
-+				 PCIE_APP_LTSSM_ENABLE);
-+
-+	val |= PCIE_ELBI_LTSSM_ENABLE;
-+	artpec8_pcie_writel(artpec8_ctrl->elbi_base, val,
-+			PCIE_APP_LTSSM_ENABLE);
++	/* disable lane eq ctrl rx data hold */
++	artpec8_pcie_lane_control(phy, PCIE_PHY_TRSV_REG2C0,
++				  LN_EQ_CTRL_RX_DATA_HOLD, 0);
 +
 +	return 0;
 +}
 +
-+static irqreturn_t artpec8_pcie_msi_irq_handler(int irq, void *arg)
++static int artpec8_pcie_phy_exit(struct phy *phy)
 +{
-+	struct artpec8_pcie *artpec8_ctrl = arg;
-+	struct dw_pcie *pci = artpec8_ctrl->pci;
-+	struct pcie_port *pp = &pci->pp;
-+	u32 val;
-+
-+	val = artpec8_pcie_readl(artpec8_ctrl->elbi_base, PCIE_IRQ2_STS);
-+
-+	if ((val & IRQ_MSI_ENABLE) == IRQ_MSI_ENABLE) {
-+		val &= IRQ_MSI_ENABLE;
-+		artpec8_pcie_writel(artpec8_ctrl->elbi_base, val,
-+				    PCIE_IRQ2_STS);
-+		dw_handle_msi_irq(pp);
-+	}
-+
-+	return IRQ_HANDLED;
++	return 0;
 +}
 +
-+static void artpec8_pcie_msi_init(struct artpec8_pcie *artpec8_ctrl)
++static int artpec8_pcie_phy_reset(struct phy *phy)
 +{
-+	u32 val;
++	struct artpec8_pcie_phy *pciephy = phy_get_drvdata(phy);
 +
-+	/* enable MSI interrupt */
-+	val = artpec8_pcie_readl(artpec8_ctrl->elbi_base, PCIE_IRQ2_EN);
-+	val |= IRQ_MSI_ENABLE;
-+	artpec8_pcie_writel(artpec8_ctrl->elbi_base, val, PCIE_IRQ2_EN);
-+}
-+
-+static void artpec8_pcie_enable_interrupts(struct artpec8_pcie *artpec8_ctrl)
-+{
-+	if (IS_ENABLED(CONFIG_PCI_MSI))
-+		artpec8_pcie_msi_init(artpec8_ctrl);
-+}
-+
-+static u32 artpec8_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size)
-+{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+	u32 val;
-+	bool is_atu = false;
-+
-+	if (base == pci->atu_base) {
-+		is_atu = true;
-+		base = pci->dbi_base;
-+		regmap_write(artpec8_ctrl->sysreg,
-+			artpec8_pcie_dbi_addr_con[artpec8_ctrl->link_id],
-+				FSYS_PCIE_DBI_ADDR_OVR_ATU);
-+	}
-+
-+	dw_pcie_read(base + reg, size, &val);
-+
-+	if (is_atu)
-+		regmap_write(artpec8_ctrl->sysreg,
-+			artpec8_pcie_dbi_addr_con[artpec8_ctrl->link_id],
-+				FSYS_PCIE_DBI_ADDR_OVR_CDM);
-+
-+	return val;
-+}
-+
-+static void artpec8_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size, u32 val)
-+{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+	bool is_atu = false;
-+
-+	if (base == pci->atu_base) {
-+		is_atu = true;
-+		base = pci->dbi_base;
-+		regmap_write(artpec8_ctrl->sysreg,
-+			artpec8_pcie_dbi_addr_con[artpec8_ctrl->link_id],
-+				FSYS_PCIE_DBI_ADDR_OVR_ATU);
-+	}
-+
-+	dw_pcie_write(base + reg, size, val);
-+
-+	if (is_atu)
-+		regmap_write(artpec8_ctrl->sysreg,
-+			artpec8_pcie_dbi_addr_con[artpec8_ctrl->link_id],
-+				FSYS_PCIE_DBI_ADDR_OVR_CDM);
-+}
-+
-+static void artpec8_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base,
-+				    u32 reg, size_t size, u32 val)
-+{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+
-+	regmap_write(artpec8_ctrl->sysreg,
-+		artpec8_pcie_dbi_addr_con[artpec8_ctrl->link_id],
-+			FSYS_PCIE_DBI_ADDR_OVR_SHADOW);
-+
-+	dw_pcie_write(base + reg, size, val);
-+
-+	regmap_write(artpec8_ctrl->sysreg,
-+		artpec8_pcie_dbi_addr_con[artpec8_ctrl->link_id],
-+			FSYS_PCIE_DBI_ADDR_OVR_CDM);
-+}
-+
-+static int artpec8_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
-+				    int where, int size, u32 *val)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
-+
-+	if (PCI_SLOT(devfn)) {
-+		*val = ~0;
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	}
-+
-+	*val = dw_pcie_read_dbi(pci, where, size);
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int artpec8_pcie_wr_own_conf(struct pci_bus *bus, unsigned int devfn,
-+				    int where, int size, u32 val)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(bus->sysdata);
-+
-+	if (PCI_SLOT(devfn))
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	dw_pcie_write_dbi(pci, where, size, val);
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static struct pci_ops artpec8_pci_ops = {
-+	.read = artpec8_pcie_rd_own_conf,
-+	.write = artpec8_pcie_wr_own_conf,
-+};
-+
-+static int artpec8_pcie_link_up(struct dw_pcie *pci)
-+{
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+	u32 val;
-+
-+	val = artpec8_pcie_readl(artpec8_ctrl->elbi_base,
-+			PCIE_ELBI_CXPL_DEBUG_00_31);
-+
-+	return (val & LTSSM_STATE_MASK) == LTSSM_STATE_L0;
-+}
-+
-+static int artpec8_pcie_host_init(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct artpec8_pcie *artpec8_ctrl = to_artpec8_pcie(pci);
-+
-+	pp->bridge->ops = &artpec8_pci_ops;
-+
-+	dw_pcie_writel_dbi(pci, PCIE_GEN3_RELATED_OFF,
-+				(PCIE_GEN3_EQ_PHASE_2_3 |
-+				 PCIE_GEN3_RXEQ_PH01_EN |
-+				 PCIE_GEN3_RXEQ_RGRDLESS_RXTS));
-+
-+	artpec8_pcie_enable_interrupts(artpec8_ctrl);
++	artpec8_pcie_phy_reg_update(pciephy->phy_base, OV_I_CMN_RSTN,
++				    0, PCIE_PHY_CMN_REG101);
++	udelay(10);
++	artpec8_pcie_phy_reg_update(pciephy->phy_base, OV_I_CMN_RSTN,
++				    OV_I_CMN_RSTN, PCIE_PHY_CMN_REG101);
 +
 +	return 0;
 +}
 +
-+static const struct dw_pcie_host_ops artpec8_pcie_host_ops = {
-+	.host_init = artpec8_pcie_host_init,
-+};
-+
-+static u8 artpec8_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
++static int artpec8_pcie_phy_power_on(struct phy *phy)
 +{
-+	u32 val;
++	struct artpec8_pcie_phy *pciephy = phy_get_drvdata(phy);
 +
-+	val = dw_pcie_readl_dbi(pci, PCIE_ATU_VIEWPORT);
-+	pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
-+
-+	if (val == 0xffffffff)
-+		return 1;
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_PWR_OFF, 0);
 +
 +	return 0;
 +}
 +
-+static void artpec8_pcie_ep_init(struct dw_pcie_ep *ep)
++static int artpec8_pcie_phy_power_off(struct phy *phy)
 +{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	enum pci_barno bar;
-+	/* Currently PCIe EP core is not setting iatu_unroll_enabled
-+	 * so let's handle it here. We need to find proper place to
-+	 * initialize this so that it can be used as for other EP
-+	 * controllers as well.
-+	 */
-+	pci->iatu_unroll_enabled = artpec8_pcie_iatu_unroll_enabled(pci);
++	struct artpec8_pcie_phy *pciephy = phy_get_drvdata(phy);
 +
-+	for (bar = BAR_0; bar <= BAR_5; bar++)
-+		dw_pcie_ep_reset_bar(pci, bar);
-+}
-+
-+static int artpec8_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-+				 enum pci_epc_irq_type type, u16 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+
-+	switch (type) {
-+	case PCI_EPC_IRQ_LEGACY:
-+		return -EINVAL;
-+	case PCI_EPC_IRQ_MSI:
-+		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-+	default:
-+		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-+	}
++	regmap_update_bits(pciephy->sysreg, FSYS_PCIE_CON,
++			   PCIE_PHY_PWR_OFF, PCIE_PHY_PWR_OFF);
 +
 +	return 0;
 +}
 +
-+static const struct pci_epc_features artpec8_pcie_epc_features = {
-+	.linkup_notifier = false,
-+	.msi_capable = true,
-+	.msix_capable = false,
-+};
-+
-+static const struct pci_epc_features*
-+artpec8_pcie_ep_get_features(struct dw_pcie_ep *ep)
++static int artpec8_pcie_phy_probe(struct platform_device *pdev)
 +{
-+	return &artpec8_pcie_epc_features;
-+}
-+
-+static const struct dw_pcie_ep_ops artpec8_dw_pcie_ep_ops = {
-+	.ep_init	= artpec8_pcie_ep_init,
-+	.raise_irq	= artpec8_pcie_raise_irq,
-+	.get_features	= artpec8_pcie_ep_get_features,
-+};
-+
-+static int __init artpec8_add_pcie_ep(struct artpec8_pcie *artpec8_ctrl,
-+		struct platform_device *pdev)
-+{
-+	int ret;
-+	struct dw_pcie_ep *ep;
-+	struct dw_pcie *pci = artpec8_ctrl->pci;
-+
-+	ep = &pci->ep;
-+	ep->ops = &artpec8_dw_pcie_ep_ops;
-+
-+	dw_pcie_writel_dbi(pci, PCIE_GEN3_RELATED_OFF,
-+				(PCIE_GEN3_EQ_PHASE_2_3 |
-+				 PCIE_GEN3_RXEQ_PH01_EN |
-+				 PCIE_GEN3_RXEQ_RGRDLESS_RXTS));
-+
-+	ret = dw_pcie_ep_init(ep);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int __init artpec8_add_pcie_port(struct artpec8_pcie *artpec8_ctrl,
-+					struct platform_device *pdev)
-+{
-+	struct dw_pcie *pci = artpec8_ctrl->pci;
-+	struct pcie_port *pp = &pci->pp;
 +	struct device *dev = &pdev->dev;
-+	int ret;
-+	int irq_flags;
-+	int irq;
++	struct artpec8_pcie_phy *artpec8_phy;
++	struct phy *generic_phy;
++	struct phy_provider *phy_provider;
++	const struct artpec8_pcie_phy_data *drv_data;
 +
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		irq = platform_get_irq_byname(pdev, "intr");
-+		if (!irq)
-+			return -ENODEV;
-+
-+		irq_flags = IRQF_SHARED | IRQF_NO_THREAD;
-+
-+		ret = devm_request_irq(dev, irq, artpec8_pcie_msi_irq_handler,
-+				irq_flags, "artpec8-pcie", artpec8_ctrl);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Prevent core for messing with the IRQ, since it's muxed */
-+	pp->msi_irq = -ENODEV;
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct dw_pcie_ops artpec8_dw_pcie_ops = {
-+	.read_dbi	= artpec8_pcie_read_dbi,
-+	.write_dbi	= artpec8_pcie_write_dbi,
-+	.write_dbi2	= artpec8_pcie_write_dbi2,
-+	.start_link	= artpec8_pcie_start_link,
-+	.stop_link	= artpec8_pcie_stop_link,
-+	.link_up	= artpec8_pcie_link_up,
-+};
-+
-+static int artpec8_pcie_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct dw_pcie *pci;
-+	struct pcie_port *pp;
-+	struct artpec8_pcie *artpec8_ctrl;
-+	enum dw_pcie_device_mode mode;
-+	struct device *dev = &pdev->dev;
-+	const struct artpec8_pcie_pdata *pdata;
-+	struct device_node *np = dev->of_node;
-+
-+	artpec8_ctrl = devm_kzalloc(dev, sizeof(*artpec8_ctrl), GFP_KERNEL);
-+	if (!artpec8_ctrl)
-+		return -ENOMEM;
-+
-+	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-+	if (!pci)
-+		return -ENOMEM;
-+
-+	pdata = (const struct artpec8_pcie_pdata *)
-+		of_device_get_match_data(dev);
-+	if (!pdata)
++	drv_data = of_device_get_match_data(dev);
++	if (!drv_data)
 +		return -ENODEV;
 +
-+	mode = (enum dw_pcie_device_mode)pdata->mode;
++	artpec8_phy = devm_kzalloc(dev, sizeof(*artpec8_phy), GFP_KERNEL);
++	if (!artpec8_phy)
++		return -ENOMEM;
 +
-+	artpec8_ctrl->pci = pci;
-+	artpec8_ctrl->pdata = pdata;
-+	artpec8_ctrl->mode = mode;
-+
-+	pci->dev = dev;
-+	pci->ops = pdata->dwc_ops;
-+	pci->dbi_base2 = NULL;
-+	pci->dbi_base = NULL;
-+	pp = &pci->pp;
-+	pp->ops = artpec8_ctrl->pdata->host_ops;
-+
-+	if (mode == DW_PCIE_RC_TYPE)
-+		artpec8_ctrl->link_id = of_alias_get_id(np, "pcierc");
-+	else
-+		artpec8_ctrl->link_id = of_alias_get_id(np, "pcieep");
-+
-+	ret = artpec8_pcie_get_subsystem_resources(pdev, artpec8_ctrl);
-+	if (ret)
-+		return ret;
-+
-+	if (pdata->res_ops && pdata->res_ops->get_mem_resources) {
-+		ret = pdata->res_ops->get_mem_resources(pdev, artpec8_ctrl);
-+		if (ret)
-+			return ret;
++	/* reference clock */
++	if (of_property_read_u32(dev->of_node, "lcpll-ref-clk",
++				&artpec8_phy->lcpll_ref_clk)) {
++		return -EINVAL;
++	}
++	/* PLL SOC reference clock */
++	if (artpec8_phy->lcpll_ref_clk == REF_CLK_FROM_SOC_PLL) {
++		artpec8_phy->soc_pll_clk = devm_clk_get(dev, "ref_clk");
++		if (IS_ERR(artpec8_phy->soc_pll_clk))
++			return -EINVAL;
++		clk_prepare_enable(artpec8_phy->soc_pll_clk);
 +	}
 +
-+	if (pdata->res_ops && pdata->res_ops->get_clk_resources) {
-+		ret = pdata->res_ops->get_clk_resources(pdev, artpec8_ctrl);
-+		if (ret)
-+			return ret;
++	/* link mode */
++	if (of_property_read_string(dev->of_node, "mode", &artpec8_phy->mode))
++		return -EINVAL;
 +
-+		ret = pdata->res_ops->init_clk_resources(artpec8_ctrl);
-+		if (ret)
-+			return ret;
-+	}
++	/* number of lanes */
++	if (of_property_read_u32(dev->of_node, "num-lanes",
++				 &artpec8_phy->num_lanes))
++		return -EINVAL;
 +
-+	platform_set_drvdata(pdev, artpec8_ctrl);
++	if (artpec8_phy->num_lanes > LANE_MAX)
++		return -EINVAL;
 +
-+	ret = artpec8_pcie_config_isolation(pci, PCIE_CLEAR_ISOLATION);
-+	if (ret)
-+		return ret;
++	/* PHY base register */
++	artpec8_phy->phy_base = devm_platform_ioremap_resource_byname(pdev, "phy");
++	if (IS_ERR(artpec8_phy->phy_base))
++		return PTR_ERR(artpec8_phy->phy_base);
 +
-+	ret = artpec8_pcie_config_perstn(pci, PCIE_REG_BIT_HIGH);
-+	if (ret)
-+		return ret;
++	/* PCS base register */
++	artpec8_phy->pcs_base = devm_platform_ioremap_resource_byname(pdev, "pcs");
++	if (IS_ERR(artpec8_phy->pcs_base))
++		return PTR_ERR(artpec8_phy->pcs_base);
 +
-+	artpec8_ctrl->phy = devm_of_phy_get(dev, np, NULL);
-+	if (IS_ERR(artpec8_ctrl->phy))
-+		return PTR_ERR(artpec8_ctrl->phy);
++	/* sysreg regmap handle, need to change using smc */
++	artpec8_phy->sysreg =
++		syscon_regmap_lookup_by_phandle(dev->of_node,
++			"samsung,fsys-sysreg");
++	if (IS_ERR(artpec8_phy->sysreg))
++		return PTR_ERR(artpec8_phy->sysreg);
 +
-+	phy_init(artpec8_ctrl->phy);
-+	phy_reset(artpec8_ctrl->phy);
++	artpec8_phy->drv_data = drv_data;
 +
-+	switch (mode) {
-+	case DW_PCIE_RC_TYPE:
-+		artpec8_pcie_writel(artpec8_ctrl->elbi_base, DEVICE_TYPE_RC,
-+				PCIE_ARTPEC8_DEVICE_TYPE);
-+		ret = artpec8_add_pcie_port(artpec8_ctrl, pdev);
-+		if (ret < 0)
-+			goto fail_probe;
-+		break;
-+	case DW_PCIE_EP_TYPE:
-+		artpec8_pcie_writel(artpec8_ctrl->elbi_base, DEVICE_TYPE_EP,
-+				PCIE_ARTPEC8_DEVICE_TYPE);
++	generic_phy = devm_phy_create(dev, dev->of_node, drv_data->ops);
++	if (IS_ERR(generic_phy))
++		return PTR_ERR(generic_phy);
 +
-+		ret = artpec8_add_pcie_ep(artpec8_ctrl, pdev);
-+		if (ret < 0)
-+			goto fail_probe;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		goto fail_probe;
-+	}
++	phy_set_drvdata(generic_phy, artpec8_phy);
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++
++	if (IS_ERR(phy_provider))
++		return PTR_ERR(phy_provider);
 +
 +	return 0;
-+
-+fail_probe:
-+	phy_exit(artpec8_ctrl->phy);
-+	if (pdata->res_ops && pdata->res_ops->deinit_clk_resources)
-+		pdata->res_ops->deinit_clk_resources(artpec8_ctrl);
-+
-+	return ret;
 +}
 +
 +static int __exit artpec8_pcie_remove(struct platform_device *pdev)
 +{
-+	struct artpec8_pcie *artpec8_ctrl = platform_get_drvdata(pdev);
-+	const struct artpec8_pcie_pdata *pdata = artpec8_ctrl->pdata;
++	struct artpec8_pcie_phy *artpec8_phy = platform_get_drvdata(pdev);
 +
-+	if (pdata->res_ops && pdata->res_ops->deinit_clk_resources)
-+		pdata->res_ops->deinit_clk_resources(artpec8_ctrl);
++	if (artpec8_phy->soc_pll_clk)
++		clk_disable_unprepare(artpec8_phy->soc_pll_clk);
 +
 +	return 0;
 +}
 +
-+static const struct artpec8_pcie_pdata artpec8_pcie_rc_pdata = {
-+	.dwc_ops	= &artpec8_dw_pcie_ops,
-+	.host_ops	= &artpec8_pcie_host_ops,
-+	.res_ops	= &artpec8_pcie_rc_res_ops,
-+	.mode		= DW_PCIE_RC_TYPE,
++static const struct phy_ops artpec8_phy_ops = {
++	.init		= artpec8_pcie_phy_init,
++	.exit		= artpec8_pcie_phy_exit,
++	.reset		= artpec8_pcie_phy_reset,
++	.power_on	= artpec8_pcie_phy_power_on,
++	.power_off	= artpec8_pcie_phy_power_off,
++	.owner		= THIS_MODULE,
 +};
 +
-+static const struct artpec8_pcie_pdata artpec8_pcie_ep_pdata = {
-+	.dwc_ops	= &artpec8_dw_pcie_ops,
-+	.host_ops	= &artpec8_pcie_host_ops,
-+	.res_ops	= &artpec8_pcie_ep_res_ops,
-+	.mode		= DW_PCIE_EP_TYPE,
++static const struct artpec8_pcie_phy_data artpec8_pcie_phy_data = {
++	.ops		= &artpec8_phy_ops,
 +};
 +
-+static const struct of_device_id artpec8_pcie_of_match[] = {
++static const struct of_device_id artpec8_pcie_phy_match[] = {
 +	{
-+		.compatible = "axis,artpec8-pcie",
-+		.data = &artpec8_pcie_rc_pdata,
-+	},
-+	{
-+		.compatible = "axis,artpec8-pcie-ep",
-+		.data = &artpec8_pcie_ep_pdata,
++		.compatible = "axis,artpec8-pcie-phy",
++		.data = &artpec8_pcie_phy_data,
 +	},
 +	{},
 +};
-+MODULE_DEVICE_TABLE(of, artpec8_pcie_of_match);
++MODULE_DEVICE_TABLE(of, artpec8_pcie_phy_match);
 +
-+static struct platform_driver artpec8_pcie_driver = {
-+	.probe	= artpec8_pcie_probe,
-+	.remove		= __exit_p(artpec8_pcie_remove),
++static struct platform_driver artpec8_pcie_phy_driver = {
++	.probe	= artpec8_pcie_phy_probe,
++	.remove	= __exit_p(artpec8_pcie_phy_remove),
 +	.driver = {
-+		.name	= "artpec8-pcie",
-+		.of_match_table = artpec8_pcie_of_match,
-+	},
++		.of_match_table	= artpec8_pcie_phy_match,
++		.name		= "artpec8_pcie_phy",
++	}
 +};
 +
-+module_platform_driver(artpec8_pcie_driver);
++module_platform_driver(artpec8_pcie_phy_driver);
 +
 +MODULE_LICENSE("GPL");
 +MODULE_AUTHOR("Jaeho Cho <jaeho79.cho@samsung.com>");
