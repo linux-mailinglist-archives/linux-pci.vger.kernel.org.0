@@ -2,138 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 091FA53CCEB
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 18:09:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E6F153D235
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 21:08:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343620AbiFCQJT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Jun 2022 12:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38894 "EHLO
+        id S1349035AbiFCTIu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Jun 2022 15:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231268AbiFCQJS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 12:09:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D7E2C103;
-        Fri,  3 Jun 2022 09:09:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B94A2618D9;
-        Fri,  3 Jun 2022 16:09:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF3E3C385B8;
-        Fri,  3 Jun 2022 16:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654272556;
-        bh=9XDqZH7lKMypp0xEWeC0uCWAmpLurZw7YA9gs7/cFME=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=lOnBJhZMF960+5MB1wXCaFBswhFih5K6XyC3STZC/40lQ414CeoIq03ECPFdsOekJ
-         i3iKetKWPwMOUDMiGL4YJKYtveSRD1A7UzFol1Wvgbc+vTxpwn7hWY0pdmL9bXjMD+
-         MFl/5yCcM1ktib7s8fHzW6hGzRdYQHinjXASR7mFYSMdboKI6ZG9oPfvYEz2kXZgPL
-         IdwZobgynLNeeduuBwwAHv4gAkNTqetRbhItA5f5SXzPsg15ldXaVHFowth0MeoXSJ
-         xcwcb6G+pCNsmBj8DmDHjd5OlP8KeKtYSSGBC6Le4VT2lmu4MInto7ZwONEqIgp5Ad
-         lehsaVkAJ/e3A==
-Date:   Fri, 3 Jun 2022 11:09:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wangseok Lee <wangseok.lee@samsung.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
-        "lars.persson@axis.com" <lars.persson@axis.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        "kernel@axis.com" <kernel@axis.com>,
-        Moon-Ki Jun <moonki.jun@samsung.com>,
-        Sang Min Kim <hypmean.kim@samsung.com>,
-        Dongjin Yang <dj76.yang@samsung.com>
-Subject: Re: [PATCH v2 5/5] MAINTAINERS: Add maintainer for Axis ARTPEC-8
- PCIe PHY driver
-Message-ID: <20220603160913.GA80202@bhelgaas>
+        with ESMTP id S1343735AbiFCTIt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 15:08:49 -0400
+Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA9B73917A
+        for <linux-pci@vger.kernel.org>; Fri,  3 Jun 2022 12:08:46 -0700 (PDT)
+Received: by mail-oo1-xc30.google.com with SMTP id c17-20020a4ac311000000b0040ea8bf80f2so1620939ooq.1
+        for <linux-pci@vger.kernel.org>; Fri, 03 Jun 2022 12:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=uQm69jIgbOTyn1ClmnjZvF1mQyllP9AbcSxz7NY1e74=;
+        b=peMTcS2J0bkhcQfLpXY5HI+ynpJKNL1j7TT3n6xhnGINfudOzs/Wy5e9dOkvukoucU
+         QNydhfLVmiD4XxjbixY4MdYa0ULFfRmO+C8wExU9wYO734rkxFtFvLbBSYiVES+YUsWx
+         kg5nWq72UAX3I5at0ImMcE8uK3uCDT6FwR74Xfp+R86JbeLJqZWmVf1xdMp6z7SnM/yw
+         tP/12eTd0FRWERzniS9Ywa+QbfrWGQCDNrQkWB3LdqvrmccIu2JJWl7q1B8AAnYB2qf4
+         z+w90BsW60aRRW+4F2qwj8D0FsuoSPnNqveyuDudklGNo/81PwLtg+pvXRLQCTNkByGE
+         WgRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=uQm69jIgbOTyn1ClmnjZvF1mQyllP9AbcSxz7NY1e74=;
+        b=8Ekw+iK+B9Rg1TZLwio3cs/0D69sZvwgPZQPjomuLbnPUh2JdqdlEbqU4InKmWjjK5
+         U4nZgDw2wjTB5YSPKzRiHJqBBaiR8P1ndC5jXPb9zgjGA38w/URdy8cq3tUR1FIFKAs4
+         RKEhWJ4uaeVSh6V7HL2V6soiOse+tyrOxudhX4BZ6iGgTPheSEjOyBHhp2Dnm9uhCm6L
+         j9ys+ft+ccjeGFAsWcBboz4cEkPHcB7twxcjwSBs01H/B77CBfoV8109q+8PgpWjy/SF
+         dwYWVgNuADexy+hcmBpn2/nxHjY7IPl3/ZtJJMU5678Bs0hkZF8ohEplzF1ccjPFOCwS
+         hTgA==
+X-Gm-Message-State: AOAM5335a9l/KxeN/5Bn4jNEbPuLfuME93DPTnkVKg8zmSAChytxuSlN
+        tGpf4bknPRxsv/RdWxaTFyNfvtGgltMhCoT+59I=
+X-Google-Smtp-Source: ABdhPJzPqr9ZJ75Di+tbMESnTfkIbH6PQ3O3mesgCBPuOrGJp0v+tITSgNkU3WRdfpwQIjwRVbypZGhoNlkRJn+M2B4=
+X-Received: by 2002:a4a:eac7:0:b0:40e:5c32:42f with SMTP id
+ s7-20020a4aeac7000000b0040e5c32042fmr4794281ooh.52.1654283326102; Fri, 03 Jun
+ 2022 12:08:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220603024347epcms2p48d01596e10b251bec077581a6c609c48@epcms2p4>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Sender: sujitnoo030@gmail.com
+Received: by 2002:a05:6358:c21:b0:a3:41b9:b883 with HTTP; Fri, 3 Jun 2022
+ 12:08:45 -0700 (PDT)
+From:   "Mr. Jimmy Moore" <jimmymoore265@gmail.com>
+Date:   Fri, 3 Jun 2022 20:08:45 +0100
+X-Google-Sender-Auth: HJSPW36J7I-RtMMQntEJbYelM4Y
+Message-ID: <CAAJKTSX1Vg6CQtPch_nYOb3yfkEh7HdqQvGydTEaGrrF2S6TTw@mail.gmail.com>
+Subject: UNITED NATIONS COVID-19 COMPENSATION FUND.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLY,LOTS_OF_MONEY,MILLION_USD,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
+        T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In subject:
+UNITED NATIONS COVID-19 OVERDUE COMPENSATION UNIT.
+REFERENCE PAYMENT CODE: 8525595
+BAILOUT AMOUNT:$3.5 MILLION USD
+ADDRESS: NEW YORK, NY 10017, UNITED STATES
 
-  MAINTAINERS: Add Axis ARTPEC-8 PCIe PHY maintainers
+Dear award recipient, Covid-19 Compensation Funds.
 
-to put the important things first so they don't get chopped off by
-"git log --oneline" and similar.
+You are receiving this correspondence because we have finally reached
+a consensus with the UN, IRS, and IMF that your total fund worth $3.5
+Million Dollars of Covid-19 Compensation payment shall be delivered to
+your nominated mode of receipt, and you are expected to pay the sum of
+$12,000 for levies owed to authorities after receiving your funds.
 
-On Fri, Jun 03, 2022 at 11:43:47AM +0900, Wangseok Lee wrote:
-> Add maintainer for Axis ARTPEC-8 PCIe PHY.
-> 
-> Add Jesper Nilsson <jesper.nilsson@axis.com> and
-> Lars Persson <lars.persson@axis.com> as Maintainer for these files.
+You have a grace period of 2 weeks to pay the $12,000 levy after you
+have received your Covid-19 Compensation total sum of $3.5 Million. We
+shall proceed with the payment of your bailout grant only if you agree
+to the terms and conditions stated.
 
-s/Maintainer/maintainers/
+Contact Dr. Mustafa Ali, for more information by email at:(
+mustafaliali180@gmail.com ) Your consent in this regard would be
+highly appreciated.
 
-> ARTPEC-8 is the SoC platform of Axis Communications
-> and PCIe phy is designed based on Samsung PHY.
-
-s/phy/PHY/ to match other uses.
-
-Rewrap all of above to fill 75 columns.
-
-> Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
-
-Obviously we'll look for acks from Jesper and Lars.
-
-Also would be good if Jesper explicitly acked the fact that his
-existing "PCIE DRIVER FOR AXIS ARTPEC" entry also matches the new
-pcie-artpec8.c driver:
-
-  PCIE DRIVER FOR AXIS ARTPEC
-  M:      Jesper Nilsson <jesper.nilsson@axis.com>
-  L:      linux-arm-kernel@axis.com
-  L:      linux-pci@vger.kernel.org
-  S:      Maintained
-  F:      Documentation/devicetree/bindings/pci/axis,artpec*
-  F:      drivers/pci/controller/dwc/*artpec*
-
-> ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d4d4aa2..cd6f75b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1864,12 +1864,14 @@ M:	Jesper Nilsson <jesper.nilsson@axis.com>
->  M:	Lars Persson <lars.persson@axis.com>
->  L:	linux-arm-kernel@axis.com
->  S:	Maintained
-> +F:	Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml
->  F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
->  F:	arch/arm/boot/dts/artpec6*
->  F:	arch/arm/mach-artpec
->  F:	drivers/clk/axis
->  F:	drivers/crypto/axis
->  F:	drivers/mmc/host/usdhi6rol0.c
-> +F:	drivers/phy/artpec/phy-artpec*
->  F:	drivers/pinctrl/pinctrl-artpec*
->  
->  ARM/ASPEED I2C DRIVER
-> -- 
-> 2.9.5
-> 
-> -- 
-> linux-phy mailing list
-> linux-phy@lists.infradead.org
-> https://lists.infradead.org/mailman/listinfo/linux-phy
+Best Regards,
+Mr. Jimmy Moore.
+Undersecretary-General United Nations
+Office of Internal Oversight-UNIOS
+UN making the world a better place
