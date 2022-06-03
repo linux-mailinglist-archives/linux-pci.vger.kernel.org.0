@@ -2,119 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E098853C676
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 09:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1475B53C68C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Jun 2022 09:55:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239100AbiFCHlu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Jun 2022 03:41:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
+        id S242655AbiFCHzX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Jun 2022 03:55:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242620AbiFCHlt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 03:41:49 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC9E21E
-        for <linux-pci@vger.kernel.org>; Fri,  3 Jun 2022 00:41:46 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id a17so4389354lfs.11
-        for <linux-pci@vger.kernel.org>; Fri, 03 Jun 2022 00:41:46 -0700 (PDT)
+        with ESMTP id S237453AbiFCHzX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 03:55:23 -0400
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D156135DC1;
+        Fri,  3 Jun 2022 00:55:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lFsusYv3a39AFVrKGs8AUQpmcs9BSd1N8sKJb+8VaT8=;
-        b=ixw28mMy3cuE9uN5yiyr9tWLypliH3/PjkIL2a7cNXIOP3hkqtNf8DpOd5Nitj3zsH
-         svWgzJ2nDzKrA+wbjZzf/G2zWbiQCu8xw9426CBpzfb0HOr7rf1sAkZgr+lsNKG7oT0k
-         4xleggXyL7PvWnKzt/+yVI/cw/1LxKlOmaORj+II8bvXYSXLWFOgWvbMjHPzEMYKCYrU
-         zYNGrDrlbEag+fqe7+kY9AJkWC+1PhjS00SnhAFvCJpTKA+TWAlRNFaiG04QB7tntEoa
-         e/looCZa7FOLM40cDzmV5WFIv79m6VaEqGHnfL+FZXnpZMlc3F/z7sX0r2tjoDz5wGV5
-         PS3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lFsusYv3a39AFVrKGs8AUQpmcs9BSd1N8sKJb+8VaT8=;
-        b=O2ajl2w/YbWd1fudrT4uW1+Ow6LIc4+VywFj5bbXLJQJ8mObABidN/srmwhFSpz7EF
-         74xIEUaxM7dCtjcKvjq2ykPTf8Nq7sGW4IfmDqZ4EKSVOnSMbWlXN+cHi12uTEPwsQ5v
-         6vIbqo8LFX6dpMZREATQBL9D6BjWI0HdOSH0hfL65B+ID3AfcSyEAkoYb/nEWOrfmvO8
-         KaPWhO5+q0uw01CZKcr9dxUbGW0Hiq4er6yilLrJRBXOLwfJZZVdHokVR4GQs7CeGhrf
-         BerdUzfwRXaM7GsdqqagkwKeJDRgxhk0bwbIWZm5eQbYyn9/mgACElZhbBy7avBRiIZN
-         0KMQ==
-X-Gm-Message-State: AOAM532q2cHze5rv9XJofgwjbOsfaUghrAMBSEy1uY22asgYgCmXKiO+
-        PliH9Zt4TekQbnz9fYm/YeF6nw==
-X-Google-Smtp-Source: ABdhPJxDXg09fNPT7NjiCzLfrFAat7DmabLDuWbgkBA/RQbgIf9Aknavt0hpzwzEn7vgd3NfamStPA==
-X-Received: by 2002:a05:6512:1041:b0:478:afc6:5846 with SMTP id c1-20020a056512104100b00478afc65846mr5888616lfb.132.1654242105122;
-        Fri, 03 Jun 2022 00:41:45 -0700 (PDT)
-Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id x6-20020ac24886000000b00477b11144e9sm1450023lfc.66.2022.06.03.00.41.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jun 2022 00:41:44 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1654242922; x=1685778922;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=idd1rNj/CX3H0NOTNJzw+JpUrFbH6zOoQ/T+QLi/PZg=;
+  b=dgSCgdHIlLH9b/SEqOSnzVr1lxcd1X96WmuBSZm/LUihPNqaavs/eR/Q
+   Z0Qw6SOkx7ZCimzp9h+8p4AVwqC2vQ3hk/7Zq55BoDDBS5GX055g/BvdG
+   nilYvHuvkABIN9TvkxT52umfsvcW1Qk2CCHsFptfFsgCPRYOUJm1jsXg6
+   s=;
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 03 Jun 2022 00:55:22 -0700
+X-QCInternal: smtphost
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Jun 2022 00:55:04 -0700
+X-QCInternal: smtphost
+Received: from hu-krichai-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.110.37])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 03 Jun 2022 13:24:44 +0530
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 33E644151; Fri,  3 Jun 2022 13:24:43 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     helgaas@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_hemantk@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v13 7/7] PCI: qcom: Revert "PCI: qcom: Add support for handling MSIs from 8 endpoints"
-Date:   Fri,  3 Jun 2022 10:41:37 +0300
-Message-Id: <20220603074137.1849892-8-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220603074137.1849892-1-dmitry.baryshkov@linaro.org>
-References: <20220603074137.1849892-1-dmitry.baryshkov@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rajat Jain <rajatja@google.com>
+Subject: [PATCH v4] PCI/ASPM: Update LTR threshold based upon reported max latencies
+Date:   Fri,  3 Jun 2022 13:24:19 +0530
+Message-Id: <1654242861-15695-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1646679549-12494-1-git-send-email-quic_pmaliset@quicinc.com>
+References: <1646679549-12494-1-git-send-email-quic_pmaliset@quicinc.com>
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I have replied with my Tested-by to the patch at [2], which has landed
-in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
-Add support for handling MSIs from 8 endpoints"). However lately I
-noticed that during the tests I still had 'pcie_pme=nomsi', so the
-device was not forced to use higher MSI vectors.
+From: Prasad Malisetty <quic_pmaliset@quicinc.com>
 
-After removing this option I noticed that high MSI vectors are not
-delivered on tested platforms. Additional research pointed to
-a patch in msm-4.14 ([1]), which describes that each group of MSI
-vectors is mapped to the separate interrupt.
+In ASPM driver, LTR threshold scale and value are updated based on
+tcommon_mode and t_poweron values. In kioxia NVMe L1.2 is failing due to
+LTR threshold scale and value are greater values than max snoop/non-snoop
+value.
 
-Without these changes specifying num_vectors can lead to missing MSI
-interrupts and thus to devices malfunction.
+Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
+reported snoop/no-snoop values is greather than or equal to
+LTR_L1.2_THRESHOLD value.
 
-[1] https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/commit/671a3d5f129f4bfe477152292ada2194c8440d22
-[2] https://lore.kernel.org/linux-arm-msm/20211214101319.25258-1-manivannan.sadhasivam@linaro.org/
-
-Fixes: 20f1bfb8dd62 ("PCI: qcom: Add support for handling MSIs from 8 endpoints")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index f9a61ad6d1f0..2e5464edc36e 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1587,7 +1587,6 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	pci->dev = dev;
- 	pci->ops = &dw_pcie_ops;
- 	pp = &pci->pp;
--	pp->num_vectors = MAX_MSI_IRQS;
+I am taking this patch forward as prasad is no more working with our org.
+changes since v3:
+	- Changed the logic to include this condition "snoop/nosnoop
+	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
+Changes since v2:
+	- Replaced LTRME logic with max snoop/no-snoop latencies check.
+Changes since v1:
+	- Added missing variable declaration in v1 patch
+---
+ drivers/pci/pcie/aspm.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index a96b742..c8f6253 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -461,14 +461,36 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ {
+ 	struct pci_dev *child = link->downstream, *parent = link->pdev;
+ 	u32 val1, val2, scale1, scale2;
++	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
+ 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+ 	u32 ctl1 = 0, ctl2 = 0;
+ 	u32 pctl1, pctl2, cctl1, cctl2;
+ 	u32 pl1_2_enables, cl1_2_enables;
++	u16 ltr;
++	u16 max_snoop_lat, max_nosnoop_lat;
  
- 	pcie->pci = pci;
+ 	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+ 		return;
  
++	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
++	if (!ltr)
++		return;
++
++	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
++	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
++
++	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
++	max_snp_val = (max_snoop_lat & PCI_LTR_VALUE_MASK);
++
++	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
++	max_nsnp_val = (max_nosnoop_lat & PCI_LTR_VALUE_MASK);
++
++	/* choose the greater max scale value between snoop and no snoop value*/
++	max_scale = (max_snp_scale > max_nsnp_scale) ? max_snp_scale: max_nsnp_scale;
++
++	/* choose the greater max value between snoop and no snoop scales */
++	max_val = (max_snp_val > max_nsnp_val) ? max_snp_val: max_nsnp_val;
++
+ 	/* Choose the greater of the two Port Common_Mode_Restore_Times */
+ 	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+ 	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+@@ -501,6 +523,16 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ 	 */
+ 	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+ 	encode_l12_threshold(l1_2_threshold, &scale, &value);
++
++	/*
++	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
++	 * snoop/no-snoop values are greather than or equal to LTR_L1.2_THRESHOLD value.
++	 */
++	if (scale > max_scale)
++		scale = max_scale;
++	if (value > max_val)
++		value = max_val;
++
+ 	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
+ 
+ 	/* Some broken devices only support dword access to L1 SS */
 -- 
-2.35.1
+2.7.4
 
