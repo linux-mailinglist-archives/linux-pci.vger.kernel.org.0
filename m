@@ -2,144 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19C7A53D851
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Jun 2022 21:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00DC053D882
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jun 2022 22:30:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240793AbiFDTcs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 4 Jun 2022 15:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48262 "EHLO
+        id S240970AbiFDUad (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 4 Jun 2022 16:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240820AbiFDTcK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Jun 2022 15:32:10 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA6054F9F4;
-        Sat,  4 Jun 2022 12:31:47 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id ew15so7962016qtb.2;
-        Sat, 04 Jun 2022 12:31:47 -0700 (PDT)
+        with ESMTP id S234748AbiFDUab (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Jun 2022 16:30:31 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B54B222A1
+        for <linux-pci@vger.kernel.org>; Sat,  4 Jun 2022 13:30:29 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id w3so9226420plp.13
+        for <linux-pci@vger.kernel.org>; Sat, 04 Jun 2022 13:30:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=purestorage.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ODz0xlzoLBs6dcrjiKhQxftor+2WPn3OJscfp/YQp7I=;
-        b=Y1gh/CBM8MBqiAEP68Q5r9yD6zqL6tJYGIr5D9uF5dstEz3rT9cWB5jTPy2ceJ+/yE
-         /Wse3w0exUsBYU/sErKIIiBTJngsnyLQ7Rby9npQ/75Y4tCO61GWPW/n9m6RPbsQ+FDe
-         FJD81AC79cosf/Nes1YaBEJpuh1KNqVFmf09JCLGL2ij6/oTGGWQrjkrQUPT8iDz5jMq
-         r9GsVNdxI3/L1+mwv/v4mzz1R0LWeHP6ucLYnhEgUkKWJLEfCiU57L04JLfiTT2e6RcM
-         YLETwXcEmVAFroE9C8EDq6oPMPxMX3g6WLN8sKSB1KgtJEydz2uZQfcW0t7BHEgSOm/2
-         aBAA==
+        bh=/HBb0ZDkKChS7u7W92q6z+RJ56Q8ZTddXO5nLVdm7Ds=;
+        b=P9CwzByv7YgasmohkFwhBdbjzvwEj+asz8ddZId+WOAo1rW80xt71SlfNQjChfKryA
+         wsOQcEWIagvMoLVuqx/Wl04bzWcJiucwtVHxpf+pl+ZTjtZY57pdASshNB27LMmG+Zjx
+         uWQ1GkoBKbMEn58u3OWvQ2kPRb7gAZzYQXH8Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ODz0xlzoLBs6dcrjiKhQxftor+2WPn3OJscfp/YQp7I=;
-        b=6/nM3IvYZQoto7GFV84g+zkWxEbu+CCWWGN55PvIyA+OQ3V8tdGAwj+UwWZCtEDPpl
-         Z4BfI/cPgTvnxYD2wzdl0m2pvO8gg8yuRuYOwr7izwyus+DHmE0VtjtgzthQGRXLY+Gu
-         aC6PlVU9uQ2GyWvb9wWht8nxH78Dp/ArfnAEhKDSI4KEYVJsb9qJQeXtxeulYtMdxsyY
-         NsZPHtIfqRUu6KE8y611mFCmLk0qM/Ocfw8ASKrSorgY8feBPh4S3PhBGD+tPYp1BCv7
-         c589J+6o8VZS+ML8rQZ90U/TOr1CzHpNfyNc4f4K8iDryCXGhsivq6xIZIx2yBZHoiHI
-         aI/A==
-X-Gm-Message-State: AOAM533tdlQQaCclilnq4p7Lsmd1h4x9CPrZi0IMJaAe18s8aFISWBEG
-        +acMyM8i6kpcPl1GCVbfWSDf2HesIUDS
-X-Google-Smtp-Source: ABdhPJyFb0Cvw3XxP8j+iWRgmOmbVwwa/PfAwP6p+g+HAZV+hvBphkJ+ocbbc+Khip88ap0Tf5af4g==
-X-Received: by 2002:ac8:570a:0:b0:304:e615:275f with SMTP id 10-20020ac8570a000000b00304e615275fmr3099117qtw.139.1654371094268;
-        Sat, 04 Jun 2022 12:31:34 -0700 (PDT)
-Received: from moria.home.lan (c-73-219-103-14.hsd1.vt.comcast.net. [73.219.103.14])
-        by smtp.gmail.com with ESMTPSA id o17-20020ac84291000000b00304defdb1b3sm3537426qtl.85.2022.06.04.12.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jun 2022 12:31:33 -0700 (PDT)
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>, pmladek@suse.com,
-        rostedt@goodmis.org, linux-pci@vger.kernel.org
-Subject: [PATCH v3 29/33] PCI/P2PDMA: Convert to printbuf
-Date:   Sat,  4 Jun 2022 15:30:38 -0400
-Message-Id: <20220604193042.1674951-30-kent.overstreet@gmail.com>
-X-Mailer: git-send-email 2.36.0
-In-Reply-To: <20220604193042.1674951-1-kent.overstreet@gmail.com>
-References: <20220604193042.1674951-1-kent.overstreet@gmail.com>
+        bh=/HBb0ZDkKChS7u7W92q6z+RJ56Q8ZTddXO5nLVdm7Ds=;
+        b=oYK8+a64gMM48mmGtYRRmLvt45X1ScWT0c9w1PbHlOoSHKt36h+ov5+4s/wWciMFQ+
+         /UnO7Sr2cuyc3zG+9/OwzDQADkvdhqg9UQz1T2gCxz9K444KbqXxIxvH7EiNzrVUlq6u
+         2goR4km/eITKa9ysZYHZye3kSuR5MGXodSZPLK/Xa/W49Ui8gQIk0TUbIAz5q1l+t1+/
+         cf5/5bUxJQgWchqWaqUmWfvNZphCRa/JM60w7MS8688xpLrdrisxe4qGkbnIN4IBF8j5
+         AvYrbNMPlK5AFBjJNWtSRfKTBpsXHNXKUggYixwMZj81iQbapBRjCfv69yTcJFe6+eDr
+         Nbaw==
+X-Gm-Message-State: AOAM532v01HYUntLjUC47W6at3bKKVm7v8loYTsJvgDc1T/pLcw7aP37
+        D8X2Ac+q1h6zagDqKOm/SCEgMw==
+X-Google-Smtp-Source: ABdhPJwtXs6I68jQqRzep0xqec3GlALJ3iL77SWf2Owq4SCVbCGHKE8Dm7lcxheeLXbH6VLIAOVrIw==
+X-Received: by 2002:a17:902:eccc:b0:167:5c6e:31e4 with SMTP id a12-20020a170902eccc00b001675c6e31e4mr5543306plh.90.1654374628607;
+        Sat, 04 Jun 2022 13:30:28 -0700 (PDT)
+Received: from irdv-mkhalfella.dev.purestorage.com ([208.88.158.128])
+        by smtp.googlemail.com with ESMTPSA id l63-20020a638842000000b003f61c311e79sm6530196pgd.56.2022.06.04.13.30.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 Jun 2022 13:30:27 -0700 (PDT)
+From:   Mohamed Khalfella <mkhalfella@purestorage.com>
+To:     helgaas@kernel.org
+Cc:     bhelgaas@google.com, ebadger@purestorage.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mkhalfella@purestorage.com,
+        msaggi@purestorage.com, oohall@gmail.com, rajatja@google.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] PCI/AER: Iterate over error counters instead of error
+Date:   Sat,  4 Jun 2022 20:30:21 +0000
+Message-Id: <20220604203021.10663-1-mkhalfella@purestorage.com>
+X-Mailer: git-send-email 2.29.0
+In-Reply-To: <20220603235856.GA117911@bhelgaas>
+References: <20220603235856.GA117911@bhelgaas>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This converts from seq_buf to printbuf. We're using printbuf in external
-buffer mode, so it's a direct conversion, aside from some trivial
-refactoring in cpu_show_meltdown() to make the code more consistent.
+On 6/3/22 16:58, Bjorn Helgaas wrote:
+> On Fri, Jun 03, 2022 at 10:12:47PM +0000, Mohamed Khalfella wrote:
+>> Is there any chance for this to land in 5.19?
+>
+> Too late for v5.19, since the merge window will end in a couple days.
+> Remind me again if you don't see it in -next by v5.20-rc5 or so.
+>
 
-Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/pci/p2pdma.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+Thank you. I will keep an eye on -next.
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 30b1df3c9d..c40d91912a 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -17,7 +17,7 @@
- #include <linux/memremap.h>
- #include <linux/percpu-refcount.h>
- #include <linux/random.h>
--#include <linux/seq_buf.h>
-+#include <linux/printbuf.h>
- #include <linux/xarray.h>
- 
- enum pci_p2pdma_map_type {
-@@ -281,12 +281,9 @@ static int pci_bridge_has_acs_redir(struct pci_dev *pdev)
- 	return 0;
- }
- 
--static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
-+static void prt_bus_devfn(struct printbuf *buf, struct pci_dev *pdev)
- {
--	if (!buf)
--		return;
--
--	seq_buf_printf(buf, "%s;", pci_name(pdev));
-+	prt_printf(buf, "%s;", pci_name(pdev));
- }
- 
- static bool cpu_supports_p2pdma(void)
-@@ -455,13 +452,11 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 	struct pci_dev *a = provider, *b = client, *bb;
- 	bool acs_redirects = false;
- 	struct pci_p2pdma *p2pdma;
--	struct seq_buf acs_list;
- 	int acs_cnt = 0;
- 	int dist_a = 0;
- 	int dist_b = 0;
- 	char buf[128];
--
--	seq_buf_init(&acs_list, buf, sizeof(buf));
-+	struct printbuf acs_list = PRINTBUF_EXTERN(buf, sizeof(buf));
- 
- 	/*
- 	 * Note, we don't need to take references to devices returned by
-@@ -472,7 +467,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 		dist_b = 0;
- 
- 		if (pci_bridge_has_acs_redir(a)) {
--			seq_buf_print_bus_devfn(&acs_list, a);
-+			prt_bus_devfn(&acs_list, a);
- 			acs_cnt++;
- 		}
- 
-@@ -501,7 +496,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
- 			break;
- 
- 		if (pci_bridge_has_acs_redir(bb)) {
--			seq_buf_print_bus_devfn(&acs_list, bb);
-+			prt_bus_devfn(&acs_list, bb);
- 			acs_cnt++;
- 		}
- 
--- 
-2.36.0
-
+>> On 5/10/22 14:17, Mohamed Khalfella wrote:
+>>>> Thanks for catching this; it definitely looks like a real issue!  I
+>>>> guess you're probably seeing junk in the sysfs files?
+>>>
+>>> That is correct. The initial report was seeing junk when reading sysfs
+>>> files. As descibed, this is happening because we reading data past the
+>>> end of the stats counters array.
+>>>
+>>>
+>>>> I think maybe we should populate the currently NULL entries in the
+>>>> string[] arrays and simplify the code here, e.g.,
+>>>>
+>>>> static const char *aer_correctable_error_string[] = {
+>>>>        "RxErr",                        /* Bit Position 0       */
+>>>>        "dev_cor_errs_bit[1]",
+>>>> 	...
+>>>>
+>>>>  if (stats[i])
+>>>>    len += sysfs_emit_at(buf, len, "%s %llu\n", strings_array[i], stats[i]);
+>>>
+>>> Doing it this way will change the output format. In this case we will show
+>>> stats only if their value is greater than zero. The current code shows all the
+>>> stats those have names (regardless of their value) plus those have non-zero
+>>> values.
+>>>
+>>>>> @@ -1342,6 +1342,11 @@ static int aer_probe(struct pcie_device *dev)
+>>>>>  	struct device *device = &dev->device;
+>>>>>  	struct pci_dev *port = dev->port;
+>>>>>
+>>>>> +	BUILD_BUG_ON(ARRAY_SIZE(aer_correctable_error_string) <
+>>>>> +		     AER_MAX_TYPEOF_COR_ERRS);
+>>>>> +	BUILD_BUG_ON(ARRAY_SIZE(aer_uncorrectable_error_string) <
+>>>>> +		     AER_MAX_TYPEOF_UNCOR_ERRS);
+>>>>
+>>>> And make these check for "!=" instead of "<".
+>>
+>> I am happy to remove these BUILD_BUG_ON() if you think it is a good
+>> idea to do so.
+>
+> I think it's good to enforce correctness there somehow, so let's leave
+> them there unless somebody has a better idea.
+>
+>>> This will require unnecessarily extending stats arrays to have 32 entries
+>>> in order to match names arrays. If you don't feel strogly about changing
+>>> "<" to "!=", I prefer to keep the code as it is. 
