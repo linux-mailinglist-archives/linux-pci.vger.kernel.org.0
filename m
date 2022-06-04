@@ -2,112 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 682D253D403
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Jun 2022 02:07:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19C7A53D851
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jun 2022 21:33:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244964AbiFDAHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Jun 2022 20:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53212 "EHLO
+        id S240793AbiFDTcs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 4 Jun 2022 15:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231737AbiFDAHS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Jun 2022 20:07:18 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DBA413F62
-        for <linux-pci@vger.kernel.org>; Fri,  3 Jun 2022 17:07:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2FD20B82504
-        for <linux-pci@vger.kernel.org>; Sat,  4 Jun 2022 00:07:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92416C385A9;
-        Sat,  4 Jun 2022 00:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654301234;
-        bh=5Xi9zd2YjII8DzjrTwlagHX4OFYRSglPRHB6VASJ1fU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SblEr/wquSAkcrJ/ALxmGWdLNmNUaVcHiTtnrNnMSwTrwNl6KbyC/lv5skAtkvXhH
-         Fdz6KjcBRpckzEP8WcTtY33VDNcvUaTf5RJx2VvXRaYEYV8npPLc26ohUwksPkhIUT
-         +zJGyWRs3jcR/SY2ngSbUIf0FEc7emkhQ+aYCU7sI8/t9p8Hb/wQARYg7w3e7QM5pC
-         HRxQp8dZNBHpGGUbOpsK3JTjFgpm4Mx2ul5uERQS0tm4mroM4CmSgEK+xG8NABKvkH
-         yafwApFR8b5DvLcW3rp57zerH56vjDD3Hpvr43fZ41stHC2V0i+7mP/MIp2YFVd0kN
-         VCcHewuf+6EPg==
-Date:   Fri, 3 Jun 2022 19:07:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
-Subject: Re: [PATCH V13 4/6] PCI: loongson: Improve the MRRS quirk for LS7A
-Message-ID: <20220604000712.GA118018@bhelgaas>
+        with ESMTP id S240820AbiFDTcK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Jun 2022 15:32:10 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA6054F9F4;
+        Sat,  4 Jun 2022 12:31:47 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id ew15so7962016qtb.2;
+        Sat, 04 Jun 2022 12:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ODz0xlzoLBs6dcrjiKhQxftor+2WPn3OJscfp/YQp7I=;
+        b=Y1gh/CBM8MBqiAEP68Q5r9yD6zqL6tJYGIr5D9uF5dstEz3rT9cWB5jTPy2ceJ+/yE
+         /Wse3w0exUsBYU/sErKIIiBTJngsnyLQ7Rby9npQ/75Y4tCO61GWPW/n9m6RPbsQ+FDe
+         FJD81AC79cosf/Nes1YaBEJpuh1KNqVFmf09JCLGL2ij6/oTGGWQrjkrQUPT8iDz5jMq
+         r9GsVNdxI3/L1+mwv/v4mzz1R0LWeHP6ucLYnhEgUkKWJLEfCiU57L04JLfiTT2e6RcM
+         YLETwXcEmVAFroE9C8EDq6oPMPxMX3g6WLN8sKSB1KgtJEydz2uZQfcW0t7BHEgSOm/2
+         aBAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ODz0xlzoLBs6dcrjiKhQxftor+2WPn3OJscfp/YQp7I=;
+        b=6/nM3IvYZQoto7GFV84g+zkWxEbu+CCWWGN55PvIyA+OQ3V8tdGAwj+UwWZCtEDPpl
+         Z4BfI/cPgTvnxYD2wzdl0m2pvO8gg8yuRuYOwr7izwyus+DHmE0VtjtgzthQGRXLY+Gu
+         aC6PlVU9uQ2GyWvb9wWht8nxH78Dp/ArfnAEhKDSI4KEYVJsb9qJQeXtxeulYtMdxsyY
+         NsZPHtIfqRUu6KE8y611mFCmLk0qM/Ocfw8ASKrSorgY8feBPh4S3PhBGD+tPYp1BCv7
+         c589J+6o8VZS+ML8rQZ90U/TOr1CzHpNfyNc4f4K8iDryCXGhsivq6xIZIx2yBZHoiHI
+         aI/A==
+X-Gm-Message-State: AOAM533tdlQQaCclilnq4p7Lsmd1h4x9CPrZi0IMJaAe18s8aFISWBEG
+        +acMyM8i6kpcPl1GCVbfWSDf2HesIUDS
+X-Google-Smtp-Source: ABdhPJyFb0Cvw3XxP8j+iWRgmOmbVwwa/PfAwP6p+g+HAZV+hvBphkJ+ocbbc+Khip88ap0Tf5af4g==
+X-Received: by 2002:ac8:570a:0:b0:304:e615:275f with SMTP id 10-20020ac8570a000000b00304e615275fmr3099117qtw.139.1654371094268;
+        Sat, 04 Jun 2022 12:31:34 -0700 (PDT)
+Received: from moria.home.lan (c-73-219-103-14.hsd1.vt.comcast.net. [73.219.103.14])
+        by smtp.gmail.com with ESMTPSA id o17-20020ac84291000000b00304defdb1b3sm3537426qtl.85.2022.06.04.12.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jun 2022 12:31:33 -0700 (PDT)
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>, pmladek@suse.com,
+        rostedt@goodmis.org, linux-pci@vger.kernel.org
+Subject: [PATCH v3 29/33] PCI/P2PDMA: Convert to printbuf
+Date:   Sat,  4 Jun 2022 15:30:38 -0400
+Message-Id: <20220604193042.1674951-30-kent.overstreet@gmail.com>
+X-Mailer: git-send-email 2.36.0
+In-Reply-To: <20220604193042.1674951-1-kent.overstreet@gmail.com>
+References: <20220604193042.1674951-1-kent.overstreet@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f336dd51-a6f2-4168-9e4b-1a6dc3d7da6a@www.fastmail.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 03, 2022 at 11:57:47PM +0100, Jiaxun Yang wrote:
-> 在2022年6月2日六月 下午5:20，Bjorn Helgaas写道：.
-> >
-> > I'd really like to have a single implementation of whatever quirk
-> > works around this.  I don't think we should have multiple copies
-> > just because we assume some firmware takes care of part of this
-> > for us.
-> >
-> Yeah that was my idea when I was writing the present version of
-> workaround.  However in later LS7A revisions Loongson somehow raised
-> MRRS for several PCIe controllers on chip to 1024 and other ports
-> remains to be 256. Kernel have no way to aware of this change and we
-> can only rely on firmware to set proper value.
+This converts from seq_buf to printbuf. We're using printbuf in external
+buffer mode, so it's a direct conversion, aside from some trivial
+refactoring in cpu_show_meltdown() to make the code more consistent.
 
-That's fine; we need a controller-specific way to find the limit
-(whether it's fixed for all versions or discovered from firmware
-settings or whatever).
+Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
+Cc: linux-pci@vger.kernel.org
+---
+ drivers/pci/p2pdma.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-My hope is that given that controller-specific value, we can have a
-single quirk that works on keystone, loongson, etc. to enforce the
-limit on all relevant devices.  Some platform firmware might do that
-configuration already, but it's OK if a generic quirk re-does it.
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 30b1df3c9d..c40d91912a 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -17,7 +17,7 @@
+ #include <linux/memremap.h>
+ #include <linux/percpu-refcount.h>
+ #include <linux/random.h>
+-#include <linux/seq_buf.h>
++#include <linux/printbuf.h>
+ #include <linux/xarray.h>
+ 
+ enum pci_p2pdma_map_type {
+@@ -281,12 +281,9 @@ static int pci_bridge_has_acs_redir(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
+-static void seq_buf_print_bus_devfn(struct seq_buf *buf, struct pci_dev *pdev)
++static void prt_bus_devfn(struct printbuf *buf, struct pci_dev *pdev)
+ {
+-	if (!buf)
+-		return;
+-
+-	seq_buf_printf(buf, "%s;", pci_name(pdev));
++	prt_printf(buf, "%s;", pci_name(pdev));
+ }
+ 
+ static bool cpu_supports_p2pdma(void)
+@@ -455,13 +452,11 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 	struct pci_dev *a = provider, *b = client, *bb;
+ 	bool acs_redirects = false;
+ 	struct pci_p2pdma *p2pdma;
+-	struct seq_buf acs_list;
+ 	int acs_cnt = 0;
+ 	int dist_a = 0;
+ 	int dist_b = 0;
+ 	char buf[128];
+-
+-	seq_buf_init(&acs_list, buf, sizeof(buf));
++	struct printbuf acs_list = PRINTBUF_EXTERN(buf, sizeof(buf));
+ 
+ 	/*
+ 	 * Note, we don't need to take references to devices returned by
+@@ -472,7 +467,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 		dist_b = 0;
+ 
+ 		if (pci_bridge_has_acs_redir(a)) {
+-			seq_buf_print_bus_devfn(&acs_list, a);
++			prt_bus_devfn(&acs_list, a);
+ 			acs_cnt++;
+ 		}
+ 
+@@ -501,7 +496,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 			break;
+ 
+ 		if (pci_bridge_has_acs_redir(bb)) {
+-			seq_buf_print_bus_devfn(&acs_list, bb);
++			prt_bus_devfn(&acs_list, bb);
+ 			acs_cnt++;
+ 		}
+ 
+-- 
+2.36.0
 
-I don't think it's worth having two quirks, one that does the
-configuration, and another that relies on firmware having done it.
-
-> I have no idea how Loongson achieved this in hardware. All those
-> PCIe controllers are attached under the same AXI bus should share
-> the same AXI to HyperTransport bridge as AXI slave behind a bus
-> matrix. Perhaps instead of fixing error handling of their AXI
-> protocol implementation they just increased the buffer size in AXI
-> bridge so it can accomplish larger requests at one time.
-
-> >> In keystone’s case it’s likely that their firmware won’t do such thing, so
-> >> their workaround shouldn’t be removed.
-> >> And  no_inc_mrrs should be set for them to prevent device drivers modifying
-> >> MRRS afterwards.
-> >
-> > I have the vague impression that this issue is related to an arm64 AXI
-> > bus property [2] or maybe a DesignWare controller property [3], so
-> > this might affect several PCIe controller drivers.
->
-> In my understanding it’s likely to be a AXI implementation issue.
-
-I know almost nothing about AXI, but this concerns me because it
-sounds like other drivers could be affected.
-
-Bjorn
