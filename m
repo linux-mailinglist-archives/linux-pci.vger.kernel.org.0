@@ -2,125 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00DC053D882
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Jun 2022 22:30:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A75A053D895
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Jun 2022 23:00:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240970AbiFDUad (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 4 Jun 2022 16:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52138 "EHLO
+        id S241694AbiFDU7x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 4 Jun 2022 16:59:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234748AbiFDUab (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Jun 2022 16:30:31 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B54B222A1
-        for <linux-pci@vger.kernel.org>; Sat,  4 Jun 2022 13:30:29 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id w3so9226420plp.13
-        for <linux-pci@vger.kernel.org>; Sat, 04 Jun 2022 13:30:29 -0700 (PDT)
+        with ESMTP id S241691AbiFDU7w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Jun 2022 16:59:52 -0400
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EC0C2EA02;
+        Sat,  4 Jun 2022 13:59:51 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id m82so14718677oif.13;
+        Sat, 04 Jun 2022 13:59:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/HBb0ZDkKChS7u7W92q6z+RJ56Q8ZTddXO5nLVdm7Ds=;
-        b=P9CwzByv7YgasmohkFwhBdbjzvwEj+asz8ddZId+WOAo1rW80xt71SlfNQjChfKryA
-         wsOQcEWIagvMoLVuqx/Wl04bzWcJiucwtVHxpf+pl+ZTjtZY57pdASshNB27LMmG+Zjx
-         uWQ1GkoBKbMEn58u3OWvQ2kPRb7gAZzYQXH8Y=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KI6RGgIhUb5YBMG55dVRTWwDyzqgJYFjmLT32LzTyec=;
+        b=RiacRFTuIoy4aVBfEZrTyG66uLRmj9OfCmEl/WuQwTeFWFmZ4Mxro4WNyWuLyV2EPx
+         S75BJVmJqFX8ukcsTmAoWQt90Z/50rhY3/nlbHq6pGx6qmE0uL71WOpZCV3irLXgwIKN
+         55bq0njQaVnM8q6/Kao0GedXeCqtyHm19X842+J+ExQJpLQZcab2tRB9iNfJ2PeDMB+0
+         fzY4Uzp27QUefOdaGCOscgnKEzFGzj8c/JO+7v9ARQGTtzKd5Ixpccnrn3vbb+f2ODOd
+         KA3VEqwrOg2ZSMHPhLWuKzikO/boV8bJOuZxoAw8lTUgO/zK3C852XwfSVoU01JLjTHH
+         EeVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/HBb0ZDkKChS7u7W92q6z+RJ56Q8ZTddXO5nLVdm7Ds=;
-        b=oYK8+a64gMM48mmGtYRRmLvt45X1ScWT0c9w1PbHlOoSHKt36h+ov5+4s/wWciMFQ+
-         /UnO7Sr2cuyc3zG+9/OwzDQADkvdhqg9UQz1T2gCxz9K444KbqXxIxvH7EiNzrVUlq6u
-         2goR4km/eITKa9ysZYHZye3kSuR5MGXodSZPLK/Xa/W49Ui8gQIk0TUbIAz5q1l+t1+/
-         cf5/5bUxJQgWchqWaqUmWfvNZphCRa/JM60w7MS8688xpLrdrisxe4qGkbnIN4IBF8j5
-         AvYrbNMPlK5AFBjJNWtSRfKTBpsXHNXKUggYixwMZj81iQbapBRjCfv69yTcJFe6+eDr
-         Nbaw==
-X-Gm-Message-State: AOAM532v01HYUntLjUC47W6at3bKKVm7v8loYTsJvgDc1T/pLcw7aP37
-        D8X2Ac+q1h6zagDqKOm/SCEgMw==
-X-Google-Smtp-Source: ABdhPJwtXs6I68jQqRzep0xqec3GlALJ3iL77SWf2Owq4SCVbCGHKE8Dm7lcxheeLXbH6VLIAOVrIw==
-X-Received: by 2002:a17:902:eccc:b0:167:5c6e:31e4 with SMTP id a12-20020a170902eccc00b001675c6e31e4mr5543306plh.90.1654374628607;
-        Sat, 04 Jun 2022 13:30:28 -0700 (PDT)
-Received: from irdv-mkhalfella.dev.purestorage.com ([208.88.158.128])
-        by smtp.googlemail.com with ESMTPSA id l63-20020a638842000000b003f61c311e79sm6530196pgd.56.2022.06.04.13.30.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 Jun 2022 13:30:27 -0700 (PDT)
-From:   Mohamed Khalfella <mkhalfella@purestorage.com>
-To:     helgaas@kernel.org
-Cc:     bhelgaas@google.com, ebadger@purestorage.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, mkhalfella@purestorage.com,
-        msaggi@purestorage.com, oohall@gmail.com, rajatja@google.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] PCI/AER: Iterate over error counters instead of error
-Date:   Sat,  4 Jun 2022 20:30:21 +0000
-Message-Id: <20220604203021.10663-1-mkhalfella@purestorage.com>
-X-Mailer: git-send-email 2.29.0
-In-Reply-To: <20220603235856.GA117911@bhelgaas>
-References: <20220603235856.GA117911@bhelgaas>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KI6RGgIhUb5YBMG55dVRTWwDyzqgJYFjmLT32LzTyec=;
+        b=u2MSxJvZRFcWfzXnZgnGcljLRXqCYrlmVZcmPhr73viKAot3BhZa46Yudngl8VQ3Td
+         qjqTqg7sAgzKvVF/uiejniEXjbeeLZzoqQNRSPl33nIiiRaoGJZeo94SQz3tL1DQIG2D
+         jfUNqbDd+ZeQEYjcVlqx2yRscOqNDbUzJsBsCkEiLZm5B2q2mEhPi0m7j5HcUIfnE6mp
+         96HGc2hZGf50rAaPg6Cegj8pPt+hNQyCHFHPhJGasniWP8YaaVzjZBvDFn+5gpFewOVM
+         DKEEndvK4Pg/tR3xy2J6MjMlosSUMacsHaDWGvR0nivSh/Z6o2b6Ps1MCduIl3lKlZ37
+         wLwA==
+X-Gm-Message-State: AOAM530timdxC7TybJ4crnk+oyxK3efJl4XeXv8U2dCoIjgHuz9i78v5
+        Kxplmvi13tkjBGHUtyckdfd3IRa7OMLYgliZ1Iw=
+X-Google-Smtp-Source: ABdhPJyS9SfYWhqaqd9DsHNCl2ttCA2tBW6F6m6Ie8I696MCMDnp3HkpP5GVvz/LETbkY4wRdLJz3WN+i/XBOxt6ywU=
+X-Received: by 2002:a54:4688:0:b0:325:9a36:ecfe with SMTP id
+ k8-20020a544688000000b003259a36ecfemr9982724oic.96.1654376390812; Sat, 04 Jun
+ 2022 13:59:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220528224423.7017-1-jim2101024@gmail.com> <20220528224423.7017-2-jim2101024@gmail.com>
+ <20220529011526.4lzuvkv5zclwntce@mraw.org> <d7a5a0d8-5d27-548f-bc94-0e7d116cc3f2@i2se.com>
+ <20220602191757.pqictbfarmvlf72f@mraw.org>
+In-Reply-To: <20220602191757.pqictbfarmvlf72f@mraw.org>
+From:   Jim Quinlan <jim2101024@gmail.com>
+Date:   Sat, 4 Jun 2022 16:59:39 -0400
+Message-ID: <CANCKTBvvm-1TOKh1akzAYoiOeu5cTKLXyy6PPRkWbOAOtpjARA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Fix regression regarding missing
+ PCIe linkup
+To:     Cyril Brulebois <kibi@debian.org>
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        James Dutton <james.dutton@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/3/22 16:58, Bjorn Helgaas wrote:
-> On Fri, Jun 03, 2022 at 10:12:47PM +0000, Mohamed Khalfella wrote:
->> Is there any chance for this to land in 5.19?
+On Thu, Jun 2, 2022 at 3:18 PM Cyril Brulebois <kibi@debian.org> wrote:
+>stm32mp157c-ev1.dts
+> Hi Stefan,
 >
-> Too late for v5.19, since the merge window will end in a couple days.
-> Remind me again if you don't see it in -next by v5.20-rc5 or so.
+> Stefan Wahren <stefan.wahren@i2se.com> (2022-05-30):
+> > i think we should better trust the results based on the v5.18 tag. During
+> > the merge window, regressions from other subsystems are possible.
 >
+> Alright, that looks like a great plan.
+>
+> Before getting your answer, I had tried taking the reboot part out of
+> the equation, but I found out that even cold boots might fail with the
+> mmc storage.
 
-Thank you. I will keep an eye on -next.
+Hi Cyril,
 
->> On 5/10/22 14:17, Mohamed Khalfella wrote:
->>>> Thanks for catching this; it definitely looks like a real issue!  I
->>>> guess you're probably seeing junk in the sysfs files?
->>>
->>> That is correct. The initial report was seeing junk when reading sysfs
->>> files. As descibed, this is happening because we reading data past the
->>> end of the stats counters array.
->>>
->>>
->>>> I think maybe we should populate the currently NULL entries in the
->>>> string[] arrays and simplify the code here, e.g.,
->>>>
->>>> static const char *aer_correctable_error_string[] = {
->>>>        "RxErr",                        /* Bit Position 0       */
->>>>        "dev_cor_errs_bit[1]",
->>>> 	...
->>>>
->>>>  if (stats[i])
->>>>    len += sysfs_emit_at(buf, len, "%s %llu\n", strings_array[i], stats[i]);
->>>
->>> Doing it this way will change the output format. In this case we will show
->>> stats only if their value is greater than zero. The current code shows all the
->>> stats those have names (regardless of their value) plus those have non-zero
->>> values.
->>>
->>>>> @@ -1342,6 +1342,11 @@ static int aer_probe(struct pcie_device *dev)
->>>>>  	struct device *device = &dev->device;
->>>>>  	struct pci_dev *port = dev->port;
->>>>>
->>>>> +	BUILD_BUG_ON(ARRAY_SIZE(aer_correctable_error_string) <
->>>>> +		     AER_MAX_TYPEOF_COR_ERRS);
->>>>> +	BUILD_BUG_ON(ARRAY_SIZE(aer_uncorrectable_error_string) <
->>>>> +		     AER_MAX_TYPEOF_UNCOR_ERRS);
->>>>
->>>> And make these check for "!=" instead of "<".
->>
->> I am happy to remove these BUILD_BUG_ON() if you think it is a good
->> idea to do so.
+FWIW, I can deliberately reproduce the errors you observed by using an
+incorrect "interrupts" property for
+the sdhci device's DT node.  It can also be triggered by removing its
+"clocks" property.
+
+However, if I do one of the above,  the error will occur on every
+boot, but in your case (I think) you are seeing it
+sporadically.  So that is peculiar.  I've looked at the recent
+upstream commits for changes in the  sdhci driver
+and also the relevant DT node and do not see anything obvious that
+might cause this.
+
+BTW,  when you observe this error, can you please do a  "cat
+/proc/interrupts" and post the results?
+
+Thanks & regards,
+Jim Quinlan
+Broadcom STB
+
+
 >
-> I think it's good to enforce correctness there somehow, so let's leave
-> them there unless somebody has a better idea.
+> I haven't been able to conduct a systematic testing of the patch on top sdhci driver or the relevant
+DT node
+> of the v5.18 tag yet (say, 10 or 20 cold boots, and the same with
+> reboots) due to strong work constraints these past few days, but that's
+> definitely still on my short term todo list (hopefully before the end of
+> the week).
 >
->>> This will require unnecessarily extending stats arrays to have 32 entries
->>> in order to match names arrays. If you don't feel strogly about changing
->>> "<" to "!=", I prefer to keep the code as it is. 
+> Sorry I didn't manage to get that lined up before Bjorn's pull request.
+>
+>
+> Cheers,
+> --
+> Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+> D-I release manager -- Release team member -- Freelance Consultant
