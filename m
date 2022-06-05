@@ -2,129 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5F5D53DC11
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jun 2022 15:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5357F53DC8F
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jun 2022 17:24:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351132AbiFEN6V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Jun 2022 09:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38476 "EHLO
+        id S235511AbiFEPYy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Jun 2022 11:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351134AbiFEN5J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jun 2022 09:57:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D30F58C;
-        Sun,  5 Jun 2022 06:55:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1D116B80D6B;
-        Sun,  5 Jun 2022 13:55:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8BB5C3411D;
-        Sun,  5 Jun 2022 13:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654437353;
-        bh=lorOceNkztaPBM5EySEUGVpa7jze3krlhXG5VMX5yno=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AyQXHFSdrAElpoY8rzCF9vbaW3bfJPOc/Mvd9uFRm/Bda45a0BKjXLo8PxvshOS/B
-         4B4YR6+lt4HE0+kB3pX+UkmxUkI5Avh+cIL+J9UdS4ORR/xMIledvhXtCG4dDYh1Ji
-         Fb4t2zjkKS0jhizaVQ8SqBrf2FLTM4Pz3q51gWv5+ggGfXmE/1FC0N6eZikp4CwubS
-         fQmgLMHbpCa7UsBEBXMw3ZxyfmicyXHZF0owbE6aOedF6QXMZ62KYrQBnNDQMsWzss
-         hYKFrjXfa40p2YD3IyqRjhNHV4xcHlfN8Y4BlSq3Bri2fcfYu0CalyfrTO8NPeU/g1
-         XmIAy2OuqwYtg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>, bhelgaas@google.com,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH MANUALSEL 4.9 3/3] x86/PCI: Add PIRQ routing table range checks
-Date:   Sun,  5 Jun 2022 09:55:45 -0400
-Message-Id: <20220605135547.61902-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220605135547.61902-1-sashal@kernel.org>
-References: <20220605135547.61902-1-sashal@kernel.org>
+        with ESMTP id S1345344AbiFEPYx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jun 2022 11:24:53 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C42132715B;
+        Sun,  5 Jun 2022 08:24:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654442691; x=1685978691;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yikPlj0wND/Abtn5F66hdIjP6Y6XeK5dIgxnMBNJi40=;
+  b=U+n8p0VY44arlYpS+MtRouMvM+fIUVF9+GdLvMRlMI3Kt911/oc3phPa
+   tIM0+4wFSJpLkKqgFhVy8Vth37Pz8HWSkzSzK/5XKoIRayadsx1W3sAG5
+   3TgLF8vPah/aBcIQ2TWv9b7XDJaLpms/R4F+leWfz7Jp76Udz+qrun91F
+   fsWTYqROQ05UUvFdbjzub63c65o2qpuNgfodl3s27cvoShxGi8RcHc3um
+   9l9dBmXWyNTXsUOPg08He5h1NoqQUnA6NJZK26F/8rHZjL+ODX5kYcHBB
+   nXhob77A7yraZR+kxNN2j3LMRHVSrjZUHUgdeVsMVp3AHXcLIVFmzYcJA
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10369"; a="264263845"
+X-IronPort-AV: E=Sophos;i="5.91,279,1647327600"; 
+   d="scan'208";a="264263845"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2022 08:24:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,279,1647327600"; 
+   d="scan'208";a="613952476"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2022 08:24:47 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nxs7S-000C1B-UN;
+        Sun, 05 Jun 2022 15:24:46 +0000
+Date:   Sun, 5 Jun 2022 23:24:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v10 1/5] clk: qcom: regmap: add PHY clock source
+ implementation
+Message-ID: <202206052344.Lkv2vI5x-lkp@intel.com>
+References: <20220603084454.1861142-2-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220603084454.1861142-2-dmitry.baryshkov@linaro.org>
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Hi Dmitry,
 
-[ Upstream commit 5d64089aa4a5bd3d7e00e3d6ddf4943dd34627b3 ]
+Thank you for the patch! Yet something to improve:
 
-Verify that the PCI IRQ Routing Table header as well as individual slot
-entries are all wholly contained within the BIOS memory area.  Do not
-even call the checksum calculator if the header would overrun the area
-and then bail out early if any slot would.
+[auto build test ERROR on v5.18]
+[also build test ERROR on next-20220603]
+[cannot apply to clk/clk-next helgaas-pci/next agross-msm/qcom/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/alpine.DEB.2.21.2203301735510.22465@angie.orcam.me.uk
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/pci/irq.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Dmitry-Baryshkov/PCI-qcom-Rework-pipe_clk-pipe_clk_src-handling/20220605-164136
+base:    4b0986a3613c92f4ec1bdc7f60ec66fea135991f
+config: mips-randconfig-r005-20220605 (https://download.01.org/0day-ci/archive/20220605/202206052344.Lkv2vI5x-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 416a5080d89066029f9889dc23f94de47c2fa895)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install mips cross compiling tool for clang build
+        # apt-get install binutils-mips-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/4fbc2ca1313223feb409121fa1028557f72a310b
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Dmitry-Baryshkov/PCI-qcom-Rework-pipe_clk-pipe_clk_src-handling/20220605-164136
+        git checkout 4fbc2ca1313223feb409121fa1028557f72a310b
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash drivers/clk/qcom/
 
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 5f0e596b0519..9921e33111bf 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -61,7 +61,8 @@ void (*pcibios_disable_irq)(struct pci_dev *dev) = pirq_disable_irq;
-  *  and perform checksum verification.
-  */
- 
--static inline struct irq_routing_table *pirq_check_routing_table(u8 *addr)
-+static inline struct irq_routing_table *pirq_check_routing_table(u8 *addr,
-+								 u8 *limit)
- {
- 	struct irq_routing_table *rt;
- 	int i;
-@@ -71,7 +72,8 @@ static inline struct irq_routing_table *pirq_check_routing_table(u8 *addr)
- 	if (rt->signature != PIRQ_SIGNATURE ||
- 	    rt->version != PIRQ_VERSION ||
- 	    rt->size % 16 ||
--	    rt->size < sizeof(struct irq_routing_table))
-+	    rt->size < sizeof(struct irq_routing_table) ||
-+	    (limit && rt->size > limit - addr))
- 		return NULL;
- 	sum = 0;
- 	for (i = 0; i < rt->size; i++)
-@@ -92,17 +94,22 @@ static inline struct irq_routing_table *pirq_check_routing_table(u8 *addr)
- 
- static struct irq_routing_table * __init pirq_find_routing_table(void)
- {
-+	u8 * const bios_start = (u8 *)__va(0xf0000);
-+	u8 * const bios_end = (u8 *)__va(0x100000);
- 	u8 *addr;
- 	struct irq_routing_table *rt;
- 
- 	if (pirq_table_addr) {
--		rt = pirq_check_routing_table((u8 *) __va(pirq_table_addr));
-+		rt = pirq_check_routing_table((u8 *)__va(pirq_table_addr),
-+					      NULL);
- 		if (rt)
- 			return rt;
- 		printk(KERN_WARNING "PCI: PIRQ table NOT found at pirqaddr\n");
- 	}
--	for (addr = (u8 *) __va(0xf0000); addr < (u8 *) __va(0x100000); addr += 16) {
--		rt = pirq_check_routing_table(addr);
-+	for (addr = bios_start;
-+	     addr < bios_end - sizeof(struct irq_routing_table);
-+	     addr += 16) {
-+		rt = pirq_check_routing_table(addr, bios_end);
- 		if (rt)
- 			return rt;
- 	}
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/clk/qcom/clk-regmap-phy-mux.c:30:8: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           val = FIELD_GET(PHY_MUX_MASK, val);
+                 ^
+>> drivers/clk/qcom/clk-regmap-phy-mux.c:44:7: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+                                     FIELD_PREP(PHY_MUX_MASK, PHY_MUX_PHY_SRC));
+                                     ^
+   drivers/clk/qcom/clk-regmap-phy-mux.c:54:7: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+                              FIELD_PREP(PHY_MUX_MASK, PHY_MUX_REF_SRC));
+                              ^
+   3 errors generated.
+
+
+vim +/FIELD_GET +30 drivers/clk/qcom/clk-regmap-phy-mux.c
+
+    22	
+    23	static int phy_mux_is_enabled(struct clk_hw *hw)
+    24	{
+    25		struct clk_regmap *clkr = to_clk_regmap(hw);
+    26		struct clk_regmap_phy_mux *phy_mux = to_clk_regmap_phy_mux(clkr);
+    27		unsigned int val;
+    28	
+    29		regmap_read(clkr->regmap, phy_mux->reg, &val);
+  > 30		val = FIELD_GET(PHY_MUX_MASK, val);
+    31	
+    32		WARN_ON(val != PHY_MUX_PHY_SRC && val != PHY_MUX_REF_SRC);
+    33	
+    34		return val == PHY_MUX_PHY_SRC;
+    35	}
+    36	
+    37	static int phy_mux_enable(struct clk_hw *hw)
+    38	{
+    39		struct clk_regmap *clkr = to_clk_regmap(hw);
+    40		struct clk_regmap_phy_mux *phy_mux = to_clk_regmap_phy_mux(clkr);
+    41	
+    42		return regmap_update_bits(clkr->regmap, phy_mux->reg,
+    43					  PHY_MUX_MASK,
+  > 44					  FIELD_PREP(PHY_MUX_MASK, PHY_MUX_PHY_SRC));
+    45	}
+    46	
+
 -- 
-2.35.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
