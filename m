@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7912E53DBD7
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jun 2022 15:55:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0F7C53DBE7
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Jun 2022 15:56:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344728AbiFENzL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Jun 2022 09:55:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38758 "EHLO
+        id S1344724AbiFEN4B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Jun 2022 09:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344676AbiFENyv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jun 2022 09:54:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86A763DE;
-        Sun,  5 Jun 2022 06:54:15 -0700 (PDT)
+        with ESMTP id S1347989AbiFENzZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jun 2022 09:55:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A77A16463;
+        Sun,  5 Jun 2022 06:55:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9551160F98;
-        Sun,  5 Jun 2022 13:54:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7B8FC385A5;
-        Sun,  5 Jun 2022 13:54:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8F266B80735;
+        Sun,  5 Jun 2022 13:54:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A26AC341C0;
+        Sun,  5 Jun 2022 13:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654437249;
+        s=k20201202; t=1654437284;
         bh=WUCCmgo0CJd1Oa1t/rXXnPa6NyR1QOuVmJ5dvv7/r0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AGmuWLtGfEdF0QK7jf5QWEBbV73Bezq36HTdz6xzO8iBh3j8KMyUYcbrEeSH6vzjG
-         ms1ZP5bM0w0yvG+iodQUre8VfQqmx8G/hDvmNglFv+eyM+Al0P0vyrAbmIsSccJEB3
-         CrmmK6d8iFSVqwNpeVJ/29m/1uu/hui1HK2wkwICyZftVRl2mq/lQdpjYtgabMtiqC
-         +7EQy6FwWrak3zLB/mz+bspQeYXliKVYk0GQZLZJ2E9a25Q5FZrBWmP0+Zc8QGCC81
-         5Vf7jN+23oBwsSbZNCKsaa13zjijjl4/C3GFLjRD7b2BIhWjtlMtSau5Hu6NDP2p3K
-         ApJCQpqU/b6Yw==
+        b=BPkiPXF+LHjMNVKHHD47ZqclapG4aSPRGIhcivaPYQzmx8p9lx5gm+BocFj/iQqrY
+         xh23+8md3lgePLmS4LDVXtR89H4/DShR7vrypLbM0gNP3a1J8lyzZCS1wpyh3OsQB9
+         DKr48nlt6H0/DFX7A7SebZwdPR+IbCCP0hWnWWGrGpvF+xZXX9MvLWkLb2sXdWft1n
+         438KMjqZtI5ZbvrKJ1UgvvWSoDqzHehLo7bynKhLr+L6Dn2QRLb2pl/nAe15ZVAHFr
+         R6pYjLKZ4gqDO2mmEvbrcddWo4B5MdEkP/n35VNLnln9/YkGSWu7DR8JEYOFWlGjdk
+         J4+OIn/Vqbo7w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Maciej W. Rozycki" <macro@orcam.me.uk>,
@@ -38,12 +38,12 @@ Cc:     "Maciej W. Rozycki" <macro@orcam.me.uk>,
         Sasha Levin <sashal@kernel.org>, bhelgaas@google.com,
         mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
         x86@kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH MANUALSEL 5.17 6/6] x86/PCI: Add PIRQ routing table range checks
-Date:   Sun,  5 Jun 2022 09:53:37 -0400
-Message-Id: <20220605135341.61427-6-sashal@kernel.org>
+Subject: [PATCH MANUALSEL 5.15 5/5] x86/PCI: Add PIRQ routing table range checks
+Date:   Sun,  5 Jun 2022 09:54:09 -0400
+Message-Id: <20220605135412.61517-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220605135341.61427-1-sashal@kernel.org>
-References: <20220605135341.61427-1-sashal@kernel.org>
+In-Reply-To: <20220605135412.61517-1-sashal@kernel.org>
+References: <20220605135412.61517-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
