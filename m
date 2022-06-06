@@ -2,64 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5C9653E959
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jun 2022 19:08:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D378053E702
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jun 2022 19:07:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241698AbiFFQ1a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jun 2022 12:27:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
+        id S231184AbiFFQci (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jun 2022 12:32:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241665AbiFFQ12 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jun 2022 12:27:28 -0400
+        with ESMTP id S231165AbiFFQch (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jun 2022 12:32:37 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEED41CB2F;
-        Mon,  6 Jun 2022 09:27:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805D31DA47;
+        Mon,  6 Jun 2022 09:32:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6B373B81A99;
-        Mon,  6 Jun 2022 16:27:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23100C385A9;
-        Mon,  6 Jun 2022 16:27:24 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4207DB81A9A;
+        Mon,  6 Jun 2022 16:32:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F36EBC385A9;
+        Mon,  6 Jun 2022 16:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654532844;
-        bh=ylWybLonD1BQqCYZrEEqFYrp83QmjcrwN1I8AMq+9V4=;
+        s=k20201202; t=1654533154;
+        bh=kcCx9yQs5mDziJlp0KzJTbH7vdxaXY8Y6DUsrLiQZiY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jKCgBcAhZw0W+7pwPPmYwVhEjCzvTnJ/7rjg5xNoB0iQhZbQ9gh+U4RZ5JomeY3Hp
-         6Rswdhk5jO20B82AjljfMyGXlmW1rIPp8rzd8eQ+h0x7RzTS7qcUJvfvNplhSAMnPF
-         Se3EWMpDXNMFnq63wG0PJhuHJY+S9N5dLX80eQoL2xWpJT6749f4TYWyoumb1K8/X8
-         HZhtP+wzgTikagNv3A3RCRVvwyxO7uGTgafX3qVZX9RGNdouLuyszi0mm1cnOiM6dP
-         BgHuO7xdWPs9hBNcqvtKJQjNz3Nrx71QPtbTMFNY5L6AND1xn8SpqMLrFtHegjXS7g
-         PsCeW1uxfSgwQ==
+        b=I/QUBJRKxZr55jiqYGCwO1DuZ/uqVh3Eg4j24gtvRHgoVifQwv47nRlI+Jhr6sOgr
+         NdJ1g4qe2UaNnGHPzr4YFvj958AvGfZAvt8HB4dU8khU/QK/qZLblEflZft/y1WgAi
+         fM870JADY/IXM8ycJPZ1QFsd10xxlBf9PypnS4/fRf6yV8L4rNggeSOPgGVqnd7UPL
+         SY7/HdgY4qiok9hky2ycmipCpS6Z7ogotmlec6ibBMmJGacStJ/5mf4YoE+/dkCfDw
+         VVxFOynfxoi6SVYUR1ncDce1PfFCL6KzEWchMiC3/iXwb60NKroiH/SAYjoGKMW9fn
+         hZwoxh2HgxM5g==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan@kernel.org>)
-        id 1nyFZV-0004As-AQ; Mon, 06 Jun 2022 18:27:17 +0200
-Date:   Mon, 6 Jun 2022 18:27:17 +0200
+        id 1nyFeV-0004DI-UY; Mon, 06 Jun 2022 18:32:27 +0200
+Date:   Mon, 6 Jun 2022 18:32:27 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH v13 4/7] PCI: dwc: Handle MSIs routed to multiple GIC
- interrupts
-Message-ID: <Yp4q5S7WIYbYEdHc@hovoldconsulting.com>
-References: <20220603074137.1849892-1-dmitry.baryshkov@linaro.org>
- <20220603074137.1849892-5-dmitry.baryshkov@linaro.org>
+        Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v10 3/5] clk: qcom: gcc-sc7280: use new
+ clk_regmap_phy_mux_ops for PCIe pipe clocks
+Message-ID: <Yp4sG1T104uxkPzp@hovoldconsulting.com>
+References: <20220603084454.1861142-1-dmitry.baryshkov@linaro.org>
+ <20220603084454.1861142-4-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220603074137.1849892-5-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220603084454.1861142-4-dmitry.baryshkov@linaro.org>
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -70,64 +67,106 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 03, 2022 at 10:41:34AM +0300, Dmitry Baryshkov wrote:
-> On some of Qualcomm platforms each group of 32 MSI vectors is routed to the
-> separate GIC interrupt. Implement support for such configurations by
-> parsing "msi0" ... "msiN" interrupts and attaching them to the chained
-> handler.
+On Fri, Jun 03, 2022 at 11:44:52AM +0300, Dmitry Baryshkov wrote:
+> Use newly defined clk_regmap_phy_mux_ops for PCIe pipe clocks to let
+> the clock framework automatically park the clock when the clock is
+> switched off and restore the parent when the clock is switched on.
 > 
-> Note, that if DT doesn't list an array of MSI interrupts and uses single
-> "msi" IRQ, the driver will limit the amount of supported MSI vectors
-> accordingly (to 32).
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  .../pci/controller/dwc/pcie-designware-host.c | 63 +++++++++++++++++--
->  1 file changed, 59 insertions(+), 4 deletions(-)
+>  drivers/clk/qcom/gcc-sc7280.c | 47 ++++++++++-------------------------
+>  1 file changed, 13 insertions(+), 34 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 85c1160792e1..d1f9e20df903 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -289,6 +289,46 @@ static void dw_pcie_msi_init(struct pcie_port *pp)
->  	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI, upper_32_bits(msi_target));
->  }
+> diff --git a/drivers/clk/qcom/gcc-sc7280.c b/drivers/clk/qcom/gcc-sc7280.c
+> index 423627d49719..5a853497d211 100644
+> --- a/drivers/clk/qcom/gcc-sc7280.c
+> +++ b/drivers/clk/qcom/gcc-sc7280.c
+> @@ -17,6 +17,7 @@
+>  #include "clk-rcg.h"
+>  #include "clk-regmap-divider.h"
+>  #include "clk-regmap-mux.h"
+> +#include "clk-regmap-phy-mux.h"
+>  #include "common.h"
+>  #include "gdsc.h"
+>  #include "reset.h"
+> @@ -255,26 +256,6 @@ static const struct clk_parent_data gcc_parent_data_5[] = {
+>  	{ .hw = &gcc_gpll0_out_even.clkr.hw },
+>  };
 >  
-> +static int dw_pcie_parse_split_msi_irq(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct device *dev = pci->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	int irq;
-> +	u32 ctrl, max_vectors;
-> +
-> +	/* Parse as many IRQs as described in the devicetree. */
-> +	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++) {
-> +		char *msi_name = "msiX";
-> +
-> +		msi_name[3] = '0' + ctrl;
+> -static const struct parent_map gcc_parent_map_6[] = {
+> -	{ P_PCIE_0_PIPE_CLK, 0 },
+> -	{ P_BI_TCXO, 2 },
+> -};
+> -
+> -static const struct clk_parent_data gcc_parent_data_6[] = {
+> -	{ .fw_name = "pcie_0_pipe_clk", .name = "pcie_0_pipe_clk" },
+> -	{ .fw_name = "bi_tcxo" },
+> -};
+> -
+> -static const struct parent_map gcc_parent_map_7[] = {
+> -	{ P_PCIE_1_PIPE_CLK, 0 },
+> -	{ P_BI_TCXO, 2 },
+> -};
+> -
+> -static const struct clk_parent_data gcc_parent_data_7[] = {
+> -	{ .fw_name = "pcie_1_pipe_clk", .name = "pcie_1_pipe_clk" },
+> -	{ .fw_name = "bi_tcxo" },
+> -};
+> -
+>  static const struct parent_map gcc_parent_map_8[] = {
+>  	{ P_BI_TCXO, 0 },
+>  	{ P_GCC_GPLL0_OUT_MAIN, 1 },
+> @@ -369,32 +350,30 @@ static const struct clk_parent_data gcc_parent_data_15[] = {
+>  	{ .hw = &gcc_mss_gpll0_main_div_clk_src.clkr.hw },
+>  };
+>  
+> -static struct clk_regmap_mux gcc_pcie_0_pipe_clk_src = {
+> +static struct clk_regmap_phy_mux gcc_pcie_0_pipe_clk_src = {
+>  	.reg = 0x6b054,
+> -	.shift = 0,
+> -	.width = 2,
+> -	.parent_map = gcc_parent_map_6,
+>  	.clkr = {
+>  		.hw.init = &(struct clk_init_data){
+>  			.name = "gcc_pcie_0_pipe_clk_src",
+> -			.parent_data = gcc_parent_data_6,
+> -			.num_parents = ARRAY_SIZE(gcc_parent_data_6),
+> -			.ops = &clk_regmap_mux_closest_ops,
+> +			.parent_data = &(const struct clk_parent_data){
+> +				.fw_name = "pcie_0_pipe_clk", .name = "pcie_0_pipe_clk",
 
-This oopses here as the string constant is read only:
+No need to initialise fw_name and name on the same line here.
 
-	[   19.787973] Unable to handle kernel write to read-only memory at virtual address ffffaa14f831afd3
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_phy_mux_ops,
+>  		},
+>  	},
+>  };
+>  
+> -static struct clk_regmap_mux gcc_pcie_1_pipe_clk_src = {
+> +static struct clk_regmap_phy_mux gcc_pcie_1_pipe_clk_src = {
+>  	.reg = 0x8d054,
+> -	.shift = 0,
+> -	.width = 2,
+> -	.parent_map = gcc_parent_map_7,
+>  	.clkr = {
+>  		.hw.init = &(struct clk_init_data){
+>  			.name = "gcc_pcie_1_pipe_clk_src",
+> -			.parent_data = gcc_parent_data_7,
+> -			.num_parents = ARRAY_SIZE(gcc_parent_data_7),
+> -			.ops = &clk_regmap_mux_closest_ops,
+> +			.parent_data = &(const struct clk_parent_data){
+> +				.fw_name = "pcie_1_pipe_clk", .name = "pcie_1_pipe_clk",
 
-Did you not test the series before posting?
+Same here.
 
-You need to define msi_name as:
-
-	char msi_name[] = "msiX";
-
-> +		irq = platform_get_irq_byname_optional(pdev, msi_name);
-> +		if (irq == -ENXIO)
-> +			break;
-> +		if (irq < 0)
-> +			return dev_err_probe(dev, irq,
-> +					     "Failed to parse MSI IRQ '%s'\n",
-> +					     msi_name);
-> +
-> +		pp->msi_irq[ctrl] = irq;
-> +	}
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_phy_mux_ops,
+>  		},
+>  	},
+>  };
 
 Johan
