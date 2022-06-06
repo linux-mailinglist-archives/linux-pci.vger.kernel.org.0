@@ -2,151 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5357F53DC8F
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Jun 2022 17:24:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7832B53E016
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jun 2022 05:33:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235511AbiFEPYy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Jun 2022 11:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
+        id S1349365AbiFFDd4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Jun 2022 23:33:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345344AbiFEPYx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jun 2022 11:24:53 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C42132715B;
-        Sun,  5 Jun 2022 08:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654442691; x=1685978691;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yikPlj0wND/Abtn5F66hdIjP6Y6XeK5dIgxnMBNJi40=;
-  b=U+n8p0VY44arlYpS+MtRouMvM+fIUVF9+GdLvMRlMI3Kt911/oc3phPa
-   tIM0+4wFSJpLkKqgFhVy8Vth37Pz8HWSkzSzK/5XKoIRayadsx1W3sAG5
-   3TgLF8vPah/aBcIQ2TWv9b7XDJaLpms/R4F+leWfz7Jp76Udz+qrun91F
-   fsWTYqROQ05UUvFdbjzub63c65o2qpuNgfodl3s27cvoShxGi8RcHc3um
-   9l9dBmXWyNTXsUOPg08He5h1NoqQUnA6NJZK26F/8rHZjL+ODX5kYcHBB
-   nXhob77A7yraZR+kxNN2j3LMRHVSrjZUHUgdeVsMVp3AHXcLIVFmzYcJA
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10369"; a="264263845"
-X-IronPort-AV: E=Sophos;i="5.91,279,1647327600"; 
-   d="scan'208";a="264263845"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2022 08:24:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,279,1647327600"; 
-   d="scan'208";a="613952476"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2022 08:24:47 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nxs7S-000C1B-UN;
-        Sun, 05 Jun 2022 15:24:46 +0000
-Date:   Sun, 5 Jun 2022 23:24:23 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v10 1/5] clk: qcom: regmap: add PHY clock source
- implementation
-Message-ID: <202206052344.Lkv2vI5x-lkp@intel.com>
-References: <20220603084454.1861142-2-dmitry.baryshkov@linaro.org>
+        with ESMTP id S233696AbiFFDdx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Jun 2022 23:33:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5425237A38;
+        Sun,  5 Jun 2022 20:33:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C755C60EDE;
+        Mon,  6 Jun 2022 03:33:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 18083C341C0;
+        Mon,  6 Jun 2022 03:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654486430;
+        bh=TI4P18/3vyoUu1YoM1I93ZEGQv/UWUtMjgpV3is+1kU=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=tFJZusU1hxG2s1CJAu/uiv0E+bAvVegQhojDIoAHyJhGf2CpfQHdYfd63OYaXP0/3
+         tl9nzWxkaafABij8lqsZ5MrgoRiCJkmKhT6mUps3kQJJUcarzBWjvqhX+nnzU7KuuH
+         M1sITb9nLev16/CnmDOBLDR9sft1NqYa56mDK6TYh+XhuSxzBGaz00U17pkjsv1ykO
+         1xbqro3byn4WFq2ZXjDSp5Mx6gkf+iadKrRgaEInhfU6CUJOoXak/Exda99R6yHsRc
+         ZpeQ/WkQ7MtuWXRB2kZKovQ5cRR+ulL6ulkGtXTJWKxLQIUAMOP2Du9HlLMaTPj68u
+         6fltf6QTe+EWQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E9551E737F0;
+        Mon,  6 Jun 2022 03:33:49 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220603084454.1861142-2-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] dt-bindings: Fix properties without any type
+From:   patchwork-bot+chrome-platform@kernel.org
+Message-Id: <165448642995.20111.10251737230487275413.git-patchwork-notify@kernel.org>
+Date:   Mon, 06 Jun 2022 03:33:49 +0000
+References: <20220519211411.2200720-1-robh@kernel.org>
+In-Reply-To: <20220519211411.2200720-1-robh@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, krzk+dt@kernel.org,
+        thierry.reding@gmail.com, sam@ravnborg.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl, dmitry.torokhov@gmail.com,
+        bleung@chromium.org, groeck@chromium.org, mchehab@kernel.org,
+        peda@axentia.se, davem@davemloft.net, kuba@kernel.org,
+        pabeni@redhat.com, kvalo@kernel.org, bhelgaas@google.com,
+        sre@kernel.org, mpm@selenic.com, herbert@gondor.apana.org.au,
+        gregkh@linuxfoundation.org, broonie@kernel.org, mripard@kernel.org,
+        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org, chrome-platform@lists.linux.dev,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dmitry,
+Hello:
 
-Thank you for the patch! Yet something to improve:
+This patch was applied to chrome-platform/linux.git (for-next)
+by Rob Herring <robh@kernel.org>:
 
-[auto build test ERROR on v5.18]
-[also build test ERROR on next-20220603]
-[cannot apply to clk/clk-next helgaas-pci/next agross-msm/qcom/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+On Thu, 19 May 2022 16:14:11 -0500 you wrote:
+> Now that the schema tools can extract type information for all
+> properties (in order to decode dtb files), finding properties missing
+> any type definition is fairly trivial though not yet automated.
+> 
+> Fix the various property schemas which are missing a type. Most of these
+> tend to be device specific properties which don't have a vendor prefix.
+> A vendor prefix is how we normally ensure a type is defined.
+> 
+> [...]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dmitry-Baryshkov/PCI-qcom-Rework-pipe_clk-pipe_clk_src-handling/20220605-164136
-base:    4b0986a3613c92f4ec1bdc7f60ec66fea135991f
-config: mips-randconfig-r005-20220605 (https://download.01.org/0day-ci/archive/20220605/202206052344.Lkv2vI5x-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 416a5080d89066029f9889dc23f94de47c2fa895)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install mips cross compiling tool for clang build
-        # apt-get install binutils-mips-linux-gnu
-        # https://github.com/intel-lab-lkp/linux/commit/4fbc2ca1313223feb409121fa1028557f72a310b
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Dmitry-Baryshkov/PCI-qcom-Rework-pipe_clk-pipe_clk_src-handling/20220605-164136
-        git checkout 4fbc2ca1313223feb409121fa1028557f72a310b
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash drivers/clk/qcom/
+Here is the summary with links:
+  - dt-bindings: Fix properties without any type
+    https://git.kernel.org/chrome-platform/c/4e71ed985389
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
->> drivers/clk/qcom/clk-regmap-phy-mux.c:30:8: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-           val = FIELD_GET(PHY_MUX_MASK, val);
-                 ^
->> drivers/clk/qcom/clk-regmap-phy-mux.c:44:7: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-                                     FIELD_PREP(PHY_MUX_MASK, PHY_MUX_PHY_SRC));
-                                     ^
-   drivers/clk/qcom/clk-regmap-phy-mux.c:54:7: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-                              FIELD_PREP(PHY_MUX_MASK, PHY_MUX_REF_SRC));
-                              ^
-   3 errors generated.
-
-
-vim +/FIELD_GET +30 drivers/clk/qcom/clk-regmap-phy-mux.c
-
-    22	
-    23	static int phy_mux_is_enabled(struct clk_hw *hw)
-    24	{
-    25		struct clk_regmap *clkr = to_clk_regmap(hw);
-    26		struct clk_regmap_phy_mux *phy_mux = to_clk_regmap_phy_mux(clkr);
-    27		unsigned int val;
-    28	
-    29		regmap_read(clkr->regmap, phy_mux->reg, &val);
-  > 30		val = FIELD_GET(PHY_MUX_MASK, val);
-    31	
-    32		WARN_ON(val != PHY_MUX_PHY_SRC && val != PHY_MUX_REF_SRC);
-    33	
-    34		return val == PHY_MUX_PHY_SRC;
-    35	}
-    36	
-    37	static int phy_mux_enable(struct clk_hw *hw)
-    38	{
-    39		struct clk_regmap *clkr = to_clk_regmap(hw);
-    40		struct clk_regmap_phy_mux *phy_mux = to_clk_regmap_phy_mux(clkr);
-    41	
-    42		return regmap_update_bits(clkr->regmap, phy_mux->reg,
-    43					  PHY_MUX_MASK,
-  > 44					  FIELD_PREP(PHY_MUX_MASK, PHY_MUX_PHY_SRC));
-    45	}
-    46	
-
+You are awesome, thank you!
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
