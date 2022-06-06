@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED9F853E800
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Jun 2022 19:08:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 772C553EB93
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Jun 2022 19:09:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233561AbiFFKPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Jun 2022 06:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50538 "EHLO
+        id S233910AbiFFKZ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Jun 2022 06:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234001AbiFFKPB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jun 2022 06:15:01 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68435A98A4
-        for <linux-pci@vger.kernel.org>; Mon,  6 Jun 2022 03:14:23 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id h19so18160340edj.0
-        for <linux-pci@vger.kernel.org>; Mon, 06 Jun 2022 03:14:23 -0700 (PDT)
+        with ESMTP id S233954AbiFFKXb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Jun 2022 06:23:31 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8F8BF4F
+        for <linux-pci@vger.kernel.org>; Mon,  6 Jun 2022 03:23:29 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id h23so16909383ejj.12
+        for <linux-pci@vger.kernel.org>; Mon, 06 Jun 2022 03:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=BkH5Y5j/4diyxC4BxZO4A1oyviqTC8HdJoLfxxc2uC0=;
-        b=JDHsJs2As/HiUSVG6Jc2zao2gEZhqwTSDMAMoS2looKDYr21f49v97yHQ3pV4sMDqy
-         vRYp+WFd9g346m2ZlrUsuhtg4/R1e/PlRZnlZWXR6/G6WMCeUFALGba/oXPHraJaQWVW
-         i61aJMJyXm6nyUEgf93zRqoM8eW39gQdUcSeytyM5aWqQfBMogZF032e6xDIOcfTee4q
-         m3NDN+uypgctVRFXqBuY0gcbzUmlMFnF8ctPfFO4+6QuW+hNutDv1ZJjwxSfqhgvWTNw
-         njEeEbwWKlFC2HG4JStkfHlMv5zdhf1jq+I6+SQte0KNn37clYLikv64rk2NZK/Bgsw9
-         OXcA==
+        bh=4fC528rYEB+48Rn1G1nDF3sqdpbIgh93bu5dw33pZWc=;
+        b=lIkxI9ub3el5LZsSbt11MryA5NFGSmjCuEc4lVH5mavFbJ+HQl63gfjY8yhEUEcpCk
+         CsCAJSEsMv8ddLTJ284kZ0XYdgVMN6ythE4vuRyBEtVF4cDzf5gqyvcyPhB0eVMHz2o+
+         Xrv64MZ5Ci2ghoqtKmPq7E6jEgMCA41nwWmBmAO2lXvKkdbqwYVZAUv4zaaUQSjVluzr
+         lBlBIqkIc870WLd7CDtuTUlc52LPw68hLUd7AiMEb5vcojbAZGILNJWWVuESnnYXRJV2
+         wye3BEv9t++3wvPMRcf0IfQhKU4IW6nZM4AcI65fu5OMhTurawTaVy1FVPldOhy+3VLn
+         +aCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=BkH5Y5j/4diyxC4BxZO4A1oyviqTC8HdJoLfxxc2uC0=;
-        b=fYat7ZenKBNZyWN4l0vXToLmEzaKAsR4YwiCYs20VfQJw3g6BRhItSuWuB6OU+UF5q
-         Y8czYSFROCJ9pCIsKI1zSpzqdBAG7Jf2Z+xdq5qps4D7lAYJZeAZXg8wOLvkEZbEkgMm
-         UAopl4U1Eff7BPy9D4aI+ZK+VYxDSLC+s6aex+KRcQLF41SsMH1g1F2RVykXoJd3AmHC
-         RSpEFcwI50LIs4brHpqKve/r4mF0Zv+I1vEJWV4urNzDzxDzpCmIwwLXrAdc0NOtMYO+
-         4y5I5IgR0SYz+PwvA0zGfa95Wv7w283AGJK4SoDw7grARS4FWO8u7nrRvtrzQO2L2YK/
-         wzkg==
-X-Gm-Message-State: AOAM531R/C467wjpluSfFweNydQHMgNm+WZoPf1oqRoTFb6m1yu3p/br
-        pkvyOa8IyNM74qupjy923r4UIQ==
-X-Google-Smtp-Source: ABdhPJyihbUPMb1yzM0sumOLqAsH/9XFxEOokF/wNE+hvrWNaIwgvk2Az0zFUc4w0QtiT60n6ZBIug==
-X-Received: by 2002:a05:6402:3899:b0:42d:d79e:acef with SMTP id fd25-20020a056402389900b0042dd79eacefmr25822942edb.12.1654510461646;
-        Mon, 06 Jun 2022 03:14:21 -0700 (PDT)
+        bh=4fC528rYEB+48Rn1G1nDF3sqdpbIgh93bu5dw33pZWc=;
+        b=YX6ZI86bNSF6EY6TWjvUBJAGetM4/VlWNPBrFL6f7Y7kqGfMkmnvO/A3jEyJrj5YuH
+         p7+9Z6o4DdIeqEcl/lcTXjzEerwdzZ1XHSphsSqvBzoIzfPaa0OXOrFFD4BKnHxlS1KB
+         qd/YcqB8t2skOHDllS46KRW1KUTLcvSqyLCdZn8JQegnH57drJ6wSlL04N0vtUIA9ygC
+         IeYL4fZpczdkv2AwkSrMozJrlmmJnDvNmAxljpAFaaGVpdm80Nf7+V3P+1V5xx/4JQUX
+         jbyGn48+1OL2tKzuqAVgtyG77/SpHlDZU0y39rJzuPYKZh4gf4j2jEX2jA8mYlnE4e3c
+         c3Mg==
+X-Gm-Message-State: AOAM530q7xIL0h9p0Ma7V84RwDfZ1XLMEgCmVNfxEJxI1pvnNnnLB+jA
+        m0FabD0NQRU95QoNRYMQkS/5hA==
+X-Google-Smtp-Source: ABdhPJxJV4zEbNNhKx5pPCIohTcPcFDBcwVmuGZ/60/VBMrh+TCuOm/Wpi+s93Bbm/FS4taCh9d6Rg==
+X-Received: by 2002:a17:906:1109:b0:711:d8fe:fe56 with SMTP id h9-20020a170906110900b00711d8fefe56mr850929eja.261.1654511007645;
+        Mon, 06 Jun 2022 03:23:27 -0700 (PDT)
 Received: from [192.168.0.181] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id a26-20020a1709062b1a00b006f3ef214db4sm5268472ejg.26.2022.06.06.03.14.20
+        by smtp.gmail.com with ESMTPSA id iy18-20020a170907819200b006fec9cf9237sm5161850ejc.130.2022.06.06.03.23.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jun 2022 03:14:21 -0700 (PDT)
-Message-ID: <45aa26be-625e-47eb-c21f-92497e60b6dd@linaro.org>
-Date:   Mon, 6 Jun 2022 12:14:19 +0200
+        Mon, 06 Jun 2022 03:23:27 -0700 (PDT)
+Message-ID: <5ddc30ca-df6d-d31d-e500-2faebc0f32f6@linaro.org>
+Date:   Mon, 6 Jun 2022 12:23:26 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v2 2/5] dt-bindings: phy: Add ARTPEC-8 PCIe phy
+Subject: Re: [PATCH v2 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
 Content-Language: en-US
 To:     wangseok.lee@samsung.com,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -75,15 +75,15 @@ Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
         Sang Min Kim <hypmean.kim@samsung.com>,
         Dongjin Yang <dj76.yang@samsung.com>
 References: <20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p6>
- <CGME20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p6>
- <20220603023158epcms2p6949f6cd93926b9e811e1b4d52fbef91b@epcms2p6>
+ <CGME20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p2>
+ <20220603023452epcms2p22b81cfd1ee4866d5a6663c089ded6eac@epcms2p2>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220603023158epcms2p6949f6cd93926b9e811e1b4d52fbef91b@epcms2p6>
+In-Reply-To: <20220603023452epcms2p22b81cfd1ee4866d5a6663c089ded6eac@epcms2p2>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,113 +91,227 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 03/06/2022 04:31, Wangseok Lee wrote:
-> Add description to support Axis, ARTPEC-8 SoC.
-> ARTPEC-8 is the SoC platform of Axis Communications
-> and PCIe phy is designed based on SAMSUNG PHY.
-
-This does not look like wrapped in Linux commit style.
-https://elixir.bootlin.com/linux/v5.18-rc4/source/Documentation/process/submitting-patches.rst#L586
-
+On 03/06/2022 04:34, Wangseok Lee wrote:
+> Add support Axis, ARTPEC-8 SoC.
+> ARTPEC-8 is the SoC platform of Axis Communications.
+> This is based on arm64 and support GEN4 & 2lane.
+> This PCIe controller is based on DesignWare Hardware core
+> and uses DesignWare core functions to implement the driver.
 > 
 > changes since v1 :
-> -'make dt_binding_check' result improvement
-> -Add the missing property list
-> -Align the indentation of continued lines/entries
+> improvement review comment of Krzysztof on driver code.
+> -debug messages for probe or other functions.
+> -Inconsistent coding style (different indentation in structure members).
+> -Inconsistent code (artpec8_pcie_get_subsystem_resources() gets device
+>   from pdev and from pci so you have two same pointers;
+>   or artpec8_pcie_get_ep_mem_resources() stores dev 
+>   as local variable but uses instead pdev->dev).
+> -Not using devm_platform_ioremap_resource().
+> -Printing messages in interrupt handlers.
+> -Several local/static structures or array are not const.
 > 
 > Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
 > ---
->  .../bindings/phy/axis,artpec8-pcie-phy.yaml        | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml
+>  drivers/pci/controller/dwc/Kconfig        |  31 ++
+>  drivers/pci/controller/dwc/Makefile       |   1 +
+>  drivers/pci/controller/dwc/pcie-artpec8.c | 864 ++++++++++++++++++++++++++++++
+>  3 files changed, 896 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-artpec8.c
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 62ce3ab..4aa6da8 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -222,6 +222,37 @@ config PCIE_ARTPEC6_EP
+>  	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+>  	  endpoint mode. This uses the DesignWare core.
+>  
+> +config PCIE_ARTPEC8
+> +	bool "Axis ARTPEC-8 PCIe controller"
+> +
+> +config PCIE_ARTPEC8_HOST
+> +	bool "Axis ARTPEC-8 PCIe controller Host Mode"
+> +	depends on ARCH_ARTPEC
+
+|| COMPILE_TEST
+and test it
+
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	depends on PCI_ENDPOINT
+> +	select PCI_EPF_TEST
+> +	select PCIE_DW_HOST
+> +	select PCIE_ARTPEC8
+> +	help
+> +	  Say 'Y' here to enable support for the PCIe controller in the
+> +	  ARTPEC-8 SoC to work in host mode.
+> +	  This PCIe controller is based on DesignWare Hardware core.
+> +	  And uses DesignWare core functions to implement the driver.
+> +
+> +config PCIE_ARTPEC8_EP
+> +	bool "Axis ARTPEC-8 PCIe controller Endpoint Mode"
+> +	depends on ARCH_ARTPEC
+
+|| COMPILE_TEST
+and test it
+
+
+> +	depends on PCI_ENDPOINT
+> +	depends on PCI_ENDPOINT_CONFIGFS
+> +	select PCI_EPF_TEST
+> +	select PCIE_DW_EP
+> +	select PCIE_ARTPEC8
+> +	help
+> +	  Say 'Y' here to enable support for the PCIe controller in the
+> +	  ARTPEC-8 SoC to work in endpoint mode.
+> +	  This PCIe controller is based on DesignWare Hardware core.
+> +	  And uses DesignWare core functions to implement the driver.
+> +
+>  config PCIE_ROCKCHIP_DW_HOST
+>  	bool "Rockchip DesignWare PCIe controller"
+>  	select PCIE_DW
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 8ba7b67..b361022 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -25,6 +25,7 @@ obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+>  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+>  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
+> +obj-$(CONFIG_PCIE_ARTPEC8) += pcie-artpec8.o
+
+This does not look properly ordered. Usually entries should not be added
+at the end.
+
+>  
+>  # The following drivers are for devices that use the generic ACPI
+>  # pci_root.c driver but don't support standard ECAM config access.
+> diff --git a/drivers/pci/controller/dwc/pcie-artpec8.c b/drivers/pci/controller/dwc/pcie-artpec8.c
 > new file mode 100644
-> index 0000000..ab9766f
+> index 0000000..d9ae9bf
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/axis,artpec8-pcie-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/drivers/pci/controller/dwc/pcie-artpec8.c
+> @@ -0,0 +1,864 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * PCIe controller driver for Axis ARTPEC-8 SoC
+> + *
+> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * Author: Jaeho Cho <jaeho79.cho@samsung.com>
+> + * This file is based on driver/pci/controller/dwc/pci-exynos.c
+> + */
 > +
-> +title: ARTPEC-8 SoC PCIe PHY Device Tree Bindings
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/resource.h>
+> +#include <linux/types.h>
+> +#include <linux/phy/phy.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +#define to_artpec8_pcie(x)	dev_get_drvdata((x)->dev)
+> +
+> +/* Gen3 Control Register */
+> +#define PCIE_GEN3_RELATED_OFF		0x890
+> +/* Disables equilzation feature */
+> +#define PCIE_GEN3_EQUALIZATION_DISABLE	(0x1 << 16)
+> +#define PCIE_GEN3_EQ_PHASE_2_3		(0x1 << 9)
+> +#define PCIE_GEN3_RXEQ_PH01_EN		(0x1 << 12)
+> +#define PCIE_GEN3_RXEQ_RGRDLESS_RXTS	(0x1 << 13)
+> +
+> +#define FAST_LINK_MODE			(7)
+> +
+> +/* PCIe ELBI registers */
+> +#define PCIE_IRQ0_STS			0x000
+> +#define PCIE_IRQ1_STS			0x004
+> +#define PCIE_IRQ2_STS			0x008
+> +#define PCIE_IRQ5_STS			0x00C
+> +#define PCIE_IRQ0_EN			0x010
+> +#define PCIE_IRQ1_EN			0x014
+> +#define PCIE_IRQ2_EN			0x018
+> +#define PCIE_IRQ5_EN			0x01C
+> +#define IRQ_MSI_ENABLE			BIT(20)
+> +#define PCIE_APP_LTSSM_ENABLE		0x054
+> +#define PCIE_ELBI_LTSSM_ENABLE		0x1
+> +#define PCIE_ELBI_CXPL_DEBUG_00_31	0x2C8
+> +#define PCIE_ELBI_CXPL_DEBUG_32_63	0x2CC
+> +#define PCIE_ELBI_SMLH_LINK_UP		BIT(4)
+> +#define PCIE_ARTPEC8_DEVICE_TYPE	0x080
+> +#define DEVICE_TYPE_EP			0x0
+> +#define DEVICE_TYPE_LEG_EP		0x1
+> +#define DEVICE_TYPE_RC			0x4
+> +#define PCIE_ELBI_SLV_AWMISC		0x828
+> +#define PCIE_ELBI_SLV_ARMISC		0x820
+> +#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
+> +#define LTSSM_STATE_MASK		0x3f
+> +#define LTSSM_STATE_L0			0x11
+> +
+> +/* FSYS SYSREG Offsets */
+> +#define FSYS_PCIE_CON			0x424
+> +#define PCIE_PERSTN			BIT(5)
+> +#define FSYS_PCIE_DBI_ADDR_CON		0x428
+> +#define FSYS_PCIE_DBI_ADDR_OVR_CDM	0x00
+> +#define FSYS_PCIE_DBI_ADDR_OVR_SHADOW	0x12
+> +#define FSYS_PCIE_DBI_ADDR_OVR_ATU	0x36
+> +
+> +/* PMU SYSCON Offsets */
+> +#define PMU_SYSCON_PCIE_ISOLATION	0x3200
+> +
+> +/* BUS P/S SYSCON Offsets */
+> +#define BUS_SYSCON_BUS_PATH_ENABLE	0x0
+> +
+> +int artpec8_pcie_dbi_addr_con[] = {
 
-Same comment as patch #1.
+1. I think I pointed before the need to constify everything which is const.
+2. Missing static
+3. definitions of static variables go after type declarations.
 
+> +	FSYS_PCIE_DBI_ADDR_CON
+> +};
 > +
-> +maintainers:
-> +  - Jesper Nilsson <jesper.nilsson@axis.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: axis,artpec8-pcie-phy
-> +
-> +  reg:
-> +    items:
-> +      - description: PHY registers.
-> +      - description: PHY coding sublayer registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: phy
-> +      - const: pcs
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  clocks:
-> +    items:
-> +      - description: PCIe PHY reference clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ref_clk
+> +struct artpec8_pcie {
+> +	struct dw_pcie			*pci;
+> +	struct clk			*pipe_clk;
+> +	struct clk			*dbi_clk;
+> +	struct clk			*mstr_clk;
+> +	struct clk			*slv_clk;
 
-Same comment as patch #1.
+Not really...  Just use clk_bulk_api.
 
-> +
-> +  num-lanes:
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - "#phy-cells"
-> +  - clocks
-> +  - clock-names
-> +  - num-lanes
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    artpec8 {
+> +	const struct artpec8_pcie_pdata	*pdata;
+> +	void __iomem			*elbi_base;
+> +	struct regmap			*sysreg;
+> +	struct regmap			*pmu_syscon;
+> +	struct regmap			*bus_s_syscon;
+> +	struct regmap			*bus_p_syscon;
+> +	enum dw_pcie_device_mode	mode;
+> +	int				link_id;
+> +	/* For Generic PHY Framework */
 
-Same comment as patch #1.
+Skip comment, it's obvious.
 
+> +	struct phy			*phy;
+> +};
+> +
 
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        pcie_phy: pcie-phy@16c80000 {
-> +            compatible = "axis,artpec8-pcie-phy";
-> +            reg = <0x0 0x16c80000 0x0 0x2000>,
-> +                  <0x0 0x16c90000 0x0 0x1000>;
-> +            reg-names = "phy", "pcs";
-> +            #phy-cells = <0>;
-> +            clocks = <&clock_cmu_fsys 53>;
-> +            clock-names = "ref_clk";
-> +            num-lanes = <2>;
-> +        };
-> +    };
-> +...
+> +	/* fsys sysreg regmap handle */
+> +	artpec8_ctrl->sysreg =
+> +		syscon_regmap_lookup_by_phandle(dev->of_node,
+> +			"samsung,fsys-sysreg");
 
+NAK.
+
+Usage of undocumented properties. Every property must be documented.
+
+Since you do not want to merge it with existing drivers (and more people
+insist on that: https://lore.kernel.org/all/Ym+u9yYrV9mxkyWX@matsya/ ),
+I am actually considering to NAK entire set if you do not post a user of
+this - DTS. Mainly because we cannot verify how does that user look like
+and such changes are sneaked in.
 
 Best regards,
 Krzysztof
