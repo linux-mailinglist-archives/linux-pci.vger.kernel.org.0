@@ -2,88 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18EA153F714
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 09:23:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FAF353F9C2
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 11:29:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237609AbiFGHXE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jun 2022 03:23:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34548 "EHLO
+        id S239547AbiFGJ3O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jun 2022 05:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237605AbiFGHXB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 03:23:01 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F7B17ABE
-        for <linux-pci@vger.kernel.org>; Tue,  7 Jun 2022 00:23:00 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id v1so22646816ejg.13
-        for <linux-pci@vger.kernel.org>; Tue, 07 Jun 2022 00:23:00 -0700 (PDT)
+        with ESMTP id S239559AbiFGJ2P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 05:28:15 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C8E5D664
+        for <linux-pci@vger.kernel.org>; Tue,  7 Jun 2022 02:28:12 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id v22so30155480ybd.5
+        for <linux-pci@vger.kernel.org>; Tue, 07 Jun 2022 02:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=OHbou33WPhW0PDy9/CZae9mIrL4buN3/FALSld4obAM=;
-        b=PsMyBKpPIW4M4oi5s8BlbY9lVTnMTX9E6ccsbCJU1RL+goYnA2LIRs3wKhCOAVI3xw
-         zjcMqyNEDJz+Db8kLcyq/kTHinzL1SXzDFzL/ad0QL2vJla5iOj1tnhAcarnJ+DKgb0v
-         DN3F5yiofw6wpneYSq0A/eRc1swG0phEI/uGBgFlvq6jYC/yQmdEMZwJkbRdw3pu5gT8
-         n99IB/6FV0H73nwQHEQ9L6u/n5Y7CvaMUDJxK3Z+8G5R2GejNynydkgr/UT0ukGSTxoP
-         DzXExcc+VEFm9F7E8z8jgIHU3JWId1DtqsBylQVKVwxQ86g1XY6G0NTjeOQ4U15/RtmY
-         03Dw==
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
+        b=gujHBVxqWIlmngbJHwwatlrY6K2BhXGLJOXKENebOL4hOCXVjvoa+7rQ+wCwOuo7nz
+         8e28HbaszMFtjrNu2xJwHUtJo1p0vWs5cPK29M2FpYQX1yrDGputAW1tF1NfmP59wawm
+         4ciGU9SnxDgRMb84mTOs96+/9zN97uENfqj9/+eZfuG77h5pSaMszmbmnWOwi9m+gNzd
+         5NtwsZACk2ULSP0cRt0MdNUxBuwzIbCfzmloCBb/Ue1QhCyZ8f6GEgrTXVIY7durHnKk
+         UWQF6j7yHnTlxlvI9xCgSzii4NusQH9ADfpyzQwiF9b+OrCBSH3adFs9TwqclNBk9aQF
+         O14A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=OHbou33WPhW0PDy9/CZae9mIrL4buN3/FALSld4obAM=;
-        b=XPR2e1bMKiA2gX1DWrz259ICFIib6Pz0yCVPS/ZEHI+Wu+YehMb/VvouxvaDJd+BA7
-         NcUWL8z5Gm1RW8u2Rb7CD1t+ALHaj46GKn+z83Lz87S5aSNaGlj3s3ZftqpVzcbnI1aV
-         gNfEiL8eN1Zl9azXzhyU2c65P3QSGyPccd9r+4uLS1dYPNX2Gvb3iWd9kfX5QhuO4kHD
-         clCdU7Ku7avEzFstkqnnJGm5pdBEaAdB4Dow8MN6uF0D9EsE9qYUFfsvZSGnSoPVfQ5z
-         /8uwnWJXIuLkIDfSN1Zxb9E6W+a+Y1Dy8cSANauWD+kSvqMsR7xAzphrJwqP7Fv0C+vg
-         ykVg==
-X-Gm-Message-State: AOAM531yx39SYDxGNT1KU5CKJdTLW4vGvxsyEePQRi6jZwc3ZYtjWLEQ
-        SwsThaA9pH1mAWqEGjcDGdHvvUqg0Usk90qRo6s=
-X-Google-Smtp-Source: ABdhPJz4k4UttdGgiLGpvxO9vryGrYVFDIkV+sv9ov2iF+siXqkWY9e6VzPU2dq2m3rnXaDECUfNIEHF2jvRW7Bf9gY=
-X-Received: by 2002:a17:907:1250:b0:711:d0bc:2370 with SMTP id
- wc16-20020a170907125000b00711d0bc2370mr7663637ejb.454.1654586578888; Tue, 07
- Jun 2022 00:22:58 -0700 (PDT)
+         :subject:to:content-transfer-encoding;
+        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
+        b=ThyOok4OAHI45jOmILGUDpZgGTEl6TGTUBHlTwE9ZGW89m6nXs82tJjQcl2kDay588
+         J6CFxoWTNV/Rz1s1OWrzyHvL3Etqdsd5vp/EdhvTRDGuxPtnAl4eFvt5nQNWpHbkxrG+
+         xGWj6U/z+AVrlGWYIgLpQcSTkRVbFGQQCgjjG3r7msYLr4bbhy1IApNYOo9jirDPKv3N
+         eUGEM+mxSzTSJysUjfwEgO9Eehq6TIV0d4VzhQWzn3Iy0hd99VqKjqlZYyafPPxGAU1p
+         CDxQzJQXhhFAMRjWDv/7A3g+TrBFfMeUsKRxN3RRuQ9c+S0kCdHqyjUP4FOFNnVgkxAi
+         9N9A==
+X-Gm-Message-State: AOAM530dmOzRWH7FS1t56Ibx++QeBmEmZFxcTKqW0zWMSQEWswd9hpP6
+        CwHVmN996YKn8jPrTUkBHti/+n23FkbZwLa3wUdiCJQHzMaoDz/H
+X-Google-Smtp-Source: ABdhPJxTYNOyqQTj+pRtv7B26L++zgaw4oyR9fAzq9Xjy/qi86fDOL5mMOdKcDA6Petw4QZgBH7CHdeaexgYk1On3ls=
+X-Received: by 2002:a05:6830:919:b0:60a:fe63:e321 with SMTP id
+ v25-20020a056830091900b0060afe63e321mr11494607ott.227.1654594080399; Tue, 07
+ Jun 2022 02:28:00 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a05:6402:26c8:0:0:0:0 with HTTP; Tue, 7 Jun 2022 00:22:58
- -0700 (PDT)
-Reply-To: andyhalford22@gmail.com
-From:   Andy Halford <fameyemrf@gmail.com>
-Date:   Tue, 7 Jun 2022 00:22:58 -0700
-Message-ID: <CAATdNavjCypNM5LXmQmsnwmeQeG9Z8E4ZdU2cotunP-+47s0DA@mail.gmail.com>
-Subject: Dear Friend
+Received: by 2002:a05:6358:99a5:b0:a2:a1fa:9308 with HTTP; Tue, 7 Jun 2022
+ 02:28:00 -0700 (PDT)
+Reply-To: robertbaileys_spende@aol.com
+From:   Robert Baileys <mercymiji.j@gmail.com>
+Date:   Tue, 7 Jun 2022 11:28:00 +0200
+Message-ID: <CAAD1zOZ9bCDqBnjmbC3dQfgC=P2zTqAS=TP3q5qK5TFB5=Q9dQ@mail.gmail.com>
+Subject: 
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=6.8 required=5.0 tests=BAYES_50,DEAR_FRIEND,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
         *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:644 listed in]
+        *      [2607:f8b0:4864:20:0:0:0:b33 listed in]
         [list.dnswl.org]
         *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
         *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
         *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
         *      provider
-        *      [fameyemrf[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [andyhalford22[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  2.6 DEAR_FRIEND BODY: Dear Friend? That's not very dear!
+        *      [mercymiji.j[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
         * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
         *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
         * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
         *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
         *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
         *       valid
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
         * -0.0 T_SCC_BODY_TEXT_LINE No description available.
         *  2.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
         *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
         *      different freemails
+        *  0.6 UNDISC_MONEY Undisclosed recipients + money/fraud signs
 X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,21 +93,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
--- 
-Hello Sir
+--=20
+Hallo, lieber Beg=C3=BCnstigter,
 
+Sie haben diese E-Mail von der Robert Bailey Foundation erhalten. Ich
+bin ein pensionierter Regierungsangestellter aus Harlem und ein
+Powerball-Lotterie-Jackpot-Gewinner von 343,8 Millionen Dollar. Ich
+bin der gr=C3=B6=C3=9Fte Jackpot-Gewinner in der Geschichte der New York Lo=
+ttery
+in Amerika. Ich habe diesen Wettbewerb am 27. Oktober 2018 gewonnen
+und m=C3=B6chte Ihnen mitteilen, dass Google in Kooperation mit Microsoft
+Ihre "E-Mail-Adresse" f=C3=BCr meine Anfrage hat und diese 3.000.000,00
+Millionen Euro kosten wird. Ich spende diese 3 Millionen Euro an Sie,
+um auch Wohlt=C3=A4tigkeitsorganisationen und armen Menschen in Ihrer
+Gemeinde zu helfen, damit wir die Welt zu einem besseren Ort f=C3=BCr alle
+machen k=C3=B6nnen. Bitte besuchen Sie die folgende Website f=C3=BCr weiter=
+e
+Informationen, damit Sie diesen 3 Mio. EUR Ausgaben nicht skeptisch
+gegen=C3=BCberstehen.
+https://nypost.com/2018/11/14/meet-the-winner-of-the-biggest-lottery-jackpo=
+t-in-new-york-history/Sie
+Weitere Best=C3=A4tigungen kann ich auch auf meinem Youtube suchen:
+https://www.youtube.com/watch?v=3DH5vT18Ysavc
+Bitte antworten Sie mir per E-Mail (robertbaileys_spende@aol.com).
+Sie m=C3=BCssen diese E-Mail sofort beantworten, damit die =C3=BCberweisend=
+e
+Bank mit dem Erhalt dieser Spende in H=C3=B6he von 3.000.000,00 Millionen
+Euro beginnen kann.
+Bitte kontaktieren Sie die untenstehende E-Mail-Adresse f=C3=BCr weitere
+Informationen, damit Sie diese Spende von der =C3=BCberweisenden Bank
+erhalten k=C3=B6nnen. E-Mail: robertbaileys_spende@aol.com
 
+Gr=C3=BC=C3=9Fe,
+Robert Bailey
+* * * * * * * * * * * * * * * *
 
-  I am Andy Halford from London, UK. Nice to meet you. Sorry for the
-inconvenience it's because of the time difference. I contacted you
-specifically regarding an important piece of information I intend
-sharing with you that will be of interest to you. Having gone through
-an intelligent methodical search, I decided to specifically contact
-you hoping that you will find this information useful. Kindly confirm
-I got the correct email by replying via same email to ensure I don't
-send the information to the wrong person.
-
-
-
-REGARDS
-Andy Halford
+Powerball-Jackpot-Gewinner
+E-Mail: robertbaileys_spende@aol.com
