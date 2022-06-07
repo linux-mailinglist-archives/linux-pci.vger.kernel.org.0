@@ -2,254 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F0F353FA9F
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 11:58:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B77C153FF86
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 14:56:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240554AbiFGJ6r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jun 2022 05:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47148 "EHLO
+        id S244287AbiFGM4h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jun 2022 08:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240374AbiFGJ6T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 05:58:19 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B6E86D971;
-        Tue,  7 Jun 2022 02:58:16 -0700 (PDT)
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LHQfM4y71z687wp;
-        Tue,  7 Jun 2022 17:53:31 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 7 Jun 2022 11:58:13 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 7 Jun
- 2022 10:58:12 +0100
-Date:   Tue, 7 Jun 2022 10:58:11 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Lukas Wunner <lukas@wunner.de>,
-        Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S236344AbiFGM4g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 08:56:36 -0400
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091397A810;
+        Tue,  7 Jun 2022 05:56:36 -0700 (PDT)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-e5e433d66dso23015816fac.5;
+        Tue, 07 Jun 2022 05:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bLS7tQNn56jjH+puzkBXWN/PDzRhNhPsyuoB3P38+0o=;
+        b=GHe27Z6Jkxw/+0HA6RgiePa4zSEKbKzers0hugcbMWMr5bJbkbCeItFiZyZodVQdCO
+         Drx1fo5KygQp8G2VygioAfnqlJwPCxADoiaOuc9i9xnBjoGFSlKNtIyQqM9XRkwBnWO7
+         upcarXqaE7G0hl6Qt8sJ7ZaxLeVy8O+In7nssy52o2+H3/dV2jmo+W7Iz5DxkmnWOUw5
+         NSQZmsNFqQoIyAi21KiCMTta2029il71dIsrtLvV+7a/J/lSGbr0ct4OZeSpySsRUisI
+         3HQk2ylsOQIoft3YzcKW49OWPuLeDXRtgOLTthLC17MQmJClEs7m5Lp5icpReuJEagjd
+         nNqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=bLS7tQNn56jjH+puzkBXWN/PDzRhNhPsyuoB3P38+0o=;
+        b=ZvEU7jfIPPbE4oVey9Hyl1ubPjdovAj9d437+Gs3pvw4MkYzYsTWWnBVuEqpzDkMxe
+         OftBWXE0/gS089hSGv4lH4dQaqUcisYtiM19ENWD4ZnIwKTUf1XTzUxDpis9duKd49XP
+         TyxOzXc8Kh9FWz3ERjDSCU+jnc6Q2ETHzRSUsJ1H7JSP6BMhekYGjGc+d+DteyvZUIsd
+         s5gnzM9d8bfLMQF2siapNVZNXWBPKqUxQ13PMDDa363gnBF0mvYHz3qCEI0yrr6TCT+f
+         4R7PIcgGbzkVQxgx6Qoo8Pk6ijjSwg4RQzsA0Onxk+/JdOi3YtI0CcqHQ/fTiF0N4tlp
+         +vxA==
+X-Gm-Message-State: AOAM531jU8/ADNFGh3P7aJCMAHqmQKzeb3l0+jEVeKtG9/S8najmI3kV
+        8Xaj8rPE5o0dnYUzyEiE8es=
+X-Google-Smtp-Source: ABdhPJyKaeFSa2UkUqJ48ZB/5OFISEdJc8ytlCSkZ2DJGDkvy3KWScg32CLDimVMqW6hikhFYKrm9g==
+X-Received: by 2002:a05:6870:b41c:b0:f2:5d2b:9a77 with SMTP id x28-20020a056870b41c00b000f25d2b9a77mr16377912oap.62.1654606595409;
+        Tue, 07 Jun 2022 05:56:35 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o7-20020a056871078700b000f32fb9d2bfsm9130713oap.5.2022.06.07.05.56.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jun 2022 05:56:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Tue, 7 Jun 2022 05:56:33 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Clemens Ladisch <clemens@ladisch.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V8 03/10] PCI: Create PCI library functions in support
- of DOE mailboxes.
-Message-ID: <20220607105811.000021d5@Huawei.com>
-In-Reply-To: <Yp5b1TSxw28hCZ+z@iweiny-desk3>
-References: <20220414203237.2198665-1-ira.weiny@intel.com>
-        <20220414203237.2198665-4-ira.weiny@intel.com>
-        <20220530190657.GA14765@wunner.de>
-        <20220531113350.0000421e@Huawei.com>
-        <YpbWCYujYDEkMm1B@iweiny-desk3>
-        <20220601071808.GA19924@wunner.de>
-        <Ypee328j+l6ZdbUT@iweiny-desk3>
-        <20220606154646.00001663@Huawei.com>
-        <Yp5b1TSxw28hCZ+z@iweiny-desk3>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org,
+        Gabriel Craciunescu <nix.or.die@googlemail.com>,
+        babu.moger@amd.com
+Subject: Re: [PATCH 1/2] x86/amd_nb: Add AMD Family 19h A0-AF IDs
+Message-ID: <20220607125633.GA1787169@roeck-us.net>
+References: <20220601172121.18612-1-mario.limonciello@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220601172121.18612-1-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 6 Jun 2022 12:56:05 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Wed, Jun 01, 2022 at 12:21:18PM -0500, Mario Limonciello wrote:
+> commit 4fb0abfee424 ("x86/amd_nb: Add AMD Family 19h Models (10h-1Fh)
+> and (A0h-AFh) PCI IDs") had claimed to add the IDs for models A0h-AFh,
+> but it appears to only have added the models 10h-1Fh.
+> 
+> Add the actual IDs for A0-AF which are needed for SMN communication to
+> work properly in amd_nb.
+> 
+> Fixes: 4fb0abfee424 ("x86/amd_nb: Add AMD Family 19h Models (10h-1Fh) and (A0h-AFh) PCI IDs")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  arch/x86/kernel/amd_nb.c | 5 +++++
 
-> On Mon, Jun 06, 2022 at 03:46:46PM +0100, Jonathan Cameron wrote:
-> > On Wed, 1 Jun 2022 10:16:15 -0700
-> > Ira Weiny <ira.weiny@intel.com> wrote:
-> >   
-> > > On Wed, Jun 01, 2022 at 09:18:08AM +0200, Lukas Wunner wrote:  
-> > > > On Tue, May 31, 2022 at 07:59:21PM -0700, Ira Weiny wrote:    
-> > > > > On Tue, May 31, 2022 at 11:33:50AM +0100, Jonathan Cameron wrote:    
-> > > > > > On Mon, 30 May 2022 21:06:57 +0200 Lukas Wunner <lukas@wunner.de> wrote:    
-> > > > > > > On Thu, Apr 14, 2022 at 01:32:30PM -0700, ira.weiny@intel.com wrote:    
-> > >   
-> > > > 
-> > > >     
-> > > > > > > > +static irqreturn_t pci_doe_irq_handler(int irq, void *data)
-> > > > > > > > +{
-> > > > > > > > +	struct pci_doe_mb *doe_mb = data;
-> > > > > > > > +	struct pci_dev *pdev = doe_mb->pdev;
-> > > > > > > > +	int offset = doe_mb->cap_offset;
-> > > > > > > > +	u32 val;
-> > > > > > > > +
-> > > > > > > > +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > > > > > > > +
-> > > > > > > > +	/* Leave the error case to be handled outside IRQ */
-> > > > > > > > +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
-> > > > > > > > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
-> > > > > > > > +		return IRQ_HANDLED;
-> > > > > > > > +	}
-> > > > > > > > +
-> > > > > > > > +	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
-> > > > > > > > +		pci_write_config_dword(pdev, offset + PCI_DOE_STATUS,
-> > > > > > > > +					PCI_DOE_STATUS_INT_STATUS);
-> > > > > > > > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
-> > > > > > > > +		return IRQ_HANDLED;
-> > > > > > > > +	}
-> > > > > > > > +
-> > > > > > > > +	return IRQ_NONE;
-> > > > > > > > +}      
-> > > > > > > 
-> > > > > > > PCIe 6.0, table 7-316 says that an interrupt is also raised when
-> > > > > > > "the DOE Busy bit has been Cleared", yet such an interrupt is
-> > > > > > > not handled here.  It is incorrectly treated as a spurious
-> > > > > > > interrupt by returning IRQ_NONE.  The right thing to do
-> > > > > > > is probably to wake the state machine in case it's polling
-> > > > > > > for the Busy flag to clear.    
-> > > > > > 
-> > > > > > Ah. I remember testing this via a lot of hacking on the QEMU code
-> > > > > > to inject the various races that can occur (it was really ugly to do).
-> > > > > > 
-> > > > > > Guess we lost the handling at some point.  I think your fix
-> > > > > > is the right one.    
-> > > > > 
-> > > > > Perhaps I am missing something but digging into this more.  I disagree
-> > > > > that the handler fails to handle this case.  If I read the spec correctly
-> > > > > DOE Interrupt Status must be set when an interrupt is generated.
-> > > > > The handler wakes the state machine in that case.  The state machine
-> > > > > then checks for busy if there is work to be done.    
-> > > > 
-> > > > Right, I was mistaken, sorry for the noise.    
-> > > 
-> > > NP I'm not always following this either.
-> > >   
-> > > > 
-> > > >     
-> > > > > Normally we would not even need to check for status error.  But that is
-> > > > > special cased because clearing that status is left to the state machine.    
-> > > > 
-> > > > That however looks wrong because the DOE Interrupt Status bit is never
-> > > > cleared after a DOE Error is signaled.  The state machine performs an
-> > > > explicit abort upon an error by setting the DOE Abort bit, but that
-> > > > doesn't seem to clear DOE Interrupt Status:
-> > > > 
-> > > > Per section 6.30.2, "At any time, the system firmware/software is
-> > > > permitted to set the DOE Abort bit in the DOE Control Register,
-> > > > and the DOE instance must Clear the Data Object Ready bit,
-> > > > if not already Clear, and Clear the DOE Error bit, if already Set,
-> > > > in the DOE Status Register, within 1 second."    
-> > > 
-> > > I thought that meant the hardware (the DOE instance) must clear those bits
-> > > within 1 second?
-> > >   
-> > > > 
-> > > > No mention of the DOE Interrupt Status bit, so we cannot assume that
-> > > > it's cleared by a DOE Abort and we must clear it explicitly.    
-> > > 
-> > > Oh...  yea.  Jonathan?  We discussed this before and I was convinced it worked
-> > > but I think Lukas is correct here.  
-> > 
-> > Hmm. I thought we were good as well, but Lukas is correct in saying
-> > the interrupt status bit isn't cleared (which is 'novel' give the associated
-> > bit to tell you what the interrupt means will be cleared). 
-> > 
-> > I'm not sure I want to think around the race conditions that result...
-> >   
-> > > 
-> > > Should we drop the special case in pci_doe_irq_handler() and just clear the
-> > > status always?  Or should we wait and clear it is pci_doe_abort_start?  
-> > 
-> > I don't think it matters.  pci_doe_irq_handler() seems a little cleaner.  
-> 
-> I agree and that is what V10 does.
-> 
-> > 
-> > I've not figured out completely if there are races however...  
-> 
-> This is why I reworked the handling of cur_task in those error cases.
-> 
-> > 
-> > It is set when no already set and we get transitions of any of the following:
-> > - DOE error bit set (this can't happen until abort so no race here)
-> > 
-> > - Data Object Ready bit is set: Can this happen with the DOE error set? I don't
-> >   immediately see language saying it can't. However, I don't think it can
-> >   for any of the challenge response protocols yet defined (and there are other
-> >   problems if anyone wants to implement unsolicited messages)
-> > 
-> > - DOE busy bit has cleared - can definitely happen after an abort (which is
-> >   fine as nothing to do anyway, so we'll handle a pointless interrupt).
-> >   Could it in theory happen when error is set? I think not but only because
-> >   of the statement  "Clear this bit when it is able to receive a new data
-> >   object."
-> > 
-> > So I think we are fine doing it preabort,  
-> 
-> That is what I though for V10 especially after reworking the cur_task locking.
-> An extra interrupt would either start processing the next task or return with
-> nothing to do.
-> 
-> > but wouldn't put it past a hardware
-> > designer to find some path through that which results in a bonus interrupt
-> > and potentially us resetting twice.
-> > 
-> > If we clear it at the end of abort instead, what happens?
-> > Definitely no interrupts until we clear it. As we are doing query response
-> > protocols only, no new data until state machine moves on, so fine there.
-> > 
-> > So what about just doing it unconditionally..
-> > 
-> > +	case DOE_WAIT_ABORT:
-> > +	case DOE_WAIT_ABORT_ON_ERR:
-> > +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +
-> > +		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
-> > +		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
-> > 
-> > 	here...
-> > 
-> > +			/* Back to normal state - carry on */
-> > +			retire_cur_task(doe_mb);
-> > 
-> > This feels a little bit more 'standard' as we are allowing new interrupts
-> > only after everything is back to a nice state.  
-> 
-> As I reworked the cur_task locking I really thought about locking cur_task
-> throughout doe_statemachine_work().  It seems a lot safer for a lot of reasons.
-> Doing so would make the extra work item no big deal.
-> 
-> So I looked at this again because you got me worried.  If mod_delayed_work()
-> can cause doe_statemachine_work() while another thread is in the middle of
-> processing the interrupt there is a chance that signal_task_complete() is
-> called a second time on a given task pointer.
-> 
-> However, I _don't_ _think_ that can happen.  Because I don't think
-> mod_delayed_work() can cause the work item to run while it is already running.
+I'll need an Ack from a x86 maintainer to apply this series,
+or it needs to be applied through x86. I sent an Ack for patch 2/2,
+so the latter would be fine with me.
 
-You are correct. I remember looking into that exact question for
-a different project a while ago.
+Thanks,
+Guenter
 
+>  include/linux/pci_ids.h  | 1 +
+>  2 files changed, 6 insertions(+)
 > 
-> So unless I misunderstand how mod_delayed_work() works we are guaranteed that
-> the extra interrupt will see the correct mailbox state and do the right thing.
-
-Agreed.  Far as I can tell we are fine.  More eyes always good though if anyone
-else wants to take a look!
-
-Jonathan
-
-p.s. I liked the original heavy weight queuing the whole thing on a mutex as it
-was a lot easier to reason about :)  Was ugly though!
-
-
-> 
-> Ira
-
+> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+> index 190e0f763375..cc8c7cfa9068 100644
+> --- a/arch/x86/kernel/amd_nb.c
+> +++ b/arch/x86/kernel/amd_nb.c
+> @@ -25,11 +25,13 @@
+>  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
+>  #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F4 0x144c
+>  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
+> +#define PCI_DEVICE_ID_AMD_19H_MA0H_ROOT	0x14b5
+>  #define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
+>  #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F4 0x14b1
+>  #define PCI_DEVICE_ID_AMD_19H_M40H_ROOT	0x14b5
+>  #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F4 0x167d
+>  #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F4 0x166e
+> +#define PCI_DEVICE_ID_AMD_19H_MA0H_DF_F4 0x1728
+>  
+>  /* Protect the PCI config register pairs used for SMN. */
+>  static DEFINE_MUTEX(smn_mutex);
+> @@ -43,6 +45,7 @@ static const struct pci_device_id amd_root_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_ROOT) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_ROOT) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_ROOT) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_MA0H_ROOT) },
+>  	{}
+>  };
+>  
+> @@ -67,6 +70,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F3) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_MA0H_DF_F3) },
+>  	{}
+>  };
+>  
+> @@ -85,6 +89,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F4) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_MA0H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+>  	{}
+>  };
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 0178823ce8c2..05b4c67a8a2a 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -560,6 +560,7 @@
+>  #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F3 0x14b0
+>  #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F3 0x167c
+>  #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F3 0x166d
+> +#define PCI_DEVICE_ID_AMD_19H_MA0H_DF_F3 0x1727
+>  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+>  #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+>  #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
