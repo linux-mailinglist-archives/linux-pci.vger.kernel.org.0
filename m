@@ -2,203 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 141F55422E5
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 08:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 485B05424AA
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 08:52:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229978AbiFHBDJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jun 2022 21:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56568 "EHLO
+        id S1352158AbiFHCRK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jun 2022 22:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1453997AbiFGXQP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 19:16:15 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64307212C88;
-        Tue,  7 Jun 2022 14:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654636138; x=1686172138;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9huLQR7ICWOJUddFIOk14WmEoo8MBEsiYlRTIituFZg=;
-  b=LGlvfpO0zn629aNvXDvf0h8HTmu1cwCRCP3KAJCZbCmIv4ILCJwDV/tm
-   aRbTu8XMchu7/8d7jQMSFDHDyqDfL4dVDMRAJaOzEa0Sqk5EclMwbevxs
-   ICYDUGE+CtloxgljOSBQy02jY+DUL2Prlf70yEq4rnnWgq9C4B74BZZ4d
-   C7q7x2K6yA81W5FDP0CUb4mPFsF4hJO7EVmPBl7x7PUg2T53HID4ZLtNF
-   DAXoWVsXTexN3SAbhyu5+/33kErwNSpvhTiyW4tASz0Y+Nj66Xd7I3i6c
-   Bu2E2bCUlY7ihZIX9c+59YykYOiPFXwBQx5+/u/3Eh5A4cOTmihbPccaL
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10371"; a="274284824"
-X-IronPort-AV: E=Sophos;i="5.91,284,1647327600"; 
-   d="scan'208";a="274284824"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 14:08:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,284,1647327600"; 
-   d="scan'208";a="682952350"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2022 14:08:55 -0700
-Received: from rjingar-desk5.amr.corp.intel.com (unknown [10.209.92.238])
-        by linux.intel.com (Postfix) with ESMTP id BACD2580A8B;
-        Tue,  7 Jun 2022 14:08:54 -0700 (PDT)
-From:   Rajvi Jingar <rajvi.jingar@linux.intel.com>
-To:     rafael.j.wysocki@intel.com, bhelgaas@google.com
-Cc:     rajvi.jingar@linux.intel.com, david.e.box@linux.intel.com,
+        with ESMTP id S1446262AbiFHCOL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 22:14:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0BC315EA57;
+        Tue,  7 Jun 2022 14:22:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 05D6560C3E;
+        Tue,  7 Jun 2022 21:22:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D701C385A2;
+        Tue,  7 Jun 2022 21:22:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654636925;
+        bh=Qpqpjs4zC/NE8w1f2Kkh52Va2IoAJuZ40cSz1THeD0w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=o1ag9DgNNkcfo+LOrhqqS2l97tokLEEYopFUjf2SX+zXSVuQh4hEuAw/kHJs+ouju
+         QsuU35wV5hauIOZ8QlDTV4I01+WxobWSgbgUyPKqml8xEeMA+Sf2o0F/Fi4rBqu5Nn
+         vQ/xvMJ6x6D2gLrYtegmMkCM/jNH3FZBNcJ9+TDttJalwHnU8ov4ktpyu5rHA76hEk
+         SPCCRki0bb9nWU57gCdvu8D+EQ+3CUoKDEOrMgi9q6gCgg7QDPJE7j1DhdgM/Bpk/R
+         tekMC7v2vNUGZ7agDH0X3HI3vrW29tpRWv/I1XVje5etwKlmZgfjb6bpYRJ5Wi+/Y+
+         4j0RHiuQS+iJw==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux1394-devel@lists.sourceforge.net, linux-pm@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v6 2/2] PCI/PM: disable PTM on all devices
-Date:   Tue,  7 Jun 2022 14:08:52 -0700
-Message-Id: <20220607210852.475863-2-rajvi.jingar@linux.intel.com>
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2] firewire: ohci: Convert to generic power management
+Date:   Tue,  7 Jun 2022 16:21:57 -0500
+Message-Id: <20220607212157.343033-1-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220607210852.475863-1-rajvi.jingar@linux.intel.com>
-References: <20220607210852.475863-1-rajvi.jingar@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On receiving a PTM Request from a downstream device, if PTM is disabled
-on the root port, as per PCIe specification, such request would cause
-an Unsupported Request error. So disable PTM for any downstream devices.
-PTM state needs to be saved before disabling it to be restored later.
+From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 
-set ptm_enabled from 'struct pci_dev' to 0 in pci_ptm_disable() and
-it is used in pci_save_state() before saving PTM state to avoid
-double save.
+Convert firewire-ohci from legacy PCI power management to the generic power
+management framework.
 
-Fixes: a697f072f5da ("PCI: Disable PTM during suspend to save power")
-Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-Suggested-by: David E. Box <david.e.box@linux.intel.com>
+Previously firewire-ohci used legacy PCI power management, and
+pci_suspend() and pci_resume() were responsible for both device-specific
+things and generic PCI things like saving and restoring config space and
+managing power state:
+
+  pci_suspend
+    software_reset                         <-- device-specific
+    pci_save_state                         <-- generic PCI
+    pci_set_power_state                    <-- generic PCI
+    pmac_ohci_off                          <-- device-specific
+
+  pci_resume
+    pmac_ohci_on                           <-- device-specific
+    pci_set_power_state(PCI_D0)            <-- generic PCI
+    pci_restore_state                      <-- generic PCI
+    pci_enable_device                      <-- generic PCI
+    ohci_enable                            <-- device-specific
+
+Convert to generic power management where the PCI bus PM methods do the
+generic PCI things, and the driver needs only the device-specific part,
+i.e.,
+
+  suspend_devices_and_enter
+    dpm_suspend_start(PMSG_SUSPEND)
+      pci_pm_suspend                       # PCI bus .suspend() method
+        pci_suspend                        # driver->pm->suspend
+          software_reset                   <-- device-specific
+          pmac_ohci_off                    <-- device-specific
+    suspend_enter
+      dpm_suspend_noirq(PMSG_SUSPEND)
+        pci_pm_suspend_noirq               # PCI bus .suspend_noirq() method
+          pci_save_state                   <-- generic PCI
+          pci_prepare_to_sleep             <-- generic PCI
+            pci_set_power_state
+    ...
+    dpm_resume_end(PMSG_RESUME)
+      pci_pm_resume                        # PCI bus .resume() method
+        pci_restore_standard_config
+          pci_set_power_state(PCI_D0)      <-- generic PCI
+          pci_restore_state                <-- generic PCI
+        pci_resume                         # driver->pm->resume
+          pmac_ohci_on                     <-- device-specific
+          ohci_enable                      <-- device-specific
+
+[bhelgaas: commit log]
+Link: https://lore.kernel.org/r/20200720150715.624520-1-vaibhavgupta40@gmail.com
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- v1 -> v2: add Fixes tag in commit message
- v2 -> v3: move changelog after "---" marker
- v3 -> v4: add "---" marker after changelog
- v4 -> v5: move pci_disable_ptm() out of the pci_dev->state_saved check.
-	   disable PTM for all devices, not just root ports.
- v5 -> v6: move pci_disable_ptm() to pci_pm_suspend()
-	   set pci_dev->ptm_enabled to 0 in pci_ptm_disable() and it is
-	   used in pci_save_state() before saving PTM state to avoid
-	   double save.
----
- drivers/pci/pci-driver.c | 21 ++++++++++++++++++++-
- drivers/pci/pci.c        | 26 +++++++++++---------------
- drivers/pci/pcie/ptm.c   |  1 +
- 3 files changed, 32 insertions(+), 16 deletions(-)
+ drivers/firewire/ohci.c | 35 ++++++++---------------------------
+ 1 file changed, 8 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 1f64de3e5280..db4d7835d7ae 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -803,14 +803,33 @@ static int pci_pm_suspend(struct device *dev)
- 		pci_dev_adjust_pme(pci_dev);
- 	}
- 
-+	/*
-+	 * If a PTM Requester is put in a low-power state, a PTM Responder
-+	 * upstream from it may also be put in a low-power state. Putting a
-+	 * Port in D1, D2, or D3hot does not prohibit it from sending or
-+	 * responding to PTM Requests. We want to disable PTM on Responders
-+	 * when they are in a low-power state. Per 6.21.3, a PTM Requester
-+	 * must not be enabled when the upstream PTM Responder is disabled.
-+	 * Therefore, we must disable all PTM on all downstream PTM
-+	 * Requesters before disabling it on the PTM Responder, e.g., a Root
-+	 * Port.
-+	 *
-+	 * Also, to restore the PTM state, it needs to be saved before
-+	 * disabling it for all devices.
-+	 */
-+	pci_save_ptm_state(pci_dev);
-+	pci_disable_ptm(pci_dev);
-+
- 	if (pm->suspend) {
- 		pci_power_t prev = pci_dev->current_state;
- 		int error;
- 
- 		error = pm->suspend(dev);
- 		suspend_report_result(dev, pm->suspend, error);
--		if (error)
-+		if (error) {
-+			pci_restore_ptm_state(pci_dev);
- 			return error;
-+		}
- 
- 		if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
- 		    && pci_dev->current_state != PCI_UNKNOWN) {
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index cfaf40a540a8..0df9b783621e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1669,7 +1669,13 @@ int pci_save_state(struct pci_dev *dev)
- 	pci_save_ltr_state(dev);
- 	pci_save_dpc_state(dev);
- 	pci_save_aer_state(dev);
--	pci_save_ptm_state(dev);
-+	/*
-+	 * PCI PM core disables PTM during suspend and saves PTM state before
-+	 * that to be able to restore the ptm state restored later. So PCI core
-+	 * needs this check to avoid double save.
-+	 */
-+	if (dev->ptm_enabled)
-+		pci_save_ptm_state(dev);
- 	return pci_save_vc_state(dev);
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index 17c9d825188b..aee705132330 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -3165,8 +3165,7 @@ static int ohci_set_iso_channels(struct fw_iso_context *base, u64 *channels)
+ 	return ret;
  }
- EXPORT_SYMBOL(pci_save_state);
-@@ -2710,24 +2716,12 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
- 	if (target_state == PCI_POWER_ERROR)
- 		return -EIO;
  
--	/*
--	 * There are systems (for example, Intel mobile chips since Coffee
--	 * Lake) where the power drawn while suspended can be significantly
--	 * reduced by disabling PTM on PCIe root ports as this allows the
--	 * port to enter a lower-power PM state and the SoC to reach a
--	 * lower-power idle state as a whole.
--	 */
--	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
--		pci_disable_ptm(dev);
--
- 	pci_enable_wake(dev, target_state, wakeup);
+-#ifdef CONFIG_PM
+-static void ohci_resume_iso_dma(struct fw_ohci *ohci)
++static void __maybe_unused ohci_resume_iso_dma(struct fw_ohci *ohci)
+ {
+ 	int i;
+ 	struct iso_context *ctx;
+@@ -3183,7 +3182,6 @@ static void ohci_resume_iso_dma(struct fw_ohci *ohci)
+ 			ohci_start_iso(&ctx->base, 0, ctx->sync, ctx->tags);
+ 	}
+ }
+-#endif
  
- 	error = pci_set_power_state(dev, target_state);
+ static int queue_iso_transmit(struct iso_context *ctx,
+ 			      struct fw_iso_packet *packet,
+@@ -3789,39 +3787,24 @@ static void pci_remove(struct pci_dev *dev)
+ 	dev_notice(&dev->dev, "removed fw-ohci device\n");
+ }
  
--	if (error) {
-+	if (error)
- 		pci_enable_wake(dev, target_state, false);
--		pci_restore_ptm_state(dev);
+-#ifdef CONFIG_PM
+-static int pci_suspend(struct pci_dev *dev, pm_message_t state)
++static int __maybe_unused pci_suspend(struct device *devp)
+ {
++	struct pci_dev *dev = to_pci_dev(devp);
+ 	struct fw_ohci *ohci = pci_get_drvdata(dev);
+-	int err;
+ 
+ 	software_reset(ohci);
+-	err = pci_save_state(dev);
+-	if (err) {
+-		ohci_err(ohci, "pci_save_state failed\n");
+-		return err;
+-	}
+-	err = pci_set_power_state(dev, pci_choose_state(dev, state));
+-	if (err)
+-		ohci_err(ohci, "pci_set_power_state failed with %d\n", err);
+ 	pmac_ohci_off(dev);
+ 
+ 	return 0;
+ }
+ 
+-static int pci_resume(struct pci_dev *dev)
++static int __maybe_unused pci_resume(struct device *devp)
+ {
++	struct pci_dev *dev = to_pci_dev(devp);
+ 	struct fw_ohci *ohci = pci_get_drvdata(dev);
+ 	int err;
+ 
+ 	pmac_ohci_on(dev);
+-	pci_set_power_state(dev, PCI_D0);
+-	pci_restore_state(dev);
+-	err = pci_enable_device(dev);
+-	if (err) {
+-		ohci_err(ohci, "pci_enable_device failed\n");
+-		return err;
 -	}
  
- 	return error;
+ 	/* Some systems don't setup GUID register on resume from ram  */
+ 	if (!reg_read(ohci, OHCI1394_GUIDLo) &&
+@@ -3838,7 +3821,6 @@ static int pci_resume(struct pci_dev *dev)
+ 
+ 	return 0;
  }
-@@ -2775,8 +2769,10 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
- 	 * port to enter a lower-power PM state and the SoC to reach a
- 	 * lower-power idle state as a whole.
- 	 */
--	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-+	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
-+		pci_save_ptm_state(dev);
- 		pci_disable_ptm(dev);
-+	}
+-#endif
  
- 	__pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
+ static const struct pci_device_id pci_table[] = {
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_SERIAL_FIREWIRE_OHCI, ~0) },
+@@ -3847,15 +3829,14 @@ static const struct pci_device_id pci_table[] = {
  
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 368a254e3124..746e29779c27 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -44,6 +44,7 @@ void pci_disable_ptm(struct pci_dev *dev)
- 	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
- 	ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
- 	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
-+	dev->ptm_enabled = 0;
- }
+ MODULE_DEVICE_TABLE(pci, pci_table);
  
- void pci_save_ptm_state(struct pci_dev *dev)
++static SIMPLE_DEV_PM_OPS(pci_pm_ops, pci_suspend, pci_resume);
++
+ static struct pci_driver fw_ohci_pci_driver = {
+ 	.name		= ohci_driver_name,
+ 	.id_table	= pci_table,
+ 	.probe		= pci_probe,
+ 	.remove		= pci_remove,
+-#ifdef CONFIG_PM
+-	.resume		= pci_resume,
+-	.suspend	= pci_suspend,
+-#endif
++	.driver.pm	= &pci_pm_ops,
+ };
+ 
+ static int __init fw_ohci_init(void)
 -- 
 2.25.1
 
