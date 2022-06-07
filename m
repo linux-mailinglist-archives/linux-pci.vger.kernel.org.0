@@ -2,160 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73F3853FF9A
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 15:00:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D0B353FFC1
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 15:12:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244341AbiFGNAq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jun 2022 09:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41816 "EHLO
+        id S241093AbiFGNMh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jun 2022 09:12:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235084AbiFGNAp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 09:00:45 -0400
-Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A681BB0A5C;
-        Tue,  7 Jun 2022 06:00:42 -0700 (PDT)
-Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-f2bb84f9edso23024426fac.10;
-        Tue, 07 Jun 2022 06:00:42 -0700 (PDT)
+        with ESMTP id S244521AbiFGNMe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 09:12:34 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F211EC63
+        for <linux-pci@vger.kernel.org>; Tue,  7 Jun 2022 06:12:31 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id y16so14167539ili.13
+        for <linux-pci@vger.kernel.org>; Tue, 07 Jun 2022 06:12:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DFToUn3iIlPxtwCctA389NaCQNcd2lS9FNAvhbLgX7A=;
-        b=eFM0y3cJ4KihBtIvqfCsN8r9BkeugI0423BFDlCGweJVhmjOc4pY7PEHHOseD33BR3
-         sjALDaeJEWfKLLnpML8JZkwcqfpPAnOYO3hgYy8VbBQ20UK8LKS1gICJdQx1fzebLxdM
-         SaTKvHRUHB3sqtBrYaNudmnZ/MWJL1OZWa/BarJSJXkVGzqmVQKJsTIh0ccEGPjuDsWA
-         pf26EdU8u5ZtbzyMi5vOo5zTfzTn6caXkEqMeL8//Ob69Vw0Cmz4FG4SaBjiMnObSg90
-         o3NDJ/heHKciiHqhngJDVp9kHRQS52mw0Zujex2/lSV0aE/5nzknpOCUiEB+JhuTKdEP
-         XU4g==
+        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mcxZtplXwk/Z+TT8W9hddhp2FUJFjSAJiAMtVESFwX4=;
+        b=1R9AiW1gY1VYK6kYFNaQEa0cCcVv0mg4PT8PsSFrmYE8qP50U/W8QnvoV8a3AAiuY/
+         6AE3+OpXx+GOb6NGUe8ynFndhTMVnvEd+lz2Ufhrj35oREogwN7e8iAHXyGibeX0qGQe
+         Mc3O1gPlG+6DN56TdUTVkO+LFlhq0niqSzLCQ+9IxXf3J157h8Ncm4NBLnm6M3LHv0Sw
+         IOvovO5h/4xOaWe8MHBozd6uGQENdjNERulvpkYnGKBDYA7j+M6905myRyL11P1J3v2z
+         CWFAj3Y3JgP7/y4FItqBEAw5Rd9w78cklOruPWiyG0Fz2W3oVXsI4xUJgPnD4USc75Vj
+         vG8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=DFToUn3iIlPxtwCctA389NaCQNcd2lS9FNAvhbLgX7A=;
-        b=tmjL7EtLkhXO7/hWFWK4jHul2oo1+RS4SQx5bBB5qHkC+h3vMHn00TdJvVP23D3VGN
-         Jxswa7USw7tWH4WNtwYlaioJQFKzrcNNzkR2DtYnWibhdCL7zMjlwBhRE6PMJL6qiJWT
-         tbnjwRJuzYiiQEidQvs3psVKQb6PUAxBIMfQVkS9XNOJJcU/WyX4w/w3xDDs27kw90A2
-         B117kSBvH0B8TTmkSV+HOOEfqlYh7yyQX3vPuZr3mvaDwvkLAGKG4LVhcSgJbh0mthbv
-         /86s1+yHRD03Yic3MCJUEt0wCOXCWkAcodEiYJw3WGIcbt4r2ErB+SKdoe47yNaJWBBZ
-         I/Zw==
-X-Gm-Message-State: AOAM532UjINPDxgUXnSSALFyL+K3jKWuhBnHkHExaJ9o+VRdzClB6TpI
-        rOxZDLU16OUBZ+cZCsgNfhY=
-X-Google-Smtp-Source: ABdhPJw9+QuoevZiTtGaeX6fa/5aU29ffGoDEmpMzhDm0HudV6g2B23y5grfm/Z5prDTntn74tvJKw==
-X-Received: by 2002:a05:6871:797:b0:f1:d49b:2f3b with SMTP id o23-20020a056871079700b000f1d49b2f3bmr16274781oap.40.1654606841310;
-        Tue, 07 Jun 2022 06:00:41 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id bb35-20020a056820162300b0040e8c09f99dsm9518388oob.23.2022.06.07.06.00.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 06:00:40 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Tue, 7 Jun 2022 06:00:39 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Clemens Ladisch <clemens@ladisch.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, babu.moger@amd.com
-Subject: Re: [PATCH v2 1/6] x86/amd_nb: Add AMD Family 17h A0-AF IDs
-Message-ID: <20220607130039.GA1787486@roeck-us.net>
-References: <20220602201137.1415-1-mario.limonciello@amd.com>
- <20220602201137.1415-2-mario.limonciello@amd.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mcxZtplXwk/Z+TT8W9hddhp2FUJFjSAJiAMtVESFwX4=;
+        b=7TUyVKCd7VSYoqo9JqIe6Dwe6ROMADS5nHvLDld1RKRJqM1Zb/aXfkrNGXi5zVtn60
+         QPrIikgnJ/3E4MrrUrZ3nI855qUU9wNVSdzohqeCNl8U7gwHgUgx5L1jRqenxxNMZ6Tt
+         t8XBvUjsD8jYfZ1fYrOYhaoskNPisMpyfhi+M+plNWrVSTqzdhH+z1dgmmxOmn40PeAG
+         D4Onj8TbjM5G6DN/iV253rlc8jbC54bYIR+ZjWz6qHLYwCEV7gcBramphXjYQVih5TeX
+         pxcXtQD6ofKRau2q5boHcjiuz/aDyDF8LuITKClkxsvrYcRfd63gys6LBwE1d/8OgB9v
+         I/Ig==
+X-Gm-Message-State: AOAM533Mz5htjr4dgzvitqvDnvvXv3EacMCd7CuLjWFCDK2SBD1swHGo
+        HLxzlT2I65w0d4M8n2dtZ52nWABWTz65LQQKlc3o8Q==
+X-Google-Smtp-Source: ABdhPJw95CeU2MDQe4i7N7oPLkSanT5aQWwJEN3LpDbgGCXPYQoyGBGQkxeiSbtBzI0UNRW9Pns5C3y7Zo+8caz+foE=
+X-Received: by 2002:a05:6e02:19cc:b0:2d3:e20f:4959 with SMTP id
+ r12-20020a056e0219cc00b002d3e20f4959mr17071989ill.40.1654607550608; Tue, 07
+ Jun 2022 06:12:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220602201137.1415-2-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.6
+References: <cover.1644234441.git.baruch@tkos.co.il> <20220412161259.GA7109@lpieralisi>
+ <YnvCGD4RwuyPkTfK@lpieralisi>
+In-Reply-To: <YnvCGD4RwuyPkTfK@lpieralisi>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Tue, 7 Jun 2022 15:12:19 +0200
+Message-ID: <CA+HBbNFo9QCExiA9T4Mn4t5vvir79xF3R9F6OLZa0m5Bzpte3w@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] PCI: IPQ6018 platform support
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Baruch Siach <baruch@tkos.co.il>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        "Bryan O'Donoghue" <pure.logic@nexus-software.ie>,
+        linux-pci@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 02, 2022 at 03:11:32PM -0500, Mario Limonciello wrote:
-> Add support for SMN communication on Family 17h Model A0h.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v1->v2:
->  * Drop fixes tag
->  * Fix commit message and definitions for s/17/19/
-> ---
->  arch/x86/kernel/amd_nb.c | 5 +++++
->  include/linux/pci_ids.h  | 1 +
+On Wed, May 11, 2022 at 4:03 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Tue, Apr 12, 2022 at 05:12:59PM +0100, Lorenzo Pieralisi wrote:
+> > On Mon, Feb 07, 2022 at 04:51:23PM +0200, Baruch Siach wrote:
+> > > This series adds support for the single PCIe lane on IPQ6018 SoCs. The code is
+> > > ported from downstream Codeaurora v5.4 kernel. The main difference from
+> > > downstream code is the split of PCIe registers configuration from .init to
+> > > .post_init, since it requires phy_power_on().
+> > >
+> > > Tested on IPQ6010 based hardware.
+> > >
+> > > Changes in v6:
+> > >
+> > >   * Drop DT patch applied to the qcom tree
+> > >
+> > >   * Normalize driver changes subject line
+> > >
+> > >   * Add a preparatory patch to rename PCIE_CAP_LINK1_VAL to PCIE_CAP_SLOT_VAL,
+> > >     and define it using PCI_EXP_SLTCAP_* macros
+> > >
+> > >   * Drop a vague comment about ASPM configuration
+> > >
+> > >   * Add a comment about the source of delay periods
+> > >
+> > > Changes in v5:
+> > >
+> > >   * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
+> > >
+> > > Changes in v4:
+> > >
+> > >   * Drop applied DT bits
+> > >
+> > >   * Add max-link-speed that was missing from the applied v2 patch
+> > >
+> > >   * Rebase the driver on v5.16-rc3
+> > >
+> > > Changes in v3:
+> > >
+> > >   * Drop applied patches
+> > >
+> > >   * Rely on generic code for speed setup
+> > >
+> > >   * Drop unused macros
+> > >
+> > >   * Formatting fixes
+> > >
+> > > Changes in v2:
+> > >
+> > >   * Add patch moving GEN3_RELATED macros to a common header
+> > >
+> > >   * Drop ATU configuration from pcie-qcom
+> > >
+> > >   * Remove local definition of common registers
+> > >
+> > >   * Use bulk clk and reset APIs
+> > >
+> > >   * Remove msi-parent from device-tree
+> > >
+> > > Baruch Siach (2):
+> > >   PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
+> > >   PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
+> > >
+> > > Selvam Sathappan Periakaruppan (1):
+> > >   PCI: qcom: Add IPQ60xx support
+> > >
+> > >  drivers/pci/controller/dwc/pcie-designware.h |   7 +
+> > >  drivers/pci/controller/dwc/pcie-qcom.c       | 155 ++++++++++++++++++-
+> > >  drivers/pci/controller/dwc/pcie-tegra194.c   |   6 -
+> > >  3 files changed, 160 insertions(+), 8 deletions(-)
+> >
+> > Hi Bjorn, Andy,
+> >
+> > any feedback on this series please ?
+>
+> Any feedback on these patches please ?
 
-I would need maintainer Acks for patches 1-3 of this series to apply them
-through the hwmon tree. Alternatively, I am ok with applying the series
-through the x86 tree.
+Finally dug the CP01, and for me, it works, so:
+Tested-by: Robert Marko <robert.marko@sartura.hr>
 
-Thanks,
-Guenter
+Can we finally get this merged or at least looked at.
+IPQ8074 will also benefit from this.
 
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-> index 190e0f763375..60c7bd525237 100644
-> --- a/arch/x86/kernel/amd_nb.c
-> +++ b/arch/x86/kernel/amd_nb.c
-> @@ -19,12 +19,14 @@
->  #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
->  #define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480
->  #define PCI_DEVICE_ID_AMD_17H_M60H_ROOT	0x1630
-> +#define PCI_DEVICE_ID_AMD_17H_MA0H_ROOT	0x14b5
->  #define PCI_DEVICE_ID_AMD_19H_M10H_ROOT	0x14a4
->  #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
->  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
->  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
->  #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F4 0x144c
->  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
-> +#define PCI_DEVICE_ID_AMD_17H_MA0H_DF_F4 0x1728
->  #define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
->  #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F4 0x14b1
->  #define PCI_DEVICE_ID_AMD_19H_M40H_ROOT	0x14b5
-> @@ -41,6 +43,7 @@ static const struct pci_device_id amd_root_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_ROOT) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_MA0H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_ROOT) },
->  	{}
-> @@ -61,6 +64,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F3) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_MA0H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
-> @@ -81,6 +85,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_MA0H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F4) },
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 0178823ce8c2..ec1c226d13e6 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -556,6 +556,7 @@
->  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
->  #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F3 0x144b
->  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
-> +#define PCI_DEVICE_ID_AMD_17H_MA0H_DF_F3 0x1727
->  #define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653
->  #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F3 0x14b0
->  #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F3 0x167c
+Regards,
+Robert
+>
+> Thanks,
+> Lorenzo
+
+
+
+-- 
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura Ltd.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
