@@ -2,180 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D0B353FFC1
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 15:12:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 159B9540AFD
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 20:27:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241093AbiFGNMh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jun 2022 09:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38342 "EHLO
+        id S1352953AbiFGSWT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jun 2022 14:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244521AbiFGNMe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 09:12:34 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F211EC63
-        for <linux-pci@vger.kernel.org>; Tue,  7 Jun 2022 06:12:31 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id y16so14167539ili.13
-        for <linux-pci@vger.kernel.org>; Tue, 07 Jun 2022 06:12:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mcxZtplXwk/Z+TT8W9hddhp2FUJFjSAJiAMtVESFwX4=;
-        b=1R9AiW1gY1VYK6kYFNaQEa0cCcVv0mg4PT8PsSFrmYE8qP50U/W8QnvoV8a3AAiuY/
-         6AE3+OpXx+GOb6NGUe8ynFndhTMVnvEd+lz2Ufhrj35oREogwN7e8iAHXyGibeX0qGQe
-         Mc3O1gPlG+6DN56TdUTVkO+LFlhq0niqSzLCQ+9IxXf3J157h8Ncm4NBLnm6M3LHv0Sw
-         IOvovO5h/4xOaWe8MHBozd6uGQENdjNERulvpkYnGKBDYA7j+M6905myRyL11P1J3v2z
-         CWFAj3Y3JgP7/y4FItqBEAw5Rd9w78cklOruPWiyG0Fz2W3oVXsI4xUJgPnD4USc75Vj
-         vG8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mcxZtplXwk/Z+TT8W9hddhp2FUJFjSAJiAMtVESFwX4=;
-        b=7TUyVKCd7VSYoqo9JqIe6Dwe6ROMADS5nHvLDld1RKRJqM1Zb/aXfkrNGXi5zVtn60
-         QPrIikgnJ/3E4MrrUrZ3nI855qUU9wNVSdzohqeCNl8U7gwHgUgx5L1jRqenxxNMZ6Tt
-         t8XBvUjsD8jYfZ1fYrOYhaoskNPisMpyfhi+M+plNWrVSTqzdhH+z1dgmmxOmn40PeAG
-         D4Onj8TbjM5G6DN/iV253rlc8jbC54bYIR+ZjWz6qHLYwCEV7gcBramphXjYQVih5TeX
-         pxcXtQD6ofKRau2q5boHcjiuz/aDyDF8LuITKClkxsvrYcRfd63gys6LBwE1d/8OgB9v
-         I/Ig==
-X-Gm-Message-State: AOAM533Mz5htjr4dgzvitqvDnvvXv3EacMCd7CuLjWFCDK2SBD1swHGo
-        HLxzlT2I65w0d4M8n2dtZ52nWABWTz65LQQKlc3o8Q==
-X-Google-Smtp-Source: ABdhPJw95CeU2MDQe4i7N7oPLkSanT5aQWwJEN3LpDbgGCXPYQoyGBGQkxeiSbtBzI0UNRW9Pns5C3y7Zo+8caz+foE=
-X-Received: by 2002:a05:6e02:19cc:b0:2d3:e20f:4959 with SMTP id
- r12-20020a056e0219cc00b002d3e20f4959mr17071989ill.40.1654607550608; Tue, 07
- Jun 2022 06:12:30 -0700 (PDT)
+        with ESMTP id S1352754AbiFGSRa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 14:17:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A45F13C1DA;
+        Tue,  7 Jun 2022 10:52:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C289DB82375;
+        Tue,  7 Jun 2022 17:52:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74ACC34115;
+        Tue,  7 Jun 2022 17:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654624353;
+        bh=NdoOI/mdof+A4Uy4fR9Q85uef2kWgrggo63N4r2XOrk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OiQ8ttaQEIDZHO4BgNte3CzWmLn5BYB61eF6QhTkPTx4MoPfdiHNNuKDdcEVDWRa8
+         ScqUAFUbDv7QTnCce4PNGOnAVjq+Bm33e3AQ5T5ujEJ5tpVIFYLcAfqz3YCt27e9Cr
+         2FlKKSiky5uynDyF5seSO6IZinZcQFGjjJaU8kXaSTL2dJ5IVEr8T3Qv/fno0I/62T
+         nvEUgg/ewdENwt9R3LKkK8gEQUThjQ8DBtOwb+PcPVAf8MSusdzFxNZk67gjLjVmoX
+         Rn107JHjT3mK8Sr49dr543l2YN8KD+51mDD597W+y2ITeK1C13fkPPNVFUEXMgQIq+
+         QKDleXSkPPQSg==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Sasha Levin <sashal@kernel.org>, jim2101024@gmail.com,
+        nsaenz@kernel.org, f.fainelli@gmail.com, lpieralisi@kernel.org,
+        p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.18 60/68] Revert "PCI: brcmstb: Do not turn off WOL regulators on suspend"
+Date:   Tue,  7 Jun 2022 13:48:26 -0400
+Message-Id: <20220607174846.477972-60-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220607174846.477972-1-sashal@kernel.org>
+References: <20220607174846.477972-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <cover.1644234441.git.baruch@tkos.co.il> <20220412161259.GA7109@lpieralisi>
- <YnvCGD4RwuyPkTfK@lpieralisi>
-In-Reply-To: <YnvCGD4RwuyPkTfK@lpieralisi>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Tue, 7 Jun 2022 15:12:19 +0200
-Message-ID: <CA+HBbNFo9QCExiA9T4Mn4t5vvir79xF3R9F6OLZa0m5Bzpte3w@mail.gmail.com>
-Subject: Re: [PATCH v6 0/3] PCI: IPQ6018 platform support
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Baruch Siach <baruch@tkos.co.il>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        "Bryan O'Donoghue" <pure.logic@nexus-software.ie>,
-        linux-pci@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 11, 2022 at 4:03 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Tue, Apr 12, 2022 at 05:12:59PM +0100, Lorenzo Pieralisi wrote:
-> > On Mon, Feb 07, 2022 at 04:51:23PM +0200, Baruch Siach wrote:
-> > > This series adds support for the single PCIe lane on IPQ6018 SoCs. The code is
-> > > ported from downstream Codeaurora v5.4 kernel. The main difference from
-> > > downstream code is the split of PCIe registers configuration from .init to
-> > > .post_init, since it requires phy_power_on().
-> > >
-> > > Tested on IPQ6010 based hardware.
-> > >
-> > > Changes in v6:
-> > >
-> > >   * Drop DT patch applied to the qcom tree
-> > >
-> > >   * Normalize driver changes subject line
-> > >
-> > >   * Add a preparatory patch to rename PCIE_CAP_LINK1_VAL to PCIE_CAP_SLOT_VAL,
-> > >     and define it using PCI_EXP_SLTCAP_* macros
-> > >
-> > >   * Drop a vague comment about ASPM configuration
-> > >
-> > >   * Add a comment about the source of delay periods
-> > >
-> > > Changes in v5:
-> > >
-> > >   * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
-> > >
-> > > Changes in v4:
-> > >
-> > >   * Drop applied DT bits
-> > >
-> > >   * Add max-link-speed that was missing from the applied v2 patch
-> > >
-> > >   * Rebase the driver on v5.16-rc3
-> > >
-> > > Changes in v3:
-> > >
-> > >   * Drop applied patches
-> > >
-> > >   * Rely on generic code for speed setup
-> > >
-> > >   * Drop unused macros
-> > >
-> > >   * Formatting fixes
-> > >
-> > > Changes in v2:
-> > >
-> > >   * Add patch moving GEN3_RELATED macros to a common header
-> > >
-> > >   * Drop ATU configuration from pcie-qcom
-> > >
-> > >   * Remove local definition of common registers
-> > >
-> > >   * Use bulk clk and reset APIs
-> > >
-> > >   * Remove msi-parent from device-tree
-> > >
-> > > Baruch Siach (2):
-> > >   PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
-> > >   PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
-> > >
-> > > Selvam Sathappan Periakaruppan (1):
-> > >   PCI: qcom: Add IPQ60xx support
-> > >
-> > >  drivers/pci/controller/dwc/pcie-designware.h |   7 +
-> > >  drivers/pci/controller/dwc/pcie-qcom.c       | 155 ++++++++++++++++++-
-> > >  drivers/pci/controller/dwc/pcie-tegra194.c   |   6 -
-> > >  3 files changed, 160 insertions(+), 8 deletions(-)
-> >
-> > Hi Bjorn, Andy,
-> >
-> > any feedback on this series please ?
->
-> Any feedback on these patches please ?
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Finally dug the CP01, and for me, it works, so:
-Tested-by: Robert Marko <robert.marko@sartura.hr>
+[ Upstream commit 7894025c783ca36394d3afe49c8cfb4c830b82fe ]
 
-Can we finally get this merged or at least looked at.
-IPQ8074 will also benefit from this.
+This reverts commit 11ed8b8624b8085f706864b4addcd304b1e4fc38.
 
-Regards,
-Robert
->
-> Thanks,
-> Lorenzo
+This is part of a revert of the following commits:
 
+  11ed8b8624b8 ("PCI: brcmstb: Do not turn off WOL regulators on suspend")
+  93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+  67211aadcb4b ("PCI: brcmstb: Add mechanism to turn on subdev regulators")
+  830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
 
+Cyril reported that 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup()
+into two funcs"), which appeared in v5.17-rc1, broke booting on the
+Raspberry Pi Compute Module 4.  Apparently 830aa6f29f07 panics with an
+Asynchronous SError Interrupt, and after further commits here is a black
+screen on HDMI and no output on the serial console.
 
+This does not seem to affect the Raspberry Pi 4 B.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
+Link: https://lore.kernel.org/r/20220511201856.808690-2-helgaas@kernel.org
+Reported-by: Cyril Brulebois <kibi@debian.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 53 +++++----------------------
+ 1 file changed, 9 insertions(+), 44 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 375c0c40bbf8..3edd63735948 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -333,7 +333,6 @@ struct brcm_pcie {
+ 	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
+ 	bool			refusal_mode;
+ 	struct subdev_regulators *sr;
+-	bool			ep_wakeup_capable;
+ };
+ 
+ static inline bool is_bmips(const struct brcm_pcie *pcie)
+@@ -1351,21 +1350,9 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+ 	pcie->bridge_sw_init_set(pcie, 1);
+ }
+ 
+-static int pci_dev_may_wakeup(struct pci_dev *dev, void *data)
+-{
+-	bool *ret = data;
+-
+-	if (device_may_wakeup(&dev->dev)) {
+-		*ret = true;
+-		dev_info(&dev->dev, "disable cancelled for wake-up device\n");
+-	}
+-	return (int) *ret;
+-}
+-
+ static int brcm_pcie_suspend(struct device *dev)
+ {
+ 	struct brcm_pcie *pcie = dev_get_drvdata(dev);
+-	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+ 	int ret;
+ 
+ 	brcm_pcie_turn_off(pcie);
+@@ -1384,22 +1371,11 @@ static int brcm_pcie_suspend(struct device *dev)
+ 	}
+ 
+ 	if (pcie->sr) {
+-		/*
+-		 * Now turn off the regulators, but if at least one
+-		 * downstream device is enabled as a wake-up source, do not
+-		 * turn off regulators.
+-		 */
+-		pcie->ep_wakeup_capable = false;
+-		pci_walk_bus(bridge->bus, pci_dev_may_wakeup,
+-			     &pcie->ep_wakeup_capable);
+-		if (!pcie->ep_wakeup_capable) {
+-			ret = regulator_bulk_disable(pcie->sr->num_supplies,
+-						     pcie->sr->supplies);
+-			if (ret) {
+-				dev_err(dev, "Could not turn off regulators\n");
+-				reset_control_reset(pcie->rescal);
+-				return ret;
+-			}
++		ret = regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
++		if (ret) {
++			dev_err(dev, "Could not turn off regulators\n");
++			reset_control_reset(pcie->rescal);
++			return ret;
+ 		}
+ 	}
+ 	clk_disable_unprepare(pcie->clk);
+@@ -1420,21 +1396,10 @@ static int brcm_pcie_resume(struct device *dev)
+ 		return ret;
+ 
+ 	if (pcie->sr) {
+-		if (pcie->ep_wakeup_capable) {
+-			/*
+-			 * We are resuming from a suspend.  In the suspend we
+-			 * did not disable the power supplies, so there is
+-			 * no need to enable them (and falsely increase their
+-			 * usage count).
+-			 */
+-			pcie->ep_wakeup_capable = false;
+-		} else {
+-			ret = regulator_bulk_enable(pcie->sr->num_supplies,
+-						    pcie->sr->supplies);
+-			if (ret) {
+-				dev_err(dev, "Could not turn on regulators\n");
+-				goto err_disable_clk;
+-			}
++		ret = regulator_bulk_enable(pcie->sr->num_supplies, pcie->sr->supplies);
++		if (ret) {
++			dev_err(dev, "Could not turn on regulators\n");
++			goto err_disable_clk;
+ 		}
+ 	}
+ 
 -- 
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+2.35.1
+
