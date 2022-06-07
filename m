@@ -2,131 +2,254 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FAF353F9C2
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 11:29:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F0F353FA9F
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 11:58:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239547AbiFGJ3O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jun 2022 05:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41092 "EHLO
+        id S240554AbiFGJ6r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jun 2022 05:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239559AbiFGJ2P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 05:28:15 -0400
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C8E5D664
-        for <linux-pci@vger.kernel.org>; Tue,  7 Jun 2022 02:28:12 -0700 (PDT)
-Received: by mail-yb1-xb33.google.com with SMTP id v22so30155480ybd.5
-        for <linux-pci@vger.kernel.org>; Tue, 07 Jun 2022 02:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
-        b=gujHBVxqWIlmngbJHwwatlrY6K2BhXGLJOXKENebOL4hOCXVjvoa+7rQ+wCwOuo7nz
-         8e28HbaszMFtjrNu2xJwHUtJo1p0vWs5cPK29M2FpYQX1yrDGputAW1tF1NfmP59wawm
-         4ciGU9SnxDgRMb84mTOs96+/9zN97uENfqj9/+eZfuG77h5pSaMszmbmnWOwi9m+gNzd
-         5NtwsZACk2ULSP0cRt0MdNUxBuwzIbCfzmloCBb/Ue1QhCyZ8f6GEgrTXVIY7durHnKk
-         UWQF6j7yHnTlxlvI9xCgSzii4NusQH9ADfpyzQwiF9b+OrCBSH3adFs9TwqclNBk9aQF
-         O14A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
-        b=ThyOok4OAHI45jOmILGUDpZgGTEl6TGTUBHlTwE9ZGW89m6nXs82tJjQcl2kDay588
-         J6CFxoWTNV/Rz1s1OWrzyHvL3Etqdsd5vp/EdhvTRDGuxPtnAl4eFvt5nQNWpHbkxrG+
-         xGWj6U/z+AVrlGWYIgLpQcSTkRVbFGQQCgjjG3r7msYLr4bbhy1IApNYOo9jirDPKv3N
-         eUGEM+mxSzTSJysUjfwEgO9Eehq6TIV0d4VzhQWzn3Iy0hd99VqKjqlZYyafPPxGAU1p
-         CDxQzJQXhhFAMRjWDv/7A3g+TrBFfMeUsKRxN3RRuQ9c+S0kCdHqyjUP4FOFNnVgkxAi
-         9N9A==
-X-Gm-Message-State: AOAM530dmOzRWH7FS1t56Ibx++QeBmEmZFxcTKqW0zWMSQEWswd9hpP6
-        CwHVmN996YKn8jPrTUkBHti/+n23FkbZwLa3wUdiCJQHzMaoDz/H
-X-Google-Smtp-Source: ABdhPJxTYNOyqQTj+pRtv7B26L++zgaw4oyR9fAzq9Xjy/qi86fDOL5mMOdKcDA6Petw4QZgBH7CHdeaexgYk1On3ls=
-X-Received: by 2002:a05:6830:919:b0:60a:fe63:e321 with SMTP id
- v25-20020a056830091900b0060afe63e321mr11494607ott.227.1654594080399; Tue, 07
- Jun 2022 02:28:00 -0700 (PDT)
+        with ESMTP id S240374AbiFGJ6T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 05:58:19 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B6E86D971;
+        Tue,  7 Jun 2022 02:58:16 -0700 (PDT)
+Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LHQfM4y71z687wp;
+        Tue,  7 Jun 2022 17:53:31 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 7 Jun 2022 11:58:13 +0200
+Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 7 Jun
+ 2022 10:58:12 +0100
+Date:   Tue, 7 Jun 2022 10:58:11 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Lukas Wunner <lukas@wunner.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V8 03/10] PCI: Create PCI library functions in support
+ of DOE mailboxes.
+Message-ID: <20220607105811.000021d5@Huawei.com>
+In-Reply-To: <Yp5b1TSxw28hCZ+z@iweiny-desk3>
+References: <20220414203237.2198665-1-ira.weiny@intel.com>
+        <20220414203237.2198665-4-ira.weiny@intel.com>
+        <20220530190657.GA14765@wunner.de>
+        <20220531113350.0000421e@Huawei.com>
+        <YpbWCYujYDEkMm1B@iweiny-desk3>
+        <20220601071808.GA19924@wunner.de>
+        <Ypee328j+l6ZdbUT@iweiny-desk3>
+        <20220606154646.00001663@Huawei.com>
+        <Yp5b1TSxw28hCZ+z@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Received: by 2002:a05:6358:99a5:b0:a2:a1fa:9308 with HTTP; Tue, 7 Jun 2022
- 02:28:00 -0700 (PDT)
-Reply-To: robertbaileys_spende@aol.com
-From:   Robert Baileys <mercymiji.j@gmail.com>
-Date:   Tue, 7 Jun 2022 11:28:00 +0200
-Message-ID: <CAAD1zOZ9bCDqBnjmbC3dQfgC=P2zTqAS=TP3q5qK5TFB5=Q9dQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b33 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [mercymiji.j[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.6 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: ******
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---=20
-Hallo, lieber Beg=C3=BCnstigter,
+On Mon, 6 Jun 2022 12:56:05 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-Sie haben diese E-Mail von der Robert Bailey Foundation erhalten. Ich
-bin ein pensionierter Regierungsangestellter aus Harlem und ein
-Powerball-Lotterie-Jackpot-Gewinner von 343,8 Millionen Dollar. Ich
-bin der gr=C3=B6=C3=9Fte Jackpot-Gewinner in der Geschichte der New York Lo=
-ttery
-in Amerika. Ich habe diesen Wettbewerb am 27. Oktober 2018 gewonnen
-und m=C3=B6chte Ihnen mitteilen, dass Google in Kooperation mit Microsoft
-Ihre "E-Mail-Adresse" f=C3=BCr meine Anfrage hat und diese 3.000.000,00
-Millionen Euro kosten wird. Ich spende diese 3 Millionen Euro an Sie,
-um auch Wohlt=C3=A4tigkeitsorganisationen und armen Menschen in Ihrer
-Gemeinde zu helfen, damit wir die Welt zu einem besseren Ort f=C3=BCr alle
-machen k=C3=B6nnen. Bitte besuchen Sie die folgende Website f=C3=BCr weiter=
-e
-Informationen, damit Sie diesen 3 Mio. EUR Ausgaben nicht skeptisch
-gegen=C3=BCberstehen.
-https://nypost.com/2018/11/14/meet-the-winner-of-the-biggest-lottery-jackpo=
-t-in-new-york-history/Sie
-Weitere Best=C3=A4tigungen kann ich auch auf meinem Youtube suchen:
-https://www.youtube.com/watch?v=3DH5vT18Ysavc
-Bitte antworten Sie mir per E-Mail (robertbaileys_spende@aol.com).
-Sie m=C3=BCssen diese E-Mail sofort beantworten, damit die =C3=BCberweisend=
-e
-Bank mit dem Erhalt dieser Spende in H=C3=B6he von 3.000.000,00 Millionen
-Euro beginnen kann.
-Bitte kontaktieren Sie die untenstehende E-Mail-Adresse f=C3=BCr weitere
-Informationen, damit Sie diese Spende von der =C3=BCberweisenden Bank
-erhalten k=C3=B6nnen. E-Mail: robertbaileys_spende@aol.com
+> On Mon, Jun 06, 2022 at 03:46:46PM +0100, Jonathan Cameron wrote:
+> > On Wed, 1 Jun 2022 10:16:15 -0700
+> > Ira Weiny <ira.weiny@intel.com> wrote:
+> >   
+> > > On Wed, Jun 01, 2022 at 09:18:08AM +0200, Lukas Wunner wrote:  
+> > > > On Tue, May 31, 2022 at 07:59:21PM -0700, Ira Weiny wrote:    
+> > > > > On Tue, May 31, 2022 at 11:33:50AM +0100, Jonathan Cameron wrote:    
+> > > > > > On Mon, 30 May 2022 21:06:57 +0200 Lukas Wunner <lukas@wunner.de> wrote:    
+> > > > > > > On Thu, Apr 14, 2022 at 01:32:30PM -0700, ira.weiny@intel.com wrote:    
+> > >   
+> > > > 
+> > > >     
+> > > > > > > > +static irqreturn_t pci_doe_irq_handler(int irq, void *data)
+> > > > > > > > +{
+> > > > > > > > +	struct pci_doe_mb *doe_mb = data;
+> > > > > > > > +	struct pci_dev *pdev = doe_mb->pdev;
+> > > > > > > > +	int offset = doe_mb->cap_offset;
+> > > > > > > > +	u32 val;
+> > > > > > > > +
+> > > > > > > > +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> > > > > > > > +
+> > > > > > > > +	/* Leave the error case to be handled outside IRQ */
+> > > > > > > > +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
+> > > > > > > > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
+> > > > > > > > +		return IRQ_HANDLED;
+> > > > > > > > +	}
+> > > > > > > > +
+> > > > > > > > +	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
+> > > > > > > > +		pci_write_config_dword(pdev, offset + PCI_DOE_STATUS,
+> > > > > > > > +					PCI_DOE_STATUS_INT_STATUS);
+> > > > > > > > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);
+> > > > > > > > +		return IRQ_HANDLED;
+> > > > > > > > +	}
+> > > > > > > > +
+> > > > > > > > +	return IRQ_NONE;
+> > > > > > > > +}      
+> > > > > > > 
+> > > > > > > PCIe 6.0, table 7-316 says that an interrupt is also raised when
+> > > > > > > "the DOE Busy bit has been Cleared", yet such an interrupt is
+> > > > > > > not handled here.  It is incorrectly treated as a spurious
+> > > > > > > interrupt by returning IRQ_NONE.  The right thing to do
+> > > > > > > is probably to wake the state machine in case it's polling
+> > > > > > > for the Busy flag to clear.    
+> > > > > > 
+> > > > > > Ah. I remember testing this via a lot of hacking on the QEMU code
+> > > > > > to inject the various races that can occur (it was really ugly to do).
+> > > > > > 
+> > > > > > Guess we lost the handling at some point.  I think your fix
+> > > > > > is the right one.    
+> > > > > 
+> > > > > Perhaps I am missing something but digging into this more.  I disagree
+> > > > > that the handler fails to handle this case.  If I read the spec correctly
+> > > > > DOE Interrupt Status must be set when an interrupt is generated.
+> > > > > The handler wakes the state machine in that case.  The state machine
+> > > > > then checks for busy if there is work to be done.    
+> > > > 
+> > > > Right, I was mistaken, sorry for the noise.    
+> > > 
+> > > NP I'm not always following this either.
+> > >   
+> > > > 
+> > > >     
+> > > > > Normally we would not even need to check for status error.  But that is
+> > > > > special cased because clearing that status is left to the state machine.    
+> > > > 
+> > > > That however looks wrong because the DOE Interrupt Status bit is never
+> > > > cleared after a DOE Error is signaled.  The state machine performs an
+> > > > explicit abort upon an error by setting the DOE Abort bit, but that
+> > > > doesn't seem to clear DOE Interrupt Status:
+> > > > 
+> > > > Per section 6.30.2, "At any time, the system firmware/software is
+> > > > permitted to set the DOE Abort bit in the DOE Control Register,
+> > > > and the DOE instance must Clear the Data Object Ready bit,
+> > > > if not already Clear, and Clear the DOE Error bit, if already Set,
+> > > > in the DOE Status Register, within 1 second."    
+> > > 
+> > > I thought that meant the hardware (the DOE instance) must clear those bits
+> > > within 1 second?
+> > >   
+> > > > 
+> > > > No mention of the DOE Interrupt Status bit, so we cannot assume that
+> > > > it's cleared by a DOE Abort and we must clear it explicitly.    
+> > > 
+> > > Oh...  yea.  Jonathan?  We discussed this before and I was convinced it worked
+> > > but I think Lukas is correct here.  
+> > 
+> > Hmm. I thought we were good as well, but Lukas is correct in saying
+> > the interrupt status bit isn't cleared (which is 'novel' give the associated
+> > bit to tell you what the interrupt means will be cleared). 
+> > 
+> > I'm not sure I want to think around the race conditions that result...
+> >   
+> > > 
+> > > Should we drop the special case in pci_doe_irq_handler() and just clear the
+> > > status always?  Or should we wait and clear it is pci_doe_abort_start?  
+> > 
+> > I don't think it matters.  pci_doe_irq_handler() seems a little cleaner.  
+> 
+> I agree and that is what V10 does.
+> 
+> > 
+> > I've not figured out completely if there are races however...  
+> 
+> This is why I reworked the handling of cur_task in those error cases.
+> 
+> > 
+> > It is set when no already set and we get transitions of any of the following:
+> > - DOE error bit set (this can't happen until abort so no race here)
+> > 
+> > - Data Object Ready bit is set: Can this happen with the DOE error set? I don't
+> >   immediately see language saying it can't. However, I don't think it can
+> >   for any of the challenge response protocols yet defined (and there are other
+> >   problems if anyone wants to implement unsolicited messages)
+> > 
+> > - DOE busy bit has cleared - can definitely happen after an abort (which is
+> >   fine as nothing to do anyway, so we'll handle a pointless interrupt).
+> >   Could it in theory happen when error is set? I think not but only because
+> >   of the statement  "Clear this bit when it is able to receive a new data
+> >   object."
+> > 
+> > So I think we are fine doing it preabort,  
+> 
+> That is what I though for V10 especially after reworking the cur_task locking.
+> An extra interrupt would either start processing the next task or return with
+> nothing to do.
+> 
+> > but wouldn't put it past a hardware
+> > designer to find some path through that which results in a bonus interrupt
+> > and potentially us resetting twice.
+> > 
+> > If we clear it at the end of abort instead, what happens?
+> > Definitely no interrupts until we clear it. As we are doing query response
+> > protocols only, no new data until state machine moves on, so fine there.
+> > 
+> > So what about just doing it unconditionally..
+> > 
+> > +	case DOE_WAIT_ABORT:
+> > +	case DOE_WAIT_ABORT_ON_ERR:
+> > +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> > +
+> > +		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
+> > +		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
+> > 
+> > 	here...
+> > 
+> > +			/* Back to normal state - carry on */
+> > +			retire_cur_task(doe_mb);
+> > 
+> > This feels a little bit more 'standard' as we are allowing new interrupts
+> > only after everything is back to a nice state.  
+> 
+> As I reworked the cur_task locking I really thought about locking cur_task
+> throughout doe_statemachine_work().  It seems a lot safer for a lot of reasons.
+> Doing so would make the extra work item no big deal.
+> 
+> So I looked at this again because you got me worried.  If mod_delayed_work()
+> can cause doe_statemachine_work() while another thread is in the middle of
+> processing the interrupt there is a chance that signal_task_complete() is
+> called a second time on a given task pointer.
+> 
+> However, I _don't_ _think_ that can happen.  Because I don't think
+> mod_delayed_work() can cause the work item to run while it is already running.
 
-Gr=C3=BC=C3=9Fe,
-Robert Bailey
-* * * * * * * * * * * * * * * *
+You are correct. I remember looking into that exact question for
+a different project a while ago.
 
-Powerball-Jackpot-Gewinner
-E-Mail: robertbaileys_spende@aol.com
+> 
+> So unless I misunderstand how mod_delayed_work() works we are guaranteed that
+> the extra interrupt will see the correct mailbox state and do the right thing.
+
+Agreed.  Far as I can tell we are fine.  More eyes always good though if anyone
+else wants to take a look!
+
+Jonathan
+
+p.s. I liked the original heavy weight queuing the whole thing on a mutex as it
+was a lot easier to reason about :)  Was ugly though!
+
+
+> 
+> Ira
+
