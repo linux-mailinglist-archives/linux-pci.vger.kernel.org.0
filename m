@@ -2,192 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C23A2540BCA
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Jun 2022 20:31:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2527854245B
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 08:52:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350857AbiFGSbx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Jun 2022 14:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42082 "EHLO
+        id S245096AbiFHBC7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Jun 2022 21:02:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351539AbiFGS3z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 14:29:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C06817B849;
-        Tue,  7 Jun 2022 10:55:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EEBB4617A6;
-        Tue,  7 Jun 2022 17:55:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E24FC34115;
-        Tue,  7 Jun 2022 17:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654624534;
-        bh=VAG+3uL6h5kOCfu6AuzyUB7t+yIhbm19oEA/UYTLcX8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZDOB/q6nznt3YUijwQSwlc06wih5Wp7PhT5BzmKW4328letOO8kidVILErW1slta
-         Ccy628lAHeCJ6MmVJx4rw62i6CqLXOmEqgDM/3BiRIyZsoCT/DVFkM0O57/0Fyra+4
-         v+xYxwj3KSsSl0HdP+5qq66CC3R59Xf14j4ill+k2irBoPolKpEjc48FEaKDMmDkBC
-         djqzmEGjvYLLP2iKg6K5MvQXM1KR/sS8jV7FyZ3tscXpWd+MP3Rn6CshAomNtSsKIk
-         +XZkq9HlvNLLJPpIz7MrvWvNlPxf77ILCo5uUsDgGomNRCQSQqH4B6fxCLHbR4FH5L
-         0kLX7WBGEkGkA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Sasha Levin <sashal@kernel.org>, jim2101024@gmail.com,
-        nsaenz@kernel.org, f.fainelli@gmail.com, lpieralisi@kernel.org,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.17 56/60] Revert "PCI: brcmstb: Split brcm_pcie_setup() into two funcs"
-Date:   Tue,  7 Jun 2022 13:52:53 -0400
-Message-Id: <20220607175259.478835-56-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220607175259.478835-1-sashal@kernel.org>
-References: <20220607175259.478835-1-sashal@kernel.org>
+        with ESMTP id S1453996AbiFGXQP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Jun 2022 19:16:15 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918D83BF6F0;
+        Tue,  7 Jun 2022 14:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654636138; x=1686172138;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uaj2zVTRdbat138k5S+d3ScjGk5l9kGngqRsS56dZKs=;
+  b=OUa9P3Mkx4wSzDO2h7nDmqBqfwn/+H9lCeLrErRcLvt1+ZKs+qrFOeEo
+   jXfOAHgt9n2Dj2ywZDydyUfGm/ozWlVt+NI5LLXYn8cPCExVSjhQzOHpu
+   CsEdSDm2tYaL2i/4XP51EIWN8/VWG4A6FQA5AryBLI2kj1JEcQy/smeD2
+   LyFk+rUwUiJqAl49BedX7/MKAc4MdXBAk8QV0pJOg/PHzGFl1WvntZPZW
+   BerwY3/bcGeiGw2ohz55NsFTusVp17/OBd3cwchNphb7ocEqBzGQSvgB+
+   lAp4l3P+I2/Zp7BnCChdmeBADPdo0NZHQrXNip5jstXYasWcDNQ8BxApa
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10371"; a="257191733"
+X-IronPort-AV: E=Sophos;i="5.91,284,1647327600"; 
+   d="scan'208";a="257191733"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 14:08:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,284,1647327600"; 
+   d="scan'208";a="723522760"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Jun 2022 14:08:54 -0700
+Received: from rjingar-desk5.amr.corp.intel.com (unknown [10.209.92.238])
+        by linux.intel.com (Postfix) with ESMTP id A6FA8580A8B;
+        Tue,  7 Jun 2022 14:08:53 -0700 (PDT)
+From:   Rajvi Jingar <rajvi.jingar@linux.intel.com>
+To:     rafael.j.wysocki@intel.com, bhelgaas@google.com
+Cc:     rajvi.jingar@linux.intel.com, david.e.box@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v6 1/2] PCI/PM: refactor pci_pm_suspend_noirq()
+Date:   Tue,  7 Jun 2022 14:08:51 -0700
+Message-Id: <20220607210852.475863-1-rajvi.jingar@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+The state of the device is saved during pci_pm_suspend_noirq(), if it
+has not already been saved, regardless of the skip_bus_pm flag value. So
+skip_bus_pm check is removed before saving the device state.
 
-[ Upstream commit f4fd559de3434c44bed1d2912bd0c75cfa42898b ]
-
-This reverts commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21.
-
-This is part of a revert of the following commits:
-
-  11ed8b8624b8 ("PCI: brcmstb: Do not turn off WOL regulators on suspend")
-  93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-  67211aadcb4b ("PCI: brcmstb: Add mechanism to turn on subdev regulators")
-  830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
-
-Cyril reported that 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup()
-into two funcs"), which appeared in v5.17-rc1, broke booting on the
-Raspberry Pi Compute Module 4.  Apparently 830aa6f29f07 panics with an
-Asynchronous SError Interrupt, and after further commits here is a black
-screen on HDMI and no output on the serial console.
-
-This does not seem to affect the Raspberry Pi 4 B.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
-Link: https://lore.kernel.org/r/20220511201856.808690-5-helgaas@kernel.org
-Reported-by: Cyril Brulebois <kibi@debian.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Suggested-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 65 +++++++++++----------------
- 1 file changed, 26 insertions(+), 39 deletions(-)
+ v1 -> v2: add comments to the changes
+ v2 -> v3: move changelog after "---" marker
+ v3 -> v4: add "---" marker after changelog
+ v4 -> v5: no change
+ v5 -> v6: no change
+---
+ drivers/pci/pci-driver.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 0e8346114a8d..e61058e13818 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -926,9 +926,16 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
- 
- static int brcm_pcie_setup(struct brcm_pcie *pcie)
- {
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
- 	u64 rc_bar2_offset, rc_bar2_size;
- 	void __iomem *base = pcie->base;
--	int ret, memc;
-+	struct device *dev = pcie->dev;
-+	struct resource_entry *entry;
-+	bool ssc_good = false;
-+	struct resource *res;
-+	int num_out_wins = 0;
-+	u16 nlw, cls, lnksta;
-+	int i, ret, memc;
- 	u32 tmp, burst, aspm_support;
- 
- 	/* Reset the bridge */
-@@ -1018,40 +1025,6 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	if (pcie->gen)
- 		brcm_pcie_set_gen(pcie, pcie->gen);
- 
--	/* Don't advertise L0s capability if 'aspm-no-l0s' */
--	aspm_support = PCIE_LINK_STATE_L1;
--	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
--		aspm_support |= PCIE_LINK_STATE_L0S;
--	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
--	u32p_replace_bits(&tmp, aspm_support,
--		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
--	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
--
--	/*
--	 * For config space accesses on the RC, show the right class for
--	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
--	 */
--	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
--	u32p_replace_bits(&tmp, 0x060400,
--			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
--	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
--
--	return 0;
--}
--
--static int brcm_pcie_linkup(struct brcm_pcie *pcie)
--{
--	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
--	struct device *dev = pcie->dev;
--	void __iomem *base = pcie->base;
--	struct resource_entry *entry;
--	struct resource *res;
--	int num_out_wins = 0;
--	u16 nlw, cls, lnksta;
--	bool ssc_good = false;
--	u32 tmp;
--	int ret, i;
--
- 	/* Unassert the fundamental reset */
- 	pcie->perst_set(pcie, 0);
- 
-@@ -1102,6 +1075,24 @@ static int brcm_pcie_linkup(struct brcm_pcie *pcie)
- 		num_out_wins++;
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 49238ddd39ee..1f64de3e5280 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -867,20 +867,14 @@ static int pci_pm_suspend_noirq(struct device *dev)
+ 		}
  	}
  
-+	/* Don't advertise L0s capability if 'aspm-no-l0s' */
-+	aspm_support = PCIE_LINK_STATE_L1;
-+	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-+		aspm_support |= PCIE_LINK_STATE_L0S;
-+	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-+	u32p_replace_bits(&tmp, aspm_support,
-+		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-+	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-+
-+	/*
-+	 * For config space accesses on the RC, show the right class for
-+	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
-+	 */
-+	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-+	u32p_replace_bits(&tmp, 0x060400,
-+			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
-+	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-+
- 	if (pcie->ssc) {
- 		ret = brcm_pcie_set_ssc(pcie);
- 		if (ret == 0)
-@@ -1290,10 +1281,6 @@ static int brcm_pcie_resume(struct device *dev)
- 	if (ret)
- 		goto err_reset;
- 
--	ret = brcm_pcie_linkup(pcie);
--	if (ret)
--		goto err_reset;
--
- 	if (pcie->msi)
- 		brcm_msi_set_regs(pcie->msi);
+-	if (pci_dev->skip_bus_pm) {
++	if (!pci_dev->state_saved) {
++		pci_save_state(pci_dev);
+ 		/*
+-		 * Either the device is a bridge with a child in D0 below it, or
+-		 * the function is running for the second time in a row without
+-		 * going through full resume, which is possible only during
+-		 * suspend-to-idle in a spurious wakeup case.  The device should
+-		 * be in D0 at this point, but if it is a bridge, it may be
+-		 * necessary to save its state.
++		 * If the device is a bridge with a child in D0 below it, it needs to
++		 * stay in D0, so check skip_bus_pm to avoid putting it into a
++		 * low-power state in that case.
+ 		 */
+-		if (!pci_dev->state_saved)
+-			pci_save_state(pci_dev);
+-	} else if (!pci_dev->state_saved) {
+-		pci_save_state(pci_dev);
+-		if (pci_power_manageable(pci_dev))
++		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+ 			pci_prepare_to_sleep(pci_dev);
+ 	}
  
 -- 
-2.35.1
+2.25.1
 
