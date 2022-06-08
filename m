@@ -2,118 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 867D654274C
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 09:03:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ED18542861
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 09:51:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232786AbiFHG4Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jun 2022 02:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55696 "EHLO
+        id S230486AbiFHHuM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jun 2022 03:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239026AbiFHGFt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 02:05:49 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D382AE3
-        for <linux-pci@vger.kernel.org>; Tue,  7 Jun 2022 22:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654664681; x=1686200681;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=hOvb8EnSwhwz1MQxZk+3Gaho/Oq120JSHbvTq7OuOuA=;
-  b=b7vgHpwnutgO2Z0C4Ge8JOcSgV+jcOktL2Jdv98WjfVgZ7L/lUtWiaS5
-   VtEsbbcx2Qg6DR4SnAUtPMVafuC7L742WzEkq2/p3oKnhvRletk8nWObq
-   Bia7tp6b1DJ4Tk/9Lckf09rXqYz3qmyfdxWd26gag1CPsrLijLnNjGwnU
-   QMA2SysGCao+e6VBCPGUNcm8lInXTCleUN6rHO1Sykp/IJfAdq7/xyU7p
-   AVY9slBQtJtsbHR6eBViE9M//2rBLGnRrhezx6AEPgg9YiIFf7Ie6P3Zu
-   ahLThnNNlL/rVm1IZvp+7p5PzhFT66RcXaboewo/fH1pei+i7q/qCRKdF
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10371"; a="259898305"
-X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
-   d="scan'208";a="259898305"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 22:02:33 -0700
-X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
-   d="scan'208";a="759318766"
-Received: from jmferrel-mobl1.amr.corp.intel.com (HELO [10.209.73.187]) ([10.209.73.187])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 22:02:33 -0700
-Message-ID: <7830b6ca-a653-867f-813e-be980bad8141@linux.intel.com>
-Date:   Tue, 7 Jun 2022 22:02:32 -0700
+        with ESMTP id S234025AbiFHHs4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 03:48:56 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805497E1F1
+        for <linux-pci@vger.kernel.org>; Wed,  8 Jun 2022 00:14:17 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1nyptD-00052C-Iv; Wed, 08 Jun 2022 09:14:03 +0200
+Message-ID: <4efc78897fb07be99bde2921f69ae6aefd13bef2.camel@pengutronix.de>
+Subject: Re: [PATCH v9 3/8] PCI: imx6: Move imx6_pcie_clk_disable() earlier
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
+        robh+dt@kernel.org, broonie@kernel.org, lorenzo.pieralisi@arm.com,
+        jingoohan1@gmail.com, festevam@gmail.com,
+        francesco.dolcini@toradex.com
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Date:   Wed, 08 Jun 2022 09:14:02 +0200
+In-Reply-To: <1651801629-30223-4-git-send-email-hongxing.zhu@nxp.com>
+References: <1651801629-30223-1-git-send-email-hongxing.zhu@nxp.com>
+         <1651801629-30223-4-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.9.1
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH] PCI/ERR: handle disconnected devices in
- report_error_detected
-To:     Christoph Hellwig <hch@lst.de>, ruscur@russell.cc,
-        oohall@gmail.com, bhelgaas@google.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        kbusch@kernel.org
-References: <20220601074024.3481035-1-hch@lst.de>
-Content-Language: en-US
-In-Reply-To: <20220601074024.3481035-1-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 6/1/22 12:40 AM, Christoph Hellwig wrote:
-> When a device is already unplugged by pciehp by the time that the AER
-> handler is invoked, the PCIe device will lready be in the
-
-/s/lready/already
-
-> pci_channel_io_perm_failure state.  In that case we should simply
-> return PCI_ERS_RESULT_DISCONNECT instead of trying to do a state
-> transition that will fail.
+Am Freitag, dem 06.05.2022 um 09:47 +0800 schrieb Richard Zhu:
+> Just move the imx6_pcie_clk_disable() to an earlier place without function
+> changes, since it wouldn't be only used in imx6_pcie_suspend_noirq() later.
 > 
-> Also untangle the state transition failure from the lack of methods to
-> improve the debugging output in case it will happen ever again.
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 
-Otherwise, it looks good to me.
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   drivers/pci/pcie/err.c | 12 ++++++++----
->   1 file changed, 8 insertions(+), 4 deletions(-)
+>  drivers/pci/controller/dwc/pci-imx6.c | 48 +++++++++++++--------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 0c5a143025af4..59c90d04a609a 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -55,10 +55,14 @@ static int report_error_detected(struct pci_dev *dev,
->   
->   	device_lock(&dev->dev);
->   	pdrv = dev->driver;
-> -	if (!pci_dev_set_io_state(dev, state) ||
-> -		!pdrv ||
-> -		!pdrv->err_handler ||
-> -		!pdrv->err_handler->error_detected) {
-> +	if (pci_dev_is_disconnected(dev)) {
-> +		vote = PCI_ERS_RESULT_DISCONNECT;
-> +	} else if (!pci_dev_set_io_state(dev, state)) {
-> +		pci_info(dev, "can't recover (state transition %u -> %u invalid)\n",
-> +			dev->error_state, state);
-> +		vote = PCI_ERS_RESULT_NONE;
-> +	} else if (!pdrv || !pdrv->err_handler ||
-> +		   !pdrv->err_handler->error_detected) {
->   		/*
->   		 * If any device in the subtree does not have an error_detected
->   		 * callback, PCI_ERS_RESULT_NO_AER_DRIVER prevents subsequent
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 1d3a8a7cafc2..9b0eac64badc 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -529,6 +529,30 @@ static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
+>  	return ret;
+>  }
+>  
+> +static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
+> +{
+> +	clk_disable_unprepare(imx6_pcie->pcie);
+> +	clk_disable_unprepare(imx6_pcie->pcie_phy);
+> +	clk_disable_unprepare(imx6_pcie->pcie_bus);
+> +
+> +	switch (imx6_pcie->drvdata->variant) {
+> +	case IMX6SX:
+> +		clk_disable_unprepare(imx6_pcie->pcie_inbound_axi);
+> +		break;
+> +	case IMX7D:
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> +				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
+> +				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
+> +		break;
+> +	case IMX8MQ:
+> +	case IMX8MM:
+> +		clk_disable_unprepare(imx6_pcie->pcie_aux);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+>  static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
+>  {
+>  	u32 val;
+> @@ -961,30 +985,6 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
+>  	usleep_range(1000, 10000);
+>  }
+>  
+> -static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
+> -{
+> -	clk_disable_unprepare(imx6_pcie->pcie);
+> -	clk_disable_unprepare(imx6_pcie->pcie_phy);
+> -	clk_disable_unprepare(imx6_pcie->pcie_bus);
+> -
+> -	switch (imx6_pcie->drvdata->variant) {
+> -	case IMX6SX:
+> -		clk_disable_unprepare(imx6_pcie->pcie_inbound_axi);
+> -		break;
+> -	case IMX7D:
+> -		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> -				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
+> -				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
+> -		break;
+> -	case IMX8MQ:
+> -	case IMX8MM:
+> -		clk_disable_unprepare(imx6_pcie->pcie_aux);
+> -		break;
+> -	default:
+> -		break;
+> -	}
+> -}
+> -
+>  static int imx6_pcie_suspend_noirq(struct device *dev)
+>  {
+>  	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+
