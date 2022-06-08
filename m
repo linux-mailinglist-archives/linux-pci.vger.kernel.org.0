@@ -2,46 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0777554296B
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 10:24:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E98F1542976
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 10:31:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231657AbiFHIYJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jun 2022 04:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54792 "EHLO
+        id S229481AbiFHIaS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jun 2022 04:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229903AbiFHIWO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 04:22:14 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C8341285E2
-        for <linux-pci@vger.kernel.org>; Wed,  8 Jun 2022 00:48:42 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1nyqQc-0003jp-L9; Wed, 08 Jun 2022 09:48:34 +0200
-Message-ID: <6550645c8163bad0b36eebdfceeb244f57329e9e.camel@pengutronix.de>
-Subject: Re: [PATCH v9 8/8] PCI: imx6: Add compliance tests mode support
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
-        robh+dt@kernel.org, broonie@kernel.org, lorenzo.pieralisi@arm.com,
-        jingoohan1@gmail.com, festevam@gmail.com,
-        francesco.dolcini@toradex.com
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Date:   Wed, 08 Jun 2022 09:48:33 +0200
-In-Reply-To: <1651801629-30223-9-git-send-email-hongxing.zhu@nxp.com>
-References: <1651801629-30223-1-git-send-email-hongxing.zhu@nxp.com>
-         <1651801629-30223-9-git-send-email-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        with ESMTP id S231970AbiFHI3K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 04:29:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1B828CFB4;
+        Wed,  8 Jun 2022 00:52:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 00167B81B34;
+        Wed,  8 Jun 2022 07:52:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC9BC3411D;
+        Wed,  8 Jun 2022 07:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654674728;
+        bh=gS10ZB6Wtd0r48aPzfM0OfzrzAHMoUWP8IgQwbfbPzU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gMQYCPm4Uwx919OpTJB7WMivRIA3qIkcRuAFdU2j6jS8kb+AmP4qcFPr7Hvcb8Czh
+         XhGP7A1r19Q15qcXd8Dfy/c4c+f4UVgYYOoD1pmqc4gQkYBvTlk8lSfpX34cNZDxub
+         utN7l6+LDJ10ctfc2QApR5JUQNCQtviMeXHb2Z2pt5FbI0nTI4GEcgXWI9EapwmoEe
+         R44cPVkLKuFm7bYdi/SuBDjuOG2ey32mVd2bWJapR2/NBOCC7Ju30jHG4MMvYYYdlT
+         E0ZiZ22aC5ubANBYqNWz55BAzclmycI4W3bUTuXdAL2ZiHtiiSmENSSy+nwpXSdeFn
+         2LBy0Qt3pvYpw==
+Received: by pali.im (Postfix)
+        id 5BDA27D5; Wed,  8 Jun 2022 09:52:05 +0200 (CEST)
+Date:   Wed, 8 Jun 2022 09:52:05 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>,
+        linux-ide@vger.kernel.org
+Subject: Re: [Bug 216094] New: pci-mvebu: SATA HDDs via 88SE6121 AHCI fail
+ with Marvell 88F6281 PCIe
+Message-ID: <20220608075205.wc55e33sxndpfrim@pali>
+References: <bug-216094-41252@https.bugzilla.kernel.org/>
+ <20220607234937.GA356793@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220607234937.GA356793@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -50,110 +60,105 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Freitag, dem 06.05.2022 um 09:47 +0800 schrieb Richard Zhu:
-> Refer to the Chapter 3.2 System Board Signal Quality of PCI Express
-> Architecture PHY Test Specification Revision 2.0.
+On Tuesday 07 June 2022 18:49:37 Bjorn Helgaas wrote:
+> On Tue, Jun 07, 2022 at 07:29:03AM +0000, bugzilla-daemon@kernel.org wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=216094
+> > 
+> >            Summary: pci-mvebu: SATA HDDs via 88SE6121 AHCI fail with
+> >                     Marvell 88F6281 PCIe
+> >     Kernel Version: 3.16 ... 5.10
+> >           Reporter: hajo-linux-bugzilla@noerenberg.de
+> >                 CC: pali@kernel.org
+> >         Regression: No
+> > 
+> > I would like to continue the SATA-related topic started with Pali
+> > Rohár at the U-Boot mailing list [1]. I have analysed the issue
+> > further and come the following conclusion that it is related to the
+> > PCIe subsystem:
+> > 
+> > SATA-2 and SATA-3 hard disks connected to a 88SE6121 (AHCI)
+> > controller, wired via PCIe to the 88F6281 SoC fail to operate
+> > ("failed to IDENTIFY" ... "qc timeout") when the pci-mvebu driver
+> > (Kernel 3.16 .. 5.10 Debian) is in use.
 > 
-> Signal quality tests (for example: jitter, differential eye opening and
-> so on) can be executed with devices in the polling.compliance state.
+> Please attach the complete dmesg logs showing this issue.
 > 
-> To let the device support polling.compliance state, the clocks and powers
-> shouldn't be turned off when the probe of device driver fails.
+> From your lspci output with v3.2, the SATA controller is at 00:01.0:
 > 
-> Based on CLB (Compliance Load Board) Test Fixture and so on test
-> equipments, the PHY link would be down during the compliance tests.
-> Refer to this scenario, add the i.MX PCIe compliance tests mode enable
-> support, and keep the clocks and powers on, and finish the driver probe
-> without error return.
+>   00:01.0 IDE [0101]: Marvell 88SE6121 SATA II
 > 
-> Use the "pci_imx6.compliance=1" in kernel command line to enable the
-> compliance tests mode.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 39 ++++++++++++++++++---------
->  1 file changed, 27 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index f0ffd9011975..f78b59822626 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -146,6 +146,10 @@ struct imx6_pcie {
->  #define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
->  #define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
->  
-> +static bool imx6_pcie_cmp_mode;
-> +module_param_named(compliance, imx6_pcie_cmp_mode, bool, 0644);
-> +MODULE_PARM_DESC(compliance, "i.MX PCIe compliance test mode (1=compliance test mode enabled)");
-> +
->  static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
->  {
->  	struct dw_pcie *pci = imx6_pcie->pci;
-> @@ -826,10 +830,12 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
->  	 * started in Gen2 mode, there is a possibility the devices on the
->  	 * bus will not be detected at all.  This happens with PCIe switches.
->  	 */
-> -	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-> -	tmp &= ~PCI_EXP_LNKCAP_SLS;
-> -	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-> -	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-> +	if (!imx6_pcie_cmp_mode) {
-> +		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-> +		tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +		tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-> +		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-> +	}
->  
->  	/* Start LTSSM. */
->  	imx6_pcie_ltssm_enable(dev);
-> @@ -887,14 +893,16 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
->  	dev_dbg(dev, "PHY DEBUG_R0=0x%08x DEBUG_R1=0x%08x\n",
->  		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
->  		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
-> -	imx6_pcie_reset_phy(imx6_pcie);
-> -	imx6_pcie_clk_disable(imx6_pcie);
-> -	if (imx6_pcie->phy != NULL) {
-> -		phy_power_off(imx6_pcie->phy);
-> -		phy_exit(imx6_pcie->phy);
-> +	if (!imx6_pcie_cmp_mode) {
-> +		imx6_pcie_reset_phy(imx6_pcie);
-> +		imx6_pcie_clk_disable(imx6_pcie);
-> +		if (imx6_pcie->phy != NULL) {
-> +			phy_power_off(imx6_pcie->phy);
-> +			phy_exit(imx6_pcie->phy);
-> +		}
-> +		if (imx6_pcie->vpcie)
-> +			regulator_disable(imx6_pcie->vpcie);
->  	}
-> -	if (imx6_pcie->vpcie)
-> -		regulator_disable(imx6_pcie->vpcie);
->  	return ret;
->  }
->  
-> @@ -1289,8 +1297,15 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		return ret;
->  
->  	ret = dw_pcie_host_init(&pci->pp);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		if (imx6_pcie_cmp_mode) {
-> +			dev_info(dev, "driver loaded with compliance test mode enabled\n");
-> +			ret = 0;
-> +		} else {
-> +			dev_err(dev, "unable to add PCIe port\n");
-> +		}
->  		return ret;
-> +	}
+> The v3.16 (with DTB) lspci output is essentially the same except the
+> controller is at 01:00.0:
 
-If you drop the error return from imx6_pcie_start_link, like I
-suggested in patch 6/8, you don't need this block as dw_pcie_host_init
-will succeed even if the link is down or in compliance test mode.
+Old kernel (incorrectly) reports Root Port and Endpoint device from the
+other end of the link to the same bus zero. Hence the difference in bus
+number between old kernel and new kernel.
 
-Regards,
-Lucas
+>   01:00.0 IDE [0101]: Marvell 88SE6121 SATA II
+> 
+> The ahci driver is bound in both cases.  The PCI address and I/O port
+> assignment differences are of no consequence unless some mvebu driver
+> defect keeps them from working.
+> 
+> I think what we need is a complete dmesg log and DTB from the newest
+> possible kernel that fails, plus the same logs from the newest kernel
+> that works.
 
->  
->  	if (pci_msi_enabled()) {
->  		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
++1
 
+> > More details:
+> > 
+> > - The problem does not exist in 2.6 and 3.16 kernels. With the old
+> > mach-kirkwood/pcie.c driver all SATA-2/3 hard disks work correctly.
+> > Especially with a 3.16 kernel it is possible to have identical
+> > ATA/AHCI drivers but try both PCIe drivers: without DTB ->
+> > mach-kirkwood -> SATA-2/3 HDDs work; with DTB -> mach-mvebu -> HDDs
+> > fail.
 
+So it looks like that issue is with DT based setup.
+
+Just by a chance, could you try to boot kernel with pcie_aspm=off or
+pci=nomsi cmdline options? There are some issues in driver/controller
+related to link retraining and MSI interrupts which ASPM kernel code can
+trigger.
+
+> > - The problem is specific to SATA-2/3 HDDs. Very old SATA-1-only
+> > HDDs work without problems. This might be related to the available
+> > data lanes, DMA or other bandwidth-related things -- I can only
+> > guess. Interestingly it does not help to limit SATA speed
+> > (libata.force=1.5G ...) with SATA-2/3 HDDs, only 'pure' SATA-1 HDDs
+> > work with pci-mvebu.
+> > 
+> > - The problem was identified with the Seagate Blackarmor NAS440
+> > hardware. Forum posts show that other users experience similar
+> > problems with the (very similar) Iomega ix4-200d NAS [2].
+> > 
+> > - Within patched U-Boot [3] all (Sata-1/2/3) HDDs always work. Same
+> > for the 88F6281 SoC onboard SATA ports (sata_mv - not connected via
+> > PCIe).
+> > 
+> > - The mach-kirkwood driver operates the 6281 as class "Host bridge
+> > [0600]" with Cap "Express (v1) Root Port", the mach-mvebu driver as
+> > class "PCI bridge [0604]" with "Express (v2) Root Port"
+> > [4][5][6][7]. Notably the v1/v2, cache line size 32/64 or the
+> > missing interrupt route might be a key difference.
+> > 
+> > From the sources I see that all PCI drivers (mach-kirkwood,
+> > mach-mvebu and U-Boot) do various unconventional 'magic' things
+> > (rewriting PCI class of the root complex, changing capabilitys, host
+> > emulation and so on). This is the point where I currently get lost
+> > and ask for your help.
+
+This 'magic' is there because of broken PCIe controller and its PCIe
+Root Port in all 32-bit Marvell SoCs.
+
+> > [1] https://lists.denx.de/pipermail/u-boot/2022-March/479197.html
+> > [2] https://forum.doozan.com/read.php?2,94079,95519#msg-95519
+> > [3] https://lists.denx.de/pipermail/u-boot/2022-March/479227.html
+> > [4] lspci Linux version 3.2.0-4-kirkwood mach-kirkwood/pci.c: HDDs ok
+> > [5] lspci Linux version 3.16.0-0.bpo.4-kirkwood - with DTB -> mvebu-pci: HDDs
+> > fail
+> > [6] lspci Linux version 3.16.0-0.bpo.4-kirkwood - without DTB ->
+> > mach-kirkwood/pci.c: HDDs ok
+> > [7] lspci Linux version 5.10.0-11-marvell (Debian bullseye) mvebu-pci: HDDs
+> > fail
