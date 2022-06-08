@@ -2,99 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 428E5543D64
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 22:11:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D457543D6E
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 22:14:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230431AbiFHULj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jun 2022 16:11:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60662 "EHLO
+        id S229851AbiFHUN6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jun 2022 16:13:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbiFHULi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 16:11:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EDA12AF6
-        for <linux-pci@vger.kernel.org>; Wed,  8 Jun 2022 13:11:37 -0700 (PDT)
+        with ESMTP id S236116AbiFHUNx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 16:13:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0A5138BE7;
+        Wed,  8 Jun 2022 13:13:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 62C7561CC2
-        for <linux-pci@vger.kernel.org>; Wed,  8 Jun 2022 20:11:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5128EC34116;
-        Wed,  8 Jun 2022 20:11:36 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 494AB61C5D;
+        Wed,  8 Jun 2022 20:13:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B37FC34116;
+        Wed,  8 Jun 2022 20:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654719096;
-        bh=8k4Ru3Gy+AFvhMwirgmAMtpZOoo6pJniIfpDb3kJRPk=;
+        s=k20201202; t=1654719230;
+        bh=aHbJvLTAEf+/7/LFJuiWzns2/o0UaL+AXHjd4hTV9QU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DAy4R+MJ0Y+hlxmsGMa5Ux3JBpY6hkerKaxsCZV9sSxlCMFbPS+sKQjmoLU5jopkK
-         pXERrkV50Nvjo8yDk8Kt+SYyzRXUPtCPuIwvu0z1oIWkIwD+5X/xWtFMQhuodWi7QF
-         iz0B+zrXCFWlDfypWQznJyfGu6qottYir6tHFycALC7cCiE6krAyn3jJeRdxu8Utdf
-         R4Q6F6Y4r3CGVVAUQT2i7n26posKRQk9RDn/REa3jtszJBuEPtpet2emxXKv8Zlg2f
-         DH3Q1UB9BCbaZV5Xcy4KraNzWb7tkf3Og/nh+gEjaFHwWN/ysWBLCfxaF7lg9agESL
-         WGVzaV1BHMNkw==
-Date:   Wed, 8 Jun 2022 15:11:34 -0500
+        b=lKrfa2ISi0opyVqfcsNP1Mie+TBDBsXxcl6dzw04KUZzFd5CQNf17qR7Ju85E49/P
+         Ev5AfsylLCvVnvJ5ax/Wvih3+2DVdRkvY4yXLwwqbksKlQw765cHdwcDC1Cin5Q8jH
+         dQ4MduN9F4MGyNreFN505y41POqwCWkPjk9+eqeBFk6236e4avPpOU7mT0D7XYOipj
+         G8e7tMGWEv2/fDwahLfb/MNiMH9rVA22OJNUx26dHxYL/wnBfSLlMnRoFxbjLnnvom
+         29PlEwpz9xBCJ57M7/LtWTf2FmW5tn7HJ4rhqy0tuYKA3VifldFNDiDCUtyJRlo5fr
+         S5+RmyH2Uz/ug==
+Date:   Wed, 8 Jun 2022 15:13:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     ruscur@russell.cc, oohall@gmail.com, bhelgaas@google.com,
-        kbusch@kernel.org, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] PCI/ERR: handle disconnected devices in
- report_error_detected
-Message-ID: <20220608201134.GA417165@bhelgaas>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Clemens Ladisch <clemens@ladisch.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, babu.moger@amd.com
+Subject: Re: [PATCH v2 1/6] x86/amd_nb: Add AMD Family 17h A0-AF IDs
+Message-ID: <20220608201347.GA417504@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220601074024.3481035-1-hch@lst.de>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+In-Reply-To: <20220602201137.1415-2-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 01, 2022 at 09:40:24AM +0200, Christoph Hellwig wrote:
-> When a device is already unplugged by pciehp by the time that the AER
-> handler is invoked, the PCIe device will lready be in the
-> pci_channel_io_perm_failure state.  In that case we should simply
-> return PCI_ERS_RESULT_DISCONNECT instead of trying to do a state
-> transition that will fail.
+On Thu, Jun 02, 2022 at 03:11:32PM -0500, Mario Limonciello wrote:
+> Add support for SMN communication on Family 17h Model A0h.
 > 
-> Also untangle the state transition failure from the lack of methods to
-> improve the debugging output in case it will happen ever again.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Applied with Sathy's reviewed-by to pci/err for v5.20, thanks!
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
 
 > ---
->  drivers/pci/pcie/err.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+> v1->v2:
+>  * Drop fixes tag
+>  * Fix commit message and definitions for s/17/19/
+> ---
+>  arch/x86/kernel/amd_nb.c | 5 +++++
+>  include/linux/pci_ids.h  | 1 +
+>  2 files changed, 6 insertions(+)
 > 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 0c5a143025af4..59c90d04a609a 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -55,10 +55,14 @@ static int report_error_detected(struct pci_dev *dev,
->  
->  	device_lock(&dev->dev);
->  	pdrv = dev->driver;
-> -	if (!pci_dev_set_io_state(dev, state) ||
-> -		!pdrv ||
-> -		!pdrv->err_handler ||
-> -		!pdrv->err_handler->error_detected) {
-> +	if (pci_dev_is_disconnected(dev)) {
-> +		vote = PCI_ERS_RESULT_DISCONNECT;
-> +	} else if (!pci_dev_set_io_state(dev, state)) {
-> +		pci_info(dev, "can't recover (state transition %u -> %u invalid)\n",
-> +			dev->error_state, state);
-> +		vote = PCI_ERS_RESULT_NONE;
-> +	} else if (!pdrv || !pdrv->err_handler ||
-> +		   !pdrv->err_handler->error_detected) {
->  		/*
->  		 * If any device in the subtree does not have an error_detected
->  		 * callback, PCI_ERS_RESULT_NO_AER_DRIVER prevents subsequent
+> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+> index 190e0f763375..60c7bd525237 100644
+> --- a/arch/x86/kernel/amd_nb.c
+> +++ b/arch/x86/kernel/amd_nb.c
+> @@ -19,12 +19,14 @@
+>  #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
+>  #define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480
+>  #define PCI_DEVICE_ID_AMD_17H_M60H_ROOT	0x1630
+> +#define PCI_DEVICE_ID_AMD_17H_MA0H_ROOT	0x14b5
+>  #define PCI_DEVICE_ID_AMD_19H_M10H_ROOT	0x14a4
+>  #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
+>  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+>  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
+>  #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F4 0x144c
+>  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
+> +#define PCI_DEVICE_ID_AMD_17H_MA0H_DF_F4 0x1728
+>  #define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
+>  #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F4 0x14b1
+>  #define PCI_DEVICE_ID_AMD_19H_M40H_ROOT	0x14b5
+> @@ -41,6 +43,7 @@ static const struct pci_device_id amd_root_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_ROOT) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_MA0H_ROOT) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_ROOT) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_ROOT) },
+>  	{}
+> @@ -61,6 +64,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F3) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_MA0H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
+> @@ -81,6 +85,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_MA0H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F4) },
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 0178823ce8c2..ec1c226d13e6 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -556,6 +556,7 @@
+>  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
+>  #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F3 0x144b
+>  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
+> +#define PCI_DEVICE_ID_AMD_17H_MA0H_DF_F3 0x1727
+>  #define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653
+>  #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F3 0x14b0
+>  #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F3 0x167c
 > -- 
-> 2.30.2
+> 2.34.1
 > 
