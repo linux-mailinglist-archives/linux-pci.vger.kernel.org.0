@@ -2,52 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 863B6543274
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 16:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E378543618
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 17:10:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241279AbiFHOY1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jun 2022 10:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
+        id S243494AbiFHPKT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jun 2022 11:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241217AbiFHOY0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 10:24:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E004617E;
-        Wed,  8 Jun 2022 07:24:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7345961A97;
-        Wed,  8 Jun 2022 14:24:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DCEAC34116;
-        Wed,  8 Jun 2022 14:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654698263;
-        bh=lfp5MteEMqeLmLkwvI2zA+stynTrMoOeGm+VdRjMKTs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aLyPcHIYueMqC4wvgXch1zV6fD4XJaRffBi+pbVw+kDKsnkr2/Zv49N/E7JSWAqXV
-         qpLkUCptxy39RQ9Wi2/YPOKnwj1yLfypQmGVZd+0CzTPV85Wjg8YxiCtcZPW60xcK5
-         ORjpVu1mlqaVKLT80OdMq3ebKgdKZSGrqcnAF3ZCw2T/L9eDKitrmGqGRqjeN1OvB7
-         /3wILjBffvDBZSBLIjzhUwlfFNZK5kS0eRi/z6mCktfemcZF6GZMqE+u09d1qpwGCB
-         RfSvr8jdo+Gy7mQ0FCiQop0wUW7BH7luCgBRA1TLG0wHF+rT+V5T7Q9OizsyfSBQkt
-         lgKZyiMOUJTSw==
-Date:   Wed, 8 Jun 2022 09:24:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux1394-devel@lists.sourceforge.net, linux-pm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2] firewire: ohci: Convert to generic power management
-Message-ID: <20220608142419.GA396923@bhelgaas>
+        with ESMTP id S243370AbiFHPKF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 11:10:05 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AB444C75D;
+        Wed,  8 Jun 2022 07:59:25 -0700 (PDT)
+Received: by mail-qk1-f172.google.com with SMTP id x75so12258024qkb.12;
+        Wed, 08 Jun 2022 07:59:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rseWESTZZ3sgQEq2yMKxEjVoiFjpbE9ug4xL4+RqKlo=;
+        b=3xVpbmC7Ka5BMTzY0NvT6MDQvqKO7f0Xgr8I/uQ4nbSxLt9boVBAr3VFRrrUAIQC1p
+         o4lmSCNm824LheQbLcCaZPqqIOl5xtdbVGugNA9E/uv/u9yL12seBCJ3veGYSIMnDT52
+         iwrNA0Q2+FuGBJ4yR1JPEVLv0VJMpior4RGNFuDSX+uhihUucXNzBedx2rr/j/hrjM7k
+         +8l1vmI3Tk3MX6UIV+kH9UIuaaMfVRRdj7WtYPLMHgMEpxDAm/1QLhGjGoQTyw6l8Djc
+         KlcmfhF5eStLghgJe4P5Hvl9umToigPB7vnaQprB/MPDhuLl/xF/hcbCSVjD2w8gH5Ye
+         gkJg==
+X-Gm-Message-State: AOAM532qceeZgPBvige0jQnfsNWAbYw+oR9pVno8UWLgU+IjY0Ua4JWu
+        XCEJi70FxzTvM3HpAYsBpImxzBadeA==
+X-Google-Smtp-Source: ABdhPJyeZH8Mdu5d3tBwNWSsnW8byi52kRMGjV6KjaZws4sh3j01ytqRp7F3bh9M+1q7Ggx+kcJsrA==
+X-Received: by 2002:a05:6638:1c19:b0:331:d0b7:4cfe with SMTP id ca25-20020a0566381c1900b00331d0b74cfemr4628587jab.311.1654699909700;
+        Wed, 08 Jun 2022 07:51:49 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t25-20020a02ab99000000b00331c1e117absm2660205jan.29.2022.06.08.07.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jun 2022 07:51:49 -0700 (PDT)
+Received: (nullmailer pid 1378913 invoked by uid 1000);
+        Wed, 08 Jun 2022 14:51:47 -0000
+Date:   Wed, 8 Jun 2022 08:51:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v14 5/7] dt-bindings: PCI: qcom: Support additional MSI
+ interrupts
+Message-ID: <20220608145147.GA1376031-robh@kernel.org>
+References: <20220608102208.2967438-1-dmitry.baryshkov@linaro.org>
+ <20220608102208.2967438-6-dmitry.baryshkov@linaro.org>
+ <1654695907.391751.1272089.nullmailer@robh.at.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220607212157.343033-1-helgaas@kernel.org>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <1654695907.391751.1272089.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,179 +76,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 07, 2022 at 04:21:57PM -0500, Bjorn Helgaas wrote:
-> From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+On Wed, Jun 08, 2022 at 07:45:07AM -0600, Rob Herring wrote:
+> On Wed, 08 Jun 2022 13:22:06 +0300, Dmitry Baryshkov wrote:
+> > On Qualcomm platforms each group of 32 MSI vectors is routed to the
+> > separate GIC interrupt. Document mapping of additional interrupts.
+> > 
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  .../devicetree/bindings/pci/qcom,pcie.yaml    | 53 +++++++++++++++++--
+> >  1 file changed, 50 insertions(+), 3 deletions(-)
+> > 
 > 
-> Convert firewire-ohci from legacy PCI power management to the generic power
-> management framework.
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
 > 
-> Previously firewire-ohci used legacy PCI power management, and
-> pci_suspend() and pci_resume() were responsible for both device-specific
-> things and generic PCI things like saving and restoring config space and
-> managing power state:
+> yamllint warnings/errors:
 > 
->   pci_suspend
->     software_reset                         <-- device-specific
->     pci_save_state                         <-- generic PCI
->     pci_set_power_state                    <-- generic PCI
->     pmac_ohci_off                          <-- device-specific
-> 
->   pci_resume
->     pmac_ohci_on                           <-- device-specific
->     pci_set_power_state(PCI_D0)            <-- generic PCI
->     pci_restore_state                      <-- generic PCI
->     pci_enable_device                      <-- generic PCI
->     ohci_enable                            <-- device-specific
-> 
-> Convert to generic power management where the PCI bus PM methods do the
-> generic PCI things, and the driver needs only the device-specific part,
-> i.e.,
-> 
->   suspend_devices_and_enter
->     dpm_suspend_start(PMSG_SUSPEND)
->       pci_pm_suspend                       # PCI bus .suspend() method
->         pci_suspend                        # driver->pm->suspend
->           software_reset                   <-- device-specific
->           pmac_ohci_off                    <-- device-specific
->     suspend_enter
->       dpm_suspend_noirq(PMSG_SUSPEND)
->         pci_pm_suspend_noirq               # PCI bus .suspend_noirq() method
->           pci_save_state                   <-- generic PCI
->           pci_prepare_to_sleep             <-- generic PCI
->             pci_set_power_state
->     ...
->     dpm_resume_end(PMSG_RESUME)
->       pci_pm_resume                        # PCI bus .resume() method
->         pci_restore_standard_config
->           pci_set_power_state(PCI_D0)      <-- generic PCI
->           pci_restore_state                <-- generic PCI
->         pci_resume                         # driver->pm->resume
->           pmac_ohci_on                     <-- device-specific
->           ohci_enable                      <-- device-specific
+> dtschema/dtc warnings/errors:
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/qcom,pcie.yaml: allOf:19:then:oneOf:0:properties:interrupt-names: {'maxItems': 1, 'items': [{'const': 'msi'}]} should not be valid under {'required': ['maxItems']}
+> 	hint: "maxItems" is not needed with an "items" list
+> 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/qcom,pcie.yaml: allOf:19:then:oneOf:1:properties:interrupt-names: 'oneOf' conditional failed, one must be fixed:
+> 	[{'const': 'msi0'}, {'const': 'msi1'}, {'const': 'msi2'}, {'const': 'msi3'}, {'const': 'msi4'}, {'const': 'msi5'}, {'const': 'msi6'}, {'const': 'msi7'}] is too long
+> 	[{'const': 'msi0'}, {'const': 'msi1'}, {'const': 'msi2'}, {'const': 'msi3'}, {'const': 'msi4'}, {'const': 'msi5'}, {'const': 'msi6'}, {'const': 'msi7'}] is too short
+> 	False schema does not allow 8
+> 	1 was expected
+> 	8 is greater than the maximum of 2
+> 	8 is greater than the maximum of 3
+> 	8 is greater than the maximum of 4
+> 	8 is greater than the maximum of 5
+> 	8 is greater than the maximum of 6
+> 	8 is greater than the maximum of 7
+> 	hint: "minItems" is only needed if less than the "items" list length
+> 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/qcom,pcie.yaml: ignoring, error in schema: allOf: 19: then: oneOf: 0: properties: interrupt-names
+> Documentation/devicetree/bindings/pci/qcom,pcie.example.dtb:0:0: /example-0/pcie@1b500000: failed to match any schema with compatible: ['qcom,pcie-ipq8064']
+> Documentation/devicetree/bindings/pci/qcom,pcie.example.dtb:0:0: /example-1/pcie@fc520000: failed to match any schema with compatible: ['qcom,pcie-apq8084']
 
-I want to point out that this changes the ordering of pmac_ohci_off()
-with respect to pci_save_state() and pci_set_power_state().
-Previously we did those as:
+These are due to a new check in dtschema main branch not yet released.
 
-  pci_save_state
-  pci_set_power_state
-  pmac_ohci_off
-
-and after this patch it would be:
-
-  pmac_ohci_off
-  pci_save_state
-  pci_set_power_state
-
-The ordering of pmac_ohci_on() in the resume path is similarly
-changed.
-
-I don't know what pmac_ohci_off() and pmac_ohci_on() do, so I don't
-know whether this is an issue.  In general, drivers don't need to do
-anything after their device is put in D3hot, but maybe firewire-ohci
-is unique in this way.
-
-> [bhelgaas: commit log]
-> Link: https://lore.kernel.org/r/20200720150715.624520-1-vaibhavgupta40@gmail.com
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/firewire/ohci.c | 35 ++++++++---------------------------
->  1 file changed, 8 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-> index 17c9d825188b..aee705132330 100644
-> --- a/drivers/firewire/ohci.c
-> +++ b/drivers/firewire/ohci.c
-> @@ -3165,8 +3165,7 @@ static int ohci_set_iso_channels(struct fw_iso_context *base, u64 *channels)
->  	return ret;
->  }
->  
-> -#ifdef CONFIG_PM
-> -static void ohci_resume_iso_dma(struct fw_ohci *ohci)
-> +static void __maybe_unused ohci_resume_iso_dma(struct fw_ohci *ohci)
->  {
->  	int i;
->  	struct iso_context *ctx;
-> @@ -3183,7 +3182,6 @@ static void ohci_resume_iso_dma(struct fw_ohci *ohci)
->  			ohci_start_iso(&ctx->base, 0, ctx->sync, ctx->tags);
->  	}
->  }
-> -#endif
->  
->  static int queue_iso_transmit(struct iso_context *ctx,
->  			      struct fw_iso_packet *packet,
-> @@ -3789,39 +3787,24 @@ static void pci_remove(struct pci_dev *dev)
->  	dev_notice(&dev->dev, "removed fw-ohci device\n");
->  }
->  
-> -#ifdef CONFIG_PM
-> -static int pci_suspend(struct pci_dev *dev, pm_message_t state)
-> +static int __maybe_unused pci_suspend(struct device *devp)
->  {
-> +	struct pci_dev *dev = to_pci_dev(devp);
->  	struct fw_ohci *ohci = pci_get_drvdata(dev);
-> -	int err;
->  
->  	software_reset(ohci);
-> -	err = pci_save_state(dev);
-> -	if (err) {
-> -		ohci_err(ohci, "pci_save_state failed\n");
-> -		return err;
-> -	}
-> -	err = pci_set_power_state(dev, pci_choose_state(dev, state));
-> -	if (err)
-> -		ohci_err(ohci, "pci_set_power_state failed with %d\n", err);
->  	pmac_ohci_off(dev);
->  
->  	return 0;
->  }
->  
-> -static int pci_resume(struct pci_dev *dev)
-> +static int __maybe_unused pci_resume(struct device *devp)
->  {
-> +	struct pci_dev *dev = to_pci_dev(devp);
->  	struct fw_ohci *ohci = pci_get_drvdata(dev);
->  	int err;
->  
->  	pmac_ohci_on(dev);
-> -	pci_set_power_state(dev, PCI_D0);
-> -	pci_restore_state(dev);
-> -	err = pci_enable_device(dev);
-> -	if (err) {
-> -		ohci_err(ohci, "pci_enable_device failed\n");
-> -		return err;
-> -	}
->  
->  	/* Some systems don't setup GUID register on resume from ram  */
->  	if (!reg_read(ohci, OHCI1394_GUIDLo) &&
-> @@ -3838,7 +3821,6 @@ static int pci_resume(struct pci_dev *dev)
->  
->  	return 0;
->  }
-> -#endif
->  
->  static const struct pci_device_id pci_table[] = {
->  	{ PCI_DEVICE_CLASS(PCI_CLASS_SERIAL_FIREWIRE_OHCI, ~0) },
-> @@ -3847,15 +3829,14 @@ static const struct pci_device_id pci_table[] = {
->  
->  MODULE_DEVICE_TABLE(pci, pci_table);
->  
-> +static SIMPLE_DEV_PM_OPS(pci_pm_ops, pci_suspend, pci_resume);
-> +
->  static struct pci_driver fw_ohci_pci_driver = {
->  	.name		= ohci_driver_name,
->  	.id_table	= pci_table,
->  	.probe		= pci_probe,
->  	.remove		= pci_remove,
-> -#ifdef CONFIG_PM
-> -	.resume		= pci_resume,
-> -	.suspend	= pci_suspend,
-> -#endif
-> +	.driver.pm	= &pci_pm_ops,
->  };
->  
->  static int __init fw_ohci_init(void)
-> -- 
-> 2.25.1
-> 
+Rob
