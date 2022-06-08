@@ -2,48 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA83C543C9F
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 21:14:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6998543CAC
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 21:19:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235103AbiFHTOm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jun 2022 15:14:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56178 "EHLO
+        id S235338AbiFHTTM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jun 2022 15:19:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234573AbiFHTOl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 15:14:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B601E3F884;
-        Wed,  8 Jun 2022 12:14:40 -0700 (PDT)
+        with ESMTP id S235337AbiFHTTK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 15:19:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F00B579A;
+        Wed,  8 Jun 2022 12:19:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4AF7D60FAB;
-        Wed,  8 Jun 2022 19:14:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B0AC34116;
-        Wed,  8 Jun 2022 19:14:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 438E4B82A1A;
+        Wed,  8 Jun 2022 19:19:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A67C3411C;
+        Wed,  8 Jun 2022 19:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654715679;
-        bh=0rNMUCfQcHHTqjT199r4QVyK/7bbE1wu48hOAmOqe/0=;
+        s=k20201202; t=1654715945;
+        bh=7q+8rJaFoklx3cPK0a9WP62E8/RaEi9cg7l7NLWKwhM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fWUKDN3HdyeoOCCIGoO65OTTGl08TgDFk9rnT/BgnI+b9X+z7jXEmgn095lkSXDth
-         r1XDIWdTOnGFFyNmJe5/hxfbsfnWdPnAPXcsQyai/ZWoP1Vjn8I/5yphOu6YwFzDOI
-         YlyV1RozBHWL6vYpWOB/a7/j88JLg042gv3yn5acw0EC9SumgyVap9Rh1EuDBY/zjk
-         EAEA0uhXokqqa+HC5IARypsQicbTVznZddfx4JUDwMKL88o1KHC1jh6cEeR2GRxK0j
-         qiQszr0mef+a7kfx96Gu0c6N6rcZsqeRf6KQw8Y94zFII5BlQUgE2pDh2eLS5fCpgv
-         wCLorWuYeMU6Q==
-Date:   Wed, 8 Jun 2022 14:14:37 -0500
+        b=Q6pmBeWs8lnn2vOVGZ1fjy+xpzpTU29yc+a7puv6oa/Y2x6P4pdsjwIa2f4yZorZS
+         pb2bM3NVTy5AVSGllTsvNdyZuyFfUyl1VXCqpntqhzJLaDyFRYS7dJSzlTRf7g82Je
+         bxqLO4/eZxYXZWpbRMuQ/zAWedHMrpgRjFks+f+TnrHZTG7FFzOBM40+a4hcBfZZYw
+         J1VgL74jpjuTRPbQlwpcmfSIhZPm2pIgY9wBi5C5LABS8Zj0cp/C+1XEqJAgxEHAS/
+         7TK2CaRDnCBxyS/ODID13AIMLmPko8H2UZbs2KVZYk28UA0UzkySoEcqQjIRiDif8k
+         2DGWuBUZijkew==
+Date:   Wed, 8 Jun 2022 14:19:02 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, michals@xilinx.com, robh@kernel.org
-Subject: Re: [PATCH v4 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root
- Port
-Message-ID: <20220608191437.GA411770@bhelgaas>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v14 5/7] dt-bindings: PCI: qcom: Support additional MSI
+ interrupts
+Message-ID: <20220608191902.GA412670@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220608164046.3474-3-bharat.kumar.gogada@xilinx.com>
+In-Reply-To: <20220608145147.GA1376031-robh@kernel.org>
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -54,53 +66,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 08, 2022 at 10:10:46PM +0530, Bharat Kumar Gogada wrote:
-> Xilinx Versal Premium series has CPM5 block which supports Root Port
-> functioning at Gen5 speed.
+On Wed, Jun 08, 2022 at 08:51:47AM -0600, Rob Herring wrote:
+> On Wed, Jun 08, 2022 at 07:45:07AM -0600, Rob Herring wrote:
+> > On Wed, 08 Jun 2022 13:22:06 +0300, Dmitry Baryshkov wrote:
+> > > On Qualcomm platforms each group of 32 MSI vectors is routed to the
+> > > separate GIC interrupt. Document mapping of additional interrupts.
+> > > 
+> > > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > ---
+> > >  .../devicetree/bindings/pci/qcom,pcie.yaml    | 53 +++++++++++++++++--
+> > >  1 file changed, 50 insertions(+), 3 deletions(-)
+> > > 
+> > 
+> > My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> > 
+> > yamllint warnings/errors:
+> > 
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/qcom,pcie.yaml: allOf:19:then:oneOf:0:properties:interrupt-names: {'maxItems': 1, 'items': [{'const': 'msi'}]} should not be valid under {'required': ['maxItems']}
+> > 	hint: "maxItems" is not needed with an "items" list
+> > 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/qcom,pcie.yaml: allOf:19:then:oneOf:1:properties:interrupt-names: 'oneOf' conditional failed, one must be fixed:
+> > 	[{'const': 'msi0'}, {'const': 'msi1'}, {'const': 'msi2'}, {'const': 'msi3'}, {'const': 'msi4'}, {'const': 'msi5'}, {'const': 'msi6'}, {'const': 'msi7'}] is too long
+> > 	[{'const': 'msi0'}, {'const': 'msi1'}, {'const': 'msi2'}, {'const': 'msi3'}, {'const': 'msi4'}, {'const': 'msi5'}, {'const': 'msi6'}, {'const': 'msi7'}] is too short
+> > 	False schema does not allow 8
+> > 	1 was expected
+> > 	8 is greater than the maximum of 2
+> > 	8 is greater than the maximum of 3
+> > 	8 is greater than the maximum of 4
+> > 	8 is greater than the maximum of 5
+> > 	8 is greater than the maximum of 6
+> > 	8 is greater than the maximum of 7
+> > 	hint: "minItems" is only needed if less than the "items" list length
+> > 	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/qcom,pcie.yaml: ignoring, error in schema: allOf: 19: then: oneOf: 0: properties: interrupt-names
+> > Documentation/devicetree/bindings/pci/qcom,pcie.example.dtb:0:0: /example-0/pcie@1b500000: failed to match any schema with compatible: ['qcom,pcie-ipq8064']
+> > Documentation/devicetree/bindings/pci/qcom,pcie.example.dtb:0:0: /example-1/pcie@fc520000: failed to match any schema with compatible: ['qcom,pcie-apq8084']
 > 
-> Xilinx Versal CPM5 has few changes with existing CPM block.
-> - CPM5 has dedicated register space for control and status registers.
-> - CPM5 legacy interrupt handling needs additional register bit
->   to enable and handle legacy interrupts.
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> ---
->  drivers/pci/controller/pcie-xilinx-cpm.c | 33 +++++++++++++++++++++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
+> These are due to a new check in dtschema main branch not yet released.
 
-Per MAINTAINERS, xilinx-cpm lacks a maintainer.  Can we get one?
-
-> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-> index c7cd44ed4dfc..a3b04083b6b3 100644
-> --- a/drivers/pci/controller/pcie-xilinx-cpm.c
-> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> @@ -35,6 +35,10 @@
->  #define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
->  #define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
->  
-> +#define XILINX_CPM_PCIE_IR_STATUS       0x000002A0
-> +#define XILINX_CPM_PCIE_IR_ENABLE       0x000002A8
-> +#define XILINX_CPM_PCIE_IR_LOCAL        BIT(0)
-> +
->  /* Interrupt registers definitions */
->  #define XILINX_CPM_PCIE_INTR_LINK_DOWN		0
->  #define XILINX_CPM_PCIE_INTR_HOT_RESET		3
-> @@ -109,6 +113,7 @@
->   * @intx_irq: legacy interrupt number
->   * @irq: Error interrupt number
->   * @lock: lock protecting shared register access
-> + * @is_cpm5: value to check cpm version
-
-s/cpm version/CPM version/ to match commit log usage.
-
-> +	port->is_cpm5 = of_device_is_compatible(dev->of_node,
-> +						"xlnx,versal-cpm5-host");
-
-One use of of_device_is_compatible() is OK, I guess, but
-of_device_get_match_data() is a better pattern if we ever need more.
-
-I would lean toward of_device_get_match_data() even here, just to
-reduce the number of ways to identify device-specific things across
-drivers.
+Even though these are new checks, I guess we should fix them before
+merging this series?  If not, let me know.
 
 Bjorn
