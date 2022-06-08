@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F0BC5426F3
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 08:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B457854243A
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Jun 2022 08:52:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234342AbiFHGBH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jun 2022 02:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33542 "EHLO
+        id S234131AbiFHGBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jun 2022 02:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237804AbiFHFvW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 01:51:22 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA9AC18FA71
-        for <linux-pci@vger.kernel.org>; Tue,  7 Jun 2022 20:32:03 -0700 (PDT)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20220608033202epoutp03a0d6b98010e7e0a50bf434cb327689af~2h7RtXPsH0355503555epoutp03v
-        for <linux-pci@vger.kernel.org>; Wed,  8 Jun 2022 03:32:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20220608033202epoutp03a0d6b98010e7e0a50bf434cb327689af~2h7RtXPsH0355503555epoutp03v
+        with ESMTP id S1345815AbiFHF5G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 01:57:06 -0400
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33653AC1C6
+        for <linux-pci@vger.kernel.org>; Tue,  7 Jun 2022 21:14:15 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20220608041413epoutp043a3c846a6485ebdde3a7599cd86ebebc~2igG8LVKN1495914959epoutp04v
+        for <linux-pci@vger.kernel.org>; Wed,  8 Jun 2022 04:14:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20220608041413epoutp043a3c846a6485ebdde3a7599cd86ebebc~2igG8LVKN1495914959epoutp04v
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1654659122;
-        bh=R6XWyD0M4zYeiZaM11sDfcj4kG76ksycJZ3q1CIX1qM=;
+        s=mail20170921; t=1654661653;
+        bh=OyFSGsOso1WcfFrcNDoi4cd/dkMLOd8O2ZOzNkMBarw=;
         h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=n3i5UWiyq88Zb6W9ZFw+HRM6PZRMCrqT4gMaa51NZWkWBndnu2bZCULrkuHlCdl72
-         D58SqwrWk558W7xpaTCnEn+R8wqD8jtteT8L9mQCRdvz3vwybY7my+96vb1O5C+N0k
-         lLyVaVeEkrB1uDYc54yxF4i5btpZtlz5/fSt8Kas=
+        b=YZnSc7zDhBxftq6s1oK1A5Gp72EgpT06blLV5EKgj+1padMujp7BZEJdRQA4sHw6e
+         6DJWeeh0/nQwNUJVnqliKmaGl5ENIIyOxF3YZu4VYlyN6CCxeh8r3dkwSjg7EnJJfd
+         hX9eplPpoBpLClvmgvnCc8fmbAXxRr+pdPmqsZ/Q=
 Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20220608033201epcas2p15b42645a7c039b4d5dd14fe94961466f~2h7Q70ymD0186101861epcas2p1c;
-        Wed,  8 Jun 2022 03:32:01 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.91]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4LHt7h07F2z4x9Q5; Wed,  8 Jun
-        2022 03:32:00 +0000 (GMT)
-X-AuditID: b6c32a46-f75ff70000002624-49-62a0182f860d
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20220608041412epcas2p3d1dcf04944492d83fef761954679b338~2igGPBcaP0359103591epcas2p3k;
+        Wed,  8 Jun 2022 04:14:12 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.102]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4LHv4L30sqz4x9Py; Wed,  8 Jun
+        2022 04:14:10 +0000 (GMT)
+X-AuditID: b6c32a46-f8bff70000002624-6e-62a0221293ef
 Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
         epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        42.EC.09764.F2810A26; Wed,  8 Jun 2022 12:31:59 +0900 (KST)
+        11.18.09764.21220A26; Wed,  8 Jun 2022 13:14:10 +0900 (KST)
 Mime-Version: 1.0
-Subject: Re: [PATCH v2 3/5] PCI: axis: Add ARTPEC-8 PCIe controller driver
+Subject: Re: [PATCH v2 4/5] phy: Add ARTPEC-8 PCIe PHY driver
 Reply-To: wangseok.lee@samsung.com
 Sender: Wangseok Lee <wangseok.lee@samsung.com>
 From:   Wangseok Lee <wangseok.lee@samsung.com>
@@ -64,355 +64,970 @@ CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
         Yeeun Kim <yeeun119.kim@samsung.com>
 X-Priority: 3
 X-Content-Kind-Code: NORMAL
-In-Reply-To: <5ddc30ca-df6d-d31d-e500-2faebc0f32f6@linaro.org>
+In-Reply-To: <4eb0959f-9659-0397-7a75-2ac89b2986bb@linaro.org>
 X-CPGS-Detection: blocking_info_exchange
 X-Drm-Type: N,general
 X-Msg-Generator: Mail
 X-Msg-Type: PERSONAL
 X-Reply-Demand: N
-Message-ID: <20220608033159epcms2p4e4d4045f2e6493463b59a032a501fc31@epcms2p4>
-Date:   Wed, 08 Jun 2022 12:31:59 +0900
-X-CMS-MailID: 20220608033159epcms2p4e4d4045f2e6493463b59a032a501fc31
+Message-ID: <20220608041409epcms2p6b5ec48616a63d45c578c12230993381c@epcms2p6>
+Date:   Wed, 08 Jun 2022 13:14:09 +0900
+X-CMS-MailID: 20220608041409epcms2p6b5ec48616a63d45c578c12230993381c
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 X-CPGSPASS: Y
 X-CPGSPASS: Y
 CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA12Tf0wTZxjHc3flrjA7T0R8x6LBc7ABA1qg8GrAsc2wG9sS4rK5LNvqQS8t
-        o7RNrzXOxVgXQSzOQe026EjphMgsPwQGUgGFlAaQDVycEyFVlECgA+L8MWVUdC0tuuy/z/vN
-        932e7/P+4GOh03gEP1+pZTVKRkHhIbyzfTHi+ERgzRWeLIew9is5dDtiYLVzJAh2VdShsPLb
-        XzE44zBj8O7hKPjb9DEcus03cHh+rp2A+mOeIOicv4PBnoHTKPy9swqHw5YBHJbZHvDgvGeW
-        gCM1+bDovJOA51yDGHT1DfPgUvsjNDOcbrA0IPRoUw5tbdXRrbajOO262o3TU1e+R+mfaw/S
-        x9tsCD1wrQOl77Vuzgn5uCBdzjJSVhPJKvNU0nylLIN6533JmxJxqlAUL9oG06hIJVPIZlA7
-        382Jz8pXeGekIvcyCp1XymE4jkrcka5R6bRspFzFaTMoVi1VqNPUCRxTyOmUsgQlq90uEgqT
-        xF7jngL50IWrhNrUjuyb0DcQeqS7GTEgwXxApoCjdQaeAQnhh5J2BFR2XMQMCJ8vINeBZft6
-        n2c9mQ3qDVW4j0NJCtgbLJhfTwSjP5UG+Rgn48HjGjfuqxNGNmGg61oj4VtgpJMHXEceEv5u
-        AlBxZJrn5xdBR137SopgcgeYaWsMJHoFLJ76GvPzBjBWv0Cs8u3+6oAnDBTdGA541oGb/3QF
-        9AhgnXIE+flL0LPsQf2sR8A3E6xvMOBNbR9N9skC8j3gHL6+EodHRoEn938IlNwJ3Eb7CmNk
-        HDj149zKmWBkDDjTmeivshU4x3mrQ+lbPMT/GSOfByV9y091u2UqECYaWE6fw8qQreZnB23+
-        Ty/zs15WBLMh4ayaK5SxXJI66ent5qkKW5GV9x6bZUdMC38lOBCUjzgQwMeoMMELu6tzQwVS
-        5ov9rEYl0egULOdAxN4py7GIDXkq74dRaiWilG3ClNRUUVqSWJhGbRRkS5uZUFLGaNkCllWz
-        mtV9KD84Qo/SOe7FE3Wdn16KTl3QtiiMLfOuKhNaMmdVhx+Y0TzY9cdIM7xYcfjEL0v7xJ78
-        frdmsZjwfJjpqs/t/u6zW5d3O590dgS/9tbJSzXXjYNyc7Xu5gc2KzFWe6iIuxs7lvVcU4/N
-        PN4wPt/Y4i6R/Dm2ZravfIsi6Y2BNtJqVFYeX+TNmvfkZqc1mSbeFo1appMfTi6+emCqp1by
-        +eXZwegU4+v9vZ8ckoCNFZPilpni2oP7h5g1Emqof1hW+nf040230MziC2vvpdx3Oky9CXfO
-        RjVzm7f0m3bVSF5aaiqd21QoSpdlfmSAcS/HJPdO7p28Is1eS2jDMzLiztzuVJZVohSPkzOi
-        WEzDMf8CUnk8n3gEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCJsWRmVeSWpSXmKPExsWy7bCmqa6Q0oIkg31veC2WNGVYvDykaTH/
+        yDlWi90zljNZzJx6htni+aFZzBafWlQtLjztYbN4Oesem8Xe11vZLRp6frNaHHnzkdli//GV
+        TBaXd81hszg77zibxYRV31gs3vx+wW5xbnGmReveI+wWO++cYLa4c/gsi8WvrX+YHMQ81sxb
+        w+hxfV2Ax4JNpR6bVnWyedy5tofN48mV6Uwem5fUe/RtWcXocfzGdiaPz5vkAriism0yUhNT
+        UosUUvOS81My89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgH5UUihLzCkFCgUk
+        Fhcr6dvZFOWXlqQqZOQXl9gqpRak5BSYF+gVJ+YWl+al6+WlllgZGhgYmQIVJmRnPO5/wF5w
+        bjlLxftP/WwNjKtmsnQxcnJICJhIPH64mxnEFhLYwSgxZ7piFyMHB6+AoMTfHcIgYWEBW4kZ
+        FxcxQZQoSexYM48ZIq4vcX1FNyuIzSagK/Fv8Uu2LkYuDhGBdcwSu2+sZQdxmAWOsEjcaf/O
+        DrGMV2JG+1OoxdIS25dvZQSxOQXsJP50LWCGiGtI/FjWC2WLStxc/ZYdxn5/bD4jhC0i0Xrv
+        LFSNoMSDn7uh4lISC54cYoWwqyX2//3NBGE3MEr0308FeUwC6Ood141BwrwCvhJbuy+xgdgs
+        AqoSt6ZdZoMod5F4uGQ/2EhmAW2JZQtfM4O0MgtoSqzfpQ8xRVniyC0WmKcaNv5mR2czC/BJ
+        dBz+CxffMe8J1DFqEvNW7mSewKg8CxHQs5DsmoWwawEj8ypGsdSC4tz01GKjAiN45Cbn525i
+        BCd3LbcdjFPeftA7xMjEwXiIUYKDWUmEVzJ8fpIQb0piZVVqUX58UWlOavEhRlOgLycyS4km
+        5wPzS15JvKGJpYGJmZmhuZGpgbmSOK9XyoZEIYH0xJLU7NTUgtQimD4mDk6pBib3abySV8WZ
+        m43++v9WVfu34e+MWwbuPz6rp/b1PHh/Yq5Crshuc3aGt4Wbrtw2muoR+mr6P2uff0HhEZll
+        f9ZsPBx1jSWs8w9r9hmFVqWNXllslxLO3dEsTfxTObtOXmif44Z776enG4jlrKz/qnZ/E1/R
+        B0Hnf1t4XlgWLIpilpq+ooSzn7WPf4Nwm9MMD5X7yk/1JUQ3ZO4X7extdGxlN+pz8lrAfjJg
+        Q0ZIzj0B2Rd/moxPJ78+WCWw5tbs1Fh7P/GUl9F+TxnLzRfF+v0T4HuksfiR2ReBjnvnvBJa
+        vu+J+mlbGXf7neyqG2nz/NbeXi95KWe3+76Iz1sPubVM+LzCTGFhevL5tNKXW5RYijMSDbWY
+        i4oTAXDyenB3BAAA
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
 X-CMS-RootMailID: 20220603015431epcms2p6203908cebe6a320854136559a32b54cb
-References: <5ddc30ca-df6d-d31d-e500-2faebc0f32f6@linaro.org>
+References: <4eb0959f-9659-0397-7a75-2ac89b2986bb@linaro.org>
         <20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p6>
-        <20220603023452epcms2p22b81cfd1ee4866d5a6663c089ded6eac@epcms2p2>
-        <CGME20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p4>
+        <20220603023805epcms2p7b77f0f972e76818b7f6c0eabc3b74340@epcms2p7>
+        <CGME20220603015431epcms2p6203908cebe6a320854136559a32b54cb@epcms2p6>
 X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On=C2=A006/06/2022=C2=A019:25,=C2=A0Krzysztof=C2=A0Kozlowski=C2=A0wrote:=0D=
-=0A>=C2=A0On=C2=A003/06/2022=C2=A004:34,=C2=A0Wangseok=C2=A0Lee=C2=A0wrote:=
+On=C2=A006/06/2022=C2=A019:34,=C2=A0Krzysztof=C2=A0Kozlowski=C2=A0wrote:=0D=
+=0A>=C2=A0On=C2=A003/06/2022=C2=A004:38,=C2=A0Wangseok=C2=A0Lee=C2=A0wrote:=
 =0D=0A>>=C2=A0Add=C2=A0support=C2=A0Axis,=C2=A0ARTPEC-8=C2=A0SoC.=0D=0A>>=
 =C2=A0ARTPEC-8=C2=A0is=C2=A0the=C2=A0SoC=C2=A0platform=C2=A0of=C2=A0Axis=C2=
 =A0Communications.=0D=0A>>=C2=A0This=C2=A0is=C2=A0based=C2=A0on=C2=A0arm64=
 =C2=A0and=C2=A0support=C2=A0GEN4=C2=A0&=C2=A02lane.=0D=0A>>=C2=A0This=C2=A0=
-PCIe=C2=A0controller=C2=A0is=C2=A0based=C2=A0on=C2=A0DesignWare=C2=A0Hardwa=
-re=C2=A0core=0D=0A>>=C2=A0and=C2=A0uses=C2=A0DesignWare=C2=A0core=C2=A0func=
-tions=C2=A0to=C2=A0implement=C2=A0the=C2=A0driver.=0D=0A>>=C2=A0=0D=0A>>=C2=
-=A0changes=C2=A0since=C2=A0v1=C2=A0:=0D=0A>>=C2=A0improvement=C2=A0review=
-=C2=A0comment=C2=A0of=C2=A0Krzysztof=C2=A0on=C2=A0driver=C2=A0code.=0D=0A>>=
-=C2=A0-debug=C2=A0messages=C2=A0for=C2=A0probe=C2=A0or=C2=A0other=C2=A0func=
-tions.=0D=0A>>=C2=A0-Inconsistent=C2=A0coding=C2=A0style=C2=A0(different=C2=
-=A0indentation=C2=A0in=C2=A0structure=C2=A0members).=0D=0A>>=C2=A0-Inconsis=
-tent=C2=A0code=C2=A0(artpec8_pcie_get_subsystem_resources()=C2=A0gets=C2=A0=
-device=0D=0A>>=C2=A0=C2=A0=C2=A0from=C2=A0pdev=C2=A0and=C2=A0from=C2=A0pci=
-=C2=A0so=C2=A0you=C2=A0have=C2=A0two=C2=A0same=C2=A0pointers;=0D=0A>>=C2=A0=
-=C2=A0=C2=A0or=C2=A0artpec8_pcie_get_ep_mem_resources()=C2=A0stores=C2=A0de=
-v=C2=A0=0D=0A>>=C2=A0=C2=A0=C2=A0as=C2=A0local=C2=A0variable=C2=A0but=C2=A0=
-uses=C2=A0instead=C2=A0pdev->dev).=0D=0A>>=C2=A0-Not=C2=A0using=C2=A0devm_p=
-latform_ioremap_resource().=0D=0A>>=C2=A0-Printing=C2=A0messages=C2=A0in=C2=
-=A0interrupt=C2=A0handlers.=0D=0A>>=C2=A0-Several=C2=A0local/static=C2=A0st=
-ructures=C2=A0or=C2=A0array=C2=A0are=C2=A0not=C2=A0const.=0D=0A>>=C2=A0=0D=
-=0A>>=C2=A0Signed-off-by:=C2=A0Wangseok=C2=A0Lee=C2=A0<wangseok.lee=40samsu=
-ng.com>=0D=0A>>=C2=A0---=0D=0A>>=C2=A0=C2=A0drivers/pci/controller/dwc/Kcon=
-fig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7C=C2=A0=C2=A031=C2=A0+=
-+=0D=0A>>=C2=A0=C2=A0drivers/pci/controller/dwc/Makefile=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=7C=C2=A0=C2=A0=C2=A01=C2=A0+=0D=0A>>=C2=A0=C2=A0dr=
-ivers/pci/controller/dwc/pcie-artpec8.c=C2=A0=7C=C2=A0864=C2=A0++++++++++++=
-++++++++++++++++++=0D=0A>>=C2=A0=C2=A03=C2=A0files=C2=A0changed,=C2=A0896=
+driver=C2=A0provides=C2=A0PHY=C2=A0interface=C2=A0for=C2=A0ARTPEC-8=C2=A0So=
+C=C2=A0PCIe=C2=A0controller,=0D=0A>>=C2=A0based=C2=A0on=C2=A0Samsung=C2=A0P=
+CIe=C2=A0PHY=C2=A0IP.=0D=0A>>=C2=A0=0D=0A>>=C2=A0Main=C2=A0changes=C2=A0sin=
+ce=C2=A0v1=C2=A0=5B1=5D:=0D=0A>>=C2=A0-change=C2=A0folder=C2=A0name=C2=A0of=
+=C2=A0phy=C2=A0driver=C2=A0to=C2=A0axis=C2=A0from=C2=A0artpec=0D=0A>>=C2=A0=
+=0D=0A>>=C2=A0Signed-off-by:=C2=A0Wangseok=C2=A0Lee=C2=A0<wangseok.lee=40sa=
+msung.com>=0D=0A>>=C2=A0---=0D=0A>>=C2=A0=C2=A0drivers/phy/Kconfig=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7C=C2=A0=C2=A0=C2=A01=C2=A0+=0D=0A>>=C2=A0=C2=A0drivers/=
+phy/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7C=C2=A0=C2=A0=C2=A01=C2=A0+=0D=0A>>=C2=
+=A0=C2=A0drivers/phy/axis/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7C=C2=A0=C2=A0=C2=A09=C2=A0+=0D=0A>>=C2=A0=
+=C2=A0drivers/phy/axis/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=7C=C2=A0=C2=A0=C2=A02=C2=A0+=0D=0A>>=C2=A0=C2=A0dr=
+ivers/phy/axis/phy-artpec8-pcie.c=C2=A0=7C=C2=A0806=C2=A0++++++++++++++++++=
+++++++++++++++++++=0D=0A>>=C2=A0=C2=A05=C2=A0files=C2=A0changed,=C2=A0819=
 =C2=A0insertions(+)=0D=0A>>=C2=A0=C2=A0create=C2=A0mode=C2=A0100644=C2=A0dr=
-ivers/pci/controller/dwc/pcie-artpec8.c=0D=0A>>=C2=A0=0D=0A>>=C2=A0diff=C2=
-=A0--git=C2=A0a/drivers/pci/controller/dwc/Kconfig=C2=A0b/drivers/pci/contr=
-oller/dwc/Kconfig=0D=0A>>=C2=A0index=C2=A062ce3ab..4aa6da8=C2=A0100644=0D=
-=0A>>=C2=A0---=C2=A0a/drivers/pci/controller/dwc/Kconfig=0D=0A>>=C2=A0+++=
-=C2=A0b/drivers/pci/controller/dwc/Kconfig=0D=0A>>=C2=A0=40=40=C2=A0-222,6=
-=C2=A0+222,37=C2=A0=40=40=C2=A0config=C2=A0PCIE_ARTPEC6_EP=0D=0A>>=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Enables=C2=
-=A0support=C2=A0for=C2=A0the=C2=A0PCIe=C2=A0controller=C2=A0in=C2=A0the=C2=
-=A0ARTPEC-6=C2=A0SoC=C2=A0to=C2=A0work=C2=A0in=0D=0A>>=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0endpoint=C2=A0mode.=C2=
-=A0This=C2=A0uses=C2=A0the=C2=A0DesignWare=C2=A0core.=0D=0A>>=C2=A0=C2=A0=
-=0D=0A>>=C2=A0+config=C2=A0PCIE_ARTPEC8=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0bool=C2=A0=22Axis=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0c=
-ontroller=22=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+config=C2=A0PCIE_ARTPEC8_HOST=0D=
-=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool=C2=A0=22Ax=
-is=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0controller=C2=A0Host=C2=A0Mode=22=0D=0A>>=
-=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0depends=C2=A0on=C2=
-=A0ARCH_ARTPEC=0D=0A>=C2=A0=C2=A0=0D=0A>=C2=A0=7C=7C=C2=A0COMPILE_TEST=0D=
-=0A>=C2=A0and=C2=A0test=C2=A0it=0D=0A>=C2=A0=0D=0A=C2=A0=0D=0AOk,=C2=A0I=C2=
-=A0will=C2=A0add=C2=A0'COMPILE_TEST'=0D=0AAnd=C2=A0then=C2=A0test.=0D=0A=C2=
-=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0depends=
-=C2=A0on=C2=A0PCI_MSI_IRQ_DOMAIN=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0depends=C2=A0on=C2=A0PCI_ENDPOINT=0D=0A>>=C2=A0+=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select=C2=A0PCI_EPF_TEST=0D=0A>>=
-=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select=C2=A0PCIE_DW_=
-HOST=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select=
-=C2=A0PCIE_ARTPEC8=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0help=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0Say=C2=A0'Y'=C2=A0here=C2=A0to=C2=A0enable=C2=A0support=C2=A0fo=
-r=C2=A0the=C2=A0PCIe=C2=A0controller=C2=A0in=C2=A0the=0D=0A>>=C2=A0+=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ARTPEC-8=C2=A0SoC=C2=
-=A0to=C2=A0work=C2=A0in=C2=A0host=C2=A0mode.=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0This=C2=A0PCIe=C2=A0controller=
-=C2=A0is=C2=A0based=C2=A0on=C2=A0DesignWare=C2=A0Hardware=C2=A0core.=0D=0A>=
->=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0And=C2=
-=A0uses=C2=A0DesignWare=C2=A0core=C2=A0functions=C2=A0to=C2=A0implement=C2=
-=A0the=C2=A0driver.=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+config=C2=A0PCIE_ARTPEC8_E=
-P=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool=C2=A0=
-=22Axis=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0controller=C2=A0Endpoint=C2=A0Mode=22=
-=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0depends=C2=
-=A0on=C2=A0ARCH_ARTPEC=0D=0A>=C2=A0=0D=0A>=C2=A0=7C=7C=C2=A0COMPILE_TEST=0D=
-=0A>=C2=A0and=C2=A0test=C2=A0it=0D=0A>=C2=A0=0D=0A>=C2=A0=0D=0A=C2=A0=0D=0A=
-Ok,=C2=A0I=C2=A0will=C2=A0add=C2=A0'COMPILE_TEST'=0D=0AAnd=C2=A0then=C2=A0t=
-est.=0D=0A=C2=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0depends=C2=A0on=C2=A0PCI_ENDPOINT=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0depends=C2=A0on=C2=A0PCI_ENDPOINT_CONFIGFS=0D=0A=
->>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select=C2=A0PCI_EP=
-F_TEST=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select=
-=C2=A0PCIE_DW_EP=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0select=C2=A0PCIE_ARTPEC8=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0help=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0Say=C2=A0'Y'=C2=A0here=C2=A0to=C2=A0enable=C2=A0sup=
-port=C2=A0for=C2=A0the=C2=A0PCIe=C2=A0controller=C2=A0in=C2=A0the=0D=0A>>=
-=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ARTPEC-8=
-=C2=A0SoC=C2=A0to=C2=A0work=C2=A0in=C2=A0endpoint=C2=A0mode.=0D=0A>>=C2=A0+=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0This=C2=A0PCIe=
-=C2=A0controller=C2=A0is=C2=A0based=C2=A0on=C2=A0DesignWare=C2=A0Hardware=
-=C2=A0core.=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0And=C2=A0uses=C2=A0DesignWare=C2=A0core=C2=A0functions=C2=A0to=
-=C2=A0implement=C2=A0the=C2=A0driver.=0D=0A>>=C2=A0+=0D=0A>>=C2=A0=C2=A0con=
-fig=C2=A0PCIE_ROCKCHIP_DW_HOST=0D=0A>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0bool=C2=A0=22Rockchip=C2=A0DesignWare=C2=A0PCIe=C2=
-=A0controller=22=0D=0A>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0select=C2=A0PCIE_DW=0D=0A>>=C2=A0diff=C2=A0--git=C2=A0a/drivers/pc=
-i/controller/dwc/Makefile=C2=A0b/drivers/pci/controller/dwc/Makefile=0D=0A>=
->=C2=A0index=C2=A08ba7b67..b361022=C2=A0100644=0D=0A>>=C2=A0---=C2=A0a/driv=
-ers/pci/controller/dwc/Makefile=0D=0A>>=C2=A0+++=C2=A0b/drivers/pci/control=
-ler/dwc/Makefile=0D=0A>>=C2=A0=40=40=C2=A0-25,6=C2=A0+25,7=C2=A0=40=40=C2=
-=A0obj-=24(CONFIG_PCIE_TEGRA194)=C2=A0+=3D=C2=A0pcie-tegra194.o=0D=0A>>=C2=
-=A0=C2=A0obj-=24(CONFIG_PCIE_UNIPHIER)=C2=A0+=3D=C2=A0pcie-uniphier.o=0D=0A=
->>=C2=A0=C2=A0obj-=24(CONFIG_PCIE_UNIPHIER_EP)=C2=A0+=3D=C2=A0pcie-uniphier=
--ep.o=0D=0A>>=C2=A0=C2=A0obj-=24(CONFIG_PCIE_VISCONTI_HOST)=C2=A0+=3D=C2=A0=
-pcie-visconti.o=0D=0A>>=C2=A0+obj-=24(CONFIG_PCIE_ARTPEC8)=C2=A0+=3D=C2=A0p=
-cie-artpec8.o=0D=0A>=C2=A0=0D=0A>=C2=A0This=C2=A0does=C2=A0not=C2=A0look=C2=
-=A0properly=C2=A0ordered.=C2=A0Usually=C2=A0entries=C2=A0should=C2=A0not=C2=
-=A0be=C2=A0added=0D=0A>=C2=A0at=C2=A0the=C2=A0end.=0D=0A>=C2=A0=0D=0A=C2=A0=
-=0D=0AI'll=C2=A0move=C2=A0to=C2=A0the=C2=A0'CONFIG_PCIE_Axxx'.=0D=0A=C2=A0=
-=0D=0A>>=C2=A0=C2=A0=0D=0A>>=C2=A0=C2=A0=23=C2=A0The=C2=A0following=C2=A0dr=
-ivers=C2=A0are=C2=A0for=C2=A0devices=C2=A0that=C2=A0use=C2=A0the=C2=A0gener=
-ic=C2=A0ACPI=0D=0A>>=C2=A0=C2=A0=23=C2=A0pci_root.c=C2=A0driver=C2=A0but=C2=
-=A0don't=C2=A0support=C2=A0standard=C2=A0ECAM=C2=A0config=C2=A0access.=0D=
-=0A>>=C2=A0diff=C2=A0--git=C2=A0a/drivers/pci/controller/dwc/pcie-artpec8.c=
-=C2=A0b/drivers/pci/controller/dwc/pcie-artpec8.c=0D=0A>>=C2=A0new=C2=A0fil=
-e=C2=A0mode=C2=A0100644=0D=0A>>=C2=A0index=C2=A00000000..d9ae9bf=0D=0A>>=C2=
-=A0---=C2=A0/dev/null=0D=0A>>=C2=A0+++=C2=A0b/drivers/pci/controller/dwc/pc=
-ie-artpec8.c=0D=0A>>=C2=A0=40=40=C2=A0-0,0=C2=A0+1,864=C2=A0=40=40=0D=0A>>=
-=C2=A0+//=C2=A0SPDX-License-Identifier:=C2=A0GPL-2.0-only=0D=0A>>=C2=A0+/*=
-=0D=0A>>=C2=A0+=C2=A0*=C2=A0PCIe=C2=A0controller=C2=A0driver=C2=A0for=C2=A0=
-Axis=C2=A0ARTPEC-8=C2=A0SoC=0D=0A>>=C2=A0+=C2=A0*=0D=0A>>=C2=A0+=C2=A0*=C2=
-=A0Copyright=C2=A0(C)=C2=A02019=C2=A0Samsung=C2=A0Electronics=C2=A0Co.,=C2=
-=A0Ltd.=0D=0A>>=C2=A0+=C2=A0*=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0http://www.samsung.com=
-=0D=0A>>=C2=A0+=C2=A0*=0D=0A>>=C2=A0+=C2=A0*=C2=A0Author:=C2=A0Jaeho=C2=A0C=
-ho=C2=A0<jaeho79.cho=40samsung.com>=0D=0A>>=C2=A0+=C2=A0*=C2=A0This=C2=A0fi=
-le=C2=A0is=C2=A0based=C2=A0on=C2=A0driver/pci/controller/dwc/pci-exynos.c=
-=0D=0A>>=C2=A0+=C2=A0*/=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23include=C2=A0<linux=
-/clk.h>=0D=0A>>=C2=A0+=23include=C2=A0<linux/module.h>=0D=0A>>=C2=A0+=23inc=
-lude=C2=A0<linux/mfd/syscon.h>=0D=0A>>=C2=A0+=23include=C2=A0<linux/of_devi=
-ce.h>=0D=0A>>=C2=A0+=23include=C2=A0<linux/regmap.h>=0D=0A>>=C2=A0+=23inclu=
-de=C2=A0<linux/resource.h>=0D=0A>>=C2=A0+=23include=C2=A0<linux/types.h>=0D=
-=0A>>=C2=A0+=23include=C2=A0<linux/phy/phy.h>=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=
-=23include=C2=A0=22pcie-designware.h=22=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23def=
-ine=C2=A0to_artpec8_pcie(x)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-dev_get_drvdata((x)->dev)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0Gen3=C2=A0Co=
-ntrol=C2=A0Register=C2=A0*/=0D=0A>>=C2=A0+=23define=C2=A0PCIE_GEN3_RELATED_=
-OFF=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A00x890=0D=0A>>=C2=A0+/*=C2=A0Disables=C2=A0equilzati=
-on=C2=A0feature=C2=A0*/=0D=0A>>=C2=A0+=23define=C2=A0PCIE_GEN3_EQUALIZATION=
-_DISABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0(0x1=C2=A0<<=C2=A01=
-6)=0D=0A>>=C2=A0+=23define=C2=A0PCIE_GEN3_EQ_PHASE_2_3=C2=A0=C2=A0=C2=A0=C2=
+ivers/phy/axis/Kconfig=0D=0A>>=C2=A0=C2=A0create=C2=A0mode=C2=A0100644=C2=
+=A0drivers/phy/axis/Makefile=0D=0A>>=C2=A0=C2=A0create=C2=A0mode=C2=A010064=
+4=C2=A0drivers/phy/axis/phy-artpec8-pcie.c=0D=0A>>=C2=A0=0D=0A>>=C2=A0diff=
+=C2=A0--git=C2=A0a/drivers/phy/Kconfig=C2=A0b/drivers/phy/Kconfig=0D=0A>>=
+=C2=A0index=C2=A0300b0f2..92b8232=C2=A0100644=0D=0A>>=C2=A0---=C2=A0a/drive=
+rs/phy/Kconfig=0D=0A>>=C2=A0+++=C2=A0b/drivers/phy/Kconfig=0D=0A>>=C2=A0=40=
+=40=C2=A0-73,6=C2=A0+73,7=C2=A0=40=40=C2=A0config=C2=A0PHY_CAN_TRANSCEIVER=
+=0D=0A>>=C2=A0=C2=A0=0D=0A>>=C2=A0=C2=A0source=C2=A0=22drivers/phy/allwinne=
+r/Kconfig=22=0D=0A>>=C2=A0=C2=A0source=C2=A0=22drivers/phy/amlogic/Kconfig=
+=22=0D=0A>>=C2=A0+source=C2=A0=22drivers/phy/axis/Kconfig=22=0D=0A>>=C2=A0=
+=C2=A0source=C2=A0=22drivers/phy/broadcom/Kconfig=22=0D=0A>>=C2=A0=C2=A0sou=
+rce=C2=A0=22drivers/phy/cadence/Kconfig=22=0D=0A>>=C2=A0=C2=A0source=C2=A0=
+=22drivers/phy/freescale/Kconfig=22=0D=0A>>=C2=A0diff=C2=A0--git=C2=A0a/dri=
+vers/phy/Makefile=C2=A0b/drivers/phy/Makefile=0D=0A>>=C2=A0index=C2=A001e9e=
+ff..808c055e=C2=A0100644=0D=0A>>=C2=A0---=C2=A0a/drivers/phy/Makefile=0D=0A=
+>>=C2=A0+++=C2=A0b/drivers/phy/Makefile=0D=0A>>=C2=A0=40=40=C2=A0-12,6=C2=
+=A0+12,7=C2=A0=40=40=C2=A0obj-=24(CONFIG_PHY_PISTACHIO_USB)=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-(0x1=C2=A0<<=C2=A09)=0D=0A>>=C2=A0+=23define=C2=A0PCIE_GEN3_RXEQ_PH01_EN=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0(0x1=C2=A0<<=C2=A012)=0D=0A>>=C2=A0+=23define=C2=A0PCIE_G=
-EN3_RXEQ_RGRDLESS_RXTS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0(0x1=
-=C2=A0<<=C2=A013)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23define=C2=A0FAST_LINK_MOD=
-E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0(7)=
-=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0PCIe=C2=A0ELBI=C2=A0registers=C2=A0*/=
-=0D=0A>>=C2=A0+=23define=C2=A0PCIE_IRQ0_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0+=3D=C2=A0phy-pistachio-usb.o=0D=0A>>=C2=A0=C2=A0obj-=24(CONFIG_USB_L=
+GM_PHY)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0+=3D=C2=A0phy-lgm-usb.o=0D=0A>>=C2=A0=C2=A0ob=
+j-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x000=0D=0A>>=C2=A0+=23define=C2=A0P=
-CIE_IRQ1_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A00x004=0D=0A>>=C2=A0+=23define=C2=A0PCIE_IRQ2_STS=C2=A0=C2=A0=C2=A0=C2=
+=C2=A0=C2=A0=C2=A0+=3D=C2=A0allwinner/=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=5C=0D=0A>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x008=0D=0A>>=C2=A0+=23defi=
-ne=C2=A0PCIE_IRQ5_STS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A00x00C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_IRQ0_EN=C2=A0=C2=A0=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0amlogi=
+c/=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=5C=0D=0A>>=C2=A0+=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x010=0D=0A>>=C2=
-=A0+=23define=C2=A0PCIE_IRQ1_EN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A00x014=0D=0A>>=C2=A0+=23define=C2=A0PCIE_IRQ2_EN=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0axis/=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=5C=0D=0A>>=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x018=
-=0D=0A>>=C2=A0+=23define=C2=A0PCIE_IRQ5_EN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x01C=0D=0A>>=C2=A0+=23define=C2=A0IRQ_=
-MSI_ENABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0broadcom/=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=5C=0D=0A>>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0BIT(20)=0D=0A>>=C2=A0+=23define=C2=A0PCIE_APP_LTSSM_ENABLE=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A00x054=0D=0A>>=C2=A0+=23define=C2=A0PCIE_ELBI_LTSSM_ENABLE=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A00x1=0D=0A>>=C2=A0+=23define=C2=A0PCIE_ELBI_CXPL_DEBUG_00_31=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x2C8=0D=0A>>=C2=A0+=23defi=
-ne=C2=A0PCIE_ELBI_CXPL_DEBUG_32_63=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A00x2CC=0D=0A>>=C2=A0+=23define=C2=A0PCIE_ELBI_SMLH_LINK_UP=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0BIT(4)=0D=0A>>=C2=A0+=23define=C2=A0PCIE_ARTPEC8_DEVICE_TYPE=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x080=0D=0A>>=C2=A0+=23define=
-=C2=A0DEVICE_TYPE_EP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+cadence/=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=5C=0D=0A>>=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A00x0=0D=0A>>=C2=A0+=23define=C2=A0DEVICE_TYPE_LEG_EP=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A00x1=0D=0A>>=C2=A0+=23define=C2=A0DEVICE_TYPE_RC=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x4=0D=0A>>=C2=A0+=23=
-define=C2=A0PCIE_ELBI_SLV_AWMISC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x828=0D=0A>>=C2=A0+=
-=23define=C2=A0PCIE_ELBI_SLV_ARMISC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x820=0D=0A>>=C2=
-=A0+=23define=C2=A0PCIE_ELBI_SLV_DBI_ENABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0BIT(21)=0D=0A>>=C2=A0+=23define=C2=A0LTSSM_STATE_MASK=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A00x3f=0D=0A>>=C2=A0+=23define=C2=A0LTSSM_STATE_L0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x11=0D=0A>>=C2=
-=A0+=0D=0A>>=C2=A0+/*=C2=A0FSYS=C2=A0SYSREG=C2=A0Offsets=C2=A0*/=0D=0A>>=C2=
-=A0+=23define=C2=A0FSYS_PCIE_CON=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A00x424=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PERSTN=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0freescale/=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=5C=0D=0A>>=C2=A0diff=C2=A0--git=C2=A0a/drivers/phy=
+/axis/Kconfig=C2=A0b/drivers/phy/axis/Kconfig=0D=0A>>=C2=A0new=C2=A0file=C2=
+=A0mode=C2=A0100644=0D=0A>>=C2=A0index=C2=A00000000..7198b93=0D=0A>>=C2=A0-=
+--=C2=A0/dev/null=0D=0A>>=C2=A0+++=C2=A0b/drivers/phy/axis/Kconfig=0D=0A>>=
+=C2=A0=40=40=C2=A0-0,0=C2=A0+1,9=C2=A0=40=40=0D=0A>>=C2=A0+config=C2=A0PHY_=
+ARTPEC8_PCIE=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+bool=C2=A0=22ARTPEC-8=C2=A0PCIe=C2=A0PHY=C2=A0driver=22=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0depends=C2=A0on=C2=A0OF=C2=A0&=
+&=C2=A0(ARCH_ARTPEC8=C2=A0=7C=7C=C2=A0COMPILE_TEST)=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select=C2=A0GENERIC_PHY=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0help=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Enable=C2=A0PCIe=
+=C2=A0PHY=C2=A0support=C2=A0for=C2=A0ARTPEC-8=C2=A0SoC.=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0This=C2=A0driver=
+=C2=A0provides=C2=A0PHY=C2=A0interface=C2=A0for=C2=A0ARTPEC-8=C2=A0SoC=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PCI=
+e=C2=A0controller.=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0This=C2=A0is=C2=A0based=C2=A0on=C2=A0Samsung=C2=A0PCIe=C2=
+=A0PHY=C2=A0IP.=0D=0A>>=C2=A0diff=C2=A0--git=C2=A0a/drivers/phy/axis/Makefi=
+le=C2=A0b/drivers/phy/axis/Makefile=0D=0A>>=C2=A0new=C2=A0file=C2=A0mode=C2=
+=A0100644=0D=0A>>=C2=A0index=C2=A00000000..45d853c=0D=0A>>=C2=A0---=C2=A0/d=
+ev/null=0D=0A>>=C2=A0+++=C2=A0b/drivers/phy/axis/Makefile=0D=0A>>=C2=A0=40=
+=40=C2=A0-0,0=C2=A0+1,2=C2=A0=40=40=0D=0A>>=C2=A0+=23=C2=A0SPDX-License-Ide=
+ntifier:=C2=A0GPL-2.0=0D=0A>>=C2=A0+obj-=24(CONFIG_PHY_ARTPEC8_PCIE)=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(5)=
-=0D=0A>>=C2=A0+=23define=C2=A0FSYS_PCIE_DBI_ADDR_CON=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0+=3D=C2=A0phy-artpec8-pcie.o=0D=0A>>=C2=A0diff=C2=A0--git=C2=
+=A0a/drivers/phy/axis/phy-artpec8-pcie.c=C2=A0b/drivers/phy/axis/phy-artpec=
+8-pcie.c=0D=0A>>=C2=A0new=C2=A0file=C2=A0mode=C2=A0100644=0D=0A>>=C2=A0inde=
+x=C2=A00000000..2742301=0D=0A>>=C2=A0---=C2=A0/dev/null=0D=0A>>=C2=A0+++=C2=
+=A0b/drivers/phy/axis/phy-artpec8-pcie.c=0D=0A>>=C2=A0=40=40=C2=A0-0,0=C2=
+=A0+1,806=C2=A0=40=40=0D=0A>>=C2=A0+//=C2=A0SPDX-License-Identifier:=C2=A0G=
+PL-2.0-only=0D=0A>>=C2=A0+/*=0D=0A>>=C2=A0+=C2=A0*=C2=A0PHY=C2=A0provider=
+=C2=A0for=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0controller=0D=0A>>=C2=A0+=C2=A0*=0D=
+=0A>>=C2=A0+=C2=A0*=C2=A0Copyright=C2=A0(C)=C2=A02019=C2=A0Samsung=C2=A0Ele=
+ctronics=C2=A0Co.,=C2=A0Ltd.=0D=0A>>=C2=A0+=C2=A0*=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0htt=
+p://www.samsung.com=0D=0A>>=C2=A0+=C2=A0*=0D=0A>>=C2=A0+=C2=A0*=C2=A0Author=
+:=C2=A0Jaeho=C2=A0Cho=C2=A0<jaeho79.cho=40samsung.com>=0D=0A>>=C2=A0+=C2=A0=
+*/=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23include=C2=A0<linux/clk.h>=0D=0A>>=C2=A0=
++=23include=C2=A0<linux/io.h>=0D=0A>>=C2=A0+=23include=C2=A0<linux/init.h>=
+=0D=0A>>=C2=A0+=23include=C2=A0<linux/mfd/syscon.h>=0D=0A>>=C2=A0+=23includ=
+e=C2=A0<linux/module.h>=0D=0A>>=C2=A0+=23include=C2=A0<linux/of.h>=0D=0A>>=
+=C2=A0+=23include=C2=A0<linux/of_address.h>=0D=0A>>=C2=A0+=23include=C2=A0<=
+linux/of_platform.h>=0D=0A>>=C2=A0+=23include=C2=A0<linux/platform_device.h=
+>=0D=0A>>=C2=A0+=23include=C2=A0<linux/phy/phy.h>=0D=0A>>=C2=A0+=23include=
+=C2=A0<linux/regmap.h>=0D=0A>>=C2=A0+=23include=C2=A0<linux/debugfs.h>=0D=
+=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0PHY=C2=A0registe=
+rs=C2=A0*/=0D=0A>>=C2=A0+/*=C2=A0CMN=C2=A0registers=C2=A0*/=0D=0A>>=C2=A0+=
+=23define=C2=A0PCIE_PHY_CMN_REG004=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x10=0D=0A>>=C2=A0=
++=23define=C2=A0PCIE_PHY_CMN_REG00B=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x2C=0D=0A>>=C2=A0=
++=23define=C2=A0PCIE_PHY_CMN_REG016=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x58=0D=0A>>=C2=A0=
++=23define=C2=A0PCIE_PHY_CMN_REG01C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x70=0D=0A>>=C2=A0=
++=23define=C2=A0PCIE_PHY_CMN_REG021=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x84=0D=0A>>=C2=A0=
++=23define=C2=A0PCIE_PHY_CMN_REG024=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x90=0D=0A>>=C2=A0=
++=23define=C2=A0PCIE_PHY_CMN_REG025=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x94=0D=0A>>=C2=A0=
++=23define=C2=A0PCIE_PHY_CMN_REG0E6=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x398=0D=0A>>=C2=
+=A0+=23define=C2=A0PCIE_PHY_CMN_REG0E7=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x39C=0D=0A>>=
+=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0E8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3A0=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0E9=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3A4=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0EA=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3A8=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0EB=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3AC=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0EC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3B0=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0EE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3B8=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0EF=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3BC=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0F1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3C4=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0F3=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3CC=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0F4=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3D0=0D=0A>=
+>=C2=A0+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG101=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A00x404=0D=0A>>=C2=A0+=23define=C2=A0OV_I_CMN_RSTN=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(4)=0D=0A>>=C2=A0+=23define=
+=C2=A0OV_I_INIT_RSTN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0BIT(6)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_=
+CMN_REG131=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x4C4=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_CMN_REG17B=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x5EC=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_CMN_REG17D=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x5F4=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_CMN_REG190=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x640=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_CMN_REG191=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x644=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_CMN_REG192=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x648=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_CMN_REG1C7=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x71C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_CMN_REG1DF=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x77C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_CMN_REG1E0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x780=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23defi=
+ne=C2=A0PCIE_PHY_CMN_REG0B1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x2C4=0D=0A>>=C2=A0+=23defi=
+ne=C2=A0ANA_ROPLL_REF_DIG_CLK_SEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0BIT(2)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0External=C2=A0clock=C2=A0=
+*/=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG14D=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x5=
+34=0D=0A>>=C2=A0+=23define=C2=A0PCIE_AUX_RX_MODE_EXTEND=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0BIT(7)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0D9=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A00x364=0D=0A>>=C2=A0+=23define=C2=A0ANA_AUX_EXT_REF_CLK=
+_SEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(4)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23define=C2=
+=A0PCIE_PHY_CMN_REG10F=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x43C=0D=0A>>=C2=A0+=23define=
+=C2=A0AUX_PLL_EN_EXTEND=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(4)=0D=0A>>=C2=A0+=0D=0A>>=
+=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG11E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x478=0D=0A>=
+>=C2=A0+=23define=C2=A0AUX2_PLL_EN_EXTEND=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(3)=0D=0A=
+>>=C2=A0+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_CMN_REG0D4=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-0x428=0D=0A>>=C2=A0+=23define=C2=A0FSYS_PCIE_DBI_ADDR_OVR_CDM=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x00=0D=0A>>=C2=A0+=23define=C2=A0FSYS_=
-PCIE_DBI_ADDR_OVR_SHADOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x1=
-2=0D=0A>>=C2=A0+=23define=C2=A0FSYS_PCIE_DBI_ADDR_OVR_ATU=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x36=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0PMU=
-=C2=A0SYSCON=C2=A0Offsets=C2=A0*/=0D=0A>>=C2=A0+=23define=C2=A0PMU_SYSCON_P=
-CIE_ISOLATION=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3200=0D=0A>>=
-=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0BUS=C2=A0P/S=C2=A0SYSCON=C2=A0Offsets=C2=A0*/=
-=0D=0A>>=C2=A0+=23define=C2=A0BUS_SYSCON_BUS_PATH_ENABLE=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x0=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+int=C2=A0art=
-pec8_pcie_dbi_addr_con=5B=5D=C2=A0=3D=C2=A0=7B=0D=0A>=C2=A0=0D=0A>=C2=A01.=
-=C2=A0I=C2=A0think=C2=A0I=C2=A0pointed=C2=A0before=C2=A0the=C2=A0need=C2=A0=
-to=C2=A0constify=C2=A0everything=C2=A0which=C2=A0is=C2=A0const.=0D=0A>=C2=
-=A02.=C2=A0Missing=C2=A0static=0D=0A>=C2=A03.=C2=A0definitions=C2=A0of=C2=
-=A0static=C2=A0variables=C2=A0go=C2=A0after=C2=A0type=C2=A0declarations.=0D=
-=0A>=C2=A0=0D=0A=C2=A0=0D=0AOk,=C2=A0i=C2=A0will=C2=A0modify=C2=A0to=C2=A0s=
-tatic=C2=A0const=C2=A0type.=0D=0A=C2=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0FSYS_PCIE_DBI_ADDR_CON=0D=0A>>=C2=A0+=7D;=0D=0A>=
->=C2=A0+=0D=0A>>=C2=A0+struct=C2=A0artpec8_pcie=C2=A0=7B=0D=0A>>=C2=A0+=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=A0dw_pcie=C2=A0=C2=
+=C2=A00x350=0D=0A>>=C2=A0+=23define=C2=A0OV_S_ANA_AUX_EN=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(3)=0D=0A>>=C2=A0+=23=
+define=C2=A0OV_I_ANA_AUX_EN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0BIT(2)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0LANE=C2=A0=
+registers=C2=A0*/=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG22D=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A00x8B4=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG23E=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*pci;=0D=0A>>=
-=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=A0clk=C2=
+=C2=A0=C2=A0=C2=A00x8F8=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2A5=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A00xA94=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3E=
+3=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A00xF8C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_RE=
+G3ED=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A00xFB4=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV=
+_REG20B=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x82C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_T=
+RSV_REG20C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x830=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_TRSV_REG234=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x8D0=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_TRSV_REG235=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x8D4=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_TRSV_REG237=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x8DC=0D=0A>>=C2=A0+=23define=C2=
+=A0PCIE_PHY_TRSV_REG239=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x8E4=0D=0A>>=C2=A0+=23define=
+=C2=A0PCIE_PHY_TRSV_REG23A=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x8E8=0D=0A>>=C2=A0+=23defi=
+ne=C2=A0PCIE_PHY_TRSV_REG23B=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x8EC=0D=0A>>=C2=A0+=23d=
+efine=C2=A0PCIE_PHY_TRSV_REG24B=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x92C=0D=0A>>=C2=A0+=
+=23define=C2=A0PCIE_PHY_TRSV_REG25D=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x974=0D=0A>>=C2=
+=A0+=23define=C2=A0PCIE_PHY_TRSV_REG262=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x988=0D=0A>>=
+=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG271=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x9C4=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG272=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x9C8=0D=
+=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG27C=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x9F0=
+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG27D=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x9=
+F4=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG27E=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*pipe_clk=
+0x9F8=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG284=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A00xA10=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG289=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A00xA24=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG28A=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A00xA28=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG28B=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A00xA2C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG28C=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A00xA30=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG28E=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A00xA38=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG28F=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A00xA3C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG29=
+0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A00xA40=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_RE=
+G291=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A00xA44=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV=
+_REG292=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA48=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_T=
+RSV_REG294=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA50=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_TRSV_REG295=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA54=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_TRSV_REG296=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA58=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_TRSV_REG297=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA5C=0D=0A>>=C2=A0+=23define=C2=
+=A0PCIE_PHY_TRSV_REG298=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA60=0D=0A>>=C2=A0+=23define=
+=C2=A0PCIE_PHY_TRSV_REG29B=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA6C=0D=0A>>=C2=A0+=23defi=
+ne=C2=A0PCIE_PHY_TRSV_REG29C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA70=0D=0A>>=C2=A0+=23d=
+efine=C2=A0PCIE_PHY_TRSV_REG29D=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA74=0D=0A>>=C2=A0+=
+=23define=C2=A0PCIE_PHY_TRSV_REG29E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xA78=0D=0A>>=C2=
+=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2AA=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xAA8=0D=0A>>=
+=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2AE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xAB8=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2C2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xB08=0D=
+=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2C6=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xB18=
+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2C7=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xB=
+1C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2CB=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+0xB2C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2CC=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A00xB30=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2CD=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A00xB34=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2CE=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A00xB38=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2D0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A00xB40=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2CF=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A00xB3C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2E0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A00xB80=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2E9=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A00xBA4=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG2E=
+A=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A00xBA8=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_RE=
+G2EB=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A00xBAC=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV=
+_REG315=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xC54=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_T=
+RSV_REG317=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xC5C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PH=
+Y_TRSV_REG319=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xC64=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_TRSV_REG364=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xD90=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_TRSV_REG36C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xDB0=0D=0A>>=C2=A0+=23define=C2=
+=A0PCIE_PHY_TRSV_REG36D=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xDB4=0D=0A>>=C2=A0+=23define=
+=C2=A0PCIE_PHY_TRSV_REG37E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xDF8=0D=0A>>=C2=A0+=23defi=
+ne=C2=A0PCIE_PHY_TRSV_REG37F=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xDFC=0D=0A>>=C2=A0+=23d=
+efine=C2=A0PCIE_PHY_TRSV_REG38F=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xE3C=0D=0A>>=C2=A0+=
+=23define=C2=A0PCIE_PHY_TRSV_REG391=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xE44=0D=0A>>=C2=
+=A0+=23define=C2=A0PCIE_PHY_TRSV_REG39C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xE70=0D=0A>>=
+=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3A8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xEA0=0D=0A>=
+>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3E0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xF80=0D=
+=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3E1=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xF84=
+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3E7=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xF=
+9C=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3E9=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+0xFA4=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3EA=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A00xFA8=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3EE=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A00xFB8=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3EF=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A00xFBC=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV_REG3F0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A00xFC0=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_TRSV=
+_REG2C0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xB00=0D=0A>>=C2=A0+=23define=C2=A0LN_EQ_CTRL=
+_RX_DATA_HOLD=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(5)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=
+=C2=A0RX=C2=A0Preset=C2=A0registers=C2=A0*/=0D=0A>>=C2=A0+=23define=C2=A0PC=
+IE_PHY_CMN_REG17E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x5F8=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_CMN_REG180=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x600=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_CMN_REG181=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x604=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_CMN_REG182=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x608=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_CMN_REG183=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x60C=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_CMN_REG184=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x610=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_CMN_REG185=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x614=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_CMN_REG186=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x618=0D=0A>>=C2=A0+=23define=C2=A0P=
+CIE_PHY_CMN_REG187=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x61C=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=
+=0D=0A>>=C2=A0+/*=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0PCS=C2=A0registers=C2=A0*/=
+=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PCS_OUT_VEC_4=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x154=
+=0D=0A>>=C2=A0+=23define=C2=A0B1_DYNAMIC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(3)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=
+=C2=A0ARTPEC-8=C2=A0SYS=C2=A0REG=C2=A0registers=C2=A0*/=0D=0A>>=C2=A0+=23de=
+fine=C2=A0FSYS_PCIE_CON=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A00x424=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_LCPLL_REFCLK_=
+SEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x3=0D=0A>>=C2=A0+=23def=
+ine=C2=A0PCIE_PHY_ROPLL_REFCLK_SEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0(0x3UL=C2=A0<<=C2=A02)=0D=0A>>=C2=A0+=23define=C2=A0ROPLL_REFCLK_N=
+OT_AVAILABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0(0x2UL=C2=A0<<=
+=C2=A02)=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_LN0_REFCLK_PAD_EN=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(10)=0D=0A>>=C2=A0+=23define=C2=
+=A0PCIE_PHY_LN1_REFCLK_PAD_EN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0BIT(11)=0D=0A>>=C2=A0+=23define=C2=A0PCIE_PHY_PWR_OFF=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0BIT(7)=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0ARTPEC-8=C2=A0Sub=C2=A0Contr=
+oller=C2=A0registers=C2=A0*/=0D=0A>>=C2=A0+=23define=C2=A0SFR_INIT_RSTN=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x1404=0D=
+=0A>>=C2=A0+=23define=C2=A0SFR_CMN_RSTN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x1408=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=23def=
+ine=C2=A0PCIE_PHY_LN0_REG_START=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x800=0D=0A>>=C2=A0+=
+=23define=C2=A0PCIE_PHY_LN0_REG_END=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xFCC=0D=0A>>=C2=
+=A0+=23define=C2=A0OFFSET_PER_LANE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x800=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+enum=C2=A0=
+artpec8_pcie_phy_num_lanes=C2=A0=7B=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0LANE0=C2=A0=3D=C2=A00,=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0LANE1,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0LANE_MAX=0D=0A>>=C2=A0+=7D;=0D=0A>>=C2=A0+=0D=
+=0A>>=C2=A0+struct=C2=A0artpec8_pcie_phy_data=C2=A0=7B=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0const=C2=A0struct=C2=A0phy_ops=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*ops;=0D=0A>=C2=A0=0D=0A>=C2=
+=A0No=C2=A0need=C2=A0for=C2=A0indentation=C2=A0before=C2=A0=22*ops=22.=C2=
+=A0Other=C2=A0places=C2=A0do=C2=A0not=C2=A0use=C2=A0it.=0D=0A>=C2=A0=0D=0A=
+=C2=A0=0D=0AOk.=C2=A0remove=C2=A0unnecessary=C2=A0indentation.=0D=0A=C2=A0=
+=0D=0A>>=C2=A0+=7D;=0D=0A>>=C2=A0+=0D=0A>=C2=A0+struct=C2=A0artpec8_pcie_ph=
+y=C2=A0=7B=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0co=
+nst=C2=A0struct=C2=A0artpec8_pcie_phy_data=C2=A0*drv_data;=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0void=C2=A0__iomem=C2=A0*phy=
+_base;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0void=
+=C2=A0__iomem=C2=A0*pcs_base;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0void=C2=A0__iomem=C2=A0*elbi_base;=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=A0clk=C2=A0*soc_pll_clk=
 ;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=
-=A0clk=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0regmap=C2=A0*sysreg;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0u32=C2=A0lcpll_ref_clk;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0const=C2=A0char=C2=A0*mode;=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32=C2=A0num_lanes;=0D=0A>>=C2=A0+=
+=7D;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+enum=C2=A0artpec8_pcie_ref_clk=C2=A0=7B=
+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0REF_CLK_FROM=
+_XO=C2=A0=3D=C2=A00,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0REF_CLK_FROM_IO,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0REF_CLK_RESERVED,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0REF_CLK_FROM_SOC_PLL,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0REF_CLK_MAX=0D=0A>>=C2=A0+=7D;=0D=0A>>=C2=A0+=
+=0D=0A>>=C2=A0+struct=C2=A0artpec8_pcie_phy_tune_reg=C2=A0=7B=0D=0A>>=C2=A0=
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32=C2=A0offset;=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32=C2=A0val;=0D=0A>=
+>=C2=A0+=7D;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0ARTPEC-8=C2=A0PCIe=C2=A0G=
+en4=C2=A0x2=C2=A0PHY=C2=A0CMN=C2=A0register=C2=A0settings=C2=A0*/=0D=0A>>=
+=C2=A0+struct=C2=A0artpec8_pcie_phy_tune_reg=C2=A0cmn_regs=5B=5D=C2=A0=3D=
+=C2=A0=7B=0D=0A>=C2=A0=0D=0A>=C2=A0static=C2=A0const=0D=0A>=C2=A0=0D=0A=C2=
+=A0=0D=0AOk.=0D=0A=C2=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG004,=C2=A00x65=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG00B,=C2=A00x18=7D=
+,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY=
+_CMN_REG016,=C2=A00x0E=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG01C,=C2=A00x4F=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG021,=C2=A00x01=
+=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_=
+PHY_CMN_REG024,=C2=A00x58=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG025,=C2=A00x98=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG0E6,=C2=A00=
+x00=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPC=
+IE_PHY_CMN_REG0E7,=C2=A00x00=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG0E8,=C2=A00x3F=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG0E9,=C2=
+=A00x3F=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG0EA,=C2=A00xFF=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG0EB,=C2=A00xFF=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG0EC,=
+=C2=A00x42=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=7BPCIE_PHY_CMN_REG0EE,=C2=A00x3F=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG0EF,=C2=A00x7F=7D,=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG0=
+F1,=C2=A00x02=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=7BPCIE_PHY_CMN_REG0F3,=C2=A00xFF=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG0F4,=C2=A00xFF=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN=
+_REG131,=C2=A00x01=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17B,=C2=A00xC0=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17D,=C2=A00xAF=7D=
+,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY=
+_CMN_REG190,=C2=A00x27=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG191,=C2=A00x0F=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG192,=C2=A00x3F=
+=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_=
+PHY_CMN_REG1C7,=C2=A00x05=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG1DF,=C2=A00x28=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG1E0,=C2=A00=
+x28=7D,=0D=0A>>=C2=A0+=7D;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+/*=C2=A0ARTPEC-8=C2=
+=A0PCIe=C2=A0Gen4=C2=A0x2=C2=A0PHY=C2=A0lane=C2=A0register=C2=A0settings=C2=
+=A0*/=0D=0A>>=C2=A0+struct=C2=A0artpec8_pcie_phy_tune_reg=C2=A0lane_regs=5B=
+=5D=C2=A0=3D=C2=A0=7B=0D=0A>=C2=A0=0D=0A>=C2=A0Same.=0D=0A>=C2=A0=0D=0A=C2=
+=A0=0D=0AOk.=0D=0A=C2=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG22D,=C2=A00x00=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG23E,=C2=A00x00=
+=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_=
+PHY_TRSV_REG2A5,=C2=A00x73=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG3E3,=C2=A00x7B=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG3ED,=C2=A0=
+0x4B=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BP=
+CIE_PHY_TRSV_REG20B,=C2=A00x02=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG20C,=C2=A00xEA=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG234=
+,=C2=A00x7A=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=7BPCIE_PHY_TRSV_REG235,=C2=A00x1C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG237,=C2=A00x10=7D,=0D=0A>=
+>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_RE=
+G239,=C2=A00x68=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=7BPCIE_PHY_TRSV_REG23A,=C2=A00xC0=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG23B,=C2=A00x0B=7D,=
+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_=
+TRSV_REG24B,=C2=A00x00=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG25D,=C2=A00x07=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG262,=C2=A00x0=
+7=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE=
+_PHY_TRSV_REG271,=C2=A00x23=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG272,=C2=A00x5E=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG27C,=C2=
+=A00x8C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_TRSV_REG27D,=C2=A00x5B=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG27E,=C2=A00x2C=7D,=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG=
+284,=C2=A00x33=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=7BPCIE_PHY_TRSV_REG289,=C2=A00xD4=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG28A,=C2=A00xCC=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRS=
+V_REG28B,=C2=A00xD9=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG28C,=C2=A00xDC=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG28E,=C2=A00xC6=
+=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_=
+PHY_TRSV_REG28F,=C2=A00x90=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG290,=C2=A00x4D=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG291,=C2=A0=
+0x19=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BP=
+CIE_PHY_TRSV_REG292,=C2=A00x1C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG294,=C2=A00x05=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG295=
+,=C2=A00x10=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=7BPCIE_PHY_TRSV_REG296,=C2=A00x0C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG297,=C2=A00x19=7D,=0D=0A>=
+>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_RE=
+G298,=C2=A00x04=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=7BPCIE_PHY_TRSV_REG29B,=C2=A00x03=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG29C,=C2=A00x1B=7D,=
+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_=
+TRSV_REG29D,=C2=A00x1B=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG29E,=C2=A00x1F=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2AA,=C2=A00x0=
+0=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE=
+_PHY_TRSV_REG2AE,=C2=A00x1F=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2C2,=C2=A00x25=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2C6,=C2=
+=A00x10=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_TRSV_REG2C7,=C2=A00x06=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2CB,=C2=A00x10=7D,=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG=
+2CC,=C2=A00x06=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=7BPCIE_PHY_TRSV_REG2CD,=C2=A00x20=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2CE,=C2=A00x27=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRS=
+V_REG2D0,=C2=A00x10=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2CF,=C2=A00x0A=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2E0,=C2=A00x01=
+=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_=
+PHY_TRSV_REG2E9,=C2=A00x11=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2EA,=C2=A00x05=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG2EB,=C2=A0=
+0x4C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BP=
+CIE_PHY_TRSV_REG315,=C2=A00x18=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG317,=C2=A00x86=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG319=
+,=C2=A00x8E=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=7BPCIE_PHY_TRSV_REG364,=C2=A00x00=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG36C,=C2=A00x03=7D,=0D=0A>=
+>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_RE=
+G36D,=C2=A00x04=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=7BPCIE_PHY_TRSV_REG37E,=C2=A00x06=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG37F,=C2=A00x04=7D,=
+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_=
+TRSV_REG38F,=C2=A00x40=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG391,=C2=A00x8B=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG39C,=C2=A00xF=
+F=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE=
+_PHY_TRSV_REG3A8,=C2=A00x02=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG3E0,=C2=A00x93=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG3E1,=C2=
+=A00x79=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_TRSV_REG3E7,=C2=A00xF5=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG3E9,=C2=A00x75=7D,=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG=
+3EA,=C2=A00x0D=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=7BPCIE_PHY_TRSV_REG3EE,=C2=A00xE2=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRSV_REG3EF,=C2=A00x6F=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_TRS=
+V_REG3F0,=C2=A00x3D=7D=0D=0A>>=C2=A0+=7D;=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG17E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x5F8=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG180=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x600=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG181=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x604=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG182=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x608=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG183=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x60C=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG184=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x610=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG185=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x614=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG186=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x618=0D=0A>>=C2=A0+=23define=C2=A0PCIE=
+_PHY_CMN_REG187=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x61C=0D=0A>=C2=A0=0D=0A>=C2=A0Defines=
+=C2=A0go=C2=A0to=C2=A0the=C2=A0top,=C2=A0before=C2=A0any=C2=A0type=C2=A0dec=
+larations.=0D=0A>=C2=A0=0D=0A=C2=A0=0D=0AOk.=0D=0A=C2=A0=0D=0A>>=C2=A0+=0D=
+=0A>>=C2=A0+struct=C2=A0artpec8_pcie_phy_tune_reg=C2=A0rx_preset_regs=5B=5D=
+=C2=A0=3D=C2=A0=7B=0D=0A>=C2=A0=0D=0A>=C2=A0Same.=0D=0A>=C2=A0=0D=0A=C2=A0=
+=0D=0AOk,=C2=A0static=C2=A0const.=0D=0A=C2=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A00=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x00=7D=
+,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY=
+_CMN_REG180,=C2=A00x23=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00x44=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG182,=C2=A00x61=
+=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_=
+PHY_CMN_REG183,=C2=A00x55=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG184,=C2=A00x14=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG185,=C2=A00=
+x23=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPC=
+IE_PHY_CMN_REG186,=C2=A00x1A=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG187,=C2=A00x04=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=
+=A00x04=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG17E,=C2=A00x00=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A01=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x08=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN=
+_REG181,=C2=A00x42=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x0C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x08=7D=
+,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A02=
+=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BP=
+CIE_PHY_CMN_REG17E,=C2=A00x10=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00x40=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=
+=A00x14=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG17E,=C2=A00x10=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A03=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x18=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN=
+_REG181,=C2=A00x45=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x1C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x18=7D=
+,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A04=
+=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BP=
+CIE_PHY_CMN_REG17E,=C2=A00x20=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00x46=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=
+=A00x24=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG17E,=C2=A00x20=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A05=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x28=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN=
+_REG181,=C2=A00x48=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x2C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x28=7D=
+,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A06=
+=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BP=
+CIE_PHY_CMN_REG17E,=C2=A00x30=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00x4A=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=
+=A00x34=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG17E,=C2=A00x30=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A07=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x38=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN=
+_REG181,=C2=A00x4C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x3C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x38=7D=
+,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A08=
+=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BP=
+CIE_PHY_CMN_REG17E,=C2=A00x40=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG180,=C2=A00x20=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=
+=A00x20=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG182,=C2=A00x01=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x44=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=
+=C2=A00x40=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0/*=C2=A09=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x48=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG180,=C2=A00x20=7D,=
+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_=
+CMN_REG181,=C2=A00x21=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG182,=C2=A00x01=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x4C=
+=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_=
+PHY_CMN_REG17E,=C2=A00x48=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0/*=C2=A010=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x50=7D,=0D=0A>>=C2=A0=
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG180,=C2=
+=A00x24=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG181,=C2=A00x80=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG182,=C2=A00x41=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG183,=
+=C2=A00xAF=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=7BPCIE_PHY_CMN_REG184,=C2=A00x26=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG185,=C2=A00x34=7D,=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG1=
+86,=C2=A00x24=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=7BPCIE_PHY_CMN_REG187,=C2=A00x06=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x54=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN=
+_REG17E,=C2=A00x50=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0/*=C2=A011=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x58=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00=
+x81=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPC=
+IE_PHY_CMN_REG17E,=C2=A00x5C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x58=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A012=C2=A0*/=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG1=
+7E,=C2=A00x60=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00x82=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x64=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN=
+_REG17E,=C2=A00x60=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0/*=C2=A013=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x68=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00=
+x83=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPC=
+IE_PHY_CMN_REG17E,=C2=A00x6C=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x68=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A014=C2=A0*/=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG1=
+7E,=C2=A00x70=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00x84=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x74=7D,=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN=
+_REG17E,=C2=A00x70=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0/*=C2=A015=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x78=7D,=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG180,=C2=A00=
+x24=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPC=
+IE_PHY_CMN_REG181,=C2=A00x85=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG182,=C2=A00x80=7D,=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG183,=C2=
+=A00x7F=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG184,=C2=A00x2D=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG185,=C2=A00x34=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG186,=
+=C2=A00x24=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=7BPCIE_PHY_CMN_REG187,=C2=A00x05=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x7C=7D,=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG1=
+7E,=C2=A00x78=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0/*=C2=A016=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x80=7D,=0D=0A>>=C2=A0+=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00x86=7D=
+,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY=
+_CMN_REG17E,=C2=A00x84=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x80=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A017=C2=A0*/=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=
+=A00x88=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG181,=C2=A00x87=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x8C=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=
+=C2=A00x88=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0/*=C2=A018=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x90=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG181,=C2=A00x88=7D,=
+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_=
+CMN_REG17E,=C2=A00x94=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x90=7D,=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A019=C2=A0*/=0D=0A>>=C2=A0+=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=
+=A00x98=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=7BPCIE_PHY_CMN_REG181,=C2=A00x89=7D,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=C2=A00x9C=7D,=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7BPCIE_PHY_CMN_REG17E,=
+=C2=A00x98=7D,=0D=0A>>=C2=A0+=7D;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=0D=0A>>=C2=
+=A0+static=C2=A0void=C2=A0artpec8_pcie_phy_reg_writel(void=C2=A0__iomem=C2=
+=A0*base,=C2=A0u32=C2=A0val,=C2=A0u32=C2=A0reg)=0D=0A>>=C2=A0+=7B=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0writel(val,=C2=A0bas=
+e=C2=A0+=C2=A0reg);=0D=0A>=C2=A0=0D=0A>=C2=A0No,=C2=A0do=C2=A0not=C2=A0crea=
+te=C2=A0wrappers=C2=A0on=C2=A0writel.=C2=A0Remove=C2=A0entire=C2=A0function=
+.=0D=0A>=0D=0A=C2=A0=0D=0AOk,=C2=A0i=C2=A0will=C2=A0remove=C2=A0wrappers=C2=
+=A0function=C2=A0and=C2=A0direct=C2=A0call=C2=A0writel.=0D=0A=C2=A0=0D=0A>>=
+=C2=A0+=7D;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+static=C2=A0u32=C2=A0artpec8_pcie_=
+phy_reg_readl(void=C2=A0__iomem=C2=A0*base,=C2=A0u32=C2=A0reg)=0D=0A>>=C2=
+=A0+=7B=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0retur=
+n=C2=A0readl(base=C2=A0+=C2=A0reg);=0D=0A>=C2=A0=0D=0A>=C2=A0Ditto=0D=0A>=
+=C2=A0=0D=0A=C2=A0=0D=0AOk,=C2=A0i=C2=A0will=C2=A0remove=C2=A0wrappers=C2=
+=A0function=C2=A0and=C2=A0direct=C2=A0call=C2=A0readl.=0D=0A=C2=A0=0D=0A>>=
+=C2=A0+=7D;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+static=C2=A0void=C2=A0artpec8_pcie=
+_phy_reg_update(void=C2=A0__iomem=C2=A0*base,=C2=A0u32=C2=A0mask,=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-*dbi_clk;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0str=
-uct=C2=A0clk=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=C2=A0=C2=A0=C2=A0=C2=A0u32=C2=A0update,=C2=A0u32=C2=A0reg)=0D=0A>>=C2=A0+=
+=7B=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32=C2=A0=
+val;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0val=C2=A0=3D=C2=A0artpec8_pcie_phy_reg_readl(base,=C2=A0reg);=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val=C2=A0&=3D=
+=C2=A0=7E(mask);=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0val=C2=A0=7C=3D=C2=A0update;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0artpec8_pcie_phy_reg_writel(base,=C2=A0val,=C2=A0re=
+g);=0D=0A>>=C2=A0+=7D;=0D=0A>>=C2=A0+=0D=0A>=C2=A0=0D=0A>=C2=A0(...)=0D=0A>=
+=C2=A0=0D=0A>>=C2=A0+static=C2=A0int=C2=A0artpec8_pcie_phy_probe(struct=C2=
+=A0platform_device=C2=A0*pdev)=0D=0A>>=C2=A0+=7B=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=A0device=C2=A0*dev=C2=A0=3D=
+=C2=A0&pdev->dev;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0struct=C2=A0artpec8_pcie_phy=C2=A0*artpec8_phy;=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=A0phy=C2=A0*generic_phy=
+;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=
+=A0phy_provider=C2=A0*phy_provider;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0const=C2=A0struct=C2=A0artpec8_pcie_phy_data=C2=A0*=
+drv_data;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0drv_data=C2=A0=3D=C2=A0of_device_get_match_data(dev);=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if=C2=A0(=21drv_data=
+)=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return=C2=A0-ENODEV;=0D=0A>>=C2=A0+=
+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0artpec8_phy=
+=C2=A0=3D=C2=A0devm_kzalloc(dev,=C2=A0sizeof(*artpec8_phy),=C2=A0GFP_KERNEL=
+);=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if=C2=A0(=
+=21artpec8_phy)=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return=C2=A0-ENOMEM;=0D=
+=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+/*=C2=A0reference=C2=A0clock=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0if=C2=A0(of_property_read_u32(dev->of_node,=C2=A0=
+=22lcpll-ref-clk=22,=0D=0A>=C2=A0=0D=0A>=C2=A0No,=C2=A0really,=C2=A0no...=
+=0D=0A>=C2=A0=0D=0A>=C2=A0All=C2=A0properties=C2=A0*must*=C2=A0be=C2=A0docu=
+mented=C2=A0in=C2=A0the=C2=A0bindings.=C2=A0You=C2=A0cannot=C2=A0sneak=C2=
+=A0in=0D=0A>=C2=A0some=C2=A0stuff=C2=A0here...=0D=0A>=C2=A0=0D=0A=C2=A0=0D=
+=0AOk,=C2=A0sure.=0D=0AI=C2=A0will=C2=A0should=C2=A0be=C2=A0documented=C2=
+=A0the=C2=A0all=C2=A0property.=0D=0A=C2=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0*mstr_clk;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0struct=C2=A0clk=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0*slv_clk;=0D=0A>=C2=A0=0D=0A>=C2=A0Not=C2=A0really...=C2=A0=
-=C2=A0Just=C2=A0use=C2=A0clk_bulk_api.=0D=0A>=C2=A0=0D=0A=C2=A0=0D=0AOk,=C2=
-=A0i=C2=A0will=C2=A0modify=C2=A0to=C2=A0use=C2=A0clk_bilk_api.=0D=0A=C2=A0=
-=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0const=C2=A0s=
-truct=C2=A0artpec8_pcie_pdata=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0*pdata;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0vo=
-id=C2=A0__iomem=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0*elbi_base;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0struct=C2=A0regmap=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0*sysreg;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0struct=C2=A0regmap=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=C2=A0=C2=A0=C2=A0=C2=A0&artpec8_phy->lcpll_ref_clk))=C2=A0=7B=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0return=C2=A0-EINVAL;=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7D=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A0PLL=C2=A0SOC=C2=A0reference=C2=A0clock=
+=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if=
+=C2=A0(artpec8_phy->lcpll_ref_clk=C2=A0=3D=3D=C2=A0REF_CLK_FROM_SOC_PLL)=C2=
+=A0=7B=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0artpec8_phy->soc_pll_clk=C2=A0=3D=
+=C2=A0devm_clk_get(dev,=C2=A0=22ref_clk=22);=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*pmu_syscon;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=A0regmap=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=C2=A0if=C2=A0(IS_ERR(artpec8_phy->soc_pll_clk))=0D=0A>>=C2=A0+=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return=C2=A0-EINVA=
+L;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0clk_prepare_enable(artpec8_phy->soc_=
+pll_clk);=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=7D=
+=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0/*=C2=A0link=C2=A0mode=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0if=C2=A0(of_property_read_string(dev->of_node,=C2=A0=
+=22mode=22,=C2=A0&artpec8_phy->mode))=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*bus_s_syscon;=0D=0A>>=C2=A0+=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=A0regmap=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*bus_p_syscon;=0D=
-=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0enum=C2=A0dw_pc=
-ie_device_mode=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mode;=0D=0A>>=
-=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int=C2=A0=C2=A0=C2=
+return=C2=A0-EINVAL;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A0number=C2=A0of=C2=A0lanes=C2=A0*/=0D=0A>>=
+=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if=C2=A0(of_property=
+_read_u32(dev->of_node,=C2=A0=22num-lanes=22,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0link_id;=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A0For=C2=A0Generic=C2=A0PHY=C2=A0Framework=C2=
-=A0*/=0D=0A>=C2=A0=0D=0A>=C2=A0Skip=C2=A0comment,=C2=A0it's=C2=A0obvious.=
-=0D=0A>=C2=A0=0D=0A=C2=A0=0D=0AOk.=0D=0A=C2=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct=C2=A0phy=C2=A0=C2=A0=C2=A0=C2=A0=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0&artpec8_phy->num_lanes))=0D=0A>>=C2=A0+=
 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*phy;=0D=0A>=C2=A0+=7D;=0D=0A>=
->=C2=A0+=0D=0A>=C2=A0=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0/*=C2=A0fsys=C2=A0sysreg=C2=A0regmap=C2=A0handle=C2=A0*/=0D=0A>>=
-=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0artpec8_ctrl->sysreg=
+=A0=C2=A0=C2=A0=C2=A0return=C2=A0-EINVAL;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if=C2=A0(artpec8_phy->num_lane=
+s=C2=A0>=C2=A0LANE_MAX)=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return=C2=A0-EI=
+NVAL;=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0/*=C2=A0PHY=C2=A0base=C2=A0register=C2=A0*/=0D=0A>>=C2=A0+=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0artpec8_phy->phy_base=C2=A0=3D=C2=
+=A0devm_platform_ioremap_resource_byname(pdev,=C2=A0=22phy=22);=0D=0A>>=C2=
+=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if=C2=A0(IS_ERR(artpec8=
+_phy->phy_base))=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return=C2=A0PTR_ERR(a=
+rtpec8_phy->phy_base);=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A0PCS=C2=A0base=C2=A0register=C2=A0*/=0D=
+=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0artpec8_phy->pc=
+s_base=C2=A0=3D=C2=A0devm_platform_ioremap_resource_byname(pdev,=C2=A0=22pc=
+s=22);=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if=C2=
+=A0(IS_ERR(artpec8_phy->pcs_base))=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret=
+urn=C2=A0PTR_ERR(artpec8_phy->pcs_base);=0D=0A>>=C2=A0+=0D=0A>>=C2=A0+=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*=C2=A0sysreg=C2=A0regmap=C2=
+=A0handle,=C2=A0need=C2=A0to=C2=A0change=C2=A0using=C2=A0smc=C2=A0*/=0D=0A>=
+>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0artpec8_phy->sysreg=
 =C2=A0=3D=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0syscon_regmap_lookup_by_phandl=
 e(dev->of_node,=0D=0A>>=C2=A0+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
 =A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
 =C2=A0=C2=A0=C2=A0=C2=A0=22samsung,fsys-sysreg=22);=0D=0A>=C2=A0=0D=0A>=C2=
-=A0NAK.=0D=0A>=C2=A0=0D=0A>=C2=A0Usage=C2=A0of=C2=A0undocumented=C2=A0prope=
-rties.=C2=A0Every=C2=A0property=C2=A0must=C2=A0be=C2=A0documented.=0D=0A>=
-=C2=A0=0D=0A>=C2=A0Since=C2=A0you=C2=A0do=C2=A0not=C2=A0want=C2=A0to=C2=A0m=
-erge=C2=A0it=C2=A0with=C2=A0existing=C2=A0drivers=C2=A0(and=C2=A0more=C2=A0=
-people=0D=0A>=C2=A0insist=C2=A0on=C2=A0that:=C2=A0https://lore.kernel.org/a=
-ll/Ym+u9yYrV9mxkyWX=40matsya/=C2=A0),=0D=0A>=C2=A0I=C2=A0am=C2=A0actually=
-=C2=A0considering=C2=A0to=C2=A0NAK=C2=A0entire=C2=A0set=C2=A0if=C2=A0you=C2=
-=A0do=C2=A0not=C2=A0post=C2=A0a=C2=A0user=C2=A0of=0D=0A>=C2=A0this=C2=A0-=
-=C2=A0DTS.=C2=A0Mainly=C2=A0because=C2=A0we=C2=A0cannot=C2=A0verify=C2=A0ho=
-w=C2=A0does=C2=A0that=C2=A0user=C2=A0look=C2=A0like=0D=0A>=C2=A0and=C2=A0su=
-ch=C2=A0changes=C2=A0are=C2=A0sneaked=C2=A0in.=0D=0A>=C2=A0=0D=0A=C2=A0=0D=
-=0AOk,=C2=A0sure=C2=A0.=0D=0AI=C2=A0will=C2=A0should=C2=A0be=C2=A0documente=
-d=C2=A0the=C2=A0all=C2=A0property=C2=A0include=C2=A0subsystem=C2=A0resource=
-.=0D=0A=C2=A0=0D=0A>=C2=A0Best=C2=A0regards,=0D=0A>=C2=A0Krzysztof=C2=A0=0D=
-=0A=0D=0AThank=20you=20for=20kindness=20reivew.=0D=0A=0D=0ABest=20regards,=
-=0D=0AWangseok=20Lee
+=A0Nope.=C2=A0Usage=C2=A0of=C2=A0undocumented=C2=A0properties.=C2=A0Please=
+=C2=A0post=C2=A0your=C2=A0DTS=C2=A0changes,=C2=A0so=0D=0A>=C2=A0we=C2=A0can=
+=C2=A0validate=C2=A0the=C2=A0user=C2=A0of=C2=A0this=C2=A0driver.=0D=0A>=C2=
+=A0=0D=0A=C2=A0=0D=0AI=C2=A0will=C2=A0should=C2=A0be=C2=A0documented=C2=A0t=
+he=C2=A0all=C2=A0property.=0D=0A=C2=A0=0D=0A>=C2=A0Best=C2=A0regards,=0D=0A=
+>=C2=A0Krzysztof=0D=0A>=C2=A0=0D=0A=0D=0AThank=20you=20for=20kindness=20rei=
+vew.=0D=0AI=20will=20return=20with=20v3=20patchset=20which=20is=20applied=
+=20review=20comments.=0D=0A=0D=0ABest=20regards,=0D=0AWangseok=20Lee
