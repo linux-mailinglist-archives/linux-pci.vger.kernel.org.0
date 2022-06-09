@@ -2,119 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25EB9544AF2
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jun 2022 13:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F03E544D66
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jun 2022 15:22:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244520AbiFILsC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jun 2022 07:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
+        id S239220AbiFINWS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jun 2022 09:22:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236948AbiFILrt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jun 2022 07:47:49 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 226B4A3C21;
-        Thu,  9 Jun 2022 04:47:08 -0700 (PDT)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LJj300DsPz67bHh;
-        Thu,  9 Jun 2022 19:45:48 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 9 Jun 2022 13:47:05 +0200
-Received: from localhost (10.81.202.195) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 9 Jun
- 2022 12:47:04 +0100
-Date:   Thu, 9 Jun 2022 12:47:02 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        "Christoph Hellwig" <hch@infradead.org>, <ira.weiny@intel.com>
-CC:     Adam Manzanares <a.manzanares@samsung.com>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
-        <lorenzo.pieralisi@arm.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: (SPDM) Device attestation, secure channels from host to device etc:
- Discuss at Plumbers?
-Message-ID: <20220609124702.000037b0@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S235210AbiFINWR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jun 2022 09:22:17 -0400
+Received: from mail.tkos.co.il (hours.tkos.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7285825F5;
+        Thu,  9 Jun 2022 06:22:15 -0700 (PDT)
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.tkos.co.il (Postfix) with ESMTPS id 18F7A44051C;
+        Thu,  9 Jun 2022 16:21:59 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+        s=default; t=1654780919;
+        bh=4lmVetWEizyXy3Pcuz2UbHUUHYh1KNwujq3JDVAhUY0=;
+        h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+        b=UJI4vR8Zfb7oVVfnOiz41PthhfILl1KVnFTBLuvNZVn82JWIlUMmB2xlmU4cZXjey
+         6Bg2yZSDDQXf8zYA1ylkOLtPogQRPqLgwvDuxXzqLJtYiP+tv3ccL9RtcUpWW+RuBU
+         hQZ+stxFV+SKPtvJyG0OQE8SfeXlQkNWjunLIZr8eJAMtwtQ+CFhQfb1Te8e7Vg3kU
+         ILHa/PWNDASm4ao8XmEzi/YPBkj7DPnA/hKAihrzOsX5w0vgdbvIMxvykB94ndTBfA
+         dxwhJph4Pms//iDVJcfmcx5K6j26xFH/DouH8SCHBfLyY17dEJ/w+iD52eQOhCviiw
+         yUWKybm+/HOlQ==
+References: <CA+HBbNFo9QCExiA9T4Mn4t5vvir79xF3R9F6OLZa0m5Bzpte3w@mail.gmail.com>
+ <20220608202420.GA418223@bhelgaas>
+User-agent: mu4e 1.6.10; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Selvam Sathappan Periakaruppan <quic_speriaka@quicinc.com>,
+        Kathiravan T <quic_kathirav@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        linux-pci@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-tegra@vger.kernel.org,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v6 0/3] PCI: IPQ6018 platform support
+Date:   Thu, 09 Jun 2022 16:10:45 +0300
+In-reply-to: <20220608202420.GA418223@bhelgaas>
+Message-ID: <875yla55vg.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.202.195]
-X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All,
+Hi Bjorn,
 
-+CC list almost certainly misses people interested in this topic
-    so please forward as appropriate.
+[ Changed codeaurora.com addresses to their quicinc.com equivalents ]
 
-I'll start by saying I haven't moved forward much with the
-SPDM/CMA over Data Object Exchange proposal from the PoC that led to
-presenting it last year as part of the PCI etc uconf last year.
-https://lpc.events/event/11/contributions/1089/
-https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
-I'm continuing to carry the QEMU emulation but not posted for a while
-as we are slowly working through a backlog of CXL stuff to merge.
-https://gitlab.com/jic23/qemu/-/commit/f989c8cf283302c70eb5b0b73625b5357c4eb44f
-On the plus side, Ira is driving the DOE support forwards so
-that will resolve one missing precursor.
+On Wed, Jun 08 2022, Bjorn Helgaas wrote:
+> [+cc Stanimir, beginning of thread at
+> https://lore.kernel.org/r/cover.1644234441.git.baruch@tkos.co.il]
+>
+> On Tue, Jun 07, 2022 at 03:12:19PM +0200, Robert Marko wrote:
+>> On Wed, May 11, 2022 at 4:03 PM Lorenzo Pieralisi
+>> <lorenzo.pieralisi@arm.com> wrote:
+>> >
+>> > On Tue, Apr 12, 2022 at 05:12:59PM +0100, Lorenzo Pieralisi wrote:
+>> > > On Mon, Feb 07, 2022 at 04:51:23PM +0200, Baruch Siach wrote:
+>> > > > This series adds support for the single PCIe lane on IPQ6018 SoCs. The code is
+>> > > > ported from downstream Codeaurora v5.4 kernel. The main difference from
+>> > > > downstream code is the split of PCIe registers configuration from .init to
+>> > > > .post_init, since it requires phy_power_on().
+>> > > >
+>> > > > Tested on IPQ6010 based hardware.
+>> > > >
+>> > > > Changes in v6:
+>> > > >
+>> > > >   * Drop DT patch applied to the qcom tree
+>> > > >
+>> > > >   * Normalize driver changes subject line
+>> > > >
+>> > > >   * Add a preparatory patch to rename PCIE_CAP_LINK1_VAL to PCIE_CAP_SLOT_VAL,
+>> > > >     and define it using PCI_EXP_SLTCAP_* macros
+>> > > >
+>> > > >   * Drop a vague comment about ASPM configuration
+>> > > >
+>> > > >   * Add a comment about the source of delay periods
+>> > > >
+>> > > > Changes in v5:
+>> > > >
+>> > > >   * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
+>> > > >
+>> > > > Changes in v4:
+>> > > >
+>> > > >   * Drop applied DT bits
+>> > > >
+>> > > >   * Add max-link-speed that was missing from the applied v2 patch
+>> > > >
+>> > > >   * Rebase the driver on v5.16-rc3
+>> > > >
+>> > > > Changes in v3:
+>> > > >
+>> > > >   * Drop applied patches
+>> > > >
+>> > > >   * Rely on generic code for speed setup
+>> > > >
+>> > > >   * Drop unused macros
+>> > > >
+>> > > >   * Formatting fixes
+>> > > >
+>> > > > Changes in v2:
+>> > > >
+>> > > >   * Add patch moving GEN3_RELATED macros to a common header
+>> > > >
+>> > > >   * Drop ATU configuration from pcie-qcom
+>> > > >
+>> > > >   * Remove local definition of common registers
+>> > > >
+>> > > >   * Use bulk clk and reset APIs
+>> > > >
+>> > > >   * Remove msi-parent from device-tree
+>> > > >
+>> > > > Baruch Siach (2):
+>> > > >   PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
+>> > > >   PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
+>> > > >
+>> > > > Selvam Sathappan Periakaruppan (1):
+>> > > >   PCI: qcom: Add IPQ60xx support
+>> > > >
+>> > > >  drivers/pci/controller/dwc/pcie-designware.h |   7 +
+>> > > >  drivers/pci/controller/dwc/pcie-qcom.c       | 155 ++++++++++++++++++-
+>> > > >  drivers/pci/controller/dwc/pcie-tegra194.c   |   6 -
+>> > > >  3 files changed, 160 insertions(+), 8 deletions(-)
+>> > >
+>> > > Hi Bjorn, Andy,
+>> > >
+>> > > any feedback on this series please ?
+>> >
+>> > Any feedback on these patches please ?
+>> 
+>> Finally dug the CP01, and for me, it works, so:
+>> Tested-by: Robert Marko <robert.marko@sartura.hr>
+>
+> This mainly affects pcie-qcom.c, so it looks like Stanimir should have
+> been copied on this, but wasn't.  Please include him on the next
+> iteration.
 
-We had a lot of open questions last year and many of them are
-still at least somewhat open; perhaps now is time to revisit?
+I somehow missed the pcie-qcom.c standalone entry in MAINTAINERS because
+the same file also appears on the general qcom entry. I'll add him on
+v7. Hopefully that will improve the fortune of this series.
 
-In the meantime there has been discussion[1]:
-[1] https://lore.kernel.org/all/CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com/
-[2] https://lore.kernel.org/all/20220511191345.GA26623@wunner.de/
-[3] https://lore.kernel.org/all/CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com/
+> This will also need to be updated to apply on v5.19-rc1:
+>
+>   03:21:47 ~/linux (next)$ git checkout -b wip/baruch-ipq6018-v6 v5.19-rc1
+>   Switched to a new branch 'wip/baruch-ipq6018-v6'
+>   03:21:55 ~/linux (wip/baruch-ipq6018-v6)$ git am m/v6_20220207_baruch_pci_ipq6018_platform_support.mbx
+>   Applying: PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
+>   Applying: PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
+>   Applying: PCI: qcom: Add IPQ60xx support
+>   error: patch failed: drivers/pci/controller/dwc/pcie-qcom.c:1531
+>   error: drivers/pci/controller/dwc/pcie-qcom.c: patch does not apply
+>   Patch failed at 0003 PCI: qcom: Add IPQ60xx support
 
-Perhaps it is worth putting in a proposal for either a session in an
-appropriate uconf at plumbers, or maybe a BoF given it is a
-broader topic than either PCI or CXL?
+I'll rebase on v5.19-rc1.
 
-We'll still need to dance around work in various standards bodies
-that we can't talk about yet, but it feels like it's worth
-some time hammering out a plan of attack on what we can
-discuss.
+baruch
 
-Rough topics:
-
-* Use models. Without those hard to define the rest!
-* Policy.  What do we do if we can't establish a secure channel?
-* Transports of interest.  Single solution for MCTP vs
-  PCI/CMA or not?
-* Session setup etc in kernel / userspace / carefully curated hybrid
-  of the two (Dan mentioned this last one in one of the links above)
-  There may be similarities to the discussion around TLS (much simpler
-  though I think!)
-* Key management
-* Potential to use github.com/dmtf/libSPDM - is it suitable for any solutions
-  (it's handy for emulation if nothing else!)
-* Measurement and what to do with it.
-* No public hardware yet, so what else should we emulate to enable
-  work in this area. (SPDM over MCTP over I2C is on my list as easy
-  to do in QEMU building on
-  https://lore.kernel.org/all/20220520170128.4436-1-Jonathan.Cameron@huawei.com/ 
-* Many other things I've forgotten about - please add!
-
-So are people who care going to be at plumbers (in person or virtually)
-and if so, do we want to put forward a session proposal?
-
-Thanks,
-
-Jonathan
+-- 
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
