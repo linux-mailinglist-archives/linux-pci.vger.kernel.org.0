@@ -2,231 +2,301 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C27A544EDC
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jun 2022 16:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98B8E5451C7
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jun 2022 18:23:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245733AbiFIOXt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jun 2022 10:23:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52098 "EHLO
+        id S241264AbiFIQXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jun 2022 12:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344057AbiFIOXj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jun 2022 10:23:39 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3051A2F4489;
-        Thu,  9 Jun 2022 07:22:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654784536; x=1686320536;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ark0roXayF/mKBG6KDiQpajzHJQh3T33GzsCRxqfOjQ=;
-  b=CMKyiY8FURkFHdjJlecFnEV8mwZyega0tp0b7ejKuolTronu9FOVA4tU
-   fcPBqtAINkodL1SWo+0iISgwkSaHX/ey/scvoN4G/ecbTTmPYaHY5pptt
-   99I9ZfXbVhJ1KN9GaqG84gBZutS02bnVUm8cUdVlxS66yY3yurkXzaXuS
-   wKH178kHv3oQ67Ei8zGRgYMm9l3TkRyaC+sWLYJwCn94+whgAtQ6A8ixd
-   gktFtdHYkpxY2Eg5pkUoVfGuSkpwGpBwvMV0ai5eir5vcUYRp97pRxHz6
-   prAJI9P4sAeJU0rfhP7JsnF4a5RiLN2MrqqZEicuWg9T0nwuP1nvk+SZU
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10373"; a="257727572"
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="257727572"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 07:22:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="683986784"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Jun 2022 07:22:15 -0700
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Thu, 9 Jun 2022 07:22:13 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Thu, 9 Jun 2022 07:22:13 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Thu, 9 Jun 2022 07:22:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G4nyn0uewGPiXsVQxWjeUifbkExSaYiHiTyLMjtBS9GqOIae7Q5sDBLRZZb/HUTHxuxtt+P2BczrVQvfuZgys1YF40UJfgB+QXEvBFPJqKp2YqD1Gnoh/FzIc+UI6rdrr31dDI3f/BTf5NS2+Qh+oTWKL4aHQ9+Z+6ypTcchxD8LFQIO/K9kbp+DfuQVPZPEqNDZMuwyRMM0r23v0UyRigVLbjhPjlVTvO7XhoMlOP0OT+ToAJbbr2FY5jukJ8SggnAlU2lOWsyXj6gkehAut6LdvqYapxnYmTs6JEVI91KSwYKzwGfUofsFP2AzdOnxvYLZrWreRKpiIckUNZG0ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yg1QFMV/PHGseWIA3C8Hk6BJVTAk5IS+I8Ckqe/ycGY=;
- b=BvFAQ3Jfu2icFri9toL7mMG50UsD6oKIDllBHF8PsXQo0+ISSJddT7fPLYmZ/wqp8YAbq8q3VSZUSqrAh+6+sBhuxhgjOQdiJsjar8jwRtp5SSSiLn+XHGVtpXAWE6etbztozn1uBFt3w6fRwBIEdvlEdehp4qj/BziUK/UX93kUv7I6lLIx5wVP47G/beQPRh+d0GuIlUXe0C64TsZBGoiSyt4Zt4vryoyR+oq21v/jLnC2nPecmD0sSaYOUkB2+p30WVaCsYqTQoTF4qiQ/tcdaYH3qn8abBb6RBY0iBbVJEBGeUqMPcnfuRCwSjvnXWj1oPQr2ZWQxYj5IcOJFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
- BL1PR11MB5304.namprd11.prod.outlook.com (2603:10b6:208:316::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.13; Thu, 9 Jun
- 2022 14:22:12 +0000
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::d4e9:9ae1:29b2:90c]) by DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::d4e9:9ae1:29b2:90c%4]) with mapi id 15.20.5332.012; Thu, 9 Jun 2022
- 14:22:12 +0000
-Date:   Thu, 9 Jun 2022 07:22:01 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
-        <lorenzo.pieralisi@arm.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: (SPDM) Device attestation, secure channels from host to device
- etc: Discuss at Plumbers?
-Message-ID: <YqICCSd/6Vxidu+v@iweiny-desk3>
-References: <20220609124702.000037b0@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220609124702.000037b0@Huawei.com>
-X-ClientProxiedBy: CO1PR15CA0108.namprd15.prod.outlook.com
- (2603:10b6:101:21::28) To DM4PR11MB6311.namprd11.prod.outlook.com
- (2603:10b6:8:a6::21)
+        with ESMTP id S235171AbiFIQXB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jun 2022 12:23:01 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60143B1F;
+        Thu,  9 Jun 2022 09:23:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CD5D8B82E31;
+        Thu,  9 Jun 2022 16:22:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B939C34114;
+        Thu,  9 Jun 2022 16:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654791777;
+        bh=pc3xBNaUgiX7uakkgh6/3I1zWKm6CQOql1Om/7UzyPY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lyjc0US4qcfH+214BEnfZCSfXXxvrpAtldkerP1SPhvmMlaHyBHfyJ+Qoap7T5s0w
+         Bbv2IoOtThEENiFkeNhlsEyk0/OwonEI6e7cAz7Ys35H8bRYGJoWjFwyvLn5Tjc8h2
+         WbPfPQ8BrdFvM6bgrbbCgREyvDaCmIvL490o3ATvmcQd4WOlkOi0OCpg2OoXGwg+ho
+         e44j5fslhcMKcrq0ywqBshFIfQRC/jLk/5AMFIJO+2FYBFQ3k3kuFjyMitQcv22q5G
+         ZeeTX9pmFX46jBnBPd0anxVvi46wdREX7z4SeFVh4NW/JyIwBIMfgztsLqd00/WmqX
+         cubkb/MEZ6eag==
+Date:   Thu, 9 Jun 2022 11:22:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] powerpc/pci: Add config option for using OF 'reg' for
+ PCI domain
+Message-ID: <20220609162255.GA483511@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4b92095b-46e7-4296-5a63-08da4a2371be
-X-MS-TrafficTypeDiagnostic: BL1PR11MB5304:EE_
-X-Microsoft-Antispam-PRVS: <BL1PR11MB5304CCB8624DF8DFBB623E3DF7A79@BL1PR11MB5304.namprd11.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: U6x5ysJ3M8Sb0h02n/HyMOxdrsz5Dae9l+g9sJcW2ejXFk9Oymujl/CWBHuOpKX6piXIWHFFA5QEVjIV1WEMSJtC5dO0+akCLNxaEfsqdK3EWhLcqmuGlpWSHBKTu830fNn7IHmb02NJSD/5Gw8eA4dYtbS3vLtmCFChlB2gP+mQBxMoCMA1lXcDqDjLkwqj7pe1JAdu5T1xx3Tb5Z7Cs36acx+cTw1j1s/tbEW2Xzyiczm08ml3lVzB4r3b963h2vLm/AIFJzcBmESb4OxEciLwyvAmhDLdcc8j8Isi93PMG1iFCCfaN5kQzRsteIlD4WyOlLGhXFE8shFY8rGerXllWwrgvcei6sZLfR+ZkAi1Mvu5QzulUEXEOIDzgDOF4r1u4XS3lNw/suO6WiS/YDyra05xGbEC+LglDVtUtiHa+kibHfq1xm5SDBZi6jIQ4FeNZqXs2MlCeX+uPYQyDiQ2SOst7fN23vWZZGDxiB3aPJcqK+BRm5WMsfE1gMeEVxBRRRUdGQH5JTpNfrqAU5cXffeHvvhOhm6BNbzBYbu3RG0miTQbW5VyXnRk0SYnD6/Li85LBcNkw/h6JW7JTUDSSa3ZQ+Gm/4crmruKtdX5uMza0QxlozbcZxxqMOVo4hu56Cp54RTaKpca/DGG0yaOXO0ce26DHbopZNEDeEpsU6NvX61TrmdFgPZQthYHApiiS4by0/RyES6KKEGG9R/ENFODQX8CEYAymrOeMKp3b8sAHpln/A7BrkV4PclFEDM70VaduhGHKdD2MW9V7A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(38100700002)(186003)(66556008)(4326008)(316002)(66476007)(8676002)(66946007)(6916009)(54906003)(508600001)(26005)(6512007)(9686003)(7416002)(44832011)(5660300002)(84970400001)(6666004)(33716001)(82960400001)(6506007)(86362001)(2906002)(8936002)(966005)(6486002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/TvETKMS896AG17oaUDm0P/0h4HlFZz8KQk58S2A0ZJBDSoD93+KpORrwZDn?=
- =?us-ascii?Q?16dwRKfxvwMcvEA4UeFT+Eb30+2cffde9jo1t0djJFXQyc6lJb+5KZowZEXM?=
- =?us-ascii?Q?0yHdiX9Dqm2SIwwYlR1CG9h8kUXE3+CUDsgRR/mj/AtvM6dup7pRnSHygp39?=
- =?us-ascii?Q?ts27UIPipWv8z4MoCwZ6lXOMwMMPMPP81TO3YKW63KsKs3ViqIeXZsAgGJTX?=
- =?us-ascii?Q?pjji2/LZ7WNExz4knhuWXDDqO97H6IUp890GNz6uNCIIqy40AJkHgv8sGZcB?=
- =?us-ascii?Q?pf9MisBUUZYADBe+tGNCJxq3Oe60ma81L/HpB5NQhzXBkG+WeqVtFk7VwYyA?=
- =?us-ascii?Q?lanCPaE2CCATQCDKzjX4hgUKr8DFo15te9mzf8SCDYQaMn7nxWZALE5AjmRZ?=
- =?us-ascii?Q?n5sqPzZE7+Zn3d2/lL+dCFAeYBekmvMP2wKiGf1b4cUcFVi8i1S0M0nnFHMy?=
- =?us-ascii?Q?bJLBw3Ndjx7zxPN2lbSLWPzPMjEVLcot+R57X9TUr4CU7JSipuKsmDiA7+PM?=
- =?us-ascii?Q?n0CSUj9RWMJK8pl3987Ye7v1mTkH1TckU4KCpz397f4L2NzdR3Fq+0xOq/kD?=
- =?us-ascii?Q?Omuyn0mtsbYlcipiHsTlCzfcUij4hKPItc655mmJfBr3YOjsmGw+hpdBjNxh?=
- =?us-ascii?Q?un+m8icq0IwwbO2fvVEnhXx7pgJn5WrGVeQw+HSOgTuxQzX1/ng3/KTINf/o?=
- =?us-ascii?Q?jCo1hi+dGwxs7IJCGibN4j7Yp1vCIcVnI10bxT9fOQku3PR0H9U6EJoYYfjL?=
- =?us-ascii?Q?doehd8IszuGpZsF/iqythA7Xh+9GYCgBtyIhxBxU//enHIdVkp/fsQbHKfyv?=
- =?us-ascii?Q?FSIDq6dUrYzSiIVdPH3o9HrFe37CP8o/sHgVV/UXRQxresajgssa/Xzfkvre?=
- =?us-ascii?Q?5jvpMVMSCNqjWeGWC1quQuzF41cgMPSB8I4v8fDNrX4LRK2OGIxNrrLnyvCZ?=
- =?us-ascii?Q?REgcyXe+1tt+2ERMTAUPrSTJWijijRg6bhTTlp3beHB/dNoeFOBEEHys3wwZ?=
- =?us-ascii?Q?9jD8RVMSIj9IPbaWew4NAiTeDmARMthwKYdtkMSJ0/eO5ofGxVxS7SEU9C7Q?=
- =?us-ascii?Q?WOPWDrsogDoAQdQbpiv/8q7G9nvQOmT4X03UqnQyObSJdbXpHxeXt6G8ufWU?=
- =?us-ascii?Q?EGVcnbUmhmatCShcbguz9v2ORQKVzqrgu3obtMp0c0NhVn7QxZx4+t/0XLIe?=
- =?us-ascii?Q?ytW6f/5Oa/AbvN4yny1BDhtg8MebgNRpBqGz5wgnShpItiJzzFQTE+Yyc2Kv?=
- =?us-ascii?Q?LRri3LxqkQpsDHqz5VBxUINaXL8tuSBQL1004FXsnMf4LUHphtxZ2kIA7QA3?=
- =?us-ascii?Q?CDf/jJqg+VV7jgj3woRtcYTffuQA4RVvijWmEpfY+mWq6ilc3+jTe6CKEZ2u?=
- =?us-ascii?Q?qyNl4j3xhJkTSs13vd2oVaqWdmiegNxc2XCWASZuBv9A+jvtQBLx8rQoE//A?=
- =?us-ascii?Q?tvpkCLtCsYrNiK5B4Urrsjb30jm5ccqniZUQ78RCdUuZmcVRj77ym1GwlTh3?=
- =?us-ascii?Q?Z1AR7lVGIFvk4WmNW3MnZ1v05krog4F3f75M7FC2hnm5PqOpNk4HFTIjbAJV?=
- =?us-ascii?Q?7j8xGdRS6l1BBn80mt+NnZQ27o7zy5YvwQGgm2HRp6AIoABprzhqnkr1WiP+?=
- =?us-ascii?Q?qcKqKKdSElZ59m1ZjbWU5IsQe+w+7AV/lsIpnvMm9Whu4ZVvSZ1j+YEnczhl?=
- =?us-ascii?Q?hV74pvKvyzPxK/oY9pRl/djaOEcrUh9MF9Is94pAZMht2kOuAiOwTd9DLxde?=
- =?us-ascii?Q?moqO0N7i7CJ9mmR0D+cfTEIH5hVLpWo=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b92095b-46e7-4296-5a63-08da4a2371be
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2022 14:22:12.0051
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VjN6Oxs6x7Tgx/xTNWjr/AqwMsuWYC7THbVOSAGvizxr4LJPnVDZeUsHomuWgSjHM8Br3tmA5zoyrwPe/zSoaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5304
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220505223302.2ydcssvdgoyqv7e5@pali>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 09, 2022 at 12:47:02PM +0100, Jonathan Cameron wrote:
-> Hi All,
-> 
-> +CC list almost certainly misses people interested in this topic
->     so please forward as appropriate.
-> 
-> I'll start by saying I haven't moved forward much with the
-> SPDM/CMA over Data Object Exchange proposal from the PoC that led to
-> presenting it last year as part of the PCI etc uconf last year.
-> https://lpc.events/event/11/contributions/1089/
-> https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
-> I'm continuing to carry the QEMU emulation but not posted for a while
-> as we are slowly working through a backlog of CXL stuff to merge.
-> https://gitlab.com/jic23/qemu/-/commit/f989c8cf283302c70eb5b0b73625b5357c4eb44f
-> On the plus side, Ira is driving the DOE support forwards so
-> that will resolve one missing precursor.
-> 
-> We had a lot of open questions last year and many of them are
-> still at least somewhat open; perhaps now is time to revisit?
-> 
-> In the meantime there has been discussion[1]:
-> [1] https://lore.kernel.org/all/CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com/
-> [2] https://lore.kernel.org/all/20220511191345.GA26623@wunner.de/
-> [3] https://lore.kernel.org/all/CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com/
-> 
-> Perhaps it is worth putting in a proposal for either a session in an
-> appropriate uconf at plumbers, or maybe a BoF given it is a
-> broader topic than either PCI or CXL?
+[+cc Guilherme, Michael, Ben (author of 63a72284b159 and PPC folks), thread:
+https://lore.kernel.org/r/20220504175718.29011-1-pali@kernel.org]
 
-Yes, while this could work as part of the CXL uconf it is probably a more
-general topic.
-
+On Fri, May 06, 2022 at 12:33:02AM +0200, Pali Rohár wrote:
+> On Thursday 05 May 2022 15:10:01 Tyrel Datwyler wrote:
+> > On 5/5/22 02:31, Pali Rohár wrote:
+> > > On Thursday 05 May 2022 07:16:40 Christophe Leroy wrote:
+> > >> Le 04/05/2022 à 19:57, Pali Rohár a écrit :
+> > >>> Since commit 63a72284b159 ("powerpc/pci: Assign fixed PHB
+> > >>> number based on device-tree properties"), powerpc kernel
+> > >>> always fallback to PCI domain assignment from OF / Device Tree
+> > >>> 'reg' property of the PCI controller.
+> > >>>
+> > >>> PCI code for other Linux architectures use increasing
+> > >>> assignment of the PCI domain for individual controllers
+> > >>> (assign the first free number), like it was also for powerpc
+> > >>> prior mentioned commit.
+> > >>>
+> > >>> Upgrading powerpc kernels from LTS 4.4 version (which does not
+> > >>> contain mentioned commit) to new LTS versions brings a
+> > >>> regression in domain assignment.
+> > >>
+> > >> Can you elaborate why it is a regression ?
+> > >> 63a72284b159 That commit says 'no functionnal changes', I'm
+> > >> having hard time understanding how a nochange can be a
+> > >> regression.
+> > > 
+> > > It is not 'no functional change'. That commit completely changed
+> > > PCI domain assignment in a way that is incompatible with other
+> > > architectures and also incompatible with the way how it was done
+> > > prior that commit.
+> > 
+> > I agree that the "no functional change" statement is incorrect.
+> > However, for most powerpc platforms it ended up being simply a
+> > cosmetic behavior change. As far as I can tell there is nothing
+> > requiring domain ids to increase montonically from zero or that
+> > each architecture is required to use the same domain numbering
+> > scheme.
 > 
-> We'll still need to dance around work in various standards bodies
-> that we can't talk about yet, but it feels like it's worth
-> some time hammering out a plan of attack on what we can
-> discuss.
+> That is truth. But it looks really suspicious why domains are not
+> assigned monotonically. Some scripts / applications are using PCI
+> location (domain:bus:dev:func) for remembering PCI device and domain
+> change can cause issue for config files. And some (older) applications
+> expects existence of domain zero. In systems without hot plug support
+> with small number of domains (e.g. 3) it means that there are always
+> domains 0, 1 and 2.
 > 
-> Rough topics:
+> > Its hard to call this a true regression unless it actually broke
+> > something. The commit in question has been in the kernel since 4.8
+> > which was released over 5 1/2 years ago.
 > 
-> * Use models. Without those hard to define the rest!
-> * Policy.  What do we do if we can't establish a secure channel?
-> * Transports of interest.  Single solution for MCTP vs
->   PCI/CMA or not?
-> * Session setup etc in kernel / userspace / carefully curated hybrid
->   of the two (Dan mentioned this last one in one of the links above)
->   There may be similarities to the discussion around TLS (much simpler
->   though I think!)
-
-I think this is something which really does need some face to face (or virtual
-face) time.  FWIW another idea from Christoph is kernel bundled userspace code.
-
-	https://lore.kernel.org/linux-cxl/YoT4C77Yem37NUUR@infradead.org/
-
-I'm not sure any real implementation would be workable.
-
-> * Key management
-> * Potential to use github.com/dmtf/libSPDM - is it suitable for any solutions
->   (it's handy for emulation if nothing else!)
-> * Measurement and what to do with it.
-> * No public hardware yet, so what else should we emulate to enable
->   work in this area. (SPDM over MCTP over I2C is on my list as easy
->   to do in QEMU building on
->   https://lore.kernel.org/all/20220520170128.4436-1-Jonathan.Cameron@huawei.com/ 
-> * Many other things I've forgotten about - please add!
+> I agree, it really depends on how you look at it.
 > 
-> So are people who care going to be at plumbers (in person or virtually)
-> and if so, do we want to put forward a session proposal?
+> The important is that lot of people are using LTS versions and are
+> doing upgrades when LTS support is dropped. Which for 4.4 now
+> happened. So not all smaller or "cosmetic" changes could be detected
+> until longer LTS period pass.
+> 
+> > With all that said looking closer at the code in question I think
+> > it is fair to assume that the author only intended this change for
+> > powernv and pseries platforms and not every powerpc platform. That
+> > change was done to make persistent naming easier to manage in
+> > userspace.
+> 
+> I agree that this behavior change may be useful in some situations
+> and I do not object this need.
+> 
+> > Your change defaults back to the old behavior which will now break
+> > both powernv and pseries platforms with regard to hotplugging and
+> > persistent naming.
+> 
+> I was aware of it, that change could cause issues. And that is why I
+> added config option for choosing behavior. So users would be able to
+> choose what they need.
+> 
+> > We could properly limit it to powernv and pseries by using
+> > ibm,fw-phb-id instead of reg property in the look up that follows
+> > a failed ibm,opal-phbid lookup. I think this is acceptable as long
+> > as no other powerpc platforms have started using this behavior for
+> > persistent naming.
+> 
+> And what about setting that new config option to enabled by default
+> for those series?
+> 
+> Or is there issue with introduction of the new config option?
+> 
+> One of the point is that it is really a good idea to have
+> similar/same behavior for all linux platforms. And if it cannot be
+> enabled by default (for backward compatibility) add at least some
+> option, so new platforms can start using it or users can decide to
+> switch behavior.
 
-I have submitted a non-CXL topic in the arch uconf and was hoping to go in
-person but I'm unsure of travel budgets.  I will likely be virtual if I can't
-attend in person.
+This is a powerpc thing so I'm just kibbitzing a little.
 
-Ira
+This basically looks like a new config option to selectively revert
+63a72284b159.  That seems hard to maintain and doesn't seem like
+something that needs to be baked into the kernel at compile-time.
+
+The 63a72284b159 commit log says persistent NIC names are tied to PCI
+domain/bus/dev/fn addresses, which seems like something we should
+discourage because we can't predict PCI addresses in general.  I
+assume other platforms typically use udev with MAC addresses or
+something?
+
+> > > For example, prior that commit on P2020 RDB board were PCI
+> > > domains 0, 1 and 2.
+> > > 
+> > > $ lspci
+> > > 0000:00:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+> > > 0000:01:00.0 USB controller: Texas Instruments TUSB73x0 SuperSpeed USB 3.0 xHCI Host Controller (rev 02)
+> > > 0001:02:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+> > > 0001:03:00.0 Network controller: Qualcomm Atheros AR93xx Wireless Network Adapter (rev 01)
+> > > 0002:04:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+> > > 0002:05:00.0 Network controller: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter
+> > > 
+> > > After that commit on P2020 RDB board are PCI domains 0x8000,
+> > > 0x9000 and 0xa000.
+> > > 
+> > > $ lspci
+> > > 8000:00:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+> > > 8000:01:00.0 USB controller: Texas Instruments TUSB73x0 SuperSpeed USB 3.0 xHCI Host Controller (rev 02)
+> > > 9000:02:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+> > > 9000:03:00.0 Network controller: Qualcomm Atheros AR93xx Wireless Network Adapter (rev 01)
+> > > a000:04:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+> > > a000:05:00.0 Network controller: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter
+> > > 
+> > > It is somehow strange that PCI domains are not indexed one by one and
+> > > also that there is no domain 0
+> > > 
+> > > With my patch when CONFIG_PPC_PCI_DOMAIN_FROM_OF_REG is not set, then
+> > > previous behavior used and PCI domains are again 0, 1 and 2.
+> > > 
+> > >> Usually we don't commit regressions to mainline ...
+> > >>
+> > >>> Fix this issue by introducing a new option
+> > >>> CONFIG_PPC_PCI_DOMAIN_FROM_OF_REG When this options is
+> > >>> disabled then powerpc kernel would assign PCI domains in the
+> > >>> similar way like it is doing kernel for other architectures
+> > >>> and also how it was done prior that commit.
+> > >>
+> > >> You don't define CONFIG_PPC_PCI_DOMAIN_FROM_OF_REG on by
+> > >> default, it means this commit will change the behaviour. Is
+> > >> that expected ?
+> > >>
+> > >> Is that really worth a user selectable option ? Is the user
+> > >> able to decide what he needs ?
+> > > 
+> > > Well, I hope that maintainers of that code answer to these
+> > > questions.
+> > > 
+> > > In any case, I think that it could be a user selectable option
+> > > as in that commit is explained that in some situation is makes
+> > > sense to do PCI domain numbering based on DT reg.
+> > > 
+> > > But as I pointed above, upgrading from 4.4 TLS kernel to some
+> > > new TLS kernel brings above regression, so I think that there
+> > > should be a way to disable this behavior.
+> > > 
+> > > In my opinion, for people who are upgrading from 4.4 TLS kernel,
+> > > this option should be turned off by default (= do not change
+> > > behavior). For people who want same behaviour on powerpc as on
+> > > other platforms, also it should be turned off by default.
+> > > 
+> > >>>
+> > >>> Fixes: 63a72284b159 ("powerpc/pci: Assign fixed PHB number based on device-tree properties")
+> > >>
+> > >> Is that really a fix ? What is the problem really ?
+> > > 
+> > > Problem is that PCI domains were changed in a way that is not
+> > > compatible neither with version prior that commit and neither
+> > > with how other linux platforms assign PCI domains for
+> > > controllers.
+> > > 
+> > >>> Signed-off-by: Pali Rohár <pali@kernel.org>
+> > >>> ---
+> > >>>   arch/powerpc/Kconfig             | 10 ++++++++++
+> > >>>   arch/powerpc/kernel/pci-common.c |  4 ++--
+> > >>>   2 files changed, 12 insertions(+), 2 deletions(-)
+> > >>>
+> > >>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> > >>> index 174edabb74fa..4dd3e3acddda 100644
+> > >>> --- a/arch/powerpc/Kconfig
+> > >>> +++ b/arch/powerpc/Kconfig
+> > >>> @@ -375,6 +375,16 @@ config PPC_OF_PLATFORM_PCI
+> > >>>   	depends on PCI
+> > >>>   	depends on PPC64 # not supported on 32 bits yet
+> > >>>   
+> > >>> +config PPC_PCI_DOMAIN_FROM_OF_REG
+> > >>> +	bool "Use OF reg property for PCI domain"
+> > >>> +	depends on PCI
+> > >>
+> > >> Should it depend on PPC_OF_PLATFORM_PCI instead ?
+> > > 
+> > > No, PPC_OF_PLATFORM_PCI has line "depends on PPC64 # not supported on 32
+> > > bits yet". But it is already used also for e.g. P2020 which is 32-bit
+> > > platform.
+> > > 
+> > >>> +	help
+> > >>> +	  By default PCI domain for host bridge during its registration is
+> > >>> +	  chosen as the lowest unused PCI domain number.
+> > >>> +
+> > >>> +	  When this option is enabled then PCI domain is determined from
+> > >>> +	  the OF / Device Tree 'reg' property.
+> > >>> +
+> > >>>   config ARCH_SUPPORTS_UPROBES
+> > >>>   	def_bool y
+> > >>>   
+> > >>> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+> > >>> index 8bc9cf62cd93..8cb6fc5302ae 100644
+> > >>> --- a/arch/powerpc/kernel/pci-common.c
+> > >>> +++ b/arch/powerpc/kernel/pci-common.c
+> > >>> @@ -74,7 +74,6 @@ void __init set_pci_dma_ops(const struct dma_map_ops *dma_ops)
+> > >>>   static int get_phb_number(struct device_node *dn)
+> > >>>   {
+> > >>>   	int ret, phb_id = -1;
+> > >>> -	u32 prop_32;
+> > >>>   	u64 prop;
+> > >>>   
+> > >>>   	/*
+> > >>> @@ -83,7 +82,8 @@ static int get_phb_number(struct device_node *dn)
+> > >>>   	 * reading "ibm,opal-phbid", only present in OPAL environment.
+> > >>>   	 */
+> > >>>   	ret = of_property_read_u64(dn, "ibm,opal-phbid", &prop);
+> > >>
+> > >> This looks like very specific, it is not reflected in the commit log.
+> > > 
+> > > I have not changed nor touched this "ibm,opal-phbid" setting. And it was
+> > > not also touched in that mentioned patch. I see that no DTS file in
+> > > kernel use this option (so probably only DTS files supplied by
+> > > bootloader use it). So I thought that there is not reason to mention in
+> > > commit message.
+> > > 
+> > > But if you think so, I can add some info to commit message about it.
+> > > 
+> > >>> -	if (ret) {
+> > >>> +	if (ret && IS_ENABLED(CONFIG_PPC_PCI_DOMAIN_FROM_OF_REG)) {
+> > >>> +		u32 prop_32;
+> > >>>   		ret = of_property_read_u32_index(dn, "reg", 1, &prop_32);
+> > >>>   		prop = prop_32;
+> > >>>   	}
+> > 
