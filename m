@@ -2,128 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 053655452E8
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jun 2022 19:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61B325452F8
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jun 2022 19:31:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344943AbiFIR0A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Jun 2022 13:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35478 "EHLO
+        id S245602AbiFIRbL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Jun 2022 13:31:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344974AbiFIRZz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jun 2022 13:25:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15A369B79;
-        Thu,  9 Jun 2022 10:25:53 -0700 (PDT)
+        with ESMTP id S239149AbiFIRbI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Jun 2022 13:31:08 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DD7237C34;
+        Thu,  9 Jun 2022 10:31:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5031361BB6;
-        Thu,  9 Jun 2022 17:25:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9E5C34114;
-        Thu,  9 Jun 2022 17:25:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CC0D7B82F33;
+        Thu,  9 Jun 2022 17:31:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4874CC34114;
+        Thu,  9 Jun 2022 17:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654795552;
-        bh=LRXZrTeIfc/3UjoxAqS+VWrDiLI0ppGgIhrh3HyHgZw=;
+        s=k20201202; t=1654795864;
+        bh=CRmm8/mUX227QEIll5fkaPHrTLEJ+9bs/oYiXXG8QFQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MQjB4azLUJEdeltSFXYBvNCenrXYvpToyYU4mAcKTRlZJTLz0YEdfhiDMgiOOYeh+
-         V9XB/uIgb6VERaxRZdFgwFqJs2bVq+5lVvS76QJOU3ljv7wtE2DSx+eVncXit1oNaF
-         niqHR3ydolPb8ctajta6HlDOf9kGUWGcerCvAI+BxWZV5tJAKfk6XKgPtIM0up9dX0
-         fVCAuPKFxSDaG7lOqn5RFL0fSq47MmycHbkJsnwnqRoqpaKYdBP8bgVG0cl9FPtn40
-         Saq8VFx6B2WFxiLodw9RA8Kiq9hSY7oS++OC3uK+FHZMtTL9/23BVRrCg/9vdCqt1F
-         JE/oHicJMGtYg==
-Date:   Thu, 9 Jun 2022 12:25:50 -0500
+        b=C8bjlMwUltah62e8/qL8celDTce5n5fF90DChyH3fO8MG/7Hqnv3FRwCFRcEofTTu
+         BEhPlzswk+ZzOfUd5NCkE8gipvjcIk5n0I2U1C3b54etSu6rJqCcN+QvwdCFYfQuq9
+         oF1NGxTHW5aDvJeQ1iV9xT0VjndVsSHwlEQUyAK6/qV2kuzcLgYhK2pC1Ayv0wmbTQ
+         QYOKMqGRvRdZt8h9U6HiZ3XppdfhInf0ReE6EYKucJKTWPOCxnPWKZc5QgP15wxdgh
+         Y/YhbXhS7+PXSYMDWAHDxhu1rSDDA9fvxFSbNOyKBzeuI2b97bc0HFpOEe4XA7/z7z
+         a3PrXQoDo5R1Q==
+Date:   Thu, 9 Jun 2022 12:31:02 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Miaoqian Lin <linmq006@gmail.com>
-Cc:     miles.chen@mediatek.com, Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] PCI: mediatek-gen3: Fix refcount leak in
- mtk_pcie_init_irq_domains
-Message-ID: <20220609172550.GA519198@bhelgaas>
+To:     Ke Liu <liuke94@huawei.com>
+Cc:     bhelgaas@google.com, nirmal.patel@linux.intel.com,
+        jonathan.derrick@linux.dev, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, kurt.schwemmer@microsemi.com, logang@deltatee.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drivers: pci: Directly use ida_alloc()/free()
+Message-ID: <20220609173102.GA519791@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220601041259.56185-1-linmq006@gmail.com>
+In-Reply-To: <20220602071115.3833935-1-liuke94@huawei.com>
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 01, 2022 at 08:12:58AM +0400, Miaoqian Lin wrote:
-> of_get_child_by_name() returns a node pointer with refcount
-> incremented, we should use of_node_put() on it when not need anymore.
-> Add missing of_node_put() to avoid refcount leak.
+On Thu, Jun 02, 2022 at 07:11:15AM +0000, Ke Liu wrote:
+> Use ida_alloc()/ida_free() instead of deprecated
+> ida_simple_get()/ida_simple_remove().
 > 
-> Fixes: 814cceebba9b ("PCI: mediatek-gen3: Add INTx support")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> Signed-off-by: Ke Liu <liuke94@huawei.com>
 
-Applied to pci/ctrl/mediatek-gen3 with Miles' reviewed-by and
-Jianjun's ack, thanks!
+I split the switchtec part off and applied it with Logan's ack to
+pci/ctrl/switchtec for v5.20, thanks!
+
+  PCI: switchtec: Prefer ida_alloc()/free() over ida_simple_get()/remove()
+
+I'll apply the vmd part as soon as one of those folks pipes up.
 
 > ---
-> changes in v2:
-> - move of_node_put(intc_node) right after irq_domain_add_linear to cover
-> normal path and error paths.
+> v2	fix sign-off name suggest by Bjorn Helgaas
 > ---
-> changes in v3:
-> - call of_node_put() in error paths with goto, and call of_node_put() before
->   return 0 in normal path. Since this function has a goto part to handle
->   resources, so put them together, as suggested by Miles Chen <miles.chen@mediatek.com>
+>  drivers/pci/controller/vmd.c   | 6 +++---
+>  drivers/pci/switch/switchtec.c | 7 +++----
+>  2 files changed, 6 insertions(+), 7 deletions(-)
 > 
-> v1 link: https://lore.kernel.org/all/20220526110246.53502-1-linmq006@gmail.com/
-> v2 link: https://lore.kernel.org/all/20220530064807.34534-1-linmq006@gmail.com/
-> ---
->  drivers/pci/controller/pcie-mediatek-gen3.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index 3e8d70bfabc6..bceed28446ed 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -600,7 +600,8 @@ static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
->  						  &intx_domain_ops, pcie);
->  	if (!pcie->intx_domain) {
->  		dev_err(dev, "failed to create INTx IRQ domain\n");
-> -		return -ENODEV;
-> +		ret = -ENODEV;
-> +		goto out_put_node;
->  	}
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 94a14a3d7e55..49c72c2d8fe7 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -894,7 +894,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  		return -ENOMEM;
 >  
->  	/* Setup MSI */
-> @@ -623,13 +624,15 @@ static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
->  		goto err_msi_domain;
->  	}
+>  	vmd->dev = dev;
+> -	vmd->instance = ida_simple_get(&vmd_instance_ida, 0, 0, GFP_KERNEL);
+> +	vmd->instance = ida_alloc(&vmd_instance_ida, GFP_KERNEL);
+>  	if (vmd->instance < 0)
+>  		return vmd->instance;
 >  
-> +	of_node_put(intc_node);
+> @@ -935,7 +935,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
 >  	return 0;
 >  
->  err_msi_domain:
->  	irq_domain_remove(pcie->msi_bottom_domain);
->  err_msi_bottom_domain:
->  	irq_domain_remove(pcie->intx_domain);
-> -
-> +out_put_node:
-> +	of_node_put(intc_node);
->  	return ret;
+>   out_release_instance:
+> -	ida_simple_remove(&vmd_instance_ida, vmd->instance);
+> +	ida_free(&vmd_instance_ida, vmd->instance);
+>  	kfree(vmd->name);
+>  	return err;
+>  }
+> @@ -958,7 +958,7 @@ static void vmd_remove(struct pci_dev *dev)
+>  	vmd_cleanup_srcu(vmd);
+>  	vmd_detach_resources(vmd);
+>  	vmd_remove_irq_domain(vmd);
+> -	ida_simple_remove(&vmd_instance_ida, vmd->instance);
+> +	ida_free(&vmd_instance_ida, vmd->instance);
+>  	kfree(vmd->name);
 >  }
 >  
+> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+> index c36c1238c604..75be4fe22509 100644
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -1376,8 +1376,7 @@ static struct switchtec_dev *stdev_create(struct pci_dev *pdev)
+>  	dev->groups = switchtec_device_groups;
+>  	dev->release = stdev_release;
+>  
+> -	minor = ida_simple_get(&switchtec_minor_ida, 0, 0,
+> -			       GFP_KERNEL);
+> +	minor = ida_alloc(&switchtec_minor_ida, GFP_KERNEL);
+>  	if (minor < 0) {
+>  		rc = minor;
+>  		goto err_put;
+> @@ -1692,7 +1691,7 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
+>  err_devadd:
+>  	stdev_kill(stdev);
+>  err_put:
+> -	ida_simple_remove(&switchtec_minor_ida, MINOR(stdev->dev.devt));
+> +	ida_free(&switchtec_minor_ida, MINOR(stdev->dev.devt));
+>  	put_device(&stdev->dev);
+>  	return rc;
+>  }
+> @@ -1704,7 +1703,7 @@ static void switchtec_pci_remove(struct pci_dev *pdev)
+>  	pci_set_drvdata(pdev, NULL);
+>  
+>  	cdev_device_del(&stdev->cdev, &stdev->dev);
+> -	ida_simple_remove(&switchtec_minor_ida, MINOR(stdev->dev.devt));
+> +	ida_free(&switchtec_minor_ida, MINOR(stdev->dev.devt));
+>  	dev_info(&stdev->dev, "unregistered.\n");
+>  	stdev_kill(stdev);
+>  	put_device(&stdev->dev);
 > -- 
 > 2.25.1
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
