@@ -2,87 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63949544006
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Jun 2022 01:44:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31B8654405C
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Jun 2022 02:10:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230486AbiFHXmI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Jun 2022 19:42:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        id S235215AbiFIAKY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Jun 2022 20:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235144AbiFHXl5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 19:41:57 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 995891AA17D;
-        Wed,  8 Jun 2022 16:41:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CA6F4B829F9;
-        Wed,  8 Jun 2022 23:41:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19D42C3411E;
-        Wed,  8 Jun 2022 23:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654731662;
-        bh=8TesstUwyX400Czc4f/SvrGdHmpleWBYHpobEaZCwkE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=InGtDqacJmo8CM6l4lGtNFSqYRF/mp1WqAFeknGWsuvfBS9Gio9rSz/TDbEI9VoYW
-         lq/1cpE72U11sAE/A76bYuzsaoWytZqKhexukpWwxlW/OJX1HCFHmRxAEUzfrYCcox
-         K8gn4Qfl4aJIGB+qzccPQOekypKr4mCHM6bKwIG+vDFfwlbiuKx1TQ6dmkkaV1G5b3
-         SveEMin/ZOuGfatVXUe3wyYVmktytRcA0NepOcbpC5VSSMryzeRYteu2j8LPq9xW5g
-         TG78VLvGMspHYQnuk4iYHa3/aPM3NHhE37V9kf29qHbUD2hr0V7COa2zi9MmuwFZfJ
-         mtC/+JRlfJ3bQ==
-Date:   Wed, 8 Jun 2022 18:40:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kent Overstreet <kent.overstreet@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, pmladek@suse.com,
-        rostedt@goodmis.org, linux-pci@vger.kernel.org,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v3 29/33] PCI/P2PDMA: Convert to printbuf
-Message-ID: <20220608234059.GA434397@bhelgaas>
+        with ESMTP id S235529AbiFIAKV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Jun 2022 20:10:21 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 137EC3467E;
+        Wed,  8 Jun 2022 17:10:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654733418; x=1686269418;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=a4P2Gcxk73HDhExF9ALEg8W8RNzRGhGylrPCFfw/tP0=;
+  b=UIl32lTyCoFNcJe0tLk+4DKWd/ztfwZQ+R/BjywYk0TNiVR0W8TPC91P
+   uMhcywBHm91c5ssR2GcD7FTy5FOiLeyNq5aXgJP5DwRJf0u1Az3oTWKHA
+   DZn/bj03az8Nb0FvmJfUHesRgD2HYBGeb+R6SZN3nUdAc7pYoYwxaKKeX
+   BmapWkfS1JMUgEo5AP0f4KqKolgUFWZZ6KrpTZ4leVlBJ+dNSJMCaaFTm
+   DuEAQDlE9+mtk3iihqY20os0QD7GD4aH9iH7BkhICuI08DYUZT5UsxjT4
+   JEBsSJjpyG3vT7ejS8jmOdrPNNhhE0bAqJFue8PeJX1BxNV7/MUca4y8Y
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10372"; a="260229122"
+X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
+   d="scan'208";a="260229122"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2022 17:10:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
+   d="scan'208";a="580316768"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 08 Jun 2022 17:10:08 -0700
+Received: from rjingar-desk5.amr.corp.intel.com (unknown [10.251.26.11])
+        by linux.intel.com (Postfix) with ESMTP id 62BB3580BE1;
+        Wed,  8 Jun 2022 17:10:08 -0700 (PDT)
+From:   Rajvi Jingar <rajvi.jingar@linux.intel.com>
+To:     rafael.j.wysocki@intel.com, bhelgaas@google.com
+Cc:     rajvi.jingar@linux.intel.com, david.e.box@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v7 1/2] PCI/PM: refactor pci_pm_suspend_noirq()
+Date:   Wed,  8 Jun 2022 17:10:06 -0700
+Message-Id: <20220609001007.533242-1-rajvi.jingar@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5d0cc2e-79e1-3248-0f55-8f1afd21f926@gmail.com>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 08, 2022 at 07:24:02PM -0400, Kent Overstreet wrote:
-> On 6/8/22 17:11, Bjorn Helgaas wrote:
-> > On Sat, Jun 04, 2022 at 03:30:38PM -0400, Kent Overstreet wrote:
-> > > This converts from seq_buf to printbuf. We're using printbuf in external
-> > > buffer mode, so it's a direct conversion, aside from some trivial
-> > > refactoring in cpu_show_meltdown() to make the code more consistent.
-> > 
-> > cpu_show_meltdown() doesn't appear in p2pdma.c.  Leftover from another
-> > patch?  Maybe from 27/33 ("powerpc: Convert to printbuf")?
+The state of the device is saved during pci_pm_suspend_noirq(), if it
+has not already been saved, regardless of the skip_bus_pm flag value. So
+skip_bus_pm check is removed before saving the device state.
 
-Don't forget this part :)
+Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Suggested-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ v1 -> v2: add comments to the changes
+ v2 -> v3: move changelog after "---" marker
+ v3 -> v4: add "---" marker after changelog
+ v4 -> v5: no change
+ v5 -> v6: no change
+ v6 -> v7: no change
+---
+ drivers/pci/pci-driver.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-> > I'm not opposed to this, but it would be nice to say what the benefit
-> > is.  How is printbuf better than seq_buf?  It's not obvious from the
-> > patch how this is better/safer/shorter/etc.
-> > 
-> > Even the cover letter [1] is not very clear about the benefit.  Yes, I
-> > see it has something to do with improving buffer management, and I
-> > know from experience that's a pain.  Concrete examples of typical
-> > printbuf usage and bugs that printbufs avoid would be helpful.
-> 
-> Take a look at the vsprintf.c conversion if you want to see big
-> improvements. Also, %pf() is another thing that's going to enable a lot more
-> improvements.
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 49238ddd39ee..1f64de3e5280 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -867,20 +867,14 @@ static int pci_pm_suspend_noirq(struct device *dev)
+ 		}
+ 	}
+ 
+-	if (pci_dev->skip_bus_pm) {
++	if (!pci_dev->state_saved) {
++		pci_save_state(pci_dev);
+ 		/*
+-		 * Either the device is a bridge with a child in D0 below it, or
+-		 * the function is running for the second time in a row without
+-		 * going through full resume, which is possible only during
+-		 * suspend-to-idle in a spurious wakeup case.  The device should
+-		 * be in D0 at this point, but if it is a bridge, it may be
+-		 * necessary to save its state.
++		 * If the device is a bridge with a child in D0 below it, it needs to
++		 * stay in D0, so check skip_bus_pm to avoid putting it into a
++		 * low-power state in that case.
+ 		 */
+-		if (!pci_dev->state_saved)
+-			pci_save_state(pci_dev);
+-	} else if (!pci_dev->state_saved) {
+-		pci_save_state(pci_dev);
+-		if (pci_power_manageable(pci_dev))
++		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+ 			pci_prepare_to_sleep(pci_dev);
+ 	}
+ 
+-- 
+2.25.1
 
-Like I said, I'm not opposed to this, I'm just looking for a hint in
-this commit log that makes me think "yes, this is a good idea for
-PCI."
-
-Right now it just says "converts X to Y."  I'm hoping for "convert X
-to Y to avoid <some problem with X>."
-
-Bjorn
