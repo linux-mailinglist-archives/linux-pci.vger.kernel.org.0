@@ -2,36 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AAAB5460F7
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 11:08:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 877B65460F4
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 11:08:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348479AbiFJJG3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jun 2022 05:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40516 "EHLO
+        id S1348457AbiFJJFw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jun 2022 05:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348478AbiFJJGC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 05:06:02 -0400
+        with ESMTP id S1348425AbiFJJF3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 05:05:29 -0400
 Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 089F3274D78;
-        Fri, 10 Jun 2022 02:05:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D57F1278311;
+        Fri, 10 Jun 2022 02:05:00 -0700 (PDT)
 Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id 7BFD316A1;
-        Fri, 10 Jun 2022 11:57:59 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 7BFD316A1
+        by mail.baikalelectronics.com (Postfix) with ESMTP id 7CF2B16A6;
+        Fri, 10 Jun 2022 11:58:00 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 7CF2B16A6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baikalelectronics.ru; s=mail; t=1654851480;
-        bh=UjzkV3hyR9eVfFMCrVRPxlaF8VE0L1vTIAeO1mk31v4=;
-        h=From:To:CC:Subject:Date:From;
-        b=P8dpbexMNsYCSo5VvEjHOG49YCz4sEVGZJB2Xh/3JsCpeGMA8YKsiUM0yCClqsrjR
-         UTasD3aMKyiZEPSISrIY3zs88iEhJjwE2cXaeW/so71TZBGjJdKZb1HwKFvEUh2muo
-         fL/KPWK/GmEm1GYBIeM0cqdmX+FTQUoeIVGO1GSo=
+        bh=1WK67QekY08rXwVgrZbhV2fY5DLa+UWQO81umxGeAE0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=hEV8IYQYm5HkDS+QIAF6kCZCr0RhSQctfKbYc2iQ3sJ+SFnesw2u+9nedEN6H8crh
+         xjlhUWKmmvMZHEM1QZcbXDSJiAbCOE59zSeAh7w+7Gsk+tbkIkN2yKjKQvL5ssAJED
+         7qp1PKs98aF/1y7v1tENpjZGM6HOu/cCugnlr7NY=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jun 2022 11:57:07 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jun 2022 11:57:08 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -39,14 +41,16 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 00/17] PCI: dwc: Add generic resources and Baikal-T1 support
-Date:   Fri, 10 Jun 2022 11:56:48 +0300
-Message-ID: <20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru>
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 01/17] dt-bindings: PCI: dwc: Detach common RP/EP DT bindings
+Date:   Fri, 10 Jun 2022 11:56:49 +0300
+Message-ID: <20220610085706.15741-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru>
+References: <20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
@@ -58,128 +62,217 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patchset is a third one in the series created in the framework of
-my Baikal-T1 PCIe/eDMA-related work:
-
-[1: In-progress v4] PCI: dwc: Various fixes and cleanups
-Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-[2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
-Link: https://lore.kernel.org/linux-pci/20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru/
-[3: In-progress v3] PCI: dwc: Add generic resources and Baikal-T1 support
-Link: ---you are looking at it---
-[4: In-progress v2] dmaengine: dw-edma: Add RP/EP local DMA support
-Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
-
-Note it is very recommended to merge the patchsets in the same order as
-they are listed in the set above in order to have them applied smoothly.
-Nothing prevents them from being reviewed synchronously though.
-
-Originally the patches submitted in this patchset were a part of the series:
-Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
-but due to the reviewers requests the series was expanded to about 30
-patches which made it too bulky for a comfortable review. So I decided to
-split it up into two patchsets: 2. and 3. in the table above.
-
-Regarding the series content. This patchset is mainly about adding new DW
-PCIe platform support - Baikal-T1 PCIe of DW PCIe v4.60a IP-core. But a
-set of feature-reach preparations are done first. It starts from
-converting the currently available DT-schema into a more flexible schemas
-hierarchy with separately defined regs, clocks, resets and interrupts
-properties. As a result the common schema can be easily re-used by all the
-currently available platforms while the named properties above can be
-either re-defined or used as is if the platforms support they. In the
-framework of that modification we also suggest to add a set of generic
-regs, clocks, resets and interrupts resource names in accordance with what
-the DW PCIe hardware reference manual describes and what the DW PCIe core
-driver already expects to be specified. Thus the new platform driver will
-be able to re-use the common resources infrastructure.
-
-Link: https://lore.kernel.org/linux-pci/20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru/
-Changelog v2:
-- Rename 'syscon' property to 'baikal,bt1-syscon'. (@Rob)
-- Move the iATU region selection procedure into a helper function (@Rob).
-- Rebase from kernel v5.17 onto v5.18-rc3 since the later kernel has
-  already DT bindings converted. (@Rob)
-- Use 'definitions' property instead of the '$defs' one. It fixes the
-  dt-validate error: 'X is not of type array.'
-- Drop 'interrupts' and 'interrupt-names' property from being required
-  for the native DW PCIe host.
-- Evaluate the 'snps,dw-pcie-common.yaml' schema in the
-  'socionext,uniphier-pcie-ep.yaml' DT-bindings since the later has
-  platform-specific names defined.
-
-Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru
-Changelog v3:
-- Split up the patch "dt-bindings: PCI: dwc: Define common and native DT
-  bindings" into a series of modifications. (@Rob)
-- Detach this series of the patches into a dedicated patchset.
-- Add a new feature patch: "PCI: dwc: Introduce generic controller
-  capabilities interface".
-- Add a new feature patch: "PCI: dwc: Introduce generic resources getter".
-- Add a new cleanup patch: "PCI: dwc: Combine iATU detection procedures".
-- Add a method to at least request the generic clocks and resets. (@Rob)
-- Add GPIO-based PERST# signal support to the core module.
-- Redefine Baikal-T1 PCIe host bridge config space accessors with the
-  pci_generic_config_read32() and pci_generic_config_write32() methods.
-  (@Rob)
-- Drop synonymous from the names list in the common DT-schema since the
-  device sub-schemas create their own enumerations anyway.
-- Rebase onto kernel v5.18.
+Currently both DW PCIe Root Port and End-point DT bindings are defined as
+separate schemas. Carefully looking at them, at the hardware reference
+manuals and seeing there is a generic part of the driver used by the both
+RP and EP drivers we can greatly simplify the DW PCIe controller bindings
+by moving some of the properties into the common DT schema. It concerns
+the PERST GPIO control, number of lanes, number of iATU windows and CDM
+check properties. They will be defined in the snps,dw-pcie-common.yaml
+schema which will be referenced in the DW PCIe Root Port and End-point DT
+bindings in order to evaluate the common for both of these controllers
+properties. The rest of properties like reg{,-names}, clock{s,-names},
+reset{s,-names}, etc will be consolidate there in one of the next commits.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: "Krzysztof Wilczyński" <kw@linux.com>
-Cc: Frank Li <Frank.Li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
 
-Serge Semin (17):
-  dt-bindings: PCI: dwc: Detach common RP/EP DT bindings
-  dt-bindings: PCI: dwc: Remove bus node from the examples
-  dt-bindings: PCI: dwc: Add phys/phy-names common properties
-  dt-bindings: PCI: dwc: Add max-link-speed common property
-  dt-bindings: PCI: dwc: Stop selecting generic bindings by default
-  dt-bindings: PCI: dwc: Add max-functions EP property
-  dt-bindings: PCI: dwc: Add interrupts/interrupt-names common
-    properties
-  dt-bindings: PCI: dwc: Add reg/reg-names common properties
-  dt-bindings: PCI: dwc: Add clocks/resets common properties
-  dt-bindings: PCI: dwc: Add dma-coherent property
-  dt-bindings: PCI: dwc: Apply common schema to Rockchip DW PCIe nodes
-  dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root Port bindings
-  PCI: dwc: Introduce generic controller capabilities interface
-  PCI: dwc: Introduce generic resources getter
-  PCI: dwc: Combine iATU detection procedures
-  PCI: dwc: Introduce generic platform clocks and resets
-  PCI: dwc: Add Baikal-T1 PCIe controller support
+---
 
- .../bindings/pci/baikal,bt1-pcie.yaml         | 154 +++++
- .../bindings/pci/fsl,imx6q-pcie.yaml          |   3 +-
- .../bindings/pci/hisilicon,kirin-pcie.yaml    |   3 +-
- .../bindings/pci/rockchip-dw-pcie.yaml        |   3 +-
- .../bindings/pci/samsung,exynos-pcie.yaml     |   3 +-
- .../bindings/pci/sifive,fu740-pcie.yaml       |   3 +-
- .../bindings/pci/snps,dw-pcie-common.yaml     | 323 +++++++++
- .../bindings/pci/snps,dw-pcie-ep.yaml         | 153 +++--
- .../devicetree/bindings/pci/snps,dw-pcie.yaml | 202 ++++--
- .../pci/socionext,uniphier-pcie-ep.yaml       |  12 +-
- .../bindings/pci/toshiba,visconti-pcie.yaml   |   3 +-
- drivers/pci/controller/dwc/Kconfig            |   9 +
- drivers/pci/controller/dwc/Makefile           |   1 +
- drivers/pci/controller/dwc/pcie-bt1.c         | 649 ++++++++++++++++++
- .../pci/controller/dwc/pcie-designware-ep.c   |  26 +-
- .../pci/controller/dwc/pcie-designware-host.c |  15 +-
- drivers/pci/controller/dwc/pcie-designware.c  | 206 ++++--
- drivers/pci/controller/dwc/pcie-designware.h  |  57 +-
- 18 files changed, 1622 insertions(+), 203 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+Changelog v3:
+- This is a new patch unpinned from the next one:
+  https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
+  by the Rob' request. (@Rob)
+---
+ .../bindings/pci/snps,dw-pcie-common.yaml     | 76 +++++++++++++++++++
+ .../bindings/pci/snps,dw-pcie-ep.yaml         | 29 +------
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml | 31 +-------
+ 3 files changed, 78 insertions(+), 58 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-bt1.c
 
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+new file mode 100644
+index 000000000000..3e992b653d12
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/snps,dw-pcie-common.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys DWC PCIe RP/EP controller
++
++maintainers:
++  - Jingoo Han <jingoohan1@gmail.com>
++  - Gustavo Pimentel <gustavo.pimentel@synopsys.com>
++
++description:
++  Generic Synopsys DesignWare PCIe Root Port and Endpoint controller
++  properties.
++
++select: false
++
++properties:
++  reset-gpio:
++    deprecated: true
++    description:
++      Reference to the GPIO-controlled PERST# signal. It is used to reset all
++      the peripheral devices available on the PCIe bus.
++    maxItems: 1
++
++  reset-gpios:
++    description:
++      Reference to the GPIO-controlled PERST# signal. It is used to reset all
++      the peripheral devices available on the PCIe bus.
++    maxItems: 1
++
++  num-lanes:
++    description:
++      Number of PCIe link lanes to use. Can be omitted should the already
++      brought up link is supposed to be preserved.
++    maximum: 16
++
++  num-ob-windows:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    deprecated: true
++    description:
++      Number of outbound address translation windows. This parameter can be
++      auto-detected based on the iATU memory writability. So there is no
++      point in having a dedicated DT-property for it.
++    maximum: 256
++
++  num-ib-windows:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    deprecated: true
++    description:
++      Number of inbound address translation windows. In the same way as
++      for the outbound AT windows, this parameter can be auto-detected based
++      on the iATU memory writability. There is no point having a dedicated
++      DT-property for it either.
++    maximum: 256
++
++  num-viewport:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    deprecated: true
++    description:
++      Number of outbound view ports configured in hardware. It's the same as
++      the number of outbound AT windows.
++    maximum: 256
++
++  snps,enable-cdm-check:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Enable automatic checking of CDM (Configuration Dependent Module)
++      registers for data corruption. CDM registers include standard PCIe
++      configuration space registers, Port Logic registers, DMA and iATU
++      registers. This feature has been available since DWC PCIe v4.80a.
++
++additionalProperties: true
++
++...
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+index e59059ab5be0..eae60901d60e 100644
+--- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+@@ -15,6 +15,7 @@ description: |
+ 
+ allOf:
+   - $ref: /schemas/pci/pci-ep.yaml#
++  - $ref: /schemas/pci/snps,dw-pcie-common.yaml#
+ 
+ properties:
+   compatible:
+@@ -36,34 +37,6 @@ properties:
+     items:
+       enum: [dbi, dbi2, config, atu, addr_space, link, atu_dma, appl]
+ 
+-  reset-gpio:
+-    description: GPIO pin number of PERST# signal
+-    maxItems: 1
+-    deprecated: true
+-
+-  reset-gpios:
+-    description: GPIO controlled connection to PERST# signal
+-    maxItems: 1
+-
+-  snps,enable-cdm-check:
+-    type: boolean
+-    description: |
+-      This is a boolean property and if present enables
+-      automatic checking of CDM (Configuration Dependent Module) registers
+-      for data corruption. CDM registers include standard PCIe configuration
+-      space registers, Port Logic registers, DMA and iATU (internal Address
+-      Translation Unit) registers.
+-
+-  num-ib-windows:
+-    description: number of inbound address translation windows
+-    maxItems: 1
+-    deprecated: true
+-
+-  num-ob-windows:
+-    description: number of outbound address translation windows
+-    maxItems: 1
+-    deprecated: true
+-
+ required:
+   - reg
+   - reg-names
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+index a5345c494744..75ff715a0153 100644
+--- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+@@ -15,6 +15,7 @@ description: |
+ 
+ allOf:
+   - $ref: /schemas/pci/pci-bus.yaml#
++  - $ref: /schemas/pci/snps,dw-pcie-common.yaml#
+ 
+ properties:
+   compatible:
+@@ -37,42 +38,12 @@ properties:
+       enum: [ dbi, dbi2, config, atu, app, elbi, mgmt, ctrl, parf, cfg, link,
+               ulreg, smu, mpu, apb, phy ]
+ 
+-  num-lanes:
+-    description: |
+-      number of lanes to use (this property should be specified unless
+-      the link is brought already up in firmware)
+-    maximum: 16
+-
+-  reset-gpio:
+-    description: GPIO pin number of PERST# signal
+-    maxItems: 1
+-    deprecated: true
+-
+-  reset-gpios:
+-    description: GPIO controlled connection to PERST# signal
+-    maxItems: 1
+-
+   interrupts: true
+ 
+   interrupt-names: true
+ 
+   clocks: true
+ 
+-  snps,enable-cdm-check:
+-    type: boolean
+-    description: |
+-      This is a boolean property and if present enables
+-      automatic checking of CDM (Configuration Dependent Module) registers
+-      for data corruption. CDM registers include standard PCIe configuration
+-      space registers, Port Logic registers, DMA and iATU (internal Address
+-      Translation Unit) registers.
+-
+-  num-viewport:
+-    description: |
+-      number of view ports configured in hardware. If a platform
+-      does not specify it, the driver autodetects it.
+-    deprecated: true
+-
+ additionalProperties: true
+ 
+ required:
 -- 
 2.35.1
 
