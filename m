@@ -2,39 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 653AD545EFA
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 10:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F629545EF1
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 10:29:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344049AbiFJI3W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jun 2022 04:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37646 "EHLO
+        id S245289AbiFJI3Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jun 2022 04:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347604AbiFJI1n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 04:27:43 -0400
+        with ESMTP id S1347597AbiFJI1o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 04:27:44 -0400
 Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E4CDD267B;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E513826F7;
         Fri, 10 Jun 2022 01:25:53 -0700 (PDT)
 Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id 3C855BD6;
-        Fri, 10 Jun 2022 11:26:33 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 3C855BD6
+        by mail.baikalelectronics.com (Postfix) with ESMTP id 0ACF6BD8;
+        Fri, 10 Jun 2022 11:26:34 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 0ACF6BD8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1654849593;
-        bh=3qGTdt7z7PgMIeLrOUnz8BGjA4aE8NJd1KjGC5/ncCc=;
+        d=baikalelectronics.ru; s=mail; t=1654849594;
+        bh=TKeiPw73UkAdUU+xrZ/SQHx4mLKyI2VePVBMGJJK00k=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=KCOgRQzkZGhN41Hq8EDeHQFdkm/6XYmFTv2D9WtplV/U0jBYIBdOmnQBYhiRCvWfJ
-         SKP8+GDUiA8R8AJsrJpgl7TWNDIKPJZjoM9RoFkGm9jgn74w9GHd09HNYHlL2aQJEP
-         pv+Vzd6pU0NrvTiHCVVxNnPtVFG/KLLqftekaFVo=
+        b=Rk22/SLo6im/ovg/qWwA92XNLN1NQd2erZGOzu6lrdwI4ZzCuftIhHPlyIteo8qm6
+         QdDUlkHR5yHMqECaKHq4Bch/XK8pGuJBmrCFu53SB0BzaFW8W82tbpThCs4x/x1q+l
+         pD86goE4jsUVZdgpmS7SC2kd+qjtdn3w8J/jSRRw=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jun 2022 11:25:40 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jun 2022 11:25:41 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -42,9 +40,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 06/18] PCI: dwc: Enable CDM-check independently from the num_lanes value
-Date:   Fri, 10 Jun 2022 11:25:22 +0300
-Message-ID: <20220610082535.12802-7-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 07/18] PCI: dwc: Add braces to the multi-line if-else statements
+Date:   Fri, 10 Jun 2022 11:25:23 +0300
+Message-ID: <20220610082535.12802-8-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -61,55 +59,52 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently the embedded CDM IOs consistency check-engine is enabled only if
-the num_lanes field of dw_pcie structure is set to non-zero value. It's
-definitely wrong since the CDM checking has nothing to do with the PCIe
-lanes settings, while that feature will be left disabled for the platforms
-which expect it being enabled and prefer keeping the default lanes setup.
-Let's fix that by enabling the CDM-check feature before the num_lanes
-parameter is handled.
+In accordance with [1] if there is at least one multi-line if-else
+clause in the statement, then each clause will need to be surrounded by
+the braces. The driver code violates that coding style rule in a few
+places. Let's fix it.
 
-Fixes: 07f123def73e ("PCI: dwc: Add support to enable CDM register check")
+[1] Documentation/process/coding-style.rst
+
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++--
+ drivers/pci/controller/dwc/pcie-designware.c    | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Changelog v4:
-- This is a new patch created on v4 lap of the series.
----
- drivers/pci/controller/dwc/pcie-designware.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 13c2e73f0eaf..7ad349c32082 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -699,9 +699,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 
+ 	if (!pci->dbi_base2) {
+ 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+-		if (!res)
++		if (!res) {
+ 			pci->dbi_base2 = pci->dbi_base + SZ_4K;
+-		else {
++		} else {
+ 			pci->dbi_base2 = devm_pci_remap_cfg_resource(dev, res);
+ 			if (IS_ERR(pci->dbi_base2))
+ 				return PTR_ERR(pci->dbi_base2);
 diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 347251bf87d0..5848cc520b52 100644
+index 5848cc520b52..d0061735b434 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.c
 +++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -740,6 +740,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 	val |= PORT_LINK_DLL_LINK_EN;
- 	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+@@ -699,8 +699,9 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
+ 			pci->atu_size = SZ_4K;
  
-+	if (of_property_read_bool(np, "snps,enable-cdm-check")) {
-+		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
-+		val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
-+		       PCIE_PL_CHK_REG_CHK_REG_START;
-+		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+ 		dw_pcie_iatu_detect_regions_unroll(pci);
+-	} else
++	} else {
+ 		dw_pcie_iatu_detect_regions(pci);
 +	}
-+
- 	of_property_read_u32(np, "num-lanes", &pci->num_lanes);
- 	if (!pci->num_lanes) {
- 		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
-@@ -786,11 +793,4 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		break;
- 	}
- 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
--
--	if (of_property_read_bool(np, "snps,enable-cdm-check")) {
--		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
--		val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
--		       PCIE_PL_CHK_REG_CHK_REG_START;
--		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
--	}
- }
+ 
+ 	dev_info(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
+ 		"enabled" : "disabled");
 -- 
 2.35.1
 
