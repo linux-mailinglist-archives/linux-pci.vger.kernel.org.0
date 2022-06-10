@@ -2,38 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD77254612A
+	by mail.lfdr.de (Postfix) with ESMTP id 4EFBA546128
 	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 11:12:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348483AbiFJJMU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jun 2022 05:12:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41892 "EHLO
+        id S1344416AbiFJJMT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jun 2022 05:12:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244940AbiFJJL7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 05:11:59 -0400
+        with ESMTP id S1344194AbiFJJMA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 05:12:00 -0400
 Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3AF1827B987;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3AF91285AAC;
         Fri, 10 Jun 2022 02:09:49 -0700 (PDT)
 Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id 8899C16C0;
-        Fri, 10 Jun 2022 11:45:48 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 8899C16C0
+        by mail.baikalelectronics.com (Postfix) with ESMTP id 8086416A4;
+        Fri, 10 Jun 2022 11:45:50 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 8086416A4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1654850748;
-        bh=sWm2wkwgYyFQa6x4pRX1K7dze5ryKklI+g5phTVa8zQ=;
+        d=baikalelectronics.ru; s=mail; t=1654850750;
+        bh=EDILp+MFSSPr1gFjUysXLOPNDUyEdUcN69hK1tuUiXU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=MKyPMr2orJRDLj8worVk5PBavw35V0yYoX2fMl4qv4Ul4bg3vQx2VqSxlRjkfoF5/
-         usV7hz/J/6RENEKxIfKRS8cOt5xB84m98YpaZ6upyRcOp/oGRiH2SeqbnaQZhgbmHt
-         9B/sQesv+lUWaEJnCMpmkDeAyf+//Jin9GkAOtg4=
+        b=hMCXPZR0QoLoqdR9D145oHXPCIZszi18d+1KkOTaveudEfhPGKeGC0qa7YPALusMz
+         ipH8bO8kLkCwP2VQIUumsVRWWn/sFc09bx8yCbCGc6LKaqwboWsTLBFy9LYGBgvGcV
+         ARi2VGRT7yKb46D8ywYBfjOhFLkCmyGbpxC58PL0=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jun 2022 11:44:56 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jun 2022 11:44:57 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rahul Tanwar <rtanwar@maxlinear.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -42,9 +41,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 14/15] PCI: dwc: Check iATU in/outbound ranges setup methods status
-Date:   Fri, 10 Jun 2022 11:44:42 +0300
-Message-ID: <20220610084444.14549-15-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 15/15] PCI: dwc: Introduce dma-ranges property support for RC-host
+Date:   Fri, 10 Jun 2022 11:44:43 +0300
+Message-ID: <20220610084444.14549-16-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -61,335 +60,210 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Let's make the DWC PCIe RC/EP safer and more verbose for the invalid or
-failed inbound and outbound iATU windows setups. Needless to say that
-silently ignoring iATU regions setup errors may cause unpredictable
-errors. For instance if for some reason a cfg or IO window fails to be
-activated, then any CFG/IO requested won't reach target PCIe devices and
-the corresponding accessors will return platform-specific random values.
+In accordance with the generic PCIe Root Port DT-bindings the "dma-ranges"
+property has the same format as the "ranges" property. The only difference
+is in their semantics. The "dma-ranges" property describes the PCIe-to-CPU
+memory mapping in opposite to the CPU-to-PCIe mapping of the "ranges"
+property. Even though the DW PCIe controllers are normally equipped with
+the internal Address Translation Unit which inbound and outbound tables
+can be used to implement both properties semantics, it was surprising for
+me to discover that the host-related part of the DW PCIe driver currently
+supports the "ranges" property only while the "dma-ranges" windows are
+just ignored. Having the "dma-ranges" supported in the driver would be
+very handy for the platforms, that don't tolerate the 1:1 CPU-PCIe memory
+mapping and require a customized PCIe memory layout. So let's fix that by
+introducing the "dma-ranges" property support.
 
-First of all we need to convert dw_pcie_ep_outbound_atu() method to check
-whether the specified outbound iATU range is successfully setup. That
-method is called by the pci_epc_ops.map_addr callback. Thus we'll make the
-EP-specific CPU->PCIe memory mappings saver.
+First of all we suggest to rename the dw_pcie_prog_inbound_atu() method to
+dw_pcie_prog_ep_inbound_atu() and create a new version of the
+dw_pcie_prog_inbound_atu() function. Thus we'll have two methods for the
+RC and EP controllers respectively in the same way as it has been
+developed for the outbound ATU setup methods.
 
-Secondly since the iATU outbound range programming method now returns the
-operation status, it will be handy to take that status into account in the
-pci_ops.{map_bus,read,write} methods. Thus any failed mapping will be
-immediately noticeable by the PCIe CFG operations requesters.
+Secondly aside with the memory window index and type the new
+dw_pcie_prog_inbound_atu() function will accept CPU address, PCIe address
+and size as its arguments. These parameters define the PCIe and CPU memory
+ranges which will be used to setup the respective inbound ATU mapping. The
+passed parameters need to be verified against the ATU ranges constraints
+in the same way as it is done for the outbound ranges.
 
-Finally we need to convert the dw_pcie_setup_rc() method to returning the
-operation status, since the iATU outbound ranges setup procedure may now
-fail. It will be especially handy in case if the DW PCIe RC DT-node has
-invalid/unsupported (dma-)ranges property. Note since the suggested
-modification causes having too wide code indentation, it is reasonable
-from maintainability and readability points of view to move the outbound
-ranges setup procedure in the separate function.
+Finally the DMA-ranges detected for the PCIe controller need to be
+converted to the inbound ATU entries during the host controller
+initialization procedure. It will be done in the framework of the
+dw_pcie_iatu_setup() method. Note before setting the inbound ranges up we
+need to disable all the inbound ATU entries in order to prevent unexpected
+PCIe TLPs translations defined by some third party software like
+bootloaders.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Rob Herring <robh@kernel.org>
+
 ---
- .../pci/controller/dwc/pcie-designware-ep.c   |   9 +-
- .../pci/controller/dwc/pcie-designware-host.c | 153 ++++++++++++------
- drivers/pci/controller/dwc/pcie-designware.h  |   5 +-
- drivers/pci/controller/dwc/pcie-intel-gw.c    |   6 +-
- 4 files changed, 114 insertions(+), 59 deletions(-)
+
+Changelog v3:
+- Drop inbound iATU window size alignment constraint. (@Manivannan)
+---
+ .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
+ .../pci/controller/dwc/pcie-designware-host.c | 32 ++++++++++-
+ drivers/pci/controller/dwc/pcie-designware.c  | 56 ++++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-designware.h  |  6 +-
+ 4 files changed, 89 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 2e91222f7c98..627c4b69878c 100644
+index 627c4b69878c..441feff1917a 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -184,8 +184,9 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_no,
- 				   phys_addr_t phys_addr,
- 				   u64 pci_addr, size_t size)
- {
--	u32 free_win;
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	u32 free_win;
-+	int ret;
- 
- 	free_win = find_first_zero_bit(ep->ob_window_map, pci->num_ob_windows);
- 	if (free_win >= pci->num_ob_windows) {
-@@ -193,8 +194,10 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_no,
+@@ -167,8 +167,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
  		return -EINVAL;
  	}
  
--	dw_pcie_prog_ep_outbound_atu(pci, func_no, free_win, PCIE_ATU_TYPE_MEM,
--				     phys_addr, pci_addr, size);
-+	ret = dw_pcie_prog_ep_outbound_atu(pci, func_no, free_win, PCIE_ATU_TYPE_MEM,
-+					   phys_addr, pci_addr, size);
-+	if (ret)
-+		return ret;
- 
- 	set_bit(free_win, ep->ob_window_map);
- 	ep->outbound_addr[free_win] = phys_addr;
+-	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, type,
+-				       cpu_addr, bar);
++	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
++					  cpu_addr, bar);
+ 	if (ret < 0) {
+ 		dev_err(pci->dev, "Failed to program IB window\n");
+ 		return ret;
 diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 7afd49c7da71..b52f7f4db191 100644
+index b52f7f4db191..56a678abe828 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-host.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -411,7 +411,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 
- 	dw_pcie_iatu_detect(pci);
- 
--	dw_pcie_setup_rc(pp);
-+	ret = dw_pcie_setup_rc(pp);
-+	if (ret)
-+		goto err_free_msi;
- 
- 	if (!dw_pcie_link_up(pci)) {
- 		ret = dw_pcie_start_link(pci);
-@@ -465,10 +467,10 @@ EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
- static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
- 						unsigned int devfn, int where)
- {
--	int type;
--	u32 busdev;
- 	struct dw_pcie_rp *pp = bus->sysdata;
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	int type, ret;
-+	u32 busdev;
+@@ -580,12 +580,15 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 	}
  
  	/*
- 	 * Checking whether the link is up here is a last line of defense
-@@ -489,8 +491,10 @@ static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
- 	else
- 		type = PCIE_ATU_TYPE_CFG1;
+-	 * Ensure all outbound windows are disabled before proceeding with
+-	 * the MEM/IO ranges setups.
++	 * Ensure all out/inbound windows are disabled before proceeding with
++	 * the MEM/IO (dma-)ranges setups.
+ 	 */
+ 	for (i = 0; i < pci->num_ob_windows; i++)
+ 		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
  
--
--	dw_pcie_prog_outbound_atu(pci, 0, type, pp->cfg0_base, busdev, pp->cfg0_size);
-+	ret = dw_pcie_prog_outbound_atu(pci, 0, type, pp->cfg0_base, busdev,
-+					pp->cfg0_size);
-+	if (ret)
-+		return NULL;
- 
- 	return pp->va_cfg0_base + where;
- }
-@@ -498,33 +502,45 @@ static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
- static int dw_pcie_rd_other_conf(struct pci_bus *bus, unsigned int devfn,
- 				 int where, int size, u32 *val)
- {
--	int ret;
- 	struct dw_pcie_rp *pp = bus->sysdata;
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	int ret;
- 
- 	ret = pci_generic_config_read(bus, devfn, where, size, val);
-+	if (ret != PCIBIOS_SUCCESSFUL)
-+		return ret;
- 
--	if (!ret && pp->cfg0_io_shared)
--		dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO, pp->io_base,
--					  pp->io_bus_addr, pp->io_size);
-+	if (pp->cfg0_io_shared) {
-+		ret = dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO,
-+						pp->io_base, pp->io_bus_addr,
-+						pp->io_size);
-+		if (ret)
-+			return PCIBIOS_SET_FAILED;
-+	}
- 
--	return ret;
-+	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int dw_pcie_wr_other_conf(struct pci_bus *bus, unsigned int devfn,
- 				 int where, int size, u32 val)
- {
--	int ret;
- 	struct dw_pcie_rp *pp = bus->sysdata;
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	int ret;
- 
- 	ret = pci_generic_config_write(bus, devfn, where, size, val);
-+	if (ret != PCIBIOS_SUCCESSFUL)
-+		return ret;
- 
--	if (!ret && pp->cfg0_io_shared)
--		dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO, pp->io_base,
--					  pp->io_bus_addr, pp->io_size);
-+	if (pp->cfg0_io_shared) {
-+		ret = dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO,
-+						pp->io_base, pp->io_bus_addr,
-+						pp->io_size);
-+		if (ret)
-+			return PCIBIOS_SET_FAILED;
-+	}
- 
--	return ret;
-+	return PCIBIOS_SUCCESSFUL;
- }
- 
- static struct pci_ops dw_child_pcie_ops = {
-@@ -551,10 +567,72 @@ static struct pci_ops dw_pcie_ops = {
- 	.write = pci_generic_config_write,
- };
- 
--void dw_pcie_setup_rc(struct dw_pcie_rp *pp)
-+static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct resource_entry *entry;
-+	int i, ret;
++	for (i = 0; i < pci->num_ib_windows; i++)
++		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
 +
-+	/* Note the very first outbound ATU is used for CFG IOs */
-+	if (!pci->num_ob_windows) {
-+		dev_err(pci->dev, "No outbound iATU found\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Ensure all outbound windows are disabled before proceeding with
-+	 * the MEM/IO ranges setups.
-+	 */
-+	for (i = 0; i < pci->num_ob_windows; i++)
-+		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
-+
+ 	i = 0;
+ 	resource_list_for_each_entry(entry, &pp->bridge->windows) {
+ 		if (resource_type(entry->res) != IORESOURCE_MEM)
+@@ -622,9 +625,32 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 	}
+ 
+ 	if (pci->num_ob_windows <= i)
+-		dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
++		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
+ 			 pci->num_ob_windows);
+ 
 +	i = 0;
-+	resource_list_for_each_entry(entry, &pp->bridge->windows) {
++	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
 +		if (resource_type(entry->res) != IORESOURCE_MEM)
 +			continue;
 +
-+		if (pci->num_ob_windows <= ++i)
++		if (pci->num_ib_windows <= i)
 +			break;
 +
-+		ret = dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_MEM,
-+						entry->res->start,
-+						entry->res->start - entry->offset,
-+						resource_size(entry->res));
++		ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
++					       entry->res->start,
++					       entry->res->start - entry->offset,
++					       resource_size(entry->res));
 +		if (ret) {
-+			dev_err(pci->dev, "Failed to set MEM range %pr\n",
++			dev_err(pci->dev, "Failed to set DMA range %pr\n",
 +				entry->res);
 +			return ret;
 +		}
 +	}
 +
-+	if (pp->io_size) {
-+		if (pci->num_ob_windows > ++i) {
-+			ret = dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_IO,
-+							pp->io_base,
-+							pp->io_bus_addr,
-+							pp->io_size);
-+			if (ret) {
-+				dev_err(pci->dev, "Failed to set IO range %pr\n",
-+					entry->res);
-+				return ret;
-+			}
-+		} else {
-+			pp->cfg0_io_shared = true;
-+		}
++	if (pci->num_ib_windows <= i)
++		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
++			 pci->num_ib_windows);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 9c622b635fdd..7a5be3c4f8e0 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -396,8 +396,60 @@ static inline void dw_pcie_writel_atu_ib(struct dw_pcie *pci, u32 index, u32 reg
+ 	dw_pcie_writel_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg, val);
+ }
+ 
+-int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-			     int type, u64 cpu_addr, u8 bar)
++int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
++			     u64 cpu_addr, u64 pci_addr, u64 size)
++{
++	u64 limit_addr = pci_addr + size - 1;
++	u32 retries, val;
++
++	if ((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit) ||
++	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
++	    !IS_ALIGNED(pci_addr, pci->region_align) || !size) {
++		return -EINVAL;
 +	}
 +
-+	if (pci->num_ob_windows <= i)
-+		dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
-+			 pci->num_ob_windows);
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_BASE,
++			      lower_32_bits(pci_addr));
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_BASE,
++			      upper_32_bits(pci_addr));
 +
-+	return 0;
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LIMIT,
++			      lower_32_bits(limit_addr));
++	if (dw_pcie_ver_is_ge(pci, 460A))
++		dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_LIMIT,
++				      upper_32_bits(limit_addr));
++
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_TARGET,
++			      lower_32_bits(cpu_addr));
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_TARGET,
++			      upper_32_bits(cpu_addr));
++
++	val = type;
++	if (upper_32_bits(limit_addr) > upper_32_bits(pci_addr) &&
++	    dw_pcie_ver_is_ge(pci, 460A))
++		val |= PCIE_ATU_INCREASE_REGION_SIZE;
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_REGION_CTRL1, val);
++	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENABLE);
++
++	/*
++	 * Make sure ATU enable takes effect before any subsequent config
++	 * and I/O accesses.
++	 */
++	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
++		val = dw_pcie_readl_atu_ib(pci, index, PCIE_ATU_REGION_CTRL2);
++		if (val & PCIE_ATU_ENABLE)
++			return 0;
++
++		mdelay(LINK_WAIT_IATU);
++	}
++
++	dev_err(pci->dev, "Inbound iATU is not being enabled\n");
++
++	return -ETIMEDOUT;
 +}
 +
-+int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
++int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
++				int type, u64 cpu_addr, u8 bar)
  {
--	u32 val, ctrl, num_ctrls;
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	u32 val, ctrl, num_ctrls;
-+	int ret;
+ 	u32 retries, val;
  
- 	/*
- 	 * Enable DBI read-only registers for writing/updating configuration.
-@@ -609,42 +687,9 @@ void dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 	 * ATU, so we should not program the ATU here.
- 	 */
- 	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
--		int i, atu_idx = 0;
--		struct resource_entry *entry;
--
--		/*
--		 * Ensure all outbound windows are disabled so there are
--		 * multiple matches
--		 */
--		for (i = 0; i < pci->num_ob_windows; i++)
--			dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
--
--		/* Get last memory resource entry */
--		resource_list_for_each_entry(entry, &pp->bridge->windows) {
--			if (resource_type(entry->res) != IORESOURCE_MEM)
--				continue;
--
--			if (pci->num_ob_windows <= ++atu_idx)
--				break;
--
--			dw_pcie_prog_outbound_atu(pci, atu_idx,
--						  PCIE_ATU_TYPE_MEM, entry->res->start,
--						  entry->res->start - entry->offset,
--						  resource_size(entry->res));
--		}
--
--		if (pp->io_size) {
--			if (pci->num_ob_windows > ++atu_idx)
--				dw_pcie_prog_outbound_atu(pci, atu_idx,
--							  PCIE_ATU_TYPE_IO, pp->io_base,
--							  pp->io_bus_addr, pp->io_size);
--			else
--				pp->cfg0_io_shared = true;
--		}
--
--		if (pci->num_ob_windows <= atu_idx)
--			dev_warn(dev, "Resources exceed number of ATU entries (%d)\n",
--				 pci->num_ob_windows);
-+		ret = dw_pcie_iatu_setup(pp);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
-@@ -657,5 +702,7 @@ void dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
- 
- 	dw_pcie_dbi_ro_wr_dis(pci);
-+
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 60f1ddc54933..c3e73ed9aff5 100644
+index c3e73ed9aff5..5954e8cf9eec 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -387,7 +387,7 @@ static inline void dw_pcie_stop_link(struct dw_pcie *pci)
- 
- #ifdef CONFIG_PCIE_DW_HOST
- irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp);
--void dw_pcie_setup_rc(struct dw_pcie_rp *pp);
-+int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
- int dw_pcie_host_init(struct dw_pcie_rp *pp);
- void dw_pcie_host_deinit(struct dw_pcie_rp *pp);
- int dw_pcie_allocate_domains(struct dw_pcie_rp *pp);
-@@ -399,8 +399,9 @@ static inline irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp)
- 	return IRQ_NONE;
- }
- 
--static inline void dw_pcie_setup_rc(struct dw_pcie_rp *pp)
-+static inline int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- {
-+	return 0;
- }
- 
- static inline int dw_pcie_host_init(struct dw_pcie_rp *pp)
-diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-index a44f685ec94d..c3481200e86a 100644
---- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-+++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-@@ -302,7 +302,11 @@ static int intel_pcie_host_setup(struct intel_pcie *pcie)
- 	intel_pcie_ltssm_disable(pcie);
- 	intel_pcie_link_setup(pcie);
- 	intel_pcie_init_n_fts(pci);
--	dw_pcie_setup_rc(&pci->pp);
-+
-+	ret = dw_pcie_setup_rc(&pci->pp);
-+	if (ret)
-+		goto app_init_err;
-+
- 	dw_pcie_upconfig_setup(pci);
- 
- 	intel_pcie_device_rst_deassert(pcie);
+@@ -308,8 +308,10 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+ 			      u64 cpu_addr, u64 pci_addr, u64 size);
+ int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+ 				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
+-int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+-			     int type, u64 cpu_addr, u8 bar);
++int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
++			     u64 cpu_addr, u64 pci_addr, u64 size);
++int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
++				int type, u64 cpu_addr, u8 bar);
+ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
+ void dw_pcie_setup(struct dw_pcie *pci);
+ void dw_pcie_iatu_detect(struct dw_pcie *pci);
 -- 
 2.35.1
 
