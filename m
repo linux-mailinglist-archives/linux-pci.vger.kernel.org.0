@@ -2,157 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E0E9546B08
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 18:55:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63342546E37
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 22:23:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237844AbiFJQuK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jun 2022 12:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47574 "EHLO
+        id S1350480AbiFJUXG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jun 2022 16:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349824AbiFJQtx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 12:49:53 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2074.outbound.protection.outlook.com [40.107.244.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D2E1DA68;
-        Fri, 10 Jun 2022 09:49:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oi0gV0WMKXJ+mWxe1eQKwkZwXjQYswU7qMo75G0gK2pDqt8OLYXTVEwkWDtqdgjBn8hEXpFmAUNs7EQqTG53NaLTBy2lE5Hr2zJWVb5hRBffD/yA408MJ42CKXsBwb2OZT2jA0BXrhC/LRHwztIegiyO38qFsYqyAA/hkt4seLI7DVR4kRTlece1MXZsaMb/SAsDacwx8iTn6EnKZkglDIKp0VIAIX0BycRK2T04EaV8pHR9UNXaL+3dfIQW/RBm6tgnTPFPSal2/66KTT6YKSBlE3jnuL0dHo1+jmYwzyh5fAp7vH4acXqmB/JRZTlQGCrtAGQKI6qCekwol3a6ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2urPBMckfgu/37oA+LJcjDQ/LfROzjJYZ1YZAGI1v9c=;
- b=Ma+KPb9kUDgzboODjuw5jg/bCtpVH5D4YZgIRyWjdUnm3XjBePbnpOtEhj3KhjsNdMv2bNxoHRzNeQvrDTHJCdZm3BYcSLLOP/MEtjzcKg8NpVVas9PPexIuIrfDSmbEo3TKsqeqxRDjimcuUF3lh1ioMrhidK1wrS6jrFFfjTMGxM2BzSQ2gVLfgjkaqi8U+2Zm577/Hpe9eRxINlkcNSMTH5xaooYPY1ZEfUs4CE5w6UPC4bmo+WNgrL1c63Y6J4o/HWtuVrGQpQw9KvesVQrNKL94lR73gGXayWkUimKpIQi47A+9PujDGF6NnCK4ADijeaYCtc+SYwf/W0HNHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2urPBMckfgu/37oA+LJcjDQ/LfROzjJYZ1YZAGI1v9c=;
- b=ciV1WsJ+bJ7SvvFRElcCDatiyfdKxFoyEJYGAWPkvP27R28M16lvd2q4soP2BdhusyPwFbqpSf91uVs4OOllEm8n4h8dX7eUrlJtefyP3QiOQ/wT6qV/baCwNwLncmiCTPA4UQvdsqXA2JHJWjLnIvGNCXF9b38LMa0k0qCNyfo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
- by BN6PR12MB1684.namprd12.prod.outlook.com (2603:10b6:405:6::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.12; Fri, 10 Jun
- 2022 16:49:41 +0000
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::9dfa:d871:2068:662f]) by BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::9dfa:d871:2068:662f%7]) with mapi id 15.20.5332.014; Fri, 10 Jun 2022
- 16:49:41 +0000
-Date:   Fri, 10 Jun 2022 16:49:36 +0000
-From:   Yazen Ghannam <yazen.ghannam@amd.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Clemens Ladisch <clemens@ladisch.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        with ESMTP id S240289AbiFJUXF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 16:23:05 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F9A02A97F;
+        Fri, 10 Jun 2022 13:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654892584; x=1686428584;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zoQP38bXu51zIjhijgSb38PIa89Sy1jQuBhhFQxrEkA=;
+  b=GPvkE6Ng2MSW6YUvrIfWCW4tgQ/pQmeuyuZpmkwH2K9oQ24TK6q4nQIy
+   Wf2huQqJ+83JE+4AToljJPEth3rqZoVi0i4aGq35lzyVKpSHnaszEkmmv
+   OUXZEVUYQPj3ghGdeJoz7XbrX4AqPTHbqDN1zt2v2rx/XmVcymdkvR5fb
+   MHXNevMgrS4Kvr2tOOfqadGy6jA+aD1n1kMSlCA5vtS2TvbVyG1fDg7ex
+   XFOEr4f+KiBTj6gw/j/g/s5ZAR0gRJbkihA6DhayDTHsDdoYIY3pGZBTC
+   W6ZxTgrGz0ezhfT30nap/uMvM9RiCp+vt5iTOBQRXC4/AeghKMV0pj/Rr
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10374"; a="275268536"
+X-IronPort-AV: E=Sophos;i="5.91,291,1647327600"; 
+   d="scan'208";a="275268536"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 13:23:03 -0700
+X-IronPort-AV: E=Sophos;i="5.91,291,1647327600"; 
+   d="scan'208";a="828422389"
+Received: from pleung-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.33.34])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2022 13:23:03 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, babu.moger@amd.com
-Subject: Re: [PATCH v2 3/6] x86/amd_nb: Add Family 19h model 60h-6Fh IDs
-Message-ID: <YqN2IMRbmn3s8ly3@yaz-fattaah>
-References: <20220602201137.1415-1-mario.limonciello@amd.com>
- <20220602201137.1415-4-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220602201137.1415-4-mario.limonciello@amd.com>
-X-ClientProxiedBy: CH0PR03CA0360.namprd03.prod.outlook.com
- (2603:10b6:610:11a::11) To BN8PR12MB3108.namprd12.prod.outlook.com
- (2603:10b6:408:40::20)
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V11 0/8] CXL: Read CDAT and DSMAS data
+Date:   Fri, 10 Jun 2022 13:22:51 -0700
+Message-Id: <20220610202259.3544623-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8f9efb4c-4692-4724-c59b-08da4b0136b4
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1684:EE_
-X-Microsoft-Antispam-PRVS: <BN6PR12MB168422B6076DE2831DBB79DBF8A69@BN6PR12MB1684.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pvoT46aU2SiYfIzvu27yCwl7lJypgIvmRnlHSrXbUVMeyFY0JUXEFrrEK+eEaI/afKzvwwHVNJeMGw/Gy4PFCYOZS3YkYzRetrFwXpFId5jibvhLx4XtsaAPYqLqi2hXdje46WGn4qLCDOBV1T9PKll1e34gbkXC1LCpmz7IDjtfD4+FZbDRGUNxrZRhNtzDoPt32/FwqG48I6WbluKEA84grqE8qEdkQ7AKgcD3ADkroUwcAnRKvmHRnEz/W9rijoQFktktTfMHAWi8LS0qM+T2MApCzpOuuAtMc+ybv/4XqhT1ZpxsgNl16IMCdILVo/N/ziZDnSr6fW1Sjc9TwGYM0rtpYLz5JkwQw1+EuAXQQHPCVSkrJe2jyGPygLhGd3k6JAgITtedaTwecbSPH1wK9JiMjpzcUNWj6qIVEH07aWXo/RhkW6H2PlhhGmrtfY0wi5CwHe5Z6zd9+EILwu/TPAIzNeQEjHITq9IlYv34Z3avVX7GSsylC9t4w6BOh8XfLJYGbQFxivspMg+Zl9uqv/XU/nYwNMIsnqyyO89YFt+QJwS96O+OCWTf2/uX7NCrsJ8C5Ssvp29hInT49bF6/MpEs4kV3A2ChxSD0HfSKy19J2sPhX1eHJJea5ABxr7aOQfKev/fyYNBgI63Rg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(4636009)(366004)(6506007)(2906002)(6666004)(26005)(6512007)(9686003)(6486002)(508600001)(6862004)(4744005)(86362001)(186003)(7416002)(8936002)(38100700002)(5660300002)(54906003)(44832011)(316002)(6636002)(66476007)(4326008)(66946007)(33716001)(66556008)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZNFdCJ6g1c8COHh00BzvxQpIWA3HepUJxQlp9slQKxsKjxb7EqlzFaYQPEdr?=
- =?us-ascii?Q?q0kJXqSpw5mVLSAd9jqRc+ZFDgvxTC+gGO3djIvdySEiBAhxXKG2pK0cB3YV?=
- =?us-ascii?Q?zrrLVso3aS1dv3NMdRE06Ala2dsfr4lYIHYNPTIBVSyzlxvsM0/s/1rcUdEX?=
- =?us-ascii?Q?AsvWPSLhBFsbGdetbt5oT0IPgwlG0x0YGcwETHx63fyDiiGS2dzdNHJIbRoS?=
- =?us-ascii?Q?hyJTtG5m2D/1TE7ERLHRZRA9Khb5tM8NxBqgCNT48Z7MZzj9GrB2lllPuq+J?=
- =?us-ascii?Q?sHCEX1Tt6sOBcyN4Tx/WdSLMO/tWwYXSb/iDCopyqbzML1iFVv7QQMP6xSZk?=
- =?us-ascii?Q?zksLy/qODByHiKpZrk2k0SMj6EUn8WZmWI5Vp602qNO78HKPcVA+LrBND8zS?=
- =?us-ascii?Q?x1LIE7tQy/+fndllRn/pc7h1KWmMJS3NKAM2FiM6C9Kk+CbS63uE0QF4E4Yx?=
- =?us-ascii?Q?Gnr7VtyanOjHuQedLMTEBka/G8hcJ0M4iSCG9Re4H5/v98WlD2U9fx8x3DR4?=
- =?us-ascii?Q?lyDcCTKlBw2RSstTVWJGL8vZAU/iUb3D25dyXjFAC+KKxPgyWi8pqMttzHu3?=
- =?us-ascii?Q?/Cv8oeMTWm4o1eZlru0jarflN/WuJaQgoQgHPenaB4vZi1A37edSzcwjB0TE?=
- =?us-ascii?Q?gQyQwgRToxoraIo/kxX20b17iPlQgkCJxwwHSGiBwpqGkA+ht7ld8ZLYjw8B?=
- =?us-ascii?Q?oQOUH68IkaHQGHygFrf2hDHDs0O/a1wROVsJPC/LBTAu3eKcXUJV5CyPhqzy?=
- =?us-ascii?Q?R5DkR+mHSwPiMroNE6xhhdG+/airWRtzbNB2Z1Bpy+3uZPUsRQkiqRtWCoyi?=
- =?us-ascii?Q?HiG1grGKwXQhJxzzWN+joqcNdLk72a4vwuTfEfOMpMW6ismQ4UtYQHBXobA8?=
- =?us-ascii?Q?4DLRKvheLmTJEWhXj7gxuAoya5E3vDrg/LYfurFJXshPNvppwpXdUanh9Y/D?=
- =?us-ascii?Q?Ud/lv4GqQI0CgLNyb0UVNGkj0IpvPSYqca//JN74d/ZzuOmoyEeBxZyp6RuG?=
- =?us-ascii?Q?i+A2Oo3OAbCOENz0dYKDGvYnDhH2RL8NjpL8ePIAi9O0bXSfTZPuWYfg3SYM?=
- =?us-ascii?Q?yX79Ps5coB1POGAtU7hzbZLsoL0WXJqT1CrTTXxn2o+t+3PKTUbFdE++DgDD?=
- =?us-ascii?Q?zSeN/Gi8r061otuEcScpQlRSal87ycphdCUL8nvUBfZCWZGrsrMFjqm8m8Ui?=
- =?us-ascii?Q?ASkXBGEQujsRyzSk5tuUupS8rvO/1UvaTkmRCenR7Q51zoNs8wweAfwBXS6P?=
- =?us-ascii?Q?6/VMVnQmY+gATo0wusTOPe9aIJEqmxNx6ABYilXK0PUu0iR+WOHx9TpKPVgY?=
- =?us-ascii?Q?KQ52BJgKxCqSDoak64j1r8Apt7rKWHf8lPbNKx3ECJnQ7DA1rs8KfhLs9N/m?=
- =?us-ascii?Q?oLd1p5dkB2xgSWubnmb+XH6AQmtO7mfgbcUNS5mQJ76ilgA1Sgm2grDRVKhP?=
- =?us-ascii?Q?l4/VKKynUjW2ASupCFT1poNcROyGokkDbaP5WjcIxwHuvJM7neKRpcy9x69o?=
- =?us-ascii?Q?Vg6xdWFniaUf3Utfcz2/YLQgTjKkgDQCEjr1ccUvl7gRP5EXwohRvhWls2yU?=
- =?us-ascii?Q?cS8z8h7jBgKrdgBvw5JoIo87CNrjU8DQ8ZuPznKR50fBOG6JCz9JM/gJnQf9?=
- =?us-ascii?Q?WpV9Tt0xBTP/WbTOrEB7p/aMitCoss45T08beHWn5vBUGyqnKAQXFUDJ2uAD?=
- =?us-ascii?Q?U05vAC45N0cAXpYiMoadBZQTULprtooGAY5n//glnbhBhR+TKzzXS8Kmrf6V?=
- =?us-ascii?Q?3c589KBmJA=3D=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f9efb4c-4692-4724-c59b-08da4b0136b4
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2022 16:49:41.3088
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5f6Mbp5PqufB5pR2//tipSjGWYSitRLC0EUbL7OBmcURFzP5y41P06VdfW1tb63f0U9lNv3tbSeuUg3ER7R2OQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1684
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 02, 2022 at 03:11:34PM -0500, Mario Limonciello wrote:
-> Add support for SMN communication on Family 19h Model 60h.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  arch/x86/kernel/amd_nb.c | 4 ++++
->  include/linux/pci_ids.h  | 1 +
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-> index 15295f5d9aca..491669c24ffd 100644
-> --- a/arch/x86/kernel/amd_nb.c
-> +++ b/arch/x86/kernel/amd_nb.c
-> @@ -32,6 +32,8 @@
->  #define PCI_DEVICE_ID_AMD_19H_M40H_ROOT	0x14b5
->  #define PCI_DEVICE_ID_AMD_19H_M40H_DF_F4 0x167d
->  #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F4 0x166e
-> +#define PCI_DEVICE_ID_AMD_19H_M60H_ROOT	0x14d8
-> +#define PCI_DEVICE_ID_AMD_19H_M60H_DF_F4 0x14e4
->  #define PCI_DEVICE_ID_AMD_19H_M70H_ROOT	0x14e8
->  #define PCI_DEVICE_ID_AMD_19H_M70H_DF_F4 0x14f4
->
+From: Ira Weiny <ira.weiny@intel.com>
 
-Same here about grouping "ROOT" IDs. Otherwise, looks good.
 
-Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Changes from V10:[7]
+	Address Ben Widawsky's comments
+		Protect against potentially malicious devices.
+		Fix ownership issue of cdat_mb
 
-Thanks,
-Yazen
+CXL drivers need various data which are provided through generic DOE mailboxes
+as defined in the PCIe 6.0 spec.[1]
+
+One such data is the Coherent Device Atribute Table (CDAT).  CDAT data provides
+coherent information about the various devices in the system.  It was developed
+because systems no longer have a priori knowledge of all coherent devices
+within a system.  CDAT describes the coherent characteristics of the
+components on the CXL bus separate from system configurations.  The OS can
+then, for example, use this information to form correct interleave sets.
+
+To begin reading the CDAT the OS must have support to access the DOE mailboxes
+provided by the CXL devices.
+
+Because DOE is not specific to DOE but is provided within the PCI spec, the
+series adds PCI DOE capability library functions.  These functions allow for
+the iteration of the DOE capabilities on a device as well as creating
+pci_doe_mb structures which can control the operation of the DOE state machine.
+
+For now the iteration of and storage of the DOE mailboxes is done on memdev
+objects within the CXL stack.  When this is needed in more generic code this
+can be lifted later.
+
+This work was tested using qemu.
+
+[0] https://lore.kernel.org/linux-cxl/20211105235056.3711389-1-ira.weiny@intel.com/
+[1] https://pcisig.com/specifications
+[2] https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+[3] https://lore.kernel.org/linux-cxl/20220201071952.900068-1-ira.weiny@intel.com/
+[4] https://lore.kernel.org/linux-cxl/20220330235920.2800929-1-ira.weiny@intel.com/
+[5] https://lore.kernel.org/linux-cxl/20220414203237.2198665-1-ira.weiny@intel.com/
+[6] https://lore.kernel.org/linux-cxl/20220531152632.1397976-1-ira.weiny@intel.com/
+[7] https://lore.kernel.org/linux-cxl/20220605005049.2155874-1-ira.weiny@intel.com/
+
+
+Previous changes
+================
+
+Changes from V9:[6]
+	Address feedback from
+		Lukas Wunner, Davidlohr Bueso, Jonathan Cameron,
+		Alison Schofield, and Ben Widawsky
+		Details in each individual patch.
+
+Changes from V8:[5]
+	For this version I've punted a bit to get it out and drop the auxiliary
+	bus functionality.  I like where Jonathan is going with the port driver
+	idea.  I think eventually the irq/mailbox creation will need to be more
+	generic in a PCI port driver.  I've modeled this version on such an
+	architecture but used the CXL port for the time being.
+
+	From Dan
+		Drop the auxiliary bus/device
+	From Jonathan
+		Cleanups
+	From Bjorn
+		Clean up commit messages
+		move pci-doe.c to doe.c
+		Clean up PCI spec references
+		Ensure all messages use pci_*()
+		Add offset to error messages to distinguish mailboxes
+			use hex for DOE offsets
+		Print 4 nibbles for Vendor ID and 2 for type.
+		s/irq/IRQ in comments
+		Fix long lines
+		Fix typos
+
+
+Changes from V7:[4]
+	Avoid code bloat by making pci-doe.c conditional on CONFIG_PCI_DOE
+		which is auto selected by the CXL_PCI config option.
+	Minor code clean ups
+	Fix bug in pci_doe_supports_prot()
+	Rebase to cxl-pending
+
+Changes from V6:[3]
+	The big change is the removal of the auxiliary bus code from the PCI
+	layer.  The auxiliary bus usage is now in the CXL layer.  The PCI layer
+	provides helpers for subsystems to utilize DOE mailboxes by creating a
+	pci_doe_mb object which controls a state machine for that mailbox
+	capability.  The CXL layer wraps this object in an auxiliary device and
+	driver which can then be used to determine if the kernel is controlling
+	the capability or it is available to be used by user space.  Reads from
+	user space via lspci are allowed.  Writes are allowed but flagged via a
+	tainting the kernel.
+
+	Feedback from Bjorn, Jonathan, and Dan
+		Details in each patch
+
+Changes from V5:[0]
+
+	Rework the patch set to split PCI vs CXL changes
+		Also make each change a bit more stand alone for easier review
+	Add cxl_cdat structure
+	Put CDAT related data structures in cdat.h
+	Clarify some device lifetimes with comments
+	Incorporate feedback from Jonathan, Bjorn and Dan
+		The bigest change is placing the DOE scanning code into the
+			pci_doe driver (part of the PCI codre).
+		Validate the CDAT when it is read rather than before DSMAS
+			parsing
+		Do not report DSMAS failure as an error, report a warning and
+			keep going.
+		Retry reading the table 1 time.
+	Update commit messages and this cover letter
+
+
+
+Ira Weiny (6):
+  PCI: Replace magic constant for PCI Sig Vendor ID
+  cxl/pci: Create PCI DOE mailbox's for memory devices
+  cxl/port: Read CDAT table
+  cxl/port: Introduce cxl_cdat_valid()
+  cxl/port: Retry reading CDAT on failure
+  cxl/port: Parse out DSMAS data from CDAT table
+
+Jonathan Cameron (2):
+  PCI: Add vendor ID for the PCI SIG
+  PCI: Create PCI library functions in support of DOE mailboxes.
+
+ drivers/cxl/Kconfig           |   1 +
+ drivers/cxl/cdat.h            | 125 ++++++
+ drivers/cxl/core/pci.c        | 302 +++++++++++++++
+ drivers/cxl/cxl.h             |   5 +
+ drivers/cxl/cxlmem.h          |  10 +
+ drivers/cxl/cxlpci.h          |   2 +
+ drivers/cxl/mem.c             |   1 +
+ drivers/cxl/pci.c             | 114 ++++++
+ drivers/cxl/port.c            |  51 +++
+ drivers/pci/Kconfig           |   3 +
+ drivers/pci/Makefile          |   1 +
+ drivers/pci/doe.c             | 693 ++++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c           |   2 +-
+ include/linux/pci-doe.h       |  65 ++++
+ include/linux/pci_ids.h       |   1 +
+ include/uapi/linux/pci_regs.h |  29 +-
+ 16 files changed, 1403 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/cxl/cdat.h
+ create mode 100644 drivers/pci/doe.c
+ create mode 100644 include/linux/pci-doe.h
+
+-- 
+2.35.1
+
