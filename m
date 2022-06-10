@@ -2,56 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EE7654663C
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 14:05:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B57CA54672B
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 15:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348001AbiFJMEZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jun 2022 08:04:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
+        id S1344387AbiFJNMq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jun 2022 09:12:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347752AbiFJMEY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 08:04:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D8F193E4;
-        Fri, 10 Jun 2022 05:04:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A38B6B834E0;
-        Fri, 10 Jun 2022 12:04:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53FECC3411D;
-        Fri, 10 Jun 2022 12:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654862661;
-        bh=q29Sh8OaZZnjTZf4cfd9bieOC8BLYRFYnh2YtXknEQs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YHYc9HR0FWAu3R/i2PNgPZXqUoX/2Mv13LjYTzteYGKaiqmIdWGzdfiX/5l8szL39
-         J1JxpDpN9bearnk8nZaOK39LmBiJbW/cc/JDRgqZ7ha6bxBdsYGdq+LiDTo9dLOovh
-         v+nEfprR3nynbRN/ZEGdkZ+0/23GyGzB65rYLFGgjEUY5h5IVrTSDcmHsgv538lYit
-         NDXZWg2gMnc3FJyfTezyMKsBKZjBDfN+1Qa3ANPN2uQ7vklE+ts0eOOD4AlURlnHwg
-         M5qv5wGdExkSg/pEohXx2n2ln4hjflkJOHkTxFzz/ub3yoIZ0AaVGuW2OA52Coq6g7
-         7vNT6JWOg/dhA==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan+linaro@kernel.org>)
-        id 1nzdNB-0002li-B5; Fri, 10 Jun 2022 14:04:17 +0200
-From:   Johan Hovold <johan+linaro@kernel.org>
-To:     stable@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S245274AbiFJNMo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 09:12:44 -0400
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222A15A0A0;
+        Fri, 10 Jun 2022 06:12:42 -0700 (PDT)
+Received: by mail-io1-f46.google.com with SMTP id p128so5781100iof.1;
+        Fri, 10 Jun 2022 06:12:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=GUJQPqIBLKX/t4jWZnKHkjJZiTQ4T+t3dlD445+qEg8=;
+        b=LlhnE92a043p3tJrMlkAtD2UCOHS8aCuiaITaFpjOCwfOJxA24CvrBstlu746Mac3j
+         +BVMeyB8GCgWW8c31/6Ng6JW4RwHWMfB+pWSDoZmICNjwbbSMWkuwuHF1Z5nmSch8Tej
+         xDaYkQdjADFSVLfN1gzDokCmy7H3hIJpcws3DpTdXYXBfwIqNs2UsgzN//Cm5sB2rqsj
+         d+AdJ6PT+6wfMHcgviVx9yvL6+Wv13q8mGGAnQIa+IDULhmqfIt6aGTTtbPX0Q0I7uIT
+         TUr8P42+11957ikGmbGtwzTWmMYotH4/zwpOXWw8j7ySdmezVb+lXTA1ccoLp5xdu0KD
+         WTng==
+X-Gm-Message-State: AOAM530/u80Zj2VvH0cr55npuY+yJOCiFMwdtMtMBl04oacG5lohO0xN
+        DWLXrzbTL/rHr9U51A32oQ==
+X-Google-Smtp-Source: ABdhPJzpXU+91NH1R+XxaxuT7R1s4GIE+oR2ZORwDbUcWvGs8HOPQcvwCCMc8f49vy0vBOWd3ZsDGw==
+X-Received: by 2002:a05:6602:2b04:b0:669:5fa:12fa with SMTP id p4-20020a0566022b0400b0066905fa12famr21843526iov.178.1654866761402;
+        Fri, 10 Jun 2022 06:12:41 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id m8-20020a0566380dc800b00331e38ccc4asm4368616jaj.51.2022.06.10.06.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jun 2022 06:12:40 -0700 (PDT)
+Received: (nullmailer pid 1529405 invoked by uid 1000);
+        Fri, 10 Jun 2022 13:12:35 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     linux-kernel@vger.kernel.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH stable-4.9] PCI: qcom: Fix unbalanced PHY init on probe errors
-Date:   Fri, 10 Jun 2022 14:04:11 +0200
-Message-Id: <20220610120411.10619-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.35.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Simon Xue <xxm@rock-chips.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+In-Reply-To: <20220610085706.15741-12-Sergey.Semin@baikalelectronics.ru>
+References: <20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru> <20220610085706.15741-12-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v3 11/17] dt-bindings: PCI: dwc: Apply common schema to Rockchip DW PCIe nodes
+Date:   Fri, 10 Jun 2022 07:12:35 -0600
+Message-Id: <1654866755.753412.1529404.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,46 +74,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-commit 83013631f0f9961416abd812e228c8efbc2f6069 upstream.
+On Fri, 10 Jun 2022 11:56:59 +0300, Serge Semin wrote:
+> As the DT-bindings description states the Rockchip PCIe controller is
+> based on the DW PCIe RP IP-core thus its DT-nodes are supposed to be
+> compatible with the common DW PCIe controller schema. Let's make sure they
+> evaluated against it by referring to the snps,dw-pcie-common.yaml schema
+> in the allOf sub-schemas composition.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> ---
+> 
+> Changelog v3:
+> - This is a new patch created on v3 lap of the series.
+> ---
+>  Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-Undo the PHY initialisation (e.g. balance runtime PM) if host
-initialisation fails during probe.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Link: https://lore.kernel.org/r/20220401133854.10421-3-johan+linaro@kernel.org
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: stable@vger.kernel.org      # 4.5
-[ johan: adjust context to 4.9 ]
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/pci/host/pcie-qcom.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+yamllint warnings/errors:
 
-diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
-index aeb46f8c7087..4e21ca3c067e 100644
---- a/drivers/pci/host/pcie-qcom.c
-+++ b/drivers/pci/host/pcie-qcom.c
-@@ -562,10 +562,15 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	ret = dw_pcie_host_init(pp);
- 	if (ret) {
- 		dev_err(dev, "cannot initialize host\n");
--		return ret;
-+		goto err_phy_exit;
- 	}
- 
- 	return 0;
-+
-+err_phy_exit:
-+	phy_exit(pcie->phy);
-+
-+	return ret;
- }
- 
- static const struct of_device_id qcom_pcie_match[] = {
--- 
-2.35.1
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/pci/snps,dw-pcie-common.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.example.dtb: pcie@fe280000: False schema does not allow {'compatible': ['rockchip,rk3568-pcie'], 'reg': [[3, 3229614080, 0, 3735552], [0, 4264034304, 0, 65536], [3, 2147483648, 0, 1048576]], 'reg-names': ['dbi', 'apb', 'config'], 'bus-range': [[32, 47]], 'clocks': [[4294967295, 143], [4294967295, 144], [4294967295, 145], [4294967295, 146], [4294967295, 147]], 'clock-names': ['aclk_mst', 'aclk_slv', 'aclk_dbi', 'pclk', 'aux'], 'device_type': ['pci'], 'linux,pci-domain': [[2]], 'max-link-speed': [[2]], 'msi-map': [[8192, 4294967295, 8192, 4096]], 'num-lanes': [[2]], 'phys': [[4294967295]], 'phy-names': ['pcie-phy'], 'power-domains': [[4294967295, 15]], 'ranges': [[2164260864, 0, 2155872256, 3, 2155872256, 0, 1048576], [2197815296, 0, 2156920832, 3, 2156920832, 0, 1064304640]], 'resets': [[4294967295, 193]], 'reset-names': ['pipe'], '#address-cells': [[3]], '#size-cells': [[2]], '$nodename': ['pcie
+ @fe280000']}
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
