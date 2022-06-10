@@ -2,189 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56CF9545CE0
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 09:10:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7B21545EE6
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 10:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346359AbiFJHJn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jun 2022 03:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44744 "EHLO
+        id S1347751AbiFJI1w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jun 2022 04:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346348AbiFJHJl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 03:09:41 -0400
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-eopbgr20054.outbound.protection.outlook.com [40.107.2.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548D9323416;
-        Fri, 10 Jun 2022 00:09:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Al3wpXx8ryE5KBwOLGjZSFbmxToQQ0KnlmMg6BJWk99jhWSkCcPk1SWWaDmijc6p+qNo8hk5U68+G8zQ7fPtFTXsygs9K5e7TQCqvUePShVYzy12WS5qwSymlFsg+h5cxV2PfYntXSsu/4RNXElP3EyR7vhV0xc9IbpDGc9RQvZuv+FqosHi1+f41WYuvWqLx2LhpRyIVYF4YOsNwQwXOPhc8bZ8Nd/X+ZrKf7E6FajjsipgHxIAzE7PKLGMAFLEkO2ZsHlNqH23899702a1n1FMvS9R/KoWUuc68J3P89LzzV//0Pb5UCxPgk4zOrQzVdginxqrsY3njvz7jdFz1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GXJTOIdWWL2Oe9ThTevYBEhMCyLCVjsWk1DiQmQ+dIY=;
- b=jZeWvdfRfXuaaJ6GRDKkS+ZHKzqDH/NhDlbdYx/qLF+vLwqhKeOdK4BsiBc3DXkKhIHacEmGj9SOZhTT9N9ULvXQWac84fbS1h3a/zYLkGZy8QpHG3j0eR0BXpK6MMP23NOATbA2eqnMOgRSxWt1BIEAzTb3AdVPHTqeva+5/mqzWeyr1WE+N4fxmgg0gJ0zg9pcnezzS+cygIXlUU4YCroAtjVB07FhfOpB1X9RQazsLdSpqyT2n/heE5XExZpd5YVHN1N8ud+fE9IR05MwLpbjsEaiIODHkcB9B9xrxlBIJ8pqDNvxBDREiUiEpfAAzuSDoZxxeh6sU/lDf3CaKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GXJTOIdWWL2Oe9ThTevYBEhMCyLCVjsWk1DiQmQ+dIY=;
- b=eHmkmYMVFBoxzv0IcZmOKelqnrW5kxfbkXDoHAox7jKzOCmUhfhehWy6BG9g1ZQ0QTCMxX3X+5iUHFobqm5/J7oiEuiNkdJk3J3O/zmuxsG4RXWdnurkgai7VOy9o+M2DxsTGdAr3tgIKdwctANL0GhI9f+qgaQEvEbAoG7GoqA=
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by AM6PR04MB5352.eurprd04.prod.outlook.com (2603:10a6:20b:95::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.13; Fri, 10 Jun
- 2022 07:09:35 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::983c:b5ce:91b1:447e]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::983c:b5ce:91b1:447e%9]) with mapi id 15.20.5332.014; Fri, 10 Jun 2022
- 07:09:35 +0000
-From:   Hongxing Zhu <hongxing.zhu@nxp.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "francesco.dolcini@toradex.com" <francesco.dolcini@toradex.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH v9 5/8] PCI: imx6: Refine the regulator usage
-Thread-Topic: [PATCH v9 5/8] PCI: imx6: Refine the regulator usage
-Thread-Index: AQHYYOzgY7AYlEljsUCdTBhQfAYNj61GEJ+AgACFwmCAAPIXgIAA4sKw
-Date:   Fri, 10 Jun 2022 07:09:35 +0000
-Message-ID: <AS8PR04MB86767131E8EA4AA6AC38192A8CA69@AS8PR04MB8676.eurprd04.prod.outlook.com>
-References: <AS8PR04MB8676EFCB2BA9C1DD0F33C4FA8CA79@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <20220609172005.GA514802@bhelgaas>
-In-Reply-To: <20220609172005.GA514802@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2e83d41a-e3d7-402f-2416-08da4ab02d32
-x-ms-traffictypediagnostic: AM6PR04MB5352:EE_
-x-microsoft-antispam-prvs: <AM6PR04MB535279C075CD9A5B0F5216C88CA69@AM6PR04MB5352.eurprd04.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mH5IHo5vLL+6hx50OhrG8xO8jFiygOfTeEEU5AzShegJFtwESGsjcA4PN/VeblWR94nLfo5URc752gXUPdaRQ8wBtRbQyZxaFcYCb1mCFSD9Kl+IAQ9um26tzRcBdNmTJVR8pDAmNu7iZ1I/5SzAQ5WuGfAXQmbg+8Km7vu/4NJ9xGlCHzuV/NSZgtIuFfBk3OJlSb87Mv1ZFxSIepkQI6fyQuYgpKNTzTfiT9ykVbQuBqVB6Cq17ZH0jerKA5VGqLBapbXiFxHL52WUSCO1U8Cu36I7Mus90f2n/WO7xdyjJjKt2/chwkcvk3GSS4AIZ/em9rSqmaAVYLYQ5fC87vEN13IasAd0lO0ZrT8BpdZB0o796Buey40SP3g2Mfb9ROjMQVnuFu4SqQutU/e3GiTF4A5DJn0Md/+OgssutvWWBEvvbOqmJLz03X6/90D2mihGG18chLPmmnScXWpqwCGXmogGKgdUVC849P0xIhcVGWZq4dRSlxePGHcT/hSDFXh4VfMPzrbKG0isyAH+yJIz6IGgl0UJh69r8Bj5cknmNx+UDy5jGHNHZONc+5XpLTNrx67SW1dx74AaCb45tJ/53Uiq0Mc2iJuRl1Og6WyNiiCdzSCgLbd1eBW8a+UYscb0bbJl2L9u1xdTl8LNsoPu4JqnmOX3pOMjjPestUPsgnqfSOSbvqy+HwuxpkfUQbP9bzhFDCLdZJcPezWqkQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6916009)(186003)(52536014)(508600001)(54906003)(38100700002)(8936002)(55016003)(66556008)(8676002)(66946007)(66446008)(66476007)(64756008)(4326008)(7416002)(5660300002)(2906002)(316002)(83380400001)(76116006)(38070700005)(33656002)(71200400001)(26005)(122000001)(7696005)(6506007)(53546011)(9686003)(86362001)(44832011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?b2FxVEd2WkdQNU0rNjdMYnltQXNGcFp6dWJaRDFKbnFyZVBvQmdtZklOb2dS?=
- =?utf-8?B?R0RoNis2Z2xYVXpycnViQ1V5RDA5dTl1UUZVdDl4RU42ZDNiZnRrMFZtcUZP?=
- =?utf-8?B?N1lKTTRMRW1pSi9xM04yL3M0MnJZV0JRWDlkd29rTkY1TWpPYXNPbnVyRG9a?=
- =?utf-8?B?VWN6WHRGNnYxU2I1SUcxRmk0WU9QVmJKcTB4czNqbS9ZV09tdHhKRWJ0RXRR?=
- =?utf-8?B?NGJ4eXRPNzd5Mjk1U1plR0JoUFFWcEFlVGgyclh4QmFuMWs2ZGVFSmtWcVFs?=
- =?utf-8?B?OWlyYlh0dEJhK2JWMWJobjFqUnc5dkI0TmZQcFNkd1FnQ1VocmQ2cHRpbGta?=
- =?utf-8?B?SElla2lqMjBVbFVGY0tIQVBUSnV3N1JkOGI1UVh3eDRvYlRpaGhNK0FnT0lI?=
- =?utf-8?B?QWlLdkw2T1F1TnJ5MzFhcmF4UEFDRUVVem9qQW1oNktaY2VqcllzZkM5cjJm?=
- =?utf-8?B?N0ZYZURBZmlOTnZ2YTQ3Z3VScDZ4VHZYTy9jOWl6YUJLRnAyZTJ2NWZQMFhI?=
- =?utf-8?B?ME5mN21tWWZxa0J4dUhVZ0NKd0c2Myt5b2FzL2RYSEVRWExSa284NmpaQ3hv?=
- =?utf-8?B?ZlNzVlBJUmhSRDB0Ti9uZUFXRHppd2Z3WnpucXk3b2JkdnhXbXE5bk1zQ3Az?=
- =?utf-8?B?MXYzYXgrcU44UEVsL2twLzJHOTByeW1pWkVISjM5T2Z4T3JpdTVzbVpTRS9i?=
- =?utf-8?B?dWYvYWlxT1ZoNy9hSnk3VDAxbTBDQVFIcmVLTVA5cHJXWWhwQWdkSGlUcGU3?=
- =?utf-8?B?S0FBSjRWOXhVSktkTE9WVE1qSnEwTUtTMVNqVzdBQ3o3Q2ttRjltOXlTSnBR?=
- =?utf-8?B?dHZvbzdmRXdsRXFzZE1CVVMxZEsrTVJmUDRiakd1d1ZHR2s4eStXOEsrekFu?=
- =?utf-8?B?Tnk3Q1hiNGdOR211MG1ibGpZQkM0bW42aVJaM0JWdlZZNTJiM0FtejBIanRH?=
- =?utf-8?B?M0V6Rjh0Ujc5QkN5Q3cralNwd2FPZE9qT1hJbGhNcXBGTUg2U2lpc2E0aEJr?=
- =?utf-8?B?b08yQmoyalhGcldEMFBtZFlXb2dNZ2NSODl3NDFmREt1MmtwZXRSTkZkWE8z?=
- =?utf-8?B?aWNuWUR5RWhsdkZ4S3VTcXQ0NlZaQlBhRE8xVkczcm1admg5WUt2VEFGZEVl?=
- =?utf-8?B?cDdRaVlqVm5tQU5mQTNwc293Z3lza2tKYUtlWWpwWlljUEQ2QWlLK3FWc0NI?=
- =?utf-8?B?bHE5NEFNVHRsbytETnBVRDlkMVhDMTI2UHh1WUhNSHFaNzdrM0pNS2pXUXpZ?=
- =?utf-8?B?a3RpVzNMNHpld0lVOGI5UmJPZmJ6SkdnUDBhem13TDYvYjh4cThQRm9SSnkr?=
- =?utf-8?B?UjNtckJiNDZQL05hSHh2azhxdHRWd3FrVW9HeDk5eExYZXJZOGd5emhDWkhz?=
- =?utf-8?B?TndKeFBkc25pSitXbWllRmthRmcyRzFDN0h5OU5jWnFGSldjTVFjaDRXZ3Fq?=
- =?utf-8?B?d1B4ME0zYWVObnhlMXdIenA4aGRZUnJxZklUQlFxQVgxbkpXWGxkZmlDOEM5?=
- =?utf-8?B?NmxONkFwU0tqLzVZRlV5VzNNQjhXVkxSWE1WQ1JvWHkrUk5SU2V5dHBGNDhz?=
- =?utf-8?B?K3JhekFlaUpGdzYxd0Y3RGtmeDdZNENIaVNLUlNGR2hYUFVGNWZXSlNTMWhs?=
- =?utf-8?B?ZnBHSk1qVlc5c0VIakV6TGQzdDdqYk8yMisvS3p3dFJERDlxblNyY09iUkJG?=
- =?utf-8?B?YXphNFk5WDJXbi8zZ2VrVHlod0t0OExOUVZYcW9wYnpId0dsM0FJejlnWDdk?=
- =?utf-8?B?dEFpcmVuZnRHbGU4SDNDUVYyN21yb2dqeUZPYU1PSDRqOTc5b1g3WitQWUNm?=
- =?utf-8?B?WDJPVG12QjlldERtMzFVWHk0T1ljNDY3bWpQL2FsWW0wdnlSaVRRK1R3WHM3?=
- =?utf-8?B?SEh0T3dXdmVDRzBXdlV4bEt3S1k4YTRlWURnWk9OMGR2cnlYVUZITTNvSFA4?=
- =?utf-8?B?R3Bsa2lNQUFmcllGdUFLNWNnTER6N0J1MzhnczAyaGplSkJkNU5CYXBpOTho?=
- =?utf-8?B?TnF6dTFranlvUnJXOGJJQlZ2djFxQkRveVpKQWxWdXQ0blpUUXlWaDdEeUFU?=
- =?utf-8?B?WXhUSlVLbUcrUXgzOXgvdmU5dmljVXBIakM3dU12SHFoazF4UXFQUGswU1gx?=
- =?utf-8?B?ZWxkTW04b2s3SVRuLzVHVkhBNHNsa29USlB5Uk5pa2FDY2dYOHBGQmk1bTFq?=
- =?utf-8?B?YXQvQ1RadVMwRGtGVGUrQWVhSy83dnlVUnVlUTlWejU1dGtBaWJHbjdqQTlM?=
- =?utf-8?B?WG9jbXA0SmJtOUE2eC84S1dxajJzUVFKR2NoZjRRWE91Si85TGdOcHlxN1oz?=
- =?utf-8?B?UktXQ2gvWFhxUjNiT0xOMUYzZkRpVkZQZ2tGWHNDZFN4VzRxNGxjUT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S1347681AbiFJI1S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 04:27:18 -0400
+Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4DAAC3632F;
+        Fri, 10 Jun 2022 01:25:39 -0700 (PDT)
+Received: from mail (mail.baikal.int [192.168.51.25])
+        by mail.baikalelectronics.com (Postfix) with ESMTP id 405A1BC2;
+        Fri, 10 Jun 2022 11:26:29 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 405A1BC2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baikalelectronics.ru; s=mail; t=1654849589;
+        bh=sSvmEoKnS0Q48Z7+B6sKqRXaTkR30D+sNc3/WMwcAeA=;
+        h=From:To:CC:Subject:Date:From;
+        b=faeDf/bSiSC2BsoOq6zJMRT1k+wuUP04UqKdqJvoT+3CumVqVLGVgfke3gjGvA22U
+         dUlwGJWzvVTwf4dF5bcAvThOFjruUOywWgBI0+539WcJpgz/UKuaZ+qSFohGTBbeNq
+         0LD+usx1/kECRuH2Y1sMPEGokNyA4zCxjGhuF0mI=
+Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jun 2022 11:25:36 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 00/18] PCI: dwc: Various fixes and cleanups
+Date:   Fri, 10 Jun 2022 11:25:16 +0300
+Message-ID: <20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e83d41a-e3d7-402f-2416-08da4ab02d32
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2022 07:09:35.8681
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HsMSzNGHibdqYSeZDIwAMyAqODPlo9EAb7F8jSS0YYwBEYw/Zkf514Il1Me18NZQM/ZjNn5Gu4xPtR0L6q7Rxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5352
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIDxoZWxn
-YWFzQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjLlubQ25pyIMTDml6UgMToyMA0KPiBUbzogSG9u
-Z3hpbmcgWmh1IDxob25neGluZy56aHVAbnhwLmNvbT4NCj4gQ2M6IGwuc3RhY2hAcGVuZ3V0cm9u
-aXguZGU7IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gYnJvb25p
-ZUBrZXJuZWwub3JnOyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyBqaW5nb29oYW4xQGdtYWls
-LmNvbTsNCj4gZmVzdGV2YW1AZ21haWwuY29tOyBmcmFuY2VzY28uZG9sY2luaUB0b3JhZGV4LmNv
-bTsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBrZXJuZWxAcGVu
-Z3V0cm9uaXguZGU7IGRsLWxpbnV4LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjkgNS84XSBQQ0k6IGlteDY6IFJlZmluZSB0aGUgcmVndWxhdG9yIHVz
-YWdlDQo+IA0KPiBPbiBUaHUsIEp1biAwOSwgMjAyMiBhdCAwNjoxOTo0N0FNICswMDAwLCBIb25n
-eGluZyBaaHUgd3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4g
-RnJvbTogQmpvcm4gSGVsZ2FhcyA8aGVsZ2Fhc0BrZXJuZWwub3JnPg0KPiA+ID4gU2VudDogMjAy
-MuW5tDbmnIg55pelIDI6NTUNCj4gPiA+IFRvOiBIb25neGluZyBaaHUgPGhvbmd4aW5nLnpodUBu
-eHAuY29tPg0KPiA+ID4gQ2M6IGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU7IGJoZWxnYWFzQGdvb2ds
-ZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gPiA+IGJyb29uaWVAa2VybmVsLm9yZzsgbG9y
-ZW56by5waWVyYWxpc2lAYXJtLmNvbTsgamluZ29vaGFuMUBnbWFpbC5jb207DQo+ID4gPiBmZXN0
-ZXZhbUBnbWFpbC5jb207IGZyYW5jZXNjby5kb2xjaW5pQHRvcmFkZXguY29tOw0KPiA+ID4gbGlu
-dXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsga2VybmVsQHBlbmd1dHJv
-bml4LmRlOyBkbC1saW51eC1pbXgNCj4gPiA+IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiA+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggdjkgNS84XSBQQ0k6IGlteDY6IFJlZmluZSB0aGUgcmVndWxhdG9y
-IHVzYWdlDQo+ID4gPg0KPiA+ID4gT24gRnJpLCBNYXkgMDYsIDIwMjIgYXQgMDk6NDc6MDZBTSAr
-MDgwMCwgUmljaGFyZCBaaHUgd3JvdGU6DQo+ID4gPiA+IFRoZSBkcml2ZXIgc2hvdWxkIHVuZG8g
-YW55IGVuYWJsZXMgaXQgZGlkIGl0c2VsZi4gVGhlIHJlZ3VsYXRvcg0KPiA+ID4gPiBkaXNhYmxl
-IHNob3VsZG4ndCBiZSBiYXNpbmcgZGVjaXNpb25zIG9uIHJlZ3VsYXRvcl9pc19lbmFibGVkKCku
-DQo+IA0KPiBUaGUgZHJpdmVyIHNob3VsZCBkaXNhYmxlIHRoaW5ncyBpZiBhbiBlcnJvciBvY2N1
-cnMgYWZ0ZXIgaXQgaGFzIGVuYWJsZWQNCj4gc29tZXRoaW5nLCBvciBpZiBpdCBlbmFibGVkIHNv
-bWV0aGluZyBkdXJpbmcgcHJvYmUgYW5kIHdlJ3JlIG5vdyBkZXRhY2hpbmcNCj4gdGhlIGRyaXZl
-ci4gIFRoYXQgZG9lc24ndCBsb29rIGxpa2UgdGhlIGNhc2UgaGVyZS4NCj4gDQo+ID4gPiA+IFRv
-IGtlZXAgdGhlIGJhbGFuY2Ugb2YgdGhlIHJlZ3VsYXRvciB1c2FnZSBjb3VudGVyLCBkaXNhYmxl
-IHRoZQ0KPiA+ID4gPiByZWd1bGF0b3IganVzdCBiZWhpbmQgb2YgaW14Nl9wY2llX2Fzc2VydF9j
-b3JlX3Jlc2V0KCkgaW4gcmVzdW1lDQo+ID4gPiA+IGFuZCBzaHV0ZG93bi4NCj4gPiA+DQo+ID4g
-PiBJbiBzdWJqZWN0LCAiUmVmaW5lIiBkb2Vzbid0IHRlbGwgbWUgYW55dGhpbmcgYWJvdXQgd2hh
-dCdzIGhhcHBlbmluZyBoZXJlLg0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLg0K
-PiA+IEhvdyBhYm91dCB0aGUgZm9sbG93aW5nIG9uZT8NCj4gPiBQQ0k6IGlteDY6IERvIHJlZ3Vs
-YXRvciBkaXNhYmxlIHdpdGhvdXQgdGhlIHJlZ3VsYXRvcl9pc19lbmFibGVkIGNoZWNrDQo+IA0K
-PiBUaGF0J3MgdG9vIGxvdy1sZXZlbCwgbGlrZSBkZXNjcmliaW5nIHRoZSBDIGNvZGUgbGluZSBi
-eSBsaW5lLg0KPiBJJ20gaG9waW5nIGZvciBzb21ldGhpbmcgYWJvdXQgdGhlIHB1cnBvc2UgZm9y
-IHRoZSBwYXRjaCBzbyAiZ2l0IGxvZyAtLW9uZWxpbmUiDQo+IGNhbiB0ZWxsIGEgY29oZXJlbnQg
-c3RvcnkuDQo+IA0KPiBBcHBhcmVudGx5IHRoaXMgaXMgYWJvdXQgZGlzYWJsaW5nIHRoZSBwb3dl
-ciByZWd1bGF0b3Igd2hlbiB0aGUgc2xvdCBpc24ndCBiZWluZw0KPiB1c2VkLCBzbyBtYXliZSBp
-dCBjb3VsZCBzYXkgc29tZXRoaW5nIGFib3V0IHRoYXQuDQo+IA0KPiAgICQgZ2l0IGdyZXAgLUVw
-ICJyZWd1bGF0b3JfKGVufGRpcylhYmxlIiBkcml2ZXJzL3BjaS9jb250cm9sbGVyLw0KPiANCj4g
-c2hvd3MgdGhhdCBpbiBvdGhlciBkcml2ZXJzLCB0aGlzIGJlaW5nIGRvbmUgaW4NCj4gcHJvYmUv
-cmVtb3ZlL3N1c3BlbmQvcmVzdW1lLXR5cGUgcGF0aHMuICBpbXg2IHNob3VsZCBiZSBzaW1pbGFy
-Lg0KPiANCkdvdCB0aGF0LCB0aGFua3MgYSBsb3QuDQoNCkJlc3QgUmVnYXJkcw0KUmljaGFyZCBa
-aHUNCg0KPiBCam9ybg0K
+This patchset is a first one in the series created in the framework of
+my Baikal-T1 PCIe/eDMA-related work:
+
+[1: In-progress v4] PCI: dwc: Various fixes and cleanups
+Link: ---you are looking at it---
+[2: In-progress v2] PCI: dwc: Add hw version and dma-ranges support
+Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+[3: In-progress v2] PCI: dwc: Add extended YAML-schema and Baikal-T1 support
+Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+[4: In-progress v2] dmaengine: dw-edma: Add RP/EP local DMA support
+Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+
+Note it is very recommended to merge the patchsets in the same order as
+they are placed in the list above in order to prevent possible merge
+conflicts. Nothing prevents them from being reviewed synchronously though.
+Any tests are very welcome!
+
+As it can be easily inferred from the patchset title, this series is about
+the DW PCIe Root Port/Endpoint driver fixes and the code cleanups, where
+fixes come before the cleanup patches. The patchset starts with adding the
+stop_link() platform-specific method invocation in case of the PCIe host
+probe procedure errors. It has been missing in the cleanup-on-error path
+of the DW PCIe Host initialization method. After that the unrolled CSRs
+layout is added to the iATU disable procedure. In third the disable iATU
+procedure is fixed to be called only for the internal ATU as being
+specific for the internal ATU implementation. Then the outbound iATU
+extended region setup procedure is fixed to have the INCREASE_REGION_SIZE
+flag set based on the limit-address - not the region size one. The last
+but not least the CDM-check enabling procedure is fixed to be independent
+from the non-related num_lanes field state.
+
+Afterwards there is a series of cleanups. It concerns the changes like
+adding braces to the multi-line if-else constructions, trailing new-lines
+to the print format-string, dropping unnecessary version checking, and
+various code simplifications and optimizations.
+
+New features like adding two-level DT bindings abstraction, adding better
+structured IP-core version interface, adding iATU regions size detection
+and the PCIe regions verification procedure, adding dma-ranges support,
+introducing a set of generic platform clocks and resets and finally adding
+Baikal-T1 PCIe interface support will be submitted in the next part of the
+series.
+
+Link: https://lore.kernel.org/linux-pci/20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Fix the end address of the example in the patch log with
+  the INCREASE_REGION_SIZE flag usage fixup. It should be
+  0x1000FFFF and not 0x0000FFFF (@Manivannan).
+- Add the cleanup-on-error path to the dw_pcie_ep_init() function.
+  (@Manivannan)
+
+Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Convert region variable type to u32 in order to fix the implicit type
+  conversion peculiarity. (@kbot)
+- Rebase onto v5.18-rc6.
+
+Link: https://lore.kernel.org/linux-pci/20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v4:
+- Move the patch "PCI: dwc: Deallocate EPC memory on EP init error" to
+  being applied before the cleanup patches.
+- Add a new fixes patch: "PCI: dwc: Enable CDM-check independently from
+  the num_lanes value".
+- Add a new cleanup patch: "PCI: dwc: Organize local variables usage".
+- Add a new cleanup patch: "PCI: dwc: Re-use local pointer to the
+  resource data".
+- Add a new cleanup patch: "PCI: dwc: Add start_link/stop_link inliners".
+- Add a new cleanup patch: "PCI: dwc: Move io_cfg_atu_shared to the Root
+  Port descriptor".
+- Add a new cleanup patch: "PCI: dwc: Add dw_ prefix to the pcie_port
+  structure name".
+- Drop the patch "PCI: dwc: Don't use generic IO-ops for DBI-space
+  access". (@Rob)
+- Drop Manivannan tested tag from the changed patches.
+- Rebase onto v5.18.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (18):
+  PCI: dwc: Stop link in the host init error and de-initialization
+  PCI: dwc: Add unroll iATU space support to the regions disable method
+  PCI: dwc: Disable outbound windows for controllers with iATU
+  PCI: dwc: Set INCREASE_REGION_SIZE flag based on limit address
+  PCI: dwc: Deallocate EPC memory on EP init error
+  PCI: dwc: Enable CDM-check independently from the num_lanes value
+  PCI: dwc: Add braces to the multi-line if-else statements
+  PCI: dwc: Add trailing new-line literals to the log messages
+  PCI: dwc: Discard IP-core version checking on unrolled iATU detection
+  PCI: dwc: Convert Link-up status method to using dw_pcie_readl_dbi()
+  PCI: dwc: Organize local variables usage
+  PCI: dwc: Re-use local pointer to the resource data
+  PCI: dwc: Add start_link/stop_link inliners
+  PCI: dwc: Move io_cfg_atu_shared to the Root Port descriptor
+  PCI: dwc: Add dw_ prefix to the pcie_port structure name
+  PCI: dwc-plat: Simplify the probe method return value handling
+  PCI: dwc-plat: Discard unused regmap pointer
+  PCI: dwc-plat: Drop dw_plat_pcie_of_match forward declaration
+
+ drivers/pci/controller/dwc/pci-dra7xx.c       |  12 +-
+ drivers/pci/controller/dwc/pci-exynos.c       |   6 +-
+ drivers/pci/controller/dwc/pci-imx6.c         |   6 +-
+ drivers/pci/controller/dwc/pci-keystone.c     |  20 ++--
+ .../pci/controller/dwc/pci-layerscape-ep.c    |  12 --
+ drivers/pci/controller/dwc/pci-layerscape.c   |   2 +-
+ drivers/pci/controller/dwc/pci-meson.c        |   2 +-
+ drivers/pci/controller/dwc/pcie-al.c          |   6 +-
+ drivers/pci/controller/dwc/pcie-armada8k.c    |   4 +-
+ drivers/pci/controller/dwc/pcie-artpec6.c     |   4 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |  30 +++--
+ .../pci/controller/dwc/pcie-designware-host.c | 104 ++++++++++--------
+ .../pci/controller/dwc/pcie-designware-plat.c |  25 +----
+ drivers/pci/controller/dwc/pcie-designware.c  |  72 +++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |  46 +++++---
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |   4 +-
+ drivers/pci/controller/dwc/pcie-fu740.c       |   2 +-
+ drivers/pci/controller/dwc/pcie-histb.c       |  10 +-
+ drivers/pci/controller/dwc/pcie-intel-gw.c    |   6 +-
+ drivers/pci/controller/dwc/pcie-keembay.c     |   4 +-
+ drivers/pci/controller/dwc/pcie-kirin.c       |   2 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        |   4 +-
+ drivers/pci/controller/dwc/pcie-spear13xx.c   |   6 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c    |  22 ++--
+ drivers/pci/controller/dwc/pcie-uniphier.c    |  10 +-
+ drivers/pci/controller/dwc/pcie-visconti.c    |   6 +-
+ 26 files changed, 225 insertions(+), 202 deletions(-)
+
+-- 
+2.35.1
+
