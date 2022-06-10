@@ -2,196 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD939546065
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 10:49:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4225254606A
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 10:49:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348316AbiFJItq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jun 2022 04:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        id S1348404AbiFJIts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jun 2022 04:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348318AbiFJItY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 04:49:24 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01597156B52;
-        Fri, 10 Jun 2022 01:49:22 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id m25so25535480lji.11;
-        Fri, 10 Jun 2022 01:49:22 -0700 (PDT)
+        with ESMTP id S1348405AbiFJIt3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 04:49:29 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2047.outbound.protection.outlook.com [40.107.244.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C92619C3B8;
+        Fri, 10 Jun 2022 01:49:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FOK2BvJEyuR27bNAQ2g64WUYhm+Hd0TiPhsjUy/3f85/rKpBkEUyxNwcUvB77rUSqUOZQ3R2ckBPpkIXYSbmgBkivj765gnWn1g0/ZNAxBnIf7lgNwFIwxOHhJFlNpjpzIhnnbwC+66rw5PLMvIm/XgfGugoWrZ8xy3EXi3O2H2iTMbPw3E65aKeWap8OvnEswUriczudTyayMZYrprF/+aIzoizUNEJqMa6zIAeerdkbxcJlKkuq/Gidx/2M2vlRIJVRLs4NVIpK5EKZuC/XCE+wGHwE4/OoHTSAzP3N2l7YHRQZBKHxyjMUF/o8pjOtG49U8rbzdpvRdzJsU32DQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oZHn+SvmZpadTBq8fX1ppytivY/1f8oJh/ajZ2+D6xU=;
+ b=oN1jMw+7f0bDRD8AbnmoVo2Vn/Fde/tETQTM0Jryr11W+D3Ghvzbu5TVs1+RwDe/uFYHyPHbcYB5ApAxLZYb3ZIIGYBV8yzKgrmjCECtku36MhHxgiPcMqnwT07f3ticggGelGG6oG5uVjpOjuTgAxXgbEBJHVf7Q+AtWt7K15PdTc4P2jhOl7a+AcrydPS12rp8eEy1Ssh/gLOcfws/vqtJlnpg4ucBOJms1SuCGnIWBWaKzUqEPwA6gKgFX0QmJHvxJYJJTVeeoslcyMgvVDLdSAhtdywcdYGqMBLe1zUT+yCOPa3mrV8lyjbrUzobRJ45c6ZMBkGJfEKnA8XqQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=hTpHz6/6Fx2nYSgjquiYmzEB7q95ijXdymuUvmeVwF4=;
-        b=k84/+bz/5ZVc3Is9kXEbUH236It7kfTAy2UraKVxROO0BQTRYgM8QF+mDzv8qXYJf6
-         gQZC3LJlkfi4z37eQWr1J5Maz3E1D0ltL6Ttfs3QoiY4+8n541OhCQohISGR/kUTWfbn
-         eQOD7OAa6jtD3DQTUbfqPtLejsCKlOX8tOw+NJLhLpMGtA2znXYyu7CQmp8eD8z+oLA/
-         rCrDG3FeKMZHdPq8GVzEuq8NiCj+Z2nS4NqlP26H8/myrAuHOmSxUWlSVrjCq8+iwff/
-         q3G9MIYuB+3vmwRAAlAyRzQxbPnmp7zIDIeiwAgkNO72xkhRc8w3Z1vi9mCZiebVpz0+
-         Ylqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=hTpHz6/6Fx2nYSgjquiYmzEB7q95ijXdymuUvmeVwF4=;
-        b=SSgEIinLlgR+0IB13xEKanSPcjVmNOlgjoaBkxUfwEyO7/vo6aDt+K8QL5aw+lqsMM
-         JqwGnAbxFU3rKUQ7Q/HWib5E9ZwZ13OLeI47+XgpUbupj59BjgKD3ZmTgTsyP3kkazk3
-         hFcf6JC84PnVaNkWAeQ2BDMmQGX0hl7HGwrcQiJYU3sa0eR5X3IGb4sW4AL03IP0sY1S
-         3NjMtBUa9TbXyXFP2eTJQsFWCCF3JjMl/nub7imUORxB9uyf6O6yHv0SJhCgi9dY3Gls
-         BWZWTwsJFkHwDz802EplNs45s6Hj5pw99JG6y3nyB7sJhiqNKNZSfe32dMLc20weqv+p
-         v/jA==
-X-Gm-Message-State: AOAM532lsB8kEkGjMuKfu3GWCGrjHqwujt5cQ1gcpuNY7rWJNYyT3k4y
-        667Vj8qymBw8CWP5unaynwA=
-X-Google-Smtp-Source: ABdhPJwWrIiBGY5P9dXg8F/AbSB5sSUnSRXg5m9zAxlJF30v2Es8hCHpoopqdD5bwmjCVlmygl+gEQ==
-X-Received: by 2002:a05:651c:1417:b0:258:df6a:731e with SMTP id u23-20020a05651c141700b00258df6a731emr3302342lje.129.1654850961261;
-        Fri, 10 Jun 2022 01:49:21 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id a27-20020a056512201b00b00478641f62c0sm4635883lfb.28.2022.06.10.01.49.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jun 2022 01:49:20 -0700 (PDT)
-Date:   Fri, 10 Jun 2022 11:49:18 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/15] PCI: dwc: Add hw version and dma-ranges support
-Message-ID: <20220610084918.eytzkynn6y3gs6q4@mobilestation>
-References: <20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oZHn+SvmZpadTBq8fX1ppytivY/1f8oJh/ajZ2+D6xU=;
+ b=tavNKgRh4vq2a4Z4RmZb/s2u1/Q1UPs3QbpVvli2GsaOjRoHs8SG34xy+xB7Q4nRkR3xFWXUwQQkJl+Ql/Ipe139AqSm8l+K6WYq4f9TPDVD2E++edx8+Az65mj+Xj4wx51fccBBbh3LiHBgGxBZHGBRWzDrBXn8ioPDkXdLjtM=
+Received: from BY5PR02MB6947.namprd02.prod.outlook.com (2603:10b6:a03:23e::12)
+ by CO6PR02MB7825.namprd02.prod.outlook.com (2603:10b6:303:b2::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.12; Fri, 10 Jun
+ 2022 08:49:26 +0000
+Received: from BY5PR02MB6947.namprd02.prod.outlook.com
+ ([fe80::70fe:1953:96d4:dd88]) by BY5PR02MB6947.namprd02.prod.outlook.com
+ ([fe80::70fe:1953:96d4:dd88%9]) with mapi id 15.20.5332.014; Fri, 10 Jun 2022
+ 08:49:26 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Michal Simek <michals@xilinx.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh@kernel.org" <robh@kernel.org>
+Subject: RE: [PATCH v4 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root
+ Port
+Thread-Topic: [PATCH v4 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root
+ Port
+Thread-Index: AQHYe1aa0KIWTujVEEyCPx8mQaEs/q1F4U+AgADVmwCAAKAQgIABABHg
+Date:   Fri, 10 Jun 2022 08:49:26 +0000
+Message-ID: <BY5PR02MB6947C5B34801AD5F289127ABA5A69@BY5PR02MB6947.namprd02.prod.outlook.com>
+References: <a403b92d-00f1-885f-7d1b-0fce82b50993@xilinx.com>
+ <20220609173201.GA519962@bhelgaas>
+In-Reply-To: <20220609173201.GA519962@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=xilinx.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 639ea556-293f-49b0-c732-08da4abe1fb2
+x-ms-traffictypediagnostic: CO6PR02MB7825:EE_
+x-microsoft-antispam-prvs: <CO6PR02MB78253EAFD9222B0F96B0CF4AA5A69@CO6PR02MB7825.namprd02.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: v0SRVWgPvWEEMDW7kbgsqJg6N1DjtqhyuRSjBuYJVZXZQn6GNB3XgYPQ6Gh/kQFhyO3q2IPUc9Ral6OiWchnJer7lwMITFAEpC5x1U6lEPiHT0OPLPkD9sMiD3I3RuTRCU3JxWY4J6JJ170+G+X2caq3SNOclRHcGPDM7wFkx8IFcga59AR7uulYxSCQL/9jpvGIEDfCmQgepuCrFJDXZ77+bkMfoH5Ub0rYWh/OTC4MvdIlohRCK0nS457eK7rLAm0PXoIXoRbwsbRhjOfaJ8ilO1rR5+gPYtmmYqCkW0LhrzpRR0Zm6CkJOlW5Y3E+4XfjyaeNeGwUhj9S1ZuWyeief1IxwIi4M1cVzkaBRXtmCokuojS64OblNrPK1LLj41AGm7a6LZSvpnOr2BQ+TJfAW3XuoOeb0iEC22opXzir8a82WlhALbUs2qfSlvTpQxaxXiJ95xe8mf9lKY8xaY0x1CHFEwzFEcGVzQYc8nAo/ssd8+Pw/GYHhn2Xtmv1d5yrD6QCeQLGe+sKn7cwSPB/dJHKjsEpX3a/YqJXVcqrRmRZ/vWqrwRS2fD5Qt8FuMpRj5iO2mx62HPJgI46UmjmROdB8fOGNF+k3mIG3+CHyGPAjlO87+bepawiyL9NILjOI5hjXxotZW7w3ZYO9rJ71InSvqwJlEvbrKLRRaxPIuRvj84IY3fsS6qzSy0GN2agRGvrdXBBBbn0VZ5rsw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR02MB6947.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8936002)(5660300002)(55016003)(52536014)(508600001)(122000001)(2906002)(71200400001)(38100700002)(38070700005)(86362001)(26005)(186003)(83380400001)(9686003)(66946007)(76116006)(4326008)(64756008)(8676002)(66476007)(54906003)(66556008)(6636002)(110136005)(55236004)(33656002)(53546011)(66446008)(7696005)(316002)(6506007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?COSiOlhZjddyprCzNkw6jg2JL2EBkUakLtKpMYPJgwh1mroD+ZbiX0jled1B?=
+ =?us-ascii?Q?zAObWpivHmVi10DwMMv1MuZrMpbqx60efAjz6i5EPGstXixSg2kRepRnpzMW?=
+ =?us-ascii?Q?ONrynQZQOvm1eVwYvxzBBaWIxJTygK5I9VOsCPeBu+vLnPG/nNLscX0D3+Rc?=
+ =?us-ascii?Q?6pX6a1UErK4UBS+Xqfe6O2gO0LndfG1fp1zFLM1w1mRrDx0eoRZOU3suk9NZ?=
+ =?us-ascii?Q?jHFhL/mN4sfcr9IgjwGRpqilKg2ZL8UVcnEKI3UjtcRAZ5ephf/9DyLPhxJA?=
+ =?us-ascii?Q?LsFuN48eYYrf5Ulc9lZ9bPdBvYenCiApcFaK9iZHdOEub+W4LuQ6zx0y0RN/?=
+ =?us-ascii?Q?zY8rNm5VOXQH8enVcK/IdTHne5J73AB2JxwacAP83jZh6fqyoW10IiIrHyZw?=
+ =?us-ascii?Q?UcvaaLiHffDsp/D0oMe3lCJm+PNLjKA5sLJqi5hynxSKkRurBAMBuj5qnjgM?=
+ =?us-ascii?Q?bW2Gxi5q1GM28Y35mzJYhUK1RQ99mZ0tojnnOWDzXk1b5jpdB0UzvAGJ3BPz?=
+ =?us-ascii?Q?9WOSoGYRYJoc6eLiEH789GGpPPIvd3tGq+JI5axDw/NawQ1pNV92WTTBerRm?=
+ =?us-ascii?Q?I1vZtNR9yW6aTjFwSvppVBTtAMukW4SMKeEnVt9PM7gnS/ukPyISdLn0grJD?=
+ =?us-ascii?Q?eHdXaaWmMZz9QnA3jnRdIL25qGEEzBpoDkXVmsqqZOBAcWb3qrL2WRNylTkl?=
+ =?us-ascii?Q?L1QiEnpErtsCUgyRuxtZ2eNLuygoNlM5hZ5B1RMMm0rQuL0FKSdRtqn/fojp?=
+ =?us-ascii?Q?jcJBwH+t5UGVEGKRDXUyraqGCWFsxshaomnf/CGvER5zdLhURS5owb+YhmWs?=
+ =?us-ascii?Q?bl4vHmsYKnMp9nY5oF0P4wewbRz+Qz2v1ulSdDQ41oC1esfxhCUExMaYRrhV?=
+ =?us-ascii?Q?jS9aFL7E9CxhOcXsWAw6ELnkX7euhkaOw2UWxniSGRdCP9HMWSSPuODMTvSE?=
+ =?us-ascii?Q?u8M8hM03JXDcFaOzv+U/SRXyl21N4CCP6AtTS6Z/8Ff9CkrtTvWiDcrybVsA?=
+ =?us-ascii?Q?qkWetl/aCi512VHgGW6vaBHFBC/jnaLracbAov5VQpm9RugeaGo4n0b0Wm3K?=
+ =?us-ascii?Q?qTvnNOhMMPFudMp1Hjye44Ik8kVNnHjOTEb5/c1cyXTaoXl+ntCqRxGGdw8T?=
+ =?us-ascii?Q?fG2qW4E5WtcBAVJD8YnLckm1VlAsCxLLA1gmGKtfwwubtUxipVPthAqzT1zn?=
+ =?us-ascii?Q?81J/tToMuTDPcuC6EyFa1bcbt1EUub+pRXabnzGYHHTo4T7KJuYtzCkdMBZr?=
+ =?us-ascii?Q?4dFtXC7nePVG/jw22PsaNtwgGGy50n4Ls9zzKpekGWE1KXwtbgShcOOX4gNH?=
+ =?us-ascii?Q?sLPy7qeBeXfc3yFNTxn3ISp7evIlhJ/xA7vDHIydFgoK0/TLNc9ZhWmrymc2?=
+ =?us-ascii?Q?4VbPmSycDSBbWDx0FpEJb1ykJxJIHAS6MAXYdU7AvV1R61A6dMX44Et21OTr?=
+ =?us-ascii?Q?huiinGwuzXk6Jzkc7kegGECxi/e2oMm52R57YRKropmPXz/0o2WODQMOD/cz?=
+ =?us-ascii?Q?LRBLrt4uBAPIYR5H1/xaDlmz5ILwIreRiG3m1q7kH6/BujI+whK4wpDetk9/?=
+ =?us-ascii?Q?dCAc4I2Wz0VuK/BAN3LfzbkhtBygnmY5HuAyBAN5px3TzXyOy9FjIvnOXWqJ?=
+ =?us-ascii?Q?ZirWdCoUfNxLK9lCNQ7GOLV6AmSKPYQ1Tpad27G0aLSJGcml7P+z/JA6BrXw?=
+ =?us-ascii?Q?/Q6KiSuh633aL6VWnBxibCVBpo+sazrnu6fejn2ll9I0Qvr2?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR02MB6947.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 639ea556-293f-49b0-c732-08da4abe1fb2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2022 08:49:26.1929
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LD+xaf/fS74In74O6KelUhlvP+oIIN864R4izvXfrwritKpJSA5M72hprpqik1RrmM9J4dqhxZyDLrJzyMMwxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB7825
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 11:44:28AM +0300, Serge Semin wrote:
-> This patchset is a second one in the series created in the framework of
-> my Baikal-T1 PCIe/eDMA-related work:
-> 
-> [1: In-progress v4] PCI: dwc: Various fixes and cleanups
-> Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-> [2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
-> Link: ---you are looking at it---
-> [3: In-progress v3] PCI: dwc: Add extended YAML-schema and Baikal-T1 support
-> Link: ---being submitted afterwards---
-> [4: In-progress v2] dmaengine: dw-edma: Add RP/EP local DMA support
-> Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
-> 
-> Note it is very recommended to merge the patchsets in the same order as
-> they are listed in the set above in order to have them applied smoothly.
-> Nothing prevents them from being reviewed synchronously though.
-> 
-> Originally the patches submitted in this patchset were a part of the series:
-> Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
-> but due to the reviewers requests the series was expanded to about 30
-> patches which made it too bulky for a comfortable review. So I decided to
-> split it up into two patchsets: 2. and 3. in the table above.
-> 
-> Regarding the series content. This patchset is about adding new features
-> to the DW PCIe core, Root Port and Endpoint drivers. First we suggest to
-> add a more verbose link-up log message. Really printing link generation
-> and width would be much more informative than just "link up". Then a
-> series of IP-core version-related patches go, like using a native FourCC
-> version representation, adding the IP-core auto-detection, adding a better
-> structured IP-core version/type interface and finally dropping manual
-> IP-core version setups from the platforms which are supposed to have it
-> auto-detected. After that the platform-specific host de-initialization
-> method is introduced. It's unused in the framework of this patchset but
-> will be utilized in the next one (see the table above). A series of iATU
-> optimizations, cleanups and new features goes afterwards. In particular we
-> suggest to drop some redundant enumerations, add iATU regions size
-> detection procedure and then use the regions parameters to verify the
-> requested by the platform iATU ranges/dma-ranges settings. After that the
-> dma-ranges property support is added for the DW PCIe Host controllers.
-> 
-> Link: https://lore.kernel.org/linux-pci/20220324013734.18234-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v2:
-> - Test the error condition first and return straight away if it comes true
->   in the link up waiting and link state logging method (@Joe).
-> - Move the dw_pcie_region_type enumeration removal patch to being applied
->   before the IB/OB iATU windows setup simplification patch (@Rob).
-> - Move the iATU region selection procedure into a helper function (@Rob).
-> - Rebase from kernel v5.17 onto v5.18-rc3 since the later kernel has
->   already DT bindings converted. (@Rob)
-> - Simplify the iATU region selection procedure by recalculating the base
->   address only if the space is unrolled. The iATU viewport base address
->   will be saved in the pci->atu_base field.
-> - Move the IP-core version detection procedure call from
->   dw_pcie_ep_init_complete() to dw_pcie_ep_init().
-> - Add a new patch: "PCI: dwc: Detect iATU settings after getting
->   "addr_space" resource."
-> 
-> Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru
-> Changelog v3:
+>=20
+> On Thu, Jun 09, 2022 at 09:59:08AM +0200, Michal Simek wrote:
+> > On 6/8/22 21:14, Bjorn Helgaas wrote:
+> > > On Wed, Jun 08, 2022 at 10:10:46PM +0530, Bharat Kumar Gogada wrote:
+> > > > Xilinx Versal Premium series has CPM5 block which supports Root
+> > > > Port functioning at Gen5 speed.
+> > > >
+> > > > Xilinx Versal CPM5 has few changes with existing CPM block.
+> > > > - CPM5 has dedicated register space for control and status register=
+s.
+> > > > - CPM5 legacy interrupt handling needs additional register bit
+> > > >    to enable and handle legacy interrupts.
+> > > >
+> > > > Signed-off-by: Bharat Kumar Gogada
+> > > > <bharat.kumar.gogada@xilinx.com>
+> > > > ---
+> > > >   drivers/pci/controller/pcie-xilinx-cpm.c | 33
+> +++++++++++++++++++++++-
+> > > >   1 file changed, 32 insertions(+), 1 deletion(-)
+> > >
+> > > Per MAINTAINERS, xilinx-cpm lacks a maintainer.  Can we get one?
+> >
+> > Bharat should become maintainer for this driver.
+> >
+> > My fragment should cover xilinx things in general in case Bharat is
+> > not available.
+>=20
+> Great!  Can one of you post a patch to show exactly what you have in mind=
+?
+>=20
+Thanks,  will send patch.
 
-> - Fix pcie-tegra194-acpi.c driver to using the new macros names.
->   (@Manivannan)
-> - Drop in/outbound iATU window size alignment constraint. (@Manivannan)
-> - Detach this series of patches into a dedicated patchset.
-
-@Mani, several patches have been changed or removed from the series
-so I have to drop you tag from some of them. Could you please have
-alook at the patchset one more time?
-
--Sergey
-
-> - Rebase onto kernel v5.18.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: "Krzysztof Wilczyński" <kw@linux.com>
-> Cc: Frank Li <Frank.Li@nxp.com>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Serge Semin (15):
->   PCI: dwc: Add more verbose link-up message
->   PCI: dwc: Detect iATU settings after getting "addr_space" resource
->   PCI: dwc: Convert to using native IP-core versions representation
->   PCI: dwc: Add IP-core version detection procedure
->   PCI: dwc: Introduce Synopsys IP-core versions/types interface
->   PCI: intel-gw: Drop manual DW PCIe controller version setup
->   PCI: tegra194: Drop manual DW PCIe controller version setup
->   PCI: dwc: Add host de-initialization callback
->   PCI: dwc: Drop inbound iATU types enumeration - dw_pcie_as_type
->   PCI: dwc: Drop iATU regions enumeration - dw_pcie_region_type
->   PCI: dwc: Simplify in/outbound iATU setup methods
->   PCI: dwc: Add iATU regions size detection procedure
->   PCI: dwc: Verify in/out regions against iATU constraints
->   PCI: dwc: Check iATU in/outbound ranges setup methods status
->   PCI: dwc: Introduce dma-ranges property support for RC-host
-> 
->  drivers/pci/controller/dwc/pci-keystone.c     |  12 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |  40 +-
->  .../pci/controller/dwc/pcie-designware-host.c | 202 +++++---
->  drivers/pci/controller/dwc/pcie-designware.c  | 461 ++++++++----------
->  drivers/pci/controller/dwc/pcie-designware.h  | 123 ++---
->  drivers/pci/controller/dwc/pcie-intel-gw.c    |  22 +-
->  .../pci/controller/dwc/pcie-tegra194-acpi.c   |   7 +-
->  drivers/pci/controller/dwc/pcie-tegra194.c    |   1 -
->  8 files changed, 461 insertions(+), 407 deletions(-)
-> 
-> -- 
-> 2.35.1
-> 
+Regards,
+Bharat
