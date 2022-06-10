@@ -2,236 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41E7A5461D8
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 11:24:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4157546214
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Jun 2022 11:29:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344016AbiFJJY1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Jun 2022 05:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51908 "EHLO
+        id S1347037AbiFJJ3E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Jun 2022 05:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349237AbiFJJXT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 05:23:19 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1BAA66CB0;
-        Fri, 10 Jun 2022 02:21:37 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id g25so28894948ljm.2;
-        Fri, 10 Jun 2022 02:21:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UR+RqvdxNC/6O7vnxiLh6+/xafLghKRExkkKTPqRGok=;
-        b=Lemye8FYmKBZkgHBMFKit5bSNWAlRuFMQ5mtgZ2v9GLhUs3YUE/FrhbmX/mqVhKCc8
-         q+GbXGYpY2vWhrQL58jcWNfW4BqcADEuovdSXRXifLvHXnI/ymUoIRY4JoS/iKf5QUr+
-         7CQ4XurcYfzrKHHkcxLw1016rmTmFvvhaDUV/4Cj88hBFAar8p6LROdOK4ZGRqRgXPrE
-         y3DG3/0z5qPeqYthiSHt5FTVeoq7CQre0iGfWR7/wOkKT8kjcOE1gJiIogFj+EaWjFdb
-         L8OT7Ult70n63foxo7E6OChcUKy0utmxL9j3Hh4t/tiun61dtUTctX7J6W07ae8lA/4I
-         GVAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=UR+RqvdxNC/6O7vnxiLh6+/xafLghKRExkkKTPqRGok=;
-        b=RBWM8AgYKMfcZHK4Wgmyrz9Y9srWbeWi7IafChHg+Vl9T3L8pdkZ+5UOCeddXBZ7ij
-         q6mTseHwG1LHS5uk4ELVlVq1Ko0f0OMh6eSnraDtd6+OztWwwHHtqdOIh+I6nrkvJxpG
-         9rK/Jkm6WLvUacnv7NM1JJXKnFRavOy4T6LdmvSHNE9mmFHCsl56+YuCB4lwMmmNnXKZ
-         ZBhlVMKc7WjXahW+0rZ+DFrYNqkA78daKMEc/Fa2DJKZeRggNDgnJifzE17sY4f29Ga6
-         QsdD52EjLuJerqmUyO8L1QI1y7LexTwhrOMdb04cyDllu+7zPLh00f/3kobAEhN/HNIk
-         Hl8g==
-X-Gm-Message-State: AOAM533JPu0pdliNDD4zQrywKpjXko9hi7+i41J3xnfOVug+k13cdlBe
-        F38mYhFPvxXXTnZNrnmASVg=
-X-Google-Smtp-Source: ABdhPJw3MKJdThzbGUpdJQ///v3bRel6K997WxVQzU+PBQkLl/kRHZlA0iKYR52uOu+eW7ysimhHqw==
-X-Received: by 2002:a2e:9b58:0:b0:255:95c0:c610 with SMTP id o24-20020a2e9b58000000b0025595c0c610mr14363089ljj.311.1654852895817;
-        Fri, 10 Jun 2022 02:21:35 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id q17-20020ac246f1000000b004790105d0cfsm4654552lfo.16.2022.06.10.02.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jun 2022 02:21:35 -0700 (PDT)
-Date:   Fri, 10 Jun 2022 12:21:33 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        with ESMTP id S1348964AbiFJJ2D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Jun 2022 05:28:03 -0400
+Received: from IND01-MA1-obe.outbound.protection.outlook.com (mail-ma1ind01olkn0156.outbound.protection.outlook.com [104.47.100.156])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A385814CDEA;
+        Fri, 10 Jun 2022 02:25:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KZtMlR2zaIc0sfPIWHGjbm1cH4jWP9KRFbzkA5e6PCt+6I5wzzU4PmOk5OB8xbGi5LgPMlX71wnp6E7NgBfw1bD2/RI71qVggkL4KBDvrci2QeEjvylfsyKqfT9lwIP5xPYn2Vrlhmrxbb2WF0QnrbBn/GM5rpEnQYv90IaaD2X6+oazQFV23bcfVf9jewPk5VQm+IobeVNhI0e1teW+fyi3CojR0BBoh1kluxLELGEDr66h0GQzVSBi1qr+mJ6JeX6RKY2P/Bd76ZsxLQMQU9NwZZc0wdGMcwPuUObuu+5BkTgvE9Em/zCp0lVHI7UlasGZSuAFeMEd7zuS2PIjyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3TdZBuflicFTLYNBf2sjs0BVt01Va59/J9D3D1NDCN0=;
+ b=JzT2XFRaepzLXbK15dx0IjWg2Ca4t4PeJzzOxldQnrq0lmhFvM9eDykNRkvvjA5bLZxqRhY/ufg1D3nHec6mbhWieMesDIvLcs6VPIkubMXrj7GTbfWLv51I3q59Ij12i8zE/FAPXsXhPD8Ubxyb3bShQMgjmMFqQRJ2407pSn6RJj8kiHCOSl4b8w0OhdecXK8txd+D1rR8PoiDKS1oH9qWJbBU8jFYk78Jro2/nm8UEFhdb1AnD/gqOaRG/PxDtZnpPEtMwv6QTdwVQyag4F3UFWdhQZIrvHC/qvcevonj1Lxh5vNy9gi69ELZUH19v0rB1eJqtYR1Gz0FW1dAlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3TdZBuflicFTLYNBf2sjs0BVt01Va59/J9D3D1NDCN0=;
+ b=ewJuYhUuMcww3nlZZGblbkZv8g32+ZYVh8CsuF1Kq0P35UXfjliDUL9bIKNR0KNAH7+3ffWWK5VjE49zUBL9+W3cou0caO7ercdPRjNzZuWXkNsbhtrxOtB5Ca31TSVQASJvfkBIeDK38go/3BSAQfyjH1Pr9AvajkqyxlPR5KDo581iDbJNLjVlTdg2iTrZl/aZz4os+P77qAGsdjsnmj2mkyax/kdfjnzETPUjECudBEGpxThGawwbM/HDKJtZbSrjCBC3AXi0v+jD2UsnaHTpScsLXgfzpU4i6XdvrpZLvfkZJpTz187ul5AuVmOupuPK+vEg5UIqvHesT4zVJw==
+Received: from PN3PR01MB7725.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:ce::7)
+ by PN1PR0101MB1934.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:1b::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.11; Fri, 10 Jun
+ 2022 09:25:41 +0000
+Received: from PN3PR01MB7725.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::d1ac:6386:9aad:ed03]) by PN3PR01MB7725.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::d1ac:6386:9aad:ed03%8]) with mapi id 15.20.5332.015; Fri, 10 Jun 2022
+ 09:25:41 +0000
+From:   Wang Wenhu <lonehugo@hotmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+        Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] dmaengine: dw-edma: Add RP/EP local DMA
- controllers support
-Message-ID: <20220610092133.uhsu5gphhvjhe2jm@mobilestation>
-References: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-fpga@vger.kernel.org (open list:FPGA DFL DRIVERS),
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
+Cc:     wenhu.wang@hotmail.com, Wang Wenhu <lonehugo@hotmail.com>
+Subject: [PATCH] mm: eliminate ifdef of HAVE_IOREMAP_PROT in .c files
+Date:   Fri, 10 Jun 2022 02:25:18 -0700
+Message-ID: <PN3PR01MB7725BD573E8D63C1CB978AD8D2A69@PN3PR01MB7725.INDPRD01.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain
+X-TMN:  [zQ6ziTVMmX4xb/X+yEgUKuoJJeq1mzpb]
+X-ClientProxiedBy: SG2PR01CA0147.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::27) To PN3PR01MB7725.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ce::7)
+X-Microsoft-Original-Message-ID: <20220610092519.346264-1-lonehugo@hotmail.com>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 98476aa9-db13-429e-e0ea-08da4ac32fd3
+X-MS-Exchange-SLBlob-MailProps: GBVYZS+v7b2Pv4YEtwLqbEhkEDSZsWZfdla8BXNG/YmlgR5gH2pAxsgGeo9hPpfPrBBkdkSD3sYZbdcs+PqduhkJYDlhUoB00LK4CIMt60K9hxTgRR5k5grgmJWlXbqI/rE1HBrgbWpokqc9e4P4pWjyxLlncA1LO+ufB8wvaOEVyO2maLfgDQSaBxgzlLg1HTQU4N5nnhFgABgPIBYx4YUspsCWgGesPMXkLQzLAaEvfEdE1R1snMSroYhx/7zcJ/5ua0f8kQfObLMEPz8PhG6PeXxBk6qPHD47FiyZG4Qx4fW5HCY3eogHtBR7tnYmdagRL/cpqIi7LB2qAMeyizQKbtetcydLBpLw/qBJjjw2+iQI7G5qekxe/DD8HrIGeeR5czfcMbXaPgbR65Lm4FBlVWRkKc5jpMPtWz7a+LJqhRX3Mg1U+y+xNWMW+Qtt3RwvPKTfR/3ITtkw9gIKEkvK7zzO5irhVgSqzGp9348QjP6oogjKiv9Mx5VuSmY1kSbZKjtvaWrHdfHRnj+oskHJ7M+Yp3lf7zmW8dUzULAasYt/CENSUFpQNnPCaGgdbEozoewUutkxry2qhCPfC+12TSEbmffkhIpZfiOOTLHgvNpPtozsYMP7hEMMoNl1SjwK9bDST1dvyioXUd3t6ADWgm7xAW3Tw3GX3q9AQa+xFgd01aXzqKCAzbI3/sMaivhlcZQxSIWJu7mwBKS58EoXDUmQB2xW2VKQZFZ/QeXraZaT67y1vSOS1o+XbD7pFL+i6K/4ZB4rGdZDRiPlvkgq+555vY9IZMmhgxcxC+p8Xveibdlo8aHTXZ6o0LmnpIGx6XON18U=
+X-MS-TrafficTypeDiagnostic: PN1PR0101MB1934:EE_
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JODbfPBfcm7O45RlMcBHh6SFVhwSdpLFUG1jIMTLS72Yj121vrJanPLx9FQD0ZTjBfjCXOJkNtiDVMKZgpAmQLNbNsBZGRH57KapU9+Tdmk4AhfP+cU8TFOeYpbEGhHCDp4gG30xUUO1vKbiCQRZ/GMvWOvLXZJf2uSJTUz9pUBufaFH3/EA1mjIUUhcCXfsPgCwQ+vAMSWDr0danQgnpu0/pr0IX/DJqRDORphW/7VG1RSoFy7kkmXrdAPA0Hi12NSVQ2ogfcs09i0KYClAdwHQ8moQavJe4H9FCOMqOdSwfpdRFCUoTFd+JAr7VYwDNncqp4oWMdXoqDXCnQznCIzx/peoD5Cf1BHELpDe50tA8p7OdUoT4vIuhJ9lsU5kO3ECIGwW+lI9feCCq+a6/u+fMTPics/5PMZlXJTAB/l1gxzHryedwzjeqCRO3L7/6RSEVXwSwXhFcxmXFz5X8F265JZBIyL0AFKMaYcdCiQJJTLsnmhbwrp31pvHt+jfBMhspvZOupbdGY4F1m9QbcLNjyFkXJFLIEYDwHcBYrI+my9nnW+g7P5Sh2I6XUZfJKmoaBoKD+2XR9WQYJVk36CCoLrQ3auh3Yjlql9nfpgfBQ66K86Njihy/oL/wi9P
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?keS3ciAMZs4QXo2pFSBBeX1oqTumsX/V3w6kzwsouyJPRctOBOsLG74Y/VER?=
+ =?us-ascii?Q?UeO9M6SKRP6eF75I9XgoW7HjjfqQ1mbR4adjG3ZOkeYOcjajjYufPVDP+DG8?=
+ =?us-ascii?Q?SP31rrLTLlhram+b3ZcHj9szLa/geC2HSiyKdTCXATOxNajHsWPWjaVsu7F/?=
+ =?us-ascii?Q?L4s9gilzJsg/UxuOLZY6VcpdEOGpWtR2SaYUbEwe/ImZVEajyLOKjR1YQSkZ?=
+ =?us-ascii?Q?/XlidFHcyoKbE43TfK9A6nut0o5lfRzl54QJlCOTRSKd6dmwEidRiRbXa9iF?=
+ =?us-ascii?Q?gQUpeWYcXNNnLsC1vVoIs+x16YYwCw8RGKEHA1qJir+8+pP4CG2N01xadRbc?=
+ =?us-ascii?Q?jmyFJ2H8upeNzvzKWmuujTdGvelTK7MPoB3yQ1tIBbFYqNGRgEg8w09C9+7e?=
+ =?us-ascii?Q?3v/1o77g6dx+XRyTXgsy+FOn5xdYszc2mmYqwQQX8pWvhKmqgH8wE3AE920c?=
+ =?us-ascii?Q?T2i7dyipHa9HH72luSWd6/tkuOQ0ZbaFd7ShtdOOcLW6XteUaZXIVSh8ZIW6?=
+ =?us-ascii?Q?cEIZ/MAAaRNj7lWgmZfq/GCY+X95WrsDstyGZ4HILjtuQERnX5a8aQab63Fd?=
+ =?us-ascii?Q?lwE9RXkjmCQ7tinAN3AxblP6DFAgwgj8upuZc/rBmahA4v+VPd1T3LfpMMiz?=
+ =?us-ascii?Q?4yC6pn6WnioTnNp95jNuZxyNMDA6x+WdNXRNOD/7Qa3NaxTPtxTfESPqR0OR?=
+ =?us-ascii?Q?/0+BaPPHbzWAUCZrv9w/Xv9acS+lCsWrMNcXgAu+iYPeVvEZsyZ/WtcE24Eo?=
+ =?us-ascii?Q?qvkXJGOzVCpA2pWmqMz7FBlh79fxJtsv77CXbcRUtnymPTBVArD7qhCXyL3Y?=
+ =?us-ascii?Q?BVvpP9bzt9tu8xv2CU3nDOjdTuk8rqu+foH/imlVGix3sZGNnAPQjZas3FYX?=
+ =?us-ascii?Q?u8W8ZqgU6OcW2+w8d4MSUnq5AJRAs/UoSBCLN4i4mdVkPPBg3hSNU/pZLy0E?=
+ =?us-ascii?Q?R6ERNPj41UvhG9vKi24RXUYwu6Luun9IvgHQJMYmBy4CqHobRIVQXeODXinZ?=
+ =?us-ascii?Q?5+hMXE12AtCIo7tkIvR6p5V/Kf62Mi7BErTOLafvH1W9E3s6hyfKtcofOcMn?=
+ =?us-ascii?Q?gbxNCUsew9k0aj6hoS3h7sH71zhyGbkt89QEKm3L2PXcFmxDETP4KonmvhCS?=
+ =?us-ascii?Q?xRG50NwpISp1T1AZnhS6wkctkaUcMh2ZdopEec1vAxtYG8oXRxY2P8cza4qh?=
+ =?us-ascii?Q?sSeZG009/sJoE1OXjctvrPZSMweBxt8Kym5TOqNkPoi/X90hBNpOc92lJvhQ?=
+ =?us-ascii?Q?IKGBc3mPmE2McRSTuGdTVPUlyYphBh5jXiBGP4OeYBXaHq6JETjTFF3y5TIB?=
+ =?us-ascii?Q?WxR3CmCyrd+aZR+G9yrzLUTQGyP1wkOMZPt7P+5kl5CWv4vBqVgJLWf3D/oe?=
+ =?us-ascii?Q?HJtZxUWNN8BU+/dq5iXQYSIZRgA8kHlsZeiZthBT0d8Om3n13GJHp5V8Ouii?=
+ =?us-ascii?Q?ypAZnO8lpDI=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-42ed3.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98476aa9-db13-429e-e0ea-08da4ac32fd3
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB7725.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2022 09:25:41.3164
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN1PR0101MB1934
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 12:14:35PM +0300, Serge Semin wrote:
-> This is a final patchset in the series created in the framework of
-> my Baikal-T1 PCIe/eDMA-related work:
-> 
-> [1: In-progress v4] PCI: dwc: Various fixes and cleanups
-> Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-> [2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
-> Link: https://lore.kernel.org/linux-pci/20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru/
-> [3: In-progress v3] PCI: dwc: Add generic resources and Baikal-T1 support
-> Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
-> [4: In-progress v3] dmaengine: dw-edma: Add RP/EP local DMA support
-> Link: ---you are looking at it---
-> 
-> Note it is very recommended to merge the patchsets in the same order as
-> they are listed in the set above in order to have them applied smoothly.
-> Nothing prevents them from being reviewed synchronously though.
-> 
-> Please note originally this series was self content, but due to Frank
-> being a bit faster in his work submission I had to rebase my patchset onto
-> his one. So now this patchset turns to be dependent on the Frank' work:
-> 
-> Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
-> 
-> So please merge Frank' series first before applying this one.
-> 
-> Here is a short summary regarding this patchset. The series starts with
-> fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
-> initializes the LL/DT base addresses for the platforms with not matching
-> CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
-> method to get a correct base address. After that you can find a series of
-> the interleaved xfers fixes. It turned out the interleaved transfers
-> implementation didn't work quite correctly from the very beginning for
-> instance missing src/dst addresses initialization, etc. In the framework
-> of the next two patches we suggest to add a new platform-specific
-> callback - pci_address() and use it to convert the CPU address to the PCIe
-> space address. It is at least required for the DW eDMA remote End-point
-> setup on the platforms with not-matching CPU/PCIe address spaces. In case
-> of the DW eDMA local RP/EP setup the conversion will be done automatically
-> by the outbound iATU (if no DMA-bypass flag is specified for the
-> corresponding iATU window). Then we introduce a set of the patches to make
-> the DebugFS part of the code supporting the multi-eDMA controllers
-> platforms. It starts with several cleanup patches and is closed joining
-> the Read/Write channels into a single DMA-device as they originally should
-> have been. After that you can find the patches with adding the non-atomic
-> io-64 methods usage, dropping DT-region descriptors allocation, replacing
-> chip IDs with the device name. In addition to that in order to have the
-> eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
-> dma-ranges-based memory ranges mapping since in case of the root port DT
-> node it's applicable for the peripheral PCIe devices only. Finally at the
-> series closure we introduce a generic DW eDMA controller support being
-> available in the DW PCIe Root Port/Endpoint driver.
-> 
-> Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v2:
-> - Drop the patches:
->   [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
->   [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
->   since they are going to be merged in in the framework of the
->   Frank's patchset.
-> - Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
->   failure."
-> - Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
->   definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
-> - Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
->   'dent'." (@Manivannan)
-> - Slightly extend the eDMA name array size. (@Manivannan)
-> - Change the specific DMA mapping comment a bit to being
->   clearer. (@Manivannan)
-> - Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
->   method."
-> - Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
->   device. That happens if the driver is disabled. (@Manivannan)
-> - Add "dma" registers resource mapping procedure. (@Manivannan)
-> - Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
-> - Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
-> - Remove eDMA in the dw_pcie_ep_exit() method.
-> - Move the dw_pcie_edma_detect() method execution to the tail of the
->   dw_pcie_ep_init() function.
-> 
-> Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v3:
+It is recommended in the "Conditional Compilation" chapter of kernel
+coding-style documentation that preprocessor conditionals should not
+be used in .c files wherever possible.
 
-> - Conditionally set dchan->dev->device.dma_coherent field since it can
->   be missing on some platforms. (@Manivannan)
-> - Drop the patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
->   method". A similar modification has been done in another patchset.
-> - Add more comprehensive and less regression prune eDMA block detection
->   procedure.
-> - Drop the patch: "dma-direct: take dma-ranges/offsets into account in
->   resource mapping". It will be separately reviewed.
-> - Remove Manivannan tb tag from the modified patches.
+As for the micro CONFIG_HAVE_IOREMAP_PROT, now it's a proper chance
+to eliminate it in .c files as we add a no-op function defination
+in the header file if the micro is not enabled.
 
-@Mani, several patches have been changed. Could you have a look at the
-series one more time?
+The main trigger for this patch is an UIO driver series and as Greg
+commented we'd better not use such preprocessor contionals.
+See: https://lore.kernel.org/lkml/YqHy1uXwCLlJmftr@kroah.com/
+For there is little work to do with the UIO driver, I try to push
+this commit independently.
 
--Sergey
+Signed-off-by: Wang Wenhu <lonehugo@hotmail.com>
+---
+ drivers/char/mem.c          | 2 --
+ drivers/fpga/dfl-afu-main.c | 2 --
+ drivers/pci/mmap.c          | 2 --
+ drivers/uio/uio.c           | 2 --
+ include/linux/mm.h          | 8 ++++++++
+ mm/memory.c                 | 4 ----
+ 6 files changed, 8 insertions(+), 12 deletions(-)
 
-> - Rebase onto the kernel v5.18.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: "Krzysztof Wilczyński" <kw@linux.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Serge Semin (24):
->   dmaengine: Fix dma_slave_config.dst_addr description
->   dmaengine: dw-edma: Release requested IRQs on failure
->   dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
->   dmaengine: dw-edma: Fix missing src/dst address of the interleaved
->     xfers
->   dmaengine: dw-edma: Don't permit non-inc interleaved xfers
->   dmaengine: dw-edma: Fix invalid interleaved xfers semantics
->   dmaengine: dw-edma: Add CPU to PCIe bus address translation
->   dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
->     glue-driver
->   dmaengine: dw-edma: Drop chancnt initialization
->   dmaengine: dw-edma: Fix DebugFS reg entry type
->   dmaengine: dw-edma: Stop checking debugfs_create_*() return value
->   dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
->   dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
->   dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
->   dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
->   dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
->   dmaengine: dw-edma: Join Write/Read channels into a single device
->   dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
->   dmaengine: dw-edma: Use non-atomic io-64 methods
->   dmaengine: dw-edma: Drop DT-region allocation
->   dmaengine: dw-edma: Replace chip ID number with device name
->   dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
->   dmaengine: dw-edma: Skip cleanup procedure if no private data found
->   PCI: dwc: Add DW eDMA engine support
-> 
->  drivers/dma/dw-edma/dw-edma-core.c            | 216 +++++-----
->  drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
->  drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c         |  76 ++--
->  drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
->  .../pci/controller/dwc/pcie-designware-ep.c   |  12 +-
->  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
->  drivers/pci/controller/dwc/pcie-designware.c  | 186 +++++++++
->  drivers/pci/controller/dwc/pcie-designware.h  |  20 +
->  include/linux/dma/edma.h                      |  18 +-
->  include/linux/dmaengine.h                     |   2 +-
->  13 files changed, 589 insertions(+), 366 deletions(-)
-> 
-> -- 
-> 2.35.1
-> 
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 84ca98ed1dad..40186a441e38 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -354,9 +354,7 @@ static inline int private_mapping_ok(struct vm_area_struct *vma)
+ #endif
+ 
+ static const struct vm_operations_struct mmap_mem_ops = {
+-#ifdef CONFIG_HAVE_IOREMAP_PROT
+ 	.access = generic_access_phys
+-#endif
+ };
+ 
+ static int mmap_mem(struct file *file, struct vm_area_struct *vma)
+diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+index 7f621e96d3b8..833e14806c7a 100644
+--- a/drivers/fpga/dfl-afu-main.c
++++ b/drivers/fpga/dfl-afu-main.c
+@@ -797,9 +797,7 @@ static long afu_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ }
+ 
+ static const struct vm_operations_struct afu_vma_ops = {
+-#ifdef CONFIG_HAVE_IOREMAP_PROT
+ 	.access = generic_access_phys,
+-#endif
+ };
+ 
+ static int afu_mmap(struct file *filp, struct vm_area_struct *vma)
+diff --git a/drivers/pci/mmap.c b/drivers/pci/mmap.c
+index b8c9011987f4..1dcfabf80453 100644
+--- a/drivers/pci/mmap.c
++++ b/drivers/pci/mmap.c
+@@ -35,9 +35,7 @@ int pci_mmap_page_range(struct pci_dev *pdev, int bar,
+ #endif
+ 
+ static const struct vm_operations_struct pci_phys_vm_ops = {
+-#ifdef CONFIG_HAVE_IOREMAP_PROT
+ 	.access = generic_access_phys,
+-#endif
+ };
+ 
+ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
+diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
+index 43afbb7c5ab9..c9205a121007 100644
+--- a/drivers/uio/uio.c
++++ b/drivers/uio/uio.c
+@@ -719,9 +719,7 @@ static int uio_mmap_logical(struct vm_area_struct *vma)
+ }
+ 
+ static const struct vm_operations_struct uio_physical_vm_ops = {
+-#ifdef CONFIG_HAVE_IOREMAP_PROT
+ 	.access = generic_access_phys,
+-#endif
+ };
+ 
+ static int uio_mmap_physical(struct vm_area_struct *vma)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index bc8f326be0ce..66d0cff6054e 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1857,8 +1857,16 @@ int follow_pfn(struct vm_area_struct *vma, unsigned long address,
+ 	unsigned long *pfn);
+ int follow_phys(struct vm_area_struct *vma, unsigned long address,
+ 		unsigned int flags, unsigned long *prot, resource_size_t *phys);
++#ifdef CONFIG_HAVE_IOREMAP_PROT
+ int generic_access_phys(struct vm_area_struct *vma, unsigned long addr,
+ 			void *buf, int len, int write);
++#else
++int generic_access_phys(struct vm_area_struct *vma, unsigned long addr,
++			void *buf, int len, int write)
++{
++	return 0;
++}
++#endif
+ 
+ extern void truncate_pagecache(struct inode *inode, loff_t new);
+ extern void truncate_setsize(struct inode *inode, loff_t newsize);
+diff --git a/mm/memory.c b/mm/memory.c
+index 7a089145cad4..79b94db1bd5e 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -5437,9 +5437,6 @@ int __access_remote_vm(struct mm_struct *mm, unsigned long addr, void *buf,
+ 		ret = get_user_pages_remote(mm, addr, 1,
+ 				gup_flags, &page, &vma, NULL);
+ 		if (ret <= 0) {
+-#ifndef CONFIG_HAVE_IOREMAP_PROT
+-			break;
+-#else
+ 			/*
+ 			 * Check if this is a VM_IO | VM_PFNMAP VMA, which
+ 			 * we can access using slightly different code.
+@@ -5453,7 +5450,6 @@ int __access_remote_vm(struct mm_struct *mm, unsigned long addr, void *buf,
+ 			if (ret <= 0)
+ 				break;
+ 			bytes = ret;
+-#endif
+ 		} else {
+ 			bytes = len;
+ 			offset = addr & (PAGE_SIZE-1);
+-- 
+2.25.1
+
