@@ -2,183 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFF5A5478F7
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Jun 2022 07:00:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE0C25479BA
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Jun 2022 12:18:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234293AbiFLFAl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Jun 2022 01:00:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48654 "EHLO
+        id S235937AbiFLKSw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 Jun 2022 06:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbiFLFAl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Jun 2022 01:00:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB3C645B;
-        Sat, 11 Jun 2022 22:00:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S232186AbiFLKSv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Jun 2022 06:18:51 -0400
+Received: from mail.tkos.co.il (golan.tkos.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2391D325;
+        Sun, 12 Jun 2022 03:18:50 -0700 (PDT)
+Received: from tarshish.tkos.co.il (unknown [10.0.8.3])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DDAB60B42;
-        Sun, 12 Jun 2022 05:00:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A4B6C34115;
-        Sun, 12 Jun 2022 05:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1655010039;
-        bh=aZel3g0siRMs9hpkSzONyBNEL3/uXvkfsBx22Gz+SpY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iKJAz5rL98YIYN7Mo860AHcTlgAowtdfsN94Oa4K3Z10IBtqVOePW7FdngSDm/wKO
-         A7fv7DEDgw0uBc4kLi+Yqqf5s0YrtzFhmFXikYoC0MrwNtSdYaqurEXoAbBGszAkpk
-         vWlLtr35/nN1qppa33aWNMMBd3eXcyvWalR36a+Y=
-Date:   Sun, 12 Jun 2022 07:00:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PM / wakeup: Unify device_init_wakeup() for PM_SLEEP and
- !PM_SLEEP
-Message-ID: <YqVy9LMWXXIrhLdw@kroah.com>
-References: <YqNYSBQWtwVUSJ+d@kroah.com>
- <20220610150628.GA599243@bhelgaas>
+        by mail.tkos.co.il (Postfix) with ESMTPS id 29882440871;
+        Sun, 12 Jun 2022 13:18:32 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+        s=default; t=1655029112;
+        bh=F94aNh3JlGBDRxuX6bcvrpui+k0ajuhAbaAtoXHdaz4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PstxhpQ2j2zL3XgaOwUiUHxsE9eAiuy2IiU7fBvREIvKdgvqEgd5dXEF41ZxmDlHV
+         +h55M7mxikZ017Rgx9sTFXJVK+smeZdCsxB2KH2fZ4qv58XwhqeZHFU+hz7+q4+tr/
+         iHaod/SMzKZm4GnP+px3pl3XQHEauQPgwzkhSdf+nuF2PGz3ZaYeqgWxVx/Gl0nr0P
+         G2lMZI8ILiENAe/aHZ+Ii1/P56l1VU3+8txwbvLUn4iX1esyCcs1dz0ok4VJuwbZ6F
+         EGwuaxAF2158bHUG3p1ihGFjn7e75S2J3mgEGa4L5BzN6BmJqRUOpyk/6bNVuPmoJ7
+         MVsh0zVsvEezA==
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc:     Baruch Siach <baruch@tkos.co.il>,
+        Kathiravan T <quic_kathirav@quicinc.com>,
+        Selvam Sathappan Periakaruppan <quic_speriaka@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: [PATCH v7 0/3] PCI: IPQ6018 platform support
+Date:   Sun, 12 Jun 2022 13:18:32 +0300
+Message-Id: <cover.1655028401.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220610150628.GA599243@bhelgaas>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 10:06:28AM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 10, 2022 at 04:42:16PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Jun 06, 2022 at 10:51:58PM -0500, Bjorn Helgaas wrote:
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > > 
-> > > Previously the CONFIG_PM_SLEEP and !CONFIG_PM_SLEEP device_init_wakeup()
-> > > implementations differed in confusing ways:
-> > > 
-> > >   - The PM_SLEEP version checked for a NULL device pointer and returned
-> > >     -EINVAL, while the !PM_SLEEP version did not and would simply
-> > >     dereference a NULL pointer.
-> > > 
-> > >   - When called with "false", the !PM_SLEEP version cleared "capable" and
-> > >     "enable" in the opposite order of the PM_SLEEP version.  That was
-> > >     harmless because for !PM_SLEEP they're simple assignments, but it's
-> > >     unnecessary confusion.
-> > > 
-> > > Use a simplified version of the PM_SLEEP implementation for both cases.
-> > > 
-> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > ---
-> > >  drivers/base/power/wakeup.c | 30 ------------------------------
-> > >  include/linux/pm_wakeup.h   | 31 +++++++++++++++++++++++--------
-> > >  2 files changed, 23 insertions(+), 38 deletions(-)
-> > > 
-> > > diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> > > index 11a4ffe91367..e3befa2c1b66 100644
-> > > --- a/drivers/base/power/wakeup.c
-> > > +++ b/drivers/base/power/wakeup.c
-> > > @@ -500,36 +500,6 @@ void device_set_wakeup_capable(struct device *dev, bool capable)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(device_set_wakeup_capable);
-> > >  
-> > > -/**
-> > > - * device_init_wakeup - Device wakeup initialization.
-> > > - * @dev: Device to handle.
-> > > - * @enable: Whether or not to enable @dev as a wakeup device.
-> > > - *
-> > > - * By default, most devices should leave wakeup disabled.  The exceptions are
-> > > - * devices that everyone expects to be wakeup sources: keyboards, power buttons,
-> > > - * possibly network interfaces, etc.  Also, devices that don't generate their
-> > > - * own wakeup requests but merely forward requests from one bus to another
-> > > - * (like PCI bridges) should have wakeup enabled by default.
-> > > - */
-> > > -int device_init_wakeup(struct device *dev, bool enable)
-> > > -{
-> > > -	int ret = 0;
-> > > -
-> > > -	if (!dev)
-> > > -		return -EINVAL;
-> > > -
-> > > -	if (enable) {
-> > > -		device_set_wakeup_capable(dev, true);
-> > > -		ret = device_wakeup_enable(dev);
-> > > -	} else {
-> > > -		device_wakeup_disable(dev);
-> > > -		device_set_wakeup_capable(dev, false);
-> > > -	}
-> > > -
-> > > -	return ret;
-> > > -}
-> > > -EXPORT_SYMBOL_GPL(device_init_wakeup);
-> > > -
-> > >  /**
-> > >   * device_set_wakeup_enable - Enable or disable a device to wake up the system.
-> > >   * @dev: Device to handle.
-> > > diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> > > index 196a157456aa..77f4849e3418 100644
-> > > --- a/include/linux/pm_wakeup.h
-> > > +++ b/include/linux/pm_wakeup.h
-> > > @@ -109,7 +109,6 @@ extern struct wakeup_source *wakeup_sources_walk_next(struct wakeup_source *ws);
-> > >  extern int device_wakeup_enable(struct device *dev);
-> > >  extern int device_wakeup_disable(struct device *dev);
-> > >  extern void device_set_wakeup_capable(struct device *dev, bool capable);
-> > > -extern int device_init_wakeup(struct device *dev, bool val);
-> > >  extern int device_set_wakeup_enable(struct device *dev, bool enable);
-> > >  extern void __pm_stay_awake(struct wakeup_source *ws);
-> > >  extern void pm_stay_awake(struct device *dev);
-> > > @@ -167,13 +166,6 @@ static inline int device_set_wakeup_enable(struct device *dev, bool enable)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > -static inline int device_init_wakeup(struct device *dev, bool val)
-> > > -{
-> > > -	device_set_wakeup_capable(dev, val);
-> > > -	device_set_wakeup_enable(dev, val);
-> > > -	return 0;
-> > > -}
-> > > -
-> > >  static inline bool device_may_wakeup(struct device *dev)
-> > >  {
-> > >  	return dev->power.can_wakeup && dev->power.should_wakeup;
-> > > @@ -217,4 +209,27 @@ static inline void pm_wakeup_hard_event(struct device *dev)
-> > >  	return pm_wakeup_dev_event(dev, 0, true);
-> > >  }
-> > >  
-> > > +/**
-> > > + * device_init_wakeup - Device wakeup initialization.
-> > > + * @dev: Device to handle.
-> > > + * @enable: Whether or not to enable @dev as a wakeup device.
-> > > + *
-> > > + * By default, most devices should leave wakeup disabled.  The exceptions are
-> > > + * devices that everyone expects to be wakeup sources: keyboards, power buttons,
-> > > + * possibly network interfaces, etc.  Also, devices that don't generate their
-> > > + * own wakeup requests but merely forward requests from one bus to another
-> > > + * (like PCI bridges) should have wakeup enabled by default.
-> > > + */
-> > > +static inline int device_init_wakeup(struct device *dev, bool enable)
-> > > +{
-> > > +	if (enable) {
-> > > +		device_set_wakeup_capable(dev, true);
-> > > +		return device_wakeup_enable(dev);
-> > > +	} else {
-> > > +		device_wakeup_disable(dev);
-> > > +		device_set_wakeup_capable(dev, false);
-> > > +		return 0;
-> > > +	}
-> > > +}
-> > > +
-> > 
-> > Why are you moving this to be inline?  Why not just drop the "other"
-> > version and stick with the .c version?
-> 
-> That would definitely be simpler but drivers/base/power/wakeup.c is
-> only built when CONFIG_PM_SLEEP=y, so a .c version there by itself
-> isn't sufficient.  I should have mentioned that in the commit log.
+This series adds support for the single PCIe lane on IPQ6018 SoCs. The code is 
+ported from downstream Codeaurora v5.4 kernel. The main difference from 
+downstream code is the split of PCIe registers configuration from .init to 
+.post_init, since it requires phy_power_on().
 
-Ah, missed that, sorry, nevermind :)
+Tested on IPQ6010 based hardware.
+
+Changes in v7:
+
+  * Use FIELD_PREP for power limit and scale fields
+
+  * Add Stanimir Varbanov to Cc
+
+  * Rebase on v5.19-rc1
+
+Changes in v6:
+
+  * Drop DT patch applied to the qcom tree
+
+  * Normalize driver changes subject line
+
+  * Add a preparatory patch to rename PCIE_CAP_LINK1_VAL to PCIE_CAP_SLOT_VAL,
+    and define it using PCI_EXP_SLTCAP_* macros
+
+  * Drop a vague comment about ASPM configuration
+
+  * Add a comment about the source of delay periods
+
+Changes in v5:
+
+  * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
+
+Changes in v4:
+
+  * Drop applied DT bits
+
+  * Add max-link-speed that was missing from the applied v2 patch
+
+  * Rebase the driver on v5.16-rc3
+
+Changes in v3:
+
+  * Drop applied patches
+
+  * Rely on generic code for speed setup
+
+  * Drop unused macros
+
+  * Formatting fixes
+
+Changes in v2:
+
+  * Add patch moving GEN3_RELATED macros to a common header
+
+  * Drop ATU configuration from pcie-qcom
+
+  * Remove local definition of common registers
+
+  * Use bulk clk and reset APIs
+
+  * Remove msi-parent from device-tree
+
+Baruch Siach (2):
+  PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
+  PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
+
+Selvam Sathappan Periakaruppan (1):
+  PCI: qcom: Add IPQ60xx support
+
+ drivers/pci/controller/dwc/pcie-designware.h |   7 +
+ drivers/pci/controller/dwc/pcie-qcom.c       | 157 ++++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-tegra194.c   |   6 -
+ 3 files changed, 162 insertions(+), 8 deletions(-)
+
+-- 
+2.35.1
+
