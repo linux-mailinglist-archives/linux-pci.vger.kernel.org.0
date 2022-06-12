@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B925479B7
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Jun 2022 12:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58E4E5479BE
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Jun 2022 12:18:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235997AbiFLKSw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Jun 2022 06:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
+        id S236022AbiFLKSx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 Jun 2022 06:18:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235937AbiFLKSv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Jun 2022 06:18:51 -0400
-Received: from mail.tkos.co.il (hours.tkos.co.il [84.110.109.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC28222289;
-        Sun, 12 Jun 2022 03:18:50 -0700 (PDT)
+        with ESMTP id S235984AbiFLKSw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Jun 2022 06:18:52 -0400
+Received: from mail.tkos.co.il (wiki.tkos.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED1422BCE;
+        Sun, 12 Jun 2022 03:18:51 -0700 (PDT)
 Received: from tarshish.tkos.co.il (unknown [10.0.8.3])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.tkos.co.il (Postfix) with ESMTPS id D59A744090C;
-        Sun, 12 Jun 2022 13:18:32 +0300 (IDT)
+        by mail.tkos.co.il (Postfix) with ESMTPS id 828B944091D;
+        Sun, 12 Jun 2022 13:18:33 +0300 (IDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1655029113;
-        bh=/rQFltQbwW1NtS1kguqnicZH12kOh3aebtATb/mTZtY=;
+        s=default; t=1655029114;
+        bh=KuQXYgm8NThAIzb7Ikf1sLboR2SVHi9w/PFiSS2oBeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eaaVttIHWcO+VixLaLug0tZoRTfgdtve3X1M8+oRzqBekE24I0BZsH04HjOKBA2Gx
-         69CDIGos0EabEbKXscobV8yNUC00dVr98YttYaIqNws5wzIs+iI/MmeKI1E4nr/BJZ
-         y2nsheJxoO8G0xWiXY3St7QSjERTqVpIt6U/01fTpzrHVbN4EYpr2tJHwf4z9h7dAi
-         7mppfr3vgdaqDaDg6Fplo3f/hNDm6O0+jn43eaFEfdyLbKI41v0ra79HFv7dCDuAup
-         F9QDFPIDCCA6lcjhl5Jh5jPZsiVdBZ2BG1Qfcz9utTjcCY37x8PI4HBan2YlW4G8Tv
-         xlQNEmT+1PqAA==
+        b=YOp6x8CPE5LAHYBIj5eIocJB8SItVI5ytlhbXSpwGr5vTbkrRUM1qycjJQly1tftR
+         XqtDzOH82NvIPMCgvMwy60TwCzmKzCZOoWVrhj7hKFDw8cnetdpMIz6YL7qCogDua8
+         NsuYVmgNpcJ8AUld6hEGILMYfjuwoTpV6KebUKZaph7mrRjhymhIJ0Kj/tS6Nex10a
+         NPrMeIotyVKWdIcvhzAgWtq/fo6s8HV73UrkwAKxQoWtYDia90/Cf2L0NNLxAGHp3l
+         fhE6TeT62FvUQ6MR+TYJd4aWxnHBTu0u7Q2qnIcFnxlycx/FGscR58szcyn3qlJK/g
+         UXO7w3gmCKxnw==
 From:   Baruch Siach <baruch@tkos.co.il>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Stanimir Varbanov <svarbanov@mm-sol.com>
 Cc:     Baruch Siach <baruch.siach@siklu.com>,
-        Rob Herring <robh@kernel.org>,
         Kathiravan T <quic_kathirav@quicinc.com>,
         Selvam Sathappan Periakaruppan <quic_speriaka@quicinc.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -48,13 +47,14 @@ Cc:     Baruch Siach <baruch.siach@siklu.com>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v7 1/3] PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
-Date:   Sun, 12 Jun 2022 13:18:33 +0300
-Message-Id: <1c2d5a7a139be81fa15f356b2380163dbdebdc09.1655028401.git.baruch@tkos.co.il>
+Subject: [PATCH v7 2/3] PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
+Date:   Sun, 12 Jun 2022 13:18:34 +0300
+Message-Id: <27d2c59cc9a916754e0dc68f44447ecefe378410.1655028401.git.baruch@tkos.co.il>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <cover.1655028401.git.baruch@tkos.co.il>
 References: <cover.1655028401.git.baruch@tkos.co.il>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
@@ -67,49 +67,53 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Baruch Siach <baruch.siach@siklu.com>
 
-These are common dwc macros that will be used for other platforms.
+The PCIE_CAP_LINK1_VAL macro actually defines slot capabilities. Use
+PCI_EXP_SLTCAP_* macros to spell its value, and rename it to better
+describe its meaning.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.h | 6 ++++++
- drivers/pci/controller/dwc/pcie-tegra194.c   | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+v7:
+  Use FIELD_PREP for power limit and stale (Pali Rohár)
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 7d6e9b7576be..ea87809ee298 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -74,6 +74,12 @@
- #define PCIE_MSI_INTR0_MASK		0x82C
- #define PCIE_MSI_INTR0_STATUS		0x830
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 2ea13750b492..5ad9be6372f4 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -69,7 +69,20 @@
+ #define PCIE20_AXI_MSTR_RESP_COMP_CTRL1		0x81c
+ #define CFG_BRIDGE_SB_INIT			BIT(0)
  
-+#define GEN3_RELATED_OFF			0x890
-+#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
-+#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
-+#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
-+#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
-+
- #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
- #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+-#define PCIE_CAP_LINK1_VAL			0x2FD7F
++#define PCIE_CAP_SLOT_POWER_LIMIT_VAL		FIELD_PREP(PCI_EXP_SLTCAP_SPLV, \
++						250)
++#define PCIE_CAP_SLOT_POWER_LIMIT_SCALE		FIELD_PREP(PCI_EXP_SLTCAP_SPLS, \
++						1)
++#define PCIE_CAP_SLOT_VAL			(PCI_EXP_SLTCAP_ABP | \
++						PCI_EXP_SLTCAP_PCP | \
++						PCI_EXP_SLTCAP_MRLSP | \
++						PCI_EXP_SLTCAP_AIP | \
++						PCI_EXP_SLTCAP_PIP | \
++						PCI_EXP_SLTCAP_HPS | \
++						PCI_EXP_SLTCAP_HPC | \
++						PCI_EXP_SLTCAP_EIP | \
++						PCIE_CAP_SLOT_POWER_LIMIT_VAL | \
++						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
  
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index cc2678490162..0190786a24b8 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -191,12 +191,6 @@
- #define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK	GENMASK(23, 8)
- #define GEN3_EQ_CONTROL_OFF_FB_MODE_MASK	GENMASK(3, 0)
+ #define PCIE20_PARF_Q2A_FLUSH			0x1AC
  
--#define GEN3_RELATED_OFF			0x890
--#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
--#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
--#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
--#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
--
- #define PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT	0x8D0
- #define AMBA_ERROR_RESPONSE_CRS_SHIFT		3
- #define AMBA_ERROR_RESPONSE_CRS_MASK		GENMASK(1, 0)
+@@ -1114,7 +1127,7 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+ 
+ 	writel(PCI_COMMAND_MASTER, pci->dbi_base + PCI_COMMAND);
+ 	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
+-	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
++	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
+ 
+ 	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+ 	val &= ~PCI_EXP_LNKCAP_ASPMS;
 -- 
 2.35.1
 
