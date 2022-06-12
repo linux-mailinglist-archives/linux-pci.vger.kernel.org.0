@@ -2,38 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE0C25479BA
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Jun 2022 12:18:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0B925479B7
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Jun 2022 12:18:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235937AbiFLKSw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S235997AbiFLKSw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sun, 12 Jun 2022 06:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232186AbiFLKSv (ORCPT
+        with ESMTP id S235937AbiFLKSv (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Jun 2022 06:18:51 -0400
-Received: from mail.tkos.co.il (golan.tkos.co.il [84.110.109.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2391D325;
+Received: from mail.tkos.co.il (hours.tkos.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC28222289;
         Sun, 12 Jun 2022 03:18:50 -0700 (PDT)
 Received: from tarshish.tkos.co.il (unknown [10.0.8.3])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.tkos.co.il (Postfix) with ESMTPS id 29882440871;
+        by mail.tkos.co.il (Postfix) with ESMTPS id D59A744090C;
         Sun, 12 Jun 2022 13:18:32 +0300 (IDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1655029112;
-        bh=F94aNh3JlGBDRxuX6bcvrpui+k0ajuhAbaAtoXHdaz4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PstxhpQ2j2zL3XgaOwUiUHxsE9eAiuy2IiU7fBvREIvKdgvqEgd5dXEF41ZxmDlHV
-         +h55M7mxikZ017Rgx9sTFXJVK+smeZdCsxB2KH2fZ4qv58XwhqeZHFU+hz7+q4+tr/
-         iHaod/SMzKZm4GnP+px3pl3XQHEauQPgwzkhSdf+nuF2PGz3ZaYeqgWxVx/Gl0nr0P
-         G2lMZI8ILiENAe/aHZ+Ii1/P56l1VU3+8txwbvLUn4iX1esyCcs1dz0ok4VJuwbZ6F
-         EGwuaxAF2158bHUG3p1ihGFjn7e75S2J3mgEGa4L5BzN6BmJqRUOpyk/6bNVuPmoJ7
-         MVsh0zVsvEezA==
+        s=default; t=1655029113;
+        bh=/rQFltQbwW1NtS1kguqnicZH12kOh3aebtATb/mTZtY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eaaVttIHWcO+VixLaLug0tZoRTfgdtve3X1M8+oRzqBekE24I0BZsH04HjOKBA2Gx
+         69CDIGos0EabEbKXscobV8yNUC00dVr98YttYaIqNws5wzIs+iI/MmeKI1E4nr/BJZ
+         y2nsheJxoO8G0xWiXY3St7QSjERTqVpIt6U/01fTpzrHVbN4EYpr2tJHwf4z9h7dAi
+         7mppfr3vgdaqDaDg6Fplo3f/hNDm6O0+jn43eaFEfdyLbKI41v0ra79HFv7dCDuAup
+         F9QDFPIDCCA6lcjhl5Jh5jPZsiVdBZ2BG1Qfcz9utTjcCY37x8PI4HBan2YlW4G8Tv
+         xlQNEmT+1PqAA==
 From:   Baruch Siach <baruch@tkos.co.il>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Baruch Siach <baruch@tkos.co.il>,
+Cc:     Baruch Siach <baruch.siach@siklu.com>,
+        Rob Herring <robh@kernel.org>,
         Kathiravan T <quic_kathirav@quicinc.com>,
         Selvam Sathappan Periakaruppan <quic_speriaka@quicinc.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -47,12 +48,13 @@ Cc:     Baruch Siach <baruch@tkos.co.il>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
         linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v7 0/3] PCI: IPQ6018 platform support
-Date:   Sun, 12 Jun 2022 13:18:32 +0300
-Message-Id: <cover.1655028401.git.baruch@tkos.co.il>
+Subject: [PATCH v7 1/3] PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
+Date:   Sun, 12 Jun 2022 13:18:33 +0300
+Message-Id: <1c2d5a7a139be81fa15f356b2380163dbdebdc09.1655028401.git.baruch@tkos.co.il>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <cover.1655028401.git.baruch@tkos.co.il>
+References: <cover.1655028401.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
@@ -63,80 +65,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series adds support for the single PCIe lane on IPQ6018 SoCs. The code is 
-ported from downstream Codeaurora v5.4 kernel. The main difference from 
-downstream code is the split of PCIe registers configuration from .init to 
-.post_init, since it requires phy_power_on().
+From: Baruch Siach <baruch.siach@siklu.com>
 
-Tested on IPQ6010 based hardware.
+These are common dwc macros that will be used for other platforms.
 
-Changes in v7:
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+---
+ drivers/pci/controller/dwc/pcie-designware.h | 6 ++++++
+ drivers/pci/controller/dwc/pcie-tegra194.c   | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-  * Use FIELD_PREP for power limit and scale fields
-
-  * Add Stanimir Varbanov to Cc
-
-  * Rebase on v5.19-rc1
-
-Changes in v6:
-
-  * Drop DT patch applied to the qcom tree
-
-  * Normalize driver changes subject line
-
-  * Add a preparatory patch to rename PCIE_CAP_LINK1_VAL to PCIE_CAP_SLOT_VAL,
-    and define it using PCI_EXP_SLTCAP_* macros
-
-  * Drop a vague comment about ASPM configuration
-
-  * Add a comment about the source of delay periods
-
-Changes in v5:
-
-  * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
-
-Changes in v4:
-
-  * Drop applied DT bits
-
-  * Add max-link-speed that was missing from the applied v2 patch
-
-  * Rebase the driver on v5.16-rc3
-
-Changes in v3:
-
-  * Drop applied patches
-
-  * Rely on generic code for speed setup
-
-  * Drop unused macros
-
-  * Formatting fixes
-
-Changes in v2:
-
-  * Add patch moving GEN3_RELATED macros to a common header
-
-  * Drop ATU configuration from pcie-qcom
-
-  * Remove local definition of common registers
-
-  * Use bulk clk and reset APIs
-
-  * Remove msi-parent from device-tree
-
-Baruch Siach (2):
-  PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
-  PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
-
-Selvam Sathappan Periakaruppan (1):
-  PCI: qcom: Add IPQ60xx support
-
- drivers/pci/controller/dwc/pcie-designware.h |   7 +
- drivers/pci/controller/dwc/pcie-qcom.c       | 157 ++++++++++++++++++-
- drivers/pci/controller/dwc/pcie-tegra194.c   |   6 -
- 3 files changed, 162 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 7d6e9b7576be..ea87809ee298 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -74,6 +74,12 @@
+ #define PCIE_MSI_INTR0_MASK		0x82C
+ #define PCIE_MSI_INTR0_STATUS		0x830
+ 
++#define GEN3_RELATED_OFF			0x890
++#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
++#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
++#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
++#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
++
+ #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+ #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index cc2678490162..0190786a24b8 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -191,12 +191,6 @@
+ #define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK	GENMASK(23, 8)
+ #define GEN3_EQ_CONTROL_OFF_FB_MODE_MASK	GENMASK(3, 0)
+ 
+-#define GEN3_RELATED_OFF			0x890
+-#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
+-#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
+-#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+-#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+-
+ #define PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT	0x8D0
+ #define AMBA_ERROR_RESPONSE_CRS_SHIFT		3
+ #define AMBA_ERROR_RESPONSE_CRS_MASK		GENMASK(1, 0)
 -- 
 2.35.1
 
