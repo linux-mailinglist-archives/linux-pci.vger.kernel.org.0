@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E3885482E7
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 11:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFC0F5482B7
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 11:15:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240204AbiFMJJe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 05:09:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42294 "EHLO
+        id S240500AbiFMJJg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 05:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240259AbiFMJJd (ORCPT
+        with ESMTP id S240145AbiFMJJd (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 05:09:33 -0400
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237A210DA;
-        Mon, 13 Jun 2022 02:09:32 -0700 (PDT)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CA51C1A1D87;
-        Mon, 13 Jun 2022 11:09:30 +0200 (CEST)
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E96EE01;
+        Mon, 13 Jun 2022 02:09:33 -0700 (PDT)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E893B201D9B;
+        Mon, 13 Jun 2022 11:09:31 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 814861A0B6F;
-        Mon, 13 Jun 2022 11:09:30 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F978201D6D;
+        Mon, 13 Jun 2022 11:09:31 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id AEDF6180219B;
-        Mon, 13 Jun 2022 17:09:28 +0800 (+08)
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id CCEC61802205;
+        Mon, 13 Jun 2022 17:09:29 +0800 (+08)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
         broonie@kernel.org, lorenzo.pieralisi@arm.com, festevam@gmail.com,
@@ -30,9 +30,9 @@ To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
 Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel@pengutronix.de, linux-imx@nxp.com
-Subject: [PATCH v10 5/7] PCI: imx6: Turn off regulator when the system is in suspend mode
-Date:   Mon, 13 Jun 2022 16:55:36 +0800
-Message-Id: <1655110538-10914-6-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v10 6/7] PCI: imx6: Mark the link down as none fatal error
+Date:   Mon, 13 Jun 2022 16:55:37 +0800
+Message-Id: <1655110538-10914-7-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1655110538-10914-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1655110538-10914-1-git-send-email-hongxing.zhu@nxp.com>
@@ -46,85 +46,80 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The driver should undo any enables it did itself. The regulator disable
-shouldn't be basing decisions on regulator_is_enabled().
+let the driver probe successfully, return zero in imx6_pcie_start_link()
+when PCIe link is down.
 
-Move the regulator_disable to the suspend function, turn off regulator
-when the system is in suspend mode.
-
-To keep the balance of the regulator usage counter, disable the
-regulator in shutdown.
+Because i.MX PCIe doesn't support hot-plug feature.
+In this link down scenario, only start the PCIe link training in resume
+when the link is up before system suspend to avoid the long latency in
+the link training period.
 
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 8002d98036e8..c02748393aac 100644
+index c02748393aac..ac6ec2d691a0 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -369,8 +369,6 @@ static int imx6_pcie_attach_pd(struct device *dev)
+@@ -67,6 +67,7 @@ struct imx6_pcie {
+ 	struct dw_pcie		*pci;
+ 	int			reset_gpio;
+ 	bool			gpio_active_high;
++	bool			link_is_up;
+ 	struct clk		*pcie_bus;
+ 	struct clk		*pcie_phy;
+ 	struct clk		*pcie_inbound_axi;
+@@ -845,7 +846,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+ 	/* Start LTSSM. */
+ 	imx6_pcie_ltssm_enable(dev);
  
- static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- {
--	struct device *dev = imx6_pcie->pci->dev;
--
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX7D:
- 	case IMX8MQ:
-@@ -400,14 +398,6 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
- 		break;
- 	}
--
--	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
--		int ret = regulator_disable(imx6_pcie->vpcie);
--
--		if (ret)
--			dev_err(dev, "failed to disable vpcie regulator: %d\n",
--				ret);
--	}
- }
+-	dw_pcie_wait_for_link(pci);
++	ret = dw_pcie_wait_for_link(pci);
++	if (ret)
++		goto err_reset_phy;
  
- static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
-@@ -580,7 +570,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	struct device *dev = pci->dev;
- 	int ret, err;
+ 	if (pci->link_gen == 2) {
+ 		/* Allow Gen2 mode after the link is up. */
+@@ -881,11 +884,14 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+ 		}
  
--	if (imx6_pcie->vpcie && !regulator_is_enabled(imx6_pcie->vpcie)) {
-+	if (imx6_pcie->vpcie) {
- 		ret = regulator_enable(imx6_pcie->vpcie);
- 		if (ret) {
- 			dev_err(dev, "failed to enable vpcie regulator: %d\n",
-@@ -653,7 +643,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	return 0;
- 
- err_clks:
--	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
-+	if (imx6_pcie->vpcie) {
- 		ret = regulator_disable(imx6_pcie->vpcie);
- 		if (ret)
- 			dev_err(dev, "failed to disable vpcie regulator: %d\n",
-@@ -1013,6 +1003,9 @@ static int imx6_pcie_suspend_noirq(struct device *dev)
- 		break;
+ 		/* Make sure link training is finished as well! */
+-		dw_pcie_wait_for_link(pci);
++		ret = dw_pcie_wait_for_link(pci);
++		if (ret)
++			goto err_reset_phy;
+ 	} else {
+ 		dev_info(dev, "Link: Gen2 disabled\n");
  	}
  
-+	if (imx6_pcie->vpcie)
-+		regulator_disable(imx6_pcie->vpcie);
-+
++	imx6_pcie->link_is_up = true;
+ 	tmp = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+ 	dev_info(dev, "Link up, Gen%i\n", tmp & PCI_EXP_LNKSTA_CLS);
+ 	return 0;
+@@ -895,7 +901,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+ 		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
+ 		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
+ 	imx6_pcie_reset_phy(imx6_pcie);
+-	return ret;
++	return 0;
+ }
+ 
+ static int imx6_pcie_host_init(struct pcie_port *pp)
+@@ -1022,10 +1028,8 @@ static int imx6_pcie_resume_noirq(struct device *dev)
+ 	imx6_pcie_init_phy(imx6_pcie);
+ 	imx6_pcie_deassert_core_reset(imx6_pcie);
+ 	dw_pcie_setup_rc(pp);
+-
+-	ret = imx6_pcie_start_link(imx6_pcie->pci);
+-	if (ret < 0)
+-		dev_info(dev, "pcie link is down after resume.\n");
++	if (imx6_pcie->link_is_up)
++		imx6_pcie_start_link(imx6_pcie->pci);
+ 
  	return 0;
  }
- 
-@@ -1259,6 +1252,8 @@ static void imx6_pcie_shutdown(struct platform_device *pdev)
- 
- 	/* bring down link, so bootloader gets clean state in case of reboot */
- 	imx6_pcie_assert_core_reset(imx6_pcie);
-+	if (imx6_pcie->vpcie)
-+		regulator_disable(imx6_pcie->vpcie);
- }
- 
- static const struct imx6_pcie_drvdata drvdata[] = {
 -- 
 2.25.1
 
