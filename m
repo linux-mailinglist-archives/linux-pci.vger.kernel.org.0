@@ -2,140 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7162549CF7
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 21:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 476B7549D1D
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 21:14:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348375AbiFMTKs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 15:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
+        id S238607AbiFMTOQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 15:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349281AbiFMTIq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 15:08:46 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95DA12C128
-        for <linux-pci@vger.kernel.org>; Mon, 13 Jun 2022 10:06:15 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id d129so6070678pgc.9
-        for <linux-pci@vger.kernel.org>; Mon, 13 Jun 2022 10:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=MOQgXtI+BKSvQKp350OufIdxJrNapSAlu2QwriUAL0M=;
-        b=Xr7brTWW1FS8zff2fqX5in7RA7W1ehGdNrTPpeehBMhGZLvChDjV5pABpRpyOvTxh2
-         +hFSK4aggLX2HLQh5AXCo0EkJpeIt8smwjmG6CoKDTxULhJPTSbnQuVGcXq+uUAEgFgo
-         MUO8lUwZjLjoVpzbK0Yh79o2bM1IwcP550ns91RLEY1ZhV35kAN7jMFexP/OvmsMmkO5
-         E3H4q67N9BhNr3oX+ovhxHlbX/jQ59vNB1ZpRNJc2udHx0hfENEKSgW25MlKGYzGuSb8
-         oTQSphWbPVCdzE70YFtOxLwdOk5vdq74xwoQT4oZEtnMDdlfdvK/OdHzv5oSoufXztIF
-         GZxQ==
+        with ESMTP id S1348359AbiFMTNc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 15:13:32 -0400
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B566C3F;
+        Mon, 13 Jun 2022 10:34:52 -0700 (PDT)
+Received: by mail-il1-f181.google.com with SMTP id f7so4781918ilr.5;
+        Mon, 13 Jun 2022 10:34:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=MOQgXtI+BKSvQKp350OufIdxJrNapSAlu2QwriUAL0M=;
-        b=dNWeM2dlUoBcwZjsh4BS4UmwxanM6fznllimF4b27QwRQQzWRJ13mExSwS4KI+u7Pv
-         SkmN5Un+i4yi6AVlcSZQ3Kmv2gKUU4NLsTd0t3Ez/cAThXxkQfrnOPHqghWJ50amHlrT
-         F4uqCA54Fz8NljgDymmw5/qVtPxoADLAB+eppe9tA3Zka/U7Zo0gZfVIVyaGnpjnVx3L
-         vZD4qytu0hm+/1OPsPOfBEpaKDxTx0iDis4e5V/MckZxHMyG3BMhxdVLtkba/c3V2mfd
-         iYClfUr7xZKVD/6cvaQ1zuowfoQrRcmdwvZLV7QQPhGDnooFq94PQ1h4Bb0jEAg8hyB5
-         gpqw==
-X-Gm-Message-State: AOAM533RanigQ8arU+LCU+BA7+Aii3ZVmcpEBB5jm2dRZA6hVz+OnyVY
-        l3+HY6w6cq2Yu8XxmB1w6eA=
-X-Google-Smtp-Source: ABdhPJzZ7i5tys91503gKW2Dx5yn+4/pmdYgJ0M/Iv2UGbTxpnBMOzfRw0pPhZwC6EEadmpIF1e9UQ==
-X-Received: by 2002:a05:6a00:1687:b0:518:6c6b:6a9a with SMTP id k7-20020a056a00168700b005186c6b6a9amr161951pfc.81.1655139974873;
-        Mon, 13 Jun 2022 10:06:14 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 199-20020a6300d0000000b003f24d67d226sm5702673pga.92.2022.06.13.10.06.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jun 2022 10:06:14 -0700 (PDT)
-Message-ID: <e58125a4-f885-ae55-0441-d52ecab9a1e8@gmail.com>
-Date:   Mon, 13 Jun 2022 10:06:12 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 0/4] PCI: brcmstb: Revert subdevice regulator stuff
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jim Quinlan <jim2101024@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        regressions@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
-References: <20220511203948.GA811126@bhelgaas>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20220511203948.GA811126@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=inaX8bZake1uK03pZZ115muQtE+Cy1cKAMm+WceEhjI=;
+        b=mdDiZ5AS/HWiLGEkWot4g9c+MHrX8O1WX5L/rX64wFg76GitZPynIajfJTKx7pGbOO
+         +y8CjMZxrekzvIOe1zzQMnTA4DfcfEpj6Mjbn+k1KrmK2z8MY07Yy29YS8ZOagtR5lKX
+         /4HCHxdNuTp+z9kiYCfKEOtPweFKoW8R6VuvaUVXKBZh3uXUkKGtd1rIIaT2vRMspzjT
+         Gq6vbAUhLx72eAkN5ffE1xT8WvZArxFVxaBojbFxYvvlGhphuJXGpoFH1mssfSxDolQX
+         R48/Kv9TNv+7FgAChLCJ8ksPnM7eQ1m4rHffu3YJ7X9w+E7qZsY/lxq8OmEq+29ZiFRd
+         5Hog==
+X-Gm-Message-State: AJIora8teG7ZU9dWT61x6ol32q2SRZxEto0MDxKIfWOTELaIWoejC555
+        pT2shsat1Mbzq/0H/24ldA==
+X-Google-Smtp-Source: AGRyM1t8MZFwlalMjddYXCHhYrtFZXaO6A02e2NyRm9JgDEGuq5eNvVvTxx+DfXezQjuV0MPJS+OEg==
+X-Received: by 2002:a92:7c06:0:b0:2d6:605d:8164 with SMTP id x6-20020a927c06000000b002d6605d8164mr505102ilc.179.1655141691307;
+        Mon, 13 Jun 2022 10:34:51 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id v2-20020a056602014200b0066a0c0beee7sm211899iot.44.2022.06.13.10.34.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jun 2022 10:34:50 -0700 (PDT)
+Received: (nullmailer pid 3951188 invoked by uid 1000);
+        Mon, 13 Jun 2022 17:34:46 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     krzk+dt@kernel.org, robh+dt@kernel.org, geert+renesas@glider.be,
+        magnus.damm@gmail.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, kw@linux.com,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        lpieralisi@kernel.org, marek.vasut+renesas@gmail.com
+In-Reply-To: <20220613115712.2831386-3-yoshihiro.shimoda.uh@renesas.com>
+References: <20220613115712.2831386-1-yoshihiro.shimoda.uh@renesas.com> <20220613115712.2831386-3-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH 2/7] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+Date:   Mon, 13 Jun 2022 11:34:46 -0600
+Message-Id: <1655141686.995312.3951187.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn,
-
-On 5/11/22 13:39, Bjorn Helgaas wrote:
-> On Wed, May 11, 2022 at 01:24:55PM -0700, Florian Fainelli wrote:
->> On 5/11/22 13:18, Bjorn Helgaas wrote:
->>> From: Bjorn Helgaas <bhelgaas@google.com>
->>>
->>> Cyril reported that 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup()
->>> into two funcs"), which appeared in v5.17-rc1, broke booting on the
->>> Raspberry Pi Compute Module 4.  Revert 830aa6f29f07 and subsequent patches
->>> for now.
->>
->> How about we get a chance to fix this? Where, when and how was this even
->> reported?
+On Mon, 13 Jun 2022 20:57:07 +0900, Yoshihiro Shimoda wrote:
+> Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
+> PCIe endpoint module.
 > 
-> Sorry, I forgot to cc you, that's my fault:
->    https://lore.kernel.org/r/CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../bindings/pci/rcar-gen4-pci-ep.yaml        | 111 ++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
 > 
-> If you come up with a fix, I'll drop the reverts, of course.
 
-OK, so now this patch series has landed in Linus' tree and was committed 
-on May 31st and we got no notification that this patch series was applied :/
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-How did I notice? Because suddenly the stable auto selection started to 
-email me about the 4 reverts being included which is kind of the worse 
-way to know about a patch having been applied.
+yamllint warnings/errors:
 
-What is even better is that meanwhile there was already a candidate fix 
-proposed on May 18th, and a v2 on May 28th, so still an alternative to 
-the reverts making it to Linus' tree, or so I thought.
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: compatible:0: 'renesas,r8a779f0-pcie-ep' was expected
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: compatible: ['snps,dw-pcie-ep'] is too short
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: reg: [[3753902080, 4096], [3753906176, 4096], [3489660928, 33554432]] is too short
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: reg-names:1: 'atu' was expected
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: reg-names:2: 'appl' was expected
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: reg-names: ['dbi', 'dbi2', 'addr_space'] is too short
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: 'resets' is a required property
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: 'power-domains' is a required property
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: 'clocks' is a required property
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: 'clock-names' is a required property
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.example.dtb: pcie-ep@dfd00000: 'oneOf' conditional failed, one must be fixed:
+	'interrupts' is a required property
+	'interrupts-extended' is a required property
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
 
-This utterly annoys me because:
+doc reference errors (make refcheckdocs):
 
-- the history for pcie-brcmstb.c is now looking super ugly because we 
-have 4 commits getting reverted and if we were to add back the original 
-feature being added now what? Do we come up with reverts of reverts, or 
-the modified (with the fix) original commits applied on top, are not we 
-going to sign ourselves for another 13 or so round of patches before we 
-all agree on the solution?
+See https://patchwork.ozlabs.org/patch/
 
-- we could have just fixed this with proper communication from the get 
-go about the regression in the first place, which remains the failure in 
-communicating appropriately with driver authors/maintainers
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-- v5.17 and v5.18 final were already broken, but who on earth uses v5.17 
-or v5.18 and not their stable counter parts, so we had a chance of 
-slipping in a fix in a subsequent stable, I mean, it's been broken for 2 
-releases on the CM4 and it was not noticed, so what was the urgency?
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-- the reverts will make it to -stable being bug fixes for regressions, 
-however for users like Jim and I, now we will lose a feature that we 
-were relying on, thus causing a regression for *many other* platforms 
-than just the CM4
+pip3 install dtschema --upgrade
 
-I appreciate that as a maintainer you are very sensitive to regressions 
-and want to be responsive and responsible but this is not leaving just a 
-slightest chance to right a wrong. Can we not do that again please?
+Please check and re-submit.
 
-Maybe I am being overly sensitive and disgruntled today, but really this 
-is the type of thing that makes me want to quit working on the Linux kernel.
--- 
-Florian
