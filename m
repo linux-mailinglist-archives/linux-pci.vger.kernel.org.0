@@ -2,161 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B614547F87
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 08:34:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C0E0548142
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 10:02:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233350AbiFMGdg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 02:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35846 "EHLO
+        id S238444AbiFMICt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 04:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233034AbiFMGdf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 02:33:35 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD7063DC;
-        Sun, 12 Jun 2022 23:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655102013; x=1686638013;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=y9hGbqruErSSwKNR3/fnnivLvgoEcCFYKPXGHFaWaaY=;
-  b=KHVJWFOb9zpruBccpDVFyc5eHa7d+5Vou7saJhBvBLZoCKNOLsrigUpu
-   jBT+vZ7eG16ksi9NRH6XSlNx7YuZLcWS6yVdLHe53B7Jn80SlaDdA4cYo
-   lBvCHn6vpRKqchBf3WKkuwM8ObhLzcqnkBmu7pVqVofqUIQFxfLq0EtHv
-   QrMcndsKIIm53zeUhHJ7K4ATDSdI9WpvDl3dkLsYF1FJ/lVq3Zi+1UTi/
-   ytcNXF8QKwJuOLxCKDmcKxyFFhOI1fx7Vth6iCbbe6BTsEA6xCKecSUg4
-   RUoVcykIhXwmjWiVqqsH3zqz+6K8yG8XAgfNDk6XzdP+QhL8KoMd10ij8
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10376"; a="261221228"
-X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="261221228"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2022 23:33:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,296,1647327600"; 
-   d="scan'208";a="582081383"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga007.jf.intel.com with ESMTP; 12 Jun 2022 23:33:32 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Sun, 12 Jun 2022 23:33:32 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Sun, 12 Jun 2022 23:33:32 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Sun, 12 Jun 2022 23:33:32 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Sun, 12 Jun 2022 23:33:31 -0700
+        with ESMTP id S239014AbiFMIC0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 04:02:26 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2085.outbound.protection.outlook.com [40.107.94.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06AA2BBC;
+        Mon, 13 Jun 2022 01:02:26 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lhmm/DsWMiGWEm51U6bcAk9wxXEdnOqSIC3JVlfY7MQg0NQEAkszpG2rv7lSFHFEmC9pH9GpRtTvaLFzUTWSUVOUePgfCZ6MQ0ZURg6acNloMh3pI7Llyx/aznj3ivkmItddLT1I9D+YZTrjoBM9UpxVcWOyibvs01VooFHTx/nztXAJRJR2rNX2MaoswhaBEtcfdVSAmreKhXH8cZPAmRiOEzvVULVJYXN719f2J4Ayqwt9Y0kdFbg66zQCTiz2t7m4dOUTXVJgjdhaizO40cYeWewmlGJoiro0bCsnLK1gloWMwypI9M4IdSgfBlYTIQz+jZT9L03+x0Dwq9NpFA==
+ b=FMH0dW6p847t+5v6O0R9NWcEGRbD8GG7Dc/S0dD/kzFxWHRlx/1njMQDsi8auWaowONiHlucxoXStAGcdDG33vUacxAPQ9b178pZjAKwvDCkBq3zFqvpvDOOS2N9L87KxKOfo52YEqOb6xxCQG7y2VcDReVd8V54utB/A/gjCbKqtaEERBGxZ46K5YRj/oZkrfnMIDhPvln0i3iqoVZBiqm8pb8wcOBj6pTP2eWAaPBdtKqGV120Yvp/YjyInzs8X/fK2XUHK3QpkWapsIt0zF/CzbBS3ml2b1Ijv8lZDmkuqZsd/R1NAVgx1Ql/7U8IfFUzitFjReQG1Z32bIHLog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KjPI+9Gfrnzova2p/iWR/KzWQe9oEr9lTCDxPLbNOHI=;
- b=GbaTzc1ZtcwHItgMETeoSZeSJjwnjwiKg65L0ZEzOVGNXw2ZXg3MC0eYiY8R/sM0EuUuxzBe35Rax5uWm3yCXE069fMvv6VqSQ8ieb4BpooFU22runYdqk8hHI/4kLwACtNXkO6QqdHMZhM3oa/Pv3dUXlxYbWljHCI+aISAQvOuwdCuk57CVuFztlq/dBrn2UcqomrF0HX+FKhrOldfLHe3scUlaeEA1hRa4yFoT1/K9daC3GxeUAZICBHXxFK1WeXpFyTNyGCMYGYDB6r8Qsn/K5ikGG/1b7ShVIFIPdtHo755GDHNYGCEj/iVc22EF+hxTOp3Vu4Zl5B12dV92g==
+ bh=tErt4+11mi2B8bzKvlv5RAq1+z9jC7EyTqyqLEhCxZs=;
+ b=nXtHR46HLwZ72sLDktK31H+pGIUt5xgJWUpMrGQevDe83JjYTnZ1hnHqf2RVr+LghCR4qxYEDqbvJ3AcumIdP87Y6BLMr3fPjQka8O1vbAZb2jYO08SY3/tme/7ErNPM/ZTXwlQZIGqfENQF6yImsVEC63l05ZGdSbTxMQrlokr1elny6SqZ2zcF2TtWZl8VPuQkDGrnWOWdNngIDnS8eu7zh2jVSr5HoASqjEIIO4aG8PqHgiCswvjNvrW1SnGiWkRCDqfLXqEqsFb3djEeSNZ9cNRYgCFwi+tk5wlI2EiGwxgpLGAAel1R0x2V9lexhsz3v6eJD6Vp4yS0vRVWpw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH7PR11MB5862.namprd11.prod.outlook.com (2603:10b6:510:134::6)
- by DM6PR11MB2858.namprd11.prod.outlook.com (2603:10b6:5:bd::19) with
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tErt4+11mi2B8bzKvlv5RAq1+z9jC7EyTqyqLEhCxZs=;
+ b=OtRGePgyBe/Gy1v52CxoDt174ZiISZlwbW83NrOqTKchpQdkH47jhgslAfRioFOMo2d2rX9MPOGIa/xKTbBYjuEnRgIEu54b5P6q7tUw0lRINaOX9Fnt8hV5+qTmF5jMt4tNaohunxg+HAtuvPZ+Wr9W0XyHTCpgOnbYL/3LOUYaMs/nktgpbqaCB9qPcSwodxXd/ShfUR9e0RvaqUlO3BUxZa8LO0Ldu2XdOSVmALzKYX2GPgP/RukdFLvAqgVHZIOuReAxVGQjvvzySluqpzvWkqjTkiSy6OAXyKnYN627FhggDfQ3RkVCGvnN+/Uoid8JvQF+WloBqxl8Z7+hQw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
+ by DM6PR12MB3051.namprd12.prod.outlook.com (2603:10b6:5:119::29) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.19; Mon, 13 Jun
- 2022 06:33:30 +0000
-Received: from PH7PR11MB5862.namprd11.prod.outlook.com
- ([fe80::1c62:2c43:b52f:f042]) by PH7PR11MB5862.namprd11.prod.outlook.com
- ([fe80::1c62:2c43:b52f:f042%3]) with mapi id 15.20.5332.015; Mon, 13 Jun 2022
- 06:33:30 +0000
-From:   "Mohan, Subramanian" <subramanian.mohan@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "nirmal.patel@linux.intel.com" <nirmal.patel@linux.intel.com>,
-        "jonathan.derrick@linux.dev" <jonathan.derrick@linux.dev>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Sangannavar, Mallikarjunappa" 
-        <mallikarjunappa.sangannavar@intel.com>,
-        "Thokala, Srikanth" <srikanth.thokala@intel.com>
-Subject: RE: [PATCH] PCI: vmd: Use devm_kasprintf instead of simple kasprintf
-Thread-Topic: [PATCH] PCI: vmd: Use devm_kasprintf instead of simple kasprintf
-Thread-Index: AQHYfNj+p8Htu1XVkUWnASKhV7DpSq1Mt6uA
-Date:   Mon, 13 Jun 2022 06:33:30 +0000
-Message-ID: <PH7PR11MB58622C3C639058508C8883A2F7AB9@PH7PR11MB5862.namprd11.prod.outlook.com>
-References: <20220531132617.20517-1-subramanian.mohan@intel.com>
- <20220610144724.GA597886@bhelgaas>
-In-Reply-To: <20220610144724.GA597886@bhelgaas>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.14; Mon, 13 Jun
+ 2022 08:02:24 +0000
+Received: from BN8PR12MB2900.namprd12.prod.outlook.com
+ ([fe80::d0a7:164b:8ea0:b670]) by BN8PR12MB2900.namprd12.prod.outlook.com
+ ([fe80::d0a7:164b:8ea0:b670%7]) with mapi id 15.20.5332.020; Mon, 13 Jun 2022
+ 08:02:23 +0000
+Message-ID: <ded0e4f1-ed94-7518-f190-ed7aff1bc832@nvidia.com>
+Date:   Mon, 13 Jun 2022 13:32:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH v4 06/18] PCI: dwc: Enable CDM-check independently from
+ the num_lanes value
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.6.500.17
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 899f7b03-9313-49f2-00e2-08da4d06a19c
-x-ms-traffictypediagnostic: DM6PR11MB2858:EE_
-x-microsoft-antispam-prvs: <DM6PR11MB2858851392A87B180D4FD571F7AB9@DM6PR11MB2858.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bspgisZ8pdNc018y7QbKZSF6cdYorPilC0tPMmuKK7iDQKFs9tJ4o/GXYnNFBan8EHPNW/Qsy/o7LMSeo9zwd8BzuB9+wsGkif/yukYycGdd/SuCXj94VOFwwndwObsrcyuoe+yV2jZth/ZfcLSLXqzwDrI3ZBO8B07QvIVBog11ELbfUvdAhSYOzWYAcH0xgGP9LY4d/DMMkdP2EKHxYzbI0OUqnWOp7Zp5L+Mg9LtnDpfL7Oy7gB9l5OsBeYzyIegaAY82O9Ez7YkETW2wsXEDnQXuGgwvEQBBTmlXpXGjoDz+RqZ/14g2FPBujMMa1aSTown7CwmeCu4bGGG9A17xg1B4Iu4lDojPXGYHsAbT5RRPKFh88YeZ6wI7pTC8tdHjcFHMaQ71eM8SX97gGUtnVH/yBZP6KrCRKlriUrVpIngulIB7EChcC78mt2Olaas6sLzbHoZnJlKnI4+RtuykxECxZHG2NdkJSvHyFVaPyS4gwlwgtz/NlQQl393dRIfibTvtn+Nnyt1NyTqQ1wldY5azVRBeAN4mVU+ijNZ7gFCFuHECChSWp5n91c2wzx7+wDRr/0ySGqVUcNtWLYo/fXVL1lv/2x5WMFYKd3bph4rTotXjk2gbqjo8sY8Pv7TyWFzuA/bsX7s3d4HOP3sfKxp1pGBCOnutH5x4uS0ehHb/IukDv21z7ncuawin/HTxlHtnj2osy/Nc9udh/g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5862.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(8676002)(66476007)(186003)(55016003)(4326008)(66446008)(66946007)(64756008)(66556008)(76116006)(6916009)(71200400001)(54906003)(6506007)(55236004)(9686003)(26005)(7696005)(83380400001)(53546011)(38100700002)(86362001)(2906002)(316002)(122000001)(52536014)(8936002)(82960400001)(508600001)(38070700005)(33656002)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?KnXdOvWjjPD82/t5kxwPug69QeNNYBXO78rsPF2fD6b7NP6SOJzKzNdvddyo?=
- =?us-ascii?Q?c/LtOQcNNX7JC//w206azoRxVJglmmrjPHr4SMk+Ut0Qa4g4am4mMtQdngt7?=
- =?us-ascii?Q?KqROzOIAF5rYdMR9q7pLK9AmGko1K10g2w135RMEoYdOExbP8pxRYt0/vik8?=
- =?us-ascii?Q?caTKioAP+syx02RfV3EQdh0i7MJWn841K0NgDof0LjkWx8gEPxBT/llMV2Wo?=
- =?us-ascii?Q?RmIfmW3NmeC8bon4ytszaKe0sg+ADDP5uYCAQT0lUqB9Wxnk9ZF8onxNoylW?=
- =?us-ascii?Q?zZi8WBkwphuWBbX8blUVIwoY1BXarJzfgaQWx0npYh1juDrEGr9IyNnEMP1f?=
- =?us-ascii?Q?mdy8PW5vwVFGBOieQ/k/9RGETRkSTO/9NZs920/cXwcubZqlHB4bmk9C8tpJ?=
- =?us-ascii?Q?9TOAYWiSXOO3JRHfWBWC6Ur/XDtYJ0hTuKxFrB7XH3wJGlgYq4ODzLsjGL1U?=
- =?us-ascii?Q?ScVAaKTdNt2KTsCvLO8eU3i82zY1ivmi3YYOhw4E3VSHB4NDJjMjpaZvZuW8?=
- =?us-ascii?Q?ncx9jLxKBoFga7QCDfJ+YGW609zobd5X3CQLDkIKMZIcTwdtAQO08sVcENKK?=
- =?us-ascii?Q?EIi5115n7sTDARK7i81spoyQ4+/mrmlFIP3kWGgkzv8sZzlJTS8xIW4i0mbw?=
- =?us-ascii?Q?QQg9LFJmSx47vf0O5snESaStgVY5l25/EEzNU/pwqkEgnlShx2IXVbyQk18e?=
- =?us-ascii?Q?XpzOBmOopjvXFPJgcUz6iGf5Yka7Urk6/At4Zi7yYAhMqzvtWiBsdm0RQItx?=
- =?us-ascii?Q?EblMYVCyhLDGqBeg78K7NbDP8ij1D40i0XJFBZ/J8gZqLq9IL13O9zUSesw/?=
- =?us-ascii?Q?Y3YsXe5ggKsPtwqTQ+0sjydTRcvK/08+K0/HrhCXGfGft1aoyTlWHnRq6HBL?=
- =?us-ascii?Q?lZ4orP/mqxnjhOBs0oRBLQS+Z95spNjlJq+HcnVUjlAa8g9wVCb25T3PLjPv?=
- =?us-ascii?Q?vmKINO+zait3VDKgSMHZJJS5dABkQVdoklR5Z92+P/o/2bWcqCV4TDLxk2pW?=
- =?us-ascii?Q?4LEhtygqyWERDWkO7/sjcsM77R3RoFDp2sJ316I6WDKqumnxClt6exfKw9NN?=
- =?us-ascii?Q?cYBKNJUa/1EhfTL+jVCROw5/jj26/aBBdO4ItI80Shz2+PqOo75+ht6ppOpq?=
- =?us-ascii?Q?iCs08QjMSas9+KUt2RP7NCYTxgMThq8zVt7Nn6lQNIgCafMrAoSLGBPB+m5j?=
- =?us-ascii?Q?AB7LJeSHxb0tiISnUaPFE545N9Va7KFolaCfoqpC6FyzSwgEh+cjh1kRddam?=
- =?us-ascii?Q?Ijbb/gi/PsR98NLoojQY2VRnBk8RFUHC9NskN1Us9mo8SfDSxeCSK4Xn3rJv?=
- =?us-ascii?Q?MaZm7nYzMXeD6/tmuviyiSlGvH6SoKXFOLFDnfnHfMH9EEsWXNmFz6UaDobv?=
- =?us-ascii?Q?MccQ8M22+uz/fg1FTkYkb6/kJmkZ9VuyZQoqzfKQKK5GPimXjuq8jafYsHXx?=
- =?us-ascii?Q?xttUnQGfOsmuG9LoX+KJDh27uzlnmKBbA6C+ofX+7mVfLlDgDC9kEL9egGUZ?=
- =?us-ascii?Q?4p2yVQbY/pircCwHAGbfSK82KE62BDRao6+7qAdY32wYtaUq6m6wno7Kzx1A?=
- =?us-ascii?Q?rBqmXzEC4t1AT4gInvJvlZDsgQE+oA5YgEjnDUbSK9q8iWbUl4orW/380OlY?=
- =?us-ascii?Q?6fJ28LLB2+Bfna6HS7i70gdRbi5CPpIVLNiHX153IEXRMEGSSvGgq2+tGUZr?=
- =?us-ascii?Q?h0I2Sw+QuAlQ6x1ryoQJjf+z5pY8BwAXNdn+2s5V+M9y5l2Dbche+cfhShi7?=
- =?us-ascii?Q?SIHkxbOK5Rv18FMX2MRCmUBBjHvUAfc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru>
+ <20220610082535.12802-7-Sergey.Semin@baikalelectronics.ru>
+From:   Vidya Sagar <vidyas@nvidia.com>
+In-Reply-To: <20220610082535.12802-7-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MAXPR0101CA0063.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:e::25) To BN8PR12MB2900.namprd12.prod.outlook.com
+ (2603:10b6:408:69::18)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9540bedd-87bb-4dc5-7d7a-08da4d130c4c
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3051:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3051F3DE9222E699AFCC6670B8AB9@DM6PR12MB3051.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: N/UBOvCUJvjWsAVRkdpO+jpl7nf0xa+Dx5vNKg3mU4wK96yxmuFv9suufwVHfCkAj0fQmO1ybHCjbaDRs6mSmU/B4ok3QOivxoGm5IWtKnegc5WH/nzjY06GTGrP14Si/VwMcIFYiewHBATGubHvZQqa6/VlKOP7DRcayuY/8ZyRyye1pugu1W6XYTma/yKhkVPqepSEBjECq1lEdkzVZMslTWSQmhXmq4Hm1gbKDJgDPDYDELrkGMgc8X9is5ixFXyAfSn56OmTqL/yRJPpcSEj7No0obonpt7W1qLjF62pQt6Uloqz9yo/p62pMDpgU9IyxAkmNoDKBQKIcjLCLuuPVhV/iw+ZEj85MjavxcNE8TQSOmUEbNiIrfU3Iejnknb2kW4cCCosF9qI0G7bljDrsl8j+/BB1BPcAWE3BpMe4VWG8HAtxGaH253ZF2uxu5goDM+KY1We3Qy+nS9TGZFqmkOUgaKkOGFvAJ1InekKMIQYXO4imeyI0sZqvxEYp4YFlKmfv20xDzqUlXl9eWmgs+oKwvQjqSU/Z3dd3ctBI1myWhg/xZWKKNUNpcpirpfT4ZYlxm+5gmKfaa8IQWrRf2+w1XW595cTdKxThDVGWBcm5dSINoof2ng74PwTnQihOH8CMUxFDtfTi6yHZ7Nd0WCy46M4XSSEMFezze5sx7MGk/KTb8NcPscHtSon7KYkRdgdIqvthZ77H5w+EVtKQxZs6Gj/+shCLk+6h00=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(31686004)(2616005)(54906003)(2906002)(6636002)(83380400001)(26005)(110136005)(316002)(36756003)(186003)(6512007)(6506007)(4326008)(8676002)(53546011)(66556008)(66946007)(31696002)(66476007)(86362001)(6666004)(508600001)(8936002)(38100700002)(7416002)(5660300002)(6486002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WklJaTR2ZmlITTJGWXZrTTJianVKQnNLOUkvWjdlMVVPZGpnZjFMZDlqajZ3?=
+ =?utf-8?B?Z05URytNTkt4RlAwd0VRdnZBcm93UHMzMFg2UHgvZ2FPMWhsZ3RzbWR4cElU?=
+ =?utf-8?B?K3lwM3RsVDNCNE1EOC9vN29kVWdxdG9LU2tGTmNKSCtvbUVFeXN5UWhnZW9w?=
+ =?utf-8?B?NTUzVTl1dy9hc2IzRFBLS0FkVWdlTmRVaGhCTjNRTk9VNFhzaWg3R29RVnhX?=
+ =?utf-8?B?MnVLY3lUWjFuQ1JEdnB6TjBvMElPVmk0MW5oUDJ5dWZ1ZzNqZkxZR2VJVC9G?=
+ =?utf-8?B?NjFzRGRNZHBhTVFMWUs5N1NDS2FDa3hESDZDcGxlK2VtOTNpSFJsVEhPSlpI?=
+ =?utf-8?B?UkJlWTNsU1dUSC9ZQ3hXYWNXMFg5TlRqMmp1cHErTjJFNU5yR042TFl0MGJF?=
+ =?utf-8?B?NDBXUk8zYmplb2d5emJKdFhIQjkzdWVOSktkbUowRlFGN29nVzUyRnFrck45?=
+ =?utf-8?B?ZmRKdnlqSWp6QUkvNWhVcytKU3pCR3dUcXJvZWRlQ0Y0czVORi9ZeE9rSDFw?=
+ =?utf-8?B?RmNKYURaR3R5YUtydkR4Mnk3TVV0RUM0NXQ0RmNERW9kY1ZkOWh0blN6MnZH?=
+ =?utf-8?B?M1RLQ0l5NjN5eXc4T2VTNEREaXJnRWw0VFJWWW8yNjBrd2RaUlNNYzAzRDV5?=
+ =?utf-8?B?MGxoRTdmOElTbTFtdFd3eVZjY2lqSjdXUzJrai9sczMrVXdYSktDS2tDTDRZ?=
+ =?utf-8?B?bjJIWlUyc3ZDTnJTd2Q2cjd0Y2Q2RTJpZ1hXN0kxd1hWMWJ5cHV5bFpvWk45?=
+ =?utf-8?B?M3FNR0h3MXZodHQxbm1sSU5Scnd1MkhVWTlVRTdkZzFlaFgwNGZsVVpWbTZP?=
+ =?utf-8?B?UFdpeE02UXFDUjRXS3hOWG9YWk9vQ2QyeVhnZ1MxM3VvVW9yd3U4WHJ1OTZh?=
+ =?utf-8?B?Njl5ZG8zNzd0Y2Nsd0lwMU9UTER3QVEyQld6dVd6VkJpMm1pU3dYYzJ1RjZM?=
+ =?utf-8?B?bFY1YmVoVVhpMUNPQmNrQnNuS1RqUmxiMEtJSkg1NHBwL3lBY2x6ck50K0hV?=
+ =?utf-8?B?ekx4ZDc0K3VPYW9XSVBnNlY4ZERZdjhheVNhQlhUYndWbUZWcTVOelRUaElY?=
+ =?utf-8?B?cTg3YWNHSmNmUDJrblI2L1VHaDBrVzBySWJoVXkybW50WkdWeUREY1EwZ0Mz?=
+ =?utf-8?B?eGt5Zm5IQVVwcnJTM0RQUUcyYk9ERE5pNW1lMkl3VU0zelFuODA0QndBcHN3?=
+ =?utf-8?B?T21pakl3L3NueEgyMWpIcW9keFdOQ2tjUE1lVFR1NjlSWWtpWkt2SjE0SlJo?=
+ =?utf-8?B?K3FnTE5UTG1Vd2RwRTRaNnZuZ242bjY0UzYyYmNVV2E0MnovYWpvb1ZtUmQw?=
+ =?utf-8?B?UkR0a0svdDIzci80cGJ5M1NBNHhIeHAzZWMrWVk1U1F1Q3RnZkRWZVJSbDkz?=
+ =?utf-8?B?ZVcrbERYSEE5ODdmZTFBREhQckppc3ZRTnpvSU9IUUs0cWpXak1JbjhBY0x2?=
+ =?utf-8?B?WTdDQXU0cWZRNE1lVGZXZXRTVGV6NXQ1UXQyNGhwL1I5R2RKNmF1T2dVMis2?=
+ =?utf-8?B?WWs0Z0Jzc2NDMmdsMER4ek4yRFA2RHdsRXphQ055a2tUd0dMZG1meTZzYnJ4?=
+ =?utf-8?B?eE5NTG90WElnSGwrZjVxMjVVeDZpa1FBNFBIQlJYbG5ldnk3SjdoaDdycHY1?=
+ =?utf-8?B?SnQwWmo3a25KMDJEMDlKOEo0QloyQ1NCb2t1VDRXaTAxSEhsNkh6aXByMG9j?=
+ =?utf-8?B?SGVDZ1lmdWdWL09jaG1TczlJVlFQKzQ3a2xRYWVNSnNHbm9VZHlocXVDZEs5?=
+ =?utf-8?B?bGZYQjNoYjd1REJvS3Zid2YzMU8rUkNmTDIvSVEvekc1V0kvNWZKaG5ySFpR?=
+ =?utf-8?B?bUM0d1RwK3J4cytyakcydWk4TlJ2b1UyUG5ReFZERUZQZmhBRDQ2MHkzUE9K?=
+ =?utf-8?B?MzYxd0ZEeDJyalV3d3dML3Z1WWpUSE15NllRWkpQczlIZmlPQkJ6bVk3bklo?=
+ =?utf-8?B?QUxDTC9QeFNINTdMa1RHQm03ek1FakJnb1ROUWNPTGdvaTJBeWlPVy9YeEtO?=
+ =?utf-8?B?NXM0YnJ1djZNNVZHdmtmK3l1TEdud0ovQXFNTEQ0eGxJWDhEZGxrUHIraUdU?=
+ =?utf-8?B?MFQ0UnlTNlZWVGxXVWszdFlhQ3NodjA5S0ZhaFVYcjRrbWpzb05GeFl5TUpn?=
+ =?utf-8?B?c1d0OGt4VEN6UmZkbHY3VmJMOWkzTkVNbFMxK2VqT1h6NEFUbjMzQ2ljcjJH?=
+ =?utf-8?B?ZjNLMThmVjVsNmNhU2hEcjUrb3RFR1BWb1h1Q3VEQzJscC8yNjUzWEp6dDBh?=
+ =?utf-8?B?Z3QrbE9VMmtGVmw1K1RMSUhkcEhsR2NIRFVLRGVGK0Q4a3hzaEdLWFh4UUFD?=
+ =?utf-8?B?bkp5end4TzY0T2Jzd2VLMEM1SjBocHU0UFVCSHMxSnBNSTdsMDFXdz09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9540bedd-87bb-4dc5-7d7a-08da4d130c4c
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5862.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 899f7b03-9313-49f2-00e2-08da4d06a19c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2022 06:33:30.2688
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2022 08:02:23.5840
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tH8gHqhPEhfNcCwa/yhYAqKbEY6sMBwV99YmiNzTsVtI6pUOHWL5ALqEeQPOSKzcHS0GKVRXrtJ0wLCN1p7uP7E0N3sz9iT1uVnAk31e4dg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2858
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GoFausHBtz0ZHtZPLgZG4cNnz0jUtTqzip9MyjdUeiYjJj6mCqsEq0oenoDvsevb+x+JIa3bBF51cnloY+OTGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3051
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -165,73 +142,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,=20
+Thanks for pushing this change.
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Friday, June 10, 2022 8:17 PM
-> To: Mohan, Subramanian <subramanian.mohan@intel.com>
-> Cc: nirmal.patel@linux.intel.com; jonathan.derrick@linux.dev;
-> lorenzo.pieralisi@arm.com; robh@kernel.org; kw@linux.com;
-> bhelgaas@google.com; linux-kernel@vger.kernel.org; linux-
-> pci@vger.kernel.org; Sangannavar, Mallikarjunappa
-> <mallikarjunappa.sangannavar@intel.com>; Thokala, Srikanth
-> <srikanth.thokala@intel.com>
-> Subject: Re: [PATCH] PCI: vmd: Use devm_kasprintf instead of simple
-> kasprintf
->=20
-> On Tue, May 31, 2022 at 06:56:17PM +0530, subramanian.mohan@intel.com
-> wrote:
-> > From: Subramanian Mohan <subramanian.mohan@intel.com>
-> >
-> > Use devm_kasprintf instead of simple kasprintf to free the allocated
-> > memory automatically when the device is freed.
-> >
-> > Suggested-by: Srikanth Thokala <srikanth.thokala@intel.com>
-> > Signed-off-by: Subramanian Mohan <subramanian.mohan@intel.com>
-> > Acked-by: Nirmal Patel <nirmal.patel@linux.intel.com>
->=20
-> Applied to pci/ctrl/vmd for v5.20, thanks!
+Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
 
-Thanks !
-
->=20
-> > ---
-> >  drivers/pci/controller/vmd.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/vmd.c
-> > b/drivers/pci/controller/vmd.c index eb05cceab964..7a72948e001f 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -897,7 +897,8 @@ static int vmd_probe(struct pci_dev *dev, const
-> struct pci_device_id *id)
-> >  	if (vmd->instance < 0)
-> >  		return vmd->instance;
-> >
-> > -	vmd->name =3D kasprintf(GFP_KERNEL, "vmd%d", vmd->instance);
-> > +	vmd->name =3D devm_kasprintf(&dev->dev, GFP_KERNEL, "vmd%d",
-> > +				   vmd->instance);
-> >  	if (!vmd->name) {
-> >  		err =3D -ENOMEM;
-> >  		goto out_release_instance;
-> > @@ -935,7 +936,6 @@ static int vmd_probe(struct pci_dev *dev, const
-> > struct pci_device_id *id)
-> >
-> >   out_release_instance:
-> >  	ida_simple_remove(&vmd_instance_ida, vmd->instance);
-> > -	kfree(vmd->name);
-> >  	return err;
-> >  }
-> >
-> > @@ -958,7 +958,6 @@ static void vmd_remove(struct pci_dev *dev)
-> >  	vmd_detach_resources(vmd);
-> >  	vmd_remove_irq_domain(vmd);
-> >  	ida_simple_remove(&vmd_instance_ida, vmd->instance);
-> > -	kfree(vmd->name);
-> >  }
-> >
-> >  #ifdef CONFIG_PM_SLEEP
-> > --
-> > 2.17.1
-> >
+On 6/10/2022 1:55 PM, Serge Semin wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> Currently the embedded CDM IOs consistency check-engine is enabled only if
+> the num_lanes field of dw_pcie structure is set to non-zero value. It's
+> definitely wrong since the CDM checking has nothing to do with the PCIe
+> lanes settings, while that feature will be left disabled for the platforms
+> which expect it being enabled and prefer keeping the default lanes setup.
+> Let's fix that by enabling the CDM-check feature before the num_lanes
+> parameter is handled.
+> 
+> Fixes: 07f123def73e ("PCI: dwc: Add support to enable CDM register check")
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> ---
+> 
+> Changelog v4:
+> - This is a new patch created on v4 lap of the series.
+> ---
+>   drivers/pci/controller/dwc/pcie-designware.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 347251bf87d0..5848cc520b52 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -740,6 +740,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>          val |= PORT_LINK_DLL_LINK_EN;
+>          dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+> 
+> +       if (of_property_read_bool(np, "snps,enable-cdm-check")) {
+> +               val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
+> +               val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
+> +                      PCIE_PL_CHK_REG_CHK_REG_START;
+> +               dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+> +       }
+> +
+>          of_property_read_u32(np, "num-lanes", &pci->num_lanes);
+>          if (!pci->num_lanes) {
+>                  dev_dbg(pci->dev, "Using h/w default number of lanes\n");
+> @@ -786,11 +793,4 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>                  break;
+>          }
+>          dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> -
+> -       if (of_property_read_bool(np, "snps,enable-cdm-check")) {
+> -               val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
+> -               val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
+> -                      PCIE_PL_CHK_REG_CHK_REG_START;
+> -               dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+> -       }
+>   }
+> --
+> 2.35.1
+> 
