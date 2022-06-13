@@ -2,115 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCB595490FA
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 18:27:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ED9C549071
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 18:26:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357730AbiFMNLa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 09:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36994 "EHLO
+        id S1347884AbiFMOzb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 10:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359271AbiFMNJp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 09:09:45 -0400
-Received: from smtpproxy21.qq.com (smtpbg701.qq.com [203.205.195.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5235D38DA0
-        for <linux-pci@vger.kernel.org>; Mon, 13 Jun 2022 04:19:49 -0700 (PDT)
-X-QQ-mid: bizesmtp79t1655119171tncpq0nk
-Received: from localhost.localdomain ( [58.240.82.166])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Mon, 13 Jun 2022 19:19:19 +0800 (CST)
-X-QQ-SSF: 01400000002000G0Q000B00A0000000
-X-QQ-FEAT: TskX/GkkryCDcmJVO5h9ev8uYG7SCnaHXyx1CcOQULQILG72duCIYEoi0yiGU
-        eOgLxLcnS35Mho1tqsNnD0GEpf0qd1gDhv/txymjOX5m0t+NlZqIXlul/FwDwVLq7/2/nqx
-        qqnZM5tbvjuTlke1A6X0R1jGpW8zb/yUDwloN22q5f2CdSrKeeDSnjFZZoRuqpdGto4Bqp3
-        HXD4NEWngy5ZHFAyb2VMNdJjmt+l2YmHK+hG/z+ClAGxJW2rhLZcwjkZwZQb8QcJrkCLxzj
-        TISphwzcNHy1W0RLLVJK24ytwYMkX/UxcWAbUvoWz1rgkloNOSwMt/ypyXd7H2Ptsi/ZlXe
-        Glyev0WqjCBCXDRbJhd9a9mmjtAxH2jchdzZ3MeOB9wWZxJr88=
-X-QQ-GoodBg: 2
-From:   Meng Tang <tangmeng@uniontech.com>
-To:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        davem@davemloft.net, kuba@kernel.org, bhelgaas@google.com
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Meng Tang <tangmeng@uniontech.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Dvora Fuxbrumer <dvorax.fuxbrumer@linux.intel.com>
-Subject: [PATCH 5.10 2/2] commit 1b5d73fb8624 ("igc: Enable PCIe PTM")
-Date:   Mon, 13 Jun 2022 19:19:07 +0800
-Message-Id: <20220613111907.25490-2-tangmeng@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220613111907.25490-1-tangmeng@uniontech.com>
-References: <20220613111907.25490-1-tangmeng@uniontech.com>
+        with ESMTP id S1387171AbiFMOy4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 10:54:56 -0400
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EA5ACD19F9;
+        Mon, 13 Jun 2022 04:57:45 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.91,297,1647270000"; 
+   d="scan'208";a="124235793"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 13 Jun 2022 20:57:21 +0900
+Received: from localhost.localdomain (unknown [10.166.15.32])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id C9CE54220BF2;
+        Mon, 13 Jun 2022 20:57:21 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, krzk+dt@kernel.org, geert+renesas@glider.be,
+        magnus.damm@gmail.com
+Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/7] treewide: PCI: renesas: Add R-Car Gen4 PCIe support
+Date:   Mon, 13 Jun 2022 20:57:05 +0900
+Message-Id: <20220613115712.2831386-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybgforeign:qybgforeign9
-X-QQ-Bgrelay: 1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        KHOP_HELO_FCRDNS,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In the 5.10 kernel version, even to the latest confirmed version,
-the following error will still be reported when I225-V network card
-is used.
+Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
 
-kernel: [    1.031581] igc: probe of 0000:01:00.0 failed with error -2
-kernel: [    1.066574] igc: probe of 0000:02:00.0 failed with error -2
-kernel: [    1.096152] igc: probe of 0000:03:00.0 failed with error -2
-kernel: [    1.127251] igc: probe of 0000:04:00.0 failed with error -2
+Yoshihiro Shimoda (7):
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+  PCI: renesas: Add R-Car Gen4 PCIe Host support
+  PCI: renesas: Add R-Car Gen4 PCIe Endpoint support
+  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+  arm64: dts: renesas: r8a779f0: Add PCIe Host and Endpoint nodes
+  arm64: dts: renesas: r8a779f0: spider: Enable PCIe Host ch0
 
-Even though I confirmed that 7c496de538eebd8212dc2a3c9a468386b2640d4
-and 47bca7de6a4fb8dcb564c7ca4d885c91ed19e03 have been merged into the
-kernel 5.10, but bug still occurred, and this patch can fixes it.
+ .../bindings/pci/rcar-gen4-pci-ep.yaml        | 111 ++++++++
+ .../bindings/pci/rcar-gen4-pci-host.yaml      | 104 +++++++
+ MAINTAINERS                                   |   1 +
+ .../boot/dts/renesas/r8a779f0-spider-cpu.dtsi |  43 +++
+ arch/arm64/boot/dts/renesas/r8a779f0.dtsi     | 133 +++++++++
+ drivers/pci/controller/dwc/Kconfig            |  18 ++
+ drivers/pci/controller/dwc/Makefile           |   2 +
+ .../pci/controller/dwc/pcie-rcar-gen4-ep.c    | 253 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-rcar-gen4-host.c  | 235 ++++++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 198 ++++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  60 +++++
+ 11 files changed, 1158 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
 
-Enables PCIe PTM (Precision Time Measurement) support in the igc
-driver. Notifies the PCI devices that PCIe PTM should be enabled.
-
-PCIe PTM is similar protocol to PTP (Precision Time Protocol) running
-in the PCIe fabric, it allows devices to report time measurements from
-their internal clocks and the correlation with the PCIe root clock.
-
-The i225 NIC exposes some registers that expose those time
-measurements, those registers will be used, in later patches, to
-implement the PTP_SYS_OFFSET_PRECISE ioctl().
-
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Tested-by: Dvora Fuxbrumer <dvorax.fuxbrumer@linux.intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Signed-off-by: Meng Tang <tangmeng@uniontech.com>
----
- drivers/net/ethernet/intel/igc/igc_main.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index fd9257c7059a..298e968629db 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -10,6 +10,7 @@
- #include <linux/ip.h>
- #include <linux/pm_runtime.h>
- #include <net/pkt_sched.h>
-+#include <linux/pci.h>
- 
- #include <net/ipv6.h>
- 
-@@ -5041,6 +5042,10 @@ static int igc_probe(struct pci_dev *pdev,
- 
- 	pci_enable_pcie_error_reporting(pdev);
- 
-+	err = pci_enable_ptm(pdev, NULL);
-+	if (err < 0)
-+		dev_info(&pdev->dev, "PCIe PTM not supported by PCIe bus/controller\n");
-+
- 	pci_set_master(pdev);
- 
- 	err = -ENOMEM;
 -- 
-2.20.1
-
-
+2.25.1
 
