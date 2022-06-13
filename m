@@ -2,120 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 101C854A04A
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 22:54:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABC0654A069
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 22:55:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351095AbiFMUyq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 16:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35180 "EHLO
+        id S1347719AbiFMUzj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 16:55:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351439AbiFMUxc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 16:53:32 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10360B91;
-        Mon, 13 Jun 2022 13:16:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655151406; x=1686687406;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=rtqhOIKVfrnY98rdPBZfGpki572ZKantyZmrTYaiCUk=;
-  b=EFSppI991TrHlQTLJe4TbPuC0YFST+UK9izwZzQt/4XfT2fsBjIHHTur
-   DvxP2pjD2RCZGAW0D/Z+NDFQl64mqOtrIyDdLrl7A/0cThG+3ln2A/Rh+
-   0m01UqGSxm8ohp0Q7nFupwv7N7GeCV6AVqch5O658XHAhvStYs3r79DzO
-   Uku6SJWyxBlN8Ij+DrtM8TdJU5a2nvrMx5jsgZY4b2iZp4e2t9bZTQYnY
-   JShwB0n0TIoQGGlhVKNJz4lBYznzS2IECtO24bXhQ7E+rvIvbPL1xoJoq
-   xOOJQNwkdLPktNic83CDCrMixBYChH0IjtQJ6uAqtivFafONKG86SybDb
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="279445859"
-X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
-   d="scan'208";a="279445859"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 13:16:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
-   d="scan'208";a="557942595"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 13 Jun 2022 13:16:42 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 4190F18F; Mon, 13 Jun 2022 23:16:45 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ferry Toth <ftoth@exalondelft.nl>
-Subject: [PATCH v1 1/1] x86/PCI: Disable e820 usage for the resource allocation
-Date:   Mon, 13 Jun 2022 23:16:41 +0300
-Message-Id: <20220613201641.67640-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S1352261AbiFMUyT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 16:54:19 -0400
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A5E2A94B;
+        Mon, 13 Jun 2022 13:22:35 -0700 (PDT)
+Received: by mail-oo1-f46.google.com with SMTP id 4-20020a4a1404000000b0041bfe1a4cffso762050ood.0;
+        Mon, 13 Jun 2022 13:22:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0cU1N9A1T1qgBn1lKK9HaI+TY1k8IeUOqJphJj6+O1w=;
+        b=WyAHgPnyMiXSovZ+PgOx9TNJBxl0psJAyTOykoAE69UXoRQEdOhXWzCXHHzUPLrC5O
+         n3/mq+TsUfV/wufIyQpg3IObdiduNo6dBn1Jak6XyVrLvthI2Wk99qdDH+sL/7f6dk1K
+         EFSXQ5BgwFQ3Wx2T6A34RXoaWK9pHiOurGgQMpHoT8WypTlmHK3zL415+Wpk6mXk0Bi8
+         DGBa+KNNhffAJ+EZt+AQjrrFAQFp9UmHoep+hb0DJb99cUl0FSR0MzndDPVUf1Te9TTV
+         kEnlaKIY6PHk6TW2fDexZxZJhF2225dXZ1vuJQpVlENeaiVWYjSWi95I7qyaSp7RYNnk
+         b1+Q==
+X-Gm-Message-State: AOAM5330ixY22sdKfUYfnPBe6pLYQf7jtAVjmIUvbLf5gFOCvtE3TyHo
+        ADS2G6PS/I4jyDufJtqfVQ==
+X-Google-Smtp-Source: ABdhPJwT2XUz5Smcb7K4j/V2wogweq9iNjCOSqWRPw8iUB34ic13DPfDUgWmQ0B2MNr30iIYNLb1mQ==
+X-Received: by 2002:a4a:378e:0:b0:41b:8cb6:b7bb with SMTP id r136-20020a4a378e000000b0041b8cb6b7bbmr614495oor.51.1655151754293;
+        Mon, 13 Jun 2022 13:22:34 -0700 (PDT)
+Received: from robh.at.kernel.org ([2607:fb90:20d2:bb97:4381:7341:60ed:a4a1])
+        by smtp.gmail.com with ESMTPSA id nl7-20020a056871458700b000f5e89a9c60sm4471001oab.3.2022.06.13.13.22.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jun 2022 13:22:33 -0700 (PDT)
+Received: (nullmailer pid 17434 invoked by uid 1000);
+        Mon, 13 Jun 2022 20:20:47 -0000
+Date:   Mon, 13 Jun 2022 14:20:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 09/18] PCI: dwc: Discard IP-core version checking on
+ unrolled iATU detection
+Message-ID: <20220613202047.GE4188875-robh@kernel.org>
+References: <20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru>
+ <20220610082535.12802-10-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220610082535.12802-10-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The resource management improve for PCI on x86 broke booting of Intel MID
-platforms. It seems that the current code removes all available resources
-from the list and none of the PCI device may be initialized. Restore the
-old behaviour by force disabling the e820 usage for the resource allocation.
+On Fri, Jun 10, 2022 at 11:25:25AM +0300, Serge Semin wrote:
+> It's pretty much pointless. Even though unrolled version of the internal
+> ATU has been indeed available since DWC PCIe v4.80a IP-core, there is no
+> guarantee it was enabled during the IP-core configuration (Synopsys
+> suggests to contact the Solvnet support for guidance of how to do that for
+> the newer IP-cores). So the only reliable way to find out the unrolled
+> iATU feature availability is indeed to check the iATU viewport register
+> content. In accordance with the reference manual [1] if the register
+> doesn't exist (unrolled iATU is enabled) it's content is fixed with
+> 0xff-s, otherwise it will contain some zeros. So we can freely drop the
+> IP-core version checking in this matter then and use the
+> dw_pcie_iatu_unroll_enabled() method only to detect whether iATU/eDMA
+> space is unrolled.
 
-Fixes: 4c5e242d3e93 ("x86/PCI: Clip only host bridge windows for E820 regions")
-Depends-on: fa6dae5d8208 ("x86/PCI: Add kernel cmdline options to use/ignore E820 reserved regions")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/include/asm/pci_x86.h | 1 +
- arch/x86/pci/acpi.c            | 2 +-
- arch/x86/pci/intel_mid_pci.c   | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+Are you sure that pre v4.80a, it is safe to read the register address? 
+Seems unlikely that the all 1s guarantee would be valid before the 
+feature ever existed. 
 
-diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-index f52a886d35cf..503f83fbc686 100644
---- a/arch/x86/include/asm/pci_x86.h
-+++ b/arch/x86/include/asm/pci_x86.h
-@@ -126,6 +126,7 @@ extern const struct pci_raw_ops *raw_pci_ext_ops;
- extern const struct pci_raw_ops pci_mmcfg;
- extern const struct pci_raw_ops pci_direct_conf1;
- extern bool port_cf9_safe;
-+extern bool pci_use_e820;
- 
- /* arch_initcall level */
- #ifdef CONFIG_PCI_DIRECT
-diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index a4f43054bc79..ac2f220d50fc 100644
---- a/arch/x86/pci/acpi.c
-+++ b/arch/x86/pci/acpi.c
-@@ -20,7 +20,7 @@ struct pci_root_info {
- #endif
- };
- 
--static bool pci_use_e820 = true;
-+bool pci_use_e820 = true;
- static bool pci_use_crs = true;
- static bool pci_ignore_seg;
- 
-diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
-index 8edd62206604..7869b86bff04 100644
---- a/arch/x86/pci/intel_mid_pci.c
-+++ b/arch/x86/pci/intel_mid_pci.c
-@@ -313,6 +313,7 @@ int __init intel_mid_pci_init(void)
- 	pcibios_enable_irq = intel_mid_pci_irq_enable;
- 	pcibios_disable_irq = intel_mid_pci_irq_disable;
- 	pci_root_ops = intel_mid_pci_ops;
-+	pci_use_e820 = false;
- 	pci_soc_mode = 1;
- 	/* Continue with standard init */
- 	acpi_noirq_set();
--- 
-2.35.1
 
+> [1] DesignWare Cores, PCI Express Controller, Register Desciptions,
+> v.4.90a, December 2016, p.855
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+
+Assuming this works,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
