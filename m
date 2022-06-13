@@ -2,62 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99B7454A1D2
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 23:54:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCBDE54A209
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 00:21:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231524AbiFMVyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 17:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33352 "EHLO
+        id S231981AbiFMWVX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 18:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348019AbiFMVyA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 17:54:00 -0400
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58719205EE;
-        Mon, 13 Jun 2022 14:53:59 -0700 (PDT)
-Received: by mail-il1-f179.google.com with SMTP id u2so5292291iln.2;
-        Mon, 13 Jun 2022 14:53:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kNvsDOdNrfDqt3EuOYydygCH1LOxGWNGFKSpTH09Uqs=;
-        b=k/b8ZVJIsrFywf1G+aJk6rZaAvGkq2e+I4F+a/JfXTVzwX2faRy+iKd8FIFEuRu7K+
-         D2gCmEaeleooodqlXS4SZ31kKlK6FuLP7aEHOilDJuB+0tu3KtQJAT+5WFJnmS0SH+ss
-         yUD0/7pF5XftF2hly05ID+03lOFfOLPkuls1XbP2Eg6/fEW7qz5/jifYRPN6kb5PtRlZ
-         svkU4OD7YKgPUhNBmPO8szVNtlqWLh2Ql4yYfBeO/15LoMvM2/ZlGzLMO+NHr9driTYK
-         gOTfJ1rWvSHiBJ6HQmrMJLuitxvZduomjjDUzVUnoZcZZUlnYLtHyxa4v4KH+fQWlZsi
-         Gbmw==
-X-Gm-Message-State: AJIora+Sut1ZAjZWWiTmaJVwy3YQz1qSu8Jtc71hFEWpM8Pf4Lm6lRBk
-        Qy4Qlp2oLRoNpj81r/MaEEq0h9weiQ==
-X-Google-Smtp-Source: AGRyM1tY2Kuf4G7eBZ1ePPacUd02zzR8e9qZkmbltUfOdHLl+CROZ8ae5h0o6TcthJZCMw2Fyjyb6Q==
-X-Received: by 2002:a05:6e02:17c8:b0:2d4:dfae:edf4 with SMTP id z8-20020a056e0217c800b002d4dfaeedf4mr1110869ilu.8.1655157238594;
-        Mon, 13 Jun 2022 14:53:58 -0700 (PDT)
-Received: from robh.at.kernel.org ([69.39.28.171])
-        by smtp.gmail.com with ESMTPSA id b10-20020a02380a000000b00332268fb7b3sm4038553jaa.21.2022.06.13.14.53.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jun 2022 14:53:58 -0700 (PDT)
-Received: (nullmailer pid 160888 invoked by uid 1000);
-        Mon, 13 Jun 2022 21:53:57 -0000
-Date:   Mon, 13 Jun 2022 15:53:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-        krzk+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 2/7] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe
- Endpoint
-Message-ID: <20220613215357.GC87830-robh@kernel.org>
-References: <20220613115712.2831386-1-yoshihiro.shimoda.uh@renesas.com>
- <20220613115712.2831386-3-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S230240AbiFMWVX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 18:21:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A11842DD58;
+        Mon, 13 Jun 2022 15:21:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B357614E1;
+        Mon, 13 Jun 2022 22:21:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B347C34114;
+        Mon, 13 Jun 2022 22:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655158881;
+        bh=nlwQXs75cmtdhpBdJq2NMEj5gmKBm8iKQVRpWIQ9K8I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KruTBi4WgF++vsI5D55FT3ww4QRsubCGiagi2uhIqOTED9DxwCtIyIwLBP+6g6foZ
+         x0/beM3ci/OJa2cB2BKMQCD6KpZZ6EyVdNJbztIzvYNoQ6f94ibgiGohlngzODMy89
+         WJDBoaViGjpqBOeRmSk+agruwWndko5q74DNpCG9jpOIJpkPf2c44Viy4ZF0RABh29
+         JeweSZGX/sOK3tMVO+NXte/+stMmirExcmWdo3OsoiaAR+5ZqafWLzsRp2+s+/6Tu4
+         HMj2maiy7ifbUZ+SOpVb/pMth7cKOYPfukqNj4DYOpexPtwNzO5+57hWdZk4tZUvwS
+         WPYam8tCCJ5bw==
+Date:   Mon, 13 Jun 2022 17:21:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
+        broonie@kernel.org, lorenzo.pieralisi@arm.com, festevam@gmail.com,
+        francesco.dolcini@toradex.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: Re: [PATCH v10 6/7] PCI: imx6: Mark the link down as none fatal error
+Message-ID: <20220613222119.GA716475@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220613115712.2831386-3-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <1655110538-10914-7-git-send-email-hongxing.zhu@nxp.com>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,140 +55,93 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 08:57:07PM +0900, Yoshihiro Shimoda wrote:
-> Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
-> PCIe endpoint module.
+On Mon, Jun 13, 2022 at 04:55:37PM +0800, Richard Zhu wrote:
+> let the driver probe successfully, return zero in imx6_pcie_start_link()
+> when PCIe link is down.
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Because i.MX PCIe doesn't support hot-plug feature.
+> In this link down scenario, only start the PCIe link training in resume
+> when the link is up before system suspend to avoid the long latency in
+> the link training period.
+
+This looks like two changes that should be separate patches:
+
+  1) Make driver probe successful even if link is down.
+
+  2) Reduce resume time by only starting the link if it was up before
+     suspend.
+
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 > ---
->  .../bindings/pci/rcar-gen4-pci-ep.yaml        | 111 ++++++++++++++++++
->  1 file changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+>  drivers/pci/controller/dwc/pci-imx6.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..654efdb3a51e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-> @@ -0,0 +1,111 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2022 Renesas Electronics Corp.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/rcar-gen4-pci-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas R-Car Gen4 PCIe Endpoint
-> +
-> +maintainers:
-> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> +
-> +allOf:
-> +  - $ref: snps,dw-pcie-ep.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: renesas,r8a779f0-pcie-ep   # R-Car S4-8
-> +      - const: renesas,rcar-gen4-pcie-ep  # R-Car Gen4
-> +      - const: snps,dw-pcie-ep
-
-Drop the last entry. Not all that useful...
-
-> +
-> +  reg:
-> +    maxItems: 4
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: atu
-> +      - const: appl
-> +      - const: addr_space
-> +
-> +  interrupts:
-> +    maxItems: 6
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: msi
-> +      - const: err
-> +      - const: fatal
-> +      - const: nonfatal
-> +      - const: lp
-> +      - const: vndmsg
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pcie
-> +      - const: pcie_bus
-> +
-
-> +  num-ib-windows: true
-> +
-> +  num-ob-windows: true
-
-Deprecated. These are detected at runtime.
-
-> +
-> +  max-link-speed: true
-> +
-> +  num-lanes: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - resets
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/r8a779f0-sysc.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie0_ep: pcie-ep@e65d0000 {
-> +            compatible = "renesas,r8a779f0-pcie-ep", "renesas,rcar-gen4-pcie-ep",
-> +                         "snps,dw-pcie-ep";
-> +            reg = <0 0xe65d0000 0 0x1000>, <0 0xe65d1000 0 0x1000>,
-> +                  <0 0xe65d3000 0 0x2000>, <0 0xfe000000 0 0x400000>;
-> +            reg-names = "dbi", "atu", "appl", "addr_space";
-> +            interrupts = <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-names = "msi", "err", "fatal", "nonfatal", "lp", "vndmsg";
-> +            clocks = <&cpg CPG_MOD 624>, <&pcie_bus_clk>;
-> +            clock-names = "pcie", "pcie_bus";
-> +            power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
-> +            resets = <&cpg 624>;
-> +            num-lanes = <2>;
-> +            max-link-speed = <2>;
-> +            num-ib-windows = <16>;
-> +            num-ob-windows = <16>;
-> +        };
-> +    };
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index c02748393aac..ac6ec2d691a0 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -67,6 +67,7 @@ struct imx6_pcie {
+>  	struct dw_pcie		*pci;
+>  	int			reset_gpio;
+>  	bool			gpio_active_high;
+> +	bool			link_is_up;
+>  	struct clk		*pcie_bus;
+>  	struct clk		*pcie_phy;
+>  	struct clk		*pcie_inbound_axi;
+> @@ -845,7 +846,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+>  	/* Start LTSSM. */
+>  	imx6_pcie_ltssm_enable(dev);
+>  
+> -	dw_pcie_wait_for_link(pci);
+> +	ret = dw_pcie_wait_for_link(pci);
+> +	if (ret)
+> +		goto err_reset_phy;
+>  
+>  	if (pci->link_gen == 2) {
+>  		/* Allow Gen2 mode after the link is up. */
+> @@ -881,11 +884,14 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+>  		}
+>  
+>  		/* Make sure link training is finished as well! */
+> -		dw_pcie_wait_for_link(pci);
+> +		ret = dw_pcie_wait_for_link(pci);
+> +		if (ret)
+> +			goto err_reset_phy;
+>  	} else {
+>  		dev_info(dev, "Link: Gen2 disabled\n");
+>  	}
+>  
+> +	imx6_pcie->link_is_up = true;
+>  	tmp = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+>  	dev_info(dev, "Link up, Gen%i\n", tmp & PCI_EXP_LNKSTA_CLS);
+>  	return 0;
+> @@ -895,7 +901,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+>  		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
+>  		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
+>  	imx6_pcie_reset_phy(imx6_pcie);
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int imx6_pcie_host_init(struct pcie_port *pp)
+> @@ -1022,10 +1028,8 @@ static int imx6_pcie_resume_noirq(struct device *dev)
+>  	imx6_pcie_init_phy(imx6_pcie);
+>  	imx6_pcie_deassert_core_reset(imx6_pcie);
+>  	dw_pcie_setup_rc(pp);
+> -
+> -	ret = imx6_pcie_start_link(imx6_pcie->pci);
+> -	if (ret < 0)
+> -		dev_info(dev, "pcie link is down after resume.\n");
+> +	if (imx6_pcie->link_is_up)
+> +		imx6_pcie_start_link(imx6_pcie->pci);
+>  
+>  	return 0;
+>  }
 > -- 
 > 2.25.1
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
