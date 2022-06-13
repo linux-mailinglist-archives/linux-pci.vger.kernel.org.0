@@ -2,138 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80A1A549B7B
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 20:29:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7162549CF7
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 21:10:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343542AbiFMS30 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 14:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53534 "EHLO
+        id S1348375AbiFMTKs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 15:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241854AbiFMS1o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 14:27:44 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E8C41FE4DF;
-        Mon, 13 Jun 2022 07:51:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B1162B8105B;
-        Mon, 13 Jun 2022 14:51:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A9FFC3411B;
-        Mon, 13 Jun 2022 14:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655131895;
-        bh=TLxFZAPhXdD/lskt5ABL7Yyvc76typsZSU+wq7k76S8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nC33P0zIEEDZN6u3S/HZm0+GRAnfXvOGbb7rQDH01pkLftaiZTdzsxZu7Xyebbpin
-         7iZJl7IWnGkRJAfwOIqc8K+j8IwSTaK3F0MHmyUTMc7CgLJgR4VJD+UGpyJJkhrqLX
-         pWeZakRI7cH0l9gg+YPdjnVNTfJ5uxNC/QoxSM1Q4+DGXBNKSm7+Cr0t5ee2RguLg7
-         uVqQjAJeEaO0Ka+V0HlIZAym1GivjWVzSNmIneaDGM/5HviE+hY2yp+gPqKFauvgmz
-         O4OH3HWNBRR1vFg6SRwbt3uLYW5nw58tlPFvpBRcH5bh9uz1ym1TUrI00o4VTDPc5K
-         zXFrxSWwbIgGA==
-Date:   Mon, 13 Jun 2022 09:51:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Meng Tang <tangmeng@uniontech.com>
-Cc:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        davem@davemloft.net, kuba@kernel.org, bhelgaas@google.com,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Subject: Re: [PATCH 5.10 1/2] commit 1d71eb53e451 ("Revert "PCI: Make
- pci_enable_ptm() private"")
-Message-ID: <20220613145133.GA701092@bhelgaas>
+        with ESMTP id S1349281AbiFMTIq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 15:08:46 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95DA12C128
+        for <linux-pci@vger.kernel.org>; Mon, 13 Jun 2022 10:06:15 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id d129so6070678pgc.9
+        for <linux-pci@vger.kernel.org>; Mon, 13 Jun 2022 10:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=MOQgXtI+BKSvQKp350OufIdxJrNapSAlu2QwriUAL0M=;
+        b=Xr7brTWW1FS8zff2fqX5in7RA7W1ehGdNrTPpeehBMhGZLvChDjV5pABpRpyOvTxh2
+         +hFSK4aggLX2HLQh5AXCo0EkJpeIt8smwjmG6CoKDTxULhJPTSbnQuVGcXq+uUAEgFgo
+         MUO8lUwZjLjoVpzbK0Yh79o2bM1IwcP550ns91RLEY1ZhV35kAN7jMFexP/OvmsMmkO5
+         E3H4q67N9BhNr3oX+ovhxHlbX/jQ59vNB1ZpRNJc2udHx0hfENEKSgW25MlKGYzGuSb8
+         oTQSphWbPVCdzE70YFtOxLwdOk5vdq74xwoQT4oZEtnMDdlfdvK/OdHzv5oSoufXztIF
+         GZxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=MOQgXtI+BKSvQKp350OufIdxJrNapSAlu2QwriUAL0M=;
+        b=dNWeM2dlUoBcwZjsh4BS4UmwxanM6fznllimF4b27QwRQQzWRJ13mExSwS4KI+u7Pv
+         SkmN5Un+i4yi6AVlcSZQ3Kmv2gKUU4NLsTd0t3Ez/cAThXxkQfrnOPHqghWJ50amHlrT
+         F4uqCA54Fz8NljgDymmw5/qVtPxoADLAB+eppe9tA3Zka/U7Zo0gZfVIVyaGnpjnVx3L
+         vZD4qytu0hm+/1OPsPOfBEpaKDxTx0iDis4e5V/MckZxHMyG3BMhxdVLtkba/c3V2mfd
+         iYClfUr7xZKVD/6cvaQ1zuowfoQrRcmdwvZLV7QQPhGDnooFq94PQ1h4Bb0jEAg8hyB5
+         gpqw==
+X-Gm-Message-State: AOAM533RanigQ8arU+LCU+BA7+Aii3ZVmcpEBB5jm2dRZA6hVz+OnyVY
+        l3+HY6w6cq2Yu8XxmB1w6eA=
+X-Google-Smtp-Source: ABdhPJzZ7i5tys91503gKW2Dx5yn+4/pmdYgJ0M/Iv2UGbTxpnBMOzfRw0pPhZwC6EEadmpIF1e9UQ==
+X-Received: by 2002:a05:6a00:1687:b0:518:6c6b:6a9a with SMTP id k7-20020a056a00168700b005186c6b6a9amr161951pfc.81.1655139974873;
+        Mon, 13 Jun 2022 10:06:14 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id 199-20020a6300d0000000b003f24d67d226sm5702673pga.92.2022.06.13.10.06.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jun 2022 10:06:14 -0700 (PDT)
+Message-ID: <e58125a4-f885-ae55-0441-d52ecab9a1e8@gmail.com>
+Date:   Mon, 13 Jun 2022 10:06:12 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220613111907.25490-1-tangmeng@uniontech.com>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 0/4] PCI: brcmstb: Revert subdevice regulator stuff
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Jim Quinlan <jim2101024@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        regressions@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
+References: <20220511203948.GA811126@bhelgaas>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20220511203948.GA811126@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 07:19:06PM +0800, Meng Tang wrote:
-> From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> 
-> Make pci_enable_ptm() accessible from the drivers.
-> 
-> Exposing this to the driver enables the driver to use the
-> 'ptm_enabled' field of 'pci_dev' to check if PTM is enabled or not.
-> 
-> This reverts commit ac6c26da29c1 ("PCI: Make pci_enable_ptm() private").
-> 
-> In the 5.10 kernel version, even to the latest confirmed version,
-> the following error will still be reported when I225-V network card
-> is used.
-> 
-> kernel: [    1.031581] igc: probe of 0000:01:00.0 failed with error -2
-> kernel: [    1.066574] igc: probe of 0000:02:00.0 failed with error -2
-> kernel: [    1.096152] igc: probe of 0000:03:00.0 failed with error -2
-> kernel: [    1.127251] igc: probe of 0000:04:00.0 failed with error -2
-> 
-> Even though I confirmed that 7c496de538eebd8212dc2a3c9a468386b2640d4
-> and 47bca7de6a4fb8dcb564c7ca4d885c91ed19e03 have been merged into the
-> kernel 5.10, the bug is still occurred, and the
-> "commit 1b5d73fb8624 ("igc: Enable PCIe PTM")" can fixes it.
-> 
-> And this patch is the pre-patch of
-> 1b5d73fb862414106cf270a1a7300ce8ae77de83.
+Bjorn,
 
-I guess the point of this is to backport 1d71eb53e451 ("Revert "PCI:
-Make pci_enable_ptm() private"") to a v5.10 stable kernel?
+On 5/11/22 13:39, Bjorn Helgaas wrote:
+> On Wed, May 11, 2022 at 01:24:55PM -0700, Florian Fainelli wrote:
+>> On 5/11/22 13:18, Bjorn Helgaas wrote:
+>>> From: Bjorn Helgaas <bhelgaas@google.com>
+>>>
+>>> Cyril reported that 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup()
+>>> into two funcs"), which appeared in v5.17-rc1, broke booting on the
+>>> Raspberry Pi Compute Module 4.  Revert 830aa6f29f07 and subsequent patches
+>>> for now.
+>>
+>> How about we get a chance to fix this? Where, when and how was this even
+>> reported?
+> 
+> Sorry, I forgot to cc you, that's my fault:
+>    https://lore.kernel.org/r/CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com
+> 
+> If you come up with a fix, I'll drop the reverts, of course.
 
-If so, I would think you'd want to send this to
-stable@vger.kernel.org.
+OK, so now this patch series has landed in Linus' tree and was committed 
+on May 31st and we got no notification that this patch series was applied :/
 
-> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-> Signed-off-by: Meng Tang <tangmeng@uniontech.com>
-> ---
->  drivers/pci/pci.h   | 3 ---
->  include/linux/pci.h | 7 +++++++
->  2 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a96dc6f53076..4084764bf0b1 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -585,11 +585,8 @@ static inline void pcie_ecrc_get_policy(char *str) { }
->  
->  #ifdef CONFIG_PCIE_PTM
->  void pci_ptm_init(struct pci_dev *dev);
-> -int pci_enable_ptm(struct pci_dev *dev, u8 *granularity);
->  #else
->  static inline void pci_ptm_init(struct pci_dev *dev) { }
-> -static inline int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
-> -{ return -EINVAL; }
->  #endif
->  
->  struct pci_dev_reset_methods {
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index bc5a1150f072..692ce678c5f1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1599,6 +1599,13 @@ static inline bool pci_aer_available(void) { return false; }
->  
->  bool pci_ats_disabled(void);
->  
-> +#ifdef CONFIG_PCIE_PTM
-> +int pci_enable_ptm(struct pci_dev *dev, u8 *granularity);
-> +#else
-> +static inline int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
-> +{ return -EINVAL; }
-> +#endif
-> +
->  void pci_cfg_access_lock(struct pci_dev *dev);
->  bool pci_cfg_access_trylock(struct pci_dev *dev);
->  void pci_cfg_access_unlock(struct pci_dev *dev);
-> -- 
-> 2.20.1
-> 
-> 
-> 
+How did I notice? Because suddenly the stable auto selection started to 
+email me about the 4 reverts being included which is kind of the worse 
+way to know about a patch having been applied.
+
+What is even better is that meanwhile there was already a candidate fix 
+proposed on May 18th, and a v2 on May 28th, so still an alternative to 
+the reverts making it to Linus' tree, or so I thought.
+
+This utterly annoys me because:
+
+- the history for pcie-brcmstb.c is now looking super ugly because we 
+have 4 commits getting reverted and if we were to add back the original 
+feature being added now what? Do we come up with reverts of reverts, or 
+the modified (with the fix) original commits applied on top, are not we 
+going to sign ourselves for another 13 or so round of patches before we 
+all agree on the solution?
+
+- we could have just fixed this with proper communication from the get 
+go about the regression in the first place, which remains the failure in 
+communicating appropriately with driver authors/maintainers
+
+- v5.17 and v5.18 final were already broken, but who on earth uses v5.17 
+or v5.18 and not their stable counter parts, so we had a chance of 
+slipping in a fix in a subsequent stable, I mean, it's been broken for 2 
+releases on the CM4 and it was not noticed, so what was the urgency?
+
+- the reverts will make it to -stable being bug fixes for regressions, 
+however for users like Jim and I, now we will lose a feature that we 
+were relying on, thus causing a regression for *many other* platforms 
+than just the CM4
+
+I appreciate that as a maintainer you are very sensitive to regressions 
+and want to be responsive and responsible but this is not leaving just a 
+slightest chance to right a wrong. Can we not do that again please?
+
+Maybe I am being overly sensitive and disgruntled today, but really this 
+is the type of thing that makes me want to quit working on the Linux kernel.
+-- 
+Florian
