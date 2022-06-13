@@ -2,71 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A2E454A0C9
+	by mail.lfdr.de (Postfix) with ESMTP id 1033154A0C8
 	for <lists+linux-pci@lfdr.de>; Mon, 13 Jun 2022 23:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348593AbiFMVFl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 17:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54762 "EHLO
+        id S242281AbiFMVFm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 17:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352630AbiFMVEb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 17:04:31 -0400
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE7A33981A;
-        Mon, 13 Jun 2022 13:39:51 -0700 (PDT)
-Received: by mail-io1-f45.google.com with SMTP id y79so7375187iof.2;
-        Mon, 13 Jun 2022 13:39:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jfed8WHo8TWNvxCiSvI5rcyrYQLVvZOkDmByiHpwcb4=;
-        b=R/y71E7QOY6woE382+bK9glJduIZ41l7A6wrwXeq6fpfqICgtjIWPLB48KyjA2UGxO
-         RWzVXV4soUsBDINcnPrt2lIVmYmAfbsu54YrLvL5cWvMlHLICdkJIN2QiL11CWxe+zfk
-         fUMcuhBE/JkMYVF2HGpEoWu2SpWND/ZRT9tvrEIobltZMO+1uDdEUsiRw9tAeLnMtT7j
-         OeMllGfoapaK0ro129uzfm04dzJZXxGBKcW0C/cxi/9kpu7odVPrmxE13yQhHwm0FKJu
-         1bGpMEtcT97KrZuI7gxsowfPCzFi+1fI8FI4hyJXe4uc7zCKBY9HhTdqQC69SY94bJe0
-         OkWA==
-X-Gm-Message-State: AOAM5302xIxFIF0mB4V4JSr+FOtdpHM1aVvKf/yXY+A5wQy4KvboWV3o
-        LJ8DS2a/quoPQIHgoo7NPw==
-X-Google-Smtp-Source: ABdhPJx7nR5T7M0L4hzZ6y5vQUaF5sNik9SF5ruUtWjDfNKqK4EuWnDm5nKY2r7qbgu01ui2ucAQoQ==
-X-Received: by 2002:a6b:6003:0:b0:668:160b:db94 with SMTP id r3-20020a6b6003000000b00668160bdb94mr769352iog.204.1655152790868;
-        Mon, 13 Jun 2022 13:39:50 -0700 (PDT)
-Received: from robh.at.kernel.org ([69.39.28.171])
-        by smtp.gmail.com with ESMTPSA id c9-20020a023f49000000b0033156d6016asm3939471jaf.91.2022.06.13.13.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jun 2022 13:39:50 -0700 (PDT)
-Received: (nullmailer pid 42858 invoked by uid 1000);
-        Mon, 13 Jun 2022 20:39:49 -0000
-Date:   Mon, 13 Jun 2022 14:39:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 13/18] PCI: dwc: Add start_link/stop_link inliners
-Message-ID: <20220613203949.GB28636-robh@kernel.org>
-References: <20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru>
- <20220610082535.12802-14-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S1353300AbiFMVFK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 17:05:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57112618;
+        Mon, 13 Jun 2022 13:41:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5E491B815AA;
+        Mon, 13 Jun 2022 20:41:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA53BC34114;
+        Mon, 13 Jun 2022 20:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655152885;
+        bh=DtUBLCpqiFD/uEnfXEFgkHOj+PJpXolzAMo1fE5cIyQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CrIwV0BJMOvNKe8nLYvYEguwyu7+7BTrDPHrnYx54x2U/d1TqFVmB8i8paOrzOp9g
+         I3stVkmVZQAVBpGJUtKotb1uZVBv3QloPQ4q436RynozkzF0H+4uAMlFIXrLLS0Hi6
+         ONP3xxiksrvk7BSKyEotDgyhk+KAqWDgF3yut41Z8ywJpJsVCCoZ8X4VxeoLWcVmFW
+         qaKM7wPITKustfnmaposwtRnDb34mmVYpzcFKnHRaKIlc+kP66bXgOGdeRrA9lMAbo
+         qEcyZJQ6EYkVPxfXuaW5bHkjjuYlYrKidqxXNvGq5zVcOVoizr001/Q5zYjDMoa7y3
+         HnLtJINegrx1A==
+Date:   Mon, 13 Jun 2022 15:41:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
+        broonie@kernel.org, lorenzo.pieralisi@arm.com, festevam@gmail.com,
+        francesco.dolcini@toradex.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: Re: [PATCH v10 0/7] PCI: imx6: refine codes and add the error
+ propagation
+Message-ID: <20220613204123.GA716053@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220610082535.12802-14-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <1655110538-10914-1-git-send-email-hongxing.zhu@nxp.com>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,33 +56,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 11:25:29AM +0300, Serge Semin wrote:
-> There are several places in the generic DW PCIe code where the
-> platform-specific PCIe link start/stop methods are called after making
-> sure the ops handler and the callbacks are specified. Instead of repeating
-> the same pattern over and over let's define the static-inline methods in
-> the DW PCIe header file and use them in the relevant parts of the driver.
-> 
-> Note returning a negative error from the EP link start procedure if the
-> start_link pointer isn't specified doesn't really make much sense since it
-> perfectly normal to have such platform. Moreover even pci_epc_start()
-> doesn't fail if no epc->ops->start callback is spotted. As a side-effect
-> of this modification we can set the generic DW PCIe and Layerscape EP
-> platform drivers free from the empty start_link callbacks and as such
-> entirely dummy dw_pcie_ops instances.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> ---
-> 
-> Changelog v4:
-> - This is a new patch created on the v4 lap of the series.
-> ---
->  drivers/pci/controller/dwc/pci-layerscape-ep.c    | 12 ------------
->  drivers/pci/controller/dwc/pcie-designware-ep.c   |  8 ++------
->  drivers/pci/controller/dwc/pcie-designware-host.c | 10 ++++------
->  drivers/pci/controller/dwc/pcie-designware-plat.c | 10 ----------
->  drivers/pci/controller/dwc/pcie-designware.h      | 14 ++++++++++++++
->  5 files changed, 20 insertions(+), 34 deletions(-)
+On Mon, Jun 13, 2022 at 04:55:31PM +0800, Richard Zhu wrote:
+> This series patches refine pci-imx6 driver and do the following main changes.
+> - Encapsulate the clock enable into one standalone function
+> - Add the error propagation from host_init and resume
+> - Turn off regulator when the system is in suspend mode
+> - Let the probe successfully when link never comes up
+> - Do not hide the phy driver callbacks in core reset and clk_enable.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This doesn't apply on v5.19-rc1 for me.  Am I missing something:
+
+  03:38:06 ~/linux (main)$ git checkout -b wip/richard-imx6-power-v10 v5.19-rc1
+  Switched to a new branch 'wip/richard-imx6-power-v10'
+  03:38:14 ~/linux (wip/richard-imx6-power-v10)$ b4 am -om/ https://lore.kernel.org/r/1655110538-10914-1-git-send-email-hongxing.zhu@nxp.com
+  Looking up https://lore.kernel.org/r/1655110538-10914-1-git-send-email-hongxing.zhu%40nxp.com
+  Analyzing 9 messages in the thread
+  Checking attestation on all messages, may take a moment...
+  ---
+    [PATCH v10 1/7] PCI: imx6: Encapsulate the clock enable into one standalone function
+    [PATCH v10 2/7] PCI: imx6: Add the error propagation from host_init
+    [PATCH v10 3/7] PCI: imx6: Move imx6_pcie_clk_disable() earlier
+    [PATCH v10 4/7] PCI: imx6: Disable iMX6QDL PCIe REF clock when disable PCIe clocks
+    [PATCH v10 5/7] PCI: imx6: Turn off regulator when the system is in suspend mode
+    [PATCH v10 6/7] PCI: imx6: Mark the link down as none fatal error
+    [PATCH v10 7/7] PCI: imx6: Do not hide phy driver callbacks and refine the error handling
+  ---
+  Total patches: 7
+  ---
+  Cover: m/v10_20220613_hongxing_zhu_pci_imx6_refine_codes_and_add_the_error_propagation.cover
+   Link: https://lore.kernel.org/r/1655110538-10914-1-git-send-email-hongxing.zhu@nxp.com
+   Base: not specified
+	 git am m/v10_20220613_hongxing_zhu_pci_imx6_refine_codes_and_add_the_error_propagation.mbx
+  03:38:27 ~/linux (wip/richard-imx6-power-v10)$ git am m/v10_20220613_hongxing_zhu_pci_imx6_refine_codes_and_add_the_error_propagation.mbx
+  Applying: PCI: imx6: Encapsulate the clock enable into one standalone function
+  error: patch failed: drivers/pci/controller/dwc/pci-imx6.c:539
+  error: drivers/pci/controller/dwc/pci-imx6.c: patch does not apply
+  Patch failed at 0001 PCI: imx6: Encapsulate the clock enable into one standalone function
+  hint: Use 'git am --show-current-patch' to see the failed patch
+  When you have resolved this problem, run "git am --continue".
+  If you prefer to skip this patch, run "git am --skip" instead.
+  To restore the original branch and stop patching, run "git am --abort".
+
