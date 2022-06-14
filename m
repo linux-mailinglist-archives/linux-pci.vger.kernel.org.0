@@ -2,121 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E1F154B50F
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 17:50:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C5B054B50D
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 17:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241398AbiFNPqU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jun 2022 11:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55014 "EHLO
+        id S235521AbiFNPrz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jun 2022 11:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241022AbiFNPqT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jun 2022 11:46:19 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0424640E4C;
-        Tue, 14 Jun 2022 08:46:17 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id v25so12228511eda.6;
-        Tue, 14 Jun 2022 08:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nfTAgqZHBZjtM/y5tRHC3jaZEPA00KzpeUJrHgo232E=;
-        b=Hz/06Qd3DuL+0aSdCvQ+LrzG9pNh4nq7R+0cWXVM8/UmTCSsn/kEFWtd2znicwSRXU
-         8/Q+I0yxH/OhewNzc1HRRyR289QxyBBLwARL8F2xZEgp6dlvLo86w6iW/qF69lRpV7SF
-         oeglckSY2br2zgmrLshNyajH3gmnlj6Pyy1bqZHVwgN2s01HneerEfvFpWeN305NowqH
-         GiM5T0u1cwyJkRjD9D1Glch/Tgg7Hp+OZ/W7rOZU8YU0QlGloTqhu/Ba5cIdwAQisyyu
-         Ux8UA5lzYZEB3geJmEEeIDJE3b2S+uqXrTiJdTiz01aly/r4c2j2uvLtcfoIlGiv97jn
-         Q/ew==
+        with ESMTP id S241973AbiFNPrx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jun 2022 11:47:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6684F13F93
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jun 2022 08:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655221669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c3D5rXBFggKZyiDmUUePVR2BksUY/F8xwEAjtaxtYb8=;
+        b=G/RDSnI7/j1r9uo/0cbVwoYGA7NlGM/El87MQ9VacvYb1hUkeUN2CrPiOPr+WVZ6MXDyfN
+        uKJ/XVRyHtKvnA+7IUge9DQrSM/J2DP78UCcmJ2jXvC98Wb96UK/y61O1UP67EunSJjjXQ
+        ao2Fc0qhwwoeE53gJ+GoRVOf4luR25k=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-131-SxZIQYLSM3iknXmsU5JRcQ-1; Tue, 14 Jun 2022 11:47:47 -0400
+X-MC-Unique: SxZIQYLSM3iknXmsU5JRcQ-1
+Received: by mail-ej1-f72.google.com with SMTP id h16-20020a1709070b1000b00713a3941a27so2958155ejl.0
+        for <linux-pci@vger.kernel.org>; Tue, 14 Jun 2022 08:47:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nfTAgqZHBZjtM/y5tRHC3jaZEPA00KzpeUJrHgo232E=;
-        b=vjz9h+3knvPSO3hT38GWqitR3F/+ZGGm8J1rtzv3PsSFT3YPJX0HB/fHIIlAMFkArG
-         sHqb6J0juSUmhZYOD50iVdKXIhbXVX4/25bLTL7azQS/p2SPgQ1Cf18+VSvk1o3jaB8B
-         5+PlqTqrN5dGk8a+42oK0EU+2Z6aDLsznzkwg7a30UmVDPOo1fQwWmv0+LKU6VSJt008
-         gOZcLlbDA9YAe81+JCDWlejzYBaSW2yuqYcTclhbwBM67Pm17uDr3+uZNQFtfKr7L7/c
-         +pxWFeIzngTeOeAUWM3bLx5fhEkNttOc4m2z5BwucgC5DdGgUZvjEqRaqIgR4az4rkCt
-         cBRQ==
-X-Gm-Message-State: AOAM530I2Khky4GkeyXiy3y/W/HlyVo6wrAFHX6jY6yYMm/uxelrInZo
-        hLuSWZnUAMj/6wFFxKPyxHk3hoEF0L51dPu+t8Y=
-X-Google-Smtp-Source: ABdhPJzDijUS05L/cIZxobR6iSqpiY+NVNJLh8JURw9ZCXKmqWch/j66MxziGjPvfelXFhydfcQgwxeUcjTGxdsPidc=
-X-Received: by 2002:aa7:d303:0:b0:42d:d192:4c41 with SMTP id
- p3-20020aa7d303000000b0042dd1924c41mr6931614edq.178.1655221575397; Tue, 14
- Jun 2022 08:46:15 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=c3D5rXBFggKZyiDmUUePVR2BksUY/F8xwEAjtaxtYb8=;
+        b=X42+A4pprrAv1zCOMyeLDDkw8IgJwism4Zv1VSaMFbtqy46Dw1jn3hJsfAOt6WFA02
+         Cl8AZz+DrIEPJRtlG7KQZNFIirhrzcaamFVGs2oDBtEwz3dMf9L+hOo4d5BFBtJrAyfN
+         IbEhotJSgxubWuxcUBl+MuaBT70x5uqzlNCULHBjhXcIHt7ioAEdi5bV5xBGWw7QDZYp
+         kE1vzwHhEQvvBvWWynxBi47ge7ZTPM4Y7xkC264JK0L4vM3cep6nfG5HEsbYQ9zE3XDa
+         tRkxK+oHdbPbTyogYv6+gKF6xfPFrCrZAXLDsuXcoeKYsbhDR6whr090K55nwOHJZp1/
+         VbzQ==
+X-Gm-Message-State: AJIora/hng5vj4yZyBYRiQq4a61VoS5GZgcOyuvCYbkh8OMYyNY/1I3Z
+        jFhBUUON9HvPdzJQGbuA4mZL7tZXW7vFH4XwXvcZqtQWIX56g5VKwy0aISVx1PDrjtGomO5ZWCs
+        Npqfqe1oZEb2iPAeIA0HE
+X-Received: by 2002:a17:907:9496:b0:711:f459:664 with SMTP id dm22-20020a170907949600b00711f4590664mr4822927ejc.704.1655221665112;
+        Tue, 14 Jun 2022 08:47:45 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uL7b2WJ9GqE48Lc8Oa55SIbLe3r72HnMhv92SlzzeuVVgeUFDg0m6ZrYBmGVWItHxA6UV0/w==
+X-Received: by 2002:a17:907:9496:b0:711:f459:664 with SMTP id dm22-20020a170907949600b00711f4590664mr4822894ejc.704.1655221664848;
+        Tue, 14 Jun 2022 08:47:44 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id u26-20020a170906951a00b00709e786c7b2sm5142116ejx.213.2022.06.14.08.47.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jun 2022 08:47:44 -0700 (PDT)
+Message-ID: <5c8923df-3d89-c7be-690d-fbef2c53eeb6@redhat.com>
+Date:   Tue, 14 Jun 2022 17:47:43 +0200
 MIME-Version: 1.0
-References: <Yqh3PtENhktETx4S@smile.fi.intel.com> <20220614151850.GA756316@bhelgaas>
-In-Reply-To: <20220614151850.GA756316@bhelgaas>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Jun 2022 17:45:38 +0200
-Message-ID: <CAHp75Vc0ArHC+iB45spvmAm-3zMDPHbhYjLkw=iTLhKQ0bZRDg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] x86/PCI: Disable e820 usage for the resource allocation
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH] x86/PCI: Revert: "Clip only host bridge windows for E820
+ regions"
+Content-Language: en-US
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ferry Toth <ftoth@exalondelft.nl>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        "H . Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>
+References: <20220614151708.GA756100@bhelgaas>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220614151708.GA756100@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 5:26 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Jun 14, 2022 at 02:55:42PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 13, 2022 at 05:35:20PM -0500, Bjorn Helgaas wrote:
-> > > On Mon, Jun 13, 2022 at 11:16:41PM +0300, Andy Shevchenko wrote:
-> > > > The resource management improve for PCI on x86 broke booting of Intel MID
-> > > > platforms. It seems that the current code removes all available resources
-> > > > from the list and none of the PCI device may be initialized. Restore the
-> > > > old behaviour by force disabling the e820 usage for the resource allocation.
-> > > >
-> > > > Fixes: 4c5e242d3e93 ("x86/PCI: Clip only host bridge windows for E820 regions")
-> > > > Depends-on: fa6dae5d8208 ("x86/PCI: Add kernel cmdline options to use/ignore E820 reserved regions")
-> > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > >
-> > > Yeah, I blew it with 4c5e242d3e93.  Can you provide more details on
-> > > how the MID platforms broke?
-> >
-> > It's not so easy. The breakage seems affects the console driver and earlycon
-> > doesn't work. erlyprintk doesn't support 32-bit MMIO addresses (again,
-> > addresses, not data size). That said, there is nothing to show at all.
-> >
-> > What I did, I have bisected to your patch, commented out the call and instead
-> > added a printk() to see what it does, and it basically removed all resources
-> > listed in _CRS.
-> >
-> > > Since you set "pci_use_e820 = false" for
-> > > MID below, I assume MID doesn't depend on the e820 clipping and thus
-> > > should not break if we turn off clipping by default in 2023 as in
-> > > 0ae084d5a674 ("x86/PCI: Disable E820 reserved region clipping starting
-> > > in 2023").
-> >
-> > > But it'd be nice to see the dmesg log and make sure.
-> >
-> > Nothing to provide (see above why), sorry.
->
-> A dmesg log with a working kernel, especially from one with Hans'
-> revert, which might have a little more logging about clipping, might
-> have enough info to help figure this out.
+Hi,
 
-https://paste.debian.net/1244105/
+On 6/14/22 17:17, Bjorn Helgaas wrote:
+> On Tue, Jun 14, 2022 at 10:15:29AM +0200, Hans de Goede wrote:
+>> On 6/14/22 01:15, Bjorn Helgaas wrote:
+>>> On Sun, Jun 12, 2022 at 04:43:25PM +0200, Hans de Goede wrote:
+>>>> Clipping the bridge windows directly from pci_acpi_root_prepare_resources()
+>>>> instead of clipping from arch_remove_reservations(), has a number of
+>>>> unforseen consequences.
+>>>>
+>>>> If there is an e820 reservation in the middle of a bridge window, then
+>>>> the smallest of the 2 remaining parts of the window will be also clipped
+>>>> off. Where as the previous code would clip regions requested by devices,
+>>>> rather then the entire window, leaving regions which were either entirely
+>>>> above or below a reservation in the middle of the window alone.
+>>>>
+>>>> E.g. on the Steam Deck this leads to this log message:
+>>>>
+>>>> acpi PNP0A08:00: clipped [mem 0x80000000-0xf7ffffff window] to [mem 0xa0100000-0xf7ffffff window]
+>>>>
+>>>> which then gets followed by these log messages:
+>>>>
+>>>> pci 0000:00:01.2: can't claim BAR 14 [mem 0x80600000-0x806fffff]: no compatible bridge window
+>>>> pci 0000:00:01.3: can't claim BAR 14 [mem 0x80500000-0x805fffff]: no compatible bridge window
+>>>>
+>>>> and many more of these. Ultimately this leads to the Steam Deck
+>>>> no longer booting properly, so revert the change.
+>>>>
+>>>> Note this is not a clean revert, this revert keeps the later change
+>>>> to make the clipping dependent on a new pci_use_e820 bool, moving
+>>>> the checking of this bool to arch_remove_reservations().
+>>>
+>>> 4c5e242d3e93 was definitely a mistake (my fault).  My intent was to
+>>> mainly to improve logging of the clipping, but I didn't implement it
+>>> well.
+>>>
+>>> That said, I'd like to understand the connection between the messages
+>>> you mention and the failure.  There are four bridges whose MMIO
+>>> windows were in the [mem 0x80000000-0x9fffffff] area that we clipped
+>>> out.  The log shows that we moved all those windows and the devices in
+>>> them to the [mem 0xa0100000-0xf7ffffff] area that remained after
+>>> clipping.
+>>>
+>>> So I think this *should* have worked even though we moved things
+>>> around unnecessarily.  What am I missing?
+>>
+>> I don't know? My guess is that maybe the ACPI table do MMIO accesses
+>> somewhere to hardcoded addresses and moving things breaks the ACPI
+>> tables.
+> 
+> This would be a firmware defect, IMHO.  There is a mechanism (_DSM for
+> preserving PCI Boot Configurations) for the firmware to tell us about
+> things that can't be moved.
+> 
+>>> The E820 map reports [mem 0xa0000000-0xa00fffff] in the middle of the
+>>> _CRS, and we currently trim that out.  We think this is a firmware
+>>> defect, so it's likely to break in 2023 if we stop clipping by
+>>> default.  I'm concerned that there may be other things in _CRS that we
+>>> need to avoid, but firmware isn't telling us about them.
+>>>
+>>> Or there's some dependency in the devices that we moved on their
+>>> original addresses, e.g., firmware on the device latched the address
+>>> and didn't notice the reassignment.
+>>
+>> Right this is the most likely cause I believe.
+> 
+> This would be another defect, in the device this time.  If we can
+> identify the device, possibly we could quirk around it.
+> 
+> Either one will be back to bite us in the future if we support
+> rebalancing resources to make room for hot-added devices.  I *think*
+> Windows already supports this kind of rebalancing.  Anyway, this is
+> why we need to dig a little deeper to figure out exactly what's going
+> wrong here.
 
-(It has a lot of unrelated debug thingy, sorry I didn't cut that out)
+Have you looked at the log of the failed boot in the Steam Deck kernel
+bugzilla? Everything there seems to work just fine and then the system
+just hangs. I think that maybe it cannot find its root disk, so maybe
+an NVME issue ?
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm afraid that if we cannot figure out the exact root cause from
+the failed boot log there is not much more we can do. Unless you
+have an idea how to debug this further and want to ask the reporter
+for more info?
+
+Regards,
+
+Hans
+
