@@ -2,68 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4119B54A675
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 04:37:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA5154A6FF
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 04:46:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355615AbiFNCg2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 22:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54324 "EHLO
+        id S1354493AbiFNCq1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 22:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355966AbiFNCgI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 22:36:08 -0400
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3E1340C0;
-        Mon, 13 Jun 2022 19:15:12 -0700 (PDT)
-X-UUID: 0b33db81944c4a7e930f51d58ecd3e44-20220614
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.6,REQID:f02b50cf-029f-4c0f-bdec-3799a2d958c6,OB:0,LO
-        B:0,IP:0,URL:5,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACT
-        ION:release,TS:0
-X-CID-META: VersionHash:b14ad71,CLOUDID:93287a07-b57a-4a25-a071-bc7b4972bc68,C
-        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
-        ,QS:nil,BEC:nil,COL:0
-X-UUID: 0b33db81944c4a7e930f51d58ecd3e44-20220614
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 2083284706; Tue, 14 Jun 2022 10:15:06 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
- Tue, 14 Jun 2022 10:15:04 +0800
-Received: from mhfsdcap04 (10.17.3.154) by mtkmbs11n2.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.2.792.3 via Frontend
- Transport; Tue, 14 Jun 2022 10:15:04 +0800
-Message-ID: <758e23499dd440f480d90c4417625a538521917a.camel@mediatek.com>
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Print LTSSM state when PCIe link
- down
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <jieyy.yang@mediatek.com>,
-        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
-        <jian.yang@mediatek.com>
-Date:   Tue, 14 Jun 2022 10:15:03 +0800
-In-Reply-To: <f95d10d69758014c9b1631718afa7dc72a68aa79.camel@mediatek.com>
-References: <20220329030715.7975-1-jianjun.wang@mediatek.com>
-         <32f5308e629cef3692c57c4c55442b0f2f25634f.camel@mediatek.com>
-         <7a10b1d7fc294093f26555a8b5a8748a3c0e1c9f.camel@mediatek.com>
-         <f95d10d69758014c9b1631718afa7dc72a68aa79.camel@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+        with ESMTP id S1353729AbiFNCqF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 22:46:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FEC56417;
+        Mon, 13 Jun 2022 19:23:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 788EC6140C;
+        Tue, 14 Jun 2022 02:23:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43116C34114;
+        Tue, 14 Jun 2022 02:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655173420;
+        bh=2JdpeLCcSB+EkvAsWhfjyJ3Yq+6ICihCOSoee4FwUcs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FVjARZi0H5LFS8bhfKScyQVBoSEzNU+8aBH6w34TAaQnKjP+eyQtJA8doYV0+0VaH
+         hu/J6hoKUDKk7djV8XqOM63HxSrVP+I83gjyRqIZPc0Vdpjx4O61iDPlJ/M3ORtQo5
+         wFH0R9tzirOAOeoy6ZkmGZKUkoyRTYEH85Hud28eO/L7sXKp3/RA1hO/TNntlAzNZH
+         WzWgdBDUibYMB1X8NsQA0p4us7MSncByO2y3RHpRf2l1JmsUsuTbDqvr8ajCWiorDI
+         B8I2m8FusgQOy3xGUxrUpwcq/1js8hok7vstbhGMItiYioOdI43j6Xo/xNBuc68BCZ
+         Ll4BDqx6YYKQg==
+Date:   Mon, 13 Jun 2022 20:23:37 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc:     Yi Zhang <yi.zhang@redhat.com>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "mstowe@redhat.com" <mstowe@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: blktests failures with v5.19-rc1
+Message-ID: <YqfxKanxbZNN7Kfw@kbusch-mbp.dhcp.thefacebook.com>
+References: <20220609235329.4jbz4wr3eg2nmzqa@shindev>
+ <717734c9-c633-fb48-499e-7e3e15113020@nvidia.com>
+ <19d09611-42cc-5a81-d676-c5375865c14c@nvidia.com>
+ <20220610122517.6pt5y63hcosk5mes@shindev>
+ <YqNZiMw+rH5gyZDI@kbusch-mbp.dhcp.thefacebook.com>
+ <CAHj4cs9G0WDrnSS6iVZJfgfOcRR0ysJhw+9yqcbqE=_8mkF0zw@mail.gmail.com>
+ <20220614010907.bvbrgbz7nnvpnw5w@shindev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220614010907.bvbrgbz7nnvpnw5w@shindev>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,131 +64,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Maintainers,
+On Tue, Jun 14, 2022 at 01:09:07AM +0000, Shinichiro Kawasaki wrote:
+> (CC+: linux-pci)
+> On Jun 11, 2022 / 16:34, Yi Zhang wrote:
+> > On Fri, Jun 10, 2022 at 10:49 PM Keith Busch <kbusch@kernel.org> wrote:
+> > >
+> > > And I am not even sure this is real. I don't know yet why this is showing up
+> > > only now, but this should fix it:
+> > 
+> > Hi Keith
+> > 
+> > Confirmed the WARNING issue was fixed with the change, here is the log:
+> 
+> Thanks. I also confirmed that Keith's change to add __ATTR_IGNORE_LOCKDEP to
+> dev_attr_dev_rescan avoids the fix, on v5.19-rc2.
+> 
+> I took a closer look into this issue and found The deadlock WARN can be
+> recreated with following two commands:
+> 
+> # echo 1 > /sys/bus/pci/devices/0000\:00\:09.0/rescan
+> # echo 1 > /sys/bus/pci/devices/0000\:00\:09.0/remove
+> 
+> And it can be recreated with PCI devices other than NVME controller, such as
+> SCSI controller or VGA controller. Then this is not a storage sub-system issue.
+> 
+> I checked function call stacks of the two commands above. As shown below, it
+> looks like ABBA deadlock possibility is detected and warned.
 
-Just gentle ping for this patch, is there anything I can to do to get
-this patch merged?
-
-Thanks.
-
-On Wed, 2022-06-01 at 10:24 +0800, Jianjun Wang wrote:
-> Hello Maintainers,
-> 
-> Is there anything I can do to get this patch merged?
-> 
-> Thanks.
-> 
-> On Wed, 2022-05-18 at 09:55 +0800, Jianjun Wang wrote:
-> > Hi Maintainers,
-> > 
-> > Gentle ping for this patch, if there is anything I can do to get
-> > this
-> > patch merged, please let me know.
-> > 
-> > Thanks.
-> > 
-> > On Fri, 2022-04-22 at 14:33 +0800, Jianjun Wang wrote:
-> > > Hi Maintainers,
-> > > 
-> > > Just gentle ping for this patch, if there is anything I can do to
-> > > get
-> > > this patch merged, please let me know.
-> > > 
-> > > Thanks.
-> > > 
-> > > On Tue, 2022-03-29 at 11:07 +0800, Jianjun Wang wrote:
-> > > > Print current LTSSM state when PCIe link down instead of the
-> > > > register
-> > > > value, make it easier to get the link status.
-> > > > 
-> > > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > > > Reviewed-by: AngeloGioacchino Del Regno <
-> > > > angelogioacchino.delregno@collabora.com>
-> > > > ---
-> > > > Changes in v2:
-> > > > Print both of the register value and the LTSSM state.
-> > > > ---
-> > > >  drivers/pci/controller/pcie-mediatek-gen3.c | 41
-> > > > ++++++++++++++++++++-
-> > > >  1 file changed, 40 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > > b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > > index 6745076a02b9..c24e03c198b7 100644
-> > > > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > > @@ -153,6 +153,37 @@ struct mtk_gen3_pcie {
-> > > >  	DECLARE_BITMAP(msi_irq_in_use, PCIE_MSI_IRQS_NUM);
-> > > >  };
-> > > >  
-> > > > +/* LTSSM state in PCIE_LTSSM_STATUS_REG bit[28:24] */
-> > > > +static const char *const ltssm_str[] = {
-> > > > +	"detect.quiet",			/* 0x00 */
-> > > > +	"detect.active",		/* 0x01 */
-> > > > +	"polling.active",		/* 0x02 */
-> > > > +	"polling.compliance",		/* 0x03 */
-> > > > +	"polling.configuration",	/* 0x04 */
-> > > > +	"config.linkwidthstart",	/* 0x05 */
-> > > > +	"config.linkwidthaccept",	/* 0x06 */
-> > > > +	"config.lanenumwait",		/* 0x07 */
-> > > > +	"config.lanenumaccept",		/* 0x08 */
-> > > > +	"config.complete",		/* 0x09 */
-> > > > +	"config.idle",			/* 0x0A */
-> > > > +	"recovery.receiverlock",	/* 0x0B */
-> > > > +	"recovery.equalization",	/* 0x0C */
-> > > > +	"recovery.speed",		/* 0x0D */
-> > > > +	"recovery.receiverconfig",	/* 0x0E */
-> > > > +	"recovery.idle",		/* 0x0F */
-> > > > +	"L0",				/* 0x10 */
-> > > > +	"L0s",				/* 0x11 */
-> > > > +	"L1.entry",			/* 0x12 */
-> > > > +	"L1.idle",			/* 0x13 */
-> > > > +	"L2.idle",			/* 0x14 */
-> > > > +	"L2.transmitwake",		/* 0x15 */
-> > > > +	"disable",			/* 0x16 */
-> > > > +	"loopback.entry",		/* 0x17 */
-> > > > +	"loopback.active",		/* 0x18 */
-> > > > +	"loopback.exit",		/* 0x19 */
-> > > > +	"hotreset",			/* 0x1A */
-> > > > +};
-> > > > +
-> > > >  /**
-> > > >   * mtk_pcie_config_tlp_header() - Configure a configuration
-> > > > TLP
-> > > > header
-> > > >   * @bus: PCI bus to query
-> > > > @@ -327,8 +358,16 @@ static int mtk_pcie_startup_port(struct
-> > > > mtk_gen3_pcie *pcie)
-> > > >  				 !!(val & PCIE_PORT_LINKUP),
-> > > > 20,
-> > > >  				 PCI_PM_D3COLD_WAIT *
-> > > > USEC_PER_MSEC);
-> > > >  	if (err) {
-> > > > +		const char *ltssm_state;
-> > > > +		int ltssm_index;
-> > > > +
-> > > >  		val = readl_relaxed(pcie->base +
-> > > > PCIE_LTSSM_STATUS_REG);
-> > > > -		dev_err(pcie->dev, "PCIe link down, ltssm reg
-> > > > val:
-> > > > %#x\n", val);
-> > > > +		ltssm_index = PCIE_LTSSM_STATE(val);
-> > > > +		ltssm_state = ltssm_index >=
-> > > > ARRAY_SIZE(ltssm_str) ?
-> > > > +			      "Unknown state" :
-> > > > ltssm_str[ltssm_index];
-> > > > +		dev_err(pcie->dev,
-> > > > +			"PCIe link down, current ltssm state:
-> > > > %s
-> > > > (%#x)\n",
-> > > > +			ltssm_state, val);
-> > > >  		return err;
-> > > >  	}
-> > > >  
-> > > 
-> > > 
-> > 
-> > 
-> 
-> 
-
+Yeah, I was mistaken on this report, so my proposal to suppress the warning is
+definitely not right. If I run both 'echo' commands in parallel, I see it
+deadlock frequently. I'm not familiar enough with this code to any good ideas
+on how to fix, but I agree this is a generic pci issue.
