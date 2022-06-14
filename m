@@ -2,148 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C15754A3B7
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 03:37:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4119B54A675
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 04:37:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348171AbiFNBhB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Jun 2022 21:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
+        id S1355615AbiFNCg2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Jun 2022 22:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234895AbiFNBhA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 21:37:00 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0257733E00
-        for <linux-pci@vger.kernel.org>; Mon, 13 Jun 2022 18:36:59 -0700 (PDT)
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20220614013657epoutp03cc8dadb2c22035f2d39a0d73afd369a6~4WOgsgshl2945329453epoutp03j
-        for <linux-pci@vger.kernel.org>; Tue, 14 Jun 2022 01:36:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20220614013657epoutp03cc8dadb2c22035f2d39a0d73afd369a6~4WOgsgshl2945329453epoutp03j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1655170617;
-        bh=jA5LhY2FU1o8vJngFMJ1TU1lJY0CuOKBbhd2Dp2tDos=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=Vjjx2N65kgRDYZY7Sp7dLCTBcfIHE+HxMbLG2WRiOhywO9ILdIKEZVJ0sCeLQbDDB
-         Wd1wUmbFe+pNaK54Ti0byFI59+6NOUnufrJRfY0O8SAn8l29ZZve6+r8Qmcy/hhrHi
-         YUS0FdzkqYhZbwh9t+b74aToy58/NIRvd6cpLnsk=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20220614013656epcas2p2256307430c211ec0bd8ea70dcb1445dd~4WOgFFOWx0196001960epcas2p2m;
-        Tue, 14 Jun 2022 01:36:56 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.99]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4LMWJ72XPhz4x9Q1; Tue, 14 Jun
-        2022 01:36:55 +0000 (GMT)
-X-AuditID: b6c32a46-f8bff70000002624-07-62a7e637a250
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9D.B7.09764.736E7A26; Tue, 14 Jun 2022 10:36:55 +0900 (KST)
-Mime-Version: 1.0
-Subject: [PATCH v3 5/5] MAINTAINERS: Add Axis ARTPEC-8 PCIe PHY maintainers
-Reply-To: wangseok.lee@samsung.com
-Sender: Wangseok Lee <wangseok.lee@samsung.com>
-From:   Wangseok Lee <wangseok.lee@samsung.com>
-To:     Wangseok Lee <wangseok.lee@samsung.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
-        "lars.persson@axis.com" <lars.persson@axis.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        "kernel@axis.com" <kernel@axis.com>
-CC:     Moon-Ki Jun <moonki.jun@samsung.com>,
-        Sang Min Kim <hypmean.kim@samsung.com>,
-        Dongjin Yang <dj76.yang@samsung.com>,
-        Yeeun Kim <yeeun119.kim@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7@epcms2p7>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20220614013654epcms2p6b8f11dd03c42b1dfcd908ed3e59c13d8@epcms2p6>
-Date:   Tue, 14 Jun 2022 10:36:54 +0900
-X-CMS-MailID: 20220614013654epcms2p6b8f11dd03c42b1dfcd908ed3e59c13d8
+        with ESMTP id S1355966AbiFNCgI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Jun 2022 22:36:08 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3E1340C0;
+        Mon, 13 Jun 2022 19:15:12 -0700 (PDT)
+X-UUID: 0b33db81944c4a7e930f51d58ecd3e44-20220614
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.6,REQID:f02b50cf-029f-4c0f-bdec-3799a2d958c6,OB:0,LO
+        B:0,IP:0,URL:5,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACT
+        ION:release,TS:0
+X-CID-META: VersionHash:b14ad71,CLOUDID:93287a07-b57a-4a25-a071-bc7b4972bc68,C
+        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
+        ,QS:nil,BEC:nil,COL:0
+X-UUID: 0b33db81944c4a7e930f51d58ecd3e44-20220614
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 2083284706; Tue, 14 Jun 2022 10:15:06 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
+ Tue, 14 Jun 2022 10:15:04 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkmbs11n2.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.3 via Frontend
+ Transport; Tue, 14 Jun 2022 10:15:04 +0800
+Message-ID: <758e23499dd440f480d90c4417625a538521917a.camel@mediatek.com>
+Subject: Re: [PATCH v2] PCI: mediatek-gen3: Print LTSSM state when PCIe link
+ down
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <jieyy.yang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
+        <jian.yang@mediatek.com>
+Date:   Tue, 14 Jun 2022 10:15:03 +0800
+In-Reply-To: <f95d10d69758014c9b1631718afa7dc72a68aa79.camel@mediatek.com>
+References: <20220329030715.7975-1-jianjun.wang@mediatek.com>
+         <32f5308e629cef3692c57c4c55442b0f2f25634f.camel@mediatek.com>
+         <7a10b1d7fc294093f26555a8b5a8748a3c0e1c9f.camel@mediatek.com>
+         <f95d10d69758014c9b1631718afa7dc72a68aa79.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA12Tf1CTZQDHe/ZuLy9205cJ9RzeAb2kgAT7IbBnCV0BZwu0W8dV1h/RC3sF
-        ZGxz71ZWGitEiaaQkiBwYyWB8qsCgSEJ3piuuxphWfw4IPQw4GBSiYkiFWNDu/77PN/7Pt/n
-        +T4/CEwwiAcSOWo9o1PTKgpfx+3oi5BGSX+rzxD9cIxEtR9moxlbBKqx9/NQd0U9B5369HsM
-        TdkqMfTnoc1o4IYJRzOV4zgympZ4yD73B4Z6HWc56Kfz1Thymh04Km34i4vmlqZ9UP/pHFR4
-        we6Duka/xdBon5OL7rXf5zwbIG8yNwH5YItCbmk1yFsbPsLlk1fLOfK22nz5sXMNQO4Y6uTI
-        b7UGKXxfz43PZmglowth1JkaZY46K4FKTUtPSo+NE4mjxDIkpULUdB6TQCXvVETtyFGtNKNC
-        3qJVhhVJQbMsJXwmXqcx6JmQbA2rT6AYrVKllWqjWTqPNaizotWM/mmxSCSJXTG+mZs901cO
-        tFXE/oqxMmAE/+DFgCAgGQMb+6XFYB0hIK0AftM9Bdw6n/SDy9aNxcCX2EimwsISM+5mAUlB
-        a5MZ8+hCOHjmY56bcTIK/n16Bnfn+JPVODw+PcVzDzDSAmDvUg9wuyDJhxVHbnA9vAl21rev
-        6r7ki/CzS8c5Hj0cLtYdxTwcAIcbXT5rPH+5xpvjDwvHnV6PH5y42+3VA6Fl0sbz8Huwd3nJ
-        m2kEsORXxlNYCK2D2zwdd8HFxp1uB5fcDE+M2r0pybC21rmagpHBsNNVjbntGBkBvzwv9ISE
-        QvsId62T8esln/8zRq6HRX3LD3SredK7ly3QfLYLKwWhlQ/PufI/a1U+XMsCsAbwGKNl87IY
-        VqKVPLjZTE1eK1h94Vt3WEGZ6/doG+AQwAYggVH+/BNX6jIEfCX9zruMTpOuM6gY1gZiV1p+
-        ggUGZGpWvohany6OkYli4uLEUkmsSEo9zk9RfkULyCxaz+QyjJbRrc3jEL6BRk7ekGx24Lv5
-        t9eLtldbHLNP3LK30YfuHih/rqYv+M4G18EFouWl+eGRR95gk2ypBa5IWXg4NWfUXpg49wKP
-        u1yOhDVXU3rCUu6pILpk+qDUEmmexMb2XR9OIhNfuZb4xfNpE84Cv1O/MLe35A/oS5Kvtz06
-        rRq54jhD7xbkKNISQy+2zRJHXjbN7+kK24uP1b7qnG9vv+wqDLsjG9sk3H4gruPgyfH6ize3
-        3WTj9hRNcVomgyRBEz2NzVWRsR2v1eWnHw1+H/AX4nWHwX4Fb99ijcFUJTOWgcMJ4gKryA9k
-        DN8vesrB1CU0N//YruSES/SfXyvcbbr989DeyO4F+skNFJfNpsVbMR1L/wuB9p+sagQAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7
-References: <20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7@epcms2p7>
-        <CGME20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7@epcms2p6>
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add maintainer for Axis ARTPEC-8 PCIe PHY.
+Hi Maintainers,
 
-Add Jesper Nilsson <jesper.nilsson@axis.com> and
-Lars Persson <lars.persson@axis.com> as maintainer for these files.
+Just gentle ping for this patch, is there anything I can to do to get
+this patch merged?
 
-ARTPEC-8 is the SoC platform of Axis Communications and PCIe PHY is designe
-d based on Samsung PHY.
+Thanks.
 
-Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+On Wed, 2022-06-01 at 10:24 +0800, Jianjun Wang wrote:
+> Hello Maintainers,
+> 
+> Is there anything I can do to get this patch merged?
+> 
+> Thanks.
+> 
+> On Wed, 2022-05-18 at 09:55 +0800, Jianjun Wang wrote:
+> > Hi Maintainers,
+> > 
+> > Gentle ping for this patch, if there is anything I can do to get
+> > this
+> > patch merged, please let me know.
+> > 
+> > Thanks.
+> > 
+> > On Fri, 2022-04-22 at 14:33 +0800, Jianjun Wang wrote:
+> > > Hi Maintainers,
+> > > 
+> > > Just gentle ping for this patch, if there is anything I can do to
+> > > get
+> > > this patch merged, please let me know.
+> > > 
+> > > Thanks.
+> > > 
+> > > On Tue, 2022-03-29 at 11:07 +0800, Jianjun Wang wrote:
+> > > > Print current LTSSM state when PCIe link down instead of the
+> > > > register
+> > > > value, make it easier to get the link status.
+> > > > 
+> > > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > > > Reviewed-by: AngeloGioacchino Del Regno <
+> > > > angelogioacchino.delregno@collabora.com>
+> > > > ---
+> > > > Changes in v2:
+> > > > Print both of the register value and the LTSSM state.
+> > > > ---
+> > > >  drivers/pci/controller/pcie-mediatek-gen3.c | 41
+> > > > ++++++++++++++++++++-
+> > > >  1 file changed, 40 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > > b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > > index 6745076a02b9..c24e03c198b7 100644
+> > > > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > > > @@ -153,6 +153,37 @@ struct mtk_gen3_pcie {
+> > > >  	DECLARE_BITMAP(msi_irq_in_use, PCIE_MSI_IRQS_NUM);
+> > > >  };
+> > > >  
+> > > > +/* LTSSM state in PCIE_LTSSM_STATUS_REG bit[28:24] */
+> > > > +static const char *const ltssm_str[] = {
+> > > > +	"detect.quiet",			/* 0x00 */
+> > > > +	"detect.active",		/* 0x01 */
+> > > > +	"polling.active",		/* 0x02 */
+> > > > +	"polling.compliance",		/* 0x03 */
+> > > > +	"polling.configuration",	/* 0x04 */
+> > > > +	"config.linkwidthstart",	/* 0x05 */
+> > > > +	"config.linkwidthaccept",	/* 0x06 */
+> > > > +	"config.lanenumwait",		/* 0x07 */
+> > > > +	"config.lanenumaccept",		/* 0x08 */
+> > > > +	"config.complete",		/* 0x09 */
+> > > > +	"config.idle",			/* 0x0A */
+> > > > +	"recovery.receiverlock",	/* 0x0B */
+> > > > +	"recovery.equalization",	/* 0x0C */
+> > > > +	"recovery.speed",		/* 0x0D */
+> > > > +	"recovery.receiverconfig",	/* 0x0E */
+> > > > +	"recovery.idle",		/* 0x0F */
+> > > > +	"L0",				/* 0x10 */
+> > > > +	"L0s",				/* 0x11 */
+> > > > +	"L1.entry",			/* 0x12 */
+> > > > +	"L1.idle",			/* 0x13 */
+> > > > +	"L2.idle",			/* 0x14 */
+> > > > +	"L2.transmitwake",		/* 0x15 */
+> > > > +	"disable",			/* 0x16 */
+> > > > +	"loopback.entry",		/* 0x17 */
+> > > > +	"loopback.active",		/* 0x18 */
+> > > > +	"loopback.exit",		/* 0x19 */
+> > > > +	"hotreset",			/* 0x1A */
+> > > > +};
+> > > > +
+> > > >  /**
+> > > >   * mtk_pcie_config_tlp_header() - Configure a configuration
+> > > > TLP
+> > > > header
+> > > >   * @bus: PCI bus to query
+> > > > @@ -327,8 +358,16 @@ static int mtk_pcie_startup_port(struct
+> > > > mtk_gen3_pcie *pcie)
+> > > >  				 !!(val & PCIE_PORT_LINKUP),
+> > > > 20,
+> > > >  				 PCI_PM_D3COLD_WAIT *
+> > > > USEC_PER_MSEC);
+> > > >  	if (err) {
+> > > > +		const char *ltssm_state;
+> > > > +		int ltssm_index;
+> > > > +
+> > > >  		val = readl_relaxed(pcie->base +
+> > > > PCIE_LTSSM_STATUS_REG);
+> > > > -		dev_err(pcie->dev, "PCIe link down, ltssm reg
+> > > > val:
+> > > > %#x\n", val);
+> > > > +		ltssm_index = PCIE_LTSSM_STATE(val);
+> > > > +		ltssm_state = ltssm_index >=
+> > > > ARRAY_SIZE(ltssm_str) ?
+> > > > +			      "Unknown state" :
+> > > > ltssm_str[ltssm_index];
+> > > > +		dev_err(pcie->dev,
+> > > > +			"PCIe link down, current ltssm state:
+> > > > %s
+> > > > (%#x)\n",
+> > > > +			ltssm_state, val);
+> > > >  		return err;
+> > > >  	}
+> > > >  
+> > > 
+> > > 
+> > 
+> > 
+> 
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 475e2836..5ad377f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1876,12 +1876,14 @@ M:	Jesper Nilsson <jesper.nilsson@axis.com>
- M:	Lars Persson <lars.persson@axis.com>
- L:	linux-arm-kernel@axis.com
- S:	Maintained
-+F:	Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml
- F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
- F:	arch/arm/boot/dts/artpec6*
- F:	arch/arm/mach-artpec
- F:	drivers/clk/axis
- F:	drivers/crypto/axis
- F:	drivers/mmc/host/usdhi6rol0.c
-+F:	drivers/phy/artpec/phy-artpec*
- F:	drivers/pinctrl/pinctrl-artpec*
- 
- ARM/ASPEED I2C DRIVER
--- 
-2.9.5
