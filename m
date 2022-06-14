@@ -2,111 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 501DF54B0DC
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 14:37:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F00CA54B0D8
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Jun 2022 14:37:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356831AbiFNMbG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Jun 2022 08:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        id S242990AbiFNMdk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Jun 2022 08:33:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244165AbiFNM2p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jun 2022 08:28:45 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AEB22B02;
-        Tue, 14 Jun 2022 05:28:45 -0700 (PDT)
+        with ESMTP id S239463AbiFNMb5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Jun 2022 08:31:57 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974A94AE21;
+        Tue, 14 Jun 2022 05:30:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655209725; x=1686745725;
+  t=1655209832; x=1686745832;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=G/BX8Uxdz+yrMTFWd+nOOlTWRC0rRAkVHt5072WNsL8=;
-  b=WytpUNbvjE1IvZE7C8TDPCkkamy+L5n0cTedZ4BxzHgXUpFxbeEr7y+X
-   80Y4EK0gbV1pOJq8o7H4Bpq7EOGTNCwe4x3jBx8qp6KUgAUusg+VJGzKV
-   SvQ/rISa9oq1vWsOlhaokZ6xJ22ou2x7qdFtT2JW4x4aMDS7BnMb5J1XT
-   q2uDt2Yio4wwacE+vuu6qAortVlXgIa2lqkm4gE5JZ3Nxelx46y3qNo9g
-   Z5E0mLejcRhIZDEx+RA6VvIMqYy1WMP3x962aipCNWr7T4Dh9TvxF5OnK
-   yF+gt6MP1m+MN+5SVMF4D4N4wPUyVeShMwM3p+fYVrzsARk3GbgY23zxH
+  bh=umN/+tNtTu1lyfbNWcYjSL326rns/NU6j6UQjyCfMA8=;
+  b=Zn53Pvo5Bq1HfcT9DzIALAWZDDJ7qEbnVwO021wlpuKUkJgupNqpiUkd
+   RbKVXClWoq4Gwp3r4uBmDkYQrQUoe9OIxRg1VP4BjsPJSZvUpRUyqJrSf
+   qHxswwjaJyhXBQ5PS1otbM6VWoOs9zd5DqWQ41WJgZh8JoUT5wUNmeZps
+   pdQgxS7kOZnbfm11prueT2V8YTtCfcx4CQbatedlZlHWLuLmQB2x69NvC
+   OH+QXb1HPwBj9X7zUztS7oPTFEhCwcPozrrzEVh5AyR141cvgLJ1L7row
+   7A/ertaGLaA9lx4R3n1/nwgubns6BKzLoDxeQF/a7JTC7piIVseOrDWUv
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="279639124"
+X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="278641663"
 X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
-   d="scan'208";a="279639124"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 05:28:44 -0700
+   d="scan'208";a="278641663"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 05:30:14 -0700
 X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
-   d="scan'208";a="582677693"
+   d="scan'208";a="588438787"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 05:28:40 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 05:30:11 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1o15eu-000cKr-Bp;
-        Tue, 14 Jun 2022 15:28:36 +0300
-Date:   Tue, 14 Jun 2022 15:28:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1o15gO-000cLO-7K;
+        Tue, 14 Jun 2022 15:30:08 +0300
+Date:   Tue, 14 Jun 2022 15:30:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Subject: Re: [PATCH] x86/PCI: Revert: "Clip only host bridge windows for E820
- regions"
-Message-ID: <Yqh+9Ei5BLhKB/da@smile.fi.intel.com>
-References: <20220612144325.85366-1-hdegoede@redhat.com>
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ferry Toth <ftoth@exalondelft.nl>
+Subject: Re: [PATCH v1 1/1] x86/PCI: Disable e820 usage for the resource
+ allocation
+Message-ID: <Yqh/UJQphSFvxX74@smile.fi.intel.com>
+References: <20220613201641.67640-1-andriy.shevchenko@linux.intel.com>
+ <45d458f5-4f4e-9ebd-cb51-1a7b784248ec@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220612144325.85366-1-hdegoede@redhat.com>
+In-Reply-To: <45d458f5-4f4e-9ebd-cb51-1a7b784248ec@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jun 12, 2022 at 04:43:25PM +0200, Hans de Goede wrote:
-> Clipping the bridge windows directly from pci_acpi_root_prepare_resources()
-> instead of clipping from arch_remove_reservations(), has a number of
-> unforseen consequences.
+On Mon, Jun 13, 2022 at 10:31:39PM +0200, Hans de Goede wrote:
+> On 6/13/22 22:16, Andy Shevchenko wrote:
+> > The resource management improve for PCI on x86 broke booting of Intel MID
+> > platforms. It seems that the current code removes all available resources
+> > from the list and none of the PCI device may be initialized. Restore the
+> > old behaviour by force disabling the e820 usage for the resource allocation.
+> > 
+> > Fixes: 4c5e242d3e93 ("x86/PCI: Clip only host bridge windows for E820 regions")
+> > Depends-on: fa6dae5d8208 ("x86/PCI: Add kernel cmdline options to use/ignore E820 reserved regions")
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> If there is an e820 reservation in the middle of a bridge window, then
-> the smallest of the 2 remaining parts of the window will be also clipped
-> off. Where as the previous code would clip regions requested by devices,
-> rather then the entire window, leaving regions which were either entirely
-> above or below a reservation in the middle of the window alone.
+> Andy, thank you for the patch. Commit 4c5e242d3e93 has also been causing
+> issues for other platforms, so I've submitted a revert of it here:
 > 
-> E.g. on the Steam Deck this leads to this log message:
+> https://lore.kernel.org/linux-pci/20220612144325.85366-1-hdegoede@redhat.com/T/#u
 > 
-> acpi PNP0A08:00: clipped [mem 0x80000000-0xf7ffffff window] to [mem 0xa0100000-0xf7ffffff window]
-> 
-> which then gets followed by these log messages:
-> 
-> pci 0000:00:01.2: can't claim BAR 14 [mem 0x80600000-0x806fffff]: no compatible bridge window
-> pci 0000:00:01.3: can't claim BAR 14 [mem 0x80500000-0x805fffff]: no compatible bridge window
-> 
-> and many more of these. Ultimately this leads to the Steam Deck
-> no longer booting properly, so revert the change.
-> 
-> Note this is not a clean revert, this revert keeps the later change
-> to make the clipping dependent on a new pci_use_e820 bool, moving
-> the checking of this bool to arch_remove_reservations().
+> can you please give the revert a try, and confirm that that fixes
+> the Intel MID platform issue too ?
 
-It does _not_ fix the Intel MID case. It requires to have my patch applied as well.
-So the difference as I see is the flags checking. I believe that you still need to
-have it in case pci_use_e820 == true. But it might be that I missed an importan
-detail.
+Nope, it doesn't fix. The problem is in flags checking as far as I can see.
+My patch is needed either we have yours or not.
 
 -- 
 With Best Regards,
