@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7653C54D513
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 01:22:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4FCC54D517
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 01:22:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356444AbiFOXQ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jun 2022 19:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58552 "EHLO
+        id S1355146AbiFOXQz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jun 2022 19:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350792AbiFOXQg (ORCPT
+        with ESMTP id S1351170AbiFOXQg (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 19:16:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8363464E;
-        Wed, 15 Jun 2022 16:16:26 -0700 (PDT)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4012034B81;
+        Wed, 15 Jun 2022 16:16:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 63959B81FE1;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 92257619B2;
+        Wed, 15 Jun 2022 23:16:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4E6C3411A;
         Wed, 15 Jun 2022 23:16:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3152C3411A;
-        Wed, 15 Jun 2022 23:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655334984;
-        bh=dW1LoSHvZjh0g3Ks+7fF1K2Mo4Xweob8fflXZGetkLo=;
+        s=k20201202; t=1655334986;
+        bh=OTHz77xYfOj2BzCwLPsZG6pEu0uiIDa86IetAa2AHUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GqU7Vu6k49begI+Z+OJvWmWLw2PHtnTl0CwR5k5b5RyrEDDj9qe+/30iOALkMfbNK
-         0AjvUG9RIqKUg/ghFaWYmzlA6lNFSxgkcCsANC4WfkTKHRys+BETY1E8NgmN0wVRdD
-         wVpP7nmdgK5UBopiBj5GZR59xGcA03wwMfrbq6BhxlMLKS5/zhii3nhoOSuyniCScm
-         73EnSvH3H634MNjo2VD9CO/+L1YxAWWUzAJ7pFbIrzJQftdrB4spFT6YcDMiXufwS1
-         jVO9bY78jaRyprycy6w+0Ra+7l7Euz2PFq8N8clOZObIBvk5pQ/UAd0i1j7Ge4gT1k
-         6pW/TGRBjyKag==
+        b=dAEULewB8TnpBmlPG1L2uOVIFqh6+hTW0iz4k3KEE5icPkIshC7xvUAWUeA7tbBvN
+         PM6xf/+jRMcxz+4eYtEfFtExQTMz6PXbGUWG2pJfoZMwuaKiRUl55Iylk7LzdIJkP1
+         6R07fm4CwpXDb3GQjeRj4hrKl8DxQgYDS5Q7bdKD+28ImkZsoadPY+o/IbYHB0fTpR
+         +1FLQXpSUy5BRrzqN+XAHW81GsDL+DJK63p8W3Qypoy+D0VzE4oo37HN/uV3bI9b+c
+         Lm71TwwwqGblLM9eg4EgMhsBGkFN7OGikMPt1+TAN8skxjjLSkNaxflKaTE5/LqCmK
+         5vMIgj2rmdNmg==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
@@ -42,9 +42,9 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>,
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v12 10/13] PCI: imx6: Mark the link down as non-fatal error
-Date:   Wed, 15 Jun 2022 18:15:48 -0500
-Message-Id: <20220615231551.1054753-11-helgaas@kernel.org>
+Subject: [PATCH v12 11/13] PCI: imx6: Reduce resume time by only starting link if it was up before suspend
+Date:   Wed, 15 Jun 2022 18:15:49 -0500
+Message-Id: <20220615231551.1054753-12-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220615231551.1054753-1-helgaas@kernel.org>
 References: <20220615231551.1054753-1-helgaas@kernel.org>
@@ -62,51 +62,60 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Richard Zhu <hongxing.zhu@nxp.com>
 
-Let the driver probe successfully, return zero in imx6_pcie_start_link()
-when PCIe link is down.
+Because i.MX PCIe doesn't support hot-plug feature.  In the link down
+scenario, only start the PCIe link training in resume when the link is up
+before system suspend to avoid the long latency in the link training
+period.
 
-Link: https://lore.kernel.org/r/1655189942-12678-7-git-send-email-hongxing.zhu@nxp.com
+[bhelgaas: drop now-unused "ret"]
+Link: https://lore.kernel.org/r/1655189942-12678-8-git-send-email-hongxing.zhu@nxp.com
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 537b8a2e0e3b..7d3592540b8a 100644
+index 7d3592540b8a..b6e5420d67b6 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -855,7 +855,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 	/* Start LTSSM. */
- 	imx6_pcie_ltssm_enable(dev);
- 
--	dw_pcie_wait_for_link(pci);
-+	ret = dw_pcie_wait_for_link(pci);
-+	if (ret)
-+		goto err_reset_phy;
- 
- 	if (pci->link_gen == 2) {
- 		/* Allow Gen2 mode after the link is up. */
-@@ -891,7 +893,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 		}
- 
- 		/* Make sure link training is finished as well! */
--		dw_pcie_wait_for_link(pci);
-+		ret = dw_pcie_wait_for_link(pci);
-+		if (ret)
-+			goto err_reset_phy;
- 	} else {
+@@ -67,6 +67,7 @@ struct imx6_pcie {
+ 	struct dw_pcie		*pci;
+ 	int			reset_gpio;
+ 	bool			gpio_active_high;
++	bool			link_is_up;
+ 	struct clk		*pcie_bus;
+ 	struct clk		*pcie_phy;
+ 	struct clk		*pcie_inbound_axi;
+@@ -900,6 +901,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
  		dev_info(dev, "Link: Gen2 disabled\n");
  	}
-@@ -905,7 +909,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
- 		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
- 	imx6_pcie_reset_phy(imx6_pcie);
--	return ret;
-+	return 0;
- }
  
- static int imx6_pcie_host_init(struct pcie_port *pp)
++	imx6_pcie->link_is_up = true;
+ 	tmp = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+ 	dev_info(dev, "Link up, Gen%i\n", tmp & PCI_EXP_LNKSTA_CLS);
+ 	return 0;
+@@ -1025,7 +1027,6 @@ static int imx6_pcie_suspend_noirq(struct device *dev)
+ 
+ static int imx6_pcie_resume_noirq(struct device *dev)
+ {
+-	int ret;
+ 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
+ 	struct pcie_port *pp = &imx6_pcie->pci->pp;
+ 
+@@ -1036,10 +1037,8 @@ static int imx6_pcie_resume_noirq(struct device *dev)
+ 	imx6_pcie_init_phy(imx6_pcie);
+ 	imx6_pcie_deassert_core_reset(imx6_pcie);
+ 	dw_pcie_setup_rc(pp);
+-
+-	ret = imx6_pcie_start_link(imx6_pcie->pci);
+-	if (ret < 0)
+-		dev_info(dev, "pcie link is down after resume.\n");
++	if (imx6_pcie->link_is_up)
++		imx6_pcie_start_link(imx6_pcie->pci);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
