@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 921DB54D529
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 01:22:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0C7354D528
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 01:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350352AbiFOXQZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jun 2022 19:16:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58574 "EHLO
+        id S1354540AbiFOXQh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jun 2022 19:16:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350355AbiFOXQS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 19:16:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305D83054F;
-        Wed, 15 Jun 2022 16:16:17 -0700 (PDT)
+        with ESMTP id S1351538AbiFOXQX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 19:16:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F5C3153D;
+        Wed, 15 Jun 2022 16:16:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B2AAF6190B;
-        Wed, 15 Jun 2022 23:16:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38F8C3411A;
-        Wed, 15 Jun 2022 23:16:15 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B4D5D619A2;
+        Wed, 15 Jun 2022 23:16:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D0EC3411A;
+        Wed, 15 Jun 2022 23:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655334976;
-        bh=cAJc7R7bE7xqXWor8RIIlSkD8G16T7DVc9c6nA3MW70=;
+        s=k20201202; t=1655334978;
+        bh=V4zjeqs/MW9qGeVecOnDdm0aX5MRgdE+/XPrfaRGJOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmOWlUMWLuGk93fTZdM2ZA5EUc664xLxgGIuWkZjzVD8k+UAoGCr9oqUMl1F7LLAg
-         i3HapcV1AhKAkGci/Z6vAgi8VTP4f+dh5yNi54R7m/OwImR8UO/C7UrmzOHeEqb2xw
-         DhIZ203TbCbvM4wb3q7187HU6gaAqur25XrZRjRqI8UOPrSO8SDe0kM9KHN0WBKZkI
-         q6QQktpxs4xJp8PPor3mq7uocXF+Ocmjj4Q1l/Wuc0QNRAgIHCLvU+kQUenJJCBHtx
-         w7X54W+JsYCDdgCb2KDU58M6EWLmb2RRY7+YbEhYdMYTX6+JhsV9/qcPpJUr4iGIIG
-         8Tx63dmqF/FOw==
+        b=RQ/DVBgE0biMDbO51l/bj0ujSHagDKrGVelfZfyLYW39UloPhtmDo3umogTTy4Pc6
+         ZxDPLafKqipRV8v//O13deY5q53bxFc7BEanZlqgUZaH6w1HWixrpfG2h71Q58l6Ka
+         dhtAhKU2tUDu1HiO9lA0lxlEgPyrnpM7hB73AGWlf4StaeLGWcaAAlVXX8UsyvGB6P
+         ATwye+6PyGbczlmNjOMD72sVqKlMin+w5am0ch/4Ymst7GvyNW0zspLe92eG4+/6hd
+         kjadA+mcKYhXDIWqgIqWmYT9Wu57vbLlf3/izosfvjfWK1UqKNYbq6748HZdkrRF8x
+         Dqlz2IrlPPzag==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
@@ -42,9 +42,9 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>,
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v12 06/13] PCI: imx6: Collect clock enables in imx6_pcie_clk_enable()
-Date:   Wed, 15 Jun 2022 18:15:44 -0500
-Message-Id: <20220615231551.1054753-7-helgaas@kernel.org>
+Subject: [PATCH v12 07/13] PCI: imx6: Propagate .host_init() errors to caller
+Date:   Wed, 15 Jun 2022 18:15:45 -0500
+Message-Id: <20220615231551.1054753-8-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220615231551.1054753-1-helgaas@kernel.org>
 References: <20220615231551.1054753-1-helgaas@kernel.org>
@@ -62,150 +62,77 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Richard Zhu <hongxing.zhu@nxp.com>
 
-Encapsulate the i.MX PCIe clock enable operations into one standalone
-function, imx6_pcie_clk_enable().  No functional change intended.
+Since dw_pcie_host_init() checks for errors from ops->host_init(),
+check for errors when enabling power regulators and clocks and return them.
 
-[bhelgaas: split pure code moves into separate patches]
-Link: https://lore.kernel.org/r/1655189942-12678-2-git-send-email-hongxing.zhu@nxp.com
+[bhelgaas: commit log]
+Link: https://lore.kernel.org/r/1655189942-12678-3-git-send-email-hongxing.zhu@nxp.com
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 98 ++++++++++++++++-----------
- 1 file changed, 58 insertions(+), 40 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index f458461880dc..e36ca08a7c51 100644
+index e36ca08a7c51..90ab9397a935 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -600,6 +600,58 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
- 	}
+@@ -708,7 +708,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+ 					imx6_pcie->gpio_active_high);
  }
  
-+static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
-+{
-+	struct dw_pcie *pci = imx6_pcie->pci;
-+	struct device *dev = pci->dev;
-+	int ret;
-+
-+	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
-+	if (ret) {
-+		dev_err(dev, "unable to enable pcie_phy clock\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
-+	if (ret) {
-+		dev_err(dev, "unable to enable pcie_bus clock\n");
-+		goto err_pcie_bus;
-+	}
-+
-+	ret = clk_prepare_enable(imx6_pcie->pcie);
-+	if (ret) {
-+		dev_err(dev, "unable to enable pcie clock\n");
-+		goto err_pcie;
-+	}
-+
-+	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
-+	if (ret) {
-+		dev_err(dev, "unable to enable pcie ref clock\n");
-+		goto err_ref_clk;
-+	}
-+
-+	switch (imx6_pcie->drvdata->variant) {
-+	case IMX8MM:
-+		if (phy_power_on(imx6_pcie->phy))
-+			dev_err(dev, "unable to power on PHY\n");
-+		break;
-+	default:
-+		break;
-+	}
-+	/* allow the clocks to stabilize */
-+	usleep_range(200, 500);
-+	return 0;
-+
-+err_ref_clk:
-+	clk_disable_unprepare(imx6_pcie->pcie);
-+err_pcie:
-+	clk_disable_unprepare(imx6_pcie->pcie_bus);
-+err_pcie_bus:
-+	clk_disable_unprepare(imx6_pcie->pcie_phy);
-+
-+	return ret;
-+}
-+
- static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
- {
- 	clk_disable_unprepare(imx6_pcie->pcie);
-@@ -660,7 +712,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+-static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
++static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
  {
  	struct dw_pcie *pci = imx6_pcie->pci;
  	struct device *dev = pci->dev;
--	int ret;
-+	int ret, err;
- 
- 	if (imx6_pcie->vpcie && !regulator_is_enabled(imx6_pcie->vpcie)) {
- 		ret = regulator_enable(imx6_pcie->vpcie);
-@@ -671,40 +723,12 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+@@ -719,7 +719,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 		if (ret) {
+ 			dev_err(dev, "failed to enable vpcie regulator: %d\n",
+ 				ret);
+-			return;
++			return ret;
  		}
  	}
  
--	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
--	if (ret) {
--		dev_err(dev, "unable to enable pcie_phy clock\n");
--		goto err_pcie_phy;
-+	err = imx6_pcie_clk_enable(imx6_pcie);
-+	if (err) {
-+		dev_err(dev, "unable to enable pcie clocks: %d\n", err);
-+		goto err_clks;
+@@ -785,7 +785,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 		msleep(100);
  	}
  
--	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
--	if (ret) {
--		dev_err(dev, "unable to enable pcie_bus clock\n");
--		goto err_pcie_bus;
--	}
--
--	ret = clk_prepare_enable(imx6_pcie->pcie);
--	if (ret) {
--		dev_err(dev, "unable to enable pcie clock\n");
--		goto err_pcie;
--	}
--
--	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
--	if (ret) {
--		dev_err(dev, "unable to enable pcie ref clock\n");
--		goto err_ref_clk;
--	}
--
--	switch (imx6_pcie->drvdata->variant) {
--	case IMX8MM:
--		if (phy_power_on(imx6_pcie->phy))
--			dev_err(dev, "unable to power on PHY\n");
--		break;
--	default:
--		break;
--	}
--	/* allow the clocks to stabilize */
--	usleep_range(200, 500);
+-	return;
++	return 0;
  
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MQ:
-@@ -763,13 +787,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 
- 	return;
- 
--err_ref_clk:
--	clk_disable_unprepare(imx6_pcie->pcie);
--err_pcie:
--	clk_disable_unprepare(imx6_pcie->pcie_bus);
--err_pcie_bus:
--	clk_disable_unprepare(imx6_pcie->pcie_phy);
--err_pcie_phy:
-+err_clks:
+ err_clks:
  	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
- 		ret = regulator_disable(imx6_pcie->vpcie);
- 		if (ret)
+@@ -794,6 +794,7 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 			dev_err(dev, "failed to disable vpcie regulator: %d\n",
+ 				ret);
+ 	}
++	return err;
+ }
+ 
+ static int imx6_pcie_wait_for_speed_change(struct imx6_pcie *imx6_pcie)
+@@ -912,11 +913,18 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+ static int imx6_pcie_host_init(struct pcie_port *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct device *dev = pci->dev;
+ 	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
++	int ret;
+ 
+ 	imx6_pcie_assert_core_reset(imx6_pcie);
+ 	imx6_pcie_init_phy(imx6_pcie);
+-	imx6_pcie_deassert_core_reset(imx6_pcie);
++	ret = imx6_pcie_deassert_core_reset(imx6_pcie);
++	if (ret < 0) {
++		dev_err(dev, "pcie host init failed: %d\n", ret);
++		return ret;
++	}
++
+ 	imx6_setup_phy_mpll(imx6_pcie);
+ 
+ 	return 0;
 -- 
 2.25.1
 
