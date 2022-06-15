@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEB4454D514
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 01:22:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82F7554D522
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 01:22:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349199AbiFOXQR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jun 2022 19:16:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58460 "EHLO
+        id S1347635AbiFOXQT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jun 2022 19:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347762AbiFOXQM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 19:16:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D5F31233;
-        Wed, 15 Jun 2022 16:16:10 -0700 (PDT)
+        with ESMTP id S1349654AbiFOXQR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 19:16:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB97A3136C;
+        Wed, 15 Jun 2022 16:16:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E3226199C;
-        Wed, 15 Jun 2022 23:16:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A8D7C3411A;
-        Wed, 15 Jun 2022 23:16:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 760246190B;
+        Wed, 15 Jun 2022 23:16:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E0AC3411A;
+        Wed, 15 Jun 2022 23:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655334969;
-        bh=QSnSKTKUmF2B69IgvFcJoWsIu/H9OSZZxzlv5+9t/Ac=;
+        s=k20201202; t=1655334971;
+        bh=eFQjAab+ad8vZ+YVNE/szknbioi8lzh0HBYCCA+n+MQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mFvW9oy5uGDTNxc8Mxa69AjgF2aWqTk4HwGP0VCaXl2y4M5c0GrRC9JNn4AwckaV5
-         +gu5JHmto/XruJWv7Xw+H2dN7Civ3L4yNEbx7gVqg9DohhBDdJuu9xTRE8ZFzwE69T
-         lSNKgZtqOjs/L5Le1xPr9t3vxgJ/3DfJwWZSpKXRw2hrYylXSvpcmZSJCb3ykaj6AK
-         nvVBGhSUjhvfK9Y+KvkRYcLN2RoJB8U1fNY38ESLVOPCmf6ANwY59eOOQ41YKV3N3P
-         2S7Bc5co+nXLRzCL8H4B/1Zv2yqmc9jdLDmBdQxOw6FOfenDL9mkjFNWVctIdvTMJ4
-         OAk2OOV7wei2A==
+        b=DiYi/LaHDcGi7iKc941YCZijL3AJfjUWjuqfGTIOi6S0pKzWdZAiXhIaTcM/4XuBw
+         +68hcUMQd+l8ctW4zMr9Jl65WpaxmPg/zKz94zfkjb0nvI2NlB0oCPENZMkCBQIiY+
+         HU4j0e+Z28flV1s3Flb2v8ZrynYGz8grY0Qj1VC3kAC4nNc/wIIzSeccJSdJ2dWsA2
+         /NickpoVO9ccttLYAMrYxFvs5UiTb3ZiTunEGrgqxeHYqm05GOU/kNYDSYoCeABnM3
+         xz2qeSXFC3kUVQ0M9d4yB4L3BIwSs5LCgNNG7DP8bcV9vUEbbVj8j1UcWC4zD+d0K+
+         9NEBgxB7AL22A==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
@@ -42,9 +42,9 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>,
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v12 03/13] PCI: imx6: Move imx6_pcie_enable_ref_clk() earlier
-Date:   Wed, 15 Jun 2022 18:15:41 -0500
-Message-Id: <20220615231551.1054753-4-helgaas@kernel.org>
+Subject: [PATCH v12 04/13] PCI: imx6: Move imx6_pcie_clk_disable() earlier
+Date:   Wed, 15 Jun 2022 18:15:42 -0500
+Message-Id: <20220615231551.1054753-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220615231551.1054753-1-helgaas@kernel.org>
 References: <20220615231551.1054753-1-helgaas@kernel.org>
@@ -60,131 +60,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Richard Zhu <hongxing.zhu@nxp.com>
 
-Move imx6_pcie_enable_ref_clk() earlier so it's not in the middle between
-imx6_pcie_assert_core_reset() and imx6_pcie_deassert_core_reset().  No
-functional change intended.
+Move imx6_pcie_clk_disable() earlier to be near other clock-related
+functions.  No functional change intended.
 
+[bhelgaas: reorder patch so pure moves are earlier]
+Link: https://lore.kernel.org/r/1655189942-12678-4-git-send-email-hongxing.z
+hu@nxp.com
+Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 96 +++++++++++++--------------
- 1 file changed, 48 insertions(+), 48 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 48 +++++++++++++--------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index e63eb6380020..a6d2b907d42b 100644
+index a6d2b907d42b..38f208eea2d7 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -520,54 +520,6 @@ static int imx6_pcie_attach_pd(struct device *dev)
- 	return 0;
- }
- 
--static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
--{
--	struct device *dev = imx6_pcie->pci->dev;
--
--	switch (imx6_pcie->drvdata->variant) {
--	case IMX7D:
--	case IMX8MQ:
--		reset_control_assert(imx6_pcie->pciephy_reset);
--		fallthrough;
--	case IMX8MM:
--		reset_control_assert(imx6_pcie->apps_reset);
--		break;
--	case IMX6SX:
--		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
--				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
--				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN);
--		/* Force PCIe PHY reset */
--		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR5,
--				   IMX6SX_GPR5_PCIE_BTNRST_RESET,
--				   IMX6SX_GPR5_PCIE_BTNRST_RESET);
--		break;
--	case IMX6QP:
--		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
--				   IMX6Q_GPR1_PCIE_SW_RST,
--				   IMX6Q_GPR1_PCIE_SW_RST);
--		break;
--	case IMX6Q:
--		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
--				   IMX6Q_GPR1_PCIE_TEST_PD, 1 << 18);
--		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
--				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
--		break;
--	}
--
--	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
--		int ret = regulator_disable(imx6_pcie->vpcie);
--
--		if (ret)
--			dev_err(dev, "failed to disable vpcie regulator: %d\n",
--				ret);
--	}
--
--	/* Some boards don't have PCIe reset GPIO. */
--	if (gpio_is_valid(imx6_pcie->reset_gpio))
--		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
--					imx6_pcie->gpio_active_high);
--}
--
- static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- {
- 	struct dw_pcie *pci = imx6_pcie->pci;
-@@ -628,6 +580,54 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+@@ -580,6 +580,30 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
  	return ret;
  }
  
-+static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
++static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
 +{
-+	struct device *dev = imx6_pcie->pci->dev;
++	clk_disable_unprepare(imx6_pcie->pcie);
++	clk_disable_unprepare(imx6_pcie->pcie_phy);
++	clk_disable_unprepare(imx6_pcie->pcie_bus);
 +
 +	switch (imx6_pcie->drvdata->variant) {
-+	case IMX7D:
-+	case IMX8MQ:
-+		reset_control_assert(imx6_pcie->pciephy_reset);
-+		fallthrough;
-+	case IMX8MM:
-+		reset_control_assert(imx6_pcie->apps_reset);
-+		break;
 +	case IMX6SX:
++		clk_disable_unprepare(imx6_pcie->pcie_inbound_axi);
++		break;
++	case IMX7D:
 +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-+				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
-+				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN);
-+		/* Force PCIe PHY reset */
-+		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR5,
-+				   IMX6SX_GPR5_PCIE_BTNRST_RESET,
-+				   IMX6SX_GPR5_PCIE_BTNRST_RESET);
++				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
++				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
 +		break;
-+	case IMX6QP:
-+		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-+				   IMX6Q_GPR1_PCIE_SW_RST,
-+				   IMX6Q_GPR1_PCIE_SW_RST);
++	case IMX8MQ:
++	case IMX8MM:
++		clk_disable_unprepare(imx6_pcie->pcie_aux);
 +		break;
-+	case IMX6Q:
-+		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-+				   IMX6Q_GPR1_PCIE_TEST_PD, 1 << 18);
-+		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-+				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
++	default:
 +		break;
 +	}
-+
-+	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
-+		int ret = regulator_disable(imx6_pcie->vpcie);
-+
-+		if (ret)
-+			dev_err(dev, "failed to disable vpcie regulator: %d\n",
-+				ret);
-+	}
-+
-+	/* Some boards don't have PCIe reset GPIO. */
-+	if (gpio_is_valid(imx6_pcie->reset_gpio))
-+		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-+					imx6_pcie->gpio_active_high);
 +}
 +
- static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
  {
- 	struct dw_pcie *pci = imx6_pcie->pci;
+ 	struct device *dev = imx6_pcie->pci->dev;
+@@ -941,30 +965,6 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
+ 	usleep_range(1000, 10000);
+ }
+ 
+-static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
+-{
+-	clk_disable_unprepare(imx6_pcie->pcie);
+-	clk_disable_unprepare(imx6_pcie->pcie_phy);
+-	clk_disable_unprepare(imx6_pcie->pcie_bus);
+-
+-	switch (imx6_pcie->drvdata->variant) {
+-	case IMX6SX:
+-		clk_disable_unprepare(imx6_pcie->pcie_inbound_axi);
+-		break;
+-	case IMX7D:
+-		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
+-				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
+-		break;
+-	case IMX8MQ:
+-	case IMX8MM:
+-		clk_disable_unprepare(imx6_pcie->pcie_aux);
+-		break;
+-	default:
+-		break;
+-	}
+-}
+-
+ static int imx6_pcie_suspend_noirq(struct device *dev)
+ {
+ 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
 -- 
 2.25.1
 
