@@ -2,305 +2,244 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D82554CD61
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jun 2022 17:49:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F4E754CDEC
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jun 2022 18:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237546AbiFOPth (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jun 2022 11:49:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44048 "EHLO
+        id S1348719AbiFOQMx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jun 2022 12:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbiFOPth (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 11:49:37 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2082.outbound.protection.outlook.com [40.107.95.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D67DB15FD1
-        for <linux-pci@vger.kernel.org>; Wed, 15 Jun 2022 08:49:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eBraDpLViFvAc/j5lMq4N8p5J0NsCYQ5t+kHngvUEWKtR28XLrPJGENLsiEcBn/DcuhQD1/gwd9Xw1r/4ysUQuRX2qo3K5oZ9qQoSDOZxtXXI+MaN7EjPICKg6nosPfucewLa8HpWYDqCzDr0ngv0uSAyuhKv7CqKAy4kt+3/J8KByxLDJQU+wUV+lyNCFoXxaRxCoOc90+1DDyx6WvdoY6sbI+hUah/B75x7KHO0sgCkkZprkFa0YWWA/3A22+YNvD3GKa2Fpl5SHPcglPgq+CAOCE4uhQZ5dpY4p2VaBuTv0AwMO536GCccAx/zjocoLUQXF8+RemsWzI4fm5Akg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dn76CCBPTvGXCuCszyodE9omSjkTpfLTXsBkCncpp2I=;
- b=BRZckVqnBYozTa0iuGy33e2HgzBIrgqZ2p6DoyeqoH/rtRe3zpVfmtzfCfnn2Xfqfx8BL1sMtF2acbqiw8vZonox6h+oFOy2jKMp05I//77hEDKN3onwaQBRRZni2Jb3Jrhe8Hb+3njswfYFJ7ZXWeqy7vcQH3G1x0W78gRYpBUBw65xoh5cGblobMqq/sFpniK8liOdBDODpDWYaoaTfl85fu7/vwR7br0X3jXzV6vZj1vJa+NTtbk+FgIDrd7XdgSIG9vIsVXIQDb+9TKojETT8Yv6powaUmOo4zIT2sMKC7rRE1zc6TXyZz9CF9cx2vWd/Ph9v/R2NaJvmMf9ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dn76CCBPTvGXCuCszyodE9omSjkTpfLTXsBkCncpp2I=;
- b=n26zXwk9uoWMDwGwwFC/QpHkQuP/tL4nPSFV+94xzsjjA7xb0t7E6vfK0+atXPZjc+cnXUS6vDUI/A3uQn/h9mEsVTm9D4lI/euMnc1gRIEWHHNYxUCnb43nHFgWkNeABuZSYIc//yOe5v/Pebj+251Z89C+8wqqMWzLRF453Nw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1947.namprd12.prod.outlook.com (2603:10b6:3:111::23)
- by MN2PR12MB4189.namprd12.prod.outlook.com (2603:10b6:208:1d8::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.14; Wed, 15 Jun
- 2022 15:49:33 +0000
-Received: from DM5PR12MB1947.namprd12.prod.outlook.com
- ([fe80::9da9:705a:18ae:5e91]) by DM5PR12MB1947.namprd12.prod.outlook.com
- ([fe80::9da9:705a:18ae:5e91%9]) with mapi id 15.20.5332.022; Wed, 15 Jun 2022
- 15:49:33 +0000
-Message-ID: <46fe8c3d-d3a7-a7e0-cb8d-e7b4f18ad0c0@amd.com>
-Date:   Wed, 15 Jun 2022 11:49:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: Question about deadlock between AER and pceihp interrupts during
- resume from S3 with unplugged device
-Content-Language: en-US
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "anatoli.antonovitch@amd.com" <anatoli.antonovitch@amd.com>,
-        "Kumar1, Rahul" <Rahul.Kumar1@amd.com>,
-        "Alexander.Deucher@amd.com" <Alexander.Deucher@amd.com>
-References: <0fc31d9a-f414-a412-3765-5519cbb9b7ff@amd.com>
- <20220210062308.GB929@wunner.de>
- <f3645499-f9ce-4625-60c7-a4a75384870f@amd.com>
- <952f49bc-81f9-68d3-89a7-b89ea173f6df@amd.com>
- <830edffd-edb9-e07a-a87d-21a6f52577e3@amd.com>
- <e38acd32-48f0-8872-8637-856ac0033ce2@linux.intel.com>
- <0754f511-fba7-7ee4-22ac-8457ba71c889@amd.com>
- <65242da6-9917-4307-90fe-4bb4d35c2f1c@linux.intel.com>
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-In-Reply-To: <65242da6-9917-4307-90fe-4bb4d35c2f1c@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YT1PR01CA0049.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2e::18) To DM5PR12MB1947.namprd12.prod.outlook.com
- (2603:10b6:3:111::23)
+        with ESMTP id S236307AbiFOQMw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 12:12:52 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B2521268;
+        Wed, 15 Jun 2022 09:12:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=/V+gZoV8pa64RyycdnrAu6um2lziyupjf8y+KKTdgKM=; b=cfjokioABlazhih4iA9XipxnHE
+        iwg+BS5/1/fJ3k9AWIPvCh6bAQRpTKMo3NE4A/lmFS5vFmyURrazVbye6G+TmxhzRhgKqIzp1U08o
+        RchrvPdPNe9jbbnElipX5QofwE4pqMHfVmVmOyhccRu74uUh4VAJVXknCwZ12K7pHOtGt/qcvolpv
+        nr2MVI9On5dczSTzxc9w1zqCg/vTOr8kN6NVwxAxVtxwp6NzDVM2113+Dc0W9KPnQuIqnM5SJTRpW
+        ++gRhRyCus9ZOqae+RR391dFlc2XkL2RQ/c9rY5DR7q0KRbzkTI9BiG87QE3iP6qC3l8ckdXAYQxK
+        H2QK7edw==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1o1VdN-0084iP-L1; Wed, 15 Jun 2022 10:12:47 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1o1VdG-0004Zp-NQ; Wed, 15 Jun 2022 10:12:38 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed, 15 Jun 2022 10:12:12 -0600
+Message-Id: <20220615161233.17527-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: da1ccb1a-0a49-451e-0519-08da4ee6a47c
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4189:EE_
-X-Microsoft-Antispam-PRVS: <MN2PR12MB41897F21805602D876ACB162EAAD9@MN2PR12MB4189.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: U4stieAEmDXTu4zMT6I/6UmPITsspWqtvw/B/zylx0hgMaVLs1rMs2Kneg02hKESjNoEvRNAGmzi6EHi4I9aq99J19lkTofN8ZqXHzCzNjm4bnwFBMvhrQnIvrz4FTN1CZn7JRzHkkJzHvPsDdGLfLHOFyI1tycR3rRb4g4Tt4bTPFeKHzxCdCXxyOCnTDumLgowKeMR6SJU0Ht60nk0F4xEx1e4+R7PkAWQF5rO3VfcEPsMGf/VO3Gc2reF5O3CGZzmgpX/Axg1emaOS1nNghj/DhomsrPZy+TFSVOHdV1WYaxxoJ/qow61KDdsa8iWRMMMw11FV/grh8se/LUGmjED0oA4tES4p+Yyf6HA8PA/Un9Pfoc9wL87RCZOjLfV3ELOf5q7TVt9g4F/ra9QPvi3lKwly80Hzz6V96n7FL1QHh+oNfUw7/eDC7iSpncDzPAYJcOJoZn9wSWOuQ22y+xqViOwYA986yaSkAD/QAzHzy9c/mQXcl62P37L02lz+07iVZXCDM3KBvwuoaCwT4ApnMyuIDKBNrfqRg1Wb13+lOH29uaGga4/3mdRCvU1SJBXOJzlRJ9pmhkNwjxGcwqEVlvxo8Hn+mweBIsixw+HgnlH9MK2koopopqlNbl6bVJZtgyrFqcz91azQky8m2WkflDNZjkmaidsSnOkbf+h32TANrRMQNqiHlH4q7+FDZu3VesyCdRRT9oTLsz3c4/njTIvJm1WwEm63a3er2a5qWdzZmHTEblRpMxfilwDxAOG0Qj6NnBfwQYdly0TfvU/qg29B99mHu5C0Cmgi5A7SM98cj0xFKUUMjkyzcGkKFj098DObYGFqEjj0G9qyKaBLTuOG668oQP5ZKyRac0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1947.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(2906002)(66476007)(66556008)(508600001)(2616005)(66946007)(36756003)(4326008)(8676002)(31686004)(186003)(110136005)(54906003)(83380400001)(316002)(6512007)(31696002)(53546011)(38100700002)(966005)(44832011)(6486002)(8936002)(5660300002)(86362001)(6506007)(45080400002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MmRJbmxxbWRtMVNpWVphT1Z3N0EyMXRhLzBpOEVYaEVSTTF1ZG84eWRGelQr?=
- =?utf-8?B?ZHlWUkFOL0xiQlVoaWlvZHBnZE5TWExSZ3lhL3VJSmxkUW1YOUFoeFE0MXEx?=
- =?utf-8?B?MFF1K0c3aG5TQXd5eTBQQ2QyRit4SUQzdDAvc0xPU3Nvd1ZnRWlHZGhwU3dw?=
- =?utf-8?B?NkRENGFFWDdhRFhzSXhJa1NuWG9wWTE0amM4dGxVUzhidnYxekh0RllaYld2?=
- =?utf-8?B?VHF3cDZWRGttdHdBMWdoYnloS1prMlplVldibTlyVXRTc1dHRXBSNmV4a1Bk?=
- =?utf-8?B?dmZkc1NDbWZkTklkTXRGdWdSTTlyY3FtZFVBSUd1Y2lxN3JIcTZNcXlkTnQr?=
- =?utf-8?B?Uy9RSm5YQS9XSnlUV1cydVNSaVR1am43YmE5aW5xa0tHOTZDYzVNTnhDQklT?=
- =?utf-8?B?OG5TYTVBWU8rRzFlcGw4UjRWNW8yR2pBTXpnc1JtVmM1emIySmY5aVhrRDBS?=
- =?utf-8?B?dFcwY3lvUW9rNkpITlZ4YjdLaGxlQUZadjdxU2N4Vzd1ckRiTWR1Y1l0S09r?=
- =?utf-8?B?WjY1Uk9CVjB0Q1kxbloraWw0ekNRY1dMWjBYaGtuOFpKTS9GRUJoeXJDNW5z?=
- =?utf-8?B?dUVNdjBhRjM5YXFRL3hjdnMyZ3pRem1CUEszRmg1SkdxVjdFSXU0MzB0R1hV?=
- =?utf-8?B?NUtrN3UyT1R1K0t3TlVkUE8wbTQ3MjdLazBlbTJiVERWL0w2VjRqeFlMSmg0?=
- =?utf-8?B?aCtTYjZHNHVSb25EU2FyN0R0dEx3UjZMM1pybzliZGwzSG5TUWhsWUJNVW11?=
- =?utf-8?B?QTZlbmxSdUV5SUVWdXVkbGFqR2c5OFJUSUhpaE1jeW1FajBLSkdzUmp5UjYz?=
- =?utf-8?B?MHlpaDFNVWlxcWlveUdvN3BvblEybWZTNmlITUliQzZuRnhsbHQ2SHdHK1NI?=
- =?utf-8?B?ZVAwZ1kyVm5PU01PTFlqZ2lKbEdBZU9tTXpuQUNkU3JFeTVpUytXN0JGTnh1?=
- =?utf-8?B?Z2ZUWXRyV2s5QllRa3graFdEU21Qb21aNjNERmpVMS9mTys3Wk5IU0VnVXhQ?=
- =?utf-8?B?SnRKbTJud2pXUGx4QkF6RVpQTU1QVjNGSnB1bzlsRm5xdVlVZW5NQ1hDRTlX?=
- =?utf-8?B?akkrRm8xSE5oTFZmaCtOa2kzNldNMEozdDYwWHNhV20wdUZuQzRjMTFiOFR1?=
- =?utf-8?B?US9WY2FYY0xNZjBTUGpBVWtpNm5adWVFWFNjTkRxWXlUWTFOczFJZmR1ZDFC?=
- =?utf-8?B?ZGI0amttR3d2OHpKUWxoNVB6dFl1NTQxU3JkelY5ZTNIbUVjdTRtSWhxTXhL?=
- =?utf-8?B?aXpHS0xpTlZCY3lKK1Z0bkRzWWpDUG9PVkg0Ny84QU5GdUxZZ1huSHJuTEd5?=
- =?utf-8?B?MzVwR3hrdFNCVDBHV0NJUlJVVGtuc1FtVC92cUFlNjhkazZ1UXY0dHVpODQ0?=
- =?utf-8?B?VTZNYjBNSU1MWDMvWUxIbGJiYUxWMGJ1T29yZ0tHVkVicU8zS2llT3JKYnRp?=
- =?utf-8?B?cEpFV3Q1aXRVT2E1VjNXWFFNT05lOEpNMGM2VnZqck5Mb2dDaHFrMUtJdlBP?=
- =?utf-8?B?bjdnSVVwS01BL3dEWGM0amdGZG5JdGJOd1lIQ0tid3JxbnFRVXp0TjM2QW1p?=
- =?utf-8?B?U0JTbG1WU05RY1BRbGRSZWg1c1grSmhialRqMDFueU9oQWI1T0N2cHllRzBZ?=
- =?utf-8?B?ZlR5TUIvTnhNUU82NkIzdjd6dVVDSVozd090eWNCc0R0ZUxuczhiRlk0Wm4r?=
- =?utf-8?B?WFhDRW5UZHIzc3RDdE16YjlFTTJsV1MzRnhaWG56V3RSdEtQc2lqSmZFd0xp?=
- =?utf-8?B?UFMvSTZQWllOZ0JCUDM3SFZTU0Faa0FpYlJ0d2FJUnRJc1dxQ3c0R1FmSTJV?=
- =?utf-8?B?VjFRMlk4WnorL2ZsTXp6eWN6dmJYRjBpN2hTeGNKelRaUlVzZzNPQlNvaVo2?=
- =?utf-8?B?Vkl5TGJYME83bTh3NU1HTTVJNXAvRU5ubVY5R1N4WHBoUGY1TWRHOXVObTd6?=
- =?utf-8?B?MmFRanVzcFRJdFhKZTlLSUdpNys4Y0p4WEdmS3B5QkI5dTVLeHZIa21Jb3ow?=
- =?utf-8?B?VFhFazQvRFFxT3FGbHJneHVJU0doSzJxTnE0M2w2RzFpbHpKNVNZNTNCS281?=
- =?utf-8?B?UHN0SWphNWg5Z3AwMWZVTHdWM0Z6SFo4Q3lHYXhYNkRNUDRMMUt3NWkvMUNr?=
- =?utf-8?B?c0VLS01ZbkZkaWs4eWJ1ZkhnaGRBR29FYXVhSFJXb2w4R1pHYlNEb2pDUlBv?=
- =?utf-8?B?KzBKbFozTThPWXJQdjFJQmJ3V2diYkppeStEd3g5dk9HYkNGTHdJN0IvelZx?=
- =?utf-8?B?KzNaRW91SGUzREtCZUJOYVNZWDkxTkxRWG9VT1g0Q09XUy9MNWE3YXF6ZkFn?=
- =?utf-8?B?azh6MXJaNjdyTEV1N3h5cE1hYzFkZlEyYzdBeWlCMzZNMUlJSExrcVpsd3h6?=
- =?utf-8?Q?HYe+SO/gReHOoxmqr4gktTi/ulnu1D2U5+w2bOhhqS27U?=
-X-MS-Exchange-AntiSpam-MessageData-1: 25cDnveE3J5orQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da1ccb1a-0a49-451e-0519-08da4ee6a47c
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1947.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2022 15:49:33.6944
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rCHMrWq6z1LVPi2E8qx0VT422hqdprRcPBMPMN8TmsWTFCvY3Xc+TCo/6yho4x6UC0NJM668N4Hbnm+LC5pP6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4189
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, jhubbard@nvidia.com, rcampbell@nvidia.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH v7 00/21]  Userspace P2PDMA with O_DIRECT NVMe devices
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
+
+This patchset continues my work to add userspace P2PDMA access using
+O_DIRECT NVMe devices. This posting cleans up the way the pages are
+stored in the VMA and relies on proper reference counting that was
+fixed up recently in the kernel. The new method uses vm_insert_page()
+in pci_mmap_p2pmem() so there are no longer an faults or other ops and
+the pages are just freed sensibly when the VMA is removed. This simplifies
+the VMA code significantly.
+
+The previous posting was here[1].
+
+This patch set enables userspace P2PDMA by allowing userspace to mmap()
+allocated chunks of the CMB. The resulting VMA can be passed only
+to O_DIRECT IO on NVMe backed files or block devices. A flag is added
+to GUP() in Patch 14, then Patches 15 through 19 wire this flag up based
+on whether the block queue indicates P2PDMA support. Patches 20
+through 21 enable the CMB to be mapped into userspace by mmaping
+the nvme char device.
+
+This is relatively straightforward, however the one significant
+problem is that, presently, pci_p2pdma_map_sg() requires a homogeneous
+SGL with all P2PDMA pages or all regular pages. Enhancing GUP to
+support enforcing this rule would require a huge hack that I don't
+expect would be all that pallatable. So the first 13 patches add
+support for P2PDMA pages to dma_map_sg[table]() to the dma-direct
+and dma-iommu implementations. Thus, systems without an IOMMU plus
+Intel and AMD IOMMUs are supported. (Other IOMMU implementations would
+then be unsupported, notably ARM and PowerPC but support would be added
+when they convert to dma-iommu).
+
+dma_map_sgtable() is preferred when dealing with P2PDMA memory as it
+will return -EREMOTEIO when the DMA device cannot map specific P2PDMA
+pages based on the existing rules in calc_map_type_and_dist().
+
+The other issue is dma_unmap_sg() needs a flag to determine whether a
+given dma_addr_t was mapped regularly or as a PCI bus address. To allow
+this, a third flag is added to the page_link field in struct
+scatterlist. This effectively means support for P2PDMA will now depend
+on CONFIG_64BIT.
+
+Feedback welcome.
+
+This series is based on v5.19-rc1. A git branch is available here:
+
+  https://github.com/sbates130272/linux-p2pmem/  p2pdma_user_cmb_v7
+
+Thanks,
+
+Logan
+
+[1] https://lkml.kernel.org/r/20220407154717.7695-1-logang@deltatee.com
+
+--
+
+Changes since v6:
+  - Rebase onto v5.19-rc1
+  - Rework how the pages are stored in the VMA per Jason's suggestion
+
+Changes since v5:
+  - Rebased onto v5.18-rc1 which includes Christophs cleanup to
+    free_zone_device_page() (similar to Ralph's patch).
+  - Fix bug with concurrent first calls to pci_p2pdma_vma_fault()
+    that caused a double allocation and lost p2p memory. Noticed
+    by Andrew Maier.
+  - Collected a Reviewed-by tag from Chaitanya.
+  - Numerous minor fixes to commit messages
+
+Changes since v4:
+  - Rebase onto v5.17-rc1.
+  - Included Ralph Cambell's patches which removes the ZONE_DEVICE page
+    reference count offset. This is just to demonstrate that this
+    series is compatible with that direction.
+  - Added a comment in pci_p2pdma_map_sg_attrs(), per Chaitanya and
+    included his Reviewed-by tags.
+  - Patch 1 in the last series which cleaned up scatterlist.h
+    has been upstreamed.
+  - Dropped NEED_SG_DMA_BUS_ADDR_FLAG seeing depends on doesn't
+    work with selected symbols, per Christoph.
+  - Switched iov_iter_get_pages_[alloc_]flags to be exported with
+    EXPORT_SYMBOL_GPL, per Christoph.
+  - Renamed zone_device_pages_are_mergeable() to
+    zone_device_pages_have_same_pgmap(), per Christoph.
+  - Renamed .mmap_file_open operation in nvme_ctrl_ops to
+    cdev_file_open(), per Christoph.
+
+Changes since v3:
+  - Add some comment and commit message cleanups I had missed for v3,
+    also moved the prototypes for some of the p2pdma helpers to
+    dma-map-ops.h (which I missed in v3 and was suggested in v2).
+  - Add separate cleanup patch for scatterlist.h and change the macros
+    to functions. (Suggested by Chaitanya and Jason, respectively)
+  - Rename sg_dma_mark_pci_p2pdma() and sg_is_dma_pci_p2pdma() to
+    sg_dma_mark_bus_address() and sg_is_dma_bus_address() which
+    is a more generic name (As requested by Jason)
+  - Fixes to some comments and commit messages as suggested by Bjorn
+    and Jason.
+  - Ensure swiotlb is not used with P2PDMA pages. (Per Jason)
+  - The sgtable coversion in RDMA was split out and sent upstream
+    separately, the new patch is only the removal. (Per Jason)
+  - Moved the FOLL_PCI_P2PDMA check outside of get_dev_pagemap() as
+    Jason suggested this will be removed in the near term.
+  - Add two patches to ensure that zone device pages with different
+    pgmaps are never merged in the block layer or
+    sg_alloc_append_table_from_pages() (Per Jason)
+  - Ensure synchronize_rcu() or call_rcu() is used before returning
+    pages to the genalloc. (Jason pointed out that pages are not
+    gauranteed to be unused in all architectures until at least
+    after an RCU grace period, and that synchronize_rcu() was likely
+    too slow to use in the vma close operation.
+  - Collected Acks and Reviews by Bjorn, Jason and Max.
+
+--
+
+Logan Gunthorpe (21):
+  lib/scatterlist: add flag for indicating P2PDMA segments in an SGL
+  PCI/P2PDMA: Attempt to set map_type if it has not been set
+  PCI/P2PDMA: Expose pci_p2pdma_map_type()
+  PCI/P2PDMA: Introduce helpers for dma_map_sg implementations
+  dma-mapping: allow EREMOTEIO return code for P2PDMA transfers
+  dma-direct: support PCI P2PDMA pages in dma-direct map_sg
+  dma-mapping: add flags to dma_map_ops to indicate PCI P2PDMA support
+  iommu/dma: support PCI P2PDMA pages in dma-iommu map_sg
+  nvme-pci: check DMA ops when indicating support for PCI P2PDMA
+  nvme-pci: convert to using dma_map_sgtable()
+  RDMA/core: introduce ib_dma_pci_p2p_dma_supported()
+  RDMA/rw: drop pci_p2pdma_[un]map_sg()
+  PCI/P2PDMA: Remove pci_p2pdma_[un]map_sg()
+  mm: introduce FOLL_PCI_P2PDMA to gate getting PCI P2PDMA pages
+  iov_iter: introduce iov_iter_get_pages_[alloc_]flags()
+  block: add check when merging zone device pages
+  lib/scatterlist: add check when merging zone device pages
+  block: set FOLL_PCI_P2PDMA in __bio_iov_iter_get_pages()
+  block: set FOLL_PCI_P2PDMA in bio_map_user_iov()
+  PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+  nvme-pci: allow mmaping the CMB in userspace
+
+ block/bio.c                  |  10 +-
+ block/blk-map.c              |   7 +-
+ drivers/infiniband/core/rw.c |  45 +----
+ drivers/iommu/dma-iommu.c    |  68 ++++++-
+ drivers/nvme/host/core.c     |  38 +++-
+ drivers/nvme/host/nvme.h     |   5 +-
+ drivers/nvme/host/pci.c      | 103 ++++++-----
+ drivers/nvme/target/rdma.c   |   2 +-
+ drivers/pci/Kconfig          |   5 +
+ drivers/pci/p2pdma.c         | 337 ++++++++++++++++++++++++++++-------
+ include/linux/dma-map-ops.h  |  76 ++++++++
+ include/linux/dma-mapping.h  |   5 +
+ include/linux/mm.h           |  24 +++
+ include/linux/pci-p2pdma.h   |  43 ++---
+ include/linux/scatterlist.h  |  44 ++++-
+ include/linux/uio.h          |   6 +
+ include/rdma/ib_verbs.h      |  11 ++
+ include/uapi/linux/magic.h   |   1 +
+ kernel/dma/direct.c          |  43 ++++-
+ kernel/dma/direct.h          |   8 +-
+ kernel/dma/mapping.c         |  22 ++-
+ lib/iov_iter.c               |  25 ++-
+ lib/scatterlist.c            |  25 +--
+ mm/gup.c                     |  22 ++-
+ 24 files changed, 765 insertions(+), 210 deletions(-)
 
 
-On 2022-06-15 11:14, Sathyanarayanan Kuppuswamy wrote:
-> 
-> 
-> On 6/14/22 1:35 PM, Andrey Grodzovsky wrote:
->>
->>
->> On 2022-06-14 14:22, Sathyanarayanan Kuppuswamy wrote:
->>> Hi,
->>>
->>> On 6/14/22 11:07 AM, Andrey Grodzovsky wrote:
->>>> Just a gentle ping, also - I updated the ticket https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215590&amp;data=05%7C01%7Candrey.grodzovsky%40amd.com%7C407a04694abb44cad1a908da4ee1c371%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637909028798586221%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=yJ3FgPSbH52kEMmoMjcgmU0apo9LZYtWwe%2B%2Bn%2F4J30U%3D&amp;reserved=0
->>>>
->>>> with the workaround we did if this could help you to advise us
->>>> what would be a generic solution for this ?
->>>>
->>>> Andrey
->>> Can you explain your WA? It seems to be unrelated to deadlock issue
->>> discussed in this thread. Are they related?
->>
->> So from start - originally we have an extension PCI board which is hot plug-able into our system board. On top of this extension board we have
->> AMD dGPU card. Originally we observed hang on resume from sleep (S3) in
->> AER enabled system because of race between AER and pciehp on S3 resume and so this
->> was resolved by the patch https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flinux-pci%2F908047f7699d9de9ec2efd6b79aa752d73dab4b6.1595329748.git.lukas%40wunner.de%2FT%2F&amp;data=05%7C01%7Candrey.grodzovsky%40amd.com%7C407a04694abb44cad1a908da4ee1c371%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637909028798586221%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=JCzeDmJmByiqDeAZGYJUjgOW2VIAMybHZgg%2B0YzYd%2Fg%3D&amp;reserved=0
->>
-> 
-> There is patch to disable AER in suspend/resume path (from Kai-Heng Feng). Did
-> you check with this patch?
-
-Yes, this patcheset[1] had no impact on the problem and we only included
-the AB-BA Deadlock patch in our code by Lukas since it resolved the SW
-deadlock for us.
-
-[1] - 
-https://patchwork.kernel.org/project/linux-pci/patch/20220126071853.1940111-1-kai.heng.feng@canonical.com/
-
-
-> 
->> Now after this we are facing a second issue where after resume and after
->> AER driver recovery completed for pcieport the system won't detect a new
->> hotplug of the extention board into the system board. Anatoli looked
-> 
-> What about the hotplug events during this sequence? Did you get the
-> LINK DOWN/UP or Presence change events?
-
-I think we do get them - both in first time hot plug (step 2)
-bellow and in post S3 resume hot plug (step 5 bellow). It's just
-that it seems we get timeout for pcie_wait_for_link in step 5)
-
-Step 2) logs
-Feb 10 23:36:59 amd-BILBY kernel: [   28.729523] pcieport 0000:00:01.1: 
-pciehp: Slot(0): Card present
-Feb 10 23:36:59 amd-BILBY kernel: [   28.735552] pcieport 0000:00:01.1: 
-pciehp: Slot(0): Link Up
-
-Step 5) logs
-Feb 10 23:41:47 amd-BILBY kernel: [  302.759503] pcieport 0000:00:01.1: 
-pciehp: Slot(0): Card present
-Feb 10 23:41:49 amd-BILBY kernel: [  304.795473] pcieport 0000:00:01.1: 
-Data Link Layer Link Active not set in 1000 msec
-Feb 10 23:41:49 amd-BILBY kernel: [  304.803146] pcieport 0000:00:01.1: 
-pciehp: Failed to check link status
-
-
-
-
-
-But maybe you meant something else and if so maybe you can
-tell me what exactly you want me to look at ?
-
-
-Andrey
-
-> 
->> into it and found the workaround that I attached that made it work by
->> resetting secondary bus and updating link speed on the upstream bridge
->> after AER recovery complete (post S3 resume).  But this is just a
-> 
-> 
->> workaround and not a generic solution so we would like to get an advise for a generic fix for this problem.
->>
->> To reiterate the full scenario is like this
->>
->> 1) Boot system
->>
->> 2) Extension board is first time hotplugged and dGPU is added to PCI topology
->>
->> 3) System suspend S3
->>
->> 4)  WE have costum BIOS which 'shuts off' the extension board during sleep so on resume the system discovers that the extension board (and dGPU) are gone and hot removes it from PCI topology. Together with this hot remove AER errors are generated and handled.
->>
->> 5)We again try to hot plug though a script we have but the system won't
->> detect the new hot plug of the extension board.
->>
->> 5*) The given workaround patch fixes issue in bullet 5) and hot plug
->> is detected and system recognizes the extension board and add it and dGPU to PCI topology.
->>
->> Andrey
->>
->>>
->>>>
->>>> On 2022-06-10 17:25, Andrey Grodzovsky wrote:
->>>>>
->>>>>
->>>>> On 2022-02-10 09:39, Andrey Grodzovsky wrote:
->>>>>> Thanks a lot for quick response, we will give this a try.
->>>>>>
->>>>>> Andrey
->>>>>>
->>>>>> On 2022-02-10 01:23, Lukas Wunner wrote:
->>>>>>> On Wed, Feb 09, 2022 at 02:54:06PM -0500, Andrey Grodzovsky wrote:
->>>>>>>> Hi, on kernel based on 5.4.2 we are observing a deadlock between
->>>>>>>> reset_lock semaphore and device_lock (dev->mutex). The scenario
->>>>>>>> we do is putting the system to sleep, disconnecting the eGPU
->>>>>>>> from the PCIe bus (through a special SBIOS setting) or by simply
->>>>>>>> removing power to external PCIe cage and waking the
->>>>>>>> system up.
->>>>>>>>
->>>>>>>> I attached the log. Please advise if you have any idea how
->>>>>>>> to work around it ? Since the kernel is old, does anyone
->>>>>>>> have an idea if this issue is known and already solved in later kernels ?
->>>>>>>> We cannot try with latest since our kernel is custom for that platform.
->>>>>>>
->>>>>>> It is a known issue.  Here's a fix I submitted during the v5.9 cycle:
->>>>>>>
->>>>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flinux-pci%2F908047f7699d9de9ec2efd6b79aa752d73dab4b6.1595329748.git.lukas%40wunner.de%2F&amp;data=05%7C01%7Candrey.grodzovsky%40amd.com%7C407a04694abb44cad1a908da4ee1c371%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637909028798586221%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=LchNztBhnuGsXC7Shn9AFc%2BRBk%2Bp%2B6O6Vq%2Fj9AzXBxI%3D&amp;reserved=0
->>>>>>>
->>>>>>> The fix hasn't been applied yet.  I think I need to rework the patch,
->>>>>>> just haven't found the time.
->>>>>
->>>>> Hey Lucas - just checking again if you had a chance to push this change
->>>>> through ? It's essential to us in one of our costumer projects so we
->>>>> wonder if have any estimate when will it be up-streamed and if we can
->>>>> help with this. We would also need backporting this back to 5.11 and 5.4
->>>>> kernels after it's upstreamed.
->>>>>
->>>>> Another point I want to mention is that this patch has a negative
->>>>> side effect on plug back times - it causes a regression point for the delay to light-up display at resume time related to back-ported AER
->>>>>
->>>>> Anatoli is working on resolving this and so maybe he can add his
->>>>> comment here and maybe you can help him with proper resolution for this.
->>>>>
->>>>> Andrey
->>>>>
->>>>>>>
->>>>>>> Since the trigger in your case are AER-handled errors during a
->>>>>>> system sleep transition, you may also want to consider the
->>>>>>> following 2-patch series by Kai-Heng Feng which is currently
->>>>>>> under discussion:
->>>>>>>
->>>>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flinux-pci%2F20220127025418.1989642-1-kai.heng.feng%40canonical.com%2F&amp;data=05%7C01%7Candrey.grodzovsky%40amd.com%7C407a04694abb44cad1a908da4ee1c371%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637909028798586221%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=I%2FkE9XrIbeeWE%2F8IHXnD%2B3%2BhOnQ2TqgZqlpr9ViKiaI%3D&amp;reserved=0
->>>>>>>
->>>>>>> That series disables AER during a system sleep transition and
->>>>>>> should thus prevent the flood of AER-handled errors you're seeing.
->>>>>>> Once AER is disabled, the reset-induced deadlocks should go away as well.
->>>>>>>
->>>>>>> Thanks,
->>>>>>>
->>>>>>> Lukas
->>>
-> 
+base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
+--
+2.30.2
