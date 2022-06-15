@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9693254CD4F
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jun 2022 17:44:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28BEB54CD73
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jun 2022 17:50:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240120AbiFOPoc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jun 2022 11:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39526 "EHLO
+        id S242638AbiFOPuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jun 2022 11:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345540AbiFOPo1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 11:44:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148672A705;
-        Wed, 15 Jun 2022 08:44:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 10754617BA;
-        Wed, 15 Jun 2022 15:44:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1A8C34115;
-        Wed, 15 Jun 2022 15:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655307864;
-        bh=zn+/9NlXFFxNxik8PzMPhaZQNyZRXGyoUKmHeh3qoKU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jrgcQroKhGK+qJaprMi3K8vdIP0AeA+TaghGIMQewyWTRAUWd1j93uevWM/vnkIY6
-         GgRjk7et5CJt1/2LReby/gDaRzibvaObXc7hgTnZNCJN8SoVf1JkvJAQdumqW9jco8
-         O2rtia3ub56/BpqZVVU4PotvWBr2WgbI8sc9McxctKx1lL7LLIEQHGXPUXruUMb8Rn
-         //6Y1PCHX8Ig3UNJ47ycxELdbjx67QiTSZ61ZL9lBpyOVLXR/SuLKsv5q490RB2aNS
-         UrH7x6gM8LuArjItzGEd8YJRoh9JnwT2T5XCRCAi9hRFF7ufcCSE+q+YE6tZiHcyKX
-         LiD4UNogf+Mag==
-Date:   Wed, 15 Jun 2022 10:44:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v1] PCI: qcom: Allow L1 and its sub states on qcom dwc
- wrapper
-Message-ID: <20220615154422.GA941075@bhelgaas>
+        with ESMTP id S231737AbiFOPuY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 11:50:24 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD3A2ED5C
+        for <linux-pci@vger.kernel.org>; Wed, 15 Jun 2022 08:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655308224; x=1686844224;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IFafxVKuc0wyJbCjimFlVnJfhhnzUB2/eWXHrN7QCWM=;
+  b=YGom7opLxHG0Vzcyu4/7B80m9JBkNZHOu96kOS54zSih3u1CbdrhkDDg
+   AB/NZhJsZy+/j+/qyRWK0fE+u46B95+YRUP9gSiPV2xjXnezt6LyIZBv9
+   xuaLgGuwMIHaspcbE2lmNBE61WvLd4ohMDB4nHu+J77SElmaaC1upafIN
+   0FBFPQ6MB/vF7saiHdpUNROGxaz4kqFtK5slh0ax86ve+ngFw12v8xX/J
+   kDKXG8YR8M75wERj7sQmlaQcuUzpo5uU+h1t8ovzw2VaM78x1zw77sC8n
+   Dy8aZml2z8cALSO+QWfgRtfaNGunMX2QddqzB5iLJr05sWuYnxwKN4xAZ
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="277801527"
+X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
+   d="scan'208";a="277801527"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 08:50:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
+   d="scan'208";a="831114924"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Jun 2022 08:50:21 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o1VHh-000Myr-0S;
+        Wed, 15 Jun 2022 15:50:21 +0000
+Date:   Wed, 15 Jun 2022 23:49:21 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ 8c1abc7f0381354511d1a36fbf9b5c9e7d0c5b79
+Message-ID: <62a9ff81.CR3gVFkBqI+6eCmI%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e92745e-6fa4-a3bd-d0cb-5c1f78efbead@quicinc.com>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,37 +62,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 15, 2022 at 06:44:19PM +0530, Krishna Chaitanya Chundru wrote:
-> On 6/9/2022 3:47 AM, Stephen Boyd wrote:
-> > Quoting Krishna chaitanya chundru (2022-06-03 00:18:50)
-> > > Allow L1 and its sub-states in the qcom dwc pcie wrapper.
-> > > By default its disabled. So enable it explicitly.
-> > > 
-> > Would be good to add some more details about why it's disabled by
-> > default. I guess it's disabled by default in the hardware and enabling
-> > it is OK to do unconditionally for all qcom dwc pcie devices?
-> 
-> This is disabled by default in the hardware. We can enable this for all qcom
-> devices unconditionally because
-> 
-> Adding this patch alone will not allow aspm transitions we need to enable
-> aspm configs. If particular devices doesn't want aspm
-> they can disable using aspm configs.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 8c1abc7f0381354511d1a36fbf9b5c9e7d0c5b79  Merge branch 'pci/ctrl/vmd'
 
-This patch only affects qcom.  Is PCIE20_PARF_PM_CTRL qcom-specific?
-Or is this something that should be done for all dwc-based drivers?
+elapsed time: 2595m
 
-In fact, it only affects Qcom IP rev 2.7.0 and 1.9.0 (the only users
-of qcom_pcie_init_2_7_0()).  I guess the other revisions don't support
-ASPM L1 at all?
+configs tested: 81
+configs skipped: 3
 
-Does this patch affect the Link Capabilities register?  Before this
-patch, does Link Cap advertise L1 support but enabling it doesn't
-work?  Or does it not even advertise L1 support?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-After this patch, I assume Link Cap advertises L1 support and enabling
-L1 and L1 substates via PCI_EXP_LNKCTL_ASPM_L1,
-PCI_L1SS_CTL1_ASPM_L1_1, and PCI_L1SS_CTL1_ASPM_L1_2 works per spec,
-right?
+gcc tested configs:
+arm                              allmodconfig
+arm                              allyesconfig
+arm                                 defconfig
+arm64                               defconfig
+arm64                            allyesconfig
+ia64                                defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+alpha                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                            allyesconfig
+arc                              allyesconfig
+arc                                 defconfig
+h8300                            allyesconfig
+xtensa                           allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allmodconfig
+s390                                defconfig
+parisc64                            defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+x86_64               randconfig-a014-20220613
+x86_64               randconfig-a011-20220613
+x86_64               randconfig-a015-20220613
+x86_64               randconfig-a016-20220613
+x86_64               randconfig-a012-20220613
+x86_64               randconfig-a013-20220613
+i386                 randconfig-a013-20220613
+i386                 randconfig-a011-20220613
+i386                 randconfig-a014-20220613
+i386                 randconfig-a012-20220613
+i386                 randconfig-a016-20220613
+i386                 randconfig-a015-20220613
+arc                  randconfig-r043-20220613
+riscv                randconfig-r042-20220613
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                    nommu_k210_defconfig
+riscv                          rv32_defconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                            allmodconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                    rhel-8.3-kselftests
+x86_64                           rhel-8.3-syz
+x86_64                          rhel-8.3-func
 
-Bjorn
+clang tested configs:
+x86_64               randconfig-a002-20220613
+x86_64               randconfig-a004-20220613
+x86_64               randconfig-a001-20220613
+x86_64               randconfig-a003-20220613
+x86_64               randconfig-a005-20220613
+x86_64               randconfig-a006-20220613
+i386                 randconfig-a002-20220613
+i386                 randconfig-a003-20220613
+i386                 randconfig-a005-20220613
+i386                 randconfig-a004-20220613
+i386                 randconfig-a001-20220613
+i386                 randconfig-a006-20220613
+hexagon              randconfig-r045-20220613
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
