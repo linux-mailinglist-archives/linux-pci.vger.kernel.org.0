@@ -2,83 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7011E54C930
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Jun 2022 14:53:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 113DD54C982
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Jun 2022 15:14:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349236AbiFOMxs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Jun 2022 08:53:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
+        id S1349070AbiFONOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Jun 2022 09:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349234AbiFOMxq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 08:53:46 -0400
-Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037D432045;
-        Wed, 15 Jun 2022 05:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=STcox88mUH+VdAhq8p9+4+XG107fbNNN1YjCyQgqCOI=; b=O5P73Q9Qzq5L30Hih2OX0VQl6k
-        gn5V5w9d7DQLXSwcs0s/7Pj1gS9DkCpladTxY0nLSwA5vB1DQI7e0VIzHByv7vfkjexlpt0z7c9GR
-        bO8Fbg7nkKatNE4FiIiYtXfsK97SZYDg2g4E0re0XcEWKk3qcsdlP+RgdVuFehvLUtn0=;
-Received: from p200300daa7110200c95c40f4ac0d06a0.dip0.t-ipconnect.de ([2003:da:a711:200:c95c:40f4:ac0d:6a0] helo=Maecks.lan)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1o1SWf-0000WR-DJ; Wed, 15 Jun 2022 14:53:37 +0200
-From:   Felix Fietkau <nbd@nbd.name>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH RESEND v10 2/3] PCI: mediatek: Allow building for ARCH_AIROHA
-Date:   Wed, 15 Jun 2022 14:53:34 +0200
-Message-Id: <20220615125335.96089-2-nbd@nbd.name>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220615125335.96089-1-nbd@nbd.name>
-References: <20220615125335.96089-1-nbd@nbd.name>
+        with ESMTP id S240965AbiFONOa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Jun 2022 09:14:30 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 604482A943;
+        Wed, 15 Jun 2022 06:14:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1655298868; x=1686834868;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=37JFSAJb+yBqLEcxkMyXiMXO+ToiIUZywb5Saztiwu4=;
+  b=zW51S3AJsNwfIHyOl4/MqGjNSHNVqSFPfNRhksDyoYPtW1UauTODvq2X
+   DCTOklkOsIN6csdpm9InhJPBZx83oZWPARSISmVa5TLouXNyKq8FGN7k7
+   eUcPCsqMcKZOXclg1VmSLy0pFAqaYExK1fYAVyjbVN6Nk0DG1iWhhiGOR
+   E=;
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 15 Jun 2022 06:14:28 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg03-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 06:14:27 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Wed, 15 Jun 2022 06:14:27 -0700
+Received: from [10.216.37.111] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 15 Jun
+ 2022 06:14:22 -0700
+Message-ID: <1e92745e-6fa4-a3bd-d0cb-5c1f78efbead@quicinc.com>
+Date:   Wed, 15 Jun 2022 18:44:19 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v1] PCI: qcom: Allow L1 and its sub states on qcom dwc
+ wrapper
+Content-Language: en-US
+To:     Stephen Boyd <swboyd@chromium.org>, <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_hemantk@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <manivannan.sadhasivam@linaro.org>, Andy Gross <agross@kernel.org>,
+        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <1654240730-31322-1-git-send-email-quic_krichai@quicinc.com>
+ <CAE-0n52hpKxMG=gq1rPGx0cM2VKNRo+WHVW+ExCScJ8UwZKgGA@mail.gmail.com>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <CAE-0n52hpKxMG=gq1rPGx0cM2VKNRo+WHVW+ExCScJ8UwZKgGA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Allow selecting the pcie-mediatek driver if ARCH_AIROHA is set, because the
-Airoha EN7523 SoC uses the same controller as MT7622.
-The driver itself is not modified. The PCIe controller DT node should use
-mediatek,mt7622-pcie after airoha,en7523-pcie.
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
----
- drivers/pci/controller/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 6/9/2022 3:47 AM, Stephen Boyd wrote:
+> Quoting Krishna chaitanya chundru (2022-06-03 00:18:50)
+>> Allow L1 and its sub-states in the qcom dwc pcie wrapper.
+>> By default its disabled. So enable it explicitly.
+>>
+> Would be good to add some more details about why it's disabled by
+> default. I guess it's disabled by default in the hardware and enabling
+> it is OK to do unconditionally for all qcom dwc pcie devices?
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index b8d96d38064d..2f6806dc2a20 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -237,7 +237,7 @@ config PCIE_ROCKCHIP_EP
- 
- config PCIE_MEDIATEK
- 	tristate "MediaTek PCIe controller"
--	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	depends on ARCH_AIROHA || ARCH_MEDIATEK || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	help
--- 
-2.36.1
+This is disabled by default in the hardware. We can enable this for all 
+qcom devices unconditionally because
+
+Adding this patch alone will not allow aspm transitions we need to 
+enable aspm configs. If particular devices doesn't want aspm
+
+they can disable using aspm configs.
 
