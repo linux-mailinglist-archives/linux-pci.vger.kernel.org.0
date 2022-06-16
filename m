@@ -2,165 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AE2E54E9A8
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 20:49:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28AE754E9EC
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 21:19:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377806AbiFPSte (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jun 2022 14:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47986 "EHLO
+        id S232660AbiFPTTt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jun 2022 15:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230118AbiFPStc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 14:49:32 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A7D35370D;
-        Thu, 16 Jun 2022 11:49:31 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id h23so2437882ljl.3;
-        Thu, 16 Jun 2022 11:49:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=79Ks8rDEr2tFH1dWaaHo2QKKffv+K7aszYPtxlZkmQ4=;
-        b=KZkmtzwxEuE7GCiL2f65ThLOb/MXxtS0yyp2nO+ENlEJ0EnJ/3SQm3crxrV+lulEho
-         Tz4Hf+7oI700Tho3qmmV0jkstVXNKOv+v7HvlqZTKWbP99Xbo3sJaOoTtHsnXgH96YW7
-         ht7NcutFBdv4NEOgwSbEBeAWEfagsh1wfkCVQm+z5FP/9mmx/yDp6zrHcE0wwO1/+p6Y
-         YHpH3s62Rbcc4IWz0hBdQ8wFapOydKvua/He1+dOjc3UeBLTCPSSGR1DwLLjHs+JKymG
-         B5QWrx4pKesxyWsiGSqOqsX9Ryfz47bsp5Zh4dHHUxyAG6FtKjQn/ZW+cZGl8i3ykxNY
-         0VoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=79Ks8rDEr2tFH1dWaaHo2QKKffv+K7aszYPtxlZkmQ4=;
-        b=S5kuDoPd6XsYozHcxCIUwewm5M8AZ7+sWj7WNPv3iWTJEEb4PAMCIi/KP8FfiiwBrZ
-         wnwIIvcTW4c/+sSsjR2dAln8NqQ2TOAuXsYIzAvYo25B5UIpto8aJ7uwN0zkONX3aa4A
-         Sn1b3E4QBV3XdiAXjvyzTwxEtXbLTKW6fg3nLEguYCvnK3IAZlIUmO4H5lHb7GueL/CB
-         tMlZ137mFHOSzxIIxyyhKM0wcbqICvZDw5t5VWvOtpocdQCL6O6NIR59/Z4Wdf/RjWfj
-         1UgtrA/SuZqDEJrp1j6wUWPd0wDCmtuxt4SUBUNmzzfoN/lq0ekIAkM7scbCyGh/obm1
-         HFwg==
-X-Gm-Message-State: AJIora/hnQNZ/XUUwLVwDwNMhBIE5vtSoPBPbrXwQMmDJz3wULsrLHWp
-        K2OmnZ1VLcHEviDV2Hnuc5M=
-X-Google-Smtp-Source: AGRyM1vARbPodOc1L2rb9cUFkcBLSOCl5ihCmbQw8/oECDKpPD+vgLO98hIligp33HSXpKB68205sg==
-X-Received: by 2002:a2e:a226:0:b0:255:8f29:a272 with SMTP id i6-20020a2ea226000000b002558f29a272mr3370591ljm.42.1655405369465;
-        Thu, 16 Jun 2022 11:49:29 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id a14-20020a194f4e000000b0047255d210e2sm334335lfk.17.2022.06.16.11.49.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jun 2022 11:49:28 -0700 (PDT)
-Date:   Thu, 16 Jun 2022 21:49:26 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
-        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, kishon@ti.com, vkoul@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
-        Sergey.Semin@baikalelectronics.ru
-Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
-Message-ID: <20220616184926.bwdzudvl3ifkc7kx@mobilestation>
-References: <20220524152159.2370739-1-Frank.Li@nxp.com>
- <20220616163533.GA1094478@bhelgaas>
+        with ESMTP id S233994AbiFPTTs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 15:19:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E57318B3C;
+        Thu, 16 Jun 2022 12:19:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A0B661D27;
+        Thu, 16 Jun 2022 19:19:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B2B0C34114;
+        Thu, 16 Jun 2022 19:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655407186;
+        bh=0oI584spUy6KbItThEajQaOi6DeQhyouguYy6HKNLas=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=h+gkzZwjbdyAZUUYeibcOTJ66aaXewoe+/NgBx8b9tz4VrCN1M9Z7oZIUsMlnYkUR
+         xCKCWNNk1udphrNMraCj9P+bik29lW7BON4nWa6TW9ZIUzWQ8IMrNlDhPMhjeuKdwN
+         C2CIp3tgs+0PbxuFHDL2QOVoFeQSTmcVuX7vPVY3kLbesnFHUIXMeN4c2/a8lrdZlm
+         PKTjQFmIA3aIeMUsdc/mZqths2GxfTNCUOqRvezX9w59+gnOmJBD0/b+VGK+6y/zFI
+         yf0IVAYOEEB71OQwut09Q0td/0JfvdEWOmS6aiNp0ZRhb6uv2nyYm7Qi2HChCPagJY
+         dHJ4GtrAKeU1g==
+Date:   Thu, 16 Jun 2022 14:19:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, michals@xilinx.com, robh@kernel.org
+Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root
+ Port
+Message-ID: <20220616191944.GA1102555@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220616163533.GA1094478@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220616124429.12917-3-bharat.kumar.gogada@xilinx.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 16, 2022 at 11:35:33AM -0500, Bjorn Helgaas wrote:
-> On Tue, May 24, 2022 at 10:21:51AM -0500, Frank Li wrote:
-> > Default Designware EDMA just probe remotely at host side.
-> > This patch allow EDMA driver can probe at EP side.
-> > 
-> > 1. Clean up patch
-> >    dmaengine: dw-edma: Detach the private data and chip info structures
-> >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> >    dmaengine: dw-edma: Change rg_region to reg_base in struct
-> >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > 
-> > 2. Enhance EDMA driver to allow prode eDMA at EP side
-> >    dmaengine: dw-edma: Add support for chip specific flags
-> >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
-> > flags (this patch removed at v11 because dma tree already have fixed
-> > patch)
-> > 
-> > 3. Bugs fix at EDMA driver when probe eDMA at EP side
-> >    dmaengine: dw-edma: Fix programming the source & dest addresses for
-> > ep
-> >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> > 
-> > 4. change pci-epf-test to use EDMA driver to transfer data.
-> >    PCI: endpoint: Add embedded DMA controller test
-> > 
-> > 5. Using imx8dxl to do test, but some EP functions still have not
-> > upstream yet. So below patch show how probe eDMA driver at EP
-> > controller driver.
-> > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
-> > 
-> > Frank Li (6):
-> >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> >   dmaengine: dw-edma: Detach the private data and chip info structures
-> >   dmaengine: dw-edma: Change rg_region to reg_base in struct
-> >     dw_edma_chip
-> >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> >     dw_edma_chip
-> >   dmaengine: dw-edma: Add support for chip specific flags
-> >   PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
-> > 
-> > Serge Semin (2):
-> >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
-> >     semantics
-> > 
-> >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
-> >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
-> >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
-> >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
-> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
-> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 112 ++++++++++++--
-> >  include/linux/dma/edma.h                      |  59 +++++++-
-> >  9 files changed, 317 insertions(+), 180 deletions(-)
+On Thu, Jun 16, 2022 at 06:14:29PM +0530, Bharat Kumar Gogada wrote:
+> Xilinx Versal Premium series has CPM5 block which supports Root Port
+> functioning at Gen5 speed.
 > 
-
-> Applied with Vinod's ack to pci/edma for v5.20, thanks!
+> Xilinx Versal CPM5 has few changes with existing CPM block.
+> - CPM5 has dedicated register space for control and status registers.
+> - CPM5 legacy interrupt handling needs additional register bit
+>   to enable and handle legacy interrupts.
 > 
-> Check
-> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/edma
-> (head 7871514c9cff ("PCI: endpoint: Enable DMA tests for endpoints
-> with DMA capabilities")).
-
-Great! Just what we needed.
-
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+>  drivers/pci/controller/pcie-xilinx-cpm.c | 62 ++++++++++++++++++++++--
+>  1 file changed, 59 insertions(+), 3 deletions(-)
 > 
-> If you post things that need to be applied on top of that branch,
-> please mention that in the cover letter.
+> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+> index c7cd44ed4dfc..0bcd11d27eeb 100644
+> --- a/drivers/pci/controller/pcie-xilinx-cpm.c
+> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+> @@ -35,6 +35,10 @@
+>  #define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
+>  #define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
+>  
+> +#define XILINX_CPM_PCIE_IR_STATUS       0x000002A0
+> +#define XILINX_CPM_PCIE_IR_ENABLE       0x000002A8
+> +#define XILINX_CPM_PCIE_IR_LOCAL        BIT(0)
+> +
+>  /* Interrupt registers definitions */
+>  #define XILINX_CPM_PCIE_INTR_LINK_DOWN		0
+>  #define XILINX_CPM_PCIE_INTR_HOT_RESET		3
+> @@ -98,6 +102,16 @@
+>  /* Phy Status/Control Register definitions */
+>  #define XILINX_CPM_PCIE_REG_PSCR_LNKUP		BIT(11)
+>  
+> +/**
+> + * struct xilinx_cpm_variant - CPM variant information
+> + * @cpm_version: CPM5 has few changes compared to CPM block.
+> + *      CPM5 has dedicated register space for control and status registers.
+> + *
 
-Ok. I'll mention that in the cover letters of my patchsets.
+Superfluous blank line.
 
-I've already got several R-b/T-b tags in the series:
-https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-Could you also have a look at it? If no objection we can either
-merge it in right away into the pci/edma branch or wait for a little
-while for a few more rc-cycles until I get to fix all the comments posted
-for the dependant patchsets.
+> + */
+> +struct xilinx_cpm_variant {
+> +	bool cpm_version;
 
+This is not really a bool, unless you want to preclude the possibility
+of ever having a CPM6 or other future variants.
+
+> +};
+> +
+>  /**
+>   * struct xilinx_cpm_pcie - PCIe port information
+>   * @dev: Device pointer
+> @@ -109,6 +123,7 @@
+>   * @intx_irq: legacy interrupt number
+>   * @irq: Error interrupt number
+>   * @lock: lock protecting shared register access
+> + * @is_cpm5: value to check cpm version
+>   */
+>  struct xilinx_cpm_pcie {
+>  	struct device			*dev;
+> @@ -120,6 +135,7 @@ struct xilinx_cpm_pcie {
+>  	int				intx_irq;
+>  	int				irq;
+>  	raw_spinlock_t			lock;
+> +	bool                            is_cpm5;
+>  };
+>  
+>  static u32 pcie_read(struct xilinx_cpm_pcie *port, u32 reg)
+> @@ -285,6 +301,14 @@ static void xilinx_cpm_pcie_event_flow(struct irq_desc *desc)
+>  		generic_handle_domain_irq(port->cpm_domain, i);
+>  	pcie_write(port, val, XILINX_CPM_PCIE_REG_IDR);
+>  
+> +	if (port->is_cpm5) {
+> +		val = readl_relaxed(port->cpm_base + XILINX_CPM_PCIE_IR_STATUS);
+> +		if (val)
+> +			writel_relaxed(val,
+> +				       port->cpm_base +
+> +				       XILINX_CPM_PCIE_IR_STATUS);
+> +	}
+> +
+>  	/*
+>  	 * XILINX_CPM_PCIE_MISC_IR_STATUS register is mapped to
+>  	 * CPM SLCR block.
+> @@ -484,6 +508,12 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
+>  	 */
+>  	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
+>  	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
+> +
+> +	if (port->is_cpm5) {
+> +		writel(XILINX_CPM_PCIE_IR_LOCAL,
+> +		       port->cpm_base + XILINX_CPM_PCIE_IR_ENABLE);
+> +	}
+> +
+>  	/* Enable the Bridge enable bit */
+>  	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
+>  		   XILINX_CPM_PCIE_REG_RPSC_BEN,
+> @@ -503,6 +533,10 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
+>  	struct device *dev = port->dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct resource *res;
+> +	const struct xilinx_cpm_variant *variant =
+> +		of_device_get_match_data(dev);
+> +
+> +	port->is_cpm5 = variant->cpm_version;
+
+It's a little clunky to use booleans for a potentially multi-valued
+version and to copy them around.  Something like this might leave room
+for future variants that need more knobs:
+
+  enum xilinx_cpm_version {
+    CPM,
+    CPM5,
+  };
+
+  struct xilinx_cpm_variant {
+    enum xilinx_cpm_version version;
+  };
+
+  struct xilinx_cpm_pcie {
+    ...
+    const struct xilinx_cpm_variant   *variant;
+
+  static const struct xilinx_cpm_variant cpm5 = {
+    .version = CPM5,
+  };
+
+  xilinx_cpm_pcie_event_flow()
+  {
+    ...
+    if (port->variant->version == CPM5)
+
+  xilinx_cpm_pcie_probe()
+  {
+    ...
+    port->variant = of_device_get_match_data(dev);
+
+
+>  	port->cpm_base = devm_platform_ioremap_resource_byname(pdev,
+>  							       "cpm_slcr");
+> @@ -518,7 +552,14 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
+>  	if (IS_ERR(port->cfg))
+>  		return PTR_ERR(port->cfg);
+>  
+> -	port->reg_base = port->cfg->win;
+> +	if (port->is_cpm5) {
+> +		port->reg_base = devm_platform_ioremap_resource_byname(pdev,
+> +								       "cpm_csr");
+> +		if (IS_ERR(port->reg_base))
+> +			return PTR_ERR(port->reg_base);
+> +	} else {
+> +		port->reg_base = port->cfg->win;
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -591,9 +632,24 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+>  	return err;
+>  }
+>  
+> +static const struct xilinx_cpm_variant cpm_host = {
+> +	.cpm_version = false,
+> +};
+> +
+> +static const struct xilinx_cpm_variant cpm5_host = {
+> +	.cpm_version = true,
+> +};
+> +
+>  static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
+> -	{ .compatible = "xlnx,versal-cpm-host-1.00", },
+> -	{}
+> +	{
+> +		.compatible = "xlnx,versal-cpm-host-1.00",
+> +		.data = &cpm_host,
+> +	},
+> +	{
+> +		.compatible = "xlnx,versal-cpm5-host",
+> +		.data = &cpm5_host,
+> +	},
+> +	{},
+>  };
+>  
+>  static struct platform_driver xilinx_cpm_pcie_driver = {
+> -- 
+> 2.17.1
 > 
-> I don't guarantee the immutability of the branch because sometimes I
-> fix typos or similar errors before the merge window.
-
-Got it.
-
--Sergey
-
-> 
-> Bjorn
