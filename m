@@ -2,197 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 051C754EDB4
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 00:57:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C669F54EDB8
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 00:58:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379091AbiFPW5q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jun 2022 18:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34282 "EHLO
+        id S1379274AbiFPW6n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jun 2022 18:58:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379259AbiFPW5q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 18:57:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4064DF44
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jun 2022 15:57:43 -0700 (PDT)
+        with ESMTP id S1379286AbiFPW6m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 18:58:42 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F1962A14;
+        Thu, 16 Jun 2022 15:58:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 85DD460E05
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jun 2022 22:57:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7263C34114;
-        Thu, 16 Jun 2022 22:57:42 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8217CB82677;
+        Thu, 16 Jun 2022 22:58:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A181BC3411C;
+        Thu, 16 Jun 2022 22:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655420262;
-        bh=XLm2AumHhqtpw6MQtzrn3AgWLTtuFYpc+cRBqBaIlaQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KBJP1OoN4AfHaoyPKa+M/ICrqTEa1CylunNUIUdF9lD08BxJuKlBqDOUh4GPlDsPP
-         36DefZwJZRBjNBjNFFpKMIiwwdysCe0oHTkna1FYl/OasiAiimtAV+jd1yplPo2D4F
-         URlPXsGN2HE3VUAdKdIy2CJ5pjJFs1kNxpIbmsiILOUiwEQwwYvmvGcgNtL3zb69kz
-         FhaoEnwioUw3+KXGcnuB+vKCHhFYgkxRIHoMvDzBxkT8a17mf6AYS4jDfyyO36p9LN
-         o0whzsa5XTlkk0qJu+xyPPAJJOp81X9ksF0so0z87W7oYOnkxgKEcHAB2/X/95HTn3
-         j3Mh78Ld0Tzkw==
-Date:   Thu, 16 Jun 2022 17:57:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@gmail.com>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH V13 5/6] PCI: Add quirk for LS7A to avoid reboot failure
-Message-ID: <20220616225740.GA1138506@bhelgaas>
+        s=k20201202; t=1655420318;
+        bh=BhBSw9D9ltx5eL2VOtxBAgMRkCtcfgjW4sB86qkvEWU=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=O5yP0MIVY9hQpBQur4ksZUlxWpn4EZ8BsqV1Q/gMV59ra7EMrb6I2j5b9IaetwL7G
+         b7UYX++AYKx91UASeN8k1yeeTwDAQIHg2E4mG4YiG/6W6xFS0UPFhxEe0Kecbw7pr8
+         BULCMbxdVK8LoKR3opAeSmWWoU7ZNoyzSJQb/SBTY4aNxXrtES5mmaxuhvJcH5CGwl
+         0halR+YTriqyvJnTnfjpecBFuxtVtHWpSktTqcu2RtiDZaCe7zEhOvRJ7UyZunRl3N
+         fOyIla2gMtTwRA+x3C8NIjsfbClotpvqPiUoYMpPVMTmTd0o31RJ3MlCV/xwgfdV9T
+         dhyhajVoW9Ryw==
+Message-ID: <4b4b08af-887b-89e9-b4a5-93e7d8a03222@kernel.org>
+Date:   Thu, 16 Jun 2022 15:58:37 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H5uT+wDRkVbW_o1hG2u0rtv6FFABTymL1VdjMMD_UEN+Q@mail.gmail.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v3 2/5] dt-bindings: phy: Add ARTPEC-8 PCIe phy
+Content-Language: en-US
+To:     wangseok.lee@samsung.com,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
+        "lars.persson@axis.com" <lars.persson@axis.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        "kernel@axis.com" <kernel@axis.com>
+Cc:     Moon-Ki Jun <moonki.jun@samsung.com>,
+        Sang Min Kim <hypmean.kim@samsung.com>,
+        Dongjin Yang <dj76.yang@samsung.com>,
+        Yeeun Kim <yeeun119.kim@samsung.com>
+References: <20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7@epcms2p7>
+ <CGME20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7@epcms2p5>
+ <20220614012916epcms2p5cf8d55e7420dea10bb4a05d91aaf99dd@epcms2p5>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20220614012916epcms2p5cf8d55e7420dea10bb4a05d91aaf99dd@epcms2p5>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-10.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 16, 2022 at 04:39:46PM +0800, Huacai Chen wrote:
-> On Thu, Jun 9, 2022 at 3:31 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Wed, Jun 08, 2022 at 05:34:21PM +0800, Huacai Chen wrote:
-> > > On Fri, Jun 3, 2022 at 12:29 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Thu, Jun 02, 2022 at 08:48:20PM +0800, Huacai Chen wrote:
-> > > > > On Wed, Jun 1, 2022 at 7:35 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Sat, Apr 30, 2022 at 04:48:45PM +0800, Huacai Chen wrote:
-> > > > > > > Commit cc27b735ad3a75574a ("PCI/portdrv: Turn off PCIe
-> > > > > > > services during shutdown") causes poweroff/reboot
-> > > > > > > failure on systems with LS7A chipset.  We found that if
-> > > > > > > we remove "pci_command &= ~PCI_COMMAND_MASTER;" in
-> > > > > > > do_pci_disable_device(), it can work well. The hardware
-> > > > > > > engineer says that the root cause is that CPU is still
-> > > > > > > accessing PCIe devices while poweroff/reboot, and if we
-> > > > > > > disable the Bus Master Bit at this time, the PCIe
-> > > > > > > controller doesn't forward requests to downstream
-> > > > > > > devices, and also doesn't send TIMEOUT to CPU, which
-> > > > > > > causes CPU wait forever (hardware deadlock). This
-> > > > > > > behavior is a PCIe protocol violation (Bus Master should
-> > > > > > > not be involved in CPU MMIO transactions), and it will
-> > > > > > > be fixed in new revisions of hardware (add timeout
-> > > > > > > mechanism for CPU read request, whether or not Bus
-> > > > > > > Master bit is cleared).
-> > > > > >
-> > > > > > LS7A might have bugs in that clearing Bus Master Enable
-> > > > > > prevents the root port from forwarding Memory or I/O
-> > > > > > requests in the downstream direction.
-> > > > > >
-> > > > > > But this feels like a bit of a band-aid because we don't
-> > > > > > know exactly what those requests are.  If we're removing
-> > > > > > the Root Port, I assume we think we no longer need any
-> > > > > > devices *below* the Root Port.
-> > > > > >
-> > > > > > If that's not the case, e.g., if we still need to produce
-> > > > > > console output or save state to a device, we probably
-> > > > > > should not be removing the Root Port at all.
-> > > > >
-> > > > > Do you mean it is better to skip the whole
-> > > > > pcie_port_device_remove() instead of just removing the
-> > > > > "clear bus master" operation for the buggy hardware?
-> > > >
-> > > > No, that's not what I want at all.  That's just another
-> > > > band-aid to avoid a problem without understanding what the
-> > > > problem is.
-> > > >
-> > > > My point is that apparently we remove a Root Port (which means
-> > > > we've already removed any devices under it), and then we try
-> > > > to use a device below the Root Port.  That seems broken.  I
-> > > > want to understand why we try to use a device after we've
-> > > > removed it.
-> > >
-> > > I agree, and I think "why we try to use a device after remove
-> > > it" is because the userspace programs don't know whether a
-> > > device is "usable", so they just use it, at any time. Then it
-> > > seems it is the responsibility of the device drivers to avoid
-> > > the problem.
-> >
-> > How is userspace able to use a device after the device is removed?
-> > E.g., if userspace does a read/write to a device that has been
-> > removed, the syscall should return error, not touch the missing
-> > device.  If userspace mmaps a device, an access after the device
-> > has been removed should fault, not do MMIO to the missing device.
->
-> To give more details, let's take the graphics driver (e.g. amdgpu)
-> as an example again. The userspace programs call printf() to display
-> "shutting down xxx service" during shutdown/reboot. Or we can even
-> simplify further, the kernel calls printk() to display something
-> during shutdown/reboot. You know, printk() can happen at any time,
-> even after we call pcie_port_device_remove() to disable the pcie
-> port on the graphic card.
+On 13/06/2022 18:29, Wangseok Lee wrote:
+> Add description to support Axis, ARTPEC-8 SoC.
+> ARTPEC-8 is the SoC platform of Axis Communications
+> and PCIe phy is designed based on SAMSUNG PHY.
 
-I've been focusing on the *remove* path, but you said the problem
-you're solving is with *poweroff/reboot*.  pcie_portdrv_remove() is
-used for both paths, but if there's a reason we need those paths to be
-different, we might be able to split them.
+No improvements here. On v2 I gave you link pointing to specific
+paragraph of our documentation which you need to apply - wrong wrapping.
+Is there something unclear here?
 
-For remove, we have to assume accesses to the device may already or
-will soon fail.  A driver that touches the device, or a device that
-performs DMA, after its drv->remove() method has been called would be
-seriously broken.  The remove operation also unbinds the driver from
-the device.
+Please
+do
+not
+wrap
+in
+different
+style.
 
-The semantics of device_shutdown(), pci_device_shutdown(), and any
-drv->shutdown() methods are not documented very well.  This path is
-only used for halt/poweroff/reboot, so my guess is that not very much
-is actually required, and it doesn't do anything at all with respect
-to driver binding.
 
-I think we mainly want to disable things that might interfere with
-halt/poweroff/reboot, like interrupts and maybe DMA.  We disable DMA
-in this path to prevent devices from corrupting memory, but I'm more
-open to a quirk in the shutdown path than in the remove path.  So how
-about if you clone pcie_port_device_remove() to make a separate
-pcie_port_device_shutdown() and put the quirk there?
-
-> The call stack is: printk() --> call_console_drivers() -->
-> con->write() --> vt_console_print() --> fbcon_putcs()
 > 
-> I think this is a scenario of "userspace programs (or kernel itself)
-> don't know whether a device is 'usable', so they just use it, at any
-> time"
+> Signed-off-by: Wangseok Lee <wangseok.lee@samsung.com>
+> ---
+> v2->v3 :
+> -modify version history to fit the linux commit rule
+> -remove 'Device Tree Bindings' on title
+> -remove clock-names entries
+> -change node name to soc from artpec8 on excamples
 > 
-> And why does the graphic driver call .suspend() in its .shutdown() can
-> fix the problem?
->
-> One of the key operations in .suspend() is drm_fb_helper_set_suspend()
-> --> fb_set_suspend() --> info->state = FBINFO_STATE_SUSPENDED;
->
-> This operation will cause fbcon_is_inactive() to return true, then
-> refuse fbcon_putcs() to really write to the framebuffer.
+> v1->v2 :
+> -'make dt_binding_check' result improvement
+> -Add the missing property list
+> -Align the indentation of continued lines/entries
+> ---
+>  .../bindings/phy/axis,artpec8-pcie-phy.yaml        | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml
+> new file mode 100644
+> index 0000000..316b774
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/axis,artpec8-pcie-phy.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/axis,artpec8-pcie-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARTPEC-8 SoC PCIe PHY
+> +
+> +maintainers:
+> +  - Jesper Nilsson <jesper.nilsson@axis.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: axis,artpec8-pcie-phy
+> +
+> +  reg:
+> +    items:
+> +      - description: PHY registers.
+> +      - description: PHY coding sublayer registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: phy
+> +      - const: pcs
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    items:
+> +      - description: PCIe PHY reference clock
+> +
+> +  num-lanes:
+> +    const: 2
+> +
+> +  lcpll-ref-clk:
+> +    const: 1
 
-> > > Take radeon/amdgpu driver as an example, the .shutdown() of the
-> > > callback can call suspend() to fix.
-> > >
-> > > But..., another problem is: There are many drivers "broken", not just
-> > > radeon/amdgpu drivers (at least, the ahci driver is also "broken").
-> > > Implementing the driver's .shutdown() correctly is nearly impossible
-> > > for us, because we don't know the hardware details of so many devices.
-> > > On the other hand, those drivers "just works" on most platforms, so
-> > > the driver authors don't think they are "broken".
-> >
-> > It sounds like you have analyzed this and have more details about
-> > exactly how this happens.  Can you please share those details?  There
-> > are a lot of steps in the middle that I don't understand yet.
-> >
-> > Without those details, "userspace programs don't know whether a device
-> > is 'usable', so they just use it, at any time" is kind of hand-wavey
-> > and not very convincing.
-> >
-> > > So, very sadly, we can only use a band-aid now. :(
-> > >
-> > > > If the scenario ends up being legitimate and unavoidable, fine -- we
-> > > > can figure out a quirk to work around the fact the LS7A doesn't allow
-> > > > that access after we clear Bus Master Enable.  But right now the
-> > > > scenario smells like a latent bug, and leaving bus mastering enabled
-> > > > just avoids it without fixing it.
-> > > >
-> > > > Bjorn
+Unknown field... custom properties need vendor (axis,), type (boolean)
+and description.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - "#phy-cells"
+> +  - clocks
+> +  - clock-names
+> +  - samsung,fsys-sysreg
+
+Same problem as in patch #1.
+
+> +  - num-lanes
+> +  - lcpll-ref-clk
+> +
+> +additionalProperties: true
+
+No, this must be false.
+
+
+Best regards,
+Krzysztof
