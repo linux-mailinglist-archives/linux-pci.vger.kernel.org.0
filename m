@@ -2,49 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E07154EB66
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 22:40:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41FEC54EBDD
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 23:05:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbiFPUk0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jun 2022 16:40:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55404 "EHLO
+        id S1378762AbiFPVFC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jun 2022 17:05:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbiFPUkZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 16:40:25 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11845DE56
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jun 2022 13:40:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 925BAB82604
-        for <linux-pci@vger.kernel.org>; Thu, 16 Jun 2022 20:40:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B0F0C3411B;
-        Thu, 16 Jun 2022 20:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655412022;
-        bh=RLfSRAEzc/5v/sXDyQjHRxK4Fv+TRgIkXH6XRsJD4Vc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Ewpf2GleVol1wdCbqZKQ2rkVdUbLtQfbta2QHhIle5uJbcSqK4tiuOP96LLVIrpg9
-         0CXDgtKBCzVM+BGcYYQqirpqkmwELCtkaSC3CEGG6v3QpUkphww59RsJlYVTXuT1j5
-         6wMbksmT5+kkpGMcIIz16wMA3SHnRhSuuU6PXXdiUEr298aTVGP8rb719OCZC0c0WO
-         ndnZt+O3e77sDfisFSGk2tzbvQBdT5Ec/hq6V17iZMvf13e5X5xeAeb2fewqAqDmZ7
-         m/9FBf7lxfdn3Azp488ETglfXKy+27OqwozULFr0RFccZJF0zZZ+K7EsE7i2W11dIb
-         ZIzuDYUBIGg/Q==
-Date:   Thu, 16 Jun 2022 15:40:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-pci@vger.kernel.org, Zack Rusin <zackr@vmware.com>
-Subject: Re: pci=no_e820 report for vmware fusion
-Message-ID: <20220616204020.GA1137352@bhelgaas>
+        with ESMTP id S233682AbiFPVFB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 17:05:01 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE344606CB
+        for <linux-pci@vger.kernel.org>; Thu, 16 Jun 2022 14:04:59 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id u18so2228495plb.3
+        for <linux-pci@vger.kernel.org>; Thu, 16 Jun 2022 14:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=2r8CtVI1tPNHi16JfLtZURG5y2oQUhHCkL352qctEB4=;
+        b=ZFKQQZDng7Udj+pP4+RgtZnW1aSKCMk7IL9cjW+d5bxsPVxEaELqcuxnw3P7JeVFKS
+         1fXiCRT5Q1vr004plkuABaw9LXvOqnJiBiZmFqKNzJYWb3rhtRCveZSG2cmOwcw2Wazl
+         z99IQOgdWuudInHw5HuTXVn25rLkWfTJSWCX+3e+ZeJLBgqDRmDCFnMHd8Q9b4Ixot9q
+         yH7J1yGkvuJ4NPEdXxIlhvGUrWmpwHCYjHtkEX/0P7rMNfp81kupvOKg1geFVAc+NncQ
+         /mCx9UcVLtH4Z9vUGeOybVyloIJPvG8U91NIWnQiex/Bc2hBC89BnOubOYLd2JL4w47L
+         7ZFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2r8CtVI1tPNHi16JfLtZURG5y2oQUhHCkL352qctEB4=;
+        b=Sue5+KPQPLikiGdeQqBoWQKRUykfuJWiDThg5JivF7lbg8wV1oriFCML0HIbTRnsTJ
+         ya7jsFvyt3zTPgshlBR3bm1if7oBMp2SXXrRO8zYPMYkiDX0cRpR8CZU5fCbO6AncrLi
+         r2S3u3qEXhmJDrRiKpFsm9aZAd/U1/ovOK4qTmWV/kTIgQbFPGIzqLANDPIeu+Wvcu5n
+         uEzVByfcU91A4wbpQd8JbhNA14yrVmlkotQ49MHx9UNT544aWKTjxiFiy5VkoxhKaAnn
+         dGa9CffN514N7eyOag999eSZ9dMa0YWce5eSKgQMhriicN3mBmHy1zgn9sYBpRUidzGq
+         BlNw==
+X-Gm-Message-State: AJIora8mDHmWqo6GwoClVC6FI+mjwdoWId105rn+TG+M50SFu2sdn7qa
+        1ZEuTwb4WwcVygEMESwkRtfi
+X-Google-Smtp-Source: AGRyM1sVCVLZiQnwkLWkMn+Hi9sjJLB7RwFgvwfnbLBljTOQAMY/4zVK+qkWOZfhGcVP9L6MlXDOcw==
+X-Received: by 2002:a17:903:120c:b0:167:8847:21f2 with SMTP id l12-20020a170903120c00b00167884721f2mr6648461plh.11.1655413499281;
+        Thu, 16 Jun 2022 14:04:59 -0700 (PDT)
+Received: from thinkpad ([192.77.111.2])
+        by smtp.gmail.com with ESMTPSA id b21-20020a170902d89500b0015e8d4eb2cdsm2041555plz.279.2022.06.16.14.04.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jun 2022 14:04:58 -0700 (PDT)
+Date:   Fri, 17 Jun 2022 02:34:56 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/18] PCI: dwc: Various fixes and cleanups
+Message-ID: <20220616210456.GH2889@thinkpad>
+References: <20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru>
+ <20220610082919.4wetzo7wj4bnjp45@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1B1241E1-6C7E-42CF-9690-1F47E9F3A6B2@redhat.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220610082919.4wetzo7wj4bnjp45@mobilestation>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -53,67 +81,163 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 16, 2022 at 08:12:28AM -0400, Benjamin Coddington wrote:
-> My VMWare Fusion linux VM's display stopped working after an update, with:
+On Fri, Jun 10, 2022 at 11:29:19AM +0300, Serge Semin wrote:
+> On Fri, Jun 10, 2022 at 11:25:16AM +0300, Serge Semin wrote:
+> > This patchset is a first one in the series created in the framework of
+> > my Baikal-T1 PCIe/eDMA-related work:
+> > 
+> > [1: In-progress v4] PCI: dwc: Various fixes and cleanups
+> > Link: ---you are looking at it---
+> > [2: In-progress v2] PCI: dwc: Add hw version and dma-ranges support
+> > Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+> > [3: In-progress v2] PCI: dwc: Add extended YAML-schema and Baikal-T1 support
+> > Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+> > [4: In-progress v2] dmaengine: dw-edma: Add RP/EP local DMA support
+> > Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+> > 
+> > Note it is very recommended to merge the patchsets in the same order as
+> > they are placed in the list above in order to prevent possible merge
+> > conflicts. Nothing prevents them from being reviewed synchronously though.
+> > Any tests are very welcome!
+> > 
+> > As it can be easily inferred from the patchset title, this series is about
+> > the DW PCIe Root Port/Endpoint driver fixes and the code cleanups, where
+> > fixes come before the cleanup patches. The patchset starts with adding the
+> > stop_link() platform-specific method invocation in case of the PCIe host
+> > probe procedure errors. It has been missing in the cleanup-on-error path
+> > of the DW PCIe Host initialization method. After that the unrolled CSRs
+> > layout is added to the iATU disable procedure. In third the disable iATU
+> > procedure is fixed to be called only for the internal ATU as being
+> > specific for the internal ATU implementation. Then the outbound iATU
+> > extended region setup procedure is fixed to have the INCREASE_REGION_SIZE
+> > flag set based on the limit-address - not the region size one. The last
+> > but not least the CDM-check enabling procedure is fixed to be independent
+> > from the non-related num_lanes field state.
+> > 
+> > Afterwards there is a series of cleanups. It concerns the changes like
+> > adding braces to the multi-line if-else constructions, trailing new-lines
+> > to the print format-string, dropping unnecessary version checking, and
+> > various code simplifications and optimizations.
+> > 
+> > New features like adding two-level DT bindings abstraction, adding better
+> > structured IP-core version interface, adding iATU regions size detection
+> > and the PCIe regions verification procedure, adding dma-ranges support,
+> > introducing a set of generic platform clocks and resets and finally adding
+> > Baikal-T1 PCIe interface support will be submitted in the next part of the
+> > series.
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru/
+> > Changelog v2:
+> > - Fix the end address of the example in the patch log with
+> >   the INCREASE_REGION_SIZE flag usage fixup. It should be
+> >   0x1000FFFF and not 0x0000FFFF (@Manivannan).
+> > - Add the cleanup-on-error path to the dw_pcie_ep_init() function.
+> >   (@Manivannan)
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+> > Changelog v3:
+> > - Convert region variable type to u32 in order to fix the implicit type
+> >   conversion peculiarity. (@kbot)
+> > - Rebase onto v5.18-rc6.
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru/
+> > Changelog v4:
+> > - Move the patch "PCI: dwc: Deallocate EPC memory on EP init error" to
+> >   being applied before the cleanup patches.
 > 
-> [.558514] vmwgfx 0000:00:0f.0: vgaarb: deactivate vga console
-> [.559964] Console: switching to colour dummy device 80x25
-> [.583703] vmwgfx 0000:00:0f.0: [drm] FIFO at 0x00000000c0000000 size is 8192
-> kiB
-> [.583783] vmwgfx 0000:00:0f.0: [drm] VRAM at 0x00000000e8000000 size is
-> 131072 kiB
-> [.583845] vmwgfx 0000:00:0f.0: [drm] Running on SVGA version 2.
-> [.583863] vmwgfx 0000:00:0f.0: [drm] Capabilities: rect copy, cursor, cursor
-> bypass, cursor bypass 2, 8bit emulation, alpha cursor, extended fifo,
-> multimon, pitchlock, irq mask, display topology, gmr, traces, gmr2, screen
-> object 2, command buffers, command buffers 2, gbobject, dx,
-> [.583865] vmwgfx 0000:00:0f.0: [drm] DMA map mode: Caching DMA mappings.
-> [.584003] vmwgfx 0000:00:0f.0: [drm] Legacy memory limits: VRAM = 4096 kB,
-> FIFO = 256 kB, surface = 0 kB
-> [.584006] vmwgfx 0000:00:0f.0: [drm] MOB limits: max mob size = 131072 kB,
-> max mob pages = 98304
-> [.584008] vmwgfx 0000:00:0f.0: [drm] Max GMR ids is 64
-> [.584009] vmwgfx 0000:00:0f.0: [drm] Max number of GMR pages is 65536
-> [.584010] vmwgfx 0000:00:0f.0: [drm] Maximum display memory size is 131072
-> kiB
-> [.619664] vmwgfx 0000:00:0f.0: [drm] Screen Target display unit initialized
-> [.638401] vmwgfx 0000:00:0f.0: [drm] Fifo max 0xffffffff min 0xffffffff cap
-> 0xffffffff
-> [.638406] vmwgfx 0000:00:0f.0: [drm] FIFO memory is not usable. Driver
-> failed to initialize.
-> [.638407] [drm:vmw_request_device [vmwgfx]] *ERROR* Unable to initialize the
-> device.
+> > - Add a new fixes patch: "PCI: dwc: Enable CDM-check independently from
+> >   the num_lanes value".
+> > - Add a new cleanup patch: "PCI: dwc: Organize local variables usage".
+> > - Add a new cleanup patch: "PCI: dwc: Re-use local pointer to the
+> >   resource data".
+> > - Add a new cleanup patch: "PCI: dwc: Add start_link/stop_link inliners".
+> > - Add a new cleanup patch: "PCI: dwc: Move io_cfg_atu_shared to the Root
+> >   Port descriptor".
+> > - Add a new cleanup patch: "PCI: dwc: Add dw_ prefix to the pcie_port
+> >   structure name".
+> > - Drop the patch "PCI: dwc: Don't use generic IO-ops for DBI-space
+> >   access". (@Rob)
+> > - Drop Manivannan tested tag from the changed patches.
 > 
-> (There's also quite a lot of pci badness entries before this, left out
-> for brevity).
+> @Mani, there are several brand new patches in this series and a few
+> ones updated (@Rob requests). Could you please have a look at the
+> patchset one more time?
+> 
 
-The badness would definitely be interesting (the entire dmesg log), as
-well as a dmesg log collected with "pci=no_e820".  I'll attach them to
-this bugzilla [1].
+Yep, this is on my todo list. But I'm in a company wide meetup currently.
+Will take a look once I'm back this weekend.
 
-Generally I expect PCI devices to work even if we reassign their BARs
-before a driver claims them.  But apparently some do not, and I'm
-always curious about which ones they are.
+I'll also give this series (and other ones) a go on my hardware.
 
-If you could confirm that Hans' revert [2] avoids the problem without
-needing "pci=no_e820", that would be awesome, too.
+Thanks,
+Mani
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=216109
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=for-linus&id=dd104bcc2cf233234f82bfc4bd5b8ab32cdbf117
+> -Sergey
+> 
+> > - Rebase onto v5.18.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> > Cc: Jingoo Han <jingoohan1@gmail.com>
+> > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> > Cc: Frank Li <Frank.Li@nxp.com>
+> > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > 
+> > Serge Semin (18):
+> >   PCI: dwc: Stop link in the host init error and de-initialization
+> >   PCI: dwc: Add unroll iATU space support to the regions disable method
+> >   PCI: dwc: Disable outbound windows for controllers with iATU
+> >   PCI: dwc: Set INCREASE_REGION_SIZE flag based on limit address
+> >   PCI: dwc: Deallocate EPC memory on EP init error
+> >   PCI: dwc: Enable CDM-check independently from the num_lanes value
+> >   PCI: dwc: Add braces to the multi-line if-else statements
+> >   PCI: dwc: Add trailing new-line literals to the log messages
+> >   PCI: dwc: Discard IP-core version checking on unrolled iATU detection
+> >   PCI: dwc: Convert Link-up status method to using dw_pcie_readl_dbi()
+> >   PCI: dwc: Organize local variables usage
+> >   PCI: dwc: Re-use local pointer to the resource data
+> >   PCI: dwc: Add start_link/stop_link inliners
+> >   PCI: dwc: Move io_cfg_atu_shared to the Root Port descriptor
+> >   PCI: dwc: Add dw_ prefix to the pcie_port structure name
+> >   PCI: dwc-plat: Simplify the probe method return value handling
+> >   PCI: dwc-plat: Discard unused regmap pointer
+> >   PCI: dwc-plat: Drop dw_plat_pcie_of_match forward declaration
+> > 
+> >  drivers/pci/controller/dwc/pci-dra7xx.c       |  12 +-
+> >  drivers/pci/controller/dwc/pci-exynos.c       |   6 +-
+> >  drivers/pci/controller/dwc/pci-imx6.c         |   6 +-
+> >  drivers/pci/controller/dwc/pci-keystone.c     |  20 ++--
+> >  .../pci/controller/dwc/pci-layerscape-ep.c    |  12 --
+> >  drivers/pci/controller/dwc/pci-layerscape.c   |   2 +-
+> >  drivers/pci/controller/dwc/pci-meson.c        |   2 +-
+> >  drivers/pci/controller/dwc/pcie-al.c          |   6 +-
+> >  drivers/pci/controller/dwc/pcie-armada8k.c    |   4 +-
+> >  drivers/pci/controller/dwc/pcie-artpec6.c     |   4 +-
+> >  .../pci/controller/dwc/pcie-designware-ep.c   |  30 +++--
+> >  .../pci/controller/dwc/pcie-designware-host.c | 104 ++++++++++--------
+> >  .../pci/controller/dwc/pcie-designware-plat.c |  25 +----
+> >  drivers/pci/controller/dwc/pcie-designware.c  |  72 +++++++-----
+> >  drivers/pci/controller/dwc/pcie-designware.h  |  46 +++++---
+> >  drivers/pci/controller/dwc/pcie-dw-rockchip.c |   4 +-
+> >  drivers/pci/controller/dwc/pcie-fu740.c       |   2 +-
+> >  drivers/pci/controller/dwc/pcie-histb.c       |  10 +-
+> >  drivers/pci/controller/dwc/pcie-intel-gw.c    |   6 +-
+> >  drivers/pci/controller/dwc/pcie-keembay.c     |   4 +-
+> >  drivers/pci/controller/dwc/pcie-kirin.c       |   2 +-
+> >  drivers/pci/controller/dwc/pcie-qcom.c        |   4 +-
+> >  drivers/pci/controller/dwc/pcie-spear13xx.c   |   6 +-
+> >  drivers/pci/controller/dwc/pcie-tegra194.c    |  22 ++--
+> >  drivers/pci/controller/dwc/pcie-uniphier.c    |  10 +-
+> >  drivers/pci/controller/dwc/pcie-visconti.c    |   6 +-
+> >  26 files changed, 225 insertions(+), 202 deletions(-)
+> > 
+> > -- 
+> > 2.35.1
+> > 
 
-> I bisected the issue to:
-> 4c5e242d3e93 x86/PCI: Clip only host bridge windows for E820 regions
-> 
-> and to confirm that was the problem I attempted a revert of that commit on
-> v5.19-rc1.  The revert had a conflict which pointed me to this commit:
-> fa6dae5d8208 x86/PCI: Add kernel cmdline options to use/ignore E820 reserved
-> regions
-> 
-> So - I've added "pci=no_e820" to my kernel parameters, which allows vmwgfx
-> to work properly again, and I'm reporting it here as requested in the commit
-> adding that parameter.
-> 
-> I'm happy to provide more information if needed, or test.
-> 
-> Ben
-> 
+-- 
+மணிவண்ணன் சதாசிவம்
