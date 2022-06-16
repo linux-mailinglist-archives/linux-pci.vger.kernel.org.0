@@ -2,64 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B1F854EA5C
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 21:53:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1464954EA79
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 22:03:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378451AbiFPTxb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jun 2022 15:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
+        id S231455AbiFPUDW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jun 2022 16:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbiFPTxT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 15:53:19 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218796276;
-        Thu, 16 Jun 2022 12:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655409198; x=1686945198;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jlT4m+WFkmmazCzTLedwDoWN/1Muhtuim1CMzuJuNFg=;
-  b=WFlFZ4hroIy5syARNZ1/GDz/ma+Utd5Uu3wb4bB2Ddt/KDpckVWRuOJB
-   Ao88s4TGb/aBUbq2fBsAOwyjT6HzRaovl5cpAaQG1QdNGwk7UkAlmE46p
-   xnBrNePScgn+DnF4tRrnt3h4OB93HuEWpMPlsEFBQ9YMtMKkTdgUKsW4Y
-   83LAH4seuLQALqWKm23OcRShRDSxyGwzYbUCTWePza//ysSTbt2zBUeZx
-   Z3J9zM2G7l3pswUJ88aDa3krO1roo3USPlSiRzvA9GXyHUSPu/h9DAgYG
-   OZ+fObUIqFEHMM2307j7Y90GAU7UBvbyvRI+EcGIyITqHuQJYbDQVCgpF
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="365690497"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="365690497"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2022 12:53:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="613284579"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 16 Jun 2022 12:53:13 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o1vYG-000OiX-OA;
-        Thu, 16 Jun 2022 19:53:12 +0000
-Date:   Fri, 17 Jun 2022 03:52:18 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     netdev@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-staging@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        bpf@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- c6d7e3b385f19869ab96e9404c92ff1abc34f2c8
-Message-ID: <62ab89f2.Pko7sI08RAKdF8R6%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229521AbiFPUDW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 16:03:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E81142C67A;
+        Thu, 16 Jun 2022 13:03:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8C370B82547;
+        Thu, 16 Jun 2022 20:03:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092ADC34114;
+        Thu, 16 Jun 2022 20:03:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655409798;
+        bh=Uol+PSWVvFyE2viRoyeLuseZUU+ffBIc10m1XLxj/eY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jN0/TY9pxWfPSCxKBXHwHlqip19rrgrZn5THfpZgVWjOjMBNM1OXcCR67Bg87FehO
+         x8oOP+wmLelkswmLZwGb1vphvdB9ZgVIUwG9l/oya5eLGewDn2EYmSYh3aaxjVCvzG
+         v99BXKjGzhKzblA5UQGDBa7g+B97EyYl0axxGujgP7j0P0RYRKiJBMzawgNNkb1KPj
+         m+ehMAejk61v7VSkLeOnDfK9xXmoCrwyNc1BGtDukFWEnVgQPpUxeRp6LjUo8uzSSr
+         zpG5T8ui/uKCuVft8zonY/BrAKRAw3CqweZlRe+vzKIGZ0lUnBWAXBq5aSTP6Mloyd
+         d4uGhfPlIPKGw==
+Date:   Thu, 16 Jun 2022 15:03:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/18] PCI: dwc: Various fixes and cleanups
+Message-ID: <20220616200316.GA1106102@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,286 +62,153 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: c6d7e3b385f19869ab96e9404c92ff1abc34f2c8  Add linux-next specific files for 20220616
+On Fri, Jun 10, 2022 at 11:25:16AM +0300, Serge Semin wrote:
+> This patchset is a first one in the series created in the framework of
+> my Baikal-T1 PCIe/eDMA-related work:
+> 
+> [1: In-progress v4] PCI: dwc: Various fixes and cleanups
+> Link: ---you are looking at it---
+> [2: In-progress v2] PCI: dwc: Add hw version and dma-ranges support
+> Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+> [3: In-progress v2] PCI: dwc: Add extended YAML-schema and Baikal-T1 support
+> Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+> [4: In-progress v2] dmaengine: dw-edma: Add RP/EP local DMA support
+> Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+> 
+> Note it is very recommended to merge the patchsets in the same order as
+> they are placed in the list above in order to prevent possible merge
+> conflicts. Nothing prevents them from being reviewed synchronously though.
+> Any tests are very welcome!
+> 
+> As it can be easily inferred from the patchset title, this series is about
+> the DW PCIe Root Port/Endpoint driver fixes and the code cleanups, where
+> fixes come before the cleanup patches. The patchset starts with adding the
+> stop_link() platform-specific method invocation in case of the PCIe host
+> probe procedure errors. It has been missing in the cleanup-on-error path
+> of the DW PCIe Host initialization method. After that the unrolled CSRs
+> layout is added to the iATU disable procedure. In third the disable iATU
+> procedure is fixed to be called only for the internal ATU as being
+> specific for the internal ATU implementation. Then the outbound iATU
+> extended region setup procedure is fixed to have the INCREASE_REGION_SIZE
+> flag set based on the limit-address - not the region size one. The last
+> but not least the CDM-check enabling procedure is fixed to be independent
+> from the non-related num_lanes field state.
+> 
+> Afterwards there is a series of cleanups. It concerns the changes like
+> adding braces to the multi-line if-else constructions, trailing new-lines
+> to the print format-string, dropping unnecessary version checking, and
+> various code simplifications and optimizations.
+> 
+> New features like adding two-level DT bindings abstraction, adding better
+> structured IP-core version interface, adding iATU regions size detection
+> and the PCIe regions verification procedure, adding dma-ranges support,
+> introducing a set of generic platform clocks and resets and finally adding
+> Baikal-T1 PCIe interface support will be submitted in the next part of the
+> series.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Fix the end address of the example in the patch log with
+>   the INCREASE_REGION_SIZE flag usage fixup. It should be
+>   0x1000FFFF and not 0x0000FFFF (@Manivannan).
+> - Add the cleanup-on-error path to the dw_pcie_ep_init() function.
+>   (@Manivannan)
+> 
+> Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v3:
+> - Convert region variable type to u32 in order to fix the implicit type
+>   conversion peculiarity. (@kbot)
+> - Rebase onto v5.18-rc6.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v4:
+> - Move the patch "PCI: dwc: Deallocate EPC memory on EP init error" to
+>   being applied before the cleanup patches.
+> - Add a new fixes patch: "PCI: dwc: Enable CDM-check independently from
+>   the num_lanes value".
+> - Add a new cleanup patch: "PCI: dwc: Organize local variables usage".
+> - Add a new cleanup patch: "PCI: dwc: Re-use local pointer to the
+>   resource data".
+> - Add a new cleanup patch: "PCI: dwc: Add start_link/stop_link inliners".
+> - Add a new cleanup patch: "PCI: dwc: Move io_cfg_atu_shared to the Root
+>   Port descriptor".
+> - Add a new cleanup patch: "PCI: dwc: Add dw_ prefix to the pcie_port
+>   structure name".
+> - Drop the patch "PCI: dwc: Don't use generic IO-ops for DBI-space
+>   access". (@Rob)
+> - Drop Manivannan tested tag from the changed patches.
+> - Rebase onto v5.18.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: Frank Li <Frank.Li@nxp.com>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (18):
+>   PCI: dwc: Stop link in the host init error and de-initialization
+>   PCI: dwc: Add unroll iATU space support to the regions disable method
+>   PCI: dwc: Disable outbound windows for controllers with iATU
+>   PCI: dwc: Set INCREASE_REGION_SIZE flag based on limit address
+>   PCI: dwc: Deallocate EPC memory on EP init error
+>   PCI: dwc: Enable CDM-check independently from the num_lanes value
+>   PCI: dwc: Add braces to the multi-line if-else statements
+>   PCI: dwc: Add trailing new-line literals to the log messages
+>   PCI: dwc: Discard IP-core version checking on unrolled iATU detection
+>   PCI: dwc: Convert Link-up status method to using dw_pcie_readl_dbi()
+>   PCI: dwc: Organize local variables usage
+>   PCI: dwc: Re-use local pointer to the resource data
+>   PCI: dwc: Add start_link/stop_link inliners
+>   PCI: dwc: Move io_cfg_atu_shared to the Root Port descriptor
+>   PCI: dwc: Add dw_ prefix to the pcie_port structure name
+>   PCI: dwc-plat: Simplify the probe method return value handling
+>   PCI: dwc-plat: Discard unused regmap pointer
+>   PCI: dwc-plat: Drop dw_plat_pcie_of_match forward declaration
+> 
+>  drivers/pci/controller/dwc/pci-dra7xx.c       |  12 +-
+>  drivers/pci/controller/dwc/pci-exynos.c       |   6 +-
+>  drivers/pci/controller/dwc/pci-imx6.c         |   6 +-
+>  drivers/pci/controller/dwc/pci-keystone.c     |  20 ++--
+>  .../pci/controller/dwc/pci-layerscape-ep.c    |  12 --
+>  drivers/pci/controller/dwc/pci-layerscape.c   |   2 +-
+>  drivers/pci/controller/dwc/pci-meson.c        |   2 +-
+>  drivers/pci/controller/dwc/pcie-al.c          |   6 +-
+>  drivers/pci/controller/dwc/pcie-armada8k.c    |   4 +-
+>  drivers/pci/controller/dwc/pcie-artpec6.c     |   4 +-
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  30 +++--
+>  .../pci/controller/dwc/pcie-designware-host.c | 104 ++++++++++--------
+>  .../pci/controller/dwc/pcie-designware-plat.c |  25 +----
+>  drivers/pci/controller/dwc/pcie-designware.c  |  72 +++++++-----
+>  drivers/pci/controller/dwc/pcie-designware.h  |  46 +++++---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c |   4 +-
+>  drivers/pci/controller/dwc/pcie-fu740.c       |   2 +-
+>  drivers/pci/controller/dwc/pcie-histb.c       |  10 +-
+>  drivers/pci/controller/dwc/pcie-intel-gw.c    |   6 +-
+>  drivers/pci/controller/dwc/pcie-keembay.c     |   4 +-
+>  drivers/pci/controller/dwc/pcie-kirin.c       |   2 +-
+>  drivers/pci/controller/dwc/pcie-qcom.c        |   4 +-
+>  drivers/pci/controller/dwc/pcie-spear13xx.c   |   6 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c    |  22 ++--
+>  drivers/pci/controller/dwc/pcie-uniphier.c    |  10 +-
+>  drivers/pci/controller/dwc/pcie-visconti.c    |   6 +-
+>  26 files changed, 225 insertions(+), 202 deletions(-)
 
-Error/Warning reports:
+This doesn't apply cleanly on v5.19-rc1 (my "main" branch).  v5.19-rc1
+was tagged June 5, but apparently v4 was rebased to v5.18 and posted
+June 10?  That's just a non-starter because many of these files were
+changed during the merge window between v5.18 and v5.19-rc1.
 
-https://lore.kernel.org/lkml/202206071511.FI7WLdZo-lkp@intel.com
+I'll be looking for an ack from Jingoo and/or Gustavo, maintainers of
+pcie-designware.c and related files.
 
-Error/Warning: (recently discovered and may have been fixed)
+Generally I wait for owners of files to comment before I review in
+detail.  This is just expedient because they know the code better than
+I do and can resolve lots of things in parallel before getting
+single-threaded on me or Lorenzo.
 
-include/linux/highmem-internal.h:203:31: error: passing argument 1 of 'kunmap_flush_on_unmap' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-include/linux/highmem-internal.h:203:31: warning: passing argument 1 of 'kunmap_flush_on_unmap' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-kernel/bpf/helpers.c:1490:29: sparse: sparse: symbol 'bpf_dynptr_from_mem_proto' was not declared. Should it be static?
-kernel/bpf/helpers.c:1516:29: sparse: sparse: symbol 'bpf_dynptr_read_proto' was not declared. Should it be static?
-kernel/bpf/helpers.c:1542:29: sparse: sparse: symbol 'bpf_dynptr_write_proto' was not declared. Should it be static?
-kernel/bpf/helpers.c:1569:29: sparse: sparse: symbol 'bpf_dynptr_data_proto' was not declared. Should it be static?
-ld.lld: error: kernel/built-in.a(kallsyms.o):(function get_symbol_offset: .text+0x532): relocation R_RISCV_PCREL_HI20 out of range: -524434 is not in [-524288, 524287]; references kallsyms_markers
-ld.lld: error: kernel/built-in.a(kallsyms.o):(function get_symbol_offset: .text+0x540): relocation R_RISCV_PCREL_HI20 out of range: -524434 is not in [-524288, 524287]; references kallsyms_names
-ld.lld: error: kernel/built-in.a(kallsyms.o):(function update_iter: .text+0x95c): relocation R_RISCV_PCREL_HI20 out of range: -524434 is not in [-524288, 524287]; references kallsyms_num_syms
-ld.lld: error: kernel/built-in.a(kallsyms.o):(function update_iter: .text+0xab2): relocation R_RISCV_PCREL_HI20 out of range: -524435 is not in [-524288, 524287]; references kallsyms_names
-ld.lld: error: kernel/built-in.a(kallsyms.o):(function update_iter: .text+0xaca): relocation R_RISCV_PCREL_HI20 out of range: -524435 is not in [-524288, 524287]; references kallsyms_token_index
-ld.lld: error: kernel/built-in.a(kallsyms.o):(function update_iter: .text+0xad4): relocation R_RISCV_PCREL_HI20 out of range: -524435 is not in [-524288, 524287]; references kallsyms_offsets
-
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:9143:27: warning: variable 'abo' set but not used [-Wunused-but-set-variable]
-drivers/usb/gadget/udc/aspeed_udc.c:1009:28: sparse: sparse: restricted __le16 degrades to integer
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- alpha-randconfig-m031-20220616
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|-- alpha-randconfig-r011-20220616
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|-- arc-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- arm-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- arm-randconfig-s031-20220616
-|   `-- drivers-usb-gadget-udc-aspeed_udc.c:sparse:sparse:restricted-__le16-degrades-to-integer
-|-- arm-randconfig-s032-20220616
-|   |-- fs-xfs-xfs_file.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-usertype-ret-got-int
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_data_proto-was-not-declared.-Should-it-be-static
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_from_mem_proto-was-not-declared.-Should-it-be-static
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_read_proto-was-not-declared.-Should-it-be-static
-|   `-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_write_proto-was-not-declared.-Should-it-be-static
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- i386-randconfig-a005
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- i386-randconfig-m021
-|   `-- arch-x86-events-core.c-init_hw_perf_events()-warn:missing-error-code-err
-|-- i386-randconfig-s001
-|   |-- drivers-pci-pci.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-pci_power_t-assigned-usertype-state-got-int
-|   |-- drivers-vfio-pci-vfio_pci_config.c:sparse:sparse:restricted-pci_power_t-degrades-to-integer
-|   `-- kernel-signal.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-lockdep_map-const-lock-got-struct-lockdep_map-noderef-__rcu
-|-- i386-randconfig-s002
-|   |-- drivers-pci-pci.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-pci_power_t-assigned-usertype-state-got-int
-|   |-- fs-xfs-xfs_file.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-usertype-ret-got-int
-|   `-- kernel-signal.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-lockdep_map-const-lock-got-struct-lockdep_map-noderef-__rcu
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- ia64-allyesconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- m68k-allmodconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- m68k-allyesconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- mips-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- mips-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- nios2-allmodconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- nios2-allyesconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- parisc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   |-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|   |-- include-linux-highmem-internal.h:error:passing-argument-of-kunmap_flush_on_unmap-discards-const-qualifier-from-pointer-target-type
-|   `-- include-linux-highmem-internal.h:warning:passing-argument-of-kunmap_flush_on_unmap-discards-const-qualifier-from-pointer-target-type
-|-- parisc-defconfig
-|   `-- include-linux-highmem-internal.h:warning:passing-argument-of-kunmap_flush_on_unmap-discards-const-qualifier-from-pointer-target-type
-|-- parisc-randconfig-r012-20220616
-|   |-- include-linux-highmem-internal.h:error:passing-argument-of-kunmap_flush_on_unmap-discards-const-qualifier-from-pointer-target-type
-|   `-- include-linux-highmem-internal.h:warning:passing-argument-of-kunmap_flush_on_unmap-discards-const-qualifier-from-pointer-target-type
-|-- parisc64-defconfig
-|   `-- include-linux-highmem-internal.h:warning:passing-argument-of-kunmap_flush_on_unmap-discards-const-qualifier-from-pointer-target-type
-|-- powerpc-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- powerpc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- riscv-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- riscv-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- s390-allyesconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|-- sh-allmodconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- sparc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- um-i386_defconfig
-|   `-- arch-um-kernel-skas-uaccess.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-const-addr-got-unsigned-int-noderef-usertype-__user-uaddr
-|-- x86_64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- x86_64-randconfig-m001
-|   |-- arch-x86-events-core.c-init_hw_perf_events()-warn:missing-error-code-err
-|   `-- lib-maple_tree.c-mas_wr_spanning_store()-warn:inconsistent-indenting
-|-- x86_64-randconfig-s021
-|   |-- drivers-pci-pci.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-pci_power_t-assigned-usertype-state-got-int
-|   |-- fs-xfs-xfs_file.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-usertype-ret-got-int
-|   `-- kernel-signal.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-lockdep_map-const-lock-got-struct-lockdep_map-noderef-__rcu
-|-- x86_64-randconfig-s022
-|   |-- drivers-pci-pci.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-pci_power_t-assigned-usertype-state-got-int
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_data_proto-was-not-declared.-Should-it-be-static
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_from_mem_proto-was-not-declared.-Should-it-be-static
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_read_proto-was-not-declared.-Should-it-be-static
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_write_proto-was-not-declared.-Should-it-be-static
-|   `-- kernel-signal.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-lockdep_map-const-lock-got-struct-lockdep_map-noderef-__rcu
-`-- xtensa-allyesconfig
-    |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-    `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-
-clang_recent_errors
-|-- riscv-buildonly-randconfig-r002-20220616
-|   `-- arch-riscv-kernel-cpufeature.c:warning:variable-cpu_apply_feature-set-but-not-used
-|-- riscv-buildonly-randconfig-r003-20220616
-|   |-- ld.lld:error:kernel-built-in.a(kallsyms.o):(function-get_symbol_offset:.text):relocation-R_RISCV_PCREL_HI20-out-of-range:is-not-in-references-kallsyms_markers
-|   |-- ld.lld:error:kernel-built-in.a(kallsyms.o):(function-get_symbol_offset:.text):relocation-R_RISCV_PCREL_HI20-out-of-range:is-not-in-references-kallsyms_names
-|   |-- ld.lld:error:kernel-built-in.a(kallsyms.o):(function-update_iter:.text):relocation-R_RISCV_PCREL_HI20-out-of-range:is-not-in-references-kallsyms_names
-|   |-- ld.lld:error:kernel-built-in.a(kallsyms.o):(function-update_iter:.text):relocation-R_RISCV_PCREL_HI20-out-of-range:is-not-in-references-kallsyms_num_syms
-|   |-- ld.lld:error:kernel-built-in.a(kallsyms.o):(function-update_iter:.text):relocation-R_RISCV_PCREL_HI20-out-of-range:is-not-in-references-kallsyms_offsets
-|   `-- ld.lld:error:kernel-built-in.a(kallsyms.o):(function-update_iter:.text):relocation-R_RISCV_PCREL_HI20-out-of-range:is-not-in-references-kallsyms_token_index
-`-- riscv-randconfig-r042-20220616
-    `-- arch-riscv-kernel-cpufeature.c:warning:variable-cpu_apply_feature-set-but-not-used
-
-elapsed time: 720m
-
-configs tested: 107
-configs skipped: 3
-
-gcc tested configs:
-arm                              allmodconfig
-arm                              allyesconfig
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-um                             i386_defconfig
-i386                          randconfig-c001
-alpha                            allyesconfig
-arc                              allyesconfig
-nios2                            allyesconfig
-mips                         bigsur_defconfig
-m68k                        mvme147_defconfig
-sh                         ap325rxa_defconfig
-sh                      rts7751r2d1_defconfig
-microblaze                      mmu_defconfig
-sh                           se7780_defconfig
-powerpc                 mpc834x_mds_defconfig
-xtensa                  audio_kc705_defconfig
-arc                              alldefconfig
-nios2                         3c120_defconfig
-arc                    vdk_hs38_smp_defconfig
-arm                        clps711x_defconfig
-nios2                         10m50_defconfig
-mips                       capcella_defconfig
-arm                           sunxi_defconfig
-xtensa                         virt_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-alpha                               defconfig
-csky                                defconfig
-nios2                               defconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-s390                             allyesconfig
-parisc64                            defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allmodconfig
-mips                             allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-arc                  randconfig-r043-20220616
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-riscv                    nommu_k210_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                                  kexec
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-
-clang tested configs:
-mips                        bcm63xx_defconfig
-powerpc                     tqm8540_defconfig
-mips                          ath79_defconfig
-mips                       lemote2f_defconfig
-mips                     loongson1c_defconfig
-powerpc                       ebony_defconfig
-powerpc                  mpc885_ads_defconfig
-x86_64                        randconfig-k001
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-hexagon              randconfig-r041-20220616
-hexagon              randconfig-r045-20220616
-s390                 randconfig-r044-20220616
-riscv                randconfig-r042-20220616
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Bjorn
