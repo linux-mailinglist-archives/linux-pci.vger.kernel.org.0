@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41E8054E0FC
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 14:45:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A260C54E0FA
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Jun 2022 14:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232131AbiFPMoq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Jun 2022 08:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51808 "EHLO
+        id S232877AbiFPMou (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Jun 2022 08:44:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbiFPMop (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 08:44:45 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2080.outbound.protection.outlook.com [40.107.236.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DE69DFC4;
+        with ESMTP id S231725AbiFPMoq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Jun 2022 08:44:46 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2065.outbound.protection.outlook.com [40.107.96.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E82A73F8B1;
         Thu, 16 Jun 2022 05:44:44 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FvA2ztVjL8x2wSZFHDiwlU75mQouISmd+lKxTMODjLX2mwLOL486V++vfvZ7Iug7qQtc+2WEsFVCjKNwcmJ+YwHX7/LF+5/3C0Qxoyvq0YCFfYDNYkEGbLGyuyYWYAcwWRu8HQNONNJXsqoxFBCuxchn9iN4reDpO+HMgM2fKdzPLGA1xwuttEn/2p1KrTvzIB7u3CmkjihA2A81kFi7DHfENNIIoqAN8So09w/XC8FinWaCfWE2WGFtWpbNMuWamsgupXrXTrjwa7reqdHQk30DxPq94mQwdJWI492gRTg7Q3VXjca3k/EzvIitWmHJwe8Z3MO3jxE1vH9QgYLB2w==
+ b=NTf2CbMSRdm2/Kg+8bLLoiaqqyjQEV0wxwQzaTsBtNISSZdO4aVSyqOj+SW+ImDLr0AeTG41CWjA2Qm/P5VV1sBM+HIo0iJZwyZVT0sjDnd7w5UkMGa1MRWMjXZT9Dt4RdnUQy7UME8yk0NAqeMJLo2inlIMyJosyYJ0+UzSmP6kdBEYfkdEK3HBtQYq2KA/F24QdQuVyJuaSid8m2W2JBoDuRq5wKWxZeO3KI8zpQ3zb714MkM2cQd/sEtkE+PIqj2HVVK4KmSF4NCMWdTaiCJ8tP53eMbs+HbHBs6hTIR0lctyC7T19SLCklsDlRN7WW4C/M+Vwvvqv0ntfZWy4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=98A8jtRpT1SVHSfirIZF3dnOSoEZWQ2ovgiPp2lg+78=;
- b=gh/nXHa9/3TZ84xFKW8sedR1wpmd8uKA1P9vMHcUS/AjUtVGt+rNlGPeZNcuAcE85biDWgCZqRAOSOHqcuR2+9+eB+R8HalyLOC1dSKtSPfdDlyI8OO5ikDTcbfrswdhT3V9duTZg80ALcPUfJpw8GgbzytGI6R12D0qPhdxjrsjgW9KLLuIFsZeBCnLCDeEIdsR8dj4bxWUPFuU3QoeoKhoLXiukZYlDQZL+d1IJRaFUcj0mhw9JVfLo+MZfIo+pVj3AH2OSObIfr4NFdthVeWn7ZOrzX5Uj+LtNq4iXEOVelMoLvx5nJCqYAz7BeAHhNxbl2Zbnyh8C02iyTtQLg==
+ bh=lJ2RMDeBBUL290SYRRhu3qCiF5XEVuN/6QlCMSYkVA0=;
+ b=Nhe1dl+Qf36DkwYUc1F6O6cEbnLcjbNqYKOZA+iGM/wIX9M9GI5iEgyzZx7rcACnMcxiZDHbokdPT3SC8A3jZDn6OxI/NdkviAwDmWoC2Ktu/XWvpwBDHD4pF7qiJayIuTg3CoMbCqqrdSRfNda0UfdGQUiEOJQnERKIc8K91OHWvO3ioos0dWf8ysETPLpD/LpGIXcgVPGtztcrxuFioCHHcopSM1rigg7uSqklaBv/L9RLxxgGj7XwATlMoHPvQ6brmlmBoVpbO91kMl2VV6ZjHQ6R7bMmdKqCRvyxtNVAMBvhg3T9f3k7OFIPu/gByIpePtpNO+kFQ6pbKvzktA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
@@ -28,15 +28,15 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=98A8jtRpT1SVHSfirIZF3dnOSoEZWQ2ovgiPp2lg+78=;
- b=l1hLMk4mRjlj4uedqDdjM1duuyROA+ylAgPm339HoPsxnhWWbHbyPq+tDYFDgckKiMchEIbK7qiR5j/gDjUPOQLyg2uw0ZpJ7i5Xr4SX6VXPoWrHPFCiWYGZ90loivmOGhHvrBEKSfsxyhE7D3BeyNhMozojuMn1ZfXMjuInuTk=
+ bh=lJ2RMDeBBUL290SYRRhu3qCiF5XEVuN/6QlCMSYkVA0=;
+ b=VHHMtn3YZY/lfVMKiAzDpfsvtKwKCLS8P9MH5hpR1uX0ZCxgkrNTdV0a1Jq6ZftbD2sZCaA5ti/8OFxwvWGnNzgCs2IOK6QjLz14jCZBcoi2wRzMRfth27V2sU/D8ao4eBKSGwhnqvaRUL8WvQof5hsjghfJ0LVCXTQUnHSuiqU=
 Received: from DS7PR05CA0089.namprd05.prod.outlook.com (2603:10b6:8:56::6) by
- BL3PR02MB8147.namprd02.prod.outlook.com (2603:10b6:208:35e::23) with
+ CY4PR02MB2696.namprd02.prod.outlook.com (2603:10b6:903:11b::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.13; Thu, 16 Jun
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.17; Thu, 16 Jun
  2022 12:44:42 +0000
 Received: from DM3NAM02FT013.eop-nam02.prod.protection.outlook.com
- (2603:10b6:8:56:cafe::2b) by DS7PR05CA0089.outlook.office365.com
+ (2603:10b6:8:56:cafe::4) by DS7PR05CA0089.outlook.office365.com
  (2603:10b6:8:56::6) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.9 via Frontend
  Transport; Thu, 16 Jun 2022 12:44:42 +0000
@@ -53,10 +53,10 @@ Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
 Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
  xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Thu, 16 Jun 2022 05:44:38 -0700
+ 15.1.2176.14; Thu, 16 Jun 2022 05:44:41 -0700
 Received: from smtp.xilinx.com (172.19.127.96) by
  xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Thu, 16 Jun 2022 05:44:38 -0700
+ 15.1.2176.14 via Frontend Transport; Thu, 16 Jun 2022 05:44:41 -0700
 Envelope-to: linux-pci@vger.kernel.org,
  linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org,
@@ -66,16 +66,16 @@ Envelope-to: linux-pci@vger.kernel.org,
 Received: from [10.140.9.2] (port=44392 helo=xhdbharatku40.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1o1orV-000Aiu-Hd; Thu, 16 Jun 2022 05:44:37 -0700
+        id 1o1orZ-000Aiu-4P; Thu, 16 Jun 2022 05:44:41 -0700
 From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>
 CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
         <michals@xilinx.com>, <robh@kernel.org>,
         Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH v5 1/2] dt-bindings: PCI: xilinx-cpm: Add Versal CPM5 Root Port
-Date:   Thu, 16 Jun 2022 18:14:28 +0530
-Message-ID: <20220616124429.12917-2-bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v5 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root Port
+Date:   Thu, 16 Jun 2022 18:14:29 +0530
+Message-ID: <20220616124429.12917-3-bharat.kumar.gogada@xilinx.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220616124429.12917-1-bharat.kumar.gogada@xilinx.com>
 References: <20220616124429.12917-1-bharat.kumar.gogada@xilinx.com>
@@ -83,25 +83,25 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: aa37eab7-d892-436c-caa5-08da4f95fbe3
-X-MS-TrafficTypeDiagnostic: BL3PR02MB8147:EE_
-X-Microsoft-Antispam-PRVS: <BL3PR02MB8147576E1373A58BCFC6A957A5AC9@BL3PR02MB8147.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 3e62ebc9-6b86-4b0d-c678-08da4f95fc21
+X-MS-TrafficTypeDiagnostic: CY4PR02MB2696:EE_
+X-Microsoft-Antispam-PRVS: <CY4PR02MB26967B368A218851588920CFA5AC9@CY4PR02MB2696.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yROrGB46p5XN20qs6HnosahfqzbcdoxvwG8SGiWsm4EBo/ToJhy4znvPvGaMjF06pot89YwUCMkK3/sjf+jLHIAICW3aAEr+o95wQGilaKQM11D9PcRuyaZ4Nv5FRPSO9Xjevr41yV+5lkvZyeppZlhNb8d8PRt80/qkpzpchYXccZR0q/Cd7S9GreXaRKvz1vH2qOpwnGSfjyx4XfWppX45Tq865C+fTBrd60sxlHT/fbQEcCWStjIy/q1Njb04fSAuk5/dcjSAXI19Gcrffjbd4tcIP428HYEHCgXIKlsNhEAP+94ztnsg+E+jH8Z9+XQDC8jbg68Rb1+RQQ0P2HHyYJYV4gjNTmY3WX9qGnvtPMOH26ve3J5d2HYqCjPj24zRes+iJvIT3J5aN4v3+nT/rMLJvDsUT36U71k1ttVICNGyAFYhPIFZUwDffnjiCTd9L9ADIxJZ+fjcPbBOLNWevGQGrUjmQCJlB8kqcktWwMHqbqxpAqrRHjXIj0eedATL6vMWd34sS/f2smAwkBLlpGptAu3HzI9/bYNwGdJBr69taWZ9oz3JshqVfbl4x3d0ISpkJqBdAngay66cCNs6QsuyOF4fG3w75i0q63huziBt/Y+CQAiLJACmf6+RpFznBJRAaFXI/TLg5CL/sX5dufyp1mFjKNuMOQS35wwrhHBlBILZn7fcK5utglqjUrM6hA7OhAi0RAODy7ZGtQ==
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230016)(4636009)(46966006)(36840700001)(40470700004)(2906002)(36860700001)(186003)(83380400001)(426003)(47076005)(336012)(1076003)(316002)(6666004)(498600001)(54906003)(110136005)(26005)(8676002)(70586007)(4326008)(7696005)(9786002)(70206006)(356005)(107886003)(103116003)(40460700003)(7636003)(36756003)(82310400005)(8936002)(2616005)(5660300002)(102446001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: SHT7cDTCZhT9mH6/OGIDZttPiEcosyxiwyc2qB4tWw7BDnGfXfMnVlL270Ziwa4E+ugCTEpSXbpRUR4L0SPHGKN1vrp28BCwt/NCYVv6J8YXjuYx1+0DkRb1nYWzBgJalqjptTJFxXHeZREwbSucH+H5UkLQ9FDlQjNhcySQDYhVH5eGc4eB8YBvnjCtmXm3M5fCLT4RDlMu/2vasiNGMkZM4IRtSao+iPswUj9GAgoLLY9xZUghMmVGNtiDMMQ6uzYvcjD2tfrSWSJTA/4Sdalx2UWkdWs7AbCAloFIeKfC6HPY+DnO0TtYmq2pSNVjXUJq8GGwscYnHy9i991yrwu6Ok2NZEG06/Nw1ebNRFxNVNIkeb3m7rIEgOi1rFfplztgujj+7HCekjJDEbrV0RPIlLSxF/7pYjalAMGGUkAvBE/xIFXqr4WqASSnhs7asGmLlCfCS0oDhPCNc1RsFFq+yPea1Jo5MoQlaoGpHl+fSRjhg5/MrSSahkjPjmpMj+aDtEFzlr2JHk+RonM16JOOTk5TMoBP5jmarZpKQ/ltwd7Q+8xEqvcn1ql7t/8IqbRERkUmu+h/oKQjrxbX9EJGxw3NykXL0yGMw5t90Io1UH5gS3in0mEFb88HJIYS+nsTPR5A9gdzVUP4RSUj4VW8CA6IlSTfP9zOGeQKJIiqwx17qiKwsCQxW6yeUS9v20iq6CwIYiyDhzCuTSZ1cQ==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230016)(4636009)(46966006)(36840700001)(40470700004)(107886003)(186003)(103116003)(2616005)(9786002)(508600001)(26005)(1076003)(5660300002)(7636003)(7696005)(2906002)(6666004)(8936002)(70206006)(40460700003)(70586007)(356005)(54906003)(83380400001)(110136005)(336012)(426003)(4326008)(36860700001)(8676002)(316002)(36756003)(47076005)(82310400005)(102446001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2022 12:44:42.0140
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2022 12:44:42.4202
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa37eab7-d892-436c-caa5-08da4f95fbe3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e62ebc9-6b86-4b0d-c678-08da4f95fc21
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
 X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT013.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR02MB8147
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2696
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -112,86 +112,148 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Xilinx Versal Premium series has CPM5 block which supports Root Port
-functionality at Gen5 speed.
+functioning at Gen5 speed.
 
-Add support for YAML schemas documentation for Versal CPM5 Root Port driver.
+Xilinx Versal CPM5 has few changes with existing CPM block.
+- CPM5 has dedicated register space for control and status registers.
+- CPM5 legacy interrupt handling needs additional register bit
+  to enable and handle legacy interrupts.
 
 Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 ---
- .../bindings/pci/xilinx-versal-cpm.yaml       | 48 +++++++++++++++++--
- 1 file changed, 44 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pcie-xilinx-cpm.c | 62 ++++++++++++++++++++++--
+ 1 file changed, 59 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-index cca395317a4c..80597f2974e5 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-+++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-@@ -14,17 +14,27 @@ allOf:
+diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+index c7cd44ed4dfc..0bcd11d27eeb 100644
+--- a/drivers/pci/controller/pcie-xilinx-cpm.c
++++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+@@ -35,6 +35,10 @@
+ #define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
+ #define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
  
- properties:
-   compatible:
--    const: xlnx,versal-cpm-host-1.00
-+    contains:
-+      enum:
-+        - xlnx,versal-cpm-host-1.00
-+        - xlnx,versal-cpm5-host
- 
-   reg:
-     items:
-       - description: CPM system level control and status registers.
-       - description: Configuration space region and bridge registers.
-+      - description: CPM5 control and status registers.
-+    minItems: 2
- 
-   reg-names:
--    items:
--      - const: cpm_slcr
--      - const: cfg
-+    oneOf:
-+      - items:
-+          - const: cpm_slcr
-+          - const: cfg
-+      - items:
-+          - const: cpm_slcr
-+          - const: cfg
-+          - const: cpm_csr
- 
-   interrupts:
-     maxItems: 1
-@@ -95,4 +105,34 @@ examples:
-                                interrupt-controller;
-                        };
-                };
++#define XILINX_CPM_PCIE_IR_STATUS       0x000002A0
++#define XILINX_CPM_PCIE_IR_ENABLE       0x000002A8
++#define XILINX_CPM_PCIE_IR_LOCAL        BIT(0)
 +
-+               cpm5_pcie: pcie@fcdd0000 {
-+                       compatible = "xlnx,versal-cpm5-host";
-+                       device_type = "pci";
-+                       #address-cells = <3>;
-+                       #interrupt-cells = <1>;
-+                       #size-cells = <2>;
-+                       interrupts = <0 72 4>;
-+                       interrupt-parent = <&gic>;
-+                       interrupt-map-mask = <0 0 0 7>;
-+                       interrupt-map = <0 0 0 1 &pcie_intc_1 0>,
-+                                       <0 0 0 2 &pcie_intc_1 1>,
-+                                       <0 0 0 3 &pcie_intc_1 2>,
-+                                       <0 0 0 4 &pcie_intc_1 3>;
-+                       bus-range = <0x00 0xff>;
-+                       ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
-+                                <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
-+                       msi-map = <0x0 &its_gic 0x0 0x10000>;
-+                       reg = <0x00 0xfcdd0000 0x00 0x1000>,
-+                             <0x06 0x00000000 0x00 0x1000000>,
-+                             <0x00 0xfce20000 0x00 0x1000000>;
-+                       reg-names = "cpm_slcr", "cfg", "cpm_csr";
+ /* Interrupt registers definitions */
+ #define XILINX_CPM_PCIE_INTR_LINK_DOWN		0
+ #define XILINX_CPM_PCIE_INTR_HOT_RESET		3
+@@ -98,6 +102,16 @@
+ /* Phy Status/Control Register definitions */
+ #define XILINX_CPM_PCIE_REG_PSCR_LNKUP		BIT(11)
+ 
++/**
++ * struct xilinx_cpm_variant - CPM variant information
++ * @cpm_version: CPM5 has few changes compared to CPM block.
++ *      CPM5 has dedicated register space for control and status registers.
++ *
++ */
++struct xilinx_cpm_variant {
++	bool cpm_version;
++};
 +
-+                       pcie_intc_1: interrupt-controller {
-+                               #address-cells = <0>;
-+                               #interrupt-cells = <1>;
-+                               interrupt-controller;
-+                       };
-+               };
+ /**
+  * struct xilinx_cpm_pcie - PCIe port information
+  * @dev: Device pointer
+@@ -109,6 +123,7 @@
+  * @intx_irq: legacy interrupt number
+  * @irq: Error interrupt number
+  * @lock: lock protecting shared register access
++ * @is_cpm5: value to check cpm version
+  */
+ struct xilinx_cpm_pcie {
+ 	struct device			*dev;
+@@ -120,6 +135,7 @@ struct xilinx_cpm_pcie {
+ 	int				intx_irq;
+ 	int				irq;
+ 	raw_spinlock_t			lock;
++	bool                            is_cpm5;
+ };
+ 
+ static u32 pcie_read(struct xilinx_cpm_pcie *port, u32 reg)
+@@ -285,6 +301,14 @@ static void xilinx_cpm_pcie_event_flow(struct irq_desc *desc)
+ 		generic_handle_domain_irq(port->cpm_domain, i);
+ 	pcie_write(port, val, XILINX_CPM_PCIE_REG_IDR);
+ 
++	if (port->is_cpm5) {
++		val = readl_relaxed(port->cpm_base + XILINX_CPM_PCIE_IR_STATUS);
++		if (val)
++			writel_relaxed(val,
++				       port->cpm_base +
++				       XILINX_CPM_PCIE_IR_STATUS);
++	}
 +
-     };
+ 	/*
+ 	 * XILINX_CPM_PCIE_MISC_IR_STATUS register is mapped to
+ 	 * CPM SLCR block.
+@@ -484,6 +508,12 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
+ 	 */
+ 	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
+ 	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
++
++	if (port->is_cpm5) {
++		writel(XILINX_CPM_PCIE_IR_LOCAL,
++		       port->cpm_base + XILINX_CPM_PCIE_IR_ENABLE);
++	}
++
+ 	/* Enable the Bridge enable bit */
+ 	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
+ 		   XILINX_CPM_PCIE_REG_RPSC_BEN,
+@@ -503,6 +533,10 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
+ 	struct device *dev = port->dev;
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct resource *res;
++	const struct xilinx_cpm_variant *variant =
++		of_device_get_match_data(dev);
++
++	port->is_cpm5 = variant->cpm_version;
+ 
+ 	port->cpm_base = devm_platform_ioremap_resource_byname(pdev,
+ 							       "cpm_slcr");
+@@ -518,7 +552,14 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
+ 	if (IS_ERR(port->cfg))
+ 		return PTR_ERR(port->cfg);
+ 
+-	port->reg_base = port->cfg->win;
++	if (port->is_cpm5) {
++		port->reg_base = devm_platform_ioremap_resource_byname(pdev,
++								       "cpm_csr");
++		if (IS_ERR(port->reg_base))
++			return PTR_ERR(port->reg_base);
++	} else {
++		port->reg_base = port->cfg->win;
++	}
+ 
+ 	return 0;
+ }
+@@ -591,9 +632,24 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+ 	return err;
+ }
+ 
++static const struct xilinx_cpm_variant cpm_host = {
++	.cpm_version = false,
++};
++
++static const struct xilinx_cpm_variant cpm5_host = {
++	.cpm_version = true,
++};
++
+ static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
+-	{ .compatible = "xlnx,versal-cpm-host-1.00", },
+-	{}
++	{
++		.compatible = "xlnx,versal-cpm-host-1.00",
++		.data = &cpm_host,
++	},
++	{
++		.compatible = "xlnx,versal-cpm5-host",
++		.data = &cpm5_host,
++	},
++	{},
+ };
+ 
+ static struct platform_driver xilinx_cpm_pcie_driver = {
 -- 
 2.17.1
 
