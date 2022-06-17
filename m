@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B422D54F229
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 09:47:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D975554F230
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 09:48:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234599AbiFQHrJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jun 2022 03:47:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57198 "EHLO
+        id S1380242AbiFQHst (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jun 2022 03:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbiFQHrI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 03:47:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E2C674F7
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jun 2022 00:47:08 -0700 (PDT)
+        with ESMTP id S1346603AbiFQHst (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 03:48:49 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CAE674F7
+        for <linux-pci@vger.kernel.org>; Fri, 17 Jun 2022 00:48:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B2EB61F6C
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jun 2022 07:47:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADAA1C3411F;
-        Fri, 17 Jun 2022 07:47:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A6E59B827A2
+        for <linux-pci@vger.kernel.org>; Fri, 17 Jun 2022 07:48:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 103E3C3411B;
+        Fri, 17 Jun 2022 07:48:42 +0000 (UTC)
 From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -31,9 +31,9 @@ Cc:     linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
         Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V14 5/7] PCI: loongson: Improve the MRRS quirk for LS7A
-Date:   Fri, 17 Jun 2022 15:43:28 +0800
-Message-Id: <20220617074330.12605-6-chenhuacai@loongson.cn>
+Subject: [PATCH V14 6/7] PCI: Add quirk for LS7A to avoid reboot failure
+Date:   Fri, 17 Jun 2022 15:43:29 +0800
+Message-Id: <20220617074330.12605-7-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220617074330.12605-1-chenhuacai@loongson.cn>
 References: <20220617074330.12605-1-chenhuacai@loongson.cn>
@@ -48,120 +48,126 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In new revision of LS7A, some PCIe ports support larger value than 256,
-but their maximum supported MRRS values are not detectable. Moreover,
-the current loongson_mrrs_quirk() cannot avoid devices increasing its
-MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-will actually set a big value in its driver. So the only possible way
-is configure MRRS of all devices in BIOS, and add a pci host bridge bit
-flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+cc27b735ad3a7557 ("PCI/portdrv: Turn off PCIe services during shutdown")
+causes poweroff/reboot failure on systems with LS7A chipset. We found
+that if we remove "pci_command &= ~PCI_COMMAND_MASTER" in do_pci_disable
+_device(), it can work well. The hardware engineer says that the root
+cause is that CPU is still accessing PCIe devices while poweroff/reboot,
+and if we disable the Bus Master Bit at this time, the PCIe controller
+doesn't forward requests to downstream devices, and also does not send
+TIMEOUT to CPU, which causes CPU wait forever (hardware deadlock). This
+behavior is a PCIe protocol violation (Bus Master should not be involved
+in CPU MMIO transactions), and it will be fixed in new revisions of
+hardware (add timeout mechanism for CPU read request, whether or not Bus
+Master bit is cleared).
 
-However, according to PCIe Spec, it is legal for an OS to program any
-value for MRRS, and it is also legal for an endpoint to generate a Read
-Request with any size up to its MRRS. As the hardware engineers say, the
-root cause here is LS7A doesn't break up large read requests. In detail,
-LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
-request with a size that's "too big" ("too big" means larger than the
-PCIe ports can handle, which means 256 for some ports and 4096 for the
-others, and of course this is a problem in the LS7A's hardware design).
+On some x86 platforms, radeon/amdgpu devices can cause similar problems
+[1][2]. Once before I wanted to make a single patch to solve "all of
+these problems" together, but it seems unreasonable because maybe they
+are not exactly the same problem. So, this patch add a new function
+pcie_portdrv_shutdown(), a slight modified copy of pcie_portdrv_remove()
+dedicated for the shutdown path, and then add a quirk just for LS7A to
+avoid clearing Bus Master bit in pcie_portdrv_shutdown(). Leave other
+platforms behave as before.
+
+[1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
+[2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/pci/controller/pci-loongson.c | 44 +++++++++------------------
- drivers/pci/pci.c                     |  6 ++++
+ drivers/pci/controller/pci-loongson.c | 17 +++++++++++++++++
+ drivers/pci/pcie/portdrv_core.c       |  1 -
+ drivers/pci/pcie/portdrv_pci.c        | 20 +++++++++++++++++++-
  include/linux/pci.h                   |  1 +
- 3 files changed, 22 insertions(+), 29 deletions(-)
+ 4 files changed, 37 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index e22142f75d97..62ac91b2a5c5 100644
+index 62ac91b2a5c5..6d7276debcfd 100644
 --- a/drivers/pci/controller/pci-loongson.c
 +++ b/drivers/pci/controller/pci-loongson.c
-@@ -67,37 +67,23 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+@@ -85,6 +85,23 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_LS7A_LPC, system_bus_quirk);
+ 			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
  
--static void loongson_mrrs_quirk(struct pci_dev *dev)
-+static void loongson_mrrs_quirk(struct pci_dev *pdev)
- {
--	struct pci_bus *bus = dev->bus;
--	struct pci_dev *bridge;
--	static const struct pci_device_id bridge_devids[] = {
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
--		{ 0, },
--	};
--
--	/* look for the matching bridge */
--	while (!pci_is_root_bus(bus)) {
--		bridge = bus->self;
--		bus = bus->parent;
--		/*
--		 * Some Loongson PCIe ports have a h/w limitation of
--		 * 256 bytes maximum read request size. They can't handle
--		 * anything larger than this. So force this limit on
--		 * any devices attached under these ports.
--		 */
--		if (pci_match_id(bridge_devids, bridge)) {
--			if (pcie_get_readrq(dev) > 256) {
--				pci_info(dev, "limiting MRRS to 256\n");
--				pcie_set_readrq(dev, 256);
--			}
--			break;
--		}
--	}
++static void loongson_bmaster_quirk(struct pci_dev *pdev)
++{
 +	/*
-+	 * Some Loongson PCIe ports have h/w limitations of maximum read
-+	 * request size. They can't handle anything larger than this. So
-+	 * force this limit on any devices attached under these ports.
++	 * Some Loongson PCIe ports will cause CPU deadlock if disable
++	 * the Bus Master bit during poweroff/reboot.
 +	 */
 +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
 +
-+	bridge->no_inc_mrrs = 1;
- }
--DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
++	bridge->no_dis_bmaster = 1;
++}
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
++			DEV_PCIE_PORT_0, loongson_bmaster_quirk);
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
++			DEV_PCIE_PORT_1, loongson_bmaster_quirk);
 +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
- 
++			DEV_PCIE_PORT_2, loongson_bmaster_quirk);
++
  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
  {
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index cfaf40a540a8..79157cbad835 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6052,6 +6052,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ 	struct pci_config_window *cfg;
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 604feeb84ee4..ee3d654dcbb4 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -493,7 +493,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
  {
- 	u16 v;
- 	int ret;
+ 	device_for_each_child(&dev->dev, NULL, remove_iter);
+ 	pci_free_irq_vectors(dev);
+-	pci_disable_device(dev);
+ }
+ 
+ /**
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index 7f8788a970ae..f821f916d020 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -148,6 +148,24 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+ 	}
+ 
+ 	pcie_port_device_remove(dev);
++
++	pci_disable_device(dev);
++}
++
++static void pcie_portdrv_shutdown(struct pci_dev *dev)
++{
 +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
- 		return -EINVAL;
-@@ -6070,6 +6071,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = (ffs(rq) - 8) << 12;
- 
-+	if (bridge->no_inc_mrrs) {
-+		if (rq > pcie_get_readrq(dev))
-+			return -EINVAL;
++
++	if (pci_bridge_d3_possible(dev)) {
++		pm_runtime_forbid(&dev->dev);
++		pm_runtime_get_noresume(&dev->dev);
++		pm_runtime_dont_use_autosuspend(&dev->dev);
 +	}
 +
- 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_READRQ, v);
++	pcie_port_device_remove(dev);
++
++	if (!bridge->no_dis_bmaster)
++		pci_disable_device(dev);
+ }
+ 
+ static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
+@@ -198,7 +216,7 @@ static struct pci_driver pcie_portdriver = {
+ 
+ 	.probe		= pcie_portdrv_probe,
+ 	.remove		= pcie_portdrv_remove,
+-	.shutdown	= pcie_portdrv_remove,
++	.shutdown	= pcie_portdrv_shutdown,
+ 
+ 	.err_handler	= &pcie_portdrv_err_handler,
  
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 81a57b498f22..a9211074add6 100644
+index a9211074add6..0f0908679074 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -569,6 +569,7 @@ struct pci_host_bridge {
- 	void		*release_data;
+@@ -570,6 +570,7 @@ struct pci_host_bridge {
  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-+	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
+ 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
++	unsigned int	no_dis_bmaster:1;	/* No Disable Bus Master */
  	unsigned int	native_aer:1;		/* OS may use PCIe AER */
  	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
  	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
