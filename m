@@ -2,84 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 254F554F787
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 14:28:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D654154F833
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 15:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236583AbiFQM2u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jun 2022 08:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52638 "EHLO
+        id S1381356AbiFQNMD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jun 2022 09:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382428AbiFQM2q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 08:28:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F037C27B08
-        for <linux-pci@vger.kernel.org>; Fri, 17 Jun 2022 05:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655468923;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tbSTGo9DcH1pdUa0OUcLVQPy+Ei6rWlj/p/p0BQai8I=;
-        b=aBH34CzsNNSbvGZiNYHhedd8wLts2HNgfO6oV4ntGdlj9wFKOYtZMYB21ZIQMgBEkHlNIB
-        80REwoX8TqEZyIIXj0+yq9XJqTJ/W0OlOExhuAkPM8/35UxcjtwWFtgte3Zuc7M46mC0pd
-        BldYorFC9OPOADEBoAZA9CsSfUuX80Q=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-554-N9tsnrjUNAeeytmKcU2WBw-1; Fri, 17 Jun 2022 08:28:40 -0400
-X-MC-Unique: N9tsnrjUNAeeytmKcU2WBw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4E0833C0D1A5;
-        Fri, 17 Jun 2022 12:28:40 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-0-23.rdu2.redhat.com [10.22.0.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74E641121314;
-        Fri, 17 Jun 2022 12:28:39 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Hans de Goede" <hdegoede@redhat.com>, linux-pci@vger.kernel.org,
-        "Zack Rusin" <zackr@vmware.com>
-Subject: Re: pci=no_e820 report for vmware fusion
-Date:   Fri, 17 Jun 2022 08:28:38 -0400
-Message-ID: <71D41FA6-BC7A-47C7-9F6C-A682E17FC793@redhat.com>
-In-Reply-To: <20220616204020.GA1137352@bhelgaas>
-References: <20220616204020.GA1137352@bhelgaas>
+        with ESMTP id S235591AbiFQNMC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 09:12:02 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF904C79E;
+        Fri, 17 Jun 2022 06:12:01 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id b7so4688301ljr.6;
+        Fri, 17 Jun 2022 06:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=791oGUkmZnfRuTNKHAERlu6WE3+Htir8Ec5AhgIO5jI=;
+        b=Uq+N89keIW7OooF6H5l3twHzNknWg0rsgasWOSA+KIlAJAQBiNSuEzipg091uypJqV
+         4yUyQb3hr6i0zmYHcEDXqAd04/9DeCvxySQ4bHcNVCETQWIqJ64ycHD5Bomd4teVLSXN
+         T81Kv5I6+IWDAXPKS0zq6iBZ6P9x4x4QQnjGL2iv4KulnkPq0jgd0X3YGKCBc8sjfTN/
+         iPdQUWc9w+EczuY6ZdSRzuTZ/imwECG1Ivr++6XSjbMyjBgx3U08tFXN9fKmIH7NXZdZ
+         OtHvbvxmjgN0znPR5SlytNFht3zzy5r/OOokoqMlL7YCJQ8+fgf0eOsGtjduTVzO/F47
+         1B3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=791oGUkmZnfRuTNKHAERlu6WE3+Htir8Ec5AhgIO5jI=;
+        b=pO8mPB9VXoEBPKwt4T4/3aWgeeBOG3D5ON85DKRo+jT1yyYGafXNZgaEigrnqnTVAk
+         VEIwp8BN5HHgNM65XkeZjToGR8b7aOh4DxEX8PIzgEgcK6GJGvqQfyiB1B+MtQWJKh6L
+         m+HK7VYzdf8NUdWgw4tt2V4ig+08657zc9GS9feZ86NK+xgdwydp9CKTRTHjAEcOc7mX
+         ftXjDKaEwlpONqQuklDKK2xCcO1Kb+pufbbnbV7n6Em/Ng3nS8srUUR/Xrh+sfj1Gvm6
+         JV9wPMnKiW7694juQEuiONg9Rj9yhH8df1XjMT+eFAKM2+hn2QmuqA4bYeRKGyBPRhcj
+         A19A==
+X-Gm-Message-State: AJIora8XqsyLEXBTI+sMQ3Xl4y04U0TYJV2FPBlIidFRMs3guZSTPd1K
+        55e0XtcWgz16TNE2MSSKQEw=
+X-Google-Smtp-Source: AGRyM1tTQ5Z4cmbsU8I+ncb7XGq/AEhisxWPA1C/k8qU1cIG5ASIW+LDwgLVDzfPfoOwTwzRajdvAQ==
+X-Received: by 2002:a2e:96c9:0:b0:258:ac98:5304 with SMTP id d9-20020a2e96c9000000b00258ac985304mr5149376ljj.382.1655471520033;
+        Fri, 17 Jun 2022 06:12:00 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id c13-20020a056512074d00b0047255d21104sm636227lfs.51.2022.06.17.06.11.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jun 2022 06:11:59 -0700 (PDT)
+Date:   Fri, 17 Jun 2022 16:11:57 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/18] PCI: dwc: Various fixes and cleanups
+Message-ID: <20220617131157.wpxncriprazptnze@mobilestation>
+References: <20220617104143.yj2mlnj4twoxoeld@mobilestation>
+ <20220617112922.GA1176883@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220617112922.GA1176883@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 16 Jun 2022, at 16:40, Bjorn Helgaas wrote:
+On Fri, Jun 17, 2022 at 06:29:22AM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 17, 2022 at 01:41:43PM +0300, Serge Semin wrote:
+> > On Thu, Jun 16, 2022 at 03:03:16PM -0500, Bjorn Helgaas wrote:
+> > > On Fri, Jun 10, 2022 at 11:25:16AM +0300, Serge Semin wrote:
+> > > > This patchset is a first one in the series created in the framework of
+> > > > my Baikal-T1 PCIe/eDMA-related work:
+> > > > ...
+> 
+> > > This doesn't apply cleanly on v5.19-rc1 (my "main" branch).  v5.19-rc1
+> > > was tagged June 5, but apparently v4 was rebased to v5.18 and posted
+> > > June 10?  That's just a non-starter because many of these files were
+> > > changed during the merge window between v5.18 and v5.19-rc1.
+> > 
+> > Ok. I'll rebase it on top of v5.19-rcX on the next cycle.
+> 
 
-> The badness would definitely be interesting (the entire dmesg log), as
+> I merge things on topic branches based on -rc1, so there's no benefit
+> to rebasing to anything past that (at least for me).  Normally it
+> doesn't matter because very little will change between -rc1 and -rcX.
 
-Here it is:
-https://bcodding.com/d/dmesg_pci_badness.txt
+Ok. rc1 it is then.
 
-> well as a dmesg log collected with "pci=no_e820".  I'll attach them to
-> this bugzilla [1].
+-Sergey
 
-https://bcodding.com/d/dmesg_pci_no_e820_param.txt
-
-> Generally I expect PCI devices to work even if we reassign their BARs
-> before a driver claims them.  But apparently some do not, and I'm
-> always curious about which ones they are.
->
-> If you could confirm that Hans' revert [2] avoids the problem without
-> needing "pci=no_e820", that would be awesome, too.
-
-I can confirm that the Hans' revert avoids the problem without having the
-kernel param set.  I've only booted it, not done any other PCI testing.
-
-Ben
-
+> 
+> > > I'll be looking for an ack from Jingoo and/or Gustavo, maintainers of
+> > > pcie-designware.c and related files.
+> > 
+> > Alas this will be very unluckily to happen. They have been inactive
+> > for more than four months on this and the rest of the patchsets
+> > (that's how long the patchsets have been hanging out on review).
+> > The last commit authored by Gustavo was the commit ce31ff786ddf
+> > ("PCI: dwc: Fix 'cast truncates bits from constant value'") posted
+> > in Sep 22, 2020 and no review activity afterwards. Jingoo' last
+> > ack was in Jun 25, 2019. So two and three years of silence accordingly
+> > doesn't give any hope on the sooner reaction from them.
+> 
+> Ok, thanks for the update.  I hadn't noticed that.
+> 
+> Bjorn
