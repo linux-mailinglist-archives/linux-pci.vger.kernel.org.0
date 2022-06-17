@@ -2,67 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D044354FE3F
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 22:24:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D237054FE4D
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 22:29:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348945AbiFQUXl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jun 2022 16:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55878 "EHLO
+        id S234856AbiFQU1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jun 2022 16:27:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245445AbiFQUXY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 16:23:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F3250059;
-        Fri, 17 Jun 2022 13:23:23 -0700 (PDT)
+        with ESMTP id S229952AbiFQU1q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 16:27:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E722DEF8;
+        Fri, 17 Jun 2022 13:27:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3F404B82BC5;
-        Fri, 17 Jun 2022 20:23:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D7AAAC3411F;
-        Fri, 17 Jun 2022 20:23:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 069B362020;
+        Fri, 17 Jun 2022 20:27:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C76E9C3411B;
+        Fri, 17 Jun 2022 20:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655497400;
-        bh=KlzgfuA96URb6EeVFN4xfFJN42ygroLo/AvhjR1yW/A=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=u3kokvDrulMXFx2UhUvQnhNcYBzIKe5H6bMOlGEGnr6pi/7Eonf4hJSlhhTrkzIPA
-         GCBKl/ffJBWKzqfbpQ0qR37GExPHjZg/pXkVgiCmkhkpmYhiGpMlgsaDCebddUK68R
-         a3QyqTPdcVKhBAvUTbA7yQ1Dk+LAhh00tKY1uUrfRaR+NFs7obsOUubqVhRRZdU2BS
-         Fcg6h9DWkf8cVrAq9HZDomfvpiiPSZWh9GhM+vgMrSt2JJsDMt+Wu7qlxtcrEYxeMZ
-         tniksge2SUvpZCEFL0zS6DJtCV/rUTb/gfu9XuS3ZeMuBUCE8fUdM3dML9Qmqx50/2
-         XCkzBueAf96Vw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BDF50E73858;
-        Fri, 17 Jun 2022 20:23:20 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v5.19
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220617200141.GA1202513@bhelgaas>
-References: <20220617200141.GA1202513@bhelgaas>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220617200141.GA1202513@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.19-fixes-2
-X-PR-Tracked-Commit-Id: a2b36ffbf5b6ec301e61249c8b09e610bc80772f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 32efdbffff280b304bb2cd48844ee4166078e69c
-Message-Id: <165549740077.12674.8391848743677386359.pr-tracker-bot@kernel.org>
-Date:   Fri, 17 Jun 2022 20:23:20 +0000
+        s=k20201202; t=1655497664;
+        bh=1h7MPvCH+0ac659Y59O+LN7H9yf7FDL7AzRyBezl7Ms=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vAdK1iR7a1WmLfVx5wRu4og+zBfk6P1uN39+gS6uvwC1k/3eefV6ILqmVxxWnZygQ
+         bBBOoIxihb0QmMQWOSV4VTF/L2bWEchyx/e//N/c6pYQvi8xU2lKBgwnYRqy701IKG
+         ssin1X/FApCNiJh7UqRMIBdBF9N8dHd9ROFutNCfyAobYjQv5VoAedCEVbGiDMcB6b
+         oU7ul27EaaCoZMvopX6aBu27/m86c8BzFJVWs6TSb4O8xF5Q/pWYL/CNBCGDGXrx4S
+         rgd2ceX8FSUrsv+DobF4lumuhsMka6+CtL70oaOV8GR5nfOmNwERtvTdMDNEnMURGm
+         v2a45NA/RU2YA==
+Date:   Fri, 17 Jun 2022 14:27:40 -0600
+From:   Keith Busch <kbusch@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Myron Stowe <myron.stowe@redhat.com>,
         Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Subject: Re: [PATCH] x86/PCI: Revert: "Clip only host bridge windows for E820
+ regions"
+Message-ID: <YqzjvO34ebaRpraz@kbusch-mbp.dhcp.thefacebook.com>
+References: <YqkeF2uqAyyxiZrQ@kbusch-mbp.dhcp.thefacebook.com>
+ <20220615151100.GA937185@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220615151100.GA937185@bhelgaas>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -73,15 +71,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Fri, 17 Jun 2022 15:01:41 -0500:
+On Wed, Jun 15, 2022 at 10:11:00AM -0500, Bjorn Helgaas wrote:
+> On Tue, Jun 14, 2022 at 04:47:35PM -0700, Keith Busch wrote:
+> > On Tue, Jun 14, 2022 at 06:01:28PM -0500, Bjorn Helgaas wrote:
+> > > [+cc NVMe folks]
+> > > 
+> > > On Tue, Jun 14, 2022 at 07:49:27PM -0300, Guilherme G. Piccoli wrote:
+> > > > On 14/06/2022 12:47, Hans de Goede wrote:
+> > > > > [...]
+> > > > > 
+> > > > > Have you looked at the log of the failed boot in the Steam Deck kernel
+> > > > > bugzilla? Everything there seems to work just fine and then the system
+> > > > > just hangs. I think that maybe it cannot find its root disk, so maybe
+> > > > > an NVME issue ?
+> > > > 
+> > > > *Exactly* that - NVMe device is the root disk, it cannot boot since the
+> > > > device doesn't work, hence no rootfs =)
+> > > 
+> > > Beginning of thread: https://lore.kernel.org/r/20220612144325.85366-1-hdegoede@redhat.com
+> > > 
+> > > Steam Deck broke because we erroneously trimmed out the PCI host
+> > > bridge window where BIOS had placed most devices, successfully
+> > > reassigned all the PCI bridge windows and BARs, but some devices,
+> > > apparently including NVMe, didn't work at the new addresses.
+> > > 
+> > > Do you NVMe folks know of gotchas in this area?  I want to know
+> > > because we'd like to be able to move devices around someday to
+> > > make room for hot-added devices.
+> > > 
+> > > This reassignment happened before drivers claimed the devices, so
+> > > from a PCI point of view, I don't know why the NVMe device
+> > > wouldn't work at the new address.
+> > 
+> > The probe status quickly returns ENODEV. Based on the output (we
+> > don't log much, so this is just an educated guesss), I think that
+> > means the driver read all F's from the status register, which
+> > indicates we can't read it when using the reassigned memory window.
+> > 
+> > Why changing memory windows may not work tends to be platform or
+> > device specific. Considering the renumbered windows didn't cause a
+> > problem for other devices, it sounds like this nvme device may be
+> > broken.
+> 
+> It sounds like you've seen this sort of problem before, so we
+> shouldn't assume that it's safe to reassign BARs.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.19-fixes-2
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/32efdbffff280b304bb2cd48844ee4166078e69c
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+I haven't seen this type of problem in years, but as I recall, it was always
+low-end consumer crap that couldn't deal with changing BARs; you're stuck with
+whatever was set after it was initially powered on. The PCI topology will
+reflect the expected renumbering, but whatever is happening on the other side
+of the PCI function seems to be unaware of the change.
