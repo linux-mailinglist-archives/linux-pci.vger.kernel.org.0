@@ -2,64 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB409550003
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jun 2022 00:37:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F64855000A
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Jun 2022 00:40:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230296AbiFQWhF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jun 2022 18:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46202 "EHLO
+        id S234308AbiFQWkX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jun 2022 18:40:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230101AbiFQWhE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 18:37:04 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 364F7381B5;
-        Fri, 17 Jun 2022 15:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655505423; x=1687041423;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=sgAq+QV1yB2cPbWs/SVWUkCKuO/vuFJeDk4k2Gd0wn0=;
-  b=J4KoCKlud523Z6VAZY4KcszfPLfwjvx2gdO+4vi/x4cRC+qA3SrCv70P
-   hMU2NKOxGJ7gOOlgrieUETaGe4D25p6Zs+NHQbpgsVGRBGQ4VutVYNs0h
-   4SHsLPv7WwCEFqzr1cMPOhXq6GK6stjqBJg8DSBwcGW+H08kjht76g/QU
-   f8Zp7NbMDudASyUj30+dYjp+kMuH9KDuwlxzuB1WManI9Frwe2TgwDUy3
-   2cwWOr9fnXCif5ZUF2xbdtDwQ9fMXUJh9pQiNZJpqw5NPUFGVOTZP6ulp
-   iu6naDJvfSPlKT+tBULUgaPYPMc98B29kjcyzj1wJJHU27gQCNQu8PRfO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="279633644"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="279633644"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 15:37:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="579074633"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 17 Jun 2022 15:36:58 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o2KaH-000Pov-CR;
-        Fri, 17 Jun 2022 22:36:57 +0000
-Date:   Sat, 18 Jun 2022 06:36:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     netdev@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-xfs@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-staging@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        bpf@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 07dc787be2316e243a16a33d0a9b734cd9365bd3
-Message-ID: <62ad01d0.+Kbzg4vMb3zc9QYp%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S230101AbiFQWkW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 18:40:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BC3522E8;
+        Fri, 17 Jun 2022 15:40:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 90B2B61195;
+        Fri, 17 Jun 2022 22:40:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0361C3411B;
+        Fri, 17 Jun 2022 22:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655505621;
+        bh=stEEcPssa79iy8Faxohn+m+scucfUzjgvbnzwZ0zwV4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=seidu66a0zm+BTzBCKhnB1QQtZQOiLiUc0GXQ9gMM6D+aHbcEHQ71Y0I7aycnLrg4
+         fYcAB/bp741gMtuxmsKows4AWC/m9EgW6V/9zY48nInn8y8NtsN0auAowniTB+EBoi
+         eHQ0la6PWly5KrBbOPtzAfTJZrPPLnUBFpzDgEvgVjMWCJaHIbMYPkrm0Wt1V/KcWi
+         CkkG4EoUeMa43hNGBW4AA77LDedNQMzy37CBj4V7mjDwkcARfXg98ZQMbjqr6ivAgl
+         Ep4orNseZ8+FNzGRv2cjNRJGI0APEkKF5zcMZUb7JRYmT2AlH5tuNA/olQJHegXu/o
+         4/7hSbOU3vKiQ==
+Date:   Fri, 17 Jun 2022 17:40:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V11 3/8] PCI: Create PCI library functions in support of
+ DOE mailboxes.
+Message-ID: <20220617224019.GA1208614@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20220610202259.3544623-4-ira.weiny@intel.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,253 +60,210 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 07dc787be2316e243a16a33d0a9b734cd9365bd3  Add linux-next specific files for 20220617
+On Fri, Jun 10, 2022 at 01:22:54PM -0700, ira.weiny@intel.com wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Introduced in a PCI r6.0, sec 6.30, DOE provides a config space based
+> mailbox with standard protocol discovery.  Each mailbox is accessed
+> through a DOE Extended Capability.
 
-Error/Warning reports:
+> +/* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
 
-https://lore.kernel.org/lkml/202206071511.FI7WLdZo-lkp@intel.com
+s/PCI/PCIe/ (up in commit log, too, I guess :))
 
-Error/Warning: (recently discovered and may have been fixed)
+Not that there will ever be a conventional PCI r6.0 spec, but there
+was a PCI r3.0 well as a PCIe r3.0, so might as well keep them
+straight.
 
-arch/xtensa/kernel/entry.S:461: undefined reference to `context_tracking_user_exit'
-arch/xtensa/kernel/entry.S:548: undefined reference to `context_tracking_user_enter'
-kernel/bpf/helpers.c:1490:29: sparse: sparse: symbol 'bpf_dynptr_from_mem_proto' was not declared. Should it be static?
-kernel/bpf/helpers.c:1516:29: sparse: sparse: symbol 'bpf_dynptr_read_proto' was not declared. Should it be static?
-kernel/bpf/helpers.c:1542:29: sparse: sparse: symbol 'bpf_dynptr_write_proto' was not declared. Should it be static?
-kernel/bpf/helpers.c:1569:29: sparse: sparse: symbol 'bpf_dynptr_data_proto' was not declared. Should it be static?
-xtensa-linux-ld: arch/xtensa/kernel/entry.o:(.text+0x24): undefined reference to `context_tracking_user_enter'
-xtensa-linux-ld: arch/xtensa/kernel/entry.o:(.text+0x8): undefined reference to `context_tracking_user_exit'
+> +struct pci_doe_mb {
+> +	struct pci_dev *pdev;
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+Trivial, but I would put cap_offset here next to pdev because the
+(pdev, cap_offset) tuple is basically the identifier for the DOE
+instance.
 
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:9143:27: warning: variable 'abo' set but not used [-Wunused-but-set-variable]
+> +	struct completion abort_c;
+> +	int irq;
+> +	struct pci_doe_protocol *prots;
+> +	int num_prots;
+> +	u16 cap_offset;
 
-Error/Warning ids grouped by kconfigs:
+> +static void pci_doe_abort_start(struct pci_doe_mb *doe_mb)
+> +{
+> +	struct pci_dev *pdev = doe_mb->pdev;
+> +	int offset = doe_mb->cap_offset;
+> +	u32 val;
+> +
+> +	val = PCI_DOE_CTRL_ABORT;
+> +	if (doe_mb->irq >= 0)
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- alpha-randconfig-r035-20220617
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- arm-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- arm-randconfig-r005-20220617
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- i386-randconfig-a005
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- i386-randconfig-m021
-|   `-- arch-x86-events-core.c-init_hw_perf_events()-warn:missing-error-code-err
-|-- i386-randconfig-s001
-|   |-- drivers-pci-pci.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-pci_power_t-assigned-usertype-state-got-int
-|   |-- drivers-vfio-pci-vfio_pci_config.c:sparse:sparse:restricted-pci_power_t-degrades-to-integer
-|   `-- kernel-signal.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-lockdep_map-const-lock-got-struct-lockdep_map-noderef-__rcu
-|-- i386-randconfig-s002
-|   |-- drivers-pci-pci.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-pci_power_t-assigned-usertype-state-got-int
-|   |-- fs-xfs-xfs_file.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-usertype-ret-got-int
-|   `-- kernel-signal.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-lockdep_map-const-lock-got-struct-lockdep_map-noderef-__rcu
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- ia64-allyesconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- m68k-allmodconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- m68k-allyesconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- m68k-randconfig-s031-20220617
-|   |-- drivers-pci-pci.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-pci_power_t-assigned-usertype-state-got-int
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_data_proto-was-not-declared.-Should-it-be-static
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_from_mem_proto-was-not-declared.-Should-it-be-static
-|   |-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_read_proto-was-not-declared.-Should-it-be-static
-|   `-- kernel-bpf-helpers.c:sparse:sparse:symbol-bpf_dynptr_write_proto-was-not-declared.-Should-it-be-static
-|-- mips-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- mips-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- nios2-allyesconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- parisc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- powerpc-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- powerpc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- riscv-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- riscv-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- s390-allyesconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|-- sh-allmodconfig
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- sparc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- um-i386_defconfig
-|   `-- arch-um-kernel-skas-uaccess.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-const-addr-got-unsigned-int-noderef-usertype-__user-uaddr
-|-- x86_64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-|-- x86_64-randconfig-m001
-|   `-- arch-x86-events-core.c-init_hw_perf_events()-warn:missing-error-code-err
-|-- xtensa-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-abo-set-but-not-used
-|   `-- drivers-staging-rtl8723bs-hal-hal_btcoex.c:warning:variable-pHalData-set-but-not-used
-`-- xtensa-randconfig-r033-20220617
-    |-- arch-xtensa-kernel-entry.S:undefined-reference-to-context_tracking_user_enter
-    |-- arch-xtensa-kernel-entry.S:undefined-reference-to-context_tracking_user_exit
-    |-- xtensa-linux-ld:arch-xtensa-kernel-entry.o:(.text):undefined-reference-to-context_tracking_user_enter
-    `-- xtensa-linux-ld:arch-xtensa-kernel-entry.o:(.text):undefined-reference-to-context_tracking_user_exit
+Is zero a valid IRQ?  In general, I don't think it is, but maybe this
+is a special case.  Or maybe this is actually the "Interrupt Message
+Number" mentioned in sec 6.30.3?  If so maybe something other than
+"irq" would be a better name here.
 
-clang_recent_errors
-`-- hexagon-randconfig-r045-20220617
-    `-- drivers-ufs-host-tc-dwc-g210-pltfrm.c:warning:unused-variable-tc_dwc_g210_pltfm_match
+Possibly relevant: a85a6c86c25b ("driver core: platform: Clarify that
+IRQ 0 is invalid")
 
-elapsed time: 902m
+> +		pci_err(pdev,
+> +			"DOE [%x] expected [VID, Protocol] = [%04x, %02x], got [%04x, %02x]\n",
 
-configs tested: 113
-configs skipped: 4
+Wouldn't make a big difference, but could consider something like this
+for enforced consistency:
 
-gcc tested configs:
-arm                              allmodconfig
-arm                              allyesconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm64                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-arm                           corgi_defconfig
-m68k                         apollo_defconfig
-m68k                           virt_defconfig
-m68k                        stmark2_defconfig
-mips                        vocore2_defconfig
-mips                         rt305x_defconfig
-powerpc                    adder875_defconfig
-m68k                         amcore_defconfig
-openrisc                 simple_smp_defconfig
-arm                            zeus_defconfig
-arm                             ezx_defconfig
-m68k                            q40_defconfig
-powerpc                mpc7448_hpc2_defconfig
-xtensa                    xip_kc705_defconfig
-parisc                generic-32bit_defconfig
-sh                           sh2007_defconfig
-m68k                       m5249evb_defconfig
-powerpc                   motionpro_defconfig
-sparc                            allyesconfig
-arm                          badge4_defconfig
-sh                             espt_defconfig
-arm                           h3600_defconfig
-ia64                                defconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-alpha                               defconfig
-csky                                defconfig
-nios2                            allyesconfig
-alpha                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allmodconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                                defconfig
-s390                             allyesconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                                defconfig
-i386                             allyesconfig
-sparc                               defconfig
-nios2                               defconfig
-arc                              allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a015
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-arc                  randconfig-r043-20220617
-s390                 randconfig-r044-20220617
-riscv                randconfig-r042-20220617
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-riscv                    nommu_k210_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-x86_64                              defconfig
-x86_64                                  kexec
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-x86_64                          rhel-8.3-func
+  #define dev_fmt(fmt) "DOE: " fmt
 
-clang tested configs:
-arm                           sama7_defconfig
-mips                      malta_kvm_defconfig
-arm                          collie_defconfig
-riscv                             allnoconfig
-arm                       cns3420vb_defconfig
-powerpc                      acadia_defconfig
-mips                          ath79_defconfig
-arm                      pxa255-idp_defconfig
-arm                         s5pv210_defconfig
-hexagon                             defconfig
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-hexagon              randconfig-r041-20220617
-hexagon              randconfig-r045-20220617
+> +	case DOE_WAIT_ABORT:
+> +	case DOE_WAIT_ABORT_ON_ERR:
+> +		prev_state = doe_mb->state;
+> +
+> +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> +
+> +		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
+> +		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
+> +			doe_mb->state = DOE_IDLE;
+> +			/* Back to normal state - carry on */
+> +			retire_cur_task(doe_mb);
+> +		} else if (time_after(jiffies, doe_mb->timeout_jiffies)) {
+> +			/* Task has timed out and is dead - abort */
+> +			pci_err(pdev, "DOE [%x] ABORT timed out\n",
+> +				doe_mb->cap_offset);
+> +			set_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags);
+> +			retire_cur_task(doe_mb);
+> +		}
+> +
+> +		/*
+> +		 * For deliberately triggered abort, someone is
+> +		 * waiting.
+> +		 */
+> +		if (prev_state == DOE_WAIT_ABORT) {
+> +			if (task)
+> +				signal_task_complete(task, -EFAULT);
+> +			complete(&doe_mb->abort_c);
+> +		}
+> +
+> +		return;
+> +	}
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+The "return" in each case is perfectly correct, but it feels a little
+more conventional to make them "break" and return once here after the
+switch to make it clear that the only way to get to the labels is via
+an error path "goto".
+
+> +err_abort:
+> +	doe_mb->state = DOE_WAIT_ABORT_ON_ERR;
+> +	pci_doe_abort_start(doe_mb);
+> +err_busy:
+> +	signal_task_complete(task, rc);
+> +	if (doe_mb->state == DOE_IDLE)
+> +		retire_cur_task(doe_mb);
+> +}
+
+> +	 * Enabling bus mastering is required for MSI/MSIx.  It is safe to call
+
+s/MSIx/MSI-X/ (typical spelling in spec)
+
+> +	 * this multiple times and thus is called here to ensure that mastering
+> +	 * is enabled even if the driver has done so.
+> +	 */
+> +	pci_set_master(pdev);
+> +	rc = pci_request_irq(pdev, irq, pci_doe_irq_handler, NULL, doe_mb,
+> +			     "DOE[%d:%s]", irq, pci_name(pdev));
+
+I assume the "DOE[%d:%s]" part appears in /proc/interrupts?  Is it
+redundant to include "irq", since /proc/interrupts already prints it,
+or is there somewhere else where "irq" is useful?
+
+How does the user associate this IRQ in /proc/interrupts with a
+specific DOE capability?  Should we include the cap_offset along with
+the pci_name()?
+
+> + * pci_doe_get_irq_num() - Return the irq number for the mailbox at offset
+> + *
+> + * @pdev: The PCI device
+> + * @offset: Offset of the DOE mailbox
+> + *
+> + * Returns: irq number on success
+> + *	    -errno if irqs are not supported on this mailbox
+
+I normally capitalize IRQ/IRQs in comments.  There are probably others
+throughout the file.  I notice some are already capitalized but not all.
+
+> + */
+> +int pci_doe_get_irq_num(struct pci_dev *pdev, int offset)
+> +{
+> +	u32 val;
+> +
+> +	pci_read_config_dword(pdev, offset + PCI_DOE_CAP, &val);
+> +	if (!FIELD_GET(PCI_DOE_CAP_INT, val))
+> +		return -EOPNOTSUPP;
+> +
+> +	return FIELD_GET(PCI_DOE_CAP_IRQ, val);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_doe_get_irq_num);
+
+Confusing function name (and comment) since PCI_DOE_CAP_IRQ is an
+Interrupt Message Number that has nothing to do with Linux IRQ
+numbers.
+
+I see we already have PCI_EXP_FLAGS_IRQ, PCI_ERR_ROOT_AER_IRQ,
+PCI_EXP_DPC_IRQ, so I guess you're in good company.
+
+At least maybe update the comment to say "Interrupt Message Number"
+instead of "irq".
+
+> + * pci_doe_supports_prot() - Return if the DOE instance supports the given
+> + *			     protocol
+> + * @doe_mb: DOE mailbox capability to query
+> + * @vid: Protocol Vendor ID
+> + * @type: Protocol type
+> + *
+> + * RETURNS: True if the DOE mailbox supports the protocol specified
+
+Is the typical use that the caller has a few specific protocols it
+cares about?  There's no case where a caller might want to enumerate
+them all?  I guess they're all in prots[], but that's supposed to be
+opaque to users.
+
+> + */
+> +bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+> +{
+> +	int i;
+> +
+> +	/* The discovery protocol must always be supported */
+> +	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_PROTOCOL_DISCOVERY)
+> +		return true;
+> +
+> +	for (i = 0; i < doe_mb->num_prots; i++)
+> +		if ((doe_mb->prots[i].vid == vid) &&
+> +		    (doe_mb->prots[i].type == type))
+> +			return true;
+> +
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
+
+> + * struct pci_doe_task - represents a single query/response
+> + *
+> + * @prot: DOE Protocol
+> + * @request_pl: The request payload
+> + * @request_pl_sz: Size of the request payload
+
+Size is in dwords, not bytes, I guess?
+
+> + * @response_pl: The response payload
+> + * @response_pl_sz: Size of the response payload
+> + * @rv: Return value.  Length of received response or error
+> + * @complete: Called when task is complete
+> + * @private: Private data for the consumer
+> + */
+> +struct pci_doe_task {
+> +	struct pci_doe_protocol prot;
+> +	u32 *request_pl;
+> +	size_t request_pl_sz;
+> +	u32 *response_pl;
+> +	size_t response_pl_sz;
+> +	int rv;
+> +	void (*complete)(struct pci_doe_task *task);
+> +	void *private;
+> +};
