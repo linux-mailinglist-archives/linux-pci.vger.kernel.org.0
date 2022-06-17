@@ -2,140 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F2CA54F3C4
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 11:02:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E50A854F53D
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Jun 2022 12:22:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234921AbiFQJC0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Jun 2022 05:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48368 "EHLO
+        id S230307AbiFQKVf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Jun 2022 06:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232062AbiFQJCZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 05:02:25 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA48393CD;
-        Fri, 17 Jun 2022 02:02:22 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id EBA0379E; Fri, 17 Jun 2022 11:02:19 +0200 (CEST)
-Date:   Fri, 17 Jun 2022 11:02:14 +0200
-From:   =?iso-8859-1?Q?J=F6rg_R=F6del?= <joro@8bytes.org>
-To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux.dev,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Baolu Lu <baolu.lu@linux.intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasant Hegde <vasant.hegde@amd.com>,
-        Will Deacon <will@kernel.org>
-Subject: [CFP LPC 2022] VFIO/IOMMU/PCI Microconference
-Message-ID: <YqxDFkAFdLjqnW8O@8bytes.org>
+        with ESMTP id S235307AbiFQKVe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Jun 2022 06:21:34 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E9E6A016;
+        Fri, 17 Jun 2022 03:21:31 -0700 (PDT)
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LPZm31CyTz67LSS;
+        Fri, 17 Jun 2022 18:19:47 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 17 Jun 2022 12:21:29 +0200
+Received: from localhost (10.81.209.131) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Fri, 17 Jun
+ 2022 11:21:28 +0100
+Date:   Fri, 17 Jun 2022 11:21:24 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
+        <lorenzo.pieralisi@arm.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: (SPDM) Device attestation, secure channels from host to device
+ etc: Discuss at Plumbers?
+Message-ID: <20220617112124.00002296@Huawei.com>
+In-Reply-To: <YqICCSd/6Vxidu+v@iweiny-desk3>
+References: <20220609124702.000037b0@Huawei.com>
+        <YqICCSd/6Vxidu+v@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.209.131]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello everyone!
+On Thu, 9 Jun 2022 07:22:01 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-We are pleased to announce that there will be another
+> On Thu, Jun 09, 2022 at 12:47:02PM +0100, Jonathan Cameron wrote:
+> > Hi All,
+> > 
+> > +CC list almost certainly misses people interested in this topic
+> >     so please forward as appropriate.
+> > 
+> > I'll start by saying I haven't moved forward much with the
+> > SPDM/CMA over Data Object Exchange proposal from the PoC that led to
+> > presenting it last year as part of the PCI etc uconf last year.
+> > https://lpc.events/event/11/contributions/1089/
+> > https://lore.kernel.org/all/20220303135905.10420-1-Jonathan.Cameron@huawei.com/
+> > I'm continuing to carry the QEMU emulation but not posted for a while
+> > as we are slowly working through a backlog of CXL stuff to merge.
+> > https://gitlab.com/jic23/qemu/-/commit/f989c8cf283302c70eb5b0b73625b5357c4eb44f
+> > On the plus side, Ira is driving the DOE support forwards so
+> > that will resolve one missing precursor.
+> > 
+> > We had a lot of open questions last year and many of them are
+> > still at least somewhat open; perhaps now is time to revisit?
+> > 
+> > In the meantime there has been discussion[1]:
+> > [1] https://lore.kernel.org/all/CAPcyv4jb7D5AKZsxGE5X0jon5suob5feggotdCZWrO_XNaer3A@mail.gmail.com/
+> > [2] https://lore.kernel.org/all/20220511191345.GA26623@wunner.de/
+> > [3] https://lore.kernel.org/all/CAPcyv4iWGb7baQSsjjLJFuT1E11X8cHYdZoGXsNd+B9GHtsxLw@mail.gmail.com/
+> > 
+> > Perhaps it is worth putting in a proposal for either a session in an
+> > appropriate uconf at plumbers, or maybe a BoF given it is a
+> > broader topic than either PCI or CXL?  
+> 
+> Yes, while this could work as part of the CXL uconf it is probably a more
+> general topic.
 
-	VFIO/IOMMU/PCI Microconference
+Maybe steal time from PCI given CXL uconf is going to be busy!
+(lets see if any of the PCI folk are reading this thread.. :)
 
-at this year's Linux Plumbers Conference (LPC), from 12th to the 14th of
-September in Dublin, Ireland. LPC is a hybrid event this year;
-attendance can be in person or remote.
+At the moment I'm not seeing enough interest to put in a proposal for
+anything 'officially scheduled', but there is a bit more time until
+the deadline so let's see if we get any other interest in that time.
 
-In this microconference we want to discuss ongoing developments around
-the VFIO, IOMMU and PCI subsystems and their interactions in Linux.
+> 
+> > 
+> > We'll still need to dance around work in various standards bodies
+> > that we can't talk about yet, but it feels like it's worth
+> > some time hammering out a plan of attack on what we can
+> > discuss.
+> > 
+> > Rough topics:
+> > 
+> > * Use models. Without those hard to define the rest!
+> > * Policy.  What do we do if we can't establish a secure channel?
+> > * Transports of interest.  Single solution for MCTP vs
+> >   PCI/CMA or not?
+> > * Session setup etc in kernel / userspace / carefully curated hybrid
+> >   of the two (Dan mentioned this last one in one of the links above)
+> >   There may be similarities to the discussion around TLS (much simpler
+> >   though I think!)  
+> 
+> I think this is something which really does need some face to face (or virtual
+> face) time.  FWIW another idea from Christoph is kernel bundled userspace code.
+> 
+> 	https://lore.kernel.org/linux-cxl/YoT4C77Yem37NUUR@infradead.org/
+> 
+> I'm not sure any real implementation would be workable.
 
-Tentative topics that are under consideration for this year include (but
-not limited to):
+Ah. I remembered to CC Christoph but not to actually link the relevant mail.
 
-	* PCI:
-	  - Cache Coherent Interconnect for Accelerators (CCIX)/Compute
-	    Express Link (CXL) expansion memory and accelerators
-	    management
-	  - Data Object Exchange (DOE)
-	  - Integrity and Data Encryption (IDE)
-	  - Component Measurement and Authentication (CMA)
-	  - Security Protocol and Data Model (SPDM)
-	  - I/O Address Space ID Allocator (IOASID)
-	  - INTX/MSI IRQ domain consolidation
-	  - Gen-Z interconnect fabric
-	  - ARM64 architecture and hardware
-	  - PCI native host controllers/endpoints drivers current
-	    challenges and improvements (e.g., state of PCI quirks, etc.)
-	  - PCI error handling and management e.g., Advanced Error
-	    Reporting (AER), Downstream Port Containment (DPC), ACPI
-	    Platform Error Interface (APEI) and Error Disconnect Recover
-	    (EDR)
-	  - Power management and devices supporting Active-state Power
-	    Management (ASPM)
-	  - Peer-to-Peer DMA (P2PDMA)
-	  - Resources claiming/assignment consolidation
-	  - Probing of native PCIe controllers and general reset
-	    implementation
-	  - Prefetchable vs non-prefetchable BAR address mappings
-	  - Untrusted/external devices management
-	  - DMA ownership models
-	  - Thunderbolt, DMA, RDMA and USB4 security
+That proposal is definitely interesting.
 
-	* VFIO:
-	  - Write-combine on non-x86 architectures
-	  - I/O Page Fault (IOPF) for passthrough devices
-	  - Shared Virtual Addressing (SVA) interface
-	  - Single-root I/O Virtualization(SRIOV)/Process Address Space
-	    ID (PASID) integration
-	  - PASID in SRIOV virtual functions
-	  - Device assignment/sub-assignment
+> 
+> > * Key management
+> > * Potential to use github.com/dmtf/libSPDM - is it suitable for any solutions
+> >   (it's handy for emulation if nothing else!)
+> > * Measurement and what to do with it.
+> > * No public hardware yet, so what else should we emulate to enable
+> >   work in this area. (SPDM over MCTP over I2C is on my list as easy
+> >   to do in QEMU building on
+> >   https://lore.kernel.org/all/20220520170128.4436-1-Jonathan.Cameron@huawei.com/ 
+> > * Many other things I've forgotten about - please add!
+> > 
+> > So are people who care going to be at plumbers (in person or virtually)
+> > and if so, do we want to put forward a session proposal?  
+> 
+> I have submitted a non-CXL topic in the arch uconf and was hoping to go in
+> person but I'm unsure of travel budgets.  I will likely be virtual if I can't
+> attend in person.
 
-	* IOMMU:
-	  - /dev/iommufd development
-	  - IOMMU virtualization
-	  - IOMMU drivers SVA interface
-	  - DMA-API layer interactions and the move towards generic
-	    dma-ops for IOMMU drivers
-	  - Possible IOMMU core changes (e.g., better integration with
-	    device-driver core, etc.)
+Cool. See you there in some fashion.  
 
-Please submit your proposals on the LPC website at:
+Jonathan
 
-	https://lpc.events/event/16/abstracts/
-
-Make sure to select the "VFIO/IOMMU/PCI MC" in the Track pulldown
-menu.
-
-Looking forward to seeing you all there, either in Dublin or virtual! :)
-
-The organizers,
-
-	Alex Williamson
-	Bjorn Helgaas
-	Jörg Rödel
-	Lorenzo Pieralisi
-	Krzysztof Wilczyński
+> 
+> Ira
 
