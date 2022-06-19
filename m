@@ -2,171 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA368550AD7
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Jun 2022 15:20:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F17D550B33
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jun 2022 16:27:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234686AbiFSNUq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 19 Jun 2022 09:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56232 "EHLO
+        id S235095AbiFSO13 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 19 Jun 2022 10:27:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234547AbiFSNUp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 19 Jun 2022 09:20:45 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEACBD4;
-        Sun, 19 Jun 2022 06:20:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3B6F3B80D33;
-        Sun, 19 Jun 2022 13:20:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA2DC34114;
-        Sun, 19 Jun 2022 13:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655644842;
-        bh=/2u5fntWSZiEpUCmtTS07g312l9PpA2KzIK3S5qIcno=;
-        h=Date:From:To:Cc:Subject:From;
-        b=E25XDRZZuiPhSrj3BRycG3Yhmd2uoLb65l/lXVT7SHCzjzj0jeLHFLwzv9IDPVW2c
-         rM6uErDiqbEVLGQoAq4HeF5wgsNui6yAPV/aDHxx9KKK0YwDcx8z/GZuTIHGUVWwaD
-         d+BQqmuyILdomSEJUcavWX1GlkN4vrEYIC70GOnMZmSTWWt5bwjSG+wXZPhnnRWsCI
-         UQqGX6CF1tB7B80maW2dkOuvqj4gbKSBVh1xASbtXSQwiR5RtZq0NwoWwCzZuUn2sJ
-         Dy1LoqCCfcFnJAr8jGscFa2EFlCW4cFhefFAoJ4fN9q6RygY569qLQHdyOzqJLtR+r
-         Mi6AO4KCjyZ6A==
-Date:   Sun, 19 Jun 2022 08:20:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Cc:     Leo Savernik <l.savernik@aon.at>, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [bugzilla-daemon@kernel.org: [Bug 216147] New: NVMe quirk needed for
- multiple Micron MTFDKBA2T0TFH SSDs]
-Message-ID: <20220619132039.GA1243474@bhelgaas>
+        with ESMTP id S232930AbiFSO12 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 19 Jun 2022 10:27:28 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29671DF17;
+        Sun, 19 Jun 2022 07:27:25 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id v8so9340320ljj.8;
+        Sun, 19 Jun 2022 07:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+rnapiqQ/iNhoZEw55mrOqXhsrJQeJukdJJz0YdF52c=;
+        b=btKsqxMh0C40YDCkv13jMTT4tBeyKqRThJOTgDQidjmj+Nd4TApTLf2W2CXI76gFAe
+         Tmfr7IccdErVC7/+QZnqX6TjGwTKonEns0jc4qv3tbx/TUP5ZkzqwkWN/jCp4pjMItaO
+         pdwZpZ+bH7+dsrVND+NXSURDWmQfI0eQS/4jdrASI50naDuv92TEZ5ns48PkLl7UmUmp
+         9usp5zCcdT+ThHj5SXlrucXXm7HOui6GbHnkVln3pwmlCVOHGrBoY/XPiKghn6mshsh8
+         q/bhbanGwa+RUs8iK8yXENyE3KQ8+Ni8d0YgJF3I+U8IRWZeLk1KNuP2llslcQkZ8nWN
+         nT8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+rnapiqQ/iNhoZEw55mrOqXhsrJQeJukdJJz0YdF52c=;
+        b=s8JY24xWWWekammRwx7o8h0SrN+PIgE/1955KzaeSlOERvYezB7du3+Y56XoPQQFZf
+         WogDLx+YINqA82ghhEUSyuQ4UogJ/Fur6E15kjhwG0xXPouiFLQMVTQ1aJ+nokt/x17P
+         uEhWxcn9gg/E6/VEkUiIUBql3BidFQ7z3gx113BwJjbkeDrsQ/MgtonWrBuKZ12Y6exG
+         BsYd/6TD5ky3FXVImzMbPDFJpvFUyyLuD4/9NHFEOocaP8El05+SUSWpwO0kQaaKlwVS
+         BeAgu8ej9eVL7GtncDmWgZMVpshc7zj1Nl2CzsAADR22/Kz1J4YjJh2XX9t/gwPGUKYG
+         QqiQ==
+X-Gm-Message-State: AJIora/9pfzkDFvWumf3TEJwwU3Nlu8QKdRTStB6mxQujOB6Jg4n/22U
+        IlyiimrdSYRYwyu+FfQF3zw=
+X-Google-Smtp-Source: AGRyM1tS56MaWKOZQKyi2yt2tECPxHpi/mLAFtv3cpnx9pQl0v21LfZtSjWdshpNpIp13f6e825Pzw==
+X-Received: by 2002:a2e:9893:0:b0:255:951f:9694 with SMTP id b19-20020a2e9893000000b00255951f9694mr9599779ljj.283.1655648843142;
+        Sun, 19 Jun 2022 07:27:23 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id s19-20020a056512315300b00479353215b3sm549381lfi.139.2022.06.19.07.27.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jun 2022 07:27:22 -0700 (PDT)
+Date:   Sun, 19 Jun 2022 17:27:20 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/17] dt-bindings: PCI: dwc: Add max-link-speed
+ common property
+Message-ID: <20220619142720.tzfgefunvf3kirul@mobilestation>
+References: <20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru>
+ <20220610085706.15741-5-Sergey.Semin@baikalelectronics.ru>
+ <20220615145550.GA1069883-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220615145550.GA1069883-robh@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks very much for the testing and report, Leo!  I'm forwarding it
-to the NVMe folks who would take care of this.  I checked current
-upstream (v5.19-rc1), and indeed this quirk does not appear there.
+On Wed, Jun 15, 2022 at 08:55:50AM -0600, Rob Herring wrote:
+> On Fri, Jun 10, 2022 at 11:56:52AM +0300, Serge Semin wrote:
+> > In accordance with [1] DW PCIe controllers support up to Gen5 link speed.
+> > Let's add the max-link-speed property upper bound to 5 then. The DT
+> > bindings of the particular devices are expected to setup more strict
+> > constraint on that parameter.
+> > 
+> > [1] Synopsys DesignWare Cores PCI Express Controller Databook, Version
+> > 5.40a, March 2019, p. 27
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > ---
+> > 
+> > Changelog v3:
+> > - This is a new patch unpinned from the next one:
+> >   https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
+> >   by the Rob' request. (@Rob)
+> > ---
+> >  Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml | 3 +++
+> >  Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml     | 2 ++
+> >  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml        | 1 +
+> >  3 files changed, 6 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> > index 627a5d6625ba..b2fbe886981b 100644
+> > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> > @@ -45,6 +45,9 @@ properties:
+> >        the peripheral devices available on the PCIe bus.
+> >      maxItems: 1
+> >  
+> > +  max-link-speed:
+> > +    maximum: 5
+> 
 
------ Forwarded message from bugzilla-daemon@kernel.org -----
+> Unless the default is less than the max, shouldn't the max here be 1 
+> less than the h/w max?
 
-Date: Sun, 19 Jun 2022 08:58:10 +0000
-From: bugzilla-daemon@kernel.org
-To: bjorn@helgaas.com
-Subject: [Bug 216147] New: NVMe quirk needed for multiple Micron MTFDKBA2T0TFH SSDs
-Message-ID: <bug-216147-41252@https.bugzilla.kernel.org/>
+Why? AFAIU max-link-speed semantics it works as less-than-or-equal
+operator isn't it? The modern DW PCIe Root ports and Endpoints
+IP-cores support up to Gen5 PCIe speed including the Gen5 mode (see
+the CX_MAX_PCIE_SPEED IP-core synthesize paramter). It's reasonable to
+set the max-link-speed here to be in coherency with the IP-core
+reference manual.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=216147
+> 
+> > +
+> >    num-lanes:
+> >      description:
+> >        Number of PCIe link lanes to use. Can be omitted should the already
+> > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> > index dcd521aed213..fc3b5d4ac245 100644
+> > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> > @@ -55,4 +55,6 @@ examples:
+> >  
+> >        phys = <&pcie_phy0>, <&pcie_phy1>, <&pcie_phy2>, <&pcie_phy3>;
+> >        phy-names = "pcie0", "pcie1", "pcie2", "pcie3";
+> > +
+> > +      max-link-speed = <3>;
+> >      };
+> > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > index 4a5c8b933b52..01cedf51e0f8 100644
+> > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > @@ -74,4 +74,5 @@ examples:
+> >        phy-names = "pcie";
+> >  
+> >        num-lanes = <1>;
+> > +      max-link-speed = <3>;
+> 
 
-            Bug ID: 216147
-           Summary: NVMe quirk needed for multiple Micron MTFDKBA2T0TFH
-                    SSDs
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.15.48
-          Hardware: AMD
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: PCI
-          Assignee: drivers_pci@kernel-bugs.osdl.org
-          Reporter: l.savernik@aon.at
-        Regression: No
+> This should give you an error because pci-bus.yaml only goes up to 4. 
 
-Created attachment 301221
-  --> https://bugzilla.kernel.org/attachment.cgi?id=301221&action=edit
-Adding NVME_QUIRK_IGNORE_DEV_SUBNQN for Micron MTFDKBA2T0TFH
+I've set max-link-speed to "3" here. So no error will be caused neither
+by this schema nor by the pci-bus.yaml bindings.
 
-Even though first noticed on an Ubuntu kernel, I dare to report this against
-upstream as this hardware combination malfunction seems not to be known yet (I
-did not find distribution-specific patches for this issue). Therefore, IMHO,
-the fix should be included upstream to make these devices work on every kernel
-deployment.
+* Though these examples won't be evaluated because the generic DW PCIe
+RP and EP schemas have been marked as "select: false".
 
-My brand new Lenovo Notebook contains three NVMe 2T disks. When booting with
-Kernel 5.15.0, I receive the following dmesg output:
+> 
+> I'm not really sure that limiting it in the common schema is too useful. 
+> We're going to be updating it one step at a time. Limiting it is really 
+> only helpful for specific implementations.
+> 
 
-...
-Jun 09 03:33:08 kubuntu kernel: nvme 0000:04:00.0: platform quirk: setting
-simple suspend
-Jun 09 03:33:08 kubuntu kernel: nvme nvme0: pci function 0000:04:00.0
-Jun 09 03:33:08 kubuntu kernel: nvme 0000:06:00.0: platform quirk: setting
-simple suspend
-Jun 09 03:33:08 kubuntu kernel: nvme nvme1: pci function 0000:06:00.0
-Jun 09 03:33:08 kubuntu kernel: nvme 0000:05:00.0: platform quirk: setting
-simple suspend
-Jun 09 03:33:08 kubuntu kernel: nvme nvme2: pci function 0000:05:00.0
-...
-Jun 09 03:33:08 kubuntu kernel: nvme nvme1: Duplicate cntlid 0 with nvme0,
-rejecting
-Jun 09 03:33:08 kubuntu kernel: nvme nvme1: Removing after probe failure
-status: -22
-Jun 09 03:33:08 kubuntu kernel: nvme nvme2: Duplicate cntlid 0 with nvme0,
-rejecting
-Jun 09 03:33:08 kubuntu kernel: nvme nvme2: Removing after probe failure
-status: -22
-Jun 09 03:33:08 kubuntu kernel: pps pps0: new PPS source ptp0
-Jun 09 03:33:08 kubuntu kernel: igc 0000:0b:00.0 (unnamed net_device)
-(uninitialized): PHC added
-Jun 09 03:33:08 kubuntu kernel: nvme nvme0: 16/0/0 default/read/poll queues
-Jun 09 03:33:08 kubuntu kernel:  nvme0n1: p1 p2 p3
-...
+I disagree. As I said above the max PCIe speed limit set here has been
+taken from the HW reference manual so it describes the modern DW PCIe
+controllers capability. No mater what value is set by the pci-bus.yaml
+schema (eventually we'll get to have it increased to Gen5 too) we can
+use the DW PCIe-specific limitation here as a known upper capabilities
+bound.
 
-nvme0 is properly detected, however nvme1 and nvme2 are both rejected with
-"Duplicate cntlid 0 with nvme0" error message.
+> Patch 1 didn't apply for me, so none of the checks ran.
 
-lspci properly enumerates all of the 3 devices:
-04:00.0 Non-Volatile memory controller: Micron Technology Inc Device 5407
-05:00.0 Non-Volatile memory controller: Micron Technology Inc Device 5407
-06:00.0 Non-Volatile memory controller: Micron Technology Inc Device 5407
+I see. The series will be re-based onto 5.19-rc1 in the next patchset
+revision.
 
-Consequentially, I cannot make use of nvme1 and nvme2. A quirk setting was
-proposed for a Samsung device [1] which was finally applied to the kernel [2].
+-Sergey
 
-[1] https://lkml.kernel.org/lkml/20210118113356.833556252@linuxfoundation.org/
-[2] https://lkml.org/lkml/2021/1/18/1172
-
-I wrote up a modified patch for Micron MTFDKBA2T0TFH devices, tested the patch
-and could make all three NVMe devices work flawlessly under Linux 5.15.0.
-
-I also checked this patch against 5.15.48, it applies cleanly.
-
-I suggest this patch be applied to latest longterm 5.15.x as well as latest
-Mainline as only one device has been added to the quirk table since, and the
-format of the quirktable was not changed in the meantime.
-
-The proposed patch itself (also see attachment):
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index b925a5f4afc3..2e5c33f3b868 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3372,5 +3372,7 @@ static const struct pci_device_id nvme_id_table[] = {
-NVME_QUIRK_128_BYTES_SQES |
-                                NVME_QUIRK_NO_DEEPEST_PS |
-                                NVME_QUIRK_IGNORE_DEV_SUBNQN, },
-+       { PCI_DEVICE(0x1344, 0x5407), /* Micron Technology Inc NVMe SSD */
-+               .driver_data = NVME_QUIRK_IGNORE_DEV_SUBNQN },
-        { PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
-        { 0, }
- };
-
--- 
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.
-
------ End forwarded message -----
+> 
+> Rob
