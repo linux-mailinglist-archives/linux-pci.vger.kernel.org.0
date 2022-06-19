@@ -2,85 +2,275 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CEDA550672
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Jun 2022 20:10:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BD38550997
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Jun 2022 12:00:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234566AbiFRSKd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Jun 2022 14:10:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
+        id S233210AbiFSKAB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 19 Jun 2022 06:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233373AbiFRSKc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Jun 2022 14:10:32 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CD010FFC
-        for <linux-pci@vger.kernel.org>; Sat, 18 Jun 2022 11:10:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k22so3010109wrd.6
-        for <linux-pci@vger.kernel.org>; Sat, 18 Jun 2022 11:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=stMUqBGDU6EWwG218v457jIAcS1AbkkNmMvvKXiLshc=;
-        b=AvV3mwFOKIyl7S4MWEhwDgKjJ6hP+2SVk0ie6YOY96rhlyZAd3ZfueHdqwHCshtQKe
-         /vbfC8aFuXDb8wXsTn4a59dQo97RdDE437uHfoUU7iXeK1QL9Xpi5dSONYVwfs9h2WCn
-         Qa4Y5Bn8muxHY/bc+D5JR0UvcyzFqfQTbvKwjKlJNN56m8d+5f+Qxk4abxYiVtI5Dd9N
-         9tlrG8KkDHWkv14ILi3AzEXTtXCWbX22TQDihKlTxsj2wt8Ey2spjkz91D/F1PxxPmMr
-         832Osru61DAOpQwXRQ+0crhBGdF+xWhOdHr9sr3LuoeqbL649szdJRIAojJl4+Kz5eSa
-         ujjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=stMUqBGDU6EWwG218v457jIAcS1AbkkNmMvvKXiLshc=;
-        b=BKalQbrAIeuuZM4oNmiZGC1MLYitoCS68fQIzsSbPDYNEo0xPOZ5xHoOTqWjYoSwut
-         3T61swXd0m6CHy12bwflVNGuZ4GPlfUjXiR1etIIODsc6mB7dZQaYTdryzXyT9K+/KWH
-         r/t+cYCeGwG3r6MwqnE/jEd/xDiOr5E3KEfFK/S4d47lCujJm6V5PbpYqdabdMGtqlTs
-         K+20NjOt6IcDmmd/IvE6vMTdOEiKZGo7peojoRZqhYOmvqzImi6wOOlBW4r9KQ/JXoal
-         fVFMS+OJMWfeqtiLsaE3z42alvvGueumdTcfhxi3vKuXkqgdMy6oj2S99yNST9x82/Kv
-         aaSg==
-X-Gm-Message-State: AJIora9sEdKEpWCXwjr/vhtNhW+Hnyui/8uWBAOPUU3NOBI+nslyc2rL
-        VmDdygaojcnnnGe7KhXIEnsVK2maPo2YP+Tdf9k=
-X-Google-Smtp-Source: AGRyM1tOBLaoQOHIzkG5kHvfcn1Zqz/zJGtb7va6YtC/XF8qdRWnRWpWl7JHQBra9j+vlsYz3x8oQam4kKU+ivPoj60=
-X-Received: by 2002:adf:e252:0:b0:21b:827e:4c63 with SMTP id
- bl18-20020adfe252000000b0021b827e4c63mr6215752wrb.307.1655575829526; Sat, 18
- Jun 2022 11:10:29 -0700 (PDT)
+        with ESMTP id S232954AbiFSJ77 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 19 Jun 2022 05:59:59 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A3EF59A
+        for <linux-pci@vger.kernel.org>; Sun, 19 Jun 2022 02:59:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655632797; x=1687168797;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R9vLee0gAi6t3M0Du0L0RSjfpqR28qQj5AMhXk+2PIw=;
+  b=KBHYXmlc9GRe0lA1/wNE8CkUnI7VhGAhtuDxYVtQFWq+ADILiKnj6oUe
+   2W7195pxmYwCQbMaxlGWhFuuzmEifHgWTXM8Qp1QgRXZjnTmehj3l24uH
+   sz/sBBvNMza/uJ5Er0zmGmzoBTjpGWWcdPdAjlFK6FMLKsnRq1E8CaTFL
+   +45QckZGdBqrSa/SQvMGW9+XS9jtlduOX0U93PMvgBOYEeDopxQr/xeg2
+   Ey9UCNJRtPEaSGiu/2trIHcvudSdq61yE18cAHyMrXAITR3HxOmzai+cz
+   DZL68L17EYrWhUj4gggAlJ+RVt+gros4jhwi7FvtDkAkiU9dL/Wj6yQBD
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="259539220"
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="259539220"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2022 02:59:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="832689577"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 19 Jun 2022 02:59:54 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o2rik-000R7x-6e;
+        Sun, 19 Jun 2022 09:59:54 +0000
+Date:   Sun, 19 Jun 2022 17:59:26 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:for-linus] BUILD SUCCESS
+ a2b36ffbf5b6ec301e61249c8b09e610bc80772f
+Message-ID: <62aef37e.mWkBDY2gRk5Bm5Pv%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Sender: shaoibwin1@gmail.com
-Received: by 2002:a05:6000:1f11:0:0:0:0 with HTTP; Sat, 18 Jun 2022 11:10:29
- -0700 (PDT)
-From:   "Mr. Stephen Mensah" <stephmensah01@gmail.com>
-Date:   Sat, 18 Jun 2022 11:10:29 -0700
-X-Google-Sender-Auth: 0wvBDvxs_RpFHURWcg-z0yS6LVQ
-Message-ID: <CAMLkz8cfQdUvzjjArnqktFgNahcVyhC5qVM3R6Uqq57Znm5h6w@mail.gmail.com>
-Subject: MY REGARDS TO YOU
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=2.8 required=5.0 tests=BAYES_60,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        SUBJ_ALL_CAPS,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: a2b36ffbf5b6ec301e61249c8b09e610bc80772f  x86/PCI: Revert "x86/PCI: Clip only host bridge windows for E820 regions"
+
+elapsed time: 2291m
+
+configs tested: 192
+configs skipped: 72
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+s390                       zfcpdump_defconfig
+sh                           se7751_defconfig
+sh                            migor_defconfig
+mips                            gpr_defconfig
+arm                         axm55xx_defconfig
+powerpc                  storcenter_defconfig
+mips                           xway_defconfig
+openrisc                  or1klitex_defconfig
+powerpc                    adder875_defconfig
+sh                           se7724_defconfig
+x86_64                              defconfig
+powerpc                         ps3_defconfig
+sh                          r7780mp_defconfig
+sh                           sh2007_defconfig
+arm                         assabet_defconfig
+alpha                            alldefconfig
+arm                          pxa910_defconfig
+arm                            mps2_defconfig
+powerpc                 mpc8540_ads_defconfig
+arm                        spear6xx_defconfig
+m68k                          amiga_defconfig
+arm                         at91_dt_defconfig
+arc                           tb10x_defconfig
+arm                        cerfcube_defconfig
+powerpc                        cell_defconfig
+sh                          sdk7780_defconfig
+mips                    maltaup_xpa_defconfig
+parisc                generic-64bit_defconfig
+sh                            titan_defconfig
+mips                           ip32_defconfig
+xtensa                              defconfig
+um                             i386_defconfig
+powerpc                         wii_defconfig
+sh                              ul2_defconfig
+nios2                            alldefconfig
+xtensa                         virt_defconfig
+powerpc                     pq2fads_defconfig
+m68k                            mac_defconfig
+arm                           sunxi_defconfig
+sh                          r7785rp_defconfig
+mips                         tb0226_defconfig
+arm                            qcom_defconfig
+arm                      jornada720_defconfig
+m68k                          hp300_defconfig
+powerpc                       eiger_defconfig
+arm                            pleb_defconfig
+mips                     loongson1b_defconfig
+arc                        vdk_hs38_defconfig
+powerpc                      ep88xc_defconfig
+parisc64                         alldefconfig
+mips                     decstation_defconfig
+arm                        trizeps4_defconfig
+powerpc                  iss476-smp_defconfig
+xtensa                  cadence_csp_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                      arches_defconfig
+powerpc                        warp_defconfig
+xtensa                  audio_kc705_defconfig
+m68k                           sun3_defconfig
+sh                          landisk_defconfig
+sh                        edosk7760_defconfig
+sh                               alldefconfig
+openrisc                            defconfig
+arc                      axs103_smp_defconfig
+m68k                         amcore_defconfig
+mips                      maltasmvp_defconfig
+riscv                               defconfig
+mips                  decstation_64_defconfig
+m68k                          multi_defconfig
+xtensa                generic_kc705_defconfig
+arc                        nsimosci_defconfig
+sh                             shx3_defconfig
+csky                             alldefconfig
+sh                        sh7763rdp_defconfig
+m68k                       m5249evb_defconfig
+m68k                             alldefconfig
+ia64                            zx1_defconfig
+m68k                       m5208evb_defconfig
+powerpc                           allnoconfig
+parisc                              defconfig
+ia64                                defconfig
+sh                            shmin_defconfig
+m68k                          atari_defconfig
+nios2                            allyesconfig
+nios2                         10m50_defconfig
+x86_64                           alldefconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220617
+arm                  randconfig-c002-20220619
+riscv                             allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+sparc                               defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                randconfig-r042-20220617
+arc                  randconfig-r043-20220617
+s390                 randconfig-r044-20220617
+riscv                randconfig-r042-20220619
+arc                  randconfig-r043-20220619
+s390                 randconfig-r044-20220619
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                                  kexec
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+arm                          pcm027_defconfig
+powerpc                    gamecube_defconfig
+arm                       spear13xx_defconfig
+powerpc                     tqm8560_defconfig
+mips                       rbtx49xx_defconfig
+powerpc                 mpc8272_ads_defconfig
+arm                          moxart_defconfig
+powerpc                   lite5200b_defconfig
+mips                      maltaaprp_defconfig
+arm                                 defconfig
+arm                        multi_v5_defconfig
+arm                      pxa255-idp_defconfig
+mips                        bcm63xx_defconfig
+arm                           spitz_defconfig
+arm                        neponset_defconfig
+s390                             alldefconfig
+mips                   sb1250_swarm_defconfig
+arm                         shannon_defconfig
+arm                         s3c2410_defconfig
+arm                            mmp2_defconfig
+powerpc                     mpc512x_defconfig
+mips                        omega2p_defconfig
+powerpc                          allmodconfig
+powerpc                       ebony_defconfig
+arm                          pxa168_defconfig
+arm                     am200epdkit_defconfig
+mips                      bmips_stb_defconfig
+powerpc                 mpc8313_rdb_defconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+
 -- 
-My name is Mr. Stephen Mensah, I am a politician from Ghana and also a
-formal manager in a financial institution as a Senior Economic Adviser
-to Government Ghana. I got your contact from the Ministry of Foreign
-Affairs and Ministry of International Trade and Industry, I am
-searching for a reliable and experienced business expert that can
-guide me in setting up a lucrative business investment, so I decided
-to look for a tourism country or secure country for this investment
-project. I have U$12.5 Million Dollars and I need your assistance and
-guidance to invest the money in your country.
-
-If you are capable and willing to assist me in collaborating with me
-to invest the fund in your country. Do not hesitate in writing to me
-immediately.
-
-
-Best Regards,
-Mr. Stephen Mensah
+0-DAY CI Kernel Test Service
+https://01.org/lkp
