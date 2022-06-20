@@ -2,233 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45D2D5515B1
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Jun 2022 12:23:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD11355178A
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Jun 2022 13:39:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232575AbiFTKXl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jun 2022 06:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51438 "EHLO
+        id S241977AbiFTLjb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Jun 2022 07:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240116AbiFTKXi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jun 2022 06:23:38 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80EADE9A;
-        Mon, 20 Jun 2022 03:23:34 -0700 (PDT)
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LRQhb4GzDz688G2;
-        Mon, 20 Jun 2022 18:23:11 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Mon, 20 Jun 2022 12:23:30 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 20 Jun
- 2022 11:23:30 +0100
-Date:   Mon, 20 Jun 2022 11:23:28 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V11 3/8] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <20220620112328.00004f63@Huawei.com>
-In-Reply-To: <62ad06a643ddf_844b1294f@dwillia2-xfh.notmuch>
-References: <20220610202259.3544623-1-ira.weiny@intel.com>
-        <20220610202259.3544623-4-ira.weiny@intel.com>
-        <62ad06a643ddf_844b1294f@dwillia2-xfh.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S241956AbiFTLj3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jun 2022 07:39:29 -0400
+X-Greylist: delayed 1833 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Jun 2022 04:39:28 PDT
+Received: from imablier.rawalpindihotel.com (imablier.rawalpindihotel.com [45.130.138.4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D09C16592
+        for <linux-pci@vger.kernel.org>; Mon, 20 Jun 2022 04:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=rawalpindihotel.com;
+ h=Reply-To:From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding; i=cor.car@rawalpindihotel.com;
+ bh=Nyf5OaNLvLP6QtC9iHPCmZ9OukM=;
+ b=AhIbK1fsNPyMRL0hjrqFPJQ+Bri5N9yqEHgzbt2BTjLBDfZlP/qUEXVt+u9XaYnbOJ5AN86l7WQQ
+   8IUejZOGQ3ZQjRdMrLI1BCXxxNDKOXnbUybbEp+5Dq0Ffwy577eQ5zoao0kfy+TCMUUOMkvp2vKW
+   J4VetmaACDCdz2DDhQYHPuiTqy0JLmHxLxNpiwuZsu6Zp0WsBTBzYw07Ov8kla7/OhOkbtwrvEqJ
+   FAdJZidXa+xk2ZZ5XXc3iv0TrIvKx8XW4bOc1mjC1PBNMYKx2eT8WUlIZCfzdxUO7p1xf/IUDfbE
+   QAa6+f4X5AaZe+wdtLpSbDuO4yxt6oKz6nkEnw==
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=rawalpindihotel.com;
+ b=Voqov4YQ0F9EE7sTcA1JjxAhR+nRzjHIS/lTcFf2LE2C58XJCpxZ+ZQoy6Qa+JRa7w6ABcj5nQa7
+   fu81jPyrsgjWe8tHQunuoxOFbp1xoL5+7ffiaRqzBMa620LdLeP10Uw+jeaT4lvlN1RNQpYcvNOR
+   M8EzEqSVLQVT8jU/27D0O1FNnJHB3sG8yf4I/eruTzTynjddtA/+oSTyjLchVMgYmTVSMN7rvxdT
+   FruiOm+pQQQ/K2nNTaagM2AnDHnSp2R/pukB1IrtOrY0OWxnHWLiqSPKS3kVhlyitC1Hpx25EM7M
+   gCJWly4GXuu8T6WxHWG+ADwqLrJzqi7yPkg+8Q==;
+Reply-To: lloydhoffman@dr.com
+From:   Lloyd <cor.car@rawalpindihotel.com>
+To:     linux-pci@vger.kernel.org
+Subject: Business Capital Funding.
+Date:   20 Jun 2022 04:08:19 -0700
+Message-ID: <20220620040819.894FC5AD8A35B7EE@rawalpindihotel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=3.9 required=5.0 tests=BAYES_80,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 17 Jun 2022 15:56:38 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+Hello,
+ 
 
-> ira.weiny@ wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > Introduced in a PCI r6.0, sec 6.30, DOE provides a config space based
-> > mailbox with standard protocol discovery.  Each mailbox is accessed
-> > through a DOE Extended Capability.
-> > 
-> > Each DOE mailbox must support the DOE discovery protocol in addition to
-> > any number of additional protocols.
-> > 
-> > Define core PCI functionality to manage a single PCI DOE mailbox at a
-> > defined config space offset.  Functionality includes iterating,
-> > creating, query of supported protocol, task submission, and destruction
-> > of the mailboxes.
-> > 
-> > If interrupts are desired, the interrupt number can be queried and
-> > passed to the create function.  Passing a negative value disables
-> > interrupts for that mailbox.  It is the callers responsibility to ensure  
-> 
-> s/callers/caller's/
-> 
-> > enough interrupt vectors are allocated.
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
+We are expanding our global presence by investing in viable=20
+projects across the globe.
+=20
+We will be willing to inject upto $5 Billion and more into a=20
+viable project(s) We grant our funding at a 3.95% ROI per annum=20
+for 10 years and 12 months moratorium.
+=20
+If you have a viable project that needs funding, kindly revert=20
+with your business plan and executive summary for our review and=20
+possible funding.
+=20
+In Anticipation of your reply
+Lloyd Hoffman .
+Client Executive.
 
-...
-
-> > + * @task_lock: Protect cur_task  
-> 
-> Protect what about cur_task? Assigning and clearing a pointer is atomic.
-> 
-> > + * @statemachine: Work item for the DOE state machine  
-> 
-> Why does the pci_doe_mb have a work item? I would expect a work item per
-> task. Then this gets a waitqueue for free to wait for task completion.
-> Otherwise I suspect this introduces complexity in the DOE implementation
-> to simulate per-task-work that a workqueue per DOE and a work item per
-> task gets you for free, and for recalling hardware context from one
-> firing of the state machine to the next. Just run the task work all
-> in-line in one context.
-
-We went through a model that looked rather more like that.  Maybe
-I misunderstood your feedback at the time (way back around the first RFC)
-where you suggested using timeouts via delayed workqueue and limiting
-the access to the DOE to a single thread (explicitly by using a single
-work item). See description of changes in v2.
-https://lore.kernel.org/all/20210413160159.935663-3-Jonathan.Cameron@huawei.com/
-
-This logic has been fundamentally the same since around v2.
-
-...
-
-> > +static irqreturn_t pci_doe_irq_handler(int irq, void *data)
-> > +{
-> > +	struct pci_doe_mb *doe_mb = data;
-> > +	struct pci_dev *pdev = doe_mb->pdev;
-> > +	int offset = doe_mb->cap_offset;
-> > +	u32 val;
-> > +
-> > +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
-> > +		pci_write_config_dword(pdev, offset + PCI_DOE_STATUS,
-> > +					PCI_DOE_STATUS_INT_STATUS);
-> > +		mod_delayed_work(system_wq, &doe_mb->statemachine, 0);  
-> 
-> Wait, no, not system_wq. I expected this wants a dedicated / ordered queue
-> per doe and this likely wants a queue that can sleep while processing a
-> task and just not support overlapping tasks.
-> 
-> In that model the irq is just waking up any tasks in execution that are
-> awaiting a polling timeout. The irq handler does:
-> 
-> wake_up(&doe_mb->wait);
-> 
-> ...and then task that is executing in the queue continues what it was
-> doing.
-
-Sure that should work. 
-
-
-> 
-> > +		return IRQ_HANDLED;
-> > +	}
-> > +
-> > +	return IRQ_NONE;
-> > +}
-> > +
-> > +/*
-> > + * Only called when safe to directly access the DOE from
-> > + * doe_statemachine_work().  Outside access is not protected.  Users who
-> > + * perform such access are left with the pieces.  
-> 
-> What pieces, where? I expect the abort implementation would be something
-> like:
-> 
-> set_bit(ABORT_PENDING) <== blocks new task submissions until clear
-> flush_workqueue() <== make sure all in-flight tasks see the abort
-> do_doe_abort(...) <== do the abort
-> clear_bit(ABORT_PENDING) <== optionally restart the tasks that were
-> cancelled, or just expect them to be resubmitted.
-
-I think this is an artifact of trying to act on suggestion to only access
-the DOE from a single thread. Without that complexity something like you
-suggest should work.
-
-Fundamentally should still only be called from within the state machine
-though (as that's the only place it makes sense) and will need to
-interrupt work in flight (waiting for interrupt / polling for timeout etc).
-
-
-> > +static int pci_doe_abort(struct pci_doe_mb *doe_mb)
-> > +{
-> > +	reinit_completion(&doe_mb->abort_c);
-> > +	set_bit(PCI_DOE_FLAG_ABORT, &doe_mb->flags);
-> > +	schedule_delayed_work(&doe_mb->statemachine, 0);
-> > +	wait_for_completion(&doe_mb->abort_c);
-> > +
-> > +	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
-> > +		return -EIO;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pci_doe_enable_irq(struct pci_doe_mb *doe_mb, unsigned int irq)
-> > +{
-> > +	struct pci_dev *pdev = doe_mb->pdev;
-> > +	int offset = doe_mb->cap_offset;
-> > +	int rc;
-> > +
-> > +	/*
-> > +	 * Enabling bus mastering is required for MSI/MSIx.  It is safe to call
-> > +	 * this multiple times and thus is called here to ensure that mastering
-> > +	 * is enabled even if the driver has done so.
-> > +	 */  
-> 
-> It is required for MSI/MSIx to work, yes, but if the caller that created
-> the doe object has not set it yet that's its prerogative.
-
-We went around this in one of the earlier threads, and I think consensus
-was that it made sense to have this in core code.
-
-> 
-> > +	pci_set_master(pdev);
-> > +	rc = pci_request_irq(pdev, irq, pci_doe_irq_handler, NULL, doe_mb,
-> > +			     "DOE[%d:%s]", irq, pci_name(pdev));  
-> 
-> If the DOE object creation is use devm_ then this wants to be
-> devm_request_irq(), although I now notice that devm_pci_doe_create()
-> only existed in the code comments, not the implementation.
-> 
-> Is there any need for the unmanaged version of this API?
-> 
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	doe_mb->irq = irq;
-> > +	pci_write_config_dword(pdev, offset + PCI_DOE_CTRL,
-> > +			       PCI_DOE_CTRL_INT_EN);
-> > +	return 0;
-> > +}
-> > +
-
-Thanks,
-
-
-Jonathan
