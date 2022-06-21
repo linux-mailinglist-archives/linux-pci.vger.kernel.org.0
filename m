@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC872553534
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jun 2022 17:06:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E0BD55359C
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jun 2022 17:14:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351521AbiFUPGi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jun 2022 11:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41550 "EHLO
+        id S1352204AbiFUPOB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jun 2022 11:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351237AbiFUPGh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jun 2022 11:06:37 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5C227FD5
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 08:06:36 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id g8so12797859plt.8
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 08:06:36 -0700 (PDT)
+        with ESMTP id S1352553AbiFUPNZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jun 2022 11:13:25 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1873E2A97F
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 08:12:21 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id h34-20020a17090a29a500b001eb01527d9eso12853557pjd.3
+        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 08:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UK5eErzZtKg/HvO01KKCBb0udTzOZqxbnH2ci/fBY9s=;
-        b=ZIemzyjsRq9eoP1h9jF5KmQizCSVDGt6xI4plwAWYZQLJz3pQk4VDas5EyrnQ0YdCb
-         Fs45mr5usc2CrPIlhZLD+lj3w62Z8Ne3WxnrMhq/lfYEA6c3lT0WTSEDUW6PK/SRsW7v
-         349tONgsznrE90mTuus6gRE39w7n373/NSybQl2gDyehRhsR7YCbiIUlqJyeOredxrw5
-         WDrejAt13I718g4SUvKBDD3tkbeg2DnakRsVMSTC+qpV0/J6tW0fxT3BgJhoitVr7Lhh
-         T90S57fg2Y0pM3XswrC0DdGuRFepPMQC+V00zshEMy+kb9nfpPhFK+J06QSWSeuh4Glr
-         dYIQ==
+        bh=OmNePCR5l0D6yhtyhalpysxE1x2cPrZSQisFtuy9SS4=;
+        b=ZqpvfHu8vpBcIY70GaBqUIIbhg0MYLnkqBGTNo87BKBqizbRzAqJlkEo31fIPmZ8S5
+         CMs+RG9Nz28IKhmzHqiglg3AoTEip6EkhOLQcehBE6GfX2V7ALUyz4uCjlcmFbEb3QbR
+         ZrGDhyxxxX9vMFD0pvqXp0iP07UC9DBvFYUWXo60Nm4va+3hL0VwiJdXG1RaCJjc9NPO
+         hgQT4Tx4vRXvvrWlPjY/eqRdILrdhzMk7K7DLLCr0pPmZEKw2EedAOFBTg/YbpulL/sF
+         xMRDgv7sfoZecKkyis+97n7ASyuBYr/4mmdyowISrYxlTiCPfOkLPV7cQzqQVcDF/BZL
+         xOwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=UK5eErzZtKg/HvO01KKCBb0udTzOZqxbnH2ci/fBY9s=;
-        b=YGC5HE+QKjWwzbisMukeykzxRBbKMv/GQX8gXhcOIEU4WC/nuhMNThHLMp3kptzvU+
-         Gia0ekIYvqnrbPYHr4aAEppChZxwuSSpSbmrkStAubbMvkZZvJIyt8au3F6R5HIDyjnW
-         JWoaP/jFo37dgItEX2USyLmzabdJlJ2R7l+j0yOImzlsZmmk+doAYS9J4L6nPnvhxFjQ
-         NSxTdXplVyk/Mhrt55QzA1kqWvAKS2zotypknx3HkJl6UoqeMj1TQ0GRDI6tJwpL5Vm7
-         NYja6vTHxNhrBvfHGD8BJqCZkEYsZIrqDIFo3caXRnk9sNBxC4uQcduIvZ53RXCv+jjf
-         +aSg==
-X-Gm-Message-State: AJIora8zAdHvsPJKVgT94j0sfI6YJEsPlx3xLK5UMq916di88Yd+o0NX
-        6CfPNoc2oqB6W+SsvVdzKOkv
-X-Google-Smtp-Source: AGRyM1uMYG5Bf48KHuNG7PKQdT3esTHv7uuvP4fyRon91ArW38BvcQbSytXAtlAXHvLN9buBK1imjw==
-X-Received: by 2002:a17:90a:5911:b0:1ec:9e24:c671 with SMTP id k17-20020a17090a591100b001ec9e24c671mr14559160pji.173.1655823995841;
-        Tue, 21 Jun 2022 08:06:35 -0700 (PDT)
+        bh=OmNePCR5l0D6yhtyhalpysxE1x2cPrZSQisFtuy9SS4=;
+        b=SS+1Tk30hF/awlKkKmOJtw1kqnW8rdUufjPAKK7Rq+NTpibQdv7I7rXjesyN6nHICT
+         2tbctvNaBqfdKfrp+VgZ/G2rGByxR0YsZUZHSqC0ryyRL86qRQyXoJtA3xpWCO71qi7e
+         t5Tefla56JSyQknNAmSNPjQcnQ4CTDCB1RRDz18NJzHpIgwMQfMKIcrpF6KeosAOWyli
+         q7ic9oudvW5iuCzU1OmEhriKR7LbFbhMSGG0LleYl9FVDou0opu++Ed1ayx7YaCBrE+L
+         H9ywj05vCbJHyeliZatI5CBPB1sjg8Tyjv3lCI0iq9eSxDYrSejUEPQ0LXUmrTLdsaFN
+         lU0Q==
+X-Gm-Message-State: AJIora8RLaUUJEM2fria1qHGW0tyvQ19AUCAT/nCITZjKlQeajRxPBKh
+        Kq5nuQXZsRgJLAaXoZk0bnoa
+X-Google-Smtp-Source: AGRyM1uDqfclGTSJzuew4bdC/Y6di2Wzht8n8gfkOWWwxO3g/JWDyQP85lECbhgyusIhM/khR8CdYg==
+X-Received: by 2002:a17:903:1206:b0:168:e5af:469d with SMTP id l6-20020a170903120600b00168e5af469dmr29754220plh.55.1655824341022;
+        Tue, 21 Jun 2022 08:12:21 -0700 (PDT)
 Received: from thinkpad ([117.193.212.116])
-        by smtp.gmail.com with ESMTPSA id v11-20020a17090331cb00b00164ade949adsm10788163ple.79.2022.06.21.08.06.31
+        by smtp.gmail.com with ESMTPSA id w22-20020a1709026f1600b001676f87473fsm10823245plk.302.2022.06.21.08.12.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jun 2022 08:06:35 -0700 (PDT)
-Date:   Tue, 21 Jun 2022 20:36:29 +0530
+        Tue, 21 Jun 2022 08:12:20 -0700 (PDT)
+Date:   Tue, 21 Jun 2022 20:42:11 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Lizhi Hou <lizhi.hou@xilinx.com>
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
@@ -56,17 +56,17 @@ Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         sonal.santan@xilinx.com, yliu@xilinx.com, michal.simek@xilinx.com,
         stefanos@xilinx.com, trix@redhat.com, mdf@kernel.org,
         dwmw2@infradead.org, linux-kernel@vger.kernel.org,
-        Max Zhen <max.zhen@xilinx.com>, kishon@ti.com
-Subject: Re: [PATCH V1 RESEND 2/4] Documentation: devicetree: bindings: add
- binding for PCIe endpoint bus
-Message-ID: <20220621150629.GA28880@thinkpad>
+        Max Zhen <max.zhen@xilinx.com>
+Subject: Re: [PATCH V1 RESEND 1/4] pci: add interface to create pci-ep device
+ tree node
+Message-ID: <20220621151211.GB28880@thinkpad>
 References: <20220305052304.726050-1-lizhi.hou@xilinx.com>
- <20220305052304.726050-3-lizhi.hou@xilinx.com>
+ <20220305052304.726050-2-lizhi.hou@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220305052304.726050-3-lizhi.hou@xilinx.com>
+In-Reply-To: <20220305052304.726050-2-lizhi.hou@xilinx.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -77,145 +77,250 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-+ Kishon
-
-On Fri, Mar 04, 2022 at 09:23:02PM -0800, Lizhi Hou wrote:
-> Create device tree binding document for PCIe endpoint bus.
+On Fri, Mar 04, 2022 at 09:23:01PM -0800, Lizhi Hou wrote:
+> This patch enables PCIe device to uses flattened device tree to describe
+> apertures in its PCIe BARs. The aperture address consists of PCIe BAR index
+> and offset.
+> 
+> For this kind of device, the driver probe routine calls the new added
+> interface to create a device tree node. This device tree node is attached
+> under system device tree root. Then the driver may load the flatten device
+> tree overlay and attach it under this node. And the node also contains
+> 'ranges' property which is used to translate aperture address(BAR index
+> and offset) to CPU address.
 > 
 
-I'm currently working on a PCI endpoint function driver for MHI bus [1] and
-hence interested in this topic.
+This is the devicetree support for the PCI endpoint subsystem. Hence, the
+code should live under drivers/pci/endpoint/.
 
-Comments below.
+But let's first settle on the structure of the devicetree binding first.
 
-[1] https://lore.kernel.org/lkml/20220502060611.58987-9-manivannan.sadhasivam@linaro.org/
+Thanks,
+Mani
 
 > Signed-off-by: Sonal Santan <sonal.santan@xilinx.com>
 > Signed-off-by: Max Zhen <max.zhen@xilinx.com>
 > Signed-off-by: Lizhi Hou <lizhi.hou@xilinx.com>
 > ---
->  .../devicetree/bindings/bus/pci-ep-bus.yaml   | 72 +++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
+>  drivers/pci/of.c       | 180 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_pci.h |  15 ++++
+>  2 files changed, 195 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml b/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
-> new file mode 100644
-> index 000000000000..0ca96298db6f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bus/pci-ep-bus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index cb2e8351c2cc..198f08351070 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -605,6 +605,186 @@ int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
+>  	return pci_parse_request_of_pci_ranges(dev, bridge);
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_OF_DYNAMIC)
 > +
-> +title: PCIe Endpoint Bus binding
+> +static void devm_of_pci_destroy_bus_endpoint(struct device *dev, void *res)
+> +{
+> +	struct device_node *node = res;
 > +
-> +description: |
-> +  PCIe device may use flattened device tree to describe apertures in its
-> +  PCIe BARs. The Bus PCIe endpoint node is created and attached under the
-> +  device tree root node for this kind of device. Then the flatten device
-> +  tree overlay for this device is attached under the endpoint node.
+> +	of_detach_node(node);
+> +}
 > +
-> +  The aperture address which is under the endpoint node consists of BAR
-> +  index and offset. It uses the following encoding:
+> +static int of_ep_add_property(struct device *dev, struct property **proplist, const char *name,
+> +			      const int length, void *value)
+> +{
+> +	struct property *new;
 > +
-
-On top of Rob's reply:
-
-Currently, the BAR memory for the PCI endpoint device is either allocated
-dynamically using pci_epf_alloc_space() or we need to pass the address in
-"phys_addr" field of "struct pci_epf_bar".
-
-In most of the PCI endpoint devices, we need to use a fixed memory region as
-the BAR. Since there is no devicetree integration for PCI endpoint subsystem,
-I've been using the 2nd approach of obtaining the BAR address from PCI endpoint
-controller devicetree node and passing it to "phys_addr" of
-"struct pci_epf_bar".
-
-Ideally, the BAR information should come from the devicetree. But we cannot use
-just "pci-ep-bus" node. I've been thinking about the below structure:
-
-pcie_ep: pcie-ep@40000000 {
-        compatible = "pcie-ep";
-	....
-
-	pci_epf_0: pci-epf@100000 {
-		reg = <0x100000 0x1000>; # BAR0
-	};
-
-	pci_epf_1: pci-epf@200000 {
-		reg = <0x200000 0x1000>; # BAR1
-	};
-};
-
-Where, "pci-epf@" represents each of the PCI endpoint functions implemented by
-this device (note that there can be more than one function per endpoint device)
-and "reg" has the BAR address/size for that function.
-
-Rob, what do you think?
-
-Thanks,
-Mani
-
-> +    0xIooooooo 0xoooooooo
+> +	new = devm_kzalloc(dev, sizeof(*new), GFP_KERNEL);
+> +	if (!new)
+> +		return -ENOMEM;
 > +
-> +  Where:
+> +	new->name = devm_kstrdup(dev, name, GFP_KERNEL);
+> +	if (!new->name)
+> +		return -ENOMEM;
 > +
-> +    I = BAR index
-> +    oooooo oooooooo = BAR offset
+> +	new->value = devm_kmalloc(dev, length, GFP_KERNEL);
+> +	if (!new->value)
+> +		return -ENOMEM;
 > +
-> +  The endpoint is compatible with 'simple-bus' and contains 'ranges'
-> +  property for translating aperture address to CPU address.
+> +	memcpy(new->value, value, length);
+> +	new->length = length;
+> +	new->next = *proplist;
+> +	*proplist = new;
 > +
-> +allOf:
-> +  - $ref: /schemas/simple-bus.yaml#
+> +	return 0;
+> +}
 > +
-> +maintainers:
-> +  - Lizhi Hou <lizhi.hou@xilinx.com>
+> +static struct device_node *of_ep_alloc_node(struct pci_dev *pdev, const char *name)
+> +{
+> +	struct device_node *node;
+> +	char *full_name;
 > +
-> +properties:
-> +  compatible:
-> +    contains:
-> +      const: pci-ep-bus
+> +	node = devres_alloc(devm_of_pci_destroy_bus_endpoint, sizeof(*node), GFP_KERNEL);
+> +	if (!node)
+> +		return NULL;
 > +
-> +  "#address-cells":
-> +    const: 2
+> +	full_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "/%s@%llx", name,
+> +				   (u64)pci_resource_start(pdev, 0));
+> +	if (!full_name)
+> +		return NULL;
 > +
-> +  "#size-cells":
-> +    const: 2
+> +	node->parent = of_root;
+> +	node->full_name = full_name;
+> +	of_node_set_flag(node, OF_DYNAMIC);
+> +	of_node_init(node);
 > +
-> +  ranges: true
+> +	return node;
+> +}
 > +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    description: hardware apertures belong to this device.
-> +    type: object
+> +/**
+> + * devm_of_pci_create_bus_endpoint - Create a device node for the given pci device.
+> + * @pdev: PCI device pointer.
+> + *
+> + * For PCI device which uses flattened device tree to describe apertures in its BARs,
+> + * a device node for the given pci device is required. Then the flattened device tree
+> + * overlay from the device can be applied to the base tree.
+> + * The device node is under root node and act like bus node. It contains a "ranges"
+> + * property which is used for address translation of its children. Each child node
+> + * corresponds an aperture and use BAR index and offset as its address.
 > +
-> +required:
-> +  - compatible
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
+> + * Returns 0 on success or a negative error-code on failure.
+> + */
+> +int devm_of_pci_create_bus_endpoint(struct pci_dev *pdev)
+> +{
+> +	struct property *proplist = NULL;
+> +	struct device *dev = &pdev->dev;
+> +	int range_ncells, addr_ncells;
+> +	struct device_node *node;
+> +	void *prop = NULL;
+> +	u32 *range_cell;
+> +	__be32 val;
+> +	int i, ret;
 > +
-> +additionalProperties: false
+> +	node = of_ep_alloc_node(pdev, "pci-ep-bus");
+> +	if (!node)
+> +		return -ENOMEM;
 > +
-> +examples:
-> +  - |
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        pci-ep-bus@e0000000 {
-> +            compatible = "pci-ep-bus", "simple-bus";
-> +            #address-cells = <2>;
-> +            #size-cells = <2>;
-> +            ranges = <0x0 0x0 0x0 0xe0000000 0x0 0x2000000
-> +                      0x20000000 0x0 0x0 0xe4200000 0x0 0x40000>;
-> +        };
-> +    };
+> +	/* the endpoint node works as 'simple-bus' to translate aperture addresses. */
+> +	prop = "simple-bus";
+> +	ret = of_ep_add_property(dev, &proplist, "compatible", strlen(prop) + 1, prop);
+> +	if (ret)
+> +		goto cleanup;
+> +
+> +	/* The address and size cells of nodes underneath are 2 */
+> +	val = cpu_to_be32(2);
+> +	ret = of_ep_add_property(dev, &proplist, "#address-cells", sizeof(u32), &val);
+> +	if (ret)
+> +		goto cleanup;
+> +
+> +	ret = of_ep_add_property(dev, &proplist, "#size-cells", sizeof(u32), &val);
+> +	if (ret)
+> +		goto cleanup;
+> +
+> +	/* child address format: 0xIooooooo oooooooo, I = bar index, o = offset on bar */
+> +	addr_ncells = of_n_addr_cells(node);
+> +	if (addr_ncells > 2) {
+> +		/* does not support number of address cells greater than 2 */
+> +		ret = -EINVAL;
+> +		goto cleanup;
+> +	}
+> +
+> +	/* range cells include <node addr cells> <child addr cells> <child size cells> */
+> +	range_ncells = addr_ncells + 4;
+> +	prop = kzalloc(range_ncells * sizeof(u32) * PCI_STD_NUM_BARS, GFP_KERNEL);
+> +	if (!prop) {
+> +		ret = -ENOMEM;
+> +		goto cleanup;
+> +	}
+> +
+> +	range_cell = prop;
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		if (!pci_resource_len(pdev, i))
+> +			continue;
+> +		/* highest 4 bits of address are bar index */
+> +		*(__be64 *)range_cell = cpu_to_be64((u64)i << 60);
+> +		range_cell += 2;
+> +		if (addr_ncells == 2)
+> +			*(__be64 *)range_cell = cpu_to_be64((u64)pci_resource_start(pdev, i));
+> +		else
+> +			*(__be32 *)range_cell = cpu_to_be32((u32)pci_resource_start(pdev, i));
+> +
+> +		range_cell += addr_ncells;
+> +		*(__be64 *)range_cell = cpu_to_be64((u64)pci_resource_len(pdev, i));
+> +		range_cell += 2;
+> +	}
+> +
+> +	/* error out if there is not PCI BAR been found */
+> +	if ((void *)range_cell == prop) {
+> +		ret = -EINVAL;
+> +		goto cleanup;
+> +	}
+> +
+> +	ret = of_ep_add_property(dev, &proplist, "ranges", (void *)range_cell - prop, prop);
+> +	kfree(prop);
+> +	if (ret)
+> +		goto cleanup;
+> +
+> +	node->properties = proplist;
+> +	ret = of_attach_node(node);
+> +	if (ret)
+> +		goto cleanup;
+> +
+> +	devres_add(dev, node);
+> +
+> +	return 0;
+> +
+> +cleanup:
+> +	kfree(prop);
+> +	if (node)
+> +		devres_free(node);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_of_pci_create_bus_endpoint);
+> +
+> +struct device_node *of_pci_find_bus_endpoint(struct pci_dev *pdev)
+> +{
+> +	struct device_node *dn;
+> +	char *path;
+> +
+> +	path = kasprintf(GFP_KERNEL, "/pci-ep-bus@%llx",
+> +			 (u64)pci_resource_start(pdev, 0));
+> +	if (!path)
+> +		return NULL;
+> +
+> +	dn = of_find_node_by_path(path);
+> +	kfree(path);
+> +
+> +	return dn;
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_find_bus_endpoint);
+> +#endif /* CONFIG_OF_DYNAMIC */
+> +
+>  #endif /* CONFIG_PCI */
+>  
+>  /**
+> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+> index 29658c0ee71f..c1d86be321b2 100644
+> --- a/include/linux/of_pci.h
+> +++ b/include/linux/of_pci.h
+> @@ -38,4 +38,19 @@ of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+>  }
+>  #endif
+>  
+> +#if IS_ENABLED(CONFIG_OF_DYNAMIC) && IS_ENABLED(CONFIG_PCI)
+> +int devm_of_pci_create_bus_endpoint(struct pci_dev *pdev);
+> +struct device_node *of_pci_find_bus_endpoint(struct pci_dev *pdev);
+> +#else
+> +static inline int devm_of_pci_create_bus_endpoint(struct pci_dev *pdev)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline struct device_node *of_pci_find_bus_endpoint(struct pci_dev *pdev)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  #endif
 > -- 
 > 2.27.0
 > 
