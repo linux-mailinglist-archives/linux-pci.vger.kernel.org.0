@@ -2,47 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60D1C553E7B
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 00:28:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D28B553EB3
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 00:49:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353377AbiFUW2j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jun 2022 18:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59650 "EHLO
+        id S1354008AbiFUWt5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jun 2022 18:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354522AbiFUW2i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jun 2022 18:28:38 -0400
+        with ESMTP id S230021AbiFUWt4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jun 2022 18:49:56 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95FED6316;
-        Tue, 21 Jun 2022 15:28:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336B11EED5;
+        Tue, 21 Jun 2022 15:49:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 31EF46172C;
-        Tue, 21 Jun 2022 22:28:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C61DC3411C;
-        Tue, 21 Jun 2022 22:28:36 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 53EEA61751;
+        Tue, 21 Jun 2022 22:49:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47BECC3411C;
+        Tue, 21 Jun 2022 22:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655850516;
-        bh=CHL/ZNk1WKi/MdEl6nAc3XijgfsJIFJrnSoy21hNQQ4=;
+        s=k20201202; t=1655851794;
+        bh=S8AJMDPQvnWDK4RahqwN098Ni4YLzb9Wd07uSaNuGok=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=no1eTT9lcjS7OYXZilCOOGp0tWQ5GvoZIeQf3c2MQWd1CqKkJVMSqxxTVhJjQQ8Fn
-         gFM02vn4mFm4f/KsmGfXmG9hKikAjPwaORkAfEVpOPQAesmWVCRgot0/BjVCQ7U/1c
-         cixfiE7iv0a88DmniS2q2YuNbum1dJ9k5BC0aiehFzHkqRjfmOnIkn1ZqIa80KJWNt
-         8xLW/2fbPPXAlSronfR9f1nRim0WVYIm9TXm0NR19x7h+lgCTZD4Tx84RitiYYp+ED
-         tH2Ck+CZvMlpajIqxGU5ByGFttFhkvWykdRlmAmh9uEyFr5CVILmkqJwzhuJi2Ig76
-         pebEuQKZlB9Yw==
-Date:   Tue, 21 Jun 2022 17:28:34 -0500
+        b=eTGz6L4kA48Wrl3e0Yf7md34NbBtsEwow9/b2efRVFJMycOz66tK1d8QbPzJgs9kS
+         tqbWmTERX+OlVi8A/z8lo3A/7qT1hhjegWoQwmJ51bPlSOk6xIOJKIJac0pGjCacgH
+         8P70Xb0DWyBpp/CD2fPtQl+1jE9Uh2aMIPGRWhcLldSr6m4ckeNjoc77Mzkm6Ip6ru
+         /Eg0NA98+vIXumy/7kYKJkHC/DapI6I0JVvNbJp1qAhn6doDrpoW86xggD0qC0ez4P
+         Nu9HxNaVOnjGiQ2v3XWPiD57U/UugQOz8qD0fpSWrPR36Wa00O+lqJtkme4RdFey2A
+         C7B5nk/gqQmKg==
+Date:   Tue, 21 Jun 2022 17:49:52 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, michals@xilinx.com, robh@kernel.org
-Subject: Re: [PATCH v5 0/2] Add support for Xilinx Versal CPM5 Root Port
-Message-ID: <20220621222834.GA1339138@bhelgaas>
+To:     Liang He <windhl@126.com>
+Cc:     marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] pci/controller/pcie-rcar-host: Hold the reference
+ returned by of_find_matching_node
+Message-ID: <20220621224952.GA1340618@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220621113653.2354462-1-bharat.kumar.gogada@xilinx.com>
+In-Reply-To: <20220621070145.4080147-1-windhl@126.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,41 +55,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 21, 2022 at 05:06:51PM +0530, Bharat Kumar Gogada wrote:
-> Xilinx Versal Premium series has CPM5 block which supports Root Port
-> functioning at Gen5 speed.
+On Tue, Jun 21, 2022 at 03:01:45PM +0800, Liang He wrote:
+> In rcar_pcie_init(), we need to hold the reference returned by
+> of_find_matching_node() which is used to call of_node_put() for
+> refcount balance.
 > 
-> Xilinx Versal CPM5 has few changes with existing CPM block.
-> - CPM5 has dedicated register space for control and status registers.
-> - CPM5 legacy interrupt handling needs additonal register bit
->   to enable and handle legacy interrupts.
+> Signed-off-by: Liang He <windhl@126.com>
+> ---
+>  drivers/pci/controller/pcie-rcar-host.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> Changes in v5:
-> - Added of_device_get_match_data to identify CPM version.
+> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+> index 997c4df6a1e7..405ec3d64f30 100644
+> --- a/drivers/pci/controller/pcie-rcar-host.c
+> +++ b/drivers/pci/controller/pcie-rcar-host.c
+> @@ -1158,7 +1158,10 @@ static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst
+>  
+>  static int __init rcar_pcie_init(void)
+>  {
+> -	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
+> +	struct device_node *np = of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match);
+> +
+> +	if (np) {
+> +		of_node_put(np);
+
+I think this is correct, but it would be nicer to update the way this
+driver uses of_device_get_match_data(), e.g.,
+
+  struct rcar_variant {
+    int (*phy_init_fn)(struct rcar_pcie_host *host);
+    bool hook_abort;
+  };
+
+  struct rcar_pcie_host {
+    ...
+    const struct rcar_variant *variant;
+  };
+
+  static int rcar_pcie_probe(...)
+  {
+    host->variant = of_device_get_match_data(dev);
+    err = host->variant->phy_init_fn(host);
+    ...
+
+  #ifdef CONFIG_ARM
+    if (host->variant->hook_abort) {
+  #ifdef CONFIG_ARM_LPAE
+      hook_fault_code(17, ...);
+  # else
+      hook_fault_code(22, ...);
+  #endif
+    }
+  #endif
+  }
+
+Or keep the hook in a separate function called from rcar_pcie_probe()
+if you think that's cleaner.
+
+I'm not sure hook_fault_code() needs to be called separately as a
+device_initcall().  The pci-ixp4xx.c driver does it in
+ixp4xx_pci_probe(), so I assume rcar could do it in probe as well.
+
+>  #ifdef CONFIG_ARM_LPAE
+>  		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
+>  				"asynchronous external abort");
+> -- 
+> 2.25.1
 > 
-> 
-> Bharat Kumar Gogada (2):
->   dt-bindings: PCI: xilinx-cpm: Add Versal CPM5 Root Port
->   PCI: xilinx-cpm: Add support for Versal CPM5 Root Port
-> 
->  .../bindings/pci/xilinx-versal-cpm.yaml       | 48 ++++++++++++--
->  drivers/pci/controller/pcie-xilinx-cpm.c      | 62 ++++++++++++++++++-
->  2 files changed, 103 insertions(+), 7 deletions(-)
-
-This is the third "v5" posting:
-
-  #1 Jun 16 https://lore.kernel.org/r/20220616124429.12917-1-bharat.kumar.gogada@xilinx.com
-  #2 Jun 18 https://lore.kernel.org/r/20220618024459.7554-1-bharat.kumar.gogada@xilinx.com
-  #3 Jun 21 https://lore.kernel.org/r/20220621113653.2354462-1-bharat.kumar.gogada@xilinx.com
-
-This makes things harder than necessary.
-
-I commented on a couple things in #2, and you said you were going to
-fix them, but they aren't fixed in #3.
-
-It will also make things easier if you include the MAINTAINERS patch
-in the same series.  There's no reason for it to be separate.
-
-Can you please post a v6 with the updates?
-
-Bjorn
