@@ -2,171 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 484EA552956
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jun 2022 04:30:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77968552A00
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jun 2022 06:03:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238103AbiFUC2R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Jun 2022 22:28:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
+        id S1344727AbiFUDxt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Jun 2022 23:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343906AbiFUC2O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jun 2022 22:28:14 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5905A30F
-        for <linux-pci@vger.kernel.org>; Mon, 20 Jun 2022 19:28:12 -0700 (PDT)
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com [209.85.210.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S1343680AbiFUDxs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Jun 2022 23:53:48 -0400
+Received: from mail.tkos.co.il (mail.tkos.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9F21C131;
+        Mon, 20 Jun 2022 20:53:46 -0700 (PDT)
+Received: from tarshish (unknown [10.0.8.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id CB9863FC10
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 02:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1655778489;
-        bh=UNuBfXpSXpZ3D5IsIMVi7WSYUlUBrkeS0wvAhdMcGn4=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=jXguBKT86q/B6Q4v9zyHg7g5SX3fKhBSbn6+e8ZnPeSxyRyl5szALQUdqg+fuiwjH
-         Xnx9SIV4rJwi/ajbBS7jgPAJI120lIwmxYdT5lRRFAft7rjTsmyAXxJgv49Gq0yN96
-         As8G2qmyTu9tWam8PUIUFRaPyy70PkS6b60Ucdm98a2cHpvhKglJdaxUR0PMC3vPTk
-         iAVyFqpAu1QiuAWngaeK0gVe6iqZyI62FjdkuIvL2Ln0tHH9g+aw1MDARLhxjnvS9P
-         2Z9PtqK0xJgUQTcuoVZv5yF4OJgI8py6L/zazk8LiATDue/nSm1o2Z3Lj7LqzuSczc
-         PDyB2MjKJYaKg==
-Received: by mail-ot1-f70.google.com with SMTP id m28-20020a0568301e7c00b0060bf9048336so6658182otr.7
-        for <linux-pci@vger.kernel.org>; Mon, 20 Jun 2022 19:28:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNuBfXpSXpZ3D5IsIMVi7WSYUlUBrkeS0wvAhdMcGn4=;
-        b=bxnHofKiFuhgqTuH26NMxjT7XFBPEQqxGZrOS5KMRRmSC+6jKaUkkXkD7cXzUjJhoA
-         qBE/A47bxLipk6elx96IQcyOzx0HxV/g17GTe3qTSNivMthXMwmdpF+Y7ykBo2q7P9Xf
-         BJxVl5WkUEzjV9+Xp4aaUQ5RmP1FP3/xQNvzroHoQ2EYGcgr2VEeGoHu6WV2aqF7oQ3n
-         ayK81UZvDLqtINR1Rfgzcuo9vaPGRd7aEr/G2LL6UMydt1aA4CtD4q1jRpLCoVBdAvmY
-         LFv2D0+Wkf7N/rQP8Nj1peBclFKk6tz6oZ98kACtyNByes11x/Hyfm0gVvAls9lojoYX
-         tFlw==
-X-Gm-Message-State: AJIora8WBDIEcWVuFT4IuPizp3gSviSFDo3md1JRzu1N9oKjb0u7mVWu
-        XQmnwu/K4LwMsIrYk1aJRP5N7jRP40t+1EyF7TiEjD5GMkLB37x6aUN/oH0+oMa4A4fRCI+hi74
-        dXyVF7ofypn5iXBmPAePZbXkGj1d2gC8L3a9oP7SO6t2YFWJ2luqf+w==
-X-Received: by 2002:a9d:6d90:0:b0:60c:757d:1e08 with SMTP id x16-20020a9d6d90000000b0060c757d1e08mr10391489otp.224.1655778488500;
-        Mon, 20 Jun 2022 19:28:08 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1u/qEtWTOcznlFO6/6DzmXZHqIjqZLMEnnAkGj+c5obYAtzAP/o58AuerszAEur2YMurVxQsX1SFQAcL3Ku9a4=
-X-Received: by 2002:a9d:6d90:0:b0:60c:757d:1e08 with SMTP id
- x16-20020a9d6d90000000b0060c757d1e08mr10391484otp.224.1655778488235; Mon, 20
- Jun 2022 19:28:08 -0700 (PDT)
+        by mail.tkos.co.il (Postfix) with ESMTPS id 699644403AE;
+        Tue, 21 Jun 2022 06:53:19 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+        s=default; t=1655783600;
+        bh=WptAxfSfvraXMBMBvNtwNadW7FWtSJ6h8v8Lg3QJU+Q=;
+        h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+        b=Et6SnfQS0iMdNuZigK9h1VY4V6DANGVpJi2+xMGysfcyDLryK51xQ0XCywvJPXwPD
+         ohk1L4Xj8d2lfVpmXMYZIoEiGsrPJxSJb19Ny+m/6qieb5son07ITJqizImnem/xdH
+         0jhqESwnMoHpXW4gL+K8J/+NXgFvzFJcxqmCnvKSQVJPrcAEhFxYtUyjoa3DEDVXky
+         5QZYgQ6vbnTdU0gpJkPoVEmHCTu6p3aUqUJiEyrs/WAAgYo41LCAnW/Z0n390hDzV+
+         HJtjNgMq+yGwVJPoJr/8n0W4r1D4uk40mpYwRQo7H7Njz7Pj9e1q5JbWHYYtH7TrCI
+         m2L4S3PSyo5hQ==
+References: <cover.1655028401.git.baruch@tkos.co.il>
+ <a470b27a642d21e7b3e64d0f3287c0c3521bd182.1655028401.git.baruch@tkos.co.il>
+ <YrCY0dhQEE5pgWT1@hovoldconsulting.com>
+User-agent: mu4e 1.6.10; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Selvam Sathappan Periakaruppan <quic_speriaka@quicinc.com>,
+        Kathiravan T <quic_kathirav@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v7 3/3] PCI: qcom: Add IPQ60xx support
+Date:   Tue, 21 Jun 2022 06:39:45 +0300
+In-reply-to: <YrCY0dhQEE5pgWT1@hovoldconsulting.com>
+Message-ID: <87k09aekop.fsf@tarshish>
 MIME-Version: 1.0
-References: <20220509073639.2048236-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20220509073639.2048236-1-kai.heng.feng@canonical.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Tue, 21 Jun 2022 10:27:56 +0800
-Message-ID: <CAAd53p4NZ1Pd0TteMm0=Pcd2s-F+f7--tkiUNQqMRm+NgZtuSQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI:ASPM: Remove pcie_aspm_pm_state_change()
-To:     bhelgaas@google.com
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 9, 2022 at 3:37 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> pcie_aspm_pm_state_change() was introduced at the inception of PCIe
-> ASPM code.
->
-> However, it can cause some issues. For instance, when ASPM config is
-> changed via sysfs, those changes won't persist across power state change
-> because pcie_aspm_pm_state_change() overwrites them.
->
-> In addition to that, if the driver is to restore L1ss [1] after system
-> resume, the restored states will also be overwritten by
-> pcie_aspm_pm_state_change().
->
-> So remove pcie_aspm_pm_state_change() for now, if there's any hardware
-> really needs it to function, a quirk can be used instead.
->
-> [1] https://lore.kernel.org/linux-pci/20220201123536.12962-1-vidyas@nvidia.com/
->
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Hi Johan,
 
-A gentle ping...
+Thanks for your review comments.
 
-> ---
->  drivers/pci/pci.c       |  3 ---
->  drivers/pci/pci.h       |  2 --
->  drivers/pci/pcie/aspm.c | 19 -------------------
->  3 files changed, 24 deletions(-)
+On Mon, Jun 20 2022, Johan Hovold wrote:
+> On Sun, Jun 12, 2022 at 01:18:35PM +0300, Baruch Siach wrote:
+>> From: Selvam Sathappan Periakaruppan <quic_speriaka@quicinc.com>
+>> 
+>> IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
+>> platform.
+>> 
+>> The code is based on downstream[1] Codeaurora kernel v5.4 (branch
+>> win.linuxopenwrt.2.0).
+>> 
+>> Split out the DBI registers access part from .init into .post_init. DBI
+>> registers are only accessible after phy_power_on().
+>> 
+>> [1] https://source.codeaurora.org/quic/qsdk/oss/kernel/linux-ipq-5.4/
+>> 
+>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+>> ---
 >
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9ecce435fb3f1..d09f7b60ee4dc 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1181,9 +1181,6 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
->         if (need_restore)
->                 pci_restore_bars(dev);
+>> +static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
+>> +{
+>> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+>> +
+>> +	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
 >
-> -       if (dev->bus->self)
-> -               pcie_aspm_pm_state_change(dev->bus->self);
-> -
->         return 0;
->  }
+> Assert reset as you do in the init error path?
+
+Not sure about that. As I understand, the reset assert/deassert sequence
+on init is meant to ensure clean startup state. Deinit most likely does
+not need that. So maybe I should remove reset assert from init error
+path instead?
+
+As always, this code sequence is from downstream kernel. I have no
+access to documentation.
+
+baruch
+
+>> +}
+>> +
+>> +static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+>> +{
+>> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+>> +	struct device *dev = pcie->pci->dev;
+>> +	int ret;
+>> +
+>> +	ret = reset_control_assert(res->rst);
+>> +	if (ret) {
+>> +		dev_err(dev, "reset assert failed (%d)\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Delay periods before and after reset deassert are working values
+>> +	 * from downstream Codeaurora kernel
+>> +	 */
+>> +	usleep_range(2000, 2500);
+>> +
+>> +	ret = reset_control_deassert(res->rst);
+>> +	if (ret) {
+>> +		dev_err(dev, "reset deassert failed (%d)\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	usleep_range(2000, 2500);
+>> +
+>> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+>> +	if (ret)
+>> +		goto err_reset;
+>> +
+>> +	return 0;
+>> +
+>> +err_reset:
+>> +	reset_control_assert(res->rst);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+>> +{
+>> +	struct dw_pcie *pci = pcie->pci;
+>> +	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> +	u32 val;
+>> +	int i;
+>> +
+>> +	writel(SLV_ADDR_SPACE_SZ,
+>> +		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
+>> +
+>> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+>> +	val &= ~BIT(0);
+>> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+>> +
+>> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+>> +
+>> +	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
+>> +	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+>> +		pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+>> +	writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS
+>> +		| GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
 >
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 3d60cabde1a15..86a19f293d4ad 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -560,12 +560,10 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
->  #ifdef CONFIG_PCIEASPM
->  void pcie_aspm_init_link_state(struct pci_dev *pdev);
->  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
-> -void pcie_aspm_pm_state_change(struct pci_dev *pdev);
->  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
->  #else
->  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
-> -static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
->  #endif
+> I noticed that some of this probably has been copied from from
+> qcom_pcie_init_2_3_3(), but please move the | operator to the previous
+> line.
 >
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index a96b7424c9bc8..7f76a5875feb4 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1012,25 +1012,6 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
->         up_read(&pci_bus_sem);
->  }
+>> +		pci->dbi_base + GEN3_RELATED_OFF);
+>> +
+>> +	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
+>> +		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
 >
-> -/* @pdev: the root port or switch downstream port */
-> -void pcie_aspm_pm_state_change(struct pci_dev *pdev)
-> -{
-> -       struct pcie_link_state *link = pdev->link_state;
-> -
-> -       if (aspm_disabled || !link)
-> -               return;
-> -       /*
-> -        * Devices changed PM state, we should recheck if latency
-> -        * meets all functions' requirement
-> -        */
-> -       down_read(&pci_bus_sem);
-> -       mutex_lock(&aspm_lock);
-> -       pcie_update_aspm_capable(link->root);
-> -       pcie_config_aspm_path(link);
-> -       mutex_unlock(&aspm_lock);
-> -       up_read(&pci_bus_sem);
-> -}
-> -
->  void pcie_aspm_powersave_config_link(struct pci_dev *pdev)
->  {
->         struct pcie_link_state *link = pdev->link_state;
-> --
-> 2.34.1
+> Same here.
 >
+>> +		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
+>> +		pcie->parf + PCIE20_PARF_SYS_CTRL);
+>> +
+>> +	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
+>> +
+>> +	dw_pcie_dbi_ro_wr_en(pci);
+>> +	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
+>> +
+>> +	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+>> +	val &= ~PCI_EXP_LNKCAP_ASPMS;
+>> +	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
+>> +
+>> +	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
+>> +			PCI_EXP_DEVCTL2);
+>> +
+>> +	for (i = 0; i < 256; i++)
+>> +		writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N
+>> +				+ (4 * i));
+>
+> And here for +, but you should probably just remove the line break (you
+> can go up to 100 chars if it makes the code more readable).
+>
+> Please drop the 0x prefix too.
+>
+>> +
+>> +	return 0;
+>> +}
+>
+> Johan
+
+
+-- 
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
