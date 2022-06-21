@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CCFB552D9B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Jun 2022 10:55:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A12A0552D9E
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Jun 2022 10:55:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346820AbiFUIzT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jun 2022 04:55:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40264 "EHLO
+        id S1348505AbiFUIzU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jun 2022 04:55:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348565AbiFUIzI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jun 2022 04:55:08 -0400
-Received: from mail.tkos.co.il (mail.tkos.co.il [84.110.109.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64EEA25EB4;
-        Tue, 21 Jun 2022 01:55:05 -0700 (PDT)
+        with ESMTP id S1346232AbiFUIzK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jun 2022 04:55:10 -0400
+Received: from mail.tkos.co.il (guitar.tkos.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186C52714D;
+        Tue, 21 Jun 2022 01:55:07 -0700 (PDT)
 Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.tkos.co.il (Postfix) with ESMTPS id C40594407DA;
-        Tue, 21 Jun 2022 11:54:39 +0300 (IDT)
+        by mail.tkos.co.il (Postfix) with ESMTPS id 70B63440876;
+        Tue, 21 Jun 2022 11:54:40 +0300 (IDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1655801680;
-        bh=/rQFltQbwW1NtS1kguqnicZH12kOh3aebtATb/mTZtY=;
+        s=default; t=1655801681;
+        bh=KuxHXSpJ/gfhMaXUGDFQUWViPyQoZK2p7Am3xkrSRQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K89WwHjGMxO/tcmUAP6DyOb6mH8so44bT7pzNO0zGkyU4z1Nv8ws2DaqVjQa6pnt0
-         cvbcSrb3lK60Iia8dXPyzKZZwcDAW1bSubaMES/4nmJhGNf/0rvryElbpWSRyYnPlU
-         +zMdtKzC+os8bzhNCvf7QJKDj8KLst4niHP2lUZWRSj58ntx0XibLR9ca7+/8kdcaK
-         lt7SvjZCAli0a3QAiFIKBRT2sjK2EPluO2Rb7fDEqr7jeYLpZXQT9EVoIjaYbMlOLC
-         HApc5gGOfr/xFS0AKkGPjXv9AzL+15pF0PSEkklMbWVsjHZqaCjGc6evQsFcB9l9Vf
-         YQx9D2eknBVug==
+        b=gVsKM3eiBrtEOi/6hcjeDsukfk9rKdjeR2cVuY4lv4v1vKRran9TPl8tkaD0g0b45
+         gon9BvkebtSakHkIWTtL+0dVmvbHh4TpF6GI3F5S2JQzCFRzmNdcOPkE0WvCVJmTiH
+         RsDtvI42aCIVhYi1aq3Jl1NyYftUd52iQcY5iBDrktaLVbQbl8WrOJ8ycN5KMyM90H
+         CeiR/y1LTRyxa4Ic8Mg2NOb08/4QYbIE+jT/8J62QvbbkkaYSHJ3rO7fr1JMzVmTOF
+         ccYTe0vR5t+0lNtsqeM7FylYyTwzdLuvcs5SkUTqfrpUCvieSODXWOP6U6UiBVuHC/
+         MS+qeN3RtVypQ==
 From:   Baruch Siach <baruch@tkos.co.il>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -49,13 +49,14 @@ Cc:     Baruch Siach <baruch.siach@siklu.com>,
         Johan Hovold <johan@kernel.org>, linux-pci@vger.kernel.org,
         linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v8 1/3] PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
-Date:   Tue, 21 Jun 2022 11:54:52 +0300
-Message-Id: <1c2d5a7a139be81fa15f356b2380163dbdebdc09.1655799816.git.baruch@tkos.co.il>
+Subject: [PATCH v8 2/3] PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
+Date:   Tue, 21 Jun 2022 11:54:53 +0300
+Message-Id: <3025d5e1d8da64798db6958f9780c4763fbcac47.1655799816.git.baruch@tkos.co.il>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <cover.1655799816.git.baruch@tkos.co.il>
 References: <cover.1655799816.git.baruch@tkos.co.il>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
@@ -68,49 +69,55 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Baruch Siach <baruch.siach@siklu.com>
 
-These are common dwc macros that will be used for other platforms.
+The PCIE_CAP_LINK1_VAL macro actually defines slot capabilities. Use
+PCI_EXP_SLTCAP_* macros to spell its value, and rename it to better
+describe its meaning.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.h | 6 ++++++
- drivers/pci/controller/dwc/pcie-tegra194.c   | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+v7:
+  Use FIELD_PREP for power limit and stale (Pali Rohár)
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 7d6e9b7576be..ea87809ee298 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -74,6 +74,12 @@
- #define PCIE_MSI_INTR0_MASK		0x82C
- #define PCIE_MSI_INTR0_STATUS		0x830
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 2ea13750b492..5ad9be6372f4 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -69,7 +69,20 @@
+ #define PCIE20_AXI_MSTR_RESP_COMP_CTRL1		0x81c
+ #define CFG_BRIDGE_SB_INIT			BIT(0)
  
-+#define GEN3_RELATED_OFF			0x890
-+#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
-+#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
-+#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
-+#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
-+
- #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
- #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+-#define PCIE_CAP_LINK1_VAL			0x2FD7F
++#define PCIE_CAP_SLOT_POWER_LIMIT_VAL		FIELD_PREP(PCI_EXP_SLTCAP_SPLV, \
++						250)
++#define PCIE_CAP_SLOT_POWER_LIMIT_SCALE		FIELD_PREP(PCI_EXP_SLTCAP_SPLS, \
++						1)
++#define PCIE_CAP_SLOT_VAL			(PCI_EXP_SLTCAP_ABP | \
++						PCI_EXP_SLTCAP_PCP | \
++						PCI_EXP_SLTCAP_MRLSP | \
++						PCI_EXP_SLTCAP_AIP | \
++						PCI_EXP_SLTCAP_PIP | \
++						PCI_EXP_SLTCAP_HPS | \
++						PCI_EXP_SLTCAP_HPC | \
++						PCI_EXP_SLTCAP_EIP | \
++						PCIE_CAP_SLOT_POWER_LIMIT_VAL | \
++						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
  
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index cc2678490162..0190786a24b8 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -191,12 +191,6 @@
- #define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK	GENMASK(23, 8)
- #define GEN3_EQ_CONTROL_OFF_FB_MODE_MASK	GENMASK(3, 0)
+ #define PCIE20_PARF_Q2A_FLUSH			0x1AC
  
--#define GEN3_RELATED_OFF			0x890
--#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
--#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
--#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
--#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
--
- #define PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT	0x8D0
- #define AMBA_ERROR_RESPONSE_CRS_SHIFT		3
- #define AMBA_ERROR_RESPONSE_CRS_MASK		GENMASK(1, 0)
+@@ -1114,7 +1127,7 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+ 
+ 	writel(PCI_COMMAND_MASTER, pci->dbi_base + PCI_COMMAND);
+ 	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
+-	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
++	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
+ 
+ 	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+ 	val &= ~PCI_EXP_LNKCAP_ASPMS;
 -- 
 2.35.1
 
