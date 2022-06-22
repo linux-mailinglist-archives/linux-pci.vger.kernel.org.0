@@ -2,206 +2,449 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2ECE55519C
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 18:48:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 555BA5551E1
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 19:04:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359558AbiFVQrz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jun 2022 12:47:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47950 "EHLO
+        id S1359505AbiFVREp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jun 2022 13:04:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357872AbiFVQrh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 12:47:37 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C40DE40A38;
-        Wed, 22 Jun 2022 09:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655916406; x=1687452406;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=0KmNyhtfgaXzQ79DCNgG8ieByTlNDejFoxd4drbOMpE=;
-  b=e+FEbffWulFB+kzRMLTvsAaUgHd+656d9JEg8nOx9Nnm744Plb68G+FW
-   Ze7egorrmv4bL8GSAfC30HUqsLxoFY1So36TtOsTeJfBSlKTkjRCquS0K
-   prFqFVVvoWTdWY5cQBt7pRLCTOszdVa5SkVGeVOnXbqqKRz3mRdz67s+b
-   nb02LEczuo/nHG3HyZ4FIfQVzxU0tq/O/Xkn7jPWZkj+rqq86PM8Z3a0J
-   9phT+quB5GXrcg7dKGC2kXsS0tUUxVm2Othsnr5/Qa0WgJBWKnEwQL9WQ
-   Bt3tQ0uDJSD3qmEClGXU3LNt23nXcHa8UKenhrBP8YSpKHdjJGDPgzGQy
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="260905924"
-X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="260905924"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 09:46:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="677642496"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2022 09:46:46 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 22 Jun 2022 09:46:44 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Wed, 22 Jun 2022 09:46:44 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.105)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Wed, 22 Jun 2022 09:46:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hX3WHD+8lfNnxegkS2malXOWgUJEV7p9ggjpC08LxzJOjyTENYn1sfhBCI7mYS3wXG5199TwitFxpTkqCRWnEy7UHY7eMsDT5Jxx7ha1LYW/Caj+YqUEbPYYI0LEpJqlJtir8oCmLWdc5kZnfkjo7hZInOm/ueiSy/hYQntCvmQZz7pddanXa/GZVmVcTi5DQteXRire2rYJSJHA4P4jgR4I6/d5xxsYbaCgEzZimKKVw9IAoWK4fJwSYsDodAZvYZxF3NwtZpCF7B4NdHD2XGsYdfA+CcQytywUi4xPFmoB/iCHKunrUdxuXLd3jfs1SIlikuKd7g4AdgHTCf+yoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U676qNd4RIsj3bpljhk9DFcCFeQQG7kwat4vsc7ltP4=;
- b=g06TMNJkTtPyz9dubGuZV3iPjsqEvWlX9gl/YpLgMMQZWSCPrNAqnEI3WhOQnVwbomW/kikVrCwvK0zboT0fgO2Hv/wWAtsR0AZTX0yiDKcK9F7oQ7m9wa75N/bkJVHUgq/I1DKJ2dsz03/EMe+x8mzg/PfHVfvgyihZXEFUaAAlMnz3TettCGSg2diMfTTfPdzIymtP9hTXjQ+l6Veub2X8weZxMVNoHmnuyTDM3UYF5GypMf/KIE+TMCQRPKfPKnI0dxSNRb2W3xTeK1Ja5Zs9p2VhiO2lOHVkghr9lmbL0dp2f/YKQeXW+8fPTNJeYlLjntccUe3auwTXkmj9XQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
- CH0PR11MB5755.namprd11.prod.outlook.com (2603:10b6:610:103::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Wed, 22 Jun
- 2022 16:46:42 +0000
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::f0ac:be8f:9429:d262]) by DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::f0ac:be8f:9429:d262%5]) with mapi id 15.20.5353.018; Wed, 22 Jun 2022
- 16:46:42 +0000
-Date:   Wed, 22 Jun 2022 09:46:38 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
+        with ESMTP id S1358953AbiFVREp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 13:04:45 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0953ED26;
+        Wed, 22 Jun 2022 10:04:43 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id w20so28798407lfa.11;
+        Wed, 22 Jun 2022 10:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UBlB6aagKQHpaazAR7xaMT1ITjWkFt+XxJ7nPPD17Qg=;
+        b=WxFIPfIfjfbr1krYSnbhMmSM1ZcLTWhf8YjrKLWaaG+LFS4DCxh1uYunifZ9zFr+Y6
+         1rF6gthS6UZ9tIqTvc5fc/3DX2uGRKQeEhPHk3H3ansk52sHDzeJhoEUgAvDWpK1SlQs
+         0Wta2xOORlfR68u9epyUDVxkEHk8XcZF7hoXUboj8zvDedT4REf1P4M64QHODGAK+8h9
+         Y1dvC/LcWf2yULsKJ3z5ul3WATuMYGMUHO7skFryfuu7s9iNOJ+aeFHyN7c3LCBA5Qqf
+         3xpcG7VzD7McONxIX71cLJrZwbrcSbxLTo+UCHJVRkZVv8B5RzDg+/3czO+dgSRqrumu
+         ki9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UBlB6aagKQHpaazAR7xaMT1ITjWkFt+XxJ7nPPD17Qg=;
+        b=V13x2mKCUVvRp76a/Pm81Kztj2feh705r2nETJTGpc84+bHfSUGJ12b3Uy6hua6j6I
+         odPRoMR6quV/pO8Sjc2uyflNM5uQSAfTB6t+rhRBN1YtA9iOuHuP+viEBJr7wsWBj6Vo
+         Cbpgj4FdccXawjshYolL6anrlY90LyGG3ibfTWgBdca9aXedZcjkbRYGvzMzfq8+ZLOy
+         pwXHzwRUt0owO4vNHwbGTBOTUOVcviAvfXXia1CTExGBGDDKEST90WvcXXnu1ZSfhS7A
+         nt1tjSDQF/qH2oZqJTGBWDk+tUzEm5pqD+tfpZdr+cHJRZiS39Ny3/IZZAPwyaH5caG9
+         tA/w==
+X-Gm-Message-State: AJIora8aPMhA5dDovUI5X/nTCt2uYk1S8NF0CR5T+aB59TN1UWid+e4b
+        QXrgHkHBPgoFC/fNQU5amRE=
+X-Google-Smtp-Source: AGRyM1tp6WK+g6wL0WLl37JKeQYRY+XpzLYT+gR8LhqN2LwZhszpngjKGno4LIlwLTrjETOkRVGN4Q==
+X-Received: by 2002:ac2:4c17:0:b0:47f:67fe:8d4a with SMTP id t23-20020ac24c17000000b0047f67fe8d4amr2859756lfq.554.1655917481449;
+        Wed, 22 Jun 2022 10:04:41 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id z6-20020a056512370600b0047f647414efsm1717011lfr.190.2022.06.22.10.04.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jun 2022 10:04:40 -0700 (PDT)
+Date:   Wed, 22 Jun 2022 20:04:37 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Dan Williams <dan.j.williams@intel.com>,
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V11 3/8] PCI: Create PCI library functions in support of
- DOE mailboxes.
-Message-ID: <YrNHbhGKs9DDMnm2@iweiny-desk3>
-References: <20220617224019.GA1208614@bhelgaas>
- <20220618163927.GA1235355@bhelgaas>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220618163927.GA1235355@bhelgaas>
-X-ClientProxiedBy: CO2PR06CA0070.namprd06.prod.outlook.com
- (2603:10b6:104:3::28) To DM4PR11MB6311.namprd11.prod.outlook.com
- (2603:10b6:8:a6::21)
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 17/17] PCI: dwc: Add Baikal-T1 PCIe controller support
+Message-ID: <20220622170437.jhvb56jmdup5dcgh@mobilestation>
+References: <20220620171347.35beffaudlik7euw@mobilestation>
+ <20220621182941.GA1322521@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c03d6170-8255-46e1-efc8-08da546ec948
-X-MS-TrafficTypeDiagnostic: CH0PR11MB5755:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-Microsoft-Antispam-PRVS: <CH0PR11MB5755CAE7B336BC8C72B5FB06F7B29@CH0PR11MB5755.namprd11.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3oJNg8f//5GAO7rng0b25c/hLQN/f7t6ZJS1Gx3Go+o4uzFgi190Ufwse6+jbhDMEAnGpPvGcIbYoe0VziyQB2VIR38XswdfxQ/6U/psPVwmYCNlDFAqDXLtkK+UGVMJm9HGBlMp7icLyuHUzGNas9sKwYVgUUGQ+FGf6Nas1EizW23QBK/UJNH+YvNZ1rWAeaVTfDuI2+cA9e5NY+xt7N/2ziv7k3rWJ0x4ayCZCTi/NBu63gcKN1nCNrFvEMw4PvQYzOwcjhVo3OdJaho8BOMT1HaD7RFCa2M1xkE0UVJBkYAHGZWku0m9SWe507ik564KHiQ3UOAKyB5jFQSkz3EMTrniK2+OOkVB0Og/pYJFABGXBX1VbTvpLAOqcY0rrgNtlnz9+HW8qboa1km7sdXckNyFmvCCx6tKX8WeG6oAvHnwbMBtxR29lEednAYzyT3hSnR6fJaI5Jijm60u/AZRas6GUeAP3nMJDuWuih+tUj+nBE/zQUjJ++0bkghTd83CS+7Z9qNPzxtKqUPkKTwGK9D28PO4xS0b6SMdnDB49nRxjozU8zlyNeVV0MDeVePL4MYbp6V4LXx4CBre2LiY6yNZoDm0B3Q837x93DNWhaG414KVRzFYnx71pjmuwdjs+FpWsZPV12MZX7oiY2tapiK9966M04udg001AxjRADMeXHa7W689WM0P6yoblj/B0k6DKm23zC3JUKBnGw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(396003)(136003)(346002)(39860400002)(366004)(376002)(8676002)(26005)(33716001)(6512007)(5660300002)(38100700002)(478600001)(86362001)(41300700001)(15650500001)(83380400001)(2906002)(82960400001)(9686003)(66556008)(44832011)(54906003)(6506007)(186003)(66946007)(66476007)(8936002)(4326008)(6486002)(316002)(6916009)(6666004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wVy3GUyV351dRDiAehwPdSPXY/PI9aY0mQygJK79xKbrmMZThccOCU14TpcR?=
- =?us-ascii?Q?LF9RB51DNnn+o+uIvfGmY9/12IkZXIwJZGNp5j8Rv0Vs1U/18bMeQErjXESp?=
- =?us-ascii?Q?ADi7TkThLCSz7A3SVoI0HaTeF7lss+zH7QEF67cpLLnMZM2b6q1Bkh3NT5OU?=
- =?us-ascii?Q?t6NVYFneatJL1cC1xvRpg0z13AFahwLu+eHTrBtVBTUgey79l3ECUP/BF3Wm?=
- =?us-ascii?Q?2s0UJgsjzlUpIbPHlQ8taXItxqebxqr0lca/BIGh2PSIZhh0g9QjfdwXxclC?=
- =?us-ascii?Q?obDQWEXoSzb9R8VX29PsGIYfVKdFgPK/61ZrAH4CCDIQ4zATuVBvbd4BMazb?=
- =?us-ascii?Q?AoTI8K+oljECTW4P738Fvgykg2Ue0SNDC3aYgwcptry+Mx6+EBHVTomzzFN1?=
- =?us-ascii?Q?6XN7upj46+E+ujgGCSgoSXrGebecs6vsqE1FgkuI6UdcPRELqKDf9AWrphR0?=
- =?us-ascii?Q?sag4t+76SQxXj4WbH+NKnGcQBTT3Ktla/GGEr5U/cbQz3A1sOAqz8DQjYYMq?=
- =?us-ascii?Q?vMtUoprinxQMZImrkiL5cDvNQmrsD7Nvv6uuCU37IHyTLhAXZ7zJ64A6Ngxm?=
- =?us-ascii?Q?CvkQAXjE6ldicYO4LXoRqfJF224R9D+Q0WMMFkufmgBqXWByyPZIyHHzJspH?=
- =?us-ascii?Q?wPlxON9XTXyXos5n0PuIQ4WolPFimWJkorvNfrLgRtlDXFpbrF5c0KIML9Zx?=
- =?us-ascii?Q?K5B9vPZbyEYt/woBgFwU55vlXoMGiZ1FSRYAlQJWSA3K05BEcInbR/ee/YWF?=
- =?us-ascii?Q?KvK1nGCS/wdNAvL7YdtjRvXpql4/PRIYAsXG7oW2zEUxOOmoNwteRurABFuE?=
- =?us-ascii?Q?i60V4pt6V2c5Z5sGyhXJ+YRLEhdiwpbxJbcyJY+mA22n2DgQ8gfZOsTEyWxk?=
- =?us-ascii?Q?Ve4dsJE1yfFJ0fXEN5BCJAG8Pjve17PByf4iWOreQV0A8dn6RuBW7VLvn6yy?=
- =?us-ascii?Q?4mNhotcSYI6yfqC12Wz/uj9UnuMwNEZWZgi85Q4KcPJ7A8LSrl8ZjrOoFmaS?=
- =?us-ascii?Q?f0Mzhwo9J9B1vGJ1eEE2c3K8JbmYM8V7zeobLHeN1BHYeYqCPVZN3JCJVSh6?=
- =?us-ascii?Q?ex+sy5RvBLawH5+bdAwJRIZSFIwpE5iwBFbetuIA1UUyUeGkDA9u+UCHr8VO?=
- =?us-ascii?Q?FNHVLOu7UqZxd/JC7m01IsajFlxKTxreULINYqXKqk/YEI3N0rG6k4gvQTbt?=
- =?us-ascii?Q?ty07kMXZ3lK4PzsWPKXPm/PuSVuqVI7Uh3OWRlBEk9mDkh5kft/qAcexd4Zz?=
- =?us-ascii?Q?ErBcTTlWWgMnpBpBU/j4I+cD5HCkn5g4jzQWiVvjBXkrHXRqKJu4nMA0U+UG?=
- =?us-ascii?Q?Ml9JwaQnR9RPuX07H7cUSKP8LP8F/aLTMezfQY0+zkWdW5yjJYXxKj+G81Mu?=
- =?us-ascii?Q?PfTpFgqDCwiNkzdrIXa41xD2oEjhSf7hOKWMqoiM7tfOkctKKekhqIX8gOlR?=
- =?us-ascii?Q?o3prSLs3505vQDAiY+FDhp8565JWgNQ611XiLZ8IVUjM0yODw2yGIQKhlbZo?=
- =?us-ascii?Q?A9xY/8XwL1ke6BPehfxXc9sdmTzEvuqFiTJC9XY5Q/bX4Pjy3S95ynIVtXlP?=
- =?us-ascii?Q?g74Z8hPfWwiOFEbvhm7OHRX9WQqB/u9yhjcmoL32+hXLI8tkULF3OMmVpD+0?=
- =?us-ascii?Q?tqjbsk8N34m2CExNZ1UEgecsnS7m7Lb6khIroKT9OUTNFeEHcA80apHmyfxr?=
- =?us-ascii?Q?U3qc8bPoamvQgqnlvtDhTzyCNlnEE89khVXIc9pJ0lA3J3ASo6jkDTCLbVkm?=
- =?us-ascii?Q?fWVpKQ6nLd/jAFqlq4j0AYIDDioLWfA=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c03d6170-8255-46e1-efc8-08da546ec948
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2022 16:46:42.7576
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Azin8Cyp5e6oaNYNPHTz7HRCbYlkQbNybXd8TqArhEgZoNF2LrnAI2fZGPVYXJ0hdh+6FjsTilpD+TuNGleYvg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5755
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220621182941.GA1322521@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 18, 2022 at 11:39:27AM -0500, Bjorn Helgaas wrote:
-> On Fri, Jun 17, 2022 at 05:40:19PM -0500, Bjorn Helgaas wrote:
-> > On Fri, Jun 10, 2022 at 01:22:54PM -0700, ira.weiny@intel.com wrote:
-> > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Tue, Jun 21, 2022 at 01:29:41PM -0500, Bjorn Helgaas wrote:
+> On Mon, Jun 20, 2022 at 08:13:47PM +0300, Serge Semin wrote:
+> > On Wed, Jun 15, 2022 at 11:48:48AM -0500, Bjorn Helgaas wrote:
+> > > On Fri, Jun 10, 2022 at 11:57:05AM +0300, Serge Semin wrote:
+> > > > Baikal-T1 SoC is equipped with DWC PCIe v4.60a host controller. It can be
+> > > > trained to work up to Gen.3 speed over up to x4 lanes. The host controller
+> > > > is attached to the DW PCIe 3.0 PCS via the PIPE-4 interface, which in its
+> > > > turn is connected to the DWC 10G PHY. The whole system is supposed to be
+> > > > fed up with four clock sources: DBI peripheral clock, AXI application
+> > > > clocks and external PHY/core reference clock generating the 100MHz signal.
+> > > > In addition to that the platform provide a way to reset each part of the
+> > > > controller: sticky/non-sticky bits, host controller core, PIPE interface,
+> > > > PCS/PHY and Hot/Power reset signal. The driver also provides a way to
+> > > > handle the GPIO-based PERST# signal.
+> > > > 
+> > > > Note due to the Baikal-T1 MMIO peculiarity we have to implement the DBI
+> > > > interface accessors which make sure the IO operations are dword-aligned.
+> 
+> > > > +struct dw_pcie_ops bt1_pcie_dw_ops = {
+> > > > +	.read_dbi = bt1_pcie_read_dbi,
+> > > > +	.write_dbi = bt1_pcie_write_dbi,
+> > > > +	.write_dbi2 = bt1_pcie_write_dbi2,
+> > > > +	.start_link = bt1_pcie_start_ltssm,
+> > > > +	.stop_link = bt1_pcie_stop_ltssm,
+> > > > +};
+> 
+> > > Please rename to "dw_pcie_ops" as most
+> > > drivers use. 
+> > 
+> > IMO matching the structure and its instance names is not a good idea.
+> > Other than confusing objects nature, at the very least it forces you to
+> > violate the local namespace convention. Thus in the line of the
+> > dw_pcie->ops initialization it looks like you use some generic
+> > operations while in fact you just refer to the locally defined
+> > DW PCIe ops instance with the generic variable name. Moreover AFAICS
+> > the latest platform drivers mainly use the vendor-specific prefix in
+> > the dw_pcie_ops structure instance including the ones acked by you,
+> > Lorenzo and Gustavo. What makes my code any different from them?
+> 
+
+> That's fair.  I suggest "bt1_pcie_ops" or "bt1_dw_pcie_ops" to match
+> the other drivers that include the driver name:
+> 
+>   intel_pcie_ops
+>   keembay_pcie_ops
+>   kirin_dw_pcie_ops
+>   tegra_dw_pcie_ops
+
++   ks_pcie_dw_pcie_ops
+
+which is even further from the suggested names.)
+
+> 
+> They're not 100% consistent, but hopefully we can at least not make
+> things *less* consistent.
+
+I don't think we can make something less consistent if there is no real
+consistency.) There are at most five ops descriptors can be defined in
+the DW PCIe platform drivers:
+
+1. struct dw_pcie_ops - DW PCIe DBI interface accessors,
++-> dw_pcie_ops
++-> <vendor>_pcie_ops
++-> <vendor>_dw_pcie_ops
+
+2. struct pci_ops     - own or child PCIe config space accessors,
++-> dw_pcie_ops !!! in the driver core.
++-> <vendor>_pci_ops
++-> <vendor>_pcie_ops
++-> dw_child_pcie_ops
++-> <vendor>_child_pcie_ops
++-> <vendor>_child_pci_ops
+
+3. struct dw_pcie_host_ops - DW PCIe Root Port init/de-init operations
++-> <vendor>_pcie_host_ops
++-> <vendor>_pcie_dw_host_ops
+
+4. struct dw_pcie_ep_ops   - DW PCIe Endpoint init/de-init operations
++-> pcie_ep_ops
++-> pci_ep_ops
++-> <vendor>_pcie_ep_ops
+
+As you can see each can have different naming approaches used in the
+DW PCIe platform drivers here and there. Some of them have been utilized
+more frequently, some of them - less. As for me what is really consistent
+across all the DW PCIe platform drivers is the local namespace prefix
+of the form "<vendor>_pcie". It is used in all the locally defined
+functions names and more-or-less mainly in the local instances of the
+operation descriptors. So if you want we can pick some approach and
+make sure it is used in all the driver from now on. For instance,
+
+struct dw_pcie_ops <vendor>_pcie_ops
+struct dw_pcie_host_ops <vendor>_pcie_host_ops
+struct dw_pcie_ep_ops <vendor>_pcie_ep_ops
+struct pci_ops <vendor>_pci_ops // Can be confused with the struct
+                                // dw_pcie_ops instance, but this what
+                                // is mainly used in the available drivers.
+struct pci_ops <vendor>_child_pci_ops // less frequent naming
+                                      // approach, but it looks more
+                                      // like the own CFG-space IOs.
+
+Note the later two cases will violate the local namespace naming
+convention of having "<vendor>_pcie" prefix.
+
+In my case the names would look like:
+struct dw_pcie_ops bt1_pcie_ops // What you suggest in the comment above
+struct dw_pcie_host_ops bt1_pcie_host_ops
+struct pci_ops bt1_pci_ops // It may look ambiguous with bt1_pcie_ops.
+
+What do you think?
+
+> 
+> > > > +static int bt1_pcie_get_res(struct bt1_pcie *btpci)
+> > 
+> > > Can you name this something similar to what other drivers use?  There
+> > > are a couple *_pcie_get_resources() functions (normally called from
+> > > *_pcie_probe()), but no *_get_res() yet.
+> > 
+> > Earlier in this patchset I've introduced a new method to get
+> > the CSRs ranges, PCIe speed, NoF lanes, etc resources. See the patch:
+> > [PATCH v3 14/17] PCI: dwc: Introduce generic resources getter
+> > The method has been named as "dw_pcie_get_res()". So the locally
+> > defined function has been named to refer to that method. If you think
+> > that using the "_resources" suffix is better (IMO there is no
+> > significant difference) then we'll need to change the name there too.
+> > Do you?
+> 
+
+> Yes.  I don't think there's value in names being gratuitously
+> different.
+
+Ok.
+
+> 
+> > > > +	/* AXI-interface is configured with 64-bit address bus width */
+> > > > +	ret = dma_coerce_mask_and_coherent(&btpci->dw.pp.bridge->dev,
+> > > > +					   DMA_BIT_MASK(64));
+> > 
+> > > Just to double-check since this is the first instance of
+> > > dma_coerce_mask_and_coherent() in drivers/pci -- I guess Baikal-T1 is
+> > > unique in needing this?
+> > 
+> > To be honest I've set it here just in case, seeing the dma_mask and
+> > coherent_dma_mask are left uninitialized in the Host bridge device
+> > instance, while it's still participate in the PCI devices hierarchy:
+> > 
+> > 1. platform_device.dev;
+> >                    | (<= devm_pci_alloc_host_bridge(dev))
+> >                    +---+
+> >                       &v
+> > 2. pci_host_bridge.dev.parent
+> >                    | (<= pci_register_host_bridge(bridge) or)
+> >                    | (<= pci_alloc_child_bus()              )
+> >                   &v
+> >            pci_bus.bridge
+> >                    +-------------------+
+> >                    |                   | (<= pci_setup_device())
+> >                    v                   v
+> > 3.     pci_bus.dev.parent  pci_dev.dev.parent
+> >                            pci_dev.dma_mask = 0xffffffff;
+> >                                    | (<= pci_device_add())
+> >                                    +----+
+> >                                        &v
+> >                            pci_dev->dev.dma_mask
+> >                            pci_dev->dev.coherent_dma_mask = 0xffffffffull;
+> > 
+> > So each device detected on the very first PCIe bus gets to have the
+> > PCI host bridge device as a parent. But AFAICS the PCI subsystem core
+> > code doesn't use the PCI host bridge DMA-mask and by default the
+> > dma_mask/coherent_dma_mask fields of each PCIe peripheral device are
+> > unconditionally initialized with DMA_BIT_MASK(32) (they are supposed
+> > to be overridden by the device-driver anyway). So to speak we can
+> > freely drop the dma_coerce_mask_and_coherent() method invocation from
+> > my driver if you say it is required and the PCI host bridge DMA parameter
+> > will never be used. What do you think?
+> 
+
+> I'd like the usage across drivers to be consistent unless there's a
+> hardware difference that requires something different.  So if you can
+> point to something different in bt1, great.  If not, do it the same as
+> the other drivers.
+
+Ok. I'll drop it from the driver then.
+
+> 
+> > > > +static void bt1_pcie_full_stop_bus(struct bt1_pcie *btpci, bool init)
 > > > 
-> > > Introduced in a PCI r6.0, sec 6.30, DOE provides a config space based
-> > > mailbox with standard protocol discovery.  Each mailbox is accessed
-> > > through a DOE Extended Capability.
-> 
-> > > + * pci_doe_get_irq_num() - Return the irq number for the mailbox at offset
-> > > + *
-> > > + * @pdev: The PCI device
-> > > + * @offset: Offset of the DOE mailbox
-> > > + *
-> > > + * Returns: irq number on success
-> > > + *	    -errno if irqs are not supported on this mailbox
-> > > + */
-> > > +int pci_doe_get_irq_num(struct pci_dev *pdev, int offset)
-> > > +{
-> > > +	u32 val;
-> > > +
-> > > +	pci_read_config_dword(pdev, offset + PCI_DOE_CAP, &val);
-> > > +	if (!FIELD_GET(PCI_DOE_CAP_INT, val))
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > > +	return FIELD_GET(PCI_DOE_CAP_IRQ, val);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(pci_doe_get_irq_num);
+> > > Can you name this something similar to what other drivers use?
 > > 
-> > Confusing function name (and comment) since PCI_DOE_CAP_IRQ is an
-> > Interrupt Message Number that has nothing to do with Linux IRQ
-> > numbers.
-> > 
-> > I see we already have PCI_EXP_FLAGS_IRQ, PCI_ERR_ROOT_AER_IRQ,
-> > PCI_EXP_DPC_IRQ, so I guess you're in good company.
+> > For instance? (Please note, the link_stop/link_start callbacks are
+> > defined as separate methods above.) The current names correctly describe
+> > the methods logic. So I wouldn't want to fully change their names.
 > 
-> Should have been more clear about this: I think we should rename the
-> new one to be PCI_DOE_CAP_INT_MSG_NUM or similar, and rename the
-> function as well.  It's too confusing to use "irq" for both Linux IRQs
-> and what the spec calls "Interupt Message Numbers".
 
-Oh...  ok I was thinking of using int_msg_num in the function and variable
-names.  I was just not sure about 'int'.  But if you like it then I do too!
-:-D
+> Do any other drivers contain similar logic?  If so, please use a
+> similar name.
 
-I'll update the code as well as that macro.
+host_init content is very platform-specific. So each driver has its own
+callback implementation and logical sub-methods split up. My case
+isn't an exception.
 
-Thanks again!
-Ira
+> 
+> > > > +	 * Application reset controls are trigger-based so de-assert the core
+> > > > +	 * resets only.
+> > > > +	 */
+> > > > +	ret = reset_control_bulk_assert(DW_PCIE_NUM_CORE_RSTS, pci->core_rsts);
+> 
+
+> BTW, the comment says "de-assert" but the code looks like "assert".
+
+Right. It is supposed to be "assert" in accordance with what is
+actually done.
+
+> 
+> > > > +	/* Make sure the reset is settled */
+> > > > +	usleep_range(1, 10);
+> > 
+> > > Is this duration related to something in the PCIe spec?  Or the DWC
+> > > spec? 
+> > 
+> > No. These durations are the chip-specific. Partly due to them being
+> > specific for each SoC we can't implement a generic bus reset
+> > procedure.
+> > 
+> > > I'd really like to use named constants when possible, although
+> > > we have a ton of bare magic numbers currently.
+> > > 
+> > > Similar for the poll timeouts and the "state settled" sleep below.
+> > 
+> > I don't really see much need in this parametrization since these
+> > numbers are used only once in the platform driver and their
+> > application is easily inferable from the code context.
+> 
+
+> Even if they are used only once, it's helpful when constants like this
+> can be connected to the spec or other justification for the specific
+> values.
+
+Ok. I'll replace the literals with the macros.
+
+> 
+> > > > +static struct bt1_pcie *bt1_pcie_create_data(struct platform_device *pdev)
+> > > > +{
+> > > > +	struct bt1_pcie *btpci;
+> > > > +
+> > > > +	btpci = devm_kzalloc(&pdev->dev, sizeof(*btpci), GFP_KERNEL);
+> > > > +	if (!btpci)
+> > > > +		return ERR_PTR(-ENOMEM);
+> > > > +
+> > > > +	btpci->pdev = pdev;
+> > > > +
+> > > > +	platform_set_drvdata(pdev, btpci);
+> > > > +
+> > > > +	return btpci;
+> > 
+> > > I don't think it's worth splitting this into a separate function.  I
+> > > think it would be better to use the same structure as other dwc-based
+> > > drivers and keep this in bt1_pcie_probe().
+> > 
+> > Sorry, I disagree in this matter. Generally I don't like the most of
+> > the probe methods designed in the kernel well because after evolving
+> > in time they get to be a mess if incoherent initializations,
+> > allocations, requests, etc. Splitting it up into a set of smaller
+> > coherent methods makes the code much clearer.
+> 
+
+> There's definitely some tension between making one driver better and
+> making it different from all the others.  I'm all in favor of making
+> all the drivers better and more consistent.  I'm less in favor of
+> one-off improvements because consistency is extremely important for
+> maintenance.
+
+Well, if there were a consistency in the probe method design it would
+have been another story, but in case of the DW PCIe there is none.
+Some DW PCIe platform drivers perform all the probe actions right in
+the probe method forming a long list of the weakly coherent things,
+some of them have a few sub-functions called but still look the same,
+some of them are mainly split up in the sub-methods, but still perform
+some initialization right in the probe method. So in general there is
+no unification and well defined convention in that regard.
+
+My approach on the contrary makes the probe method code well unified.
+Should any new additional step is required, the new method can be
+added together with the cleanup antagonist. Similarly the
+sub-methods update patches is easier to review than reading the
+all-in-one probe code update. Moreover such design approach I've
+been using in all the drivers submitted by me to the kernel and no
+questions have been raised so far. Finally the driver is supposed to
+be maintained by its author at the very least. So I definitely won't
+have any problem with it especially after using the same design
+pattern in all my drivers.
+
+> 
+> > > > +static int bt1_pcie_add_dw_port(struct bt1_pcie *btpci)
+> > 
+> > > All other dwc-based drivers call dw_pcie_host_init() from either
+> > > *_pcie_probe() or *_add_pcie_port().  Please use a similar convention.
+> > 
+> > Not entirely. Tegra is an exception. So as before I don't think there
+> > is a real convention. Most likely it's a result of a lucky coincident.
+> > Moreover I don't really like such naming. Something like
+> > VENDOR_pcie_add_root_port() would be much better.
+> 
+
+> I stand corrected.  Of the 21 dw_pcie_host_init() calls, 13 are from
+> *_pcie_probe(), 7 are from *_add_pcie_port(), and tegra is from
+> tegra_pcie_init_controller().  I think the *_add_pcie_port() structure
+> is better because it makes room to support multiple root ports.
+
+See the last comment. It concerns the same methods, but you suggest to
+use the names "*_add_port()" there.
+
+> 
+> > > > +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> > > 
+> > > Why do you need this when no other dwc-based drivers do?  Is Baikal-T1
+> > > different in this respect?
+> > 
+> > It's because eDMA engine embedded into the DW PCIe root port. 
+> 
+
+> Let's add a comment about the fact that this is needed because of the
+> eDMA engine.
+
+Ok.
+
+> 
+> > > > +static void bt1_pcie_del_dw_port(struct bt1_pcie *btpci)
+> > 
+> > > Can you call dw_pcie_host_deinit() from the same place as other
+> > > drivers?
+> > > 
+> > >   $ git grep -p dw_pcie_host_deinit drivers/pci/controller/dwc
+> > 
+> > Sorry I'd rather leave it as is. There are only four drivers using
+> > it and one of them don't follow what seems like a convention. I'd
+> > rather have my driver code coherent:
+> > bt1_pcie_add_pcie_port() is used to add the DW PCIe Root Port.
+> > and
+> > bt1_pcie_del_pcie_port() is used to remove the DW PCIe Root Port
+> 
+> I agree with your rationale.  Intel and kirin do:
+> 
+>   *_pcie_probe
+>     dw_pcie_host_init
+> 
+>   *_pcie_remove
+>     dw_pcie_host_deinit
+> 
+> and tegra is similar but from tegra_pcie_init_controller() and
+> tegra_pcie_deinit_controller().  Exynos is the odd one out and calls
+> dw_pcie_host_init() from exynos_add_pcie_port() but
+> dw_pcie_host_deinit() from exynos_pcie_remove().
+> 
+> Your model is better since it removes the "single root port"
+> assumption.  I would like the "bt1_pcie_add_port()" and
+> "bt1_pcie_del_port()" (or "bt1_pcie_remove_port()", which would be
+> slightly more parallel with "add") names to align with other drivers.
+
+Ok. I'll use bt1_pcie_add_port() and bt1_pcie_del_port() names then.
+* Note the DW PCIe platform drivers mainly use the _pcie_port() suffix
+* in the add-method.
+
+-Sergey
+
+> 
+> Bjorn
