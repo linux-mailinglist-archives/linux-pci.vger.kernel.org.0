@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A48E05540B0
+	by mail.lfdr.de (Postfix) with ESMTP id 29B775540AF
 	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 04:58:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356237AbiFVC5s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Jun 2022 22:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59844 "EHLO
+        id S1356251AbiFVC5x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Jun 2022 22:57:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232424AbiFVC5r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jun 2022 22:57:47 -0400
+        with ESMTP id S1356308AbiFVC5v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Jun 2022 22:57:51 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1783C33A3F;
-        Tue, 21 Jun 2022 19:57:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C3033A32;
+        Tue, 21 Jun 2022 19:57:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C0DCCB81C06;
-        Wed, 22 Jun 2022 02:57:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E23C3411C;
-        Wed, 22 Jun 2022 02:57:44 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 28E6FB81C06;
+        Wed, 22 Jun 2022 02:57:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77B3C341C7;
+        Wed, 22 Jun 2022 02:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655866664;
-        bh=+DAkEjyZDVXSjDhctgTH4pNXCRo3pfjqjM5DE9U5ZB4=;
+        s=k20201202; t=1655866666;
+        bh=QNzTpoGr4shSjLv0sk0M1WLeZIItPNE1fT8ivdONYmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbNPaVHyGxLsLBgmfD9jcxHRpY72GtT1KHjKARb1/MBr3IofApDLPHXkGOSNJiRCC
-         RkStxXoFJAytlTDOdtwj5plOHM1Rfz/Co1ki58ESI+1TS2vFw8hoj0LSn2KwyvqIqf
-         4HsY7yXljLSnwu66k47I0BP7C/hekkQ+1NMGwjz8r4+PDr4Pjwgy6zdkbdIGCTQGGv
-         DZRlsyQz0GmrvZPUhQBuoAmgmMgSq90cY8yPkvaC4vC/OCkWnH0tX1d1Kpi46PLX0P
-         0+ggvT9uNIxGM16IrwawSp3kfv+VmLmVGU5spqcgfRURrirjTd401kX2iPM8QU9XKY
-         kEbLEKuhSnp/Q==
+        b=K/f+fiDA3xJ6T1elwyfgYgH0uVhQ0NIE94Uawid8Puy808OI40xxKeHbjb7/dosNZ
+         N+1FZOywA42QllCOHTm0TPzdIcHznORZKILSnjMjHDHbQX50sOarPn7pvhVHH/JEIG
+         0Sc7IKvcZmhWtLu7FPBkfR/zvZjqMKru//M+1+HEPkRtd1PI5z61qafuEtC2+J2hXo
+         xEyrL9FXeP2eX5HmWDfb2CxFBCA8yenMYT5nzLTFLEDeRkaMiqfdnhOlU95kJ5U2CG
+         WaFmd5TEa7aQOgUydNzlhPzVXPg1P4PmLf613697CufhUQNZRSwzLERDMFxkCXn5zq
+         FMvx0dDTnicYg==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
@@ -42,9 +42,9 @@ Cc:     Liang He <windhl@126.com>,
         linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 1/2] PCI: rcar: Add dev struct for of_device_get_match_data()
-Date:   Tue, 21 Jun 2022 21:57:31 -0500
-Message-Id: <20220622025732.1359389-2-helgaas@kernel.org>
+Subject: [PATCH 2/2] PCI: rcar: Resolve of_find_matching_node() reference leak
+Date:   Tue, 21 Jun 2022 21:57:32 -0500
+Message-Id: <20220622025732.1359389-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220622025732.1359389-1-helgaas@kernel.org>
 References: <20220622025732.1359389-1-helgaas@kernel.org>
@@ -62,108 +62,118 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Add a struct rcar_variant to hold details about differences between the
-different R-Car variants we support.  No functional change intended.
+Previously, rcar_pcie_init() used of_find_matching_node() to search the
+entire device tree for compatible strings for which we need to install an
+abort handler.  If we found one, we got a device_node with refcount
+incremented, but we discarded the pointer and never released that
+reference.
 
-The benefit is that we can find all this information with the existing
-single of_device_get_match_data() call.  A subsequent commit will remove
-an of_find_matching_node() call by extending this structure.
+Extend the struct rcar_variant to indicate whether each variant requires an
+abort handler.  Install the handler in rcar_pcie_probe() when needed.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Liang He <windhl@126.com>
 Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- drivers/pci/controller/pcie-rcar-host.c | 53 +++++++++++++++----------
- 1 file changed, 33 insertions(+), 20 deletions(-)
+ drivers/pci/controller/pcie-rcar-host.c | 60 +++++++++++--------------
+ 1 file changed, 27 insertions(+), 33 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index 997c4df6a1e7..ccf13aafa1e5 100644
+index ccf13aafa1e5..139a0274b9e0 100644
 --- a/drivers/pci/controller/pcie-rcar-host.c
 +++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -56,13 +56,19 @@ static void __iomem *pcie_base;
- static struct device *pcie_dev;
- #endif
+@@ -60,6 +60,7 @@ struct rcar_pcie_host;
  
-+struct rcar_pcie_host;
-+
-+struct rcar_variant {
-+	int	(*phy_init_fn)(struct rcar_pcie_host *host);
-+};
-+
- /* Structure representing the PCIe interface */
- struct rcar_pcie_host {
--	struct rcar_pcie	pcie;
--	struct phy		*phy;
--	struct clk		*bus_clk;
--	struct			rcar_msi msi;
--	int			(*phy_init_fn)(struct rcar_pcie_host *host);
-+	struct rcar_pcie	  pcie;
-+	struct phy		  *phy;
-+	struct clk		  *bus_clk;
-+	struct rcar_msi		  msi;
-+	const struct rcar_variant *variant;
+ struct rcar_variant {
+ 	int	(*phy_init_fn)(struct rcar_pcie_host *host);
++	bool	hook_aborts;
  };
  
- static DEFINE_SPINLOCK(pmsr_lock);
-@@ -958,19 +964,26 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie_host *host)
+ /* Structure representing the PCIe interface */
+@@ -964,12 +965,35 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie_host *host)
  	return err;
  }
  
-+static const struct rcar_variant rcar_h1_data = {
-+	.phy_init_fn = rcar_pcie_phy_init_h1,
-+};
++#ifdef CONFIG_ARM
++static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
++		unsigned int fsr, struct pt_regs *regs)
++{
++	return !fixup_exception(regs);
++}
++#endif
 +
-+static const struct rcar_variant rcar_gen2_data = {
-+	.phy_init_fn = rcar_pcie_phy_init_gen2,
-+};
++static void rcar_pcie_hook_aborts(void)
++{
++#ifdef CONFIG_ARM
++#ifdef CONFIG_ARM_LPAE
++	hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
++			"asynchronous external abort");
++#else
++	hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
++			"imprecise external abort");
++#endif
++#endif
++}
 +
-+static const struct rcar_variant rcar_gen3_data = {
-+	.phy_init_fn = rcar_pcie_phy_init_gen3,
-+};
-+
- static const struct of_device_id rcar_pcie_of_match[] = {
--	{ .compatible = "renesas,pcie-r8a7779",
--	  .data = rcar_pcie_phy_init_h1 },
--	{ .compatible = "renesas,pcie-r8a7790",
--	  .data = rcar_pcie_phy_init_gen2 },
--	{ .compatible = "renesas,pcie-r8a7791",
--	  .data = rcar_pcie_phy_init_gen2 },
--	{ .compatible = "renesas,pcie-rcar-gen2",
--	  .data = rcar_pcie_phy_init_gen2 },
--	{ .compatible = "renesas,pcie-r8a7795",
--	  .data = rcar_pcie_phy_init_gen3 },
--	{ .compatible = "renesas,pcie-rcar-gen3",
--	  .data = rcar_pcie_phy_init_gen3 },
-+	{ .compatible = "renesas,pcie-r8a7779",   .data = &rcar_h1_data },
-+	{ .compatible = "renesas,pcie-r8a7790",   .data = &rcar_gen2_data },
-+	{ .compatible = "renesas,pcie-r8a7791",   .data = &rcar_gen2_data },
-+	{ .compatible = "renesas,pcie-rcar-gen2", .data = &rcar_gen2_data },
-+
-+	{ .compatible = "renesas,pcie-r8a7795",   .data = &rcar_gen3_data },
-+	{ .compatible = "renesas,pcie-rcar-gen3", .data = &rcar_gen3_data },
- 	{},
+ static const struct rcar_variant rcar_h1_data = {
+ 	.phy_init_fn = rcar_pcie_phy_init_h1,
++	.hook_aborts = true,
  };
  
-@@ -1015,8 +1028,8 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_clk_disable;
+ static const struct rcar_variant rcar_gen2_data = {
+ 	.phy_init_fn = rcar_pcie_phy_init_gen2,
++	.hook_aborts = true,
+ };
  
--	host->phy_init_fn = of_device_get_match_data(dev);
--	err = host->phy_init_fn(host);
-+	host->variant = of_device_get_match_data(dev);
-+	err = host->variant->phy_init_fn(host);
- 	if (err) {
- 		dev_err(dev, "failed to init PCIe PHY\n");
+ static const struct rcar_variant rcar_gen3_data = {
+@@ -1035,6 +1059,9 @@ static int rcar_pcie_probe(struct platform_device *pdev)
  		goto err_clk_disable;
-@@ -1084,7 +1097,7 @@ static int __maybe_unused rcar_pcie_resume(struct device *dev)
- 		return 0;
+ 	}
  
++	if (host->variant->hook_aborts)
++		rcar_pcie_hook_aborts();
++
  	/* Failure to get a link might just be that no cards are inserted */
--	err = host->phy_init_fn(host);
-+	err = host->variant->phy_init_fn(host);
- 	if (err) {
+ 	if (rcar_pcie_hw_init(pcie)) {
  		dev_info(dev, "PCIe link down\n");
- 		return 0;
+@@ -1153,37 +1180,4 @@ static struct platform_driver rcar_pcie_driver = {
+ 	},
+ 	.probe = rcar_pcie_probe,
+ };
+-
+-#ifdef CONFIG_ARM
+-static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
+-		unsigned int fsr, struct pt_regs *regs)
+-{
+-	return !fixup_exception(regs);
+-}
+-
+-static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
+-	{ .compatible = "renesas,pcie-r8a7779" },
+-	{ .compatible = "renesas,pcie-r8a7790" },
+-	{ .compatible = "renesas,pcie-r8a7791" },
+-	{ .compatible = "renesas,pcie-rcar-gen2" },
+-	{},
+-};
+-
+-static int __init rcar_pcie_init(void)
+-{
+-	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
+-#ifdef CONFIG_ARM_LPAE
+-		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
+-				"asynchronous external abort");
+-#else
+-		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
+-				"imprecise external abort");
+-#endif
+-	}
+-
+-	return platform_driver_register(&rcar_pcie_driver);
+-}
+-device_initcall(rcar_pcie_init);
+-#else
+ builtin_platform_driver(rcar_pcie_driver);
+-#endif
 -- 
 2.25.1
 
