@@ -2,91 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3C2D554132
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 06:09:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B739554156
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 06:14:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356662AbiFVEJq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jun 2022 00:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41940 "EHLO
+        id S1356650AbiFVEOG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jun 2022 00:14:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356415AbiFVEJo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 00:09:44 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D1533E12
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 21:09:43 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id cv13so12184443pjb.4
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 21:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=8a9fQe0ScUZXLADDjkAaIEciBfbUGtcUKGKu69KZMM4=;
-        b=7a9sqZhMOrv9d1Jj341zLdUTERsmX6EN2EHXL/bVu+aZI0rYc7SwMfe5uAzleJE7AC
-         KTT5ZW8437miJClVcneVmWBI284Oy/5EQ1tvhWhvDOGgZEO1r+Hg1y2h49B+YQQkJ3Gw
-         PdiF7Ex6AkO31fCwcw2KzlKgKoUmHDuKSbs9izymzbHBQDd3TvW5cv73P4hCK43B4V0S
-         XeVeCgQbsH7UjGoO1aEsCNCk0BLL/c8L6LGcXVPtOIuH1y3cTD/tS+diI+hFFYCgZBDn
-         pF7mpXS9cn7iRet5TtZGWq76Mcrp+nN/JWsDNCQ4CFxCExFHiufGsOkoif/neF97AXKL
-         62Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8a9fQe0ScUZXLADDjkAaIEciBfbUGtcUKGKu69KZMM4=;
-        b=NsTtcs5B8/mumlH/o5CDg+ZQGUrWXRZGxVkFdqeZ47VAKisCcaJSUmnHxZC8+pS/Do
-         4ncaxlN+nYemqDQPGWyL6bHt3X9OBU5tVjGFxb6lRGcqAt8iWMZ8MEnPdtluC0DJdz6i
-         Rj+IqUpTPARdkC/78uy1miD241lzZ8K7hn0oncNT7OKf2DUxNH+D/H5Eiw3zhQ7LdbAh
-         h9WOKXUu6MQnioy1+Q0u5eWfhPbZoQNUG7ac5DkaFKSgibdm1r958RvcJD3F1SmRFbpX
-         cq6zpZiR2Zp1B8umtaZ+2Zq7Nls0g4oBRahLvpmpNd9MBuVK1N9xXErqhsuUP5HdcNo/
-         cc1A==
-X-Gm-Message-State: AJIora8RsZeBw+eOF6Ic1pkffSLkOGYGse/XfodaYJMRFLYo4rLIlxOw
-        mfvHhg5ebJJf2AF0mx5gMxorLg==
-X-Google-Smtp-Source: AGRyM1vL1GLWjsczHaaLN5PR2rW/9O0ybvtd8lSdJZdNWzfrMKxeLJnajmjkvuQO/HjOZY2VZaAzMQ==
-X-Received: by 2002:a17:902:728f:b0:168:b18e:9e0d with SMTP id d15-20020a170902728f00b00168b18e9e0dmr31386280pll.174.1655870982569;
-        Tue, 21 Jun 2022 21:09:42 -0700 (PDT)
-Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id p19-20020a639513000000b0040ceac94813sm2853749pgd.67.2022.06.21.21.09.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jun 2022 21:09:41 -0700 (PDT)
-From:   Shunsuke Mie <mie@igel.co.jp>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski=20?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Li Chen <lchen@ambarella.com>, Shunsuke Mie <mie@igel.co.jp>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: endpoint: Don't stop EP controller by EP function
-Date:   Wed, 22 Jun 2022 13:09:24 +0900
-Message-Id: <20220622040924.113279-1-mie@igel.co.jp>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1356942AbiFVENw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 00:13:52 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C9A34B90;
+        Tue, 21 Jun 2022 21:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655871220; x=1687407220;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B/bYItcHLvNJYHpcF6HLJkuCKPwbVggAy5q3voJHv0A=;
+  b=Xy75RLUJsTjQf/t4bpFjms6CUbxXOKdwZtH/rku9CdRs9IGEBpTqRFPw
+   Owro08vFAPEZC6shbpauPeZ4dJSE4/HYaiC7jNvTLHLi9KdVaWL75URTA
+   gDbcNfsTOK63RoCgEc6VruUFZMohCEKJfUoM6xlRMbt5XdB4ACFvadHvw
+   TUYGFb4dQcgPIHT9wjC07KfAwWyQwZtnUoasFuZnH0GLCW9x7JmF7sCC9
+   E/cepmIi4ba4X2C+VrOtL6mFmqihANygrCMsOVhcVUDRKx8bjO0Paj24u
+   Dfz9ibrgvHXGeUt4UsfKBwTMP1KpOJCv3a8uh4EDFPS++EsDRPbDrwEmp
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="277855656"
+X-IronPort-AV: E=Sophos;i="5.92,211,1650956400"; 
+   d="scan'208";a="277855656"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2022 21:13:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,211,1650956400"; 
+   d="scan'208";a="715230316"
+Received: from lkp-server02.sh.intel.com (HELO a67cc04a5eeb) ([10.239.97.151])
+  by orsmga004.jf.intel.com with ESMTP; 21 Jun 2022 21:13:35 -0700
+Received: from kbuild by a67cc04a5eeb with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o3rkA-0000on-5h;
+        Wed, 22 Jun 2022 04:13:30 +0000
+Date:   Wed, 22 Jun 2022 12:13:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Wang Wenhu <wenhu.wang@hotmail.com>, gregkh@linuxfoundation.org,
+        arnd@arndb.de, hao.wu@intel.com, trix@redhat.com, mdf@kernel.org,
+        yilun.xu@intel.com, bhelgaas@google.com, akpm@linux-foundation.org,
+        linux-fpga@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     kbuild-all@lists.01.org, christophe.leroy@csgroup.eu,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mpe@ellerman.id.au, wenhu.wang@hotmail.com
+Subject: Re: [PATCHv2 1/2] mm: eliminate ifdef of HAVE_IOREMAP_PROT in .c
+ files
+Message-ID: <202206221102.w7hylFXN-lkp@intel.com>
+References: <SG2PR01MB295111ED8F547B9F99DB9FA99FAD9@SG2PR01MB2951.apcprd01.prod.exchangelabs.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SG2PR01MB295111ED8F547B9F99DB9FA99FAD9@SG2PR01MB2951.apcprd01.prod.exchangelabs.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For multi-function endpoint device, an ep function shouldn't stop EP
-controller. Nomally the controller is stopped via configfs.
+Hi Wang,
 
-Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
-Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 1 -
- 1 file changed, 1 deletion(-)
+Thank you for the patch! Yet something to improve:
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 5b833f00e980..a5ed779b0a51 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -627,7 +627,6 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
- 
- 	cancel_delayed_work(&epf_test->cmd_handler);
- 	pci_epf_test_clean_dma_chan(epf_test);
--	pci_epc_stop(epc);
- 	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
- 		epf_bar = &epf->bar[bar];
- 
+[auto build test ERROR on akpm-mm/mm-everything]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Wang-Wenhu/mm-eliminate-ifdef-of-HAVE_IOREMAP_PROT-in-c-files/20220615-140135
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+config: m68k-buildonly-randconfig-r001-20220622 (https://download.01.org/0day-ci/archive/20220622/202206221102.w7hylFXN-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/b20efcc877829b6f416cf111bd5ad2b13a0cd08e
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Wang-Wenhu/mm-eliminate-ifdef-of-HAVE_IOREMAP_PROT-in-c-files/20220615-140135
+        git checkout b20efcc877829b6f416cf111bd5ad2b13a0cd08e
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> m68k-linux-ld: drivers/char/mem.o:(.rodata+0x37c): undefined reference to `generic_access_phys'
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
