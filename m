@@ -2,64 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A040554444
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 10:11:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39D245543EA
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 10:10:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234363AbiFVHqF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jun 2022 03:46:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46732 "EHLO
+        id S1351798AbiFVHuL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jun 2022 03:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbiFVHqE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 03:46:04 -0400
+        with ESMTP id S1354442AbiFVHtw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 03:49:52 -0400
 Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46FF41EEC3;
-        Wed, 22 Jun 2022 00:46:02 -0700 (PDT)
-Received: by mail-qv1-f53.google.com with SMTP id 89so24043138qvc.0;
-        Wed, 22 Jun 2022 00:46:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B1F37BFA;
+        Wed, 22 Jun 2022 00:49:37 -0700 (PDT)
+Received: by mail-qv1-f53.google.com with SMTP id q4so11910928qvq.8;
+        Wed, 22 Jun 2022 00:49:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6NqzMVPYor30cDFAk/KEthpekJP7tc0FOSV0dYJSBIg=;
-        b=2p78/HvsDyERGscXkkDLFEWSXjTHDm1mOm2WrUyHsjmFur5l++hu15U6gw/jNQR3A1
-         oVoX9nM6wRXUFZVDuWfrYMHkv2SdlErDrueSD9hiqpWcyfkAOZVuUNnXIHpHlz+bilWN
-         k6txD5Fp0sMgLBiZ4Dx1bwXgT2ONnFVgN0eYA91ixp8UwD6EWKny6o673OXpfpfi5nXD
-         lUtXe0XNXefuxkwYj4MgH0JfWiQjSj10956uBJqufqwWyssMkGsidgb//LdfgGvj1f3o
-         xKkd7NRLgJT/zKXWFLkaUcI+5qHfx0c5nhVhuSfK+BAJyeRo2Ooj2FEcQLf8rciPzGhA
-         MzgA==
-X-Gm-Message-State: AJIora96B8OQ4QVj6mCWJ5nomWrmAasFWXk+pcbh+thEscozpNNnnCh6
-        w6X1zkpp4Ije/qvFnNYwnkpVPmWBUOBcSw==
-X-Google-Smtp-Source: AGRyM1ulqpmxj+qEYL0sIiF/lFV4D3kBxb8Z/CSqDxIoDABXopohsN+RJw94iKblFAKohAMPGi+q8g==
-X-Received: by 2002:a05:622a:547:b0:305:2dc3:6ecf with SMTP id m7-20020a05622a054700b003052dc36ecfmr1794625qtx.466.1655883961170;
-        Wed, 22 Jun 2022 00:46:01 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id b22-20020ac85bd6000000b00304e33f21f7sm15038124qtb.68.2022.06.22.00.46.00
+        bh=MiZWM7MxRKqxYWhMwu/FnGq8WJHzbefkWgjumIh+/s4=;
+        b=GnT2RBNJbahuJqBR51HTyvoibuQJp7UR2Fy2OLAxFnKhycBBtGKKdvDSbhENFdeQoG
+         z6KkWIPuC0eCn7aOpPpklJANr78McSk6WKfrXxf/01xqQ2PpF0ECrMXVL/Lkb+W4AKwU
+         rvt21E11/7MRebLX+fbWGZ4GpGLQJR328hrxt7esIKdXntQbtkrGX/pLx76MLJxMJahk
+         AtTWyykBJFQue1MmdPTLKjvnq9JUarK0hDfgo8Z7NhSAROC7E2Pt8krAVOkO6e3D09rh
+         /AB7+sDOoaQug+Qm9mrGhNOdi0Od0r4f6cLzr3w5dIfRuYBsNftN+RJQuc5hDwr9fCh6
+         gH/Q==
+X-Gm-Message-State: AJIora/e8bbh80JNY/y5CcHqgwLdo0z87yz2J6l2uGZ04hK8eSpzbp1e
+        dnyVs/YZCnmJfs8he/is8pdQSHGG0OMU2Q==
+X-Google-Smtp-Source: AGRyM1uzDBfxwFqWmHeknzLMiSphWzydQHEuZv+htjEUdaYeHCPPV83EozPNteAyBZaL8DAvX64/hA==
+X-Received: by 2002:a05:622a:60d:b0:305:1ec1:5b01 with SMTP id z13-20020a05622a060d00b003051ec15b01mr1753388qta.491.1655884176941;
+        Wed, 22 Jun 2022 00:49:36 -0700 (PDT)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id u15-20020a05620a430f00b006a693e46d5csm16241385qko.11.2022.06.22.00.49.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jun 2022 00:46:00 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id u9so18601206ybq.3;
-        Wed, 22 Jun 2022 00:46:00 -0700 (PDT)
-X-Received: by 2002:a25:2b48:0:b0:668:3b7d:326c with SMTP id
- r69-20020a252b48000000b006683b7d326cmr2251276ybr.380.1655883960430; Wed, 22
- Jun 2022 00:46:00 -0700 (PDT)
+        Wed, 22 Jun 2022 00:49:36 -0700 (PDT)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-3176d94c236so154637327b3.3;
+        Wed, 22 Jun 2022 00:49:36 -0700 (PDT)
+X-Received: by 2002:a81:2401:0:b0:317:ce48:cf95 with SMTP id
+ k1-20020a812401000000b00317ce48cf95mr2587809ywk.502.1655884176233; Wed, 22
+ Jun 2022 00:49:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220622025732.1359389-1-helgaas@kernel.org> <20220622025732.1359389-3-helgaas@kernel.org>
-In-Reply-To: <20220622025732.1359389-3-helgaas@kernel.org>
+References: <20220621070145.4080147-1-windhl@126.com> <20220621224952.GA1340618@bhelgaas>
+In-Reply-To: <20220621224952.GA1340618@bhelgaas>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 22 Jun 2022 09:45:49 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUwGLDzOQo_wwSLmzBnJXe-cOw=nqsPbFLsj-c+nHfy_w@mail.gmail.com>
-Message-ID: <CAMuHMdUwGLDzOQo_wwSLmzBnJXe-cOw=nqsPbFLsj-c+nHfy_w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: rcar: Resolve of_find_matching_node() reference leak
+Date:   Wed, 22 Jun 2022 09:49:24 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWJCX93kyjUwKxBgfWfazSgUKC3J=kMDj3EtTViRBJ+=Q@mail.gmail.com>
+Message-ID: <CAMuHMdWJCX93kyjUwKxBgfWfazSgUKC3J=kMDj3EtTViRBJ+=Q@mail.gmail.com>
+Subject: Re: [PATCH] pci/controller/pcie-rcar-host: Hold the reference
+ returned by of_find_matching_node
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+Cc:     Liang He <windhl@126.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Liang He <windhl@126.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
@@ -73,90 +73,70 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
 
-On Wed, Jun 22, 2022 at 4:57 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Jun 22, 2022 at 12:57 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Tue, Jun 21, 2022 at 03:01:45PM +0800, Liang He wrote:
+> > In rcar_pcie_init(), we need to hold the reference returned by
+> > of_find_matching_node() which is used to call of_node_put() for
+> > refcount balance.
+> >
+> > Signed-off-by: Liang He <windhl@126.com>
+
+> > --- a/drivers/pci/controller/pcie-rcar-host.c
+> > +++ b/drivers/pci/controller/pcie-rcar-host.c
+> > @@ -1158,7 +1158,10 @@ static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst
+> >
+> >  static int __init rcar_pcie_init(void)
+> >  {
+> > -     if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
+> > +     struct device_node *np = of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match);
+> > +
+> > +     if (np) {
+> > +             of_node_put(np);
 >
-> Previously, rcar_pcie_init() used of_find_matching_node() to search the
-> entire device tree for compatible strings for which we need to install an
-> abort handler.  If we found one, we got a device_node with refcount
-> incremented, but we discarded the pointer and never released that
-> reference.
+> I think this is correct, but it would be nicer to update the way this
+> driver uses of_device_get_match_data(), e.g.,
 >
-> Extend the struct rcar_variant to indicate whether each variant requires an
-> abort handler.  Install the handler in rcar_pcie_probe() when needed.
+>   struct rcar_variant {
+>     int (*phy_init_fn)(struct rcar_pcie_host *host);
+>     bool hook_abort;
+>   };
 >
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Liang He <windhl@126.com>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Thanks for your patch!
-
-> --- a/drivers/pci/controller/pcie-rcar-host.c
-> +++ b/drivers/pci/controller/pcie-rcar-host.c
-
-> @@ -964,12 +965,35 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie_host *host)
->         return err;
->  }
+>   struct rcar_pcie_host {
+>     ...
+>     const struct rcar_variant *variant;
+>   };
 >
-> +#ifdef CONFIG_ARM
-> +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
-> +               unsigned int fsr, struct pt_regs *regs)
-> +{
-> +       return !fixup_exception(regs);
-> +}
-> +#endif
-> +
-> +static void rcar_pcie_hook_aborts(void)
-> +{
-> +#ifdef CONFIG_ARM
-> +#ifdef CONFIG_ARM_LPAE
-> +       hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> +                       "asynchronous external abort");
-> +#else
-> +       hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> +                       "imprecise external abort");
-> +#endif
-> +#endif
-> +}
-> +
->  static const struct rcar_variant rcar_h1_data = {
->         .phy_init_fn = rcar_pcie_phy_init_h1,
-> +       .hook_aborts = true,
->  };
+>   static int rcar_pcie_probe(...)
+>   {
+>     host->variant = of_device_get_match_data(dev);
+>     err = host->variant->phy_init_fn(host);
+>     ...
 >
->  static const struct rcar_variant rcar_gen2_data = {
->         .phy_init_fn = rcar_pcie_phy_init_gen2,
-> +       .hook_aborts = true,
->  };
+>   #ifdef CONFIG_ARM
+>     if (host->variant->hook_abort) {
+>   #ifdef CONFIG_ARM_LPAE
+>       hook_fault_code(17, ...);
+>   # else
+>       hook_fault_code(22, ...);
+>   #endif
+>     }
+>   #endif
+>   }
 >
->  static const struct rcar_variant rcar_gen3_data = {
-> @@ -1035,6 +1059,9 @@ static int rcar_pcie_probe(struct platform_device *pdev)
->                 goto err_clk_disable;
->         }
+> Or keep the hook in a separate function called from rcar_pcie_probe()
+> if you think that's cleaner.
 >
-> +       if (host->variant->hook_aborts)
-> +               rcar_pcie_hook_aborts();
+> I'm not sure hook_fault_code() needs to be called separately as a
+> device_initcall().
 
-I was quite sure there was a good reason why this was not done in
-.probe() before...
+Yes it doesn, as hook_fault_code() is __init.
 
-And indeed, the original submission[1] did have a comment explaining
-that:
+> The pci-ixp4xx.c driver does it in
+> ixp4xx_pci_probe(), so I assume rcar could do it in probe as well.
 
-    + /*
-    + * Since probe() can be deferred we need to make sure that
-    + * hook_fault_code is not called after __init memory is freed
-    + * by kernel and since rcar_pcie_abort_handler() is a no-op,
-    + * we can install the handler here without risking it
-    + * accessing some uninitialized driver state.
-    + */
+The pci-ixp4xx.c driver uses builtin_platform_driver_probe(), and
+ixp4xx_pci_probe() is marked __init.
 
-No idea why it was removed in v2 and later, but the point is:
-hook_fault_code() is __init, so you cannot call it from a deferred
-probe.
-And you should have got a section mismatch warning ;-)
-
-[1] https://lore.kernel.org/all/20200912211853.15321-1-marek.vasut@gmail.com/
 
 Gr{oetje,eeting}s,
 
