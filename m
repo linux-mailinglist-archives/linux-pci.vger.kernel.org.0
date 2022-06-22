@@ -2,53 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B9A1555560
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 22:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7081C5555A5
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 23:00:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbiFVU0s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jun 2022 16:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53342 "EHLO
+        id S1347544AbiFVU7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jun 2022 16:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiFVU0r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 16:26:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A85A136682;
-        Wed, 22 Jun 2022 13:26:46 -0700 (PDT)
+        with ESMTP id S229710AbiFVU7H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 16:59:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C6615FFE;
+        Wed, 22 Jun 2022 13:59:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0470061738;
-        Wed, 22 Jun 2022 20:26:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2427CC34114;
-        Wed, 22 Jun 2022 20:26:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 83B00B82108;
+        Wed, 22 Jun 2022 20:59:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E287FC34114;
+        Wed, 22 Jun 2022 20:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655929605;
-        bh=kXEUTw/N4tbohAVX+9EPs5JvigCwZ5p1wSKw76VkLGg=;
+        s=k20201202; t=1655931544;
+        bh=JAuvwzzIc8I0jEMb6uKgOcBoYXCBX/+WPVXr9EWW1kI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LxVMS/Q/AXjq/CFLjx4GJiLjQKJ1DETmISnpLERNDTg2bTZi4w9aDIBxvLnuWHHlP
-         uMOqpinUDwRQ+HTyi7KMHnZXBnVNrcnH/UxO8QsTWuwAJ7kdPuCvRgke06RfZxQZt7
-         QgEL+qw7tt9eRLTpjPoy7ssl0bW/Tyjx5mt1eNzRdQ+1zLOSY0fxJbjLJDF8D0cahZ
-         nDWudeSbzuQUmMQ4tlgD5EEkUGAZ1IJ66qk3fgaONAN4C8A/znTSv2/BJZuhZJtOGZ
-         b5OYUF+e4/fmbJ4zisPg/pv7Mlrd0UahYo0SSImMXQ5rb4mVfhbixGAom1IIeVs0wR
-         niIalZUMbk1mQ==
-Date:   Wed, 22 Jun 2022 15:26:43 -0500
+        b=UmGJQPn65btImLAlFTy2bVGaGScB5/S+aZr9e5hvEglA7m4xtXMV/bFBh87LN6eFL
+         5i4WUy9cNv8vQEcWWxSzCSmEA8/ukKozHe9EOCm3aS1bWu/NshZkhHiVER55cdGOI7
+         bx3Eb1Ls7F6g3a0LrF1gCDSU+Hh0xnB1ujhoRSuhtO49Wj55pIyRlnnahrloi7vzS6
+         8+Gl5D5po9yoDzqEiGl7FbF4VNCrPSyJLT1ZDMblKsHiAeTGnrB0qi0y2tIAY5v0tJ
+         hMjl3t/agrqYK6qZ0z7FTnNPcSWxGji6jK39zkfrGUDUpEwhOXJjD5/Bh1aZpFXN/P
+         WgofHm1Ky4/9g==
+Date:   Wed, 22 Jun 2022 15:59:01 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lpieralisi@kernel.org, Rob Herring <robh@kernel.org>, kw@linux.com,
-        Bjorn Helgaas <bhelgaas@google.com>, p.zabel@pengutronix.de,
-        jingoohan1@gmail.com, linux-pci@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        johan+linaro@kernel.org
-Subject: Re: [PATCH v2] PCI: qcom: fix IPQ8074 Gen2 support
-Message-ID: <20220622202643.GA1387264@bhelgaas>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     bhelgaas@google.com, Jiawen Wu <jiawenwu@trustnetic.com>,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next v7] net: txgbe: Add build support for txgbe
+Message-ID: <20220622205901.GA1390995@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOX2RU6isNEF4LYRDUEjnKwOcsEoPJR2ekn2kD9RjKFwusF4DA@mail.gmail.com>
+In-Reply-To: <20220621223315.60b657f4@kernel.org>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -59,41 +52,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 22, 2022 at 04:23:49PM +0200, Robert Marko wrote:
-> On Tue, 21 Jun 2022 at 23:43, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, Jun 21, 2022 at 11:05:17PM +0200, Robert Marko wrote:
-> > > On Tue, 21 Jun 2022 at 22:32, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Tue, Jun 21, 2022 at 01:23:30PM +0200, Robert Marko wrote:
-> > > > > IPQ8074 has one Gen2 and one Gen3 port, currently the Gen2 port will
-> > > > > cause the system to hang as its using DBI registers in the .init
-> > > > > and those are only accesible after phy_power_on().
-> ...
-
-> > Unless there's a reason *not* to move the DBI accesses for other
-> > variants, I think we should move them all to .post_init().  Otherwise
-> > it's just magic -- there's no indication in the code about why IPQ8074
-> > needs to be different from all the rest.
+On Tue, Jun 21, 2022 at 10:33:15PM -0700, Jakub Kicinski wrote:
+> On Tue, 21 Jun 2022 10:32:09 +0800 Jiawen Wu wrote:
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -5942,3 +5942,18 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+> >  #endif
+> > +
+> > +static void quirk_wangxun_set_read_req_size(struct pci_dev *pdev)
+> > +{
+> > +	u16 ctl;
+> > +
+> > +	pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &ctl);
+> > +
+> > +	if (((ctl & PCI_EXP_DEVCTL_READRQ) != PCI_EXP_DEVCTL_READRQ_128B) &&
+> > +	    ((ctl & PCI_EXP_DEVCTL_READRQ) != PCI_EXP_DEVCTL_READRQ_256B))
+> > +		pcie_capability_clear_and_set_word(pdev, PCI_EXP_DEVCTL,
+> > +						   PCI_EXP_DEVCTL_READRQ,
+> > +						   PCI_EXP_DEVCTL_READRQ_256B);
+> > +}
+> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_WANGXUN, PCI_ANY_ID,
+> > +			 quirk_wangxun_set_read_req_size);
 > 
-> I am not sure how to do it properly, especially for the 2.1.0 IP that
-> IPQ8064 uses
-> and that is already filled with tweaks to get it properly working.
-> 
-> As far as I can tell, the reason why it works for all of the others
-> is that they dont use a PHY driver at all (2.1.0 in IPQ8064 and
-> 2.4.0 in IPQ4019), 1.1.0 in APQ8084 appears to be unused completely
-> as its compatible is not used in any of the DTS-es.  2.3.2 in
-> MSM8996 and MSM8998 also use QMP, so I am not sure why these work.
-> ...
+> Hi Bjorn! Other than the fact that you should obviously have been CCed
+> on the patch [1] - what are the general rules on the quirks? Should
+> this be sent separately to your PCI tree?
 
-> This patch applies to 5.19 as well, though I will send a v4 with the
-> updated description.  Like, I said, I am not sure how to move DBI
-> accesses in other IP-s without breaking them.
+This is a little bit ugly because the PCI core assumes that it
+controls PCI_EXP_DEVCTL_READRQ (Max_Read_Request_Size / MRRS) and uses
+it as part of the hierarchy-wide strategy for managing
+Max_Payload_Size / MPS.
 
-Why would they break?  I don't see anything that indicates the DBI
-accesses are required to be before phy_power_on() or would fail after
-phy_power_on().
+This is all in pcie_bus_configure_settings() and is called after
+enumerating all devices, so I think it happens *after* all the quirks
+have been run.  So whatever this quirk does might be overwritten by
+pcie_bus_configure_settings().
 
-I agree there's always a risk of unintended breakage.  It just doesn't
-seem very likely.
+I assume wangxun needs to set MRRS to 128 or 256 bytes.  The power-up
+default is supposed to be 512 bytes, and pcie_bus_configure_settings()
+may choose something else.  There are some drivers that call
+pcie_set_readrq() from their probe functions, and that's probably what
+you should do, too.
 
-Bjorn
+I do see that quirk_brcm_5719_limit_mrrs() does this as a quirk after
+0b471506712d ("tg3: Recode PCI MRRS adjustment as a PCI quirk"), but I
+don't think that is reliable.  Apparently it *used* to be done during
+probe, and I don't know why it was changed to be a quirk.
+
+> [1]
+> https://lore.kernel.org/all/20220621023209.599386-1-jiawenwu@trustnetic.com/
