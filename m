@@ -2,115 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34F63554238
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 07:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 168B755424D
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 07:33:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356545AbiFVFYJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jun 2022 01:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60736 "EHLO
+        id S233626AbiFVFdT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jun 2022 01:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233946AbiFVFYJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 01:24:09 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7897B36167
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 22:24:06 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id a11so9184115ljb.5
-        for <linux-pci@vger.kernel.org>; Tue, 21 Jun 2022 22:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SwIledSLJN1+QLOSPItKlxyEAsKWtgQUbp5m5Fbo6uQ=;
-        b=yi0OysNlyMSg6TwiZPAbEDxUKmeua7drte42/DUfPgwAoszXJowcaVaHuZgGZcUUIh
-         IMTpOJi1r+8ofYsCqnGziazSOoySDDXGQHXWC3MXXMLD4Qxoc9MIsEf97SXpBqY5coXz
-         WSBVTzpthRCJu6g/eUTFa8zcxFQyDb/7oyTdelKmL64E4cBypu/KW3RIlvmetc9qiANI
-         fQVwVme1pwz5J+JlZzXyc8cljwBMqgPY0oHG3Sk1bU21okCSqWS0OYrxgTT3qvfKDOb6
-         pXpaUhMrRmRtd6Z332mM6IRRvKDn+ZrRGuNKfYByuJnZyTehGGGKOmi60/haFUKAp7ii
-         8Juw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SwIledSLJN1+QLOSPItKlxyEAsKWtgQUbp5m5Fbo6uQ=;
-        b=uPTzt7+2q2GigwJeDhYQBTDmaw8ZwrDSt6B0Dl2kl/J1hpAFhZqx/DWNUwsGX1MPPh
-         BIakq6Kfsj6yiv2HKls3m6pRyvwDmLr8prTWXm9A38TBZ1AJ/RutgNqzoY50NhgyY4zN
-         yqwkzYPfAKPh9EsOVNrCEYNQSjLmNT75EgKtqvFiPWKA3rskFffbYPI+XWID/ZtZARkt
-         GjAV/mY8ZjyErFzoBtpmcJgTFGcr/yVVtig78ldxFxR63atuqrUO6b/nkXLVs6fBbHuE
-         w8Fgm8Qo41RTZYKtBg7ZSa8JNhUrDe0Fe0hBkqb2gvr7ZxSR1lGdgeWJN/5/ELvKvKHR
-         tS0g==
-X-Gm-Message-State: AJIora9amPG8pn25gXFiLUmA0wkpmqIVWJlA0pyoetvam+ky4R+uZvh+
-        hJQxl2bwl+2I8gWVks6sJvLYl2NYmC4auLCAflIiIQ==
-X-Google-Smtp-Source: AGRyM1uZ+3lCpiAbKhVLDcGNPyhqSK6wLdiFg4xJOrqa0vUy4IGMre35HEc0/mj2H1l2hL9a1hHOcyRO3vwE80eIvFs=
-X-Received: by 2002:a2e:8881:0:b0:255:7790:25e6 with SMTP id
- k1-20020a2e8881000000b00255779025e6mr835126lji.525.1655875444760; Tue, 21 Jun
- 2022 22:24:04 -0700 (PDT)
+        with ESMTP id S232386AbiFVFdS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 01:33:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C3F205E4;
+        Tue, 21 Jun 2022 22:33:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9032E61986;
+        Wed, 22 Jun 2022 05:33:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD118C34114;
+        Wed, 22 Jun 2022 05:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655875997;
+        bh=6Mr/dzeGOUef4ZuCzLFtq0MrZ+HZv3O4fRtN/qhvNbw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ERRkcK5KaKK3L/TS2dsaqX1dQ5UupOiyG9AN42ihFk2Jr/kN3xHSg/etCYf5dWTmC
+         4jVV0Jo3IbvadH3UCc9riD0DswNkeFIEW8+i2z05KCdsR6MTxB7mdgLwiS92uw3djX
+         hAtA/BIstxMEEkAMyzPhSacnBFQLmgCK3A8wnVls9APO2TxvC5zssZuWOZIBuLuIfR
+         3r/eMT/NBqEwOs6OHsiGqRuJZVN3NfEF/vSbml6DEXkrjKRJuG3fd89vLdtgHtCWCB
+         V5UsiogWTRQpZCpvGulomrWWvitNRhy2/uDBK3os+PAYWl3BOHoOAvZmAWJoFu9Ill
+         5Y+Brtcy10tOQ==
+Date:   Tue, 21 Jun 2022 22:33:15 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     bhelgaas@google.com
+Cc:     Jiawen Wu <jiawenwu@trustnetic.com>, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next v7] net: txgbe: Add build support for txgbe
+Message-ID: <20220621223315.60b657f4@kernel.org>
+In-Reply-To: <20220621023209.599386-1-jiawenwu@trustnetic.com>
+References: <20220621023209.599386-1-jiawenwu@trustnetic.com>
 MIME-Version: 1.0
-References: <20220622040924.113279-1-mie@igel.co.jp> <4bc63a00-a220-e9b8-49ff-8c2d783b55f5@ti.com>
-In-Reply-To: <4bc63a00-a220-e9b8-49ff-8c2d783b55f5@ti.com>
-From:   Shunsuke Mie <mie@igel.co.jp>
-Date:   Wed, 22 Jun 2022 14:23:51 +0900
-Message-ID: <CANXvt5oNDFmU=YtdAFtd3uB9Un0dxCqbD+0VtMRd3Aj1qOc3Wg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: endpoint: Don't stop EP controller by EP function
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Li Chen <lchen@ambarella.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+On Tue, 21 Jun 2022 10:32:09 +0800 Jiawen Wu wrote:
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5942,3 +5942,18 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+>  #endif
+> +
+> +static void quirk_wangxun_set_read_req_size(struct pci_dev *pdev)
+> +{
+> +	u16 ctl;
+> +
+> +	pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &ctl);
+> +
+> +	if (((ctl & PCI_EXP_DEVCTL_READRQ) != PCI_EXP_DEVCTL_READRQ_128B) &&
+> +	    ((ctl & PCI_EXP_DEVCTL_READRQ) != PCI_EXP_DEVCTL_READRQ_256B))
+> +		pcie_capability_clear_and_set_word(pdev, PCI_EXP_DEVCTL,
+> +						   PCI_EXP_DEVCTL_READRQ,
+> +						   PCI_EXP_DEVCTL_READRQ_256B);
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_WANGXUN, PCI_ANY_ID,
+> +			 quirk_wangxun_set_read_req_size);
 
-Thank you for your ack.
+Hi Bjorn! Other than the fact that you should obviously have been CCed
+on the patch [1] - what are the general rules on the quirks? Should
+this be sent separately to your PCI tree?
 
-2022=E5=B9=B46=E6=9C=8822=E6=97=A5(=E6=B0=B4) 14:10 Kishon Vijay Abraham I =
-<kishon@ti.com>:
->
->
->
-> On 22/06/22 09:39, Shunsuke Mie wrote:
-> > For multi-function endpoint device, an ep function shouldn't stop EP
-> > controller. Nomally the controller is stopped via configfs.
->
-> %s/Nomally/Normally/
-Oops, sorry. Should I resend this patch with fixing the typo?
-
-> > Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to t=
-est PCI")
-> > Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
->
-> Thank you for the fix!
->
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > ---
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pc=
-i/endpoint/functions/pci-epf-test.c
-> > index 5b833f00e980..a5ed779b0a51 100644
-> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > @@ -627,7 +627,6 @@ static void pci_epf_test_unbind(struct pci_epf *epf=
-)
-> >
-> >       cancel_delayed_work(&epf_test->cmd_handler);
-> >       pci_epf_test_clean_dma_chan(epf_test);
-> > -     pci_epc_stop(epc);
-> >       for (bar =3D 0; bar < PCI_STD_NUM_BARS; bar++) {
-> >               epf_bar =3D &epf->bar[bar];
-> >
-
-Thanks.
-Shunsuke Mie
+[1]
+https://lore.kernel.org/all/20220621023209.599386-1-jiawenwu@trustnetic.com/
