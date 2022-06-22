@@ -2,88 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD345554483
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 10:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A040554444
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Jun 2022 10:11:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353024AbiFVHd3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Jun 2022 03:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36668 "EHLO
+        id S234363AbiFVHqF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Jun 2022 03:46:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352760AbiFVHdZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 03:33:25 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D191037019;
-        Wed, 22 Jun 2022 00:33:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9C498B81C62;
-        Wed, 22 Jun 2022 07:33:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 472DDC34114;
-        Wed, 22 Jun 2022 07:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655883202;
-        bh=M1TCKnfSCn2e6DiQKtvagYnWwei54N2fJytMMiG7IXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pSqf6pIgJb5tY0/g1FfDd/0M1rMacxbsC81DF8RsUGJMbgZ3pj3GCSQd1iyOUZcDl
-         0LA3xP/M4MkcezaCvLvgBuVU9I7kZg8dXAQiZDW7A5C0karDS1JjJ9faS6AT9rV5Ym
-         Kj3i9X2LBRSRkigD4D8nq00eRHPWJtiQktrfltCKiNF2BY3bIegK7epE+6yeRuShx7
-         jD6J8v5EBBgq2penN3HlXwHcXekT2bLPsyK4ZYJyw6RcpdY7pkNyL1F9je5kj6oEB8
-         qB52jxQ5s/s1ZcAH+PWoGcemNVWI0J6WCBdneXrbnvHzN3zVL96BDCRYe8qrUxDtAQ
-         U2YPRanntYZyg==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1o3urW-0007St-Hf; Wed, 22 Jun 2022 09:33:18 +0200
-Date:   Wed, 22 Jun 2022 09:33:18 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Robert Marko <robimarko@gmail.com>, svarbanov@mm-sol.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, p.zabel@pengutronix.de, jingoohan1@gmail.com,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, johan+linaro@kernel.org
-Subject: Re: [PATCH v2] PCI: qcom: fix IPQ8074 Gen2 support
-Message-ID: <YrLFvrW/i/oRFFvf@hovoldconsulting.com>
-References: <20220621112330.448754-1-robimarko@gmail.com>
- <20220621203211.GA1330530@bhelgaas>
- <YrK7b1GaEMuANGtR@hovoldconsulting.com>
+        with ESMTP id S229559AbiFVHqE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Jun 2022 03:46:04 -0400
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46FF41EEC3;
+        Wed, 22 Jun 2022 00:46:02 -0700 (PDT)
+Received: by mail-qv1-f53.google.com with SMTP id 89so24043138qvc.0;
+        Wed, 22 Jun 2022 00:46:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6NqzMVPYor30cDFAk/KEthpekJP7tc0FOSV0dYJSBIg=;
+        b=2p78/HvsDyERGscXkkDLFEWSXjTHDm1mOm2WrUyHsjmFur5l++hu15U6gw/jNQR3A1
+         oVoX9nM6wRXUFZVDuWfrYMHkv2SdlErDrueSD9hiqpWcyfkAOZVuUNnXIHpHlz+bilWN
+         k6txD5Fp0sMgLBiZ4Dx1bwXgT2ONnFVgN0eYA91ixp8UwD6EWKny6o673OXpfpfi5nXD
+         lUtXe0XNXefuxkwYj4MgH0JfWiQjSj10956uBJqufqwWyssMkGsidgb//LdfgGvj1f3o
+         xKkd7NRLgJT/zKXWFLkaUcI+5qHfx0c5nhVhuSfK+BAJyeRo2Ooj2FEcQLf8rciPzGhA
+         MzgA==
+X-Gm-Message-State: AJIora96B8OQ4QVj6mCWJ5nomWrmAasFWXk+pcbh+thEscozpNNnnCh6
+        w6X1zkpp4Ije/qvFnNYwnkpVPmWBUOBcSw==
+X-Google-Smtp-Source: AGRyM1ulqpmxj+qEYL0sIiF/lFV4D3kBxb8Z/CSqDxIoDABXopohsN+RJw94iKblFAKohAMPGi+q8g==
+X-Received: by 2002:a05:622a:547:b0:305:2dc3:6ecf with SMTP id m7-20020a05622a054700b003052dc36ecfmr1794625qtx.466.1655883961170;
+        Wed, 22 Jun 2022 00:46:01 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id b22-20020ac85bd6000000b00304e33f21f7sm15038124qtb.68.2022.06.22.00.46.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jun 2022 00:46:00 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id u9so18601206ybq.3;
+        Wed, 22 Jun 2022 00:46:00 -0700 (PDT)
+X-Received: by 2002:a25:2b48:0:b0:668:3b7d:326c with SMTP id
+ r69-20020a252b48000000b006683b7d326cmr2251276ybr.380.1655883960430; Wed, 22
+ Jun 2022 00:46:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YrK7b1GaEMuANGtR@hovoldconsulting.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220622025732.1359389-1-helgaas@kernel.org> <20220622025732.1359389-3-helgaas@kernel.org>
+In-Reply-To: <20220622025732.1359389-3-helgaas@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 22 Jun 2022 09:45:49 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUwGLDzOQo_wwSLmzBnJXe-cOw=nqsPbFLsj-c+nHfy_w@mail.gmail.com>
+Message-ID: <CAMuHMdUwGLDzOQo_wwSLmzBnJXe-cOw=nqsPbFLsj-c+nHfy_w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: rcar: Resolve of_find_matching_node() reference leak
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Liang He <windhl@126.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 22, 2022 at 08:49:20AM +0200, Johan Hovold wrote:
-> On Tue, Jun 21, 2022 at 03:32:11PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Jun 21, 2022 at 01:23:30PM +0200, Robert Marko wrote:
-> > > IPQ8074 has one Gen2 and one Gen3 port, currently the Gen2 port will
-> > > cause the system to hang as its using DBI registers in the .init
-> > > and those are only accesible after phy_power_on().
+Hi Bjorn,
 
-> > But I also see DBI register accesses in other .init() functions:
-> > 
-> >   qcom_pcie_init_2_1_0
-> >   qcom_pcie_init_1_0_0      (oddly out of order)
-> >   qcom_pcie_init_2_3_2
-> >   qcom_pcie_init_2_4_0
-> > 
-> > Why do these accesses not need to be moved?  I assume it's because
-> > pcie->phy is an optional PHY and phy_power_on() does nothing on those
-> > controllers?
-> 
-> At least the QMP PHY driver does not implement the PHY power_on op and
-> instead fires everything up already at phy_init(). That may explain the
-> difference in behaviour here.
+On Wed, Jun 22, 2022 at 4:57 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Previously, rcar_pcie_init() used of_find_matching_node() to search the
+> entire device tree for compatible strings for which we need to install an
+> abort handler.  If we found one, we got a device_node with refcount
+> incremented, but we discarded the pointer and never released that
+> reference.
+>
+> Extend the struct rcar_variant to indicate whether each variant requires an
+> abort handler.  Install the handler in rcar_pcie_probe() when needed.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Liang He <windhl@126.com>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Or maybe not, IPQ8074 appears to be using the same PHY driver.
+Thanks for your patch!
 
-Johan
+> --- a/drivers/pci/controller/pcie-rcar-host.c
+> +++ b/drivers/pci/controller/pcie-rcar-host.c
+
+> @@ -964,12 +965,35 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie_host *host)
+>         return err;
+>  }
+>
+> +#ifdef CONFIG_ARM
+> +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
+> +               unsigned int fsr, struct pt_regs *regs)
+> +{
+> +       return !fixup_exception(regs);
+> +}
+> +#endif
+> +
+> +static void rcar_pcie_hook_aborts(void)
+> +{
+> +#ifdef CONFIG_ARM
+> +#ifdef CONFIG_ARM_LPAE
+> +       hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
+> +                       "asynchronous external abort");
+> +#else
+> +       hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
+> +                       "imprecise external abort");
+> +#endif
+> +#endif
+> +}
+> +
+>  static const struct rcar_variant rcar_h1_data = {
+>         .phy_init_fn = rcar_pcie_phy_init_h1,
+> +       .hook_aborts = true,
+>  };
+>
+>  static const struct rcar_variant rcar_gen2_data = {
+>         .phy_init_fn = rcar_pcie_phy_init_gen2,
+> +       .hook_aborts = true,
+>  };
+>
+>  static const struct rcar_variant rcar_gen3_data = {
+> @@ -1035,6 +1059,9 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+>                 goto err_clk_disable;
+>         }
+>
+> +       if (host->variant->hook_aborts)
+> +               rcar_pcie_hook_aborts();
+
+I was quite sure there was a good reason why this was not done in
+.probe() before...
+
+And indeed, the original submission[1] did have a comment explaining
+that:
+
+    + /*
+    + * Since probe() can be deferred we need to make sure that
+    + * hook_fault_code is not called after __init memory is freed
+    + * by kernel and since rcar_pcie_abort_handler() is a no-op,
+    + * we can install the handler here without risking it
+    + * accessing some uninitialized driver state.
+    + */
+
+No idea why it was removed in v2 and later, but the point is:
+hook_fault_code() is __init, so you cannot call it from a deferred
+probe.
+And you should have got a section mismatch warning ;-)
+
+[1] https://lore.kernel.org/all/20200912211853.15321-1-marek.vasut@gmail.com/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
