@@ -2,113 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5B175579B3
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jun 2022 14:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC594557C90
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jun 2022 15:10:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230208AbiFWMCE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jun 2022 08:02:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42030 "EHLO
+        id S231226AbiFWNKl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jun 2022 09:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231358AbiFWMBm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jun 2022 08:01:42 -0400
-Received: from mail-oa1-x42.google.com (mail-oa1-x42.google.com [IPv6:2001:4860:4864:20::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3768B4D625
-        for <linux-pci@vger.kernel.org>; Thu, 23 Jun 2022 05:00:24 -0700 (PDT)
-Received: by mail-oa1-x42.google.com with SMTP id 586e51a60fabf-101bb9275bcso21416781fac.8
-        for <linux-pci@vger.kernel.org>; Thu, 23 Jun 2022 05:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=SH1826VGivRTcWTFt6CirTUpizldtIW6lapFTxm7Gbo=;
-        b=dL4ZdfjGobK7bZ5zNav1+xGQiGde1Zc7ClvHsT7kk6LqobgfylVSX6CBG5RjcoVDTa
-         P464n62qmhgQVmko817GDYihyl7pvjfwkgES8JkCRGmr9xxgu3PjHmBrdfIKpKF+gxtz
-         ck0sfdPmzNP6PJDK99aoAJqvIJ6MSx5TfjB1KlqaDZn92DOWiz08x3njQYk7p7AUH10T
-         y+GlFokIsHaKh5IwUNZgaGJCE9OJ9vSfBgmQkTnZzySftM6HqqxRqpOIYwT/wd75+23E
-         P9+fpjMOoHjPoNoGgly+tjBN6a3v4kxdZSCYsYXbKgVUjjGIp5B1Lh0sXido0MvDOb61
-         P1yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=SH1826VGivRTcWTFt6CirTUpizldtIW6lapFTxm7Gbo=;
-        b=eOVjb7XuRkXR24KMDXBpBUDGx3Lye1FjmxSv7edqQoZXX/cdHAiDbxUhOx2AfwthSV
-         qD/sE6wNXIYEczpT4OQzNWBxDwTS9orXulHTFfATRIhU1JoVy8tBAUIy1XsZcnH2Oe9Q
-         b/vMCt10p3mpGj5iN22sfrnykMDvnHjwT6eVlFjgLEQcEn3qJcO4Ql0r1KQsl7r1WcBs
-         OLqZbczSLEj5vg2sBoVQUNcfadJpVA8JazVViMH8p79UQxQjfJpLDHNUz148DCqveIjv
-         2RWupxNLPy+M+9KFHDu4qOVXd4rPG9NPU7QNxIvSoR5SmULzXjeLxmMwc4KSR3vgOQ/b
-         lCpQ==
-X-Gm-Message-State: AJIora+QfvLm+pAd/T8WvkxAqVhgyoyH91rK+886lj/y+00+HuBx2PVc
-        5ajT1Wb+NyFJxivDN2vjC71aZDRLVS02YuB7IDA=
-X-Google-Smtp-Source: AGRyM1u9XqAMSItZNhegX/ZymFvhNBQP3xenHiWf00X4SNsH0rLed72zRQSP+YVxHt9F6Yhn4fsa6RzBdFD/GHKyBzE=
-X-Received: by 2002:a05:6870:311:b0:f2:d46a:b370 with SMTP id
- m17-20020a056870031100b000f2d46ab370mr2282258oaf.169.1655985618110; Thu, 23
- Jun 2022 05:00:18 -0700 (PDT)
+        with ESMTP id S230415AbiFWNKk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jun 2022 09:10:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55122FFF4;
+        Thu, 23 Jun 2022 06:10:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5D6C9B82343;
+        Thu, 23 Jun 2022 13:10:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C56C3411D;
+        Thu, 23 Jun 2022 13:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655989833;
+        bh=0zY1CcAGOodqFHYKrqKnel8P6Pk0ezfsNJ9fjtuoE6c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dkxkUTGX7gPCpPUD/3XJ0uFa9iOVbPV6YLXAzKvyPQG4i+qjIJIb4P4Im/bi4bn61
+         GrdcSjE+U2DoBBEpyWKD5X5CHrSv2SXktJ+frq9tem568cj3uiEKtIGt2ajsCxb4rg
+         hOWCUs4zn3ZYp8xf3Kx29RT97RfViDCmu7CkeP5yv5FaM+okjowWULwPsfgQuEniwc
+         BPoscgORoMF0j939cFADYXzPbqhMHzbPNL+kG4rKBYDhHvoKYEXa1AZu+1wvPMLTR8
+         Gw9PxTdQkaHaiVisWEExgiBBOAvJAtOYYdL7afAqFOQZExmd5sD+DuWsUencNsLvnA
+         NXOzESRCwtLwg==
+Received: by pali.im (Postfix)
+        id C548C79F; Thu, 23 Jun 2022 15:10:29 +0200 (CEST)
+Date:   Thu, 23 Jun 2022 15:10:29 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: Use devm_request_irq() for registering
+ interrupt handler
+Message-ID: <20220623131029.e4tyegjmvhy5xxxw@pali>
+References: <20220524122817.7199-1-pali@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:a4a:e60e:0:0:0:0:0 with HTTP; Thu, 23 Jun 2022 05:00:17
- -0700 (PDT)
-Reply-To: ibnahmadmustafa.aseelfinance@gmail.com
-From:   "Ibn Ahmad Mustafa(ASEEL Islamic Finance)" <alexaziz900@gmail.com>
-Date:   Thu, 23 Jun 2022 13:00:17 +0100
-Message-ID: <CA+ZonYFVf4r4TP5OjTABRM+sUUb77Yi8rA2ZjaW7-M57GTtrGA@mail.gmail.com>
-Subject: LOAN AND INVESTMENT-ASEEL ISLAMIC FINANCE
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.2 required=5.0 tests=BAYES_60,DEAR_SOMETHING,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2001:4860:4864:20:0:0:0:42 listed in]
-        [list.dnswl.org]
-        *  1.5 BAYES_60 BODY: Bayes spam probability is 60 to 80%
-        *      [score: 0.7847]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [alexaziz900[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [alexaziz900[at]gmail.com]
-        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  2.0 DEAR_SOMETHING BODY: Contains 'Dear (something)'
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *******
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220524122817.7199-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Sir/Madam
+On Tuesday 24 May 2022 14:28:17 Pali Rohár wrote:
+> Same as in commit a3b69dd0ad62 ("Revert "PCI: aardvark: Rewrite IRQ code to
+> chained IRQ handler"") for pci-aardvark driver, use devm_request_irq()
+> instead of chained IRQ handler in pci-mvebu.c driver.
+> 
+> This change fixes affinity support and allows to pin interrupts from
+> different PCIe controllers to different CPU cores.
+> 
+> Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
 
-I would like to introduce you to Aseel Islamic finance PJSC which is a
-private joint stock company that was
-established in 2006 and has built a leading market position for itself
-in the UAE's Islamic finance market which specializes in loan finance
-and investment activities in real estate, hospitality, industrial &
-sustainable technologies, strategic financial investments, specialized
-education, healthcare services, agriculture, manufacturing,
-mining,energy and additional environmentally sustainable projects.
+PING?
 
-I would love to send you further details with your consent.
-
-Regards.
-
-Mr.Ahmad Ibn Mustafa
-International Business Coordinator
-Aseel Islamic Finance PJSC
-Telephone: 800-ASEEL(27335)
+> Hello Bjorn! This is basically same issue as for pci-aardvark.c:
+> https://lore.kernel.org/linux-pci/20220515125815.30157-1-pali@kernel.org/#t
+> 
+> I tested this patch with pci=nomsi in cmdline (to force kernel to use
+> legacy intx instead of MSI) on A385 and checked that I can set affinity
+> via /proc/irq/XX/smp_affinity file for every mvebu pcie controller to
+> different CPU and legacy interrupts from different cards/controllers
+> were handled by different CPUs.
+> 
+> I think that this is important on Armada XP platforms which have many
+> independent PCIe controllers (IIRC up to 10) and many cores (up to 4).
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 30 +++++++++++++++++-------------
+>  1 file changed, 17 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index 8f76d4bda356..de67ea39fea5 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -1017,16 +1017,13 @@ static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
+>  	return 0;
+>  }
+>  
+> -static void mvebu_pcie_irq_handler(struct irq_desc *desc)
+> +static irqreturn_t mvebu_pcie_irq_handler(int irq, void *arg)
+>  {
+> -	struct mvebu_pcie_port *port = irq_desc_get_handler_data(desc);
+> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct mvebu_pcie_port *port = arg;
+>  	struct device *dev = &port->pcie->pdev->dev;
+>  	u32 cause, unmask, status;
+>  	int i;
+>  
+> -	chained_irq_enter(chip, desc);
+> -
+>  	cause = mvebu_readl(port, PCIE_INT_CAUSE_OFF);
+>  	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+>  	status = cause & unmask;
+> @@ -1040,7 +1037,7 @@ static void mvebu_pcie_irq_handler(struct irq_desc *desc)
+>  			dev_err_ratelimited(dev, "unexpected INT%c IRQ\n", (char)i+'A');
+>  	}
+>  
+> -	chained_irq_exit(chip, desc);
+> +	return status ? IRQ_HANDLED : IRQ_NONE;
+>  }
+>  
+>  static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> @@ -1490,9 +1487,20 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+>  				mvebu_pcie_powerdown(port);
+>  				continue;
+>  			}
+> -			irq_set_chained_handler_and_data(irq,
+> -							 mvebu_pcie_irq_handler,
+> -							 port);
+> +
+> +			ret = devm_request_irq(dev, irq, mvebu_pcie_irq_handler,
+> +					       IRQF_SHARED | IRQF_NO_THREAD,
+> +					       port->name, port);
+> +			if (ret) {
+> +				dev_err(dev, "%s: cannot register interrupt handler: %d\n",
+> +					port->name, ret);
+> +				irq_domain_remove(port->intx_irq_domain);
+> +				pci_bridge_emul_cleanup(&port->bridge);
+> +				devm_iounmap(dev, port->base);
+> +				port->base = NULL;
+> +				mvebu_pcie_powerdown(port);
+> +				continue;
+> +			}
+>  		}
+>  
+>  		/*
+> @@ -1599,7 +1607,6 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
+>  
+>  	for (i = 0; i < pcie->nports; i++) {
+>  		struct mvebu_pcie_port *port = &pcie->ports[i];
+> -		int irq = port->intx_irq;
+>  
+>  		if (!port->base)
+>  			continue;
+> @@ -1615,9 +1622,6 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
+>  		/* Clear all interrupt causes. */
+>  		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+>  
+> -		if (irq > 0)
+> -			irq_set_chained_handler_and_data(irq, NULL, NULL);
+> -
+>  		/* Remove IRQ domains. */
+>  		if (port->intx_irq_domain)
+>  			irq_domain_remove(port->intx_irq_domain);
+> -- 
+> 2.20.1
+> 
