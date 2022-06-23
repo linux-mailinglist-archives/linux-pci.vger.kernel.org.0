@@ -2,53 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A08E5557EF5
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Jun 2022 17:52:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCB59557F0F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Jun 2022 17:55:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231843AbiFWPwW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jun 2022 11:52:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57096 "EHLO
+        id S231899AbiFWPzm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jun 2022 11:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231848AbiFWPwS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jun 2022 11:52:18 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB5A43EEE;
-        Thu, 23 Jun 2022 08:52:17 -0700 (PDT)
+        with ESMTP id S232128AbiFWPze (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jun 2022 11:55:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCEC2E0A3;
+        Thu, 23 Jun 2022 08:55:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1E188B8246B;
-        Thu, 23 Jun 2022 15:52:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B520C3411B;
-        Thu, 23 Jun 2022 15:52:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6112161EA8;
+        Thu, 23 Jun 2022 15:55:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E19C3411B;
+        Thu, 23 Jun 2022 15:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655999534;
-        bh=f1yUMkNQijNCMovgwuypQ/49a7NNjLshwaNNnee92ic=;
+        s=k20201202; t=1655999726;
+        bh=nQzJZplHc0/Ec1lWYneNbQij/MgioWH/DG89ypcJyRc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cZA4xdw8NI4eRz/aTRQgagViZw4M68kmeCM2dI0bWgt3PB4+7+eM+Q+PLkU3rq8iu
-         B2x5yvp/8+6A8KjY2mtsK9GJ1cV1YXGoR0Yk2pyLRAZGnaXzXaoKBAgpD5hZ1WL20e
-         P88/o6ghFWcD23j4nUi1fg2Jf3WiSRofqFq2TazctaRyLHSz4/Dja1v6WBPlVTH9X7
-         mvYWPxcOWGiWfAD5QSLTfiIGC1TjlmJdmU4tNY/6xlgkE5DO8I3xwe8EhVsLTlvJ/9
-         eENNgA1CSZ88oR0YBm/LbRtJiE8C6TBycpQlC9xpFpJTlbtGdpGdka9eLjYUqPPYzI
-         D8ZKzxsjxoMtQ==
-Date:   Thu, 23 Jun 2022 10:52:13 -0500
+        b=XbAbve4X2I83UPs5Fri+9rI5uoH1A0sZYskUqDqYqp7Cq1G9ZF6g61zZTyBdR1chw
+         eQoCjC7k4SlaC8O0gF2/Nr9W6p7DvuWriIPp0/411iSTrg/5bTGlLu+RN40Ti3p2w8
+         ng+GObXTMOKoZAbErK7KYxhUt8C6PC2E4aGS+qT278rU+Z1O9o4cDjM396rvRb7f6m
+         T+Q3Mx/YfQFDl84N8F7zoEQwt4GEfI7ZiyJUXz2HE+hqVw/TWpWWTm6hArUAMfwcEG
+         aNGr8wdLGfexldfwLf17d2OjERrOEroA2vckKx/DLthRyp3hp7v5aIlbSgNlQG/3xg
+         FtlgQX4cC61QQ==
+Date:   Thu, 23 Jun 2022 10:55:24 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Add support for modular builds
-Message-ID: <20220623155213.GA1450949@bhelgaas>
+To:     Frank Li <frank.li@nxp.com>
+Cc:     Ren Zhijie <renzhijie2@huawei.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] NTB: EPF: Fix Kconfig dependency
+Message-ID: <20220623155524.GA1452766@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220519094646.23009-1-johan+linaro@kernel.org>
+In-Reply-To: <PAXPR04MB91861EE0E20E9EC71F4C494288B59@PAXPR04MB9186.eurprd04.prod.outlook.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -59,141 +58,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 19, 2022 at 11:46:46AM +0200, Johan Hovold wrote:
-> Allow the Qualcomm PCIe controller driver to be built as a module, which
-> is useful for multi-platform kernels as well as during development.
+On Thu, Jun 23, 2022 at 03:36:38PM +0000, Frank Li wrote:
+> > -----Original Message-----
+> > From: Ren Zhijie <renzhijie2@huawei.com>
+> > Sent: Thursday, June 23, 2022 3:46 AM
+> > To: kishon@ti.com; lpieralisi@kernel.org; kw@linux.com;
+> > bhelgaas@google.com; jdmason@kudzu.us; Frank Li <frank.li@nxp.com>
+> > Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Ren Zhijie
+> > <renzhijie2@huawei.com>
+> > Subject: [PATCH -next] NTB: EPF: Fix Kconfig dependency
+
+@Ren, please use a typical subject line for the file, e.g.,
+
+  PCI: endpoint: ...
+
+> > If CONFIG_NTB is not set and CONFIG_PCI_EPF_VNTB is y.
+> > 
+> > make ARCH=x86_64 CROSS_COMPILE=x86_64-linux-gnu-, will be failed, like
+> > this:
+> > 
+> > drivers/pci/endpoint/functions/pci-epf-vntb.o: In function
+> > `epf_ntb_cmd_handler':
+> > pci-epf-vntb.c:(.text+0x95e): undefined reference to `ntb_db_event'
+> > pci-epf-vntb.c:(.text+0xa1f): undefined reference to `ntb_link_event'
+> > pci-epf-vntb.c:(.text+0xa42): undefined reference to `ntb_link_event'
+> > drivers/pci/endpoint/functions/pci-epf-vntb.o: In function `pci_vntb_probe':
+> > pci-epf-vntb.c:(.text+0x1250): undefined reference to `ntb_register_device'
+> > 
+> > The functions ntb_*() are defined in drivers/ntb/core.c, which need
+> > CONFIG_NTB setting y to be build-in.
+> > To fix this build error, add depends on NTB.
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Fixes: ff32fac00d97("NTB: EPF: support NTB transfer between PCI RC and EP
+> > connection")
+> > Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
+> > ---
+> [Frank Li] Acked
+
+@Frank: if you use the conventional style, e.g.,
+"Acked-by: Frank Li <frank.li@nxp.com>", tooling like b4 will
+automatically pick it up.  Just saying "Acked" is likely to get missed
+or ignored.
 > 
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  drivers/pci/controller/dwc/Kconfig     |  2 +-
->  drivers/pci/controller/dwc/pcie-qcom.c | 36 +++++++++++++++++++++++---
->  2 files changed, 34 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 62ce3abf0f19..230f56d1a268 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -168,7 +168,7 @@ config PCI_HISI
->  	  Hip05 and Hip06 SoCs
->  
->  config PCIE_QCOM
-> -	bool "Qualcomm PCIe controller"
-> +	tristate "Qualcomm PCIe controller"
->  	depends on OF && (ARCH_QCOM || COMPILE_TEST)
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select PCIE_DW_HOST
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 8523b5ef9d16..e25d5c09657c 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -16,7 +16,7 @@
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
->  #include <linux/kernel.h>
-> -#include <linux/init.h>
-> +#include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/of_gpio.h>
->  #include <linux/pci.h>
-> @@ -1425,6 +1425,15 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
->  	return ret;
->  }
->  
-> +static void qcom_pcie_host_deinit(struct qcom_pcie *pcie)
-> +{
-> +	qcom_ep_reset_assert(pcie);
-> +	if (pcie->cfg->ops->post_deinit)
-> +		pcie->cfg->ops->post_deinit(pcie);
-> +	phy_power_off(pcie->phy);
-> +	pcie->cfg->ops->deinit(pcie);
-
-These post_deinit/deinit names look backwards.  Why would we call a
-"post_deinit()" method *before* the "deinit()" method?  It would make
-sense if we called "pre_deinit()" followed by "deinit()".
-
->  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
->  	.host_init = qcom_pcie_host_init,
->  };
-> @@ -1651,6 +1660,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static int qcom_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
-> +	struct device *dev = &pdev->dev;
-> +
-> +	dw_pcie_host_deinit(&pcie->pci->pp);
-> +	qcom_pcie_host_deinit(pcie);
-> +
-> +	phy_exit(pcie->phy);
-> +
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
-
-Why is this not more symmetric with qcom_pcie_probe()?  Maybe struct
-dw_pcie_host_ops needs a new .host_deinit() pointer that would be
-called from dw_pcie_host_deinit()?
-
-In the probe path, we have this:
-
-  qcom_pcie_probe
-    pm_runtime_enable
-    pm_runtime_get_sync
-    phy_init(pcie->phy)
-    dw_pcie_host_init
-      pp->ops->host_init
-        qcom_pcie_host_init             # .host_init()
-          pcie->cfg->ops->init(pcie)
-          phy_power_on(pcie->phy)
-          pcie->cfg->ops->post_init(pcie)
-          qcom_ep_reset_deassert(pcie)
-
-The remove path does do things in the opposite order, which makes
-sense, but the call to qcom_pcie_host_deinit() breaks the symmetry:
-
-  qcom_pcie_remove
-    dw_pcie_host_deinit
-    qcom_pcie_host_deinit
-      qcom_ep_reset_assert
-      pcie->cfg->ops->post_deinit
-      phy_power_off(pcie->phy)
-      pcie->cfg->ops->deinit
-    phy_exit(pcie->phy)
-    pm_runtime_put_sync
-    pm_runtime_disable
-
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
-> @@ -1669,6 +1694,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
->  	{ }
->  };
-> +MODULE_DEVICE_TABLE(of, qcom_pcie_match);
->  
->  static void qcom_fixup_class(struct pci_dev *dev)
->  {
-> @@ -1684,10 +1710,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
->  
->  static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
-> +	.remove = qcom_pcie_remove,
->  	.driver = {
->  		.name = "qcom-pcie",
-> -		.suppress_bind_attrs = true,
->  		.of_match_table = qcom_pcie_match,
->  	},
->  };
-> -builtin_platform_driver(qcom_pcie_driver);
-> +module_platform_driver(qcom_pcie_driver);
-> +
-> +MODULE_AUTHOR("Stanimir Varbanov <svarbanov@mm-sol.com>");
-> +MODULE_DESCRIPTION("Qualcomm PCIe root complex driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.35.1
+> >  drivers/pci/endpoint/functions/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/pci/endpoint/functions/Kconfig
+> > b/drivers/pci/endpoint/functions/Kconfig
+> > index 362555b024e8..9beee4f0f4ee 100644
+> > --- a/drivers/pci/endpoint/functions/Kconfig
+> > +++ b/drivers/pci/endpoint/functions/Kconfig
+> > @@ -29,6 +29,7 @@ config PCI_EPF_NTB
+> >  config PCI_EPF_VNTB
+> >          tristate "PCI Endpoint NTB driver"
+> >          depends on PCI_ENDPOINT
+> > +        depends on NTB
+> >          select CONFIGFS_FS
+> >          help
+> >            Select this configuration option to enable the Non-Transparent
+> > --
+> > 2.17.1
 > 
