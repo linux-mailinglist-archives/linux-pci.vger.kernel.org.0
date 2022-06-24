@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A02A1558FA1
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 06:20:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C691558FA3
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 06:20:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231363AbiFXEUa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 00:20:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
+        id S231411AbiFXEUe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 00:20:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbiFXEUS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 00:20:18 -0400
+        with ESMTP id S231329AbiFXEUT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 00:20:19 -0400
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB19255367;
-        Thu, 23 Jun 2022 21:20:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EF95639B;
+        Thu, 23 Jun 2022 21:20:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656044416; x=1687580416;
+  t=1656044417; x=1687580417;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=LEnpiryl3EJtlzLZIRW5oeLAcKcKGsRDBy0eKrTmGME=;
-  b=QQ3krwzAt79Lz7+DeVF5at5p/rua/GtMMQG/b2I1X2/0Rf/sxsbivJIV
-   npICnr3xaYqNX8G+8tcJjmVnnwwfLZv3F+gar6YnKZQYsYWu9kGKK2TWQ
-   pGUaGoWAGmUx/9YIUn/ZL0RmTusXnfTL5YaB0LsXL+KCimzjVoeBX8qPg
-   +bXgc/uxq4Ui1muA4Ss7owxRRte7YGYWULZ2EbLNzj9/LV8ZVNJA0G0ak
-   c5gX671Twc0K6qdgVnbYMAN4CAC32zL9Z4F4FtD6JWQEicdXLpkaAKvx6
-   hHUv/CzmuSeNzhlhjrIk8ZH9fgjRLOPWQ5YRzYI651dh43RLpCBcOuIxt
+  bh=gavlelRZmhRVxfC9YWBfVgcdtFPtB4GEpy8NZudDjyI=;
+  b=fgkzINNqIU+/NwWD/MmACtLUEVcDkjzNUie4b5zNQiivJXJeNi5oy7rD
+   ETDd1EvoHhnh6ZG0qqIwm4NC+pjTBlJTd4E9mQQ4STkHbDrkzm23OenxO
+   fQFhmqRbmWvQMphlmOi87yjZpTxYBiMtVtzdLT2keXR9aMa+FCa5Q3f3e
+   DYLK3CalxkOcIm5aEssIlAm5YTaoX9/tsOhu8JSZvKSm6hA6R2oKKL0BQ
+   iScjFA424pGAreB6pTCo2QTxdLMzBrqch/o+BsBLUQ7WqBmdFmqlivgiV
+   NBt+1NSebz6oVxGkWxkwt4wd/9HeSQscnK1IXjhotZXsHMUKL7WvI+FD4
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="367238058"
+X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="367238060"
 X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="367238058"
+   d="scan'208";a="367238060"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:16 -0700
 X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="645092965"
+   d="scan'208";a="645092968"
 Received: from daharell-mobl2.amr.corp.intel.com (HELO dwillia2-xfh.intel.com) ([10.209.66.176])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:15 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:16 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     nvdimm@lists.linux.dev, linux-pci@vger.kernel.org,
         patches@lists.linux.dev, hch@lst.de,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 44/46] cxl/pmem: Delete unused nvdimm attribute
-Date:   Thu, 23 Jun 2022 21:19:48 -0700
-Message-Id: <20220624041950.559155-19-dan.j.williams@intel.com>
+Subject: [PATCH 45/46] cxl/pmem: Fix offline_nvdimm_bus() to offline by bridge
+Date:   Thu, 23 Jun 2022 21:19:49 -0700
+Message-Id: <20220624041950.559155-20-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
@@ -59,29 +59,96 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-While there is a need to go from a LIBNVDIMM 'struct nvdimm' to a CXL
-'struct cxl_nvdimm', there is no use case to go the other direction.
-Likely this is a leftover from an early version of the referenced commit
-before it implemented devm for releasing the created nvdimm.
+Be careful to only disable cxl_pmem objects related to a given
+cxl_nvdimm_bridge. Otherwise, offline_nvdimm_bus() reaches across CXL
+domains and disables more than is expected.
 
-Fixes: 21083f51521f ("cxl/pmem: Register 'pmem' / cxl_nvdimm devices")
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/cxl.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/cxl/cxl.h  |  1 +
+ drivers/cxl/pmem.c | 21 +++++++++++++++++----
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 734b4479feb2..d6ff6337aa49 100644
+index d6ff6337aa49..95f486bc1b41 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -411,7 +411,6 @@ struct cxl_nvdimm_bridge {
+@@ -411,6 +411,7 @@ struct cxl_nvdimm_bridge {
  struct cxl_nvdimm {
  	struct device dev;
  	struct cxl_memdev *cxlmd;
--	struct nvdimm *nvdimm;
++	struct cxl_nvdimm_bridge *bridge;
  };
  
  /**
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 0aaa70b4e0f7..b271f6e90b91 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -26,7 +26,10 @@ static void clear_exclusive(void *cxlds)
+ 
+ static void unregister_nvdimm(void *nvdimm)
+ {
++	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
++
+ 	nvdimm_delete(nvdimm);
++	cxl_nvd->bridge = NULL;
+ }
+ 
+ static int cxl_nvdimm_probe(struct device *dev)
+@@ -66,6 +69,7 @@ static int cxl_nvdimm_probe(struct device *dev)
+ 	}
+ 
+ 	dev_set_drvdata(dev, nvdimm);
++	cxl_nvd->bridge = cxl_nvb;
+ 	rc = devm_add_action_or_reset(dev, unregister_nvdimm, nvdimm);
+ out:
+ 	device_unlock(&cxl_nvb->dev);
+@@ -204,15 +208,23 @@ static bool online_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb)
+ 	return cxl_nvb->nvdimm_bus != NULL;
+ }
+ 
+-static int cxl_nvdimm_release_driver(struct device *dev, void *data)
++static int cxl_nvdimm_release_driver(struct device *dev, void *cxl_nvb)
+ {
++	struct cxl_nvdimm *cxl_nvd;
++
+ 	if (!is_cxl_nvdimm(dev))
+ 		return 0;
++
++	cxl_nvd = to_cxl_nvdimm(dev);
++	if (cxl_nvd->bridge != cxl_nvb)
++		return 0;
++
+ 	device_release_driver(dev);
+ 	return 0;
+ }
+ 
+-static void offline_nvdimm_bus(struct nvdimm_bus *nvdimm_bus)
++static void offline_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb,
++			       struct nvdimm_bus *nvdimm_bus)
+ {
+ 	if (!nvdimm_bus)
+ 		return;
+@@ -222,7 +234,8 @@ static void offline_nvdimm_bus(struct nvdimm_bus *nvdimm_bus)
+ 	 * nvdimm_bus_unregister() rips the nvdimm objects out from
+ 	 * underneath them.
+ 	 */
+-	bus_for_each_dev(&cxl_bus_type, NULL, NULL, cxl_nvdimm_release_driver);
++	bus_for_each_dev(&cxl_bus_type, NULL, cxl_nvb,
++			 cxl_nvdimm_release_driver);
+ 	nvdimm_bus_unregister(nvdimm_bus);
+ }
+ 
+@@ -260,7 +273,7 @@ static void cxl_nvb_update_state(struct work_struct *work)
+ 
+ 		dev_dbg(&cxl_nvb->dev, "rescan: %d\n", rc);
+ 	}
+-	offline_nvdimm_bus(victim_bus);
++	offline_nvdimm_bus(cxl_nvb, victim_bus);
+ 
+ 	put_device(&cxl_nvb->dev);
+ }
 -- 
 2.36.1
 
