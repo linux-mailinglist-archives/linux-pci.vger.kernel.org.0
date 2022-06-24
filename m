@@ -2,757 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA5F558FA2
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 06:20:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4928E5590AA
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 07:14:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231470AbiFXEUf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 00:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57680 "EHLO
+        id S229635AbiFXFFG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 01:05:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbiFXEU2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 00:20:28 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293665677B;
-        Thu, 23 Jun 2022 21:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656044418; x=1687580418;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wZpcOhWCiYhcxn7Gz6M1glzobiwvNwhKhmWA7RsZ4Ac=;
-  b=fKeJnemaSvcRz1HDSwXyrG+txQyC6tN5T+Bf0JqoCvd6GUXiuuMuIKL0
-   iRvabCTbkU4EjQb4ZzNAhg3ZR0ilvXZyyIP9bQwY0YQ6Ogkx/WBHj4NYi
-   Melah8raL0G4F2ykjvmKjsh83x3Ls5S77DjjhKt1ashQpHB6foxH/J7sf
-   9GlsiumuKcS8Rz7ho1hXl9JrxJ5QO9jHvQZW4g8HX3bWii1Dt3le7WEzj
-   Fd1K08ytD7ic/2pNgenErVDDLY2ZeHUAtxm06m6f1Vyg3BIGxOWUaWw6d
-   P/uTgp9g0wKPAjRNxnhvlAcMr1cOteiSewT31YDpUpBfyLsr3j8C6k7Uf
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="367238066"
-X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="367238066"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:16 -0700
-X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="645092971"
-Received: from daharell-mobl2.amr.corp.intel.com (HELO dwillia2-xfh.intel.com) ([10.209.66.176])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:16 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     nvdimm@lists.linux.dev, linux-pci@vger.kernel.org,
-        patches@lists.linux.dev, hch@lst.de,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>
-Subject: [PATCH 46/46] cxl/region: Introduce cxl_pmem_region objects
-Date:   Thu, 23 Jun 2022 21:19:50 -0700
-Message-Id: <20220624041950.559155-21-dan.j.williams@intel.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
-References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
+        with ESMTP id S229497AbiFXFFF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 01:05:05 -0400
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30044.outbound.protection.outlook.com [40.107.3.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6FA4FC54;
+        Thu, 23 Jun 2022 22:05:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LUkbS7dKSDIMeWbgseCB5/Y29fK4yH3pLvabN6Drb8tYzetwhTd2Einc/jkyYEv/3OWEwpsMxAF6o+XG5kfrmNWGkd8Ilg3jB2CTGEiSCNc6GjSHEx8BVeQeEoY4q4NL/elIa+7E+6zEBDxLL1DVC23KGP+AznwOKAuN1ME4er4ThJWPZ1ScDOaVj6B1oJg8u8QY1VGxcRfFTKk2SNgjSGH+UYQIuqzxeEhpSWJwVGuU7q8Kl76ttqBH/ZXFx+LUk10K7n+pUfnOBdrJhSkO8C3lwEL+gw22GLNkKWnjL4gOkGGeqO/N4JDvHH6HKyGolKycXrtLiH54ZBAOBXrtDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oUfSlEP1sJRUNRRbVm4g8GYVa5g8Vpg0U8YW35SMqAI=;
+ b=hXqyp3e8M7P9RkK9W940ipGTrPUz15I3vuV2BjyGyHsXwgrhoxkjYeP83NpIRjZfF4llmPgOE3j8Hj9AzFhWXzpoLO8aG93V47CqLzVXarJOlHujkvOQXuvA803f2n+DvWl1T6grcSFZPreX65Gyr8FbCG8TG/ZnR8qpesS8ztAKEw/ZfQu2r6pzh0YBpyeIKUVV7kT/61jHJYecCe4W+hg8JGnuIYesq0P/yHuvtvHFI1fq/W2WqTZb4LLCVAkVWKZ4uyXGLc0p1Pl+zLGyYvjxngaftJ27gi461dv55g4JkpWGgDpqvy5sM0OqakGxF+Swbxm+T+R7YLGVogzfIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oUfSlEP1sJRUNRRbVm4g8GYVa5g8Vpg0U8YW35SMqAI=;
+ b=RygRXRebA0HoDKjJop4x2W6Pi3naTiaTo+U8SWuM9c9CuBi23xxiEVjW0a/gL5eeKqVRv1CWGIQFsv0IVP6V29WsTsT0YQ4s3snN4L/ptT713GYnCMcbPrfEGoXpP495lKma2xEahYgujgYmdeYvTk9xFk0qa2HsHUC+VxyOgZA=
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by VI1PR0402MB3904.eurprd04.prod.outlook.com (2603:10a6:803:17::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.15; Fri, 24 Jun
+ 2022 05:05:00 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::a0fa:978c:2b40:2cb7]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::a0fa:978c:2b40:2cb7%7]) with mapi id 15.20.5353.022; Fri, 24 Jun 2022
+ 05:05:00 +0000
+From:   Hongxing Zhu <hongxing.zhu@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "francesco.dolcini@toradex.com" <francesco.dolcini@toradex.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v13 10/15] PCI: imx6: Turn off regulator when system is in
+ suspend mode
+Thread-Topic: [PATCH v13 10/15] PCI: imx6: Turn off regulator when system is
+ in suspend mode
+Thread-Index: AQHYgjdcUQJgMZ5OO0yRoK73B1k2ea1dmj8AgABrJkA=
+Date:   Fri, 24 Jun 2022 05:05:00 +0000
+Message-ID: <AS8PR04MB8676C6B250ECFC44E120D8188CB49@AS8PR04MB8676.eurprd04.prod.outlook.com>
+References: <1655461874-16908-11-git-send-email-hongxing.zhu@nxp.com>
+ <20220623221944.GA1481121@bhelgaas>
+In-Reply-To: <20220623221944.GA1481121@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e5596b6b-d70c-424b-8152-08da559f1735
+x-ms-traffictypediagnostic: VI1PR0402MB3904:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ydGTnaAS8y1zNtG5czt4hW3vBBrs14RWtH0UA7f6VLirHE2eH9oj9BrM6dsThddhFn1d8JTy7qQvV1GQe61mHoA1FVc/RzHoQgohsKrv8mRsxbfY32HFCZQsff3KBadhgWwXAlMndtcB2WOJL/+Bg8L+B+C6HuJU8bFzW5Yl9K8rPoyW/fRQdbSXCBrOWyf6Hq+E69VpCq3ZRcKxF3UJTFLbUugiBJaapwupwgq1F0jHp1QzhZFphjvG/uPZKnuQywjsPn01IlmN69iuMUOaYw3/+vnYZxcbpyEmxpK+Uj3vARpH4tAsaG1sC7llEiRA+PzI1IXFc4MDUpygvGIgd7dJYadBGQwGZ8rHUK/gcGcr+G2jxbyVxL2p35e6DUldupSVJJzy5AR7rD2oTjfltxU7FF8m+9Ki4etGhQB1LFHKu1pV/Kc7S5kQUx6BS0lt29eAF2DXWqjGSXiVLzvVFuyBlCmc/sHxglfGrDMCHpfaVmPlFr4cH655vzsHGqPwlHyWnfDJ2H1nDJG6Uji0ZYOa26mTC82Zp+3SvfqrI4Z04Xu9PzLl7c995xOisFxMep4zzHOh5r/pgE+OGmPvvWmJ78ec7M7G3bN2OcWKKDNMuvht5lFUsWq3HrLAZJ4i6z5CTFAGbCL3uOBkffzeGlZTaWJ4cnopGFMa8jVCimia5NlScPN2whfYvQGHlSS51q3ygYiSzCYpsFaKQGsMLkLEYwz+Qxo1xU4LTzpGqOyVLIDlXqG4lDoPraRkiCt0j1ot0x2VBNdmUX+A903sbEFt6/NlkbkpvwrcpJgzqJiYSwwprFXbpm9NYLix97J0ITup0IMyoD5LuwghInMnEg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(346002)(376002)(136003)(366004)(86362001)(6916009)(6506007)(8936002)(38100700002)(7696005)(45080400002)(26005)(38070700005)(186003)(122000001)(71200400001)(9686003)(41300700001)(53546011)(83380400001)(54906003)(7416002)(66946007)(316002)(15650500001)(44832011)(76116006)(52536014)(5660300002)(66556008)(55016003)(64756008)(33656002)(478600001)(66476007)(8676002)(2906002)(4326008)(966005)(66446008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?gb2312?B?Vno1VzFqTzlqanhOQVdZQ1RKRFVHcWRoeFFXaUU2Tm5qNDR6cEhSTUpqT1JB?=
+ =?gb2312?B?TWJ4aS9nYnFzeUZjVUZ3YzR2bTFrWjY4MEdUMkFBQ01ZZmswMVR0WC82d2w0?=
+ =?gb2312?B?WDQ1ZWE5ZzJ3UjhqbVprRDhRYytVZU5jTFI0TVZRVHJyTGNHSS9GR3pFZk5H?=
+ =?gb2312?B?MUs4TjdjUWVpcUdXUmQ1YklxY255aXRJQWM1Z0U0Y3QrWXRMRWljVzdtTTUw?=
+ =?gb2312?B?d3BOK0VOSk5Pd3V4OFJ5V0FLbXUwR2t3V0twc0JTc2hOZVN5UW1EQkVYNWV3?=
+ =?gb2312?B?NDNrTGdJbDhCbGRDeHFuZVlqUGRzdXRuakZMT2l0a0xuUkwwUmJrbXlnNGh3?=
+ =?gb2312?B?MXNhNElqTEZMQUx5RjUwVGpQamZwUDZzYnZwU0V3ZEJGYTZYSS9KaEpBWDhX?=
+ =?gb2312?B?eTNrb3RMc1EzK3dtWGpqOXVEWDZHa3kyYThXTDZGK1laMm5JY1V3aDRKTWNu?=
+ =?gb2312?B?RCtVNkxSRnJyR1djaDJucHY4S1B6M1dUMEQvVUdqZWVRMHVlUVdxOEFIbExO?=
+ =?gb2312?B?dEhKQXBNK0VCSkwza1dEYmxGYUQxN2xzYzloMGpBSko4dzBST1VpWU5Xa1Ex?=
+ =?gb2312?B?aHYvOFJ6L0tmRG85d0w1UHdCQlFnUWh1RGZrQWEzVnpJVG5xdEJQYmhtcjdX?=
+ =?gb2312?B?bU1FVFhZNHNUckgwQThmLzdzMmw3VHFwdXM2cnp3ajZaV2ZRZXdDZXFZdmht?=
+ =?gb2312?B?bFVLaC90T1pKaGRQRk8xMU1KTWQvekNNdW9ObzVTSGZGRWxOV205WnF2N1ZG?=
+ =?gb2312?B?L0ZxMktiYXg2WVIvVHc1TkNWM1VONWozaFhka1J6VmtKS3ovNnNRWWVMS2RH?=
+ =?gb2312?B?cS9FdDJDd2IzSmMwYzEyWi9XUkc4TDdnSVVVeHJjdGVEcjJrNGkyTmZjM3Zp?=
+ =?gb2312?B?WmxrcGJOM3dZYmZkb0pqZmMyUjZTaS8rU1V6UG5QNU1hc0pBdE1yWXkwSTNT?=
+ =?gb2312?B?K29HWnN6WXRjT0ZtRlJLOUowNkpxc25IMUZaRVpuTklaK3FvVnhMSmNPQ01H?=
+ =?gb2312?B?ak9ZMlRaN3hWaDBsd2hOVlJBWmlUU1ljU2xRVFhpK1g2YzdGR20rODBJYW1l?=
+ =?gb2312?B?THFQZE9FalkwWkEwV1dsaVlLc3MxWE1tQjR0T2hVQW4yVGt6TGlmN1pEdlNS?=
+ =?gb2312?B?V3NEb0JnWCtOWWZ3bExkMFpaSldERUVCZDVPZDEyWVA3citEa3VscTlvRnFR?=
+ =?gb2312?B?QkVTSGprUEd6RFN3alk3aDg3SkRnQTh4ZEJXNkhUdGx1TlJWWVI5RWt5U3lw?=
+ =?gb2312?B?QkZLalNGZEpXNG9FbEZwQUtBcFNiTUI2RGRkMXlrckRtZm4wV3VFOG1WTlVY?=
+ =?gb2312?B?bm5TQiswSlREQUNyMEQxVmN5eWlPbXRKdWhnYm9obGM2ejlFaWhqK1QxTmZq?=
+ =?gb2312?B?OGxCVlRscjMvdDIyTURjUStGYTR5c3A3ZGdzTWZMRDVUdUVmYkdIL1NxOE9u?=
+ =?gb2312?B?WlJUUk5PUFFWQm4xODljMHpBdDhoWVJ3SGJyVVd1d2Y2S29kOGJyUWU5ci9V?=
+ =?gb2312?B?OGZoQ09EYlliTmpsTGNtTlF4NmZ6cUJhdjBtakNNYXE4TmR0d3UzTk5wTlE1?=
+ =?gb2312?B?UlV6d3RDSENOOU90dUlwU3NMR0ZYM1hJODBtM25hdk15THBQSnl3UTMwQ0hw?=
+ =?gb2312?B?dHFOcklOYUwzUWc5OUF4ekNTTS9Yalk0N0s1dW96VWIzbmg5QmNPcFNTNU93?=
+ =?gb2312?B?RDdqb2s4b0RZRmFML243R3RPZmtIRnU4UlJnYVJjK2t1cHVhVmJWZ0ZpTmk1?=
+ =?gb2312?B?YUN6Q3RsSWN2VGJkRC9jKzJwbDcraG1yYjFMRHpIVk9lcVVSMFlRaTdCWUw1?=
+ =?gb2312?B?WUFOVzV6TDhYSzAzVklZR2x1N0JOV2pndTRjZnAzcXo1cmRkMEYvYnp1aXVJ?=
+ =?gb2312?B?UFN0Z0Zlc1kyZFc3NlB4R1dsTjJaczJKd1RQZGZpOFYvNDZXWWF0bm5iSUk5?=
+ =?gb2312?B?MWZnanc3VHBnUjNheGdHT1E2TkFlaG42NWV1VGw4WTI1YXVDa2lSQ1Z4b081?=
+ =?gb2312?B?eW40d3FKcVp3SXZiemR4bjhLWktHRU1DMjZ4SUhwYlZKZ0lQZC9Ga253MXBM?=
+ =?gb2312?B?MVExQThDb2lrbTFYRGhyWG5JbDhSVFZnOVVUWElyS1hoSjNodE5YcitQZngy?=
+ =?gb2312?Q?PpRF0Ani+5sw57B26mmwb2liY?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5596b6b-d70c-424b-8152-08da559f1735
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2022 05:05:00.3265
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7ogQ179gz0DBkfGAUJNaxi+sANziSJsXJyf+/aDhj9q5Y9wp9pkMr/9k1AAYijEvFqyNlIW19IjUBtMrFEnY1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3904
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The LIBNVDIMM subsystem is a platform agnostic representation of system
-NVDIMM / persistent memory resources. To date, the CXL subsystem's
-interaction with LIBNVDIMM has been to register an nvdimm-bridge device
-and cxl_nvdimm objects to proxy CXL capabilities into existing LIBNVDIMM
-subsystem mechanics.
-
-With regions the approach is the same. Create a new cxl_pmem_region
-object to proxy CXL region details into a LIBNVDIMM definition. With
-this enabling LIBNVDIMM can partition CXL persistent memory regions with
-legacy namespace labels. A follow-on patch will add CXL region label and
-CXL namespace label support to persist region configurations across
-driver reload / system-reset events.
-
-Co-developed-by: Ben Widawsky <bwidawsk@kernel.org>
-Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/core.h      |   3 +
- drivers/cxl/core/pmem.c      |   4 +-
- drivers/cxl/core/port.c      |   2 +
- drivers/cxl/core/region.c    | 139 ++++++++++++++++++++-
- drivers/cxl/cxl.h            |  36 +++++-
- drivers/cxl/pmem.c           | 235 ++++++++++++++++++++++++++++++++++-
- drivers/nvdimm/region_devs.c |  28 +++--
- include/linux/libnvdimm.h    |   5 +
- 8 files changed, 440 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index be5198ab8f3b..f5c5b041e8a5 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -13,6 +13,7 @@ extern struct attribute_group cxl_base_attribute_group;
- extern struct device_attribute dev_attr_create_pmem_region;
- extern struct device_attribute dev_attr_delete_region;
- extern struct device_attribute dev_attr_region;
-+extern const struct device_type cxl_pmem_region_type;
- extern const struct device_type cxl_region_type;
- void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
- int cxl_region_init(void);
-@@ -23,6 +24,7 @@ void cxl_region_exit(void);
-  */
- #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
- #define CXL_REGION_TYPE(x) (&cxl_region_type)
-+#define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
- #else
- static inline void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
- {
-@@ -36,6 +38,7 @@ static inline void cxl_region_exit(void)
- }
- #define CXL_REGION_ATTR(x) NULL
- #define CXL_REGION_TYPE(x) NULL
-+#define CXL_PMEM_REGION_TYPE(x) NULL
- #endif
- 
- struct cxl_send_command;
-diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index bec7cfb54ebf..1d12a8206444 100644
---- a/drivers/cxl/core/pmem.c
-+++ b/drivers/cxl/core/pmem.c
-@@ -62,9 +62,9 @@ static int match_nvdimm_bridge(struct device *dev, void *data)
- 	return is_cxl_nvdimm_bridge(dev);
- }
- 
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct device *start)
- {
--	struct cxl_port *port = find_cxl_root(&cxl_nvd->dev);
-+	struct cxl_port *port = find_cxl_root(start);
- 	struct device *dev;
- 
- 	if (!port)
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 00add9e0b192..e13cd012ed22 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -44,6 +44,8 @@ static int cxl_device_id(struct device *dev)
- 		return CXL_DEVICE_NVDIMM_BRIDGE;
- 	if (dev->type == &cxl_nvdimm_type)
- 		return CXL_DEVICE_NVDIMM;
-+	if (dev->type == CXL_PMEM_REGION_TYPE())
-+		return CXL_DEVICE_PMEM_REGION;
- 	if (is_cxl_port(dev)) {
- 		if (is_cxl_root(to_cxl_port(dev)))
- 			return CXL_DEVICE_ROOT;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index cd1848d4c8fe..70e9baef95f7 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1614,6 +1614,136 @@ static ssize_t delete_region_store(struct device *dev,
- }
- DEVICE_ATTR_WO(delete_region);
- 
-+static void cxl_pmem_region_release(struct device *dev)
-+{
-+	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
-+	int i;
-+
-+	for (i = 0; i < cxlr_pmem->nr_mappings; i++) {
-+		struct cxl_memdev *cxlmd = cxlr_pmem->mapping[i].cxlmd;
-+
-+		put_device(&cxlmd->dev);
-+	}
-+
-+	kfree(cxlr_pmem);
-+}
-+
-+static const struct attribute_group *cxl_pmem_region_attribute_groups[] = {
-+	&cxl_base_attribute_group,
-+	NULL,
-+};
-+
-+const struct device_type cxl_pmem_region_type = {
-+	.name = "cxl_pmem_region",
-+	.release = cxl_pmem_region_release,
-+	.groups = cxl_pmem_region_attribute_groups,
-+};
-+
-+bool is_cxl_pmem_region(struct device *dev)
-+{
-+	return dev->type == &cxl_pmem_region_type;
-+}
-+EXPORT_SYMBOL_NS_GPL(is_cxl_pmem_region, CXL);
-+
-+struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
-+{
-+	if (dev_WARN_ONCE(dev, !is_cxl_pmem_region(dev),
-+			  "not a cxl_pmem_region device\n"))
-+		return NULL;
-+	return container_of(dev, struct cxl_pmem_region, dev);
-+}
-+EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, CXL);
-+
-+static struct lock_class_key cxl_pmem_region_key;
-+
-+static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
-+{
-+	struct cxl_pmem_region *cxlr_pmem = ERR_PTR(-ENXIO);
-+	struct cxl_region_params *p = &cxlr->params;
-+	struct device *dev;
-+	int i;
-+
-+	down_read(&cxl_region_rwsem);
-+	if (p->state != CXL_CONFIG_COMMIT)
-+		goto out;
-+	cxlr_pmem = kzalloc(struct_size(cxlr_pmem, mapping, p->nr_targets),
-+			    GFP_KERNEL);
-+	if (!cxlr_pmem) {
-+		cxlr_pmem = ERR_PTR(-ENOMEM);
-+		goto out;
-+	}
-+
-+	cxlr_pmem->hpa_range.start = p->res->start;
-+	cxlr_pmem->hpa_range.end = p->res->end;
-+
-+	/* Snapshot the region configuration underneath the cxl_region_rwsem */
-+	cxlr_pmem->nr_mappings = p->nr_targets;
-+	for (i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
-+		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+		struct cxl_pmem_region_mapping *m = &cxlr_pmem->mapping[i];
-+
-+		m->cxlmd = cxlmd;
-+		get_device(&cxlmd->dev);
-+		m->start = cxled->dpa_res->start;
-+		m->size = resource_size(cxled->dpa_res);
-+		m->position = i;
-+	}
-+
-+	dev = &cxlr_pmem->dev;
-+	cxlr_pmem->cxlr = cxlr;
-+	device_initialize(dev);
-+	lockdep_set_class(&dev->mutex, &cxl_pmem_region_key);
-+	device_set_pm_not_required(dev);
-+	dev->parent = &cxlr->dev;
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_pmem_region_type;
-+out:
-+	up_read(&cxl_region_rwsem);
-+
-+	return cxlr_pmem;
-+}
-+
-+static void cxlr_pmem_unregister(void *dev)
-+{
-+	device_unregister(dev);
-+}
-+
-+/**
-+ * devm_cxl_add_pmem_region() - add a cxl_region to nd_region bridge
-+ * @host: same host as @cxlmd
-+ *
-+ * Return: 0 on success negative error code on failure.
-+ */
-+static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
-+{
-+	struct cxl_pmem_region *cxlr_pmem;
-+	struct device *dev;
-+	int rc;
-+
-+	cxlr_pmem = cxl_pmem_region_alloc(cxlr);
-+	if (IS_ERR(cxlr_pmem))
-+		return PTR_ERR(cxlr_pmem);
-+
-+	dev = &cxlr_pmem->dev;
-+	rc = dev_set_name(dev, "pmem_region%d", cxlr->id);
-+	if (rc)
-+		goto err;
-+
-+	rc = device_add(dev);
-+	if (rc)
-+		goto err;
-+
-+	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
-+		dev_name(dev));
-+
-+	return devm_add_action_or_reset(&cxlr->dev, cxlr_pmem_unregister, dev);
-+
-+err:
-+	put_device(dev);
-+	return rc;
-+}
-+
- static int cxl_region_probe(struct device *dev)
- {
- 	struct cxl_region *cxlr = to_cxl_region(dev);
-@@ -1637,7 +1767,14 @@ static int cxl_region_probe(struct device *dev)
- 	 */
- 	up_read(&cxl_region_rwsem);
- 
--	return rc;
-+	switch (cxlr->mode) {
-+	case CXL_DECODER_PMEM:
-+		return devm_cxl_add_pmem_region(cxlr);
-+	default:
-+		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
-+			cxlr->mode);
-+		return -ENXIO;
-+	}
- }
- 
- static struct cxl_driver cxl_region_driver = {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 95f486bc1b41..bf878509bed4 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -412,6 +412,25 @@ struct cxl_nvdimm {
- 	struct device dev;
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_nvdimm_bridge *bridge;
-+	struct cxl_pmem_region *region;
-+};
-+
-+struct cxl_pmem_region_mapping {
-+	struct cxl_memdev *cxlmd;
-+	struct cxl_nvdimm *cxl_nvd;
-+	u64 start;
-+	u64 size;
-+	int position;
-+};
-+
-+struct cxl_pmem_region {
-+	struct device dev;
-+	struct cxl_region *cxlr;
-+	struct nd_region *nd_region;
-+	struct cxl_nvdimm_bridge *bridge;
-+	struct range hpa_range;
-+	int nr_mappings;
-+	struct cxl_pmem_region_mapping mapping[];
- };
- 
- /**
-@@ -587,6 +606,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- #define CXL_DEVICE_ROOT			4
- #define CXL_DEVICE_MEMORY_EXPANDER	5
- #define CXL_DEVICE_REGION		6
-+#define CXL_DEVICE_PMEM_REGION		7
- 
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
-@@ -598,7 +618,21 @@ struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm_bridge(struct device *dev);
- int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct device *dev);
-+
-+#ifdef CONFIG_CXL_REGION
-+bool is_cxl_pmem_region(struct device *dev);
-+struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
-+#else
-+static inline bool is_cxl_pmem_region(struct device *dev)
-+{
-+	return false;
-+}
-+static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
- 
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index b271f6e90b91..4ba7248275ac 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -7,6 +7,7 @@
- #include <linux/ndctl.h>
- #include <linux/async.h>
- #include <linux/slab.h>
-+#include <linux/nd.h>
- #include "cxlmem.h"
- #include "cxl.h"
- 
-@@ -27,6 +28,19 @@ static void clear_exclusive(void *cxlds)
- static void unregister_nvdimm(void *nvdimm)
- {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
-+	struct cxl_nvdimm_bridge *cxl_nvb = cxl_nvd->bridge;
-+	struct cxl_pmem_region *cxlr_pmem;
-+
-+	device_lock(&cxl_nvb->dev);
-+	cxlr_pmem = cxl_nvd->region;
-+	dev_set_drvdata(&cxl_nvd->dev, NULL);
-+	cxl_nvd->region = NULL;
-+	device_unlock(&cxl_nvb->dev);
-+
-+	if (cxlr_pmem) {
-+		device_release_driver(&cxlr_pmem->dev);
-+		put_device(&cxlr_pmem->dev);
-+	}
- 
- 	nvdimm_delete(nvdimm);
- 	cxl_nvd->bridge = NULL;
-@@ -42,7 +56,7 @@ static int cxl_nvdimm_probe(struct device *dev)
- 	struct nvdimm *nvdimm;
- 	int rc;
- 
--	cxl_nvb = cxl_find_nvdimm_bridge(cxl_nvd);
-+	cxl_nvb = cxl_find_nvdimm_bridge(dev);
- 	if (!cxl_nvb)
- 		return -ENXIO;
- 
-@@ -223,6 +237,21 @@ static int cxl_nvdimm_release_driver(struct device *dev, void *cxl_nvb)
- 	return 0;
- }
- 
-+static int cxl_pmem_region_release_driver(struct device *dev, void *cxl_nvb)
-+{
-+	struct cxl_pmem_region *cxlr_pmem;
-+
-+	if (!is_cxl_pmem_region(dev))
-+		return 0;
-+
-+	cxlr_pmem = to_cxl_pmem_region(dev);
-+	if (cxlr_pmem->bridge != cxl_nvb)
-+		return 0;
-+
-+	device_release_driver(dev);
-+	return 0;
-+}
-+
- static void offline_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb,
- 			       struct nvdimm_bus *nvdimm_bus)
- {
-@@ -234,6 +263,8 @@ static void offline_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb,
- 	 * nvdimm_bus_unregister() rips the nvdimm objects out from
- 	 * underneath them.
- 	 */
-+	bus_for_each_dev(&cxl_bus_type, NULL, cxl_nvb,
-+			 cxl_pmem_region_release_driver);
- 	bus_for_each_dev(&cxl_bus_type, NULL, cxl_nvb,
- 			 cxl_nvdimm_release_driver);
- 	nvdimm_bus_unregister(nvdimm_bus);
-@@ -328,6 +359,200 @@ static struct cxl_driver cxl_nvdimm_bridge_driver = {
- 	.id = CXL_DEVICE_NVDIMM_BRIDGE,
- };
- 
-+static int match_cxl_nvdimm(struct device *dev, void *data)
-+{
-+	return is_cxl_nvdimm(dev);
-+}
-+
-+static void unregister_region(void *nd_region)
-+{
-+	struct cxl_nvdimm_bridge *cxl_nvb;
-+	struct cxl_pmem_region *cxlr_pmem;
-+	int i;
-+
-+	cxlr_pmem = nd_region_provider_data(nd_region);
-+	cxl_nvb = cxlr_pmem->bridge;
-+	device_lock(&cxl_nvb->dev);
-+	for (i = 0; i < cxlr_pmem->nr_mappings; i++) {
-+		struct cxl_pmem_region_mapping *m = &cxlr_pmem->mapping[i];
-+		struct cxl_nvdimm *cxl_nvd = m->cxl_nvd;
-+
-+		if (cxl_nvd->region) {
-+			put_device(&cxlr_pmem->dev);
-+			cxl_nvd->region = NULL;
-+		}
-+	}
-+	device_unlock(&cxl_nvb->dev);
-+
-+	nvdimm_region_delete(nd_region);
-+}
-+
-+static void cxlr_pmem_remove_resource(void *res)
-+{
-+	remove_resource(res);
-+}
-+
-+struct cxl_pmem_region_info {
-+	u64 offset;
-+	u64 serial;
-+};
-+
-+static int cxl_pmem_region_probe(struct device *dev)
-+{
-+	struct nd_mapping_desc mappings[CXL_DECODER_MAX_INTERLEAVE];
-+	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
-+	struct cxl_region *cxlr = cxlr_pmem->cxlr;
-+	struct cxl_pmem_region_info *info = NULL;
-+	struct cxl_nvdimm_bridge *cxl_nvb;
-+	struct nd_interleave_set *nd_set;
-+	struct nd_region_desc ndr_desc;
-+	struct cxl_nvdimm *cxl_nvd;
-+	struct nvdimm *nvdimm;
-+	struct resource *res;
-+	int rc = 0, i;
-+
-+	cxl_nvb = cxl_find_nvdimm_bridge(&cxlr_pmem->mapping[0].cxlmd->dev);
-+	if (!cxl_nvb) {
-+		dev_dbg(dev, "bridge not found\n");
-+		return -ENXIO;
-+	}
-+	cxlr_pmem->bridge = cxl_nvb;
-+
-+	device_lock(&cxl_nvb->dev);
-+	if (!cxl_nvb->nvdimm_bus) {
-+		dev_dbg(dev, "nvdimm bus not found\n");
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
-+	memset(&mappings, 0, sizeof(mappings));
-+	memset(&ndr_desc, 0, sizeof(ndr_desc));
-+
-+	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-+	if (!res) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	res->name = "Persistent Memory";
-+	res->start = cxlr_pmem->hpa_range.start;
-+	res->end = cxlr_pmem->hpa_range.end;
-+	res->flags = IORESOURCE_MEM;
-+	res->desc = IORES_DESC_PERSISTENT_MEMORY;
-+
-+	rc = insert_resource(&iomem_resource, res);
-+	if (rc)
-+		goto out;
-+
-+	rc = devm_add_action_or_reset(dev, cxlr_pmem_remove_resource, res);
-+	if (rc)
-+		goto out;
-+
-+	ndr_desc.res = res;
-+	ndr_desc.provider_data = cxlr_pmem;
-+
-+	ndr_desc.numa_node = memory_add_physaddr_to_nid(res->start);
-+	ndr_desc.target_node = phys_to_target_node(res->start);
-+	if (ndr_desc.target_node == NUMA_NO_NODE) {
-+		ndr_desc.target_node = ndr_desc.numa_node;
-+		dev_dbg(&cxlr->dev, "changing target node from %d to %d",
-+			NUMA_NO_NODE, ndr_desc.target_node);
-+	}
-+
-+	nd_set = devm_kzalloc(dev, sizeof(*nd_set), GFP_KERNEL);
-+	if (!nd_set) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ndr_desc.memregion = cxlr->id;
-+	set_bit(ND_REGION_CXL, &ndr_desc.flags);
-+	set_bit(ND_REGION_PERSIST_MEMCTRL, &ndr_desc.flags);
-+
-+	info = kmalloc_array(cxlr_pmem->nr_mappings, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		goto out;
-+
-+	rc = -ENODEV;
-+	for (i = 0; i < cxlr_pmem->nr_mappings; i++) {
-+		struct cxl_pmem_region_mapping *m = &cxlr_pmem->mapping[i];
-+		struct cxl_memdev *cxlmd = m->cxlmd;
-+		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+		struct device *d;
-+
-+		d = device_find_child(&cxlmd->dev, NULL, match_cxl_nvdimm);
-+		if (!d) {
-+			dev_dbg(dev, "[%d]: %s: no cxl_nvdimm found\n", i,
-+				dev_name(&cxlmd->dev));
-+			goto err;
-+		}
-+
-+		/* safe to drop ref now with bridge lock held */
-+		put_device(d);
-+
-+		cxl_nvd = to_cxl_nvdimm(d);
-+		nvdimm = dev_get_drvdata(&cxl_nvd->dev);
-+		if (!nvdimm) {
-+			dev_dbg(dev, "[%d]: %s: no nvdimm found\n", i,
-+				dev_name(&cxlmd->dev));
-+			goto err;
-+		}
-+		cxl_nvd->region = cxlr_pmem;
-+		get_device(&cxlr_pmem->dev);
-+		m->cxl_nvd = cxl_nvd;
-+		mappings[i] = (struct nd_mapping_desc) {
-+			.nvdimm = nvdimm,
-+			.start = m->start,
-+			.size = m->size,
-+			.position = i,
-+		};
-+		info[i].offset = m->start;
-+		info[i].serial = cxlds->serial;
-+	}
-+	ndr_desc.num_mappings = cxlr_pmem->nr_mappings;
-+	ndr_desc.mapping = mappings;
-+
-+	/*
-+	 * TODO enable CXL labels which skip the need for 'interleave-set cookie'
-+	 */
-+	nd_set->cookie1 =
-+		nd_fletcher64(info, sizeof(*info) * cxlr_pmem->nr_mappings, 0);
-+	nd_set->cookie2 = nd_set->cookie1;
-+	ndr_desc.nd_set = nd_set;
-+
-+	cxlr_pmem->nd_region =
-+		nvdimm_pmem_region_create(cxl_nvb->nvdimm_bus, &ndr_desc);
-+	if (IS_ERR(cxlr_pmem->nd_region)) {
-+		rc = PTR_ERR(cxlr_pmem->nd_region);
-+		goto err;
-+	} else
-+		rc = devm_add_action_or_reset(dev, unregister_region,
-+					      cxlr_pmem->nd_region);
-+out:
-+	device_unlock(&cxl_nvb->dev);
-+	put_device(&cxl_nvb->dev);
-+	kfree(info);
-+
-+	if (rc)
-+		dev_dbg(dev, "failed to create nvdimm region\n");
-+	return rc;
-+
-+err:
-+	for (i--; i >= 0; i--) {
-+		nvdimm = mappings[i].nvdimm;
-+		cxl_nvd = nvdimm_provider_data(nvdimm);
-+		put_device(&cxl_nvd->region->dev);
-+		cxl_nvd->region = NULL;
-+	}
-+	goto out;
-+}
-+
-+static struct cxl_driver cxl_pmem_region_driver = {
-+	.name = "cxl_pmem_region",
-+	.probe = cxl_pmem_region_probe,
-+	.id = CXL_DEVICE_PMEM_REGION,
-+};
-+
- /*
-  * Return all bridges to the CXL_NVB_NEW state to invalidate any
-  * ->state_work referring to the now destroyed cxl_pmem_wq.
-@@ -372,8 +597,14 @@ static __init int cxl_pmem_init(void)
- 	if (rc)
- 		goto err_nvdimm;
- 
-+	rc = cxl_driver_register(&cxl_pmem_region_driver);
-+	if (rc)
-+		goto err_region;
-+
- 	return 0;
- 
-+err_region:
-+	cxl_driver_unregister(&cxl_nvdimm_driver);
- err_nvdimm:
- 	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
- err_bridge:
-@@ -383,6 +614,7 @@ static __init int cxl_pmem_init(void)
- 
- static __exit void cxl_pmem_exit(void)
- {
-+	cxl_driver_unregister(&cxl_pmem_region_driver);
- 	cxl_driver_unregister(&cxl_nvdimm_driver);
- 	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
- 	destroy_cxl_pmem_wq();
-@@ -394,3 +626,4 @@ module_exit(cxl_pmem_exit);
- MODULE_IMPORT_NS(CXL);
- MODULE_ALIAS_CXL(CXL_DEVICE_NVDIMM_BRIDGE);
- MODULE_ALIAS_CXL(CXL_DEVICE_NVDIMM);
-+MODULE_ALIAS_CXL(CXL_DEVICE_PMEM_REGION);
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index d976260eca7a..473a71bbd9c9 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -133,7 +133,8 @@ static void nd_region_release(struct device *dev)
- 		put_device(&nvdimm->dev);
- 	}
- 	free_percpu(nd_region->lane);
--	memregion_free(nd_region->id);
-+	if (!test_bit(ND_REGION_CXL, &nd_region->flags))
-+		memregion_free(nd_region->id);
- 	kfree(nd_region);
- }
- 
-@@ -982,9 +983,14 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 
- 	if (!nd_region)
- 		return NULL;
--	nd_region->id = memregion_alloc(GFP_KERNEL);
--	if (nd_region->id < 0)
--		goto err_id;
-+	/* CXL pre-assigns memregion ids before creating nvdimm regions */
-+	if (test_bit(ND_REGION_CXL, &ndr_desc->flags)) {
-+		nd_region->id = ndr_desc->memregion;
-+	} else {
-+		nd_region->id = memregion_alloc(GFP_KERNEL);
-+		if (nd_region->id < 0)
-+			goto err_id;
-+	}
- 
- 	nd_region->lane = alloc_percpu(struct nd_percpu_lane);
- 	if (!nd_region->lane)
-@@ -1043,9 +1049,10 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 
- 	return nd_region;
- 
-- err_percpu:
--	memregion_free(nd_region->id);
-- err_id:
-+err_percpu:
-+	if (!test_bit(ND_REGION_CXL, &ndr_desc->flags))
-+		memregion_free(nd_region->id);
-+err_id:
- 	kfree(nd_region);
- 	return NULL;
- }
-@@ -1068,6 +1075,13 @@ struct nd_region *nvdimm_volatile_region_create(struct nvdimm_bus *nvdimm_bus,
- }
- EXPORT_SYMBOL_GPL(nvdimm_volatile_region_create);
- 
-+void nvdimm_region_delete(struct nd_region *nd_region)
-+{
-+	if (nd_region)
-+		nd_device_unregister(&nd_region->dev, ND_SYNC);
-+}
-+EXPORT_SYMBOL_GPL(nvdimm_region_delete);
-+
- int nvdimm_flush(struct nd_region *nd_region, struct bio *bio)
- {
- 	int rc = 0;
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index 0d61e07b6827..c74acfa1a3fe 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -59,6 +59,9 @@ enum {
- 	/* Platform provides asynchronous flush mechanism */
- 	ND_REGION_ASYNC = 3,
- 
-+	/* Region was created by CXL subsystem */
-+	ND_REGION_CXL = 4,
-+
- 	/* mark newly adjusted resources as requiring a label update */
- 	DPA_RESOURCE_ADJUSTED = 1 << 0,
- };
-@@ -122,6 +125,7 @@ struct nd_region_desc {
- 	int numa_node;
- 	int target_node;
- 	unsigned long flags;
-+	int memregion;
- 	struct device_node *of_node;
- 	int (*flush)(struct nd_region *nd_region, struct bio *bio);
- };
-@@ -259,6 +263,7 @@ static inline struct nvdimm *nvdimm_create(struct nvdimm_bus *nvdimm_bus,
- 			cmd_mask, num_flush, flush_wpq, NULL, NULL, NULL);
- }
- void nvdimm_delete(struct nvdimm *nvdimm);
-+void nvdimm_region_delete(struct nd_region *nd_region);
- 
- const struct nd_cmd_desc *nd_cmd_dimm_desc(int cmd);
- const struct nd_cmd_desc *nd_cmd_bus_desc(int cmd);
--- 
-2.36.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIDxoZWxn
+YWFzQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjLE6jbUwjI0yNUgNjoyMA0KPiBUbzogSG9uZ3hp
+bmcgWmh1IDxob25neGluZy56aHVAbnhwLmNvbT4NCj4gQ2M6IGwuc3RhY2hAcGVuZ3V0cm9uaXgu
+ZGU7IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gYnJvb25pZUBr
+ZXJuZWwub3JnOyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyBmZXN0ZXZhbUBnbWFpbC5jb207
+DQo+IGZyYW5jZXNjby5kb2xjaW5pQHRvcmFkZXguY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwu
+b3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgZGwtbGludXgtaW14
+IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MTMgMTAvMTVdIFBD
+STogaW14NjogVHVybiBvZmYgcmVndWxhdG9yIHdoZW4gc3lzdGVtIGlzIGluDQo+IHN1c3BlbmQg
+bW9kZQ0KPiANCj4gT24gRnJpLCBKdW4gMTcsIDIwMjIgYXQgMDY6MzE6MDlQTSArMDgwMCwgUmlj
+aGFyZCBaaHUgd3JvdGU6DQo+ID4gVGhlIGRyaXZlciBzaG91bGQgdW5kbyBhbnkgZW5hYmxlcyBp
+dCBkaWQgaXRzZWxmLiBUaGUgcmVndWxhdG9yDQo+ID4gZGlzYWJsZSBzaG91bGRuJ3QgYmUgYmFz
+aW5nIGRlY2lzaW9ucyBvbiByZWd1bGF0b3JfaXNfZW5hYmxlZCgpLg0KPiA+DQo+ID4gTW92ZSB0
+aGUgcmVndWxhdG9yX2Rpc2FibGUgdG8gdGhlIHN1c3BlbmQgZnVuY3Rpb24sIHR1cm4gb2ZmIHJl
+Z3VsYXRvcg0KPiA+IHdoZW4gdGhlIHN5c3RlbSBpcyBpbiBzdXNwZW5kIG1vZGUuDQo+ID4NCj4g
+PiBUbyBrZWVwIHRoZSBiYWxhbmNlIG9mIHRoZSByZWd1bGF0b3IgdXNhZ2UgY291bnRlciwgZGlz
+YWJsZSB0aGUNCj4gPiByZWd1bGF0b3IgaW4gc2h1dGRvd24uDQo+ID4NCj4gPiBMaW5rOg0KPiA+
+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRw
+cyUzQSUyRiUyRmxvcmUNCj4gPiAua2VybmVsLm9yZyUyRnIlMkYxNjU1MTg5OTQyLTEyNjc4LTYt
+Z2l0LXNlbmQtZW1haWwtaG9uZ3hpbmcueiZhbXA7ZA0KPiBhdA0KPiA+DQo+IGE9MDUlN0MwMSU3
+Q2hvbmd4aW5nLnpodSU0MG54cC5jb20lN0M1NjMzZmExYmYzYzQ0M2UyMDNlMTA4ZGE1NQ0KPiA2
+NjdkYzIlDQo+ID4NCj4gN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0Mw
+JTdDNjM3OTE2MTk1OTI3NzI3Ng0KPiAwNCU3Q1Vua24NCj4gPg0KPiBvd24lN0NUV0ZwYkdac2Iz
+ZDhleUpXSWpvaU1DNHdMakF3TURBaUxDSlFJam9pVjJsdU16SWlMQ0pCVGlJNklrMQ0KPiBoYVd3
+aQ0KPiA+DQo+IExDSlhWQ0k2TW4wJTNEJTdDMzAwMCU3QyU3QyU3QyZhbXA7c2RhdGE9MUtiem4z
+WFNWdnQzZ0dQckV5JTINCj4gQkVUOEVabjRJDQo+ID4gZHdTJTJCaFVaM0FhbFoyWVowJTNEJmFt
+cDtyZXNlcnZlZD0wDQo+ID4gaHVAbnhwLmNvbQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFJpY2hhcmQg
+Wmh1IDxob25neGluZy56aHVAbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCam9ybiBIZWxn
+YWFzIDxiaGVsZ2Fhc0Bnb29nbGUuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250
+cm9sbGVyL2R3Yy9wY2ktaW14Ni5jIHwgMTkgKysrKysrKy0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktaW14Ni5jDQo+ID4gYi9k
+cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktaW14Ni5jDQo+ID4gaW5kZXggMmI0MmMzN2Yx
+NjE3Li5mNzJlYjYwOTc2OWIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9kd2MvcGNpLWlteDYuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3Bj
+aS1pbXg2LmMNCj4gPiBAQCAtNjcwLDggKzY3MCw2IEBAIHN0YXRpYyB2b2lkIGlteDZfcGNpZV9j
+bGtfZGlzYWJsZShzdHJ1Y3QgaW14Nl9wY2llDQo+ID4gKmlteDZfcGNpZSkNCj4gPg0KPiA+ICBz
+dGF0aWMgdm9pZCBpbXg2X3BjaWVfYXNzZXJ0X2NvcmVfcmVzZXQoc3RydWN0IGlteDZfcGNpZSAq
+aW14Nl9wY2llKQ0KPiA+IHsNCj4gPiAtCXN0cnVjdCBkZXZpY2UgKmRldiA9IGlteDZfcGNpZS0+
+cGNpLT5kZXY7DQo+ID4gLQ0KPiA+ICAJc3dpdGNoIChpbXg2X3BjaWUtPmRydmRhdGEtPnZhcmlh
+bnQpIHsNCj4gPiAgCWNhc2UgSU1YN0Q6DQo+ID4gIAljYXNlIElNWDhNUToNCj4gPiBAQCAtNzAy
+LDE0ICs3MDAsNiBAQCBzdGF0aWMgdm9pZCBpbXg2X3BjaWVfYXNzZXJ0X2NvcmVfcmVzZXQoc3Ry
+dWN0DQo+IGlteDZfcGNpZSAqaW14Nl9wY2llKQ0KPiA+ICAJCWJyZWFrOw0KPiA+ICAJfQ0KPiA+
+DQo+ID4gLQlpZiAoaW14Nl9wY2llLT52cGNpZSAmJiByZWd1bGF0b3JfaXNfZW5hYmxlZChpbXg2
+X3BjaWUtPnZwY2llKSA+IDApIHsNCj4gPiAtCQlpbnQgcmV0ID0gcmVndWxhdG9yX2Rpc2FibGUo
+aW14Nl9wY2llLT52cGNpZSk7DQo+ID4gLQ0KPiA+IC0JCWlmIChyZXQpDQo+ID4gLQkJCWRldl9l
+cnIoZGV2LCAiZmFpbGVkIHRvIGRpc2FibGUgdnBjaWUgcmVndWxhdG9yOiAlZFxuIiwNCj4gPiAt
+CQkJCXJldCk7DQo+ID4gLQl9DQo+ID4gLQ0KPiA+ICAJLyogU29tZSBib2FyZHMgZG9uJ3QgaGF2
+ZSBQQ0llIHJlc2V0IEdQSU8uICovDQo+ID4gIAlpZiAoZ3Bpb19pc192YWxpZChpbXg2X3BjaWUt
+PnJlc2V0X2dwaW8pKQ0KPiA+ICAJCWdwaW9fc2V0X3ZhbHVlX2NhbnNsZWVwKGlteDZfcGNpZS0+
+cmVzZXRfZ3BpbywNCj4gPiBAQCAtNzIyLDcgKzcxMiw3IEBAIHN0YXRpYyBpbnQgaW14Nl9wY2ll
+X2RlYXNzZXJ0X2NvcmVfcmVzZXQoc3RydWN0DQo+IGlteDZfcGNpZSAqaW14Nl9wY2llKQ0KPiA+
+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gcGNpLT5kZXY7DQo+ID4gIAlpbnQgcmV0Ow0KPiA+DQo+
+ID4gLQlpZiAoaW14Nl9wY2llLT52cGNpZSAmJiAhcmVndWxhdG9yX2lzX2VuYWJsZWQoaW14Nl9w
+Y2llLT52cGNpZSkpIHsNCj4gPiArCWlmIChpbXg2X3BjaWUtPnZwY2llKSB7DQo+ID4gIAkJcmV0
+ID0gcmVndWxhdG9yX2VuYWJsZShpbXg2X3BjaWUtPnZwY2llKTsNCj4gPiAgCQlpZiAocmV0KSB7
+DQo+ID4gIAkJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSB2cGNpZSByZWd1bGF0b3I6
+ICVkXG4iLCBAQA0KPiAtNzk1LDcNCj4gPiArNzg1LDcgQEAgc3RhdGljIGludCBpbXg2X3BjaWVf
+ZGVhc3NlcnRfY29yZV9yZXNldChzdHJ1Y3QgaW14Nl9wY2llDQo+ICppbXg2X3BjaWUpDQo+ID4g
+IAlyZXR1cm4gMDsNCj4gPg0KPiA+ICBlcnJfY2xrczoNCj4gPiAtCWlmIChpbXg2X3BjaWUtPnZw
+Y2llICYmIHJlZ3VsYXRvcl9pc19lbmFibGVkKGlteDZfcGNpZS0+dnBjaWUpID4gMCkgew0KPiA+
+ICsJaWYgKGlteDZfcGNpZS0+dnBjaWUpIHsNCj4gPiAgCQlyZXQgPSByZWd1bGF0b3JfZGlzYWJs
+ZShpbXg2X3BjaWUtPnZwY2llKTsNCj4gPiAgCQlpZiAocmV0KQ0KPiA+ICAJCQlkZXZfZXJyKGRl
+diwgImZhaWxlZCB0byBkaXNhYmxlIHZwY2llIHJlZ3VsYXRvcjogJWRcbiIsIEBADQo+IC0xMDIy
+LDYNCj4gPiArMTAxMiw5IEBAIHN0YXRpYyBpbnQgaW14Nl9wY2llX3N1c3BlbmRfbm9pcnEoc3Ry
+dWN0IGRldmljZSAqZGV2KQ0KPiA+ICAJCWJyZWFrOw0KPiA+ICAJfQ0KPiA+DQo+ID4gKwlpZiAo
+aW14Nl9wY2llLT52cGNpZSkNCj4gPiArCQlyZWd1bGF0b3JfZGlzYWJsZShpbXg2X3BjaWUtPnZw
+Y2llKTsNCj4gPiArDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiANCj4gVGhlIHN1c3BlbmQg
+YW5kIHJlc3VtZSBtZXRob2RzIHNob3VsZCBiZSBzeW1tZXRyaWMsIGFuZCB0aGV5IHNob3VsZA0K
+PiAqbG9vayogc3ltbWV0cmljLg0KPiANCj4gaW14Nl9wY2llX3N1c3BlbmRfbm9pcnEoKSBkaXNh
+YmxlcyB0aGUgcmVndWxhdG9yLCBzbw0KPiBpbXg2X3BjaWVfcmVzdW1lX25vaXJxKCkgc2hvdWxk
+IGVuYWJsZSBpdC4NCj4gDQo+IGlteDZfcGNpZV9zdXNwZW5kX25vaXJxKCkgY2FsbHMgaW14Nl9w
+Y2llX2Nsa19kaXNhYmxlKCkgdG8gZGlzYWJsZSBzZXZlcmFsDQo+IGNsb2Nrcy4gIGlteDZfcGNp
+ZV9yZXN1bWVfbm9pcnEoKSBzaG91bGQgY2FsbA0KPiBpbXg2X3BjaWVfY2xrX2VuYWJsZSgpIHRv
+IGVuYWJsZSB0aGVtLg0KPiANCj4gaW14Nl9wY2llX2Nsa19lbmFibGUoKSAqaXMqIGNhbGxlZCBp
+biB0aGUgcmVzdW1lIHBhdGgsIGJ1dCBpdCdzIGJ1cmllZCBpbnNpZGUNCj4gaW14Nl9wY2llX2hv
+c3RfaW5pdCgpIGFuZCBpbXg2X3BjaWVfZGVhc3NlcnRfY29yZV9yZXNldCgpLg0KPiBUaGF0IG1h
+a2VzIGl0IGhhcmQgdG8gYW5hbHl6ZS4NCj4gDQo+IFdlIHNob3VsZCBiZSBhYmxlIHRvIGxvb2sg
+YXQgaW14Nl9wY2llX3N1c3BlbmRfbm9pcnEoKSBhbmQNCj4gaW14Nl9wY2llX3Jlc3VtZV9ub2ly
+cSgpIGFuZCBlYXNpbHkgc2VlIHRoYXQgdGhlIHJlc3VtZSBwYXRoIHJlc3VtZXMNCj4gZXZlcnl0
+aGluZyB0aGF0IHdhcyBzdXNwZW5kZWQgaW4gdGhlIHN1c3BlbmQgcGF0aC4NCkhpIEJqb3JuOg0K
+VGhhbmtzIGZvciB5b3VyIGtpbmRseSBoZWxwIHRvIHJldmlldyBpdC4NClllcywgaXQgaXMuIEl0
+J3MgYmV0dGVyIHRvIGtlZXAgc3VzcGVuZC9yZXN1bWUgc3ltbWV0cmljIGFzIG11Y2ggYXMgcG9z
+c2libGUuDQpJbiByZXN1bWUsIHRoZSBob3N0X2luaXQgaXMgaW52b2tlZCwgY2xvY2tzLCByZWd1
+bGF0b3JzIGFuZCBzbyBvbiB3b3VsZCBiZQ0KaW5pdGlhbGl6ZWQgcHJvcGVybHkuIA0KVW5mb3J0
+dW5hdGVseSwgdGhlcmUgaXMgbm8gYWNjb3JkaW5nIGhvc3RfZXhpdCgpIHRoYXQgY2FuIGJlIGNh
+bGxlZCB0byBkbyB0aGUNCnJldmVyc2VkIGNsb2NrcywgcmVndWxhdG9ycyBkaXNhYmxlIG9wZXJh
+dGlvbnMgaW4gdGhlIHN1c3BlbmQuDQpTbywgdGhlIGNsb2NrcyBhbmQgcmVndWxhdG9yIGRpc2Fi
+bGUgYXJlIGV4cGxpY2l0bHkgaW52b2tlZCBpbiBzdXNwZW5kIGNhbGxiYWNrLg0KDQpIb3cgYWJv
+dXQgdG8gZG8gdGhlIGluY3JlbWVudGFsIHVwZGF0ZXMgaWYgdGhlIC5ob3N0X2V4aXQgY2FuIGJl
+IGFkZGVkIGxhdGVyPw0KDQpCZXN0IFJlZ2FyZHMNClJpY2hhcmQgWmh1DQo+IA0KPiBCam9ybg0K
