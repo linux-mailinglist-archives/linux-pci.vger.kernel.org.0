@@ -2,46 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D7885596E4
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 11:39:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76CC9559759
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 12:07:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231230AbiFXJgj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 05:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
+        id S231158AbiFXKG5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 06:06:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231605AbiFXJgb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 05:36:31 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83F347946E;
-        Fri, 24 Jun 2022 02:36:28 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LTsQp4yZVzkWVf;
-        Fri, 24 Jun 2022 17:34:42 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 17:36:01 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 24 Jun
- 2022 17:36:00 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <Frank.Li@nxp.com>, <jdmason@kudzu.us>, <kishon@ti.com>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>
-Subject: [PATCH -next] PCI: endpoint: pci-epf-vntb: fix error handle in epf_ntb_mw_bar_init()
-Date:   Fri, 24 Jun 2022 17:46:04 +0800
-Message-ID: <20220624094604.2159713-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229862AbiFXKG4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 06:06:56 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B527A6D6
+        for <linux-pci@vger.kernel.org>; Fri, 24 Jun 2022 03:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656065215; x=1687601215;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1kOZ/w+nU/2YRgZoTCJAp2zyzcBo2cUPIO7aPTgSlCg=;
+  b=WepqScRkNryFSPzUhK7ioo/IHHsgFjVt4XwMuvMTFZxB56SzlPC8eTwj
+   6h6SdAjlAgrtBu6I3K7d/OsxnNMP/QmhrY+nD9eCCddFQIz8Eu3e5dIUl
+   mx7DD9IkhCVo6iX6lXyybWZocZjhdulNO+UcFisphvIAe+nMHjMgMaXzC
+   DwPM8cTWOdo+b0aT7IJra2b/uazlPkLe8ThAihL/bWctM+DeOtUcAQOum
+   EvlOn0wOueDgmQGpNC0sP7zdwcZLDmuxUYhPoFA5Es9TRVAjc1K6vDXQW
+   Hy5SPs7hPQkKC9GjjWJWEyL8F1ejeUJuxJXTQjlYwI+He4Bzl8NLp2Bnx
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="342657680"
+X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
+   d="scan'208";a="342657680"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2022 03:06:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
+   d="scan'208";a="539236919"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jun 2022 03:06:53 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o4gDE-0003yL-Pb;
+        Fri, 24 Jun 2022 10:06:52 +0000
+Date:   Fri, 24 Jun 2022 18:06:47 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/ctrl/mediatek] BUILD SUCCESS
+ b3b76fc86f0fb4d98918f48c784138bfa950dff6
+Message-ID: <62b58cb7.DOx9HOWypFYI/d0W%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,84 +62,113 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In error case of epf_ntb_mw_bar_init(), memory window BARs should be
-cleared, so add 'num_mws' parameter in epf_ntb_mw_bar_clear() and
-calling it in error path to clear the BARs. Also add missing error
-code when pci_epc_mem_alloc_addr() fails.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/mediatek
+branch HEAD: b3b76fc86f0fb4d98918f48c784138bfa950dff6  PCI: mediatek: Allow building for ARCH_AIROHA
 
-Fixes: ff32fac00d97 ("NTB: EPF: support NTB transfer between PCI RC and EP connection")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- drivers/pci/endpoint/functions/pci-epf-vntb.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+elapsed time: 724m
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index ebf7e243eefa..d8ed640c16c4 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -567,6 +567,8 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
- 	return -1;
- }
- 
-+static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws);
-+
- /**
-  * epf_ntb_db_bar_clear() - Clear doorbell BAR and free memory
-  *   allocated in peers outbound address space
-@@ -625,6 +627,11 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- 							      &ntb->vpci_mw_phy[i],
- 							      size);
- 		if (!ntb->vpci_mw_addr[i]) {
-+			pci_epc_clear_bar(ntb->epf->epc,
-+					  ntb->epf->func_no,
-+					  ntb->epf->vfunc_no,
-+					  &ntb->epf->bar[barno]);
-+			ret = -ENOMEM;
- 			dev_err(dev, "Failed to allocate source address\n");
- 			goto err_alloc_mem;
- 		}
-@@ -632,6 +639,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
- 
- 	return ret;
- err_alloc_mem:
-+	epf_ntb_mw_bar_clear(ntb, i);
- 	return ret;
- }
- 
-@@ -640,12 +648,12 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
-  * @ntb: NTB device that facilitates communication between HOST and vHOST
-  *
-  */
--static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb)
-+static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws)
- {
- 	enum pci_barno barno;
- 	int i;
- 
--	for (i = 0; i < ntb->num_mws; i++) {
-+	for (i = 0; i < num_mws; i++) {
- 		barno = ntb->epf_ntb_bar[BAR_MW0 + i];
- 		pci_epc_clear_bar(ntb->epf->epc,
- 				  ntb->epf->func_no,
-@@ -774,7 +782,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
- 	return 0;
- 
- err_write_header:
--	epf_ntb_mw_bar_clear(ntb);
-+	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
- err_mw_bar_init:
- 	epf_ntb_db_bar_clear(ntb);
- err_db_bar_init:
-@@ -794,7 +802,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
- static void epf_ntb_epc_cleanup(struct epf_ntb *ntb)
- {
- 	epf_ntb_db_bar_clear(ntb);
--	epf_ntb_mw_bar_clear(ntb);
-+	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
- }
- 
- #define EPF_NTB_R(_name)						\
+configs tested: 91
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+mips                 randconfig-c004-20220622
+arm                         lubbock_defconfig
+arm                      jornada720_defconfig
+sh                  sh7785lcr_32bit_defconfig
+ia64                      gensparse_defconfig
+arm                           corgi_defconfig
+nios2                         3c120_defconfig
+sh                        sh7757lcr_defconfig
+arm                             pxa_defconfig
+arm                         s3c6400_defconfig
+m68k                        m5272c3_defconfig
+arm                        realview_defconfig
+arm                        keystone_defconfig
+microblaze                          defconfig
+arm                          iop32x_defconfig
+m68k                            q40_defconfig
+powerpc                      chrp32_defconfig
+alpha                               defconfig
+sh                         ecovec24_defconfig
+arm                           viper_defconfig
+riscv                             allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+arc                  randconfig-r043-20220622
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+arm                                 defconfig
+powerpc                 mpc8560_ads_defconfig
+arm                           omap1_defconfig
+powerpc                     mpc5200_defconfig
+hexagon                             defconfig
+powerpc                 mpc836x_mds_defconfig
+mips                     loongson2k_defconfig
+powerpc                 mpc832x_rdb_defconfig
+powerpc                       ebony_defconfig
+powerpc                     pseries_defconfig
+x86_64                        randconfig-k001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a014
+x86_64                        randconfig-a012
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a015
+i386                          randconfig-a011
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+hexagon              randconfig-r041-20220622
+hexagon              randconfig-r041-20220623
+s390                 randconfig-r044-20220622
+hexagon              randconfig-r045-20220622
+hexagon              randconfig-r045-20220623
+riscv                randconfig-r042-20220622
+hexagon              randconfig-r041-20220624
+s390                 randconfig-r044-20220624
+hexagon              randconfig-r045-20220624
+riscv                randconfig-r042-20220624
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
