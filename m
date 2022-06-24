@@ -2,116 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 940E0559B8C
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 16:32:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B07559BB0
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 16:35:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231615AbiFXOcs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 10:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60234 "EHLO
+        id S232499AbiFXOel (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 10:34:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230073AbiFXOcr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 10:32:47 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61692562CB;
-        Fri, 24 Jun 2022 07:32:46 -0700 (PDT)
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LV0242RPSz67DYv;
-        Fri, 24 Jun 2022 22:32:12 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 24 Jun 2022 16:32:44 +0200
-Received: from localhost (10.81.207.131) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 24 Jun
- 2022 15:32:42 +0100
-Date:   Fri, 24 Jun 2022 15:32:41 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "ben@bwidawsk.net" <ben@bwidawsk.net>, <linuxarm@huawei.com>,
-        <lorenzo.pieralisi@arm.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: (SPDM) Device attestation, secure channels from host to device
- etc: Discuss at Plumbers?
-Message-ID: <20220624153241.000055e2@Huawei.com>
-In-Reply-To: <20220624141531.GA32171@wunner.de>
-References: <20220609124702.000037b0@Huawei.com>
-        <YqICCSd/6Vxidu+v@iweiny-desk3>
-        <20220617112124.00002296@Huawei.com>
-        <20220620165217.GA18451@wunner.de>
-        <20220622124638.00004456@Huawei.com>
-        <20220624120830.00002eef@Huawei.com>
-        <20220624141531.GA32171@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S232453AbiFXOek (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 10:34:40 -0400
+Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F32DF4E3BB;
+        Fri, 24 Jun 2022 07:34:33 -0700 (PDT)
+Received: from mail (mail.baikal.int [192.168.51.25])
+        by mail.baikalelectronics.com (Postfix) with ESMTP id DD2A316D7;
+        Fri, 24 Jun 2022 17:35:51 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com DD2A316D7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baikalelectronics.ru; s=mail; t=1656081352;
+        bh=dl1pmMziOzXIj+32gBup2/UOO8PRGsVK8sv4CehJaxg=;
+        h=From:To:CC:Subject:Date:From;
+        b=YAxeTfTM5N0IO+xRE0CXDNoCqIoYcOXhVbzXQl6pAuY+XogslyaPaAc4Aw66KCGRi
+         qaod5paSBPCrpcPnucwz/5Q7gfAUI+GQWBjUR1sfj3S00Y0yrzghZsoel8H0hy2W4m
+         H2IgDzK8LDZb3gybJZARS1OBgMOpt3426l1MuVMQ=
+Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 Jun 2022 17:34:32 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH RESEND v5 00/18] PCI: dwc: Various fixes and cleanups
+Date:   Fri, 24 Jun 2022 17:34:10 +0300
+Message-ID: <20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.207.131]
-X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 24 Jun 2022 16:15:31 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+This patchset is a first one in the series created in the framework of
+my Baikal-T1 PCIe/eDMA-related work:
 
-> On Fri, Jun 24, 2022 at 12:08:30PM +0100, Jonathan Cameron wrote:
-> > I've put this in for now:  
-> 
-> Perfect!  For me as a non-native English speaker, it would have been
-> a lot more difficult to write up such an excellent description,
-> so thanks for doing this.
+[1: In-progress v5] PCI: dwc: Various fixes and cleanups
+Link: ---you are looking at it---
+[2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
+Link: https://lore.kernel.org/linux-pci/20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru/
+[3: In-progress v3] PCI: dwc: Add generic resources and Baikal-T1 support
+Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
+[4: In-progress v3] dmaengine: dw-edma: Add RP/EP local DMA support
+Link: https://lore.kernel.org/linux-pci/20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru/
 
-It always feels a bit like cheating when you get to write these
-things in your first language!
-> 
-> > Hence this proposal for a BoF rather than session in 
-> > either PCI or CXL uconf.  
-> 
-> I think this has overlap with the Confidential Computing uconf as well,
-> so that might be another potentially interested audience.
-> 
-> (Link encryption is by its very nature "confidential computing",
-> and attestation is explicitly mentioned on the CC uconf page:
-> https://lpc.events/event/16/contributions/1143/ )
-> 
-> Thanks,
-> 
-> Lukas
-> 
+Note it is very recommended to merge the patchsets in the same order as
+they are placed in the list above in order to prevent possible merge
+conflicts. Nothing prevents them from being reviewed synchronously though.
+Any tests are very welcome!
 
-Good point. That is an area in which we need dance around what we
-can an can't say (i.e. what is public from various standards orgs) but they 
-may well still be interested.
+As it can be easily inferred from the patchset title, this series is about
+the DW PCIe Root Port/Endpoint driver fixes and the code cleanups, where
+fixes come before the cleanup patches. The patchset starts with adding the
+stop_link() platform-specific method invocation in case of the PCIe host
+probe procedure errors. It has been missing in the cleanup-on-error path
+of the DW PCIe Host initialization method. After that the unrolled CSRs
+layout is added to the iATU disable procedure. In third the disable iATU
+procedure is fixed to be called only for the internal ATU as being
+specific for the internal ATU implementation. Then the outbound iATU
+extended region setup procedure is fixed to have the INCREASE_REGION_SIZE
+flag set based on the limit-address - not the region size one. The last
+but not least the CDM-check enabling procedure is fixed to be independent
+from the non-related num_lanes field state.
 
-Added 
-- Confidential compute community
-to list of people who might be interested.
+Afterwards there is a series of cleanups. It concerns the changes like
+adding braces to the multi-line if-else constructions, trailing new-lines
+to the print format-string, dropping unnecessary version checking, and
+various code simplifications and optimizations.
 
-+CC Joerg so he knows this proposal exists and can perhaps drag in anyone
-else who might be interested.
+New features like adding two-level DT bindings abstraction, adding better
+structured IP-core version interface, adding iATU regions size detection
+and the PCIe regions verification procedure, adding dma-ranges support,
+introducing a set of generic platform clocks and resets and finally adding
+Baikal-T1 PCIe interface support will be submitted in the next part of the
+series.
 
-https://lore.kernel.org/all/20220624120830.00002eef@Huawei.com/
-for abstract.
+Link: https://lore.kernel.org/linux-pci/20220324012524.16784-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Fix the end address of the example in the patch log with
+  the INCREASE_REGION_SIZE flag usage fixup. It should be
+  0x1000FFFF and not 0x0000FFFF (@Manivannan).
+- Add the cleanup-on-error path to the dw_pcie_ep_init() function.
+  (@Manivannan)
 
-Thanks,
+Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Convert region variable type to u32 in order to fix the implicit type
+  conversion peculiarity. (@kbot)
+- Rebase onto v5.18-rc6.
 
-Jonathan
+Link: https://lore.kernel.org/linux-pci/20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v4:
+- Move the patch "PCI: dwc: Deallocate EPC memory on EP init error" to
+  being applied before the cleanup patches.
+- Add a new fixes patch: "PCI: dwc: Enable CDM-check independently from
+  the num_lanes value".
+- Add a new cleanup patch: "PCI: dwc: Organize local variables usage".
+- Add a new cleanup patch: "PCI: dwc: Re-use local pointer to the
+  resource data".
+- Add a new cleanup patch: "PCI: dwc: Add start_link/stop_link inliners".
+- Add a new cleanup patch: "PCI: dwc: Move io_cfg_atu_shared to the Root
+  Port descriptor".
+- Add a new cleanup patch: "PCI: dwc: Add dw_ prefix to the pcie_port
+  structure name".
+- Drop the patch "PCI: dwc: Don't use generic IO-ops for DBI-space
+  access". (@Rob)
+- Drop Manivannan tested tag from the changed patches.
+- Rebase onto v5.18.
+
+Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v5:
+- Just resend the series.
+- Rebase onto v5.19-rcX.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: Frank Li <Frank.Li@nxp.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (18):
+  PCI: dwc: Stop link in the host init error and de-initialization
+  PCI: dwc: Add unroll iATU space support to the regions disable method
+  PCI: dwc: Disable outbound windows for controllers with iATU
+  PCI: dwc: Set INCREASE_REGION_SIZE flag based on limit address
+  PCI: dwc: Deallocate EPC memory on EP init error
+  PCI: dwc: Enable CDM-check independently from the num_lanes value
+  PCI: dwc: Add braces to the multi-line if-else statements
+  PCI: dwc: Add trailing new-line literals to the log messages
+  PCI: dwc: Discard IP-core version checking on unrolled iATU detection
+  PCI: dwc: Convert Link-up status method to using dw_pcie_readl_dbi()
+  PCI: dwc: Organize local variables usage
+  PCI: dwc: Re-use local pointer to the resource data
+  PCI: dwc: Add start_link/stop_link inliners
+  PCI: dwc: Move io_cfg_atu_shared to the Root Port descriptor
+  PCI: dwc: Add dw_ prefix to the pcie_port structure name
+  PCI: dwc-plat: Simplify the probe method return value handling
+  PCI: dwc-plat: Discard unused regmap pointer
+  PCI: dwc-plat: Drop dw_plat_pcie_of_match forward declaration
+
+ drivers/pci/controller/dwc/pci-dra7xx.c       |  12 +--
+ drivers/pci/controller/dwc/pci-exynos.c       |   6 +-
+ drivers/pci/controller/dwc/pci-imx6.c         |   6 +-
+ drivers/pci/controller/dwc/pci-keystone.c     |  20 ++--
+ .../pci/controller/dwc/pci-layerscape-ep.c    |  12 ---
+ drivers/pci/controller/dwc/pci-layerscape.c   |   2 +-
+ drivers/pci/controller/dwc/pci-meson.c        |   2 +-
+ drivers/pci/controller/dwc/pcie-al.c          |   6 +-
+ drivers/pci/controller/dwc/pcie-armada8k.c    |   4 +-
+ drivers/pci/controller/dwc/pcie-artpec6.c     |   4 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |  30 ++++--
+ .../pci/controller/dwc/pcie-designware-host.c | 102 ++++++++++--------
+ .../pci/controller/dwc/pcie-designware-plat.c |  25 ++---
+ drivers/pci/controller/dwc/pcie-designware.c  |  72 +++++++------
+ drivers/pci/controller/dwc/pcie-designware.h  |  46 +++++---
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |   4 +-
+ drivers/pci/controller/dwc/pcie-fu740.c       |   2 +-
+ drivers/pci/controller/dwc/pcie-histb.c       |  10 +-
+ drivers/pci/controller/dwc/pcie-intel-gw.c    |   6 +-
+ drivers/pci/controller/dwc/pcie-keembay.c     |   4 +-
+ drivers/pci/controller/dwc/pcie-kirin.c       |   2 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        |   4 +-
+ drivers/pci/controller/dwc/pcie-spear13xx.c   |   6 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c    |  22 ++--
+ drivers/pci/controller/dwc/pcie-uniphier.c    |  10 +-
+ drivers/pci/controller/dwc/pcie-visconti.c    |   6 +-
+ 26 files changed, 224 insertions(+), 201 deletions(-)
+
+-- 
+2.35.1
 
