@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49AFD559B9F
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 16:35:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2AE559BA4
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 16:35:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231151AbiFXOfS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 10:35:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34442 "EHLO
+        id S232580AbiFXOfT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 10:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232527AbiFXOey (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 10:34:54 -0400
+        with ESMTP id S232587AbiFXOfF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 10:35:05 -0400
 Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 98D7550026;
-        Fri, 24 Jun 2022 07:34:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AE61D506EB;
+        Fri, 24 Jun 2022 07:34:46 -0700 (PDT)
 Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id 3BEE116DF;
+        by mail.baikalelectronics.com (Postfix) with ESMTP id D2AAD16D7;
         Fri, 24 Jun 2022 17:35:57 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 3BEE116DF
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com D2AAD16D7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baikalelectronics.ru; s=mail; t=1656081357;
-        bh=Jehj/IpcCcaFyw6zSdprGYeAZzksa/3wUla6mrBEJUE=;
+        bh=76d6RvpHlke2XG5vtzot1F5Cmsj9ruFlQ53awF3O0zw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=OBTpEcjRSwLVtV+j2mkdl9fkS+1Sbr9g28Bm9aOrq4ezSHHW8ALvZQhZkGcw9QBao
-         qgPOa2SuKTodiqyCjiwOoXSbKD/E22QsriS+1hhDVSAIvdsDErfJayWF15OuoB4oym
-         dNONL68jqhe8n7FVp9MKoqWvQleBKpmijlIz/I7Q=
+        b=GEwe7oFzIbgntUj+MA+q5z6Y3AgvcoLT3QzcHJ4QDLBgmcYr2f/8N508ojH5OT9xM
+         Wkr9jjekstlsg2FHsrpKku3g6fHkJ1mbwQcb3TAehJ5ESQCx7HQMxW0aClXPG4zNFm
+         Y5bQI7/zeCvWxpWM1gLquDNhoRFiDVbNH26ieTYo=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 Jun 2022 17:34:37 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 Jun 2022 17:34:38 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -41,9 +41,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v5 08/18] PCI: dwc: Add trailing new-line literals to the log messages
-Date:   Fri, 24 Jun 2022 17:34:18 +0300
-Message-ID: <20220624143428.8334-9-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH RESEND v5 09/18] PCI: dwc: Discard IP-core version checking on unrolled iATU detection
+Date:   Fri, 24 Jun 2022 17:34:19 +0300
+Message-ID: <20220624143428.8334-10-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -59,48 +59,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There are two places in the DW PCIe controller driver, which omit the
-trailing newlines in the log info and warn messages. Not having them there
-will cause leaving the messages in the printk ring buffer until a next
-'\n'-terminated message is printed (it will consequently cause the buffer
-flush). As it isn't what the corresponding code implies let's add the
-new-line characters in the messages.
+It's pretty much pointless. Even though unrolled version of the internal
+ATU has been indeed available since DWC PCIe v4.80a IP-core, there is no
+guarantee it was enabled during the IP-core configuration (Synopsys
+suggests to contact the Solvnet support for guidance of how to do that for
+the newer IP-cores). So the only reliable way to find out the unrolled
+iATU feature availability is indeed to check the iATU viewport register
+content. In accordance with the reference manual [1] if the register
+doesn't exist (unrolled iATU is enabled) it's content is fixed with
+0xff-s, otherwise it will contain some zeros. So we can freely drop the
+IP-core version checking in this matter then and use the
+dw_pcie_iatu_unroll_enabled() method only to detect whether iATU/eDMA
+space is unrolled.
+
+[1] DesignWare Cores, PCI Express Controller, Register Desciptions,
+v.4.90a, December 2016, p.855
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
- drivers/pci/controller/dwc/pcie-designware.c      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d4326aae5a32..9a4922b714e5 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -633,7 +633,7 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 		}
- 
- 		if (pci->num_ob_windows <= atu_idx)
--			dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)",
-+			dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
- 				 pci->num_ob_windows);
- 	}
- 
 diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index d0061735b434..ac966ed28c5b 100644
+index ac966ed28c5b..e5c30695f664 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.c
 +++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -706,7 +706,7 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
- 	dev_info(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
- 		"enabled" : "disabled");
+@@ -600,15 +600,15 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
  
--	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound",
-+	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u inbound\n",
- 		 pci->num_ob_windows, pci->num_ib_windows);
  }
  
+-static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
++static bool dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
+ {
+ 	u32 val;
+ 
+ 	val = dw_pcie_readl_dbi(pci, PCIE_ATU_VIEWPORT);
+ 	if (val == 0xffffffff)
+-		return 1;
++		return true;
+ 
+-	return 0;
++	return false;
+ }
+ 
+ static void dw_pcie_iatu_detect_regions_unroll(struct dw_pcie *pci)
+@@ -680,9 +680,8 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
+ 	struct device *dev = pci->dev;
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 
+-	if (pci->version >= 0x480A || (!pci->version &&
+-				       dw_pcie_iatu_unroll_enabled(pci))) {
+-		pci->iatu_unroll_enabled = true;
++	pci->iatu_unroll_enabled = dw_pcie_iatu_unroll_enabled(pci);
++	if (pci->iatu_unroll_enabled) {
+ 		if (!pci->atu_base) {
+ 			struct resource *res =
+ 				platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
 -- 
 2.35.1
 
