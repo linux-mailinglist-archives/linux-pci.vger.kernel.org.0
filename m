@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CB5E558F8F
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 06:20:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4D7A558F8E
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 06:20:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbiFXEUL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 00:20:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
+        id S229478AbiFXEUM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 00:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbiFXEUK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 00:20:10 -0400
+        with ESMTP id S229498AbiFXEUL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 00:20:11 -0400
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E6141339;
-        Thu, 23 Jun 2022 21:20:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6623049CBE;
+        Thu, 23 Jun 2022 21:20:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656044409; x=1687580409;
+  t=1656044410; x=1687580410;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=doqMnMZaLZqXI5lHzZ/n37xKfTdx3Elte7spEgmJPmE=;
-  b=axVhHs0Yj8an2aC2iYNqNnxqjrNINMB89TjM/acxXYbh0hyQJDMTLIJ4
-   O/e8MM2IC4xXh8cX854ibId+0fuhuwLJdjFhC9xQ2pfsT5UoPw7DRflkR
-   sgKFQN7UjiifD8W1/aCefhG6WXipP+DvbesozH7QUnpbTwvpu2fkeApDT
-   wWV+VQFJsmc4UmzQq+ZGw55P7UQRQPdvQU6U80FZM6LpqDNVPWcsx6fEM
-   CnQaKUq0ppf+DLTVl9w4grkH5wExrkapGskqNl+aUq/dPuLDPx4GXMdWm
-   W/67QhEtY4q2U4aa9dXmeOFyUBI9JlMabYj9SpNopAaNgIOjS53EaQMKt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="367237992"
+  bh=d8ij3u11o75oSSOGptJFkUuJ7uZDU0gk5H3Gjw/F+sU=;
+  b=S+28G0gGgiH+kNGDGC+2Ul6+KHX5MWTa6QG18Ka1V2+GSyfZTjoTmdqd
+   lDzYPkwYQAlXKXdeXnIrnPxAWosmLkRc2+LIPCyYbQLy4Tiw/qQkass7a
+   QdBAqtIrFyANfAib1/3veo8yzkk+qDpD1UuZVrH8LBdBuu92dHaYLeQX8
+   iNyFknC/zsCXUFQmyD4HXhdYVtgh3mEzI+/y7iFXu5SVhxlH234wdQcS2
+   JCZegJAsaw38LwoLSUaUEVd+wgCqApwg3qUTHQsKbuM4ZS6y0Whco7YCN
+   CMyBNFXoV8bxwcY2XiyTVYwinPe9qhFZYKP3grVboI/cmGCxK9gYTQNPg
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="367237996"
 X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="367237992"
+   d="scan'208";a="367237996"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:09 -0700
 X-IronPort-AV: E=Sophos;i="5.92,218,1650956400"; 
-   d="scan'208";a="645092896"
+   d="scan'208";a="645092899"
 Received: from daharell-mobl2.amr.corp.intel.com (HELO dwillia2-xfh.intel.com) ([10.209.66.176])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:08 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 21:20:09 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     nvdimm@lists.linux.dev, linux-pci@vger.kernel.org,
         patches@lists.linux.dev, hch@lst.de,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH 26/46] cxl/port: Record parent dport when adding ports
-Date:   Thu, 23 Jun 2022 21:19:30 -0700
-Message-Id: <20220624041950.559155-1-dan.j.williams@intel.com>
+Subject: [PATCH 27/46] cxl/port: Move 'cxl_ep' references to an xarray per port
+Date:   Thu, 23 Jun 2022 21:19:31 -0700
+Message-Id: <20220624041950.559155-2-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
@@ -59,224 +59,186 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-At the time that cxl_port instances are being created, cache the dport
-from the parent port that points to this new child port. This will be
-useful for region provisioning when walking the tree to calculate
-decoder targets, and saves rewalking the dport list after the fact to
-build this information.
+In preparation for region provisioning that needs to walk the topology
+by endpoints, use an xarray to record endpoint interest in a given port.
+In addition to being more space and time efficient it also reduces the
+complexity of the implementation by moving locking internal to the
+xarray implementation. It also allows for a single cxl_ep reference to
+be recorded in multiple xarrays.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/acpi.c      |  3 +--
- drivers/cxl/core/port.c | 30 +++++++++++++++++-------------
- drivers/cxl/cxl.h       |  7 +++++--
- drivers/cxl/mem.c       | 10 ++++++----
- 4 files changed, 29 insertions(+), 21 deletions(-)
+ drivers/cxl/core/port.c | 60 ++++++++++++++++++++---------------------
+ drivers/cxl/cxl.h       |  4 +--
+ 2 files changed, 30 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 5972f380cdf2..09fe92177d03 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -212,8 +212,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
- 	if (rc)
- 		return rc;
- 
--	port = devm_cxl_add_port(host, match, dport->component_reg_phys,
--				 root_port);
-+	port = devm_cxl_add_port(host, match, dport->component_reg_phys, dport);
- 	if (IS_ERR(port))
- 		return PTR_ERR(port);
- 	dev_dbg(host, "%s: add: %s\n", dev_name(match), dev_name(&port->dev));
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index c54e1dbf92cb..8f53f59dd0fa 100644
+index 8f53f59dd0fa..ea3ab9baf232 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -526,7 +526,7 @@ static struct lock_class_key cxl_port_key;
+@@ -431,22 +431,27 @@ static struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev)
  
- static struct cxl_port *cxl_port_alloc(struct device *uport,
- 				       resource_size_t component_reg_phys,
--				       struct cxl_port *parent_port)
-+				       struct cxl_dport *parent_dport)
+ static void cxl_ep_release(struct cxl_ep *ep)
  {
- 	struct cxl_port *port;
- 	struct device *dev;
-@@ -548,9 +548,12 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
- 	 * description.
- 	 */
- 	dev = &port->dev;
--	if (parent_port) {
--		dev->parent = &parent_port->dev;
-+	if (parent_dport) {
-+		struct cxl_port *parent_port = parent_dport->port;
+-	if (!ep)
+-		return;
+-	list_del(&ep->list);
+ 	put_device(ep->ep);
+ 	kfree(ep);
+ }
+ 
++static void cxl_ep_remove(struct cxl_port *port, struct cxl_ep *ep)
++{
++	if (!ep)
++		return;
++	xa_erase(&port->endpoints, (unsigned long) ep->ep);
++	cxl_ep_release(ep);
++}
 +
- 		port->depth = parent_port->depth + 1;
-+		port->parent_dport = parent_dport;
-+		dev->parent = &parent_port->dev;
- 	} else
- 		dev->parent = uport;
- 
-@@ -579,24 +582,24 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
-  * @host: host device for devm operations
-  * @uport: "physical" device implementing this upstream port
-  * @component_reg_phys: (optional) for configurable cxl_port instances
-- * @parent_port: next hop up in the CXL memory decode hierarchy
-+ * @parent_dport: next hop up in the CXL memory decode hierarchy
-  */
- struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- 				   resource_size_t component_reg_phys,
--				   struct cxl_port *parent_port)
-+				   struct cxl_dport *parent_dport)
+ static void cxl_port_release(struct device *dev)
  {
- 	struct cxl_port *port;
- 	struct device *dev;
- 	int rc;
+ 	struct cxl_port *port = to_cxl_port(dev);
+-	struct cxl_ep *ep, *_e;
++	unsigned long index;
++	struct cxl_ep *ep;
  
--	port = cxl_port_alloc(uport, component_reg_phys, parent_port);
-+	port = cxl_port_alloc(uport, component_reg_phys, parent_dport);
- 	if (IS_ERR(port))
- 		return port;
+-	device_lock(dev);
+-	list_for_each_entry_safe(ep, _e, &port->endpoints, list)
+-		cxl_ep_release(ep);
+-	device_unlock(dev);
++	xa_for_each(&port->endpoints, index, ep)
++		cxl_ep_remove(port, ep);
++	xa_destroy(&port->endpoints);
+ 	ida_free(&cxl_port_ida, port->id);
+ 	kfree(port);
+ }
+@@ -562,7 +567,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+ 	ida_init(&port->decoder_ida);
+ 	port->dpa_end = -1;
+ 	INIT_LIST_HEAD(&port->dports);
+-	INIT_LIST_HEAD(&port->endpoints);
++	xa_init(&port->endpoints);
  
- 	dev = &port->dev;
- 	if (is_cxl_memdev(uport))
- 		rc = dev_set_name(dev, "endpoint%d", port->id);
--	else if (parent_port)
-+	else if (parent_dport)
- 		rc = dev_set_name(dev, "port%d", port->id);
- 	else
- 		rc = dev_set_name(dev, "root%d", port->id);
-@@ -998,7 +1001,7 @@ static void delete_endpoint(void *data)
- 	struct cxl_port *parent_port;
- 	struct device *parent;
+ 	device_initialize(dev);
+ 	lockdep_set_class_and_subclass(&dev->mutex, &cxl_port_key, port->depth);
+@@ -858,33 +863,21 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport, CXL);
  
--	parent_port = cxl_mem_find_port(cxlmd);
-+	parent_port = cxl_mem_find_port(cxlmd, NULL);
- 	if (!parent_port)
- 		goto out;
- 	parent = &parent_port->dev;
-@@ -1133,8 +1136,8 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+-static struct cxl_ep *find_ep(struct cxl_port *port, struct device *ep_dev)
+-{
+-	struct cxl_ep *ep;
+-
+-	device_lock_assert(&port->dev);
+-	list_for_each_entry(ep, &port->endpoints, list)
+-		if (ep->ep == ep_dev)
+-			return ep;
+-	return NULL;
+-}
+-
+ static int add_ep(struct cxl_ep *new)
  {
- 	struct device *dparent = grandparent(dport_dev);
- 	struct cxl_port *port, *parent_port = NULL;
-+	struct cxl_dport *dport, *parent_dport;
- 	resource_size_t component_reg_phys;
--	struct cxl_dport *dport;
- 	int rc;
+ 	struct cxl_port *port = new->dport->port;
+-	struct cxl_ep *dup;
++	int rc;
  
- 	if (!dparent) {
-@@ -1148,7 +1151,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+ 	device_lock(&port->dev);
+ 	if (port->dead) {
+ 		device_unlock(&port->dev);
  		return -ENXIO;
  	}
+-	dup = find_ep(port, new->ep);
+-	if (!dup)
+-		list_add_tail(&new->list, &port->endpoints);
++	rc = xa_insert(&port->endpoints, (unsigned long)new->ep, new,
++		       GFP_KERNEL);
+ 	device_unlock(&port->dev);
  
--	parent_port = find_cxl_port(dparent, NULL);
-+	parent_port = find_cxl_port(dparent, &parent_dport);
- 	if (!parent_port) {
- 		/* iterate to create this parent_port */
- 		return -EAGAIN;
-@@ -1167,7 +1170,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
- 	if (!port) {
- 		component_reg_phys = find_component_registers(uport_dev);
- 		port = devm_cxl_add_port(&parent_port->dev, uport_dev,
--					 component_reg_phys, parent_port);
-+					 component_reg_phys, parent_dport);
- 		/* retry find to pick up the new dport information */
- 		if (!IS_ERR(port))
- 			port = find_cxl_port_at(parent_port, dport_dev, &dport);
-@@ -1274,9 +1277,10 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+-	return dup ? -EEXIST : 0;
++	return rc;
  }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_ports, CXL);
  
--struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd)
-+struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
-+				   struct cxl_dport **dport)
+ /**
+@@ -905,7 +898,6 @@ static int cxl_add_ep(struct cxl_dport *dport, struct device *ep_dev)
+ 	if (!ep)
+ 		return -ENOMEM;
+ 
+-	INIT_LIST_HEAD(&ep->list);
+ 	ep->ep = get_device(ep_dev);
+ 	ep->dport = dport;
+ 
+@@ -1048,6 +1040,12 @@ static void delete_switch_port(struct cxl_port *port, struct list_head *dports)
+ 	devm_release_action(port->dev.parent, unregister_port, port);
+ }
+ 
++static struct cxl_ep *cxl_ep_load(struct cxl_port *port,
++				  struct cxl_memdev *cxlmd)
++{
++	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
++}
++
+ static void cxl_detach_ep(void *data)
  {
--	return find_cxl_port(grandparent(&cxlmd->dev), NULL);
-+	return find_cxl_port(grandparent(&cxlmd->dev), dport);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_mem_find_port, CXL);
+ 	struct cxl_memdev *cxlmd = data;
+@@ -1086,11 +1084,11 @@ static void cxl_detach_ep(void *data)
+ 		}
  
+ 		device_lock(&port->dev);
+-		ep = find_ep(port, &cxlmd->dev);
++		ep = cxl_ep_load(port, cxlmd);
+ 		dev_dbg(&cxlmd->dev, "disconnect %s from %s\n",
+ 			ep ? dev_name(ep->ep) : "", dev_name(&port->dev));
+-		cxl_ep_release(ep);
+-		if (ep && !port->dead && list_empty(&port->endpoints) &&
++		cxl_ep_remove(port, ep);
++		if (ep && !port->dead && xa_empty(&port->endpoints) &&
+ 		    !is_cxl_root(parent_port)) {
+ 			/*
+ 			 * This was the last ep attached to a dynamically
+@@ -1184,7 +1182,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+ 		dev_dbg(&cxlmd->dev, "add to new port %s:%s\n",
+ 			dev_name(&port->dev), dev_name(port->uport));
+ 		rc = cxl_add_ep(dport, &cxlmd->dev);
+-		if (rc == -EEXIST) {
++		if (rc == -EBUSY) {
+ 			/*
+ 			 * "can't" happen, but this error code means
+ 			 * something to the caller, so translate it.
+@@ -1247,7 +1245,7 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+ 			 * the parent_port lock as the current port may be being
+ 			 * reaped.
+ 			 */
+-			if (rc && rc != -EEXIST) {
++			if (rc && rc != -EBUSY) {
+ 				put_device(&port->dev);
+ 				return rc;
+ 			}
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index e654251a54dd..55d34b1576f1 100644
+index 55d34b1576f1..3d149780d724 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -325,6 +325,7 @@ struct cxl_nvdimm {
-  * @id: id for port device-name
-  * @dports: cxl_dport instances referenced by decoders
-  * @endpoints: cxl_ep instances, endpoints that are a descendant of this port
-+ * @parent_dport: dport that points to this port in the parent
-  * @decoder_ida: allocator for decoder ids
-  * @dpa_end: cursor to track highest allocated decoder for allocation ordering
-  * @component_reg_phys: component register capability base address (optional)
-@@ -337,6 +338,7 @@ struct cxl_port {
+@@ -337,7 +337,7 @@ struct cxl_port {
+ 	struct device *uport;
  	int id;
  	struct list_head dports;
- 	struct list_head endpoints;
-+	struct cxl_dport *parent_dport;
+-	struct list_head endpoints;
++	struct xarray endpoints;
+ 	struct cxl_dport *parent_dport;
  	struct ida decoder_ida;
  	int dpa_end;
- 	resource_size_t component_reg_phys;
-@@ -391,11 +393,12 @@ int devm_cxl_register_pci_bus(struct device *host, struct device *uport,
- struct pci_bus *cxl_port_to_pci_bus(struct cxl_port *port);
- struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- 				   resource_size_t component_reg_phys,
--				   struct cxl_port *parent_port);
-+				   struct cxl_dport *parent_dport);
- struct cxl_port *find_cxl_root(struct device *dev);
- int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
- int cxl_bus_rescan(void);
--struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd);
-+struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
-+				   struct cxl_dport **dport);
- bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd);
- 
- struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 7513bea55145..2786d3402c9e 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -26,14 +26,15 @@
+@@ -366,12 +366,10 @@ struct cxl_dport {
+  * struct cxl_ep - track an endpoint's interest in a port
+  * @ep: device that hosts a generic CXL endpoint (expander or accelerator)
+  * @dport: which dport routes to this endpoint on this port
+- * @list: node on port->endpoints list
   */
+ struct cxl_ep {
+ 	struct device *ep;
+ 	struct cxl_dport *dport;
+-	struct list_head list;
+ };
  
- static int create_endpoint(struct cxl_memdev *cxlmd,
--			   struct cxl_port *parent_port)
-+			   struct cxl_dport *parent_dport)
- {
-+	struct cxl_port *parent_port = parent_dport->port;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct cxl_port *endpoint;
- 	int rc;
- 
- 	endpoint = devm_cxl_add_port(&parent_port->dev, &cxlmd->dev,
--				     cxlds->component_reg_phys, parent_port);
-+				     cxlds->component_reg_phys, parent_dport);
- 	if (IS_ERR(endpoint))
- 		return PTR_ERR(endpoint);
- 
-@@ -76,6 +77,7 @@ static int cxl_mem_probe(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_port *parent_port;
-+	struct cxl_dport *dport;
- 	struct dentry *dentry;
- 	int rc;
- 
-@@ -100,7 +102,7 @@ static int cxl_mem_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
--	parent_port = cxl_mem_find_port(cxlmd);
-+	parent_port = cxl_mem_find_port(cxlmd, &dport);
- 	if (!parent_port) {
- 		dev_err(dev, "CXL port topology not found\n");
- 		return -ENXIO;
-@@ -114,7 +116,7 @@ static int cxl_mem_probe(struct device *dev)
- 		goto unlock;
- 	}
- 
--	rc = create_endpoint(cxlmd, parent_port);
-+	rc = create_endpoint(cxlmd, dport);
- unlock:
- 	device_unlock(&parent_port->dev);
- 	put_device(&parent_port->dev);
+ /*
 -- 
 2.36.1
 
