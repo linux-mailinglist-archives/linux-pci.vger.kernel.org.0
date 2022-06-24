@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A96A558D73
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 04:47:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29EED558D75
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 04:47:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230151AbiFXCrn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jun 2022 22:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
+        id S230145AbiFXCro (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jun 2022 22:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230145AbiFXCrZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jun 2022 22:47:25 -0400
+        with ESMTP id S229559AbiFXCr2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jun 2022 22:47:28 -0400
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E40D856F8B;
-        Thu, 23 Jun 2022 19:47:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4914B56F8B;
+        Thu, 23 Jun 2022 19:47:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656038844; x=1687574844;
+  t=1656038847; x=1687574847;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=k577WlWGR8+tMsjmrBphLWB/BamMu7wSTNCexpx4R3k=;
-  b=Yvx5FzFQNLjjUir5cQvAf/bZczG8+xx+ZILOnjK+QA2S7TBFog7+6ARI
-   YJJ1P0WeY5ARVmKTnMM2g2kOUYHUrjx6pR6FhTkHkiLlCEIFBCrXW1KQ6
-   ZP0epbyY0IkHYemw4ObRYDJxV6cOUF6K9AeayXnkbFsQgIxRCnKYnldGM
-   p38Q9cvHcRS30lMv871xbmdhjaovr1ql/Jvl/0nk5U6KBnf3pntOOKVmB
-   Ops3ru2/qzR4XNTwI62mVI/CgJvcwULU8ifd3a5upVOsB+Uevxj0C8tP2
-   uZCwlnnYL1vge31bJKYoL81+rQITeOnn883XfmSGx1h6xSBuCpGMXXJ3B
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="261331945"
+  bh=hZDzbqdvdL0Lsair8D6fHdnqjSy4yrUja0LuPqwSDB4=;
+  b=lzDG+/XQ5DVrkE0R8QnGY0hlW9iR2zdPtrvGFq7mGLSJxUuqQg7nNbUO
+   Dp1DD6IVt4szptsXoDtoYG7+p3CsjX+Cjrv1bX+gtUt6y969Rp46ORLri
+   mHiKyoKRJUSg52EgGlOteJfbR8tH1EN8vfuStewxK+OCtfiyKu8QjCq1O
+   +CBlsii/KPpIwPHHTeY/DtUWF5hokzLFVh6VdAW2epv9SlT6rKG1uZguf
+   JAAWDAkKCO5nGyqF23XCc43p7u/egJ8nKnFlMC1xY247197XSQAyukv/l
+   4iCS3wdkG6ZLqsxI3dLftYRdjJcNOF5yOzkM+vJnAqQQx+xi9P0W+DPV+
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10387"; a="261331954"
 X-IronPort-AV: E=Sophos;i="5.92,217,1650956400"; 
-   d="scan'208";a="261331945"
+   d="scan'208";a="261331954"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 19:47:23 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2022 19:47:27 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,217,1650956400"; 
-   d="scan'208";a="834933975"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Jun 2022 19:47:23 -0700
-Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+   d="scan'208";a="834933986"
+Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jun 2022 19:47:26 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Thu, 23 Jun 2022 19:47:23 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ 15.1.2308.27; Thu, 23 Jun 2022 19:47:26 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Thu, 23 Jun 2022 19:47:23 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.45) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ 15.1.2308.27 via Frontend Transport; Thu, 23 Jun 2022 19:47:26 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.47) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Thu, 23 Jun 2022 19:47:23 -0700
+ 15.1.2308.27; Thu, 23 Jun 2022 19:47:26 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XfFb6NRtwPae/OGH+KdvvleX/rUgPvyIh4QvtPw72SjlzarUSjC62ynuoCf0njkI1APKsiDuNT8uiPX6+cPATPvCLGqXkjaFPBJ50eybd+m5wQUzUCQc+yGrTbzTVbQW6UWfa3ps7RFXicY+wXzDJMteCtYGB1FDcosN9P3HznojRZfLQ0/sakHNxwU5LifRqgU+qNAzBf3y9uaz6kMy1rB+TCDdsNnKHznV/I0O0EIRA6fd98qn5GSsqAXjbirwxgPQniqsCtwAk/P6ahWvVldrB7QYKLb16v2XES3rFtIwf0tJJouqJrQ99SiW+PSkK6jFQhgsGntK6ymPQETDjA==
+ b=LHVfm674r11T17iUG2ZtMvn6+0cX9gri7Hv7iKkiglnKxXDNxHI3R5f8qTFS7cJNB9sXoUm/o0E6lLdbf/LQ0QEhWruIYlP588L/TMOyKVaV5WhDRSwtxS8LA17fMhcalBoEVjnTAEsDFAtY2D8g3YcshgRFzIeCJAwDKua1RBMLSwypcj7nUGvo/Ul8fJeTMKypWvPnl2BmwsJZsTjaFpdJUEtwDc0LTrjRNHPpNnprMexARACnSMFsX3zEJ0KfHdl5qfAXW6/tHS6ImTOQ+S4jEEYTHoTxT1ZesCyMcnOhxFMdbICm48ePS+kP7E352R60ZZ8s1tQMI/NgJ8DCNQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xfWBfHXLVeiYVRrcD6JcrPyU4M9x3zVr5btJ4kG+YN0=;
- b=WwjOCgYEKCL4AdMsXWln1QM8yy//xWfkq6IYYdnyJHMXOZbwB1C67FLiNLIaX0GPb3Uxdjh0LWLlB5Wj8PXFBXfQ0bueTvQQkb2JblLAyBRtLAE03qkzYYdrfBgKk9arqu0WcIjSSEbpbhpuw97AosOT7NqZ1RVkSieZK6+FrJZZ/Yoj/URI+a2jpNQo8WtaR5QSuYwC5hV5UfTOSJlRZoAancLohRjZD05ujo2zDfNqCiB4RZYXdZ7GNOuYnQHduU9fyNr0OhGLtouHqMdnnDqtY1KBHzKap45KsZszIxhy56sr6IFUZkaWakQdr2cygqhV2WyGE10G81I/6hSGgA==
+ bh=FYEsxWpRW4rAw7Q7uQ++hy5O504P+o8Td4t+Uu2rV8A=;
+ b=F7WEe0CDJyucS3sWsegIKj9vUt4g/HP8e9s7ZJJ+wplN4Lnoej2rG0Pv80LRNDFFEpigPRAoWcTyMLxnT2muXs/3Bf0aBlLCeBtaDZSAtniObeAQbp4iiDOYbo4BUPWoVHdKOPbyV+4klXoHUapIcwQ9wcIFyCbbfaW0YcC6roKQA/L9sywReDhcgBbm6KAPjZ+aMnPNvVJhRDuG1KlZKUqFABcAar6rjaG2rtKM8Zx9kujDsUNUTnN0zCsLgs3o/ih0E5qlPQQqCZpb1+m8wmFPj5bkqAW352zypuumJ5XZnIwoiu3WCA70L6Rh4aJ+RHoQAIQEXRiLbcUfCmIRtQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -65,75 +65,76 @@ Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
  (2603:10b6:301:50::20) by BYAPR11MB2789.namprd11.prod.outlook.com
  (2603:10b6:a02:cc::11) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.18; Fri, 24 Jun
- 2022 02:47:21 +0000
+ 2022 02:47:24 +0000
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::f50c:6e72:c8aa:8dbf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::f50c:6e72:c8aa:8dbf%7]) with mapi id 15.20.5353.022; Fri, 24 Jun 2022
- 02:47:21 +0000
-Date:   Thu, 23 Jun 2022 19:47:07 -0700
+ 02:47:24 +0000
+Date:   Thu, 23 Jun 2022 19:47:18 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     <linux-cxl@vger.kernel.org>
 CC:     <hch@infradead.org>, <alison.schofield@intel.com>,
         <nvdimm@lists.linux.dev>, <linux-pci@vger.kernel.org>,
         <patches@lists.linux.dev>
-Subject: [PATCH 17/46] cxl/hdm: Track next decoder to allocate
-Message-ID: <165603882752.551046.12620934370518380800.stgit@dwillia2-xfh>
+Subject: [PATCH 18/46] cxl/hdm: Add support for allocating DPA to an endpoint
+ decoder
+Message-ID: <165603883814.551046.17226119386543525679.stgit@dwillia2-xfh>
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
 In-Reply-To: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
 User-Agent: StGit/0.18-3-g996c
-X-ClientProxiedBy: MWHPR13CA0032.namprd13.prod.outlook.com
- (2603:10b6:300:95::18) To MWHPR1101MB2126.namprd11.prod.outlook.com
+X-ClientProxiedBy: MWHPR1701CA0013.namprd17.prod.outlook.com
+ (2603:10b6:301:14::23) To MWHPR1101MB2126.namprd11.prod.outlook.com
  (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 94ae1edc-75dc-47e3-694a-08da558bd531
+X-MS-Office365-Filtering-Correlation-Id: 82b96727-8f4c-4f2b-5798-08da558bdb9e
 X-MS-TrafficTypeDiagnostic: BYAPR11MB2789:EE_
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: USuMyRZSscnMNciT619PK9TmVDyCxN+1JIu/gETYCzqO1t5uycsBKgqexDMfJrvoBlMge2+eJwoxd9k/ap9MhFWT8JfRBe+niH66nl83CNX+NBl3y+9PN6rYZvfU0UoVMDrhu4GsXJaeM2cp9TgThinSa4+tdJNZvir9O8nfImMZe+8k8OVwuj6bv+Kq1xfhfa4jtZ101dhp6bl0d9fh8zmXUg0THOZN5oVtsQJGSdRiwyPTAnKJIYBW7mHcSgWaYTVr1HDuUkczXpjsJtRoUXJ0vcYtdpqhTbMrwtXDCsE8rhg1E5p8u/b0amYMQEE17SKMYH2H7Q1mrK1C3oKofc2H2/5Mwmrhs8xZHg//jid+ISWqJ/7WynkJIa6fl0CFAvSeoDKISohQGZivlHsQIZJNChX5lB9CTLJzZ4Ff5Q2ODsqbimvn4UW1O0vMXxq4lwYHNTbmBSt6tnbBwGObm2Cg35MTLggqMEoQjnDKtrwhSMGNriwmE8xZT65ep1rBB/R3S4mlFXLmkt8nxodyh/xudqyZpNmfUm31fTVqKLwndfi9jdVV8NzwQk1YBGrVN3xYAMmjXOFOT0nhe/V28iwmOW+fLTZs2ZQbs9jktvEenBXxjr74I5aTFHsjdGC2ZjfZJa8qLBGwvhFUObK+Ez9AYdSyn8zRqP9DEy2pu+fOGTxJm0UfacylFkaSgEj6kwXQhrwgceWF2RO0IW+nMcUw1i60ku9H3ZROVo28KjzjooOcwcJASkDrZrJ13CDO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(366004)(136003)(39860400002)(396003)(376002)(346002)(8676002)(6506007)(66476007)(66556008)(6666004)(9686003)(82960400001)(33716001)(4326008)(38100700002)(6512007)(66946007)(41300700001)(478600001)(316002)(83380400001)(8936002)(86362001)(103116003)(186003)(2906002)(6916009)(6486002)(26005)(5660300002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: fu/+kI1RcnuVEJoMRrvb/ErhL/XUFHgtmTXEvYjKWaQlVJHU05KZaRlpC3qvQ6b3vZ3aAQ7WrxtdLuplPBZPG5/4JMwuW7907QwJKHCGAMH8qW5DfqyYhhSiN5Qcf2fYJvUHK/39YEDFqbt/bMx9sPCL6mmm39QVPdCDUg9llnJKKo8gi+99v8dA+4xces7/VtOVi1ZrG0ozH2U/nEh9P9G3Sck5vA78E7z+BKVxbslfSdSkxENsr2DhrFhMypWutq4I3XW02Hd8CeUOS6+BUaU+BrtyGavQy7f9yBlQKWChRjzseJI8SS1uSsSM81L2KFbOv+JRpZL3oe5j/IIQ42NZg2P3w8ImZVtaG7RdhwaWh0cKH4iIOVJb3+siHDDbGwyxLfJEPWhNxxsz3J/t8DUOP9U3pOWeoIHxsVrAklwR3gou+jB4JJbebhleY3G9W8qXKxJ5xZDguaAfciK2yOfTyG8VqmY81ZCamZE6nOwQMp5Qc58tu5Vn+rMHMHwYejBoqdP4VPNW8L0Fmm0X0zij88H5na7bjNd3XDhnA5Ta///Hp641VCWZez+ZRJ5qMIbmI2Nh/IJo4kEmJTFx03iaqhgmKQCT0tB0EVE0k7AYmGaWP8DAdkwNXb0V5b+ZGgMZnqQ3kOCb1OhcMQkTJpnj+Lo2w7DhOSrp8yZYU4QdWfEgIrHs3kKcGWiat3vb5ifrqI0c1lEnt5BvCdmJ36r1/ljnb6rMQX8GgUFyh/yFPtfnov/iUf41E8Ioqa1c
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(366004)(136003)(39860400002)(396003)(376002)(346002)(8676002)(6506007)(66476007)(66556008)(6666004)(9686003)(82960400001)(33716001)(4326008)(38100700002)(6512007)(66946007)(41300700001)(30864003)(478600001)(316002)(83380400001)(8936002)(86362001)(103116003)(186003)(2906002)(6916009)(6486002)(26005)(5660300002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Y/v1uPS1W9ZjIhwWnrwJXkPzsJQmaZenYxHp91IXJN6HFYv6bX74KlZ62HIm?=
- =?us-ascii?Q?TvMB3MO7zOXqTaNT/uqUI6F7BnHJAA8HHFmUeElSH5kLGv0ylASSivTC4lmZ?=
- =?us-ascii?Q?e/H9WUQcA6z9w5atxNbggWtV0G3fS1u5cGKIvsEPypFeyFyCFNtIsXCEZWP4?=
- =?us-ascii?Q?ZJZoFMd4knuyHFk/6xziDB5juyNTIgnNjJBkClo0c9nlDskaV7rDjDGC92XJ?=
- =?us-ascii?Q?ypv5ytsuQ8f2A9ydO2ic8+AEkfm7E/Yju7vUpceW1XdhmPXaSDU045mqHpGV?=
- =?us-ascii?Q?ofdPI6qS6XHC2ktDlkAMhtAGFQVFtrjSAJfiheofj1WVHetzbZxLk82JiW/8?=
- =?us-ascii?Q?bJDc8MuAPREM0WLyENplEktKcLdzW/gsIPxDmTzkTKuCwt4ocbpuCsfNVmxm?=
- =?us-ascii?Q?/QY9qIoegu7Ok1O2eLSZlagDRXi9chfLTXZTe9Y4StGrSviKGo7U3O/btfzE?=
- =?us-ascii?Q?LgdmwZjA5tSdscRWt5HCALArJrFdGOTQVj9EIbiZbJ4BTCA/R/KgWeVf8pFy?=
- =?us-ascii?Q?OFiLfxEhLQOacrjvaG+aFjwD6RRgaSsJhs6Nvf0+1n6DgNaSvvA61COLouZG?=
- =?us-ascii?Q?ddsVLaaOJmtD48URGOqs+qr0vrTDsRb4mDoUAaluVHZvXwWqN8A02JimcQ/d?=
- =?us-ascii?Q?5WmBVwOTrwjAseriFytWu6NkguKQfSNVQJt2SrJu77JqH3l9iJ/YjTA19Evc?=
- =?us-ascii?Q?jHt5YvORHW0aOhRF222tQijNdYsju3UX77m9DRwbzRiC7vT/ORLB//moZqJS?=
- =?us-ascii?Q?XuRlj4e8psKcXYTWOn1O4wwlZxXaZNfeIDq/L5kHq0is+oOqYP5UrDC5j5Ab?=
- =?us-ascii?Q?LSNj3E208pnqpkRhOYILJ20fsIRyHxeBGuZGZNUjMhcoHdVGq6BUa+2fWdXX?=
- =?us-ascii?Q?qaxzmJ9Cn7TsyMVXP69AJDLSM2xnRfWNHvNwnOigZdYFjUIiM4AEQKyJzfhU?=
- =?us-ascii?Q?Z6kH+fabjqA7s5RzLgFFWyQ8lzvn3pJYlM5/XcGStkO5gwV1JwiTW6+FKi5B?=
- =?us-ascii?Q?p1NG0p75urmMeUedUEUze1cfPs05ksgCIq4X2i7MbVDQAJzxk5Z8wvK+OyEu?=
- =?us-ascii?Q?8XNQptsRHBneoP1gpnCsc36VE0NPuATcVcY3L16Bt6tgY6vE0sVw94RkNPel?=
- =?us-ascii?Q?nP5U+/esL++YrO3QYUTKArCafW/X3v3FGKKNMGkwGLTje+2cUllritIMTif5?=
- =?us-ascii?Q?nwHOFYNR95L7+qe2hWfSKc91+/Y1Fwd0Pf+Soq7krUyec71kmt/dHpmBc3ty?=
- =?us-ascii?Q?1CrlPN7Af2OY85gcYpgG1ig/vAU22DCGPoHwrDV1gajx7DOv/y9ULMiaYygC?=
- =?us-ascii?Q?IoHSWxzobAV8sisSJAreUR0F/GBzEw9BACzszMEdKNM4fIP15VWdqjr+Ymig?=
- =?us-ascii?Q?eZHjDhGkN9cLS+mkZl5g549MnkMqu734Y/85vMCWfDyPZArGT1rOia7nFb8n?=
- =?us-ascii?Q?Gp91Sy7p9E0YNvJm8WFzC8lV7OtLg1wyPlTiRWzYKuV3SULvmHDpT/DexBJJ?=
- =?us-ascii?Q?o+HLOwbMfs9eIZf3eKdVklkD3EBlZdIEkPT28CJAYsxF9tiniVFzJ1AomdGz?=
- =?us-ascii?Q?k0wTx2Du9piB8yLMWYgKmepmdRjl1ijKKOVPWRDIkfFwXxelHccyPDh7Bm6U?=
- =?us-ascii?Q?8w=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94ae1edc-75dc-47e3-694a-08da558bd531
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?W7xXCLXLp3ZjB6E+5tGLIszE+CA/udL8rwgzf7oDUDH4N7UexDmKAhOmTCb2?=
+ =?us-ascii?Q?Zt4WTfV4d4qJmFFIDj/reWEEVi0P3QBPIgYttTDnRhnpsgbzWPKpQF637iOl?=
+ =?us-ascii?Q?mKoOshr4jTnuKNNq+zQ+ml+80mdID2t2Fst4UmrVeaTCdZ4ggId9/zkdi+gQ?=
+ =?us-ascii?Q?XZJ9W+jer5wrAFlAiuCQrARlsuiBcb+y4GIpswzXtS4pY5KPZurF6/MYQO0u?=
+ =?us-ascii?Q?3fGJM/HPwKMW1LPjt1a9rLmFS049NLIjGEG9gIr2i1lhafWsYUBh2PE43usW?=
+ =?us-ascii?Q?Zfvr+bbHysPzc3jp+9/MmJyxhFHVAe4ahobLe5iWFkJQzeUaKqaIRBLHTm1F?=
+ =?us-ascii?Q?+lKcvjys3jDcLqIWUT8QDJVFzC3ESQ5yqk6guIGykCbEq9UxQuKD0abaXcBN?=
+ =?us-ascii?Q?OEv7H3G4AtgiIER1JrXzjzmAuAfgYXJR16Rni0GMfIFEt7TVXa8i66XYjZbV?=
+ =?us-ascii?Q?Ka3QkLLCJZD+Q97y3qqkUULn9Ggj9CizMyTHuPd7NTUWK3o0LzYxZ9M1+Xes?=
+ =?us-ascii?Q?BRIT6BTFFuLydsmRhlc1wPL+tF9fcT3pJYSnCWknQIbJx1DstUbm7r4uc3n+?=
+ =?us-ascii?Q?UPJsgHPAqzR22ENBDwE7n7Y3Pzmlxz03I8PmFgA7H9o4V78+3Z8BXwLGq9ef?=
+ =?us-ascii?Q?X1dCeFeH2R2bSFl41Xl84gXwx34C3IpUN4+Cn6ZcpuLyOadtXRIxafLZXjVo?=
+ =?us-ascii?Q?eXrxhxzzMkuL6QQ6VVpAvh+3oq9QVt2Mu/4Wl2pDA7/j9zLs+I1WEPVU4CTR?=
+ =?us-ascii?Q?zTQgvKuad1rY5ahjQALesLat/tHmKml7zbnXHLYmjLtQctG1LnGnS7/gdZXY?=
+ =?us-ascii?Q?9/q/0XZsNABwZ/rs80rmblPbPiNiEi/ZDwTr0E5+s1tNqm49lKBWvja/XOF5?=
+ =?us-ascii?Q?V2FqWNJRa/vOhkpJU0VuxExhKGOcY85BH87L+mZwsRURxXL+dNHJ2+GD4KM7?=
+ =?us-ascii?Q?Pb3Pjus9ss1r2fIM3TN4PIWStmaA89JuwKKlaiphQ4iS2IkaKQH5JLIArltn?=
+ =?us-ascii?Q?GTyT2ZZdIv7rAePPJV25PQnxUPXKwf4yU/EklAl7D0e/bSlnTE3PH1p7j+An?=
+ =?us-ascii?Q?l4zQgTyArSZl9EvHpX0ZTV5+hYSmdYk15aWJEqtvQJeRBg1pyZGdjedFm422?=
+ =?us-ascii?Q?IjhNMy9R9ZO7CTt9Qk+wKxRroewGvpNaTKI+0ReIJN19KQRO3v5Rpzrqpljd?=
+ =?us-ascii?Q?3vlNK95OZQXldbC59xoHOsokSdqviPe8gUyCsIKXq17x09NBIedE1xdocYOj?=
+ =?us-ascii?Q?9flCxBoIulBvCp4iah46OA+oeOVEIMso3ynbJYIGnfYPnIJMVgD1WcT6TMiC?=
+ =?us-ascii?Q?/+ESSIJm6pgx7Q9C2vCnXcr5IvS40In0DdlK35yxlw+xuchMDxBYn8j1gy76?=
+ =?us-ascii?Q?8dgF0cakje49hr/dGaRo/5YCuYTHFDxmguUi2wzg594SBNDAvFNGRkHFKf22?=
+ =?us-ascii?Q?0lw2RbLzZrW/bI8CjKr1RBIZBp+NS9WhrMbTy7x3aPZiBXmdHFXX1DINdyEL?=
+ =?us-ascii?Q?ZhSzs1vVlf9qxCwNz4aQQJNmo9bl7orQhhjdiJpyoUsGUkNDml2Ueh6aC4g1?=
+ =?us-ascii?Q?AvUWxwStQr0mHQs6K72U7RGJwljkhxSi4x/1zZDwEz+kePkoSCf65OR+s4PS?=
+ =?us-ascii?Q?Sw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82b96727-8f4c-4f2b-5798-08da558bdb9e
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2022 02:47:09.3196
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2022 02:47:20.1155
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: maNxTkRUAe4X/ZVrFUL3R96Un/byV98XSt3zkX+jJBD41TXoMu4MiMzs4sGQ+8DqbX04zSflHWQJNc0+9YJvGx9YlGrl1WvV6Jc7VVJLrEM=
+X-MS-Exchange-CrossTenant-UserPrincipalName: a4P6+eJKn9b9gKK+73Yt+Z756PZGo+UFEG61HMu8dOWtmdbRl7UuPvTh7wpvvsFOZs5sDTQSYQr+Tv1pbMf8/IQ4yqJ/Sr0gWfhosF7P08w=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2789
 X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -146,87 +147,362 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The CXL specification enforces that endpoint decoders are committed in
-hw instance id order. In preparation for adding dynamic DPA allocation,
-record the hw instance id in endpoint decoders, and enforce allocations
-to occur in hw instance id order.
+The region provisioning flow will roughly follow a sequence of:
+
+1/ Allocate DPA to a set of decoders
+
+2/ Allocate HPA to a region
+
+3/ Associate decoders with a region and validate that the DPA allocations
+   and topologies match the parameters of the region.
+
+For now, this change (step 1) arranges for DPA capacity to be allocated
+and deleted from non-committed decoders based on the decoder's mode /
+partition selection. Capacity is allocated from the lowest DPA in the
+partition and any 'pmem' allocation blocks out all remaining ram
+capacity in its 'skip' setting. DPA allocations are enforced in decoder
+instance order. I.e. decoder N + 1 always starts at a higher DPA than
+instance N, and deleting allocations must proceed from the
+highest-instance allocated decoder to the lowest.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/hdm.c  |   14 ++++++++++++++
- drivers/cxl/core/port.c |    1 +
- drivers/cxl/cxl.h       |    2 ++
- 3 files changed, 17 insertions(+)
+ Documentation/ABI/testing/sysfs-bus-cxl |   37 +++++++
+ drivers/cxl/core/core.h                 |    7 +
+ drivers/cxl/core/hdm.c                  |  160 +++++++++++++++++++++++++++++++
+ drivers/cxl/core/port.c                 |   73 ++++++++++++++
+ 4 files changed, 275 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 091459216e11..85844f9bc00b 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -171,7 +171,7 @@ Date:		May, 2022
+ KernelVersion:	v5.20
+ Contact:	linux-cxl@vger.kernel.org
+ Description:
+-		(RO) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
++		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
+ 		translates from a host physical address range, to a device local
+ 		address range. Device-local address ranges are further split
+ 		into a 'ram' (volatile memory) range and 'pmem' (persistent
+@@ -180,3 +180,38 @@ Description:
+ 		when a decoder straddles the volatile/persistent partition
+ 		boundary, and 'none' indicates the decoder is not actively
+ 		decoding, or no DPA allocation policy has been set.
++
++		'mode' can be written, when the decoder is in the 'disabled'
++		state, with either 'ram' or 'pmem' to set the boundaries for the
++		next allocation.
++
++
++What:		/sys/bus/cxl/devices/decoderX.Y/dpa_resource
++Date:		May, 2022
++KernelVersion:	v5.20
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) When a CXL decoder is of devtype "cxl_decoder_endpoint",
++		and its 'dpa_size' attribute is non-zero, this attribute
++		indicates the device physical address (DPA) base address of the
++		allocation.
++
++
++What:		/sys/bus/cxl/devices/decoderX.Y/dpa_size
++Date:		May, 2022
++KernelVersion:	v5.20
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
++		translates from a host physical address range, to a device local
++		address range. The range, base address plus length in bytes, of
++		DPA allocated to this decoder is conveyed in these 2 attributes.
++		Allocations can be mutated as long as the decoder is in the
++		disabled state. A write to 'size' releases the previous DPA
++		allocation and then attempts to allocate from the free capacity
++		in the device partition referred to by 'decoderX.Y/mode'.
++		Allocate and free requests can only be performed on the highest
++		instance number disabled decoder with non-zero size. I.e.
++		allocations are enforced to occur in increasing 'decoderX.Y/id'
++		order and frees are enforced to occur in decreasing
++		'decoderX.Y/id' order.
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 1a50c0fc399c..47cf0c286fc3 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -17,6 +17,13 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s);
+ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+ 				   resource_size_t length);
+ 
++int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
++		     enum cxl_decoder_mode mode);
++int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
++int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
++resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
++resource_size_t cxl_dpa_resource(struct cxl_endpoint_decoder *cxled);
++
+ int cxl_memdev_init(void);
+ void cxl_memdev_exit(void);
+ void cxl_mbox_init(void);
 diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 3f929231b822..8805afe63ebf 100644
+index 8805afe63ebf..ceb4c28abc1b 100644
 --- a/drivers/cxl/core/hdm.c
 +++ b/drivers/cxl/core/hdm.c
-@@ -153,6 +153,7 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled, bool remove_ac
- 	cxled->skip = 0;
- 	__release_region(&cxlds->dpa_res, res->start, resource_size(res));
- 	cxled->dpa_res = NULL;
-+	port->dpa_end--;
+@@ -248,6 +248,166 @@ static int cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
  }
  
- static void cxl_dpa_release(void *cxled)
-@@ -183,6 +184,18 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 		return -EBUSY;
- 	}
- 
-+	if (port->dpa_end + 1 != cxled->cxld.id) {
-+		/*
-+		 * Assumes alloc and commit order is always in hardware instance
-+		 * order per expectations from 8.2.5.12.20 Committing Decoder
-+		 * Programming that enforce decoder[m] committed before
-+		 * decoder[m+1] commit start.
-+		 */
-+		dev_dbg(dev, "decoder%d.%d: expected decoder%d.%d\n", port->id,
-+			cxled->cxld.id, port->id, port->dpa_end + 1);
-+		return -EBUSY;
++resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
++{
++	resource_size_t size = 0;
++
++	down_read(&cxl_dpa_rwsem);
++	if (cxled->dpa_res)
++		size = resource_size(cxled->dpa_res);
++	up_read(&cxl_dpa_rwsem);
++
++	return size;
++}
++
++resource_size_t cxl_dpa_resource(struct cxl_endpoint_decoder *cxled)
++{
++	resource_size_t base = -1;
++
++	down_read(&cxl_dpa_rwsem);
++	if (cxled->dpa_res)
++		base = cxled->dpa_res->start;
++	up_read(&cxl_dpa_rwsem);
++
++	return base;
++}
++
++int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
++{
++	int rc = -EBUSY;
++	struct device *dev = &cxled->cxld.dev;
++	struct cxl_port *port = to_cxl_port(dev->parent);
++
++	down_write(&cxl_dpa_rwsem);
++	if (!cxled->dpa_res) {
++		rc = 0;
++		goto out;
++	}
++	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
++		dev_dbg(dev, "decoder enabled\n");
++		goto out;
++	}
++	if (cxled->cxld.id != port->dpa_end) {
++		dev_dbg(dev, "expected decoder%d.%d\n", port->id,
++			port->dpa_end);
++		goto out;
++	}
++	__cxl_dpa_release(cxled, true);
++	rc = 0;
++out:
++	up_write(&cxl_dpa_rwsem);
++	return rc;
++}
++
++int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
++		     enum cxl_decoder_mode mode)
++{
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct device *dev = &cxled->cxld.dev;
++	int rc = -EBUSY;
++
++	switch (mode) {
++	case CXL_DECODER_RAM:
++	case CXL_DECODER_PMEM:
++		break;
++	default:
++		dev_dbg(dev, "unsupported mode: %d\n", mode);
++		return -EINVAL;
 +	}
 +
- 	if (skip) {
- 		res = __request_region(&cxlds->dpa_res, base - skip, skip,
- 				       dev_name(dev), 0);
-@@ -213,6 +226,7 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 			cxled->cxld.id, cxled->dpa_res);
- 		cxled->mode = CXL_DECODER_MIXED;
- 	}
-+	port->dpa_end++;
- 
- 	return 0;
- }
++	down_write(&cxl_dpa_rwsem);
++	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE)
++		goto out;
++	/*
++	 * Only allow modes that are supported by the current partition
++	 * configuration
++	 */
++	rc = -ENXIO;
++	if (mode == CXL_DECODER_PMEM && !resource_size(&cxlds->pmem_res)) {
++		dev_dbg(dev, "no available pmem capacity\n");
++		goto out;
++	}
++	if (mode == CXL_DECODER_RAM && !resource_size(&cxlds->ram_res)) {
++		dev_dbg(dev, "no available ram capacity\n");
++		goto out;
++	}
++
++	cxled->mode = mode;
++	rc = 0;
++out:
++	up_write(&cxl_dpa_rwsem);
++
++	return rc;
++}
++
++int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
++{
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	resource_size_t free_ram_start, free_pmem_start;
++	struct cxl_port *port = cxled_to_port(cxled);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct device *dev = &cxled->cxld.dev;
++	resource_size_t start, avail, skip;
++	struct resource *p, *last;
++	int rc = -EBUSY;
++
++	down_write(&cxl_dpa_rwsem);
++	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
++		dev_dbg(dev, "decoder enabled\n");
++		goto out;
++	}
++
++	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
++		last = p;
++	if (last)
++		free_ram_start = last->end + 1;
++	else
++		free_ram_start = cxlds->ram_res.start;
++
++	for (p = cxlds->pmem_res.child, last = NULL; p; p = p->sibling)
++		last = p;
++	if (last)
++		free_pmem_start = last->end + 1;
++	else
++		free_pmem_start = cxlds->pmem_res.start;
++
++	if (cxled->mode == CXL_DECODER_RAM) {
++		start = free_ram_start;
++		avail = cxlds->ram_res.end - start + 1;
++		skip = 0;
++	} else if (cxled->mode == CXL_DECODER_PMEM) {
++		resource_size_t skip_start, skip_end;
++
++		start = free_pmem_start;
++		avail = cxlds->pmem_res.end - start + 1;
++		skip_start = free_ram_start;
++		skip_end = start - 1;
++		skip = skip_end - skip_start + 1;
++	} else {
++		dev_dbg(dev, "mode not set\n");
++		rc = -EINVAL;
++		goto out;
++	}
++
++	if (size > avail) {
++		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
++			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
++			&avail);
++		rc = -ENOSPC;
++		goto out;
++	}
++
++	rc = __cxl_dpa_reserve(cxled, start, size, skip);
++out:
++	up_write(&cxl_dpa_rwsem);
++
++	if (rc)
++		return rc;
++
++	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
++}
++
+ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 			    int *target_map, void __iomem *hdm, int which,
+ 			    u64 *dpa_base)
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 9d632c8c580b..54bf032cbcb7 100644
+index 54bf032cbcb7..08851357b364 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -485,6 +485,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
- 	port->uport = uport;
- 	port->component_reg_phys = component_reg_phys;
- 	ida_init(&port->decoder_ida);
-+	port->dpa_end = -1;
- 	INIT_LIST_HEAD(&port->dports);
- 	INIT_LIST_HEAD(&port->endpoints);
+@@ -188,7 +188,76 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
+ 		return sysfs_emit(buf, "mixed\n");
+ 	}
+ }
+-static DEVICE_ATTR_RO(mode);
++
++static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
++			  const char *buf, size_t len)
++{
++	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
++	enum cxl_decoder_mode mode;
++	ssize_t rc;
++
++	if (sysfs_streq(buf, "pmem"))
++		mode = CXL_DECODER_PMEM;
++	else if (sysfs_streq(buf, "ram"))
++		mode = CXL_DECODER_RAM;
++	else
++		return -EINVAL;
++
++	rc = cxl_dpa_set_mode(cxled, mode);
++	if (rc)
++		return rc;
++
++	return len;
++}
++static DEVICE_ATTR_RW(mode);
++
++static ssize_t dpa_resource_show(struct device *dev, struct device_attribute *attr,
++			    char *buf)
++{
++	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
++	u64 base = cxl_dpa_resource(cxled);
++
++	return sysfs_emit(buf, "%#llx\n", base);
++}
++static DEVICE_ATTR_RO(dpa_resource);
++
++static ssize_t dpa_size_show(struct device *dev, struct device_attribute *attr,
++			     char *buf)
++{
++	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
++	resource_size_t size = cxl_dpa_size(cxled);
++
++	return sysfs_emit(buf, "%pa\n", &size);
++}
++
++static ssize_t dpa_size_store(struct device *dev, struct device_attribute *attr,
++			      const char *buf, size_t len)
++{
++	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
++	unsigned long long size;
++	ssize_t rc;
++
++	rc = kstrtoull(buf, 0, &size);
++	if (rc)
++		return rc;
++
++	if (!IS_ALIGNED(size, SZ_256M))
++		return -EINVAL;
++
++	rc = cxl_dpa_free(cxled);
++	if (rc)
++		return rc;
++
++	if (size == 0)
++		return len;
++
++	rc = cxl_dpa_alloc(cxled, size);
++	if (rc)
++		return rc;
++
++	return len;
++}
++static DEVICE_ATTR_RW(dpa_size);
  
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index aa223166f7ef..d8edbdaa6208 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -326,6 +326,7 @@ struct cxl_nvdimm {
-  * @dports: cxl_dport instances referenced by decoders
-  * @endpoints: cxl_ep instances, endpoints that are a descendant of this port
-  * @decoder_ida: allocator for decoder ids
-+ * @dpa_end: cursor to track highest allocated decoder for allocation ordering
-  * @component_reg_phys: component register capability base address (optional)
-  * @dead: last ep has been removed, force port re-creation
-  * @depth: How deep this port is relative to the root. depth 0 is the root.
-@@ -337,6 +338,7 @@ struct cxl_port {
- 	struct list_head dports;
- 	struct list_head endpoints;
- 	struct ida decoder_ida;
-+	int dpa_end;
- 	resource_size_t component_reg_phys;
- 	bool dead;
- 	unsigned int depth;
+ static struct attribute *cxl_decoder_base_attrs[] = {
+ 	&dev_attr_start.attr,
+@@ -241,6 +310,8 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
+ static struct attribute *cxl_decoder_endpoint_attrs[] = {
+ 	&dev_attr_target_type.attr,
+ 	&dev_attr_mode.attr,
++	&dev_attr_dpa_size.attr,
++	&dev_attr_dpa_resource.attr,
+ 	NULL,
+ };
+ 
 
