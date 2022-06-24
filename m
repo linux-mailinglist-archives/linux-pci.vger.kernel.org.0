@@ -2,98 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 306E4559654
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 11:20:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D7885596E4
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 11:39:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231537AbiFXJUQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 05:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35838 "EHLO
+        id S231230AbiFXJgj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 05:36:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230245AbiFXJUP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 05:20:15 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240FC680BB;
-        Fri, 24 Jun 2022 02:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1656062415; x=1687598415;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=FH5MRkjexNSBtIFQJCSSojv/QFrWgGXcfNpOdTHtJRE=;
-  b=I8FDs6ug8UkpLg372J61PZDEK4dIaBIAdRiEU/0CwioWPIpfNXdFFsVn
-   xxi8Fj3mPMfo13SqgM4OjOSPnAUhYacJXFab6rxY4HJNi6rkX2YJTgS3P
-   hxzqI4F249QTbC3lHW7NQQvPRn/f+ArE2oG8xicgJ5tO8WEJoMj5m928o
-   c=;
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 24 Jun 2022 02:20:15 -0700
-X-QCInternal: smtphost
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Jun 2022 02:20:13 -0700
-X-QCInternal: smtphost
-Received: from hu-krichai-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.110.37])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 24 Jun 2022 14:49:55 +0530
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id 147913E69; Fri, 24 Jun 2022 14:49:55 +0530 (+0530)
-From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
-To:     helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_hemantk@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
-        dmitry.baryshkov@linaro.org,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH v1 3/3] arm64: dts: qcom: sc7280: Add missing pcie clocks
-Date:   Fri, 24 Jun 2022 14:49:51 +0530
-Message-Id: <1656062391-14567-4-git-send-email-quic_krichai@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1656062391-14567-1-git-send-email-quic_krichai@quicinc.com>
-References: <1656062391-14567-1-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231605AbiFXJgb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 05:36:31 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83F347946E;
+        Fri, 24 Jun 2022 02:36:28 -0700 (PDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LTsQp4yZVzkWVf;
+        Fri, 24 Jun 2022 17:34:42 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 24 Jun 2022 17:36:01 +0800
+Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 24 Jun
+ 2022 17:36:00 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <Frank.Li@nxp.com>, <jdmason@kudzu.us>, <kishon@ti.com>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>
+Subject: [PATCH -next] PCI: endpoint: pci-epf-vntb: fix error handle in epf_ntb_mw_bar_init()
+Date:   Fri, 24 Jun 2022 17:46:04 +0800
+Message-ID: <20220624094604.2159713-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add missing pcie clocks.
+In error case of epf_ntb_mw_bar_init(), memory window BARs should be
+cleared, so add 'num_mws' parameter in epf_ntb_mw_bar_clear() and
+calling it in error path to clear the BARs. Also add missing error
+code when pci_epc_mem_alloc_addr() fails.
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Fixes: ff32fac00d97 ("NTB: EPF: support NTB transfer between PCI RC and EP connection")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 ---
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index e66fc67..a5ce095 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -2043,6 +2043,8 @@
- 				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
- 				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
- 				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
-+				 <&gcc GCC_AGGRE_NOC_PCIE_CENTER_SF_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>,
- 				 <&gcc GCC_DDRSS_PCIE_SF_CLK>;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index ebf7e243eefa..d8ed640c16c4 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -567,6 +567,8 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
+ 	return -1;
+ }
  
- 			clock-names = "pipe",
-@@ -2055,6 +2057,8 @@
- 				      "bus_slave",
- 				      "slave_q2a",
- 				      "tbu",
-+				      "aggre0",
-+				      "aggre1",
- 				      "ddrss_sf_tbu";
++static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws);
++
+ /**
+  * epf_ntb_db_bar_clear() - Clear doorbell BAR and free memory
+  *   allocated in peers outbound address space
+@@ -625,6 +627,11 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
+ 							      &ntb->vpci_mw_phy[i],
+ 							      size);
+ 		if (!ntb->vpci_mw_addr[i]) {
++			pci_epc_clear_bar(ntb->epf->epc,
++					  ntb->epf->func_no,
++					  ntb->epf->vfunc_no,
++					  &ntb->epf->bar[barno]);
++			ret = -ENOMEM;
+ 			dev_err(dev, "Failed to allocate source address\n");
+ 			goto err_alloc_mem;
+ 		}
+@@ -632,6 +639,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
  
- 			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
+ 	return ret;
+ err_alloc_mem:
++	epf_ntb_mw_bar_clear(ntb, i);
+ 	return ret;
+ }
+ 
+@@ -640,12 +648,12 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
+  * @ntb: NTB device that facilitates communication between HOST and vHOST
+  *
+  */
+-static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb)
++static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws)
+ {
+ 	enum pci_barno barno;
+ 	int i;
+ 
+-	for (i = 0; i < ntb->num_mws; i++) {
++	for (i = 0; i < num_mws; i++) {
+ 		barno = ntb->epf_ntb_bar[BAR_MW0 + i];
+ 		pci_epc_clear_bar(ntb->epf->epc,
+ 				  ntb->epf->func_no,
+@@ -774,7 +782,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
+ 	return 0;
+ 
+ err_write_header:
+-	epf_ntb_mw_bar_clear(ntb);
++	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
+ err_mw_bar_init:
+ 	epf_ntb_db_bar_clear(ntb);
+ err_db_bar_init:
+@@ -794,7 +802,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
+ static void epf_ntb_epc_cleanup(struct epf_ntb *ntb)
+ {
+ 	epf_ntb_db_bar_clear(ntb);
+-	epf_ntb_mw_bar_clear(ntb);
++	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
+ }
+ 
+ #define EPF_NTB_R(_name)						\
 -- 
-2.7.4
+2.25.1
 
