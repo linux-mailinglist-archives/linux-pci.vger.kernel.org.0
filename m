@@ -2,268 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24244559BED
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 16:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A188A559CBD
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 17:00:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233059AbiFXOkY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 10:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40776 "EHLO
+        id S233341AbiFXOwR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 10:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233048AbiFXOkP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 10:40:15 -0400
-Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E433F67E6D;
-        Fri, 24 Jun 2022 07:40:09 -0700 (PDT)
-Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id 4CD395BC8;
-        Fri, 24 Jun 2022 17:41:24 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 4CD395BC8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1656081684;
-        bh=JVcgoEPgpyE0TQbuJnHYD50yVoHbE9gPDnqnypQoVIs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=WLM7gGTkLnK/1M0h33YJDmbEY866XeTpngHYvoQ5SpVoYjQfHjriHrw3kAoWB68wL
-         8t/dk55DVnHMVajXE5WmcaY18XXcii61SLxpFeC5bZZNY2VCYD0fqixuGSakLsiBVx
-         SGivJEBQOYWpi5wF20mzmbbluiHx/x2mLT7iobCo=
-Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 Jun 2022 17:40:04 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v4 15/15] PCI: dwc: Introduce dma-ranges property support for RC-host
-Date:   Fri, 24 Jun 2022 17:39:47 +0300
-Message-ID: <20220624143947.8991-16-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
-References: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S233337AbiFXOv4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 10:51:56 -0400
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on0626.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0e::626])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A1F6F7BD;
+        Fri, 24 Jun 2022 07:46:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UN66ukcb1y5mmaMB4YS8o/wTm0JmsfkoicfSbr9Ep5RCB2dH2QNP7y+t4//eaYnC2LHPKrfF5SQi9V2wdjfIqFZ/3Wb3qMcZ85UIuc5LAeDl6SWEd7WJDK7coiwueBfYJZoG+wyJtc4ANDyOWIpnYf6ISNbmAQyNAcmmGR4E21ISmu3AUZh1hCawF5ADlFLBv+VLXij6vSpSJIDNDZCctvC4KYLHYRUVrUPk0z+bkCnhPBMNRL+B2Hx3S1SKnpW0oitOLYEqv2SBlqQlzXDWxx18BxzOpuhh0p/DMn85By7EC0GLG42ueI0xxXHvWQaNLXzGErnWvBQbBpb1dwJL0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+QiZ3PhUg1/sq0AvKj8y/HjApkNiJc8hfYCcMCHumdA=;
+ b=c2S0URYgBPsbXofHFCwJdWmLKaGwPuexVqJaFWJ2YseeKk05NIluHle2uYvDXxKTK1SxZ6HxPbDWwCkE7o/DllgYuecjNo50/jlOnqwzUQ2zLZnLDNX0u+fxksynAPXLdFz1z/7Eyqql1aAQXAvUDYJXwy8G/Gzr1JzzGyUtj9MMeYSv/rNprTgkmWgRuz4EnTRhYekk+m13jJ0S7u2/2bxK5dFibYxLRnFawXJYLi3+HJGTuTggVF2/SOZ++zCjonq1E1PLfBhePtfD5YyZMycPduqvp/nyeQxpnGsi6iji8tJC9T4KOUGY3iM2HLAhI0MQ5mtgsRCLDBhNMo2oVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+QiZ3PhUg1/sq0AvKj8y/HjApkNiJc8hfYCcMCHumdA=;
+ b=TtCXvvscRz2K4QylGuaEFXN7veRaS5U5qXO68KE4x7rl6N2d4PMaDXMm3p1Z3jx8uvxxHyHEQKRsbBMhI7Q7zFhBftd1D2QAkSi2PYjUa4NoBPdqErFZ12ZCP7N0Zo8ZPFiywGFW3vXfqn5/2tYp/fLw5aNioYBIM/Kmq7ZZgmU=
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by VI1PR04MB7167.eurprd04.prod.outlook.com (2603:10a6:800:12a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.17; Fri, 24 Jun
+ 2022 14:46:09 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::e0bf:616e:3fa0:e4ea]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::e0bf:616e:3fa0:e4ea%5]) with mapi id 15.20.5373.017; Fri, 24 Jun 2022
+ 14:46:09 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     Yang Yingliang <yangyingliang@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Subject: RE: [PATCH -next] PCI: endpoint: pci-epf-vntb: fix error handle in
+ epf_ntb_mw_bar_init()
+Thread-Topic: [PATCH -next] PCI: endpoint: pci-epf-vntb: fix error handle in
+ epf_ntb_mw_bar_init()
+Thread-Index: AQHYh63jnkgyJ8o6FUODAWw8C6hSSa1eoSvg
+Date:   Fri, 24 Jun 2022 14:46:09 +0000
+Message-ID: <PAXPR04MB9186907C398EC709B7ADF95888B49@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220624094604.2159713-1-yangyingliang@huawei.com>
+In-Reply-To: <20220624094604.2159713-1-yangyingliang@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fd2261b3-7116-4005-ebf4-08da55f046ab
+x-ms-traffictypediagnostic: VI1PR04MB7167:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SC3DoNrpZCb4c/79UAN9Pj6f/1vxExg8utivAWMmmsay039nmQ68zUky4RSjwH5804K17+RhJZbZY5Of041fUDJ3uYJNI7EhuCW7RLq/ZLxu/C+u+vENS5ILUdyQ6nbo7qieIsIju/8HcFJB6TmvWQVUv0Zf3sYzq8MEo/syEtFmZ21Jj5XduoZoWhnlK3Tvhh4geDS/2297QKiJrJy5/4sAohSEH0SFAanS/zYTyYrP4eMwr/1SgAuB/r1Wo9d0tqAM6XqzgIBAAnWh2LhgOFMZI+5Lk6l5hX4Q3bJyaCOINrMD7tS2PJ+TGn2Sm2J+RIs/+JWBd9KXnVjLB1RjA08PDdyXQPKqgynKBjFkUCYKV6N2sWsw8mlVTqnifa5sj3GYYMfaPTsxVIzGFvGv3WQXO9OP/NBGimxagaz3zNeM/kQetxQTrlw1DD/uzpkwbP/RPJ2UDbvPOiFzAbOQnkMoFmdCkFbiWLrUiPYS0/bBZwjReUsZ9TSH8dwi7KDmWAcECjZuf8BFo/DffrNu6LK8dSHgX7w/mazhXpsjeadJprty0Rm28pgn5Y1WUyHssbkIT3jO66A5n6oL8dFP95PZ2hNtfmiVAf7EHyQ/yJpW4pQzCGazcfoP3sGEoCQHNDD4XPDhg+P9AQYrcW8j3PEatRHjXwZeBdB8OnHfMsxGF02xTCLCkj7C6Bx/uAXTomFdQiPS/tN55eyjdRVRy68uDFFj9Mmz85OJE5yFbRuiI+P8xQb79JnkJ97/nj3h3oO90FpItqLirh8oJK8Msg6otJTVIzbB3vKpADG5jaI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(8676002)(64756008)(66556008)(66476007)(52536014)(54906003)(71200400001)(4326008)(66446008)(76116006)(66946007)(44832011)(55016003)(38070700005)(110136005)(7696005)(86362001)(122000001)(186003)(8936002)(6506007)(83380400001)(53546011)(38100700002)(55236004)(5660300002)(9686003)(41300700001)(26005)(33656002)(316002)(2906002)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?crnBl5gmMBJhIq9p1+Yk0qebiTYqapSVCqQg+1TsUpjjGK/cIWxwDZhCTfp/?=
+ =?us-ascii?Q?qzu9aSrJDjazP9HI+UDLrzBR85sK17VzviG4rooplRtScKPaV3TXNecKzfIr?=
+ =?us-ascii?Q?rqZ7FHTtbNe8XxZRVnGo0OgyVe3+6C4TsfyZhx4ql/09aK0gcsLO9HjB0dcU?=
+ =?us-ascii?Q?4aOnqhbdwYQKHuHJpBhv8YlCB+vMdFOGlDADwShj82BDKRK6/hZKg+RT9JIA?=
+ =?us-ascii?Q?zkEyS7dyVlJbpc8+8WQwc/sKN1xAl8GvTNEDSW4pVVde2wmGeTe5Xk6FjWpa?=
+ =?us-ascii?Q?Q76gr/BIlKLprbde15Jt+RGtH5o7AJDiyaG/F+RIXgn4YWUPYxd2jutmPrJH?=
+ =?us-ascii?Q?yrcJ462BfSqq2S70PXYn0LurhpdTi8F2hGbIbxdYgnQIME+DG4pujsxMTPrr?=
+ =?us-ascii?Q?0OWsCZtw8eJm1wP4Ed6/oMIhBR1AlZjEtLn2N+H8VqHXIjKafjjtkQztUh5g?=
+ =?us-ascii?Q?RgXJz2Z7Bpfn9Pweq+sAh5QpP8WYayGBWOXGe/QTlc1gxVI1syvY5YG4Efnc?=
+ =?us-ascii?Q?6x1r3tAUrIcO/WY5uLW8yX5t/6QsWvwPvGb7QlnzaZMPyfdxf4IMSrMkBaHy?=
+ =?us-ascii?Q?3uhR0JRpl/u6OiIdhol1hDaZ25AQGFDN7CySGeHJH6UGQkFfzMimnGQNjDUe?=
+ =?us-ascii?Q?lKT0nnU4K0EGkIfCmsYrxBVXQN42VXu0iRfPbpWt+dPGxkse7p7EsWRIWIcs?=
+ =?us-ascii?Q?Y+Tho/4/ojxzPaSBulC5/3Y3YUq0Op5wD5uHw3BlvdsFzdUbNUqqz+cRfyyZ?=
+ =?us-ascii?Q?d7jEqlIc5ZUZ5+7DPofuWTcOkppV7cTKz9dz6PtMKdv0PWZnyVyyG+d2/uyL?=
+ =?us-ascii?Q?ha8M2VsbhWqKZgJUy8xbuO28N1UErgbugmJO8uIw+CAJ2u+hOGHvfVM8OuOT?=
+ =?us-ascii?Q?BrV43iQoqIzUQt6GRkVCClH8ln5vU/hNkXSgltbYjajNGimNL+NNbPjlk1Wy?=
+ =?us-ascii?Q?dB4axlpB2PpyauwFnbM+Xh3e5CAAvur9q4FkyslJGvb/rXKnVuwBvYcU/945?=
+ =?us-ascii?Q?jpbCQ5rawX3sY3KzRj5UaciqSdCYFDduJ/KfJ8DJjP74upeUGMpetArQWdao?=
+ =?us-ascii?Q?zwDb2E1zyEsqLlwo7Ni3nW+JuaiVHN/ET3cdRhvs9aVWo0UY2un5NFf5xu7I?=
+ =?us-ascii?Q?xIFdDsszp+JFqlZAW3TtoL6iUb/LDfzf55rZmAnGxYBW4IyzBJX41S8bxPq7?=
+ =?us-ascii?Q?064bGAFovlCDXrouDo9AFcExJ1s+oX5pkry1AsemVXdEwIXxvhXzf3qL96c9?=
+ =?us-ascii?Q?zdcEB+SO9oVAQKaeTBUcEImmtV3aCub6GBgevbGSVhiehYsSlBjC/ZRTMpbk?=
+ =?us-ascii?Q?e2llyng0opXG1shFGwoOqc4A4C5mhWg3qHskAnm/moG6CDAQAFwh1ddo+G0i?=
+ =?us-ascii?Q?dRhNeqVxLW2IYoW8brKNkmxVBRh/CS5d9FB1lHUywWwQK2vFhDTNIk7Nolmi?=
+ =?us-ascii?Q?yCZXf6pkxLcQkSGSC3kF4nYBcQ9X1LtxS6mC+G7refZ38PKzoRRbZTOM5/72?=
+ =?us-ascii?Q?jZmK4GrbcgtipSAKQu6NdQ7jN7QB5BqhJim83b1pUar0CaG9Fxnqk5PruLx/?=
+ =?us-ascii?Q?b0CkKjfrKIUm8C4PoOc=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd2261b3-7116-4005-ebf4-08da55f046ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2022 14:46:09.1909
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3OsOVrpV16swJn1BYGKYDV9iUZG7nykizD2GiuvaAIxa+UtvnE+He29MJUFfNdeAWc6OBQ9ur9Qm4+s/Op8fKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7167
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In accordance with the generic PCIe Root Port DT-bindings the "dma-ranges"
-property has the same format as the "ranges" property. The only difference
-is in their semantics. The "dma-ranges" property describes the PCIe-to-CPU
-memory mapping in opposite to the CPU-to-PCIe mapping of the "ranges"
-property. Even though the DW PCIe controllers are normally equipped with
-the internal Address Translation Unit which inbound and outbound tables
-can be used to implement both properties semantics, it was surprising for
-me to discover that the host-related part of the DW PCIe driver currently
-supports the "ranges" property only while the "dma-ranges" windows are
-just ignored. Having the "dma-ranges" supported in the driver would be
-very handy for the platforms, that don't tolerate the 1:1 CPU-PCIe memory
-mapping and require a customized PCIe memory layout. So let's fix that by
-introducing the "dma-ranges" property support.
 
-First of all we suggest to rename the dw_pcie_prog_inbound_atu() method to
-dw_pcie_prog_ep_inbound_atu() and create a new version of the
-dw_pcie_prog_inbound_atu() function. Thus we'll have two methods for the
-RC and EP controllers respectively in the same way as it has been
-developed for the outbound ATU setup methods.
 
-Secondly aside with the memory window index and type the new
-dw_pcie_prog_inbound_atu() function will accept CPU address, PCIe address
-and size as its arguments. These parameters define the PCIe and CPU memory
-ranges which will be used to setup the respective inbound ATU mapping. The
-passed parameters need to be verified against the ATU ranges constraints
-in the same way as it is done for the outbound ranges.
+> -----Original Message-----
+> From: Yang Yingliang <yangyingliang@huawei.com>
+> Sent: Friday, June 24, 2022 4:46 AM
+> To: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
+> Cc: Frank Li <frank.li@nxp.com>; jdmason@kudzu.us; kishon@ti.com;
+> lpieralisi@kernel.org; kw@linux.com; bhelgaas@google.com
+> Subject: [PATCH -next] PCI: endpoint: pci-epf-vntb: fix error handle in
+> epf_ntb_mw_bar_init()
+>=20
+> In error case of epf_ntb_mw_bar_init(), memory window BARs should be
+> cleared, so add 'num_mws' parameter in epf_ntb_mw_bar_clear() and
+> calling it in error path to clear the BARs. Also add missing error
+> code when pci_epc_mem_alloc_addr() fails.
+>=20
+> Fixes: ff32fac00d97 ("NTB: EPF: support NTB transfer between PCI RC and E=
+P
+> connection")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> index ebf7e243eefa..d8ed640c16c4 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> @@ -567,6 +567,8 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
+>  	return -1;
+>  }
+>=20
+> +static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws);
+> +
+>  /**
+>   * epf_ntb_db_bar_clear() - Clear doorbell BAR and free memory
+>   *   allocated in peers outbound address space
+> @@ -625,6 +627,11 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
+>  							      &ntb-
+> >vpci_mw_phy[i],
+>  							      size);
+>  		if (!ntb->vpci_mw_addr[i]) {
+> +			pci_epc_clear_bar(ntb->epf->epc,
+> +					  ntb->epf->func_no,
+> +					  ntb->epf->vfunc_no,
+> +					  &ntb->epf->bar[barno]);
+> +			ret =3D -ENOMEM;
 
-Finally the DMA-ranges detected for the PCIe controller need to be
-converted to the inbound ATU entries during the host controller
-initialization procedure. It will be done in the framework of the
-dw_pcie_iatu_setup() method. Note before setting the inbound ranges up we
-need to disable all the inbound ATU entries in order to prevent unexpected
-PCIe TLPs translations defined by some third party software like
-bootloaders.
+This function move to goto and keep consistent of error handle.=20
+=20
+Suggest:=20
+	Goto err_set_bar
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
+	....
+Error_set_bar:
+	Pci_epc_clear_bar();
 
----
-
-Changelog v3:
-- Drop inbound iATU window size alignment constraint. (@Manivannan)
----
- .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
- .../pci/controller/dwc/pcie-designware-host.c | 32 ++++++++++-
- drivers/pci/controller/dwc/pcie-designware.c  | 56 ++++++++++++++++++-
- drivers/pci/controller/dwc/pcie-designware.h  |  6 +-
- 4 files changed, 89 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 627c4b69878c..441feff1917a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -167,8 +167,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
- 		return -EINVAL;
- 	}
- 
--	ret = dw_pcie_prog_inbound_atu(pci, func_no, free_win, type,
--				       cpu_addr, bar);
-+	ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
-+					  cpu_addr, bar);
- 	if (ret < 0) {
- 		dev_err(pci->dev, "Failed to program IB window\n");
- 		return ret;
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 6993ce9e856d..2fbe9dc11634 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -581,12 +581,15 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 	}
- 
- 	/*
--	 * Ensure all outbound windows are disabled before proceeding with
--	 * the MEM/IO ranges setups.
-+	 * Ensure all out/inbound windows are disabled before proceeding with
-+	 * the MEM/IO (dma-)ranges setups.
- 	 */
- 	for (i = 0; i < pci->num_ob_windows; i++)
- 		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_OB, i);
- 
-+	for (i = 0; i < pci->num_ib_windows; i++)
-+		dw_pcie_disable_atu(pci, PCIE_ATU_REGION_DIR_IB, i);
-+
- 	i = 0;
- 	resource_list_for_each_entry(entry, &pp->bridge->windows) {
- 		if (resource_type(entry->res) != IORESOURCE_MEM)
-@@ -623,9 +626,32 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 	}
- 
- 	if (pci->num_ob_windows <= i)
--		dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)\n",
-+		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
- 			 pci->num_ob_windows);
- 
-+	i = 0;
-+	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
-+		if (resource_type(entry->res) != IORESOURCE_MEM)
-+			continue;
-+
-+		if (pci->num_ib_windows <= i)
-+			break;
-+
-+		ret = dw_pcie_prog_inbound_atu(pci, i++, PCIE_ATU_TYPE_MEM,
-+					       entry->res->start,
-+					       entry->res->start - entry->offset,
-+					       resource_size(entry->res));
-+		if (ret) {
-+			dev_err(pci->dev, "Failed to set DMA range %pr\n",
-+				entry->res);
-+			return ret;
-+		}
-+	}
-+
-+	if (pci->num_ib_windows <= i)
-+		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
-+			 pci->num_ib_windows);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 9c622b635fdd..7a5be3c4f8e0 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -396,8 +396,60 @@ static inline void dw_pcie_writel_atu_ib(struct dw_pcie *pci, u32 index, u32 reg
- 	dw_pcie_writel_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg, val);
- }
- 
--int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
--			     int type, u64 cpu_addr, u8 bar)
-+int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
-+			     u64 cpu_addr, u64 pci_addr, u64 size)
-+{
-+	u64 limit_addr = pci_addr + size - 1;
-+	u32 retries, val;
-+
-+	if ((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit) ||
-+	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
-+	    !IS_ALIGNED(pci_addr, pci->region_align) || !size) {
-+		return -EINVAL;
-+	}
-+
-+	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_BASE,
-+			      lower_32_bits(pci_addr));
-+	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_BASE,
-+			      upper_32_bits(pci_addr));
-+
-+	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LIMIT,
-+			      lower_32_bits(limit_addr));
-+	if (dw_pcie_ver_is_ge(pci, 460A))
-+		dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_LIMIT,
-+				      upper_32_bits(limit_addr));
-+
-+	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_LOWER_TARGET,
-+			      lower_32_bits(cpu_addr));
-+	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_UPPER_TARGET,
-+			      upper_32_bits(cpu_addr));
-+
-+	val = type;
-+	if (upper_32_bits(limit_addr) > upper_32_bits(pci_addr) &&
-+	    dw_pcie_ver_is_ge(pci, 460A))
-+		val |= PCIE_ATU_INCREASE_REGION_SIZE;
-+	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_REGION_CTRL1, val);
-+	dw_pcie_writel_atu_ib(pci, index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENABLE);
-+
-+	/*
-+	 * Make sure ATU enable takes effect before any subsequent config
-+	 * and I/O accesses.
-+	 */
-+	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
-+		val = dw_pcie_readl_atu_ib(pci, index, PCIE_ATU_REGION_CTRL2);
-+		if (val & PCIE_ATU_ENABLE)
-+			return 0;
-+
-+		mdelay(LINK_WAIT_IATU);
-+	}
-+
-+	dev_err(pci->dev, "Inbound iATU is not being enabled\n");
-+
-+	return -ETIMEDOUT;
-+}
-+
-+int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-+				int type, u64 cpu_addr, u8 bar)
- {
- 	u32 retries, val;
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index c3e73ed9aff5..5954e8cf9eec 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -308,8 +308,10 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
- 			      u64 cpu_addr, u64 pci_addr, u64 size);
- int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
- 				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
--int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
--			     int type, u64 cpu_addr, u8 bar);
-+int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
-+			     u64 cpu_addr, u64 pci_addr, u64 size);
-+int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-+				int type, u64 cpu_addr, u8 bar);
- void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
- void dw_pcie_setup(struct dw_pcie *pci);
- void dw_pcie_iatu_detect(struct dw_pcie *pci);
--- 
-2.35.1
+>  			dev_err(dev, "Failed to allocate source address\n");
+>  			goto err_alloc_mem;
+>  		}
+> @@ -632,6 +639,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
+>=20
+>  	return ret;
+>  err_alloc_mem:
+> +	epf_ntb_mw_bar_clear(ntb, i);
+>  	return ret;
+>  }
+>=20
+> @@ -640,12 +648,12 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
+>   * @ntb: NTB device that facilitates communication between HOST and
+> vHOST
+>   *
+>   */
+> -static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb)
+> +static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws)
+>  {
+>  	enum pci_barno barno;
+>  	int i;
+>=20
+> -	for (i =3D 0; i < ntb->num_mws; i++) {
+> +	for (i =3D 0; i < num_mws; i++) {
+>  		barno =3D ntb->epf_ntb_bar[BAR_MW0 + i];
+>  		pci_epc_clear_bar(ntb->epf->epc,
+>  				  ntb->epf->func_no,
+> @@ -774,7 +782,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
+>  	return 0;
+>=20
+>  err_write_header:
+> -	epf_ntb_mw_bar_clear(ntb);
+> +	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
+>  err_mw_bar_init:
+>  	epf_ntb_db_bar_clear(ntb);
+>  err_db_bar_init:
+> @@ -794,7 +802,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
+>  static void epf_ntb_epc_cleanup(struct epf_ntb *ntb)
+>  {
+>  	epf_ntb_db_bar_clear(ntb);
+> -	epf_ntb_mw_bar_clear(ntb);
+> +	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
+>  }
+>=20
+>  #define EPF_NTB_R(_name)						\
+> --
+> 2.25.1
 
