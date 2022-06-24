@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05758559C16
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 16:45:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87363559BF5
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 16:44:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232990AbiFXOkG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Jun 2022 10:40:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40520 "EHLO
+        id S232428AbiFXOkF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Jun 2022 10:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232933AbiFXOkA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 10:40:00 -0400
+        with ESMTP id S232470AbiFXOkC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Jun 2022 10:40:02 -0400
 Received: from mail.baikalelectronics.com (mail.baikalelectronics.com [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 711BE64789;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 431116478B;
         Fri, 24 Jun 2022 07:39:59 -0700 (PDT)
 Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id 8D55C5BC7;
-        Fri, 24 Jun 2022 17:41:15 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 8D55C5BC7
+        by mail.baikalelectronics.com (Postfix) with ESMTP id 6D83E5BC3;
+        Fri, 24 Jun 2022 17:41:16 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 6D83E5BC3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1656081675;
-        bh=kzvAT0+XskKc4to3kewrh91J9sNB+uuliISSGHATFPk=;
+        d=baikalelectronics.ru; s=mail; t=1656081676;
+        bh=9U2WClu82BJWbbQgRZJ1z49ymt89672SnfrQ5iGsWQ8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=XQENv9N1sUaPpTStJTlDPdNlzSD1PNpG9LQR7l0xjkLjLThmJXr1z08rM//NiWmU5
-         DOnEKhdIJudgdXJ/kO9WtmEAgBrCS57J0JhiltadeDF9+Ga/sc+kIyTgbDyAuLpGw6
-         n4OwYakUgReu67pgNbAC5lerS7y7mp7X8htbYgsU=
+        b=fo6a5ysxpwp5o+YKvQvD6ZDgqkt6Lh6NpJ2G11n8xhZYKqPTHKsMqvRIAZkXurJpA
+         LBe+KOFKw2SYlLlT5n31cNV7r0cITWZmW9ckACzXiNJ1mIwGCsd+NdLKxbtA9Pr7tV
+         hJgUv2mWHLisHpRQBsUmkUNVhSSdVtItk8J6ytFs=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 Jun 2022 17:39:55 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 24 Jun 2022 17:39:56 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -42,9 +42,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v4 04/15] PCI: dwc: Add IP-core version detection procedure
-Date:   Fri, 24 Jun 2022 17:39:36 +0300
-Message-ID: <20220624143947.8991-5-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH RESEND v4 05/15] PCI: dwc: Introduce Synopsys IP-core versions/types interface
+Date:   Fri, 24 Jun 2022 17:39:37 +0300
+Message-ID: <20220624143947.8991-6-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -60,125 +60,94 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since DWC PCIe v4.70a the controller version and version type can be read
-from the PORT_LOGIC.PCIE_VERSION_OFF and PORT_LOGIC.PCIE_VERSION_TYPE_OFF
-registers respectively. Seeing the generic code has got version-dependent
-parts let's use these registers to find out the controller version.  The
-detection procedure is executed for both RC and EP modes right after the
-platform-specific initialization. We can't do that earlier since the
-glue-drivers can perform the DBI-related setups there including the bus
-reference clocks activation, without which the CSRs just can't be read.
-
-Note the CSRs content is zero on the older DWC PCIe controller. In that
-case we have no choice but to rely on the platform setup.
+Instead of manual DW PCIe data version field comparison let's use a handy
+macro-based interface in order to shorten out the statements, simplify the
+corresponding parts, improve the code readability and maintainability in
+perspective when more complex version-based dependencies need to
+implemented. Similar approaches have already been implemented in the DWC
+USB3 and DW SPI drivers (though with some IP-core evolution specifics).
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Rob Herring <robh@kernel.org>
-
 ---
+ drivers/pci/controller/dwc/pci-keystone.c    |  2 +-
+ drivers/pci/controller/dwc/pcie-designware.c |  8 ++++----
+ drivers/pci/controller/dwc/pcie-designware.h | 15 +++++++++++++++
+ 3 files changed, 20 insertions(+), 5 deletions(-)
 
-Changelog v2:
-- Move the IP-core version detection procedure call from
-  dw_pcie_ep_init_complete() to dw_pcie_ep_init().
----
- .../pci/controller/dwc/pcie-designware-ep.c   |  2 ++
- .../pci/controller/dwc/pcie-designware-host.c |  2 ++
- drivers/pci/controller/dwc/pcie-designware.c  | 24 +++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h  |  6 +++++
- 4 files changed, 34 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 1e35542d6f72..ffbd3af6d65a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -711,6 +711,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	ep->phys_base = res->start;
- 	ep->addr_size = resource_size(res);
- 
-+	dw_pcie_version_detect(pci);
-+
- 	dw_pcie_iatu_detect(pci);
- 
- 	ep->ib_window_map = devm_kcalloc(dev,
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 95256434913f..b1437b37140f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -405,6 +405,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 		}
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index c4ab3d775a18..2a9bbde224af 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -1233,7 +1233,7 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 		goto err_get_sync;
  	}
  
-+	dw_pcie_version_detect(pci);
-+
- 	dw_pcie_iatu_detect(pci);
- 
- 	dw_pcie_setup_rc(pp);
+-	if (pci->version >= DW_PCIE_VER_480A)
++	if (dw_pcie_ver_is_ge(pci, 480A))
+ 		ret = ks_pcie_am654_set_mode(dev, mode);
+ 	else
+ 		ret = ks_pcie_set_mode(dev);
 diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index f10a7d5d94e8..cbb36ccaa48b 100644
+index cbb36ccaa48b..bd575ad32bc4 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.c
 +++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -16,6 +16,30 @@
- #include "../../pci.h"
- #include "pcie-designware.h"
- 
-+void dw_pcie_version_detect(struct dw_pcie *pci)
-+{
-+	u32 ver;
-+
-+	/* The content of the CSR is zero on DWC PCIe older than v4.70a */
-+	ver = dw_pcie_readl_dbi(pci, PCIE_VERSION_NUMBER);
-+	if (!ver)
-+		return;
-+
-+	if (pci->version && pci->version != ver)
-+		dev_warn(pci->dev, "Versions don't match (%08x != %08x)\n",
-+			 pci->version, ver);
-+	else
-+		pci->version = ver;
-+
-+	ver = dw_pcie_readl_dbi(pci, PCIE_VERSION_TYPE);
-+
-+	if (pci->type && pci->type != ver)
-+		dev_warn(pci->dev, "Types don't match (%08x != %08x)\n",
-+			 pci->type, ver);
-+	else
-+		pci->type = ver;
-+}
-+
- /*
-  * These interfaces resemble the pci_find_*capability() interfaces, but these
-  * are for configuring host controllers, which are bridges *to* PCI devices but
+@@ -313,7 +313,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ 	val = type | PCIE_ATU_FUNC_NUM(func_no);
+ 	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr))
+ 		val |= PCIE_ATU_INCREASE_REGION_SIZE;
+-	if (pci->version == DW_PCIE_VER_490A)
++	if (dw_pcie_ver_is(pci, 490A))
+ 		val = dw_pcie_enable_ecrc(val);
+ 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+ 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+@@ -360,7 +360,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+ 			   upper_32_bits(cpu_addr));
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_LIMIT,
+ 			   lower_32_bits(limit_addr));
+-	if (pci->version >= DW_PCIE_VER_460A)
++	if (dw_pcie_ver_is_ge(pci, 460A))
+ 		dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_LIMIT,
+ 				   upper_32_bits(limit_addr));
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET,
+@@ -369,9 +369,9 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+ 			   upper_32_bits(pci_addr));
+ 	val = type | PCIE_ATU_FUNC_NUM(func_no);
+ 	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
+-	    pci->version >= DW_PCIE_VER_460A)
++	    dw_pcie_ver_is_ge(pci, 460A))
+ 		val |= PCIE_ATU_INCREASE_REGION_SIZE;
+-	if (pci->version == DW_PCIE_VER_490A)
++	if (dw_pcie_ver_is(pci, 490A))
+ 		val = dw_pcie_enable_ecrc(val);
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 6b81530fb2ca..7899808bdbc6 100644
+index 7899808bdbc6..d247f227464c 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -85,6 +85,9 @@
- #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
- #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+@@ -28,6 +28,21 @@
+ #define DW_PCIE_VER_490A		0x3439302a
+ #define DW_PCIE_VER_520A		0x3532302a
  
-+#define PCIE_VERSION_NUMBER		0x8F8
-+#define PCIE_VERSION_TYPE		0x8FC
++#define __dw_pcie_ver_cmp(_pci, _ver, _op) \
++	((_pci)->version _op DW_PCIE_VER_ ## _ver)
 +
- #define PCIE_ATU_VIEWPORT		0x900
- #define PCIE_ATU_REGION_INBOUND		BIT(31)
- #define PCIE_ATU_REGION_OUTBOUND	0
-@@ -279,6 +282,7 @@ struct dw_pcie {
- 	struct dw_pcie_ep	ep;
- 	const struct dw_pcie_ops *ops;
- 	u32			version;
-+	u32			type;
- 	int			num_lanes;
- 	int			link_gen;
- 	u8			n_fts[2];
-@@ -290,6 +294,8 @@ struct dw_pcie {
- #define to_dw_pcie_from_ep(endpoint)   \
- 		container_of((endpoint), struct dw_pcie, ep)
- 
-+void dw_pcie_version_detect(struct dw_pcie *pci);
++#define dw_pcie_ver_is(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, ==)
 +
- u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
- u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
- 
++#define dw_pcie_ver_is_ge(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, >=)
++
++#define dw_pcie_ver_type_is(_pci, _ver, _type) \
++	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
++	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, ==))
++
++#define dw_pcie_ver_type_is_ge(_pci, _ver, _type) \
++	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
++	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, >=))
++
+ /* Parameters for the waiting for link up routine */
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
 -- 
 2.35.1
 
