@@ -2,124 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DA61558B51
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 00:40:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9497C558CB4
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Jun 2022 03:15:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbiFWWku (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Jun 2022 18:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37252 "EHLO
+        id S229523AbiFXBPx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Jun 2022 21:15:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbiFWWku (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jun 2022 18:40:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BAC517DE;
-        Thu, 23 Jun 2022 15:40:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E03C061EF8;
-        Thu, 23 Jun 2022 22:40:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7225C3411D;
-        Thu, 23 Jun 2022 22:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656024048;
-        bh=nnitVTYwb6+eE3UB/jXxlIFf+kvi+dKql4XS6JwuRC4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CEYhBM5bT3+v80LqWsNgMQ9sp4oZ+tv0FfvSIjgvPo9lyF98+Ufy9q7UGF8a4pgcG
-         u58UTOJA32YKvXpZuA/e/rgm7hpyiemTwP9Wj4algR9uMmhlrfSbzOfAeW/a7IpVr3
-         Yw6+1Uq841ZylEkdJQiO2mGnpdruKV5PEU7MBPvgEZYsSwkSHm+LUx1F8K1KziwpKl
-         yE0d59WYHjhMTFRWwjANXIXr1xHjGzEZmBUXT+au8cYBn8wWmMgdz+bhmbiqb+g/Pz
-         2IojuMlqT8helRtpHc1vTpAZqsz9psc6o6t0iBUkBExZEdiOHwxy0FOqLPm0YU5OAJ
-         vbl/YYpgdllEg==
-Date:   Thu, 23 Jun 2022 17:40:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Herve Codina <herve.codina@bootlin.com>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v6 0/6] RZN1 USB Host support
-Message-ID: <20220623224046.GA1484281@bhelgaas>
+        with ESMTP id S229446AbiFXBPx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Jun 2022 21:15:53 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8875456770;
+        Thu, 23 Jun 2022 18:15:51 -0700 (PDT)
+Received: from dggpeml500020.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LTfHD16ZjzShC2;
+        Fri, 24 Jun 2022 09:12:24 +0800 (CST)
+Received: from dggpeml500008.china.huawei.com (7.185.36.147) by
+ dggpeml500020.china.huawei.com (7.185.36.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 24 Jun 2022 09:15:49 +0800
+Received: from [127.0.0.1] (10.67.111.83) by dggpeml500008.china.huawei.com
+ (7.185.36.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 24 Jun
+ 2022 09:15:49 +0800
+Message-ID: <cf645f1f-9368-3466-6e6d-09ea48a9c3a0@huawei.com>
+Date:   Fri, 24 Jun 2022 09:15:49 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220623223912.GA1484125@bhelgaas>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [EXT] Re: [PATCH -next] NTB: EPF: Fix Kconfig dependency
+To:     Frank Li <frank.li@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>
+CC:     "kishon@ti.com" <kishon@ti.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <PAXPR04MB91861EE0E20E9EC71F4C494288B59@PAXPR04MB9186.eurprd04.prod.outlook.com>
+ <20220623155524.GA1452766@bhelgaas>
+ <PAXPR04MB91865EE1D156F47DB8D9EE4B88B59@PAXPR04MB9186.eurprd04.prod.outlook.com>
+From:   Ren Zhijie <renzhijie2@huawei.com>
+In-Reply-To: <PAXPR04MB91865EE1D156F47DB8D9EE4B88B59@PAXPR04MB9186.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.83]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500008.china.huawei.com (7.185.36.147)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 05:39:14PM -0500, Bjorn Helgaas wrote:
-> On Fri, May 20, 2022 at 11:41:49AM +0200, Herve Codina wrote:
-> > Hi,
-> > 
-> > This series add support for the USB Host controllers available on
-> > RZN1 (r9a06g032) SOC.
-> > 
-> > These USB Host controllers are PCI OHCI/EHCI controllers located
-> > behind a bridge.
-> > 
-> > Regards,
-> > Herve
-> > 
-> > Changes v2:
-> > - Convert bindings to json-schema
-> > - Update clocks description
-> > - Remove unneeded '.compatible = "renesas,pci-r9a06g032"'
-> > 
-> > Changes v3:
-> > - Remove the unneeded patch that calls clk_bulk_prepare_enable()
-> > - Rework the device tree binding (conversion from .txt and RZ/N1 support)
-> > - Use the RZ/N1 SOCs family only in the driver match compatible string.
-> > - Enable PM and PM_GENERIC_DOMAIN for RZ/N1 and add the missing
-> >   '#power-domain-cells' in sysctrl node.
-> > 
-> > Changes v4:
-> > - Remove patches related to PM enable and #pwower-domain-cells as they
-> >   will be handle out of this series.
-> > - Add Bob's reviewed-by on patch 1
-> > - Add Geert's reviewed by on patch 1 and 6
-> > - Rename clocks and make the 'resets' property optional on RZ/N1 family
-> > - Reword some commit logs and titles
-> > - Fix dst node location (sort by node names or unit addresses)
-> > - Fix the USB PHY node name
-> > 
-> > Changes v5:
-> > - Rename clocks ("usb_" prefix removed)
-> > - Add Geert's reviewed-by on patch 2, 3, 4 and 5
-> > 
-> > Changes v6:
-> > - Include schema optionnal part (ie 'if:') in a 'allOf:' block
-> > - Modify commit log on commit 2/6
-> > 
-> > Herve Codina (6):
-> >   dt-bindings: PCI: pci-rcar-gen2: Convert bindings to json-schema
-> >   dt-bindings: PCI: renesas,pci-rcar-gen2: Add device tree support for
-> >     r9a06g032
-> >   PCI: rcar-gen2: Add RZ/N1 SOCs family compatible string
-> 
-> Applied the first three patches (above) to pci/ctrl/rcar-gen2 for
-> v5.20, thank you!
+在 2022/6/23 23:58, Frank Li 写道:
+>
+>> -----Original Message-----
+>> From: Bjorn Helgaas <helgaas@kernel.org>
+>> Sent: Thursday, June 23, 2022 10:55 AM
+>> To: Frank Li <frank.li@nxp.com>
+>> Cc: Ren Zhijie <renzhijie2@huawei.com>; kishon@ti.com;
+>> lpieralisi@kernel.org; kw@linux.com; bhelgaas@google.com;
+>> jdmason@kudzu.us; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Subject: [EXT] Re: [PATCH -next] NTB: EPF: Fix Kconfig dependency
+>>
+>> Caution: EXT Email
+>>
+>> On Thu, Jun 23, 2022 at 03:36:38PM +0000, Frank Li wrote:
+>>>> -----Original Message-----
+>>>> From: Ren Zhijie <renzhijie2@huawei.com>
+>>>> Sent: Thursday, June 23, 2022 3:46 AM
+>>>> To: kishon@ti.com; lpieralisi@kernel.org; kw@linux.com;
+>>>> bhelgaas@google.com; jdmason@kudzu.us; Frank Li <frank.li@nxp.com>
+>>>> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Ren Zhijie
+>>>> <renzhijie2@huawei.com>
+>>>> Subject: [PATCH -next] NTB: EPF: Fix Kconfig dependency
+>> @Ren, please use a typical subject line for the file, e.g.,
+>>
+>>    PCI: endpoint: ...
+>>
+>>>> If CONFIG_NTB is not set and CONFIG_PCI_EPF_VNTB is y.
+>>>>
+>>>> make ARCH=x86_64 CROSS_COMPILE=x86_64-linux-gnu-, will be failed,
+>> like
+>>>> this:
+>>>>
+>>>> drivers/pci/endpoint/functions/pci-epf-vntb.o: In function
+>>>> `epf_ntb_cmd_handler':
+>>>> pci-epf-vntb.c:(.text+0x95e): undefined reference to `ntb_db_event'
+>>>> pci-epf-vntb.c:(.text+0xa1f): undefined reference to `ntb_link_event'
+>>>> pci-epf-vntb.c:(.text+0xa42): undefined reference to `ntb_link_event'
+>>>> drivers/pci/endpoint/functions/pci-epf-vntb.o: In function
+>> `pci_vntb_probe':
+>>>> pci-epf-vntb.c:(.text+0x1250): undefined reference to
+>> `ntb_register_device'
+>>>> The functions ntb_*() are defined in drivers/ntb/core.c, which need
+>>>> CONFIG_NTB setting y to be build-in.
+>>>> To fix this build error, add depends on NTB.
+>>>>
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Fixes: ff32fac00d97("NTB: EPF: support NTB transfer between PCI RC and
+>> EP
+>>>> connection")
+>>>> Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
+>>>> ---
+>>> [Frank Li] Acked
+>> @Frank: if you use the conventional style, e.g.,
+>> "Acked-by: Frank Li <frank.li@nxp.com>", tooling like b4 will
+>> automatically pick it up.  Just saying "Acked" is likely to get missed
+>> or ignored.
+> Thanks.
+> Acked-by: Frank Li <frank.li@nxp.com>
 
-Oh, just noticed there's no ack from Marek or Yoshihiro, the
-maintainers of drivers/pci/controller/pci-rcar-gen2.c.  Let me know if
-you object!  If you can ack it, I will amend the commits to reflect
-that.
+sure, will fix it in patch v2.
 
-Bjorn
+
+Thanks,
+
+Ren Zhijie
+
+>>>>   drivers/pci/endpoint/functions/Kconfig | 1 +
+>>>>   1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/drivers/pci/endpoint/functions/Kconfig
+>>>> b/drivers/pci/endpoint/functions/Kconfig
+>>>> index 362555b024e8..9beee4f0f4ee 100644
+>>>> --- a/drivers/pci/endpoint/functions/Kconfig
+>>>> +++ b/drivers/pci/endpoint/functions/Kconfig
+>>>> @@ -29,6 +29,7 @@ config PCI_EPF_NTB
+>>>>   config PCI_EPF_VNTB
+>>>>           tristate "PCI Endpoint NTB driver"
+>>>>           depends on PCI_ENDPOINT
+>>>> +        depends on NTB
+>>>>           select CONFIGFS_FS
+>>>>           help
+>>>>             Select this configuration option to enable the Non-Transparent
+>>>> --
+>>>> 2.17.1
+> .
+
