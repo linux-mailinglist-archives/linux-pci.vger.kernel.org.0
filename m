@@ -2,132 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 077DC55ABA4
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Jun 2022 18:58:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A99D355ABFC
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Jun 2022 21:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231311AbiFYQ6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Jun 2022 12:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38112 "EHLO
+        id S233285AbiFYTBI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Jun 2022 15:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbiFYQ6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Jun 2022 12:58:18 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 530EB13F81
-        for <linux-pci@vger.kernel.org>; Sat, 25 Jun 2022 09:58:15 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id x38so9664779ybd.9
-        for <linux-pci@vger.kernel.org>; Sat, 25 Jun 2022 09:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=zkRKKkHvNmeWqvRVOQLK4rfH21duyawXjkMEAhn/9YU=;
-        b=KsfZmfHwEoUmo32EMl8R69YgNYeOI+3gnbWXHLQpmoXfJBWazZKTgVlMJuiL1h8r9c
-         +3L3Mu3UezUqsHfXqzFXj+KIuVf1S/iL+mCZ0ewJk0/xu7vxznCM8dEPsA4s/mjDnJOP
-         WU3pSRheEyd4d4MVPFCjx4pMuOtgMfzI99V2phdQNVvNUcwi52nKzJFIsGxa8KOa4x1X
-         iNmLahNWHPwqdkDJyDQVDgNVm2kkvzGyjlzkzXZb14d0FHTeScjwEATvn6JfpS2WaDZH
-         cQhetDHCJGutUWT0DU3g/HlNgUC8EMCYGMhs/js2lbSZzb1DlbgQdb2VfLZxzyDgWhR8
-         WmuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=zkRKKkHvNmeWqvRVOQLK4rfH21duyawXjkMEAhn/9YU=;
-        b=nR+l1sJ1lLOjPnujoFlq3ra79owLviz4AaB37Bw9+8FdsOSRZWhif2kCnrye9b3npx
-         3Yb1UtUd/FI1+dKExXkbLi6BQN2zbt+NmG0xa4/XIOYOb8YygIph5f7+2PkQ9Flrrkf5
-         fzeTxgQHFzBL5J9db5P069Xss4bV17FGWtQFpbN9wLeiE0R3jz9EL01VYMPCgToVeca5
-         FCNvjlcKLUT9e081dTLr2uuOG7Ms7ECvcmzKOax+pGl/umZGVlv8LpHOgFooL+Ffv/2U
-         /I9GkmedIWibeTbpsws3Wj7q/QqIOBfk7beXWqiPqNGy+cjsq94tBPxyuS5ZR/sYCB52
-         AIrA==
-X-Gm-Message-State: AJIora986ZMYdDc6SZl6GKDfm/3sztmlF2C+h5t/gcq216yiCXIaE9Jg
-        1gVgRQetpjVmbZ1tazIfm4YR+kcWCSq55GFCJ50=
-X-Google-Smtp-Source: AGRyM1t4wTpxKGcwNVCaVZnbM5aZf97IxU+FcBU2AdN1Io2kRH9xYgRB0v/75tswkfhAmJt8cJ9DDQjakCS+1LyPgj8=
-X-Received: by 2002:a25:6ed5:0:b0:669:8b84:bb57 with SMTP id
- j204-20020a256ed5000000b006698b84bb57mr4985546ybc.227.1656176294259; Sat, 25
- Jun 2022 09:58:14 -0700 (PDT)
+        with ESMTP id S233159AbiFYTBH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Jun 2022 15:01:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FBC13F5B;
+        Sat, 25 Jun 2022 12:01:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 02CBE60B17;
+        Sat, 25 Jun 2022 19:01:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2DC1C3411C;
+        Sat, 25 Jun 2022 19:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656183665;
+        bh=9Yol+HZbbq6AmjOX2hEQynrbgqOCgS3MOxZs3p5+9iA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YRIUwiFBKbwWTGvrZ1PdENH13XwOqRXpcKER9L9DE5gB1z7ZQO9fQBebVn+dmMEpV
+         u2nEvFgNvA0N4ckMdb8FClcjfh/VZV980agff7IpD65JE7gIVwmAZFjld1s4nNRgpW
+         DGGZCa1whroyB8Byvbs1tCPQcXjl/5YqXdzdt62At3tBXo14J4KA4KS1ukuss5jp01
+         yWT8rZxyK29yFvrfVEB+0UvUh1Yr2Y4Mj9gqpWgr+mAmKI1iBgRUQmgrcBF/oIAS8R
+         KwnTFkey7Awp+Z3l69EFRlH4Espe2ooJZnWbKstH3PEp1QjqoQTEMRtifVJ1rU6ruL
+         YIOniQXpPRfaw==
+Date:   Sat, 25 Jun 2022 14:01:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@huawei.com>
+Cc:     yangyicong@hisilicon.com, bhelgaas@google.com, rafael@kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        lenb@kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH] PCI/ACPI: Always advertise ASPM support if
+ CONFIG_PCIEASPM=y
+Message-ID: <20220625190103.GA1559134@bhelgaas>
 MIME-Version: 1.0
-Sender: asakigbosamson@gmail.com
-Received: by 2002:a05:7000:5344:0:0:0:0 with HTTP; Sat, 25 Jun 2022 09:58:13
- -0700 (PDT)
-From:   MRS HANNAH VANDRAD <h.vandrad@gmail.com>
-Date:   Sat, 25 Jun 2022 09:58:13 -0700
-X-Google-Sender-Auth: Sfpbn_G015D7mKjMaBF3Q7lMlAU
-Message-ID: <CAG+Fjb=LLh6OoDcB2zqcKhHrko+KBLnMLG12veWzO0GTdrVO=w@mail.gmail.com>
-Subject: Greetings dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_8,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b34 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [h.vandrad[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
-        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
-        *  2.2 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5779c78-eb82-16ae-3f05-16f132f29a67@huawei.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Greetings dear
+On Mon, May 09, 2022 at 08:20:23PM +0800, Yicong Yang wrote:
+> On 2022/5/6 2:41, Bjorn Helgaas wrote:
+> > On Thu, May 05, 2022 at 08:36:42PM +0800, Yicong Yang wrote:
+> >> On 2022/5/4 6:38, Bjorn Helgaas wrote:
+> >>> On Mon, Apr 25, 2022 at 03:06:34PM +0800, Yicong Yang wrote:
+> >>>> When we have CONFIG_PCIEASPM enabled it means OS can always
+> >>>> support ASPM no matter user have disabled it through
+> >>>> pcie_aspm=off or not. But currently we won't advertise ASPM
+> >>>> support in _OSC negotiation if user disables it, which doesn't
+> >>>> match the fact. This will also have side effects that other
+> >>>> PCIe services like AER and hotplug will be disabled as ASPM
+> >>>> support is required and we won't negotiate other services if
+> >>>> ASPM support is absent.
+> >>>>
+> >>>> So this patch makes OS always advertising ASPM support if
+> >>>> CONFIG_PCIEASPM=y.  It intends no functional change to
+> >>>> pcie_aspm=off as it will still mark aspm_disabled=1 and
+> >>>> aspm_support_enabled=false, driver will check these status
+> >>>> before configuring ASPM.
+> >>>>
+> >>>> Tested this patch with pcie_aspm=off:
+> >>>> estuary:/$ dmesg | egrep -i "aspm|osc"
+> >>>> [    0.000000] PCIe ASPM is disabled
+> >>>> [    8.706961] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM
+> >>>> ClockPM Segments MSI EDR HPX-Type3]
+> >>>> [    8.726032] acpi PNP0A08:00: _OSC: platform does not support [LTR]
+> >>>> [    8.742818] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME
+> >>>> AER PCIeCapability DPC]
+> >>>> estuary:/sys/module/pcie_aspm/parameters$ cat policy
+> >>>> [default] performance powersave powersupersave
+> >>>> estuary:/sys/module/pcie_aspm/parameters$ echo powersave > policy
+> >>>> bash: echo: write error: Operation not permitted
+> >>>>
+> >>>> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> >>>> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> >>>> [https://lore.kernel.org/linux-pci/20220407154257.GA235990@bhelgaas/]
+> >>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> >>>> ---
+> >>>>  drivers/acpi/pci_root.c | 2 +-
+> >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> >>>> index 6f9e75d14808..17e78582e633 100644
+> >>>> --- a/drivers/acpi/pci_root.c
+> >>>> +++ b/drivers/acpi/pci_root.c
+> >>>> @@ -393,7 +393,7 @@ static u32 calculate_support(void)
+> >>>>  	support |= OSC_PCI_HPX_TYPE_3_SUPPORT;
+> >>>>  	if (pci_ext_cfg_avail())
+> >>>>  		support |= OSC_PCI_EXT_CONFIG_SUPPORT;
+> >>>> -	if (pcie_aspm_support_enabled())
+> >>>> +	if (IS_ENABLED(CONFIG_PCIEASPM))
+> >>>
+> >>> Is there any way firmware could tell the difference between
+> >>> "CONFIG_PCIEASPM not set" and "CONFIG_PCIEASPM=y and booted with
+> >>> 'pcie_aspm=off'"?
+> >>>
+> >>> If not, why would we even check whether CONFIG_PCIEASPM is set?
+> >>
+> >> If we announce ASPM support when CONFIG_PCIEASPM=n it'll work as well
+> >> but negotiation and the log don't match the fact. We'll get misleading
+> >> messages that ASPM is supported by OS by it cannot be enable as there's
+> >> no driver.
+> >>
+> >> As mentioned by the PCIe Firmware Spec r3.3,
+> >> "ASPM Optionality supported
+> >>  The operating system sets this bit to 1 if it properly recognizes
+> >>  and manages ASPM support on PCI Express components which report
+> >>  support for ASPM L1 only in the ASPM Support field within the Link
+> >>  Capabilities Register. Otherwise, the operating system sets this
+> >>  bit to 0"
+> > 
+> > Yes.  I don't completely understand this bit, but I think it's related
+> > to the fact that L0s support was originally required for all links, so
+> > the only defined ASPM Support encodings were these:
+> > 
+> >   01b - L0s supported
+> >   11b - L0s and L1 supported
+> > 
+> > The "ASPM Optionality" ECN [1] of June 19, 2009, added these new
+> > encodings:
+> > 
+> >   00b - No ASPM support
+> >   10b - L1 supported
+> > 
+> > So I think the _OSC "ASPM Optionality Supported" bit tells the
+> > firmware that the OS supports this new possibility of devices that
+> > support L1 but not L0s.
+> > 
+> > Linux currently never sets the "ASPM Optionality Supported" bit, but
+> > it probably should, because I think we *do* support L1 even if L0s
+> > isn't supported.
+> 
+> Yes, it sounds sensible to me. Actually I intended to refer BIT[1] which we're
+> currently using for advertising ASPM support in _OSC, but I copied the wrong
+> field...apologize.
+> 
+> "Active State Power Management supported
+> The operating system sets this bit to 1 if it natively supports configuration
+> of Active State Power Management registers in PCI Express devices. Otherwise,
+> the operating system sets this bit to 0."
+> 
+> IIUC, CONFIG_PCIEASPM=y means the OS *natively* support ASPM configuration so
+> we should set this bit to 1 even if we boot with pcie_aspm=off; otherwise the
+> OS has no native support of ASPM the bit should be 0. Currently the _OSC
+> negotiation seems to violent the spec a bit when booting with pcie_aspm=off
+> on a OS with CONFIG_PCIASPM=y.
 
+We have three cases:
 
-   This letter might be a surprise to you, But I believe that you will
-be honest to fulfill my final wish. I bring peace and love to you. It
-is by the grace of god, I had no choice than to do what is lawful and
-right in the sight of God for eternal life and in the sight of man for
-witness of god's mercy and glory upon my life. My dear, I sent this
-mail praying it will find you in a good condition, since I myself am
-in a very critical health condition in which I sleep every night
-without knowing if I may be alive to see the next day. I am Mrs.Hannah
-Vandrad, a widow suffering from a long time illness. I have some funds
-I inherited from my late husband, the sum of ($11,000,000.00,)
-my Doctor told me recently that I have serious
-sickness which is a cancer problem. What disturbs me most is my stroke
-sickness. Having known my condition, I decided to donate this fund to
-a good person that will utilize it the way I am going to instruct
-herein. I need a very honest and God fearing person who can claim this
-money and use it for Charity works, for orphanages and gives justice
-and help to the poor, needy and widows says The Lord." Jeremiah
-22:15-16.=E2=80=9C and also build schools for less privilege that will be
-named after my late husband if possible and to promote the word of god
-and the effort that the house of god is maintained.
+  1) CONFIG_PCIEASPM=y
 
- I do not want a situation where this money will be used in an ungodly
-manner. That's why I'm taking this decision. I'm not afraid of death,
-so I know where I'm going. I accept this decision because I do not
-have any child who will inherit this money after I die. Please I want
-your sincere and urgent answer to know if you will be able to execute
-this project, and I will give you more information on how the fund
-will be transferred to your bank account. May the grace, peace, love
-and the truth in the Word of god be with you and all those that you
-love and  care for.
+     Linux allocates ASPM link_state for downstream ports and manages
+     ASPM.
 
-I am waiting for your reply.
+  2) CONFIG_PCIEASPM=y and booted with "pcie_aspm=off"
 
-May God Bless you,
+     aspm_support_enabled is false, so Linux does not allocate ASPM
+     link_state and does not manage ASPM.  There is no way to change
+     aspm_support_enabled at runtime.  pcie_aspm_get_link() always
+     returns NULL, so ASPM cannot be enabled by drivers or by the
+     sysfs knobs (aspm_ctrl_attrs[]).
 
- Mrs.Hannah Vandrad.
+  3) CONFIG_PCIEASPM is unset
+
+     aspm.c is not even compiled, so ASPM cannot be enabled by drivers
+     or sysfs.
+
+Currently we set OSC_PCI_ASPM_SUPPORT only for case 1.  This patch
+would set it for both case 1 and case 2.
+
+But I think case 2 and case 3 are indistinguishable from the
+platform's point of view.  The only difference is that case 2 includes
+some ASPM code in the image that can never be used.
+
+I think part of the motivation for this patch is that we'd like AER,
+hotplug, etc to work even in case 2.  We could make an argument for
+doing that, but then AER and hotplug should work even in case 3.
+
+If we want to do that, I think we should do it head-on by relaxing
+this test in os_control_query_checks():
+
+  if ((support & ACPI_PCIE_REQ_SUPPORT) != ACPI_PCIE_REQ_SUPPORT) {
+    decode_osc_support(root, "not requesting OS control; OS requires",
+		       ACPI_PCIE_REQ_SUPPORT);
+    return false;
+  }
+
+> >> When CONFIG_PCIEASPM=n we have no aspm driver and apparently cannot
+> >> support any ASPM features so we should set the bit to 0 to match the spec.
+> > 
+> > I think you're saying that firmware could not tell the difference, but
+> > the Linux log messages might be slightly misleading.  I assume you
+> > mean this message:
+> > 
+> >   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+> > 
+> > where we would claim that we support ASPM even when CONFIG_PCIEASPM is
+> > unset.
+> > 
+> 
+> yes. That's what I mean misleading.
+> 
+> > The purpose of that message is to expose what Linux is telling the
+> > platform via _OSC.  If we're telling the platform we support ASPM, I
+> > think the message should reflect that.
+> > 
+> 
+> agree.
+> 
+> > But I'm actually not sure there's real value in advertising ASPM
+> > support to the platform when CONFIG_PCIEASPM=y but we're booted with
+> > "pcie_aspm=off".  It sounds like this was found by using that option
+> > (even though it wasn't *needed*) and finding that Linux didn't request
+> > control of other PCIe services.  I don't know if that's worth
+> > changing.
+> > 
+> 
+> It's found in one of our test scenes that the AER is not worked. The issue
+> is implicit as AER is influenced by the ASPM which it shouldn't be. And
+> the implementation of pcie_aspm=off seems don't follow the spec. This patch
+> intends to make the code follow the spec in this corner case and by the way
+> fixes the issue I met. In the general cases there intends no change.
+> 
+> For the usage of pcie_aspm=off there may be cases of turning off ASPM when
+> the firmware grant the control to the OS. On some platform user may disable
+> ASPM through firmware by ACPI FADT, but on other platform OS may always get
+> the control of ASPM so this provide a way of disabling it. But I think it's
+> not proper to assume user doesn't want other services like AER either.
+> 
+> Since we haven't met any realistic issue on this boot option, I'd really
+> appreciate your suggestions on this.
+> 
+> Regards,
+> Yicong
