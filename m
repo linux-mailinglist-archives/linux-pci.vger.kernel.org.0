@@ -2,96 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC1D755DB34
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:24:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4ECC55CD00
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:02:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236535AbiF0OCP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jun 2022 10:02:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38622 "EHLO
+        id S236014AbiF0PHc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jun 2022 11:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236355AbiF0OCO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 10:02:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DBE10578;
-        Mon, 27 Jun 2022 07:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BpEvF0BzklG8G9XjSPP96oVb/MAS3WNPpABfNhe5u5s=; b=ZV1HzTDRRvvaBT0EJFa4US4l4F
-        GHea9PgpyHfJqxTevWsYuYnrsgtVy9qh9+rPGLXlDi5Dei3SciLj7YfCl/o2/O0HsBqJyMkC8xkpl
-        Xh88cl/xkod+OM8+U/Is97UoRJr0ObUiAcWofUjeB19Rlil3RdV67Z1VcUj+rBVZERJSYgoYMr/J5
-        C2eaahpLR+mgEQZZ+g3OvEQsT6JBsMs7TxjWMNjL3aklnutRHkh5j/FOUPM6Az+bLYno2OoY+j769
-        mHTtQqN4tzH8GcVbCiF20H4rKSiqdZGeH04LYb9DpDLA3iVBjz098WeniRwPEEBbD7+dR9dHW5XzL
-        l8+9JBmg==;
-Received: from dhcp-077-249-017-003.chello.nl ([77.249.17.3] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o5pJ1-00BPhR-AX; Mon, 27 Jun 2022 14:01:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DC4D230040C;
-        Mon, 27 Jun 2022 16:01:31 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BE20C29BEB0F7; Mon, 27 Jun 2022 16:01:31 +0200 (CEST)
-Date:   Mon, 27 Jun 2022 16:01:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yicong Yang <yangyicong@huawei.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, yangyicong@hisilicon.com,
-        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
-        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        jonathan.cameron@huawei.com, robin.murphy@arm.com,
-        leo.yan@linaro.org, mark.rutland@arm.com, will@kernel.org,
-        joro@8bytes.org, shameerali.kolothum.thodi@huawei.com,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        john.garry@huawei.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        iommu@lists.linux-foundation.org, prime.zeng@huawei.com,
-        liuqi115@huawei.com, james.clark@arm.com,
-        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
-        alexander.shishkin@linux.intel.com, acme@kernel.org
-Subject: Re: [PATCH v9 0/8] Add support for HiSilicon PCIe Tune and Trace
- device
-Message-ID: <Yrm4O+AFbgnoBVba@hirez.programming.kicks-ass.net>
-References: <20220606115555.41103-1-yangyicong@hisilicon.com>
- <af6723f1-c0c5-8af5-857c-af9280e705af@huawei.com>
- <Yrms2cI05O2yZRKU@kroah.com>
- <e737393a-56dd-7d24-33d3-e935b14ba758@huawei.com>
+        with ESMTP id S237687AbiF0PHa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 11:07:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADEDB18352;
+        Mon, 27 Jun 2022 08:07:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6239DB81840;
+        Mon, 27 Jun 2022 15:07:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA048C3411D;
+        Mon, 27 Jun 2022 15:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1656342447;
+        bh=tZxvX20Ke65Yi+x4CGSg+T4rZrQkmThqBiNjJDO6IrE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EyD5KuLRb4jqQFu72TMxxWafj9WqqZ7E9NwUjT12eOG9N1UKPDOSPH9Bl0PxtPLZw
+         Ag6yjG06qk2rKFyvpuYfW+n6ZFb2v7imAhtAgHfZYvGqsWCWyOCaCKneIu1Yg33P39
+         Ya+JURfgZdwOW+sNCuI4Z7320D/CPaIG2w6fYIOI=
+Date:   Mon, 27 Jun 2022 17:07:24 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        whitehat002 <hackyzh002@gmail.com>
+Subject: Re: [PATCH] PCI/ACPI: do not reference a pci device after it has
+ been released
+Message-ID: <YrnHrF8WLy4296Z1@kroah.com>
+References: <20220428142854.1065953-1-gregkh@linuxfoundation.org>
+ <20220428155858.GA14614@bhelgaas>
+ <Ymq/W+KcWD9DKQr/@kroah.com>
+ <CAJZ5v0hCiO6_deYnUK-5pfqE+fy1XLSUiBvkBgWw2nbqu9ggXA@mail.gmail.com>
+ <CAJZ5v0itRry98=7X=NOmituD3VH=GYdY3REtrhx3ubH0wf=ckw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e737393a-56dd-7d24-33d3-e935b14ba758@huawei.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <CAJZ5v0itRry98=7X=NOmituD3VH=GYdY3REtrhx3ubH0wf=ckw@mail.gmail.com>
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 09:25:42PM +0800, Yicong Yang wrote:
-> On 2022/6/27 21:12, Greg KH wrote:
-> > On Mon, Jun 27, 2022 at 07:18:12PM +0800, Yicong Yang wrote:
-> >> Hi Greg,
-> >>
-> >> Since the kernel side of this device has been reviewed for 8 versions with
-> >> all comments addressed and no more comment since v9 posted in 5.19-rc1,
-> >> is it ok to merge it first (for Patch 1-3 and 7-8)?
-> > 
-> > I am not the maintainer of this subsystem, so I do not understand why
-> > you are asking me :(
-> > 
+On Thu, Apr 28, 2022 at 10:30:38PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Apr 28, 2022 at 10:15 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Thu, Apr 28, 2022 at 6:22 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Thu, Apr 28, 2022 at 10:58:58AM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Apr 28, 2022 at 04:28:53PM +0200, Greg Kroah-Hartman wrote:
+> > > > > In acpi_get_pci_dev(), the debugging message for when a PCI bridge is
+> > > > > not found uses a pointer to a pci device whose reference has just been
+> > > > > dropped.  The chance that this really is a device that is now been
+> > > > > removed from the system is almost impossible to happen, but to be safe,
+> > > > > let's print out the debugging message based on the acpi root device
+> > > > > which we do have a valid reference to at the moment.
+> > > >
+> > > > This code was added by 497fb54f578e ("ACPI / PCI: Fix NULL pointer
+> > > > dereference in acpi_get_pci_dev() (rev. 2)").  Not sure if it's worth
+> > > > a Fixes: tag.
+> > >
+> > > Can't hurt, I'll add it for the v2 based on this review.
+> > >
+> > > >
+> > > > acpi_get_pci_dev() is used by only five callers, three of which are
+> > > > video/backlight related.  I'm always skeptical of one-off interfaces
+> > > > like this, but I don't know enough to propose any refactoring or other
+> > > > alternatives.
+> > > >
+> > > > I'll leave this for Rafael, but if I were applying I would silently
+> > > > touch up the subject to match convention:
+> > > >
+> > > >   PCI/ACPI: Do not reference PCI device after it has been released
+> > >
+> > > Much simpler, thanks.
+> > >
+> > > >
+> > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > > > Cc: Len Brown <lenb@kernel.org>
+> > > > > Cc: linux-pci@vger.kernel.org
+> > > > > Cc: linux-acpi@vger.kernel.org
+> > > > > Reported-by: whitehat002 <hackyzh002@gmail.com>
+> > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > ---
+> > > > >  drivers/acpi/pci_root.c | 3 ++-
+> > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> > > > > index 6f9e75d14808..ecda378dbc09 100644
+> > > > > --- a/drivers/acpi/pci_root.c
+> > > > > +++ b/drivers/acpi/pci_root.c
+> > > > > @@ -303,7 +303,8 @@ struct pci_dev *acpi_get_pci_dev(acpi_handle handle)
+> > > > >              * case pdev->subordinate will be NULL for the parent.
+> > > > >              */
+> > > > >             if (!pbus) {
+> > > > > -                   dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
+> > > > > +                   dev_dbg(&root->device->dev,
+> > > > > +                           "dev %d, function %d is not a PCI-to-PCI bridge\n", dev, fn);
+> > > >
+> > > > This should use "%02x.%d" to be consistent with the dev_set_name() in
+> > > > pci_setup_device().
+> > >
+> > > Ah, missed that, will change it and send out a new version tomorrow.
+> >
+> > I would make the change below (modulo the gmail-induced wthite space
+> > breakage), though.
 > 
-> I checked the log of drivers/hwtracing and seems patches of coresight/intel_th/stm
-> applied by different maintainers and I see you applied some patches of intel_th/stm.
-> Should any of these three maintainers or you can help applied this?
+> That said ->
+> 
+> > ---
+> >  drivers/acpi/pci_root.c |    5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > Index: linux-pm/drivers/acpi/pci_root.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/acpi/pci_root.c
+> > +++ linux-pm/drivers/acpi/pci_root.c
+> > @@ -295,8 +295,6 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
+> >              break;
+> >
+> >          pbus = pdev->subordinate;
+> > -        pci_dev_put(pdev);
+> > -
+> >          /*
+> >           * This function may be called for a non-PCI device that has a
+> >           * PCI parent (eg. a disk under a PCI SATA controller).  In that
+> > @@ -304,9 +302,12 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
+> >           */
+> >          if (!pbus) {
+> >              dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
+> > +            pci_dev_put(pdev);
+> >              pdev = NULL;
+> >              break;
+> >          }
+> > +
+> > +        pci_dev_put(pdev);
+> 
+> -> we are going to use pbus after this and it is pdev->subordinate
+> which cannot survive without pdev AFAICS.
+> 
+> Are we not concerned about this case?
 
-I was hoping Mark would have a look, since he knows this ARM stuff
-better than me. But ISTR he's somewhat busy atm too. But an ACK from the
-CoreSight people would also be appreciated.
+Good point.
 
-And Arnaldo usually doesn't pick up the userspace perf bits until the
-kernel side is sorted.
+whitehat002, any ideas?  You found this issue but it really looks like
+it is not anything that can ever be hit, so how far do you want to go to
+unwind it?
+
+thanks,
+
+greg k-h
