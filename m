@@ -2,153 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12F2655D4BC
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:14:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA4A755DFD9
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:31:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242622AbiF0Wbt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jun 2022 18:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37384 "EHLO
+        id S242691AbiF0WlY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jun 2022 18:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242616AbiF0Wbr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 18:31:47 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5841F603;
-        Mon, 27 Jun 2022 15:31:46 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id j21so19107194lfe.1;
-        Mon, 27 Jun 2022 15:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ebUPv2y8CKJXtjGQGMNXRZnKdkcl00JDd47Ea+foYmc=;
-        b=K6AMMbAMeQ0+NMpEomZFp6AbmHXEFoMmYYFCd0RU6AdSfWQxPR6hdaiBq190z5fNeZ
-         sCkPerzqxyZHWsCYq+gM8iLSBAqHq0rHnV5KWJ4ISa1VumxngUWz4XsvQ1HTPNw7Q+AO
-         7D7LlqiiHSulXyBT18mF8QjRi0uozC396gXB6JksX88HAzn6fq7U/avuT7PrqWFa6HYt
-         ZCNr360StzxQdELNfprZkQJ3M0hPWFXbojGuCSh/jRsANiZSdxaRCfeaay3QwlGL67YK
-         7BtRcG9iZct1DCzmofz7rE2CqxwDUovuCiQzKNJ2/S9lrTCtQT+0nC8uduCVWQobCPkX
-         TtmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ebUPv2y8CKJXtjGQGMNXRZnKdkcl00JDd47Ea+foYmc=;
-        b=5VTTG4kqQ8HnidXZ4Rkll0mslOn15YPr39KhliUg28ykAt9/SYvxz+ypxpaPNF66kR
-         CeQnOIIYo4CRdnPUvI+QTMI9VtvVH19pNdDamLasAjwEkywrg5ibW1keVZuBQxCy/QzW
-         p1PFWe/gQyyHAxzzjxp074ixXNg8ApKElr805vAHVXyvDVkNiH81Ae6kHVbyLvUPfKJV
-         /wRFpoqob93zer0VhjX7a40OunWs+H6p2pRS+mKi5j2A12Wlz/ntwlCvwVCbXHaqvXLw
-         UQ2X2LoeSWwLCJ7OggU9jJInAolthHTe6Bo3OLvXBFRepptgRLoyrw9Dry5q9oz7uFuE
-         5bYQ==
-X-Gm-Message-State: AJIora9s74i9kOHDjjSIUE1dft61fQUuwdy9zPaf5nAkBG/mYbuXmNHc
-        JRasdcKSYhGpubeEG76r4ik=
-X-Google-Smtp-Source: AGRyM1s7XDkWVNzlUNN4DZn+jHKm7XYpwR+3m/xsLRQtn9qkeFvGbQAXIsBTu7qObrs/crW128MTDA==
-X-Received: by 2002:a05:6512:2629:b0:47d:b9cd:1d1d with SMTP id bt41-20020a056512262900b0047db9cd1d1dmr9590870lfb.82.1656369104462;
-        Mon, 27 Jun 2022 15:31:44 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id z14-20020a056512376e00b0047f9dca3708sm1957298lft.51.2022.06.27.15.31.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 15:31:43 -0700 (PDT)
-Date:   Tue, 28 Jun 2022 01:31:41 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S242737AbiF0WlK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 18:41:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332BB193FE;
+        Mon, 27 Jun 2022 15:41:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DC734B819BA;
+        Mon, 27 Jun 2022 22:41:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B11AC34115;
+        Mon, 27 Jun 2022 22:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656369660;
+        bh=4/K9joc295zYQ8ztp373EU6ZFmyHW62BR4utv5l/YvQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=QFoF+581jUiwSgy1iW7LUdx2GTFBnr/ebfCUuTFvkWOOH+etCv0kKDey0UeoSWHvR
+         gngssrpYYlnw/ZHUUybTpuoD5ihtr5m4+JPnMrPiX2ITJgKj6bJMeJi27R/sjaTgAg
+         T9ttb9i6IZSj71gsWSkfwRUJGaN1/L0i/MjPt0DiWMjMMgR/3H94fZisjoZdRC41+v
+         8YuNLqPQtnm29eA44JSjDquponB7a8SFZxJFQXKD5rMfKqpzQAa6a1o7N+AXtRGPrj
+         ygSXr+j5nuqnWIR3KPLCOvSuLVprjoqwDpqllGocxRUh2meiXIeZedHF2fpY17JfL9
+         sIPCetEzvWaEA==
+Date:   Mon, 27 Jun 2022 17:40:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH RESEND v4 07/15] PCI: tegra194: Drop manual DW PCIe
- controller version setup
-Message-ID: <20220627223141.qzi4unrloj23v5jt@mobilestation>
-References: <20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru>
- <20220624143947.8991-8-Sergey.Semin@baikalelectronics.ru>
- <48b2c4c2-3032-a90b-07c1-f03b3a84df3a@nvidia.com>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH RESEND v5 03/18] PCI: dwc: Disable outbound windows for
+ controllers with iATU
+Message-ID: <20220627224058.GA1784787@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <48b2c4c2-3032-a90b-07c1-f03b3a84df3a@nvidia.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220624143428.8334-4-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 01:29:33PM +0530, Vidya Sagar wrote:
-> 
-> 
-> On 6/24/2022 8:09 PM, Serge Semin wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > Since the DW PCIe common code now supports the IP-core version
-> > auto-detection there is no point in manually setting the version up for the
-> > controllers newer than v4.70a. Seeing Tegra 194 PCIe Host and EP
-> > controllers are based on the DW PCIe v4.90a IP-core we can freely drop the
-> > dw_pcie.version field initialization.
-> > 
-> > Suggested-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > ---
-> > 
-> > Folks, I don't have Tegra 194 PCIe hw instance to test it out. Could you
-> > please make sure this patch doesn't brake anything?
-> 
+[+cc Jonathan for pcie-al.c, Kishon for pci-keystone.c]
 
-> Hi,
-> I tried to apply the series
-> https://patchwork.kernel.org/project/linux-pci/list/?series=653624 on top of
-> linux-next and ran into conflicts. Could you please tell me the minimum set
-> of patches to be taken?
+On Fri, Jun 24, 2022 at 05:34:13PM +0300, Serge Semin wrote:
+> In accordance with the dw_pcie_setup_rc() method semantics and judging by
+> what the comment added in commit dd193929d91e ("PCI: designware: Explain
+> why we don't program ATU for some platforms") states there are DWC
+> PCIe-available platforms like Keystone (pci-keystone.c) or Amazon's
+> Annapurna Labs (pcie-al.c) which don't have the DW PCIe internal ATU
+> enabled and use it's own address translation approach implemented. In
+> these cases at the very least there is no point in touching the DW PCIe
+> iATU CSRs. Moreover depending on the vendor-specific address translation
+> implementation it might be even erroneous. So let's move the iATU windows
+> disabling procedure to being under the corresponding conditional statement
+> clause thus performing that procedure only if the iATU is expected to be
+> available on the platform.
 
-Hi.
-As the cover letter says it is supposed to be applied on top of the
-next series *:
-https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
-* Currently latest patchset version is v5.
+Added Jonathan and Kishon to make sure pcie-al.c and pci-keystone.c
+(the only two drivers that override the default dw_child_pcie_ops)
+won't be broken by skipping the outbound window disable.
 
-Then - the resent series what you are referring to.
-
--Sergey
-
+> Fixes: 458ad06c4cdd ("PCI: dwc: Ensure all outbound ATU windows are reset")
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 > 
-> Thanks,
-> Vidya Sagar
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index bc9a7df130ef..d4326aae5a32 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -543,7 +543,6 @@ static struct pci_ops dw_pcie_ops = {
+>  
+>  void dw_pcie_setup_rc(struct pcie_port *pp)
+>  {
+> -	int i;
+>  	u32 val, ctrl, num_ctrls;
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  
+> @@ -594,19 +593,22 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+>  	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
+>  
+> -	/* Ensure all outbound windows are disabled so there are multiple matches */
+> -	for (i = 0; i < pci->num_ob_windows; i++)
+> -		dw_pcie_disable_atu(pci, i, DW_PCIE_REGION_OUTBOUND);
+> -
+>  	/*
+>  	 * If the platform provides its own child bus config accesses, it means
+>  	 * the platform uses its own address translation component rather than
+>  	 * ATU, so we should not program the ATU here.
+>  	 */
+>  	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
+> -		int atu_idx = 0;
+> +		int i, atu_idx = 0;
+>  		struct resource_entry *entry;
+>  
+> +		/*
+> +		 * Ensure all outbound windows are disabled so there are
+> +		 * multiple matches
+
+I know you only moved this comment and didn't change the wording, but
+do you know what it means?  What "multiple matches" is it talking
+about, and why are they important?
+
+I guess Rob previously moved it with 458ad06c4cdd ("PCI: dwc: Ensure
+all outbound ATU windows are reset") [1], and it looks like maybe the
+point is to *avoid* having an outbound transaction match multiple
+windows?  So maybe this comment should say this?
+
+  Disable all outbound windows to make sure a transaction can't match
+  multiple windows.
+
+[1] https://git.kernel.org/linus/458ad06c4cdd
+
+> +		 */
+> +		for (i = 0; i < pci->num_ob_windows; i++)
+> +			dw_pcie_disable_atu(pci, i, DW_PCIE_REGION_OUTBOUND);
+> +
+>  		/* Get last memory resource entry */
+>  		resource_list_for_each_entry(entry, &pp->bridge->windows) {
+>  			if (resource_type(entry->res) != IORESOURCE_MEM)
+> -- 
+> 2.35.1
 > 
-> > 
-> > Changelog v3:
-> > - This is a new patch create as a result of the discussion:
-> >    https://lore.kernel.org/linux-pci/20220503214638.1895-6-Sergey.Semin@baikalelectronics.ru/
-> > ---
-> >   drivers/pci/controller/dwc/pcie-tegra194.c | 1 -
-> >   1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > index f24b30b7454f..e497e6de8d15 100644
-> > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > @@ -1979,7 +1979,6 @@ static int tegra194_pcie_probe(struct platform_device *pdev)
-> >          pci->ops = &tegra_dw_pcie_ops;
-> >          pci->n_fts[0] = N_FTS_VAL;
-> >          pci->n_fts[1] = FTS_VAL;
-> > -       pci->version = DW_PCIE_VER_490A;
-> > 
-> >          pp = &pci->pp;
-> >          pp->num_vectors = MAX_MSI_IRQS;
-> > --
-> > 2.35.1
-> > 
