@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5C555D0DC
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA16C55D019
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:07:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240695AbiF0MYd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jun 2022 08:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
+        id S240508AbiF0MYb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jun 2022 08:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240685AbiF0MYb (ORCPT
+        with ESMTP id S233475AbiF0MYb (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 08:24:31 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C1098BF40;
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C0FBDBCA7;
         Mon, 27 Jun 2022 05:24:29 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.92,226,1650898800"; 
-   d="scan'208";a="124258806"
+   d="scan'208";a="125807832"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 27 Jun 2022 21:24:28 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 27 Jun 2022 21:24:28 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5D1344290412;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 7A1514290415;
         Mon, 27 Jun 2022 21:24:28 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
@@ -28,76 +28,49 @@ To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 00/13] treewide: PCI: renesas: Add R-Car Gen4 PCIe support
-Date:   Mon, 27 Jun 2022 21:24:04 +0900
-Message-Id: <20220627122417.809615-1-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 01/13] PCI: Add PCI_EXP_LNKCAP_MLW macros
+Date:   Mon, 27 Jun 2022 21:24:05 +0900
+Message-Id: <20220627122417.809615-2-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220627122417.809615-1-yoshihiro.shimoda.uh@renesas.com>
+References: <20220627122417.809615-1-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
-        KHOP_HELO_FCRDNS,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
+Add macros defining Maximum Link Width bits in Link Capabilities
+Register.
 
-Changes from v1:
- - Fix a lot of warning/errors by 'make DT_CHECKER_FLAGS=-m dt_binding_check'.
- - Add PCI_EXP_LNKCAP_MLW macros into pci_regs.h
- - Remove "extern" in pcie-rcar-gen4.h.
- - Add ep_pre_init() into dw_pcie_ep_ops for this controller.
- - Add a new flag "reset_all_bars" into dw_pcie_ep. If this way is acceptable,
-   I'll make patches for other endpoint controllers to simplify.
- - Move timing of getting num-lanes property for {ep_pre,host}_init().
- - Remove some platform_get_resource().
- - Remove "struct rcar_gen4_pcie_ep".
- - Allow a kernel module for both host and ep of this controller.
- - Minor fixes for checkpatch.pl.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ include/uapi/linux/pci_regs.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Yoshihiro Shimoda (13):
-  PCI: Add PCI_EXP_LNKCAP_MLW macros
-  PCI: controller: dwc: Expose dw_pcie_ep_exit() to module
-  PCI: dwc: Add ep_pre_init() callback to dw_pcie_ep_ops
-  PCI: dwc: Add reset_all_bars flag
-  PCI: dwc: endpoint: Read num-lanes property before ep_pre_init()
-  PCI: dwc: host: Read num-lanes property before host_init()
-  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
-  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
-  PCI: renesas: Add R-Car Gen4 PCIe Host support
-  PCI: renesas: Add R-Car Gen4 PCIe Endpoint support
-  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
-  arm64: dts: renesas: r8a779f0: Add PCIe Host and Endpoint nodes
-  arm64: dts: renesas: r8a779f0: spider: Enable PCIe Host ch0
-
- .../bindings/pci/rcar-gen4-pci-ep.yaml        |  99 +++++++++
- .../bindings/pci/rcar-gen4-pci-host.yaml      |  97 +++++++++
- MAINTAINERS                                   |   1 +
- .../boot/dts/renesas/r8a779f0-spider-cpu.dtsi |  39 ++++
- arch/arm64/boot/dts/renesas/r8a779f0.dtsi     | 118 ++++++++++
- drivers/pci/controller/dwc/Kconfig            |  18 ++
- drivers/pci/controller/dwc/Makefile           |   4 +
- .../pci/controller/dwc/pcie-designware-ep.c   |  16 ++
- .../pci/controller/dwc/pcie-designware-host.c |   2 +
- drivers/pci/controller/dwc/pcie-designware.c  |   1 -
- drivers/pci/controller/dwc/pcie-designware.h  |   2 +
- .../pci/controller/dwc/pcie-rcar-gen4-ep.c    | 192 ++++++++++++++++
- .../pci/controller/dwc/pcie-rcar-gen4-host.c  | 205 ++++++++++++++++++
- drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 172 +++++++++++++++
- drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  63 ++++++
- include/uapi/linux/pci_regs.h                 |   7 +
- 16 files changed, 1035 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
-
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 108f8523fa04..c619b108df06 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -538,6 +538,13 @@
+ #define  PCI_EXP_LNKCAP_SLS_16_0GB 0x00000004 /* LNKCAP2 SLS Vector bit 3 */
+ #define  PCI_EXP_LNKCAP_SLS_32_0GB 0x00000005 /* LNKCAP2 SLS Vector bit 4 */
+ #define  PCI_EXP_LNKCAP_SLS_64_0GB 0x00000006 /* LNKCAP2 SLS Vector bit 5 */
++#define  PCI_EXP_LNKCAP_MLW_X1	0x00000010 /* Maximum Link Width x1 */
++#define  PCI_EXP_LNKCAP_MLW_X2	0x00000020 /* Maximum Link Width x2 */
++#define  PCI_EXP_LNKCAP_MLW_X4	0x00000040 /* Maximum Link Width x4 */
++#define  PCI_EXP_LNKCAP_MLW_X8	0x00000080 /* Maximum Link Width x8 */
++#define  PCI_EXP_LNKCAP_MLW_X12	0x000000c0 /* Maximum Link Width x12 */
++#define  PCI_EXP_LNKCAP_MLW_X16	0x00000100 /* Maximum Link Width x16 */
++#define  PCI_EXP_LNKCAP_MLW_X32	0x00000200 /* Maximum Link Width x32 */
+ #define  PCI_EXP_LNKCAP_MLW	0x000003f0 /* Maximum Link Width */
+ #define  PCI_EXP_LNKCAP_ASPMS	0x00000c00 /* ASPM Support */
+ #define  PCI_EXP_LNKCAP_ASPM_L0S 0x00000400 /* ASPM L0s Support */
 -- 
 2.25.1
 
