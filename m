@@ -2,179 +2,260 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4713155CD0A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:02:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7458655D18A
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:09:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234392AbiF0QhT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jun 2022 12:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35950 "EHLO
+        id S240455AbiF0TlX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jun 2022 15:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234815AbiF0QhS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 12:37:18 -0400
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E374C1114B;
-        Mon, 27 Jun 2022 09:37:17 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-3137316bb69so90988597b3.10;
-        Mon, 27 Jun 2022 09:37:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/8cJy4YWWhfOgGW+zMoAe8mZCw8P609Jt5k6gJA927w=;
-        b=Cwn1H2Vq9sYafq7PTMKVTTBSnoMJbNpHkhdMU0Xkx8gbPCw2V44n4mL/aT6kRgcz+g
-         1ZR+lPQyrLj1yZfCUO/OM0bcJfUhGHAS0PI6TnV9Ppuap9sORGI2Td9LjuMLxDqZo9Wv
-         /hAuvp4fLAiVB5vxZQr8rYspY9atwnf6vHxUZMOsUcwWyE1egYSgLCuECKlVCL18azqI
-         qVx71z+2m0fQKn9jtiNGRcHvh3pKOWeKSA9bJdwXIpRGXpfLbintw4jJLGxfFxxjW21r
-         1bTIB/T1CKjWRnsYVcDGbsgGxgHN1irvyB4CLffWTqlKSiZ0CUETUZYKevIGVjxK+w4q
-         bF5g==
-X-Gm-Message-State: AJIora//f6Y4n7SJ185Fpl7lLZXp3aoMgaq7wm2MxQ1C7wvUsGcwsNAa
-        3CUaIaCg4P8hdIjjokDaJKmsYZD7wTxvYTaBcaD4h9WI
-X-Google-Smtp-Source: AGRyM1usIXDdm9P7SB54q/8t5ltXdx4rqEoeT9ry649tveDiSQ//6tBKU1RbXt9fqmxaCge04BSuTw3NHSIIn0cV4Ho=
-X-Received: by 2002:a81:57d7:0:b0:317:b111:34d5 with SMTP id
- l206-20020a8157d7000000b00317b11134d5mr15951942ywb.7.1656347837101; Mon, 27
- Jun 2022 09:37:17 -0700 (PDT)
+        with ESMTP id S240443AbiF0TlV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 15:41:21 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08CB1759E;
+        Mon, 27 Jun 2022 12:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656358879; x=1687894879;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8CuvkP0vcHWHYz4O+MpXmhInxvjdtTkynfXQVhQtVvU=;
+  b=jbLMxiB6cksX4WYhPLLmhLAgHe/BBBIpnUT8EpnFN26iAs+lk42UXv0n
+   EckJYLUo0OUZsZL+um/oE+tWvpdIHgkfLqCkgjsy7IhDQPxrNXkYj1Xcp
+   Jv3alCzX1bnzyHv2zf0/QzUJlRSXBgZ5aQKabsJfOe7m9OUWz4xt2xAb+
+   YPWVciRNiVJ58duZGDVsdVJotjEJq1vVAoPYthFIxVwzVIN+7wNwdxl2s
+   tJa9VmamPCUsR6FBjfkpFounIK0TDR3g53/6rGYhhD14rHX8j1H2MWCS9
+   jQJ80F1aENgiLUn1ymnJ+e+qgq+wg8WVSK0mYPgvwTj/EQpRKyJbvoNH4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="343235485"
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="343235485"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 12:40:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="766877478"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 27 Jun 2022 12:40:46 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o5ubG-0008wF-9g;
+        Mon, 27 Jun 2022 19:40:46 +0000
+Date:   Tue, 28 Jun 2022 03:40:41 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     sound-open-firmware@alsa-project.org, ntb@lists.linux.dev,
+        mjpeg-users@lists.sourceforge.net, linuxppc-dev@lists.ozlabs.org,
+        linux-usb@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ aab35c3d5112df6e329a1a5a5a1881e5c4ca3821
+Message-ID: <62ba07b9.qFa7tsWUZhZoW2FF%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20220428142854.1065953-1-gregkh@linuxfoundation.org>
- <20220428155858.GA14614@bhelgaas> <Ymq/W+KcWD9DKQr/@kroah.com>
- <CAJZ5v0hCiO6_deYnUK-5pfqE+fy1XLSUiBvkBgWw2nbqu9ggXA@mail.gmail.com>
- <CAJZ5v0itRry98=7X=NOmituD3VH=GYdY3REtrhx3ubH0wf=ckw@mail.gmail.com> <YrnHrF8WLy4296Z1@kroah.com>
-In-Reply-To: <YrnHrF8WLy4296Z1@kroah.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 27 Jun 2022 18:37:06 +0200
-Message-ID: <CAJZ5v0hfdnRg0EqG2Zcp9=Kjq+P1NC45iudatisVL_G=QjOC+A@mail.gmail.com>
-Subject: Re: [PATCH] PCI/ACPI: do not reference a pci device after it has been released
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        whitehat002 <hackyzh002@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 5:07 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Apr 28, 2022 at 10:30:38PM +0200, Rafael J. Wysocki wrote:
-> > On Thu, Apr 28, 2022 at 10:15 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Thu, Apr 28, 2022 at 6:22 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Thu, Apr 28, 2022 at 10:58:58AM -0500, Bjorn Helgaas wrote:
-> > > > > On Thu, Apr 28, 2022 at 04:28:53PM +0200, Greg Kroah-Hartman wrote:
-> > > > > > In acpi_get_pci_dev(), the debugging message for when a PCI bridge is
-> > > > > > not found uses a pointer to a pci device whose reference has just been
-> > > > > > dropped.  The chance that this really is a device that is now been
-> > > > > > removed from the system is almost impossible to happen, but to be safe,
-> > > > > > let's print out the debugging message based on the acpi root device
-> > > > > > which we do have a valid reference to at the moment.
-> > > > >
-> > > > > This code was added by 497fb54f578e ("ACPI / PCI: Fix NULL pointer
-> > > > > dereference in acpi_get_pci_dev() (rev. 2)").  Not sure if it's worth
-> > > > > a Fixes: tag.
-> > > >
-> > > > Can't hurt, I'll add it for the v2 based on this review.
-> > > >
-> > > > >
-> > > > > acpi_get_pci_dev() is used by only five callers, three of which are
-> > > > > video/backlight related.  I'm always skeptical of one-off interfaces
-> > > > > like this, but I don't know enough to propose any refactoring or other
-> > > > > alternatives.
-> > > > >
-> > > > > I'll leave this for Rafael, but if I were applying I would silently
-> > > > > touch up the subject to match convention:
-> > > > >
-> > > > >   PCI/ACPI: Do not reference PCI device after it has been released
-> > > >
-> > > > Much simpler, thanks.
-> > > >
-> > > > >
-> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > > > > > Cc: Len Brown <lenb@kernel.org>
-> > > > > > Cc: linux-pci@vger.kernel.org
-> > > > > > Cc: linux-acpi@vger.kernel.org
-> > > > > > Reported-by: whitehat002 <hackyzh002@gmail.com>
-> > > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > > ---
-> > > > > >  drivers/acpi/pci_root.c | 3 ++-
-> > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> > > > > > index 6f9e75d14808..ecda378dbc09 100644
-> > > > > > --- a/drivers/acpi/pci_root.c
-> > > > > > +++ b/drivers/acpi/pci_root.c
-> > > > > > @@ -303,7 +303,8 @@ struct pci_dev *acpi_get_pci_dev(acpi_handle handle)
-> > > > > >              * case pdev->subordinate will be NULL for the parent.
-> > > > > >              */
-> > > > > >             if (!pbus) {
-> > > > > > -                   dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
-> > > > > > +                   dev_dbg(&root->device->dev,
-> > > > > > +                           "dev %d, function %d is not a PCI-to-PCI bridge\n", dev, fn);
-> > > > >
-> > > > > This should use "%02x.%d" to be consistent with the dev_set_name() in
-> > > > > pci_setup_device().
-> > > >
-> > > > Ah, missed that, will change it and send out a new version tomorrow.
-> > >
-> > > I would make the change below (modulo the gmail-induced wthite space
-> > > breakage), though.
-> >
-> > That said ->
-> >
-> > > ---
-> > >  drivers/acpi/pci_root.c |    5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > Index: linux-pm/drivers/acpi/pci_root.c
-> > > ===================================================================
-> > > --- linux-pm.orig/drivers/acpi/pci_root.c
-> > > +++ linux-pm/drivers/acpi/pci_root.c
-> > > @@ -295,8 +295,6 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
-> > >              break;
-> > >
-> > >          pbus = pdev->subordinate;
-> > > -        pci_dev_put(pdev);
-> > > -
-> > >          /*
-> > >           * This function may be called for a non-PCI device that has a
-> > >           * PCI parent (eg. a disk under a PCI SATA controller).  In that
-> > > @@ -304,9 +302,12 @@ struct pci_dev *acpi_get_pci_dev(acpi_ha
-> > >           */
-> > >          if (!pbus) {
-> > >              dev_dbg(&pdev->dev, "Not a PCI-to-PCI bridge\n");
-> > > +            pci_dev_put(pdev);
-> > >              pdev = NULL;
-> > >              break;
-> > >          }
-> > > +
-> > > +        pci_dev_put(pdev);
-> >
-> > -> we are going to use pbus after this and it is pdev->subordinate
-> > which cannot survive without pdev AFAICS.
-> >
-> > Are we not concerned about this case?
->
-> Good point.
->
-> whitehat002, any ideas?  You found this issue but it really looks like
-> it is not anything that can ever be hit, so how far do you want to go to
-> unwind it?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: aab35c3d5112df6e329a1a5a5a1881e5c4ca3821  Add linux-next specific files for 20220627
 
-I have an idea, sorry for the delay here.
+Error/Warning: (recently discovered and may have been fixed)
 
-I should be ready to post something tomorrow.
+arch/powerpc/kernel/interrupt.c:542:55: error: suggest braces around empty body in an 'if' statement [-Werror=empty-body]
+arch/powerpc/kernel/interrupt.c:542:55: warning: suggest braces around empty body in an 'if' statement [-Wempty-body]
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:1025:33: warning: variable 'pre_connection_type' set but not used [-Wunused-but-set-variable]
+drivers/ntb/test/ntb_perf.c:1145: undefined reference to `__umoddi3'
+drivers/pci/endpoint/functions/pci-epf-vntb.c:975:5: warning: no previous prototype for 'pci_read' [-Wmissing-prototypes]
+drivers/pci/endpoint/functions/pci-epf-vntb.c:984:5: warning: no previous prototype for 'pci_write' [-Wmissing-prototypes]
+vmlinux.o: warning: objtool: __ct_user_enter+0x8c: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_idle_enter+0x19: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_idle_exit+0x3e: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_irq_enter+0x6a: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_irq_exit+0x6a: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_kernel_enter.constprop.0+0x2a: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_kernel_enter_state+0x2d: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_kernel_exit.constprop.0+0x53: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_kernel_exit_state+0x2d: call to ftrace_likely_update() leaves .noinstr.text section
+vmlinux.o: warning: objtool: ct_nmi_enter+0x4b: call to ftrace_likely_update() leaves .noinstr.text section
 
-Cheers!
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+drivers/acpi/scan.c:615:35: warning: Uninitialized variable: acpi_device_bus_id->bus_id [uninitvar]
+drivers/phy/qualcomm/phy-qcom-qmp-combo.c:1701:19: warning: Value stored to 'qmp' during its initialization is never read [clang-analyzer-deadcode.DeadStores]
+drivers/soc/mediatek/mtk-mutex.c:799:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
+drivers/staging/media/zoran/zr36016.c:430:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
+drivers/staging/media/zoran/zr36050.c:829:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
+drivers/staging/media/zoran/zr36060.c:869:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
+drivers/thunderbolt/tmu.c:758:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
+sound/soc/sof/intel/mtl.c:547:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|   |-- drivers-soc-mediatek-mtk-mutex.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
+|   |-- drivers-staging-media-zoran-zr36016.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
+|   |-- drivers-staging-media-zoran-zr36050.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
+|   |-- drivers-staging-media-zoran-zr36060.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
+|   |-- drivers-thunderbolt-tmu.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
+|   `-- sound-soc-sof-intel-mtl.c:internal-compiler-error:in-arc_ifcvt-at-config-arc-arc.c
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|   `-- ntb_perf.c:(.text):undefined-reference-to-__umoddi3
+|-- i386-randconfig-a013-20220627
+|   `-- ERROR:__umoddi3-drivers-ntb-test-ntb_perf.ko-undefined
+|-- i386-randconfig-m021-20220627
+|   `-- arch-x86-events-core.c-init_hw_perf_events()-warn:missing-error-code-err
+|-- i386-randconfig-p001-20220627
+|   `-- drivers-acpi-scan.c:warning:Uninitialized-variable:acpi_device_bus_id-bus_id-uninitvar
+|-- ia64-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|-- mips-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|-- powerpc-allmodconfig
+|   |-- ERROR:__umoddi3-drivers-ntb-test-ntb_perf.ko-undefined
+|   |-- arch-powerpc-kernel-interrupt.c:warning:suggest-braces-around-empty-body-in-an-if-statement
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|-- powerpc-allnoconfig
+|   `-- arch-powerpc-kernel-interrupt.c:error:suggest-braces-around-empty-body-in-an-if-statement
+|-- powerpc-buildonly-randconfig-r003-20220627
+|   `-- arch-powerpc-kernel-interrupt.c:error:suggest-braces-around-empty-body-in-an-if-statement
+|-- powerpc-buildonly-randconfig-r005-20220627
+|   |-- arch-powerpc-kernel-interrupt.c:warning:suggest-braces-around-empty-body-in-an-if-statement
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|-- powerpc-randconfig-r023-20220627
+|   `-- arch-powerpc-kernel-interrupt.c:warning:suggest-braces-around-empty-body-in-an-if-statement
+|-- riscv-randconfig-r012-20220627
+|   |-- ERROR:__umoddi3-drivers-ntb-test-ntb_perf.ko-undefined
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|-- s390-buildonly-randconfig-r001-20220627
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|-- sparc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|-- sparc-randconfig-r032-20220627
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|-- x86_64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link.c:warning:variable-pre_connection_type-set-but-not-used
+|   |-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_read
+|   `-- drivers-pci-endpoint-functions-pci-epf-vntb.c:warning:no-previous-prototype-for-pci_write
+|-- x86_64-randconfig-a011-20220627
+|   |-- vmlinux.o:warning:objtool:__ct_user_enter:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   |-- vmlinux.o:warning:objtool:ct_idle_enter:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   |-- vmlinux.o:warning:objtool:ct_idle_exit:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   |-- vmlinux.o:warning:objtool:ct_irq_enter:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   |-- vmlinux.o:warning:objtool:ct_irq_exit:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   |-- vmlinux.o:warning:objtool:ct_kernel_enter:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   |-- vmlinux.o:warning:objtool:ct_kernel_enter_state:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   |-- vmlinux.o:warning:objtool:ct_kernel_exit:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   |-- vmlinux.o:warning:objtool:ct_kernel_exit_state:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|   `-- vmlinux.o:warning:objtool:ct_nmi_enter:call-to-ftrace_likely_update()-leaves-.noinstr.text-section
+|-- x86_64-randconfig-m001-20220627
+|   `-- arch-x86-events-core.c-init_hw_perf_events()-warn:missing-error-code-err
+`-- xtensa-randconfig-r024-20220627
+    `-- drivers-ntb-test-ntb_perf.c:undefined-reference-to-__umoddi3
+
+clang_recent_errors
+`-- riscv-randconfig-c006-20220617
+    `-- drivers-phy-qualcomm-phy-qcom-qmp-combo.c:warning:Value-stored-to-qmp-during-its-initialization-is-never-read-clang-analyzer-deadcode.DeadStores
+
+elapsed time: 726m
+
+configs tested: 52
+configs skipped: 2
+
+gcc tested configs:
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+ia64                             allmodconfig
+alpha                            allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+m68k                             allyesconfig
+powerpc                           allnoconfig
+sh                               allmodconfig
+powerpc                          allmodconfig
+mips                             allyesconfig
+i386                                defconfig
+i386                             allyesconfig
+x86_64               randconfig-a012-20220627
+x86_64               randconfig-a011-20220627
+x86_64               randconfig-a013-20220627
+x86_64               randconfig-a014-20220627
+x86_64               randconfig-a015-20220627
+x86_64               randconfig-a016-20220627
+i386                 randconfig-a012-20220627
+i386                 randconfig-a011-20220627
+i386                 randconfig-a013-20220627
+i386                 randconfig-a014-20220627
+i386                 randconfig-a015-20220627
+i386                 randconfig-a016-20220627
+arc                  randconfig-r043-20220627
+s390                 randconfig-r044-20220627
+riscv                randconfig-r042-20220627
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-syz
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+
+clang tested configs:
+i386                 randconfig-a001-20220627
+i386                 randconfig-a002-20220627
+i386                 randconfig-a003-20220627
+i386                 randconfig-a006-20220627
+i386                 randconfig-a005-20220627
+i386                 randconfig-a004-20220627
+x86_64               randconfig-a002-20220627
+x86_64               randconfig-a003-20220627
+x86_64               randconfig-a001-20220627
+x86_64               randconfig-a006-20220627
+x86_64               randconfig-a005-20220627
+x86_64               randconfig-a004-20220627
+hexagon              randconfig-r041-20220627
+hexagon              randconfig-r045-20220627
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
