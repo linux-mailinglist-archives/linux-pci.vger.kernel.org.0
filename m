@@ -2,49 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2976855DE84
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:29:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B22FA55D9D7
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:21:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236814AbiF0U2D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Jun 2022 16:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
+        id S238384AbiF0U3U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Jun 2022 16:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241275AbiF0U1I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 16:27:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539D31C92B;
-        Mon, 27 Jun 2022 13:27:07 -0700 (PDT)
+        with ESMTP id S241346AbiF0U3F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Jun 2022 16:29:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CBBD110F;
+        Mon, 27 Jun 2022 13:29:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E0C6261760;
-        Mon, 27 Jun 2022 20:27:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10DFCC34115;
-        Mon, 27 Jun 2022 20:27:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE0B36176A;
+        Mon, 27 Jun 2022 20:29:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E6C5C34115;
+        Mon, 27 Jun 2022 20:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656361626;
-        bh=ZrO7ZxD6CZrzBEiHbXQNlyeA1JpOhkqhlJ6JhbdaKkk=;
+        s=k20201202; t=1656361740;
+        bh=nMxs8Nw/BcSltBccXR04SvWCkdWBXpnOIAzxfKoZJu4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nGKopElfco9srP0aolIuSPoGiOTISZ5JXFwJfpg0QagqihMPf7SfD3K/+thtHutvb
-         K4enZrewIOyHm8fCstsRhRhcq277bFqmgEYy/vCoqZ4VnseN/yvtsDwxqqqef2bolr
-         3Km4lTx4Ulmx6JF/ul1lbbafomlEy+N1qI4xi8Ht/CdogfQnZnbu8md+iZMUCnHHO+
-         ndecuYff/67fCKBUKlaprGW2zgt5X0jHONvvOR3zoIV2PutPtQqmksA7R1rvdoyGnG
-         FpFHzNtU5B9/97tBtMQccdhqyT+jwdU/kN6l/BHwsJst8Nle234gsorNQ+qcPjQb51
-         wCw+UZuJBdpZg==
-Date:   Mon, 27 Jun 2022 15:27:04 -0500
+        b=vH/JVG4fH1kNDyOgKtfw+e+iM5yy4rmJr6ULbnYzduzZRfHOBlPJgAm1t2cZyFHSC
+         dQLlfz+Irh+rPvNsWocB9kieI6qgfW3Fzbn7CSERTvFMGVviySnzZnFtEosPMh7Nuf
+         dW2HEuHSk1lmR10CSi3WEMDXpCwK+dHzQ+dizwNFnNCg/YRXOpH7Ot8tnhHLPDyJ+7
+         izr3OIyxJNMvrvmAZfec93O4pTXRAvNg0PcWuWYw93Al9ncaEfKI4iRR8sziTzEs77
+         7Gp94ch+pXs45+UJeMTFeTbfMJW65OJotb2M2t1l6OoLn5A48Rt720r2G6uEE5qBMw
+         7yxHL76LT+H0g==
+Date:   Mon, 27 Jun 2022 15:28:58 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yang Yingliang <yangyingliang@huawei.com>,
+To:     Colin Ian King <colin.i.king@gmail.com>,
         Jon Mason <jdmason@kudzu.us>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Frank.Li@nxp.com, kishon@ti.com, lpieralisi@kernel.org,
-        kw@linux.com, bhelgaas@google.com
-Subject: Re: [PATCH -next v2] PCI: endpoint: pci-epf-vntb: fix error handle
- in epf_ntb_mw_bar_init()
-Message-ID: <20220627202704.GA1775928@bhelgaas>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] NTB: EPF: set pointer addr to null using NULL
+ rather than 0
+Message-ID: <20220627202858.GA1776067@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220625021516.431473-1-yangyingliang@huawei.com>
+In-Reply-To: <20220623165709.77229-1-colin.i.king@gmail.com>
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,96 +58,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jun 25, 2022 at 10:15:16AM +0800, Yang Yingliang wrote:
-> In error case of epf_ntb_mw_bar_init(), memory window BARs should be
-> cleared, so add 'num_mws' parameter in epf_ntb_mw_bar_clear() and
-> calling it in error path to clear the BARs. Also add missing error
-> code when pci_epc_mem_alloc_addr() fails.
+On Thu, Jun 23, 2022 at 05:57:09PM +0100, Colin Ian King wrote:
+> The pointer addr is being set to null using 0. Use NULL instead.
+> 
+> Cleans up sparse warning:
+> warning: Using plain integer as NULL pointer
 
-Another one for Jon, since ff32fac00d97 appeared in -next via his
-tree
+Another one for Jon; fixes this commit:
 
 https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=ff32fac00d97
 
-> Fixes: ff32fac00d97 ("NTB: EPF: support NTB transfer between PCI RC and EP connection")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 > ---
-> v2:
->   add error label err_set_bar and move pci_epc_clear_bar() to it
-> ---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 20 ++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index ebf7e243eefa..ee9fee167d48 100644
+> index ebf7e243eefa..fb31c868af6a 100644
 > --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
 > +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -567,6 +567,8 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
->  	return -1;
->  }
+> @@ -605,7 +605,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
 >  
-> +static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws);
-> +
->  /**
->   * epf_ntb_db_bar_clear() - Clear doorbell BAR and free memory
->   *   allocated in peers outbound address space
-> @@ -625,13 +627,21 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
->  							      &ntb->vpci_mw_phy[i],
->  							      size);
->  		if (!ntb->vpci_mw_addr[i]) {
-> +			ret = -ENOMEM;
->  			dev_err(dev, "Failed to allocate source address\n");
-> -			goto err_alloc_mem;
-> +			goto err_set_bar;
->  		}
->  	}
->  
->  	return ret;
-> +
-> +err_set_bar:
-> +	pci_epc_clear_bar(ntb->epf->epc,
-> +			  ntb->epf->func_no,
-> +			  ntb->epf->vfunc_no,
-> +			  &ntb->epf->bar[barno]);
->  err_alloc_mem:
-> +	epf_ntb_mw_bar_clear(ntb, i);
->  	return ret;
->  }
->  
-> @@ -640,12 +650,12 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
->   * @ntb: NTB device that facilitates communication between HOST and vHOST
->   *
->   */
-> -static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb)
-> +static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws)
->  {
->  	enum pci_barno barno;
->  	int i;
->  
-> -	for (i = 0; i < ntb->num_mws; i++) {
-> +	for (i = 0; i < num_mws; i++) {
->  		barno = ntb->epf_ntb_bar[BAR_MW0 + i];
->  		pci_epc_clear_bar(ntb->epf->epc,
->  				  ntb->epf->func_no,
-> @@ -774,7 +784,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
->  	return 0;
->  
->  err_write_header:
-> -	epf_ntb_mw_bar_clear(ntb);
-> +	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
->  err_mw_bar_init:
->  	epf_ntb_db_bar_clear(ntb);
->  err_db_bar_init:
-> @@ -794,7 +804,7 @@ static int epf_ntb_epc_init(struct epf_ntb *ntb)
->  static void epf_ntb_epc_cleanup(struct epf_ntb *ntb)
->  {
->  	epf_ntb_db_bar_clear(ntb);
-> -	epf_ntb_mw_bar_clear(ntb);
-> +	epf_ntb_mw_bar_clear(ntb, ntb->num_mws);
->  }
->  
->  #define EPF_NTB_R(_name)						\
+>  		ntb->epf->bar[barno].barno = barno;
+>  		ntb->epf->bar[barno].size = size;
+> -		ntb->epf->bar[barno].addr = 0;
+> +		ntb->epf->bar[barno].addr = NULL;
+>  		ntb->epf->bar[barno].phys_addr = 0;
+>  		ntb->epf->bar[barno].flags |= upper_32_bits(size) ?
+>  				PCI_BASE_ADDRESS_MEM_TYPE_64 :
 > -- 
-> 2.25.1
+> 2.35.3
 > 
