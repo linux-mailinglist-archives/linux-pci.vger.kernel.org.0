@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45EDE55D0C6
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:08:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6457F55DFC2
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:31:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345422AbiF1MSb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jun 2022 08:18:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47696 "EHLO
+        id S1345484AbiF1MUE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jun 2022 08:20:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344871AbiF1MSb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 08:18:31 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85AAD2A27C;
-        Tue, 28 Jun 2022 05:18:29 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id j21so21992703lfe.1;
-        Tue, 28 Jun 2022 05:18:29 -0700 (PDT)
+        with ESMTP id S230249AbiF1MUD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 08:20:03 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C63A1D0D1;
+        Tue, 28 Jun 2022 05:20:02 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id i18so21939577lfu.8;
+        Tue, 28 Jun 2022 05:20:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=AD/028lQNRt99VqHDqMBw00IrndI5w4T9lxRCSQvLwc=;
-        b=iSQtYBgDtpLyMDkoJLVoWXmlDQKqUe+IoFaNVqZi1IingTn+OytjiHN8W+FS/SvJBb
-         tpFtqXeLbipLrCen9/K9KPuBO7bsXqLMHfEFs20slm9DI/7mLzndWuTs/y7fXDooDW/f
-         vdxFPOagpdZ/VsNSb27uzKDFoynttIbM4ggrm/8xsTbda8+Y3YrnEfFsUEnWYs9JGrVv
-         PkAekPFbxKMD0vVX2SboaZyOcAOYfTsOIvA33CJBOYVg6zDTLWIE5yx4oW90iO1OXUQ8
-         MvBbvCvrntnhZjziDyL+NbkGYkGzVJBlhseoylnWSeVO2FkZxejzSiapBctWRTYlk2Pt
-         F/Ww==
+        bh=MVzgUGxdhgem/6VaBvLoYmVpdRnW/LkWA6EcAAYvS3A=;
+        b=mHSZFx9Rl0emaEhg2qXFWI0s/dZuSL5F86yqhQ9wUFOz3mLCbPAX275Mp8mjLsfPws
+         n4oMhwGrA8MXRO1CEkq2N2HV8Goczm9TmMOzfG9OsrKJpe3nyqAD1+uooDvkyyUONxAg
+         N2b7S5hUEDhNzYwdEbAiAA0I610ZyhbL1qhjFcsUNB2iD5LnOuQcp107fX+tW2OZki10
+         DxPke2euRluKJnjA1BNb8M1UjudIkyPFmogfv71KzO6GB7E3TvrD/1Hv1zewrlNQi2qJ
+         2N2cYEvumaWPTmVOWFHNelLqVTm4xSCTqM2QzDm4PXnIyMrm3FFXM/qxvn/HoIqOLwY/
+         At1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=AD/028lQNRt99VqHDqMBw00IrndI5w4T9lxRCSQvLwc=;
-        b=Bn1oq4AqXgUN8gC+ilbfqrX/0PGE8ZgsTPtdJpAX7Hj2mCyqQraR+ZeSvE5//PnlX5
-         e6enO8XLL3vu/CinlJDjKZIe2LD/E+xb8Da09M9C4cp8yWo7/RoodhmZ/aD1AFDKmqmC
-         L6NUPSiWnauPu+Euh/5mxXT4s1ODK5sZMW1smBeywlo1KZYFMUka17Pb4aczYTlIPbOR
-         7zhtI2ATGBQ8rAg9MEgnFPBVIjp9HSjauieBZ0G5LFfceWjOYzR7wqDkN9Bb6PDH1E1+
-         /02zWAnmdNwWjAaIeiuKwTx77rxTqkQEb/5tJTP6TTc2ZXL3mvXkspL56EH8oK+kmua7
-         lyfQ==
-X-Gm-Message-State: AJIora//yR0XsukK62gpMokYD7T0dFn3PO7WwMkQ9qOm+N5ehUbey8k9
-        TzE7NPeBug7pZpYUksoCjHI=
-X-Google-Smtp-Source: AGRyM1u2OQeO86TghuhJems3ROZwxR43VjmOELIz7/RMU3eZSyCU8NG5WMiCDS5a56kQyQJZujcv8Q==
-X-Received: by 2002:a05:6512:1096:b0:481:2eb7:1a41 with SMTP id j22-20020a056512109600b004812eb71a41mr1652713lfg.90.1656418707780;
-        Tue, 28 Jun 2022 05:18:27 -0700 (PDT)
+        bh=MVzgUGxdhgem/6VaBvLoYmVpdRnW/LkWA6EcAAYvS3A=;
+        b=GCpS38P+c7W99ZOUH7nUD/4S8fOZurkrlfuOEKBKcfQjJUxO4QHkWfkUmTL/7U6Rsr
+         i4mwj3n7MKA0EEjW0cUE2gkOKPHOaF69X0VgVn/r68/FAtYvlVu08mKT8x3PCNMmjHwX
+         ztBQqJDcQBLhyRtM07KB8szMehBGAAYLUH0+06QAdPU51O9Pm5pO4VRZ6fC6emRqv3xP
+         eRaROzlHsM++kWOXfJn9GTpFoRk8TST+3n2Dj2ohIuC3fJ7d8OKmItmzu+sFIzQHEncy
+         LG7hbJnyvWy+kkjK5QDQNAQ59smmvcXHjVgZ2OaP5xke2Eg8dofpkMXEr/DEpaYg+2xB
+         iidg==
+X-Gm-Message-State: AJIora/3pbd++3IVhnN8IUCYEfW8/Rlxs8AkEQwr6zlNs/YeCbM+BoIV
+        qNZnD5rUYSEPvl+IkBdUrS4=
+X-Google-Smtp-Source: AGRyM1tJI7E5B+LFtRN0Gxm7YtSBUrPmXSjDeZIhzEbiotIykgoE+xQGuSQRzw8A2xTB076W2EpDyQ==
+X-Received: by 2002:a05:6512:2508:b0:480:f1cb:64a5 with SMTP id be8-20020a056512250800b00480f1cb64a5mr11885619lfb.0.1656418800372;
+        Tue, 28 Jun 2022 05:20:00 -0700 (PDT)
 Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id x14-20020a056512130e00b004801964251asm1916864lfu.201.2022.06.28.05.18.26
+        by smtp.gmail.com with ESMTPSA id j14-20020a2e850e000000b0025a6e20abe9sm1767718lji.130.2022.06.28.05.19.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jun 2022 05:18:27 -0700 (PDT)
-Date:   Tue, 28 Jun 2022 15:18:24 +0300
+        Tue, 28 Jun 2022 05:19:59 -0700 (PDT)
+Date:   Tue, 28 Jun 2022 15:19:57 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Rob Herring <robh@kernel.org>
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -63,17 +63,17 @@ Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/17] dt-bindings: PCI: dwc: Add
- interrupts/interrupt-names common properties
-Message-ID: <20220628121824.72lfvzbjfrjkdpqo@mobilestation>
+Subject: Re: [PATCH v3 12/17] dt-bindings: PCI: dwc: Add Baikal-T1 PCIe Root
+ Port bindings
+Message-ID: <20220628121957.76wz5mofqizugwn6@mobilestation>
 References: <20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru>
- <20220610085706.15741-8-Sergey.Semin@baikalelectronics.ru>
- <20220615153201.GB1069883-robh@kernel.org>
- <20220619163727.xjdlx2jf565uhids@mobilestation>
+ <20220610085706.15741-13-Sergey.Semin@baikalelectronics.ru>
+ <20220615163712.GA1400328-robh@kernel.org>
+ <20220619200355.zuixe3hqebpif4kv@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220619163727.xjdlx2jf565uhids@mobilestation>
+In-Reply-To: <20220619200355.zuixe3hqebpif4kv@mobilestation>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -86,285 +86,246 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Rob,
 Could you please get your attention back to this this thread?
-A possible solution have been suggested below. Let's finally settle
-things down, so we could move on with the series further.
 
 -Sergey
 
-On Sun, Jun 19, 2022 at 07:37:27PM +0300, Serge Semin wrote:
-> On Wed, Jun 15, 2022 at 09:32:01AM -0600, Rob Herring wrote:
-> > On Fri, Jun 10, 2022 at 11:56:55AM +0300, Serge Semin wrote:
-> > > Currently the 'interrupts' and 'interrupt-names' are defined being too
-> > > generic to really describe any actual IRQ interface. Moreover the DW PCIe
-> > > End-point devices are left with no IRQ signals. All of that can be fixed
-> > > by adding the IRQ-related properties to the common DW PCIe DT-schema and
-> > > defining a common and device-specific set of the IRQ names in accordance
-> > > with the hardware reference manual. Seeing there are common and dedicated
-> > > IRQ signals for DW PCIe Root Port and End-point controllers we suggest to
-> > > split the IRQ names up into two sets: common definitions available in the
-> > > snps,dw-pcie-common.yaml schema and Root Port specific names defined in
-> > > the snps,dw-pcie.yaml schema. The former one will be applied to both DW
-> > > PCIe RP and EP controllers, while the later one - for the RP only.
+On Sun, Jun 19, 2022 at 11:03:55PM +0300, Serge Semin wrote:
+> On Wed, Jun 15, 2022 at 10:37:12AM -0600, Rob Herring wrote:
+> > On Fri, Jun 10, 2022 at 11:57:00AM +0300, Serge Semin wrote:
+> > > Baikal-T1 SoC is equipped with DWC PCIe v4.60a Root Port controller, which
+> > > link can be trained to work on up to Gen.3 speed over up to x4 lanes. The
+> > > controller is supposed to be fed up with four clock sources: DBI
+> > > peripheral clock, AXI application Tx/Rx clocks and external PHY/core
+> > > reference clock generating the 100MHz signal. In addition to that the
+> > > platform provide a way to reset each part of the controller:
+> > > sticky/non-sticky bits, host controller core, PIPE interface, PCS/PHY and
+> > > Hot/Power reset signal. The Root Port controller is equipped with multiple
+> > > IRQ lines like MSI, system AER, PME, HP, Bandwidth change, Link
+> > > equalization request and eDMA ones. The registers space is accessed over
+> > > the DBI interface. There can be no more than four inbound or outbound iATU
+> > > windows configured.
 > > > 
 > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > > > 
 > > > ---
 > > > 
-> > > Changelog v3:
-> > > - This is a new patch unpinned from the next one:
-> > >   https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
-> > >   by the Rob' request. (@Rob)
+> > > Changelog v2:
+> > > - Rename 'syscon' property to 'baikal,bt1-syscon'.
+> > > - Fix the 'compatible' property definition to being more specific about
+> > >   what strings are supposed to be used. Due to that we had to add the
+> > >   select property to evaluate the schema against the Baikal-T1 PCIe DT
+> > >   nodes only.
 > > > ---
-> > >  .../bindings/pci/snps,dw-pcie-common.yaml     | 51 +++++++++++++++
-> > >  .../bindings/pci/snps,dw-pcie-ep.yaml         | 17 +++++
-> > >  .../devicetree/bindings/pci/snps,dw-pcie.yaml | 63 ++++++++++++++++++-
-> > >  3 files changed, 128 insertions(+), 3 deletions(-)
+> > >  .../bindings/pci/baikal,bt1-pcie.yaml         | 154 ++++++++++++++++++
+> > >  1 file changed, 154 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
 > > > 
-> > > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-> > > index b2fbe886981b..0a524e916a9f 100644
-> > > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-> > > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-> > > @@ -17,6 +17,25 @@ description:
-> > >  select: false
-> > >  
-> > >  properties:
+> > > diff --git a/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+> > > new file mode 100644
+> > > index 000000000000..23bd1d0aa5c5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/baikal,bt1-pcie.yaml
+> > > @@ -0,0 +1,154 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pci/baikal,bt1-pcie.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Baikal-T1 PCIe Root Port Controller
+> > > +
+> > > +maintainers:
+> > > +  - Serge Semin <fancer.lancer@gmail.com>
+> > > +
+> > > +description:
+> > > +  Embedded into Baikal-T1 SoC Root Complex controller. It's based on the
+> > > +  DWC RC PCIe v4.60a IP-core, which is configured to have just a single Root
+> > > +  Port function and is capable of establishing the link up to Gen.3 speed
+> > > +  on x4 lanes. It doesn't have embedded clock and reset control module, so
+> > > +  the proper interface initialization is supposed to be performed by software.
+> > > +
+> > > +select:
+> > > +  properties:
+> > > +    compatible:
+> > > +      contains:
+> > > +        const: baikal,bt1-pcie
+> > > +
+> > > +  required:
+> > > +    - compatible
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - const: baikal,bt1-pcie
+> > > +      - const: snps,dw-pcie-4.60a
+> > 
+> 
+> > Pointless, you can read the version.
+> 
+> The IP-core version CSR was first introduced in v4.70a. So by using
+> the version-based compatible string I advertise the actual IP-core
+> version.
+> 
+> > 
+> > > +      - const: snps,dw-pcie
+> > 
+> 
+> > Pointless, because what can you do with this by itself?
+> 
+> In general many things. For instance implement some IP-core specific
+> quirks in the generic part of the PCIe subsystem, visually identify
+> the device origin, etc.
+> 
+> > 
+> > > +
+> > > +  reg:
+> > > +    description:
+> > > +      DBI, DBI2 and at least 4KB outbound iATU-capable region.
+> > > +    maxItems: 3
+> > > +
+> > > +  reg-names:
+> > > +    minItems: 3
+> > > +    maxItems: 3
+> > > +    items:
+> > > +      enum: [ dbi, dbi2, config ]
+> > 
+> 
+> > This should define the order.
+> 
+> Please, tell me why do you persist in the items being ordered? The
+> driver permits the relaxed order of the resources. Thus there is no
+> much need in such constraint. At least I can't find any.
+> 
+> > 
+> > > +
 > > > +  interrupts:
 > > > +    description:
-> > > +      There are two main sub-blocks which are normally capable of
-> > > +      generating interrupts. It's System Information Interface and MSI
-> > > +      interface. While the former one has some common for the Host and
-> > > +      Endpoint controllers IRQ-signals, the later interface is obviously
-> > > +      Root Complex specific since it's responsible for the incoming MSI
-> > > +      messages signalling. The System Information IRQ signals are mainly
-> > > +      responsible for reporting the generic PCIe hierarchy and Root
-> > > +      Complex events like VPD IO request, general AER, PME, Hot-plug, link
-> > > +      bandwidth change, link equalization request, INTx asserted/deasserted
-> > > +      Message detection, embedded DMA Tx/Rx/Error.
-> > > +    minItems: 1
-> > > +    maxItems: 26
+> > > +      MSI, AER, PME, Hot-plug, Link Bandwidth Management, Link Equalization
+> > > +      request and eight Read/Write eDMA IRQ lines are available.
+> > > +    maxItems: 14
 > > > +
 > > > +  interrupt-names:
-> > > +    minItems: 1
-> > > +    maxItems: 26
+> > > +    minItems: 14
+> > > +    maxItems: 14
+> > > +    items:
+> > > +      oneOf:
+> > > +        - pattern: '^dma[0-7]$'
+> > > +        - enum: [ msi, aer, pme, hp, bw_mg, l_eq ]
+> > 
+> 
+> > Define the order.
+> 
+> Fourteen IRQs? dma0, dma1, dma2, ..., msi, aer, ..., l_eq?
+> 
+> > 
 > > > +
-> > >    phys:
-> > >      description:
-> > >        There can be up to the number of possible lanes PHYs specified.
-> > > @@ -91,4 +110,36 @@ properties:
-> > >  
-> > >  additionalProperties: true
-> > >  
-> > > +definitions:
-> > 
-> 
-> > $defs:
-> > 
-> > But I suppose this is the applying fixups or not issue. That's certainly 
-> > not behavior we should rely on. If we need a way to specify applying 
-> > fixups or not, we should do that. But really I'd prefer not to need 
-> > that.
-> 
-> $defs doesn't work in this case. Please see the patchlog to the v2
-> of this patch:
-> https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
-> 
-> Anyway see my next comment. Let's settle the next issue first, then
-> get back to the implementation details.
-> 
-> > 
-> > > +  interrupt-names:
+> > > +  clocks:
 > > > +    description:
-> > > +      IRQ signal names common for the DWC PCIe Root Port and Endpoint
-> > > +      controllers.
-> > > +    oneOf:
-> > > +      - description:
-> > > +          Controller request to read or write virtual product data
-> > > +          from/to the VPD capability registers.
-> > > +        const: vpd
-> > > +      - description:
-> > > +          Link Equalization Request flag is set in the Link Status 2
-> > > +          register (applicable if the corresponding IRQ is enabled in
-> > > +          the Link Control 3 register).
-> > > +        const: l_eq
-> > > +      - description:
-> > > +          Indicates that the eDMA Tx/Rx transfer is complete or that an
-> > > +          error has occurred on the corresponding channel. eDMA can have
-> > > +          eight Tx (Write) and Rx (Read) eDMA channels thus supporting up
-> > > +          to 16 IRQ signals all together. Write eDMA channels shall go
-> > > +          first in the ordered row as per default edma_int[*] bus setup.
-> > > +        pattern: '^dma([0-9]|1[0-5])?$'
-> > > +      - description:
-> > > +          PCIe protocol correctable error or a Data Path protection
-> > > +          correctable error is detected by the automotive/safety
-> > > +          feature.
-> > > +        const: sft_ce
-> > > +      - description:
-> > > +          Indicates that the internal safety mechanism detected and
-> > > +          uncorrectable error.
-> > > +        const: sft_ue
+> > > +      DBI (attached to the APB bus), AXI-bus master and slave interfaces
+> > > +      are fed up by the dedicated application clocks. A common reference
+> > > +      clock signal is supposed to be attached to the corresponding Ref-pad
+> > > +      of the SoC. It will be redistributed amongst the controller core
+> > > +      sub-modules (pipe, core, aux, etc).
+> > > +    minItems: 4
+> > > +    maxItems: 4
+> > > +
+> > > +  clock-names:
+> > > +    minItems: 4
+> > > +    maxItems: 4
+> > > +    items:
+> > > +      enum: [ dbi, mstr, slv, ref ]
+> > > +
+> > > +  resets:
+> > > +    description:
+> > > +      A comprehensive controller reset logic is supposed to be implemented
+> > > +      by software, so almost all the possible application and core reset
+> > > +      signals are exposed via the system CCU module.
+> > > +    minItems: 9
+> > > +    maxItems: 9
+> > > +
+> > > +  reset-names:
+> > > +    minItems: 9
+> > > +    maxItems: 9
+> > > +    items:
+> > > +      enum: [ mstr, slv, pwr, hot, phy, core, pipe, sticky, non-sticky ]
+> > > +
+> > > +  baikal,bt1-syscon:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description:
+> > > +      Phandle to the Baikal-T1 System Controller DT node. It's required to
+> > > +      access some additional PM, Reset-related and LTSSM signals.
+> > > +
+> > > +  num-lanes:
+> > > +    maximum: 4
+> > > +
+> > > +  max-link-speed:
+> > > +    maximum: 3
+> > > +
 > > 
-> > I still don't really like this pattern. My first read of it makes me 
-> > think only 1 interrupt is supported, and I have to go look that this is 
-> > referenced from 'items'.
+> 
+> > > +  num-ob-windows:
+> > > +    const: 4
+> > > +
+> > > +  num-ib-windows:
+> > > +    const: 4
 > > 
-> > Could we do a lot more with json-schema like you have? Yes, but the 
-> > schemas are optimized for simplicity and a relatively fixed pattern of 
-> > what's allowed as json-schema is new to most folks. It's also easy to 
-> > create things that simply don't work (silently). Just reviewing this 
-> > series is hard.
-> > 
+> > Remove these. They are deprecated and shouldn't be in new bindings.
 > 
-> > This series is trying to do lots of things. Refactoring, adding 
-> > constraints, and adding a new binding. I would split it up if you want 
-> > to make progress.
-> 
-> This series has been refactored three times already! First I created
-> it as the legacy bindings conversion to the yaml schema. I missed just
-> a few weeks, but someone has already submitted the converted bindings.
-> So I had to rebase my work on top of the already performed conversion.
-> After that you asked me to split it up into the series of patches.
-> Now you want the patchset to be refactored again and to be split up
-> again. Each such action takes a lot of my time which I've already
-> spent too much on this update taking into account the time spent on
-> looking for a way to implement the extendable array property pattern.
-> And there is no guaranty you won't refuse the suggested update should
-> I re-submit the separate patchset. So please don't ask me to split it
-> up again especially seeing there are only eleven DT-related patches
-> here. I just can't afford it, but am still very much eager to get the
-> work merged in in a suitable for you and me form.
-> 
-> Let's finally settle the main issue here so I could re-submit the
-> series what you'd be ok with. On each iteration you said you didn't
-> like the pattern I've used here. It looks like this:
-> 
-> 1) The most common schema:
-> pci/snps,dw-pcie-common.yaml:
-> > definitions:
-> >   interrupt-names:
-> >     oneOf:
-> >       - const: i1
-> >       - const: i2
-> 
-> 2) Generic Dw PCIe Root Port schema:
-> pci/snps,dw-pcie.yaml:
-> > properties:
-> >   interrupt-names:
-> >     items:
-> >       anyOf:
-> >         - $ref: /schemas/pci/snps,dw-pcie-common.yaml#/definitions/interrupt-names
-> >         - $ref: '#/definitions/interrupt-names'
-> > definitions:
-> >   interrupt-names:
-> >     oneOf:
-> >       - const: i3
-> >       - const: i4
-> 
-> 3) Generic Dw PCIe Endpoint schema:
-> pci/snps,dw-pcie-ep.yaml:
-> > properties:
-> >   interrupt-names:
-> >     items:
-> >       anyOf:
-> >         - $ref: /schemas/pci/snps,dw-pcie-common.yaml#/definitions/interrupt-names
-> >         - $ref: '#/definitions/interrupt-names'
-> > definitions:
-> >   interrupt-names:
-> >     oneOf:
-> >       - const: i5
-> >       - const: i6
-> 
-> I am not that much happy with it either, but first I didn't find any
-> alternative, and second by using it I've solved several complex
-> problems persistent in the currently implemented DW PCIe bindings:
-> 1) Drop the duplicated properties defined in the Root Port and Endpoint
-> schemas and create a common DT bindings for both of these devices
-> seeing in accordance with the ref. manual they are very much alike.
-> 2) Create the generic DW PCIe Root Port and Endpoint DT-schemas with
-> more restrictive constraints so to stop the new drivers from creating
-> their own regs/clocks/resets/interrupts bindings implementation.
-> 3) Fix the already defined DW PCIe vendor-specific DT-bindings to use
-> either 1) or 2) schema depending on what is applicable for them.
-> 
-> So to speak I was willing to bring some order to the already
-> implemented DT-schemas and to make sure the new bindings wouldn't
-> define the new names to the already known resources. As a result the
-> next schemas hierarchy has been provided:
->                        1. Common DW PCIe schema
->                        snps,dw-pcie-common.yaml
->                                   |
->           +-----------------------+----------------------+
->           |                       |                      |
->           v                       v                      V
->  2.DW PCIe Root Port     3. DW PCIe Endpoint   4. DW PCIe Vendor-spec
->   snps,dw-pcie.yaml     snps,dw-pcie-ep.yaml             |
->           |                       |                      |
->           v                       v                      V
->  baikal,bt1-pcie.yaml                         hisilicon,kirin-pcie.yaml
->   intel-gw-pcie.yaml                            sifive,fu740-pcie.yaml
->                                               toshiba,visconti-pcie.yaml
->                                             socionext,uniphier-pcie-ep.yaml
->                                                  fsl,imx6q-pcie.yaml
-> 
-> As you can see the suggested in this patchset approach is very flexible
-> and permits using the common DW PCIe schema in the particular device
-> bindings while still have the vendor-specific constraints defined in
-> the particular schemas. So the new devices drivers are supposed to use
-> the schemas (2) and (3), while the already added drivers can
-> following the path (4), apply the schema (1), but still use the names
-> "definitions" added to (1), (2) and (3).
-> 
-> You keep saying that what I've done here is misleading since what was
-> created under the "definitions" property is perceived as the "only 1
-> interrupt/clock/reg/reset is supported, and you have to go look that
-> this is referenced from 'items'". If so then what alternative to this
-> solution can you suggest? Do you know a schema pattern which would be
-> more suitable? If there is none, then what? Do you suggest to drop
-> trying to solve the problems I've listed above? Please answer to these
-> questions (or go on on this comment for a possible but IMO less
-> suitable alternative solution).
-> 
-> Anyway in my opinion the currently implemented approach of the names
-> array properties:
-> >   reg-names:
-> >     items:
-> >       enum: [dbi, dbi2, config, atu, addr_space, link, atu_dma, appl]
-> isn't much more descriptive, since it doesn't provide much info
-> regarding the resources but just lists all the common and
-> vendor-specific names to the same resources.
-> 
-> As IMO a much less suitable, but "definitions"-less alternative to my
-> approach we can use the next pattern:
-> 
-> 1) The most common schema:
-> pci/snps,dw-pcie-common.yaml:
-> > properties:
-> >   interrupt-names:
-> >     anyOf:
-> >       - const: i1
-> >       - const: i2
-> >       - true
-> 
-> 2) Generic Dw PCIe Root Port schema:
-> pci/snps,dw-pcie.yaml:
-> > allOf:
-> >   - $ref: /schemas/pci/snps,dw-pcie-common.yaml#
-> >
-> > properties:
-> >   interrupt-names:
-> >     items:
-> >       anyOf:
-> >         - const: i3
-> >         - const: i4
-> >         - true
-> 
-> 3) etc
-> 
-> It will give us a more generic and less restrictive bindings. Thus due
-> to using the "true" schema in there we won't be able to automatically
-> deny the new resource names adding. But it won't have any
-> "definitions" or "$defs" utilized as you seem do not like.
+> Aren't they deprecated in the framework of the DT nodes only?
+> Can't I still use them here to signify the number of iATU windows?
 > 
 > -Sergey
 > 
 > > 
-> > Rob
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - reg-names
+> > > +  - interrupts
+> > > +  - interrupt-names
+> > > +
+> > > +unevaluatedProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    pcie@1f052000 {
+> > > +      compatible = "baikal,bt1-pcie", "snps,dw-pcie-4.60a", "snps,dw-pcie";
+> > > +      device_type = "pci";
+> > > +      reg = <0x1f052000 0x1000>, <0x1f053000 0x1000>, <0x1bdbf000 0x1000>;
+> > > +      reg-names = "dbi", "dbi2", "config";
+> > > +      #address-cells = <3>;
+> > > +      #size-cells = <2>;
+> > > +      ranges = <0x81000000 0 0x00000000 0x1bdb0000 0 0x00008000>,
+> > > +               <0x82000000 0 0x20000000 0x08000000 0 0x13db0000>;
+> > > +      bus-range = <0x0 0xff>;
+> > > +
+> > > +      interrupts = <0 80 4>, <0 81 4>, <0 82 4>, <0 83 4>,
+> > > +                   <0 84 4>, <0 85 4>, <0 86 4>, <0 87 4>,
+> > > +                   <0 88 4>, <0 89 4>, <0 90 4>, <0 91 4>,
+> > > +                   <0 92 4>, <0 93 4>;
+> > > +      interrupt-names = "dma0", "dma1", "dma2", "dma3", "dma4", "dma5", "dma6",
+> > > +                        "dma7", "msi", "aer", "pme", "hp", "bw_mg", "l_eq";
+> > > +
+> > > +      clocks = <&ccu_sys 1>, <&ccu_axi 6>, <&ccu_axi 7>, <&clk_pcie>;
+> > > +      clock-names = "dbi", "mstr", "slv", "ref";
+> > > +
+> > > +      resets = <&ccu_axi 6>, <&ccu_axi 7>, <&ccu_sys 7>, <&ccu_sys 10>,
+> > > +               <&ccu_sys 4>, <&ccu_sys 6>, <&ccu_sys 5>, <&ccu_sys 8>,
+> > > +               <&ccu_sys 9>;
+> > > +      reset-names = "mstr", "slv", "pwr", "hot", "phy", "core", "pipe",
+> > > +                    "sticky", "non-sticky";
+> > > +
+> > > +      reset-gpios = <&port0 0 1>;
+> > > +
+> > > +      num-lanes = <4>;
+> > > +      max-link-speed = <3>;
+> > > +    };
+> > > +...
+> > > -- 
+> > > 2.35.1
+> > > 
+> > > 
