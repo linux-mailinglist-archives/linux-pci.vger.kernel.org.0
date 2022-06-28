@@ -2,79 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A512C55D200
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 15:10:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 599B755CAEF
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 14:59:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344438AbiF1MYD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jun 2022 08:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53444 "EHLO
+        id S1345545AbiF1MYj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jun 2022 08:24:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344426AbiF1MYC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 08:24:02 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB0212607;
-        Tue, 28 Jun 2022 05:24:00 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id w20so21949482lfa.11;
-        Tue, 28 Jun 2022 05:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WQ9z0kTfCVSMtE397ipDHk7qIKZlvLyKSPAwwpIITAU=;
-        b=oJeWJ1qCSiib5W2lwNnI8DCmF6gEvOiXc4xzCpsOZIF6yapvctQSK6rHVW9x6GSyZu
-         LdwYH5tmtMCOnDshF1TN90IcBRf/m1kf3l8KqibN4dqzD8PiktilDXSiHrlG2NPQx78S
-         7hrmCOtAsUlNqthmCEwV3apGA0jXo/0DBOZ8yKzKLSUjRvbx74c5g4RAulCbAiA9syD8
-         HigV9bGGEhl34l8K//bfeCz6YnLOiKTY38nCsW5vueljvs97TuldTvbHMuJ6fQkItlmm
-         00JwVXoDF67FJw2eGGAbxzDG0hTxolzEHfgW4BoG6dNxmrsTJP7pwupxYfTIZ7aAdO1M
-         9Y1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WQ9z0kTfCVSMtE397ipDHk7qIKZlvLyKSPAwwpIITAU=;
-        b=Znc14CpT/sXEZIu8sJyAkuZcv0WjMJbmy4cUlR3lXbFvRX/U+YpJQ2YFKxmirkNMj8
-         FTJHqDQnM1du/4o+ppgBq9UaLa60upqPvtghNAqOtQ/qC0aoPH9svgaXpzG3ME/wYjez
-         GAmDdRto7eGHH5kBoNeNVTyHjz4WA9BBtrmuK3+qHG7+pZkTwQqx2eXBsgiBbaL3hzBp
-         pIIK9Q1yI5FrNgGbebwBN8XO+sSNbSZ4bZVHnu++gdNzbXL5hpcRVKcoODtOqJ2CWFoE
-         eYSUzcCnzExVgNFnAgAVj/SuAB+sXIAdBf7PU77m+dTIWr3y5L4CnURWdoCTn1wKF5dF
-         vhBw==
-X-Gm-Message-State: AJIora+JMh9mMXHoDT2bzSoycLPksu0rEnMofVH5K246ze4z4U1XiD4L
-        3mSB3S+KlEXOFMw/5cqRWs8=
-X-Google-Smtp-Source: AGRyM1vx1D1O75pkNnia/hKrEET3jpv4ZxA0jF7/IIn8/3AzukiI+aebALgZc18jCe8O9M3uhM4SAg==
-X-Received: by 2002:a05:6512:1095:b0:47f:7061:2751 with SMTP id j21-20020a056512109500b0047f70612751mr12478192lfg.392.1656419038779;
-        Tue, 28 Jun 2022 05:23:58 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id u22-20020a197916000000b0047f86b503absm2192747lfc.16.2022.06.28.05.23.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jun 2022 05:23:58 -0700 (PDT)
-Date:   Tue, 28 Jun 2022 15:23:56 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S241591AbiF1MYi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 08:24:38 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2090.outbound.protection.outlook.com [40.107.113.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19FA1D312;
+        Tue, 28 Jun 2022 05:24:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C7RgR6jcY04fbt1tLVNRZb0zJdAGLiugnDres0GKmzgR/7I/NjBruGBuhVD6UA4mOZZqs+Xm7ziOGiW8EBN6J3JOkk5nwVDD7Pn1Ay/FMCHFTJD7dV4FL0RrP3ciDItfP/YGg8AOa3WII/LjoDpNxxXaLpekCpv8TDwvTppQSlRbdW+Z0IVox2MUIV8WnWWFF27sSH3r/hisdh8+Lp7W/ut0RWECVglFDyhPDKuYncp7PZAhZpRRkOuV11gOWULA8NXyJ5LETWCLEIWLkQEcbaqnzibZikx8Gjebo8SvQkb8ABHKJdl1bIBrq8IYtbZNpNTYTt/NRyH1OfICb5WxJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AsZeSwTupIUVgeJfXHZQ0fl2ksJrB6ZqtcJIC1AlfSg=;
+ b=Ar3LoooFQQJm3Q3WWBA+wWxZoU0e8QZob4gEM58e6D1yY7fhYXPJsCVBp7qSKcdBJzNruABTRjhXYMLhb1uvQf3OcaCvvJduBDrnOzS+eJfEZlhPPoNsvBxjXIgk63lJnbpJwjR2bxWXw9BjG49VMgfTWL6MNi0+m14JAkQju6gYcrB2VU6YsP448CUJg/0w8J0U7+d9Osd+58w0n8Oj6VQWvmebNXZubEPVFF19sb3CooqkZg3g4zcLWYJmPP3prsbIEd4NwsnS4RxfE4zNgdt7BQa++bHl2Giai3UMBaNyUQNmB6qqeQZ0Nz1U9Nr3NcIWLgtz2nEFke3NULdU7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AsZeSwTupIUVgeJfXHZQ0fl2ksJrB6ZqtcJIC1AlfSg=;
+ b=O34rk4yMtWCEYwEldKe0VPlI1DQN7OKmqmbM4HNVwHCya8kLdV15URW3nM7pZIX7xzTqrTm0LHf9/fnIW5iE7T4bXpZ6TIhp4v/HDoP+hBjf2Y8xblWu/oNtZlj/mJuLkcD6xuGqxeCT3ydATkpKKGgkTeZdnok+HYF7Fg632r4=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by OSZPR01MB6908.jpnprd01.prod.outlook.com
+ (2603:1096:604:138::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.15; Tue, 28 Jun
+ 2022 12:24:34 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::b596:754d:e595:bb2d]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::b596:754d:e595:bb2d%5]) with mapi id 15.20.5373.018; Tue, 28 Jun 2022
+ 12:24:34 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 17/17] PCI: dwc: Add Baikal-T1 PCIe controller support
-Message-ID: <20220628122356.ao6b3usaiwtvz4s7@mobilestation>
-References: <20220620171347.35beffaudlik7euw@mobilestation>
- <20220621182941.GA1322521@bhelgaas>
- <20220622170437.jhvb56jmdup5dcgh@mobilestation>
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v2 09/13] PCI: renesas: Add R-Car Gen4 PCIe Host support
+Thread-Topic: [PATCH v2 09/13] PCI: renesas: Add R-Car Gen4 PCIe Host support
+Thread-Index: AQHYiiDamgExIByjH0yAMmHf8TTCfq1kceSAgABMulA=
+Date:   Tue, 28 Jun 2022 12:24:34 +0000
+Message-ID: <TYBPR01MB5341EA61B14BB1BCD17DE650D8B89@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+References: <20220627122417.809615-1-yoshihiro.shimoda.uh@renesas.com>
+ <20220627122417.809615-10-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWKzjzRi_TmGAobPXu_Dk8dKaQeeZkssR_uk6jT4Hic5Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdWKzjzRi_TmGAobPXu_Dk8dKaQeeZkssR_uk6jT4Hic5Q@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2aa4e2cd-c2d8-4fd0-fc16-08da590128df
+x-ms-traffictypediagnostic: OSZPR01MB6908:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YuFfk79Cg4Q6C+X5P39l0l+xC9RQohrHEjL2tpN39WSg3Snug1Zkd4UdviZoxKR5VhKPS1cItJgOwJafkY9YVPVvvMB1U4FURiYDI2kblzSoTwL16vJUO0Y/LJp9Max6i15Ci/HeYeFh5KN12zqw8PqzFvwNtzlSJXvg33kDUn5nUO2IEaIOTDOeQU6d07eijdMQzPRrqFQh9o6WpocMf5PRGkpRpx/t8s39Dkcth0cXqUz/Di0Umi1ufkeahScs/Lof0qjsQcjnKdbX6IS4SOktDnLMs3V4XtJfRWTpuX92gxS52xKrQxZYeMqKP71bVM6jCTcXljVMc/xIoqmXXUElNz5R4hjwA1MsFyRqfmblBaxdl9sS4w8R6oUk4cA59K89Mbl8B2w6Orr++7hI+DhzaL825Fty3sDKlyuMfDQy0/Pz+4ELZOq3y2ajIfQV8Ho65fknkw132CZCvyrTvLrWvLcD8HJ821y/fB2MrYCHHqELqU0N5GGYEaG4z9044TzIwFf0l0pJXeLFo4Zv91hV1jV9ne+QQuru9DpVlYE8f95vtAov5dLZcExLb/QpunPrhbXLETyuHQPhKnjynpW9WT404ZJDYcFRuDXpeGtjxPQrvK7BEnD5MdsCjsCKcSqiJkqz1TJXL3MiAgpgjOoWbPT1SApWTjG5F8tbEmyXgVlSvAivaszIda+yTjCKlpxbGI+i+NjR0c3WtW9tBj2/5QAsSYj5hh42KFAX9Bcy52x+5FiLeiMWjo/jbM+x6aHd9kH4O4qqDwethX6C/TeeGqpS7IaybFZ02yf/iNY=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(39860400002)(376002)(136003)(396003)(346002)(6916009)(83380400001)(71200400001)(86362001)(38070700005)(53546011)(52536014)(54906003)(38100700002)(2906002)(55016003)(4326008)(9686003)(316002)(7696005)(41300700001)(186003)(6506007)(33656002)(8936002)(66446008)(64756008)(66946007)(5660300002)(7416002)(76116006)(8676002)(478600001)(66556008)(66476007)(122000001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cUQyTVlBVHJzR2ZiaUpFazk5UW4yZDZPV2paVkNvUVh1OElMQjVBMVg5Q3I1?=
+ =?utf-8?B?YlFBbEZpdFlacUxmRTZDamExUERzVm4xZG5WajdxcHlLZXdVb3pST1VQMTdu?=
+ =?utf-8?B?UFhzWGZLWWdxU2pRd21iNEczMEN6eVhFRUlsT0J2WGxlUi83MndBL2wzT203?=
+ =?utf-8?B?MXplcjY5Y29TMFVYeHB2cXZDZTc3YXlWSG5VclV3RHR0MFk1K2VrZzUybU8y?=
+ =?utf-8?B?RnpOdy8valZoclFTNlZxOXYrOFR0aHRpU1h5TUgvelFrYW5lTHBkcWZMUk5y?=
+ =?utf-8?B?T2ZhWkFEYUVTYUg5ZFpBRUNaRWhZalYyOEg5TTgxSGVaWURpVFpsdVVXT3BG?=
+ =?utf-8?B?M0h2Zk11bDhrWUFwa0N2dlRZYXp1L3IwTEVzWFd0SE0yUVh3cFdldURSeTY3?=
+ =?utf-8?B?Q3BHaWtPY2RMTXRRSmNSOEdOMXp0cHpPbHVVdUtWSDJpdmJNQlA4SG9HeGxJ?=
+ =?utf-8?B?bW1QeTYxS2pFRHZQU2NRQW5RWjBPVG15R1N0MkRhQWpncE92ck1ROEpGOStO?=
+ =?utf-8?B?UVJNTmZxUVNPUmtkUWJuOUpEdEJzZGY4VFREQ0JpN0J2UUNLN0FlaTM2Q0JO?=
+ =?utf-8?B?ZU1Oam1nQXltTStQSGJnQ01ZREMyTjErNVhWNWpCaTRDRm9PNEZqdUlBRXAx?=
+ =?utf-8?B?TVVKQk5yYWcvbGxJU0MzMHdHTEtaV05FQ0laaHEvdXBqSVR1Z09BajlHbzBB?=
+ =?utf-8?B?d09MKzBvRjJwczBBaWdURXlrdVZSVGY0YUUvVFJQbks3ek00RUxreTIyVHR6?=
+ =?utf-8?B?c2V0U2c3a0hNVlkxNVVMNUVJMWlJNXI2WTJtV1dMOGI3WVZXL0pkUld5RGpZ?=
+ =?utf-8?B?R013Z1FlaHhqclVqdjgyeW5UcXlLQ2xlcS9VZFVtZlVyaE1wT1R3d0N3K3lS?=
+ =?utf-8?B?U3pMQWwzQVZ0clpiaisva05yVGQreHU1OFZlaVQyWEJ4akZUeUphc2FHdjQv?=
+ =?utf-8?B?cUY5dEd0WFlCYnNYU2VDaXBWZ1VUbHFPN3VqMUhXa25LRjFETE5zU2ZYV2pl?=
+ =?utf-8?B?K0pSU3lsY2VtT3lkK0svUENITTRxenRKK2xhMG0xVTNEVFRlTlZCWXJuT0lI?=
+ =?utf-8?B?S1d6R3h2eU5McmpDMk9WZjB3UGVLZjNKTmpWTlVCZDJYb0EyM0FCMHlnSDFx?=
+ =?utf-8?B?S2cyaTZiRlBkZUdRWTNicGdTQXFNOG13bk5jQ0MvWnZTQWJSQjg4ZGl0L3JT?=
+ =?utf-8?B?bFRZT21KMkpMTFRVeTBUR1lFTmtUcDNZRHhzcW9LYkt3MjJrSENITVpkWEVi?=
+ =?utf-8?B?czJuMDU3NVJBZ0drT1RaK2tzZ3YreDNTNTNuUGhsVUtmYXlMMVVnR1lxaml3?=
+ =?utf-8?B?YWVwUllzWFdSM0twVjBkVjFUb2RJZ3hmaVkwYzdibm9ONkQza1pZTG9wb01s?=
+ =?utf-8?B?OG5IOFl4YUxFZm5mNHhCS2VEbTViV2VUQW9nTzRUOHVucWpSRUFUMUVJUWxh?=
+ =?utf-8?B?WVdlNEZnNk53WVJ3dXFOdEFyM0E4WXBKODBTem1EWXFqVmw4ZEtwRkhQZVdV?=
+ =?utf-8?B?NkhsOTR3THltL3EwdVkrWlo4a0FjYWNyQWFTRjlJdC9URllFZnhnUmJrVC9s?=
+ =?utf-8?B?c3JEbUVlajNkK2xiYURIZjRaZVR0UGEvODFxTUZSMzh0TzZSTTlTUHJ3S1dV?=
+ =?utf-8?B?MklKTjU0VUJyUTNFUGkydTBqemFmditsdVBLZU9XcEJiRHRwZU5LNjBlY0tE?=
+ =?utf-8?B?VUxhU0cxU3VXK0w1ajE2VmkwaVkxNXJ1OCs5WkR6eFVmNTRSckxOOGVQMlNo?=
+ =?utf-8?B?TGJ3UVRncW1nL2VHQW5wcjNSYndmOGJGb0srSnRUeVZEcjFPWFVGOHAxd3Vx?=
+ =?utf-8?B?TUxITWN2MUZvUHl6cjNQV0xCa1IvOGt6QjBvN1QvbGhadmk2UW5WQ2IwUFc2?=
+ =?utf-8?B?cFJsNG0vQWZ0Ums3Wnk1TVJlTnVCcWUwNmhVVUtNWjM5RXZ0VVhPelhIenR6?=
+ =?utf-8?B?T1RPWU15YlA0SFQxZzZmSFJpR2YvTTRtT2hLYnAvelBLVzZFSUVvcEpaNy9X?=
+ =?utf-8?B?cWVyN1hMbEFNNlVjMUxNOFd2bUcvbGprM1JuTzRMbmVNR3JNMWgxRTA5ZSt1?=
+ =?utf-8?B?WTFLY05JR3RPY2xpZWhyZ2V5U05wK3ZSTi9ZNEY0eVdmRk5XbEFIM3R0bXZj?=
+ =?utf-8?B?L3lxZjQrbk1tWkJaYURBeXd6VjBWNXVVV2xuNG53dkwxMjdQZlIzOGZXRmRo?=
+ =?utf-8?B?aFh0WjRaV3R5OEFTS2RZUUE0VHdCcWN1TlhoeGlPd3VUdGFDaWgzeXIyeWg5?=
+ =?utf-8?B?OW5udjd0RUVjMklrRWpMSGZDUk9RPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220622170437.jhvb56jmdup5dcgh@mobilestation>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2aa4e2cd-c2d8-4fd0-fc16-08da590128df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2022 12:24:34.1484
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5dDjE13Xt+2ZH+EKu65X5GK2vnxGbfb5F43E7sP86/3Iovmnyj5sSoVLxx82akX3MFx1fegvbWHOIwnRhfAWGB6xNsX7ryzc8lwuZgQp5w9d8VtdUnOQz+0alPdvSdwo
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB6908
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,376 +138,180 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn,
-Do you have anything to say based on the notes below?
-
--Sergey
-
-On Wed, Jun 22, 2022 at 08:04:37PM +0300, Serge Semin wrote:
-> On Tue, Jun 21, 2022 at 01:29:41PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jun 20, 2022 at 08:13:47PM +0300, Serge Semin wrote:
-> > > On Wed, Jun 15, 2022 at 11:48:48AM -0500, Bjorn Helgaas wrote:
-> > > > On Fri, Jun 10, 2022 at 11:57:05AM +0300, Serge Semin wrote:
-> > > > > Baikal-T1 SoC is equipped with DWC PCIe v4.60a host controller. It can be
-> > > > > trained to work up to Gen.3 speed over up to x4 lanes. The host controller
-> > > > > is attached to the DW PCIe 3.0 PCS via the PIPE-4 interface, which in its
-> > > > > turn is connected to the DWC 10G PHY. The whole system is supposed to be
-> > > > > fed up with four clock sources: DBI peripheral clock, AXI application
-> > > > > clocks and external PHY/core reference clock generating the 100MHz signal.
-> > > > > In addition to that the platform provide a way to reset each part of the
-> > > > > controller: sticky/non-sticky bits, host controller core, PIPE interface,
-> > > > > PCS/PHY and Hot/Power reset signal. The driver also provides a way to
-> > > > > handle the GPIO-based PERST# signal.
-> > > > > 
-> > > > > Note due to the Baikal-T1 MMIO peculiarity we have to implement the DBI
-> > > > > interface accessors which make sure the IO operations are dword-aligned.
-> > 
-> > > > > +struct dw_pcie_ops bt1_pcie_dw_ops = {
-> > > > > +	.read_dbi = bt1_pcie_read_dbi,
-> > > > > +	.write_dbi = bt1_pcie_write_dbi,
-> > > > > +	.write_dbi2 = bt1_pcie_write_dbi2,
-> > > > > +	.start_link = bt1_pcie_start_ltssm,
-> > > > > +	.stop_link = bt1_pcie_stop_ltssm,
-> > > > > +};
-> > 
-> > > > Please rename to "dw_pcie_ops" as most
-> > > > drivers use. 
-> > > 
-> > > IMO matching the structure and its instance names is not a good idea.
-> > > Other than confusing objects nature, at the very least it forces you to
-> > > violate the local namespace convention. Thus in the line of the
-> > > dw_pcie->ops initialization it looks like you use some generic
-> > > operations while in fact you just refer to the locally defined
-> > > DW PCIe ops instance with the generic variable name. Moreover AFAICS
-> > > the latest platform drivers mainly use the vendor-specific prefix in
-> > > the dw_pcie_ops structure instance including the ones acked by you,
-> > > Lorenzo and Gustavo. What makes my code any different from them?
-> > 
-> 
-> > That's fair.  I suggest "bt1_pcie_ops" or "bt1_dw_pcie_ops" to match
-> > the other drivers that include the driver name:
-> > 
-> >   intel_pcie_ops
-> >   keembay_pcie_ops
-> >   kirin_dw_pcie_ops
-> >   tegra_dw_pcie_ops
-> 
-> +   ks_pcie_dw_pcie_ops
-> 
-> which is even further from the suggested names.)
-> 
-> > 
-> > They're not 100% consistent, but hopefully we can at least not make
-> > things *less* consistent.
-> 
-> I don't think we can make something less consistent if there is no real
-> consistency.) There are at most five ops descriptors can be defined in
-> the DW PCIe platform drivers:
-> 
-> 1. struct dw_pcie_ops - DW PCIe DBI interface accessors,
-> +-> dw_pcie_ops
-> +-> <vendor>_pcie_ops
-> +-> <vendor>_dw_pcie_ops
-> 
-> 2. struct pci_ops     - own or child PCIe config space accessors,
-> +-> dw_pcie_ops !!! in the driver core.
-> +-> <vendor>_pci_ops
-> +-> <vendor>_pcie_ops
-> +-> dw_child_pcie_ops
-> +-> <vendor>_child_pcie_ops
-> +-> <vendor>_child_pci_ops
-> 
-> 3. struct dw_pcie_host_ops - DW PCIe Root Port init/de-init operations
-> +-> <vendor>_pcie_host_ops
-> +-> <vendor>_pcie_dw_host_ops
-> 
-> 4. struct dw_pcie_ep_ops   - DW PCIe Endpoint init/de-init operations
-> +-> pcie_ep_ops
-> +-> pci_ep_ops
-> +-> <vendor>_pcie_ep_ops
-> 
-> As you can see each can have different naming approaches used in the
-> DW PCIe platform drivers here and there. Some of them have been utilized
-> more frequently, some of them - less. As for me what is really consistent
-> across all the DW PCIe platform drivers is the local namespace prefix
-> of the form "<vendor>_pcie". It is used in all the locally defined
-> functions names and more-or-less mainly in the local instances of the
-> operation descriptors. So if you want we can pick some approach and
-> make sure it is used in all the driver from now on. For instance,
-> 
-> struct dw_pcie_ops <vendor>_pcie_ops
-> struct dw_pcie_host_ops <vendor>_pcie_host_ops
-> struct dw_pcie_ep_ops <vendor>_pcie_ep_ops
-> struct pci_ops <vendor>_pci_ops // Can be confused with the struct
->                                 // dw_pcie_ops instance, but this what
->                                 // is mainly used in the available drivers.
-> struct pci_ops <vendor>_child_pci_ops // less frequent naming
->                                       // approach, but it looks more
->                                       // like the own CFG-space IOs.
-> 
-> Note the later two cases will violate the local namespace naming
-> convention of having "<vendor>_pcie" prefix.
-> 
-> In my case the names would look like:
-> struct dw_pcie_ops bt1_pcie_ops // What you suggest in the comment above
-> struct dw_pcie_host_ops bt1_pcie_host_ops
-> struct pci_ops bt1_pci_ops // It may look ambiguous with bt1_pcie_ops.
-> 
-> What do you think?
-> 
-> > 
-> > > > > +static int bt1_pcie_get_res(struct bt1_pcie *btpci)
-> > > 
-> > > > Can you name this something similar to what other drivers use?  There
-> > > > are a couple *_pcie_get_resources() functions (normally called from
-> > > > *_pcie_probe()), but no *_get_res() yet.
-> > > 
-> > > Earlier in this patchset I've introduced a new method to get
-> > > the CSRs ranges, PCIe speed, NoF lanes, etc resources. See the patch:
-> > > [PATCH v3 14/17] PCI: dwc: Introduce generic resources getter
-> > > The method has been named as "dw_pcie_get_res()". So the locally
-> > > defined function has been named to refer to that method. If you think
-> > > that using the "_resources" suffix is better (IMO there is no
-> > > significant difference) then we'll need to change the name there too.
-> > > Do you?
-> > 
-> 
-> > Yes.  I don't think there's value in names being gratuitously
-> > different.
-> 
-> Ok.
-> 
-> > 
-> > > > > +	/* AXI-interface is configured with 64-bit address bus width */
-> > > > > +	ret = dma_coerce_mask_and_coherent(&btpci->dw.pp.bridge->dev,
-> > > > > +					   DMA_BIT_MASK(64));
-> > > 
-> > > > Just to double-check since this is the first instance of
-> > > > dma_coerce_mask_and_coherent() in drivers/pci -- I guess Baikal-T1 is
-> > > > unique in needing this?
-> > > 
-> > > To be honest I've set it here just in case, seeing the dma_mask and
-> > > coherent_dma_mask are left uninitialized in the Host bridge device
-> > > instance, while it's still participate in the PCI devices hierarchy:
-> > > 
-> > > 1. platform_device.dev;
-> > >                    | (<= devm_pci_alloc_host_bridge(dev))
-> > >                    +---+
-> > >                       &v
-> > > 2. pci_host_bridge.dev.parent
-> > >                    | (<= pci_register_host_bridge(bridge) or)
-> > >                    | (<= pci_alloc_child_bus()              )
-> > >                   &v
-> > >            pci_bus.bridge
-> > >                    +-------------------+
-> > >                    |                   | (<= pci_setup_device())
-> > >                    v                   v
-> > > 3.     pci_bus.dev.parent  pci_dev.dev.parent
-> > >                            pci_dev.dma_mask = 0xffffffff;
-> > >                                    | (<= pci_device_add())
-> > >                                    +----+
-> > >                                        &v
-> > >                            pci_dev->dev.dma_mask
-> > >                            pci_dev->dev.coherent_dma_mask = 0xffffffffull;
-> > > 
-> > > So each device detected on the very first PCIe bus gets to have the
-> > > PCI host bridge device as a parent. But AFAICS the PCI subsystem core
-> > > code doesn't use the PCI host bridge DMA-mask and by default the
-> > > dma_mask/coherent_dma_mask fields of each PCIe peripheral device are
-> > > unconditionally initialized with DMA_BIT_MASK(32) (they are supposed
-> > > to be overridden by the device-driver anyway). So to speak we can
-> > > freely drop the dma_coerce_mask_and_coherent() method invocation from
-> > > my driver if you say it is required and the PCI host bridge DMA parameter
-> > > will never be used. What do you think?
-> > 
-> 
-> > I'd like the usage across drivers to be consistent unless there's a
-> > hardware difference that requires something different.  So if you can
-> > point to something different in bt1, great.  If not, do it the same as
-> > the other drivers.
-> 
-> Ok. I'll drop it from the driver then.
-> 
-> > 
-> > > > > +static void bt1_pcie_full_stop_bus(struct bt1_pcie *btpci, bool init)
-> > > > 
-> > > > Can you name this something similar to what other drivers use?
-> > > 
-> > > For instance? (Please note, the link_stop/link_start callbacks are
-> > > defined as separate methods above.) The current names correctly describe
-> > > the methods logic. So I wouldn't want to fully change their names.
-> > 
-> 
-> > Do any other drivers contain similar logic?  If so, please use a
-> > similar name.
-> 
-> host_init content is very platform-specific. So each driver has its own
-> callback implementation and logical sub-methods split up. My case
-> isn't an exception.
-> 
-> > 
-> > > > > +	 * Application reset controls are trigger-based so de-assert the core
-> > > > > +	 * resets only.
-> > > > > +	 */
-> > > > > +	ret = reset_control_bulk_assert(DW_PCIE_NUM_CORE_RSTS, pci->core_rsts);
-> > 
-> 
-> > BTW, the comment says "de-assert" but the code looks like "assert".
-> 
-> Right. It is supposed to be "assert" in accordance with what is
-> actually done.
-> 
-> > 
-> > > > > +	/* Make sure the reset is settled */
-> > > > > +	usleep_range(1, 10);
-> > > 
-> > > > Is this duration related to something in the PCIe spec?  Or the DWC
-> > > > spec? 
-> > > 
-> > > No. These durations are the chip-specific. Partly due to them being
-> > > specific for each SoC we can't implement a generic bus reset
-> > > procedure.
-> > > 
-> > > > I'd really like to use named constants when possible, although
-> > > > we have a ton of bare magic numbers currently.
-> > > > 
-> > > > Similar for the poll timeouts and the "state settled" sleep below.
-> > > 
-> > > I don't really see much need in this parametrization since these
-> > > numbers are used only once in the platform driver and their
-> > > application is easily inferable from the code context.
-> > 
-> 
-> > Even if they are used only once, it's helpful when constants like this
-> > can be connected to the spec or other justification for the specific
-> > values.
-> 
-> Ok. I'll replace the literals with the macros.
-> 
-> > 
-> > > > > +static struct bt1_pcie *bt1_pcie_create_data(struct platform_device *pdev)
-> > > > > +{
-> > > > > +	struct bt1_pcie *btpci;
-> > > > > +
-> > > > > +	btpci = devm_kzalloc(&pdev->dev, sizeof(*btpci), GFP_KERNEL);
-> > > > > +	if (!btpci)
-> > > > > +		return ERR_PTR(-ENOMEM);
-> > > > > +
-> > > > > +	btpci->pdev = pdev;
-> > > > > +
-> > > > > +	platform_set_drvdata(pdev, btpci);
-> > > > > +
-> > > > > +	return btpci;
-> > > 
-> > > > I don't think it's worth splitting this into a separate function.  I
-> > > > think it would be better to use the same structure as other dwc-based
-> > > > drivers and keep this in bt1_pcie_probe().
-> > > 
-> > > Sorry, I disagree in this matter. Generally I don't like the most of
-> > > the probe methods designed in the kernel well because after evolving
-> > > in time they get to be a mess if incoherent initializations,
-> > > allocations, requests, etc. Splitting it up into a set of smaller
-> > > coherent methods makes the code much clearer.
-> > 
-> 
-> > There's definitely some tension between making one driver better and
-> > making it different from all the others.  I'm all in favor of making
-> > all the drivers better and more consistent.  I'm less in favor of
-> > one-off improvements because consistency is extremely important for
-> > maintenance.
-> 
-> Well, if there were a consistency in the probe method design it would
-> have been another story, but in case of the DW PCIe there is none.
-> Some DW PCIe platform drivers perform all the probe actions right in
-> the probe method forming a long list of the weakly coherent things,
-> some of them have a few sub-functions called but still look the same,
-> some of them are mainly split up in the sub-methods, but still perform
-> some initialization right in the probe method. So in general there is
-> no unification and well defined convention in that regard.
-> 
-> My approach on the contrary makes the probe method code well unified.
-> Should any new additional step is required, the new method can be
-> added together with the cleanup antagonist. Similarly the
-> sub-methods update patches is easier to review than reading the
-> all-in-one probe code update. Moreover such design approach I've
-> been using in all the drivers submitted by me to the kernel and no
-> questions have been raised so far. Finally the driver is supposed to
-> be maintained by its author at the very least. So I definitely won't
-> have any problem with it especially after using the same design
-> pattern in all my drivers.
-> 
-> > 
-> > > > > +static int bt1_pcie_add_dw_port(struct bt1_pcie *btpci)
-> > > 
-> > > > All other dwc-based drivers call dw_pcie_host_init() from either
-> > > > *_pcie_probe() or *_add_pcie_port().  Please use a similar convention.
-> > > 
-> > > Not entirely. Tegra is an exception. So as before I don't think there
-> > > is a real convention. Most likely it's a result of a lucky coincident.
-> > > Moreover I don't really like such naming. Something like
-> > > VENDOR_pcie_add_root_port() would be much better.
-> > 
-> 
-> > I stand corrected.  Of the 21 dw_pcie_host_init() calls, 13 are from
-> > *_pcie_probe(), 7 are from *_add_pcie_port(), and tegra is from
-> > tegra_pcie_init_controller().  I think the *_add_pcie_port() structure
-> > is better because it makes room to support multiple root ports.
-> 
-> See the last comment. It concerns the same methods, but you suggest to
-> use the names "*_add_port()" there.
-> 
-> > 
-> > > > > +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-> > > > 
-> > > > Why do you need this when no other dwc-based drivers do?  Is Baikal-T1
-> > > > different in this respect?
-> > > 
-> > > It's because eDMA engine embedded into the DW PCIe root port. 
-> > 
-> 
-> > Let's add a comment about the fact that this is needed because of the
-> > eDMA engine.
-> 
-> Ok.
-> 
-> > 
-> > > > > +static void bt1_pcie_del_dw_port(struct bt1_pcie *btpci)
-> > > 
-> > > > Can you call dw_pcie_host_deinit() from the same place as other
-> > > > drivers?
-> > > > 
-> > > >   $ git grep -p dw_pcie_host_deinit drivers/pci/controller/dwc
-> > > 
-> > > Sorry I'd rather leave it as is. There are only four drivers using
-> > > it and one of them don't follow what seems like a convention. I'd
-> > > rather have my driver code coherent:
-> > > bt1_pcie_add_pcie_port() is used to add the DW PCIe Root Port.
-> > > and
-> > > bt1_pcie_del_pcie_port() is used to remove the DW PCIe Root Port
-> > 
-> > I agree with your rationale.  Intel and kirin do:
-> > 
-> >   *_pcie_probe
-> >     dw_pcie_host_init
-> > 
-> >   *_pcie_remove
-> >     dw_pcie_host_deinit
-> > 
-> > and tegra is similar but from tegra_pcie_init_controller() and
-> > tegra_pcie_deinit_controller().  Exynos is the odd one out and calls
-> > dw_pcie_host_init() from exynos_add_pcie_port() but
-> > dw_pcie_host_deinit() from exynos_pcie_remove().
-> > 
-> > Your model is better since it removes the "single root port"
-> > assumption.  I would like the "bt1_pcie_add_port()" and
-> > "bt1_pcie_del_port()" (or "bt1_pcie_remove_port()", which would be
-> > slightly more parallel with "add") names to align with other drivers.
-> 
-> Ok. I'll use bt1_pcie_add_port() and bt1_pcie_del_port() names then.
-> * Note the DW PCIe platform drivers mainly use the _pcie_port() suffix
-> * in the add-method.
-> 
-> -Sergey
-> 
-> > 
-> > Bjorn
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVHVlc2Rh
+eSwgSnVuZSAyOCwgMjAyMiA0OjQ2IFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+IE9u
+IE1vbiwgSnVuIDI3LCAyMDIyIGF0IDI6MjQgUE0gWW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hp
+aGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBBZGQgUi1DYXIgR2VuNCBQ
+Q0llIEhvc3Qgc3VwcG9ydC4gVGhpcyBjb250cm9sbGVyIGlzIGJhc2VkIG9uDQo+ID4gU3lub3Bz
+eXMgRGVzaWduV2FyZSBQQ0llLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9zaGloaXJvIFNo
+aW1vZGEgPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPg0KPiANCj4gVGhhbmtzIGZv
+ciB5b3VyIHBhdGNoIQ0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQo+ID4gLS0tIC9k
+ZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcmNhci1n
+ZW40LWhvc3QuYw0KPiA+IEBAIC0wLDAgKzEsMjA1IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1J
+ZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4gKy8qDQo+ID4gKyAqIFBDSWUgaG9zdCBjb250cm9sbGVy
+IGRyaXZlciBmb3IgUmVuZXNhcyBSLUNhciBHZW40IFNlcmllcyBTb0NzDQo+ID4gKyAqIENvcHly
+aWdodCAoQykgMjAyMiBSZW5lc2FzIEVsZWN0cm9uaWNzIENvcnBvcmF0aW9uDQo+ID4gKyAqLw0K
+PiA+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KPiA+ICsjaW5jbHVkZSA8
+bGludXgvbW9kdWxlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L3BjaS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2
+aWNlLmg+DQo+ID4gKw0KPiA+ICsjaW5jbHVkZSAicGNpZS1yY2FyLWdlbjQuaCINCj4gPiArI2lu
+Y2x1ZGUgInBjaWUtZGVzaWdud2FyZS5oIg0KPiA+ICsNCj4gPiArc3RhdGljIGludCByY2FyX2dl
+bjRfcGNpZV9ob3N0X2luaXQoc3RydWN0IHBjaWVfcG9ydCAqcHApDQo+ID4gK3sNCj4gPiArICAg
+ICAgIHN0cnVjdCBkd19wY2llICpkdyA9IHRvX2R3X3BjaWVfZnJvbV9wcChwcCk7DQo+ID4gKyAg
+ICAgICBzdHJ1Y3QgcmNhcl9nZW40X3BjaWUgKnJjYXIgPSB0b19yY2FyX2dlbjRfcGNpZShkdyk7
+DQo+ID4gKyAgICAgICBpbnQgcmV0Ow0KPiA+ICsgICAgICAgdTMyIHZhbDsNCj4gPiArDQo+ID4g
+KyAgICAgICByY2FyX2dlbjRfcGNpZV9zZXRfZGV2aWNlX3R5cGUocmNhciwgdHJ1ZSwgZHctPm51
+bV9sYW5lcyk7DQo+ID4gKw0KPiA+ICsgICAgICAgZHdfcGNpZV9kYmlfcm9fd3JfZW4oZHcpOw0K
+PiA+ICsNCj4gPiArICAgICAgIC8qIEVuYWJsZSBMMSBTdWJzdGF0ZXMgKi8NCj4gPiArICAgICAg
+IHZhbCA9IGR3X3BjaWVfcmVhZGxfZGJpKGR3LCBMMVBTQ0FQKFBDSV9MMVNTX0NUTDEpKTsNCj4g
+PiArICAgICAgIHZhbCAmPSB+UENJX0wxU1NfQ1RMMV9MMVNTX01BU0s7DQo+ID4gKyAgICAgICB2
+YWwgfD0gUENJX0wxU1NfQ1RMMV9QQ0lQTV9MMV8yIHwgUENJX0wxU1NfQ1RMMV9QQ0lQTV9MMV8x
+IHwNCj4gPiArICAgICAgICAgICAgICBQQ0lfTDFTU19DVEwxX0FTUE1fTDFfMiB8IFBDSV9MMVNT
+X0NUTDFfQVNQTV9MMV8xOw0KPiA+ICsgICAgICAgZHdfcGNpZV93cml0ZWxfZGJpKGR3LCBMMVBT
+Q0FQKFBDSV9MMVNTX0NUTDEpLCB2YWwpOw0KPiA+ICsNCj4gPiArICAgICAgIHJjYXJfZ2VuNF9w
+Y2llX2Rpc2FibGVfYmFyKGR3LCBCQVIwTUFTS0YpOw0KPiA+ICsgICAgICAgcmNhcl9nZW40X3Bj
+aWVfZGlzYWJsZV9iYXIoZHcsIEJBUjFNQVNLRik7DQo+ID4gKw0KPiA+ICsgICAgICAgLyogU2V0
+IFJvb3QgQ29udHJvbCAqLw0KPiA+ICsgICAgICAgdmFsID0gZHdfcGNpZV9yZWFkbF9kYmkoZHcs
+IEVYUENBUChQQ0lfRVhQX1JUQ1RMKSk7DQo+ID4gKyAgICAgICB2YWwgfD0gUENJX0VYUF9SVENU
+TF9TRUNFRSB8IFBDSV9FWFBfUlRDVExfU0VORkVFIHwNCj4gPiArICAgICAgICAgICAgICBQQ0lf
+RVhQX1JUQ1RMX1NFRkVFIHwgUENJX0VYUF9SVENUTF9QTUVJRSB8DQo+ID4gKyAgICAgICAgICAg
+ICAgUENJX0VYUF9SVENUTF9DUlNTVkU7DQo+ID4gKyAgICAgICBkd19wY2llX3dyaXRlbF9kYmko
+ZHcsIEVYUENBUChQQ0lfRVhQX1JUQ1RMKSwgdmFsKTsNCj4gPiArDQo+ID4gKyAgICAgICAvKiBT
+ZXQgSW50ZXJydXB0IERpc2FibGUsIFNFUlIjIEVuYWJsZSwgUGFyaXR5IEVycm9yIFJlc3BvbnNl
+ICovDQo+ID4gKyAgICAgICB2YWwgPSBkd19wY2llX3JlYWRsX2RiaShkdywgUENJX0NPTU1BTkQp
+Ow0KPiA+ICsgICAgICAgdmFsIHw9IFBDSV9DT01NQU5EX1BBUklUWSB8IFBDSV9DT01NQU5EX1NF
+UlIgfA0KPiA+ICsgICAgICAgICAgICAgIFBDSV9DT01NQU5EX0lOVFhfRElTQUJMRTsNCj4gPiAr
+ICAgICAgIGR3X3BjaWVfd3JpdGVsX2RiaShkdywgUENJX0NPTU1BTkQsIHZhbCk7DQo+ID4gKw0K
+PiA+ICsgICAgICAgLyogRW5hYmxlIFNFUlIgKi8NCj4gPiArICAgICAgIHZhbCA9IGR3X3BjaWVf
+cmVhZGJfZGJpKGR3LCBQQ0lfQlJJREdFX0NPTlRST0wpOw0KPiA+ICsgICAgICAgdmFsIHw9IFBD
+SV9CUklER0VfQ1RMX1NFUlI7DQo+ID4gKyAgICAgICBkd19wY2llX3dyaXRlYl9kYmkoZHcsIFBD
+SV9CUklER0VfQ09OVFJPTCwgdmFsKTsNCj4gPiArDQo+ID4gKyAgICAgICAvKiBEZXZpY2UgY29u
+dHJvbCAqLw0KPiA+ICsgICAgICAgdmFsID0gZHdfcGNpZV9yZWFkbF9kYmkoZHcsIEVYUENBUChQ
+Q0lfRVhQX0RFVkNUTCkpOw0KPiA+ICsgICAgICAgdmFsIHw9IFBDSV9FWFBfREVWQ1RMX0NFUkUg
+fCBQQ0lfRVhQX0RFVkNUTF9ORkVSRSB8DQo+ID4gKyAgICAgICAgICAgICAgUENJX0VYUF9ERVZD
+VExfRkVSRSB8IFBDSV9FWFBfREVWQ1RMX1VSUkU7DQo+ID4gKyAgICAgICBkd19wY2llX3dyaXRl
+bF9kYmkoZHcsIEVYUENBUChQQ0lfRVhQX0RFVkNUTCksIHZhbCk7DQo+ID4gKw0KPiA+ICsgICAg
+ICAgZHdfcGNpZV9kYmlfcm9fd3JfZGlzKGR3KTsNCj4gPiArDQo+ID4gKyAgICAgICBpZiAoSVNf
+RU5BQkxFRChDT05GSUdfUENJX01TSSkpIHsNCj4gPiArICAgICAgICAgICAgICAgLyogRW5hYmxl
+IE1TSSBpbnRlcnJ1cHQgc2lnbmFsICovDQo+ID4gKyAgICAgICAgICAgICAgIHZhbCA9IHJjYXJf
+Z2VuNF9wY2llX3JlYWRsKHJjYXIsIFBDSUVJTlRTVFMwRU4pOw0KPiA+ICsgICAgICAgICAgICAg
+ICB2YWwgfD0gTVNJX0NUUkxfSU5UOw0KPiA+ICsgICAgICAgICAgICAgICByY2FyX2dlbjRfcGNp
+ZV93cml0ZWwocmNhciwgUENJRUlOVFNUUzBFTiwgdmFsKTsNCj4gPiArICAgICAgIH0NCj4gPiAr
+DQo+ID4gKyAgICAgICBkd19wY2llX3NldHVwX3JjKHBwKTsNCj4gPiArDQo+ID4gKyAgICAgICBk
+d19wY2llX2RiaV9yb193cl9lbihkdyk7DQo+ID4gKyAgICAgICByY2FyX2dlbjRfcGNpZV9zZXRf
+bWF4X2xpbmtfd2lkdGgoZHcsIGR3LT5udW1fbGFuZXMpOw0KPiA+ICsgICAgICAgZHdfcGNpZV9k
+Ymlfcm9fd3JfZGlzKGR3KTsNCj4gPiArDQo+ID4gKyAgICAgICBpZiAoIWR3X3BjaWVfbGlua191
+cChkdykpIHsNCj4gPiArICAgICAgICAgICAgICAgcmV0ID0gZHctPm9wcy0+c3RhcnRfbGluayhk
+dyk7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChyZXQpDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgcmV0dXJuIHJldDsNCj4gPiArICAgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICAvKiBJ
+Z25vcmUgZXJyb3JzLCB0aGUgbGluayBtYXkgY29tZSB1cCBsYXRlciAqLw0KPiA+ICsgICAgICAg
+aWYgKGR3X3BjaWVfd2FpdF9mb3JfbGluayhkdykpDQo+ID4gKyAgICAgICAgICAgICAgIGRldl9p
+bmZvKGR3LT5kZXYsICJQQ0llIGxpbmsgZG93blxuIik7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0
+dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHdfcGNpZV9o
+b3N0X29wcyByY2FyX2dlbjRfcGNpZV9ob3N0X29wcyA9IHsNCj4gPiArICAgICAgIC5ob3N0X2lu
+aXQgPSByY2FyX2dlbjRfcGNpZV9ob3N0X2luaXQsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0
+aWMgaW50IHJjYXJfZ2VuNF9hZGRfcGNpZV9wb3J0KHN0cnVjdCByY2FyX2dlbjRfcGNpZSAqcmNh
+ciwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2UgKnBkZXYpDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCBkd19wY2llICpkdyA9
+ICZyY2FyLT5kdzsNCj4gPiArICAgICAgIHN0cnVjdCBwY2llX3BvcnQgKnBwID0gJmR3LT5wcDsN
+Cj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKElTX0VOQUJMRUQo
+Q09ORklHX1BDSV9NU0kpKSB7DQo+ID4gKyAgICAgICAgICAgICAgIHBwLT5tc2lfaXJxID0gcGxh
+dGZvcm1fZ2V0X2lycV9ieW5hbWUocGRldiwgIm90aGVycyIpOw0KPiA+ICsgICAgICAgICAgICAg
+ICBpZiAocHAtPm1zaV9pcnEgPCAwKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVy
+biBwcC0+bXNpX2lycTsNCj4gPiArICAgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICBwcC0+b3Bz
+ID0gJnJjYXJfZ2VuNF9wY2llX2hvc3Rfb3BzOw0KPiA+ICsNCj4gPiArICAgICAgIHJldCA9IGR3
+X3BjaWVfaG9zdF9pbml0KHBwKTsNCj4gPiArICAgICAgIGlmIChyZXQpIHsNCj4gPiArICAgICAg
+ICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIGluaXRpYWxpemUgaG9zdFxu
+Iik7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgICB9DQo+ID4g
+Kw0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lk
+IHJjYXJfZ2VuNF9yZW1vdmVfcGNpZV9wb3J0KHN0cnVjdCByY2FyX2dlbjRfcGNpZSAqcmNhcikN
+Cj4gPiArew0KPiA+ICsgICAgICAgZHdfcGNpZV9ob3N0X2RlaW5pdCgmcmNhci0+ZHcucHApOw0K
+PiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHJjYXJfZ2VuNF9wY2llX2dldF9yZXNvdXJj
+ZXMoc3RydWN0IHJjYXJfZ2VuNF9wY2llICpyY2FyLA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICt7
+DQo+ID4gKyAgICAgICBzdHJ1Y3QgZHdfcGNpZSAqZHcgPSAmcmNhci0+ZHc7DQo+ID4gKw0KPiA+
+ICsgICAgICAgLyogUmVuZXNhcy1zcGVjaWZpYyByZWdpc3RlcnMgKi8NCj4gPiArICAgICAgIHJj
+YXItPmJhc2UgPSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2VfYnluYW1lKHBkZXYsICJh
+cHAiKTsNCj4gPiArICAgICAgIGlmIChJU19FUlIocmNhci0+YmFzZSkpDQo+ID4gKyAgICAgICAg
+ICAgICAgIHJldHVybiBQVFJfRVJSKHJjYXItPmJhc2UpOw0KPiA+ICsNCj4gPiArICAgICAgIHJl
+dHVybiByY2FyX2dlbjRfcGNpZV9kZXZtX3Jlc2V0X2dldChyY2FyLCBkdy0+ZGV2KTsNCj4gPiAr
+fQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCByY2FyX2dlbjRfcGNpZV9wcm9iZShzdHJ1Y3QgcGxh
+dGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlICpk
+ZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICsgICAgICAgc3RydWN0IHJjYXJfZ2VuNF9wY2llICpyY2Fy
+Ow0KPiA+ICsgICAgICAgaW50IGVycjsNCj4gPiArDQo+ID4gKyAgICAgICByY2FyID0gcmNhcl9n
+ZW40X3BjaWVfZGV2bV9hbGxvYyhkZXYpOw0KPiA+ICsgICAgICAgaWYgKCFyY2FyKQ0KPiA+ICsg
+ICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+ID4gKyAgICAgICBlcnIgPSBy
+Y2FyX2dlbjRfcGNpZV9wbV9ydW50aW1lX2VuYWJsZShkZXYpOw0KPiA+ICsgICAgICAgaWYgKGVy
+ciA8IDApIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJwbV9ydW50aW1lX2dl
+dF9zeW5jIGZhaWxlZFxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBlcnI7DQo+ID4g
+KyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgZXJyID0gcmNhcl9nZW40X3BjaWVfZ2V0X3Jl
+c291cmNlcyhyY2FyLCBwZGV2KTsNCj4gPiArICAgICAgIGlmIChlcnIgPCAwKSB7DQo+ID4gKyAg
+ICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIHJlcXVlc3QgcmVzb3VyY2U6ICVk
+XG4iLCBlcnIpOw0KPiA+ICsgICAgICAgICAgICAgICBnb3RvIGVycl9wbV9wdXQ7DQo+ID4gKyAg
+ICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgcmNh
+cik7DQo+ID4gKw0KPiA+ICsgICAgICAgZXJyID0gcmNhcl9nZW40X3BjaWVfcHJlcGFyZShyY2Fy
+KTsNCj4gPiArICAgICAgIGlmIChlcnIgPCAwKQ0KPiA+ICsgICAgICAgICAgICAgICBnb3RvIGVy
+cl9wbV9wdXQ7DQo+ID4gKw0KPiA+ICsgICAgICAgZXJyID0gcmNhcl9nZW40X2FkZF9wY2llX3Bv
+cnQocmNhciwgcGRldik7DQo+ID4gKyAgICAgICBpZiAoZXJyIDwgMCkNCj4gPiArICAgICAgICAg
+ICAgICAgZ290byBlcnJfaG9zdF9kaXNhYmxlOw0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiAw
+Ow0KPiA+ICsNCj4gPiArZXJyX2hvc3RfZGlzYWJsZToNCj4gPiArICAgICAgIHJjYXJfZ2VuNF9w
+Y2llX3VucHJlcGFyZShyY2FyKTsNCj4gPiArDQo+ID4gK2Vycl9wbV9wdXQ6DQo+ID4gKyAgICAg
+ICByY2FyX2dlbjRfcGNpZV9wbV9ydW50aW1lX2Rpc2FibGUoZGV2KTsNCj4gPiArDQo+ID4gKyAg
+ICAgICByZXR1cm4gZXJyOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHJjYXJfZ2Vu
+NF9wY2llX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICt7DQo+ID4g
+KyAgICAgICBzdHJ1Y3QgcmNhcl9nZW40X3BjaWUgKnJjYXIgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0
+YShwZGV2KTsNCj4gPiArDQo+ID4gKyAgICAgICByY2FyX2dlbjRfcmVtb3ZlX3BjaWVfcG9ydChy
+Y2FyKTsNCj4gPiArICAgICAgIHJjYXJfZ2VuNF9wY2llX3VucHJlcGFyZShyY2FyKTsNCj4gPiAr
+ICAgICAgIHJjYXJfZ2VuNF9wY2llX3BtX3J1bnRpbWVfZGlzYWJsZSgmcGRldi0+ZGV2KTsNCj4g
+PiArDQo+ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGNv
+bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcmNhcl9nZW40X3BjaWVfb2ZfbWF0Y2hbXSA9IHsNCj4g
+PiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxyY2FyLWdlbjQtcGNpZSIsIH0sDQo+
+ID4gKyAgICAgICB7fSwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZv
+cm1fZHJpdmVyIHJjYXJfZ2VuNF9wY2llX2RyaXZlciA9IHsNCj4gPiArICAgICAgIC5kcml2ZXIg
+PSB7DQo+ID4gKyAgICAgICAgICAgICAgIC5uYW1lID0gInBjaWUtcmNhci1nZW40IiwNCj4gPiAr
+ICAgICAgICAgICAgICAgLm9mX21hdGNoX3RhYmxlID0gcmNhcl9nZW40X3BjaWVfb2ZfbWF0Y2gs
+DQo+ID4gKyAgICAgICB9LA0KPiA+ICsgICAgICAgLnByb2JlID0gcmNhcl9nZW40X3BjaWVfcHJv
+YmUsDQo+ID4gKyAgICAgICAucmVtb3ZlID0gcmNhcl9nZW40X3BjaWVfcmVtb3ZlLA0KPiA+ICt9
+Ow0KPiA+ICttb2R1bGVfcGxhdGZvcm1fZHJpdmVyKHJjYXJfZ2VuNF9wY2llX2RyaXZlcik7DQo+
+ID4gKw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlJlbmVzYXMgUi1DYXIgR2VuNCBQQ0llIGhv
+c3QgY29udHJvbGxlciBkcml2ZXIiKTsNCj4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXJjYXItZ2VuNC5j
+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1yY2FyLWdlbjQuYw0KPiA+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5mYTk1ODhlZDc1ZTANCj4g
+PiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNp
+ZS1yY2FyLWdlbjQuYw0KPiA+IEBAIC0wLDAgKzEsMTcyIEBADQo+ID4gKy8vIFNQRFgtTGljZW5z
+ZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4gKy8qDQo+ID4gKyAqIFBDSWUgaG9zdC9lbmRwb2lu
+dCBjb250cm9sbGVyIGRyaXZlciBmb3IgUmVuZXNhcyBSLUNhciBHZW40IFNlcmllcyBTb0NzDQo+
+ID4gKyAqIENvcHlyaWdodCAoQykgMjAyMiBSZW5lc2FzIEVsZWN0cm9uaWNzIENvcnBvcmF0aW9u
+DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ID4gKyNpbmNs
+dWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3BjaS5oPg0KPiA+
+ICsjaW5jbHVkZSA8bGludXgvcG1fcnVudGltZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVz
+ZXQuaD4NCj4gPiArDQo+ID4gKyNpbmNsdWRlICJwY2llLXJjYXItZ2VuNC5oIg0KPiA+ICsjaW5j
+bHVkZSAicGNpZS1kZXNpZ253YXJlLmgiDQo+ID4gKw0KPiA+ICsvKiBSZW5lc2FzLXNwZWNpZmlj
+ICovDQo+ID4gKyNkZWZpbmUgUENJRVJTVENUUkwxICAgICAgICAgICAweDAwMTQNCj4gPiArI2Rl
+ZmluZSAgQVBQX0hPTERfUEhZX1JTVCAgICAgIEJJVCgxNikNCj4gPiArI2RlZmluZSAgQVBQX0xU
+U1NNX0VOQUJMRSAgICAgIEJJVCgwKQ0KPiA+ICsNCj4gPiArI2RlZmluZSBEV0NfVkVSU0lPTiAg
+ICAgICAgICAgIDB4NTIwYQ0KPiA+ICsNCj4gPiArdTMyIHJjYXJfZ2VuNF9wY2llX3JlYWRsKHN0
+cnVjdCByY2FyX2dlbjRfcGNpZSAqcmNhciwgdTMyIHJlZykNCj4gPiArew0KPiA+ICsgICAgICAg
+cmV0dXJuIHJlYWRsKHJjYXItPmJhc2UgKyByZWcpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICt2b2lk
+IHJjYXJfZ2VuNF9wY2llX3dyaXRlbChzdHJ1Y3QgcmNhcl9nZW40X3BjaWUgKnJjYXIsIHUzMiBy
+ZWcsIHUzMiB2YWwpDQo+ID4gK3sNCj4gPiArICAgICAgIHdyaXRlbCh2YWwsIHJjYXItPmJhc2Ug
+KyByZWcpOw0KPiA+ICt9DQo+IA0KPiBEbyB5b3UgcmVhbGx5IG5lZWQgaGVscGVyIGZ1bmN0aW9u
+cyBmb3IgdGhpcz8gWW91IG5lZWQgdG8gdHlwZSBsZXNzDQo+IHdoZW4gb3Blbi1jb2RpbmcuDQoN
+Ck5vLCBJIGRvbid0IG5lZWQgdGhlc2UgZnVuY3Rpb25zLiBTbywgSSdsbCByZW1vdmUgdGhlbS4N
+Cg0KPiBJZiB5b3UgaW5zaXN0LCBwbGVhc2UgbWFrZSB0aGVtIHN0YXRpYyBpbmxpbmUgaW4gdGhl
+IGhlYWRlciBmaWxlLg0KPiANCj4gPiAraW50IHJjYXJfZ2VuNF9wY2llX3ByZXBhcmUoc3RydWN0
+IHJjYXJfZ2VuNF9wY2llICpyY2FyKQ0KPiA+ICt7DQo+ID4gKyAgICAgICByZXR1cm4gcmVzZXRf
+Y29udHJvbF9kZWFzc2VydChyY2FyLT5yc3QpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICt2b2lkIHJj
+YXJfZ2VuNF9wY2llX3VucHJlcGFyZShzdHJ1Y3QgcmNhcl9nZW40X3BjaWUgKnJjYXIpDQo+ID4g
+K3sNCj4gPiArICAgICAgIHJlc2V0X2NvbnRyb2xfYXNzZXJ0KHJjYXItPnJzdCk7DQo+ID4gK30N
+Cj4gDQo+IFN0YXRpYyBpbmxpbmUgaW4gaGVhZGVyIGZpbGU/DQoNCkknbSB0aGlua2luZyB0aGF0
+IHdlIGNhbiBtZXJnZSBjb2RlIG9mIHJjYXJfZ2VuNF9wY2llX3BtX3J1bnRpbWVfZW5hYmxlKCkN
+CmFuZCByY2FyX2dlbjRfcGNpZV9wcmVwYXJlKCkuIElmIHdlIGNhbm5vdCBtZXJnZSB0aGVtLCBJ
+J2xsIGNoYW5nZQ0KdGhlIHByZXBhcmUvdW5wcmVwYXJlIGZ1bmN0aW9ucyBhcyBzdGF0aWMgaW5s
+aW5lLg0KDQo+ID4gKw0KPiA+ICtpbnQgcmNhcl9nZW40X3BjaWVfcG1fcnVudGltZV9lbmFibGUo
+c3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBwbV9ydW50aW1lX2VuYWJs
+ZShkZXYpOw0KPiA+ICsgICAgICAgcmV0dXJuIHBtX3J1bnRpbWVfZ2V0X3N5bmMoZGV2KTsNCj4g
+DQo+IFBsZWFzZSB1c2UgcG1fcnVudGltZV9yZXN1bWVfYW5kX2dldCgpIGluIG5ldyBjb2RlLg0K
+DQpJIGRpZG4ndCBrbm93IHRoYXQuIEknbGwgZml4IGl0Lg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3No
+aWhpcm8gU2hpbW9kYQ0KDQo=
