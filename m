@@ -2,57 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABB6D55E811
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 18:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA7D055E9A5
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 18:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346645AbiF1ObQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jun 2022 10:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41424 "EHLO
+        id S1346621AbiF1ObP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jun 2022 10:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346539AbiF1ObN (ORCPT
+        with ESMTP id S1346588AbiF1ObN (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 10:31:13 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B5531388;
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D9DD3138A;
         Tue, 28 Jun 2022 07:31:10 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SEH09f028940;
-        Tue, 28 Jun 2022 14:31:06 GMT
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SDlUmV019297;
+        Tue, 28 Jun 2022 14:31:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=VDvAOC9IBHLsG7T0+yCHF0Na5NSX7aR9kmK/JjSN6kc=;
- b=cUoHXCfQF1UbS/e1RM3rQT6gQmQvZcQCOSKn/nyOMIKeydWfQLYOCb9tXbAqOnF9b6KJ
- +dOQOTr3ksCgkhvC3rSi2rVh/LNjFoVU4PIasJN5UM9ENWrod938EFOmRrMiomcyiRhU
- OG5HidcLvco6qbEyCbGu3EpYIVGF2wQm1X1Yhdc63TPQsArTs/4+qIGMqXe0tVceWyEI
- FzlQTxjvbMawdT4bSZf/QIXP3wIejqhNL2/LfvOggHU7FuKg/ftpB+z/FGidMkrUJJmO
- iA+WxV3+IJBTE99TrGAdnQWIBzy1QII8rJZUS2DXv5LeDHiwG4qeO6xx88ofpFTpDRGU kw== 
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=R+BseDFs09Ja9H71wowHmFUqTDEh3Fs4AyTzsPrycMk=;
+ b=ZSGm1xxos/fe5PFXgWObeKH3pbbhQFod8bozSET1uT40SO5W57MxQ9h9C0o68PJa71tR
+ fEBvPJYUdXvHVkdhiDHCJO3jw89VE1AYdWh6IyWMx9oMgerj3a1pfqZYxrGE3NgP+FMX
+ J1uATGYOOGOC9PbKSoLUEQ6YYxseRo5hB27KYIC++ISIkP++VPqGWMUUiXZ3R39SJDXN
+ TQDX17gY2W0SCrD/0jbNfYJbn9Yf9KCcwvheFmbANFlwuviwdoDTHvX/zKLYOgOLWiCR
+ 3M8bG44k5CkyOdsDjmFk28cVR0U9KXFzgX8sgOeoCDIhGGuEcr6GikNSj8QlDP0xfkPY hA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h03968h2r-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h02u21r0p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jun 2022 14:31:06 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25SEHLsI030160;
-        Tue, 28 Jun 2022 14:31:06 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h03968h1j-1
+        Tue, 28 Jun 2022 14:31:07 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25SEOX2m013915;
+        Tue, 28 Jun 2022 14:31:07 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h02u21qxr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jun 2022 14:31:06 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SELdUn022017;
+        Tue, 28 Jun 2022 14:31:07 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SEL4d3007246;
         Tue, 28 Jun 2022 14:31:04 GMT
 Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 3gwsmj51fp-1
+        by ppma03ams.nl.ibm.com with ESMTP id 3gwt08w09a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Tue, 28 Jun 2022 14:31:04 +0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SEV16q23658950
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SEV1RM23724348
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 28 Jun 2022 14:31:01 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61E02A4054;
+        by IMSVA (Postfix) with ESMTP id AC186A4060;
         Tue, 28 Jun 2022 14:31:01 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2054AA4060;
+        by IMSVA (Postfix) with ESMTP id 6D818A405B;
         Tue, 28 Jun 2022 14:31:01 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
@@ -64,24 +63,25 @@ Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
         Pierre Morel <pmorel@linux.ibm.com>,
         linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/5] PCI: Split out next_ari_fn() from next_fn()
-Date:   Tue, 28 Jun 2022 16:30:57 +0200
-Message-Id: <20220628143100.3228092-3-schnelle@linux.ibm.com>
+Subject: [PATCH v6 3/5] PCI: Move jailhouse's isolated function handling to pci_scan_slot()
+Date:   Tue, 28 Jun 2022 16:30:58 +0200
+Message-Id: <20220628143100.3228092-4-schnelle@linux.ibm.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220628143100.3228092-1-schnelle@linux.ibm.com>
 References: <20220628143100.3228092-1-schnelle@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6hHpoGfa25fy2Psn1FDo1WXDdL-Gf6ow
-X-Proofpoint-GUID: SHbbB6ql_HsRo1ZRxJH3cYGcPgj0_0lr
+X-Proofpoint-GUID: cunDo7g8OqfAsU5sdE-G2lDDrY3fxuS6
+X-Proofpoint-ORIG-GUID: kSVxSToXv8ZBR96nMz7h14Wg3BNQIVm0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-06-28_07,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- suspectscore=0 priorityscore=1501 adultscore=0 mlxlogscore=951
- clxscore=1015 phishscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ malwarescore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2204290000 definitions=main-2206280059
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
@@ -92,67 +92,80 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In commit b1bd58e448f2 ("PCI: Consolidate "next-function" functions")
-the next_fn() function subsumed the traditional and ARI based next
-function determination. This got rid of some needlessly complex function
-pointer handling but also reduced the separation between these very
-different methods of finding the next function. With the next_fn()
-cleaned up a bit we can re-introduce this separation by moving out the
-ARI handling while sticking with direct function calls.
+The special case of the jailhouse hypervisor passing through individual
+PCI functions handles scanning for PCI functions even if function 0 does
+not exist. Currently this is done with an extra loop duplicating the one
+in pci_scan_slot(). By incorporating the check for jailhouse_paravirt()
+into pci_scan_slot() we can instead do this as part of the normal
+slot scan. Note that with the assignment of dev->multifunction gated by
+fn > 0 we set dev->multifunction unconditionally for all functions if
+function 0 is missing just as in the existing jailhouse loop.
 
+The only functional change is that we now call
+pcie_aspm_init_link_state() for these functions but this already
+happened if function 0 was passed through and should not be a problem.
+
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Link: https://lore.kernel.org/linux-pci/20220408224514.GA353445@bhelgaas/
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 ---
- drivers/pci/probe.c | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+ drivers/pci/probe.c | 30 ++++++++++--------------------
+ 1 file changed, 10 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b05d0ed83a24..2c737dce757e 100644
+index 2c737dce757e..a18e07e6a7df 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -2579,26 +2579,30 @@ struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
- }
- EXPORT_SYMBOL(pci_scan_single_device);
- 
--static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
-+static int next_ari_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
+@@ -2662,8 +2662,13 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
+ 			if (fn > 0)
+ 				dev->multifunction = 1;
+ 		} else if (fn == 0) {
+-			/* function 0 is required */
+-			break;
++			/*
++			 * function 0 is required unless we are running on
++			 * a hypervisor which passes through individual PCI
++			 * functions.
++			 */
++			if (!jailhouse_paravirt())
++				break;
+ 		}
+ 		fn = next_fn(bus, dev, fn);
+ 	} while (fn >= 0);
+@@ -2862,29 +2867,14 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
  {
- 	int pos;
- 	u16 cap = 0;
- 	unsigned int next_fn;
+ 	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+ 	unsigned int start = bus->busn_res.start;
+-	unsigned int devfn, fn, cmax, max = start;
++	unsigned int devfn, cmax, max = start;
+ 	struct pci_dev *dev;
+-	int nr_devs;
  
--	if (pci_ari_enabled(bus)) {
--		if (!dev)
--			return -ENODEV;
--		pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI);
--		if (!pos)
--			return -ENODEV;
-+	if (!dev)
-+		return -ENODEV;
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI);
-+	if (!pos)
-+		return -ENODEV;
-+
-+	pci_read_config_word(dev, pos + PCI_ARI_CAP, &cap);
-+	next_fn = PCI_ARI_CAP_NFN(cap);
-+	if (next_fn <= fn)
-+		return -ENODEV;	/* protect against malformed list */
+ 	dev_dbg(&bus->dev, "scanning bus\n");
  
--		pci_read_config_word(dev, pos + PCI_ARI_CAP, &cap);
--		next_fn = PCI_ARI_CAP_NFN(cap);
--		if (next_fn <= fn)
--			return -ENODEV;	/* protect against malformed list */
-+	return next_fn;
-+}
- 
--		return next_fn;
+ 	/* Go find them, Rover! */
+-	for (devfn = 0; devfn < 256; devfn += 8) {
+-		nr_devs = pci_scan_slot(bus, devfn);
+-
+-		/*
+-		 * The Jailhouse hypervisor may pass individual functions of a
+-		 * multi-function device to a guest without passing function 0.
+-		 * Look for them as well.
+-		 */
+-		if (jailhouse_paravirt() && nr_devs == 0) {
+-			for (fn = 1; fn < 8; fn++) {
+-				dev = pci_scan_single_device(bus, devfn + fn);
+-				if (dev)
+-					dev->multifunction = 1;
+-			}
+-		}
 -	}
-+static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
-+{
-+	if (pci_ari_enabled(bus))
-+		return next_ari_fn(bus, dev, fn);
++	for (devfn = 0; devfn < 256; devfn += 8)
++		pci_scan_slot(bus, devfn);
  
- 	if (fn >= 7)
- 		return -ENODEV;
+ 	/* Reserve buses for SR-IOV capability */
+ 	used_buses = pci_iov_bus_range(bus);
 -- 
 2.32.0
 
