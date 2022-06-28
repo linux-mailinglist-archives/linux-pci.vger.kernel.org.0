@@ -2,584 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8480955E64D
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 18:27:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B3E655E837
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Jun 2022 18:35:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345249AbiF1OQe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jun 2022 10:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55858 "EHLO
+        id S1344905AbiF1OYS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jun 2022 10:24:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbiF1OQe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 10:16:34 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 862C42EA10;
-        Tue, 28 Jun 2022 07:16:31 -0700 (PDT)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LXRTF6Y9Dz689t8;
-        Tue, 28 Jun 2022 22:15:45 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+        with ESMTP id S241831AbiF1OYQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 10:24:16 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34AD2CDC3;
+        Tue, 28 Jun 2022 07:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656426255; x=1687962255;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=iP6rFGN4MVizacFDXq6Afq+IzlEelUMyR7YWaozVSFk=;
+  b=HPltUJ6ONfZ+KHDCrwWP2e7DxCrBm1Xd5WHuz6bk4McSZtaK2chJGzHh
+   h1p/0TOiU8CXRDJ4gPyl51WBQeB8TysnKoBrmrjoWbGJgx3nR7+hxt4EX
+   THDOeYPzQQMn5Jh6sZVWgI8uaf1n5VSc7bVNAxs5vQgC0dhiAZkVgKsTY
+   H//8fT34dOvWTAh5nVD2kwG9KkjQ6+ILSecdm4wvPu4EW5dnQK1IVV1kf
+   8SvbH/WQGsV8odF5U1+CAusK5KZS5p7udovrXAfL3fmB34AkfiKhXN1zO
+   9uDLgWUBvl+Ohsik3oxFUCqO5lsxn4utgc9Bw76KmIGunVCLUlBBqyUvm
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10391"; a="262163869"
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="262163869"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 07:24:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="836693138"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Jun 2022 07:24:15 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 28 Jun 2022 16:16:28 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 28 Jun
- 2022 15:16:27 +0100
-Date:   Tue, 28 Jun 2022 15:16:26 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Li, Ming" <ming4.li@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V12 3/9] PCI: Create PCIe library functions in support
- of DOE mailboxes.
-Message-ID: <20220628151626.00001c0f@Huawei.com>
-In-Reply-To: <20220628041527.742333-4-ira.weiny@intel.com>
-References: <20220628041527.742333-1-ira.weiny@intel.com>
-        <20220628041527.742333-4-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+ 15.1.2308.27; Tue, 28 Jun 2022 07:24:14 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Tue, 28 Jun 2022 07:24:14 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.103)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Tue, 28 Jun 2022 07:24:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NVqSP7pQl8Bi2Q5ZTFaU7DsY56mYV7+eLVeGKMQMMNtawrXXzDwCDsPeTtC5L+Ka0Y2fMxj+mWLB88nLkWKJxpEOKDVHc9OuZJkIKuSuUzK3cotAI5wflosbtpvr5qqzcYdisg5cyxnHGhWvzlydWVHrjlabis9VVd3XDKzVwl1KotxxQdCuWV3an3DXgmeIuxKNK3UCwnwSwmRclb9exvXLdyYhr3zRBLJao/VQWtBb6r6K2T895AFc350NEZ/yNojffBe6obTvjV1TZJFCg3NI9vs4mC3AXZNM70Q2JxKkC48NYEb/sYPgjpgJpk2Y1XCJnnu2A5Z93IPMGxwNeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1FWLgMHLgvmj+cL604b9YrwzXDji77zjZjd8AgExVYY=;
+ b=Us+DGOja2/sw1Yh8Zi1277R/MqZRfOKViJK/6TUVLPl3FtwfxCRZpY5mD0bz/MfRuUudTt6QX/1DKV9lXR24pkt+uB56FkzbjsRwNzik72lMWL3VOS80rkkIMnMTaMzUOp00zEQ4IuF+nzLppgX+UHalu5/5kmLs1WETYQ+FdjBwozNUnZPI69Wf+xYHC7D6R1+O2LZaQXuQztzl5eC36oVuCu0PJHFhQhqKdd3OPlbXNS6SEgawwzB3i8qgrxaQFt8iNjHm/fMwAtgXFmEJSDNG07qFevknYyPg+Rs1rZHlDWpRbI6rDQkL2+xj1OWC64Mw1Qg+9efk/IUVvLNcAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by BN8PR11MB3780.namprd11.prod.outlook.com
+ (2603:10b6:408:90::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.15; Tue, 28 Jun
+ 2022 14:24:12 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::f50c:6e72:c8aa:8dbf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::f50c:6e72:c8aa:8dbf%7]) with mapi id 15.20.5373.018; Tue, 28 Jun 2022
+ 14:24:12 +0000
+Date:   Tue, 28 Jun 2022 07:24:08 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
+        <hch@lst.de>, "Ben Widawsky" <bwidawsk@kernel.org>
+Subject: Re: [PATCH 35/46] cxl/region: Add a 'uuid' attribute
+Message-ID: <62bb0f08eb1c1_169b9c29432@dwillia2-xfh.notmuch>
+References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
+ <20220624041950.559155-10-dan.j.williams@intel.com>
+ <20220628112919.000067e6@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220628112919.000067e6@Huawei.com>
+X-ClientProxiedBy: CO1PR15CA0060.namprd15.prod.outlook.com
+ (2603:10b6:101:1f::28) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b5a2d9df-eaea-4d99-faaf-08da5911df15
+X-MS-TrafficTypeDiagnostic: BN8PR11MB3780:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GxS82hgzDNFVN1W98Lja/PBehKoXfld4fzQ3opzr2j040mJnIBv2ZrfDZle2QB1982+sHSf7PBnleG1kynk4EeMYv8KusKmFIuqaZJc/CjEcPFNGp7QloSsS2QZcAeIaspEyFuxpYLo8UD8qIJS+yqX+w4uVdiHE6nZKwDOxJZqG8MiRnRJPXQCrbfOkou2Y2S7mhiZxGFqTWtSVFS07acBEmw35xPOfOcTpCsgVXH5cwjaTIFgGyAdYiHJJKPEy/aYnF39L9tbah8UVc3+YZDQasT5o3oEJWHcAuej7uMIt1zpyos7kpNiE+BNconY6ZTQSLAMAD6RoVQ3TopblGdvqUDdFRmTmiB23MqsDYTjhnZd4EJJebbpXT/xpznAQl/iEGBgmcsoGnvSR+mqwIPUPNVvCa5JEr12M1dBCZK32KneKF34IW0IkBi7lQMiReIIhPQeGxjQHIpMPu8w7c438VIWN+r3PJPx2QR5yecOMJ8gHci8uSX7NdRXvaSi3qPc3d/4t2mUWt8rOYXwgVGiXpwBR+J0O6qHX9l7uDFXa+awOxqXRRdnviZoKgG5x8Ews+xMouU4oSLNX7nbBIxHiYnz1HJfbtjQ/VmBQoMia540EaLgY1n+xOPAgw0gLC7p8ELSkOZrTJqD9iigR33X3LttKvmYtzWDFQ+24WDPMrZGyDT4UeqYuFyoy8qrvzrfnM3ZBcOrbw2LyxSyNlSExzMXWyet7lSEmsStRxIgOB7pyxYwYiLsy83jmQRfK
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(376002)(396003)(39860400002)(366004)(136003)(6506007)(6666004)(316002)(2906002)(66476007)(478600001)(83380400001)(6486002)(186003)(8676002)(4326008)(5660300002)(4744005)(66556008)(26005)(66946007)(41300700001)(6512007)(9686003)(110136005)(86362001)(82960400001)(38100700002)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pawm7HoS24uJtuNqrAzStsTrQDaq9TdNrEVZcZwFk+JRlA5/sIX29TjCCkN5?=
+ =?us-ascii?Q?xlaefvHlEjuotomZtz5zy3r6q54ndI7Cq5gvLV8/laA0x1cLo5bIugkUoIhW?=
+ =?us-ascii?Q?SkPWb6q17Sl6KCpjWocF7hDA4gM44Sv2/a9TJz6Tq39An9JhNE8AgJuNqEwp?=
+ =?us-ascii?Q?cU7BrPE/R+S2P6scDpAkt1FKefMX1WeOvY0NStS0o/SPtKuut3UAHPDliD91?=
+ =?us-ascii?Q?8lQ/lmHakHMB1nMJ9RB2lxrklFoHAPtE5K/dAmApMVFcJ+Hs6jj0NyloWud2?=
+ =?us-ascii?Q?KHObmcS6pAuoOcmG1AXzRG9ga4oqbxxUE5olkP8gP0GW+KakJluh/3F6vOuy?=
+ =?us-ascii?Q?v5YHpS1gArkyQvkylQnIpjwHcQU3fx7GRzTyGEuwf/6ihnj21cVvFgBoHafg?=
+ =?us-ascii?Q?gkU2KJ/ckiaOOHoLaASAsiWar2R4udMfyC9CDIy6hURKGYnWIaQi7hpJrbkP?=
+ =?us-ascii?Q?fgy0hXbEQIMOApQAbKfmhMTtOvpTES7WsOVflK/54WkPpngplGq3G6d1vtUS?=
+ =?us-ascii?Q?Z09GE4OmNUHdfoAnOr0T4jjaniByjcS286yaDgQwdjMoA9wBVOJThnt/610E?=
+ =?us-ascii?Q?WeifDcd6D2yHMtuTGFk6UiOhkryXw4JFQmZmbmjuF+J7a+jtiJPXQEGWn06P?=
+ =?us-ascii?Q?RWs0AnLl0mb+gM5+Lv2ZnjKv+dpoIQLUvyr++FficlgSwECdYxCJBRvTxC65?=
+ =?us-ascii?Q?GzlBD9/ZtexuZId8eCrDNTbmjfMQn7gVK64+dzbhEASDH5McD7R9eBtT/67d?=
+ =?us-ascii?Q?IpT0VcUtH6ntZTEukQgdkEcPqY2N2lS+uvXFODTOo1ZkmGC5JCcREggWaWG2?=
+ =?us-ascii?Q?SJ/WOkQdiK+8wcMYm1RG79POiHNurb/lYuKLfel8j5IzCXxa2gV9C0RMkwGN?=
+ =?us-ascii?Q?asyeCCLRqXV7zHWYayvY6GpzqXFTCQrc3iv5eJT8SWMen5JgECCHvjIFqob8?=
+ =?us-ascii?Q?+mtRbARhXj7ROdK9kMtdHIYKVqh6nRQagNpn07GULzFNRmBLvST8u46ErYIv?=
+ =?us-ascii?Q?nNhp+e8uIVbhP5+BLyO+esmo3R4YI2OTO3o3IVTYJJ6livlqGFxp2ATWeWbL?=
+ =?us-ascii?Q?8LT2PzcSt+vthSd5Uve9jTEZS07bvAIdISdG2tTTrEg8SoDtlhQ8SOy+VXXY?=
+ =?us-ascii?Q?fCrxDUeqkpjdgmWCTwJDAevCm3dyDIOOAEDnCOlCHCwgPi/zyXKzylxu4Jl7?=
+ =?us-ascii?Q?f4FCKiXl5oJ4J3S6Hf+bS5dD3LzjRzeNIaOemZMvA0wrt4xCiVBQQwLU3zQF?=
+ =?us-ascii?Q?87ptL5PIFyX8mfAx/zlXMeBYsmiCWDkQeFcIM5W4rnM8COiWY/IdrEkhM0y4?=
+ =?us-ascii?Q?lBSwmVFyKGQwOAqPPmfFrEwaS+X5ZpU+BCzMrz4IkBqNN+kubAcfHWFFyJPt?=
+ =?us-ascii?Q?Ee6MEwXI1ZjmNybHvePxX2qhMuH0WrXv7v8ghefA7gsln9GQmITlS2XA9T9H?=
+ =?us-ascii?Q?oitGHKjivjt2xzL8vf2IoERsbzhrDwKLj5Cz56ewOrdKEpT+PgpCr1YVJQVe?=
+ =?us-ascii?Q?NNMka4To3mSeZIzMTN3/gS/R1ytKvEiDtWKWce2vN/gmgomufYro/QmmkxhW?=
+ =?us-ascii?Q?fX/xJfY2WHojdk70QJWglolbXhvvIbWs5qtGazNKpM5KruzImsXJS/OnI+CC?=
+ =?us-ascii?Q?GA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5a2d9df-eaea-4d99-faaf-08da5911df15
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2022 14:24:11.9828
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: d6ogCXPoWlOIPGy/msaTycw7mtyHwFUovJbEbkT7f8InbmQeqTIFoWoM9cREfLHCNw4cCbE6UeXbcJp7f62BTjNRyrMpc6LR3yFw50l8jrY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR11MB3780
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 27 Jun 2022 21:15:21 -0700
-ira.weiny@intel.com wrote:
-
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Jonathan Cameron wrote:
+> On Thu, 23 Jun 2022 21:19:39 -0700
+> Dan Williams <dan.j.williams@intel.com> wrote:
 > 
-> Introduced in a PCIe r6.0, sec 6.30, DOE provides a config space based
-> mailbox with standard protocol discovery.  Each mailbox is accessed
-> through a DOE Extended Capability.
+> > From: Ben Widawsky <bwidawsk@kernel.org>
+> > 
+> > The process of provisioning a region involves triggering the creation of
+> > a new region object, pouring in the configuration, and then binding that
+> > configured object to the region driver to start is operation. For
+> > persistent memory regions the CXL specification mandates that it
+> > identified by a uuid. Add an ABI for userspace to specify a region's
+> > uuid.
+> > 
+> > Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
+> > [djbw: simplify locking]
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > 
-> Each DOE mailbox must support the DOE discovery protocol in addition to
-> any number of additional protocols.
+> I think this needs to be a little less restrictive as it currently errors
+> out on trying to write the same UUID to the same region twice.
 > 
-> Define core PCIe functionality to manage a single PCIe DOE mailbox at a
-> defined config space offset.  Functionality includes iterating,
-> creating, query of supported protocol, and task submission.  Destruction
-> of the mailboxes is device managed.
-> 
-> If interrupts are desired, the interrupt number can be queried and
-> passed to the create function.  Passing a negative value disables
-> interrupts for that mailbox.  It is the caller's responsibility to ensure
-> enough interrupt vectors are allocated.
-> 
-> Cc: "Li, Ming" <ming4.li@intel.com>
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-Hi Ira,
+> Short cut that case and just return 0 if the UUID is same as already set.
 
-Thanks for keeping at this!
-
-I think this has reintroduced some of the races around that annoying
-interrupt source form BUSY transitioning to low that has
-no explicit 'cause' flag.  I think we'd hammered all those out in the
-previous version but maybe there were still some there...
-
-I 'think' it will work as is, but depending on the timing a given DOE
-implementation has, the interrupt may be completely pointless as it
-will be signaling the wrong event.
-
-Jonathan
-
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index 0da6b1ebc694..2680e4c92f0a 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -31,6 +31,7 @@ obj-$(CONFIG_PCI_ECAM)		+= ecam.o
->  obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
->  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
->  obj-$(CONFIG_VGA_ARB)		+= vgaarb.o
-> +obj-$(CONFIG_PCI_DOE)		+= doe.o
->  
->  # Endpoint library must be initialized before its users
->  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> new file mode 100644
-> index 000000000000..4a7a1e988124
-> --- /dev/null
-> +++ b/drivers/pci/doe.c
-
-
-> +/**
-> + * struct pci_doe_mb - State for a single DOE mailbox
-> + *
-> + * This state is used to manage a single DOE mailbox capability.  All fields
-> + * should be considered opaque to the consumers and the structure passed into
-> + * the helpers below after being created by devm_pci_doe_create()
-> + *
-> + * @pdev: PCI device this mailbox belongs to
-> + * @cap_offset: Capability offset
-> + * @int_msg_num: DOE Interrupt Message Number; negative if irqs are not used
-> + * @prots: Array of protocols supported (encoded as long values)
-> + * @wq: Wait queue for work items awaiting irq/abort
-> + * @work_queue: Queue of pci_doe_work items
-> + * @flags: Bit array of PCI_DOE_FLAG_* flags
-> + *
-> + * Note: @prots can't be allocated with struct size because the number of
-> + * protocols is not known until after this structure is in use.  However, the
-> + * single discovery protocol is always required to query for the number of
-> + * protocols.
-> + */
-> +struct pci_doe_mb {
-> +	struct pci_dev *pdev;
-> +	u16 cap_offset;
-> +	int int_msg_num;
-> +	struct xarray prots;
-> +
-> +	wait_queue_head_t wq;
-> +	struct workqueue_struct *work_queue;
-> +	unsigned long flags;
-> +};
-> +
-> +static irqreturn_t pci_doe_irq_handler(int irq, void *data)
-> +{
-> +	struct pci_doe_mb *doe_mb = data;
-> +	struct pci_dev *pdev = doe_mb->pdev;
-> +	int offset = doe_mb->cap_offset;
-> +	u32 val;
-> +
-> +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> +	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
-> +		pci_write_config_dword(pdev, offset + PCI_DOE_STATUS,
-> +					PCI_DOE_STATUS_INT_STATUS);
-> +		set_bit(PCI_DOE_FLAG_IRQ, &doe_mb->flags);
-> +		wake_up(&doe_mb->wq);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	return IRQ_NONE;
-> +}
-> +
-
-> +/*
-> + * Returned from the wait functions to indicate that an abort has been issued
-> + */
-> +#define DOE_WAIT_ABORT 1
-> +
-> +static int pci_doe_arm_wait(struct pci_doe_mb *doe_mb)
-
-Feels like there should be a naming to convey the return value as
-a boolean rather than pushing through a flag value.
-
-> +{
-> +	if (test_and_clear_bit(PCI_DOE_FLAG_ABORT, &doe_mb->flags))
-> +		return DOE_WAIT_ABORT;
-> +	clear_bit(PCI_DOE_FLAG_IRQ, &doe_mb->flags);
-> +	return 0;
-> +}
-> +
-
-> +static void pci_doe_write_ctrl(struct pci_doe_mb *doe_mb, u32 val)
-> +{
-> +	struct pci_dev *pdev = doe_mb->pdev;
-> +	int offset = doe_mb->cap_offset;
-> +
-> +	if (pci_doe_irq_enabled(doe_mb))
-> +		val |= PCI_DOE_CTRL_INT_EN;
-> +	pci_write_config_dword(pdev, offset + PCI_DOE_CTRL, val);
-> +}
-> +
-> +static int pci_doe_issue_abort(struct pci_doe_mb *doe_mb)
-Can we rename this as it does more than simply issue the abort,
-it waits for it to finish
-
-> +{
-> +	struct pci_dev *pdev = doe_mb->pdev;
-> +	int offset = doe_mb->cap_offset;
-> +	unsigned long timeout_jiffies;
-> +
-> +	pci_dbg(pdev, "[%x] Issuing Abort\n", offset);
-> +
-> +	/*
-> +	 * Abort detected while aborting; something is really broken or the
-> +	 * mailbox is being destroyed.
-> +	 */
-> +	if (pci_doe_arm_wait(doe_mb))
-> +		return -EIO;
-> +
-> +	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
-> +	pci_doe_write_ctrl(doe_mb, PCI_DOE_CTRL_ABORT);
-> +
-> +	do {
-> +		u32 val;
-> +
-> +		/*
-> +		 * Abort detected while aborting; something is really broken or
-> +		 * the mailbox is being destroyed.
-> +		 */
-> +		if (pci_doe_wait_irq_or_poll(doe_mb))
-> +			return -EIO;
-> +		pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> +
-> +		/* Abort success! */
-> +		if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
-> +		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val))
-> +			return 0;
-> +
-> +	} while (!time_after(jiffies, timeout_jiffies));
-> +
-> +	/* Abort has timed out and the MB is dead */
-> +	pci_err(pdev, "[%x] ABORT timed out\n", offset);
-
-Does this print mention it's a DOE somewhere? 
-
-> +	return -EIO;
-> +}
-> +
-
-...
-
-> +static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> +{
-> +	struct pci_dev *pdev = doe_mb->pdev;
-> +	int offset = doe_mb->cap_offset;
-> +	size_t length, payload_length;
-> +	u32 val;
-> +	int i;
-> +
-> +	/* Read the first dword to get the protocol */
-> +	pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> +	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != task->prot.vid) ||
-> +	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != task->prot.type)) {
-> +		pci_err(pdev,
-> +			"[%x] expected [VID, Protocol] = [%04x, %02x], got [%04x, %02x]\n",
-> +			doe_mb->cap_offset,
-> +			task->prot.vid, task->prot.type,
-> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
-> +			FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
-> +		return -EIO;
-> +	}
-> +
-> +	pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> +	/* Read the second dword to get the length */
-> +	pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> +	pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> +
-> +	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
-> +	if (length > SZ_1M || length < 2)
-> +		return -EIO;
-> +
-> +	/* First 2 dwords have already been read */
-> +	length -= 2;
-> +	payload_length = min(length, task->response_pl_sz / sizeof(u32));
-> +	/* Read the rest of the response payload */
-> +	for (i = 0; i < payload_length; i++) {
-> +		pci_read_config_dword(pdev, offset + PCI_DOE_READ,
-> +				      &task->response_pl[i]);
-> +		/* Prior to the last ack, ensure Data Object Ready */
-> +		if (i == (payload_length-1) && !pci_doe_data_obj_ready(doe_mb))
-
-spaces around - 
-
-> +			return -EIO;
-> +		pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> +	}
-> +
-> +	/* Flush excess length */
-> +	for (; i < length; i++) {
-> +		pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> +		pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> +	}
-> +
-> +	/* Final error check to pick up on any since Data Object Ready */
-> +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
-> +		return -EIO;
-> +
-> +	return min(length, task->response_pl_sz / sizeof(u32)) * sizeof(u32);
-> +}
-> +
-
-> +
-> +static void doe_statemachine_work(struct work_struct *work)
-> +{
-> +	struct pci_doe_task *task = container_of(work, struct pci_doe_task,
-> +						 work);
-> +	struct pci_doe_mb *doe_mb = task->doe_mb;
-> +	struct pci_dev *pdev = doe_mb->pdev;
-> +	int offset = doe_mb->cap_offset;
-> +	unsigned int busy_retries = 0;
-> +	unsigned long timeout_jiffies;
-> +	u32 val;
-> +	int rc;
-> +
-> +	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags)) {
-> +		signal_task_complete(task, -EIO);
-> +		return;
-> +	}
-> +
-> +	/* Send request */
-> +retry_req:
-> +	if (pci_doe_arm_wait(doe_mb)) {
-> +		signal_task_abort(task, -EIO);
-> +		return;
-> +	}
-
-Is there a race here?  If Busy drops at this point we queue up
-a message, but IRQ bit is already set.  Hence when we hit
-wait_event_timeout() the flag is already set and IIRC we'll
-drop straight through.
-
-It'll probably be fine because it will end up polling below
-but doesn't look ideal.
-
-Upshot is that you sort of have to handle "spurious interrupts"
-cleanly and rewait on the interrupt if you get one whilst also handling
-race conditions around RW1C of the interrupt status flag.
-
-
-> +
-> +	rc = pci_doe_send_req(doe_mb, task);
-> +
-> +	/*
-> +	 * The specification does not provide any guidance on how long
-> +	 * some other entity could keep the DOE busy, so try for 1
-> +	 * second then fail. Busy handling is best effort only, because
-> +	 * there is no way of avoiding racing against another user of
-> +	 * the DOE.
-> +	 */
-> +	if (rc == -EBUSY) {
-> +		busy_retries++;
-> +		if (busy_retries == PCI_DOE_BUSY_MAX_RETRIES) {
-> +			pci_warn(pdev,
-> +				"[%x] busy for too long (> 1 sec)\n",
-> +				offset);
-> +			signal_task_complete(task, rc);
-> +			return;
-> +		}
-> +		if (pci_doe_wait_poll(doe_mb, HZ / PCI_DOE_BUSY_MAX_RETRIES)) {
-> +			signal_task_abort(task, rc);
-> +			return;
-> +		}
-> +		goto retry_req;
-> +	} else if (rc) {
-> +		signal_task_abort(task, rc);
-> +		return;
-> +	}
-> +
-> +	timeout_jiffies = jiffies + HZ;
-> +	if (pci_doe_wait_irq_or_poll(doe_mb)) {
-
-So this may well be passed as a result of a BUSY transition to 0 very soon
-after the doe_send_req but well before the data is ready....
-
-
-> +		signal_task_abort(task, -EIO);
-> +		return;
-> +	}
-> +
-> +	/* Poll for response */
-> +retry_resp:
-> +	if (pci_doe_arm_wait(doe_mb)) {
-I think we can get here between Busy drop and Object Ready which means
-this can get another IRQ_FLAG setting just after it.  Does it matter?
-Don't think so, as we don't use that bit again in this run through
-and it will be cleared at beginning of next one, but if so why is
-this call here?  I think it's only useful for detecting an abort, if
-so do that explicitly. 
-
-> +		signal_task_abort(task, -EIO);
-> +		return;
-> +	}
-> +
-> +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
-> +		signal_task_abort(task, -EIO);
-> +		return;
-> +	}
-> +
-> +	if (!FIELD_GET(PCI_DOE_STATUS_DATA_OBJECT_READY, val)) {
-> +		if (time_after(jiffies, timeout_jiffies)) {
-> +			signal_task_abort(task, -ETIMEDOUT);
-> +			return;
-> +		}
-> +		if (pci_doe_wait_poll(doe_mb, PCI_DOE_POLL_INTERVAL)) {
-
-Following on from above....
-As a result of the interrupt having fired on the BUSY off transition,
-I think we will almost always end up spinning here until Object Ready
-is set.  Fine, but seems a shame we don't let an interrupt do this
-for us in most cases.  (note in QEMU response is instantaneous so
-when the interrupt for Busy drop is set, object ready also true so
-by the time we get here data ready will already be sent).
-
-> +			signal_task_abort(task, -EIO);
-> +			return;
-> +		}
-> +		goto retry_resp;
-> +	}
-> +
-> +	rc  = pci_doe_recv_resp(doe_mb, task);
-> +	if (rc < 0) {
-> +		signal_task_abort(task, rc);
-> +		return;
-> +	}
-> +
-> +	signal_task_complete(task, rc);
-> +}
-> +
-
-
-> +static void pci_doe_free_mb(struct pci_doe_mb *doe_mb)
-> +{
-> +	if (doe_mb->work_queue)
-
-I'm not a great fan of free functions that check a bunch of conditions
-because they may be called before things are set up.  To my
-mind that generally means we should be calling individual cleanup
-in the appropriate error handlers.
-
-Either that or just use devm handling for each item. Sure
-it's a few more lines of code, but I find it a lot easier to go
-
-Oh look that thing we just set up is cleaned up by this.
-
-
-> +		destroy_workqueue(doe_mb->work_queue);
-> +	if (pci_doe_irq_enabled(doe_mb))
-> +		pci_free_irq(doe_mb->pdev, doe_mb->int_msg_num, doe_mb);
-> +	xa_destroy(&doe_mb->prots);
-> +	kfree(doe_mb);
-> +}
-> +
-
-...
-
-> +
-> +static void pci_doe_destroy_mb(void *mb)
-> +{
-> +	struct pci_doe_mb *doe_mb = mb;
-> +
-> +	/* Mark going down */
-> +	set_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags);
-> +
-> +	/* Abort any in progress work items */
-> +	pci_doe_abort(doe_mb);
-
-Abort is getting used for two things in here. Perhaps
-rename this one to 
-pci_doe_abort_tasks() or something like that?
-
-> +
-> +	/* Flush remaining work items */
-> +	flush_workqueue(doe_mb->work_queue);
-> +
-> +	pci_doe_free_mb(doe_mb);
-> +}
-> +
-> +/**
-> + * pcim_doe_create_mb() - Create a DOE mailbox object
-> + *
-> + * @pdev: PCI device to create the DOE mailbox for
-> + * @cap_offset: Offset of the DOE mailbox
-> + * @int_msg_num: Interrupt message number to use; a negative value means don't
-> + *		 use interrupts
-> + *
-> + * Create a single mailbox object to manage the mailbox protocol at the
-> + * cap_offset specified.
-> + *
-> + * Caller should allocate PCI IRQ vectors before passing a possitive value for
-
-positive
-
-> + * int_msg_num.
-> + *
-> + * RETURNS: created mailbox object on success
-> + *	    ERR_PTR(-errno) on failure
-> + */
-> +struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset,
-> +				      int int_msg_num)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	int rc;
-> +
-> +	doe_mb = kzalloc(sizeof(*doe_mb), GFP_KERNEL);
-> +	if (!doe_mb)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	doe_mb->pdev = pdev;
-> +	doe_mb->int_msg_num = -1;
-> +	doe_mb->cap_offset = cap_offset;
-> +
-> +	xa_init(&doe_mb->prots);
-> +	init_waitqueue_head(&doe_mb->wq);
-> +
-> +	if (int_msg_num >= 0) {
-> +		rc = pci_doe_enable_irq(doe_mb, int_msg_num);
-> +		if (rc)
-> +			pci_err(pdev,
-> +				"[%x] enable requested IRQ (%d) failed : %d\n",
-> +				doe_mb->cap_offset, int_msg_num, rc);
-
-If we are printing an error, I'd argue we should not continue.
-Or at very least we should a comment here to say why we should do so...
-
-
-> +	}
-> +
-> +	doe_mb->work_queue = alloc_ordered_workqueue("DOE: [%x]", 0,
-> +						     doe_mb->cap_offset);
-> +	if (!doe_mb->work_queue) {
-> +		pci_err(pdev, "[%x] failed to allocate work queue\n",
-> +			doe_mb->cap_offset);
-> +		pci_doe_free_mb(doe_mb);
-
-As above, I'd rather this explicitly freed what has been set up
-and only that rather than calling a free function that does a bunch of
-stuff conditionally.
-
-
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	/* Reset the mailbox by issuing an abort */
-> +	rc = pci_doe_issue_abort(doe_mb);
-> +	if (rc) {
-> +		pci_err(pdev, "[%x] failed to reset : %d\n",
-> +			doe_mb->cap_offset, rc);
-> +		pci_doe_free_mb(doe_mb);
-> +		return ERR_PTR(rc);
-> +	}
-> +
-> +	if (devm_add_action_or_reset(&pdev->dev, pci_doe_destroy_mb, doe_mb))
-> +		return ERR_PTR(-EIO);
-> +
-> +	rc = pci_doe_cache_protocols(doe_mb);
-> +	if (rc) {
-> +		pci_err(pdev, "[%x] failed to cache protocols : %d\n",
-> +			doe_mb->cap_offset, rc);
-> +		return ERR_PTR(rc);
-> +	}
-> +
-> +	return doe_mb;
-> +}
-> +EXPORT_SYMBOL_GPL(pcim_doe_create_mb);
-> +
-
-
-
+Sure, fixed that up locally.
