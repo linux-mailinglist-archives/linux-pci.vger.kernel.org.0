@@ -2,366 +2,286 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71BC4560502
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 17:57:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18C9B560509
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 17:58:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232098AbiF2P5A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 11:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37000 "EHLO
+        id S234387AbiF2P5p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 11:57:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232099AbiF2P47 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 11:56:59 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7506134;
-        Wed, 29 Jun 2022 08:56:57 -0700 (PDT)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LY5cp3LV3z6H7fH;
-        Wed, 29 Jun 2022 23:54:34 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 29 Jun 2022 17:56:55 +0200
-Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 29 Jun
- 2022 16:56:54 +0100
-Date:   Wed, 29 Jun 2022 16:56:52 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <hch@infradead.org>,
-        <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
-        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>
-Subject: Re: [PATCH 18/46] cxl/hdm: Add support for allocating DPA to an
- endpoint decoder
-Message-ID: <20220629165652.00004ca3@Huawei.com>
-In-Reply-To: <165603883814.551046.17226119386543525679.stgit@dwillia2-xfh>
-References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
-        <165603883814.551046.17226119386543525679.stgit@dwillia2-xfh>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S233043AbiF2P5m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 11:57:42 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF598193FB;
+        Wed, 29 Jun 2022 08:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=SVR0l1hJUb/SHapAzG2atHABZ/RRitWr1nc+ar7tRXg=; b=QyUF4DUaaZjROkuPI+1suf1xXG
+        iYuJIT9YMfYCt00rup88G3A2fOs1LDo7hhHgWo0Ohlqb76yxSlp/vgMGwxd7TW5fYAkKL79lyXLKw
+        X+zSU/4jS/f4D/m/J9gbb/UReLJ00H6u78LPJthJAR+juKfGgM94nvaKgzerE3D/pFN6SnvVDAoyK
+        eto6eEiUJPslncF4lPynUlCOC3+9GHp8EcwRnCzPOaGuxwS0LB6WUPHazf3fFRXCJnGM+lmx17Hax
+        rUH3mIYEFd4d/GhL3bWSdTf7itMjRaQRx0P2J2yU7oU/L88BMNHKeWYzP16i2n7FzmTTvUtv5REt6
+        VgBg577w==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1o6a4O-002RwK-3q; Wed, 29 Jun 2022 09:57:37 -0600
+Message-ID: <f56181fb-7035-a775-22b1-77f97d6ec52c@deltatee.com>
+Date:   Wed, 29 Jun 2022 09:57:32 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Content-Language: en-CA
+To:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org
+Cc:     Minturn Dave B <dave.b.minturn@intel.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Xiong Jianxin <jianxin.xiong@intel.com>
+References: <20220615161233.17527-1-logang@deltatee.com>
+ <20220615161233.17527-9-logang@deltatee.com>
+ <feecc6fe-a16e-11f2-33c8-3de7c96b9ad5@arm.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <feecc6fe-a16e-11f2-33c8-3de7c96b9ad5@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: robin.murphy@arm.com, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, dave.b.minturn@intel.com, martin.oliveira@eideticom.com, rcampbell@nvidia.com, jgg@nvidia.com, jhubbard@nvidia.com, dave.hansen@linux.intel.com, willy@infradead.org, christian.koenig@amd.com, jgg@ziepe.ca, ckulkarnilinux@gmail.com, jason@jlekstrand.net, daniel.vetter@ffwll.ch, helgaas@kernel.org, dan.j.williams@intel.com, sbates@raithlin.com, ira.weiny@intel.com, hch@lst.de, jianxin.xiong@intel.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v7 08/21] iommu/dma: support PCI P2PDMA pages in dma-iommu
+ map_sg
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Jun 2022 19:47:18 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> The region provisioning flow will roughly follow a sequence of:
+
+
+On 2022-06-29 06:07, Robin Murphy wrote:
+> On 2022-06-15 17:12, Logan Gunthorpe wrote:
+>> When a PCI P2PDMA page is seen, set the IOVA length of the segment
+>> to zero so that it is not mapped into the IOVA. Then, in finalise_sg(),
+>> apply the appropriate bus address to the segment. The IOVA is not
+>> created if the scatterlist only consists of P2PDMA pages.
+>>
+>> A P2PDMA page may have three possible outcomes when being mapped:
+>>    1) If the data path between the two devices doesn't go through
+>>       the root port, then it should be mapped with a PCI bus address
+>>    2) If the data path goes through the host bridge, it should be mapped
+>>       normally with an IOMMU IOVA.
+>>    3) It is not possible for the two devices to communicate and thus
+>>       the mapping operation should fail (and it will return -EREMOTEIO).
+>>
+>> Similar to dma-direct, the sg_dma_mark_pci_p2pdma() flag is used to
+>> indicate bus address segments. On unmap, P2PDMA segments are skipped
+>> over when determining the start and end IOVA addresses.
+>>
+>> With this change, the flags variable in the dma_map_ops is set to
+>> DMA_F_PCI_P2PDMA_SUPPORTED to indicate support for P2PDMA pages.
+>>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+>> ---
+>>   drivers/iommu/dma-iommu.c | 68 +++++++++++++++++++++++++++++++++++----
+>>   1 file changed, 61 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+>> index f90251572a5d..b01ca0c6a7ab 100644
+>> --- a/drivers/iommu/dma-iommu.c
+>> +++ b/drivers/iommu/dma-iommu.c
+>> @@ -21,6 +21,7 @@
+>>   #include <linux/iova.h>
+>>   #include <linux/irq.h>
+>>   #include <linux/list_sort.h>
+>> +#include <linux/memremap.h>
+>>   #include <linux/mm.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/pci.h>
+>> @@ -1062,6 +1063,16 @@ static int __finalise_sg(struct device *dev,
+>> struct scatterlist *sg, int nents,
+>>           sg_dma_address(s) = DMA_MAPPING_ERROR;
+>>           sg_dma_len(s) = 0;
+>>   +        if (is_pci_p2pdma_page(sg_page(s)) && !s_iova_len) {
 > 
-> 1/ Allocate DPA to a set of decoders
+> Logically, should we not be able to use sg_is_dma_bus_address() here? I
+> think it should be feasible, and simpler, to prepare the p2p segments
+> up-front, such that at this point all we need to do is restore the
+> original length (if even that, see below).
+
+Per my previous email, no, because sg_is_dma_bus_address() is not set
+yet and not meant to tell you something about the page. That flag will
+be set below by pci_p2pdma_map_bus_segment() and then checkd in
+iommu_dma_unmap_sg() to determine if the dma_address in the segment
+needs to be unmapped.
+
 > 
-> 2/ Allocate HPA to a region
+>> +            if (i > 0)
+>> +                cur = sg_next(cur);
+>> +
+>> +            pci_p2pdma_map_bus_segment(s, cur);
+>> +            count++;
+>> +            cur_len = 0;
+>> +            continue;
+>> +        }
+>> +
+>>           /*
+>>            * Now fill in the real DMA data. If...
+>>            * - there is a valid output segment to append to
+>> @@ -1158,6 +1169,8 @@ static int iommu_dma_map_sg(struct device *dev,
+>> struct scatterlist *sg,
+>>       struct iova_domain *iovad = &cookie->iovad;
+>>       struct scatterlist *s, *prev = NULL;
+>>       int prot = dma_info_to_prot(dir, dev_is_dma_coherent(dev), attrs);
+>> +    struct dev_pagemap *pgmap = NULL;
+>> +    enum pci_p2pdma_map_type map_type;
+>>       dma_addr_t iova;
+>>       size_t iova_len = 0;
+>>       unsigned long mask = dma_get_seg_boundary(dev);
+>> @@ -1193,6 +1206,35 @@ static int iommu_dma_map_sg(struct device *dev,
+>> struct scatterlist *sg,
+>>           s_length = iova_align(iovad, s_length + s_iova_off);
+>>           s->length = s_length;
+>>   +        if (is_pci_p2pdma_page(sg_page(s))) {
+>> +            if (sg_page(s)->pgmap != pgmap) {
+>> +                pgmap = sg_page(s)->pgmap;
+>> +                map_type = pci_p2pdma_map_type(pgmap, dev);
+>> +            }
 > 
-> 3/ Associate decoders with a region and validate that the DPA allocations
->    and topologies match the parameters of the region.
+> There's a definite code smell here, but per above and below I think we
+> *should* actually call the new helper instead of copy-pasting half of it.
+
+
 > 
-> For now, this change (step 1) arranges for DPA capacity to be allocated
-> and deleted from non-committed decoders based on the decoder's mode /
-> partition selection. Capacity is allocated from the lowest DPA in the
-> partition and any 'pmem' allocation blocks out all remaining ram
-> capacity in its 'skip' setting. DPA allocations are enforced in decoder
-> instance order. I.e. decoder N + 1 always starts at a higher DPA than
-> instance N, and deleting allocations must proceed from the
-> highest-instance allocated decoder to the lowest.
+>> +
+>> +            switch (map_type) {
+>> +            case PCI_P2PDMA_MAP_BUS_ADDR:
+>> +                /*
+>> +                 * A zero length will be ignored by
+>> +                 * iommu_map_sg() and then can be detected
 > 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> If that is required behaviour then it needs an explicit check in
+> iommu_map_sg() to guarantee (and document) it. It's only by chance that
+> __iommu_map() happens to return success for size == 0 *if* all the other
+> arguments still line up, which is a far cry from a safe no-op.
 
-The error value setting in here might save a few lines, but to me it
-is less readable than setting rc in each error path.
+What should such a check look like? I could certainly add some comments
+to iommu_map_sg(), but I don't see what the code would need to check for...
 
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl |   37 +++++++
->  drivers/cxl/core/core.h                 |    7 +
->  drivers/cxl/core/hdm.c                  |  160 +++++++++++++++++++++++++++++++
->  drivers/cxl/core/port.c                 |   73 ++++++++++++++
->  4 files changed, 275 insertions(+), 2 deletions(-)
+> However, rather than play yet more silly tricks, I think it would make
+> even more sense to make iommu_map_sg() properly aware and able to skip
+> direct p2p segments on its own. Once it becomes normal to pass mixed
+> scatterlists around, it's only a matter of time until one ends up being
+> handed to a driver which manages its own IOMMU domain, and then what?
+
+I suppose we can add another call to is_pci_p2pdma_page() inside
+iommu_map_sg() if you think that is cleaner. Seems like more work on the
+fast path to me, but I'm not opposed to it.
+
+>> +                 * in __finalise_sg() to actually map the
+>> +                 * bus address.
+>> +                 */
+>> +                s->length = 0;
+>> +                continue;
+>> +            case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
+>> +                /*
+>> +                 * Mapping through host bridge should be
+>> +                 * mapped with regular IOVAs, thus we
+>> +                 * do nothing here and continue below.
+>> +                 */
+>> +                break;
+>> +            default:
+>> +                ret = -EREMOTEIO;
+>> +                goto out_restore_sg;
+>> +            }
+>> +        }
+>> +
+>>           /*
+>>            * Due to the alignment of our single IOVA allocation, we can
+>>            * depend on these assumptions about the segment boundary mask:
+>> @@ -1215,6 +1257,9 @@ static int iommu_dma_map_sg(struct device *dev,
+>> struct scatterlist *sg,
+>>           prev = s;
+>>       }
+>>   +    if (!iova_len)
+>> +        return __finalise_sg(dev, sg, nents, 0);
+>> +
+>>       iova = iommu_dma_alloc_iova(domain, iova_len, dma_get_mask(dev),
+>> dev);
+>>       if (!iova) {
+>>           ret = -ENOMEM;
+>> @@ -1236,7 +1281,7 @@ static int iommu_dma_map_sg(struct device *dev,
+>> struct scatterlist *sg,
+>>   out_restore_sg:
+>>       __invalidate_sg(sg, nents);
+>>   out:
+>> -    if (ret != -ENOMEM)
+>> +    if (ret != -ENOMEM && ret != -EREMOTEIO)
+>>           return -EINVAL;
+>>       return ret;
+>>   }
+>> @@ -1244,7 +1289,7 @@ static int iommu_dma_map_sg(struct device *dev,
+>> struct scatterlist *sg,
+>>   static void iommu_dma_unmap_sg(struct device *dev, struct
+>> scatterlist *sg,
+>>           int nents, enum dma_data_direction dir, unsigned long attrs)
+>>   {
+>> -    dma_addr_t start, end;
+>> +    dma_addr_t end, start = DMA_MAPPING_ERROR;
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 091459216e11..85844f9bc00b 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -171,7 +171,7 @@ Date:		May, 2022
->  KernelVersion:	v5.20
->  Contact:	linux-cxl@vger.kernel.org
->  Description:
-> -		(RO) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
-> +		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
->  		translates from a host physical address range, to a device local
->  		address range. Device-local address ranges are further split
->  		into a 'ram' (volatile memory) range and 'pmem' (persistent
-> @@ -180,3 +180,38 @@ Description:
->  		when a decoder straddles the volatile/persistent partition
->  		boundary, and 'none' indicates the decoder is not actively
->  		decoding, or no DPA allocation policy has been set.
-> +
-> +		'mode' can be written, when the decoder is in the 'disabled'
-> +		state, with either 'ram' or 'pmem' to set the boundaries for the
-> +		next allocation.
-> +
+> There are several things I don't like about this logic, I'd rather have
+> "end = 0" here...
 
-As before, documentation above this in the file only uses single line break between
-entries.
+Ok, I think that should work.
 
-> +
-> +What:		/sys/bus/cxl/devices/decoderX.Y/dpa_resource
-> +Date:		May, 2022
-> +KernelVersion:	v5.20
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) When a CXL decoder is of devtype "cxl_decoder_endpoint",
-> +		and its 'dpa_size' attribute is non-zero, this attribute
-> +		indicates the device physical address (DPA) base address of the
-> +		allocation.
-
-Why _resource rather than _base or _start?
-
-> +
-> +
-> +What:		/sys/bus/cxl/devices/decoderX.Y/dpa_size
-> +Date:		May, 2022
-> +KernelVersion:	v5.20
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
-> +		translates from a host physical address range, to a device local
-> +		address range. The range, base address plus length in bytes, of
-> +		DPA allocated to this decoder is conveyed in these 2 attributes.
-> +		Allocations can be mutated as long as the decoder is in the
-> +		disabled state. A write to 'size' releases the previous DPA
-
-'dpa_size' ?
-
-> +		allocation and then attempts to allocate from the free capacity
-> +		in the device partition referred to by 'decoderX.Y/mode'.
-> +		Allocate and free requests can only be performed on the highest
-> +		instance number disabled decoder with non-zero size. I.e.
-> +		allocations are enforced to occur in increasing 'decoderX.Y/id'
-> +		order and frees are enforced to occur in decreasing
-> +		'decoderX.Y/id' order.
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 1a50c0fc399c..47cf0c286fc3 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -17,6 +17,13 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s);
->  void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  				   resource_size_t length);
->  
-> +int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
-> +		     enum cxl_decoder_mode mode);
-> +int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
-> +int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
-> +resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
-> +resource_size_t cxl_dpa_resource(struct cxl_endpoint_decoder *cxled);
-> +
->  int cxl_memdev_init(void);
->  void cxl_memdev_exit(void);
->  void cxl_mbox_init(void);
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 8805afe63ebf..ceb4c28abc1b 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -248,6 +248,166 @@ static int cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
->  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
->  }
->  
-> +resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
-> +{
-> +	resource_size_t size = 0;
-> +
-> +	down_read(&cxl_dpa_rwsem);
-> +	if (cxled->dpa_res)
-> +		size = resource_size(cxled->dpa_res);
-> +	up_read(&cxl_dpa_rwsem);
-> +
-> +	return size;
-> +}
-> +
-> +resource_size_t cxl_dpa_resource(struct cxl_endpoint_decoder *cxled)
-
-Instinct would be to expect this to return the resource, not the start.
-Rename?
-
-
-> +{
-> +	resource_size_t base = -1;
-> +
-> +	down_read(&cxl_dpa_rwsem);
-> +	if (cxled->dpa_res)
-> +		base = cxled->dpa_res->start;
-> +	up_read(&cxl_dpa_rwsem);
-> +
-> +	return base;
-> +}
-> +
-> +int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
-> +{
-> +	int rc = -EBUSY;
-> +	struct device *dev = &cxled->cxld.dev;
-> +	struct cxl_port *port = to_cxl_port(dev->parent);
-> +
-> +	down_write(&cxl_dpa_rwsem);
-> +	if (!cxled->dpa_res) {
-> +		rc = 0;
-> +		goto out;
-> +	}
-> +	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-> +		dev_dbg(dev, "decoder enabled\n");
-
-I'd prefer explicit setting of rc = -EBUSY in the two
-'error' paths to make it really clear when looking at these
-that they are treated as errors.
-
-> +		goto out;
-> +	}
-> +	if (cxled->cxld.id != port->dpa_end) {
-> +		dev_dbg(dev, "expected decoder%d.%d\n", port->id,
-> +			port->dpa_end);
-> +		goto out;
-> +	}
-> +	__cxl_dpa_release(cxled, true);
-> +	rc = 0;
-> +out:
-> +	up_write(&cxl_dpa_rwsem);
-> +	return rc;
-> +}
-> +
-> +int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
-> +		     enum cxl_decoder_mode mode)
-> +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct device *dev = &cxled->cxld.dev;
-> +	int rc = -EBUSY;
-
-As above, I'd prefer seeing error set in each error path rther
-than it being set in a few locations and having to go look
-for which value it currently has.  To me having the
-error code next to the condition is much easier to follow.
-
-> +
-> +	switch (mode) {
-> +	case CXL_DECODER_RAM:
-> +	case CXL_DECODER_PMEM:
-> +		break;
-> +	default:
-> +		dev_dbg(dev, "unsupported mode: %d\n", mode);
-> +		return -EINVAL;
-> +	}
-> +
-> +	down_write(&cxl_dpa_rwsem);
-> +	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE)
-> +		goto out;
-> +	/*
-> +	 * Only allow modes that are supported by the current partition
-> +	 * configuration
-> +	 */
-> +	rc = -ENXIO;
-> +	if (mode == CXL_DECODER_PMEM && !resource_size(&cxlds->pmem_res)) {
-> +		dev_dbg(dev, "no available pmem capacity\n");
-> +		goto out;
-> +	}
-> +	if (mode == CXL_DECODER_RAM && !resource_size(&cxlds->ram_res)) {
-> +		dev_dbg(dev, "no available ram capacity\n");
-> +		goto out;
-> +	}
-> +
-> +	cxled->mode = mode;
-> +	rc = 0;
-> +out:
-> +	up_write(&cxl_dpa_rwsem);
-> +
-> +	return rc;
-> +}
-> +
-> +int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-> +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	resource_size_t free_ram_start, free_pmem_start;
-> +	struct cxl_port *port = cxled_to_port(cxled);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct device *dev = &cxled->cxld.dev;
-> +	resource_size_t start, avail, skip;
-> +	struct resource *p, *last;
-> +	int rc = -EBUSY;
-> +
-> +	down_write(&cxl_dpa_rwsem);
-> +	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-> +		dev_dbg(dev, "decoder enabled\n");
-> +		goto out;
-
-
--EBUSY only used in this path, so clearer to me to push that setting down
-to in this  error path.
-
-
-> +	}
-> +
-> +	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
-> +		last = p;
-> +	if (last)
-> +		free_ram_start = last->end + 1;
-> +	else
-> +		free_ram_start = cxlds->ram_res.start;
-> +
-> +	for (p = cxlds->pmem_res.child, last = NULL; p; p = p->sibling)
-> +		last = p;
-> +	if (last)
-> +		free_pmem_start = last->end + 1;
-> +	else
-> +		free_pmem_start = cxlds->pmem_res.start;
-> +
-> +	if (cxled->mode == CXL_DECODER_RAM) {
-> +		start = free_ram_start;
-> +		avail = cxlds->ram_res.end - start + 1;
-> +		skip = 0;
-> +	} else if (cxled->mode == CXL_DECODER_PMEM) {
-> +		resource_size_t skip_start, skip_end;
-> +
-> +		start = free_pmem_start;
-> +		avail = cxlds->pmem_res.end - start + 1;
-> +		skip_start = free_ram_start;
-> +		skip_end = start - 1;
-> +		skip = skip_end - skip_start + 1;
-> +	} else {
-> +		dev_dbg(dev, "mode not set\n");
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	if (size > avail) {
-> +		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
-> +			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
-> +			&avail);
-> +		rc = -ENOSPC;
-> +		goto out;
-> +	}
-> +
-> +	rc = __cxl_dpa_reserve(cxled, start, size, skip);
-> +out:
-> +	up_write(&cxl_dpa_rwsem);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
-> +}
-> +
->  static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  			    int *target_map, void __iomem *hdm, int which,
->  			    u64 *dpa_base)
-
->  
+>>       struct scatterlist *tmp;
+>>       int i;
+>>   @@ -1260,14 +1305,22 @@ static void iommu_dma_unmap_sg(struct device
+>> *dev, struct scatterlist *sg,
+>>        * The scatterlist segments are mapped into a single
+>>        * contiguous IOVA allocation, so this is incredibly easy.
+>>        */
 > 
+> [ This comment rather stops being true :( ]
 
+Not exactly. Sure there are some segments in the SGL that have bus
+addresses, but all the regular IOVAs still have a single contiguous
+allocation and only require one call to  __iommu_dma_unmap(). The only
+trick issues is finding the first and last actual IOVA SG to get the range.
+
+> 
+>> -    start = sg_dma_address(sg);
+>> -    for_each_sg(sg_next(sg), tmp, nents - 1, i) {
+> 
+> ...then generalise the first-element special case here into a dedicated
+> "walk to the first non-p2p element" loop...
+
+Ok, I'll see what I can do for that.
+
+Logan
