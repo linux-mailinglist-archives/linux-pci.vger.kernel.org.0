@@ -2,138 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26AD455F281
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 02:48:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C836955F2AA
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 03:11:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbiF2AsM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jun 2022 20:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
+        id S229532AbiF2BLB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jun 2022 21:11:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbiF2AsL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 20:48:11 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC3DDA5
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jun 2022 17:48:07 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id k14so12585717plh.4
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jun 2022 17:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=UaR1NefD75n+13si808lphUXo4PHuRX3UDYDNilXuoM=;
-        b=gGplD12ZEKRYW4jBL8Xs57G17SrfzXNQnHceG6HgSCIdwenkiKsH3MNIBewfG2KCwn
-         o2V9Qr+U/IMTtpJq7w1HI8qFacklJaVmszAMnqblzZIN9B34l4b8nejvfY5o55e27pum
-         U2WIS+hr9fFDT7dN5dha/i6gckpmv+EP0B7KZv64XJN5kPR85OVvgI9jduBjNN8e2tHR
-         UsjftP58X4nNyAh8v+QZpGihWuXP+OT9DOh74NvuoYaloPoHDnedtS6hMQohyokv+Nh1
-         PN+BabD1Ie9fKkzZs7zb73vqkeylyNPMjvbZxAe68IUYYZQx1PwnG29TbuOz5HrtiCIQ
-         WV9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=UaR1NefD75n+13si808lphUXo4PHuRX3UDYDNilXuoM=;
-        b=3aqUDneEuJ4iiVQR7/lmQbM18vAm5KB775ocOmIcSqRwEvBqYeisLlJ3gsge2FX9WH
-         1EU142NRtbuqiFGA6ZrqU9fD0PGw+mREUGwU4QsuCqJ2sYyG9uv0ulcmmFfa/rscBwpi
-         pZX/0xGSv+2eHXZdnSRSfeKOY/h0nP6UXjcQpjq5OCxYY0IR/2k+uiMsljD/wlhSEgli
-         Kncr/R/L/qnGpKd5cde0ROEYF6G9WIOa1NDx3prrn8xVpC5jB/jbqqrte1zbZe/kCLoL
-         pl+2LhOB/M4osMMJBfUpdVmSoL+iLjd4K/o2srrrZ0x64n/C1ufSdTK30SR3WxP0DWSW
-         ydAQ==
-X-Gm-Message-State: AJIora9KDqdfpiZJodolZgZgaoWGG6DpmOEZQllGT3tGzHefc3t6wPKW
-        t+cVDbqtn6pQqc5/76YpoYSnp4N2KntcJsKtn08=
-X-Google-Smtp-Source: AGRyM1ue1oty47I2RCpB18vCvbxDwRco8AAxWAQzKgw4eg52fmLcsYHWsgicpT3gDDmF3Mu0i9wXVC9HrNw9GmyDsvI=
-X-Received: by 2002:a17:90b:388c:b0:1ec:d278:7aa4 with SMTP id
- mu12-20020a17090b388c00b001ecd2787aa4mr2677927pjb.176.1656463686683; Tue, 28
- Jun 2022 17:48:06 -0700 (PDT)
+        with ESMTP id S229436AbiF2BLA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 21:11:00 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AA226138;
+        Tue, 28 Jun 2022 18:10:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A0BADB81E0A;
+        Wed, 29 Jun 2022 01:10:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16829C341C8;
+        Wed, 29 Jun 2022 01:10:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656465057;
+        bh=K3eCd7hCm8MhP8o3l+4ySC/WrN2F82RoNmx18R2IK8A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jZDcZmVZJzRaR8ixnK53OJdcmu7QYO4Os9OVfswG1aysoK+oyMnVt5oGWjynbPRxz
+         2WmA7j5tqklZGtXBzuUd0DbrpddJ4vjCJuWnucrycL3GBEe/pFnerKDx6C0zBhO6ne
+         ha3SrlL9Q0eK/HK2mxF8D6L0h2JGGVmvSG6nRsZuHTAmSIMmTWrSJu5nM6EllIQXKG
+         TXByYp89JmdD8EC92e/4y4Xvg2VmQEFIV5JzC/vDzZ2ojo3lEscSA9aSzMcZSm0HWn
+         Dn+ydymXwjCESKyMpzHXbWVQnlBtfxIMXhJ/TO24euy8cVSiiwyNZKpFglHHO1QYlD
+         qssHj3AsSEdzQ==
+Date:   Tue, 28 Jun 2022 20:10:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH V12 5/9] driver-core: Introduce BIN_ATTR_ADMIN_{RO,RW}
+Message-ID: <20220629011055.GA1890289@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a05:6a20:e193:b0:83:f687:f339 with HTTP; Tue, 28 Jun 2022
- 17:48:06 -0700 (PDT)
-Reply-To: christopher@groningenbank.com
-From:   Christopher Wright <yachicof1234@gmail.com>
-Date:   Wed, 29 Jun 2022 02:48:06 +0200
-Message-ID: <CACo5k8eLPLTJCqDt8E7b1s=edbyyRp+N4hpDzTG6nFURQV+3sQ@mail.gmail.com>
-Subject: Re: Christopher Wright
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=7.1 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
-        BAYES_60,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_HUNDRED,
-        MONEY_FRAUD_8,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,T_SHARE_50_50,UNDISC_MONEY,
-        XFER_LOTSA_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:632 listed in]
-        [list.dnswl.org]
-        *  1.5 BAYES_60 BODY: Bayes spam probability is 60 to 80%
-        *      [score: 0.7118]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [yachicof1234[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [yachicof1234[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  0.0 T_SHARE_50_50 Share the money 50/50
-        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
-        *  0.0 XFER_LOTSA_MONEY Transfer a lot of money
-        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
-        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
-        *  2.5 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220628041527.742333-6-ira.weiny@intel.com>
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---=20
-Hello, my name is Christopher Wright, Audit Accounting Officer of
-Groningen Bank, Groningen, The Netherlands. I got your information
-when I was searching for an oversea partner among other names, I ask
-for your pardon if my approach is offensive as I never mean't to
-invade your privacy through this means, and also i believe this is the
-best and secured means I can pass my message across to you in a clear
-terms. I have sent you this proposal before now; I do hope this will
-get to you in good health.
+[+cc Krzysztof]
 
-As the Audit Accounting Officer of the bank, I have access to lots of
-documents because I handle some of the bank's sensitive files. In the
-course of the last year 2021 business report, I discovered that my
-branch in which I am the Audit Accounting Officer made =E2=82=AC5.500.000.
-(Five Million Five Hundred Thousand Euro) from some past government
-contractors in which my head office is not aware of and will never be
-aware of. I have placed this funds on what we call an escrow call
-account with no beneficiary.
+On Mon, Jun 27, 2022 at 09:15:23PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Many binary attributes need to limit access to CAP_SYS_ADMIN only; ie
+> many binary attributes specify is_visible with 0400 or 0600.
+> 
+> Make setting the permissions of such attributes more explicit by
+> defining BIN_ATTR_ADMIN_{RO,RW}.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-As an officer of this bank I cannot be directly connected to this
-money, since i am still working with the bank. so my aim of contacting
-you is to assist me receive this money in your bank account and get
-50% of the total funds as commission. There are practically no risks
-involved, it will be a bank-to-bank transfer, and all I need from you
-is to stand claim as the Original depositor of these funds who made
-the deposit with my branch so that my head office can order the
-transfer to your designated bank account.
+FWIW, this looks a lot like this previous patch:
+  https://lore.kernel.org/all/20210416205856.3234481-7-kw@linux.com/
 
-When the fund has been transferred into your bank account, I will come
-to your country to share the fund. The fund will be shared 50% for me
-and 50% for you.
-
-I await your response.
-
-Yours Faithfully,
-Christopher Wright
-Audit Accounting Officer
-Groningen Bank
-christopher@groningenbank.com
+> ---
+> Changes from V11:
+> 	New Patch
+> ---
+>  include/linux/sysfs.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index e3f1e8ac1f85..fd3fe5c8c17f 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -235,6 +235,22 @@ struct bin_attribute bin_attr_##_name = __BIN_ATTR_WO(_name, _size)
+>  #define BIN_ATTR_RW(_name, _size)					\
+>  struct bin_attribute bin_attr_##_name = __BIN_ATTR_RW(_name, _size)
+>  
+> +
+> +#define __BIN_ATTR_ADMIN_RO(_name, _size) {					\
+> +	.attr	= { .name = __stringify(_name), .mode = 0400 },		\
+> +	.read	= _name##_read,						\
+> +	.size	= _size,						\
+> +}
+> +
+> +#define __BIN_ATTR_ADMIN_RW(_name, _size)					\
+> +	__BIN_ATTR(_name, 0600, _name##_read, _name##_write, _size)
+> +
+> +#define BIN_ATTR_ADMIN_RO(_name, _size)					\
+> +struct bin_attribute bin_attr_##_name = __BIN_ATTR_ADMIN_RO(_name, _size)
+> +
+> +#define BIN_ATTR_ADMIN_RW(_name, _size)					\
+> +struct bin_attribute bin_attr_##_name = __BIN_ATTR_ADMIN_RW(_name, _size)
+> +
+>  struct sysfs_ops {
+>  	ssize_t	(*show)(struct kobject *, struct attribute *, char *);
+>  	ssize_t	(*store)(struct kobject *, struct attribute *, const char *, size_t);
+> -- 
+> 2.35.3
+> 
