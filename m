@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2556F560251
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 16:16:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E0F8560237
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 16:16:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234031AbiF2OMm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 10:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41452 "EHLO
+        id S233472AbiF2OMp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 10:12:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233971AbiF2OMd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 10:12:33 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F882E08E;
-        Wed, 29 Jun 2022 07:12:32 -0700 (PDT)
+        with ESMTP id S233986AbiF2OMf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 10:12:35 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0D82EA28;
+        Wed, 29 Jun 2022 07:12:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DCF32B824B7;
-        Wed, 29 Jun 2022 14:12:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE27C341CE;
+        by sin.source.kernel.org (Postfix) with ESMTPS id 4AB70CE2742;
+        Wed, 29 Jun 2022 14:12:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2554BC36AF2;
         Wed, 29 Jun 2022 14:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1656511949;
-        bh=v0eVaS3PBQTamh6cRAXZ5AqGfuYojlDjnveI93v18rE=;
+        bh=BBR83r4Z8wYISqoy9N8mcRo90majWxT9oz32aYE16B4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jIPyXyanWiEFs6QCHay6xZzD5iRqofl69DvTGzoudch6PR3bEji/pv1rvqcpm6XvR
-         U44YDKBIdgVq2anWg2rlCoX9vZcgsTmXS6aC0MsmpNnb/2tTH6Qz57v1iyZF2QmlOw
-         k10EuB5YvWHKBWhwQJezY/93Tat8SxNk9fRLaQPz5/cuHtf1lFWrBmGwkHBfEju1AR
-         /RP/U8Q5sp7wvXrCR7274LpHkE8UpYESu+R6EueWYyjh9+Ni9ZdsVsvJ/PWdQvH+Zg
-         YFnKZ4x5PpHBwUqJJJjGxwuaYFFTUONX973x1zv2On3eiSpFNLD5aD0bkzK31Wdmpu
-         bphks+e7Rx7uA==
+        b=gew/QVJJ/o5eGLVzrXqIw7oT9Dk9Rrn/kVBT+qcMXVua0irWxj/utDhGeiXF9OrGG
+         saeCu8T87R2lWeXzyt2IKpNsVlPhKTeUo6+dX2hQ+chlmf0vYlEWnSHmuNfLAnWOZI
+         4AgopHSEcpuijvC0BBDpJMDnBD43nNgoDJrP88sBmqwggq1uWeKHAW6P8f6HybXSsD
+         F8TrxmaC/FcIJCPYqo9VNMA2UJldNkxWMr909qFHGgEtWFWewGT8Xi1W70nKee/RiE
+         faq5hSuy+YLOfErfQOolgJOVM4EG9NqTHMUgdBMxZHa4tktzwh1DDmUHMJTfqUu/JX
+         oZgTsyLZw3VFQ==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1o6YQe-0004lN-TX; Wed, 29 Jun 2022 16:12:28 +0200
+        id 1o6YQf-0004lS-0X; Wed, 29 Jun 2022 16:12:29 +0200
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>
@@ -47,9 +47,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 07/10] PCI: qcom: Add support for SA8540P
-Date:   Wed, 29 Jun 2022 16:09:57 +0200
-Message-Id: <20220629141000.18111-8-johan+linaro@kernel.org>
+Subject: [PATCH 08/10] PCI: qcom: Make all optional clocks optional
+Date:   Wed, 29 Jun 2022 16:09:58 +0200
+Message-Id: <20220629141000.18111-9-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220629141000.18111-1-johan+linaro@kernel.org>
 References: <20220629141000.18111-1-johan+linaro@kernel.org>
@@ -65,43 +65,113 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The SA8540P platform has five PCIe controllers: two 4-lane, two 2-lane
-and one 1-lane.
+The kernel is not a devicetree validator and does not need to re-encode
+information which is already available in the devicetree.
 
-Add a new "qcom,pcie-sa8540p" compatible string and reuse the 1.9.0 ops.
+This is specifically true for the optional PCIe clocks, some of which
+are really interconnect clocks.
 
-Note that like for SC8280XP, the SA8540 controllers need two or three
-interconnect clocks to be enabled.
+Treat also the 2.7.0 optional clocks as truly optional instead of
+maintaining a list of clocks per compatible (including two compatible
+strings for the two identical controllers on sm8450) just to validate
+the devicetree.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 28 ++++----------------------
+ 1 file changed, 4 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index da3f1cdc4ba6..8ab88e5743da 100644
+index 8ab88e5743da..1a564f624bb1 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1461,6 +1461,11 @@ static const struct qcom_pcie_cfg ipq4019_cfg = {
- 	.ops = &ops_2_4_0,
+@@ -189,10 +189,6 @@ struct qcom_pcie_ops {
+ 
+ struct qcom_pcie_cfg {
+ 	const struct qcom_pcie_ops *ops;
+-	unsigned int has_tbu_clk:1;
+-	unsigned int has_ddrss_sf_tbu_clk:1;
+-	unsigned int has_aggre0_clk:1;
+-	unsigned int has_aggre1_clk:1;
  };
  
-+static const struct qcom_pcie_cfg sa8540p_cfg = {
-+	.ops = &ops_1_9_0,
-+	.has_ddrss_sf_tbu_clk = true,
-+};
-+
+ struct qcom_pcie {
+@@ -1140,14 +1136,6 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+ 	res->clks[idx++].id = "bus_master";
+ 	res->clks[idx++].id = "bus_slave";
+ 	res->clks[idx++].id = "slave_q2a";
+-	if (pcie->cfg->has_tbu_clk)
+-		res->clks[idx++].id = "tbu";
+-	if (pcie->cfg->has_ddrss_sf_tbu_clk)
+-		res->clks[idx++].id = "ddrss_sf_tbu";
+-	if (pcie->cfg->has_aggre0_clk)
+-		res->clks[idx++].id = "aggre0";
+-	if (pcie->cfg->has_aggre1_clk)
+-		res->clks[idx++].id = "aggre1";
+ 
+ 	num_clks = idx;
+ 
+@@ -1155,6 +1143,10 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	res->clks[idx++].id = "tbu";
++	res->clks[idx++].id = "ddrss_sf_tbu";
++	res->clks[idx++].id = "aggre0";
++	res->clks[idx++].id = "aggre1";
+ 	res->clks[idx++].id = "noc_aggr_4";
+ 	res->clks[idx++].id = "noc_aggr_south_sf";
+ 	res->clks[idx++].id = "cnoc_qx";
+@@ -1463,17 +1455,14 @@ static const struct qcom_pcie_cfg ipq4019_cfg = {
+ 
+ static const struct qcom_pcie_cfg sa8540p_cfg = {
+ 	.ops = &ops_1_9_0,
+-	.has_ddrss_sf_tbu_clk = true,
+ };
+ 
  static const struct qcom_pcie_cfg sc8280xp_cfg = {
  	.ops = &ops_1_9_0,
- 	.has_ddrss_sf_tbu_clk = true,
-@@ -1626,6 +1631,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &ipq8074_cfg },
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &ipq4019_cfg },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &ipq4019_cfg },
-+	{ .compatible = "qcom,pcie-sa8540p", .data = &sa8540p_cfg },
- 	{ .compatible = "qcom,pcie-sdm845", .data = &sdm845_cfg },
- 	{ .compatible = "qcom,pcie-sm8150", .data = &sm8150_cfg },
- 	{ .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
+-	.has_ddrss_sf_tbu_clk = true,
+ };
+ 
+ static const struct qcom_pcie_cfg sdm845_cfg = {
+ 	.ops = &ops_2_7_0,
+-	.has_tbu_clk = true,
+ };
+ 
+ static const struct qcom_pcie_cfg sm8150_cfg = {
+@@ -1485,31 +1474,22 @@ static const struct qcom_pcie_cfg sm8150_cfg = {
+ 
+ static const struct qcom_pcie_cfg sm8250_cfg = {
+ 	.ops = &ops_1_9_0,
+-	.has_tbu_clk = true,
+-	.has_ddrss_sf_tbu_clk = true,
+ };
+ 
+ static const struct qcom_pcie_cfg sm8450_pcie0_cfg = {
+ 	.ops = &ops_1_9_0,
+-	.has_ddrss_sf_tbu_clk = true,
+-	.has_aggre0_clk = true,
+-	.has_aggre1_clk = true,
+ };
+ 
+ static const struct qcom_pcie_cfg sm8450_pcie1_cfg = {
+ 	.ops = &ops_1_9_0,
+-	.has_ddrss_sf_tbu_clk = true,
+-	.has_aggre1_clk = true,
+ };
+ 
+ static const struct qcom_pcie_cfg sc7280_cfg = {
+ 	.ops = &ops_1_9_0,
+-	.has_tbu_clk = true,
+ };
+ 
+ static const struct qcom_pcie_cfg sc8180x_cfg = {
+ 	.ops = &ops_1_9_0,
+-	.has_tbu_clk = true,
+ };
+ 
+ static const struct dw_pcie_ops dw_pcie_ops = {
 -- 
 2.35.1
 
