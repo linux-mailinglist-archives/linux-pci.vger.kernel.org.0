@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C5E4560245
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 16:16:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8C0A560233
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 16:16:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233466AbiF2OMk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 10:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41478 "EHLO
+        id S234024AbiF2OMl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 10:12:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233964AbiF2OMc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 10:12:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDA02EA28;
-        Wed, 29 Jun 2022 07:12:31 -0700 (PDT)
+        with ESMTP id S233936AbiF2OMb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 10:12:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A80E92F007;
+        Wed, 29 Jun 2022 07:12:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4D50DB8249B;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4187E61EDC;
         Wed, 29 Jun 2022 14:12:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFE40C34114;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08526C341CB;
         Wed, 29 Jun 2022 14:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1656511949;
-        bh=lR7ZwSAWF+pA7EbW6aJNgBB7QMveHeptOeicRhPqt3w=;
+        bh=BcVf9zGOO0RH2knLw0DhaZp1AodwzllZNO48giZBxQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P5ay69S8xdtKXmQ5I15QvuCir9V7FKY73SDHRB2G/DZtFvPKn3oVNNgRFvJkRctnu
-         HN3n++hMJWDEcQJaVD5NKkA4GYJIjNvFPhZMyfv3WUx9vlBa8w3F/TanQc9F8h61eT
-         WBfPZN0ZQcH9tFlrFCPSBhXmR/qxpCfyecQbWtpBsh/ZH/jfbZtSblUkG/TGnTjq2Q
-         XBunFSUldovd1H/+lotIiuk4b3N2HXs3XDfCbi/GZ4DKqUW2Yc0klfVz0NdfkUfuyM
-         ZNguMuTx0ps2nfIWasx3lOfuErki/CWe80/Nn7gNJxlQNQ1J+Ikz4edIZMS+KHkrOD
-         DEm6h9WvjNcSw==
+        b=LstHweX0rNQX9CxIVzoQVfmqlQEezAH/foe79ueSQ398Ts2G0dbTthNLvnO5teOVG
+         UMFow718sN5w+pmwPiG8r3bTNowOAeKy0p2j3I/4NTrsBgGsCnBVNAFlWFCR2WZEts
+         s3wC4ZGJ2PHCGQedsLTBwgYvDtXMhAWbUNyV3AQr7ELJPJY5J/izsrtOSzO5jOfN3T
+         rVYbPsL9aikgemhBcppTIW1nSWmhE2dG/pfZ7qmKM1A0PXq40R1iMXMC9f7BCNg5wp
+         xePHuSJ3KzsjcRJw40E1yuSXjxRuQE0k6iWSNmEZWb1ugBk1fYulWIx5ZoVA9zyeb0
+         Be2pr7ArMqrMw==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1o6YQe-0004l8-CK; Wed, 29 Jun 2022 16:12:28 +0200
+        id 1o6YQe-0004lA-Ep; Wed, 29 Jun 2022 16:12:28 +0200
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>
@@ -47,9 +47,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 01/10] dt-bindings: PCI: qcom: Fix reset conditional
-Date:   Wed, 29 Jun 2022 16:09:51 +0200
-Message-Id: <20220629141000.18111-2-johan+linaro@kernel.org>
+Subject: [PATCH 02/10] dt-bindings: PCI: qcom: Fix msi-interrupt conditional
+Date:   Wed, 29 Jun 2022 16:09:52 +0200
+Message-Id: <20220629141000.18111-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220629141000.18111-1-johan+linaro@kernel.org>
 References: <20220629141000.18111-1-johan+linaro@kernel.org>
@@ -65,28 +65,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix the reset conditional which always evaluated to true due to a
-misspelled property name ("compatibles" in plural).
+Fix the msi-interrupt conditional which always evaluated to false due to
+a misspelled property name ("compatibles" in plural).
 
-Fixes: 6700a9b00f0a ("dt-bindings: PCI: qcom: Do not require resets on msm8996 platforms")
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 7e84063afe25..ed9f9462a758 100644
+index ed9f9462a758..a1b4fc70e162 100644
 --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -615,7 +615,7 @@ allOf:
+@@ -628,7 +628,7 @@ allOf:
+     # On older chipsets it's always 1 msi interrupt
    - if:
-       not:
-         properties:
--          compatibles:
-+          compatible:
-             contains:
-               enum:
-                 - qcom,pcie-msm8996
+       properties:
+-        compatibles:
++        compatible:
+           contains:
+             enum:
+               - qcom,pcie-msm8996
 -- 
 2.35.1
 
