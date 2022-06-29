@@ -2,136 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8E4B5608FB
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 20:24:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CA5C5609C6
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 20:51:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbiF2SYs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 14:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38040 "EHLO
+        id S230176AbiF2Sve (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 14:51:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbiF2SYr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 14:24:47 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B0B255AB;
-        Wed, 29 Jun 2022 11:24:47 -0700 (PDT)
+        with ESMTP id S230149AbiF2Svb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 14:51:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CD6E1C939;
+        Wed, 29 Jun 2022 11:51:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=6f/hfdoWC+PgJWoBH5fqwFGRbVxwuN3ohOs8yiOPg/w=; b=KqlIdYHpF5kcUd1uj3HgVczqN5
-        +LiC/fe4thV0n4GWyYvjongR/yShAMienfuQ1vSKr2dlutBWKxI1nszo45XAnij64gY60aWl25yKn
-        9yS7YZF5VmQ5saw9wKgfKuTqMswh1/nBQISRAQ25FYKkr6Le3Ih3GarYYS3dES6F4h5ipa5KBXImW
-        +5AYt7ZvYxGywfXkmA46cmlkEvd9ckJZYnEqkIBKI2tycRJV07BzAnX9mR41JUrGOel82aqdx3sqr
-        111sVLF6oie65Xr6Z42l/GsfBOMAbGWd8Y9f26Frw8Cb4XUZDZkK9lUUkK39WvPZjSo78/eCvKrz8
-        ZKirfsHg==;
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1o6cMk-002URm-20; Wed, 29 Jun 2022 12:24:43 -0600
-Message-ID: <9725fc38-cbe6-f660-8d5f-6ceb983e6976@deltatee.com>
-Date:   Wed, 29 Jun 2022 12:24:36 -0600
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=SQbCDug6YtBQhXuY1RjXAElJtdb8hCK+VaT6mCPo/no=; b=v7yL2mxNkLU/Gt4cBbL2jufr1v
+        yWpq+SQgz2xlqUNcmjucMWcrKHDBcWBNVPhRkIzXQ7AJEunx+lr26EbYdblJq58upDEJ4jqQKkBrw
+        NGP+vhdjXfTc7fP77eHC7PUHjIUrOpCQNA4q5S/yyu9wt96AbtixdCw93jAUQhAULJXP/iY92cEAz
+        oq5yx63WW2HmtfKZJKQ/ncPryVaENkBwQzr+FIU36I/b/vOhg2qZtOnsB6Xi4ncA7lOx34yTuZj7e
+        o1ROLtc0bx+2OtR58VnsF5wkZ22TvaeJRo3sKlw7IWRGxjyn6EKxlVtEzgdoeft6kxXswo6gqgR6t
+        OjVIWGsw==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o6cmW-00DdkC-Ga; Wed, 29 Jun 2022 18:51:20 +0000
+Message-ID: <687deec4-b799-0abc-5cf1-c65021c36ebd@infradead.org>
+Date:   Wed, 29 Jun 2022 11:51:19 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
+ Thunderbird/91.10.0
+Subject: Re: [PATCH -next] PCI: endpoint: Fix Kconfig dependency
 Content-Language: en-US
-To:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>
-References: <20220615161233.17527-1-logang@deltatee.com>
- <20220615161233.17527-2-logang@deltatee.com>
- <b56d9b93-c59f-5764-e599-d9718edb42d3@arm.com>
- <c42b5ee3-5d4f-7e44-8885-26b8417208ae@deltatee.com>
- <d84a0498-3b7f-3d38-2bfd-9a175db4002a@arm.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <d84a0498-3b7f-3d38-2bfd-9a175db4002a@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ren Zhijie <renzhijie2@huawei.com>,
+        Jon Mason <jdmason@kudzu.us>
+Cc:     kishon@ti.com, lpieralisi@kernel.org, kw@linux.com,
+        bhelgaas@google.com, Frank.Li@nxp.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220627202528.GA1775049@bhelgaas>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20220627202528.GA1775049@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: robin.murphy@arm.com, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, dan.j.williams@intel.com, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, kch@nvidia.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: Re: [PATCH v7 01/21] lib/scatterlist: add flag for indicating P2PDMA
- segments in an SGL
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2022-06-29 12:02, Robin Murphy wrote:
-> On 2022-06-29 16:39, Logan Gunthorpe wrote:
->> On 2022-06-29 03:05, Robin Murphy wrote:
->>> On 2022-06-15 17:12, Logan Gunthorpe wrote:
->>> Does this serve any useful purpose? If a page is determined to be device
->>> memory, it's not going to suddenly stop being device memory, and if the
->>> underlying sg is recycled to point elsewhere then sg_assign_page() will
->>> still (correctly) clear this flag anyway. Trying to reason about this
->>> beyond superficial API symmetry - i.e. why exactly would a caller need
->>> to call it, and what would the implications be of failing to do so -
->>> seems to lead straight to confusion.
+On 6/27/22 13:25, Bjorn Helgaas wrote:
+> On Mon, Jun 27, 2022 at 03:07:50PM -0500, Bjorn Helgaas wrote:
+>> On Mon, Jun 27, 2022 at 02:57:14PM -0500, Bjorn Helgaas wrote:
+>>> On Fri, Jun 24, 2022 at 09:19:11AM +0800, Ren Zhijie wrote:
+>>>> If CONFIG_NTB is not set and CONFIG_PCI_EPF_VNTB is y.
+>>>>
+>>>> make ARCH=x86_64 CROSS_COMPILE=x86_64-linux-gnu-, will be failed, like this:
+>>>>
+>>>> drivers/pci/endpoint/functions/pci-epf-vntb.o: In function `epf_ntb_cmd_handler':
+>>>> pci-epf-vntb.c:(.text+0x95e): undefined reference to `ntb_db_event'
+>>>> pci-epf-vntb.c:(.text+0xa1f): undefined reference to `ntb_link_event'
+>>>> pci-epf-vntb.c:(.text+0xa42): undefined reference to `ntb_link_event'
+>>>> drivers/pci/endpoint/functions/pci-epf-vntb.o: In function `pci_vntb_probe':
+>>>> pci-epf-vntb.c:(.text+0x1250): undefined reference to `ntb_register_device'
+>>>>
+>>>> The functions ntb_*() are defined in drivers/ntb/core.c, which need CONFIG_NTB setting y to be build-in.
+>>>> To fix this build error, add depends on NTB.
+>>>>
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Fixes: ff32fac00d97("NTB: EPF: support NTB transfer between PCI RC and EP connection")
+>>>> Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
+>>>> Acked-by: Frank Li <frank.li@nxp.com>
 >>>
->>> In fact I'd be inclined to have sg_assign_page() be responsible for
->>> setting the flag automatically as well, and thus not need
->>> sg_dma_mark_bus_address() either, however I can see the argument for
->>> doing it this way round to not entangle the APIs too much, so I don't
->>> have any great objection to that.
+>>> Am I missing something? 
+>>>
+>>>   02:54:01 ~/linux (next)$ git checkout -b wip/ren-endpoint-ntb v5.19-rc1
+>>>   Switched to a new branch 'wip/ren-endpoint-ntb'
+>>>   02:54:23 ~/linux (wip/ren-endpoint-ntb)$ b4 am -om/ https://lore.kernel.org/r/20220624011911.164146-1-renzhijie2@huawei.com
+>>>   02:54:47 ~/linux (wip/ren-endpoint-ntb)$ git am m/20220624_renzhijie2_pci_endpoint_fix_kconfig_dependency.mbx
+>>>   Applying: PCI: endpoint: Fix Kconfig dependency
+>>>   error: patch failed: drivers/pci/endpoint/functions/Kconfig:29
+>>>
+>>> Obviously I could fix this manually, but if there's something wrong
+>>> with your patch posting process, we should fix it.
 >>
->> Yes, I think you misunderstand what this is for. The SG_DMA_BUS_ADDDRESS
->> flag doesn't mark the segment for the page, but for the dma address. It
->> cannot be set in sg_assign_page() seeing it's not a property of the page
->> but a property of the dma_address in the sgl.
->>
->> It's not meant for use by regular SG users, it's only meant for use
->> inside DMA mapping implementations. The purpose is to know whether a
->> given dma_address in the SGL is a bus address or regular memory because
->> the two different types must be unmapped differently. We can't rely on
->> the page because, as you know, many dma_map_sg() the dma_address entry
->> in the sgl does not map to the same memory as the page. Or to put it
->> another way: is_pci_p2pdma_page(sg->page) does not imply that
->> sg->dma_address points to a bus address.
->>
->> Does that make sense?
+>> Oh, I see the problem.  This patch depends on some other VNTB patch
+>> that hasn't been merged yet.  That means this fix should be squashed
+>> into the VNTB patch that adds "config PCI_EPF_VNTB".
 > 
-> Ah, you're quite right, in trying to take in the whole series at once
-> first thing in the morning I did fail to properly grasp that detail, so
-> indeed the sg_assign_page() thing couldn't possibly work, but as I said
-> that's fine anyway. I still think the lifecycle management is a bit off
-> though - equivalently, a bus address doesn't stop being a bus address,
-> so it would seem appropriate to update this flag appropriately whenever
-> sg_dma_address() is assigned to, and not when it isn't.
+> Well, I saw *part* of the problem.  This fixes something that is in
+> -next, added by ff32fac00d97 ("NTB: EPF: support NTB transfer between
+> PCI RC and EP connection") [1], which was merged by Jon.
+> 
+> So I guess Jon will squash and update his branch or merge the
+> fixup(s).
+> 
+> (Jon, if you squash, note there are several typos in the commit log:
+> s/Virtual NTB/virtual NTB/, s/include/includes/, s/3 part/3 parts/,
+> s/virutal/virtual, s/pci/PCI/, s/BUS/Bus/)
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=ff32fac00d97
+> 
+>>>> ---
+>>>> v2: Fix some commit message errors
+>>>> ---
+>>>>  drivers/pci/endpoint/functions/Kconfig | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
+>>>> index 362555b024e8..9beee4f0f4ee 100644
+>>>> --- a/drivers/pci/endpoint/functions/Kconfig
+>>>> +++ b/drivers/pci/endpoint/functions/Kconfig
+>>>> @@ -29,6 +29,7 @@ config PCI_EPF_NTB
+>>>>  config PCI_EPF_VNTB
+>>>>          tristate "PCI Endpoint NTB driver"
+>>>>          depends on PCI_ENDPOINT
+>>>> +        depends on NTB
+>>>>          select CONFIGFS_FS
+>>>>          help
+>>>>            Select this configuration option to enable the Non-Transparent
+>>>> -- 
 
-Yes, that's pretty much the way the code is now. The only two places
-sg_dma_mark_bus_address() is called are in the two pci_p2pdma helpers
-that set the dma address to the bus address. The lines before both calls
-set the dma_address and dma_len.
+Works for me. Thanks.
 
-Logan
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
+maybe even
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+(see https://lore.kernel.org/linux-next/835b844b-9d9d-615c-af11-44154c2a8102@infradead.org/)
+
+-- 
+~Randy
