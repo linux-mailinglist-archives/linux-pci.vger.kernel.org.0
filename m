@@ -2,64 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B119D56081C
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 19:59:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D93D56084B
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 20:03:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231878AbiF2R7K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 13:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39326 "EHLO
+        id S232422AbiF2SCy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 14:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230340AbiF2R7K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 13:59:10 -0400
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB33F2AD
-        for <linux-pci@vger.kernel.org>; Wed, 29 Jun 2022 10:59:08 -0700 (PDT)
-Received: by mail-qv1-xf2b.google.com with SMTP id z1so8695486qvp.9
-        for <linux-pci@vger.kernel.org>; Wed, 29 Jun 2022 10:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ngWx43aEx+7T9A14R2LGOmGQG6CiD1NPE7ELlQTW2Yo=;
-        b=SKmcghAf6nlxb3TYM9q+L2K6WvoAOg3jhiALBKso44zP0sXfB8bfiUedLcgKzgwJgh
-         iTJCket4ICkaBkiO0QMT6a7oZweniTqMyqfh5UKIWBSdtteoys0WU0gLpwmQxcuZ4T0C
-         B5EZV3F+pSyyuE/TubvDD1bjbB6DXWKJyou3V2eDANW0FMx1qb5IymBGqRBGbaBO/qpz
-         ziWT+UQffo2LDKQOaJhYTyVo3/P9yrGTwX9E3INhoqRXiDqc6Jau79+OQONuVBZZne7a
-         MzNQ3dTgqHtk/dbWQmfNzsZcoGEiW6sxYQ0kC+3zRe5EegJZ5dxZXRpFz6xNN0CByfx0
-         8ESA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ngWx43aEx+7T9A14R2LGOmGQG6CiD1NPE7ELlQTW2Yo=;
-        b=zbBP5lahgDb5cq0i62gI0sl/EH9CBbnGjGyFdk8mEE2gKUeubVwE4wxglaeT3HB4jA
-         8zpWd4Lp7YPm65keQdd43yuEIxjKJHO0rkCAZ73mPYsiZR6QYEwp9w6cDc7k7eVs0f4u
-         iyTwpBZUS6g9GsVPk7faL1Nml/eO4Iv/XyHRvKJ4UKVnaAOlQSh16+iY88ACS+p1sMLG
-         4oNV47vXnHcnvxNYGB11fJ7UrPw1AyQqmtFYGncsEcML5hfYmQpnr/0ESJXkbvrWL05L
-         OwiqbbgD4D/mfpCsGisWs/Wp9ZGcOEKkI1FjfHboMd3YTvYByoLMZ6xcVhzH8iRsoGig
-         iVhQ==
-X-Gm-Message-State: AJIora/A9a1zaWGQQvzOQpwZsUWsdgRmdnuEPYiIZXwqZqOnmzUh1LtK
-        JAzRisobsljefmSbxy4Xz4MQeA==
-X-Google-Smtp-Source: AGRyM1tbrZ7P9r+hmIBmAW2EDXMkZbkavnNkEyNTe14M5A9CnmgPVypEPOrPgPFspFUz9zUokVYXKQ==
-X-Received: by 2002:a05:6214:ac2:b0:46e:7e2a:ada with SMTP id g2-20020a0562140ac200b0046e7e2a0adamr8831887qvi.81.1656525547889;
-        Wed, 29 Jun 2022 10:59:07 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id c13-20020a05620a164d00b006a6a4b43c01sm12832373qko.38.2022.06.29.10.59.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 10:59:07 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1o6bxy-003bBJ-Q7; Wed, 29 Jun 2022 14:59:06 -0300
-Date:   Wed, 29 Jun 2022 14:59:06 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
+        with ESMTP id S232231AbiF2SCo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 14:02:44 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E3D83A735;
+        Wed, 29 Jun 2022 11:02:43 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E21051480;
+        Wed, 29 Jun 2022 11:02:42 -0700 (PDT)
+Received: from [10.57.85.71] (unknown [10.57.85.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 050C53F5A1;
+        Wed, 29 Jun 2022 11:02:37 -0700 (PDT)
+Message-ID: <d84a0498-3b7f-3d38-2bfd-9a175db4002a@arm.com>
+Date:   Wed, 29 Jun 2022 19:02:33 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v7 01/21] lib/scatterlist: add flag for indicating P2PDMA
+ segments in an SGL
+Content-Language: en-GB
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Don Dutile <ddutile@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
@@ -70,70 +47,179 @@ Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
         Xiong Jianxin <jianxin.xiong@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
         Martin Oliveira <martin.oliveira@eideticom.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
-Message-ID: <20220629175906.GU23621@ziepe.ca>
+        Chaitanya Kulkarni <kch@nvidia.com>
 References: <20220615161233.17527-1-logang@deltatee.com>
- <20220615161233.17527-21-logang@deltatee.com>
- <20220629064854.GD17576@lst.de>
- <99242789-66a6-bbd2-b56a-e47891f4522e@deltatee.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99242789-66a6-bbd2-b56a-e47891f4522e@deltatee.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+ <20220615161233.17527-2-logang@deltatee.com>
+ <b56d9b93-c59f-5764-e599-d9718edb42d3@arm.com>
+ <c42b5ee3-5d4f-7e44-8885-26b8417208ae@deltatee.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <c42b5ee3-5d4f-7e44-8885-26b8417208ae@deltatee.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 29, 2022 at 10:00:09AM -0600, Logan Gunthorpe wrote:
+On 2022-06-29 16:39, Logan Gunthorpe wrote:
 > 
 > 
 > 
-> On 2022-06-29 00:48, Christoph Hellwig wrote:
-> > On Wed, Jun 15, 2022 at 10:12:32AM -0600, Logan Gunthorpe wrote:
-> >> A pseudo mount is used to allocate an inode for each PCI device. The
-> >> inode's address_space is used in the file doing the mmap so that all
-> >> VMAs are collected and can be unmapped if the PCI device is unbound.
-> >> After unmapping, the VMAs are iterated through and their pages are
-> >> put so the device can continue to be unbound. An active flag is used
-> >> to signal to VMAs not to allocate any further P2P memory once the
-> >> removal process starts. The flag is synchronized with concurrent
-> >> access with an RCU lock.
-> > 
-> > Can't we come up with a way of doing this without all the pseudo-fs
-> > garbagage?  I really hate all the overhead for that in the next
-> > nvme patch as well.
+> On 2022-06-29 03:05, Robin Murphy wrote:
+>> On 2022-06-15 17:12, Logan Gunthorpe wrote:
+>>> Make use of the third free LSB in scatterlist's page_link on 64bit
+>>> systems.
+>>>
+>>> The extra bit will be used by dma_[un]map_sg_p2pdma() to determine when a
+>>> given SGL segments dma_address points to a PCI bus address.
+>>> dma_unmap_sg_p2pdma() will need to perform different cleanup when a
+>>> segment is marked as a bus address.
+>>>
+>>> The new bit will only be used when CONFIG_PCI_P2PDMA is set; this means
+>>> PCI P2PDMA will require CONFIG_64BIT. This should be acceptable as the
+>>> majority of P2PDMA use cases are restricted to newer root complexes and
+>>> roughly require the extra address space for memory BARs used in the
+>>> transactions.
+>>>
+>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>> Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+>>> ---
+>>>    drivers/pci/Kconfig         |  5 +++++
+>>>    include/linux/scatterlist.h | 44 ++++++++++++++++++++++++++++++++++++-
+>>>    2 files changed, 48 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+>>> index 133c73207782..5cc7cba1941f 100644
+>>> --- a/drivers/pci/Kconfig
+>>> +++ b/drivers/pci/Kconfig
+>>> @@ -164,6 +164,11 @@ config PCI_PASID
+>>>    config PCI_P2PDMA
+>>>        bool "PCI peer-to-peer transfer support"
+>>>        depends on ZONE_DEVICE
+>>> +    #
+>>> +    # The need for the scatterlist DMA bus address flag means PCI P2PDMA
+>>> +    # requires 64bit
+>>> +    #
+>>> +    depends on 64BIT
+>>>        select GENERIC_ALLOCATOR
+>>>        help
+>>>          Enableѕ drivers to do PCI peer-to-peer transactions to and from
+>>> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
+>>> index 7ff9d6386c12..6561ca8aead8 100644
+>>> --- a/include/linux/scatterlist.h
+>>> +++ b/include/linux/scatterlist.h
+>>> @@ -64,12 +64,24 @@ struct sg_append_table {
+>>>    #define SG_CHAIN    0x01UL
+>>>    #define SG_END        0x02UL
+>>>    +/*
+>>> + * bit 2 is the third free bit in the page_link on 64bit systems which
+>>> + * is used by dma_unmap_sg() to determine if the dma_address is a
+>>> + * bus address when doing P2PDMA.
+>>> + */
+>>> +#ifdef CONFIG_PCI_P2PDMA
+>>> +#define SG_DMA_BUS_ADDRESS    0x04UL
+>>> +static_assert(__alignof__(struct page) >= 8);
+>>> +#else
+>>> +#define SG_DMA_BUS_ADDRESS    0x00UL
+>>> +#endif
+>>> +
+>>>    /*
+>>>     * We overload the LSB of the page pointer to indicate whether it's
+>>>     * a valid sg entry, or whether it points to the start of a new
+>>> scatterlist.
+>>>     * Those low bits are there for everyone! (thanks mason :-)
+>>>     */
+>>> -#define SG_PAGE_LINK_MASK (SG_CHAIN | SG_END)
+>>> +#define SG_PAGE_LINK_MASK (SG_CHAIN | SG_END | SG_DMA_BUS_ADDRESS)
+>>>      static inline unsigned int __sg_flags(struct scatterlist *sg)
+>>>    {
+>>> @@ -91,6 +103,11 @@ static inline bool sg_is_last(struct scatterlist *sg)
+>>>        return __sg_flags(sg) & SG_END;
+>>>    }
+>>>    +static inline bool sg_is_dma_bus_address(struct scatterlist *sg)
+>>> +{
+>>> +    return __sg_flags(sg) & SG_DMA_BUS_ADDRESS;
+>>> +}
+>>> +
+>>>    /**
+>>>     * sg_assign_page - Assign a given page to an SG entry
+>>>     * @sg:            SG entry
+>>> @@ -245,6 +262,31 @@ static inline void sg_unmark_end(struct
+>>> scatterlist *sg)
+>>>        sg->page_link &= ~SG_END;
+>>>    }
+>>>    +/**
+>>> + * sg_dma_mark_bus address - Mark the scatterlist entry as a bus address
+>>> + * @sg:         SG entryScatterlist
+>>
+>> entryScatterlist?
+>>
+>>> + *
+>>> + * Description:
+>>> + *   Marks the passed in sg entry to indicate that the dma_address is
+>>> + *   a bus address and doesn't need to be unmapped.
+>>> + **/
+>>> +static inline void sg_dma_mark_bus_address(struct scatterlist *sg)
+>>> +{
+>>> +    sg->page_link |= SG_DMA_BUS_ADDRESS;
+>>> +}
+>>> +
+>>> +/**
+>>> + * sg_unmark_pci_p2pdma - Unmark the scatterlist entry as a bus address
+>>> + * @sg:         SG entryScatterlist
+>>> + *
+>>> + * Description:
+>>> + *   Clears the bus address mark.
+>>> + **/
+>>> +static inline void sg_dma_unmark_bus_address(struct scatterlist *sg)
+>>> +{
+>>> +    sg->page_link &= ~SG_DMA_BUS_ADDRESS;
+>>> +}
+>>
+>> Does this serve any useful purpose? If a page is determined to be device
+>> memory, it's not going to suddenly stop being device memory, and if the
+>> underlying sg is recycled to point elsewhere then sg_assign_page() will
+>> still (correctly) clear this flag anyway. Trying to reason about this
+>> beyond superficial API symmetry - i.e. why exactly would a caller need
+>> to call it, and what would the implications be of failing to do so -
+>> seems to lead straight to confusion.
+>>
+>> In fact I'd be inclined to have sg_assign_page() be responsible for
+>> setting the flag automatically as well, and thus not need
+>> sg_dma_mark_bus_address() either, however I can see the argument for
+>> doing it this way round to not entangle the APIs too much, so I don't
+>> have any great objection to that.
 > 
-> I assume you still want to be able to unmap the VMAs on unbind and not
-> just hang?
+> Yes, I think you misunderstand what this is for. The SG_DMA_BUS_ADDDRESS
+> flag doesn't mark the segment for the page, but for the dma address. It
+> cannot be set in sg_assign_page() seeing it's not a property of the page
+> but a property of the dma_address in the sgl.
 > 
-> I'll see if I can come up with something to do the a similar thing using
-> vm_private data or some such.
+> It's not meant for use by regular SG users, it's only meant for use
+> inside DMA mapping implementations. The purpose is to know whether a
+> given dma_address in the SGL is a bus address or regular memory because
+> the two different types must be unmapped differently. We can't rely on
+> the page because, as you know, many dma_map_sg() the dma_address entry
+> in the sgl does not map to the same memory as the page. Or to put it
+> another way: is_pci_p2pdma_page(sg->page) does not imply that
+> sg->dma_address points to a bus address.
+> 
+> Does that make sense?
 
-I've tried in the past, this is not a good idea. There is no way to
-handle failures when a VMA is dup'd and if you rely on private_data
-you almost certainly have to alloc here.
+Ah, you're quite right, in trying to take in the whole series at once 
+first thing in the morning I did fail to properly grasp that detail, so 
+indeed the sg_assign_page() thing couldn't possibly work, but as I said 
+that's fine anyway. I still think the lifecycle management is a bit off 
+though - equivalently, a bus address doesn't stop being a bus address, 
+so it would seem appropriate to update this flag appropriately whenever 
+sg_dma_address() is assigned to, and not when it isn't.
 
-Then there is the issue of making the locking work on invalidation
-which is crazy ugly.
-
-> I was not a fan of the extra code for this either, but I was given to
-> understand that it was the standard way to collect and cleanup VMAs.
-
-Christoph you tried tried to clean it once globally, what happened to
-that?
-
-All that is needed here is a way to get a unique inode for the PCI
-memory.
-
-Jason
+Thanks,
+Robin.
