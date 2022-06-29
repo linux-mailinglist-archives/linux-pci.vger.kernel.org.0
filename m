@@ -2,115 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2F10560B16
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 22:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87299560BCF
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 23:36:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229841AbiF2Uew (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 16:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58686 "EHLO
+        id S231253AbiF2VgS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 17:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbiF2Uev (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 16:34:51 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895692C10C;
-        Wed, 29 Jun 2022 13:34:49 -0700 (PDT)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20220629203448usoutp02318847ae62d98267869b8f184374df8a~9MbRdlW-t1403414034usoutp02d;
-        Wed, 29 Jun 2022 20:34:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20220629203448usoutp02318847ae62d98267869b8f184374df8a~9MbRdlW-t1403414034usoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1656534888;
-        bh=lXomARyTOr4zgBrO/xc7GHtTIlPV1c04Hr27zgTgCDo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=DoXDYnTU9wJUhHg0M+dJvd6R5eELNa1IpQhmZRsSdXjD5XvtmRCwfJRBDo75/EmRD
-         /MLQvbFVRfnkXhoW6gVJFii6Xk6V4Ci81G1kWeMKjb++6/XGm+wyQM61wFd+5GrCWa
-         gcOReMFB2voO/ZsLw15IUWNbjR170WvjY4hqRBzk=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20220629203448uscas1p105d46b03604938b494e3acea4abe6ad6~9MbRM8mXt2673826738uscas1p1H;
-        Wed, 29 Jun 2022 20:34:48 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id 35.93.09760.867BCB26; Wed,
-        29 Jun 2022 16:34:48 -0400 (EDT)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-        [203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220629203448uscas1p264a7f79a1ed7f9257eefcb3064c7d943~9MbQ1nqLU1740317403uscas1p2U;
-        Wed, 29 Jun 2022 20:34:48 +0000 (GMT)
-X-AuditID: cbfec36d-51bff70000002620-64-62bcb76802ee
-Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id E2.9A.57470.767BCB26; Wed,
-        29 Jun 2022 16:34:47 -0400 (EDT)
-Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
-        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 29 Jun 2022 13:34:47 -0700
-Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
-        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Wed,
-        29 Jun 2022 13:34:47 -0700
-From:   Adam Manzanares <a.manzanares@samsung.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH 06/46] cxl/core: Drop is_cxl_decoder()
-Thread-Topic: [PATCH 06/46] cxl/core: Drop is_cxl_decoder()
-Thread-Index: AQHYi/esL78qDLSsR02eEE+HvYuomA==
-Date:   Wed, 29 Jun 2022 20:34:47 +0000
-Message-ID: <20220629203440.GA1140902@bgt-140510-bm01>
-In-Reply-To: <165603874340.551046.15491766127759244728.stgit@dwillia2-xfh>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5997976DCBC30F47BE34FFBE44886E3B@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231386AbiF2VgL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 17:36:11 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4EE3FD9B
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jun 2022 14:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656538566; x=1688074566;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jn2NH1285pk9HbMOykQfBMgT4zyBr5bMTRzqIXvYfZE=;
+  b=AWBdhAgE5J+jtTcxEdHzrfY4KWatV46Af2kJJvjTXoWN2SyiNAz+b92u
+   YFgqPLTrzFzZ6JTNwPxq4rcm5UVn0SFKzbZIUsnS1CowNIKNXlIKx53J6
+   Fsai2j2tSe9P2kqDsBLmR+yJFILCEIwKfqG/m8WHkl+vjgzqDmtqodKNI
+   hBLjq0tji/Kldb8JpTlO146CqEHxeF4mA1Nx0GiD8FWRaM7tY0oR91u1K
+   DM7EK351poIIjM8Qv5XH7viSKa8b23yAX7hv91akzO15s78Ai03VoVwBg
+   foSXZA8GHJnuRfAmuSDe9T34EzWdagCIYkLeALyMhd1tU1aCI/rtlgsRb
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="270932677"
+X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
+   d="scan'208";a="270932677"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 14:36:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,232,1650956400"; 
+   d="scan'208";a="917772543"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Jun 2022 14:36:02 -0700
+Received: from MeteorLakePO1.jf.intel.com (MeteorLakePO1.jf.intel.com [10.234.180.58])
+        by linux.intel.com (Postfix) with ESMTP id 64ABB580B55;
+        Wed, 29 Jun 2022 14:35:57 -0700 (PDT)
+From:   Gayatri Kammela <gayatri.kammela@linux.intel.com>
+To:     linux-pci@vger.kernel.org
+Cc:     rafael@kernel.org, david.e.box@linux.intel.com,
+        Gayatri Kammela <gayatri.kammela@linux.intel.com>
+Subject: [RFC] PCIe error handling support
+Date:   Wed, 29 Jun 2022 14:36:28 -0700
+Message-Id: <20220629213628.433924-1-gayatri.kammela@linux.intel.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djXc7oZ2/ckGSx4LGpx9/EFNovpUy8w
-        WpyesIjJ4vysUywWZ+cdZ7NY+eMPq8XlE5cYHdg9Nq/Q8li85yWTx4vNMxk9Pm+SC2CJ4rJJ
-        Sc3JLEst0rdL4Mp492s5a8FN3ooJ504zNzBu5+5i5OSQEDCR2Ln5PGMXIxeHkMBKRok59yey
-        QTitTBKPH3Wxw1T9+7ySFSKxllHi4ptJUFWfGCVO338I5SxjlNg3fR8LSAubgIHE7+MbmUFs
-        EQFtiYlzDjKDFDELnGKS+P7rJ1iRsICVxNPlZ6GKrCU+XPvDCGHrSTx9fp0NxGYRUJV4OOEW
-        WA2vgJnEv4dfwOKcAl4SH56sBbuPUUBM4vupNUwgNrOAuMStJ/OZIO4WlFg0ew8zhC0m8W/X
-        QzYIW1Hi/veX7BD1OhILdn9ig7DtJF4cbGKEsLUlli18DbVXUOLkzCcsEL2SEgdX3GABeUZC
-        4AKHxIm1bVDLXCT+b7kODTBpib93lzFBFLUzSnyYsI8VwpnAKHHn7U+oM6wl/nVeY5/AqDIL
-        yeWzkFw1C8lVs5BcNQvJVQsYWVcxipcWF+empxYb5qWW6xUn5haX5qXrJefnbmIEJqfT/w7n
-        7mDcceuj3iFGJg7GQ4wSHMxKIrwLz+xMEuJNSaysSi3Kjy8qzUktPsQozcGiJM67LHNDopBA
-        emJJanZqakFqEUyWiYNTqoGJ3+k2j22Zzor43Wwd9379t5pzZ5uc907WzT2VlacWijaeF+fu
-        vmaTFvOn+qWZUeqb9+0vVzZc8rv/8Mye1qe33ovPWfDs7v6m9ZmSCbISbj6ljBzbAu+tWPo7
-        fpp7SeOjaVM0zUJUfmo/VIpzkCp8dpWx/Z/aRL31TgXOfNlbVxwU42zc80pkSpjxuSe/FpY+
-        jJkwI/vXi1z/6V87p/UUZzxwa71r+zn6gXjD1nWVvVmCHUvLhWJ/cgSEv7i29rXPlf1SkfeP
-        VrX/yHp6eUelglEOi9+dErUVzh4mtUV3xHO8XRb+EpB937YlySA1Sognv85r1oP10zuyFpZG
-        TOSW1nx3xfZrwcbovi1lnx4osRRnJBpqMRcVJwIArRGlvr0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsWS2cA0STd9+54kg8WTDCzuPr7AZjF96gVG
-        i9MTFjFZnJ91isXi7LzjbBYrf/xhtbh84hKjA7vH5hVaHov3vGTyeLF5JqPH501yASxRXDYp
-        qTmZZalF+nYJXBnvfi1nLbjJWzHh3GnmBsbt3F2MnBwSAiYS/z6vZO1i5OIQEljNKHH8yHEW
-        COcTo8ShhW1MEM4yRolrF3eygbSwCRhI/D6+kRnEFhHQlpg45yAzSBGzwCkmie+/frKAJIQF
-        rCSeLj8LVWQt8eHaH0YIW0/i6fPrYINYBFQlHk64BVbDK2Am8e/hFzaIbR2MEgeP/wQr4hTw
-        kvjwZC07iM0oICbx/dQaJhCbWUBc4taT+UwQTwhILNlznhnCFpV4+fgfK4StKHH/+0t2iHod
-        iQW7P7FB2HYSLw42MULY2hLLFr6GOkJQ4uTMJywQvZISB1fcYJnAKDELybpZSEbNQjJqFpJR
-        s5CMWsDIuopRvLS4ODe9otgoL7Vcrzgxt7g0L10vOT93EyMwqk//Oxy9g/H2rY96hxiZOBgP
-        MUpwMCuJ8C48szNJiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/LqInxQgLpiSWp2ampBalFMFkm
-        Dk6pBqYpoesiT9oeum2ZoPa4c9uhq9LhvcF1gllakT+6J2xZdTaC42CDtoVokkJD0+TjyUlf
-        7r1rNmeyPtnncTWFQaVBoI9ZMfnRFu3o+11rJhxWzjd8MXHF8y1aE1aGVwt3FTPMz67oWGrx
-        eWOF3c+jFYc8rltP7zxxUOhJX4bk5GuPLeJkFNsvapWcuWvmsj/1z5HfHlmWYe9mN6nUiJft
-        Orqa+cj9c18l253ELtXmRwrdOybhyR2iJX7q39VrrqdYQ1UyLhU3ZxTNWPj89dJpTBUP2Q5F
-        TZ+sWrxZIiwpZsoWSct1t/9Xme27rrSb0cah4GT5YVUjlbBT6vqlTcxVH3fZXdFIfxF3Qewz
-        sz3zMSWW4oxEQy3mouJEAE/EosJZAwAA
-X-CMS-MailID: 20220629203448uscas1p264a7f79a1ed7f9257eefcb3064c7d943
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20220629203448uscas1p264a7f79a1ed7f9257eefcb3064c7d943
-References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
-        <165603874340.551046.15491766127759244728.stgit@dwillia2-xfh>
-        <CGME20220629203448uscas1p264a7f79a1ed7f9257eefcb3064c7d943@uscas1p2.samsung.com>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -118,50 +60,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 07:45:43PM -0700, Dan Williams wrote:
-> This helper was only used to identify the object type for lockdep
-> purposes. Now that lockdep support is done with explicit lock classes,
-> this helper can be dropped.
->=20
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/port.c |    6 ------
->  drivers/cxl/cxl.h       |    1 -
->  2 files changed, 7 deletions(-)
->=20
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index b51eb41aa839..13c321afe076 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -271,12 +271,6 @@ bool is_root_decoder(struct device *dev)
->  }
->  EXPORT_SYMBOL_NS_GPL(is_root_decoder, CXL);
-> =20
-> -bool is_cxl_decoder(struct device *dev)
-> -{
-> -	return dev->type && dev->type->release =3D=3D cxl_decoder_release;
-> -}
-> -EXPORT_SYMBOL_NS_GPL(is_cxl_decoder, CXL);
-> -
->  struct cxl_decoder *to_cxl_decoder(struct device *dev)
->  {
->  	if (dev_WARN_ONCE(dev, dev->type->release !=3D cxl_decoder_release,
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 35ce17872fc1..6e08fe8cc0fe 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -337,7 +337,6 @@ struct cxl_dport *cxl_find_dport_by_dev(struct cxl_po=
-rt *port,
->  struct cxl_decoder *to_cxl_decoder(struct device *dev);
->  bool is_root_decoder(struct device *dev);
->  bool is_endpoint_decoder(struct device *dev);
-> -bool is_cxl_decoder(struct device *dev);
->  struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
->  					   unsigned int nr_targets);
->  struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
->=20
->
+Hi all,
 
-Looks good.
+We have a PCIe device with several functions, 0, 1, and 2. However only function
+1 has and needs a driver. We've added PCIe error handler support to this driver,
+but it doesn't work by itself to recover the device because the other two
+functions do not have drivers bound to them. This condition is covered by the
+following code block in drivers/pci/pcie/err.c:
 
-Reviewed by: Adam Manzanares <a.manzanares@samsung.com>=
+	if (!pci_dev_set_io_state(dev, state) || !pdrv ||
+	    !pdrv->err_handler || !pdrv->err_handler->error_detected) {
+		/*
+		 * If any device in the subtree does not have an error_detected
+		 * callback, PCI_ERS_RESULT_NO_AER_DRIVER prevents subsequent
+		 * error callbacks of "any" device in the subtree, and will
+		 * exit in the disconnected error state.
+		 */
+		if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+			vote = PCI_ERS_RESULT_NO_AER_DRIVER;
+			pci_info(dev, "can't recover (no error_detected callback)\n");
+		}
+
+The current solution is to bind dummy drivers to these functions with error
+handler support. However, these are custom drivers and we're looking for a
+solution that would work upstream without having to provide these drivers.
+Starting by looking at this code, is a particular reason to require a driver in
+order to recover a PCIe device? Would it be feasible to remove this requirement,
+at least allowing other existing function drivers to recover themselves and
+allowing recovery of the slot? Thanks.
+
+-- 
+2.32.0
