@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F47A560AF7
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 22:21:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2F10560B16
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 22:34:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbiF2UVV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 16:21:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49140 "EHLO
+        id S229841AbiF2Uew (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 16:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbiF2UVU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 16:21:20 -0400
+        with ESMTP id S229492AbiF2Uev (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 16:34:51 -0400
 Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E2682655C;
-        Wed, 29 Jun 2022 13:21:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895692C10C;
+        Wed, 29 Jun 2022 13:34:49 -0700 (PDT)
 Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20220629202118usoutp029a2fe36a6978904fe7c2aacdfcce3fe9~9MPeouByJ0653306533usoutp02P;
-        Wed, 29 Jun 2022 20:21:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20220629202118usoutp029a2fe36a6978904fe7c2aacdfcce3fe9~9MPeouByJ0653306533usoutp02P
+        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20220629203448usoutp02318847ae62d98267869b8f184374df8a~9MbRdlW-t1403414034usoutp02d;
+        Wed, 29 Jun 2022 20:34:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20220629203448usoutp02318847ae62d98267869b8f184374df8a~9MbRdlW-t1403414034usoutp02d
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1656534078;
-        bh=Xa6KQ9lRNGUH1NXlKyrnq3bwVa1PO/sSyuZksalxf5E=;
+        s=mail20170921; t=1656534888;
+        bh=lXomARyTOr4zgBrO/xc7GHtTIlPV1c04Hr27zgTgCDo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=FKMnDUkAgUK4eZdfRqBbIaJ7qYLjU2qXo6MAevyW59Ll/s/mmTclh1MhGMhsQas4+
-         6MBc6OQcH23Bv6xaaMVHauIrG+9dpUUQ80LCTnhvr6lFs+5CwrpGud66Ki5/XtGNEq
-         pU+8hP0Ne+tfmqS1g1Q8ByOdZ+ZfRVCJNtHyou8Y=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220629202117uscas1p22ba9ed315d799355fffa25758c786576~9MPeci01D2612526125uscas1p2c;
-        Wed, 29 Jun 2022 20:21:17 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id 31.BF.09749.D34BCB26; Wed,
-        29 Jun 2022 16:21:17 -0400 (EDT)
+        b=DoXDYnTU9wJUhHg0M+dJvd6R5eELNa1IpQhmZRsSdXjD5XvtmRCwfJRBDo75/EmRD
+         /MLQvbFVRfnkXhoW6gVJFii6Xk6V4Ci81G1kWeMKjb++6/XGm+wyQM61wFd+5GrCWa
+         gcOReMFB2voO/ZsLw15IUWNbjR170WvjY4hqRBzk=
+Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
+        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220629203448uscas1p105d46b03604938b494e3acea4abe6ad6~9MbRM8mXt2673826738uscas1p1H;
+        Wed, 29 Jun 2022 20:34:48 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges1new.samsung.com (USCPEMTA) with SMTP id 35.93.09760.867BCB26; Wed,
+        29 Jun 2022 16:34:48 -0400 (EDT)
 Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
         [203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220629202117uscas1p2892fb68ae60c4754e2f7d26882a92ae5~9MPeLPf6o0195001950uscas1p2E;
-        Wed, 29 Jun 2022 20:21:17 +0000 (GMT)
-X-AuditID: cbfec370-a83ff70000002615-fa-62bcb43d0da7
-Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 61.7A.57470.D34BCB26; Wed,
-        29 Jun 2022 16:21:17 -0400 (EDT)
+        20220629203448uscas1p264a7f79a1ed7f9257eefcb3064c7d943~9MbQ1nqLU1740317403uscas1p2U;
+        Wed, 29 Jun 2022 20:34:48 +0000 (GMT)
+X-AuditID: cbfec36d-51bff70000002620-64-62bcb76802ee
+Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id E2.9A.57470.767BCB26; Wed,
+        29 Jun 2022 16:34:47 -0400 (EDT)
 Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
-        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
+        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 29 Jun 2022 13:21:16 -0700
+        15.1.2375.24; Wed, 29 Jun 2022 13:34:47 -0700
 Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
         SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Wed,
-        29 Jun 2022 13:21:16 -0700
+        29 Jun 2022 13:34:47 -0700
 From:   Adam Manzanares <a.manzanares@samsung.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
@@ -55,61 +55,59 @@ CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
         "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH 05/46] cxl/core: Drop ->platform_res attribute for root
- decoders
-Thread-Topic: [PATCH 05/46] cxl/core: Drop ->platform_res attribute for root
-        decoders
-Thread-Index: AQHYi/XJZNdlvVrhU0SI5d+SQ3FK1Q==
-Date:   Wed, 29 Jun 2022 20:21:16 +0000
-Message-ID: <20220629202116.GC1140419@bgt-140510-bm01>
-In-Reply-To: <165603873619.551046.791596854070136223.stgit@dwillia2-xfh>
+Subject: Re: [PATCH 06/46] cxl/core: Drop is_cxl_decoder()
+Thread-Topic: [PATCH 06/46] cxl/core: Drop is_cxl_decoder()
+Thread-Index: AQHYi/esL78qDLSsR02eEE+HvYuomA==
+Date:   Wed, 29 Jun 2022 20:34:47 +0000
+Message-ID: <20220629203440.GA1140902@bgt-140510-bm01>
+In-Reply-To: <165603874340.551046.15491766127759244728.stgit@dwillia2-xfh>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <30230E33D023C744BF3C6C915C6D5B46@ssi.samsung.com>
+Content-ID: <5997976DCBC30F47BE34FFBE44886E3B@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsWy7djX87q2W/YkGay8ZGFx9/EFNovpUy8w
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7djXc7oZ2/ckGSx4LGpx9/EFNovpUy8w
         WpyesIjJ4vysUywWZ+cdZ7NY+eMPq8XlE5cYHdg9Nq/Q8li85yWTx4vNMxk9Pm+SC2CJ4rJJ
-        Sc3JLEst0rdL4Mp4MuMJS8ETo4oJJ7MbGCdodjFyckgImEjsPtbN0sXIxSEksJJR4snzC6wQ
-        TiuTxKN1sxlhquYuO8EMkVjLKHHk13l2COcTo0RPy3qo/mWMEl9/T2MFaWETMJD4fXwjM4gt
-        IqAtMXHOQbB2ZoFTTBLff/1kAUkIC4RJbP3SxQhRFC5x/ccfFghbT2L9q2dgg1gEVCX+vGgG
-        WsfBwStgJnGhRxgkzCngIbF6322wckYBMYnvp9YwgdjMAuISt57MZ4I4W1Bi0ew9zBC2mMS/
-        XQ/ZIGxFifvfX7JD1OtILNj9iQ3CtpPYunQRC4StLbFs4WuwXl6gOSdnPmGB6JWUOLjiBtjD
-        EgJXOCRWv90IlXCRuHnnFNQyaYm/d5cxQRS1M0p8mLCPFcKZwChx5+1PqDOsJf51XmOfwKgy
-        C8nls5BcNQvJVbOQXDULyVULGFlXMYqXFhfnpqcWG+ellusVJ+YWl+al6yXn525iBCam0/8O
-        F+xgvHXro94hRiYOxkOMEhzMSiK8C8/sTBLiTUmsrEotyo8vKs1JLT7EKM3BoiTOuyxzQ6KQ
-        QHpiSWp2ampBahFMlomDU6qBqShz39vX7Bfu2qrMXilQuV8lxdyuRELFMPdJUJz6vM/rJrDm
-        1UXyhmrmFN7ek7BS0edr5dMrJ2OMt2/P2KO+vzIq3Vh5RtClgnv1zaYhlfaTL9btda2Jvr5O
-        WMu5c0LsKX2FtNmLa28w+K4rXXbY4Hfuw3SblebXRWp5mha/kjg9KSR7U0jPqkANpa6VtkeW
-        Jlya+vfwtrqvF0++THhb8uVJvbXBnkL2JzYbjF8fyvp0xK1+8gz/3Ktp1na3JG9svM1mUD29
-        WWjDlzs99p+lsh7M+3l+HsetOs1tZTVigd0nVjTP8HZ7NqlayakoRu6WxI7JPH9r/383vbP+
-        xCffr/9O7uetXPubxTsplyW2WImlOCPRUIu5qDgRAA/quVW7AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWS2cA0Sdd2y54kg8arShZ3H19gs5g+9QKj
-        xekJi5gszs86xWJxdt5xNouVP/6wWlw+cYnRgd1j8wotj8V7XjJ5vNg8k9Hj8ya5AJYoLpuU
-        1JzMstQifbsErownM56wFDwxqphwMruBcYJmFyMnh4SAicTcZSeYuxi5OIQEVjNKTDw4A8r5
-        xCix7N5hJghnGaPElm2vmEBa2AQMJH4f38gMYosIaEtMnHMQrINZ4BSTxPdfP1lAEsICYRJb
-        v3QxQhSFS3ydNo8NwtaTWP/qGSuIzSKgKvHnRTN7FyMHB6+AmcSFHmGIZW2MEtcfd4LVcwp4
-        SKzedxtsJqOAmMT3U2vAjmAWEJe49WQ+E8QPAhJL9pxnhrBFJV4+/scKYStK3P/+kh2iXkdi
-        we5PbBC2ncTWpYtYIGxtiWULX4P18goISpyc+YQFoldS4uCKGywTGCVmIVk3C8moWUhGzUIy
-        ahaSUQsYWVcxipcWF+emVxQb5aWW6xUn5haX5qXrJefnbmIERvTpf4ejdzDevvVR7xAjEwfj
-        IUYJDmYlEd6FZ3YmCfGmJFZWpRblxxeV5qQWH2KU5mBREud9GTUxXkggPbEkNTs1tSC1CCbL
-        xMEp1cBkFsr5t73oVKEZwxfWV48N2r2zIsNbTPP8Pppffm10THme5ISbk0t6baYs4TSbsDxr
-        avjOlBK7PUleEVyTpkXZiHY7ixybX508d+KPIEexvnebI1ROX2p/3Hdiyldx05VPAgScy4SX
-        G71vn2R1dZbcghV2/jP/vqrYY/SoaNUzhj9hwpIG8of3KO2Z0SXL9/Ogim988r19d4w1thjq
-        9If3qr/qN8x3kzdLtnf5LPvO94RJ4X9e95fqx/OmG346xLS58OBNxUnf/FakeUifiK3/ZmVm
-        vzWn+J3guo2v++zt9F7sC2g7LMT8NvvQxa2FJ776vSyImhv/meNRSeyTlqzzDBZtshtmsDgd
-        dt49+bYSS3FGoqEWc1FxIgB8lOjjVwMAAA==
-X-CMS-MailID: 20220629202117uscas1p2892fb68ae60c4754e2f7d26882a92ae5
+        Sc3JLEst0rdL4Mp492s5a8FN3ooJ504zNzBu5+5i5OSQEDCR2Ln5PGMXIxeHkMBKRok59yey
+        QTitTBKPH3Wxw1T9+7ySFSKxllHi4ptJUFWfGCVO338I5SxjlNg3fR8LSAubgIHE7+MbmUFs
+        EQFtiYlzDjKDFDELnGKS+P7rJ1iRsICVxNPlZ6GKrCU+XPvDCGHrSTx9fp0NxGYRUJV4OOEW
+        WA2vgJnEv4dfwOKcAl4SH56sBbuPUUBM4vupNUwgNrOAuMStJ/OZIO4WlFg0ew8zhC0m8W/X
+        QzYIW1Hi/veX7BD1OhILdn9ig7DtJF4cbGKEsLUlli18DbVXUOLkzCcsEL2SEgdX3GABeUZC
+        4AKHxIm1bVDLXCT+b7kODTBpib93lzFBFLUzSnyYsI8VwpnAKHHn7U+oM6wl/nVeY5/AqDIL
+        yeWzkFw1C8lVs5BcNQvJVQsYWVcxipcWF+empxYb5qWW6xUn5haX5qXrJefnbmIEJqfT/w7n
+        7mDcceuj3iFGJg7GQ4wSHMxKIrwLz+xMEuJNSaysSi3Kjy8qzUktPsQozcGiJM67LHNDopBA
+        emJJanZqakFqEUyWiYNTqoGJ3+k2j22Zzor43Wwd9379t5pzZ5uc907WzT2VlacWijaeF+fu
+        vmaTFvOn+qWZUeqb9+0vVzZc8rv/8Mye1qe33ovPWfDs7v6m9ZmSCbISbj6ljBzbAu+tWPo7
+        fpp7SeOjaVM0zUJUfmo/VIpzkCp8dpWx/Z/aRL31TgXOfNlbVxwU42zc80pkSpjxuSe/FpY+
+        jJkwI/vXi1z/6V87p/UUZzxwa71r+zn6gXjD1nWVvVmCHUvLhWJ/cgSEv7i29rXPlf1SkfeP
+        VrX/yHp6eUelglEOi9+dErUVzh4mtUV3xHO8XRb+EpB937YlySA1Sognv85r1oP10zuyFpZG
+        TOSW1nx3xfZrwcbovi1lnx4osRRnJBpqMRcVJwIArRGlvr0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsWS2cA0STd9+54kg8WTDCzuPr7AZjF96gVG
+        i9MTFjFZnJ91isXi7LzjbBYrf/xhtbh84hKjA7vH5hVaHov3vGTyeLF5JqPH501yASxRXDYp
+        qTmZZalF+nYJXBnvfi1nLbjJWzHh3GnmBsbt3F2MnBwSAiYS/z6vZO1i5OIQEljNKHH8yHEW
+        COcTo8ShhW1MEM4yRolrF3eygbSwCRhI/D6+kRnEFhHQlpg45yAzSBGzwCkmie+/frKAJIQF
+        rCSeLj8LVWQt8eHaH0YIW0/i6fPrYINYBFQlHk64BVbDK2Am8e/hFzaIbR2MEgeP/wQr4hTw
+        kvjwZC07iM0oICbx/dQaJhCbWUBc4taT+UwQTwhILNlznhnCFpV4+fgfK4StKHH/+0t2iHod
+        iQW7P7FB2HYSLw42MULY2hLLFr6GOkJQ4uTMJywQvZISB1fcYJnAKDELybpZSEbNQjJqFpJR
+        s5CMWsDIuopRvLS4ODe9otgoL7Vcrzgxt7g0L10vOT93EyMwqk//Oxy9g/H2rY96hxiZOBgP
+        MUpwMCuJ8C48szNJiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/LqInxQgLpiSWp2ampBalFMFkm
+        Dk6pBqYpoesiT9oeum2ZoPa4c9uhq9LhvcF1gllakT+6J2xZdTaC42CDtoVokkJD0+TjyUlf
+        7r1rNmeyPtnncTWFQaVBoI9ZMfnRFu3o+11rJhxWzjd8MXHF8y1aE1aGVwt3FTPMz67oWGrx
+        eWOF3c+jFYc8rltP7zxxUOhJX4bk5GuPLeJkFNsvapWcuWvmsj/1z5HfHlmWYe9mN6nUiJft
+        Orqa+cj9c18l253ELtXmRwrdOybhyR2iJX7q39VrrqdYQ1UyLhU3ZxTNWPj89dJpTBUP2Q5F
+        TZ+sWrxZIiwpZsoWSct1t/9Xme27rrSb0cah4GT5YVUjlbBT6vqlTcxVH3fZXdFIfxF3Qewz
+        sz3zMSWW4oxEQy3mouJEAE/EosJZAwAA
+X-CMS-MailID: 20220629203448uscas1p264a7f79a1ed7f9257eefcb3064c7d943
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20220629202117uscas1p2892fb68ae60c4754e2f7d26882a92ae5
+X-CMS-RootMailID: 20220629203448uscas1p264a7f79a1ed7f9257eefcb3064c7d943
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
-        <165603873619.551046.791596854070136223.stgit@dwillia2-xfh>
-        <CGME20220629202117uscas1p2892fb68ae60c4754e2f7d26882a92ae5@uscas1p2.samsung.com>
+        <165603874340.551046.15491766127759244728.stgit@dwillia2-xfh>
+        <CGME20220629203448uscas1p264a7f79a1ed7f9257eefcb3064c7d943@uscas1p2.samsung.com>
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
@@ -120,193 +118,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 07:45:36PM -0700, Dan Williams wrote:
-> Root decoders are responsible for hosting the available host address
-> space for endpoints and regions to claim. The tracking of that available
-> capacity can be done in iomem_resource directly. As a result, root
-> decoders no longer need to host their own resource tree. The
-> current ->platform_res attribute was added prematurely.
->=20
-> Otherwise, ->hpa_range fills the role of conveying the current decode
-> range of the decoder.
+On Thu, Jun 23, 2022 at 07:45:43PM -0700, Dan Williams wrote:
+> This helper was only used to identify the object type for lockdep
+> purposes. Now that lockdep support is done with explicit lock classes,
+> this helper can be dropped.
 >=20
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/cxl/acpi.c      |   17 ++++++++++-------
->  drivers/cxl/core/pci.c  |    8 +-------
->  drivers/cxl/core/port.c |   30 +++++++-----------------------
->  drivers/cxl/cxl.h       |    6 +-----
->  4 files changed, 19 insertions(+), 42 deletions(-)
+>  drivers/cxl/core/port.c |    6 ------
+>  drivers/cxl/cxl.h       |    1 -
+>  2 files changed, 7 deletions(-)
 >=20
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 40286f5df812..951695cdb455 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -108,8 +108,10 @@ static int cxl_parse_cfmws(union acpi_subtable_heade=
-rs *header, void *arg,
-> =20
->  	cxld->flags =3D cfmws_to_decoder_flags(cfmws->restrictions);
->  	cxld->target_type =3D CXL_DECODER_EXPANDER;
-> -	cxld->platform_res =3D (struct resource)DEFINE_RES_MEM(cfmws->base_hpa,
-> -							     cfmws->window_size);
-> +	cxld->hpa_range =3D (struct range) {
-> +		.start =3D cfmws->base_hpa,
-> +		.end =3D cfmws->base_hpa + cfmws->window_size - 1,
-> +	};
->  	cxld->interleave_ways =3D CFMWS_INTERLEAVE_WAYS(cfmws);
->  	cxld->interleave_granularity =3D CFMWS_INTERLEAVE_GRANULARITY(cfmws);
-> =20
-> @@ -119,13 +121,14 @@ static int cxl_parse_cfmws(union acpi_subtable_head=
-ers *header, void *arg,
->  	else
->  		rc =3D cxl_decoder_autoremove(dev, cxld);
->  	if (rc) {
-> -		dev_err(dev, "Failed to add decoder for %pr\n",
-> -			&cxld->platform_res);
-> +		dev_err(dev, "Failed to add decoder for [%#llx - %#llx]\n",
-> +			cxld->hpa_range.start, cxld->hpa_range.end);
-
-Minor nit, should we add range in our debug message?
-
-+		dev_err(dev, "Failed to add decoder for range [%#llx - %#llx]\n",
-
->  		return 0;
->  	}
-> -	dev_dbg(dev, "add: %s node: %d range %pr\n", dev_name(&cxld->dev),
-> -		phys_to_target_node(cxld->platform_res.start),
-> -		&cxld->platform_res);
-> +	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
-> +		dev_name(&cxld->dev),
-> +		phys_to_target_node(cxld->hpa_range.start),
-> +		cxld->hpa_range.start, cxld->hpa_range.end);
-> =20
->  	return 0;
->  }
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index c4c99ff7b55e..7672789c3225 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -225,7 +225,6 @@ static int dvsec_range_allowed(struct device *dev, vo=
-id *arg)
->  {
->  	struct range *dev_range =3D arg;
->  	struct cxl_decoder *cxld;
-> -	struct range root_range;
-> =20
->  	if (!is_root_decoder(dev))
->  		return 0;
-> @@ -237,12 +236,7 @@ static int dvsec_range_allowed(struct device *dev, v=
-oid *arg)
->  	if (!(cxld->flags & CXL_DECODER_F_RAM))
->  		return 0;
-> =20
-> -	root_range =3D (struct range) {
-> -		.start =3D cxld->platform_res.start,
-> -		.end =3D cxld->platform_res.end,
-> -	};
-> -
-> -	return range_contains(&root_range, dev_range);
-> +	return range_contains(&cxld->hpa_range, dev_range);
->  }
-> =20
->  static void disable_hdm(void *_cxlhdm)
 > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 98bcbbd59a75..b51eb41aa839 100644
+> index b51eb41aa839..13c321afe076 100644
 > --- a/drivers/cxl/core/port.c
 > +++ b/drivers/cxl/core/port.c
-> @@ -73,29 +73,17 @@ static ssize_t start_show(struct device *dev, struct =
-device_attribute *attr,
->  			  char *buf)
+> @@ -271,12 +271,6 @@ bool is_root_decoder(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(is_root_decoder, CXL);
+> =20
+> -bool is_cxl_decoder(struct device *dev)
+> -{
+> -	return dev->type && dev->type->release =3D=3D cxl_decoder_release;
+> -}
+> -EXPORT_SYMBOL_NS_GPL(is_cxl_decoder, CXL);
+> -
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev)
 >  {
->  	struct cxl_decoder *cxld =3D to_cxl_decoder(dev);
-> -	u64 start;
-> =20
-> -	if (is_root_decoder(dev))
-> -		start =3D cxld->platform_res.start;
-> -	else
-> -		start =3D cxld->hpa_range.start;
-> -
-> -	return sysfs_emit(buf, "%#llx\n", start);
-> +	return sysfs_emit(buf, "%#llx\n", cxld->hpa_range.start);
->  }
->  static DEVICE_ATTR_ADMIN_RO(start);
-> =20
->  static ssize_t size_show(struct device *dev, struct device_attribute *at=
-tr,
-> -			char *buf)
-> +			 char *buf)
->  {
->  	struct cxl_decoder *cxld =3D to_cxl_decoder(dev);
-> -	u64 size;
-> -
-> -	if (is_root_decoder(dev))
-> -		size =3D resource_size(&cxld->platform_res);
-> -	else
-> -		size =3D range_len(&cxld->hpa_range);
-> =20
-> -	return sysfs_emit(buf, "%#llx\n", size);
-> +	return sysfs_emit(buf, "%#llx\n", range_len(&cxld->hpa_range));
->  }
->  static DEVICE_ATTR_RO(size);
-> =20
-> @@ -1233,7 +1221,10 @@ static struct cxl_decoder *cxl_decoder_alloc(struc=
-t cxl_port *port,
->  	cxld->interleave_ways =3D 1;
->  	cxld->interleave_granularity =3D PAGE_SIZE;
->  	cxld->target_type =3D CXL_DECODER_EXPANDER;
-> -	cxld->platform_res =3D (struct resource)DEFINE_RES_MEM(0, 0);
-> +	cxld->hpa_range =3D (struct range) {
-> +		.start =3D 0,
-> +		.end =3D -1,
-> +	};
-> =20
->  	return cxld;
->  err:
-> @@ -1347,13 +1338,6 @@ int cxl_decoder_add_locked(struct cxl_decoder *cxl=
-d, int *target_map)
->  	if (rc)
->  		return rc;
-> =20
-> -	/*
-> -	 * Platform decoder resources should show up with a reasonable name. Al=
-l
-> -	 * other resources are just sub ranges within the main decoder resource=
-.
-> -	 */
-> -	if (is_root_decoder(dev))
-> -		cxld->platform_res.name =3D dev_name(dev);
-> -
->  	return device_add(dev);
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
+>  	if (dev_WARN_ONCE(dev, dev->type->release !=3D cxl_decoder_release,
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 8256728cea8d..35ce17872fc1 100644
+> index 35ce17872fc1..6e08fe8cc0fe 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -197,7 +197,6 @@ enum cxl_decoder_type {
->   * struct cxl_decoder - CXL address range decode configuration
->   * @dev: this decoder's device
->   * @id: kernel device name id
-> - * @platform_res: address space resources considered by root decoder
->   * @hpa_range: Host physical address range mapped by this decoder
->   * @interleave_ways: number of cxl_dports in this decode
->   * @interleave_granularity: data stride per dport
-> @@ -210,10 +209,7 @@ enum cxl_decoder_type {
->  struct cxl_decoder {
->  	struct device dev;
->  	int id;
-> -	union {
-> -		struct resource platform_res;
-> -		struct range hpa_range;
-> -	};
-> +	struct range hpa_range;
->  	int interleave_ways;
->  	int interleave_granularity;
->  	enum cxl_decoder_type target_type;
+> @@ -337,7 +337,6 @@ struct cxl_dport *cxl_find_dport_by_dev(struct cxl_po=
+rt *port,
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>  bool is_root_decoder(struct device *dev);
+>  bool is_endpoint_decoder(struct device *dev);
+> -bool is_cxl_decoder(struct device *dev);
+>  struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+>  					   unsigned int nr_targets);
+>  struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
 >=20
->=20
+>
 
-
-Otherwise, looks good.
+Looks good.
 
 Reviewed by: Adam Manzanares <a.manzanares@samsung.com>=
