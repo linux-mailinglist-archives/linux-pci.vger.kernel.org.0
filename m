@@ -2,350 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8485455F60C
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 08:09:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D2155F609
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 08:09:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231793AbiF2GJH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 02:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45592 "EHLO
+        id S231341AbiF2GEt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 02:04:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231775AbiF2GIe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 02:08:34 -0400
-X-Greylist: delayed 480 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Jun 2022 23:08:27 PDT
-Received: from ste-pvt-msa1.bahnhof.se (ste-pvt-msa1.bahnhof.se [213.80.101.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CEB1D0C7
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jun 2022 23:08:27 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 834993F620;
-        Wed, 29 Jun 2022 08:00:25 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-X-Spam-Score: -2.11
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
-Authentication-Results: ste-pvt-msa1.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=shipmail.org
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 48l2bCkwSLvs; Wed, 29 Jun 2022 08:00:23 +0200 (CEST)
-Received: by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 51F693F5FC;
-        Wed, 29 Jun 2022 08:00:23 +0200 (CEST)
-Received: from [192.168.0.209] (h-155-4-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id B14423625BA;
-        Wed, 29 Jun 2022 08:00:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1656482422; bh=kedDAyhqxce/LSmugrguo+Fkh8dnHfaxJ9IvL0i7KhU=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=XiLsLEUj7X41Aj+VNUt508HLZA2AYA3sOxu7Q1X7NFYIbwDnY1k7YLkRX7W5QXx2T
-         yLkvVX+HViaKP1Ltr7aiXuw4Cxvpih6tSYL79c6tmogvySHwbm4UL4pHGMoNIuovAa
-         qppJ3CONyQq4wj19gj7aRUluAiPjUDR77c5J0MYc=
-Message-ID: <c1a2aef7-9c48-ef87-6275-1eb5ea33b45d@shipmail.org>
-Date:   Wed, 29 Jun 2022 08:00:21 +0200
+        with ESMTP id S230062AbiF2GEs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 02:04:48 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2078.outbound.protection.outlook.com [40.107.96.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D3518B2E;
+        Tue, 28 Jun 2022 23:04:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QMD54vG0vYPRm67xJasW8sbuCe6EnDIyx//wKwDkv61UXvObDHY7VVcdESkv/ot4W5N685rJKKfVc+qTcxH5d+655lmmb8yYQHyE+W8EE/pGUNThhAZabkqQDpg5GpG/zVEBWMsJtS2VPts2zZVMQB0dYeVSNbR+lU2ooJJH4UBxcrudUyUmH8GySSgkFZVw1PZhHA/PgeYOYIE+Np2J3BG9o6O6+1Ijv7N52mxM6YRvtZHhxSyWHOgOFJ6KjVNATcOYeYPWQZJuhGTvyWadBQv1IaIJGqGHGIEnTD37HzKNA/ZaB8plQYdykII40ZLOoYSexsxzAOy/ubzwJQEx7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QxdTEW7J6BEZidifFvWZJQykUkDJ9z6efFjJUrhLmxI=;
+ b=YjdNmJwjDBH4pbFu/OWTWMaZPFIWbEL9w3ScTcgz1D4UqKaGgENI+ZMAdJSgMMb26PytgwbYhxXMjshVynyMMWa0kVq9H4dx9vTcQ/mvmg7YbYq7D3TY+jtzTc/up6ww1YhjEfmbAFJ5Ff9dv/bQts8/AkiBjEcXRT2Qc6YeV1kyStXaxAc0uYMOOxbHGqKySwDM1xWlggUlPJ5u3qzUiQal413WY9H93eX1Oc3IRmVvfeRTplqA7BMqPPJLHCaIg2FJPgHPurZ+81aUdk7A6eai5x6XAUNNCChZAOY0oHqsPBh1CD2qlFyBHqhWROVewKDWGeBYY/BMJwq7x+E4zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.238) smtp.rcpttodomain=ti.com smtp.mailfrom=nvidia.com; dmarc=pass
+ (p=reject sp=reject pct=100) action=none header.from=nvidia.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QxdTEW7J6BEZidifFvWZJQykUkDJ9z6efFjJUrhLmxI=;
+ b=Adq0khzR2TqZLOGQRqf/yBa74Vvkp19qsXUrHs6pGVjglH/jqguXo8yDq44xPYc4s/+mva1IESjslfM7S9gjgQcZ/dCEhndcP2JJl/3/oFnPyUiU7GfZeJ78/WhYsTq6Iiqy+KfZSBNvhTUMXqlyAP/ligw4QokL57sIXFOXXdw73FXPTQiooAkVuv5XSA8r0iDP6MJX51wKg3NSVgTlIHBwGYnKs/INnwdb1g5JBOiFoj34KJQctqSa5jcsh/bu/CzXvfhXcgK3UiYmdx0z6gD4n+xzM1CaufP4fvdxXcs3b29eP6Vuwwph3OrrjGlif95s2nR/2mmXAJPTE3ILzA==
+Received: from DM6PR17CA0034.namprd17.prod.outlook.com (2603:10b6:5:1b3::47)
+ by MWHPR12MB1870.namprd12.prod.outlook.com (2603:10b6:300:10a::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.17; Wed, 29 Jun
+ 2022 06:04:45 +0000
+Received: from DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:1b3:cafe::21) by DM6PR17CA0034.outlook.office365.com
+ (2603:10b6:5:1b3::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.21 via Frontend
+ Transport; Wed, 29 Jun 2022 06:04:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.238)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.238 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.238; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (12.22.5.238) by
+ DM6NAM11FT041.mail.protection.outlook.com (10.13.172.98) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.5373.15 via Frontend Transport; Wed, 29 Jun 2022 06:04:44 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL105.nvidia.com
+ (10.27.9.14) with Microsoft SMTP Server (TLS) id 15.0.1497.32; Wed, 29 Jun
+ 2022 06:04:43 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.26; Tue, 28 Jun
+ 2022 23:04:43 -0700
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.986.26 via Frontend
+ Transport; Tue, 28 Jun 2022 23:04:38 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>
+CC:     <kishon@ti.com>, <vkoul@kernel.org>, <kw@linux.com>,
+        <krzk@kernel.org>, <p.zabel@pengutronix.de>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V3 00/11] PCI: tegra: Add Tegra234 PCIe support
+Date:   Wed, 29 Jun 2022 11:34:24 +0530
+Message-ID: <20220629060435.25297-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [Intel-gfx] [PATCH 1/2] drm/i915: Add support for LMEM PCIe
- resizable bar
-Content-Language: en-US
-To:     "Dandamudi, Priyanka" <priyanka.dandamudi@intel.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "De Marchi, Lucas" <lucas.demarchi@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Sergei Miroshnichenko <s.miroshnichenko@yadro.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Auld, Matthew" <matthew.auld@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20220617184441.7kbs4al7gmpxjuuy@ldmartin-desk2>
- <20220617203252.GA1203491@bhelgaas>
- <20220617212727.h5r2o3schvl73bbk@ldmartin-desk2>
- <21bce72a-3537-0ff2-2553-4d62cc86ffbd@amd.com>
- <DM6PR11MB4492AEEEDB2CC5E6B861B93F8DB49@DM6PR11MB4492.namprd11.prod.outlook.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>
-In-Reply-To: <DM6PR11MB4492AEEEDB2CC5E6B861B93F8DB49@DM6PR11MB4492.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3d56b6e3-09f8-4442-0fe6-08da59954393
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1870:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DMM8LZBE+xgJxp6YgJmmB0CywI/KrhEFDtwM/1zj48I0hHxAjRrWaJBpyjdPdO5/VYm8yaP5d3Su9s5uhm/qjnohxRFzJ4VrsaAgUGhQ7+w0ZtnDVRioiHHP1QxqA5WnPaWdmUaU2PUMBKxMNDClUWY7bQr57pS9eryMDwmMpIbkq5E33TV+bQLtSgc38tPGD7OUw456L345WbW5lCh0Dh7sxxcuEHPmvZziDIksr3wae7mIOlCUXI7zuWMadvXrUavJsFvnB3jwQtyIXkX5NWew8B7nuysRBWEwoftuqrr8WLssPWvC/ZyyOxJ9BNimZrENKGgZf61kAOYIpxj91HHMk5HBfZpktHiFdqsuZ3Q9M+eamOsSj7M0myaC4suPC9gJBvMwlBb/WfsU9pp/nrIpOOffT55bSwgY6yW7J8KQrAs1fqIb3Tm9OazWct/uXDkkQ8qxig6dqtDNOwZ1LHTGwB4t0ZlGGrCXoh+Da5XppmOsHqGZexn2PyL1S0DK+xlB0/g5YhxxAiRnNOSDsZRjs5T+IMrPJny6qO3vcFqfnfpco1uUnNueObF/ZFhbAu0Ux6Rg4eZziqSg3TL2ffAZqRQlpKZ63LEeyPUkOTFYgyHrShCfkLWuOapWZ0jXtZl0fj+wcLyjba24qJbuEL37lAn9ldjyC3/s6zgfvTBf+Gns/7deO2CZDk4mALuXdq5+u+EenRqHlIihRI1hse5MkHq+ntlJuZJAsdAL83RjyCBdg5iCraU9E100Ud2z6IhF/YfnrPHVebLIyzNY7xoXzNOfi2eehZMqMrLdzO70j5wu9Frlv2qoXG97XKBMdKxaEAAca+EwGGkDRKTxFw==
+X-Forefront-Antispam-Report: CIP:12.22.5.238;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(136003)(376002)(39860400002)(40470700004)(36840700001)(46966006)(2906002)(8676002)(41300700001)(478600001)(82310400005)(40480700001)(54906003)(86362001)(110136005)(4326008)(6636002)(6666004)(26005)(70586007)(316002)(70206006)(7696005)(40460700003)(356005)(1076003)(36756003)(8936002)(47076005)(186003)(2616005)(83380400001)(7416002)(426003)(36860700001)(81166007)(5660300002)(336012)(82740400003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2022 06:04:44.3963
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d56b6e3-09f8-4442-0fe6-08da59954393
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.238];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1870
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Tegra234 has a total of 11 PCIe controllers based on Synopsys DesignWare core.
+There are three Universal PHY (UPHY) blocks (viz. HSIO, NVHS and GBE) with
+each block supporting 8 lanes respectively. Controllers:0~4 use UPHY lanes
+from HSIO block, Controllers:5,6 use UPHY lanes from NVHS block and
+Controllers:7~10 use UPHY lanes from GBE block. Lane mapping in each block
+is controlled in XBAR module by BPMP-FW. Since PCIe core has PIPE interface,
+a glue module called PIPE-to-UPHY (P2U) is used to connect each UPHY lane
+(applicable to all three UPHY bricks i.e. HSIO/NVHS/GBE) to PCIe controller.
+All the controllers can operate in the RootPort mode where as only controllers
+C5, C6, C7 and C10 can operate in the EndPoint mode.
 
-On 6/24/22 06:02, Dandamudi, Priyanka wrote:
->
->> -----Original Message-----
->> From: Christian König <christian.koenig@amd.com>
->> Sent: 18 June 2022 08:45 PM
->> To: De Marchi, Lucas <lucas.demarchi@intel.com>; Bjorn Helgaas
->> <helgaas@kernel.org>
->> Cc: linux-pci@vger.kernel.org; intel-gfx@lists.freedesktop.org; Sergei
->> Miroshnichenko <s.miroshnichenko@yadro.com>; linux-
->> kernel@vger.kernel.org; Dandamudi, Priyanka
->> <priyanka.dandamudi@intel.com>; Auld, Matthew
->> <matthew.auld@intel.com>; Bjorn Helgaas <bhelgaas@google.com>
->> Subject: Re: [Intel-gfx] [PATCH 1/2] drm/i915: Add support for LMEM PCIe
->> resizable bar
->>
->> Am 17.06.22 um 23:27 schrieb Lucas De Marchi:
->>> On Fri, Jun 17, 2022 at 03:32:52PM -0500, Bjorn Helgaas wrote:
->>>> [+cc Christian, author of pci_resize_resource(), Sergei, author of
->>>> rebalancing patches]
->>>>
->>>> Hi Lucas,
->>>>
->>>> On Fri, Jun 17, 2022 at 11:44:41AM -0700, Lucas De Marchi wrote:
->>>>> Cc'ing intel-pci, lkml, Bjorn
->>>>>
->>>>> On Fri, Jun 17, 2022 at 11:32:37AM +0300, Jani Nikula wrote:
->>>>>> On Thu, 16 Jun 2022, priyanka.dandamudi@intel.com wrote:
->>>>>>> From: Akeem G Abodunrin <akeem.g.abodunrin@intel.com>
->>>>>>>
->>>>>>> Add support for the local memory PICe resizable bar, so that
->>>>>>> local memory can be resized to the maximum size supported by the
->>>>> device,
->>>>>>> and mapped correctly to the PCIe memory bar. It is usual that
->>>>>>> GPU devices expose only 256MB BARs primarily to be compatible
->>>>>>> with
->>>>> 32-bit
->>>>>>> systems. So, those devices cannot claim larger memory BAR
->>>>> windows size due
->>>>>>> to the system BIOS limitation. With this change, it would be
->>>>> possible to
->>>>>>> reprogram the windows of the bridge directly above the
->>>>> requesting device
->>>>>>> on the same BAR type.
->>>>> There is a big caveat here that this may be too late as other
->>>>> drivers may have already mapped their BARs - so probably too late in
->>>>> the pci scan for it to be effective. In fact, after using this for a
->>>>> while, it seems to fail too often, particularly on CFL systems.
->>>> Help me understand the "too late" part.  Do you mean that there is
->>>> enough available space for the max BAR size, but it's fragmented and
->>>> therefore not usable?  And that if we could do something earlier,
->>>> before drivers have claimed their devices, we might be able to
->>>> compact the BARs of other devices to make a larger contiguous available
->> space?
->>> yes. I will dig some logs I had in the past to confirm.
->>>
->>>
->>>> That is theoretically possible, but I think the current
->>>> pci_resize_resource() only supports resizing of the specified BAR and
->>>> any upstream bridge windows.  I don't think it supports moving BARs
->>>> of other devices.
->>>>
->>>> Sergei did some nice work that might help with this situation because
->>>> it can move BARs around more generally.  It hasn't quite achieved
->>>> critical mass yet, but maybe this would help get there:
->>>>
->>>>
->>>>
->> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flor
->>>> e.kernel.org%2Flinux-pci%2F20201218174011.340514-1-
->> s.miroshnichenko%4
->> 0yadro.com%2F&amp;data=05%7C01%7Cchristian.koenig%40amd.com%7C8
->> 096027
->> f68484d0656b108da50a82e7d%7C3dd8961fe4884e608e11a82d994e183d%7C
->> 0%7C0%
->> 7C637910980509199388%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjA
->> wMDAiLCJQ
->> IjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;
->> sdata=
->> %2FfntE2FTQ8wmLnz4wnzk94R0GMLEwVs7Mj18%2B9Q6PJk%3D&amp;reser
->> ved=0
->>> oh... I hadn't thought about pause/ioremap/unpause. That looks rad :).
->>> So it seems this would integrate neatly with
->>> pci_resize_resource() (what this patch is doing), as long as drivers
->>> for devices affected implement
->>> .bar_fixed()/.rescan_prepare()/.rescan_done(). That seems it would
->>> solve our issues too.
->> Well we never ran into any of the issues you describe with PCIe BAR resize
->> for GPUs so there must be something you do differently to AMD hardware
->> regarding this.
->>
->> Additional to that keep in mind that you can't resize the BAR before kicking
->> out vgacon/efifb or otherwise it can happen that the just released 256MiB
->> window is still used while you try to resize it. When you do that you usually
->> end up with a hard lockup of the system.
->>
->> Regards,
->> Christian.
->>
->>> thanks
->>> Lucas De Marchi
->>>
->>>> If I understand Sergei's series correctly, this rebalancing actually
->>>> cannot be done during enumeration because we only move BARs if a
->>>> driver for the device indicates that it supports it, so there would
->>>> be no requirement to do this early.
->>>>
->>>>> Do we have any alternative to be done in the PCI subsystem during
->>>>> the scan?  There is other work in progress to allow i915 to use the
->>>>> rest of the device memory even with a smaller BAR, but it would be
->>>>> better if we can improve our chances of succeeding the resize.
->>>>>>> Signed-off-by: Akeem G Abodunrin <akeem.g.abodunrin@intel.com>
->>>>>>> Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
->>>>>>> Cc: Stuart Summers <stuart.summers@intel.com>
->>>>>>> Cc: Michael J Ruhl <michael.j.ruhl@intel.com>
->>>>>>> Cc: Prathap Kumar Valsan <prathap.kumar.valsan@intel.com>
->>>>>>> Signed-off-by: Priyanka Dandamudi
->> <priyanka.dandamudi@intel.com>
->>>>>>> Reviewed-by: Matthew Auld <matthew.auld@intel.com>
->>>>>> Please see
->> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flo
->> re.kernel.org%2Fr%2F87pmj8vesm.fsf%40intel.com&amp;data=05%7C01%7C
->> ch
->> ristian.koenig%40amd.com%7C8096027f68484d0656b108da50a82e7d%7C3d
->> d896
->> 1fe4884e608e11a82d994e183d%7C0%7C0%7C637910980509199388%7CUnk
->> nown%7C
->> TWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiL
->> CJX
->> VCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=d4cf7HQ6t7y1Xobwjdt8im%
->> 2Fh0E5IZ
->>>>> sXgzQDpsB2vCU4%3D&amp;reserved=0
->>>>>>> ---
->>>>>>>    drivers/gpu/drm/i915/i915_driver.c | 92
->>>>> ++++++++++++++++++++++++++++++
->>>>>>>    1 file changed, 92 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/gpu/drm/i915/i915_driver.c
->>>>> b/drivers/gpu/drm/i915/i915_driver.c
->>>>>>> index d26dcca7e654..4bdb471cb2e2 100644
->>>>>>> --- a/drivers/gpu/drm/i915/i915_driver.c
->>>>>>> +++ b/drivers/gpu/drm/i915/i915_driver.c
->>>>>>> @@ -303,6 +303,95 @@ static void sanitize_gpu(struct
->>>>> drm_i915_private *i915)
->>>>>>>            __intel_gt_reset(to_gt(i915), ALL_ENGINES);
->>>>>>>    }
->>>>>>>
->>>>>>> +static void __release_bars(struct pci_dev *pdev) {
->>>>>>> +    int resno;
->>>>>>> +
->>>>>>> +    for (resno = PCI_STD_RESOURCES; resno <
->>>>> PCI_STD_RESOURCE_END; resno++) {
->>>>>>> +        if (pci_resource_len(pdev, resno))
->>>>>>> +            pci_release_resource(pdev, resno);
->>>>>>> +    }
->>>>>>> +}
->>>>>>> +
->>>>>>> +static void
->>>>>>> +__resize_bar(struct drm_i915_private *i915, int resno,
->>>>> resource_size_t size)
->>>>>>> +{
->>>>>>> +    struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
->>>>>>> +    int bar_size = pci_rebar_bytes_to_size(size);
->>>>>>> +    int ret;
->>>>>>> +
->>>>>>> +    __release_bars(pdev);
->>>>>>> +
->>>>>>> +    ret = pci_resize_resource(pdev, resno, bar_size);
->>>>>>> +    if (ret) {
->>>>>>> +        drm_info(&i915->drm, "Failed to resize BAR%d to %dM
->>>>> (%pe)\n",
->>>>>>> +             resno, 1 << bar_size, ERR_PTR(ret));
->>>>>>> +        return;
->>>>>>> +    }
->>>>>>> +
->>>>>>> +    drm_info(&i915->drm, "BAR%d resized to %dM\n", resno, 1 <<
->>>>> bar_size);
->>>>>>> +}
->>>>>>> +
->>>>>>> +/* BAR size starts from 1MB - 2^20 */ #define BAR_SIZE_SHIFT 20
->>>>>>> +static resource_size_t __lmem_rebar_size(struct
->>>>>>> +drm_i915_private *i915, int resno) {
->>>>>>> +    struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
->>>>>>> +    u32 rebar = pci_rebar_get_possible_sizes(pdev, resno);
->>>>>>> +    resource_size_t size;
->>>>>>> +
->>>>>>> +    if (!rebar)
->>>>>>> +        return 0;
->>>>>>> +
->>>>>>> +    size = 1ULL << (__fls(rebar) + BAR_SIZE_SHIFT);
->>>>>>> +
->>>>>>> +    if (size <= pci_resource_len(pdev, resno))
->>>>>>> +        return 0;
->>>>>>> +
->>>>>>> +    return size;
->>>>>>> +}
->>>>>>> +
->>>>>>> +#define LMEM_BAR_NUM 2
->>>>>>> +static void i915_resize_lmem_bar(struct drm_i915_private *i915)
->>>>>>> +{
->>>>>>> +    struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
->>>>>>> +    struct pci_bus *root = pdev->bus;
->>>>>>> +    struct resource *root_res;
->>>>>>> +    resource_size_t rebar_size = __lmem_rebar_size(i915,
->>>>> LMEM_BAR_NUM);
->>>>>>> +    u32 pci_cmd;
->>>>>>> +    int i;
->>>>>>> +
->>>>>>> +    if (!rebar_size)
->>>>>>> +        return;
->>>>>>> +
->>>>>>> +    /* Find out if root bus contains 64bit memory addressing */
->>>>>>> +    while (root->parent)
->>>>>>> +        root = root->parent;
->>>>>>> +
->>>>>>> +    pci_bus_for_each_resource(root, root_res, i) {
->>>>>>> +        if (root_res && root_res->flags & (IORESOURCE_MEM |
->>>>>>> +                    IORESOURCE_MEM_64) && root_res->start >
->>>>> 0x100000000ull)
->>>>>>> +            break;
->>>>>>> +    }
->>>>>>> +
->>>>>>> +    /* pci_resize_resource will fail anyways */
->>>>>>> +    if (!root_res) {
->>>>>>> +        drm_info(&i915->drm, "Can't resize LMEM BAR - platform
->>>>> support is missing\n");
->>>>>>> +        return;
->>>>>>> +    }
->>>>>>> +
->>>>>>> +    /* First disable PCI memory decoding references */
->>>>>>> +    pci_read_config_dword(pdev, PCI_COMMAND, &pci_cmd);
->>>>>>> +    pci_write_config_dword(pdev, PCI_COMMAND,
->>>>>>> +                   pci_cmd & ~PCI_COMMAND_MEMORY);
->>>>>>> +
->>>>>>> +    __resize_bar(i915, LMEM_BAR_NUM, rebar_size);
->>>>>>> +
->>>>>>> + pci_assign_unassigned_bus_resources(pdev->bus);
->>>>>>> +    pci_write_config_dword(pdev, PCI_COMMAND, pci_cmd); }
->>>>>>> +
->>>>>>>    /**
->>>>>>>     * i915_driver_early_probe - setup state not requiring device
->>>>> access
->>>>>>>     * @dev_priv: device private
->>>>>>> @@ -852,6 +941,9 @@ int i915_driver_probe(struct pci_dev *pdev,
->>>>> const struct pci_device_id *ent)
->>>>>>> disable_rpm_wakeref_asserts(&i915->runtime_pm);
->>>>>>>
->>>>>>> +    if (HAS_LMEM(i915))
->>>>>>> +        i915_resize_lmem_bar(i915);
->>>>>>> +
->>>>>>>        intel_vgpu_detect(i915);
->>>>>>>
->>>>>>>        ret = intel_gt_probe_all(i915);
->>>>>> --
->>>>>> Jani Nikula, Intel Open Source Graphics Center
-> [Dandamudi, Priyanka]
-> @De Marchi, Lucas
-> Can I proceed with the current approach or is there anything I need to add to it?
+This patch series
+- Adds support for Tegra234 in the existing P2U PHY driver
+- Adds support for Tegra234 in the existing PCIe platform controller driver
+- Adds device tree nodes for all PCIe controllers
+- Enables nodes applicable to P3737-0000 platform
 
-IMO we should be good to go. From my understanding, the problem that 
-Lucas brings up doesn't yet have a solution other than WIP, so if we end 
-up not being able to resize, we'd fall back to using the small BAR with 
-Matthew's work.
+Testing done on P3737-0000 platform
+- PCIe link is up with on-board Broadcom WiFi controller
 
-That said, If we keep hitting errors when resizing, we should, as 
-Christian says, compare with AMD (since they are not seeing this) and 
-see what, if anything, can be done differently.
+- PCIe link is up with an NVMe drive connected to M.2 Key-M slot and its
+  functionality is verified
 
-Thanks,
+- PCIe link is up with a variety of cards (NICs and USB3.0 add-on cards)
+  connected to CEM slot and their functionality is verified
 
-Thomas
+- PCIe link is up with C5 controller configured for the endpoint mode with
+  a host
 
+V3:
+* Add DT nodes for the controllers that can work in the EndPoint mode
+* Converted the existing device-tree binding documentation from .txt to .yaml
+* Add T234 specific information to the RP and EP .yaml documentation files
+* Added regulators required to power up required power rails
+
+V2:
+* Dropped 3 patches that add clocks & resets IDs, power-domain IDs and
+  memory IDs for PCIe controllers as the patches are already available
+  in linux-next
+* Based on Bjorn's review comment, reverted the commit b57256918399 ("PCI:
+  tegra194: Rename tegra_pcie_dw to tegra194_pcie") and pushed it as a
+  separate patch before adding support for T234 in the existing driver
+* Addressed review comments from Rob for the other changes
+
+Vidya Sagar (10):
+  dt-bindings: PHY: P2U: Add support for Tegra234 P2U block
+  dt-bindings: PCI: tegra234: Add schema for tegra234 rootport mode
+  dt-bindings: PCI: tegra234: Add schema for tegra234 endpoint mode
+  arm64: tegra: Add regulators required for PCIe
+  arm64: tegra: Add P2U and PCIe controller nodes to Tegra234 DT
+  arm64: tegra: Enable PCIe slots in P3737-0000 board
+  phy: tegra: Add PCIe PIPE2UPHY support for Tegra234
+  PCI: Disable MSI for Tegra234 root ports
+  Revert "PCI: tegra194: Rename tegra_pcie_dw to tegra194_pcie"
+  PCI: tegra: Add Tegra234 PCIe support
+
+ .../bindings/pci/nvidia,tegra194-pcie-ep.yaml | 370 +++++++
+ .../bindings/pci/nvidia,tegra194-pcie.txt     | 245 -----
+ .../bindings/pci/nvidia,tegra194-pcie.yaml    | 395 ++++++++
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |   2 +-
+ .../bindings/phy/phy-tegra194-p2u.yaml        |  17 +-
+ .../boot/dts/nvidia/tegra234-p3701-0000.dtsi  |  24 +
+ .../nvidia/tegra234-p3737-0000+p3701-0000.dts |  52 +
+ .../boot/dts/nvidia/tegra234-p3737-0000.dtsi  |  23 +
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi      | 935 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 622 ++++++++----
+ drivers/pci/quirks.c                          |  13 +-
+ drivers/phy/tegra/phy-tegra194-p2u.c          |  48 +-
+ 12 files changed, 2295 insertions(+), 451 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+
+-- 
+2.17.1
 
