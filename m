@@ -2,106 +2,223 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A903560562
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 18:07:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33D8156056D
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 18:09:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233881AbiF2QGO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 12:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48240 "EHLO
+        id S232654AbiF2QIt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Jun 2022 12:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233829AbiF2QGM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 12:06:12 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F926396;
-        Wed, 29 Jun 2022 09:06:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=7Il3Zmz7S/H0NpQetmZjc06R/zh7uKcDBAajLC9gk7k=; b=nQI+rf6typETAhwsXDC03rqH1s
-        V164Y6PeH/wetb3LsK1Agsg11/TBxGJrqtz9PS3ZCkdd8xr4Tq3i6g50Fh8k7KpOVCJf71tRgxbIH
-        njTbD+6wn0OaEcJplIK7kNG6yhTWpzvNbrG4L/3iG+OAOYrLdNmjf+5QpEyqcx7jaj/nE8Z8TguZc
-        jVHgBb1v3Ga3S+jBuSfll3H9aSztuVx1Un8QlkO5yuAX5Saz9FlonIBzN4iJ0dd8BEbHTqvsVvRi1
-        T3g4LOg96bAhr2/nF2mMRWewmYCIhMV+dOlF5CozLQiN2Y1LRjq0qQmuCMGhP54hZ4GTTGSsVNp3Y
-        Ww9rCnag==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1o6aCX-002SQa-6C; Wed, 29 Jun 2022 10:06:02 -0600
-Message-ID: <7da06e08-7dd1-f37c-4382-bc59a1b1e819@deltatee.com>
-Date:   Wed, 29 Jun 2022 10:06:00 -0600
+        with ESMTP id S232392AbiF2QIs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 12:08:48 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43974205D7;
+        Wed, 29 Jun 2022 09:08:46 -0700 (PDT)
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LY5rT0GcFz67NYn;
+        Thu, 30 Jun 2022 00:04:41 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 29 Jun 2022 18:08:43 +0200
+Received: from localhost (10.202.226.42) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.24; Wed, 29 Jun
+ 2022 17:08:43 +0100
+Date:   Wed, 29 Jun 2022 17:08:41 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <hch@infradead.org>,
+        <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>,
+        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>
+Subject: Re: [PATCH 20/46] cxl/mem: Add a debugfs version of 'iomem' for
+ DPA, 'dpamem'
+Message-ID: <20220629170841.000078e5@Huawei.com>
+In-Reply-To: <165603885318.551046.8308248564880066726.stgit@dwillia2-xfh>
+References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
+        <165603885318.551046.8308248564880066726.stgit@dwillia2-xfh>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Content-Language: en-CA
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>
-References: <20220615161233.17527-1-logang@deltatee.com>
- <20220615161233.17527-17-logang@deltatee.com> <20220629064629.GC17576@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20220629064629.GC17576@lst.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: hch@lst.de, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, dan.j.williams@intel.com, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+X-Originating-IP: [10.202.226.42]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: Re: [PATCH v7 16/21] block: add check when merging zone device pages
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, 23 Jun 2022 19:47:33 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-
-
-On 2022-06-29 00:46, Christoph Hellwig wrote:
-> On Wed, Jun 15, 2022 at 10:12:28AM -0600, Logan Gunthorpe wrote:
->> Consecutive zone device pages should not be merged into the same sgl
->> or bvec segment with other types of pages or if they belong to different
->> pgmaps. Otherwise getting the pgmap of a given segment is not possible
->> without scanning the entire segment. This helper returns true either if
->> both pages are not zone device pages or both pages are zone device
->> pages with the same pgmap.
->>
->> Add a helper to determine if zone device pages are mergeable and use
->> this helper in page_is_mergeable().
+> Dump the device-physial-address map for a CXL expander in /proc/iomem
+> style format. E.g.:
 > 
-> Any reason not to simply set REQ_NOMERGE for these requests?  We
-> can't merge for passthrough requests anyway, and genrally don't merge
-> for direct I/O either, so adding all this overhead seems a bit pointless.
+>   cat /sys/kernel/debug/cxl/mem1/dpamem
+>   00000000-0fffffff : ram
+>   10000000-1fffffff : pmem
 
-Hmm, I suppose we could also ensure that REQ_NOMERGE is set in a bio
-before setting FOLL_PCI_P2PDMA in bio_map_user_iov() and
-__bio_iov_iter_get_pages(). Assuming it's always set for any direct I/O.
+Nice in general, but...
 
-I'll look into it.
+When I just checked what this looked like on my test setup. I'm 
+seeing
+00000000-0ffffff : pmem
+  00000000-0fffff : endpoint3
 
-Logan
+Seems odd to see an endpoint nested below a pmem.  Wrong name somewhere
+in a later patch. I'd expect that to be a decoder rather than the endpoint...
+If I spot where that comes from whilst reviewing I'll call it out, but
+didn't want to forget to raise it.
+
+This patch is fine.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/core/core.h |    1 -
+>  drivers/cxl/core/hdm.c  |   23 +++++++++++++++++++++++
+>  drivers/cxl/core/port.c |    1 +
+>  drivers/cxl/cxlmem.h    |    4 ++++
+>  drivers/cxl/mem.c       |   23 +++++++++++++++++++++++
+>  5 files changed, 51 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index c242fa02d5e8..472ec9cb1018 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -24,7 +24,6 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+>  resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
+>  resource_size_t cxl_dpa_resource(struct cxl_endpoint_decoder *cxled);
+>  
+> -struct dentry *cxl_debugfs_create_dir(const char *dir);
+>  int cxl_memdev_init(void);
+>  void cxl_memdev_exit(void);
+>  void cxl_mbox_init(void);
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index ceb4c28abc1b..c0164f9b2195 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>  #include <linux/io-64-nonatomic-hi-lo.h>
+> +#include <linux/seq_file.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+>  
+> @@ -248,6 +249,28 @@ static int cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
+>  }
+>  
+> +static void __cxl_dpa_debug(struct seq_file *file, struct resource *r, int depth)
+> +{
+> +	unsigned long long start = r->start, end = r->end;
+> +
+> +	seq_printf(file, "%*s%08llx-%08llx : %s\n", depth * 2, "", start, end,
+> +		   r->name);
+> +}
+> +
+> +void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds)
+> +{
+> +	struct resource *p1, *p2;
+> +
+> +	down_read(&cxl_dpa_rwsem);
+> +	for (p1 = cxlds->dpa_res.child; p1; p1 = p1->sibling) {
+> +		__cxl_dpa_debug(file, p1, 0);
+> +		for (p2 = p1->child; p2; p2 = p2->sibling)
+> +			__cxl_dpa_debug(file, p2, 1);
+> +	}
+> +	up_read(&cxl_dpa_rwsem);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dpa_debug, CXL);
+> +
+>  resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled)
+>  {
+>  	resource_size_t size = 0;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index f02b7470c20e..4e4e26ca507c 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1702,6 +1702,7 @@ struct dentry *cxl_debugfs_create_dir(const char *dir)
+>  {
+>  	return debugfs_create_dir(dir, cxl_debugfs);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_debugfs_create_dir, CXL);
+>  
+>  static __init int cxl_core_init(void)
+>  {
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index b4e5ed9eabc9..db9c889f42ab 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -385,4 +385,8 @@ struct cxl_hdm {
+>  	unsigned int interleave_mask;
+>  	struct cxl_port *port;
+>  };
+> +
+> +struct seq_file;
+> +struct dentry *cxl_debugfs_create_dir(const char *dir);
+> +void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
+>  #endif /* __CXL_MEM_H__ */
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index a979d0b484d5..7513bea55145 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> +#include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> @@ -56,10 +57,26 @@ static void enable_suspend(void *data)
+>  	cxl_mem_active_dec();
+>  }
+>  
+> +static void remove_debugfs(void *dentry)
+> +{
+> +	debugfs_remove_recursive(dentry);
+> +}
+> +
+> +static int cxl_mem_dpa_show(struct seq_file *file, void *data)
+> +{
+> +	struct device *dev = file->private;
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +
+> +	cxl_dpa_debug(file, cxlmd->cxlds);
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxl_mem_probe(struct device *dev)
+>  {
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>  	struct cxl_port *parent_port;
+> +	struct dentry *dentry;
+>  	int rc;
+>  
+>  	/*
+> @@ -73,6 +90,12 @@ static int cxl_mem_probe(struct device *dev)
+>  	if (work_pending(&cxlmd->detach_work))
+>  		return -EBUSY;
+>  
+> +	dentry = cxl_debugfs_create_dir(dev_name(dev));
+> +	debugfs_create_devm_seqfile(dev, "dpamem", dentry, cxl_mem_dpa_show);
+> +	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
+> +	if (rc)
+> +		return rc;
+> +
+>  	rc = devm_cxl_enumerate_ports(cxlmd);
+>  	if (rc)
+>  		return rc;
+> 
+
