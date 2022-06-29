@@ -2,151 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DFAA55F271
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 02:33:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26AD455F281
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Jun 2022 02:48:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbiF2Ade (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Jun 2022 20:33:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57460 "EHLO
+        id S229489AbiF2AsM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Jun 2022 20:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiF2Adc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 20:33:32 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE4C7140F9
-        for <linux-pci@vger.kernel.org>; Tue, 28 Jun 2022 17:33:30 -0700 (PDT)
-Received: from [10.20.42.19] (unknown [10.20.42.19])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL9fQnbtiaK5iAA--.10601S3;
-        Wed, 29 Jun 2022 08:33:20 +0800 (CST)
-Subject: Re: [PATCH V14 4/7] PCI: loongson: Don't access non-existant devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20220628160402.GA1842175@bhelgaas>
-From:   Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <3d0b6e83-e653-7cab-4a87-02aa00a806a0@loongson.cn>
-Date:   Wed, 29 Jun 2022 08:33:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S229978AbiF2AsL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Jun 2022 20:48:11 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC3DDA5
+        for <linux-pci@vger.kernel.org>; Tue, 28 Jun 2022 17:48:07 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id k14so12585717plh.4
+        for <linux-pci@vger.kernel.org>; Tue, 28 Jun 2022 17:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=UaR1NefD75n+13si808lphUXo4PHuRX3UDYDNilXuoM=;
+        b=gGplD12ZEKRYW4jBL8Xs57G17SrfzXNQnHceG6HgSCIdwenkiKsH3MNIBewfG2KCwn
+         o2V9Qr+U/IMTtpJq7w1HI8qFacklJaVmszAMnqblzZIN9B34l4b8nejvfY5o55e27pum
+         U2WIS+hr9fFDT7dN5dha/i6gckpmv+EP0B7KZv64XJN5kPR85OVvgI9jduBjNN8e2tHR
+         UsjftP58X4nNyAh8v+QZpGihWuXP+OT9DOh74NvuoYaloPoHDnedtS6hMQohyokv+Nh1
+         PN+BabD1Ie9fKkzZs7zb73vqkeylyNPMjvbZxAe68IUYYZQx1PwnG29TbuOz5HrtiCIQ
+         WV9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=UaR1NefD75n+13si808lphUXo4PHuRX3UDYDNilXuoM=;
+        b=3aqUDneEuJ4iiVQR7/lmQbM18vAm5KB775ocOmIcSqRwEvBqYeisLlJ3gsge2FX9WH
+         1EU142NRtbuqiFGA6ZrqU9fD0PGw+mREUGwU4QsuCqJ2sYyG9uv0ulcmmFfa/rscBwpi
+         pZX/0xGSv+2eHXZdnSRSfeKOY/h0nP6UXjcQpjq5OCxYY0IR/2k+uiMsljD/wlhSEgli
+         Kncr/R/L/qnGpKd5cde0ROEYF6G9WIOa1NDx3prrn8xVpC5jB/jbqqrte1zbZe/kCLoL
+         pl+2LhOB/M4osMMJBfUpdVmSoL+iLjd4K/o2srrrZ0x64n/C1ufSdTK30SR3WxP0DWSW
+         ydAQ==
+X-Gm-Message-State: AJIora9KDqdfpiZJodolZgZgaoWGG6DpmOEZQllGT3tGzHefc3t6wPKW
+        t+cVDbqtn6pQqc5/76YpoYSnp4N2KntcJsKtn08=
+X-Google-Smtp-Source: AGRyM1ue1oty47I2RCpB18vCvbxDwRco8AAxWAQzKgw4eg52fmLcsYHWsgicpT3gDDmF3Mu0i9wXVC9HrNw9GmyDsvI=
+X-Received: by 2002:a17:90b:388c:b0:1ec:d278:7aa4 with SMTP id
+ mu12-20020a17090b388c00b001ecd2787aa4mr2677927pjb.176.1656463686683; Tue, 28
+ Jun 2022 17:48:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20220628160402.GA1842175@bhelgaas>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxL9fQnbtiaK5iAA--.10601S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXF4xKryftr45ZryDCrW3Wrg_yoW5ur1Dpa
-        y5XFn2kF4DKr1Iy3s2vw1Fqay5tFW3KayrJr1rJr1kCws0vrySyFsFgr4jk34DJr4kZ3W2
-        vayqqFWrKryDAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
-        jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-        ACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-        07AlzVAYIcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8V
-        W5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-        vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-        42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
-        IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a20:e193:b0:83:f687:f339 with HTTP; Tue, 28 Jun 2022
+ 17:48:06 -0700 (PDT)
+Reply-To: christopher@groningenbank.com
+From:   Christopher Wright <yachicof1234@gmail.com>
+Date:   Wed, 29 Jun 2022 02:48:06 +0200
+Message-ID: <CACo5k8eLPLTJCqDt8E7b1s=edbyyRp+N4hpDzTG6nFURQV+3sQ@mail.gmail.com>
+Subject: Re: Christopher Wright
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=7.1 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
+        BAYES_60,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_HUNDRED,
+        MONEY_FRAUD_8,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,T_SHARE_50_50,UNDISC_MONEY,
+        XFER_LOTSA_MONEY autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:632 listed in]
+        [list.dnswl.org]
+        *  1.5 BAYES_60 BODY: Bayes spam probability is 60 to 80%
+        *      [score: 0.7118]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [yachicof1234[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [yachicof1234[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  0.0 T_SHARE_50_50 Share the money 50/50
+        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
+        *  0.0 XFER_LOTSA_MONEY Transfer a lot of money
+        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
+        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
+        *  2.5 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+--=20
+Hello, my name is Christopher Wright, Audit Accounting Officer of
+Groningen Bank, Groningen, The Netherlands. I got your information
+when I was searching for an oversea partner among other names, I ask
+for your pardon if my approach is offensive as I never mean't to
+invade your privacy through this means, and also i believe this is the
+best and secured means I can pass my message across to you in a clear
+terms. I have sent you this proposal before now; I do hope this will
+get to you in good health.
 
+As the Audit Accounting Officer of the bank, I have access to lots of
+documents because I handle some of the bank's sensitive files. In the
+course of the last year 2021 business report, I discovered that my
+branch in which I am the Audit Accounting Officer made =E2=82=AC5.500.000.
+(Five Million Five Hundred Thousand Euro) from some past government
+contractors in which my head office is not aware of and will never be
+aware of. I have placed this funds on what we call an escrow call
+account with no beneficiary.
 
-On 2022/6/29 上午12:04, Bjorn Helgaas wrote:
-> On Tue, Jun 28, 2022 at 09:03:02PM +0800, Jianmin Lv wrote:
->> On 2022/6/28 上午5:38, Bjorn Helgaas wrote:
->>> On Fri, Jun 17, 2022 at 03:43:27PM +0800, Huacai Chen wrote:
->>>> On LS2K/LS7A, some non-existant devices don't return 0xffffffff when
->>>> scanning. This is a hardware flaw but we can only avoid it by software
->>>> now.
->>>
->>> We should say what *does* happen if we do a config read to a device
->>> that doesn't exit.  Machine check, hang, etc?
->>
->> The device is a hidden device(only for debug) that should not be
->> scanned. If scanned in a non-normal way, the machine is hang(one
->> case in ltp pci test can trigger the issue, which is explained
->> below).
-> 
-> Reading the Vendor ID is the *normal* way to scan for a device.  It
-> seems that this hardware just hangs in some cases when the device
-> doesn't exist.
-> 
->>> Generally speaking we only probe for functions > 0 if .0 is marked as
->>> multi-function, so I guess this means 00:09.0 is marked as a
->>> multi-function device, but config reads to 00:09.1 would fail?
->>
->> Yes, definitely. Actually, the 00:09.0 is a single device, so fun1(09.1)
->> will not be scanned(e.g. the fun1 will be not scanned on pci enumeration
->> during kernel booting).
->>
->> But, there is one situation: when running ltp pci test case on LS7A,
->> the 00:08.2 is a sata controller(a valid device), and the bus number(0)
->> and devfn(0x42) are inputted to kernel api pci_scan_slot(), which has
->> clear note: devfn must have zero function. So, apparently, the inputted
->> devfn's function is not zero, but 2, and then in the pci_scan_slot():
->>
->>          for (fn = next_fn(bus, dev, 0); fn > 0; fn = next_fn(bus, dev, fn))
->> {
->>                  dev = pci_scan_single_device(bus, devfn + fn);
->>                  ...
->>          }
->>
->> 08.2,08.3...and 09.1 will be scanned one by one, so the 09.1(fun1) is
->> scanned.
-> 
-> Does the "((bus == 0) && (device >= 9 && device <= 20) && (function > 0))"
-> test catch *all* devfns where the hang occurs?  I wouldn't want to
-> only avoid the ones that LTP happens to use.  If we did that, a future
-> LTP change could easily break things again.  But I assume you know
-> exactly what devices are present on the root bus.
-> 
+As an officer of this bank I cannot be directly connected to this
+money, since i am still working with the bank. so my aim of contacting
+you is to assist me receive this money in your bank account and get
+50% of the total funds as commission. There are practically no risks
+involved, it will be a bank-to-bank transfer, and all I need from you
+is to stand claim as the Original depositor of these funds who made
+the deposit with my branch so that my head office can order the
+transfer to your designated bank account.
 
-Yes, as you said, I'm sure that only these hidden functions(fun1 of dev 
-9 to 20) on root bus can cause issue, so this fix is enough to address it.
+When the fund has been transferred into your bank account, I will come
+to your country to share the fund. The fund will be shared 50% for me
+and 50% for you.
 
->>>> -	if (priv->data->flags & FLAG_DEV_FIX &&
->>>> -			!pci_is_root_bus(bus) && PCI_SLOT(devfn) > 0)
->>>> +	if ((priv->data->flags & FLAG_DEV_FIX) && bus->self) {
->>>> +		if (!pci_is_root_bus(bus) && (device > 0))
->>>> +			return NULL;
->>>> +	}
->>>> +
->>>> +	/* Don't access non-existant devices */
->>>> +	if (!pdev_is_existant(busnum, device, function))
->>>>    		return NULL;
->>>
->>> Is this a "forever" hardware bug that will never be fixed, or should
->>> there be a flag like FLAG_DEV_FIX so we only do this on the broken
->>> devices?
->>
->> No, the next new version LS7A will correct it, so maybe we can use
->> FLAG_DEV_FIX-like to address it.
-> 
-> You should add the flag now instead of waiting for the new hardware.
-> Otherwise you may not remember or notice the need to make this
-> conditional on the hardware version, you'll wonder why the fixed
-> hardware doesn't enumerate devices correctly.
-> 
+I await your response.
 
-Thanks for your suggestion, I agree that, Huacai, WDYT?
-
-
-> Bjorn
-> 
-
+Yours Faithfully,
+Christopher Wright
+Audit Accounting Officer
+Groningen Bank
+christopher@groningenbank.com
