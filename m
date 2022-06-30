@@ -2,152 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96B8C560FBB
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jun 2022 05:40:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0F18561043
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jun 2022 06:35:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbiF3Dkj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Jun 2022 23:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40862 "EHLO
+        id S231617AbiF3Ee1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jun 2022 00:34:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiF3Dki (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Jun 2022 23:40:38 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AACC183B3;
-        Wed, 29 Jun 2022 20:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656560437; x=1688096437;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=M4kZq5FcB7DP6BJ0p0F18onmB+f1X02DX424RY9eGCg=;
-  b=ap7oJ3frv1/5J8rt+o7a75j47EC9uI5lfdEW/5Sa2s+fC3SJ3+0Zft3R
-   0ltiqDSY/nyqtuU2w8xt0u4cZwuYqTMbJEUBWO0m6FuG9P/GVAw7IMdaX
-   wF29tXMQ4rJsV0VEqLDFLIwd+WU7uhknJkVdtru97B1LAUEQGWRd7B/N6
-   6PSocZeoKxVjrhDSGEY/ghsBaD/Dzr+zOX84nu5SqZLEN/sWCcDyEQquj
-   ZXiiOxEkTUF0ywhjykJDS05Leih9ZCvrrGX5on5++mPLikaHlIpOOyJQx
-   J3vc/5NdsphUliMLFJHUfu9VUxhYbdT8pYsK23qNms6bZke7v6VltedRW
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10393"; a="368545399"
-X-IronPort-AV: E=Sophos;i="5.92,233,1650956400"; 
-   d="scan'208";a="368545399"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2022 20:40:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,233,1650956400"; 
-   d="scan'208";a="680794885"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Jun 2022 20:40:37 -0700
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 29 Jun 2022 20:40:36 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Wed, 29 Jun 2022 20:40:36 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Wed, 29 Jun 2022 20:40:36 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.45) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Wed, 29 Jun 2022 20:40:36 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BJ84bYWtHz9948UhuCgVRhchBASI5kTaZk2LZ2/K9cjkYnx+g/f/LU/9hIDforFWSMXsT6UR5CnCVU8l8a8gh3mPFTFT5kJja62tAIsrs5/XQGH9mdn7UK13zWU/b3weXomtk8QHHPckpi0BRpEAFdHdxv5neCI/DcJQmulOqZrRNnF4TXKkYZOjR9j+0Q5xe2ura5ba6tWOszZZTIuKmViEofMp27lPmJZ+D1LFWR6Y8oVn6LBGYd6TWwfya5AfjCbsAK4fxoEpw4MPtqrPTfKbm8/+qZ2gePvxKI8at+MkUq3EEcN9caU7cDXNtkwdh4a811yjV1Ch8ypqL7vVAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0U2f3DSA3fq2Kc1JxGSkzwNBVOQZVUUBqEr1CeJr5rY=;
- b=Gal+Y+LxccqVVqF4V7KhwSTlZaCR9j9rIzZujn9nqkWwzGuNQdZ/J16WBo7EmCBDC+y4G5PVurV6bQTx8k2ld43/5JKgCmeDC1rfQ05gzJgFAw/V7kj3ooxR4jdGyAf9O6jrEd8YGEpCI1qFEvZsgmcjPF5EF8wMV2pYln0ax2K8p7ZkRE/V//2ewFa0DRiCeHZkzxFylh4mkTm1AWYB12LWZxV2G7cWmAkuO25wPi0eCNBoDZLlAhn0qLkGWGo7L+fJJ5lHHa7Ogatjw+Pp6+vhIO1bO9iQnnKR0E2+8dar1GB4za9vnZJxo5etK2hwaY95RsbQI3KrOSg28gZUbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
- BN6PR11MB2002.namprd11.prod.outlook.com (2603:10b6:404:4a::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5395.14; Thu, 30 Jun 2022 03:40:34 +0000
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::e912:6a38:4502:f207]) by DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::e912:6a38:4502:f207%5]) with mapi id 15.20.5395.014; Thu, 30 Jun 2022
- 03:40:34 +0000
-Date:   Wed, 29 Jun 2022 20:40:27 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V12 8/9] cxl/port: Retry reading CDAT on failure
-Message-ID: <Yr0bK4RUnreNTy86@iweiny-desk3>
-References: <20220628041527.742333-1-ira.weiny@intel.com>
- <20220628041527.742333-9-ira.weiny@intel.com>
- <20220628155720.000034cb@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220628155720.000034cb@Huawei.com>
-X-ClientProxiedBy: BYAPR01CA0017.prod.exchangelabs.com (2603:10b6:a02:80::30)
- To DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21)
+        with ESMTP id S232147AbiF3Ee0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 00:34:26 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6873DA76
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jun 2022 21:34:25 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id c205so16996945pfc.7
+        for <linux-pci@vger.kernel.org>; Wed, 29 Jun 2022 21:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ve/vXBI5N+hLr5sCxzL7fj/EAUdEfCHLabZmvvVnHmI=;
+        b=KOAdovB2Ezy8cAIx4fJetquqz+9T3XczFsn5nK3MTESaEEphQmvF32YhuUw2lTBVHb
+         8EB+wkjBehfoXKzO7bCB2Zmdhh2tr6BRFZKsHy1F5RBPEUhIj4AsKyrKIJ0IuUwBqgrw
+         qtZShd3TMB/o2g+TaXIG/cXlo4VaKm543PDLaGg5zT2VsLICzRCN6XnLYACYyE9eVsUO
+         i7R1wF4khrGJ/9UHV+7+fhJoH4Oz0QdwCKDHUHjf7skkW7U6AkyiL0Dzhptt3XH4Vp7z
+         MdESzhA7AyHQ4KmRRMQbfzUj6QO3YlzuegXXdSWluMugTFJ1V38lXZQf+WKAJki/nkUq
+         eUGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ve/vXBI5N+hLr5sCxzL7fj/EAUdEfCHLabZmvvVnHmI=;
+        b=kZMkawY7t9VHLBF68ShZw2PYVDlhCbtbzVjkouun7XzL5w1XO+wEyrsza69sKEBIjG
+         N687rYV9s02bJfnhODFvWuXuiKdC0P6EeMxDsG4JE4Cl6vY1wjZcPzUzlpkdSnCiGzwm
+         54p6afmzmEhooFG97Qp0YFle+K1dnfLbR7GSkVFPWvQfvaUY8E6d1QZ9rBK+CYkhJEcV
+         HroUb0daheHSUg9R1MbfacB1CDVql/aituhiOc+m1xCfN0gV140W5+yoIgHKCmKzpKUW
+         KG0360eyOEDBF6lqeqUKhpRrgpLnPR0wCjPtbWB8V47u4Q4IS6ju7wAzjTpcMemzKxdg
+         sAgg==
+X-Gm-Message-State: AJIora+8SkGHuozXFuCALqxuG6/naTx96zYRRc9mLaPxvzDPs3cRJAAD
+        r+BrLp3vQO+u1w9H4AtBblff
+X-Google-Smtp-Source: AGRyM1s3sTW3qj/6y0W+Kw9RGDfAOKTyDtk1auDsy0RslDnd8VNf1JtWl1JkuAjacIc+qv0bFPij9w==
+X-Received: by 2002:a63:210f:0:b0:40d:dd27:8361 with SMTP id h15-20020a63210f000000b0040ddd278361mr6034809pgh.306.1656563664914;
+        Wed, 29 Jun 2022 21:34:24 -0700 (PDT)
+Received: from thinkpad ([59.92.102.209])
+        by smtp.gmail.com with ESMTPSA id t129-20020a625f87000000b005259578e8fcsm9061064pfb.181.2022.06.29.21.34.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jun 2022 21:34:24 -0700 (PDT)
+Date:   Thu, 30 Jun 2022 10:04:15 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, swboyd@chromium.org,
+        dmitry.baryshkov@linaro.org,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/2] PCI: qcom: Add system PM support
+Message-ID: <20220630043415.GA5012@thinkpad>
+References: <1656055682-18817-1-git-send-email-quic_krichai@quicinc.com>
+ <1656495214-4028-1-git-send-email-quic_krichai@quicinc.com>
+ <1656495214-4028-2-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fd7aef9a-6c37-4b70-dd96-08da5a4a49cb
-X-MS-TrafficTypeDiagnostic: BN6PR11MB2002:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5ENW7tfS9PgRgz32uYa5FMnk30BO4AD9G75xBYF2RYjWCQRR0BOOGJloqvYHcMtdu0k7v5e5IKugdoNU5cjMbTvNsYn01UhZ0Wr4p/4Wc3cSzxwey8D3exUNEBAGXrNCcjn8Er4C26UtFzmcxK6kKZiG12grHrCey4F++N8bw7nG2RGlCinaeKCK00VwNHMlIiGTicJqQ1N6c8C+HR0KvJzx/4XbpIywPglk8tX8KiqFAo9a5jaYhifJptoB2fQKaRG8yquftR/u9lxbtRFjm6n9vqLBbo/OVBYrKEoL1ZfCK44fQRCuYvb2UdVzVNUwhFHQ9lhPTqmFzdqzkBftfvW1KbrbnMYbr6qR78EeHO+ISmyzNLY3Hv8cjSOhorve1JhfUm6Fidy7/0cbXJ3OGpFZ5o7DYSpeIcRnalRVBN/AosVMv8k4d/1C9+oQYYyR4/PTuwbrZWMDo/OYrGp3ZC4zdGqNHVMmqm2p++2Eow2bT8In1vJJOs7JB8BsrXAcw8Oj4pHK9j6D2isLIi7vzX2gUDXClkmoHG+QMvmkCdcSBLsqDfMU/+ynktY20UustiVC2vHqkOQj5U3XfR4sGVzIc/3lrgCvbmMnmqrSt4Y1YByPyCaAMVcT80DMOmu3SlgkVnWVoXq1798YIHPDhsZ29h9ZNGzfk6Qdsr7sBiGbPm+IUOeN6JzatCGZU0fGqqhT3OoJMmwm3uwvgaZpuj88Ve/1os4kPXi7p1D7Qp5qr36OwTQFBqYNqrLLSSxpmmhKdyrlAK4tQQ6ZyGUB7Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(396003)(376002)(346002)(39860400002)(136003)(366004)(478600001)(6486002)(2906002)(44832011)(6512007)(9686003)(6916009)(316002)(86362001)(8936002)(5660300002)(4326008)(66476007)(66946007)(66556008)(8676002)(186003)(83380400001)(54906003)(38100700002)(6666004)(6506007)(33716001)(82960400001)(41300700001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tNF9FzwQGGX9WsQI+Y6CRHUZqDNy8tCPaqoPCmIKKt05xf2qCiVQWzA7rbdO?=
- =?us-ascii?Q?8C6V+OO98VbKLdpp+N99eIr7BCG8Mcj+eg2JEI1s/VHYEqNKm3wPMTh6Rc9m?=
- =?us-ascii?Q?WZP0hos8ONnDD947crBKKhNR8nu+pSnBM9EV0DwJ/CWEJhMcDGJLrj4KbF6z?=
- =?us-ascii?Q?AJc0Aob7Je302yTCsuHJtGMxwu6t8F+08Dd6UGJuWto8qLBKAN23ZqGChcbF?=
- =?us-ascii?Q?vORB3rXoK/Ejb+M0/OKri9z0qlM2LKvWZxZ0JYBW048lEyTIaJ/VeE3hGknk?=
- =?us-ascii?Q?spVloRP/9KwQ/D2H6c9PbHLvNm36lKsVTNfzjIRd0Mil1DU+N+AAiMZtSa+O?=
- =?us-ascii?Q?k4I/g1C9sX/M4eFyy2YVnMQdrNVxZOzDOF18B1sK116jIWR2JshAmZ4Oc3/v?=
- =?us-ascii?Q?jdgkwU5WAQrqC4Uh5UkA/zNX/F4aNzp512f2V/XIQiQ94KW8x8VNmyqeqkfJ?=
- =?us-ascii?Q?LDAKZodBVsU2C0NM6d7SIavsawmqnb50oRqR9xEuLXuUXVCAkCT2qM0EQDog?=
- =?us-ascii?Q?dhtBdYqbT8eyEjiLtM9sN73kAeXgF62Q/A967bDdlwWqZ8EDR7Fsb4500uOb?=
- =?us-ascii?Q?zkIP/74GfNhQBB6YKRd9I3j9zX5hya9QQHtAVidRPy+N+ltS5PSDiHrPk8k/?=
- =?us-ascii?Q?k96CTncB13bT1MmlrNTsftXHjeldxAlKA2CEsnEFVrpI+jxcScgcTwDdvL9I?=
- =?us-ascii?Q?QfuZoFAWrxfnE2D8wTtQ+d0NKYvKeUu1REU5B8xZ2Javbqg0UdOwXrYPXArv?=
- =?us-ascii?Q?/1UDQ1AiWgowFqKk8KZcPlALwmP0+C8uDWnhmVE2wP6ng04MWDpDH37JAOW0?=
- =?us-ascii?Q?O5GddykvhyZ4zIq6E+dkvgbroTuW9sN+I/NGxrMNK20ovevACb3/FufcWNcS?=
- =?us-ascii?Q?0l4pjxoMqgE77VCb2YUnp6SI+SaNY3enbzCaJ42Trnd/EMaiCBQoWpUl0MDy?=
- =?us-ascii?Q?DqQxMS6OY7Cfj8m/oCKnNYkMtLIVxFNuMhPQ4QRXbpqW+laGCIrgpHXNUbYo?=
- =?us-ascii?Q?uaQxF1rnbViiKNYVOWsryYZTe/gnXNXGxFbiloyIlSwbiq3ZVniWPUYCtiFC?=
- =?us-ascii?Q?MDKArVGNUecVc7ZWvtW+ZsPTj9C/XO+X31VkzAax9is7TihIHEmrige0CQs2?=
- =?us-ascii?Q?dP+XZ5rTJ3gVJoBpkNmSH+F+FilE1iU0Tzi4uAmjbWed+u91m/YlqGOdAy6M?=
- =?us-ascii?Q?u1yHTWc0mr1HulXY+OShK+wWdiqNhiFNk3AofwtpiqXrP4JSMEDfYWTub9gB?=
- =?us-ascii?Q?IKHk1qKIiXQkPPuScpk6MGMAuwmR2E7Bz3GCcC8wP6dLIm8BYeig6rbYO+ZJ?=
- =?us-ascii?Q?73dXkUaB09LowGBd+udnmkHIK1dk2qq7haZLbG/RtW4BfgZD8frHSLgTjHqz?=
- =?us-ascii?Q?rfX1Lbr/Zcs4n6+rjyJrsMQtDvb/9FOWFgI9hdmEEYC7WrhTEaNTOY8GDi7b?=
- =?us-ascii?Q?CH/zpsM0A+GGoejUIg8xMsGssicKwcH8wM+4ABy2/51wO3aywy8zel7qknNn?=
- =?us-ascii?Q?X7nmsi0tzDak/LMmUD5iubRNzdFZxFxzhCWil8jEabqp8hECDIzVzNU3+YFY?=
- =?us-ascii?Q?oN92pZU5JediL5a0fGql9TCQcWevMvTkQOTzKI4gWTrhlaEb7tLq+XD/RyBw?=
- =?us-ascii?Q?tszdbtyVCTDJa41Vh4aHIhVp+LX0JvyY9TlYL0a7J/dU?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd7aef9a-6c37-4b70-dd96-08da5a4a49cb
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2022 03:40:33.9773
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S6Qz+Mm8fEaJQvUqlBUjCYMm6OeWhaqt8Ihe2bbqpk4KTfFWhs99tRniK/xJ6JnOeccVyzp5aoq8ZQ9Kd5tybQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB2002
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1656495214-4028-2-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -155,99 +84,108 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 03:57:20PM +0100, Jonathan Cameron wrote:
-> On Mon, 27 Jun 2022 21:15:26 -0700
-> ira.weiny@intel.com wrote:
+On Wed, Jun 29, 2022 at 03:03:33PM +0530, Krishna chaitanya chundru wrote:
+> Add suspend and resume pm callbacks.
+> 
+> When system suspends, and if the link is in L1ss, disable the clocks
+> so that system enters into low power state to save the maximum power.
+> And when the system resumes, enable the clocks back if they are
+> disabled in the suspend path.
 > 
 
-[snip]
+Why only during L1ss and not L2/L3?
 
-> >  
-> > -/**
-> > - * read_cdat_data - Read the CDAT data on this port
-> > - * @port: Port to read data from
-> > - *
-> > - * This call will sleep waiting for responses from the DOE mailbox.
-> > - */
-> > -void read_cdat_data(struct cxl_port *port)
-> > +static int __read_cdat_data(struct cxl_port *port)
-> >  {
-> >  	static struct pci_doe_mb *cdat_mb;
-> >  	struct device *dev = &port->dev;
-> >  	struct device *uport = port->uport;
-> >  	size_t cdat_length;
-> > -	int ret;
-> > +	int ret = 0;
-> Fairly sure there isn't a path in which ret isn't set...
+> Changes since v1:
+> 	- Fixed compilation errors.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 81 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 6ab9089..8e9ef37 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -41,6 +41,9 @@
+>  #define L23_CLK_RMV_DIS				BIT(2)
+>  #define L1_CLK_RMV_DIS				BIT(1)
+>  
+> +#define PCIE20_PARF_PM_STTS                     0x24
+> +#define PCIE20_PARF_PM_STTS_LINKST_IN_L1SUB    BIT(8)
+> +
+>  #define PCIE20_PARF_PHY_CTRL			0x40
+>  #define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
+>  #define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+> @@ -190,6 +193,8 @@ struct qcom_pcie_ops {
+>  	void (*post_deinit)(struct qcom_pcie *pcie);
+>  	void (*ltssm_enable)(struct qcom_pcie *pcie);
+>  	int (*config_sid)(struct qcom_pcie *pcie);
+> +	int (*enable_clks)(struct qcom_pcie *pcie);
+> +	int (*disable_clks)(struct qcom_pcie *pcie);
+
+I think these could vary between platforms. Like some other platform may try to
+disable regulators etc... So use names such as suspend and resume.
+
+>  };
+>  
+>  struct qcom_pcie_cfg {
+> @@ -199,6 +204,7 @@ struct qcom_pcie_cfg {
+>  	unsigned int has_ddrss_sf_tbu_clk:1;
+>  	unsigned int has_aggre0_clk:1;
+>  	unsigned int has_aggre1_clk:1;
+> +	unsigned int support_pm_ops:1;
+>  };
+>  
+>  struct qcom_pcie {
+> @@ -209,6 +215,7 @@ struct qcom_pcie {
+>  	struct phy *phy;
+>  	struct gpio_desc *reset;
+>  	const struct qcom_pcie_cfg *cfg;
+> +	unsigned int is_suspended:1;
+
+Why do you need this flag? Is suspend going to happen multiple times in
+an out-of-order manner?
+
+>  };
+>  
+>  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> @@ -1308,6 +1315,23 @@ static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
+>  	clk_disable_unprepare(res->pipe_clk);
+>  }
+>  
+
+[...]
+
+> +static const struct dev_pm_ops qcom_pcie_pm_ops = {
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(qcom_pcie_pm_suspend, qcom_pcie_pm_resume)
+
+Use the new macro: NOIRQ_SYSTEM_SLEEP_PM_OPS
+
+> +};
+> +
+>  static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
+>  	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
+> @@ -1679,6 +1759,7 @@ static struct platform_driver qcom_pcie_driver = {
+>  	.probe = qcom_pcie_probe,
+>  	.driver = {
+>  		.name = "qcom-pcie",
+> +		.pm = &qcom_pcie_pm_ops,
+
+There will be warnings when CONFIG_PM_SLEEP is not set. So use below,
+
+		.pm = pm_sleep_ptr(&qcom_pcie_pm_ops),
+
+Thanks,
+Mani
+
+>  		.suppress_bind_attrs = true,
+>  		.of_match_table = qcom_pcie_match,
+>  	},
+> -- 
+> 2.7.4
 > 
 
-Yep.
-
-> 
-> Mixing ret and rc is a bit inconsistent, maybe scrub patch set for
-> one or the other. (My fault originally I think :)
-
-Ok PCI uses both ret and rc.  :-(  But CXL seems to be consistent with rc.  So
-I've used rc with the new series which I think satisfies both subsystems.
-
-Thanks again for the detail review of the series.  Hopefully there will be a
-new version out tomorrow.
-Ira
-
-> 
-> 
-> >  
-> >  	cdat_mb = find_cdat_mb(uport);
-> >  	if (!cdat_mb) {
-> >  		dev_dbg(dev, "No CDAT mailbox\n");
-> > -		return;
-> > +		return -EIO;
-> >  	}
-> >  
-> >  	port->cdat_sup = true;
-> >  
-> >  	if (cxl_cdat_get_length(dev, cdat_mb, &cdat_length)) {
-> >  		dev_dbg(dev, "No CDAT length\n");
-> > -		return;
-> > +		return -EIO;
-> >  	}
-> >  
-> >  	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
-> >  	if (!port->cdat.table)
-> > -		return;
-> > +		return -ENOMEM;
-> >  
-> >  	port->cdat.length = cdat_length;
-> >  	ret = cxl_cdat_read_table(dev, cdat_mb, &port->cdat);
-> > @@ -658,5 +652,30 @@ void read_cdat_data(struct cxl_port *port)
-> >  		port->cdat.length = 0;
-> >  		dev_err(dev, "CDAT data read error\n");
-> >  	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * read_cdat_data - Read the CDAT data on this port
-> > + * @port: Port to read data from
-> > + *
-> > + * This call will sleep waiting for responses from the DOE mailbox.
-> > + */
-> > +void read_cdat_data(struct cxl_port *port)
-> > +{
-> > +	int retries = 5;
-> > +	int rc;
-> > +
-> > +	while (retries--) {
-> > +		rc = __read_cdat_data(port);
-> > +		if (!rc)
-> > +			return;
-> > +		dev_dbg(&port->dev,
-> > +			"CDAT data read error rc=%d (retries %d)\n",
-> > +			rc, retries);
-> > +	}
-> > +	dev_err(&port->dev, "CDAT data read failed after %d retries\n",
-> > +		retries);
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
-> 
+-- 
+மணிவண்ணன் சதாசிவம்
