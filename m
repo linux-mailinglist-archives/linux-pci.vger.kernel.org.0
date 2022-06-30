@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D352561CBE
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jun 2022 16:15:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8F0B561E21
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jun 2022 16:37:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235990AbiF3ONb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jun 2022 10:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39800 "EHLO
+        id S237186AbiF3OhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jun 2022 10:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237201AbiF3OMq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 10:12:46 -0400
+        with ESMTP id S235954AbiF3Ogz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 10:36:55 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C58187346;
-        Thu, 30 Jun 2022 06:56:41 -0700 (PDT)
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LYfxL5y3Cz67kFH;
-        Thu, 30 Jun 2022 21:55:50 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6452615714;
+        Thu, 30 Jun 2022 07:31:55 -0700 (PDT)
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LYgk02FNLz686H8;
+        Thu, 30 Jun 2022 22:31:04 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Thu, 30 Jun 2022 15:56:39 +0200
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 30 Jun 2022 16:31:53 +0200
 Received: from localhost (10.81.200.250) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 30 Jun
- 2022 14:56:38 +0100
-Date:   Thu, 30 Jun 2022 14:56:36 +0100
+ 2022 15:31:52 +0100
+Date:   Thu, 30 Jun 2022 15:31:50 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
         <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
         <hch@lst.de>, "Ben Widawsky" <bwidawsk@kernel.org>
-Subject: Re: [PATCH 37/46] cxl/region: Allocate host physical address (HPA)
- capacity to new regions
-Message-ID: <20220630145636.00002f12@Huawei.com>
-In-Reply-To: <20220624041950.559155-12-dan.j.williams@intel.com>
+Subject: Re: [PATCH 38/46] cxl/region: Enable the assignment of endpoint
+ decoders to regions
+Message-ID: <20220630153150.00006fa2@Huawei.com>
+In-Reply-To: <20220624041950.559155-13-dan.j.williams@intel.com>
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
-        <20220624041950.559155-12-dan.j.williams@intel.com>
+        <20220624041950.559155-13-dan.j.williams@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -55,76 +55,180 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Jun 2022 21:19:41 -0700
+On Thu, 23 Jun 2022 21:19:42 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> After a region's interleave parameters (ways and granularity) are set,
-> add a way for regions to allocate HPA from the free capacity in their
-> decoder. The allocator for this capacity reuses the 'struct resource'
-> based allocator used for CONFIG_DEVICE_PRIVATE.
-> 
-> Once the tuple of "ways, granularity, and size" is set the
-> region configuration transitions to the CXL_CONFIG_INTERLEAVE_ACTIVE
-> state which is a precursor to allowing endpoint decoders to be added to
-> a region.
+> The region provisioning process involves allocating DPA to a set of
+> endpoint decoders, and HPA plus the region geometry to a region device.
+> Then the decoder is assigned to the region. At this point several
+> validation steps can be performed to validate that the decoder is
+> suitable to participate in the region.
 > 
 > Co-developed-by: Ben Widawsky <bwidawsk@kernel.org>
 > Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-A few comments on the interface inline.
-
-Thanks,
-
-Jonathan
-
 > ---
->  Documentation/ABI/testing/sysfs-bus-cxl |  25 ++++
->  drivers/cxl/Kconfig                     |   3 +
->  drivers/cxl/core/region.c               | 148 +++++++++++++++++++++++-
->  drivers/cxl/cxl.h                       |   2 +
->  4 files changed, 177 insertions(+), 1 deletion(-)
+>  Documentation/ABI/testing/sysfs-bus-cxl |  19 ++
+>  drivers/cxl/core/core.h                 |   6 +
+>  drivers/cxl/core/hdm.c                  |  13 +-
+>  drivers/cxl/core/port.c                 |  12 +-
+>  drivers/cxl/core/region.c               | 286 +++++++++++++++++++++++-
+>  drivers/cxl/cxl.h                       |  11 +
+>  6 files changed, 342 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 46d5295c1149..3658facc9944 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -294,3 +294,28 @@ Description:
->  		(RW) Configures the number of devices participating in the
->  		region is set by writing this value. Each device will provide
->  		1/interleave_ways of storage for the region.
-> +
-> +
-> +What:		/sys/bus/cxl/devices/regionZ/size
-> +Date:		May, 2022
-> +KernelVersion:	v5.20
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RW) System physical address space to be consumed by the region.
-> +		When written to, this attribute will allocate space out of the
-> +		CXL root decoder's address space. When read the size of the
-> +		address space is reported and should match the span of the
-> +		region's resource attribute. Size shall be set after the
-> +		interleave configuration parameters.
 
-There seem to be constraints that say you have to set this to 0 and then something
-else later to force a resize. That should be mentioned here or gotten rid of.
+A few fixes seems to have ended up in wrong patch.
+Other trivial typos etc inline plus what looks to be an
+item left from a todo list...
+
+...
 
 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index a604c24ff918..4830365f3857 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -24,6 +24,7 @@
+>   * but is only visible for persistent regions.
+>   * 1. Interleave granularity
+>   * 2. Interleave size
+> + * 3. Decoder targets
+>   */
+>  
+>  /*
+> @@ -138,6 +139,8 @@ static ssize_t interleave_ways_show(struct device *dev,
+>  	return rc;
+>  }
+>  
+> +static const struct attribute_group *get_cxl_region_target_group(void);
 > +
-> +
-> +What:		/sys/bus/cxl/devices/regionZ/resource
-> +Date:		May, 2022
-> +KernelVersion:	v5.20
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) A region is a contiguous partition of a CXL root decoder
-> +		address space. Region capacity is allocated by writing to the
-> +		size attribute, the resulting physical address space determined
-> +		by the driver is reflected here. It is therefore not useful to
-> +		read this before writing a value to the size attribute.
+>  static ssize_t interleave_ways_store(struct device *dev,
+>  				     struct device_attribute *attr,
+>  				     const char *buf, size_t len)
+> @@ -146,7 +149,7 @@ static ssize_t interleave_ways_store(struct device *dev,
+>  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+>  	struct cxl_region *cxlr = to_cxl_region(dev);
+>  	struct cxl_region_params *p = &cxlr->params;
+> -	int rc, val;
+> +	int rc, val, save;
+>  	u8 iw;
+>  
+>  	rc = kstrtoint(buf, 0, &val);
+> @@ -175,9 +178,13 @@ static ssize_t interleave_ways_store(struct device *dev,
+>  		goto out;
+>  	}
+>  
+> +	save = p->interleave_ways;
+>  	p->interleave_ways = val;
+> +	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
+> +	if (rc)
+> +		p->interleave_ways = save;
+>  out:
+> -	up_read(&cxl_region_rwsem);
+> +	up_write(&cxl_region_rwsem);
 
-I don't much like naming a "base address" resource.  I'd expect resource to contain
-both base and size whereas this only has the base address of the region.
+Bug in earlier patch?
+
+>  	if (rc)
+>  		return rc;
+>  	return len;
+> @@ -234,7 +241,7 @@ static ssize_t interleave_granularity_store(struct device *dev,
+>  
+>  	p->interleave_granularity = val;
+>  out:
+> -	up_read(&cxl_region_rwsem);
+> +	up_write(&cxl_region_rwsem);
+
+Bug in earlier patch? 
+
+>  	if (rc)
+>  		return rc;
+>  	return len;
+> @@ -393,9 +400,262 @@ static const struct attribute_group cxl_region_group = {
+>  	.is_visible = cxl_region_visible,
+>  };
+
+...
+
+> +/*
+> + * - Check that the given endpoint is attached to a host-bridge identified
+> + *   in the root interleave.
+
+ Comment on something to fix?  Or stale comment that can be dropped?
+
+> + */
+> +static int cxl_region_attach(struct cxl_region *cxlr,
+> +			     struct cxl_endpoint_decoder *cxled, int pos)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +
+> +	if (cxled->mode == CXL_DECODER_DEAD) {
+> +		dev_dbg(&cxlr->dev, "%s dead\n", dev_name(&cxled->cxld.dev));
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (pos >= p->interleave_ways) {
+> +		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
+> +			p->interleave_ways);
+> +		return -ENXIO;
+> +	}
+> +
+> +	if (p->targets[pos] == cxled)
+> +		return 0;
+> +
+> +	if (p->targets[pos]) {
+> +		struct cxl_endpoint_decoder *cxled_target = p->targets[pos];
+> +		struct cxl_memdev *cxlmd_target = cxled_to_memdev(cxled_target);
+> +
+> +		dev_dbg(&cxlr->dev, "position %d already assigned to %s:%s\n",
+> +			pos, dev_name(&cxlmd_target->dev),
+> +			dev_name(&cxled_target->cxld.dev));
+> +		return -EBUSY;
+> +	}
+> +
+> +	p->targets[pos] = cxled;
+> +	cxled->pos = pos;
+> +	p->nr_targets++;
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_region *cxlr = cxled->cxld.region;
+> +	struct cxl_region_params *p;
+> +
+> +	lockdep_assert_held_write(&cxl_region_rwsem);
+> +
+> +	if (!cxlr)
+> +		return;
+> +
+> +	p = &cxlr->params;
+> +	get_device(&cxlr->dev);
+> +
+> +	if (cxled->pos < 0 || cxled->pos >= p->interleave_ways ||
+> +	    p->targets[cxled->pos] != cxled) {
+> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +
+> +		dev_WARN_ONCE(&cxlr->dev, 1, "expected %s:%s at position %d\n",
+> +			      dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+> +			      cxled->pos);
+> +		goto out;
+> +	}
+> +
+> +	p->targets[cxled->pos] = NULL;
+> +	p->nr_targets--;
+> +
+> +	/* notify the region driver that one of its targets has deparated */
+
+departed?
+
+> +	up_write(&cxl_region_rwsem);
+> +	device_release_driver(&cxlr->dev);
+> +	down_write(&cxl_region_rwsem);
+> +out:
+> +	put_device(&cxlr->dev);
+> +}
+> +
 
 
