@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A04561645
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jun 2022 11:26:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A3AC561663
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jun 2022 11:33:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232478AbiF3J0o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jun 2022 05:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58952 "EHLO
+        id S233956AbiF3Jda (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jun 2022 05:33:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232859AbiF3J0m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 05:26:42 -0400
+        with ESMTP id S231572AbiF3Jda (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 05:33:30 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B7D13E5FB;
-        Thu, 30 Jun 2022 02:26:41 -0700 (PDT)
-Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LYXw04MHsz6817f;
-        Thu, 30 Jun 2022 17:24:16 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF7315FC7;
+        Thu, 30 Jun 2022 02:33:28 -0700 (PDT)
+Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LYY5f1gwrz6GD2T;
+        Thu, 30 Jun 2022 17:32:38 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.24; Thu, 30 Jun 2022 11:26:39 +0200
+ 15.1.2375.24; Thu, 30 Jun 2022 11:33:26 +0200
 Received: from localhost (10.81.200.250) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 30 Jun
- 2022 10:26:38 +0100
-Date:   Thu, 30 Jun 2022 10:26:37 +0100
+ 2022 10:33:24 +0100
+Date:   Thu, 30 Jun 2022 10:33:11 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
         <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
-        <hch@lst.de>, "Ben Widawsky" <bwidawsk@kernel.org>
-Subject: Re: [PATCH 30/46] cxl/hdm: Add sysfs attributes for interleave ways
- + granularity
-Message-ID: <20220630102637.00001d53@Huawei.com>
-In-Reply-To: <20220624041950.559155-5-dan.j.williams@intel.com>
+        <hch@lst.de>
+Subject: Re: [PATCH 31/46] cxl/hdm: Initialize decoder type for memory
+ expander devices
+Message-ID: <20220630103311.00004d94@Huawei.com>
+In-Reply-To: <20220624041950.559155-6-dan.j.williams@intel.com>
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
-        <20220624041950.559155-5-dan.j.williams@intel.com>
+        <20220624041950.559155-6-dan.j.williams@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -55,111 +55,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Jun 2022 21:19:34 -0700
+On Thu, 23 Jun 2022 21:19:35 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> From: Ben Widawsky <bwidawsk@kernel.org>
+> Unless and until accelerator (type-2) drivers start registering for
+> CXL.mem mapping services from the CXL subsystem core, initialize idle
+> HDM decoders to the "expander" type. I.e. the only CXL devices using the
+> CXL core presently are those implementing the CXL 2.0 Type-3 memory
+> expander device class code that the cxl_pci driver claims.
 > 
-> The region provisioning flow involves selecting interleave ways +
-> granularity settings for a region, and then programming the decoder
-> topology to meet those constraints, if possible. For example, root
-> decoders set the minimum interleave ways + granularity for any hosted
-> regions.
-> 
-> Given decoder programming is not atomic and collisions can occur between
-> multiple requesting regions userpace will be resonsible for conflict
-> resolution and it needs these attributes to make those decisions.
-> 
-> Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
-> [djbw: reword changelog, make read-only, add sysfs ABI documentaion]
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-some comments on docs.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 23 +++++++++++++++++++++++
->  drivers/cxl/core/port.c                 | 23 +++++++++++++++++++++++
->  2 files changed, 46 insertions(+)
+>  drivers/cxl/core/hdm.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 85844f9bc00b..2a4e4163879f 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -215,3 +215,26 @@ Description:
->  		allocations are enforced to occur in increasing 'decoderX.Y/id'
->  		order and frees are enforced to occur in decreasing
->  		'decoderX.Y/id' order.
-> +
-> +
-> +What:		/sys/bus/cxl/devices/decoderX.Y/interleave_ways
-> +Date:		May, 2022
-> +KernelVersion:	v5.20
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) The number of targets across which this decoder's host
-> +		physical address (HPA) memory range is interleaved. The device
-> +		maps every Nth block of HPA (of size ==
-> +		'interleave_granularity') to consecutive DPA addresses. The
-> +		decoder's position in the interleave is determined by the
-> +		device's (endpoint or switch) switch ancestry.
-
-Perhaps make it clear what happens for host bridges (i.e. decoder position
-in interleave defined by fixed memory window.
-
-> +
-> +
-> +What:		/sys/bus/cxl/devices/decoderX.Y/interleave_granularity
-> +Date:		May, 2022
-> +KernelVersion:	v5.20
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) The number of consecutive bytes of host physical address
-> +		space this decoder claims at address N before awaint the next
-
-awaint?
-
-> +		address (N + interleave_granularity * intereleave_ways).
-
-interleave_ways
-
-Even knowing exactly what this is, I don't understand the docs so
-perhaps reword this :)
-
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index c48f217e689a..08a380d20cf1 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -260,10 +260,33 @@ static ssize_t dpa_size_store(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RW(dpa_size);
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 672bf3e97811..7b58f6911523 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -474,6 +474,17 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  		cxld->flags |= CXL_DECODER_F_ENABLE;
+>  		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
+>  			cxld->flags |= CXL_DECODER_F_LOCK;
+> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl))
+> +			cxld->target_type = CXL_DECODER_EXPANDER;
+> +		else
+> +			cxld->target_type = CXL_DECODER_ACCELERATOR;
+> +	} else {
+> +		/* unless / until type-2 drivers arrive, assume type-3 */
+> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl) == 0) {
+> +			ctrl |= CXL_HDM_DECODER0_CTRL_TYPE;
+> +			writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
+> +		}
+> +		cxld->target_type = CXL_DECODER_EXPANDER;
+>  	}
+>  	rc = cxl_to_ways(FIELD_GET(CXL_HDM_DECODER0_CTRL_IW_MASK, ctrl),
+>  			 &cxld->interleave_ways);
+> @@ -488,11 +499,6 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  	if (rc)
+>  		return rc;
 >  
-> +static ssize_t interleave_granularity_show(struct device *dev,
-> +					   struct device_attribute *attr,
-> +					   char *buf)
-> +{
-> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> +
-> +	return sysfs_emit(buf, "%d\n", cxld->interleave_granularity);
-> +}
-> +
-> +static DEVICE_ATTR_RO(interleave_granularity);
-> +
-> +static ssize_t interleave_ways_show(struct device *dev,
-> +				    struct device_attribute *attr, char *buf)
-> +{
-> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> +
-> +	return sysfs_emit(buf, "%d\n", cxld->interleave_ways);
-> +}
-> +
-> +static DEVICE_ATTR_RO(interleave_ways);
-> +
->  static struct attribute *cxl_decoder_base_attrs[] = {
->  	&dev_attr_start.attr,
->  	&dev_attr_size.attr,
->  	&dev_attr_locked.attr,
-> +	&dev_attr_interleave_granularity.attr,
-> +	&dev_attr_interleave_ways.attr,
->  	NULL,
->  };
->  
+> -	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl))
+> -		cxld->target_type = CXL_DECODER_EXPANDER;
+> -	else
+> -		cxld->target_type = CXL_DECODER_ACCELERATOR;
+> -
+>  	if (!cxled) {
+>  		target_list.value =
+>  			ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
 
