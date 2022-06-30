@@ -2,233 +2,251 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8F0B561E21
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Jun 2022 16:37:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B84D561E5B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Jun 2022 16:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237186AbiF3OhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jun 2022 10:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44186 "EHLO
+        id S235203AbiF3OqB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jun 2022 10:46:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235954AbiF3Ogz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 10:36:55 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6452615714;
-        Thu, 30 Jun 2022 07:31:55 -0700 (PDT)
-Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LYgk02FNLz686H8;
-        Thu, 30 Jun 2022 22:31:04 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 30 Jun 2022 16:31:53 +0200
-Received: from localhost (10.81.200.250) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 30 Jun
- 2022 15:31:52 +0100
-Date:   Thu, 30 Jun 2022 15:31:50 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
-        <hch@lst.de>, "Ben Widawsky" <bwidawsk@kernel.org>
-Subject: Re: [PATCH 38/46] cxl/region: Enable the assignment of endpoint
- decoders to regions
-Message-ID: <20220630153150.00006fa2@Huawei.com>
-In-Reply-To: <20220624041950.559155-13-dan.j.williams@intel.com>
-References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
-        <20220624041950.559155-13-dan.j.williams@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S232297AbiF3OqA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 10:46:00 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2088B1A835;
+        Thu, 30 Jun 2022 07:45:59 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25UEfBvp037543;
+        Thu, 30 Jun 2022 14:45:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=bVRAqFqxas/+eql8YkiW8QnBAmPd4iM27hO1S1rVvF0=;
+ b=l41518QLo4u6n987JN9ZWVwxrGoYMVPBVIFrfvBafMUz0oFArhBPIFZSQ3n5e7ViGP+i
+ Df03rgAEzdgMA0pQwdjofG4pXYhLc6JUqKa41hz2qZBx00osXGuP2Vxnqq5li+FmSIyU
+ EFyEPcG/6ijWeERIvrjh3WJo6OrdgwbxSEYx4bKKXMGOBKlOMibj4nxOMEvlbfXd1h5z
+ JcMymp4DxZOB3AhEm6k6lfDVcdHrZsHPcUMdmThz9uwO0beptGh7yeHRQrxBjHCrZh6W
+ Oec4Oj2AI+g1a3vCzIVs3487fm2/VAUYe0nJ2DxCXhBUYWZub0rxegTD/fVgOk7ln1T0 NQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h1dj00p0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jun 2022 14:45:56 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25UEgHWN014243;
+        Thu, 30 Jun 2022 14:45:55 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h1dj00nyu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jun 2022 14:45:55 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25UELLvK001956;
+        Thu, 30 Jun 2022 14:45:53 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 3gwsmj8byv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jun 2022 14:45:52 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25UEjn6l19595528
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jun 2022 14:45:49 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62C9A52050;
+        Thu, 30 Jun 2022 14:45:49 +0000 (GMT)
+Received: from [9.171.69.2] (unknown [9.171.69.2])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 07AFB5204E;
+        Thu, 30 Jun 2022 14:45:48 +0000 (GMT)
+Message-ID: <03fff591-63e1-2dab-06d5-1fac242c248f@linux.ibm.com>
+Date:   Thu, 30 Jun 2022 16:50:18 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v6 1/5] PCI: Clean up pci_scan_slot()
+Content-Language: en-US
+To:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220628143100.3228092-1-schnelle@linux.ibm.com>
+ <20220628143100.3228092-2-schnelle@linux.ibm.com>
+ <17c30662-7285-0e1a-91fb-071fa2cfc733@linux.ibm.com>
+ <7741c617519b786750fbe04029fbb6295c8d6c85.camel@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+In-Reply-To: <7741c617519b786750fbe04029fbb6295c8d6c85.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.200.250]
-X-ClientProxiedBy: lhreml754-chm.china.huawei.com (10.201.108.204) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: uzFNaawNg303gaMLjQF4qkwg89nNNtjf
+X-Proofpoint-ORIG-GUID: GPI8DY7uDQv7WelYfyAChgLCkkvJ0ki2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-06-30_09,2022-06-28_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 impostorscore=0 mlxscore=0 phishscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=999 spamscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2206300057
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Jun 2022 21:19:42 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> The region provisioning process involves allocating DPA to a set of
-> endpoint decoders, and HPA plus the region geometry to a region device.
-> Then the decoder is assigned to the region. At this point several
-> validation steps can be performed to validate that the decoder is
-> suitable to participate in the region.
+
+On 6/30/22 15:48, Niklas Schnelle wrote:
+> On Thu, 2022-06-30 at 14:40 +0200, Pierre Morel wrote:
+>>
+>> On 6/28/22 16:30, Niklas Schnelle wrote:
+>>> While determining the next PCI function is factored out of
+>>> pci_scan_slot() into next_fn() the former still handles the first
+>>> function as a special case. This duplicates the code from the scan loop.
+>>>
+>>> Furthermore the non ARI branch of next_fn() is generally hard to
+>>> understand and especially the check for multifunction devices is hidden
+>>> in the handling of NULL devices for non-contiguous multifunction. It
+>>> also signals that no further functions need to be scanned by returning
+>>> 0 via wraparound and this is a valid function number.
+>>>
+>>> Improve upon this by transforming the conditions in next_fn() to be
+>>> easier to understand.
+>>>
+>>> By changing next_fn() to return -ENODEV instead of 0 when there is no
+>>> next function we can then handle the initial function inside the loop
+>>> and deduplicate the shared handling. This also makes it more explicit
+>>> that only function 0 must exist.
+>>>
+>>> No functional change is intended.
+>>>
+>>> Cc: Jan Kiszka <jan.kiszka@siemens.com>
+>>> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+>>> ---
+>>>    drivers/pci/probe.c | 38 +++++++++++++++++++-------------------
+>>>    1 file changed, 19 insertions(+), 19 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>>> index 17a969942d37..b05d0ed83a24 100644
+>>> --- a/drivers/pci/probe.c
+>>> +++ b/drivers/pci/probe.c
+>>> @@ -2579,8 +2579,7 @@ struct pci_dev *pci_scan_single_device(struct pci_bus *bus, int devfn)
+>>>    }
+>>>    EXPORT_SYMBOL(pci_scan_single_device);
+>>>    
+>>> -static unsigned int next_fn(struct pci_bus *bus, struct pci_dev *dev,
+>>> -			    unsigned int fn)
+>>> +static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
+>>>    {
+>>>    	int pos;
+>>>    	u16 cap = 0;
+>>> @@ -2588,24 +2587,26 @@ static unsigned int next_fn(struct pci_bus *bus, struct pci_dev *dev,
+>>>    
+>>>    	if (pci_ari_enabled(bus)) {
+>>>    		if (!dev)
+>>> -			return 0;
+>>> +			return -ENODEV;
+>>>    		pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI);
+>>>    		if (!pos)
+>>> -			return 0;
+>>> +			return -ENODEV;
+>>>    
+>>>    		pci_read_config_word(dev, pos + PCI_ARI_CAP, &cap);
+>>>    		next_fn = PCI_ARI_CAP_NFN(cap);
+>>>    		if (next_fn <= fn)
+>>> -			return 0;	/* protect against malformed list */
+>>> +			return -ENODEV;	/* protect against malformed list */
+>>>    
+>>>    		return next_fn;
+>>>    	}
+>>>    
+>>> -	/* dev may be NULL for non-contiguous multifunction devices */
+>>> -	if (!dev || dev->multifunction)
+>>> -		return (fn + 1) % 8;
+>>> +	if (fn >= 7)
+>>> +		return -ENODEV;
+>>> +	/* only multifunction devices may have more functions */
+>>> +	if (dev && !dev->multifunction)
+>>> +		return -ENODEV;
+>>>    
+>>> -	return 0;
+>>> +	return fn + 1;
+>>
+>> No more % 8 ?
+>> Even it disapear later shouldn't we keep it ?
 > 
-> Co-developed-by: Ben Widawsky <bwidawsk@kernel.org>
-> Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl |  19 ++
->  drivers/cxl/core/core.h                 |   6 +
->  drivers/cxl/core/hdm.c                  |  13 +-
->  drivers/cxl/core/port.c                 |  12 +-
->  drivers/cxl/core/region.c               | 286 +++++++++++++++++++++++-
->  drivers/cxl/cxl.h                       |  11 +
->  6 files changed, 342 insertions(+), 5 deletions(-)
+> The "% 8" became unnecessary due to the explicit "if (fn >= 7)"
+> above.
+> The original "% 8" did what I referred to in the commit message with
+> "It [the function] also signals that no further functions need to be
+> scanned by returning 0 via wraparound and this is a valid function
+> number.". Instead we now explicitly return -ENODEV in this case.
+
+Yes it goes with it.
+With this code next_fn returns -ENODEV for fn = 8 instead of previously 
+returning 1. (If I am right)
+
+With the previous code, did we assume that next_fn is never called with 
+fn > 7?
+I guess yes as we test pci_ari_enabled first and without ARI we do not 
+have more than 7 more functions. is it right?
+
+For what I think this new code seems better as it does not make the 
+assumption that it get called with fn < 8.
+
+> 
+>>
+>>
+>>
+>>>    }
+>>>    
+>>>    static int only_one_child(struct pci_bus *bus)
+>>> @@ -2643,26 +2644,25 @@ static int only_one_child(struct pci_bus *bus)
+>>>     */
+>>>    int pci_scan_slot(struct pci_bus *bus, int devfn)
+>>>    {
+>>> -	unsigned int fn, nr = 0;
+>>>    	struct pci_dev *dev;
+>>> +	int fn = 0, nr = 0;
+>>>    
+>>>    	if (only_one_child(bus) && (devfn > 0))
+>>>    		return 0; /* Already scanned the entire slot */
+>>>    
+>>> -	dev = pci_scan_single_device(bus, devfn);
+>>> -	if (!dev)
+>>> -		return 0;
+>>> -	if (!pci_dev_is_added(dev))
+>>> -		nr++;
+>>> -
+>>> -	for (fn = next_fn(bus, dev, 0); fn > 0; fn = next_fn(bus, dev, fn)) {
+>>> +	do {
+>>>    		dev = pci_scan_single_device(bus, devfn + fn);
+>>>    		if (dev) {
+>>>    			if (!pci_dev_is_added(dev))
+>>>    				nr++;
+>>> -			dev->multifunction = 1;
+>>> +			if (fn > 0)
+>>> +				dev->multifunction = 1;
+>>> +		} else if (fn == 0) {
+>>> +			/* function 0 is required */
+>>> +			break;
+>>>    		}
+>>> -	}
+>>> +		fn = next_fn(bus, dev, fn);
+>>> +	} while (fn >= 0);
+>>>    
+>>>    	/* Only one slot has PCIe device */
+>>>    	if (bus->self && nr)
+>>>
+>>
+>> Otherwise LGTM
+>>
+> 
+> Thanks for taking a look!
 > 
 
-A few fixes seems to have ended up in wrong patch.
-Other trivial typos etc inline plus what looks to be an
-item left from a todo list...
-
-...
-
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index a604c24ff918..4830365f3857 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -24,6 +24,7 @@
->   * but is only visible for persistent regions.
->   * 1. Interleave granularity
->   * 2. Interleave size
-> + * 3. Decoder targets
->   */
->  
->  /*
-> @@ -138,6 +139,8 @@ static ssize_t interleave_ways_show(struct device *dev,
->  	return rc;
->  }
->  
-> +static const struct attribute_group *get_cxl_region_target_group(void);
-> +
->  static ssize_t interleave_ways_store(struct device *dev,
->  				     struct device_attribute *attr,
->  				     const char *buf, size_t len)
-> @@ -146,7 +149,7 @@ static ssize_t interleave_ways_store(struct device *dev,
->  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
->  	struct cxl_region *cxlr = to_cxl_region(dev);
->  	struct cxl_region_params *p = &cxlr->params;
-> -	int rc, val;
-> +	int rc, val, save;
->  	u8 iw;
->  
->  	rc = kstrtoint(buf, 0, &val);
-> @@ -175,9 +178,13 @@ static ssize_t interleave_ways_store(struct device *dev,
->  		goto out;
->  	}
->  
-> +	save = p->interleave_ways;
->  	p->interleave_ways = val;
-> +	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
-> +	if (rc)
-> +		p->interleave_ways = save;
->  out:
-> -	up_read(&cxl_region_rwsem);
-> +	up_write(&cxl_region_rwsem);
-
-Bug in earlier patch?
-
->  	if (rc)
->  		return rc;
->  	return len;
-> @@ -234,7 +241,7 @@ static ssize_t interleave_granularity_store(struct device *dev,
->  
->  	p->interleave_granularity = val;
->  out:
-> -	up_read(&cxl_region_rwsem);
-> +	up_write(&cxl_region_rwsem);
-
-Bug in earlier patch? 
-
->  	if (rc)
->  		return rc;
->  	return len;
-> @@ -393,9 +400,262 @@ static const struct attribute_group cxl_region_group = {
->  	.is_visible = cxl_region_visible,
->  };
-
-...
-
-> +/*
-> + * - Check that the given endpoint is attached to a host-bridge identified
-> + *   in the root interleave.
-
- Comment on something to fix?  Or stale comment that can be dropped?
-
-> + */
-> +static int cxl_region_attach(struct cxl_region *cxlr,
-> +			     struct cxl_endpoint_decoder *cxled, int pos)
-> +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +
-> +	if (cxled->mode == CXL_DECODER_DEAD) {
-> +		dev_dbg(&cxlr->dev, "%s dead\n", dev_name(&cxled->cxld.dev));
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (pos >= p->interleave_ways) {
-> +		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
-> +			p->interleave_ways);
-> +		return -ENXIO;
-> +	}
-> +
-> +	if (p->targets[pos] == cxled)
-> +		return 0;
-> +
-> +	if (p->targets[pos]) {
-> +		struct cxl_endpoint_decoder *cxled_target = p->targets[pos];
-> +		struct cxl_memdev *cxlmd_target = cxled_to_memdev(cxled_target);
-> +
-> +		dev_dbg(&cxlr->dev, "position %d already assigned to %s:%s\n",
-> +			pos, dev_name(&cxlmd_target->dev),
-> +			dev_name(&cxled_target->cxld.dev));
-> +		return -EBUSY;
-> +	}
-> +
-> +	p->targets[pos] = cxled;
-> +	cxled->pos = pos;
-> +	p->nr_targets++;
-> +
-> +	return 0;
-> +}
-> +
-> +static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct cxl_region *cxlr = cxled->cxld.region;
-> +	struct cxl_region_params *p;
-> +
-> +	lockdep_assert_held_write(&cxl_region_rwsem);
-> +
-> +	if (!cxlr)
-> +		return;
-> +
-> +	p = &cxlr->params;
-> +	get_device(&cxlr->dev);
-> +
-> +	if (cxled->pos < 0 || cxled->pos >= p->interleave_ways ||
-> +	    p->targets[cxled->pos] != cxled) {
-> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +
-> +		dev_WARN_ONCE(&cxlr->dev, 1, "expected %s:%s at position %d\n",
-> +			      dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> +			      cxled->pos);
-> +		goto out;
-> +	}
-> +
-> +	p->targets[cxled->pos] = NULL;
-> +	p->nr_targets--;
-> +
-> +	/* notify the region driver that one of its targets has deparated */
-
-departed?
-
-> +	up_write(&cxl_region_rwsem);
-> +	device_release_driver(&cxlr->dev);
-> +	down_write(&cxl_region_rwsem);
-> +out:
-> +	put_device(&cxlr->dev);
-> +}
-> +
-
-
+-- 
+Pierre Morel
+IBM Lab Boeblingen
