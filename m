@@ -2,233 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7585A5627F3
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 03:03:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81BFE5629C1
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 05:43:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231906AbiGABCq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jun 2022 21:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55140 "EHLO
+        id S233498AbiGADkS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jun 2022 23:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbiGABCp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 21:02:45 -0400
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148E5599DC
-        for <linux-pci@vger.kernel.org>; Thu, 30 Jun 2022 18:02:41 -0700 (PDT)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-2ef5380669cso9476397b3.9
-        for <linux-pci@vger.kernel.org>; Thu, 30 Jun 2022 18:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5e2VOFezjxqspoL1d+0n+t2eO3x2RETtacSMN5zGdAs=;
-        b=DsTv+bcUYNl2fnBIUQ6Ro+r6VNjE0cbQFXA4vyDI5HQqsh4HPnaE2QRJLCe7v9S8BY
-         /sPM6wwB4Thmd9ctc71kf5zNualdBzDI6pzuSH459ZT6uGsbbeVr1zkhsrR+9SCGrkga
-         eFzxQdtX2LTtB0U0e+oAHULZ6H3/8wxj482TXtyUaG0bxrzPX3x3nOVIL6kCog6d5gcg
-         LmMqOOaAwAH0GSveeP9usrtvR9mS1vCO9kL3m2e9ANdbcSFg50/oCi3Dy/o2rg1RtfgE
-         N/MvAq/ur9OAzHma+pmZ1GlbMoV3k8KvhiBi/O3LEVCA5tZnGyDDaTwqWz6XghYiU8PM
-         XgFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5e2VOFezjxqspoL1d+0n+t2eO3x2RETtacSMN5zGdAs=;
-        b=O1hlnW/mDacefRrqI7okDSMx1QjrzMnhVkocFxnNIuV5siywI9zmR/P/foYjIuYRcp
-         c+WH0kOmIroANDY0jvjZCjNWFnD97/I8KhogEVyMLdNDI7NH6vAQ5gfWyLRFqMu/pNjG
-         ma3P39cw1FI4b+H71Eob5XMmJ/VTKI9cEjJN9y57Vf/8Oa553YVApCZb2XiVJbYELeEi
-         jq2xmNjRusnStNHbxjdg2w/qY6W466bedu7nkuk+eCPyJiuw8DkxzaJYCDa9QzJ9lTMc
-         MuaIa1jgtEz2prmIuqLCpiLYGXwMnZuwOL1LEOaCwzdenzYb+oios11fgdhHCEBCqAlb
-         0N+Q==
-X-Gm-Message-State: AJIora/kfos/yOwmTe88/WeC2+4STuxSFqJFQ2r564MODeWIyJNOV54t
-        C/9rqr5jlJVUCw1QaRJ2d45OV9HcCZybxwuVMYNi1A==
-X-Google-Smtp-Source: AGRyM1ubQ0A0CmfYu3uw1vNRx0QpThx7NPDmiZeEC/WVv0cqnsx6dmYl28Rt8jXrA27ZBF8EDUPrq9vbignfaImDp8s=
-X-Received: by 2002:a0d:eace:0:b0:317:87ac:b3a8 with SMTP id
- t197-20020a0deace000000b0031787acb3a8mr14172406ywe.126.1656637360041; Thu, 30
- Jun 2022 18:02:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <62bdec26.1c69fb81.46bc5.2d67@mx.google.com> <Yr3vEDDulZj1Dplv@sirena.org.uk>
- <CAGETcx88M3Use8crFMTU=By3UVjjaJuP1_Ah7zsy_w=pNxc+6w@mail.gmail.com>
-In-Reply-To: <CAGETcx88M3Use8crFMTU=By3UVjjaJuP1_Ah7zsy_w=pNxc+6w@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 30 Jun 2022 18:02:04 -0700
-Message-ID: <CAGETcx_s+ui9wWA7OawojPbY95bLZE5pSmpK-34_kLZTzjf9Ew@mail.gmail.com>
-Subject: Re: next/master bisection: baseline.bootrr.imx6q-pcie-pcie0-probed on kontron-pitx-imx8m
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernelci-results@groups.io, bot@kernelci.org,
-        gtucker@collabora.com, Michael Walle <michael@walle.cc>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230072AbiGADkR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 23:40:17 -0400
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6614064D41;
+        Thu, 30 Jun 2022 20:40:16 -0700 (PDT)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 060FE2035BC;
+        Fri,  1 Jul 2022 05:40:15 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 996B92035BD;
+        Fri,  1 Jul 2022 05:40:14 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id D98631820F58;
+        Fri,  1 Jul 2022 11:40:12 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
+        broonie@kernel.org, lorenzo.pieralisi@arm.com, festevam@gmail.com,
+        francesco.dolcini@toradex.com
+Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: [PATCH v14 0/17] PCI: imx6: refine codes and add the error propagation
+Date:   Fri,  1 Jul 2022 11:25:18 +0800
+Message-Id: <1656645935-1370-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 2:48 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Thu, Jun 30, 2022 at 11:44 AM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Thu, Jun 30, 2022 at 11:32:06AM -0700, KernelCI bot wrote:
-> >
-> > The KernelCI bisection bot identified a failure to probe the PCI bus on
-> > kontron-pitx-imx8m in -next resulting from commit (5a46079a96451 PM:
-> > domains: Delete usage of driver_deferred_probe_check_state()) with at
-> > least an arm64 defconfig+64K_PAGES.
-> >
-> > The only logging I see from PCI in the failing boot is:
-> >
-> >    <6>[    0.580973] PCI: CLS 0 bytes, default 64
-> >
-> > there's none of the host bridge enumeration starting with
-> >
-> >   <6>[    2.394399] imx6q-pcie 33800000.pcie: host bridge /soc@0/pcie@33800000 ranges:
-> >   <6>[    2.396012] imx6q-pcie 33c00000.pcie: host bridge /soc@0/pcie@33c00000 ranges:
-> >
-> > that is seen with working boots.
-> >
-> > I've left the full bot report below, it's got a Reported-by tag, links
-> > to more details including full boot logs and more.  The bot checked that
-> > reverting the patch seems to fix the problem.
->
-> Thanks for the report. I'll look into this alongside the issue Tony reported.
+This series patches refine pci-imx6 driver and do the following main changes.
+- Encapsulate the clock enable into one standalone function
+- Add the error propagation from host_init and resume
+- Turn off regulator when the system is in suspend mode
+- Let the probe successfully when link never comes up
+- Do not hide the phy driver callbacks in core reset and clk_enable.
+- Keep symmetric as much as possible between suspend and resume callbacks.
+BTW, this series are verified on i.MX8MM EVK board when one NVME is used.
 
-Hi Mark,
+Main changes from v13 to v14 refer to Bjorn's comments:
+- To keep suspend/resume symmetric as much as possible. Create
+  imx6_pcie_stop_link() and imx6_pcie_host_exit() functions, and invoke
+  them in suspend callback.
+- Since the imx6_pcie_clk_disable() is invoked by imx6_pcie_host_exit(),
+  to be symmetric with imx6_pcie_host_exit(), move imx6_pcie_clk_enable()
+  to imx6_pcie_host_init() from imx6_pcie_deassert_core_reset().
 
-I think the root cause is the same as the issue I debugged here:
-https://lore.kernel.org/lkml/CAGETcx_1qa=gGT4LVkyPpcA1vFM9FzuJE+0DhL_nFyg5cbFjVg@mail.gmail.com/
+Main changes from v12 to v13:
+- Call imx6_pcie_host_init() instead of duplicating codes in resume.
+- Move the regulator enable out of imx6_pcie_deassert_core_reset().
+  Re-format the error handling in imx6_pcie_deassert_core_reset()
+  and imx6_pcie_host_init() accordingly.
 
-The patch attached to that email will probably fix this issue. I
-haven't dealt with Kernel CI bot before. Is there a way to get it to
-test a patch?
+Main changes from v11 to v12 issued by Bjorn:
+- Add four intro patches to move code around to collect similar things
+  (PHY management, reset management) together.  This makes the first
+  diff to collect clock enables simpler because it's not cluttered with
+  unrelated things that didn't actually change.
+- Factor out ref clock disables so the disable function structure matches
+  the enable structure.
+- Drop unused "ret" from "Reduce resume time ..." to avoid bisection
+  hole, then add it back in "Do not hide phy driver ..." where we start
+  using it again.
+- Add patch to make imx6_pcie_clk_disable() symmetric with
+  imx6_pcie_clk_enable() in terms of enable/disable ordering.
 
-Thanks,
-Saravana
+Main changes from v10 to v11:
+No code changes, just do the following operations refer to Bjorn's comments.
+  - Split #6 patch into two patches.
+  - Rebase to v5.19-rc1 based on for-next branch of Shawn's git.
 
->
-> > > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > > * This automated bisection report was sent to you on the basis  *
-> > > * that you may be involved with the breaking commit it has      *
-> > > * found.  No manual investigation has been done to verify it,   *
-> > > * and the root cause of the problem may be somewhere else.      *
-> > > *                                                               *
-> > > * If you do send a fix, please include this trailer:            *
-> > > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> > > *                                                               *
-> > > * Hope this helps!                                              *
-> > > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > >
-> > > next/master bisection: baseline.bootrr.imx6q-pcie-pcie0-probed on kontron-pitx-imx8m
-> > >
-> > > Summary:
-> > >   Start:      6cc11d2a17592 Add linux-next specific files for 20220630
-> > >   Plain log:  https://storage.kernelci.org/next/master/next-20220630/arm64/defconfig+CONFIG_ARM64_64K_PAGES=y/gcc-10/lab-kontron/baseline-kontron-pitx-imx8m.txt
-> > >   HTML log:   https://storage.kernelci.org/next/master/next-20220630/arm64/defconfig+CONFIG_ARM64_64K_PAGES=y/gcc-10/lab-kontron/baseline-kontron-pitx-imx8m.html
-> > >   Result:     5a46079a96451 PM: domains: Delete usage of driver_deferred_probe_check_state()
-> > >
-> > > Checks:
-> > >   revert:     PASS
-> > >   verify:     PASS
-> > >
-> > > Parameters:
-> > >   Tree:       next
-> > >   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > >   Branch:     master
-> > >   Target:     kontron-pitx-imx8m
-> > >   CPU arch:   arm64
-> > >   Lab:        lab-kontron
-> > >   Compiler:   gcc-10
-> > >   Config:     defconfig+CONFIG_ARM64_64K_PAGES=y
-> > >   Test case:  baseline.bootrr.imx6q-pcie-pcie0-probed
-> > >
-> > > Breaking commit found:
-> > >
-> > > -------------------------------------------------------------------------------
-> > > commit 5a46079a96451cfb15e4f5f01f73f7ba24ef851a
-> > > Author: Saravana Kannan <saravanak@google.com>
-> > > Date:   Wed Jun 1 00:06:57 2022 -0700
-> > >
-> > >     PM: domains: Delete usage of driver_deferred_probe_check_state()
-> > >
-> > >     Now that fw_devlink=on by default and fw_devlink supports
-> > >     "power-domains" property, the execution will never get to the point
-> > >     where driver_deferred_probe_check_state() is called before the supplier
-> > >     has probed successfully or before deferred probe timeout has expired.
-> > >
-> > >     So, delete the call and replace it with -ENODEV.
-> > >
-> > >     Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > >     Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > >     Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > >     Link: https://lore.kernel.org/r/20220601070707.3946847-2-saravanak@google.com
-> > >     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >
-> > > diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> > > index 739e52cd4aba5..3e86772d5fac5 100644
-> > > --- a/drivers/base/power/domain.c
-> > > +++ b/drivers/base/power/domain.c
-> > > @@ -2730,7 +2730,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
-> > >               mutex_unlock(&gpd_list_lock);
-> > >               dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
-> > >                       __func__, PTR_ERR(pd));
-> > > -             return driver_deferred_probe_check_state(base_dev);
-> > > +             return -ENODEV;
-> > >       }
-> > >
-> > >       dev_dbg(dev, "adding to PM domain %s\n", pd->name);
-> > > -------------------------------------------------------------------------------
-> > >
-> > >
-> > > Git bisection log:
-> > >
-> > > -------------------------------------------------------------------------------
-> > > git bisect start
-> > > # good: [d9b2ba67917c18822c6a09af41c32fa161f1606b] Merge tag 'platform-drivers-x86-v5.19-3' of git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
-> > > git bisect good d9b2ba67917c18822c6a09af41c32fa161f1606b
-> > > # bad: [6cc11d2a1759275b856e464265823d94aabd5eaf] Add linux-next specific files for 20220630
-> > > git bisect bad 6cc11d2a1759275b856e464265823d94aabd5eaf
-> > > # good: [7391068f14aafb8c5bb9d5aeb07ecfa55c89be42] Merge branch 'drm-next' of https://gitlab.freedesktop.org/agd5f/linux
-> > > git bisect good 7391068f14aafb8c5bb9d5aeb07ecfa55c89be42
-> > > # good: [17daf6a2ab5178cf52a20d1c85470ea4638d4310] Merge branch 'next' of git://git.kernel.org/pub/scm/virt/kvm/kvm.git
-> > > git bisect good 17daf6a2ab5178cf52a20d1c85470ea4638d4310
-> > > # bad: [a143ea0f3ce59385089e6e7b71b04fd0b5621bd8] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git
-> > > git bisect bad a143ea0f3ce59385089e6e7b71b04fd0b5621bd8
-> > > # bad: [57b6609eb7251280cf9f34fdebf1244f10673749] Merge branch 'icc-next' of git://git.kernel.org/pub/scm/linux/kernel/git/djakov/icc.git
-> > > git bisect bad 57b6609eb7251280cf9f34fdebf1244f10673749
-> > > # bad: [eb3fd63a935b759df99bfe4a6b13c820204f81d3] Merge branch 'usb-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
-> > > git bisect bad eb3fd63a935b759df99bfe4a6b13c820204f81d3
-> > > # good: [048914d1bed271f04f726b7f78d0bef8cd1809f5] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi.git
-> > > git bisect good 048914d1bed271f04f726b7f78d0bef8cd1809f5
-> > > # good: [40a959d7042bb7711e404ad2318b30e9f92c6b9b] usb: host: ohci-ppc-of: Fix refcount leak bug
-> > > git bisect good 40a959d7042bb7711e404ad2318b30e9f92c6b9b
-> > > # good: [849f35422319a46c2a52289e2d5c85eb3346a921] Merge tag 'thunderbolt-for-v5.20-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt into usb-next
-> > > git bisect good 849f35422319a46c2a52289e2d5c85eb3346a921
-> > > # bad: [a52ed4866d2b90dd5e4ae9dabd453f3ed8fa3cbc] mwifiex: fix sleep in atomic context bugs caused by dev_coredumpv
-> > > git bisect bad a52ed4866d2b90dd5e4ae9dabd453f3ed8fa3cbc
-> > > # bad: [f516d01b9df2782b9399c44fa1d21c3d09211f8a] Revert "driver core: Set default deferred_probe_timeout back to 0."
-> > > git bisect bad f516d01b9df2782b9399c44fa1d21c3d09211f8a
-> > > # bad: [f8217275b57aa48d98cc42051c2aac34152718d6] net: mdio: Delete usage of driver_deferred_probe_check_state()
-> > > git bisect bad f8217275b57aa48d98cc42051c2aac34152718d6
-> > > # bad: [24a026f85241a01bbcfe1b263caeeaa9a79bab40] pinctrl: devicetree: Delete usage of driver_deferred_probe_check_state()
-> > > git bisect bad 24a026f85241a01bbcfe1b263caeeaa9a79bab40
-> > > # bad: [5a46079a96451cfb15e4f5f01f73f7ba24ef851a] PM: domains: Delete usage of driver_deferred_probe_check_state()
-> > > git bisect bad 5a46079a96451cfb15e4f5f01f73f7ba24ef851a
-> > > # first bad commit: [5a46079a96451cfb15e4f5f01f73f7ba24ef851a] PM: domains: Delete usage of driver_deferred_probe_check_state()
-> > > -------------------------------------------------------------------------------
-> > >
-> > >
-> > > -=-=-=-=-=-=-=-=-=-=-=-
-> > > Groups.io Links: You receive all messages sent to this group.
-> > > View/Reply Online (#28727): https://groups.io/g/kernelci-results/message/28727
-> > > Mute This Topic: https://groups.io/mt/92093224/1131744
-> > > Group Owner: kernelci-results+owner@groups.io
-> > > Unsubscribe: https://groups.io/g/kernelci-results/unsub [broonie@kernel.org]
-> > > -=-=-=-=-=-=-=-=-=-=-=-
-> > >
-> > >
+Main changes from v9 to v10:
+- Add the "Reviewed-by: Lucas Stach <l.stach@pengutronix.de>" tag into #3
+  and #4 patches.
+- Refer to Bjorn's comments:
+  - refine the commit of the first patch
+  - keep alignment of the message format in the second patch
+  - More specific commit and subject of the #5 and #7 patches.
+- Move the regualtor_disable into suspend, turn off the regulator when bus
+  is powered off and system in suspend mode.
+- Let the driver probe successfully, return zero in imx6_pcie_start_link()
+  when PCIe link is down. 
+  In this link down scenario, only start the PCIe link training in resume
+  when the link is up before system suspend to avoid the long latency in
+  the link training period.
+- Don't hide phy driver callbacks in core reset and clk_enable, and refine
+  the error handling accordingly.
+- Drop the #8 patch of v9 series, since the clocks and powers are not gated
+  off anymore when link is down.
+
+Main changes from v8 to v9:
+- Don't change pcie-designware codes, and do the error exit process only in
+  pci-imx6 driver internally.
+- Move the phy driver callbacks to the proper places
+
+Main changes from v7 to v8:
+Regarding Bjorn's review comments.
+- Align the format of the dev_info message and refine commit log of
+  #6/7/8 patches.
+- Rename the err_reset_phy label, since there is no PHY reset in the out
+
+Main changes from v6 to v7:
+- Keep the regulator usage counter balance in the #5 patch of v6 series.
+
+Main changes from v5 to v6:
+- Refer to the following discussion with Fabio, fix the dump by his patch.
+  https://patchwork.kernel.org/project/linux-pci/patch/1641368602-20401-6-git-send-email-hongxing.zhu@nxp.com/
+  Refine and rebase this patch-set after Fabio' dump fix patch is merged.
+- Add one new #4 patch to disable i.MX6QDL REF clock too when disable clocks
+- Split the regulator refine codes into one standalone patch #5 in this version.
+
+Main changes from v4 to v5:
+- Since i.MX8MM PCIe support had been merged. Based on Lorenzo's git repos,
+  resend the patch-set after rebase.
+
+Main changes from v3 to v4:
+- Regarding Mark's comments, delete the regulator_is_enabled() check.
+- Squash #3 and #6 of v3 patch into #5 patch of v4 set.
+
+Main changes from v2 to v3:
+- Add "Reviewed-by: Lucas Stach <l.stach@pengutronix.de>" tag into
+  first two patches.
+- Add a Fixes tag into #3 patch.
+- Split the #4 of v2 to two patches, one is clock disable codes move,
+  the other one is the acutal clock unbalance fix.
+- Add a new host_exit() callback into dw_pcie_host_ops, then it could be
+  invoked to handle the unbalance issue in the error handling after
+  host_init() function when link is down.
+- Add a new host_exit() callback for i.MX PCIe driver to handle this case
+  in the error handling after host_init.
+
+Main changes from v1 to v2:
+Regarding Lucas' comments.
+  - Move the placement of the new imx6_pcie_clk_enable() to avoid the
+    forward declarition.
+  - Seperate the second patch of v1 patch-set to three patches.
+  - Use the module_param to replace the kernel command line.
+Regarding Bjorn's comments:
+  - Use the cover-letter for a multi-patch series.
+  - Correct the subject line, and refine the commit logs. For example,
+    remove the timestamp of the logs.
+
+Bjorn Helgaas (5):
+  PCI: imx6: Move imx6_pcie_grp_offset(), imx6_pcie_configure_type()
+    earlier
+  PCI: imx6: Move PHY management functions together
+  PCI: imx6: Move imx6_pcie_enable_ref_clk() earlier
+  PCI: imx6: Factor out ref clock disable to match enable
+  PCI: imx6: Disable clocks in reverse order of enable
+
+Richard Zhu (12):
+  PCI: imx6: Move imx6_pcie_clk_disable() earlier
+  PCI: imx6: Collect clock enables in imx6_pcie_clk_enable()
+  PCI: imx6: Propagate .host_init() errors to caller
+  PCI: imx6: Disable i.MX6QDL clock when disabling ref clocks
+  PCI: imx6: Call host init function directly in resume
+  PCI: imx6: Turn off regulator when system is in suspend mode
+  PCI: imx6: Move regulator enable out of
+    imx6_pcie_deassert_core_reset()
+  PCI: imx6: Mark the link down as non-fatal error
+  PCI: imx6: Reduce resume time by only starting link if it was up
+    before suspend
+  PCI: imx6: Do not hide phy driver callbacks and refine the error
+    handling
+  PCI: imx6: Reformat suspend callback to keep symmetric with resume
+  PCI: imx6: Move the imx6_pcie_ltssm_disable() earlier
+
+drivers/pci/controller/dwc/pci-imx6.c | 661 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------------------------------------------
+1 file changed, 358 insertions(+), 303 deletions(-)
