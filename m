@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF245629AD
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 05:43:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD7955629B7
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 05:43:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233395AbiGADke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Jun 2022 23:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50588 "EHLO
+        id S234163AbiGADkf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Jun 2022 23:40:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233744AbiGADk2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 23:40:28 -0400
+        with ESMTP id S229868AbiGADk3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Jun 2022 23:40:29 -0400
 Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A3164D41;
-        Thu, 30 Jun 2022 20:40:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A15364D74;
+        Thu, 30 Jun 2022 20:40:28 -0700 (PDT)
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 39CA51A33D0;
-        Fri,  1 Jul 2022 05:40:26 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 59AB21A33E2;
+        Fri,  1 Jul 2022 05:40:27 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 01E601A33D8;
-        Fri,  1 Jul 2022 05:40:26 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 223F11A33E0;
+        Fri,  1 Jul 2022 05:40:27 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 61DFC180222B;
-        Fri,  1 Jul 2022 11:40:24 +0800 (+08)
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 80DD91802204;
+        Fri,  1 Jul 2022 11:40:25 +0800 (+08)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
         broonie@kernel.org, lorenzo.pieralisi@arm.com, festevam@gmail.com,
@@ -30,9 +30,9 @@ To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
 Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel@pengutronix.de, linux-imx@nxp.com
-Subject: [PATCH v14 10/17] PCI: imx6: Turn off regulator when system is in suspend mode
-Date:   Fri,  1 Jul 2022 11:25:28 +0800
-Message-Id: <1656645935-1370-11-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v14 11/17] PCI: imx6: Move regulator enable out of imx6_pcie_deassert_core_reset()
+Date:   Fri,  1 Jul 2022 11:25:29 +0800
+Message-Id: <1656645935-1370-12-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1656645935-1370-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1656645935-1370-1-git-send-email-hongxing.zhu@nxp.com>
@@ -46,88 +46,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The driver should undo any enables it did itself. The regulator disable
-shouldn't be basing decisions on regulator_is_enabled().
+Move regulator enable out of imx6_pcie_deassert_core_reset(), since the
+regulator_enable() has nothing to do in with
+imx6_pcie_deassert_core_reset().
 
-Move the regulator_disable to the suspend function, turn off regulator when
-the system is in suspend mode.
-
-To keep the balance of the regulator usage counter, disable the regulator
-in shutdown.
-
-Link: https://lore.kernel.org/r/1655189942-12678-6-git-send-email-hongxing.z
-hu@nxp.com
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 36 ++++++++++++---------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 2b42c37f1617..f72eb609769b 100644
+index f72eb609769b..0b168f0d57b8 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -670,8 +670,6 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
+@@ -712,19 +712,10 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	struct device *dev = pci->dev;
+ 	int ret;
  
- static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- {
--	struct device *dev = imx6_pcie->pci->dev;
+-	if (imx6_pcie->vpcie) {
+-		ret = regulator_enable(imx6_pcie->vpcie);
+-		if (ret) {
+-			dev_err(dev, "failed to enable vpcie regulator: %d\n",
+-				ret);
+-			return ret;
+-		}
+-	}
 -
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX7D:
- 	case IMX8MQ:
-@@ -702,14 +700,6 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- 		break;
+ 	ret = imx6_pcie_clk_enable(imx6_pcie);
+ 	if (ret) {
+ 		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
+-		goto err_clks;
++		return ret;
  	}
  
--	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
--		int ret = regulator_disable(imx6_pcie->vpcie);
+ 	switch (imx6_pcie->drvdata->variant) {
+@@ -783,15 +774,6 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	}
+ 
+ 	return 0;
 -
+-err_clks:
+-	if (imx6_pcie->vpcie) {
+-		ret = regulator_disable(imx6_pcie->vpcie);
 -		if (ret)
 -			dev_err(dev, "failed to disable vpcie regulator: %d\n",
 -				ret);
 -	}
--
- 	/* Some boards don't have PCIe reset GPIO. */
- 	if (gpio_is_valid(imx6_pcie->reset_gpio))
- 		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-@@ -722,7 +712,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	struct device *dev = pci->dev;
- 	int ret;
+-	return ret;
+ }
  
--	if (imx6_pcie->vpcie && !regulator_is_enabled(imx6_pcie->vpcie)) {
-+	if (imx6_pcie->vpcie) {
- 		ret = regulator_enable(imx6_pcie->vpcie);
- 		if (ret) {
- 			dev_err(dev, "failed to enable vpcie regulator: %d\n",
-@@ -795,7 +785,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 	return 0;
+ static int imx6_pcie_wait_for_speed_change(struct imx6_pcie *imx6_pcie)
+@@ -916,15 +898,29 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
  
- err_clks:
--	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
+ 	imx6_pcie_assert_core_reset(imx6_pcie);
+ 	imx6_pcie_init_phy(imx6_pcie);
 +	if (imx6_pcie->vpcie) {
- 		ret = regulator_disable(imx6_pcie->vpcie);
- 		if (ret)
- 			dev_err(dev, "failed to disable vpcie regulator: %d\n",
-@@ -1022,6 +1012,9 @@ static int imx6_pcie_suspend_noirq(struct device *dev)
- 		break;
++		ret = regulator_enable(imx6_pcie->vpcie);
++		if (ret) {
++			dev_err(dev, "failed to enable vpcie regulator: %d\n",
++				ret);
++			return ret;
++		}
++	}
++
+ 	ret = imx6_pcie_deassert_core_reset(imx6_pcie);
+ 	if (ret < 0) {
+ 		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
+-		return ret;
++		goto err_reg_disable;
  	}
  
-+	if (imx6_pcie->vpcie)
-+		regulator_disable(imx6_pcie->vpcie);
-+
+ 	imx6_setup_phy_mpll(imx6_pcie);
+ 
  	return 0;
- }
- 
-@@ -1268,6 +1261,8 @@ static void imx6_pcie_shutdown(struct platform_device *pdev)
- 
- 	/* bring down link, so bootloader gets clean state in case of reboot */
- 	imx6_pcie_assert_core_reset(imx6_pcie);
++
++err_reg_disable:
 +	if (imx6_pcie->vpcie)
 +		regulator_disable(imx6_pcie->vpcie);
++	return ret;
  }
  
- static const struct imx6_pcie_drvdata drvdata[] = {
+ static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
 -- 
 2.25.1
 
