@@ -2,173 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C84D563606
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 16:44:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12DB956360E
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 16:44:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232428AbiGAOn2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Jul 2022 10:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34542 "EHLO
+        id S230402AbiGAOoa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Jul 2022 10:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233185AbiGAOnH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 10:43:07 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2201114;
-        Fri,  1 Jul 2022 07:42:48 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 261EMjir002604;
-        Fri, 1 Jul 2022 14:42:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=uyWJEummehwzc0wqCJ2uwFIV2Y5jSghhAfoFZA7XG1g=;
- b=HBz1DGmE5k4hmSG///y6N17ss14zIJRDERZ+6NWkuOy6XYnuRuX/WWeVjNGL4nEMXKez
- 58gY4zZEjKBBLIpJNBrQX77pqgp87K6TDWqVnUqLIWW+b2DGz0AxDRBO4SFH5WFke4/1
- nsyMyEDcHVUMkK9SAL5n9Amw8/dMz0OT9xS+WyPCrWSKtb+IUQZkGBgx0B+XmMqG/xaj
- sKwgyoYSDxwJaxzS8GD9jFbKd7uVTDWbOTllaZmYjvbDbwoM4gYMHVFkj2wXQfU2weah
- rtpRnfgolbeN4hlF8s3kStUs0eAUBDi5q8OlxUlbxwzlM9yMB1/PVXx+W0QTV9Sb2HQf LA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h22mw0pw3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 Jul 2022 14:42:45 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 261EMlBa002672;
-        Fri, 1 Jul 2022 14:42:44 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h22mw0pvb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 Jul 2022 14:42:44 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 261EKnsS023962;
-        Fri, 1 Jul 2022 14:42:42 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06fra.de.ibm.com with ESMTP id 3gwsmhycea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 Jul 2022 14:42:42 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 261EgdoW22544782
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 Jul 2022 14:42:39 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11B8DAE04D;
-        Fri,  1 Jul 2022 14:42:39 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C2CCAE053;
-        Fri,  1 Jul 2022 14:42:38 +0000 (GMT)
-Received: from sig-9-145-161-31.de.ibm.com (unknown [9.145.161.31])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 Jul 2022 14:42:38 +0000 (GMT)
-Message-ID: <ec7b4f2ad9f1cfb6ad47e9476b11127ecb24a9f7.camel@linux.ibm.com>
-Subject: Re: [PATCH v6 4/5] PCI: Extend isolated function probing to s390
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
+        with ESMTP id S229998AbiGAOo2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 10:44:28 -0400
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25C8D13E84;
+        Fri,  1 Jul 2022 07:44:28 -0700 (PDT)
+Received: by mail-il1-f178.google.com with SMTP id w10so1549270ilj.4;
+        Fri, 01 Jul 2022 07:44:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ytccVTPOAVJYoaiSKyc0iiVcQYhIGLNNjeSgQTrxPac=;
+        b=etBF3h/sROX/O+VkG1fvRXqVtANkWmO6S/xZ6MY5mcrYhxb9eEJqdF54Sks9GY3Pyq
+         bZ0xhyvCyAwCXT8PaJuHfeXN45sLv3JqTEXA0Eft3174EhH5iXmzXivZv+XxtzACowSt
+         r2Ibw6+14BqUhNroxSigsRsvW4N5Xv87h9pvKiYeLnHtTgtxPCcb4UnPnwBGI33Mo9hr
+         1P9TMs1VBm10m9qx2GoUDhDRtkNfFF0HlEikb4m+/Dtfegt/Mv1Y+RnY85Q8ScSrbwAL
+         sIOjGKJ7m0OAeIPYdgYCJrxZTM9aaMcHz7tKymiAcblBaR2+T0VQbHnKR/2J81JQo3BL
+         z4pg==
+X-Gm-Message-State: AJIora9AtYooxCIpmrIlTlS7NoUKLmGjsDRDdwdq2a8zz74evfMn10kZ
+        2CX4DMMHV+3ixPJbssDeCQ==
+X-Google-Smtp-Source: AGRyM1uzdTpatC7zqZJnxWDfoRAtzaFQwkHUDgHjdzvkIy8cLMH/g0o6FP2Cp2hjNV62WE067Yx5HQ==
+X-Received: by 2002:a92:cd8d:0:b0:2d9:5692:5141 with SMTP id r13-20020a92cd8d000000b002d956925141mr8668884ilb.15.1656686667304;
+        Fri, 01 Jul 2022 07:44:27 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id j12-20020a6b794c000000b0067275a52928sm10352684iop.9.2022.07.01.07.44.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Jul 2022 07:44:26 -0700 (PDT)
+Received: (nullmailer pid 904416 invoked by uid 1000);
+        Fri, 01 Jul 2022 14:44:24 -0000
+Date:   Fri, 1 Jul 2022 08:44:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Fri, 01 Jul 2022 16:42:38 +0200
-In-Reply-To: <90996285-9ae3-0030-a5e3-a3f1bfa23088@linux.ibm.com>
-References: <20220628143100.3228092-1-schnelle@linux.ibm.com>
-         <20220628143100.3228092-5-schnelle@linux.ibm.com>
-         <90996285-9ae3-0030-a5e3-a3f1bfa23088@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hAEhURQexcZrhd5fEISYsMF1jKiQ9yPg
-X-Proofpoint-ORIG-GUID: jA-tqPmvu7yEOhqBN6Yg0M-MkSCQZmYE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-01_07,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 bulkscore=0
- phishscore=0 suspectscore=0 mlxlogscore=786 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2207010056
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v3 04/17] dt-bindings: PCI: dwc: Add max-link-speed
+ common property
+Message-ID: <20220701144424.GA804716-robh@kernel.org>
+References: <20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru>
+ <20220610085706.15741-5-Sergey.Semin@baikalelectronics.ru>
+ <20220615145550.GA1069883-robh@kernel.org>
+ <20220619142720.tzfgefunvf3kirul@mobilestation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220619142720.tzfgefunvf3kirul@mobilestation>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2022-06-30 at 14:45 +0200, Pierre Morel wrote:
-> 
-> On 6/28/22 16:30, Niklas Schnelle wrote:
-> > Like the jailhouse hypervisor s390's PCI architecture allows passing
-> > isolated PCI functions to an OS instance. As of now this is was not
-> > utilized even with multi-function support as the s390 PCI code makes
-> > sure that only virtual PCI busses including a function with devfn 0 are
-> > presented to the PCI subsystem. A subsequent change will remove this
-> > restriction.
+On Sun, Jun 19, 2022 at 05:27:20PM +0300, Serge Semin wrote:
+> On Wed, Jun 15, 2022 at 08:55:50AM -0600, Rob Herring wrote:
+> > On Fri, Jun 10, 2022 at 11:56:52AM +0300, Serge Semin wrote:
+> > > In accordance with [1] DW PCIe controllers support up to Gen5 link speed.
+> > > Let's add the max-link-speed property upper bound to 5 then. The DT
+> > > bindings of the particular devices are expected to setup more strict
+> > > constraint on that parameter.
+> > > 
+> > > [1] Synopsys DesignWare Cores PCI Express Controller Databook, Version
+> > > 5.40a, March 2019, p. 27
+> > > 
+> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > 
+> > > ---
+> > > 
+> > > Changelog v3:
+> > > - This is a new patch unpinned from the next one:
+> > >   https://lore.kernel.org/linux-pci/20220503214638.1895-2-Sergey.Semin@baikalelectronics.ru/
+> > >   by the Rob' request. (@Rob)
+> > > ---
+> > >  Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml | 3 +++
+> > >  Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml     | 2 ++
+> > >  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml        | 1 +
+> > >  3 files changed, 6 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> > > index 627a5d6625ba..b2fbe886981b 100644
+> > > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
+> > > @@ -45,6 +45,9 @@ properties:
+> > >        the peripheral devices available on the PCIe bus.
+> > >      maxItems: 1
+> > >  
+> > > +  max-link-speed:
+> > > +    maximum: 5
 > > 
-> > Allow probing such functions by replacing the existing check for
-> > jailhouse_paravirt() with a new hypervisor_isolated_pci_functions()
-> > helper.
+> 
+> > Unless the default is less than the max, shouldn't the max here be 1 
+> > less than the h/w max?
+> 
+> Why? AFAIU max-link-speed semantics it works as less-than-or-equal
+> operator isn't it? The modern DW PCIe Root ports and Endpoints
+> IP-cores support up to Gen5 PCIe speed including the Gen5 mode (see
+> the CX_MAX_PCIE_SPEED IP-core synthesize paramter). It's reasonable to
+> set the max-link-speed here to be in coherency with the IP-core
+> reference manual.
+
+It is supposed to be an override for the default. Wouldn't the default 
+always be the max the IP supports?
+
+In any case, this max is only accurate for the current/latest version of 
+the IP. For older versions, it's not an accurate limit. I think it 
+should just be dropped and each controller needs to provide a limit.
+
+
+> > >    num-lanes:
+> > >      description:
+> > >        Number of PCIe link lanes to use. Can be omitted should the already
+> > > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> > > index dcd521aed213..fc3b5d4ac245 100644
+> > > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+> > > @@ -55,4 +55,6 @@ examples:
+> > >  
+> > >        phys = <&pcie_phy0>, <&pcie_phy1>, <&pcie_phy2>, <&pcie_phy3>;
+> > >        phy-names = "pcie0", "pcie1", "pcie2", "pcie3";
+> > > +
+> > > +      max-link-speed = <3>;
+> > >      };
+> > > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > index 4a5c8b933b52..01cedf51e0f8 100644
+> > > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > @@ -74,4 +74,5 @@ examples:
+> > >        phy-names = "pcie";
+> > >  
+> > >        num-lanes = <1>;
+> > > +      max-link-speed = <3>;
 > > 
-> > Cc: Jan Kiszka <jan.kiszka@siemens.com>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > ---
-> >   drivers/pci/probe.c        | 2 +-
-> >   include/linux/hypervisor.h | 8 ++++++++
-> >   2 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> > This should give you an error because pci-bus.yaml only goes up to 4. 
+> 
+> I've set max-link-speed to "3" here. So no error will be caused neither
+> by this schema nor by the pci-bus.yaml bindings.
+> 
+> * Though these examples won't be evaluated because the generic DW PCIe
+> RP and EP schemas have been marked as "select: false".
+
+Uh, I don't know what I was thinking...
+
+> 
 > > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index a18e07e6a7df..156dd13594b8 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -2667,7 +2667,7 @@ int pci_scan_slot(struct pci_bus *bus, int devfn)
-> >   			 * a hypervisor which passes through individual PCI
-> >   			 * functions.
-> >   			 */
-> > -			if (!jailhouse_paravirt())
-> > +			if (!hypervisor_isolated_pci_functions())
-> >   				break;
-> >   		}
-> >   		fn = next_fn(bus, dev, fn);
-> > diff --git a/include/linux/hypervisor.h b/include/linux/hypervisor.h
-> > index fc08b433c856..33b1c0482aac 100644
-> > --- a/include/linux/hypervisor.h
-> > +++ b/include/linux/hypervisor.h
-> > @@ -32,4 +32,12 @@ static inline bool jailhouse_paravirt(void)
-> >   
-> >   #endif /* !CONFIG_X86 */
-> >   
-> > +static inline bool hypervisor_isolated_pci_functions(void)
-> > +{
-> > +	if (IS_ENABLED(CONFIG_S390))
-> > +		return true;
-> > +	else
-> > +		return jailhouse_paravirt();
-> 
-> I would spare the else,
-
-I don't have a preference for either style so sure.
-
-> 
-> Another remark, shouldn't it be the last patch?
-
-Either way should work. Without the last patch we don't try to probe
-and without this patch the probing wouldn't find the function. I think
-I'll keep the order to keep the PCI subsystem changes together and
-because I feel trying to probe without that working is worse than not
-probing.
-
-> 
-> otherwise LGTM
-> 
-> Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-
-Thanks for taking a look!
-
-> 
-> 
-> > +}
-> > +
-> >   #endif /* __LINUX_HYPEVISOR_H */
+> > I'm not really sure that limiting it in the common schema is too useful. 
+> > We're going to be updating it one step at a time. Limiting it is really 
+> > only helpful for specific implementations.
 > > 
+> 
+> I disagree. As I said above the max PCIe speed limit set here has been
+> taken from the HW reference manual so it describes the modern DW PCIe
+> controllers capability. No mater what value is set by the pci-bus.yaml
+> schema (eventually we'll get to have it increased to Gen5 too) we can
+> use the DW PCIe-specific limitation here as a known upper capabilities
+> bound.
 
+The latest DWC IP is likely going to support the latest gen within some 
+amount of time. With each bump, we're going to have to update 
+pci-bus.yaml and then this one too. Yet neither really has any impact 
+if we provide a per controller limit.
 
+Rob
