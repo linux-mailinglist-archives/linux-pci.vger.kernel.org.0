@@ -2,34 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 395F4563795
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 18:17:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76E4E563798
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 18:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231496AbiGAQQ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Jul 2022 12:16:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38842 "EHLO
+        id S231349AbiGAQRB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Jul 2022 12:17:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230483AbiGAQQ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 12:16:58 -0400
+        with ESMTP id S231775AbiGAQRA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 12:17:00 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 74D503E0D2;
-        Fri,  1 Jul 2022 09:16:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E4FA13BBF9;
+        Fri,  1 Jul 2022 09:16:59 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82D12113E;
-        Fri,  1 Jul 2022 09:16:57 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3633143D;
+        Fri,  1 Jul 2022 09:16:59 -0700 (PDT)
 Received: from pierre123.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9577C3F66F;
-        Fri,  1 Jul 2022 09:16:55 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D4A2A3F66F;
+        Fri,  1 Jul 2022 09:16:57 -0700 (PDT)
 From:   Pierre Gondois <pierre.gondois@arm.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     Pierre Gondois <Pierre.Gondois@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org
-Subject: [PATCH RESEND v1 0/2] Make _PRS and _SRS methods optional
-Date:   Fri,  1 Jul 2022 18:16:22 +0200
-Message-Id: <20220701161624.2844305-1-pierre.gondois@arm.com>
+Subject: [PATCH RESEND v1 1/2] ACPI/PCI: Make _SRS optional for link device
+Date:   Fri,  1 Jul 2022 18:16:23 +0200
+Message-Id: <20220701161624.2844305-2-pierre.gondois@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220701161624.2844305-1-pierre.gondois@arm.com>
+References: <20220701161624.2844305-1-pierre.gondois@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
@@ -41,33 +44,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI legacy interrupts can be described with link devices,
-cf ACPI 6.4, s6.2.13 "_PRT (PCI Routing Table)".
-Link devices can have optional _SRS/_PRS methods to set the interrupt.
+From: Pierre Gondois <Pierre.Gondois@arm.com>
 
-In PCI Firmware Specification Revision 3.3, s4.3.2.1. "Resource Setting":
-"""
-A non-configurable device only specifies _CRS. However, if they are
-configurable, devices include _PRS to indicate the possible resource
-setting and _SRS to allow OSPM to specify a new resource allocation
-for the device.
-"""
+In ACPI 6.4, s6.2.13 "_PRT (PCI Routing Table)", PCI legacy
+interrupts can be described though a link device (first model).
+From s6.2.16 "_SRS (Set Resource Settings)":
+"This optional control method [...]"
 
-However, _PRS/_SRS methods are checked in drivers/acpi/pci_link.c,
-and the driver aborts if they are absent.
-E.g.: When _PRS is missing:
-ACPI: \_SB_.PCI0.LNKA: _CRS 36 not found in _PRS
-ACPI: \_SB_.PCI0.LNKA: No IRQ available. Try pci=noacpi or acpi=off
+Make it optional to have a _SRS method for link devices.
 
 Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215560
+Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
+---
+ drivers/acpi/pci_link.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Pierre Gondois (2):
-  ACPI/PCI: Make _SRS optional for link device
-  ACPI/PCI: Make _PRS optional for link device
-
- drivers/acpi/pci_link.c | 46 ++++++++++++++++++++++++++++-------------
- 1 file changed, 32 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+index 58647051c948..129e3e7e80ee 100644
+--- a/drivers/acpi/pci_link.c
++++ b/drivers/acpi/pci_link.c
+@@ -288,6 +288,13 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
+ 	if (!irq)
+ 		return -EINVAL;
+ 
++	if (!acpi_has_method(handle, METHOD_NAME__SRS)) {
++		if (link->irq.active == irq)
++			return 0;
++		acpi_handle_err(handle, "Unable to set IRQ %d: No _SRS.\n", irq);
++		return -ENODEV;
++	}
++
+ 	resource = kzalloc(sizeof(*resource) + 1, irqs_disabled() ? GFP_ATOMIC: GFP_KERNEL);
+ 	if (!resource)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
