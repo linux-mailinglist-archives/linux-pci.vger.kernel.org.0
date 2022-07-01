@@ -2,178 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03BC55634EA
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 16:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C972A5635A8
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 16:34:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232006AbiGAONx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Jul 2022 10:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59850 "EHLO
+        id S229882AbiGAOej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Jul 2022 10:34:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbiGAONw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 10:13:52 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2A138DAF;
-        Fri,  1 Jul 2022 07:13:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1656684832; x=1688220832;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=jvcWb3wyK4oXONKNFq0h9eFMRH9SpOBxEGRZFxKd7lY=;
-  b=fb3alwF4ko09T++YwSRlz4gjRZeT+ITP1SOpQb6lSOh3wO5raJMIfnJX
-   sBG6lpys6o4WbZCx8On7jltgZCxsw20xeic0z0pVc4qu0E0jFY8NV4nxE
-   X97Iw5Sg9Yh53rN3u2bZiEhNZdJBedWAiTW8sJQzbOsoqvQzOQCPmFlCb
-   I=;
-Received: from ironmsg07-lv.qualcomm.com ([10.47.202.151])
-  by alexa-out.qualcomm.com with ESMTP; 01 Jul 2022 07:13:51 -0700
-X-QCInternal: smtphost
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg07-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Jul 2022 07:13:49 -0700
-X-QCInternal: smtphost
-Received: from hu-krichai-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.110.37])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 01 Jul 2022 19:43:31 +0530
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id E226C425F; Fri,  1 Jul 2022 19:43:30 +0530 (+0530)
-From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
-To:     helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        with ESMTP id S231243AbiGAOe1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 10:34:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FE08F220;
+        Fri,  1 Jul 2022 07:29:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7207B60C17;
+        Fri,  1 Jul 2022 14:29:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7841BC3411E;
+        Fri,  1 Jul 2022 14:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656685784;
+        bh=rcuSJZpqu02xDnkLFRTdxft1jR3fDN9Dyq4Myc8opqk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ebLI2a9ZJspHU73fB8plU3g+5L9kFYiLJrxuS2Zdzx+oG44FsjxCOmGg4+z3wNVu+
+         ZfN4YiTGOJXCB4iM2Mxd9c/BnwmF259VY9dH9YdU6kXvI5xSlr0Q03rEPS2Pwt1WjZ
+         2VuNM3j0cDM3GO8IfzKoMWHnJ8FhG4+8YBMeKvkpURhOBrLhPoPaJOmh9kOc1hgolt
+         dge7eAWKtUe4e3nFVDSlrLGWrGvDLUhExx5ruf4P0SDGqa1RPBA1FdWGmsxjCmTL1O
+         VRD0LRFoWMOFcdB+nTGZEgrcE3NvWl7Q06wcp6v5x4HXZDjMNhsldCZp73qcymr1hQ
+         zwD0y5NKdTOGQ==
+Received: by pali.im (Postfix)
+        id 8FC92888; Fri,  1 Jul 2022 16:29:41 +0200 (CEST)
+Date:   Fri, 1 Jul 2022 16:29:41 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH v3 2/2] PCI: qcom: Restrict pci transactions after pci suspend
-Date:   Fri,  1 Jul 2022 19:43:19 +0530
-Message-Id: <1656684800-31278-3-git-send-email-quic_krichai@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1656684800-31278-1-git-send-email-quic_krichai@quicinc.com>
-References: <1656495214-4028-1-git-send-email-quic_krichai@quicinc.com>
- <1656684800-31278-1-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mvebu: Use devm_request_irq() for registering
+ interrupt handler
+Message-ID: <20220701142941.xww2xon2joth5ikq@pali>
+References: <20220524122817.7199-1-pali@kernel.org>
+ <20220623162747.GA1455992@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220623162747.GA1455992@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If the endpoint device state is D0 and irq's are not freed, then
-kernel try to mask interrupts in system suspend path by writing
-in to the vector table (for MSIX interrupts) and config space (for MSI's).
+On Thursday 23 June 2022 11:27:47 Bjorn Helgaas wrote:
+> On Tue, May 24, 2022 at 02:28:17PM +0200, Pali Rohár wrote:
+> > Same as in commit a3b69dd0ad62 ("Revert "PCI: aardvark: Rewrite IRQ code to
+> > chained IRQ handler"") for pci-aardvark driver, use devm_request_irq()
+> > instead of chained IRQ handler in pci-mvebu.c driver.
+> >
+> > This change fixes affinity support and allows to pin interrupts from
+> > different PCIe controllers to different CPU cores.
+> 
+> Several other drivers use irq_set_chained_handler_and_data().  Do any
+> of them need similar changes?  The commit log suggests that using
+> chained IRQ handlers breaks affinity support.  But perhaps that's not
+> the case and the real culprit is some other difference between mvebu
+> and the other drivers.
 
-These transactions are initiated in the pm suspend after pcie clocks got
-disabled as part of platform driver pm  suspend call. Due to it, these
-transactions are resulting in un-clocked access and eventually to crashes.
+And there is another reason to not use irq_set_chained_handler_and_data
+and instead use devm_request_irq(). Armada XP has some interrupts
+shared and it looks like that irq_set_chained_handler_and_data() API
+does not handle shared interrupt sources too.
 
-So added a logic in qcom driver to restrict these unclocked access.
-And updated the logic to check the link state before masking
-or unmasking the interrupts.
+I can update commit message to mention also this fact.
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 14 +++++++--
- drivers/pci/controller/dwc/pcie-qcom.c            | 36 +++++++++++++++++++++--
- 2 files changed, 46 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 2fa86f3..2a46b40 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -29,13 +29,23 @@ static void dw_msi_ack_irq(struct irq_data *d)
- 
- static void dw_msi_mask_irq(struct irq_data *d)
- {
--	pci_msi_mask_irq(d);
-+	struct pcie_port *pp = irq_data_get_irq_chip_data(d->parent_data);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	if (dw_pcie_link_up(pci))
-+		pci_msi_mask_irq(d);
-+
- 	irq_chip_mask_parent(d);
- }
- 
- static void dw_msi_unmask_irq(struct irq_data *d)
- {
--	pci_msi_unmask_irq(d);
-+	struct pcie_port *pp = irq_data_get_irq_chip_data(d->parent_data);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	if (dw_pcie_link_up(pci))
-+		pci_msi_unmask_irq(d);
-+
- 	irq_chip_unmask_parent(d);
- }
- 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index d7ede0c..f0e9079 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1335,11 +1335,41 @@ static int qcom_pcie_suspend_2_7_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static u32 qcom_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size)
-+{
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+	u32 val;
-+
-+	if (pcie->is_suspended)
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	dw_pcie_read(base + reg, size, &val);
-+	return val;
-+}
-+
-+static void qcom_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
-+				u32 reg, size_t size, u32 val)
-+{
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+
-+	if (pcie->is_suspended)
-+		return;
-+
-+	dw_pcie_write(base + reg, size, val);
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
--	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
--	u16 val = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+	u16 offset;
-+	u16 val;
-+
-+	if (pcie->is_suspended)
-+		return false;
- 
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	val = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
- 	return !!(val & PCI_EXP_LNKSTA_DLLLA);
- }
- 
-@@ -1583,6 +1613,8 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- 	.start_link = qcom_pcie_start_link,
-+	.read_dbi = qcom_pcie_read_dbi,
-+	.write_dbi = qcom_pcie_write_dbi,
- };
- 
- static int qcom_pcie_probe(struct platform_device *pdev)
--- 
-2.7.4
-
+> > Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > ---
+> > Hello Bjorn! This is basically same issue as for pci-aardvark.c:
+> > https://lore.kernel.org/linux-pci/20220515125815.30157-1-pali@kernel.org/#t
+> > 
+> > I tested this patch with pci=nomsi in cmdline (to force kernel to use
+> > legacy intx instead of MSI) on A385 and checked that I can set affinity
+> > via /proc/irq/XX/smp_affinity file for every mvebu pcie controller to
+> > different CPU and legacy interrupts from different cards/controllers
+> > were handled by different CPUs.
+> > 
+> > I think that this is important on Armada XP platforms which have many
+> > independent PCIe controllers (IIRC up to 10) and many cores (up to 4).
+> > ---
+> >  drivers/pci/controller/pci-mvebu.c | 30 +++++++++++++++++-------------
+> >  1 file changed, 17 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > index 8f76d4bda356..de67ea39fea5 100644
+> > --- a/drivers/pci/controller/pci-mvebu.c
+> > +++ b/drivers/pci/controller/pci-mvebu.c
+> > @@ -1017,16 +1017,13 @@ static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
+> >  	return 0;
+> >  }
+> >  
+> > -static void mvebu_pcie_irq_handler(struct irq_desc *desc)
+> > +static irqreturn_t mvebu_pcie_irq_handler(int irq, void *arg)
+> >  {
+> > -	struct mvebu_pcie_port *port = irq_desc_get_handler_data(desc);
+> > -	struct irq_chip *chip = irq_desc_get_chip(desc);
+> > +	struct mvebu_pcie_port *port = arg;
+> >  	struct device *dev = &port->pcie->pdev->dev;
+> >  	u32 cause, unmask, status;
+> >  	int i;
+> >  
+> > -	chained_irq_enter(chip, desc);
+> > -
+> >  	cause = mvebu_readl(port, PCIE_INT_CAUSE_OFF);
+> >  	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> >  	status = cause & unmask;
+> > @@ -1040,7 +1037,7 @@ static void mvebu_pcie_irq_handler(struct irq_desc *desc)
+> >  			dev_err_ratelimited(dev, "unexpected INT%c IRQ\n", (char)i+'A');
+> >  	}
+> >  
+> > -	chained_irq_exit(chip, desc);
+> > +	return status ? IRQ_HANDLED : IRQ_NONE;
+> >  }
+> >  
+> >  static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> > @@ -1490,9 +1487,20 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+> >  				mvebu_pcie_powerdown(port);
+> >  				continue;
+> >  			}
+> > -			irq_set_chained_handler_and_data(irq,
+> > -							 mvebu_pcie_irq_handler,
+> > -							 port);
+> > +
+> > +			ret = devm_request_irq(dev, irq, mvebu_pcie_irq_handler,
+> > +					       IRQF_SHARED | IRQF_NO_THREAD,
+> > +					       port->name, port);
+> > +			if (ret) {
+> > +				dev_err(dev, "%s: cannot register interrupt handler: %d\n",
+> > +					port->name, ret);
+> > +				irq_domain_remove(port->intx_irq_domain);
+> > +				pci_bridge_emul_cleanup(&port->bridge);
+> > +				devm_iounmap(dev, port->base);
+> > +				port->base = NULL;
+> > +				mvebu_pcie_powerdown(port);
+> > +				continue;
+> > +			}
+> >  		}
+> >  
+> >  		/*
+> > @@ -1599,7 +1607,6 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
+> >  
+> >  	for (i = 0; i < pcie->nports; i++) {
+> >  		struct mvebu_pcie_port *port = &pcie->ports[i];
+> > -		int irq = port->intx_irq;
+> >  
+> >  		if (!port->base)
+> >  			continue;
+> > @@ -1615,9 +1622,6 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
+> >  		/* Clear all interrupt causes. */
+> >  		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> >  
+> > -		if (irq > 0)
+> > -			irq_set_chained_handler_and_data(irq, NULL, NULL);
+> > -
+> >  		/* Remove IRQ domains. */
+> >  		if (port->intx_irq_domain)
+> >  			irq_domain_remove(port->intx_irq_domain);
+> > -- 
+> > 2.20.1
+> > 
