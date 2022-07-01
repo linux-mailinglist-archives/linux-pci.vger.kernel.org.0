@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E3ED562E9A
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 10:43:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62059562EA6
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 10:46:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231781AbiGAImz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Jul 2022 04:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50184 "EHLO
+        id S233929AbiGAIqM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Jul 2022 04:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232772AbiGAImx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 04:42:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A37773584;
-        Fri,  1 Jul 2022 01:42:53 -0700 (PDT)
+        with ESMTP id S232323AbiGAIqM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 04:46:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D0407126B;
+        Fri,  1 Jul 2022 01:46:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A9421621F2;
-        Fri,  1 Jul 2022 08:42:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC63C3411E;
-        Fri,  1 Jul 2022 08:42:52 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EBBC7621BA;
+        Fri,  1 Jul 2022 08:46:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4044FC3411E;
+        Fri,  1 Jul 2022 08:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656664972;
-        bh=mEnpNa04cW7W2+foF0mx8jXYUwlICj51Uv92LnU2IG4=;
+        s=k20201202; t=1656665170;
+        bh=d8YS2MfyIifK2eexLKF4rU7qHuCuM0M62Yrtfq5jCDI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ax5oSM90X/GgV5rdKmwlCZ6oma2twd9/gVwxV2np1EDjfKzqzQcGAZvtyMSzo4wU6
-         Rhv5vbejaSonhpqum016w0B5nNvEFKLrF0MKuPFeysv4Mq6p4oTE8QKmDHBxIV8vzc
-         OVuql1LFFgKXCRI+mXqQZ/In6m/XSwOY4hBWUhxX4PM+6weviaiL66eRaCVoYbAJUG
-         rthD/bEtIox35R/h9W+pURSbbX++gd5Tw6AbO/zGB2qdRDlkWPOsuKp41qHI+KzjCV
-         O0NQQUr9aI8pVNjvP42XBUIMcA3AdWobxxNureBMHEt8JGEC6U4aPzk5V2ZillqsT5
-         NOhTlF7vJ5AaQ==
+        b=OiP0RmofRuxnGV2te9aHbDTTi2PSWuFavTk5civOdJw67OkzxBMnn3p87wCYBt4G+
+         tWQzNjX2QjweJYAEFyv2rPPI5qALy0SXF4aLiSXtIcvvBSwspSacBFofei/fr94V/J
+         sg8/YVR2Etu/bWmXB93KOhZnENbkvml5+wGweFvW1l1kAGuQE+hpzWpuZ6nF7VToyX
+         FsiTEq0WJvAGQZUfbm7SKQG5Y+mH8mcC2R7kdmRQDtZ9e4cMVBGsqa+s6+l45YyCrp
+         jxoXuYPvaQkIMoGEXasVNAM5EYFa/hTlHAmyzAhjs68VZuJF87Tn6n/Hr0W3H9C1bO
+         MgjWsq5XpRJZA==
 Received: from johan by xi.lan with local (Exim 4.94.2)
         (envelope-from <johan@kernel.org>)
-        id 1o7CEl-0001ZF-VB; Fri, 01 Jul 2022 10:42:52 +0200
-Date:   Fri, 1 Jul 2022 10:42:51 +0200
+        id 1o7CHy-0001hi-34; Fri, 01 Jul 2022 10:46:10 +0200
+Date:   Fri, 1 Jul 2022 10:46:10 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Johan Hovold <johan+linaro@kernel.org>,
@@ -49,15 +49,15 @@ Cc:     Johan Hovold <johan+linaro@kernel.org>,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/10] dt-bindings: PCI: qcom: Add SA8540P to binding
-Message-ID: <Yr6zi6Jad5d0U1Ms@hovoldconsulting.com>
+Subject: Re: [PATCH 10/10] PCI: qcom: Sort device-id table
+Message-ID: <Yr60Ugswl8kKpbbT@hovoldconsulting.com>
 References: <20220629141000.18111-1-johan+linaro@kernel.org>
- <20220629141000.18111-6-johan+linaro@kernel.org>
- <63b8ec88-cb22-4644-e6dc-6878ad20c792@linaro.org>
+ <20220629141000.18111-11-johan+linaro@kernel.org>
+ <0cb92a07-b310-ddc8-a705-522842a6939f@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <63b8ec88-cb22-4644-e6dc-6878ad20c792@linaro.org>
+In-Reply-To: <0cb92a07-b310-ddc8-a705-522842a6939f@linaro.org>
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -68,46 +68,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 01, 2022 at 10:38:24AM +0200, Krzysztof Kozlowski wrote:
-> On 29/06/2022 16:09, Johan Hovold wrote:
-> > SA8540P is a new platform related to SC8280XP but which uses a single
-> > host interrupt for MSI routing.
+On Fri, Jul 01, 2022 at 10:40:52AM +0200, Krzysztof Kozlowski wrote:
+> On 29/06/2022 16:10, Johan Hovold wrote:
+> > Sort the device-id table entries alphabetically by compatible string to
+> > make it easier to find entries and add new ones.
 > > 
 > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > > ---
-> >  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 3 +++
-> >  1 file changed, 3 insertions(+)
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
 > > 
-> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > index a039f6110322..e9a7c8c783e7 100644
-> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > @@ -25,6 +25,7 @@ properties:
-> >        - qcom,pcie-ipq4019
-> >        - qcom,pcie-ipq8074
-> >        - qcom,pcie-qcs404
-> > +      - qcom,pcie-sa8540p
-> >        - qcom,pcie-sc7280
-> >        - qcom,pcie-sc8180x
-> >        - qcom,pcie-sc8280xp
-> > @@ -603,6 +604,7 @@ allOf:
-> >          compatible:
-> >            contains:
-> >              enum:
-> > +              - qcom,pcie-sa8540p
-> >                - qcom,pcie-sc8280xp
-> >      then:
-> >        properties:
-> > @@ -720,6 +722,7 @@ allOf:
-> >                - qcom,pcie-ipq8064
-> >                - qcom,pcie-ipq8064-v2
-> >                - qcom,pcie-ipq8074
-> > +              - qcom,pcie-sa8540p
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 567601679465..093f4d4bc15d 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -1572,23 +1572,23 @@ static int qcom_pcie_remove(struct platform_device *pdev)
+> >  }
+> >  
+> >  static const struct of_device_id qcom_pcie_match[] = {
+> > +	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> >  	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
+> >  	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+> > -	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> > -	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+> >  	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
+> >  	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
+> > -	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+> > +	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+> >  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
+> > +	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+> > +	{ .compatible = "qcom,pcie-sc8180x", .data = &cfg_1_9_0 },
+> > +	{ .compatible = "qcom,pcie-sc8280xp", .data = &cfg_1_9_0 },
+> >  	{ .compatible = "qcom,pcie-sdm845", .data = &cfg_2_7_0 },
+> >  	{ .compatible = "qcom,pcie-sm8150", .data = &cfg_1_9_0 },
+> >  	{ .compatible = "qcom,pcie-sm8250", .data = &cfg_1_9_0 },
+> > -	{ .compatible = "qcom,pcie-sc8180x", .data = &cfg_1_9_0 },
+> > -	{ .compatible = "qcom,pcie-sc8280xp", .data = &cfg_1_9_0 },
+> >  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+> >  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+> > -	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+> > +	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
 > 
-> Alphabetical order please.
+> Idea is good but it is not sorted alphabetically (not entirely). Q goes
+> before S.
 
-Oops. Will fix.
-
-> >                - qcom,pcie-qcs404
+Heh. I blame the heat.
 
 Johan
