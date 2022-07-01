@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76A0B563645
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 16:58:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87549563656
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 16:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231334AbiGAO6C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Jul 2022 10:58:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53052 "EHLO
+        id S232674AbiGAO7K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Jul 2022 10:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233981AbiGAO56 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 10:57:58 -0400
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D09D396BD;
-        Fri,  1 Jul 2022 07:57:55 -0700 (PDT)
-Received: by mail-qk1-f179.google.com with SMTP id g1so1982205qkl.9;
-        Fri, 01 Jul 2022 07:57:55 -0700 (PDT)
+        with ESMTP id S232870AbiGAO7E (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 10:59:04 -0400
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D23396BD;
+        Fri,  1 Jul 2022 07:59:03 -0700 (PDT)
+Received: by mail-qk1-f176.google.com with SMTP id z12so2007354qki.3;
+        Fri, 01 Jul 2022 07:59:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DjqE4fCphVWixLa+7/BY/DDrOMGgn93pjEIoCZKVrr0=;
-        b=7uVyi2nt0GkTc3OVRGv56QH5j0EA7qM1IMII0oVUOplf0b0Olb3Eo+P4OgQkT4YYh0
-         3oGRQR8DW8AnKpVdPfcGrXijyn0kSyT0KgvnXVVVVckJFmO+Z5aXdTjboHciHSl/UdRo
-         M/0dV1fFiDmqRTp1SGLMR0rGoBf6+9X25qzCpmfbOcuJDxZW0xv/RiyJJnb4Fc4VHEQC
-         RJRgfjamrfjydbu64ummpiw3HFzsMQAqZussWIQO4vCnhx07VCwpdzFRcrMVY+jKrhOn
-         fxjSrMh21ZxT+xg1mhCxPgEd706gUTo3zHq78NFTyw1ac8Q4I32Fg7h8NM1BTuvVDXMO
-         TbFQ==
-X-Gm-Message-State: AJIora++rTNabBuN8K9PqZlofoHnmWzPUlpCQM+42Qq6oVm9txrzCp4+
-        fTrT87kMP+SZQ//E8bcW3H2yaTbtCsEw+A==
-X-Google-Smtp-Source: AGRyM1uH83+H90Q9lOfN6LI4o9tQpUKNLfFIlRMMSOVAWbooJoP1m2x39P+7YpW52W02YZWPFyXxHg==
-X-Received: by 2002:a05:620a:2682:b0:67e:1a58:c947 with SMTP id c2-20020a05620a268200b0067e1a58c947mr11092226qkp.650.1656687474279;
-        Fri, 01 Jul 2022 07:57:54 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id 194-20020a370acb000000b006a8b6848556sm17601766qkk.7.2022.07.01.07.57.53
+        bh=ClF4/O+9R1s6OCLClNeVfKgbElLOzOXCNjDKPl+CiaU=;
+        b=WR+8roYhSHBrrI2fQ61SUYBupCt39ArBkC3H3l6zRoVqaxBKL65713+CCpwHxSmMuW
+         +K3/rgtPq/jdTDzII8s44C69NhsQz+WyiR9pMpS1r3hQMoDjqqq2r0fWC77LXnQXaArP
+         YTfWQNy2azzNP5TJoNrlayh69ioHeHN9DmPTJVsVMT4YH7KH5p27H8ec6Z8Ni7xOY6lU
+         X6yHV+h/FkzoiS3aarkeztfRJb/1PREmbJZIQpjyKFurbUW2AXsML54xKibzLcTH21iA
+         oSAhYNGR6e2LABojVYT2/j6x1bSOIc0FoTsiTJopPfblyEY8gWj0oEhY6rN3BwLItpt3
+         jhkQ==
+X-Gm-Message-State: AJIora8s6Jvc2kMTd8RRm5B75DIySut/k9YvZuamrlvubsQ+YSxrxrRS
+        ZZxFaE6r0tmF1Yvmzj4niD5ZfHC+fmO2Dg==
+X-Google-Smtp-Source: AGRyM1txTmKwMJvi2qgDbCLgsfSZs9LQAI2x4iFTItFADZQNp2UGErlzzs3nc7msBybH+mE5I+/ypQ==
+X-Received: by 2002:a37:ad03:0:b0:6ae:d5a0:d90e with SMTP id f3-20020a37ad03000000b006aed5a0d90emr10573082qkm.48.1656687542507;
+        Fri, 01 Jul 2022 07:59:02 -0700 (PDT)
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
+        by smtp.gmail.com with ESMTPSA id bm9-20020a05620a198900b006a73ad95d40sm17529541qkb.55.2022.07.01.07.59.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Jul 2022 07:57:53 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id p136so4505926ybg.4;
-        Fri, 01 Jul 2022 07:57:53 -0700 (PDT)
-X-Received: by 2002:a25:be49:0:b0:64a:2089:f487 with SMTP id
- d9-20020a25be49000000b0064a2089f487mr1499864ybm.202.1656687473352; Fri, 01
- Jul 2022 07:57:53 -0700 (PDT)
+        Fri, 01 Jul 2022 07:59:02 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id q132so4461251ybg.10;
+        Fri, 01 Jul 2022 07:59:01 -0700 (PDT)
+X-Received: by 2002:a25:2b48:0:b0:668:3b7d:326c with SMTP id
+ r69-20020a252b48000000b006683b7d326cmr15360089ybr.380.1656687541538; Fri, 01
+ Jul 2022 07:59:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220701085420.870306-1-yoshihiro.shimoda.uh@renesas.com> <20220701085420.870306-10-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <20220701085420.870306-10-yoshihiro.shimoda.uh@renesas.com>
+References: <20220701085420.870306-1-yoshihiro.shimoda.uh@renesas.com> <20220701085420.870306-11-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20220701085420.870306-11-yoshihiro.shimoda.uh@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 1 Jul 2022 16:57:42 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVsOuLDbhBGrSO8r5i1WF+8scoLRNReyUW-tg4TQQL3gg@mail.gmail.com>
-Message-ID: <CAMuHMdVsOuLDbhBGrSO8r5i1WF+8scoLRNReyUW-tg4TQQL3gg@mail.gmail.com>
-Subject: Re: [PATCH v3 09/13] PCI: renesas: Add R-Car Gen4 PCIe Host support
+Date:   Fri, 1 Jul 2022 16:58:50 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU98Thzn5-sVcye1Qz4WFiLy7AHH=X9JXqfa2LrRyqy+A@mail.gmail.com>
+Message-ID: <CAMuHMdU98Thzn5-sVcye1Qz4WFiLy7AHH=X9JXqfa2LrRyqy+A@mail.gmail.com>
+Subject: Re: [PATCH v3 10/13] PCI: renesas: Add R-Car Gen4 PCIe Endpoint support
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -77,18 +77,16 @@ Hi Shimoda-san,
 
 On Fri, Jul 1, 2022 at 10:55 AM Yoshihiro Shimoda
 <yoshihiro.shimoda.uh@renesas.com> wrote:
-> Add R-Car Gen4 PCIe Host support. This controller is based on
+> Add R-Car Gen4 PCIe Endpoint support. This controller is based on
 > Synopsys DesignWare PCIe.
 >
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Thanks for your patch!
-
 > --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
 
 > +static const struct of_device_id rcar_gen4_pcie_of_match[] = {
-> +       { .compatible = "renesas,rcar-gen4-pcie", },
+> +       { .compatible = "renesas,rcar-gen4-pcie-ep", },
 > +       {},
 
 Please drop the comma, as no new entries must be added after the
