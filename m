@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A01B56377E
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 18:12:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C29556377F
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 18:12:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231551AbiGAQMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Jul 2022 12:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33888 "EHLO
+        id S231599AbiGAQMI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Jul 2022 12:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231163AbiGAQMF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 12:12:05 -0400
+        with ESMTP id S231558AbiGAQMH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 12:12:07 -0400
 Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94CB237DC;
-        Fri,  1 Jul 2022 09:12:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD812871A;
+        Fri,  1 Jul 2022 09:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1656691925; x=1688227925;
+  t=1656691927; x=1688227927;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references;
-  bh=1d2wYW3ewRhZyGFM6oKSePTdDddbGJiMNxXm0ckzdk4=;
-  b=akBN+Mqo6A4vDp4TwAY2Q39MO4S32r4joXxcrIKGc2EWHIO0TBIjCPdJ
-   lI8+ZDyT47X3W+OKkWnwXngwrqVgMX09JzlRFBuy9R0CG7ibJGU2HVyzs
-   8GaHvDlFyFmxPRiegFc+JlHlQuXh9hLR5ZhyLgXXuboIazNRKgpn0DAHX
-   Q=;
+  bh=0tyKBBYdbHpy30R2fsTbpKyVsvgl1kgPnuCL+OBYJuQ=;
+  b=pVl0m77aHYvlu8R07m17ecfh5NyVPlmfEOG6LEXujUJXJ8RrwdkYoix8
+   3ff9Ktxth9Kz/azDv1x9UX1iHmmSr88D7zISo010Jk4XVE1lcXcfw598i
+   TalpT6LhNjOfZLUZ8aEbnywoZQjkw63WwBsq/m1BitzEBYl+KI3kzl4A+
+   U=;
 Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 01 Jul 2022 09:12:05 -0700
+  by alexa-out.qualcomm.com with ESMTP; 01 Jul 2022 09:12:06 -0700
 X-QCInternal: smtphost
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Jul 2022 09:12:02 -0700
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Jul 2022 09:12:04 -0700
 X-QCInternal: smtphost
 Received: from hu-krichai-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.110.37])
   by ironmsg01-blr.qualcomm.com with ESMTP; 01 Jul 2022 21:41:41 +0530
 Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id 45D30425A; Fri,  1 Jul 2022 21:41:41 +0530 (+0530)
+        id 74226425F; Fri,  1 Jul 2022 21:41:41 +0530 (+0530)
 From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
 To:     helgaas@kernel.org
 Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -45,15 +45,13 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Krishna chaitanya chundru <quic_krichai@quicinc.com>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS)
-Subject: [PATCH v2 2/3] dt-bindings: pci: QCOM Adding sc7280 aggre0, aggre1 clocks
-Date:   Fri,  1 Jul 2022 21:41:38 +0530
-Message-Id: <1656691899-21315-3-git-send-email-quic_krichai@quicinc.com>
+Subject: [PATCH v2 3/3] arm64: dts: qcom: sc7280: Add missing aggre0, aggre1 clocks
+Date:   Fri,  1 Jul 2022 21:41:39 +0530
+Message-Id: <1656691899-21315-4-git-send-email-quic_krichai@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1656691899-21315-1-git-send-email-quic_krichai@quicinc.com>
 References: <1656062391-14567-1-git-send-email-quic_krichai@quicinc.com>
@@ -68,37 +66,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Adding aggre0 and aggre1 clock entries to PCIe node. 
+Add missing aggre0, aggre1 clocks to pcie node.
 
 Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7280.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 0b69b12..8f29bdd 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -423,8 +423,8 @@ allOf:
-     then:
-       properties:
-         clocks:
--          minItems: 11
--          maxItems: 11
-+          minItems: 13
-+          maxItems: 13
-         clock-names:
-           items:
-             - const: pipe # PIPE clock
-@@ -437,6 +437,8 @@ allOf:
-             - const: bus_slave # Slave AXI clock
-             - const: slave_q2a # Slave Q2A clock
-             - const: tbu # PCIe TBU clock
-+            - const: aggre0 # Aggre NoC PCIe CENTER SF AXI clock
-+            - const: aggre1 # Aggre NoC PCIe1 AXI clock
-             - const: ddrss_sf_tbu # PCIe SF TBU clock
-         resets:
-           maxItems: 1
+diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+index e66fc67..a5ce095 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+@@ -2043,6 +2043,8 @@
+ 				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
+ 				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
+ 				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
++				 <&gcc GCC_AGGRE_NOC_PCIE_CENTER_SF_AXI_CLK>,
++				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>,
+ 				 <&gcc GCC_DDRSS_PCIE_SF_CLK>;
+ 
+ 			clock-names = "pipe",
+@@ -2055,6 +2057,8 @@
+ 				      "bus_slave",
+ 				      "slave_q2a",
+ 				      "tbu",
++				      "aggre0",
++				      "aggre1",
+ 				      "ddrss_sf_tbu";
+ 
+ 			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
 -- 
 2.7.4
 
