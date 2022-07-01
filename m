@@ -2,133 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A50C563757
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 18:03:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0127E563773
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Jul 2022 18:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231479AbiGAQDo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 1 Jul 2022 12:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55342 "EHLO
+        id S230415AbiGAQMF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 1 Jul 2022 12:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231442AbiGAQDk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 12:03:40 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 88C241F2DF;
-        Fri,  1 Jul 2022 09:03:39 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98867143D;
-        Fri,  1 Jul 2022 09:03:39 -0700 (PDT)
-Received: from pierre123.arm.com (unknown [10.57.40.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 61C8F3F66F;
-        Fri,  1 Jul 2022 09:03:37 -0700 (PDT)
-From:   Pierre Gondois <pierre.gondois@arm.com>
-To:     linux-eng@arm.com
-Cc:     Pierre Gondois <Pierre.Gondois@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] ACPI/PCI: Make _PRS optional for link device
-Date:   Fri,  1 Jul 2022 18:03:08 +0200
-Message-Id: <20220701160309.2842180-2-pierre.gondois@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220701160309.2842180-1-pierre.gondois@arm.com>
-References: <20220701160309.2842180-1-pierre.gondois@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229572AbiGAQME (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 1 Jul 2022 12:12:04 -0400
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132A52315A;
+        Fri,  1 Jul 2022 09:12:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1656691923; x=1688227923;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=1UOqR7z0v60WglGmcoRLRqX/2H4WzWvDM22PGtcJloM=;
+  b=c8qBHu0uaiqhRHjd2Y0ScoURv6Isvccf55vet7oGgXpKbUgXhkPVpybT
+   fAboJ2BoVAtMENTwngUBTzKJ/2ez/dJ8wECbhmoA1MarOA3iCIqfTktcs
+   Mge0032G3Yik9+WqVqIrByddHvoDa8Kpj1LvAOmAOMg+5jgQrLNFeBoKs
+   k=;
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 01 Jul 2022 09:12:03 -0700
+X-QCInternal: smtphost
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Jul 2022 09:12:01 -0700
+X-QCInternal: smtphost
+Received: from hu-krichai-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.110.37])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 01 Jul 2022 21:41:40 +0530
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id C28C34244; Fri,  1 Jul 2022 21:41:40 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     helgaas@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v2 0/3] PCI: qcom: sc7280: add missing aggre0, aggre1 and ddrs sf tbu clocks
+Date:   Fri,  1 Jul 2022 21:41:36 +0530
+Message-Id: <1656691899-21315-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1656062391-14567-1-git-send-email-quic_krichai@quicinc.com>
+References: <1656062391-14567-1-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pierre Gondois <Pierre.Gondois@arm.com>
+Add missing aggre0, aggre1 and ddrs sf tbu clocks supports to PCIe node.
 
-In ACPI 6.4, s6.2.13 "_PRT (PCI Routing Table)", PCI legacy
-interrupts can be described though a link device (first model).
-From s6.2.12 "_PRS (Possible Resource Settings)":
-"This optional object evaluates [...]"
+Without voting these clocks, PCIe link is going down when system is
+suspended as these clocks can get turned off as no-one is voting for them.
 
-It is currently checked that the interrupt advertised in _CRS
-is one of the interrupts available in _PRS.
-Make this check conditional to the presence of _PRS.
+Krishna chaitanya chundru (3):
+  PCI: qcom: Add sc7280 aggre0, aggre1 and ddr sf tbu clocks in PCIe
+    driver
+  dt-bindings: pci: QCOM Add missing sc7280 aggre0, aggre1 clocks
+  arm64: dts: qcom: sc7280: Add missing aggre0, aggre1 clocks
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215560
-Signed-off-by: Pierre Gondois <Pierre.Gondois@arm.com>
----
- drivers/acpi/pci_link.c | 39 +++++++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 6 ++++--
+ arch/arm64/boot/dts/qcom/sc7280.dtsi                 | 4 ++++
+ drivers/pci/controller/dwc/pcie-qcom.c               | 3 +++
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-index 129e3e7e80ee..b5a41866f135 100644
---- a/drivers/acpi/pci_link.c
-+++ b/drivers/acpi/pci_link.c
-@@ -532,19 +532,10 @@ int __init acpi_irq_penalty_init(void)
- 
- static int acpi_irq_balance = -1;	/* 0: static, 1: balance */
- 
--static int acpi_pci_link_allocate(struct acpi_pci_link *link)
-+static int select_from_possible(struct acpi_pci_link *link)
- {
--	acpi_handle handle = link->device->handle;
--	int irq;
- 	int i;
- 
--	if (link->irq.initialized) {
--		if (link->refcnt == 0)
--			/* This means the link is disabled but initialized */
--			acpi_pci_link_set(link, link->irq.active);
--		return 0;
--	}
--
- 	/*
- 	 * search for active IRQ in list of possible IRQs.
- 	 */
-@@ -557,8 +548,9 @@ static int acpi_pci_link_allocate(struct acpi_pci_link *link)
- 	 */
- 	if (i == link->irq.possible_count) {
- 		if (acpi_strict)
--			acpi_handle_warn(handle, "_CRS %d not found in _PRS\n",
--					 link->irq.active);
-+			acpi_handle_warn(link->device->handle,
-+					"_CRS %d not found in _PRS\n",
-+					link->irq.active);
- 		link->irq.active = 0;
- 	}
- 
-@@ -566,9 +558,28 @@ static int acpi_pci_link_allocate(struct acpi_pci_link *link)
- 	 * if active found, use it; else pick entry from end of possible list.
- 	 */
- 	if (link->irq.active)
--		irq = link->irq.active;
-+		return link->irq.active;
-+	else
-+		return link->irq.possible[link->irq.possible_count - 1];
-+}
-+
-+static int acpi_pci_link_allocate(struct acpi_pci_link *link)
-+{
-+	acpi_handle handle = link->device->handle;
-+	int irq;
-+	int i;
-+
-+	if (link->irq.initialized) {
-+		if (link->refcnt == 0)
-+			/* This means the link is disabled but initialized */
-+			acpi_pci_link_set(link, link->irq.active);
-+		return 0;
-+	}
-+
-+	if (link->irq.possible_count)
-+		irq = select_from_possible(link);
- 	else
--		irq = link->irq.possible[link->irq.possible_count - 1];
-+		irq = link->irq.active;
- 
- 	if (acpi_irq_balance || !link->irq.active) {
- 		/*
 -- 
-2.25.1
+2.7.4
 
