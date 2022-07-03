@@ -2,137 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3BEB5643B2
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Jul 2022 05:26:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 999E75646C7
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Jul 2022 12:47:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230346AbiGCD03 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Jul 2022 23:26:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43718 "EHLO
+        id S231169AbiGCKrL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 3 Jul 2022 06:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbiGCD02 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Jul 2022 23:26:28 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF1B9FC3;
-        Sat,  2 Jul 2022 20:26:22 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id fz10so139247pjb.2;
-        Sat, 02 Jul 2022 20:26:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/LE3/OvnxwC10hHaqp2JoOJSN7rfZOpUu2WCyCiyCz4=;
-        b=Augt3VIV/iWcoU+DHx6Yl7vroOm9Hwz+XtZe2jvyXkhsx95p/JLAo0xcEd6ix1ZIVf
-         qIfg68MUyw+xLjl2gBsPYsbv6l3jY94RzOJD92gb6rxdLTyy5Av/dXPYvA/EXIhLOtLz
-         svOqPB75mbgpDTnbuNTXc8rdS2DrehpRBgIiYcfLEACt56jQqPD4OYEXOr+iSon97xBH
-         KYxD4XfgTiHC/xmDNEPOFfPpT2EHhts4G6H0Pm0fJr3aoQ7VOuwkBeKtFwd1B4K1k9D/
-         GdNdQLrWNIKMTC9YgyvhuIjL+GirhGz9Rbn2DEPjhAWabLVNFd+wt0MxRzds1x2rF4/L
-         8aeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/LE3/OvnxwC10hHaqp2JoOJSN7rfZOpUu2WCyCiyCz4=;
-        b=hSqHn4/XX/P/1YE7EvPtr7Y+Gdsa1DIREWmnADK9NoQy99dUPWRtADeOmp8jV5NVib
-         WBnRteh9EbmYjsDyBRgK8MiOR/LL3MxloBDohF3ox6rX4Ywo29ftvJkN0cTn84sWVVP4
-         evQ/7KuPFaoOm6FTu1uGu6I4xfvA0YhJzAftMKvnnOMhvyMr+B+rSXsMCAuMHgDTUq0a
-         D60ZfydIqmFzEmlgQ99aOyFFJ66m35ObaZ2GcAZoDMLIiTzcRoL06Qy/4yrpQ0pkevKi
-         OrInWrB1W2JRoNrczCaKDgYwbnqHFMS7bK1d1RvhMkjJURkI2ulbJ1mbG3IgRfR4mwHX
-         tBtA==
-X-Gm-Message-State: AJIora9XIOW8cd/kwEIuBr8xZHO3SqObbMGFfCEDNVp09OqOPg7BXXUf
-        ScwRSq1f3RsApXnEAA2R9+hy4tQUFJpMcg==
-X-Google-Smtp-Source: AGRyM1v/qGK0NX2/G7uiSvuhmywhBxQ+rRzGPCB7tQOWN8p4Gfx3qW4Qvkfllc0ImMReMYjkXPk5jA==
-X-Received: by 2002:a17:903:2c6:b0:16a:276a:ad81 with SMTP id s6-20020a17090302c600b0016a276aad81mr29074812plk.65.1656818782428;
-        Sat, 02 Jul 2022 20:26:22 -0700 (PDT)
-Received: from debian.me (subs32-116-206-28-33.three.co.id. [116.206.28.33])
-        by smtp.gmail.com with ESMTPSA id u17-20020a170902e81100b0016a0db8c5b4sm1866809plg.156.2022.07.02.20.26.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Jul 2022 20:26:21 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id EA78810390C; Sun,  3 Jul 2022 10:26:16 +0700 (WIB)
-Date:   Sun, 3 Jul 2022 10:26:16 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Alasdair Kergon <agk@redhat.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Takashi Iwai <tiwai@suse.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        alsa-devel@alsa-project.org, dm-devel@redhat.com,
-        kunit-dev@googlegroups.com, kvm@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 00/12] Fix several documentation build warnings with
- Sphinx 2.4.4
-Message-ID: <YsEMWDYCdjxiUZ1P@debian.me>
-References: <cover.1656759988.git.mchehab@kernel.org>
+        with ESMTP id S229993AbiGCKrK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 3 Jul 2022 06:47:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 611CC63A0;
+        Sun,  3 Jul 2022 03:47:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0D4E9B808BC;
+        Sun,  3 Jul 2022 10:47:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF83C341C6;
+        Sun,  3 Jul 2022 10:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656845226;
+        bh=HD+UNn1IdHjZqXcbGKr/C+wHAxNFVwZfaVB9VK3fw1o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A2r/uOlGQPx0FB7KKElRAbOUdoy2cgyHjMRmgUWJsf73CTQwmc1S0Hr+tbSEteZnb
+         ME5IR0iEIDMs5u6ARwe7xYYu09zqKfC73Snw3lm46u+7tQTSwVzBqtrl83wVxmhR3h
+         /k6ecK0PeyDScj/qofo0OEB3/8TJiulkmZr9YO6EmzTV4fRzNkVzAN4eNA4OtwDJBT
+         Mr/51qx2UvZzpCZmz+47rMCUmiOGTm3LfI4UeTA9BRtyZezQamUMqS0FaC4UUbRhtS
+         u1KL/aYnOrzLysrA9295XrEojiCYiO1AtAdQnhGFl8VLRCr6KVMcvmkwxexVyXpIxm
+         Y3rZnsXisbYGw==
+Received: by pali.im (Postfix)
+        id 466A211B0; Sun,  3 Jul 2022 12:47:03 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: pci-bridge-emul: Set position of PCI capabilities to real HW value
+Date:   Sun,  3 Jul 2022 12:46:27 +0200
+Message-Id: <20220703104627.27058-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1656759988.git.mchehab@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jul 02, 2022 at 12:07:32PM +0100, Mauro Carvalho Chehab wrote:
-> This series is against next-20220701. It fixes several warnings
-> that are currently produced while building html docs.
-> 
-> Each patch in this series is independent from the others, as
-> each one touches a different file.
-> 
-> Mauro Carvalho Chehab (12):
->   docs: ext4: blockmap.rst: fix a broken table
->   docs: tegra194-hte.rst: don't include gpiolib.c twice
->   docs: device-mapper: add a blank line at writecache.rst
->   docs: PCI: pci-vntb-function.rst: Properly include ascii artwork
->   docs: PCI: pci-vntb-howto.rst: fix a title markup
->   docs: virt: kvm: fix a title markup at api.rst
->   docs: ABI: sysfs-bus-nvdimm
->   kunit: test.h: fix a kernel-doc markup
->   net: mac80211: fix a kernel-doc markup
->   docs: alsa: alsa-driver-api.rst: remove a kernel-doc file
->   docs: arm: index.rst: add google/chromebook-boot-flow
->   docs: leds: index.rst: add leds-qcom-lpg to it
-> 
+mvebu and aardvark HW have PCIe capabilities on different offset in PCI
+config space. Extend pci-bridge-emul.c code to allow setting custom driver
+custom value where PCIe capabilities starts.
 
-Hi Mauro,
+With this change PCIe capabilities of both drivers are reported at the same
+location as where they are reported by U-Boot - in their real HW offset.
 
-Thanks for cleaning up these warning above. However, I have already
-submitted some of these cleanups (pending reviews or integration):
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/pci/controller/pci-aardvark.c |  1 +
+ drivers/pci/controller/pci-mvebu.c    |  1 +
+ drivers/pci/pci-bridge-emul.c         | 46 +++++++++++++++++----------
+ drivers/pci/pci-bridge-emul.h         |  2 ++
+ 4 files changed, 33 insertions(+), 17 deletions(-)
 
-[1]: https://lore.kernel.org/linux-doc/20220702042350.23187-1-bagasdotme@gmail.com/
-[2]: https://lore.kernel.org/linux-doc/20220612000125.9777-1-bagasdotme@gmail.com/
-[3]: https://lore.kernel.org/linux-doc/20220627095151.19339-1-bagasdotme@gmail.com/
-[4]: https://lore.kernel.org/linux-doc/20220627082928.11239-1-bagasdotme@gmail.com/
-
-There's still a warning left:
-
-Documentation/ABI/testing/sysfs-bus-iio-sx9324:2: WARNING: Unexpected indentation.
-
-But I think the Date: field that triggered the warning above looks OK.
-
-Regardless of that, the build successed.
-
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index ffec82c8a523..32f97e71e0ca 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -984,6 +984,7 @@ static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+ 	bridge->pcie_conf.rootcap = cpu_to_le16(PCI_EXP_RTCAP_CRSVIS);
+ 
+ 	bridge->has_pcie = true;
++	bridge->pcie_start = PCIE_CORE_PCIEXP_CAP;
+ 	bridge->data = pcie;
+ 	bridge->ops = &advk_pci_bridge_emul_ops;
+ 
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index c1ffdb06c971..cb7cf3f4802f 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -946,6 +946,7 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
+ 	bridge->subsystem_vendor_id = ssdev_id & 0xffff;
+ 	bridge->subsystem_id = ssdev_id >> 16;
+ 	bridge->has_pcie = true;
++	bridge->pcie_start = PCIE_CAP_PCIEXP_OFF;
+ 	bridge->data = port;
+ 	bridge->ops = &mvebu_pci_bridge_emul_ops;
+ 
+diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+index 9c2ca28e3ecf..dfbbe43ef518 100644
+--- a/drivers/pci/pci-bridge-emul.c
++++ b/drivers/pci/pci-bridge-emul.c
+@@ -22,11 +22,7 @@
+ 
+ #define PCI_BRIDGE_CONF_END	PCI_STD_HEADER_SIZEOF
+ #define PCI_CAP_SSID_SIZEOF	(PCI_SSVID_DEVICE_ID + 2)
+-#define PCI_CAP_SSID_START	PCI_BRIDGE_CONF_END
+-#define PCI_CAP_SSID_END	(PCI_CAP_SSID_START + PCI_CAP_SSID_SIZEOF)
+ #define PCI_CAP_PCIE_SIZEOF	(PCI_EXP_SLTSTA2 + 2)
+-#define PCI_CAP_PCIE_START	PCI_CAP_SSID_END
+-#define PCI_CAP_PCIE_END	(PCI_CAP_PCIE_START + PCI_CAP_PCIE_SIZEOF)
+ 
+ /**
+  * struct pci_bridge_reg_behavior - register bits behaviors
+@@ -324,7 +320,7 @@ pci_bridge_emul_read_ssid(struct pci_bridge_emul *bridge, int reg, u32 *value)
+ 	switch (reg) {
+ 	case PCI_CAP_LIST_ID:
+ 		*value = PCI_CAP_ID_SSVID |
+-			(bridge->has_pcie ? (PCI_CAP_PCIE_START << 8) : 0);
++			((bridge->pcie_start > bridge->ssid_start) ? (bridge->pcie_start << 8) : 0);
+ 		return PCI_BRIDGE_EMUL_HANDLED;
+ 
+ 	case PCI_SSVID_VENDOR_ID:
+@@ -365,12 +361,25 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
+ 	if (!bridge->pci_regs_behavior)
+ 		return -ENOMEM;
+ 
+-	if (bridge->subsystem_vendor_id)
+-		bridge->conf.capabilities_pointer = PCI_CAP_SSID_START;
+-	else if (bridge->has_pcie)
+-		bridge->conf.capabilities_pointer = PCI_CAP_PCIE_START;
+-	else
+-		bridge->conf.capabilities_pointer = 0;
++	/* If ssid_start and pcie_start were not specified then choose the lowest possible value. */
++	if (!bridge->ssid_start && !bridge->pcie_start) {
++		if (bridge->subsystem_vendor_id)
++			bridge->ssid_start = PCI_BRIDGE_CONF_END;
++		if (bridge->has_pcie)
++			bridge->pcie_start = bridge->ssid_start + PCI_CAP_SSID_SIZEOF;
++	} else if (!bridge->ssid_start && bridge->subsystem_vendor_id) {
++		if (bridge->pcie_start - PCI_BRIDGE_CONF_END >= PCI_CAP_SSID_SIZEOF)
++			bridge->ssid_start = PCI_BRIDGE_CONF_END;
++		else
++			bridge->ssid_start = bridge->pcie_start + PCI_CAP_PCIE_SIZEOF;
++	} else if (!bridge->pcie_start && bridge->has_pcie) {
++		if (bridge->ssid_start - PCI_BRIDGE_CONF_END >= PCI_CAP_PCIE_SIZEOF)
++			bridge->pcie_start = PCI_BRIDGE_CONF_END;
++		else
++			bridge->pcie_start = bridge->ssid_start + PCI_CAP_SSID_SIZEOF;
++	}
++
++	bridge->conf.capabilities_pointer = min(bridge->ssid_start, bridge->pcie_start);
+ 
+ 	if (bridge->conf.capabilities_pointer)
+ 		bridge->conf.status |= cpu_to_le16(PCI_STATUS_CAP_LIST);
+@@ -459,15 +468,17 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
+ 		read_op = bridge->ops->read_base;
+ 		cfgspace = (__le32 *) &bridge->conf;
+ 		behavior = bridge->pci_regs_behavior;
+-	} else if (reg >= PCI_CAP_SSID_START && reg < PCI_CAP_SSID_END && bridge->subsystem_vendor_id) {
++	} else if (reg >= bridge->ssid_start && reg < bridge->ssid_start + PCI_CAP_SSID_SIZEOF &&
++		   bridge->subsystem_vendor_id) {
+ 		/* Emulated PCI Bridge Subsystem Vendor ID capability */
+-		reg -= PCI_CAP_SSID_START;
++		reg -= bridge->ssid_start;
+ 		read_op = pci_bridge_emul_read_ssid;
+ 		cfgspace = NULL;
+ 		behavior = NULL;
+-	} else if (reg >= PCI_CAP_PCIE_START && reg < PCI_CAP_PCIE_END && bridge->has_pcie) {
++	} else if (reg >= bridge->pcie_start && reg < bridge->pcie_start + PCI_CAP_PCIE_SIZEOF &&
++		   bridge->has_pcie) {
+ 		/* Our emulated PCIe capability */
+-		reg -= PCI_CAP_PCIE_START;
++		reg -= bridge->pcie_start;
+ 		read_op = bridge->ops->read_pcie;
+ 		cfgspace = (__le32 *) &bridge->pcie_conf;
+ 		behavior = bridge->pcie_cap_regs_behavior;
+@@ -538,9 +549,10 @@ int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
+ 		write_op = bridge->ops->write_base;
+ 		cfgspace = (__le32 *) &bridge->conf;
+ 		behavior = bridge->pci_regs_behavior;
+-	} else if (reg >= PCI_CAP_PCIE_START && reg < PCI_CAP_PCIE_END && bridge->has_pcie) {
++	} else if (reg >= bridge->pcie_start && reg < bridge->pcie_start + PCI_CAP_PCIE_SIZEOF &&
++		   bridge->has_pcie) {
+ 		/* Our emulated PCIe capability */
+-		reg -= PCI_CAP_PCIE_START;
++		reg -= bridge->pcie_start;
+ 		write_op = bridge->ops->write_pcie;
+ 		cfgspace = (__le32 *) &bridge->pcie_conf;
+ 		behavior = bridge->pcie_cap_regs_behavior;
+diff --git a/drivers/pci/pci-bridge-emul.h b/drivers/pci/pci-bridge-emul.h
+index 71392b67471d..2a0e59c7f0d9 100644
+--- a/drivers/pci/pci-bridge-emul.h
++++ b/drivers/pci/pci-bridge-emul.h
+@@ -131,6 +131,8 @@ struct pci_bridge_emul {
+ 	struct pci_bridge_reg_behavior *pci_regs_behavior;
+ 	struct pci_bridge_reg_behavior *pcie_cap_regs_behavior;
+ 	void *data;
++	u8 pcie_start;
++	u8 ssid_start;
+ 	bool has_pcie;
+ 	u16 subsystem_vendor_id;
+ 	u16 subsystem_id;
 -- 
-An old man doll... just what I always wanted! - Clara
+2.20.1
+
