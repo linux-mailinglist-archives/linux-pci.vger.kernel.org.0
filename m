@@ -2,147 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE5EE56521A
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Jul 2022 12:23:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2958565645
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Jul 2022 14:59:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234070AbiGDKWC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Jul 2022 06:22:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45714 "EHLO
+        id S234390AbiGDM67 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Jul 2022 08:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234148AbiGDKVq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jul 2022 06:21:46 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F4ADDFE1
-        for <linux-pci@vger.kernel.org>; Mon,  4 Jul 2022 03:20:04 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id o31-20020a17090a0a2200b001ef7bd037bbso3804479pjo.0
-        for <linux-pci@vger.kernel.org>; Mon, 04 Jul 2022 03:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ui6jM4ZYL95jFXsEJNqQO63PcH9wdj9Z4AxG9QKXlsk=;
-        b=GvSzH22gCSolN+ML/4454VuP5xi7hCqYh3iBNj7BsSKVgA4TpvBHywhPCeoApnfRAJ
-         0ECxw1MihfcLw8YnRZA2hPIX6zybx/LfAnow6UC98HULCRrJIRMUhuMoS5nlkRAun+FG
-         bB1h36cBBBOr0fRSVpvhyJEgIeKP4HnUobKaQ2XrC1ooQTJ2/xziCatTAD4DXPFWc+6u
-         GaaW5Hra03vyAhoYBG0C9oiTMZnow424UlLfLNBXqV7yRwF9m/s0ivRa5i2eSJUoAvEC
-         ZJnrPg/8HP347f5WAyhrBBmymSsT2L/XCgFhSUNTahFG4GshJPafSwasZB8Ep60E1n1i
-         ZbTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ui6jM4ZYL95jFXsEJNqQO63PcH9wdj9Z4AxG9QKXlsk=;
-        b=bNaqAv641HGp0AlxlmkR7AmEZeOKxG4HFqjsJ0FUTZVKhr5U3Vej+/u+wVrkEy8/Xz
-         4mJCDWXxmGhkY3CafWO3RjPaTRlB8LTFscxBHqPVKou5pl1B9SczbIhdsVYlAwu/PFYM
-         fQWez+cKf2QQ1uTGIt+feoNSmCgyXbuLiOKYeHoQ8hCYUkKk8Vp7BQjYqsK3Y1RIwcYQ
-         hehsD+cYvByEa5edN5PP7yVJ4KPt2aZ0FYoshbJWWxhDzph/xUjl5dqwfFp2bAFsBTec
-         s0IH+vF4NXvAH4MbAwZjhYIVGHwJuS3uAUtnyfoR5gpR2LMDz718wByPz2J1BcLjcR/i
-         ourQ==
-X-Gm-Message-State: AJIora84cYaltKHj2XmQJpahm8JgusIsF5Y36BqKSjKMHYc8Nfvi+BCN
-        85NwoSHheUbxYYL/WYhACtTCdCBf+YwW
-X-Google-Smtp-Source: AGRyM1sZ6xYXHsOd/xbmmI/Ti9HJnupEePcXxzVWeGr7WZfxD0YPmcXQaXXzh9r+ytRnh49OAdR35g==
-X-Received: by 2002:a17:90b:4c0a:b0:1ec:e6b3:7690 with SMTP id na10-20020a17090b4c0a00b001ece6b37690mr35452668pjb.121.1656930003648;
-        Mon, 04 Jul 2022 03:20:03 -0700 (PDT)
-Received: from thinkpad ([220.158.158.244])
-        by smtp.gmail.com with ESMTPSA id u14-20020a170903124e00b0015ee60ef65bsm20742341plh.260.2022.07.04.03.19.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Jul 2022 03:20:01 -0700 (PDT)
-Date:   Mon, 4 Jul 2022 15:49:55 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Tom Rix <trix@redhat.com>
-Cc:     kishon@ti.com, lpieralisi@kernel.org, kw@linux.com,
-        bhelgaas@google.com, Frank.Li@nxp.com, jdmason@kudzu.us,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: endpoint: reduce several globals to statics
-Message-ID: <20220704101955.GD6560@thinkpad>
-References: <20220630210517.1825677-1-trix@redhat.com>
+        with ESMTP id S232850AbiGDM66 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jul 2022 08:58:58 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A7C760DC;
+        Mon,  4 Jul 2022 05:58:58 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C793E22175;
+        Mon,  4 Jul 2022 14:58:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1656939536;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nywE2HrLysWnN3UI4qxsDI2pyuwRY/B3fW0rahkLC9w=;
+        b=Rg/urS2RdMA8OLtrXGUCO44DRooROvtEcajP7qjAHhP4nRV3AUzb7uc/iQwxqVLTTpfpg2
+        f0fYNYkIQF1F3ThEL23H2dN6QCSAghDIbIz2d3aPb6RSMkGi6FMS/qEQ1jeZLavY6YyrzY
+        j6IZlo6tMcMKw+QupH8Ct7XT8h8ca6o=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220630210517.1825677-1-trix@redhat.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 04 Jul 2022 14:58:54 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernelci-results@groups.io, bot@kernelci.org,
+        gtucker@collabora.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Heiko Thiery <heiko.thiery@gmail.com>
+Subject: Re: next/master bisection: baseline.bootrr.imx6q-pcie-pcie0-probed on
+ kontron-pitx-imx8m
+In-Reply-To: <CAGETcx-ToG1xAtKVuZqwQK7hvVbT+Q0J0m4oWVCtR55XiYqETQ@mail.gmail.com>
+References: <62bdec26.1c69fb81.46bc5.2d67@mx.google.com>
+ <Yr3vEDDulZj1Dplv@sirena.org.uk>
+ <CAGETcx88M3Use8crFMTU=By3UVjjaJuP1_Ah7zsy_w=pNxc+6w@mail.gmail.com>
+ <CAGETcx_s+ui9wWA7OawojPbY95bLZE5pSmpK-34_kLZTzjf9Ew@mail.gmail.com>
+ <Yr67fvEPKmDTQfGz@sirena.org.uk>
+ <CAGETcx-ToG1xAtKVuZqwQK7hvVbT+Q0J0m4oWVCtR55XiYqETQ@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <de79bf0e80138d91a5df5fe4a323e508@walle.cc>
+X-Sender: michael@walle.cc
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 30, 2022 at 05:05:17PM -0400, Tom Rix wrote:
-> sparse reports
-> drivers/pci/endpoint/functions/pci-epf-vntb.c:956:10: warning: symbol 'pci_space' was not declared. Should it be static?
-> drivers/pci/endpoint/functions/pci-epf-vntb.c:975:5: warning: symbol 'pci_read' was not declared. Should it be static?
-> drivers/pci/endpoint/functions/pci-epf-vntb.c:984:5: warning: symbol 'pci_write' was not declared. Should it be static?
-> drivers/pci/endpoint/functions/pci-epf-vntb.c:989:16: warning: symbol 'vpci_ops' was not declared. Should it be static?
+[+ Heiko]
+
+Am 2022-07-02 00:28, schrieb Saravana Kannan:
+> On Fri, Jul 1, 2022 at 2:16 AM Mark Brown <broonie@kernel.org> wrote:
+>> 
+>> On Thu, Jun 30, 2022 at 06:02:04PM -0700, Saravana Kannan wrote:
+>> 
+>> > The patch attached to that email will probably fix this issue. I
+>> > haven't dealt with Kernel CI bot before. Is there a way to get it to
+>> > test a patch?
+>> 
+>> It is but I don't have access to do that - either the lab owner
+>> (Michael, CCed here) or Guillaume (also CCed) should be able to help
+>> there.
 > 
-> These functions and variables are only used in pci-epf-vntb.c, so their storage
-> class specifiers should be static.
+> I found a much simpler solution that I think should work. Snippet at
+> the end of this email.
+> https://lore.kernel.org/lkml/CAGETcx-fLAXnG+1S4MHJwg9t7O6jj6Mp+q25bh==C_Z1CLs-mg@mail.gmail.com/
 > 
-> Fixes: ff32fac00d97 ("NTB: EPF: support NTB transfer between PCI RC and EP connection")
-> Signed-off-by: Tom Rix <trix@redhat.com>
-
-Commit subject should include "pci-epf-vntb" prefix. Otherwise it is not
-possible to guess which driver this patch touches (unless one reads commit
-description).
-
-With that fixed,
-
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
-> ---
-> v2 : Change commit prefix
+> I'm waiting for Alexander in that thread to give it a shot.
 > 
-> ---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index ebf7e243eefa..6f0775b1fec3 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -953,7 +953,7 @@ static struct config_group *epf_ntb_add_cfs(struct pci_epf *epf,
->  
->  #define VPCI_BUS_NUM 0x10
->  
-> -uint32_t pci_space[] = {
-> +static uint32_t pci_space[] = {
->  	(VNTB_VID | (VNTB_PID << 16)),	//DeviceID, Vendor ID
->  	0,		// status, Command
->  	0xffffffff,	// Class code, subclass, prog if, revision id
-> @@ -972,7 +972,7 @@ uint32_t pci_space[] = {
->  	0,		//Max Lat, Min Gnt, interrupt pin, interrupt line
->  };
->  
-> -int pci_read(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val)
-> +static int pci_read(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val)
->  {
->  	if (devfn == 0) {
->  		memcpy(val, ((uint8_t *)pci_space) + where, size);
-> @@ -981,12 +981,12 @@ int pci_read(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *
->  	return -1;
->  }
->  
-> -int pci_write(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val)
-> +static int pci_write(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val)
->  {
->  	return 0;
->  }
->  
-> -struct pci_ops vpci_ops = {
-> +static struct pci_ops vpci_ops = {
->  	.read = pci_read,
->  	.write = pci_write,
->  };
-> -- 
-> 2.27.0
-> 
+> Michael/Guillaume, if you want to give it a shot too, that'll be nice 
+> :)
 
--- 
-மணிவண்ணன் சதாசிவம்
+Heiko will give it a try on his kontron-pitx-imx8m board.
+
+-michael
