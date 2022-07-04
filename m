@@ -2,187 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E51456597A
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Jul 2022 17:10:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51F645659C0
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Jul 2022 17:28:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234592AbiGDPKI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Jul 2022 11:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
+        id S234215AbiGDP1y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Jul 2022 11:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234636AbiGDPJp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jul 2022 11:09:45 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0D2191182F;
-        Mon,  4 Jul 2022 08:08:46 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03A6F23A;
-        Mon,  4 Jul 2022 08:08:46 -0700 (PDT)
-Received: from [10.57.86.91] (unknown [10.57.86.91])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9C583F792;
-        Mon,  4 Jul 2022 08:08:41 -0700 (PDT)
-Message-ID: <2be62742-4737-bb3c-5467-011a26edfcea@arm.com>
-Date:   Mon, 4 Jul 2022 16:08:37 +0100
+        with ESMTP id S234066AbiGDP1u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jul 2022 11:27:50 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0749CE11
+        for <linux-pci@vger.kernel.org>; Mon,  4 Jul 2022 08:27:48 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id a13so16324398lfr.10
+        for <linux-pci@vger.kernel.org>; Mon, 04 Jul 2022 08:27:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NaEf/yojdWUVoM4DyM+sfk4+GZRJzUjUlgOlA6lEjGY=;
+        b=Mrwu36MjgDN58NqnTz2jyWdQ0tYqB+tjcSqgQ2zBdWDsXZEAPL79lO8VAVy+b/PkiW
+         p02aRoNSBDFXJfqv7d0V6wqIzLUQIvviU8mq+yBCQP9EF25TbnxPxpqTKfJNRNQW1XiB
+         c4IcTiWto1598x2XuGxylMBRlRX5jKtZ82cATD7Oo7Pmetv8EUk/Tf2aJX7jTX92hlUT
+         M68IurH93s3mO5eES2bwr8uI77YKm7DWEYKAXnqIAjrZJVSZ7g+UeV3UrLfs2drWkkiz
+         /1CpRmm/Qw30sK/P7f+HlFOSgUdaUIxo3F9bSWMxikGONc/kdkHSQUlgMYjIsXfqDQMt
+         23uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NaEf/yojdWUVoM4DyM+sfk4+GZRJzUjUlgOlA6lEjGY=;
+        b=a2b8AM1Pr2jZ6npYQ1VMoCD9ou32ni8Gg18vYiNSJHmzMEuw6VBnDGvBui7j1qVPSW
+         S7QrzDUy50PeBki2ljFQep8u1FfonD9UkYolYt+JXKNHaS1UEAPzy5dogYSsMifKeeqY
+         FaQUA+bWtdpXpsYfJDSm0jqRnPUH4SEpgnFfEA1T83jSRtCWlOlOxD0xgHTYgowYUBdU
+         vtuL1LcmSqkp/zO8fOetFLOCS8/ISi5fRWzKO7A981HbwZlQoyEzLTejH7K9LmOC+C6q
+         FJoUvorSZcpQGcgN0xoLyVDW4bE7iTcquPnp3O1qli877+20iFMupKet1/C9sbbgSPFZ
+         BYLw==
+X-Gm-Message-State: AJIora/GODdlqBrrEYhDJq3fCIVWz+aYhdStLxXJJEC9TgMX3LXcEO0Q
+        mYjYarG/tSG3sgyY3mM6yv71KQ==
+X-Google-Smtp-Source: AGRyM1v17OicmD9S3ypvvtIziLorNT2p/J195EKs+S3PRcHVPoRFWRQsPq7dCCBW/uWSrt+QzVBrxg==
+X-Received: by 2002:a05:6512:ea4:b0:482:9f6b:ed1f with SMTP id bi36-20020a0565120ea400b004829f6bed1fmr9134162lfb.383.1656948467168;
+        Mon, 04 Jul 2022 08:27:47 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id h14-20020a056512220e00b004786eb19049sm5175820lfu.24.2022.07.04.08.27.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Jul 2022 08:27:46 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH v16 0/6] PCI: dwc: Fix higher MSI vectors handling
+Date:   Mon,  4 Jul 2022 18:27:40 +0300
+Message-Id: <20220704152746.807550-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v7 01/21] lib/scatterlist: add flag for indicating P2PDMA
- segments in an SGL
-Content-Language: en-GB
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>
-References: <20220615161233.17527-1-logang@deltatee.com>
- <20220615161233.17527-2-logang@deltatee.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20220615161233.17527-2-logang@deltatee.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-06-15 17:12, Logan Gunthorpe wrote:
-> Make use of the third free LSB in scatterlist's page_link on 64bit systems.
-> 
-> The extra bit will be used by dma_[un]map_sg_p2pdma() to determine when a
-> given SGL segments dma_address points to a PCI bus address.
-> dma_unmap_sg_p2pdma() will need to perform different cleanup when a
-> segment is marked as a bus address.
-> 
-> The new bit will only be used when CONFIG_PCI_P2PDMA is set; this means
-> PCI P2PDMA will require CONFIG_64BIT. This should be acceptable as the
-> majority of P2PDMA use cases are restricted to newer root complexes and
-> roughly require the extra address space for memory BARs used in the
-> transactions.
+I have replied with my Tested-by to the patch at [2], which has landed
+in the linux-next as the commit 20f1bfb8dd62 ("PCI: qcom:
+Add support for handling MSIs from 8 endpoints"). However lately I
+noticed that during the tests I still had 'pcie_pme=nomsi', so the
+device was not forced to use higher MSI vectors.
 
-Another thought that's hit me slightly late; depending on CONFIG_64BIT 
-also means that we've got a whole 4 bytes of padding in struct 
-scatterlist to play with, so at that point maybe it's worth considering 
-carrying new extra DMA mapping properties in their own field(s). For 
-instance it would also be really helpful to flag whether a segment is 
-bounce-buffered or not.
+After removing this option I noticed that hight MSI vectors are not
+delivered on tested platforms. After additional research I stumbled upon
+a patch in msm-4.14 ([1]), which describes that each group of MSI
+vectors is mapped to the separate interrupt. Implement corresponding
+mapping.
 
-Robin.
+Changes since v15:
+ - Rebased on top of linux-next to take care of the conflict with the
+   comit 27235cd867cf ("PCI: dwc: Fix MSI msi_msg DMA mapping").
 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-> ---
->   drivers/pci/Kconfig         |  5 +++++
->   include/linux/scatterlist.h | 44 ++++++++++++++++++++++++++++++++++++-
->   2 files changed, 48 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 133c73207782..5cc7cba1941f 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -164,6 +164,11 @@ config PCI_PASID
->   config PCI_P2PDMA
->   	bool "PCI peer-to-peer transfer support"
->   	depends on ZONE_DEVICE
-> +	#
-> +	# The need for the scatterlist DMA bus address flag means PCI P2PDMA
-> +	# requires 64bit
-> +	#
-> +	depends on 64BIT
->   	select GENERIC_ALLOCATOR
->   	help
->   	  Enableѕ drivers to do PCI peer-to-peer transactions to and from
-> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-> index 7ff9d6386c12..6561ca8aead8 100644
-> --- a/include/linux/scatterlist.h
-> +++ b/include/linux/scatterlist.h
-> @@ -64,12 +64,24 @@ struct sg_append_table {
->   #define SG_CHAIN	0x01UL
->   #define SG_END		0x02UL
->   
-> +/*
-> + * bit 2 is the third free bit in the page_link on 64bit systems which
-> + * is used by dma_unmap_sg() to determine if the dma_address is a
-> + * bus address when doing P2PDMA.
-> + */
-> +#ifdef CONFIG_PCI_P2PDMA
-> +#define SG_DMA_BUS_ADDRESS	0x04UL
-> +static_assert(__alignof__(struct page) >= 8);
-> +#else
-> +#define SG_DMA_BUS_ADDRESS	0x00UL
-> +#endif
-> +
->   /*
->    * We overload the LSB of the page pointer to indicate whether it's
->    * a valid sg entry, or whether it points to the start of a new scatterlist.
->    * Those low bits are there for everyone! (thanks mason :-)
->    */
-> -#define SG_PAGE_LINK_MASK (SG_CHAIN | SG_END)
-> +#define SG_PAGE_LINK_MASK (SG_CHAIN | SG_END | SG_DMA_BUS_ADDRESS)
->   
->   static inline unsigned int __sg_flags(struct scatterlist *sg)
->   {
-> @@ -91,6 +103,11 @@ static inline bool sg_is_last(struct scatterlist *sg)
->   	return __sg_flags(sg) & SG_END;
->   }
->   
-> +static inline bool sg_is_dma_bus_address(struct scatterlist *sg)
-> +{
-> +	return __sg_flags(sg) & SG_DMA_BUS_ADDRESS;
-> +}
-> +
->   /**
->    * sg_assign_page - Assign a given page to an SG entry
->    * @sg:		    SG entry
-> @@ -245,6 +262,31 @@ static inline void sg_unmark_end(struct scatterlist *sg)
->   	sg->page_link &= ~SG_END;
->   }
->   
-> +/**
-> + * sg_dma_mark_bus address - Mark the scatterlist entry as a bus address
-> + * @sg:		 SG entryScatterlist
-> + *
-> + * Description:
-> + *   Marks the passed in sg entry to indicate that the dma_address is
-> + *   a bus address and doesn't need to be unmapped.
-> + **/
-> +static inline void sg_dma_mark_bus_address(struct scatterlist *sg)
-> +{
-> +	sg->page_link |= SG_DMA_BUS_ADDRESS;
-> +}
-> +
-> +/**
-> + * sg_unmark_pci_p2pdma - Unmark the scatterlist entry as a bus address
-> + * @sg:		 SG entryScatterlist
-> + *
-> + * Description:
-> + *   Clears the bus address mark.
-> + **/
-> +static inline void sg_dma_unmark_bus_address(struct scatterlist *sg)
-> +{
-> +	sg->page_link &= ~SG_DMA_BUS_ADDRESS;
-> +}
-> +
->   /**
->    * sg_phys - Return physical address of an sg entry
->    * @sg:	     SG entry
+Changes since v14:
+ - Fixed the dtschema warnings in qcom,pcie.yaml (reported by Rob
+   Herring)
+
+Changes since v13:
+ - Changed msiX from pointer to the char array (reported by Johan).
+
+Changes since v12:
+ - Dropped split_msi_names array in favour of generating the msi_name on
+   the fly (Rob),
+ - Dropped separate split MSI ISR as requested by Rob,
+ - Many small syntax & spelling changes as suggested by Johan and Rob,
+ - Moved a revert to be a last patch, as it is now a reminder to
+   Lorenzo,
+ - Renamed series to name dwc rather than qcom, as the are no more
+   actual changes to the qcom PCIe driver (Johan thanks for all
+   suggestions for making the code to work as is).
+
+Changes since v11 (suggested by Johan):
+ - Added back reporting errors for the "msi0" interrupt,
+ - Stopped overriding num_vectors field if it is less than the amount of
+   MSI vectors deduced from interrupt list,
+ - Added a warning (and an override) if the host specifies more MSI
+   vectors than available,
+ - Moved has_split_msi_irq variable to the patch where it is used.
+
+Changes since v10:
+ - Remove has_split_msi_irqs flag. Trust DT and use split MSI IRQs if
+   they are described in the DT. This removes the need for the
+   pcie-qcom.c changes (everything is handled by the core (suggested by
+   Johan).
+ - Rebased on top of Lorenzo's DWC branch
+
+Changes since v9:
+ - Relax requirements and stop validating the DT. If the has_split_msi
+   was specified, parse as many msiN irqs as specified in DT. If there
+   are none, fallback to the single "msi" IRQ.
+
+Changes since v8:
+ - Fix typos noted by Bjorn Helgaas
+ - Add missing links to the patch 1 (revert)
+ - Fix sm8250 interrupt-names (Johan)
+ - Specify num_vectors in qcom configuration data (Johan)
+ - Rework parsing of MSI IRQs (Johan)
+
+Changes since v7:
+ - Move code back to the dwc core driver (as required by Rob),
+ - Change dt schema to require either a single "msi" interrupt or an
+   array of "msi0", "msi1", ... "msi7" IRQs. Disallow specifying a
+   part of the array (the DT should specify the exact amount of MSI IRQs
+   allowing fallback to a single "msi" IRQ),
+ - Fix in the DWC init code for the dma_mapping_error() return value.
+
+Changes since v6:
+ - Fix indentation of the arguments as requested by Stanimir
+
+Changes since v5:
+ - Fixed commit subject and in-comment code according to Bjorn's
+   suggestion,
+ - Changed variable idx to i to follow dw_handle_msi_irq() style.
+
+Changes since v4:
+ - Fix the minItems/maxItems properties in the YAML schema.
+
+Changes since v3:
+ - Reimplement MSI handling scheme in the Qualcomm host controller
+   driver.
+
+Changes since v2:
+ - Fix and rephrase commit message for patch 2.
+
+Changes since v1:
+ - Split a huge patch into three patches as suggested by Bjorn Helgaas
+ - snps,dw-pcie removal is now part of [3]
+
+[1] https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/commit/671a3d5f129f4bfe477152292ada2194c8440d22
+[2] https://lore.kernel.org/linux-arm-msm/20211214101319.25258-1-manivannan.sadhasivam@linaro.org/
+
+Dmitry Baryshkov (6):
+  PCI: dwc: Correct msi_irq condition in dw_pcie_free_msi()
+  PCI: dwc: Convert msi_irq to the array
+  PCI: dwc: split MSI IRQ parsing/allocation to a separate function
+  PCI: dwc: Handle MSIs routed to multiple GIC interrupts
+  dt-bindings: PCI: qcom: Support additional MSI interrupts
+  arm64: dts: qcom: sm8250: provide additional MSI interrupts
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  51 +++++-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |  12 +-
+ drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
+ drivers/pci/controller/dwc/pci-exynos.c       |   2 +-
+ .../pci/controller/dwc/pcie-designware-host.c | 162 +++++++++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |   2 +-
+ drivers/pci/controller/dwc/pcie-keembay.c     |   2 +-
+ drivers/pci/controller/dwc/pcie-spear13xx.c   |   2 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c    |   2 +-
+ 9 files changed, 183 insertions(+), 54 deletions(-)
+
+-- 
+2.35.1
+
