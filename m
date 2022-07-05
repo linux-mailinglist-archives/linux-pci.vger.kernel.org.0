@@ -2,52 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85696567810
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 21:51:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E783567826
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 22:03:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbiGETvc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jul 2022 15:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48028 "EHLO
+        id S231758AbiGEUDq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jul 2022 16:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbiGETvb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 15:51:31 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 832F71D0E6;
-        Tue,  5 Jul 2022 12:51:30 -0700 (PDT)
+        with ESMTP id S229565AbiGEUDp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 16:03:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DEA5FF3;
+        Tue,  5 Jul 2022 13:03:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 18407B8197D;
-        Tue,  5 Jul 2022 19:51:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 728DCC341C7;
-        Tue,  5 Jul 2022 19:51:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 81C5F61B91;
+        Tue,  5 Jul 2022 20:03:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01E8C341C7;
+        Tue,  5 Jul 2022 20:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657050687;
-        bh=FHSwCWE5Qqw8UZ5yAxfce6oaTgBWlJxEMNIl7ItdHGo=;
+        s=k20201202; t=1657051422;
+        bh=z+VSOPZHJdUGcIPzt3HH3vim1AKYQpXZNPySuOqur1c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hsNjREwz7ClHCyhPShCaTaluPcAsVCtc33dMkOpkJzU88Cd4hBjaXvmyTCeowsHgq
-         Y9ScpDC4v2WlVhwd2afC3lwmhAFyjd3/MwIZ2L9vxW04MAQuGo3Wzf1JLF+mAuxo8j
-         HcMx5IrHg5zq/Lb0r+pzaMcMPSgSF2NRKo0dxqEIlnJ2F/lwCkSub/7kAzspu18EtD
-         UHiu9f27bYpNPgpPUnQj/FJX235A26qsIO0+iABwpUzzCyBBR07MeVtRCP51YGw8xB
-         PQJYgD6/uru1DPq10JSJP47Mwk8FBO8jj2cH7chMvt/M70BzNVWNYVIf5+O3CZ1udO
-         JB56OWi/DQO6A==
-Date:   Tue, 5 Jul 2022 14:51:25 -0500
+        b=CzGjJ6s+WAWlKor2phjuf7ooM/Vupuguc09eReuXWoPLeN4ANOmN38Bt7+GaaUuuY
+         vTjkp+Xl37VN2DXwTigD++pVNzozDZpHfGrUKdyNlDX4hC61PaETI31VPXle93gjsH
+         vQPEuY9y4aLonw3G560bNngRJ6YdG5lWcIvyndrf7zBKWh+he8dRq7YVEjuABE1Qy8
+         gHw6zKb1OS6jec1P+yxCglegfhkHdNwQlF8MrQgSeEt0DlTvR7gdVVsatUM6yJ9V4C
+         VL194AOgBWCYMj+V+9uFVBKj6y8Mf0uY9XNScPbx7sYdQaRatOoesNGbI9dq2rzXXQ
+         tjTFuxtNwEZMQ==
+Date:   Tue, 5 Jul 2022 15:03:41 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: pci: toshiba,visconti-pcie: Update the
- common clock properties
-Message-ID: <20220705195125.GA78912@bhelgaas>
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: iproc: Use the bitmap API to allocate bitmaps
+Message-ID: <20220705200341.GA80171@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220520085648.620703-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+In-Reply-To: <d839a951358ceb447226dc776590a2a38f3e3f9d.1656940469.git.christophe.jaillet@wanadoo.fr>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,44 +60,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 20, 2022 at 05:56:48PM +0900, Nobuhiro Iwamatsu wrote:
-> The clock for this driver switched to the common clock controller driver.
-> Therefore, update common clock properties for PCIe controller in the binding
-> document.
+On Mon, Jul 04, 2022 at 03:15:03PM +0200, Christophe JAILLET wrote:
+> Use bitmap_zalloc()/bitmap_free() instead of hand-writing them.
 > 
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> Acked-by: Rob Herring <robh@kernel.org>
+> It is less verbose and it improves the semantic.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Rob, does your ack mean you want me to pick this up?  It looks like
-you merged the original 17c1b16340f0 ("dt-bindings: pci: Add DT
-binding for Toshiba Visconti PCIe controller")?
+Applied with Ray's ack to pci/ctrl/iproc for v5.20, thanks!
 
 > ---
->  .../devicetree/bindings/pci/toshiba,visconti-pcie.yaml         | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/pcie-iproc-msi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
-> index 30b6396d83c8..b9d0484606cc 100644
-> --- a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
-> @@ -69,6 +69,7 @@ unevaluatedProperties: false
+> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+> index 757b7fbcdc59..fee036b07cd4 100644
+> --- a/drivers/pci/controller/pcie-iproc-msi.c
+> +++ b/drivers/pci/controller/pcie-iproc-msi.c
+> @@ -589,8 +589,8 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
+>  		msi->has_inten_reg = true;
 >  
->  examples:
->    - |
-> +    #include <dt-bindings/clock/toshiba,tmpv770x.h>
->      #include <dt-bindings/interrupt-controller/irq.h>
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  	msi->nr_msi_vecs = msi->nr_irqs * EQ_LEN;
+> -	msi->bitmap = devm_kcalloc(pcie->dev, BITS_TO_LONGS(msi->nr_msi_vecs),
+> -				   sizeof(*msi->bitmap), GFP_KERNEL);
+> +	msi->bitmap = devm_bitmap_zalloc(pcie->dev, msi->nr_msi_vecs,
+> +					 GFP_KERNEL);
+>  	if (!msi->bitmap)
+>  		return -ENOMEM;
 >  
-> @@ -102,7 +103,7 @@ examples:
->                   0 0 0 2 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH
->                   0 0 0 3 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH
->                   0 0 0 4 &gic GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
-> -            clocks = <&extclk100mhz>, <&clk600mhz>, <&clk25mhz>;
-> +            clocks = <&extclk100mhz>, <&pismu TMPV770X_CLK_PCIE_MSTR>, <&pismu TMPV770X_CLK_PCIE_AUX>;
->              clock-names = "ref", "core", "aux";
->              max-link-speed = <2>;
->          };
 > -- 
-> 2.36.0
+> 2.34.1
 > 
 > 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
