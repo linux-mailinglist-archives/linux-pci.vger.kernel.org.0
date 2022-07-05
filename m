@@ -2,54 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA37256737E
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 17:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B86156737A
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 17:53:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232830AbiGEPvo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jul 2022 11:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46496 "EHLO
+        id S232959AbiGEPvp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jul 2022 11:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232949AbiGEPvF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 11:51:05 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA66C18E15;
-        Tue,  5 Jul 2022 08:50:07 -0700 (PDT)
+        with ESMTP id S232195AbiGEPvG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 11:51:06 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0911928E;
+        Tue,  5 Jul 2022 08:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657036207; x=1688572207;
+  t=1657036211; x=1688572211;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xrFja2ADE5qtMfXc+jWS05OGzDhcloppZSGS/q+/bMI=;
-  b=ZaSChbPZIUnrXjSTrZh5f4zwBGYHCLj7CBlpMfnOH1orRvsYom5HMR0m
-   YrN56vH80LWa8Z4XrNGwmPoKxNJQg7QJRZwrjvqB18SpE5KKV63Z8lri9
-   oAFSy4S0i1d6C47oZK625X5PAE4a8nTxBSRF3C3zRDwBsMKp6baFSyB22
-   fOcTNTMzmLiZ/yuF2RVrxTtdBocL6Lbr7WRwFsr98hxyrPM3BFkhiNQpk
-   kxutqCbIhBeNLW/IUJ8lCmSZNUpAiT6dl6IRj1qgOLswaVCNxBh9ouM3K
-   DOdSTSaLDvJ6icNe65SVM/NkSf3TuDC5n2486atTR813PngBsieP4xFYb
+  bh=KHO4l4f5twVCRTpiTRrOo5KIdLqw6qldFhvobbtx6xE=;
+  b=k3ZCWoDa/3qKtD26RyJvsOYpx7uY/j0eHN3kpSQ17jwQ659iFfbt6Czo
+   DpFSGFhke3WpRE9jTBOHt5WTM5OSq9bsPc0J6fzwhnZjTonAq6kZZChV/
+   9KhLPNy2cjMqWfBtB5DYB+jsIkPwZcjcuiCNP6rGMZubAu2A1zU9sSN2i
+   utyrgbWy79HPZO5T+pZ6gAq1coePr+PwPJBlqebGnOiYwflWZj5yZxxcl
+   fWIZyat7+yAZFjAjawgNnYXdXJVhz01mUMrGpfsD0azVDZnNmPohVb/WW
+   mxlYQOW/0mUvDRDfRUYHVx0F2UlXVycDB8Bbv2SpWCd5xO/hK3RI/Z4S8
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10398"; a="263810333"
+X-IronPort-AV: E=McAfee;i="6400,9594,10398"; a="272169460"
 X-IronPort-AV: E=Sophos;i="5.92,247,1650956400"; 
-   d="scan'208";a="263810333"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 08:50:07 -0700
+   d="scan'208";a="272169460"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 08:50:11 -0700
 X-IronPort-AV: E=Sophos;i="5.92,247,1650956400"; 
-   d="scan'208";a="543003422"
+   d="scan'208";a="660600771"
 Received: from amangla-mobl.amr.corp.intel.com (HELO localhost) ([10.255.0.184])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 08:50:04 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 08:50:08 -0700
 From:   ira.weiny@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Lukas Wunner <lukas@wunner.de>,
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
         linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH V13 7/9] cxl/port: Introduce cxl_cdat_valid()
-Date:   Tue,  5 Jul 2022 08:49:30 -0700
-Message-Id: <20220705154932.2141021-8-ira.weiny@intel.com>
+Subject: [PATCH V13 8/9] cxl/port: Retry reading CDAT on failure
+Date:   Tue,  5 Jul 2022 08:49:31 -0700
+Message-Id: <20220705154932.2141021-9-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <20220705154932.2141021-1-ira.weiny@intel.com>
 References: <20220705154932.2141021-1-ira.weiny@intel.com>
@@ -57,8 +58,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -67,110 +68,117 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-The CDAT data is protected by a checksum and should be the proper
-length.
+The CDAT read may fail for a number of reasons but mainly it is possible
+to get different parts of a valid state.  The checksum in the CDAT table
+protects against this.
 
-Introduce cxl_cdat_valid() to validate the data.  While at it check and
-store the sequence number.
+Now that the cdat data is validated, issue a retry if the CDAT read
+fails.  For now 5 retries are implemented.
 
+Reviewed-by: Ben Widawsky <bwidawsk@kernel.org>
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
 Changes from V12
 	Jonathan:
-		Remove unneeded rc check.
+		Standardize on 'rc' for return code
+		Don't set rc unnecessarily
+
+Changes from V10
+	Pick up review tag and fix commit message
+
+Changes from V9
+	Alison Schofield/Davidlohr Bueso
+		Print debug on each iteration and error only after failure
 
 Changes from V8
 	Move code to cxl/core/pci.c
 
 Changes from V6
-	Change name to cxl_cdat_valid() as this validates all the CDAT
-		data not just the header
-	Add error and debug prints
+	Move to pci.c
+	Fix retries count
+	Change to 5 retries
 
-Changes from V5
-	New patch, split out
-	Update cdat_hdr_valid()
-		Remove revision and cs field parsing
-			There is no point in these
-		Add seq check and debug print.
+Changes from V5:
+	New patch -- easy to push off or drop.
 ---
- drivers/cxl/cdat.h     |  2 ++
- drivers/cxl/core/pci.c | 37 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
+ drivers/cxl/core/pci.c | 39 +++++++++++++++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
-index c6a48ab326bf..39eb561081f2 100644
---- a/drivers/cxl/cdat.h
-+++ b/drivers/cxl/cdat.h
-@@ -91,10 +91,12 @@
-  *
-  * @table: cache of CDAT table
-  * @length: length of cached CDAT table
-+ * @seq: Last read Sequence number of the CDAT table
-  */
- struct cxl_cdat {
- 	void *table;
- 	size_t length;
-+	u32 seq;
- };
- 
- #endif /* !__CXL_CDAT_H__ */
 diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 9232b806d051..0a1620c302e1 100644
+index 0a1620c302e1..0853885c5767 100644
 --- a/drivers/cxl/core/pci.c
 +++ b/drivers/cxl/core/pci.c
-@@ -531,6 +531,40 @@ static int cxl_cdat_get_length(struct device *dev,
+@@ -623,13 +623,7 @@ static int cxl_cdat_read_table(struct device *dev,
  	return 0;
  }
  
-+static bool cxl_cdat_valid(struct device *dev, struct cxl_cdat *cdat)
-+{
-+	u32 *table = cdat->table;
-+	u8 *data8 = cdat->table;
-+	u32 length, seq;
-+	u8 check;
-+	int i;
+-/**
+- * read_cdat_data - Read the CDAT data on this port
+- * @port: Port to read data from
+- *
+- * This call will sleep waiting for responses from the DOE mailbox.
+- */
+-void read_cdat_data(struct cxl_port *port)
++static int __read_cdat_data(struct cxl_port *port)
+ {
+ 	static struct pci_doe_mb *cdat_mb;
+ 	struct device *dev = &port->dev;
+@@ -640,19 +634,19 @@ void read_cdat_data(struct cxl_port *port)
+ 	cdat_mb = find_cdat_mb(uport);
+ 	if (!cdat_mb) {
+ 		dev_dbg(dev, "No CDAT mailbox\n");
+-		return;
++		return -EIO;
+ 	}
+ 
+ 	port->cdat_sup = true;
+ 
+ 	if (cxl_cdat_get_length(dev, cdat_mb, &cdat_length)) {
+ 		dev_dbg(dev, "No CDAT length\n");
+-		return;
++		return -EIO;
+ 	}
+ 
+ 	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
+ 	if (!port->cdat.table)
+-		return;
++		return -ENOMEM;
+ 
+ 	port->cdat.length = cdat_length;
+ 	rc = cxl_cdat_read_table(dev, cdat_mb, &port->cdat);
+@@ -663,5 +657,30 @@ void read_cdat_data(struct cxl_port *port)
+ 		port->cdat.length = 0;
+ 		dev_err(dev, "CDAT data read error\n");
+ 	}
 +
-+	length = FIELD_GET(CDAT_HEADER_DW0_LENGTH, table[0]);
-+	if ((length < CDAT_HEADER_LENGTH_BYTES) || (length > cdat->length)) {
-+		dev_err(dev, "CDAT Invalid length %u (%zu-%zu)\n", length,
-+			CDAT_HEADER_LENGTH_BYTES, cdat->length);
-+		return false;
-+	}
-+
-+	for (check = 0, i = 0; i < length; i++)
-+		check += data8[i];
-+
-+	dev_dbg(dev, "CDAT length %u CS %u\n", length, check);
-+	if (check != 0) {
-+		dev_err(dev, "CDAT Invalid checksum %u\n", check);
-+		return false;
-+	}
-+
-+	seq = FIELD_GET(CDAT_HEADER_DW3_SEQUENCE, table[3]);
-+	/* Store the sequence for now. */
-+	if (cdat->seq != seq) {
-+		dev_info(dev, "CDAT seq change %x -> %x\n", cdat->seq, seq);
-+		cdat->seq = seq;
-+	}
-+
-+	return true;
++	return rc;
 +}
 +
- static int cxl_cdat_read_table(struct device *dev,
- 			       struct pci_doe_mb *cdat_mb,
- 			       struct cxl_cdat *cdat)
-@@ -583,6 +617,9 @@ static int cxl_cdat_read_table(struct device *dev,
- 		}
- 	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
- 
-+	if (!cxl_cdat_valid(dev, cdat))
-+		return -EIO;
++/**
++ * read_cdat_data - Read the CDAT data on this port
++ * @port: Port to read data from
++ *
++ * This call will sleep waiting for responses from the DOE mailbox.
++ */
++void read_cdat_data(struct cxl_port *port)
++{
++	int retries = 5;
++	int rc;
 +
- 	return 0;
++	while (retries--) {
++		rc = __read_cdat_data(port);
++		if (!rc)
++			return;
++		dev_dbg(&port->dev,
++			"CDAT data read error rc=%d (retries %d)\n",
++			rc, retries);
++	}
++	dev_err(&port->dev, "CDAT data read failed after %d retries\n",
++		retries);
  }
- 
+ EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
 -- 
 2.35.3
 
