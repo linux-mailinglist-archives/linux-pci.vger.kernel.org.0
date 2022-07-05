@@ -2,111 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F36D567602
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 19:53:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE16956763E
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 20:16:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbiGERxA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jul 2022 13:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39936 "EHLO
+        id S231648AbiGESQz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jul 2022 14:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbiGERw7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 13:52:59 -0400
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761F519C12;
-        Tue,  5 Jul 2022 10:52:58 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id b85so9928823yba.8;
-        Tue, 05 Jul 2022 10:52:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rtZW43uaFGJ9zjjYWIL3hR7D7c7iNZ58RuAJEx8JrUs=;
-        b=E8KmgTIVCZ8YuVVsrTCc4lS9u0Ji1eDJZ7RORRnbMpJkIJsQ/W9sMOuF4DP8DfmgpG
-         ZaaY652sS0qGhmrzMJBOaakc10tOKiQmKZ1ZlXVAkYWfqlgEM9l56R8/Am2g6JPdacKK
-         Xi/jwmo6pZOtCbzUHymqY7v3E6LUhUei9Fkqrme3F4HaAr84U5uKTKUPcSLKki+zxVUh
-         lMKCX9zm4uMmz2yFp0dq8HXFmtMMeSEW2g00NuWjgmZw80Giwo5c12brwlbg8QFyPRSa
-         DHLaq9KNw3ozTPD7VeKWcUjcbRGsVtmYmDRA5uXIaKeXedjAgdNCV0SzPDAdepC4/0+s
-         aw9Q==
-X-Gm-Message-State: AJIora8Iq8MGU+bfj8WWQHIEc2V+/hufyAQggNOAE80YXzvOVEAbyqhu
-        7NScIdxz5kt1hYXBtfj38OTxWhGeqVcW+4mJVV8Fcb3DOLM=
-X-Google-Smtp-Source: AGRyM1tUkRK6ivdZVYz6eLSLc6jRDky8LL2tfELYNeYotqiIcRDlZFHwuORrn6n29m2di+W4XP3C8c4zym3FIyRXPjY=
-X-Received: by 2002:a25:664f:0:b0:66c:d0f4:36cc with SMTP id
- z15-20020a25664f000000b0066cd0f436ccmr37116337ybm.482.1657043577315; Tue, 05
- Jul 2022 10:52:57 -0700 (PDT)
+        with ESMTP id S231372AbiGESQy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 14:16:54 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E194B13F16;
+        Tue,  5 Jul 2022 11:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=3rV+tiVBCGETS+0m1VAyBeVrP084h9ybGuEcnOkL1jA=; b=lfZ2jUE/Pcr0euHS/PfSv8pLp+
+        4/PPUzTkxnoApUidHmt7v626OqXgmL9EfNAu2FXDE82dIkZS4evTLlHJEcLA0sTsaZOdUL7sJXe1K
+        llHNHqCgIXLxKGdC2EFMJ+uJ5Hokog7lmJrw7QTYdr9sTAhi3Hh9CcwjoJd4Ouhncx4sMJASxJZo5
+        Z45htSKhX9sgtg0ghREzgU5ID+skNQqwC9IlBlCgbwMhIXpFTCZpyt8HpOowWyAcZWE8tHzKxRvGy
+        MFCCqqfCCaFi3VeOomss+vTbx17EVsq2HRcn8flYVkfHi6Hg6MM5xYspG5eOMY/FjnLQKBs2TXntf
+        tmVTSv/w==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1o8n6O-007Udo-RE; Tue, 05 Jul 2022 12:16:49 -0600
+Message-ID: <b3deacdd-cb76-6ebb-0e29-ef6a5a426a0d@deltatee.com>
+Date:   Tue, 5 Jul 2022 12:16:45 -0600
 MIME-Version: 1.0
-References: <20220701161624.2844305-1-pierre.gondois@arm.com> <20220701161624.2844305-2-pierre.gondois@arm.com>
-In-Reply-To: <20220701161624.2844305-2-pierre.gondois@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 5 Jul 2022 19:52:46 +0200
-Message-ID: <CAJZ5v0hWm5_zwY9z10dTg4K0Skz-bGc8ABH7C0j_=Vu+Z8zqpQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v1 1/2] ACPI/PCI: Make _SRS optional for link device
-To:     Pierre Gondois <pierre.gondois@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Content-Language: en-CA
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220629175906.GU23621@ziepe.ca> <20220705075108.GB17451@lst.de>
+ <20220705135102.GE23621@ziepe.ca> <20220705161240.GB13721@lst.de>
+ <a509b13c-244b-23fc-f989-339750a733a5@deltatee.com>
+ <20220705164315.GB14484@lst.de>
+ <acb91f37-0470-8ce4-19e4-426903cbc3a1@deltatee.com>
+ <20220705165039.GB14566@lst.de> <YsRzNqmZYlgkL7fI@kroah.com>
+ <1bd43ef7-0403-bd25-087c-d54d5af677e4@deltatee.com>
+ <YsR4CNDgtt4JWonv@kroah.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <YsR4CNDgtt4JWonv@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, hch@lst.de, jgg@ziepe.ca, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, dan.j.williams@intel.com, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, bhelgaas@google.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v7 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 1, 2022 at 6:17 PM Pierre Gondois <pierre.gondois@arm.com> wrote:
->
-> From: Pierre Gondois <Pierre.Gondois@arm.com>
->
-> In ACPI 6.4, s6.2.13 "_PRT (PCI Routing Table)", PCI legacy
-> interrupts can be described though a link device (first model).
-> From s6.2.16 "_SRS (Set Resource Settings)":
-> "This optional control method [...]"
->
-> Make it optional to have a _SRS method for link devices.
 
-Note that if _DIS is present, _SRS is necessary to enable the link and
-acpi_pci_link_add() evaluates _DIS for all links.  So you need to
-check both, not just one.
 
-Moreover, it doesn't make much sense to provide _PRS without _SRS and
-arguably _PRS is needed if _SRS is present, so this needs to be taken
-into account too.
+On 2022-07-05 11:42, Greg Kroah-Hartman wrote:
+> On Tue, Jul 05, 2022 at 11:32:23AM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2022-07-05 11:21, Greg Kroah-Hartman wrote:
+>>> On Tue, Jul 05, 2022 at 06:50:39PM +0200, Christoph Hellwig wrote:
+>>>> [note for the newcomers, this is about allowing mmap()ing the PCIe
+>>>> P2P memory from the generic PCI P2P code through sysfs, and more
+>>>> importantly how to revoke it on device removal]
+>>>
+>>> We allow mmap on PCIe config space today, right?  Why is this different
+>>> from what pci_create_legacy_files() does today?
+>>>
+>>>> On Tue, Jul 05, 2022 at 10:44:49AM -0600, Logan Gunthorpe wrote:
+>>>>> We might be able to. I'm not sure. I'll have to figure out how to find
+>>>>> that inode from the p2pdma code. I haven't found an obvious interface to
+>>>>> do that.
+>>>>
+>>>> I think the right way to approach this would be a new sysfs API
+>>>> that internally calls unmap_mapping_range internally instead of
+>>>> exposing the inode. I suspect that might actually be the right thing
+>>>> to do for iomem_inode as well.
+>>>
+>>> Why do we need something new and how is this any different from the PCI
+>>> binary files I mention above?  We have supported PCI hotplug for a very
+>>> long time, do the current PCI binary sysfs files not work properly with
+>>> mmap and removing a device?
+>>
+>> The P2PDMA code allocates and hands out struct pages to userspace that
+>> are backed with ZONE_DEVICE memory from a device's BAR. This is quite
+>> different from the existing binary files mentioned above which neither
+>> support struct pages nor allocation.
+> 
+> Why would you want to do this through a sysfs interface?  that feels
+> horrid...
 
-AFAICS, the only valid configuration in which _SRS and _PRS are not
-present is when _DIS is not present too, so only _CRS is present and
-the IRQ listed by it is actually in use.  However, in that case it is
-hardly necessary to add a device object for the PCI link device at
-all.
+The current version does it through a char device, but that requires
+creating a simple_fs and anon_inode for teardown on driver removal, plus
+a bunch of hooks through the driver that exposes it (NVMe, in this case)
+to set this all up.
 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215560
-> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
-> ---
->  drivers/acpi/pci_link.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> index 58647051c948..129e3e7e80ee 100644
-> --- a/drivers/acpi/pci_link.c
-> +++ b/drivers/acpi/pci_link.c
-> @@ -288,6 +288,13 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
->         if (!irq)
->                 return -EINVAL;
->
-> +       if (!acpi_has_method(handle, METHOD_NAME__SRS)) {
-> +               if (link->irq.active == irq)
-> +                       return 0;
-> +               acpi_handle_err(handle, "Unable to set IRQ %d: No _SRS.\n", irq);
-> +               return -ENODEV;
-> +       }
-> +
->         resource = kzalloc(sizeof(*resource) + 1, irqs_disabled() ? GFP_ATOMIC: GFP_KERNEL);
->         if (!resource)
->                 return -ENOMEM;
-> --
-> 2.25.1
->
+Christoph is suggesting a sysfs interface which could potentially avoid
+the anon_inode and all of the extra hooks. It has some significant
+benefits and maybe some small downsides, but I wouldn't describe it as
+horrid.
+
+Logan
