@@ -2,97 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E783567826
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 22:03:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8F3956788C
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 22:42:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbiGEUDq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jul 2022 16:03:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54788 "EHLO
+        id S230135AbiGEUmh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jul 2022 16:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbiGEUDp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 16:03:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DEA5FF3;
-        Tue,  5 Jul 2022 13:03:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 81C5F61B91;
-        Tue,  5 Jul 2022 20:03:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01E8C341C7;
-        Tue,  5 Jul 2022 20:03:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657051422;
-        bh=z+VSOPZHJdUGcIPzt3HH3vim1AKYQpXZNPySuOqur1c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CzGjJ6s+WAWlKor2phjuf7ooM/Vupuguc09eReuXWoPLeN4ANOmN38Bt7+GaaUuuY
-         vTjkp+Xl37VN2DXwTigD++pVNzozDZpHfGrUKdyNlDX4hC61PaETI31VPXle93gjsH
-         vQPEuY9y4aLonw3G560bNngRJ6YdG5lWcIvyndrf7zBKWh+he8dRq7YVEjuABE1Qy8
-         gHw6zKb1OS6jec1P+yxCglegfhkHdNwQlF8MrQgSeEt0DlTvR7gdVVsatUM6yJ9V4C
-         VL194AOgBWCYMj+V+9uFVBKj6y8Mf0uY9XNScPbx7sYdQaRatOoesNGbI9dq2rzXXQ
-         tjTFuxtNwEZMQ==
-Date:   Tue, 5 Jul 2022 15:03:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S229710AbiGEUmg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 16:42:36 -0400
+Received: from mx2.absolutedigital.net (mx2.absolutedigital.net [50.242.207.105])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 219D2120AE;
+        Tue,  5 Jul 2022 13:42:35 -0700 (PDT)
+Received: from lancer.cnet.absolutedigital.net (lancer.cnet.absolutedigital.net [10.7.5.10])
+        by luxor.inet.absolutedigital.net (8.14.4/8.14.4) with ESMTP id 265Kg5Z7028293
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Tue, 5 Jul 2022 16:42:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lancer.cnet.absolutedigital.net (8.17.1/8.17.1) with ESMTPS id 265KgHAl008523
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 5 Jul 2022 16:42:18 -0400
+Date:   Tue, 5 Jul 2022 16:42:17 -0400 (EDT)
+From:   Cal Peake <cp@absolutedigital.net>
+To:     Alex Williamson <alex.williamson@redhat.com>
+cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] PCI: iproc: Use the bitmap API to allocate bitmaps
-Message-ID: <20220705200341.GA80171@bhelgaas>
+        Huacai Chen <chenhuacai@kernel.org>, linux-pci@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCHv2] vgaarb: Add module param to allow for choosing the
+ boot VGA device
+In-Reply-To: <20220705101535.569f5cac.alex.williamson@redhat.com>
+Message-ID: <93acb310-ede4-cd9d-e470-2375971a451@absolutedigital.net>
+References: <8498ea9f-2ba9-b5da-7dc4-1588363f1b62@absolutedigital.net> <20220704213829.GA16883@bhelgaas> <20220705101535.569f5cac.alex.williamson@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d839a951358ceb447226dc776590a2a38f3e3f9d.1656940469.git.christophe.jaillet@wanadoo.fr>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 04, 2022 at 03:15:03PM +0200, Christophe JAILLET wrote:
-> Use bitmap_zalloc()/bitmap_free() instead of hand-writing them.
-> 
-> It is less verbose and it improves the semantic.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Tue, 5 Jul 2022, Alex Williamson wrote:
 
-Applied with Ray's ack to pci/ctrl/iproc for v5.20, thanks!
+> > > +	ret = sscanf(input, "%x:%x.%x", &bus, &dev, &func);
+> > > +	if (ret != 3) {
+> > > +		pr_warn("Improperly formatted PCI ID: %s\n", input);
+> > > +		return;
+> > > +	}
+> 
+> See pci_dev_str_match()
 
-> ---
->  drivers/pci/controller/pcie-iproc-msi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Alex, thanks for the feedback. I'll add this if we wind up going with 
+some version of my patch.
+
+> > > +	if (boot_vga && boot_vga->is_chosen_one)
+> > > +		return false;
+> > > +
+> > > +	if (bootdev_id == PCI_DEVID(pdev->bus->number, pdev->devfn)) {
+> > > +		vgadev->is_chosen_one = true;
+> > > +		return true;
+> > > +	}
 > 
-> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-> index 757b7fbcdc59..fee036b07cd4 100644
-> --- a/drivers/pci/controller/pcie-iproc-msi.c
-> +++ b/drivers/pci/controller/pcie-iproc-msi.c
-> @@ -589,8 +589,8 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
->  		msi->has_inten_reg = true;
->  
->  	msi->nr_msi_vecs = msi->nr_irqs * EQ_LEN;
-> -	msi->bitmap = devm_kcalloc(pcie->dev, BITS_TO_LONGS(msi->nr_msi_vecs),
-> -				   sizeof(*msi->bitmap), GFP_KERNEL);
-> +	msi->bitmap = devm_bitmap_zalloc(pcie->dev, msi->nr_msi_vecs,
-> +					 GFP_KERNEL);
->  	if (!msi->bitmap)
->  		return -ENOMEM;
->  
-> -- 
-> 2.34.1
+> This seems too simplistic, for example PCI code determines whether the
+> ROM is a shadow ROM at 0xc0000 based on whether it's the
+> vga_default_device() where that default device is set in
+> vga_arbiter_add_pci_device() based on the value returned by
+> this vga_is_boot_device() function.  A user wishing to specify the boot
+> VGA device doesn't magically make that device's ROM shadowed into this
+> location.
 > 
+
+I think I understand what you're saying. We're not telling the system what 
+the boot device is, it's telling us?
+
+> I also don't see how this actually enables VGA routing to the user
+> selected device, where we generally expect the boot device already has
+> this enabled.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Furthermore, what's the initialization state of the selected device, if
+> it has not had its option ROM executed, is it necessarily in a state to
+> accept VGA commands?  If we're changing the default VGA device, are we
+> fully uncoupling from any firmware notions of the console device?
+> Thanks,
+
+Unfortunately, I'm not the best qualified to answer these questions. My 
+understanding is mostly surface-level until I start digging into the code.
+
+I think the answer to most of them though might be that the UEFI firmware
+initializes both cards.
+
+During POST, I do get output on both GPUs. One gets the static BIOS text 
+(Copyright AMI etc.) -- this is the one selected as boot device -- and the 
+other gets the POST-code counting up.
+
+Once the firmware hands off to the bootloader, whichever GPU has the 
+active display (both GPUs go to the same display, the input source gets 
+switched depending on whether I'm using the host or the VM) is where 
+the bootloader output is.
+
+When the bootloader hands off to the kernel, the boot device chosen by the 
+firmware gets the kernel output. If that's the host GPU, then everything 
+is fine.
+
+If that's the VM GPU, then it gets the kernel output until the vfio-pci 
+driver loads and then all output stops. Back on the host GPU, the screen 
+is black until the X server spawns[1] but I get no VTs.
+
+With my patch, telling the arbiter that the host GPU is always the boot 
+device results in everything just working.
+
+With all that said, if you feel this isn't the right way to go, do you 
+have any thoughts on what would be a better path to try?
+
+Thanks,
+
+-- 
+Cal Peake
+
+[1] I said in a previous email that this only happened when I set 
+VGA_ARB_MAX_GPUS=1, but after doing some more testing just now, it seems I 
+was wrong and the X server was just taking longer than expected to load.
