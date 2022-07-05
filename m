@@ -2,115 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C7B25675EC
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 19:42:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F36D567602
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Jul 2022 19:53:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233340AbiGERmj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jul 2022 13:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
+        id S229807AbiGERxA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jul 2022 13:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232949AbiGERmj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 13:42:39 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D33119006;
-        Tue,  5 Jul 2022 10:42:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CBCCAB81887;
-        Tue,  5 Jul 2022 17:42:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4620C341C7;
-        Tue,  5 Jul 2022 17:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1657042955;
-        bh=18T9JrVrQmGUhIeB/JuQTrGy9yUM/iGt2yUQiwv239s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E+wsESQzjBq0Jm7GRcNunkZNg/B9u9pWxluE8Hvyw5c8ngmjtRMeYZplVgH18CEMg
-         +CWBPqMRpf6vtqHc8uVHP4AxL8xobnRkwM4XtCynMLc+/O8b28/frnTwxcKPJt8aG2
-         gLkaIa6aOTwyOr/X8xpnr7Wu6h8BVukKTtB9ibvU=
-Date:   Tue, 5 Jul 2022 19:42:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
-Message-ID: <YsR4CNDgtt4JWonv@kroah.com>
-References: <20220629175906.GU23621@ziepe.ca>
- <20220705075108.GB17451@lst.de>
- <20220705135102.GE23621@ziepe.ca>
- <20220705161240.GB13721@lst.de>
- <a509b13c-244b-23fc-f989-339750a733a5@deltatee.com>
- <20220705164315.GB14484@lst.de>
- <acb91f37-0470-8ce4-19e4-426903cbc3a1@deltatee.com>
- <20220705165039.GB14566@lst.de>
- <YsRzNqmZYlgkL7fI@kroah.com>
- <1bd43ef7-0403-bd25-087c-d54d5af677e4@deltatee.com>
+        with ESMTP id S229591AbiGERw7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 13:52:59 -0400
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761F519C12;
+        Tue,  5 Jul 2022 10:52:58 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id b85so9928823yba.8;
+        Tue, 05 Jul 2022 10:52:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rtZW43uaFGJ9zjjYWIL3hR7D7c7iNZ58RuAJEx8JrUs=;
+        b=E8KmgTIVCZ8YuVVsrTCc4lS9u0Ji1eDJZ7RORRnbMpJkIJsQ/W9sMOuF4DP8DfmgpG
+         ZaaY652sS0qGhmrzMJBOaakc10tOKiQmKZ1ZlXVAkYWfqlgEM9l56R8/Am2g6JPdacKK
+         Xi/jwmo6pZOtCbzUHymqY7v3E6LUhUei9Fkqrme3F4HaAr84U5uKTKUPcSLKki+zxVUh
+         lMKCX9zm4uMmz2yFp0dq8HXFmtMMeSEW2g00NuWjgmZw80Giwo5c12brwlbg8QFyPRSa
+         DHLaq9KNw3ozTPD7VeKWcUjcbRGsVtmYmDRA5uXIaKeXedjAgdNCV0SzPDAdepC4/0+s
+         aw9Q==
+X-Gm-Message-State: AJIora8Iq8MGU+bfj8WWQHIEc2V+/hufyAQggNOAE80YXzvOVEAbyqhu
+        7NScIdxz5kt1hYXBtfj38OTxWhGeqVcW+4mJVV8Fcb3DOLM=
+X-Google-Smtp-Source: AGRyM1tUkRK6ivdZVYz6eLSLc6jRDky8LL2tfELYNeYotqiIcRDlZFHwuORrn6n29m2di+W4XP3C8c4zym3FIyRXPjY=
+X-Received: by 2002:a25:664f:0:b0:66c:d0f4:36cc with SMTP id
+ z15-20020a25664f000000b0066cd0f436ccmr37116337ybm.482.1657043577315; Tue, 05
+ Jul 2022 10:52:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1bd43ef7-0403-bd25-087c-d54d5af677e4@deltatee.com>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220701161624.2844305-1-pierre.gondois@arm.com> <20220701161624.2844305-2-pierre.gondois@arm.com>
+In-Reply-To: <20220701161624.2844305-2-pierre.gondois@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 5 Jul 2022 19:52:46 +0200
+Message-ID: <CAJZ5v0hWm5_zwY9z10dTg4K0Skz-bGc8ABH7C0j_=Vu+Z8zqpQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v1 1/2] ACPI/PCI: Make _SRS optional for link device
+To:     Pierre Gondois <pierre.gondois@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 05, 2022 at 11:32:23AM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2022-07-05 11:21, Greg Kroah-Hartman wrote:
-> > On Tue, Jul 05, 2022 at 06:50:39PM +0200, Christoph Hellwig wrote:
-> >> [note for the newcomers, this is about allowing mmap()ing the PCIe
-> >> P2P memory from the generic PCI P2P code through sysfs, and more
-> >> importantly how to revoke it on device removal]
-> > 
-> > We allow mmap on PCIe config space today, right?  Why is this different
-> > from what pci_create_legacy_files() does today?
-> > 
-> >> On Tue, Jul 05, 2022 at 10:44:49AM -0600, Logan Gunthorpe wrote:
-> >>> We might be able to. I'm not sure. I'll have to figure out how to find
-> >>> that inode from the p2pdma code. I haven't found an obvious interface to
-> >>> do that.
-> >>
-> >> I think the right way to approach this would be a new sysfs API
-> >> that internally calls unmap_mapping_range internally instead of
-> >> exposing the inode. I suspect that might actually be the right thing
-> >> to do for iomem_inode as well.
-> > 
-> > Why do we need something new and how is this any different from the PCI
-> > binary files I mention above?  We have supported PCI hotplug for a very
-> > long time, do the current PCI binary sysfs files not work properly with
-> > mmap and removing a device?
-> 
-> The P2PDMA code allocates and hands out struct pages to userspace that
-> are backed with ZONE_DEVICE memory from a device's BAR. This is quite
-> different from the existing binary files mentioned above which neither
-> support struct pages nor allocation.
+On Fri, Jul 1, 2022 at 6:17 PM Pierre Gondois <pierre.gondois@arm.com> wrote:
+>
+> From: Pierre Gondois <Pierre.Gondois@arm.com>
+>
+> In ACPI 6.4, s6.2.13 "_PRT (PCI Routing Table)", PCI legacy
+> interrupts can be described though a link device (first model).
+> From s6.2.16 "_SRS (Set Resource Settings)":
+> "This optional control method [...]"
+>
+> Make it optional to have a _SRS method for link devices.
 
-Why would you want to do this through a sysfs interface?  that feels
-horrid...
+Note that if _DIS is present, _SRS is necessary to enable the link and
+acpi_pci_link_add() evaluates _DIS for all links.  So you need to
+check both, not just one.
 
+Moreover, it doesn't make much sense to provide _PRS without _SRS and
+arguably _PRS is needed if _SRS is present, so this needs to be taken
+into account too.
+
+AFAICS, the only valid configuration in which _SRS and _PRS are not
+present is when _DIS is not present too, so only _CRS is present and
+the IRQ listed by it is actually in use.  However, in that case it is
+hardly necessary to add a device object for the PCI link device at
+all.
+
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215560
+> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
+> ---
+>  drivers/acpi/pci_link.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+> index 58647051c948..129e3e7e80ee 100644
+> --- a/drivers/acpi/pci_link.c
+> +++ b/drivers/acpi/pci_link.c
+> @@ -288,6 +288,13 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
+>         if (!irq)
+>                 return -EINVAL;
+>
+> +       if (!acpi_has_method(handle, METHOD_NAME__SRS)) {
+> +               if (link->irq.active == irq)
+> +                       return 0;
+> +               acpi_handle_err(handle, "Unable to set IRQ %d: No _SRS.\n", irq);
+> +               return -ENODEV;
+> +       }
+> +
+>         resource = kzalloc(sizeof(*resource) + 1, irqs_disabled() ? GFP_ATOMIC: GFP_KERNEL);
+>         if (!resource)
+>                 return -ENOMEM;
+> --
+> 2.25.1
+>
