@@ -2,102 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EDB9569347
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 22:26:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D04D6569460
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 23:31:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233594AbiGFUZs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jul 2022 16:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35644 "EHLO
+        id S234469AbiGFVaw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jul 2022 17:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234488AbiGFUZc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 16:25:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5B22AE19;
-        Wed,  6 Jul 2022 13:25:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 78980B81ECD;
-        Wed,  6 Jul 2022 20:25:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D762BC3411C;
-        Wed,  6 Jul 2022 20:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657139116;
-        bh=wuncvhN57Sak96AraAMdXUe617s/eFjjZhDBJneKDYo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JyQTLPsY/lq5rKAezFGwTpf8zOpHXLZ10Cvvyc2axbu596miP5i9bji3ZQfNUJOSI
-         7VvMp8Ceap5isb7JChzcGtuCoLW/IO20MdrNbLIIOBRbgfYdg8JBQi3Lv8FWnAXo0B
-         YkmXZFjsXhOD1Ekx/1BsFkjxHSJyPyGQbZpN2a7cSh1bQNYNU+6Nmt+LVBLWh22c1D
-         +tbyEtblzji6EWJtsVxPC5GlRbR5WPUu84sUxzcXSVCsBraZAjRm+uXmXqogmkdZF7
-         dOXa0sPs/hsmV4WI9PskOWzRZqOZa5hWOcacloUBwxr+Lvq99Mcsxh5vPcXGpD+ll1
-         WvC08RwJhbegA==
-Date:   Wed, 6 Jul 2022 15:25:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shunsuke Mie <mie@igel.co.jp>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Li Chen <lchen@ambarella.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: endpoint: Don't stop EP controller by EP function
-Message-ID: <20220706202514.GA218769@bhelgaas>
+        with ESMTP id S234627AbiGFVas (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 17:30:48 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E3412A94F;
+        Wed,  6 Jul 2022 14:30:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=8YduW0eS5FyJqaOqaP8Ime9Kxv0Nz0ax91qwOz8aVq0=; b=tJ8pa1OCY41/griklmW+EWfOVD
+        GWRX3NjEHhYKoa1dirAXu9tcLaN+qpf0nzpSUt6AE2hSTAMaGkgPgv4NcYCGYPyn5+QpenS+wTnVf
+        dzwHgdTgxI67I3CmK0cMnjTb734bjxbjYx7DQA9orlsLZwJnT7/WMP2dzbiZ7YbAQzYQu/y+kd36E
+        NWKd/LUDPN2BcSU2j0kYeELLqOgQTg66ewIFq/UnLnPvN5w4UmYxGdTvEJEsZFKMhHTjiXUcAJU+a
+        56SmKOp2xezp85myJotIUFWF91GMeRTiTwry5HfRHn7/M0IWeMCxtQww2OKOWXkI2zuBZnUl0FPwc
+        DaJoW4Qg==;
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1o9CbT-008LWu-KY; Wed, 06 Jul 2022 15:30:36 -0600
+Message-ID: <e40595f9-f398-d43f-b09d-08d3e88b3950@deltatee.com>
+Date:   Wed, 6 Jul 2022 15:30:30 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANXvt5rn3NdV63c6-22UqxBpxCNeSdog6Sr+SiZjt7K5pkKbLw@mail.gmail.com>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Content-Language: en-US
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220705161240.GB13721@lst.de>
+ <a509b13c-244b-23fc-f989-339750a733a5@deltatee.com>
+ <20220705164315.GB14484@lst.de>
+ <acb91f37-0470-8ce4-19e4-426903cbc3a1@deltatee.com>
+ <20220705165039.GB14566@lst.de> <YsRzNqmZYlgkL7fI@kroah.com>
+ <1bd43ef7-0403-bd25-087c-d54d5af677e4@deltatee.com>
+ <YsR4CNDgtt4JWonv@kroah.com>
+ <b3deacdd-cb76-6ebb-0e29-ef6a5a426a0d@deltatee.com>
+ <20220706065127.GA27132@lst.de> <YsU0Cb0rRbW8FGPX@kroah.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <YsU0Cb0rRbW8FGPX@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, hch@lst.de, jgg@ziepe.ca, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, dan.j.williams@intel.com, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com, bhelgaas@google.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v7 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 06, 2022 at 12:15:38PM +0900, Shunsuke Mie wrote:
-> 2022年7月6日(水) 12:08 Bjorn Helgaas <helgaas@kernel.org>:
-> > On Wed, Jul 06, 2022 at 11:37:29AM +0900, Shunsuke Mie wrote:
-> > > 2022年7月6日(水) 7:40 Bjorn Helgaas <helgaas@kernel.org>:
-> > > > On Wed, Jun 22, 2022 at 01:09:24PM +0900, Shunsuke Mie wrote:
-> > > > > For multi-function endpoint device, an ep function shouldn't stop EP
-> > > > > controller. Nomally the controller is stopped via configfs.
-> > > >
-> > > > Can you please clarify this for me?
-> > > >
-> > > > An endpoint function by itself wouldn't stop an endpoint controller.
-> > > > I assume that some *operation* on an endpoint function currently stops
-> > > > the endpoint controller, but that operation should not stop the
-> > > > controller?
-> > > >
-> > > > I guess the operation is an "unbind" that detaches an EPF device from
-> > > > an EPC device?
-> > >
-> > > It is likely that after all of the endpoint functions are unbound, the
-> > > controller can be stopped safely, but I'm not sure if it is desired behavior
-> > > for endpoint framework.
-> >
-> > I'm not asking about the patch itself.  I'm asking about the commit
-> > log because "an EP function shouldn't stop EP controller" doesn't
-> > quite make sense in English.
-> I'm sorry.
+
+
+On 2022-07-06 01:04, Greg Kroah-Hartman wrote:
+> On Wed, Jul 06, 2022 at 08:51:27AM +0200, Christoph Hellwig wrote:
+>> On Tue, Jul 05, 2022 at 12:16:45PM -0600, Logan Gunthorpe wrote:
+>>> The current version does it through a char device, but that requires
+>>> creating a simple_fs and anon_inode for teardown on driver removal, plus
+>>> a bunch of hooks through the driver that exposes it (NVMe, in this case)
+>>> to set this all up.
+>>>
+>>> Christoph is suggesting a sysfs interface which could potentially avoid
+>>> the anon_inode and all of the extra hooks. It has some significant
+>>> benefits and maybe some small downsides, but I wouldn't describe it as
+>>> horrid.
+>>
+>> Yeah, I don't think is is horrible, it fits in with the resource files
+>> for the BARs, and solves a lot of problems.  Greg, can you explain
+>> what would be so bad about it?
 > 
-> > I suspect it should say something like "unbinding one endpoint
-> > function of a multi-function device from the endpoint controller
-> > should not stop the controller."
-> Yes, it is correct and represents the commit clearly.
+> As you mention, you will have to pass different things down into sysfs
+> in order for that to be possible.  If it matches the resource files like
+> we currently have today, that might not be that bad, but it still feels
+> odd to me.  Let's see an implementation and a Documentation/ABI/ entry
+> first though.
 
-Thanks!  I updated the commit log to the following:
+I'll work something up in the coming weeks.
 
-  PCI: endpoint: Don't stop controller when unbinding endpoint function
+Thanks,
 
-  Unbinding an endpoint function from the endpoint controller shouldn't stop
-  the controller.  This is especially a problem for multi-function endpoints
-  where other endpoints may still be active.
-
-  Don't stop the controller when unbinding one of its endpoints.  Normally
-  the controller is stopped via configfs.
-
+Logan
