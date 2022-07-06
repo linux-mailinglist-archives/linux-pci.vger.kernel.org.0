@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FEDC568E3D
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 17:51:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4EA1568DFD
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 17:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233017AbiGFPsX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jul 2022 11:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43498 "EHLO
+        id S234568AbiGFPsQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jul 2022 11:48:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233867AbiGFPsC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 11:48:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2A922BB30
-        for <linux-pci@vger.kernel.org>; Wed,  6 Jul 2022 08:40:55 -0700 (PDT)
+        with ESMTP id S232916AbiGFPr6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 11:47:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0FB7E2A243
+        for <linux-pci@vger.kernel.org>; Wed,  6 Jul 2022 08:40:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657122054;
+        s=mimecast20190719; t=1657122047;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hOBngKK5ObcYp0aTM/eJADmU4zkvY2wG1pNNZ2Kjb4Y=;
-        b=a10f16dFXoeNw05eGRnG9kMKSE/tsujHuODJjrLuZsSf/ULwvhGE3ZZa3CCfKAQMVbUw6E
-        fiXhWMXcWYIlEEzPZTeUdJyUG5ar8rfCBpSRGi92Z1f7X1RBjgWgOgZ5tmsUJg7Sz/2ca4
-        CvqUIJVzbls/KRaOorqNAt2HhDs3/Ok=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Kw+hePrwDbzDiEREmLImOf93xliKHYFU7TLXwcjNYt0=;
+        b=g/SbmgoTsBp3R8D1/IvIET50znZBZGDzOHuxH0/yzovW+cODHeV7XajabAwegRS5A6Nhhh
+        MU0PO6F3IzIIHPFy9iAOThD1/Kg4c1kg745JbMPZgufhkgz9IdU1cBowoNuwsSvbU0vvyB
+        aLqN7Jy83xg0BLlcYIWpHnoqZOYX63M=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-577-Aef06cIvPUWpvPgupK22hQ-1; Wed, 06 Jul 2022 11:40:51 -0400
-X-MC-Unique: Aef06cIvPUWpvPgupK22hQ-1
-Received: by mail-il1-f200.google.com with SMTP id d3-20020a056e02214300b002dc0d8abab3so5121447ilv.20
-        for <linux-pci@vger.kernel.org>; Wed, 06 Jul 2022 08:40:51 -0700 (PDT)
+ us-mta-526-MEsgIbD_OiyPklBCW1ywmQ-1; Wed, 06 Jul 2022 11:40:46 -0400
+X-MC-Unique: MEsgIbD_OiyPklBCW1ywmQ-1
+Received: by mail-il1-f197.google.com with SMTP id x11-20020a056e021cab00b002dada9d2a50so7831539ill.15
+        for <linux-pci@vger.kernel.org>; Wed, 06 Jul 2022 08:40:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:organization:mime-version:content-transfer-encoding;
-        bh=hOBngKK5ObcYp0aTM/eJADmU4zkvY2wG1pNNZ2Kjb4Y=;
-        b=RbHsVpbOdVfY93aH4t8Vv9VA+oQ1uoh5R43dZfIYPbQvMwc0lsPMhgNM/8q8+ckm89
-         ZKLZn4hVGjdXxvh+hLnb6VRa2GUo7VfwuoMDTn6VPHofzLVwn7nsFfDWiEYowG473Lhi
-         GHJpZMeiXFqwFvUOyJwCGfbmNEx8OulaZ6j30uOrKR62srUuCGtkmoq+t0vCtVbzzlfF
-         gdZVo+jWqz3hyuxai1rU/zwGGmpAv5fGs3sLxG8QliVUVqCpQi5jS7fVEXHrltgTnN6V
-         DeWYF55BBAAiDC8drI3aENwl6IbDyd22npi7yzQt9zFlyazDiHQxd1zlIPmuDyKwWPIC
-         /2Hw==
-X-Gm-Message-State: AJIora8ODli3nADync3pkUHT0eZ3h/Nl4NIXeYRr0DJaZVvlVbrdx3eK
-        qpMijgLNrkzLk1qw9LYuzSWbz1EW9AEbIc9GQW1Tob87NBdNJSl7Dh8By7ygpg1aL5fnpvOdHi7
-        OEfM54s2yDqzFK14jBQda
-X-Received: by 2002:a05:6638:2651:b0:33e:b468:ece9 with SMTP id n17-20020a056638265100b0033eb468ece9mr15106871jat.85.1657122050738;
-        Wed, 06 Jul 2022 08:40:50 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tGVw+lSRAIoA4x4g8L15GS3fsLZBAb9mQaFyjvIkhW6p55QeD0DJfDTS201tOSes4EYKjdeg==
-X-Received: by 2002:a05:6638:2651:b0:33e:b468:ece9 with SMTP id n17-20020a056638265100b0033eb468ece9mr15106847jat.85.1657122050465;
-        Wed, 06 Jul 2022 08:40:50 -0700 (PDT)
+        bh=Kw+hePrwDbzDiEREmLImOf93xliKHYFU7TLXwcjNYt0=;
+        b=dMizFq3QwZZWuIVoZg4zjEnV39cvIDpjKmYxkMlItfXwcKdyifpmDUlgTCsg1UMKUB
+         X052pYMq5blcHBjc3Sl3+KyTmG2QX30/v3UzIyCKDNOnAM2Z220KfDOvzcbBsRhLxBPy
+         x+2g9/uNBlzeBZ6LZXzdjPBfL5meC4lN47eTd7SoJ5JuFwGtSzUHqRU7uPRF+QdSiV3l
+         Dp/opLhRP64jc6zRy3uPQxoGLOylJhrBkF5Aai04KJCypdUnhD4k86kbrCgrLDGhaHsK
+         72NJZ1pRH/v6/dZZhE3tAVUrgjPckeqUgEgawlL36TasQbUqc2oDEHtZ6NuxIKYjKf5M
+         XUvQ==
+X-Gm-Message-State: AJIora/jrjVr6gMArMfOlFpzNn8Rh2oNkF8+F/GkqKNwtvmzSuplk07g
+        q6/bDR9qm+nun4+9XRBugvofAgRn8KC8RlI5QFptYGBQpyxf2Iv42QekNwcGofg5If/te/NUUtz
+        sMCePTSkMml0l1HPQ4++5
+X-Received: by 2002:a05:6e02:1b8d:b0:2dc:32dc:a03d with SMTP id h13-20020a056e021b8d00b002dc32dca03dmr2819800ili.261.1657122045314;
+        Wed, 06 Jul 2022 08:40:45 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tJknWA5fe5K/3hOcpi9Lvkw/Sr30glLgGICdmPgj3KJLKzuRHboplxHCnha46TsS2+ft6XbQ==
+X-Received: by 2002:a05:6e02:1b8d:b0:2dc:32dc:a03d with SMTP id h13-20020a056e021b8d00b002dc32dca03dmr2819788ili.261.1657122044997;
+        Wed, 06 Jul 2022 08:40:44 -0700 (PDT)
 Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id d12-20020a0566022bec00b0066958ec56d9sm17003884ioy.40.2022.07.06.08.40.48
+        by smtp.gmail.com with ESMTPSA id a17-20020a056e0208b100b002d955fab9dbsm14702119ilt.23.2022.07.06.08.40.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 08:40:49 -0700 (PDT)
-Date:   Wed, 6 Jul 2022 09:39:45 -0600
+        Wed, 06 Jul 2022 08:40:44 -0700 (PDT)
+Date:   Wed, 6 Jul 2022 09:39:59 -0600
 From:   Alex Williamson <alex.williamson@redhat.com>
 To:     Abhishek Sahu <abhsahu@nvidia.com>
 Cc:     Cornelia Huck <cohuck@redhat.com>,
@@ -67,17 +67,18 @@ Cc:     Cornelia Huck <cohuck@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
         <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 1/6] vfio/pci: Mask INTx during runtime suspend
-Message-ID: <20220706093945.30d65ce6.alex.williamson@redhat.com>
-In-Reply-To: <20220701110814.7310-2-abhsahu@nvidia.com>
+Subject: Re: [PATCH v4 2/6] vfio: Add a new device feature for the power
+ management
+Message-ID: <20220706093959.3bd2cbbb.alex.williamson@redhat.com>
+In-Reply-To: <20220701110814.7310-3-abhsahu@nvidia.com>
 References: <20220701110814.7310-1-abhsahu@nvidia.com>
-        <20220701110814.7310-2-abhsahu@nvidia.com>
+        <20220701110814.7310-3-abhsahu@nvidia.com>
 Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -86,164 +87,123 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 1 Jul 2022 16:38:09 +0530
+On Fri, 1 Jul 2022 16:38:10 +0530
 Abhishek Sahu <abhsahu@nvidia.com> wrote:
 
-> This patch adds INTx handling during runtime suspend/resume.
-> All the suspend/resume related code for the user to put the device
-> into the low power state will be added in subsequent patches.
+> This patch adds the new feature VFIO_DEVICE_FEATURE_POWER_MANAGEMENT
+> for the power management in the header file. The implementation for the
+> same will be added in the subsequent patches.
 > 
-> The INTx are shared among devices. Whenever any INTx interrupt comes
-
-"The INTx lines may be shared..."
-
-> for the VFIO devices, then vfio_intx_handler() will be called for each
-> device. Inside vfio_intx_handler(), it calls pci_check_and_mask_intx()
-
-"...device sharing the interrupt."
-
-> and checks if the interrupt has been generated for the current device.
-> Now, if the device is already in the D3cold state, then the config space
-> can not be read. Attempt to read config space in D3cold state can
-> cause system unresponsiveness in a few systems. To prevent this, mask
-> INTx in runtime suspend callback and unmask the same in runtime resume
-> callback. If INTx has been already masked, then no handling is needed
-> in runtime suspend/resume callbacks. 'pm_intx_masked' tracks this, and
-> vfio_pci_intx_mask() has been updated to return true if INTx has been
-> masked inside this function.
+> With the standard registers, all power states cannot be achieved. The
+> platform-based power management needs to be involved to go into the
+> lowest power state. For all the platform-based power management, this
+> device feature can be used.
 > 
-> For the runtime suspend which is triggered for the no user of VFIO
-> device, the is_intx() will return false and these callbacks won't do
-> anything.
-> 
-> The MSI/MSI-X are not shared so similar handling should not be
-> needed for MSI/MSI-X. vfio_msihandler() triggers eventfd_signal()
-> without doing any device-specific config access. When the user performs
-> any config access or IOCTL after receiving the eventfd notification,
-> then the device will be moved to the D0 state first before
-> servicing any request.
+> This device feature uses flags to specify the different operations. In
+> the future, if any more power management functionality is needed then
+> a new flag can be added to it. It supports both GET and SET operations.
 > 
 > Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
 > ---
->  drivers/vfio/pci/vfio_pci_core.c  | 37 +++++++++++++++++++++++++++----
->  drivers/vfio/pci/vfio_pci_intrs.c |  6 ++++-
->  include/linux/vfio_pci_core.h     |  3 ++-
->  3 files changed, 40 insertions(+), 6 deletions(-)
+>  include/uapi/linux/vfio.h | 55 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-> index a0d69ddaf90d..5948d930449b 100644
-> --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -259,16 +259,45 @@ int vfio_pci_set_power_state(struct vfio_pci_core_device *vdev, pci_power_t stat
->  	return ret;
->  }
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 733a1cddde30..7e00de5c21ea 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -986,6 +986,61 @@ enum vfio_device_mig_state {
+>  	VFIO_DEVICE_STATE_RUNNING_P2P = 5,
+>  };
 >  
-> +#ifdef CONFIG_PM
-> +static int vfio_pci_core_runtime_suspend(struct device *dev)
-> +{
-> +	struct vfio_pci_core_device *vdev = dev_get_drvdata(dev);
-> +
-> +	/*
-> +	 * If INTx is enabled, then mask INTx before going into the runtime
-> +	 * suspended state and unmask the same in the runtime resume.
-> +	 * If INTx has already been masked by the user, then
-> +	 * vfio_pci_intx_mask() will return false and in that case, INTx
-> +	 * should not be unmasked in the runtime resume.
-> +	 */
-> +	vdev->pm_intx_masked = (is_intx(vdev) && vfio_pci_intx_mask(vdev));
-> +
-> +	return 0;
-> +}
-> +
-> +static int vfio_pci_core_runtime_resume(struct device *dev)
-> +{
-> +	struct vfio_pci_core_device *vdev = dev_get_drvdata(dev);
-> +
-> +	if (vdev->pm_intx_masked)
-> +		vfio_pci_intx_unmask(vdev);
-> +
-> +	return 0;
-> +}
-> +#endif /* CONFIG_PM */
-> +
->  /*
-> - * The dev_pm_ops needs to be provided to make pci-driver runtime PM working,
-> - * so use structure without any callbacks.
-> - *
->   * The pci-driver core runtime PM routines always save the device state
->   * before going into suspended state. If the device is going into low power
->   * state with only with runtime PM ops, then no explicit handling is needed
->   * for the devices which have NoSoftRst-.
->   */
-> -static const struct dev_pm_ops vfio_pci_core_pm_ops = { };
-> +static const struct dev_pm_ops vfio_pci_core_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(vfio_pci_core_runtime_suspend,
-> +			   vfio_pci_core_runtime_resume,
-> +			   NULL)
-> +};
->  
->  int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
->  {
-> diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-> index 6069a11fb51a..1a37db99df48 100644
-> --- a/drivers/vfio/pci/vfio_pci_intrs.c
-> +++ b/drivers/vfio/pci/vfio_pci_intrs.c
-> @@ -33,10 +33,12 @@ static void vfio_send_intx_eventfd(void *opaque, void *unused)
->  		eventfd_signal(vdev->ctx[0].trigger, 1);
->  }
->  
-> -void vfio_pci_intx_mask(struct vfio_pci_core_device *vdev)
-> +/* Returns true if INTx has been masked by this function. */
-> +bool vfio_pci_intx_mask(struct vfio_pci_core_device *vdev)
->  {
->  	struct pci_dev *pdev = vdev->pdev;
->  	unsigned long flags;
-> +	bool intx_masked = false;
->  
->  	spin_lock_irqsave(&vdev->irqlock, flags);
->  
-> @@ -60,9 +62,11 @@ void vfio_pci_intx_mask(struct vfio_pci_core_device *vdev)
->  			disable_irq_nosync(pdev->irq);
->  
->  		vdev->ctx[0].masked = true;
-> +		intx_masked = true;
->  	}
->  
->  	spin_unlock_irqrestore(&vdev->irqlock, flags);
-> +	return intx_masked;
->  }
+> +/*
+> + * Perform power management-related operations for the VFIO device.
+> + *
+> + * The low power feature uses platform-based power management to move the
+> + * device into the low power state.  This low power state is device-specific.
+> + *
+> + * This device feature uses flags to specify the different operations.
+> + * It supports both the GET and SET operations.
+> + *
+> + * - VFIO_PM_LOW_POWER_ENTER flag moves the VFIO device into the low power
+> + *   state with platform-based power management.  This low power state will be
+> + *   internal to the VFIO driver and the user will not come to know which power
+> + *   state is chosen.  Once the user has moved the VFIO device into the low
+> + *   power state, then the user should not do any device access without moving
+> + *   the device out of the low power state.
 
+Except we're wrapping device accesses to make this possible.  This
+should probably describe how any discrete access will wake the device
+but ongoing access through mmaps will generate user faults.
 
-There's certainly another path through this function that masks the
-interrupt, which makes the definition of this return value a bit
-confusing.  Wouldn't it be simpler not to overload the masked flag on
-the interrupt context like this and instead set a new flag on the vdev
-under irqlock to indicate the device is unable to generate interrupts.
-The irq handler would add a test of this flag before any tests that
-would access the device.  Thanks,
+> + *
+> + * - VFIO_PM_LOW_POWER_EXIT flag moves the VFIO device out of the low power
+> + *    state.  This flag should only be set if the user has previously put the
+> + *    device into low power state with the VFIO_PM_LOW_POWER_ENTER flag.
+
+Indenting.
+
+> + *
+> + * - VFIO_PM_LOW_POWER_ENTER and VFIO_PM_LOW_POWER_EXIT are mutually exclusive.
+> + *
+> + * - VFIO_PM_LOW_POWER_REENTERY_DISABLE flag is only valid with
+> + *   VFIO_PM_LOW_POWER_ENTER.  If there is any access for the VFIO device on
+> + *   the host side, then the device will be moved out of the low power state
+> + *   without the user's guest driver involvement.  Some devices require the
+> + *   user's guest driver involvement for each low-power entry.  If this flag is
+> + *   set, then the re-entry to the low power state will be disabled, and the
+> + *   host kernel will not move the device again into the low power state.
+> + *   The VFIO driver internally maintains a list of devices for which low
+> + *   power re-entry is disabled by default and for those devices, the
+> + *   re-entry will be disabled even if the user has not set this flag
+> + *   explicitly.
+
+Wrong polarity.  The kernel should not maintain the policy.  By default
+every wakeup, whether from host kernel accesses or via user accesses
+that do a pm-get should signal a wakeup to userspace.  Userspace needs
+to opt-out of that wakeup to let the kernel automatically re-enter low
+power and userspace needs to maintain the policy for which devices it
+wants that to occur.
+
+> + *
+> + * For the IOCTL call with VFIO_DEVICE_FEATURE_GET:
+> + *
+> + * - VFIO_PM_LOW_POWER_ENTER will be set if the user has put the device into
+> + *   the low power state, otherwise, VFIO_PM_LOW_POWER_EXIT will be set.
+> + *
+> + * - If the device is in a normal power state currently, then
+> + *   VFIO_PM_LOW_POWER_REENTERY_DISABLE will be set for the devices where low
+> + *   power re-entry is disabled by default.  If the device is in the low power
+> + *   state currently, then VFIO_PM_LOW_POWER_REENTERY_DISABLE will be set
+> + *   according to the current transition.
+
+Very confusing semantics.
+
+What if the feature SET ioctl took an eventfd and that eventfd was one
+time use.  Calling the ioctl would setup the eventfd to notify the user
+on wakeup and call pm-put.  Any access to the device via host, ioctl,
+or region would be wrapped in pm-get/put and the pm-resume handler
+would perform the matching pm-get to balance the feature SET and signal
+the eventfd.  If the user opts-out by not providing a wakeup eventfd,
+then the pm-resume handler does not perform a pm-get.  Possibly we
+could even allow mmap access if a wake-up eventfd is provided.  The
+feature GET ioctl would be used to exit low power behavior and would be
+a no-op if the wakeup eventfd had already been signaled.  Thanks,
 
 Alex
- 
->  /*
-> diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-> index 23c176d4b073..cdfd328ba6b1 100644
-> --- a/include/linux/vfio_pci_core.h
-> +++ b/include/linux/vfio_pci_core.h
-> @@ -124,6 +124,7 @@ struct vfio_pci_core_device {
->  	bool			needs_reset;
->  	bool			nointx;
->  	bool			needs_pm_restore;
-> +	bool			pm_intx_masked;
->  	struct pci_saved_state	*pci_saved_state;
->  	struct pci_saved_state	*pm_save;
->  	int			ioeventfds_nr;
-> @@ -147,7 +148,7 @@ struct vfio_pci_core_device {
->  #define is_irq_none(vdev) (!(is_intx(vdev) || is_msi(vdev) || is_msix(vdev)))
->  #define irq_is(vdev, type) (vdev->irq_type == type)
+
+> + */
+> +struct vfio_device_feature_power_management {
+> +	__u32	flags;
+> +#define VFIO_PM_LOW_POWER_ENTER			(1 << 0)
+> +#define VFIO_PM_LOW_POWER_EXIT			(1 << 1)
+> +#define VFIO_PM_LOW_POWER_REENTERY_DISABLE	(1 << 2)
+> +	__u32	reserved;
+> +};
+> +
+> +#define VFIO_DEVICE_FEATURE_POWER_MANAGEMENT	3
+> +
+>  /* -------- API for Type1 VFIO IOMMU -------- */
 >  
-> -extern void vfio_pci_intx_mask(struct vfio_pci_core_device *vdev);
-> +extern bool vfio_pci_intx_mask(struct vfio_pci_core_device *vdev);
->  extern void vfio_pci_intx_unmask(struct vfio_pci_core_device *vdev);
->  
->  extern int vfio_pci_set_irqs_ioctl(struct vfio_pci_core_device *vdev,
+>  /**
 
