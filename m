@@ -2,51 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51EDD5692EC
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 21:58:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17024569332
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 22:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233818AbiGFT6r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jul 2022 15:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46540 "EHLO
+        id S234383AbiGFUVh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jul 2022 16:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233898AbiGFT6r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 15:58:47 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD5A17A81;
-        Wed,  6 Jul 2022 12:58:43 -0700 (PDT)
+        with ESMTP id S231916AbiGFUVh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 16:21:37 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD6020F77;
+        Wed,  6 Jul 2022 13:21:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 60921B81EB7;
-        Wed,  6 Jul 2022 19:58:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67D1C3411C;
-        Wed,  6 Jul 2022 19:58:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2D2CFB81ECC;
+        Wed,  6 Jul 2022 20:21:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93301C341C0;
+        Wed,  6 Jul 2022 20:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657137521;
-        bh=oFb69u//HpNXjs5TOfyJYyYjVRtzdr/CioBwb3NZ9Zc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BeJcw5YXsXvkbIs8t58CCQJBd7hoze5weHIpdTtnB+IURKWXqHynzbDZBHb3goTUL
-         3HdAlp1H1eDzu8lc/p0cla3/srRywizZ+c/3LAQ3YH0zIjAZdU8jsqoitDYtwgKpXk
-         jKE6EjsKIFpTg20JIgdwHcvXtKR3Mmd6rp5QspyiAPR3lwjJKIbWoax0nMXeqlz882
-         h5ji3gUA4kk4YoMREZDycJED2S+bgRMcVYFJuqX8Sk+Z4aM3GmG/xxPZrjbOb9Fp17
-         0y/fmB+BhlMYlCT8Fvp8z4bp0dny/ZkpVEvZJOJfnZnDckQ3K+96Pkv0GStXTZ77VV
-         WajNqVAvktuyA==
+        s=k20201202; t=1657138893;
+        bh=gOcE8HPlzWbrrVF7KpH0louwUHrwrtqqE+BWqbjxFQg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SPWDMNZbK0/XjRSnLQOxqLWkLpqI/1rDlyOvfopFPr/oagPQAbxHsApeJAjQGKPvY
+         mWJ9UoUz0D0URe53P+Rsy0Aj8v8exukL0e3cGmwCS/fkTBCRffl69ZNE/yHeQmvYMN
+         TbhdJpEX8hHIAUPJMZMg+A6/A5vmttfMObCxsZZoLYf3wJloH4cZLJSxBgiwHZaFdG
+         BtuUEuJ5motTuKyZp20CNwuHiBBu4eOwJ+O79oE3ljhP9eyVNpzvnC22l5kvrNJpEd
+         3yt1CNi04owS5mOaTyM6J4kSV9fVMMqmV0T57BLo4YvaxftGXT4YzIAx+uko9iZeO4
+         +dyzDVuUMKHNw==
+Date:   Wed, 6 Jul 2022 15:21:31 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Toan Le <toan@os.amperecomputing.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: Drop of_match_ptr() to avoid unused variables
-Date:   Wed,  6 Jul 2022 14:58:38 -0500
-Message-Id: <20220706195838.217054-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+To:     Pierre Gondois <pierre.gondois@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH RESEND v1 1/2] ACPI/PCI: Make _SRS optional for link
+ device
+Message-ID: <20220706202131.GA218207@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35de3948-d8f2-c2da-05f9-995eecf275ce@arm.com>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -57,79 +55,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Jul 06, 2022 at 11:52:56AM +0200, Pierre Gondois wrote:
+> On 7/5/22 19:29, Bjorn Helgaas wrote:
+> > On Fri, Jul 01, 2022 at 06:16:23PM +0200, Pierre Gondois wrote:
+> > > From: Pierre Gondois <Pierre.Gondois@arm.com>
+> > > 
+> > > In ACPI 6.4, s6.2.13 "_PRT (PCI Routing Table)", PCI legacy
+> > > interrupts can be described though a link device (first model).
+> > >  From s6.2.16 "_SRS (Set Resource Settings)":
+> > > "This optional control method [...]"
+> > > 
+> > > Make it optional to have a _SRS method for link devices.
+> > 
+> > I think it would be helpful to outline the reason for wanting these
+> > changes in the commit log.  Otherwise we don't know the benefit and
+> > it's harder to justify making the change since it's not an obvious
+> > cleanup.
+> > 
+> > IIRC from [1] there *is* a good reason: you need to use Interrupt Link
+> > devices so you can specify "level triggered, active high".
+> > 
+> > Without an Interrupt Link, you would get the default "level triggered,
+> > active low" setting, which apparently isn't compatible with GICv2.
+> > 
+> > I assume this fixes a device that previously didn't work correctly,
+> > but I don't see the details of that in the bugzilla.  I'm a little
+> > confused about this.  Isn't GICv2 widely used already?  How are things
+> > working now?  Or are there just a lot of broken devices?
+> 
+> It was unsure which of the 2 models described in ACPI 6.4, s6.2.13
+> "_PRT (PCI Routing Table)" would be used for UEFI for kvmtool.
+> 
+> Remainder:
+> The first model allows to accurately describe interrupts: level/edge
+> triggered and active high/low. Interrupts are also configurable with
+> _CRS/_PRS/_SRS/_DIS methods
+> The second model allows to describe hardwired interrupts, and are
+> by default level triggered, active low.
+> 
+> The kernel is aware that GivV2 interrupts are active high, so there
+> was actually no need to accurately describe them. Thus the second
+> model was used.
+> While experimenting, we temporarily had a configuration using
+> the first model, and only had a _CRS method (no _PRS/_SRS), which
+> triggered some warnings.
 
-We have stubs for most OF interfaces even when CONFIG_OF is not set, so we
-allow building of most controller drivers in that case for compile testing.
+OK, thanks.  So it sounds like there is some existing kernel code that
+special-cases GICv2 interrupts to make them level/high, and that code
+would not have been necessary if _PRS/_SRS had been optional from the
+beginning.
 
-When CONFIG_OF is not set, "of_match_ptr(<match_table>)" compiles to NULL,
-which leaves <match_table> unused, resulting in errors like this:
+I don't think we could ever *remove* that code because there's
+firmware in the field that relies on it, and that firmware will never
+be updated.
 
-  $ make W=1
-  drivers/pci/controller/pci-xgene.c:636:34: error: ‘xgene_pcie_match_table’ defined but not used [-Werror=unused-const-variable=]
+> So these patches are not fixes for existing platforms, but merely
+> to make _PRS/_SRS methods optional.
+> 
+> In [1] I said I would submit patches to change that. If you think
+> this is not necessary as the configuration is non-existing, I am
+> perfectly fine to drop the patches.
+> 
+> Also as Rafael noted, the _DIS method should also be taken into
+> consideration if _PRS/_SRS are made optional.
 
-Drop of_match_ptr() to avoid the unused variable warning.
+But that said, I'm not opposed to making _PRS/_SRS optional if that
+makes legal and reasonable _PRT descriptions work, and if all the
+considerations Rafael mentioned are taken care of.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/controller/dwc/pci-keystone.c   | 2 +-
- drivers/pci/controller/dwc/pcie-armada8k.c  | 2 +-
- drivers/pci/controller/dwc/pcie-spear13xx.c | 2 +-
- drivers/pci/controller/pci-xgene.c          | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index d10e5fd0f83c..602909f712b9 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -1324,7 +1324,7 @@ static struct platform_driver ks_pcie_driver __refdata = {
- 	.remove = __exit_p(ks_pcie_remove),
- 	.driver = {
- 		.name	= "keystone-pcie",
--		.of_match_table = of_match_ptr(ks_pcie_of_match),
-+		.of_match_table = ks_pcie_of_match,
- 	},
- };
- builtin_platform_driver(ks_pcie_driver);
-diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
-index 4e2552dcf982..8391417fad41 100644
---- a/drivers/pci/controller/dwc/pcie-armada8k.c
-+++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-@@ -343,7 +343,7 @@ static struct platform_driver armada8k_pcie_driver = {
- 	.probe		= armada8k_pcie_probe,
- 	.driver = {
- 		.name	= "armada8k-pcie",
--		.of_match_table = of_match_ptr(armada8k_pcie_of_match),
-+		.of_match_table = armada8k_pcie_of_match,
- 		.suppress_bind_attrs = true,
- 	},
- };
-diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
-index 1569e82b5568..48af5170a8e7 100644
---- a/drivers/pci/controller/dwc/pcie-spear13xx.c
-+++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
-@@ -258,7 +258,7 @@ static struct platform_driver spear13xx_pcie_driver = {
- 	.probe		= spear13xx_pcie_probe,
- 	.driver = {
- 		.name	= "spear-pcie",
--		.of_match_table = of_match_ptr(spear13xx_pcie_of_match),
-+		.of_match_table = spear13xx_pcie_of_match,
- 		.suppress_bind_attrs = true,
- 	},
- };
-diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-index eb6240958bb0..549d3bd6d1c2 100644
---- a/drivers/pci/controller/pci-xgene.c
-+++ b/drivers/pci/controller/pci-xgene.c
-@@ -641,7 +641,7 @@ static const struct of_device_id xgene_pcie_match_table[] = {
- static struct platform_driver xgene_pcie_driver = {
- 	.driver = {
- 		.name = "xgene-pcie",
--		.of_match_table = of_match_ptr(xgene_pcie_match_table),
-+		.of_match_table = xgene_pcie_match_table,
- 		.suppress_bind_attrs = true,
- 	},
- 	.probe = xgene_pcie_probe,
--- 
-2.25.1
-
+Bjorn
