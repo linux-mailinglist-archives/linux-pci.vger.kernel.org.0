@@ -2,53 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0FFA568567
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 12:23:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94E055685EC
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 12:43:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232248AbiGFKWq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jul 2022 06:22:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36768 "EHLO
+        id S232876AbiGFKna (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jul 2022 06:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233150AbiGFKWW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 06:22:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7732925C70;
-        Wed,  6 Jul 2022 03:22:21 -0700 (PDT)
+        with ESMTP id S232324AbiGFKn3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 06:43:29 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEF1B6F;
+        Wed,  6 Jul 2022 03:43:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C07661DFC;
-        Wed,  6 Jul 2022 10:22:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44B26C341C0;
-        Wed,  6 Jul 2022 10:22:20 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 4B838CE1EBC;
+        Wed,  6 Jul 2022 10:43:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 452CDC3411C;
+        Wed,  6 Jul 2022 10:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657102940;
-        bh=5RJNNFRIVghvmdUSW6GuwgiuwsPcvqMprUl9pG2CXAs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIRgolfAO2xEEw7akxf7//984YrubOnA0R8bW1OE6XDQJxiyw+77sZBa1fj+WlZv/
-         d/URcRVv6rQHA/wtyn33AP0T/phtAXwwyN7ngWhcLsFwIEGav9gYP8NfrevZb7BoBL
-         UWgm3BUAAFRH4nTqmYvQN8DuJZiq0Vc+L1t4fgQT/ygCtrvDZT7+zYgocVUtPRcA/v
-         JgDC1x558eTV5Nxj+9PGYjGyAGRiZYI/2K3QP9PJ3g3uDJh7sdJwKatBBqd+tItnaG
-         p0vJmPNOcCj2d0DU2FijgNMNRafXxWCVTQyoNfiP8Kd9+MHrdm8e4zJNXUbY4mG5a8
-         oxIF+7fqD69zg==
+        s=k20201202; t=1657104200;
+        bh=ZJU7+A8sh/C/YCWpWSHDj402O/F82gQIyYiqc8Vq+qE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nh8cmyXUfOvYI6WT/AqaEO7/btmBNWEvYeHfvCxNxPIErrpWyhHpKR+fhDtiBlvfa
+         kT8ArZVV+1VD/6vlI01haiBNIlM+IlQtrAb/N+NaUp7z93wJLoENFaSD3my3yn0tS4
+         wMDuaZjjAlgQ5ROrTtALTzAF0Up4SJbomsO3rV4MVqdNQyCAOWd1wD1FYRlvNbTvUw
+         ydBkCWCUX67FXFmcmfwJ/lcrXbeEDhV9s7IxPHyhwMhgdb0IGACmK27xw9oNsNdbMV
+         If7giLMUEZpHlF1AReLsG27w2cYIcAr+1bDlGCJD8k46sn0/tXu5mq3V0+KBw4JBbJ
+         KJyiIeWlt7FYQ==
 Received: by pali.im (Postfix)
-        id C570A7F1; Wed,  6 Jul 2022 12:22:17 +0200 (CEST)
+        id 41DC57BA; Wed,  6 Jul 2022 12:43:17 +0200 (CEST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Guowen Shan <gshan@redhat.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Nick Child <nick.child@ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] powerpc/pci: Prefer PCI domain assignment via DT 'linux,pci-domain' and alias
-Date:   Wed,  6 Jul 2022 12:21:48 +0200
-Message-Id: <20220706102148.5060-2-pali@kernel.org>
+Subject: [PATCH 0/5] powerpc/pci: Cleanup unused code and enable 256 PCI buses
+Date:   Wed,  6 Jul 2022 12:43:03 +0200
+Message-Id: <20220706104308.5390-1-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220706102148.5060-1-pali@kernel.org>
-References: <20220706102148.5060-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,71 +60,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Other Linux architectures use DT property 'linux,pci-domain' for specifying
-fixed PCI domain of PCI controller specified in Device-Tree.
+This patch series cleanup unused code by eliminating it at compile time
+and then enable usage of all 256 PCI buses per every PCI domain as
+currently PCI bus numbers have to be unique across all PCI domains.
+So first bus number of each PCI domain would be zero and not the bus
+number of the previous domain plus one. As such bus assignment changes
+BDF address of every PCI device on multi-domain system, this new
+"feature" is configurable by config option to prevent regressions.
 
-And lot of Freescale powerpc boards have defined numbered pci alias in
-Device-Tree for every PCIe controller which number specify preferred PCI
-domain.
+Tested on Freescale P2020 board. Before this patch lspci reports:
 
-So prefer usage of DT property 'linux,pci-domain' (via function
-of_get_pci_domain_nr()) and DT pci alias (via function of_alias_get_id())
-on powerpc architecture for assigning PCI domain to PCI controller.
+8000:00:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+8000:01:00.0 USB controller: Texas Instruments TUSB73x0 SuperSpeed USB 3.0 xHCI Host Controller (rev 02)
+9000:02:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+9000:03:00.0 Network controller: Qualcomm Atheros AR93xx Wireless Network Adapter (rev 01)
+a000:04:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+a000:05:00.0 Network controller: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter
 
-Fixes: 63a72284b159 ("powerpc/pci: Assign fixed PHB number based on device-tree properties")
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
-Changes in v2:
-* New patch
----
- arch/powerpc/kernel/pci-common.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+With these patches and enabled config option it reports:
 
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index 7f959df34833..0715d74855b3 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -78,10 +78,25 @@ static int get_phb_number(struct device_node *dn)
- 
- 	/*
- 	 * Try fixed PHB numbering first, by checking archs and reading
--	 * the respective device-tree properties. Firstly, try powernv by
--	 * reading "ibm,opal-phbid", only present in OPAL environment.
-+	 * the respective device-tree properties. Firstly, try reading
-+	 * standard "linux,pci-domain", then try reading "ibm,opal-phbid"
-+	 * (only present in powernv OPAL environment), then try device-tree
-+	 * alias and as the last try to use lower bits of "reg" property
-+	 * (only if CONFIG_PPC_PCI_DOMAIN_FROM_OF_REG is enabled).
- 	 */
--	ret = of_property_read_u64(dn, "ibm,opal-phbid", &prop);
-+	ret = of_get_pci_domain_nr(dn);
-+	if (ret >= 0) {
-+		prop = ret;
-+		ret = 0;
-+	}
-+	if (ret)
-+		ret = of_property_read_u64(dn, "ibm,opal-phbid", &prop);
-+	if (ret)
-+		ret = of_alias_get_id(dn, "pci");
-+	if (ret >= 0) {
-+		prop = ret;
-+		ret = 0;
-+	}
- 	if (ret && IS_ENABLED(CONFIG_PPC_PCI_DOMAIN_FROM_OF_REG)) {
- 		u32 prop_32;
- 		ret = of_property_read_u32_index(dn, "reg", 1, &prop_32);
-@@ -95,10 +110,7 @@ static int get_phb_number(struct device_node *dn)
- 	if ((phb_id >= 0) && !test_and_set_bit(phb_id, phb_bitmap))
- 		return phb_id;
- 
--	/*
--	 * If not pseries nor powernv, or if fixed PHB numbering tried to add
--	 * the same PHB number twice, then fallback to dynamic PHB numbering.
--	 */
-+	/* If everything fails then fallback to dynamic PHB numbering. */
- 	phb_id = find_first_zero_bit(phb_bitmap, MAX_PHBS);
- 	BUG_ON(phb_id >= MAX_PHBS);
- 	set_bit(phb_id, phb_bitmap);
+8000:00:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+8000:01:00.0 USB controller: Texas Instruments TUSB73x0 SuperSpeed USB 3.0 xHCI Host Controller (rev 02)
+9000:00:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+9000:01:00.0 Network controller: Qualcomm Atheros AR93xx Wireless Network Adapter (rev 01)
+a000:00:00.0 PCI bridge: Freescale Semiconductor Inc P2020E (rev 21)
+a000:01:00.0 Network controller: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter
+
+Now every PCIe Root Port is on bus zero and theoretically with enough
+multiport PCIe switches connected to every PCIe Root Port, it should be
+possible to have 256 PCI buses on every PCIe controller (as each is in
+own PCI domain) and therefore connect more PCIe cards as without these
+patches.
+
+Pali Rohár (5):
+  powerpc/pci: Hide pci_device_from_OF_node() for non-powermac code
+  powerpc/pci: Make pcibios_make_OF_bus_map() static
+  powerpc/pci: Hide pci_create_OF_bus_map() for non-chrp code
+  powerpc/pci: Disable filling pci-OF-bus-map for non-chrp/powermac
+  powerpc/pci: Add config option for using all 256 PCI buses
+
+ arch/powerpc/Kconfig                  | 11 +++++++++++
+ arch/powerpc/include/asm/pci-bridge.h |  4 ++++
+ arch/powerpc/kernel/pci_32.c          | 27 +++++++++++++++++++++------
+ arch/powerpc/kernel/pci_64.c          |  2 ++
+ 4 files changed, 38 insertions(+), 6 deletions(-)
+
 -- 
 2.20.1
 
