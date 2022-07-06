@@ -2,106 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7FB3567AA6
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 01:23:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23BC1567BF7
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 04:38:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232926AbiGEXW0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jul 2022 19:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37800 "EHLO
+        id S230387AbiGFCho (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jul 2022 22:37:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232865AbiGEXWY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 19:22:24 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2201A3A7;
-        Tue,  5 Jul 2022 16:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657063340; x=1688599340;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pXVHNJCtIuqHam3NNieA0W34pcZC7c81/cpdnlVw4AQ=;
-  b=DtUW+pxk6IlycrHJ6KZ9WgjNHzkdzGfKCp/kdLbk+qL590Hfu3rl5W1A
-   GDnKPmajYtgC2bPadaKMjL2G+9RJlNAdJHb3quzwTOovHedV3FiovNMrC
-   +TtqTjyk8L8tMtbqBsf0j9/P1ni5zuhIHNr3ha1UKN+cztaYEaS6QL/K8
-   sOwA+qCUKT4Jk4rJV+1F1DXNYCiKy/k8CuSxVSeAGyUuGSCLg7nHpGdUS
-   p2MaaenU1otM6ujRTqU+ooQD8ZOT2N2euNUCz4yLqzJyeH448STlLg+Uu
-   lJYOkJdAg0l8TurNKMeMCDhSVMkXsNT0sBVvn87pWoWBZgOe2WHD1/5oY
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10399"; a="345250085"
-X-IronPort-AV: E=Sophos;i="5.92,248,1650956400"; 
-   d="scan'208";a="345250085"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 16:22:20 -0700
-X-IronPort-AV: E=Sophos;i="5.92,248,1650956400"; 
-   d="scan'208";a="735338613"
-Received: from adiazinf-mobl.amr.corp.intel.com (HELO localhost) ([10.255.0.103])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2022 16:22:16 -0700
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 3/3] CXL/doe: Use devm_xa_init()
-Date:   Tue,  5 Jul 2022 16:21:59 -0700
-Message-Id: <20220705232159.2218958-4-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20220705232159.2218958-1-ira.weiny@intel.com>
-References: <20220705232159.2218958-1-ira.weiny@intel.com>
+        with ESMTP id S230363AbiGFCho (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 22:37:44 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FA4192A3
+        for <linux-pci@vger.kernel.org>; Tue,  5 Jul 2022 19:37:42 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id t25so23615397lfg.7
+        for <linux-pci@vger.kernel.org>; Tue, 05 Jul 2022 19:37:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=emiR8o/UQR5w8WuS4yBByTW8/kBqRL/MkaDBR+7tZUM=;
+        b=ZDAbVaBdb6JWaypB6MUdJBd3icqZkN9Syz5Eg8Y9Z7SDjm0dzENMBXJVnnE+p5l7/g
+         dtx//SKvB5Vu+bKnB8TdkcpAHjcyq/xx0KoDyHMcIMB0us20Ws36vkvIWes8KwRfUq+A
+         BiEKRFu3Cuu5hAALcJ3VZmDivAolfkmsBcmwe8ReK3KQXcZZZYQfE+n1G7uzm/zVY1f9
+         qoQgusprL1m3w+acx2rYh/X3bLAjJFGjhti7FRmMYjraIiR1VSIrx744jfslCz6+KZxM
+         8OebKQK7b1WI+1F/wceBWUoXB7INbLOHA/rLBUvxE8bU/m2X6FeIMlFKzeJkGXDfU3ON
+         b0RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=emiR8o/UQR5w8WuS4yBByTW8/kBqRL/MkaDBR+7tZUM=;
+        b=6M50QMXeUSxBa8bzRrmHDFMb+alFr8UG4k7CslbRez6MZY76p0QxMk4C4T35xQDQGx
+         +sqv8ybJt+4iLvH+nx8t6KM/akPoeI4651zPaBKkw385vqS71lhHtmX1H4+iEUhOaM32
+         VyGE6yhEsWu495xVI8eDHBq5/USp02HAPzoGOqVY9WPdvnpM43RPaV2cdwjirgpgk0jt
+         4+UtKom10RzkC9kjIVSkzW+WBnNqODvGUk9JjARLWir7zKXp6JBk3TINzHEivKy+ZG9u
+         F56400KdpcEgGAK1v1LArLMBfFjkkpLyfiRaYbB9YsZB4X4s8thXIjpQaeMtng3AqAtM
+         mciw==
+X-Gm-Message-State: AJIora/PAPeYyjFUHWYbM05N0jQiukknLbet7YFRMnqGa7GqP8pwbgkE
+        CXXVSDnUH0rx1Hvg7QzEPxIsC/L7kyruG/QhglOgig==
+X-Google-Smtp-Source: AGRyM1uoTxQkoL9/Rrok+c4rGFrKk0qxoW5GxDlW4rP1FjAoAY2VRPdA9C1LXZtD8n1z2vMNATnnjJWnnG+tttrHkUU=
+X-Received: by 2002:a05:6512:22cd:b0:47f:6e84:f51c with SMTP id
+ g13-20020a05651222cd00b0047f6e84f51cmr23532318lfu.175.1657075060834; Tue, 05
+ Jul 2022 19:37:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220622040924.113279-1-mie@igel.co.jp> <20220705224028.GA90560@bhelgaas>
+In-Reply-To: <20220705224028.GA90560@bhelgaas>
+From:   Shunsuke Mie <mie@igel.co.jp>
+Date:   Wed, 6 Jul 2022 11:37:29 +0900
+Message-ID: <CANXvt5qjx6gXhBZD3ndBPCxx++i2oxd5X7=MRgUGrXUj4kRgfw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: endpoint: Don't stop EP controller by EP function
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Li Chen <lchen@ambarella.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+2022=E5=B9=B47=E6=9C=886=E6=97=A5(=E6=B0=B4) 7:40 Bjorn Helgaas <helgaas@ke=
+rnel.org>:
 
-The DOE mailboxes are all allocated with device managed calls.
-Therefore, the XArray can go away when the device goes away.
+>
+> On Wed, Jun 22, 2022 at 01:09:24PM +0900, Shunsuke Mie wrote:
+> > For multi-function endpoint device, an ep function shouldn't stop EP
+> > controller. Nomally the controller is stopped via configfs.
+>
+> Can you please clarify this for me?
+>
+> An endpoint function by itself wouldn't stop an endpoint controller.
+> I assume that some *operation* on an endpoint function currently stops
+> the endpoint controller, but that operation should not stop the
+> controller?
+>
+> I guess the operation is an "unbind" that detaches an EPF device from
+> an EPC device?
+It is likely that after all of the endpoint functions are unbound, the
+controller can be stopped safely, but I'm not sure if it is desired behavio=
+r
+for endpoint framework.
 
-Use devm_xa_init() and remove the callback needed for xa_destroy().
+Kishon, could you please comment?
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/cxl/pci.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+> > Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to t=
+est PCI")
+> > Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pc=
+i/endpoint/functions/pci-epf-test.c
+> > index 5b833f00e980..a5ed779b0a51 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > @@ -627,7 +627,6 @@ static void pci_epf_test_unbind(struct pci_epf *epf=
+)
+> >
+> >       cancel_delayed_work(&epf_test->cmd_handler);
+> >       pci_epf_test_clean_dma_chan(epf_test);
+> > -     pci_epc_stop(epc);
+> >       for (bar =3D 0; bar < PCI_STD_NUM_BARS; bar++) {
+> >               epf_bar =3D &epf->bar[bar];
+> >
+> > --
+> > 2.17.1
+> >
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 6228c95fd142..adb8198fc6ad 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -387,11 +387,6 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 	return rc;
- }
- 
--static void cxl_pci_destroy_doe(void *mbs)
--{
--	xa_destroy(mbs);
--}
--
- static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
- {
- 	struct device *dev = cxlds->dev;
-@@ -446,8 +441,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (IS_ERR(cxlds))
- 		return PTR_ERR(cxlds);
- 
--	xa_init(&cxlds->doe_mbs);
--	if (devm_add_action(&pdev->dev, cxl_pci_destroy_doe, &cxlds->doe_mbs))
-+	if (devm_xa_init(&pdev->dev, &cxlds->doe_mbs))
- 		return -ENOMEM;
- 
- 	cxlds->serial = pci_get_dsn(pdev);
--- 
-2.35.3
-
+Thanks,
+Shunsuke
