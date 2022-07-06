@@ -2,49 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17024569332
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 22:21:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EDB9569347
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 22:26:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234383AbiGFUVh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jul 2022 16:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60388 "EHLO
+        id S233594AbiGFUZs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jul 2022 16:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231916AbiGFUVh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 16:21:37 -0400
+        with ESMTP id S234488AbiGFUZc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 16:25:32 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD6020F77;
-        Wed,  6 Jul 2022 13:21:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5B22AE19;
+        Wed,  6 Jul 2022 13:25:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2D2CFB81ECC;
-        Wed,  6 Jul 2022 20:21:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93301C341C0;
-        Wed,  6 Jul 2022 20:21:33 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 78980B81ECD;
+        Wed,  6 Jul 2022 20:25:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D762BC3411C;
+        Wed,  6 Jul 2022 20:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657138893;
-        bh=gOcE8HPlzWbrrVF7KpH0louwUHrwrtqqE+BWqbjxFQg=;
+        s=k20201202; t=1657139116;
+        bh=wuncvhN57Sak96AraAMdXUe617s/eFjjZhDBJneKDYo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SPWDMNZbK0/XjRSnLQOxqLWkLpqI/1rDlyOvfopFPr/oagPQAbxHsApeJAjQGKPvY
-         mWJ9UoUz0D0URe53P+Rsy0Aj8v8exukL0e3cGmwCS/fkTBCRffl69ZNE/yHeQmvYMN
-         TbhdJpEX8hHIAUPJMZMg+A6/A5vmttfMObCxsZZoLYf3wJloH4cZLJSxBgiwHZaFdG
-         BtuUEuJ5motTuKyZp20CNwuHiBBu4eOwJ+O79oE3ljhP9eyVNpzvnC22l5kvrNJpEd
-         3yt1CNi04owS5mOaTyM6J4kSV9fVMMqmV0T57BLo4YvaxftGXT4YzIAx+uko9iZeO4
-         +dyzDVuUMKHNw==
-Date:   Wed, 6 Jul 2022 15:21:31 -0500
+        b=JyQTLPsY/lq5rKAezFGwTpf8zOpHXLZ10Cvvyc2axbu596miP5i9bji3ZQfNUJOSI
+         7VvMp8Ceap5isb7JChzcGtuCoLW/IO20MdrNbLIIOBRbgfYdg8JBQi3Lv8FWnAXo0B
+         YkmXZFjsXhOD1Ekx/1BsFkjxHSJyPyGQbZpN2a7cSh1bQNYNU+6Nmt+LVBLWh22c1D
+         +tbyEtblzji6EWJtsVxPC5GlRbR5WPUu84sUxzcXSVCsBraZAjRm+uXmXqogmkdZF7
+         dOXa0sPs/hsmV4WI9PskOWzRZqOZa5hWOcacloUBwxr+Lvq99Mcsxh5vPcXGpD+ll1
+         WvC08RwJhbegA==
+Date:   Wed, 6 Jul 2022 15:25:14 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pierre Gondois <pierre.gondois@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH RESEND v1 1/2] ACPI/PCI: Make _SRS optional for link
- device
-Message-ID: <20220706202131.GA218207@bhelgaas>
+To:     Shunsuke Mie <mie@igel.co.jp>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Li Chen <lchen@ambarella.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: endpoint: Don't stop EP controller by EP function
+Message-ID: <20220706202514.GA218769@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <35de3948-d8f2-c2da-05f9-995eecf275ce@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANXvt5rn3NdV63c6-22UqxBpxCNeSdog6Sr+SiZjt7K5pkKbLw@mail.gmail.com>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,72 +58,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 06, 2022 at 11:52:56AM +0200, Pierre Gondois wrote:
-> On 7/5/22 19:29, Bjorn Helgaas wrote:
-> > On Fri, Jul 01, 2022 at 06:16:23PM +0200, Pierre Gondois wrote:
-> > > From: Pierre Gondois <Pierre.Gondois@arm.com>
-> > > 
-> > > In ACPI 6.4, s6.2.13 "_PRT (PCI Routing Table)", PCI legacy
-> > > interrupts can be described though a link device (first model).
-> > >  From s6.2.16 "_SRS (Set Resource Settings)":
-> > > "This optional control method [...]"
-> > > 
-> > > Make it optional to have a _SRS method for link devices.
-> > 
-> > I think it would be helpful to outline the reason for wanting these
-> > changes in the commit log.  Otherwise we don't know the benefit and
-> > it's harder to justify making the change since it's not an obvious
-> > cleanup.
-> > 
-> > IIRC from [1] there *is* a good reason: you need to use Interrupt Link
-> > devices so you can specify "level triggered, active high".
-> > 
-> > Without an Interrupt Link, you would get the default "level triggered,
-> > active low" setting, which apparently isn't compatible with GICv2.
-> > 
-> > I assume this fixes a device that previously didn't work correctly,
-> > but I don't see the details of that in the bugzilla.  I'm a little
-> > confused about this.  Isn't GICv2 widely used already?  How are things
-> > working now?  Or are there just a lot of broken devices?
+On Wed, Jul 06, 2022 at 12:15:38PM +0900, Shunsuke Mie wrote:
+> 2022年7月6日(水) 12:08 Bjorn Helgaas <helgaas@kernel.org>:
+> > On Wed, Jul 06, 2022 at 11:37:29AM +0900, Shunsuke Mie wrote:
+> > > 2022年7月6日(水) 7:40 Bjorn Helgaas <helgaas@kernel.org>:
+> > > > On Wed, Jun 22, 2022 at 01:09:24PM +0900, Shunsuke Mie wrote:
+> > > > > For multi-function endpoint device, an ep function shouldn't stop EP
+> > > > > controller. Nomally the controller is stopped via configfs.
+> > > >
+> > > > Can you please clarify this for me?
+> > > >
+> > > > An endpoint function by itself wouldn't stop an endpoint controller.
+> > > > I assume that some *operation* on an endpoint function currently stops
+> > > > the endpoint controller, but that operation should not stop the
+> > > > controller?
+> > > >
+> > > > I guess the operation is an "unbind" that detaches an EPF device from
+> > > > an EPC device?
+> > >
+> > > It is likely that after all of the endpoint functions are unbound, the
+> > > controller can be stopped safely, but I'm not sure if it is desired behavior
+> > > for endpoint framework.
+> >
+> > I'm not asking about the patch itself.  I'm asking about the commit
+> > log because "an EP function shouldn't stop EP controller" doesn't
+> > quite make sense in English.
+> I'm sorry.
 > 
-> It was unsure which of the 2 models described in ACPI 6.4, s6.2.13
-> "_PRT (PCI Routing Table)" would be used for UEFI for kvmtool.
-> 
-> Remainder:
-> The first model allows to accurately describe interrupts: level/edge
-> triggered and active high/low. Interrupts are also configurable with
-> _CRS/_PRS/_SRS/_DIS methods
-> The second model allows to describe hardwired interrupts, and are
-> by default level triggered, active low.
-> 
-> The kernel is aware that GivV2 interrupts are active high, so there
-> was actually no need to accurately describe them. Thus the second
-> model was used.
-> While experimenting, we temporarily had a configuration using
-> the first model, and only had a _CRS method (no _PRS/_SRS), which
-> triggered some warnings.
+> > I suspect it should say something like "unbinding one endpoint
+> > function of a multi-function device from the endpoint controller
+> > should not stop the controller."
+> Yes, it is correct and represents the commit clearly.
 
-OK, thanks.  So it sounds like there is some existing kernel code that
-special-cases GICv2 interrupts to make them level/high, and that code
-would not have been necessary if _PRS/_SRS had been optional from the
-beginning.
+Thanks!  I updated the commit log to the following:
 
-I don't think we could ever *remove* that code because there's
-firmware in the field that relies on it, and that firmware will never
-be updated.
+  PCI: endpoint: Don't stop controller when unbinding endpoint function
 
-> So these patches are not fixes for existing platforms, but merely
-> to make _PRS/_SRS methods optional.
-> 
-> In [1] I said I would submit patches to change that. If you think
-> this is not necessary as the configuration is non-existing, I am
-> perfectly fine to drop the patches.
-> 
-> Also as Rafael noted, the _DIS method should also be taken into
-> consideration if _PRS/_SRS are made optional.
+  Unbinding an endpoint function from the endpoint controller shouldn't stop
+  the controller.  This is especially a problem for multi-function endpoints
+  where other endpoints may still be active.
 
-But that said, I'm not opposed to making _PRS/_SRS optional if that
-makes legal and reasonable _PRT descriptions work, and if all the
-considerations Rafael mentioned are taken care of.
+  Don't stop the controller when unbinding one of its endpoints.  Normally
+  the controller is stopped via configfs.
 
-Bjorn
