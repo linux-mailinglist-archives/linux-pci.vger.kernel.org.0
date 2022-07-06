@@ -2,141 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CB55567C7C
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 05:15:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B46B6567DAA
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jul 2022 07:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229884AbiGFDPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jul 2022 23:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34960 "EHLO
+        id S230370AbiGFFU3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jul 2022 01:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbiGFDPx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jul 2022 23:15:53 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772811BE8E
-        for <linux-pci@vger.kernel.org>; Tue,  5 Jul 2022 20:15:52 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id w2so478136ljj.7
-        for <linux-pci@vger.kernel.org>; Tue, 05 Jul 2022 20:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3G8AJUPNdeXHxdK11v2ens9rp8pWF9KEJuCg9Xy8WOI=;
-        b=UQXvkK3e0+BUuLrhVL9zEaoMNJgJ/1uW7iD9TZYFbvle2tITMyV1culntFFAk7Hmkj
-         cVGlCapiIK2i8juSYgtsF6Y0zITaiL8K7z5Wx+vcJrHM1CKwkJEykqkLKYf73Zgrz76H
-         /BIVVNK2V8zb5vw3K/fXUwYgahiowXZh0b1V6xLPStvKZJkYmsz6rk75F3PrY8eO8vyo
-         G1cambYG1XfxOtZAvPQzRrJ9Tv3HyI1YZtjXDZG8kbyd95XI4/fIUDZ564ffjD5Xy/sX
-         uwCg33tg7iSNl+BX1u6Zv+pJ2P+/FVk+tPJE4xmJlJ8KNeSH35syZHhFXGTHhwjoOfBU
-         ZBjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3G8AJUPNdeXHxdK11v2ens9rp8pWF9KEJuCg9Xy8WOI=;
-        b=U+HXHZ3rVNJxsJGsIp07ig8t6hF08E1G0uBdnXvJoOP+oDOvKmrHPUp3xXPUTqJZdU
-         +bSIqwK4KcUGaA0KaJJEpWiFkowKEkBxtivY2Xe2IKtnNq1BADlx3bCdXsfdF0rL7oYo
-         AAb5dU9vC8SPcETun2LhWDUgUxnVnPzB4iZisZUfXaWijeymIhaNIO9u+ovYd4EkjjuX
-         qG+RCl3+Efj4h5pbocx5+vPdHqQybLJVid/SS2CprcD3kw/zdlg+mvVMgDb3/1Lg8hpz
-         R+0ms/oqHqqUy7nFcv0aQoUvPuQcBQhTbVbR08Ffr+SrNs1OpRYSq8LDgPrgg6M0Cps1
-         vxMg==
-X-Gm-Message-State: AJIora80LnmPBq3u5ZwEL44D+99PQEx2zdRkDjjQJuMtAdVMi3mteKXP
-        IlX+zXMR8+7lOTOs8chcj7Ry4TSLhtFQDxicrhRM4w==
-X-Google-Smtp-Source: AGRyM1vAX5WpM+PWUidEjVteiohH2A9OnZY9W6tH18+Y6jl+xCfnaMAWQ+tE55YbvX2n4CNqwjWtuxBWykJfU5KsFtM=
-X-Received: by 2002:a2e:bb88:0:b0:25a:6ec7:a1a0 with SMTP id
- y8-20020a2ebb88000000b0025a6ec7a1a0mr22324641lje.360.1657077350779; Tue, 05
- Jul 2022 20:15:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <CANXvt5qjx6gXhBZD3ndBPCxx++i2oxd5X7=MRgUGrXUj4kRgfw@mail.gmail.com>
- <20220706030812.GA109866@bhelgaas>
-In-Reply-To: <20220706030812.GA109866@bhelgaas>
-From:   Shunsuke Mie <mie@igel.co.jp>
-Date:   Wed, 6 Jul 2022 12:15:38 +0900
-Message-ID: <CANXvt5rn3NdV63c6-22UqxBpxCNeSdog6Sr+SiZjt7K5pkKbLw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: endpoint: Don't stop EP controller by EP function
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Li Chen <lchen@ambarella.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S230344AbiGFFU2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 01:20:28 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793ED1FCF8
+        for <linux-pci@vger.kernel.org>; Tue,  5 Jul 2022 22:20:26 -0700 (PDT)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220706052024epoutp01d1c12b93dd2e3b1b9f7eaa6417594317~-Jd4zlTte0070000700epoutp01e
+        for <linux-pci@vger.kernel.org>; Wed,  6 Jul 2022 05:20:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220706052024epoutp01d1c12b93dd2e3b1b9f7eaa6417594317~-Jd4zlTte0070000700epoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1657084824;
+        bh=f+ua8THa6FizjnAsXlAoxZZd0pO8JVwXvlSUl0eu28s=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=dE7VlihhkxqrhpMEpWxQ5DjU8wlwK57TYaIAeT9tYGYK1e8mNoPd58SeQpRqEU7Lr
+         lB84ovULeF9MZP0zf4jsZP1MVwYphriPh3mERbOXUnwqnj7DMcmfjvufvmVQ2XboZ2
+         MtZ3Jaw3IL8ZFq/atCWQrK4s0CB2TQJ2tLir7jgE=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20220706052023epcas2p42c3b36dc283a34e4155af641625a3b5d~-Jd3_gpvL1642816428epcas2p4h;
+        Wed,  6 Jul 2022 05:20:23 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.69]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4Ld7Cp5S6pz4x9Q2; Wed,  6 Jul
+        2022 05:20:22 +0000 (GMT)
+X-AuditID: b6c32a47-5e1ff700000025aa-9a-62c51b96a027
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1D.F3.09642.69B15C26; Wed,  6 Jul 2022 14:20:22 +0900 (KST)
+Mime-Version: 1.0
+Subject: Re: [PATCH v3 2/5] dt-bindings: phy: Add ARTPEC-8 PCIe phy
+Reply-To: wangseok.lee@samsung.com
+Sender: Wangseok Lee <wangseok.lee@samsung.com>
+From:   Wangseok Lee <wangseok.lee@samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jesper.nilsson@axis.com" <jesper.nilsson@axis.com>,
+        "lars.persson@axis.com" <lars.persson@axis.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
+        "kernel@axis.com" <kernel@axis.com>
+CC:     Moon-Ki Jun <moonki.jun@samsung.com>,
+        Sang Min Kim <hypmean.kim@samsung.com>,
+        Dongjin Yang <dj76.yang@samsung.com>,
+        Yeeun Kim <yeeun119.kim@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <43a075c6-ff48-acf2-0be7-634d292daf30@kernel.org>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20220706052021epcms2p700172d20dbc02303cf9c6f7e66cebfbd@epcms2p7>
+Date:   Wed, 06 Jul 2022 14:20:21 +0900
+X-CMS-MailID: 20220706052021epcms2p700172d20dbc02303cf9c6f7e66cebfbd
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBJsWRmVeSWpSXmKPExsWy7bCmqe406aNJBs07tSyWNGVYvDykaTH/
+        yDlWi90zljNZzJx6htni+aFZzBafWlQtLjztYbN4Oesem8X58xvYLRp6frNaHHnzkdli//GV
+        TBaXd81hszg77zibxYRV31gs3vx+wW5xbnGmReveI+wWO++cYLb4tfUPk4Oox5p5axg9rq8L
+        8FiwqdRj06pONo8nV6YzeWxeUu/Rt2UVo8fxG9uZPD5vkgvgjMq2yUhNTEktUkjNS85PycxL
+        t1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXLzAH6TEmhLDGnFCgUkFhcrKRvZ1OUX1qS
+        qpCRX1xiq5RakJJTYF6gV5yYW1yal66Xl1piZWhgYGQKVJiQnbGj+RtjQbdIRfu28gbG48Jd
+        jJwcEgImEpufdTJ3MXJxCAnsYJSYu+kpUxcjBwevgKDE3x1gNcICzhK7/m9iA7GFBJQkdqyZ
+        xwwR15e4vqKbFcRmE9CV+Lf4JRvIHBGBWWwSS74uZQJxmAUWMErs/72PEWIbr8SM9qcsELa0
+        xPblW8HinAJ2EnNPH2KGiGtI/FjWC2WLStxc/ZYdxn5/bD7UHBGJ1ntnoWoEJR783A0Vl5JY
+        8OQQK4RdLbH/728mCLuBUaL/firIYxJAV++4bgwS5hXwlZh4CeIxFgFViea9fWwQ5S4S594/
+        BFvLLKAtsWzha2aQVmYBTYn1u/QhpihLHLnFAvNUw8bf7OhsZgE+iY7Df+HiO+Y9gTpGTWLe
+        yp3MExiVZyECehaSXbMQdi1gZF7FKJZaUJybnlpsVGAMj9rk/NxNjOAkruW+g3HG2w96hxiZ
+        OBgPMUpwMCuJ8K6adDBJiDclsbIqtSg/vqg0J7X4EKMp0JcTmaVEk/OBeSSvJN7QxNLAxMzM
+        0NzI1MBcSZzXK2VDopBAemJJanZqakFqEUwfEwenVAOTTUNRsWXQ/AkiEo2H3HJ1Jv+8cci5
+        6PgRT+eeme1ctl6rntXcq7p76F+H0dkrRe+vmBcErI5TT278G/j5zJ8ri9z7HzzneSjEcbf8
+        jGijdu/fX9P9DW+1KQk2L+ufvNcyRk5Swdyx0vd8pu4mlt0B/Knz/G9XJ/6Vv7SolP1VbFr1
+        5knFLxr5O3n4Fv5V/7ic6/i5hG4pOU3fjn363BxmLs6ua0+eftHQaR1kd0Rausj4BZ+jn/n3
+        zrZnlYv0bH9o76r41T/PREnr9m7Jrrefd4cV7rg3xevY+mvP9c6qvwx43+Z0JKfXsmhxiYbC
+        7LqFBk9CZ0zi8uMPYAs4yXX40qGTy94E5jlJfeQ+81SJpTgj0VCLuag4EQCuPlWyawQAAA==
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7
+References: <43a075c6-ff48-acf2-0be7-634d292daf30@kernel.org>
+        <20220620083821epcms2p57a65984523a0f2a3815e4873e8bfc6df@epcms2p5>
+        <4b4b08af-887b-89e9-b4a5-93e7d8a03222@kernel.org>
+        <20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7@epcms2p7>
+        <20220614012916epcms2p5cf8d55e7420dea10bb4a05d91aaf99dd@epcms2p5>
+        <20220629071829epcms2p65eab75702495a939f3f6e4ea020181de@epcms2p6>
+        <CGME20220614011616epcms2p7dcaa67c53b7df5802dd7a697e2d472d7@epcms2p7>
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-2022=E5=B9=B47=E6=9C=886=E6=97=A5(=E6=B0=B4) 12:08 Bjorn Helgaas <helgaas@k=
-ernel.org>:
->
-> On Wed, Jul 06, 2022 at 11:37:29AM +0900, Shunsuke Mie wrote:
-> > 2022=E5=B9=B47=E6=9C=886=E6=97=A5(=E6=B0=B4) 7:40 Bjorn Helgaas <helgaa=
-s@kernel.org>:
-> > > On Wed, Jun 22, 2022 at 01:09:24PM +0900, Shunsuke Mie wrote:
-> > > > For multi-function endpoint device, an ep function shouldn't stop E=
-P
-> > > > controller. Nomally the controller is stopped via configfs.
-> > >
-> > > Can you please clarify this for me?
-> > >
-> > > An endpoint function by itself wouldn't stop an endpoint controller.
-> > > I assume that some *operation* on an endpoint function currently stop=
-s
-> > > the endpoint controller, but that operation should not stop the
-> > > controller?
-> > >
-> > > I guess the operation is an "unbind" that detaches an EPF device from
-> > > an EPC device?
-> >
-> > It is likely that after all of the endpoint functions are unbound, the
-> > controller can be stopped safely, but I'm not sure if it is desired beh=
-avior
-> > for endpoint framework.
->
-> I'm not asking about the patch itself.  I'm asking about the commit
-> log because "an EP function shouldn't stop EP controller" doesn't
-> quite make sense in English.
-I'm sorry.
-
-> I suspect it should say something like "unbinding one endpoint
-> function of a multi-function device from the endpoint controller
-> should not stop the controller."
-Yes, it is correct and represents the commit clearly.
-
-> But I don't know enough about EPF/EPC binding to know whether that
-> makes sense either.
->
-> > Kishon, could you please comment?
-> >
-> > > > Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function =
-to test PCI")
-> > > > Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
-> > > > ---
-> > > >  drivers/pci/endpoint/functions/pci-epf-test.c | 1 -
-> > > >  1 file changed, 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/driver=
-s/pci/endpoint/functions/pci-epf-test.c
-> > > > index 5b833f00e980..a5ed779b0a51 100644
-> > > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > > @@ -627,7 +627,6 @@ static void pci_epf_test_unbind(struct pci_epf =
-*epf)
-> > > >
-> > > >       cancel_delayed_work(&epf_test->cmd_handler);
-> > > >       pci_epf_test_clean_dma_chan(epf_test);
-> > > > -     pci_epc_stop(epc);
-> > > >       for (bar =3D 0; bar < PCI_STD_NUM_BARS; bar++) {
-> > > >               epf_bar =3D &epf->bar[bar];
-> > > >
-> > > > --
-> > > > 2.17.1
-> > > >
-> >
-> > Thanks,
-> > Shunsuke
+On=C2=A005/07/2022=C2=A019:59,=C2=A0Krzysztof=20Kozlowski=C2=A0wrote:=0D=0A=
+>=20On=C2=A029/06/2022=C2=A009:18,=C2=A0Wangseok=C2=A0Lee=C2=A0wrote:=0D=0A=
+>>=C2=A0Just=C2=A0a=C2=A0gentle=C2=A0ping=C2=A0for=C2=A0this=C2=A0patch,=C2=
+=A0if=C2=A0any=C2=A0concern=C2=A0on=C2=A0this=C2=A0patch=C2=A0please=C2=A0l=
+et=C2=A0me=C2=A0know.=0D=0A>>=C2=A0=0D=0A>=20=0D=0A>=20You=C2=A0received=C2=
+=A0comments=C2=A0to=C2=A0fix=C2=A0in=C2=A0this=C2=A0patch.=C2=A0Exactly=C2=
+=A0four.=C2=A0Four=C2=A0important=0D=0A>=20points=C2=A0to=C2=A0fix.=C2=A0Th=
+erefore=C2=A0what=C2=A0is=C2=A0this=C2=A0ping=C2=A0about?=0D=0A>=20=0D=0A>=
+=20Without=C2=A0fixing=C2=A0these=C2=A0items,=C2=A0your=C2=A0patch=C2=A0can=
+not=C2=A0be=C2=A0accepted.=C2=A0What=C2=A0is=C2=A0more=0D=0A>=20to=C2=A0pin=
+g=C2=A0here?=0D=0A>=20=0D=0A>=20Best=C2=A0regards,=0D=0A>=20Krzysztof=0D=0A=
+=0D=0AI=20tried=20to=20receive=20your=20opinion=20about=20the=20fix=20point=
+=20.=0D=0AI=20will=20request=20a=20review=20again=20after=20modifying=20it=
+=20in=20the=20next=20patch.=0D=0A=0D=0AThank=20you.=0D=0A=0D=0A>>>=20+=0D=
+=0A>>>=20+=20=20clocks:=0D=0A>>>=20+=20=20=20=20items:=0D=0A>>>=20+=20=20=
+=20=20=20=20-=20description:=20PCIe=20PHY=20reference=20clock=0D=0A>=20=0D=
+=0A>=20refer=20to=20sample-schema.yaml,=20even=20if=20the=20clock=20item=20=
+is=20single,=0D=0A>=20it=20seems=20to=20be=20used=20as=20follows.=0D=0A>=20=
+=0D=0A>=20clocks:=0D=0A>=20=20=20maxItems:=201=0D=0A>=20=0D=0A>=20clock-nam=
+es:=0D=0A>=20=20=20items:=0D=0A>=20=20=20=20=20-=20const:=20ref=0D=0A>=20=
+=0D=0A>=20If=20only=20=22clocks:=22=20are=20define=20and=20clock-names=20ar=
+e=20not=20define,=0D=0A>=20the=20following=20warning=20occurs.=0D=0A>=20=22=
+'clock-names'=20does=20not=20match=20any=20of=20the=20regexes=22=0D=0A>=20=
+=0D=0A>>>=20+=0D=0A>>>=20+=20=20lcpll-ref-clk:=0D=0A>>>=20+=20=20=20=20cons=
+t:=201=0D=0A>>=20=0D=0A>>=20Unknown=20field...=20custom=20properties=20need=
+=20vendor=20(axis,),=20type=20(boolean)=0D=0A>>=20and=20description.=0D=0A>=
+>=20=0D=0A>=20=0D=0A>=20=22lcpl-ref-clk=22=20has=20an=20enum=20type=20value=
+,=20so=20i=20will=20modify=20it=20as=20below.=0D=0A>=20=0D=0A>=20=0D=0A>=20=
+axis,lcpll-ref-clk:=0D=0A>=20=20=20description:=0D=0A>=20=20=20=20=20select=
+=20the=20reference=20clock=20of=20phy=20and=20initialization=20is=20perform=
+ed=0D=0A>=20=20=20=20=20with=20the=20reference=20clock=20according=20to=20t=
+he=20selected=20value.=0D=0A>=20=20=20=24ref:=20/schemas/types.yaml=23/defi=
+nitions/uint32=0D=0A>=20=20=20enum:=20=5B=200,=201,=202,=203,=204=20=5D=0D=
+=0A>=20
