@@ -2,295 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E25D45695AC
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 01:13:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F368F5696F3
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 02:36:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234274AbiGFXNb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jul 2022 19:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59218 "EHLO
+        id S234149AbiGGAgB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jul 2022 20:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234275AbiGFXN1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 19:13:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57885F12;
-        Wed,  6 Jul 2022 16:13:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E878C61E73;
-        Wed,  6 Jul 2022 23:13:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E338C341CA;
-        Wed,  6 Jul 2022 23:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657149205;
-        bh=t5NRaBUfMxchTeFrdnqRAu3a2uP/L9/bkoa+5umIdRc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ejH77V8VcSzb3ntMwzTqxcvBZ2lvKt5cd0HMa3isbENM9k4eLmL5UKfmu4IYSe6AR
-         867ArwZ3Xm8nzQubQ3ihsDrBuf4dOzyt31b+n73r43B1XMZzSx8lZ4LovHMF+VQoEV
-         WD0RpJfclOuf8NYUqdOcFE379X7iZkvxBVnW5ONX6C2dLE2iylQb/gFGmqTcTcGhKB
-         yoiujjq2gI4m/Qz3eN8Mp42lC7fACdA/Llgtuu7B2MuvDTRQvFcmIKYu2v5+AfwxIn
-         ksP20rXfuLhjhE9V1tSnSzYw+1ydIBOHZ4EoQqYhtfk3TvVv0LJYvfFsgX0aHbrQpu
-         Sh185EFya+9hw==
-Date:   Wed, 6 Jul 2022 18:13:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        with ESMTP id S234025AbiGGAgA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jul 2022 20:36:00 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2133.outbound.protection.outlook.com [40.107.114.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EC1DB2B;
+        Wed,  6 Jul 2022 17:35:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lRzfvVNgiPYREDhg2jK1SOWI9j7LoIhE7xoQYl7kANswMhO+iYhye7/OEGGDjf84LGmkVXBcNztvVYXYRYYVGWLrN2YC8omvCzLueUU1EOu+mATJlBxoJa3QSm+X+7P24svbbPES9iG6pKj5QvlFnhtkmT9bgsG9yZqZDIaN+A+hYke2gyQ4s8rmSgnmGVlc/rkEfrLsrJex4m+4DDwBWpxOBwtG6zEJJRGTfaXynPLWlrfVTu6XkTAKu7kwp51Kn67LHa5NsayilqOqfsVkd4P201abdOk2K72G7vN5UPbEyDb5SwHzjRhSek0jD8szFuuEjq7WJe1GOgjH+7PryQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XdmyVa3+z8kgSlXNnn2g7txz93DMIWtPehWLpZxEPTA=;
+ b=X4CjBDiAX5ivYa2ZYr1WLtXF3Y1WfCcVjqTSKrxS0VMtYiGaEYDrkkQNHc5rwLORvTChvzoyXYygQsT678sscw0LoAsg+KrjVeHoW7ThQTsbVXu8K/Q29W7Qvyjqz+6ho17WQmkhmE3B10Yf6iJSGf9p8ffaQAJ2hEXfj1jFvqVueLbxmU8Baierr0U1mvOLmUUh5ueSAtZaUn9Y3ucAdqR7dY9EMapS0Ue2hqSTNVmREDynnKA5FIY5ljz44R9vnUfjc4dkWG9rdZw6PAI54SHSt6HUjecvfPXmQuI9Sbc3Y30RsICs9Oqk33KjpyfrOKWZPhdLD6jde0b7sQw2eQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XdmyVa3+z8kgSlXNnn2g7txz93DMIWtPehWLpZxEPTA=;
+ b=lZtoahxWZyDppZddcyCXT7T+ptcuJDjKilX4v0zsPICqnvES+BKH9HWocCMaRHtK3hO5k9JVawUozOfphi6xePvQTwOMFHGJntM5SC9/vxzkLyDlJ8G4WdEYiy0kLF8hEk41bWW8X2EGVgSNHliL/DgOurdv4/t6aixKj634Kjc=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by TYAPR01MB5513.jpnprd01.prod.outlook.com
+ (2603:1096:404:803f::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Thu, 7 Jul
+ 2022 00:35:55 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::b596:754d:e595:bb2d]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::b596:754d:e595:bb2d%6]) with mapi id 15.20.5417.016; Thu, 7 Jul 2022
+ 00:35:55 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Frank Li <frank.li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 3/4] PCI: brcmstb: Add control of subdevice voltage
- regulators
-Message-ID: <20220706231323.GA237418@bhelgaas>
+        Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: RE: [EXT] RE: [PATCH v3 19/24] dmaengine: dw-edma: Use non-atomic
+ io-64 methods
+Thread-Topic: [EXT] RE: [PATCH v3 19/24] dmaengine: dw-edma: Use non-atomic
+ io-64 methods
+Thread-Index: AQHYfKtQgpemW274PkqGO4tIUqvOIa1w+AlwgACYAYCAAKi9cA==
+Date:   Thu, 7 Jul 2022 00:35:55 +0000
+Message-ID: <TYBPR01MB534114729095568324E44B70D8839@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+References: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
+ <20220610091459.17612-20-Sergey.Semin@baikalelectronics.ru>
+ <TYBPR01MB53418C1BC8791CB6D068A177D8809@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <PAXPR04MB9186551C4A12F747C35784B288809@PAXPR04MB9186.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB9186551C4A12F747C35784B288809@PAXPR04MB9186.eurprd04.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5a43d008-8c28-429c-8e91-08da5fb0a772
+x-ms-traffictypediagnostic: TYAPR01MB5513:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Y6VK4HkLhsPuuxMB+sjB2Iy/vvt3WVQbXICh/d6mb3jNav+pSWWfKdkvtqbo78qonJYtqAjoVBI5TBazy7Bsbg+Ayvtk6W+e4AqTdnEzDZZwPlC7ASmgpnq04Ub+G7/k+HB7JWevBbaBT3YtrpsrVLGNiM+Q+zJnmWJybgCyiAJyZO/Tndw3XPe9FvSlEDCSsuSdNDSCywrGS+G3t/gnPhBcsAOhBRVPi1O/4OScH1K51XKakCoQX+m7l1RS+GsYENR4IKcmMAk8lSotSmxKQzStVgT8Tg1BIqtAPBObIKywUCS8GBo3/sBsRXWoLUrMOz6tHTm0QQEI9UwXLvRJiTCQvPDBe8+7N9WRN6GixkUD7XAS/N5dVom3VZ39HNltRBTz+tzQ6vhq5mi3pVN3Kp/BW6XiHyqXfOeeDbbeWpiG1sm1z5d6H2rl+rmNpCewWWqJI+flfDSSuD3HoasZQF4M/CsAzkrq2tNVu/9PIASFijWSHzisH1l6zcACYatrN/1Wsfj2SEc6Y2OHwcv9JHohf9bbh5Xu/W+y+/Hox2vz7gAk8DciMoqdI1ZrH5+gvQIFTZqt1PLnFCPXnGcIFPZzev587Ls3DBlPKTYE9BiLb8XbM2xQRsYC72d+u7uTCfgyOJLpMdUaZkPqz1AGFGWlR9PcUcoXLQ79QlUYVo7ycIKsIRmvv51u8pRNlDBx33IHo9sBimPufjHxRJdU6JCLQo5oD7rale73N3YZ6MpgzZFfqtk65qqz2UxCBc6B2BbAey+/QSr8ifsCToCRFeBtaPIs9sFlb1pJVuPP2mjDGtI6XLnpdWIxCfUl40zh
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(478600001)(8676002)(6506007)(66446008)(64756008)(316002)(4326008)(66476007)(66556008)(66946007)(76116006)(8936002)(55016003)(71200400001)(54906003)(110136005)(7696005)(5660300002)(52536014)(83380400001)(7416002)(41300700001)(2906002)(86362001)(33656002)(38070700005)(122000001)(186003)(38100700002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?G6XWdqy15EtXxVVO5IDC8lM2GKg2t9AdZKSheW/mO9AcZ8LmnBnOeOP2ge?=
+ =?iso-8859-2?Q?7lY3KACOWqKcRXasOlWY7tszdEkscPad3mw1pd4ZgZaGFbKxyWlnhhr3M0?=
+ =?iso-8859-2?Q?1wtqQ3JXMtuS5dSa9+eK0C2yx0CWr/xJELgxOFtR1f5Iivcc/VaxS+9C9P?=
+ =?iso-8859-2?Q?vEvJD00ziZrxlCJ8Kf7VixkoDwGYusOMijMhSyhvJw3xAKByvItaoaxTYd?=
+ =?iso-8859-2?Q?A/FB6tEA61jpo+dXCcLwafRUsgVqo7jfxGGygWCrSxLKwxQ+oOnPG5oSc6?=
+ =?iso-8859-2?Q?YRjGGeu5GZB4KS5kXdOlSI48wHCkO82Qgjk+t9cHHMNdRnqdCfHoof7lDU?=
+ =?iso-8859-2?Q?kHYmxUOJxtY8/2ecsPri67CcGMJeCtS3zyE7yUE4RAi8c+QW3q2Rj0EmpL?=
+ =?iso-8859-2?Q?QKpjOyAwviPgtcnr3bi0rD8xRRBKZoNfl5cONcKwjwpCmuVSCYnxahXTaY?=
+ =?iso-8859-2?Q?m82XScOl0T+MlW+0Bwqui5v2Whwm1oUA00dVXvyTSMzB4su/fSswn7WCoi?=
+ =?iso-8859-2?Q?ItiAffHxv2GlWX4rPxbsVNTFAh0/UhWTQSl8xcjCWDz2seLiZaGqTiujWK?=
+ =?iso-8859-2?Q?WHRY4ySGEeKrSzIp98rwD96cYLZJ7SXt/vlT0r6aIlOEl15USK73egOsBv?=
+ =?iso-8859-2?Q?lqlswZsH/0MimxGI+6t8sDP9dsubfCthus3pQk2kq4m3nRn8xfX8YbiRfV?=
+ =?iso-8859-2?Q?AaMqchvJIeHj3TDt555p0vuydsk0tNl4NDHxrCOCaFOei+Q0NIZ6Y42XvC?=
+ =?iso-8859-2?Q?JKXCRtHjNnM4zC3Qo+QhQTzhHAzAbS2RrEidav3JAvr6RgWVPFsW88UdkT?=
+ =?iso-8859-2?Q?jRSmne7mfjGXxf2nERcXTXlpoEcjGwO8J41jSyKA3rkB32WuWtXLdQXUGP?=
+ =?iso-8859-2?Q?HnBuAzZyg4OfKgYuykNv7Px3M8Av7TnWBvOMqFBy3qU3qbuAjYao0DZpnr?=
+ =?iso-8859-2?Q?NZVPXThbsj6g6xCYlF1JLG4dIL2Rp/g++fc4qoGSdg8GDV7BddN74b591e?=
+ =?iso-8859-2?Q?L5GrUuUIwwr/kaB6GhtCxxbgmELBBahtjDA9sU8J/xgjre/gHnjByu9RWy?=
+ =?iso-8859-2?Q?nPTOH31iIq0mekt9tDz3H9SUBBjd8tnENPILHXHMlh0sregOZaJ3Wk0H/g?=
+ =?iso-8859-2?Q?f+FmsA90e5KJO27u3WHDXLfVU/mUWRLjrVzSBiQzWNHd9MjcHPD3ICxAlf?=
+ =?iso-8859-2?Q?4ComdzrSKNU9CwslWf6q6m1PIr0eGsCGlYsnVyTgvDm3MVQPYXJczokGhq?=
+ =?iso-8859-2?Q?z86L0DwDZPHMaBcild/EfgF0oz4CyV132L+6fRCrDzmMQugZqn/g7O/JON?=
+ =?iso-8859-2?Q?MDQi8Kwq1iPvgvbxAUGw9GxKLZ7TOChtA78gX2/+23EXddlt4r/AxoIBWP?=
+ =?iso-8859-2?Q?JY95+BlZSdE1FxYYJUHU/X341SwtyDwMrOtT4y0tv9NItzqNHpuCIZSy4+?=
+ =?iso-8859-2?Q?Va3NYxIwPNUvCRVQ1FXo4QtsBeif3bzJsNyvHJVshvWzEMgcouowm6jvhl?=
+ =?iso-8859-2?Q?oyDg3L+H5CvyZkqbySWro1l2tiTR0PRB3TRvUuZC19ao2srnF0HO8y4WoR?=
+ =?iso-8859-2?Q?tAxEUOphNVMln1Cr4suUsXqBCfs5EOpwtw4j6P0fAySufVKI0hS1SP6/Tl?=
+ =?iso-8859-2?Q?OX94EUOuYhSZxk7ti0VQDOYlu6Zl4LsXbwJ/Ukz7Z/dh1c4qHUU9kE4tkj?=
+ =?iso-8859-2?Q?JPy6UlqcUvd6T3foj4dOKA7Jew12+mVQsqmBbpkX9y5v5W7oYLq88sqcy1?=
+ =?iso-8859-2?Q?gDcw=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220701162726.31346-4-jim2101024@gmail.com>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a43d008-8c28-429c-8e91-08da5fb0a772
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2022 00:35:55.4219
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bHwidnuEMAVPPmDnu8EgvPmOFO0bwOoNfJQnyk/u01FpSeSbeOCvXLL4x8ptFBMJAWCAHsRRZra6hP+oOXwWVrAfxFtazU2NjZAI37u5tZgmhFsuv4n9ME9RUKsIRchu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5513
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 01, 2022 at 12:27:24PM -0400, Jim Quinlan wrote:
-> This Broadcom STB PCIe RC driver has one port and connects directly to one
-> device, be it a switch or an endpoint.  We want to be able to leverage the
-> recently added mechanism that allocates and turns on/off subdevice
-> regulators.
-> 
-> All that needs to be done is to put the regulator DT nodes in the bridge
-> below host and to set the pci_ops methods add_bus and remove_bus.
-> 
-> Note that the pci_subdev_regulators_add_bus() method is wrapped for two
-> reasons:
-> 
->    1. To achieve link up after the voltage regulators are turned on.
-> 
->    2. If, in the case of an unsuccessful link up, to redirect any PCIe
->       accesses to subdevices, e.g. the scan for DEV/ID.  This redirection
->       is needed because the Broadcom PCIe HW will issue a CPU abort if such
->       an access is made when the link is down.
-> 
-> [bhelgaas: fold in
-> https://lore.kernel.org/r/20220112013100.48029-1-jim2101024@gmail.com]
-> Link: https://lore.kernel.org/r/20220106160332.2143-7-jim2101024@gmail.com
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 86 ++++++++++++++++++++++++---
->  1 file changed, 77 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 661d3834c6da..a86bf502a265 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -196,6 +196,8 @@ static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie,
->  static inline void brcm_pcie_perst_set_4908(struct brcm_pcie *pcie, u32 val);
->  static inline void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val);
->  static inline void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val);
-> +static int brcm_pcie_linkup(struct brcm_pcie *pcie);
-> +static int brcm_pcie_add_bus(struct pci_bus *bus);
+Hi,
 
-I think the brcm_pcie_add_bus() declaration is unnecessary.
+> From: Frank Li, Sent: Wednesday, July 6, 2022 11:29 PM
+>=20
+> > > From: Serge Semin, Sent: Friday, June 10, 2022 6:15 PM
+<snip>
+> >
+> > Since both codes in #ifdef and #else are the same, we can just remove c=
+ode
+> > of the #else part.
+> > But, what do you think?
+> > -----
+> >                 #ifdef CONFIG_64BIT
+> >                 /* llp is not aligned on 64bit -> keep 32bit accesses *=
+/
+> >                 SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> >                           lower_32_bits(chunk->ll_region.paddr));
+> >                 SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> >                           upper_32_bits(chunk->ll_region.paddr));
+> >                 #else /* CONFIG_64BIT */
+> >                 SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> >                           lower_32_bits(chunk->ll_region.paddr));
+> >                 SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> >                           upper_32_bits(chunk->ll_region.paddr));
+> >                 #endif /* CONFIG_64BIT */
+> > -----
+> >
+>=20
+> Latest Linux-next code have removed CONFIG_64BIT.
 
-The brcm_pcie_linkup() one is probably unnecessary, too, but would
-require a lot of reordering that I don't think we should do in this
-series.
+Thank you for the information! I had looked the PCI repository only.
+I confirmed the latest Linux-next (next-20220706 tag) code have removed the=
+ CONFIG_64BIT.
 
->  enum {
->  	RGR1_SW_INIT_1,
-> @@ -329,6 +331,8 @@ struct brcm_pcie {
->  	u32			hw_rev;
->  	void			(*perst_set)(struct brcm_pcie *pcie, u32 val);
->  	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
-> +	bool			refusal_mode;
-> +	struct subdev_regulators *sr;
->  };
->  
->  static inline bool is_bmips(const struct brcm_pcie *pcie)
-> @@ -497,6 +501,33 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
->  	return 0;
->  }
->  
-> +static int brcm_pcie_add_bus(struct pci_bus *bus)
-> +{
-> +	struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
-> +	int ret;
-> +
-> +	if (!bus->parent || !pci_is_root_bus(bus->parent))
-> +		return 0;
-> +
-> +	ret = pci_subdev_regulators_add_bus(bus);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Grab the regulators for suspend/resume */
-> +	pcie->sr = bus->dev.driver_data;
-> +
-> +	/*
-> +	 * If we have failed linkup there is no point to return an error as
-> +	 * currently it will cause a WARNING() from pci_alloc_child_bus().
-> +	 * We return 0 and turn on the "refusal_mode" so that any further
-> +	 * accesses to the pci_dev just get 0xffffffff
-> +	 */
-> +	if (brcm_pcie_linkup(pcie) != 0)
-> +		pcie->refusal_mode = true;
+Best regards,
+Yoshihiro Shimoda
 
-Is there a bisection hole between the previous patch and this one?
-The previous patch sets .add_bus() to pci_subdev_regulators_add_bus(),
-so we'll turn on the regulators, but we don't know whether the link
-came up.  If it didn't come up, it looks like we might get a CPU abort
-when enumerating?
-
-I think we should split out the refusal_mode patch:
-
-  - Add refusal mode
-  - Add subdev regulator mechanism
-  - This patch (which would then be clearly about managing regulators
-    in suspend/resume, IIUC)
-
-> +	return 0;
-> +}
-> +
->  static void pci_subdev_regulators_remove_bus(struct pci_bus *bus)
->  {
->  	struct device *dev = &bus->dev;
-> @@ -826,6 +857,18 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
->  	/* Accesses to the RC go right to the RC registers if slot==0 */
->  	if (pci_is_root_bus(bus))
->  		return PCI_SLOT(devfn) ? NULL : base + where;
-> +	if (pcie->refusal_mode) {
-> +		/*
-> +		 * At this point we do not have link.  There will be a CPU
-> +		 * abort -- a quirk with this controller --if Linux tries
-> +		 * to read any config-space registers besides those
-> +		 * targeting the host bridge.  To prevent this we hijack
-> +		 * the address to point to a safe access that will return
-> +		 * 0xffffffff.
-> +		 */
-> +		writel(0xffffffff, base + PCIE_MISC_RC_BAR2_CONFIG_HI);
-> +		return base + PCIE_MISC_RC_BAR2_CONFIG_HI + (where & 0x3);
-> +	}
->  
->  	/* For devices, write to the config space index register */
->  	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
-> @@ -854,7 +897,7 @@ static struct pci_ops brcm_pcie_ops = {
->  	.map_bus = brcm_pcie_map_conf,
->  	.read = pci_generic_config_read,
->  	.write = pci_generic_config_write,
-> -	.add_bus = pci_subdev_regulators_add_bus,
-> +	.add_bus = brcm_pcie_add_bus,
->  	.remove_bus = pci_subdev_regulators_remove_bus,
->  };
->  
-> @@ -1327,6 +1370,14 @@ static int brcm_pcie_suspend(struct device *dev)
->  		return ret;
->  	}
->  
-> +	if (pcie->sr) {
-> +		ret = regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
-> +		if (ret) {
-> +			dev_err(dev, "Could not turn off regulators\n");
-> +			reset_control_reset(pcie->rescal);
-> +			return ret;
-> +		}
-> +	}
->  	clk_disable_unprepare(pcie->clk);
->  
->  	return 0;
-> @@ -1344,9 +1395,17 @@ static int brcm_pcie_resume(struct device *dev)
->  	if (ret)
->  		return ret;
->  
-> +	if (pcie->sr) {
-> +		ret = regulator_bulk_enable(pcie->sr->num_supplies, pcie->sr->supplies);
-> +		if (ret) {
-> +			dev_err(dev, "Could not turn on regulators\n");
-> +			goto err_disable_clk;
-> +		}
-> +	}
-> +
->  	ret = reset_control_reset(pcie->rescal);
->  	if (ret)
-> -		goto err_disable_clk;
-> +		goto err_regulator;
->  
->  	ret = brcm_phy_start(pcie);
->  	if (ret)
-> @@ -1378,6 +1437,9 @@ static int brcm_pcie_resume(struct device *dev)
->  
->  err_reset:
->  	reset_control_rearm(pcie->rescal);
-> +err_regulator:
-> +	if (pcie->sr)
-> +		regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
->  err_disable_clk:
->  	clk_disable_unprepare(pcie->clk);
->  	return ret;
-> @@ -1488,10 +1550,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto fail;
->  
-> -	ret = brcm_pcie_linkup(pcie);
-> -	if (ret)
-> -		goto fail;
-> -
->  	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
->  	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
->  		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
-> @@ -1513,7 +1571,17 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, pcie);
->  
-> -	return pci_host_probe(bridge);
-> +	ret = pci_host_probe(bridge);
-> +	if (!ret && !brcm_pcie_link_up(pcie))
-> +		ret = -ENODEV;
-> +
-> +	if (ret) {
-> +		brcm_pcie_remove(pdev);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +
->  fail:
->  	__brcm_pcie_remove(pcie);
->  	return ret;
-> @@ -1522,8 +1590,8 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  MODULE_DEVICE_TABLE(of, brcm_pcie_match);
->  
->  static const struct dev_pm_ops brcm_pcie_pm_ops = {
-> -	.suspend = brcm_pcie_suspend,
-> -	.resume = brcm_pcie_resume,
-> +	.suspend_noirq = brcm_pcie_suspend,
-> +	.resume_noirq = brcm_pcie_resume,
-
-Can you name these brcm_pcie_suspend_noirq() and
-brcm_pcie_resume_noirq() to match the hook names?
-
->  };
->  
->  static struct platform_driver brcm_pcie_driver = {
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
