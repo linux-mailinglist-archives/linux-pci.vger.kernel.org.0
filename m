@@ -2,80 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A30C756A7E2
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 18:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F48656A7EE
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 18:22:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235938AbiGGQUW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jul 2022 12:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60046 "EHLO
+        id S236126AbiGGQWc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jul 2022 12:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230209AbiGGQUV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 12:20:21 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A6527B01
-        for <linux-pci@vger.kernel.org>; Thu,  7 Jul 2022 09:20:20 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id n12so20445225pfq.0
-        for <linux-pci@vger.kernel.org>; Thu, 07 Jul 2022 09:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VXrYZ61N0EjYwN6PmYoAGfWNrBsZ7xX7Atb1jDnnUSA=;
-        b=p5wmJD477mFFtzowBb8tx/XSzckuQ07p5RO7tIH/RMTYYqVJvjEU+jVSQI/h61cAsC
-         ZAeNKbYjvdYoyxAcdnVUhr5YTr/DdyuC+7Wh0UGF5/GFfY1IW4sSk7R7ixIOa6qc4+in
-         IZYBztrPs9K5X1g4xfSjM3hbrQmfKmwrCKql/n8Of0ZIGbzcyn1/KE87fe+FLq1DUDsN
-         0OySncNZPDUCvOHJZX2KxMOvxbF3FwDnbxhf4E9a7j+V8aFx7lQzslSxoirFnz0HuY15
-         cxR76TTEuHuBFapSoq7E1fJhmlxzzXllKXaDJyTK9xsqpMJ04Cw8PC3eWS72t2pxv94y
-         lKpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VXrYZ61N0EjYwN6PmYoAGfWNrBsZ7xX7Atb1jDnnUSA=;
-        b=q7xP5/LPIFOMDK8oLCPud+QAyovGo2lwZqPSBDD/ofkFwaCk/RdpwmWoYRNKOC03QZ
-         Sg7V8cyYEhxaLUlDAMcLbJsalYwzgumt+uO5H8VDyGlen1KHZt6/0h33GkE/QFlo+D+I
-         NlIiQcW+XUeoCNx6su6XScvkN/cVvzdYSJOZd+xdMulVzPG0cvx8++93dEifDacteoyq
-         4dBEcD6+M0zPwkmMGD/4J4ZPmec3hamuHyf6Y3zVbsNm2Kxeob+JvR1sF2R590mgvPWn
-         VlXRZkdqjRC7kEQEvTpd3eJ28EXg1WlpSBkecIU7qHCvCqbqv3wJl645SSnFQMF1yBvF
-         OReg==
-X-Gm-Message-State: AJIora9sUu/FbEZqCyVfD/vwUuY1Xz7r+AHgSOsRYRahErFzePzH38pX
-        pnfUIvR3+Qb9Vn1KdzZKrgsmmw==
-X-Google-Smtp-Source: AGRyM1spx2+HSN4zZHdWrjsd4aiZUaj9PIAEWmczVW+O1PKipBvy8craMZ3yK3aPEeXBugRIYe/CSA==
-X-Received: by 2002:a17:90b:2249:b0:1ef:2097:8448 with SMTP id hk9-20020a17090b224900b001ef20978448mr6176146pjb.97.1657210819457;
-        Thu, 07 Jul 2022 09:20:19 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id q17-20020a656851000000b003fdc16f5de2sm26336967pgt.15.2022.07.07.09.20.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 09:20:18 -0700 (PDT)
-Date:   Thu, 7 Jul 2022 10:20:15 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Yicong Yang <yangyicong@huawei.com>
-Cc:     gregkh@linuxfoundation.org, alexander.shishkin@linux.intel.com,
-        leo.yan@linaro.org, james.clark@arm.com, will@kernel.org,
-        robin.murphy@arm.com, acme@kernel.org, jonathan.cameron@huawei.com,
-        john.garry@huawei.com, helgaas@kernel.org,
-        lorenzo.pieralisi@arm.com, suzuki.poulose@arm.com,
-        mark.rutland@arm.com, joro@8bytes.org,
-        shameerali.kolothum.thodi@huawei.com, peterz@infradead.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
-        prime.zeng@huawei.com, liuqi115@huawei.com,
-        zhangshaokun@hisilicon.com, linuxarm@huawei.com, corbet@lwn.net,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v9 7/8] docs: trace: Add HiSilicon PTT device driver
- documentation
-Message-ID: <20220707162015.GA2609651@p14s>
-References: <20220606115555.41103-1-yangyicong@hisilicon.com>
- <20220606115555.41103-8-yangyicong@hisilicon.com>
- <20220706175751.GA2546265@p14s>
- <75afb15e-9fc2-d14a-c72d-dc33589cfc0e@huawei.com>
+        with ESMTP id S236182AbiGGQW1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 12:22:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD232CC84;
+        Thu,  7 Jul 2022 09:22:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EA08F623C7;
+        Thu,  7 Jul 2022 16:22:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 291E3C3411E;
+        Thu,  7 Jul 2022 16:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657210945;
+        bh=HN6yvGVfevEjt75PnG4J8rUpc7xjiTvUZmOyG5gVKtA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IMvF4f6cwmSSL2YUBBg7x2oJf9s+3uFnEP9GoviCcwUOdrzANU1J2xHC7pguJLCv1
+         nRwjeXWdTUIyoPIgPzHd06b6+T7/cAPje5o+ei9+XZrlQeW1ktEeK4lMK4KHYJ0oHN
+         nD+Pz7HuoxwZmeAFW0zsLaEnqDBNdhMLDRXcX5rP4V4KtsMiauY+Uh2Q58Vdc1Bh3L
+         gIt2IdYa3P3XaNH94nIayGi/ISeINGl+rYHvKx8kJR6HToTGoVIUwpqQObB4ZgMXfR
+         /RuM8ZPgmINLAVgz7Asn7DY/BgBuubRQk2C7XEX3PhYVxqOz8BlT8G5ZUVyNq4Rdmj
+         QGFRYaVgVysrw==
+Date:   Thu, 7 Jul 2022 11:22:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Li, Ming" <ming4.li@intel.com>, Lukas Wunner <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V13 3/9] PCI: Create PCIe library functions in support of
+ DOE mailboxes.
+Message-ID: <20220707162223.GA307520@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <75afb15e-9fc2-d14a-c72d-dc33589cfc0e@huawei.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <20220705154932.2141021-4-ira.weiny@intel.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -84,267 +61,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 07:43:21PM +0800, Yicong Yang wrote:
-> On 2022/7/7 1:57, Mathieu Poirier wrote:
-> > Hi,
-> > 
-> > I have started looking at this set.
-> 
-> Thanks!
-> 
-> > 
-> > On Mon, Jun 06, 2022 at 07:55:54PM +0800, Yicong Yang wrote:
-> >> Document the introduction and usage of HiSilicon PTT device driver.
-> >>
-> >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >> ---
-> >>  Documentation/trace/hisi-ptt.rst | 307 +++++++++++++++++++++++++++++++
-> >>  Documentation/trace/index.rst    |   1 +
-> > 
-> > The "get_maintainer" script clearly indicates that Jonathan Corbet maintains the
-> > Documentation directory and yet he is not CC'ed on this patch, nor is the
-> > linux-doc mainling list.  As such, it would not be possible to merge this
-> > patchset.
-> > 
-> 
-> sorry for missing. +cc'ed.
-> 
-> >>  2 files changed, 308 insertions(+)
-> >>  create mode 100644 Documentation/trace/hisi-ptt.rst
-> >>
-> >> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
-> >> new file mode 100644
-> >> index 000000000000..0a3112244d40
-> >> --- /dev/null
-> >> +++ b/Documentation/trace/hisi-ptt.rst
-> >> @@ -0,0 +1,307 @@
-> >> +.. SPDX-License-Identifier: GPL-2.0
-> >> +
-> >> +======================================
-> >> +HiSilicon PCIe Tune and Trace device
-> >> +======================================
-> >> +
-> >> +Introduction
-> >> +============
-> >> +
-> >> +HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
-> >> +integrated Endpoint (RCiEP) device, providing the capability
-> >> +to dynamically monitor and tune the PCIe link's events (tune),
-> >> +and trace the TLP headers (trace). The two functions are independent,
-> >> +but is recommended to use them together to analyze and enhance the
-> >> +PCIe link's performance.
-> >> +
-> >> +On Kunpeng 930 SoC, the PCIe Root Complex is composed of several
-> >> +PCIe cores. Each PCIe core includes several Root Ports and a PTT
-> >> +RCiEP, like below. The PTT device is capable of tuning and
-> >> +tracing the links of the PCIe core.
-> >> +::
-> >> +
-> >> +          +--------------Core 0-------+
-> >> +          |       |       [   PTT   ] |
-> >> +          |       |       [Root Port]---[Endpoint]
-> >> +          |       |       [Root Port]---[Endpoint]
-> >> +          |       |       [Root Port]---[Endpoint]
-> >> +    Root Complex  |------Core 1-------+
-> >> +          |       |       [   PTT   ] |
-> >> +          |       |       [Root Port]---[ Switch ]---[Endpoint]
-> >> +          |       |       [Root Port]---[Endpoint] `-[Endpoint]
-> >> +          |       |       [Root Port]---[Endpoint]
-> >> +          +---------------------------+
-> >> +
-> >> +The PTT device driver registers one PMU device for each PTT device.
-> >> +The name of each PTT device is composed of 'hisi_ptt' prefix with
-> >> +the id of the SICL and the Core where it locates. The Kunpeng 930
-> >> +SoC encapsulates multiple CPU dies (SCCL, Super CPU Cluster) and
-> >> +IO dies (SICL, Super I/O Cluster), where there's one PCIe Root
-> >> +Complex for each SICL.
-> >> +::
-> >> +
-> >> +    /sys/devices/hisi_ptt<sicl_id>_<core_id>
-> > 
-> > All entries added to sysfs should have corresponding documentation.  See [1] and
-> > [2] for details and [3] for an example.
-> > 
-> > [1]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/README
-> > [2]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/testing
-> > [3]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/testing/sysfs-bus-coresight-devices-etm4x
-> > 
-> 
-> ok. I'll add a patch for ABI description. Thanks for the reference.
-> 
-> >> +
-> >> +Tune
-> >> +====
-> >> +
-> >> +PTT tune is designed for monitoring and adjusting PCIe link parameters (events).
-> >> +Currently we support events in 4 classes. The scope of the events
-> >> +covers the PCIe core to which the PTT device belongs.
-> >> +
-> >> +Each event is presented as a file under $(PTT PMU dir)/tune, and
-> >> +a simple open/read/write/close cycle will be used to tune the event.
-> >> +::
-> >> +
-> >> +    $ cd /sys/devices/hisi_ptt<sicl_id>_<core_id>/tune
-> >> +    $ ls
-> >> +    qos_tx_cpl    qos_tx_np    qos_tx_p
-> >> +    tx_path_rx_req_alloc_buf_level
-> >> +    tx_path_tx_req_alloc_buf_level
-> > 
-> > These look overly long... How about watermark_rx and watermark_tx?
-> > 
-> 
-> These are gotten from the hardware manual and abbreviated. These events are highly connected
-> to the hardware desgin so I think it's better to keep consistence. The watermark_{rx, tx} will
-> become ambigious when we add more events for Rx path or other Tx path events.
-> 
-> The event code is composed of two parts. First part (tx_path) describes which path it belongs to
-> and second part describes the function ({rx,tx}_req_alloc_buf_level). We called the link path
-> between CPU and PCIe RC as Rx path and the path between PCIe RC to the PCIe link as Tx path.
-> So we need to have tx_path prefix for the Tx path and {rx, tx}_req_alloc_buf_level for the
-> requested watermark of {inbound, outbound} buffer allocation. Indeed we have other Tx path
-> buffer events which are not exported in this series.
->
+On Tue, Jul 05, 2022 at 08:49:26AM -0700, ira.weiny@intel.com wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I will not be maintaining nor using this driver so the choice is entirely yours.
-That being said the end result is the same - those names are, in my opinion, too
-long.
+Possible subject:
 
-> 
-> >> +    $ cat qos_tx_dp
-> >> +    1
-> >> +    $ echo 2 > qos_tx_dp
-> >> +    $ cat qos_tx_dp
-> >> +    2
-> >> +
-> >> +Current value (numerical value) of the event can be simply read
-> >> +from the file, and the desired value written to the file to tune.
-> >> +
-> >> +1. Tx path QoS control
-> >> +------------------------
-> >> +
-> >> +The following files are provided to tune the QoS of the tx path of
-> >> +the PCIe core.
-> >> +
-> >> +- qos_tx_cpl: weight of Tx completion TLPs
-> >> +- qos_tx_np: weight of Tx non-posted TLPs
-> >> +- qos_tx_p: weight of Tx posted TLPs
-> >> +
-> >> +The weight influences the proportion of certain packets on the PCIe link.
-> >> +For example, for the storage scenario, increase the proportion
-> >> +of the completion packets on the link to enhance the performance as
-> >> +more completions are consumed.
-> >> +
-> >> +The available tune data of these events is [0, 1, 2].
-> >> +Writing a negative value will return an error, and out of range
-> >> +values will be converted to 2. Note that the event value just
-> >> +indicates a probable level, but is not precise.
-> >> +
-> >> +2. Tx path buffer control
-> >> +-------------------------
-> >> +
-> >> +Following files are provided to tune the buffer of tx path of the PCIe core.
-> >> +
-> >> +- tx_path_rx_req_alloc_buf_level: watermark of Rx requested
-> >> +- tx_path_tx_req_alloc_buf_level: watermark of Tx requested
-> >> +
-> >> +These events influence the watermark of the buffer allocated for each
-> >> +type. Rx means the inbound while Tx means outbound. The packets will
-> >> +be stored in the buffer first and then transmitted either when the
-> >> +watermark reached or when timed out. For a busy direction, you should
-> >> +increase the related buffer watermark to avoid frequently posting and
-> >> +thus enhance the performance. In most cases just keep the default value.
-> >> +
-> >> +The available tune data of above events is [0, 1, 2].
-> >> +Writing a negative value will return an error, and out of range
-> >> +values will be converted to 2. Note that the event value just
-> >> +indicates a probable level, but is not precise.
-> > 
-> > This is useful documentation but it also should be found in the ABI
-> > documentation referred to above.
-> > 
-> >> +
-> >> +Trace
-> >> +=====
-> >> +
-> >> +PTT trace is designed for dumping the TLP headers to the memory, which
-> >> +can be used to analyze the transactions and usage condition of the PCIe
-> >> +Link. You can choose to filter the traced headers by either requester ID,
-> >> +or those downstream of a set of Root Ports on the same core of the PTT
-> >> +device. It's also supported to trace the headers of certain type and of
-> >> +certain direction.
-> >> +
-> >> +You can use the perf command `perf record` to set the parameters, start
-> >> +trace and get the data. It's also supported to decode the trace
-> >> +data with `perf report`. The control parameters for trace is inputted
-> >> +as event code for each events, which will be further illustrated later.
-> >> +An example usage is like
-> >> +::
-> >> +
-> >> +    $ perf record -e hisi_ptt0_2/filter=0x80001,type=1,direction=1,
-> >> +      format=1/ -- sleep 5
-> >> +
-> >> +This will trace the TLP headers downstream root port 0000:00:10.1 (event
-> >> +code for event 'filter' is 0x80001) with type of posted TLP requests,
-> >> +direction of inbound and traced data format of 8DW.
-> >> +
-> >> +1. filter
-> >> +---------
-> >> +
-> >> +The TLP headers to trace can be filtered by the Root Ports or the requester
-> >> +ID of the endpoints, which are located on the same core of the PTT device.
-> >> +You can set the filter by specifying the `filter` parameter which is required
-> >> +to start the trace. The parameter value is 20 bit. The supported filters and
-> >> +related values are outputted through `available_root_port_filters` and
-> >> +`available_requester_filters` sysfs attributes for Root Ports and Requesters
-> >> +respectively.
-> >> +::
-> >> +
-> >> +    $ cat available_root_port_filters
-> >> +    0000:00:10.0	0x80001
-> >> +    0000:00:11.0	0x80004
-> >> +    $ cat available_requester_filters
-> >> +    0000:01:00.0	0x00100
-> >> +    0000:01:00.1	0x00101
-> > 
-> > If I remember correctly, one of the rule for sysfs is one line per entry.
-> > 
-> 
-> Since one PTT devices may support several Root Ports and Endpoints on its core, I find no better
-> way to make this information convenient and easy to use for the users to collect. So maybe this
-> canbe an exception and there seems to have some limited examples like
-> /sys/devices/system/node/node<N>/{meminfo, vmstat, meminfo}.
+  PCI/DOE: Add DOE mailbox support functions
 
-You can either find a better solution or argue the matter with Greg.  I suggest
-to introduce new directories, i.e "root_port_filters" and "requested_filters"
-and under those have entries like "port0", "port1" and so on.
+(no trailing period required)
 
+> Introduced in a PCIe r6.0, sec 6.30, DOE provides a config space based
+> mailbox with standard protocol discovery.  Each mailbox is accessed
+> through a DOE Extended Capability.
 > 
-> >> +
-> >> +Note that multiple Root Ports can be specified at one time, but only
-> >> +one Endpoint function can be specified in one trace. Specifying both
-> >> +Root Port and function at the same time is not supported.
-> >> +
-> >> +If no filter is available, reading the related filter sysfs attribute
-> >> +will get an empty string.
-> >> +::
-> >> +
-> >> +    $ cat available_root_port_filters
-> >> +
-> >> +    $ cat available_requester_filters
-> > 
-> > Those too look overly long, and where to find them is not documented.  As such
-> > users have to guest that it must be somewhere under
-> > /sys/devices/hisi_ptt<sicl_id>_<core_id>/.
-> > 
+> Each DOE mailbox must support the DOE discovery protocol in addition to
+> any number of additional protocols.
 > 
-> Since Root Port and Requester are PCIe terminologies so it's better to have them
-> embedded to make it clear. Maybe 'available' can be removed.
+> Define core PCIe functionality to manage a single PCIe DOE mailbox at a
+> defined config space offset.  Functionality includes iterating,
+> creating, query of supported protocol, and task submission.  Destruction
+> of the mailboxes is device managed.
 > 
-> Will have all these sysfs attributes documented.
-> 
-> > More comments tomorrow.
-> > 
-> 
-> Thanks,
-> Yicong
+> Cc: "Li, Ming" <ming4.li@intel.com>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+Whenever the CXL folks are happy with this:
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> +static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+> ...
+> +		pci_err(pdev,
+> +			"[%x] expected [VID, Protocol] = [%04x, %02x], got [%04x, %02x]\n",
+
+Since the string already wraps, I think there's no benefit to starting
+it on its own line.  Joining with "pci_err(pdev, "[%x] ..." improves
+greppability slightly.
+
+> +			pci_err(pdev,
+> +				"[%x] busy detected; another entity is sending conflicting requests\n",
+> +				offset);
+
+Ditto.
+
+> + * pci_doe_submit_task() - Submit a task to be processed by the state machine
+> ...
+> + * RETURNS: 0 when task has been successful queued, -ERRNO on error
+
+successfully
+
+> +int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+> ...
+> +	 * DOE requests must be a whole number of DW
+> +	 * and the response needs to be big enough for at least 1 DW
+
+Rewrap to fill 78 columns or so.
