@@ -2,80 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 702F456A3EA
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 15:41:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3842056A402
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 15:46:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235866AbiGGNlI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jul 2022 09:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34230 "EHLO
+        id S235695AbiGGNp6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jul 2022 09:45:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235857AbiGGNlH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 09:41:07 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C966C2AC50
-        for <linux-pci@vger.kernel.org>; Thu,  7 Jul 2022 06:41:05 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id i17so17526017ljj.12
-        for <linux-pci@vger.kernel.org>; Thu, 07 Jul 2022 06:41:05 -0700 (PDT)
+        with ESMTP id S235245AbiGGNp4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 09:45:56 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB21167FA
+        for <linux-pci@vger.kernel.org>; Thu,  7 Jul 2022 06:45:55 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id e12so31202688lfr.6
+        for <linux-pci@vger.kernel.org>; Thu, 07 Jul 2022 06:45:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=jRAjZXY6+UUMfN9anTAWHy/uwmogMIm8H3PLiHy9OEI=;
-        b=nNBRS+FZwsMAmv+unQDonMckzxWyz51mGvxoj5yAx5CBRCb1ZAlNEP4YGf0HIQB7Jj
-         xzLlWnvMnTQ1LsabcoJH6BEzf6slgc8cjTwSn4KkCm5lOW03zo8juX8AwcwOee9RhnNk
-         8KHlFFAjDimv0YupF2OA6QTJ/yN77Tvq7WkMyQ4J0BCduoT64mvaVfGlog1xQrLUtizz
-         te475qDsuU8gJFcRQMiMsg/dtTOvhJw+7w1YHNyg1Jhn0LA5Wi8LqgxdNRCA5xk47Xqc
-         zJDU7HtTYt9HT6oaIv0wukY83stC9PGpul9zEL08tkFJErE+t1GlpOS5tYIStKOwWzHk
-         oK6Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J84rYJRxyLS+DUjyXjNuhmSfKGBG7TC7QePHLusbdzw=;
+        b=jKkeaRYF23FtZ6HZA6V52In5GCMTZeNH250abFmDRxUhV5M4/kKpjdO+0DVWZQLI2G
+         d8NNfPqp9GiGYKehCUVa9HGbegz7nP09LNFxJu69wPyqkHEaokgwWPJBWT9VXOFb1GhA
+         CXyptjESVF3ot+2kfHGnYFCWhsQlunFqLzCVsY6XIktGa941d/4PkGvW0HD7tAwSV8tV
+         ty3GAzFDeCBfbNNkTFFDdkKOayD/W3HklaCg8pVsZ2TmS5e8XBp1lYKPGWBcIalL4Q+8
+         sKxdwsmHcJFYsG64eDRWgkMe/9OZErKRBlK1VWtChjcQItFez2f26JzblV6itPc7i63Q
+         eq1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=jRAjZXY6+UUMfN9anTAWHy/uwmogMIm8H3PLiHy9OEI=;
-        b=UQsEdY2SeKAFOgDjTW0KIk8u18Mc1N7i8QCK/Ym1WcQFec3xEb5Qttpirkw5doC4PY
-         CUh0v/xGALl8qSkDzoR70J0XySxR2wkm28E6Ms9UlwIV3Vr3xiJ0Owl1+0XnFr2jtD+i
-         d/AlS+Q6ME4qfKaM9V3oJvKqPeerthCHv0yxP7NrXE1RCITpNWeP011JPjNf/PezLuZl
-         D9kfR9mQ2T6r8+fAPu4w+Mc0i6buXqtdRAFgFJMcfzXFBjstMaOjJYJs9+hlhIDJ9qIU
-         URC5FLIcU1ccBsFZkZg5iqFPIF6WGKFuR/JYp7me6N0lutgQCmNu37e5yX2AY3UWpRty
-         3+fg==
-X-Gm-Message-State: AJIora+/FiRZYrIfCOyikvtwYe3nAnSBy2yBS9+F+YvXVTikTfjZmM8H
-        SzleVIkXzpLGxSj8Vz6e9MxWFw==
-X-Google-Smtp-Source: AGRyM1t4UqVaNKTbjrPlQkcNgoKuyx+oGPkBeDq++hP317Wk1kHIWC4XtoISid7vnJuGGeLqCFO/dQ==
-X-Received: by 2002:a2e:92c6:0:b0:255:84cb:4eea with SMTP id k6-20020a2e92c6000000b0025584cb4eeamr25815297ljh.204.1657201264047;
-        Thu, 07 Jul 2022 06:41:04 -0700 (PDT)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id e20-20020a05651c04d400b0025a64093a9esm6794026lji.117.2022.07.07.06.41.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Jul 2022 06:41:03 -0700 (PDT)
-Message-ID: <2fbe9cf7-7ed8-ccc8-b0bc-26d358cec927@linaro.org>
-Date:   Thu, 7 Jul 2022 16:41:02 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 02/10] dt-bindings: PCI: qcom: Fix msi-interrupt
- conditional
-Content-Language: en-GB
+        bh=J84rYJRxyLS+DUjyXjNuhmSfKGBG7TC7QePHLusbdzw=;
+        b=ixQaD3Kxc6oVEF7Z1Vo225aCYClegIMdrmYOliF/CExJwgkwkK2ogpDmzF4jVbNqyZ
+         6gvMcCk2Y6603kCcgHRvILTun4rccihLlfCmtAcOsKS7pVo3gdXhN3ToTaMZnT0SVpFa
+         ANJFIwjaJSc/2URLUFQsSOlZvkdNqjYcvzqKHgUZex/ioIS1dnHce5AwcI99ksaVXunB
+         z3xWXGI0Y/RC0H1mHPFy+CGpvQV20Jzu+YITJSZQfXtF4bcQNPrePb0i6RCWTvXSkNAY
+         Y7OrgAfBsI72XQin7g3wQBhXqq72qSiXHq4MMngrxE+XEnGnToIg6sSanrHJDFZy7uXp
+         ENow==
+X-Gm-Message-State: AJIora8nRO49z1EOZe65RlDYTSc7gVGdI40rK6kNX4gXAnm3Z7gRMIqf
+        ee8/w9YFXqVs2RJhAWHYf4aFdg==
+X-Google-Smtp-Source: AGRyM1tYRRs62+3BxTdwVevSgyxH22yeW6RRboVvaXprKyowC2dHaOYS/W8Vk9oL8zsZQ2wYPpT8gQ==
+X-Received: by 2002:a05:6512:102a:b0:47f:a442:7178 with SMTP id r10-20020a056512102a00b0047fa4427178mr31602041lfr.30.1657201553667;
+        Thu, 07 Jul 2022 06:45:53 -0700 (PDT)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id k12-20020a2eb74c000000b0024f3d1daee0sm6612652ljo.104.2022.07.07.06.45.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jul 2022 06:45:53 -0700 (PDT)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Johan Hovold <johan+linaro@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220629141000.18111-1-johan+linaro@kernel.org>
- <20220629141000.18111-3-johan+linaro@kernel.org>
- <cab173ce-9c7c-9985-277c-3498d82b8400@linaro.org>
-In-Reply-To: <cab173ce-9c7c-9985-277c-3498d82b8400@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH] dt-bindings: PCI: qcom: fix typo in condition guarding resets
+Date:   Thu,  7 Jul 2022 16:45:52 +0300
+Message-Id: <20220707134552.2436442-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -84,44 +78,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 07/07/2022 16:34, Dmitry Baryshkov wrote:
-> On 29/06/2022 17:09, Johan Hovold wrote:
->> Fix the msi-interrupt conditional which always evaluated to false due to
->> a misspelled property name ("compatibles" in plural).
->>
->> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> 
-> Fixes: 6700a9b00f0a ("dt-bindings: PCI: qcom: Do not require resets on 
-> msm8996 platforms")
+Fix the typo (compatibles vs compatible) in the condition guarding the
+resets being required everywhere except MSM8996.
 
-Ugh, I was thinking about a different chunk (which also has this issue), 
-so please ignore the Fixes.
+Fixes: 6700a9b00f0a ("dt-bindings: PCI: qcom: Do not require resets on msm8996 platforms")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> 
->> ---
->>   Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml 
->> b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> index ed9f9462a758..a1b4fc70e162 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> @@ -628,7 +628,7 @@ allOf:
->>       # On older chipsets it's always 1 msi interrupt
->>     - if:
->>         properties:
->> -        compatibles:
->> +        compatible:
->>             contains:
->>               enum:
->>                 - qcom,pcie-msm8996
-> 
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index 0b69b12b849e..9b3ebee938e8 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -614,7 +614,7 @@ allOf:
+   - if:
+       not:
+         properties:
+-          compatibles:
++          compatible:
+             contains:
+               enum:
+                 - qcom,pcie-msm8996
 -- 
-With best wishes
-Dmitry
+2.35.1
+
