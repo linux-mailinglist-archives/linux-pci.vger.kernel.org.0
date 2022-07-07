@@ -2,214 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9ED656AADA
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 20:35:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8270B56AACF
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 20:35:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236640AbiGGSeH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jul 2022 14:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35600 "EHLO
+        id S236634AbiGGSei (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jul 2022 14:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236482AbiGGSdt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 14:33:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48FDA65D7A;
-        Thu,  7 Jul 2022 11:31:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CC9706224A;
-        Thu,  7 Jul 2022 18:31:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0738C3411E;
-        Thu,  7 Jul 2022 18:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657218676;
-        bh=6H4otsM+waE4dVzYoIhYtGakU7UsxGvGs8V4UhCwWLk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AVcR9BEnIteKrsshXQBk3+8HHlfCwNMo1smY/GVwny7VKin6zGBR6GacZilBCsr11
-         JahP8UctdbsythFcaVx6o33iO1MSIhbesQiJqmPPgCu6CdL4/JBi718CJGzHreMiJR
-         +qBtMrbZh6XFFKXEm7NdOOviGGIS1shXKgnHdiWE7pKhAHZnxpn68F+w9bvPkwnMnC
-         LaD69S6gLKX26hhirXP7KB7pYEr8z1HHWPIh4uuZr+55wh6bMqKQYUWJGSPZfqu3u5
-         97jxigOgnLftXe9WL+HZpc7va+ERTvJzwsjtYU/PsupoPRe2R79M1LVRY03Lm45lgf
-         zxxyuy44HaPzQ==
-Received: by pali.im (Postfix)
-        id CC3F07B1; Thu,  7 Jul 2022 20:31:12 +0200 (CEST)
-Date:   Thu, 7 Jul 2022 20:31:12 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] ARM: Marvell: Update PCIe fixup
-Message-ID: <20220707183112.f7dgz3lzordxnqhj@pali>
-References: <20211101150405.14618-1-pali@kernel.org>
- <20211102171259.9590-1-pali@kernel.org>
- <20211109225332.kqyfm4h4kwcnhhhl@pali>
- <20220514182125.xfvnw7yj2rmxpi7l@pali>
+        with ESMTP id S236627AbiGGSeG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 14:34:06 -0400
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A33C5C967;
+        Thu,  7 Jul 2022 11:32:25 -0700 (PDT)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-31c89111f23so128348077b3.0;
+        Thu, 07 Jul 2022 11:32:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GRf9ml7jXebCmHJtIo9hXGmvl5NfH5hP6TYRGyysBr4=;
+        b=JB4bSD1u8UUZi8mBn59N2M9WdomsmlUxoBGxmNUP1deyObKnULkRtWjiLu0ObNdWiW
+         Qgr+p/LXQfoACrK8fYMDqNoxcqbu2U0nBB8Hn6y78jIPH7Kyu2PGO0jRmFNCkWmnarG4
+         F+2KFSL1ys8msVqTzKB/sunfTtx5QjyE6mfUQyXro8A/0L7zC23OMAajOPS/bRueQorY
+         1MNiqrzCgSF/Wf2smZZT8Mp9dv2MGh5wX6oJ66TGRYLE71BSd5GNiBPq9ZyFO9ZMNHWf
+         Ddw5eqHtFRS82okeHilyCuecLHN5x+EiW70CNSnRdDmk1BwPtM1HCi0UffbCk2XYSF9W
+         GvFA==
+X-Gm-Message-State: AJIora9Y3R6KaTbhQ2enPMpNxHFIFJ3AjLuS7pXRDXKfWc0MZQcj4QdF
+        KUoUF2g1NJ+3e1SntCpPnQVXwGY3vFLgyAQDSsFH2JwiLiI=
+X-Google-Smtp-Source: AGRyM1uLoifQN5Q5hSE3q0FTI97hoR0WKNSRBz0XN+Ejo0nkSmMs1C9YixxVSVG+X2gt6cvp/LIqdlEWGQZSrPseQKY=
+X-Received: by 2002:a81:6943:0:b0:31c:ee3e:47c6 with SMTP id
+ e64-20020a816943000000b0031cee3e47c6mr10527897ywc.515.1657218744731; Thu, 07
+ Jul 2022 11:32:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220514182125.xfvnw7yj2rmxpi7l@pali>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220707172205.3205110-1-rajvi.jingar@linux.intel.com>
+ <20220707172205.3205110-2-rajvi.jingar@linux.intel.com> <CAJZ5v0h02a=puAKY3wp2vqhXCHKxnzWFQvUOjMMtnENz3=39xg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0h02a=puAKY3wp2vqhXCHKxnzWFQvUOjMMtnENz3=39xg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 7 Jul 2022 20:32:13 +0200
+Message-ID: <CAJZ5v0hqG+d6ZN9uQ5e0puftsUBaU-WKrnTZi_uVcyJhJ1hcNw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI/PTM: fix in pci_disable_ptm()
+To:     Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        David Box <david.e.box@linux.intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PING? I have not received any reply!
+On Thu, Jul 7, 2022 at 8:27 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Jul 7, 2022 at 7:22 PM Rajvi Jingar
+> <rajvi.jingar@linux.intel.com> wrote:
+> >
+> > Set ptm_enabled from 'struct pci_dev' to 0 in pci_ptm_disable() to
+>
+> I would set "Clear" here instead of "Set", but moreover ->
 
-On Saturday 14 May 2022 20:21:25 Pali Rohár wrote:
-> On Tuesday 09 November 2021 23:53:32 Pali Rohár wrote:
-> > On Tuesday 02 November 2021 18:12:58 Pali Rohár wrote:
-> > > - The code relies on rc_pci_fixup being called, which only happens
-> > >   when CONFIG_PCI_QUIRKS is enabled, so add that to Kconfig. Omitting
-> > >   this causes a booting failure with a non-obvious cause.
-> > > - Update rc_pci_fixup to set the class properly, copying the
-> > >   more modern style from other places
-> > > - Correct the rc_pci_fixup comment
-> > > 
-> > > This patch just re-applies commit 1dc831bf53fd ("ARM: Kirkwood: Update
-> > > PCI-E fixup") for all other Marvell ARM platforms which have same buggy
-> > > PCIe controller and do not use pci-mvebu.c controller driver yet.
-> > > 
-> > > Long-term goal for these Marvell ARM platforms should be conversion to
-> > > pci-mvebu.c controller driver and removal of these fixups in arch code.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > Cc: Jason Gunthorpe <jgg@nvidia.com>
-> > > Cc: stable@vger.kernel.org
-> > 
-> > Hello! Patch 2/2 was already applied into mips-next. Could you review
-> > also this patch 1/2?
-> 
-> PING?
-> 
-> > > 
-> > > ---
-> > > Changes in v2:
-> > > * Move MIPS change into separate patch
-> > > * Add information that this patch is for platforms which do not use pci-mvebu.c
-> > > ---
-> > >  arch/arm/Kconfig              |  1 +
-> > >  arch/arm/mach-dove/pcie.c     | 11 ++++++++---
-> > >  arch/arm/mach-mv78xx0/pcie.c  | 11 ++++++++---
-> > >  arch/arm/mach-orion5x/Kconfig |  1 +
-> > >  arch/arm/mach-orion5x/pci.c   | 12 +++++++++---
-> > >  5 files changed, 27 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > > index fc196421b2ce..9f157e973555 100644
-> > > --- a/arch/arm/Kconfig
-> > > +++ b/arch/arm/Kconfig
-> > > @@ -400,6 +400,7 @@ config ARCH_DOVE
-> > >  	select GENERIC_IRQ_MULTI_HANDLER
-> > >  	select GPIOLIB
-> > >  	select HAVE_PCI
-> > > +	select PCI_QUIRKS if PCI
-> > >  	select MVEBU_MBUS
-> > >  	select PINCTRL
-> > >  	select PINCTRL_DOVE
-> > > diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
-> > > index ee91ac6b5ebf..ecf057a0f5ba 100644
-> > > --- a/arch/arm/mach-dove/pcie.c
-> > > +++ b/arch/arm/mach-dove/pcie.c
-> > > @@ -135,14 +135,19 @@ static struct pci_ops pcie_ops = {
-> > >  	.write = pcie_wr_conf,
-> > >  };
-> > >  
-> > > +/*
-> > > + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-> > > + * is operating as a root complex this needs to be switched to
-> > > + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-> > > + * the device. Decoding setup is handled by the orion code.
-> > > + */
-> > >  static void rc_pci_fixup(struct pci_dev *dev)
-> > >  {
-> > > -	/*
-> > > -	 * Prevent enumeration of root complex.
-> > > -	 */
-> > >  	if (dev->bus->parent == NULL && dev->devfn == 0) {
-> > >  		int i;
-> > >  
-> > > +		dev->class &= 0xff;
-> > > +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
-> > >  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-> > >  			dev->resource[i].start = 0;
-> > >  			dev->resource[i].end   = 0;
-> > > diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-mv78xx0/pcie.c
-> > > index 636d84b40466..9362b5fc116f 100644
-> > > --- a/arch/arm/mach-mv78xx0/pcie.c
-> > > +++ b/arch/arm/mach-mv78xx0/pcie.c
-> > > @@ -177,14 +177,19 @@ static struct pci_ops pcie_ops = {
-> > >  	.write = pcie_wr_conf,
-> > >  };
-> > >  
-> > > +/*
-> > > + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-> > > + * is operating as a root complex this needs to be switched to
-> > > + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-> > > + * the device. Decoding setup is handled by the orion code.
-> > > + */
-> > >  static void rc_pci_fixup(struct pci_dev *dev)
-> > >  {
-> > > -	/*
-> > > -	 * Prevent enumeration of root complex.
-> > > -	 */
-> > >  	if (dev->bus->parent == NULL && dev->devfn == 0) {
-> > >  		int i;
-> > >  
-> > > +		dev->class &= 0xff;
-> > > +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
-> > >  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-> > >  			dev->resource[i].start = 0;
-> > >  			dev->resource[i].end   = 0;
-> > > diff --git a/arch/arm/mach-orion5x/Kconfig b/arch/arm/mach-orion5x/Kconfig
-> > > index e94a61901ffd..7189a5b1ec46 100644
-> > > --- a/arch/arm/mach-orion5x/Kconfig
-> > > +++ b/arch/arm/mach-orion5x/Kconfig
-> > > @@ -6,6 +6,7 @@ menuconfig ARCH_ORION5X
-> > >  	select GPIOLIB
-> > >  	select MVEBU_MBUS
-> > >  	select FORCE_PCI
-> > > +	select PCI_QUIRKS
-> > >  	select PHYLIB if NETDEVICES
-> > >  	select PLAT_ORION_LEGACY
-> > >  	help
-> > > diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion5x/pci.c
-> > > index 76951bfbacf5..5145fe89702e 100644
-> > > --- a/arch/arm/mach-orion5x/pci.c
-> > > +++ b/arch/arm/mach-orion5x/pci.c
-> > > @@ -509,14 +509,20 @@ static int __init pci_setup(struct pci_sys_data *sys)
-> > >  /*****************************************************************************
-> > >   * General PCIe + PCI
-> > >   ****************************************************************************/
-> > > +
-> > > +/*
-> > > + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
-> > > + * is operating as a root complex this needs to be switched to
-> > > + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
-> > > + * the device. Decoding setup is handled by the orion code.
-> > > + */
-> > >  static void rc_pci_fixup(struct pci_dev *dev)
-> > >  {
-> > > -	/*
-> > > -	 * Prevent enumeration of root complex.
-> > > -	 */
-> > >  	if (dev->bus->parent == NULL && dev->devfn == 0) {
-> > >  		int i;
-> > >  
-> > > +		dev->class &= 0xff;
-> > > +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
-> > >  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
-> > >  			dev->resource[i].start = 0;
-> > >  			dev->resource[i].end   = 0;
-> > > -- 
-> > > 2.20.1
-> > > 
+s/set/say/ sorry.
+
+> > save the disabled PTM state for the device.
+> >
+> > Fixes: a697f072f5da ("PCI: Disable PTM during suspend to save power")
+> > Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+> > ---
+> >  drivers/pci/pcie/ptm.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+> > index 368a254e3124..746e29779c27 100644
+> > --- a/drivers/pci/pcie/ptm.c
+> > +++ b/drivers/pci/pcie/ptm.c
+> > @@ -44,6 +44,7 @@ void pci_disable_ptm(struct pci_dev *dev)
+> >         pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
+> >         ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
+> >         pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
+> > +       dev->ptm_enabled = 0;
+>
+> -> I don't think that this is going to work without setting
+> dev->ptm_enabled in pci_restore_ptm_state() if the restored state
+> turns out to be "enabled".
+
+And arguably, this function doesn't need to do anything if
+dev->ptm_enabled is 0 already and this is the only check it needs to
+do, because dev->ptm_enabled will only be set for PCIe devices that
+have PTM.
+
+> >  }
+> >
+> >  void pci_save_ptm_state(struct pci_dev *dev)
+> > --
