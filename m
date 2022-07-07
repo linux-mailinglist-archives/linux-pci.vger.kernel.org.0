@@ -2,44 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36C2256A339
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 15:14:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9303256A334
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 15:14:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234799AbiGGNOw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jul 2022 09:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38346 "EHLO
+        id S235166AbiGGNO3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jul 2022 09:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235467AbiGGNOv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 09:14:51 -0400
-Received: from mint-fitpc2.mph.net (unknown [81.168.73.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C9923248CE;
-        Thu,  7 Jul 2022 06:14:44 -0700 (PDT)
-Received: from palantir17.mph.net (unknown [192.168.0.4])
-        by mint-fitpc2.mph.net (Postfix) with ESMTP id 5C104320938;
-        Thu,  7 Jul 2022 14:07:32 +0100 (BST)
-Received: from localhost ([::1] helo=palantir17.mph.net)
-        by palantir17.mph.net with esmtp (Exim 4.95)
-        (envelope-from <habetsm.xilinx@gmail.com>)
-        id 1o9REC-0007L0-34;
-        Thu, 07 Jul 2022 14:07:32 +0100
-Subject: [PATCH net-next v2 2/2] sfc: Implement change of BAR configuration
-From:   Martin Habets <habetsm.xilinx@gmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-        edumazet@google.com
-Cc:     netdev@vger.kernel.org, ecree.xilinx@gmail.com,
-        linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Date:   Thu, 07 Jul 2022 14:07:32 +0100
-Message-ID: <165719925197.28149.5790766191978827431.stgit@palantir17.mph.net>
-In-Reply-To: <165719918216.28149.7678451615870416505.stgit@palantir17.mph.net>
-References: <165719918216.28149.7678451615870416505.stgit@palantir17.mph.net>
-User-Agent: StGit/0.19
+        with ESMTP id S234888AbiGGNO2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 09:14:28 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C06F248CE;
+        Thu,  7 Jul 2022 06:14:27 -0700 (PDT)
+Received: from kwepemi500023.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Ldxdw3NFtzkWq1;
+        Thu,  7 Jul 2022 21:12:20 +0800 (CST)
+Received: from huawei.com (10.175.112.208) by kwepemi500023.china.huawei.com
+ (7.221.188.76) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 7 Jul
+ 2022 21:14:23 +0800
+From:   Peng Wu <wupeng58@huawei.com>
+To:     <kishon@ti.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liwei391@huawei.com>, <wupeng58@huawei.com>
+Subject: [PATCH] PCI: endpoint: Fix a NULL vs IS_ERR() check in pci_epf_test_init_dma_chan()
+Date:   Thu, 7 Jul 2022 13:12:15 +0000
+Message-ID: <20220707131215.65075-1-wupeng58@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,KHOP_HELO_FCRDNS,NML_ADSP_CUSTOM_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.208]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500023.china.huawei.com (7.221.188.76)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,78 +45,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Placeholders are added for vDPA. These will be assigned with
-a later patch.
+On failure, dma_request_channel() returns NULL and not a
+ERR_PTR() value. Fix return value checking by using is NULL.
 
-Signed-off-by: Martin Habets <habetsm.xilinx@gmail.com>
+Signed-off-by: Peng Wu <wupeng58@huawei.com>
 ---
- drivers/net/ethernet/sfc/ef100_nic.c |   39 ++++++++++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/sfc/ef100_nic.c b/drivers/net/ethernet/sfc/ef100_nic.c
-index 218db3cb31eb..ce4b7b4e705e 100644
---- a/drivers/net/ethernet/sfc/ef100_nic.c
-+++ b/drivers/net/ethernet/sfc/ef100_nic.c
-@@ -704,7 +704,25 @@ static unsigned int efx_ef100_recycle_ring_size(const struct efx_nic *efx)
- 	return 10 * EFX_RECYCLE_RING_SIZE_10G;
- }
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 34aac220dd4c..eed6638ab71d 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -221,7 +221,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+ 	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
+ 	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
  
--/* BAR configuration */
-+/* BAR configuration.
-+ * To change BAR configuration we tear down the current configuration (which
-+ * leaves the hardware in the PROBED state), and then initialise the new
-+ * BAR state.
-+ */
-+static struct {
-+	int (*init)(struct efx_probe_data *probe_data);
-+	void (*fini)(struct efx_probe_data *probe_data);
-+} bar_config_std[] = {
-+	[EF100_BAR_CONFIG_EF100] = {
-+		.init = ef100_probe_netdev,
-+		.fini = ef100_remove_netdev
-+	},
-+	[EF100_BAR_CONFIG_VDPA] = {
-+		.init = NULL,	/* TODO: assign these */
-+		.fini = NULL
-+	},
-+};
-+
- static ssize_t bar_config_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf_out)
- {
-@@ -732,7 +750,9 @@ static ssize_t bar_config_store(struct device *dev,
- {
- 	struct efx_nic *efx = pci_get_drvdata(to_pci_dev(dev));
- 	struct ef100_nic_data *nic_data = efx->nic_data;
--	enum ef100_bar_config new_config;
-+	enum ef100_bar_config new_config, old_config;
-+	struct efx_probe_data *probe_data;
-+	int rc;
- 
- 	if (!strncasecmp(buf, "ef100", min_t(size_t, count, 5)))
- 		new_config = EF100_BAR_CONFIG_EF100;
-@@ -741,7 +761,22 @@ static ssize_t bar_config_store(struct device *dev,
- 	else
- 		return -EIO;
- 
-+	old_config = nic_data->bar_config;
-+	if (new_config == old_config)
-+		return count;
-+
-+	probe_data = container_of(efx, struct efx_probe_data, efx);
-+	if (bar_config_std[old_config].fini)
-+		bar_config_std[old_config].fini(probe_data);
-+
- 	nic_data->bar_config = new_config;
-+	if (bar_config_std[new_config].init) {
-+		rc = bar_config_std[new_config].init(probe_data);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	pci_info(efx->pci_dev, "BAR configuration changed to %s", buf);
- 	return count;
- }
- 
-
+-	if (IS_ERR(dma_chan)) {
++	if (!dma_chan) {
+ 		dev_info(dev, "Failed to get private DMA tx channel. Falling back to generic one\n");
+ 		goto fail_back_rx;
+ 	}
+-- 
+2.17.1
 
