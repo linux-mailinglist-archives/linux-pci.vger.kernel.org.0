@@ -2,327 +2,349 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23D1F56A7DA
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 18:18:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A30C756A7E2
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 18:21:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235915AbiGGQRm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jul 2022 12:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57256 "EHLO
+        id S235938AbiGGQUW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jul 2022 12:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236194AbiGGQRh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 12:17:37 -0400
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18FD6DF99;
-        Thu,  7 Jul 2022 09:17:36 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id i14so13614406yba.1;
-        Thu, 07 Jul 2022 09:17:36 -0700 (PDT)
+        with ESMTP id S230209AbiGGQUV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 12:20:21 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A6527B01
+        for <linux-pci@vger.kernel.org>; Thu,  7 Jul 2022 09:20:20 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id n12so20445225pfq.0
+        for <linux-pci@vger.kernel.org>; Thu, 07 Jul 2022 09:20:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VXrYZ61N0EjYwN6PmYoAGfWNrBsZ7xX7Atb1jDnnUSA=;
+        b=p5wmJD477mFFtzowBb8tx/XSzckuQ07p5RO7tIH/RMTYYqVJvjEU+jVSQI/h61cAsC
+         ZAeNKbYjvdYoyxAcdnVUhr5YTr/DdyuC+7Wh0UGF5/GFfY1IW4sSk7R7ixIOa6qc4+in
+         IZYBztrPs9K5X1g4xfSjM3hbrQmfKmwrCKql/n8Of0ZIGbzcyn1/KE87fe+FLq1DUDsN
+         0OySncNZPDUCvOHJZX2KxMOvxbF3FwDnbxhf4E9a7j+V8aFx7lQzslSxoirFnz0HuY15
+         cxR76TTEuHuBFapSoq7E1fJhmlxzzXllKXaDJyTK9xsqpMJ04Cw8PC3eWS72t2pxv94y
+         lKpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iNDoYSvd59pYkJGvoaN7Bi5VVVz7oaHmh9uahP1lZbs=;
-        b=WTdDqLqR4yKXGEOn0lKhqA5dCV37Dked7ph+ahPUZZjYw509Ww3uKBfZo6dFiqgm4P
-         2Bu5O6OaNlvBHNdYXuMTbsWV0bleZaYFcWPsh5zOKMjBsz3lA/O/TswiF+WGJKcfe4fm
-         bZEz2XqpK3kYfasWKmiiWNTyfArwLc5G9Wdda4fKFL9sHfDLVesqW+Xm3brJos6KRaTq
-         Kxva3eRkoz9fhVjHx+olfyy8bjDy1CLQgAijPYA3PaB1YmQhn5PKHDWfHneWgjIsTlq4
-         UshuQWjXqeJT6CKSQE6C86+F+It8gM3BHYRn0i/0uKN59nMmTcJbjmmgh6w8wZKP+SE1
-         5EIw==
-X-Gm-Message-State: AJIora+S0AT6ps13fj0bPwp2MjeaHQrWzpIPJPl/DY1FWiu3wh00iTrm
-        +VGljI4qcGEYYbx+UL0RlF0Z/jwwcoAq+iniP8uM5zcQwAw=
-X-Google-Smtp-Source: AGRyM1sJBdf8dhWPDByV7+nX2eW11WjDWRTtyepwM+BYWgdffzeCzS6VoWlpRrMLbiSQ9ICB7AlVoDQlWuH8yKnU3c4=
-X-Received: by 2002:a25:a2ca:0:b0:66e:719e:279 with SMTP id
- c10-20020a25a2ca000000b0066e719e0279mr15032108ybn.622.1657210655174; Thu, 07
- Jul 2022 09:17:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VXrYZ61N0EjYwN6PmYoAGfWNrBsZ7xX7Atb1jDnnUSA=;
+        b=q7xP5/LPIFOMDK8oLCPud+QAyovGo2lwZqPSBDD/ofkFwaCk/RdpwmWoYRNKOC03QZ
+         Sg7V8cyYEhxaLUlDAMcLbJsalYwzgumt+uO5H8VDyGlen1KHZt6/0h33GkE/QFlo+D+I
+         NlIiQcW+XUeoCNx6su6XScvkN/cVvzdYSJOZd+xdMulVzPG0cvx8++93dEifDacteoyq
+         4dBEcD6+M0zPwkmMGD/4J4ZPmec3hamuHyf6Y3zVbsNm2Kxeob+JvR1sF2R590mgvPWn
+         VlXRZkdqjRC7kEQEvTpd3eJ28EXg1WlpSBkecIU7qHCvCqbqv3wJl645SSnFQMF1yBvF
+         OReg==
+X-Gm-Message-State: AJIora9sUu/FbEZqCyVfD/vwUuY1Xz7r+AHgSOsRYRahErFzePzH38pX
+        pnfUIvR3+Qb9Vn1KdzZKrgsmmw==
+X-Google-Smtp-Source: AGRyM1spx2+HSN4zZHdWrjsd4aiZUaj9PIAEWmczVW+O1PKipBvy8craMZ3yK3aPEeXBugRIYe/CSA==
+X-Received: by 2002:a17:90b:2249:b0:1ef:2097:8448 with SMTP id hk9-20020a17090b224900b001ef20978448mr6176146pjb.97.1657210819457;
+        Thu, 07 Jul 2022 09:20:19 -0700 (PDT)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id q17-20020a656851000000b003fdc16f5de2sm26336967pgt.15.2022.07.07.09.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jul 2022 09:20:18 -0700 (PDT)
+Date:   Thu, 7 Jul 2022 10:20:15 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Yicong Yang <yangyicong@huawei.com>
+Cc:     gregkh@linuxfoundation.org, alexander.shishkin@linux.intel.com,
+        leo.yan@linaro.org, james.clark@arm.com, will@kernel.org,
+        robin.murphy@arm.com, acme@kernel.org, jonathan.cameron@huawei.com,
+        john.garry@huawei.com, helgaas@kernel.org,
+        lorenzo.pieralisi@arm.com, suzuki.poulose@arm.com,
+        mark.rutland@arm.com, joro@8bytes.org,
+        shameerali.kolothum.thodi@huawei.com, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
+        prime.zeng@huawei.com, liuqi115@huawei.com,
+        zhangshaokun@hisilicon.com, linuxarm@huawei.com, corbet@lwn.net,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v9 7/8] docs: trace: Add HiSilicon PTT device driver
+ documentation
+Message-ID: <20220707162015.GA2609651@p14s>
+References: <20220606115555.41103-1-yangyicong@hisilicon.com>
+ <20220606115555.41103-8-yangyicong@hisilicon.com>
+ <20220706175751.GA2546265@p14s>
+ <75afb15e-9fc2-d14a-c72d-dc33589cfc0e@huawei.com>
 MIME-Version: 1.0
-References: <20220609001007.533242-2-rajvi.jingar@linux.intel.com> <20220611001217.GA639674@bhelgaas>
-In-Reply-To: <20220611001217.GA639674@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 7 Jul 2022 18:17:24 +0200
-Message-ID: <CAJZ5v0gNy6YJA+RNTEyHBdoJK-jqKN60oU_k_LX4=cTuyoO2mg@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] PCI/PM: Disable PTM on all devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Box <david.e.box@linux.intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75afb15e-9fc2-d14a-c72d-dc33589cfc0e@huawei.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Sorry for the delay here.
+On Thu, Jul 07, 2022 at 07:43:21PM +0800, Yicong Yang wrote:
+> On 2022/7/7 1:57, Mathieu Poirier wrote:
+> > Hi,
+> > 
+> > I have started looking at this set.
+> 
+> Thanks!
+> 
+> > 
+> > On Mon, Jun 06, 2022 at 07:55:54PM +0800, Yicong Yang wrote:
+> >> Document the introduction and usage of HiSilicon PTT device driver.
+> >>
+> >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> ---
+> >>  Documentation/trace/hisi-ptt.rst | 307 +++++++++++++++++++++++++++++++
+> >>  Documentation/trace/index.rst    |   1 +
+> > 
+> > The "get_maintainer" script clearly indicates that Jonathan Corbet maintains the
+> > Documentation directory and yet he is not CC'ed on this patch, nor is the
+> > linux-doc mainling list.  As such, it would not be possible to merge this
+> > patchset.
+> > 
+> 
+> sorry for missing. +cc'ed.
+> 
+> >>  2 files changed, 308 insertions(+)
+> >>  create mode 100644 Documentation/trace/hisi-ptt.rst
+> >>
+> >> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
+> >> new file mode 100644
+> >> index 000000000000..0a3112244d40
+> >> --- /dev/null
+> >> +++ b/Documentation/trace/hisi-ptt.rst
+> >> @@ -0,0 +1,307 @@
+> >> +.. SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +======================================
+> >> +HiSilicon PCIe Tune and Trace device
+> >> +======================================
+> >> +
+> >> +Introduction
+> >> +============
+> >> +
+> >> +HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
+> >> +integrated Endpoint (RCiEP) device, providing the capability
+> >> +to dynamically monitor and tune the PCIe link's events (tune),
+> >> +and trace the TLP headers (trace). The two functions are independent,
+> >> +but is recommended to use them together to analyze and enhance the
+> >> +PCIe link's performance.
+> >> +
+> >> +On Kunpeng 930 SoC, the PCIe Root Complex is composed of several
+> >> +PCIe cores. Each PCIe core includes several Root Ports and a PTT
+> >> +RCiEP, like below. The PTT device is capable of tuning and
+> >> +tracing the links of the PCIe core.
+> >> +::
+> >> +
+> >> +          +--------------Core 0-------+
+> >> +          |       |       [   PTT   ] |
+> >> +          |       |       [Root Port]---[Endpoint]
+> >> +          |       |       [Root Port]---[Endpoint]
+> >> +          |       |       [Root Port]---[Endpoint]
+> >> +    Root Complex  |------Core 1-------+
+> >> +          |       |       [   PTT   ] |
+> >> +          |       |       [Root Port]---[ Switch ]---[Endpoint]
+> >> +          |       |       [Root Port]---[Endpoint] `-[Endpoint]
+> >> +          |       |       [Root Port]---[Endpoint]
+> >> +          +---------------------------+
+> >> +
+> >> +The PTT device driver registers one PMU device for each PTT device.
+> >> +The name of each PTT device is composed of 'hisi_ptt' prefix with
+> >> +the id of the SICL and the Core where it locates. The Kunpeng 930
+> >> +SoC encapsulates multiple CPU dies (SCCL, Super CPU Cluster) and
+> >> +IO dies (SICL, Super I/O Cluster), where there's one PCIe Root
+> >> +Complex for each SICL.
+> >> +::
+> >> +
+> >> +    /sys/devices/hisi_ptt<sicl_id>_<core_id>
+> > 
+> > All entries added to sysfs should have corresponding documentation.  See [1] and
+> > [2] for details and [3] for an example.
+> > 
+> > [1]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/README
+> > [2]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/testing
+> > [3]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/testing/sysfs-bus-coresight-devices-etm4x
+> > 
+> 
+> ok. I'll add a patch for ABI description. Thanks for the reference.
+> 
+> >> +
+> >> +Tune
+> >> +====
+> >> +
+> >> +PTT tune is designed for monitoring and adjusting PCIe link parameters (events).
+> >> +Currently we support events in 4 classes. The scope of the events
+> >> +covers the PCIe core to which the PTT device belongs.
+> >> +
+> >> +Each event is presented as a file under $(PTT PMU dir)/tune, and
+> >> +a simple open/read/write/close cycle will be used to tune the event.
+> >> +::
+> >> +
+> >> +    $ cd /sys/devices/hisi_ptt<sicl_id>_<core_id>/tune
+> >> +    $ ls
+> >> +    qos_tx_cpl    qos_tx_np    qos_tx_p
+> >> +    tx_path_rx_req_alloc_buf_level
+> >> +    tx_path_tx_req_alloc_buf_level
+> > 
+> > These look overly long... How about watermark_rx and watermark_tx?
+> > 
+> 
+> These are gotten from the hardware manual and abbreviated. These events are highly connected
+> to the hardware desgin so I think it's better to keep consistence. The watermark_{rx, tx} will
+> become ambigious when we add more events for Rx path or other Tx path events.
+> 
+> The event code is composed of two parts. First part (tx_path) describes which path it belongs to
+> and second part describes the function ({rx,tx}_req_alloc_buf_level). We called the link path
+> between CPU and PCIe RC as Rx path and the path between PCIe RC to the PCIe link as Tx path.
+> So we need to have tx_path prefix for the Tx path and {rx, tx}_req_alloc_buf_level for the
+> requested watermark of {inbound, outbound} buffer allocation. Indeed we have other Tx path
+> buffer events which are not exported in this series.
+>
 
-On Sat, Jun 11, 2022 at 2:12 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Jun 08, 2022 at 05:10:07PM -0700, Rajvi Jingar wrote:
-> > On receiving a PTM Request from a downstream device, if PTM is disabled
-> > on the root port, as per PCIe specification, such request would cause
-> > an Unsupported Request error. So disable PTM for any downstream devices.
-> > PTM state needs to be saved before disabling it to be restored later.
-> >
-> > Set ptm_enabled from 'struct pci_dev' to 0 in pci_ptm_disable() and
-> > it is used in pci_save_state() before saving PTM state to avoid
-> > double save.
-> >
-> > Fixes: a697f072f5da ("PCI: Disable PTM during suspend to save power")
-> > Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-> > Suggested-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> >  v1 -> v2: add Fixes tag in commit message
-> >  v2 -> v3: move changelog after "---" marker
-> >  v3 -> v4: add "---" marker after changelog
-> >  v4 -> v5: move pci_disable_ptm() out of the pci_dev->state_saved check.
-> >          disable PTM for all devices, not just root ports.
-> >  v5 -> v6: move pci_disable_ptm() to pci_pm_suspend()
-> >          set pci_dev->ptm_enabled to 0 in pci_ptm_disable() and it is
-> >          used in pci_save_state() before saving PTM state to avoid
-> >          double save.
-> >  v6 -> v7: add #ifdef CONFIG_PCIE_PTM in pci_save_state() before saving
-> >          PTM state
-> > ---
-> >  drivers/pci/pci-driver.c | 21 ++++++++++++++++++++-
-> >  drivers/pci/pci.c        | 28 +++++++++++++---------------
-> >  drivers/pci/pcie/ptm.c   |  1 +
-> >  3 files changed, 34 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 1f64de3e5280..db4d7835d7ae 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -803,14 +803,33 @@ static int pci_pm_suspend(struct device *dev)
-> >               pci_dev_adjust_pme(pci_dev);
-> >       }
-> >
-> > +     /*
-> > +      * If a PTM Requester is put in a low-power state, a PTM Responder
-> > +      * upstream from it may also be put in a low-power state. Putting a
-> > +      * Port in D1, D2, or D3hot does not prohibit it from sending or
-> > +      * responding to PTM Requests. We want to disable PTM on Responders
-> > +      * when they are in a low-power state. Per 6.21.3, a PTM Requester
-> > +      * must not be enabled when the upstream PTM Responder is disabled.
-> > +      * Therefore, we must disable all PTM on all downstream PTM
-> > +      * Requesters before disabling it on the PTM Responder, e.g., a Root
-> > +      * Port.
-> > +      *
-> > +      * Also, to restore the PTM state, it needs to be saved before
-> > +      * disabling it for all devices.
-> > +      */
-> > +     pci_save_ptm_state(pci_dev);
-> > +     pci_disable_ptm(pci_dev);
->
-> I think this is a little bit too magical.  The PTM disable doesn't
-> really fit here in pci_pm_suspend().  It's more like the wakeup
-> configuration done by pci_pm_suspend_noirq() in
-> pci_prepare_to_sleep().
->
-> IIUC, the reason it's here in pci_pm_suspend() is because of the weird
-> nvme thing where nvme_suspend() puts the device in a device-specific
-> low-power flavor of D0 and subsequent config accesses take it out of
-> that low-power situation [1].
->
-> I don't think this is a maintainable situation because there's nothing
-> about this pci_disable_ptm() that says "this cannot be done after
-> pm->suspend()".  That's a completely nvme-specific thing that we can't
-> deduce from the code and are likely to break in the future.
+I will not be maintaining nor using this driver so the choice is entirely yours.
+That being said the end result is the same - those names are, in my opinion, too
+long.
 
-Well, I'm not sure it is nvme-specific really.
+> 
+> >> +    $ cat qos_tx_dp
+> >> +    1
+> >> +    $ echo 2 > qos_tx_dp
+> >> +    $ cat qos_tx_dp
+> >> +    2
+> >> +
+> >> +Current value (numerical value) of the event can be simply read
+> >> +from the file, and the desired value written to the file to tune.
+> >> +
+> >> +1. Tx path QoS control
+> >> +------------------------
+> >> +
+> >> +The following files are provided to tune the QoS of the tx path of
+> >> +the PCIe core.
+> >> +
+> >> +- qos_tx_cpl: weight of Tx completion TLPs
+> >> +- qos_tx_np: weight of Tx non-posted TLPs
+> >> +- qos_tx_p: weight of Tx posted TLPs
+> >> +
+> >> +The weight influences the proportion of certain packets on the PCIe link.
+> >> +For example, for the storage scenario, increase the proportion
+> >> +of the completion packets on the link to enhance the performance as
+> >> +more completions are consumed.
+> >> +
+> >> +The available tune data of these events is [0, 1, 2].
+> >> +Writing a negative value will return an error, and out of range
+> >> +values will be converted to 2. Note that the event value just
+> >> +indicates a probable level, but is not precise.
+> >> +
+> >> +2. Tx path buffer control
+> >> +-------------------------
+> >> +
+> >> +Following files are provided to tune the buffer of tx path of the PCIe core.
+> >> +
+> >> +- tx_path_rx_req_alloc_buf_level: watermark of Rx requested
+> >> +- tx_path_tx_req_alloc_buf_level: watermark of Tx requested
+> >> +
+> >> +These events influence the watermark of the buffer allocated for each
+> >> +type. Rx means the inbound while Tx means outbound. The packets will
+> >> +be stored in the buffer first and then transmitted either when the
+> >> +watermark reached or when timed out. For a busy direction, you should
+> >> +increase the related buffer watermark to avoid frequently posting and
+> >> +thus enhance the performance. In most cases just keep the default value.
+> >> +
+> >> +The available tune data of above events is [0, 1, 2].
+> >> +Writing a negative value will return an error, and out of range
+> >> +values will be converted to 2. Note that the event value just
+> >> +indicates a probable level, but is not precise.
+> > 
+> > This is useful documentation but it also should be found in the ABI
+> > documentation referred to above.
+> > 
+> >> +
+> >> +Trace
+> >> +=====
+> >> +
+> >> +PTT trace is designed for dumping the TLP headers to the memory, which
+> >> +can be used to analyze the transactions and usage condition of the PCIe
+> >> +Link. You can choose to filter the traced headers by either requester ID,
+> >> +or those downstream of a set of Root Ports on the same core of the PTT
+> >> +device. It's also supported to trace the headers of certain type and of
+> >> +certain direction.
+> >> +
+> >> +You can use the perf command `perf record` to set the parameters, start
+> >> +trace and get the data. It's also supported to decode the trace
+> >> +data with `perf report`. The control parameters for trace is inputted
+> >> +as event code for each events, which will be further illustrated later.
+> >> +An example usage is like
+> >> +::
+> >> +
+> >> +    $ perf record -e hisi_ptt0_2/filter=0x80001,type=1,direction=1,
+> >> +      format=1/ -- sleep 5
+> >> +
+> >> +This will trace the TLP headers downstream root port 0000:00:10.1 (event
+> >> +code for event 'filter' is 0x80001) with type of posted TLP requests,
+> >> +direction of inbound and traced data format of 8DW.
+> >> +
+> >> +1. filter
+> >> +---------
+> >> +
+> >> +The TLP headers to trace can be filtered by the Root Ports or the requester
+> >> +ID of the endpoints, which are located on the same core of the PTT device.
+> >> +You can set the filter by specifying the `filter` parameter which is required
+> >> +to start the trace. The parameter value is 20 bit. The supported filters and
+> >> +related values are outputted through `available_root_port_filters` and
+> >> +`available_requester_filters` sysfs attributes for Root Ports and Requesters
+> >> +respectively.
+> >> +::
+> >> +
+> >> +    $ cat available_root_port_filters
+> >> +    0000:00:10.0	0x80001
+> >> +    0000:00:11.0	0x80004
+> >> +    $ cat available_requester_filters
+> >> +    0000:01:00.0	0x00100
+> >> +    0000:01:00.1	0x00101
+> > 
+> > If I remember correctly, one of the rule for sysfs is one line per entry.
+> > 
+> 
+> Since one PTT devices may support several Root Ports and Endpoints on its core, I find no better
+> way to make this information convenient and easy to use for the users to collect. So maybe this
+> canbe an exception and there seems to have some limited examples like
+> /sys/devices/system/node/node<N>/{meminfo, vmstat, meminfo}.
 
-Pretty much the same goes for any driver that wants to do their own
-power management (whatever it is) in the ->suspend() callback and
-indicate that by calling pci_save_state() by itself.
+You can either find a better solution or argue the matter with Greg.  I suggest
+to introduce new directories, i.e "root_port_filters" and "requested_filters"
+and under those have entries like "port0", "port1" and so on.
 
-> We *do* have the rule that if the driver sets pdev->state_saved
-> (normally by calling pci_save_state()), it means the driver is
-> responsible for *all* the device state, even the standard config space
-> that the PCI core would normally handle.
->
-> When the driver does set pdev->state_saved, I don't think
-> pci_pm_suspend_noirq() actually touches the device itself, and I'm a
-> little more comfortable relying on that assumption.
-
-It can be relied on right now which is also why the $subject patch
-cannot put the PTM disabling in there and do it regardless of the
-state_saved value.
-
-> If this nvme weirdness plays a part here, I think the commit log and
-> probably a comment really should mention what's going on because it's
-> just feels fragile.
-
-Totally agree on that one.
-
-> [1] https://lore.kernel.org/r/CAJZ5v0iNaAd=yP3DgDVVpffKU6kt+nSpPeqxWJyRddaX5K4FRA@mail.gmail.com
->
-> >       if (pm->suspend) {
-> >               pci_power_t prev = pci_dev->current_state;
-> >               int error;
-> >
-> >               error = pm->suspend(dev);
-> >               suspend_report_result(dev, pm->suspend, error);
-> > -             if (error)
-> > +             if (error) {
-> > +                     pci_restore_ptm_state(pci_dev);
-> >                       return error;
-> > +             }
-> >
-> >               if (!pci_dev->state_saved && pci_dev->current_state != PCI_D0
-> >                   && pci_dev->current_state != PCI_UNKNOWN) {
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index cfaf40a540a8..3e9dcb1bbffa 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -1669,7 +1669,15 @@ int pci_save_state(struct pci_dev *dev)
-> >       pci_save_ltr_state(dev);
-> >       pci_save_dpc_state(dev);
-> >       pci_save_aer_state(dev);
-> > -     pci_save_ptm_state(dev);
-> > +#ifdef CONFIG_PCIE_PTM
-> > +     /*
-> > +      * PCI PM core disables PTM during suspend and saves PTM state before
-> > +      * that to be able to restore the ptm state restored later. So PCI core
-> > +      * needs this check to avoid double save.
-> > +      */
-> > +     if (dev->ptm_enabled)
-> > +             pci_save_ptm_state(dev);
-> > +#endif
->
-> This ptm_enabled check doesn't fit with the rest of the function and
-> the semantics are fairly complicated.
->
-> >       return pci_save_vc_state(dev);
-> >  }
-> >  EXPORT_SYMBOL(pci_save_state);
-> > @@ -2710,24 +2718,12 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
-> >       if (target_state == PCI_POWER_ERROR)
-> >               return -EIO;
-> >
-> > -     /*
-> > -      * There are systems (for example, Intel mobile chips since Coffee
-> > -      * Lake) where the power drawn while suspended can be significantly
-> > -      * reduced by disabling PTM on PCIe root ports as this allows the
-> > -      * port to enter a lower-power PM state and the SoC to reach a
-> > -      * lower-power idle state as a whole.
-> > -      */
-> > -     if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-> > -             pci_disable_ptm(dev);
-> > -
-> >       pci_enable_wake(dev, target_state, wakeup);
-> >
-> >       error = pci_set_power_state(dev, target_state);
-> >
-> > -     if (error) {
-> > +     if (error)
-> >               pci_enable_wake(dev, target_state, false);
-> > -             pci_restore_ptm_state(dev);
-> > -     }
-> >
-> >       return error;
-> >  }
-> > @@ -2775,8 +2771,10 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
-> >        * port to enter a lower-power PM state and the SoC to reach a
-> >        * lower-power idle state as a whole.
-> >        */
-> > -     if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-> > +     if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
-> > +             pci_save_ptm_state(dev);
-> >               pci_disable_ptm(dev);
-> > +     }
-> >
-> >       __pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
-> >
-> > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> > index 368a254e3124..746e29779c27 100644
-> > --- a/drivers/pci/pcie/ptm.c
-> > +++ b/drivers/pci/pcie/ptm.c
-> > @@ -44,6 +44,7 @@ void pci_disable_ptm(struct pci_dev *dev)
-> >       pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
-> >       ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
-> >       pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
-> > +     dev->ptm_enabled = 0;
->
-> This looks like a bug fix that could be in a separate patch.
->
-> >  }
-> >
-> >  void pci_save_ptm_state(struct pci_dev *dev)
->
->
-> I think something like the sketch below would fit better in the power
-> management framework.  PTM disable is closely related to device power
-> states, so I tried to put it as close as possible to the power state
-> transitions.  I'm sure there are things missing and things I'm
-> overlooking:
-
-There are PCI devices that pci_prepare_to_sleep() is not called for,
-so disabling PTM in there may not work in general.
-
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index cfaf40a540a8..4dcd0c7381b9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2705,28 +2705,21 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
->  {
->         bool wakeup = device_may_wakeup(&dev->dev);
->         pci_power_t target_state = pci_target_state(dev, wakeup);
-> +       bool ptm = pcie_ptm_enabled(dev);
->         int error;
->
->         if (target_state == PCI_POWER_ERROR)
->                 return -EIO;
->
-> -       /*
-> -        * There are systems (for example, Intel mobile chips since Coffee
-> -        * Lake) where the power drawn while suspended can be significantly
-> -        * reduced by disabling PTM on PCIe root ports as this allows the
-> -        * port to enter a lower-power PM state and the SoC to reach a
-> -        * lower-power idle state as a whole.
-> -        */
-> -       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-> -               pci_disable_ptm(dev);
-> -
-> +       pci_disable_ptm(dev);
->         pci_enable_wake(dev, target_state, wakeup);
->
->         error = pci_set_power_state(dev, target_state);
->
->         if (error) {
->                 pci_enable_wake(dev, target_state, false);
-> -               pci_restore_ptm_state(dev);
-> +               if (ptm)
-> +                       pci_enable_ptm(dev);
->         }
->
->         return error;
-> @@ -2762,6 +2755,7 @@ EXPORT_SYMBOL(pci_back_from_sleep);
->  int pci_finish_runtime_suspend(struct pci_dev *dev)
->  {
->         pci_power_t target_state;
-> +       bool ptm = pcie_ptm_enabled(dev);
->         int error;
->
->         target_state = pci_target_state(dev, device_can_wakeup(&dev->dev));
-> @@ -2778,13 +2772,15 @@ int pci_finish_runtime_suspend(struct pci_dev *dev)
->         if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
->                 pci_disable_ptm(dev);
->
-> +       pci_disable_ptm(dev);
->         __pci_enable_wake(dev, target_state, pci_dev_run_wake(dev));
->
->         error = pci_set_power_state(dev, target_state);
->
->         if (error) {
->                 pci_enable_wake(dev, target_state, false);
-> -               pci_restore_ptm_state(dev);
-> +               if (ptm)
-> +                       pci_enable_ptm(dev);
->         }
->
->         return error;
+> 
+> >> +
+> >> +Note that multiple Root Ports can be specified at one time, but only
+> >> +one Endpoint function can be specified in one trace. Specifying both
+> >> +Root Port and function at the same time is not supported.
+> >> +
+> >> +If no filter is available, reading the related filter sysfs attribute
+> >> +will get an empty string.
+> >> +::
+> >> +
+> >> +    $ cat available_root_port_filters
+> >> +
+> >> +    $ cat available_requester_filters
+> > 
+> > Those too look overly long, and where to find them is not documented.  As such
+> > users have to guest that it must be somewhere under
+> > /sys/devices/hisi_ptt<sicl_id>_<core_id>/.
+> > 
+> 
+> Since Root Port and Requester are PCIe terminologies so it's better to have them
+> embedded to make it clear. Maybe 'available' can be removed.
+> 
+> Will have all these sysfs attributes documented.
+> 
+> > More comments tomorrow.
+> > 
+> 
+> Thanks,
+> Yicong
