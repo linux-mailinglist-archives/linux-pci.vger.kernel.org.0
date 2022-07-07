@@ -2,127 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C353569B6F
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 09:22:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90B58569C73
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 10:08:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232095AbiGGHWO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jul 2022 03:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
+        id S234442AbiGGIEh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jul 2022 04:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbiGGHWN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 03:22:13 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B960220F78;
-        Thu,  7 Jul 2022 00:22:12 -0700 (PDT)
-Received: by mail-qt1-f173.google.com with SMTP id g14so21551183qto.9;
-        Thu, 07 Jul 2022 00:22:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g1iXDcNbNDisdpPgJiiBxrCtccde/88C3HCt64upFyM=;
-        b=t/OXhX2QQScnmxe7rDqRQ3LMfnYjiLHqzYZ8Wk6s9yicXq6aBPcDArW2+07tPufqKq
-         e2lSXpHg1gE+Z6LVrHosagBDjD8h4VZqpStwOUMbFsf4axDEQzFj5PAB6gOGf49ZD5Kc
-         f2ktPCj2QFyIH9fVoGlt6/MAPFdF1diAyXjiU1yha4nDeQtkspN6zZXrnd/a3iTsaQiW
-         cxU6UiPEDzIq6Hve+K/02BtIu5TXeUIaZXuPM5PJG7j+iZmQcE3rBZ9BcJVf3V8HG+ht
-         mJNjypgH5RB0IDkYoc8GxpufKU3shiz+t4yS6C4a7oLO592JHhAy8KLwTOxBTOxAbKck
-         7ZGg==
-X-Gm-Message-State: AJIora9rozqiPlBh6+Pb5hnipYd6s9wnEwr8/wVGJaxYW27+8SBSqpp2
-        6UyHjJDHFjLpR9V29OVkg7VwY56CHzqWdw==
-X-Google-Smtp-Source: AGRyM1sndVlcLk0HOKAS9JmW3XCtkJlILpqb8Cf5JVJZ6gl69VLq1XeVBIvtRoLXix1KZuYQrN9f9Q==
-X-Received: by 2002:a05:6214:29c4:b0:472:fb62:3a03 with SMTP id gh4-20020a05621429c400b00472fb623a03mr13639555qvb.93.1657178531815;
-        Thu, 07 Jul 2022 00:22:11 -0700 (PDT)
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
-        by smtp.gmail.com with ESMTPSA id t2-20020ac85302000000b00317cdc1b15bsm24239422qtn.27.2022.07.07.00.22.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Jul 2022 00:22:11 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-31c89111f23so111474497b3.0;
-        Thu, 07 Jul 2022 00:22:11 -0700 (PDT)
-X-Received: by 2002:a81:5404:0:b0:31c:c24d:94b0 with SMTP id
- i4-20020a815404000000b0031cc24d94b0mr16256568ywb.502.1657178531209; Thu, 07
- Jul 2022 00:22:11 -0700 (PDT)
+        with ESMTP id S231223AbiGGIEg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 04:04:36 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C18A331373
+        for <linux-pci@vger.kernel.org>; Thu,  7 Jul 2022 01:04:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657181075; x=1688717075;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=X+/O4qp3XkA3/dfVoVSa+DYcBk0DGyas2PAIwZnzO0Y=;
+  b=lgwQcTucu+uXKswbk3D1VZWfg8NV/xtSiIAyyv6A8LyuSJQa47Zq1M2v
+   scofJCx/yHXuFe4OhFzzh8qHRE8BQveInspYYfFx+oH0m0YfpydMtQXaw
+   JwVyTlOuTB8vwrIg/S+dVcWUhcrywtkab5MHuS6FxxBgnj1sNJk8TPrGk
+   PzwqfF5eyV56xy+rnuFxxdyYkxgXZ42lkQYCpHCDx7vZ9UI6BTZlJqwL1
+   GlwAy73F4a+QjPkzpmHUfGuVqNKasNdspXdLNL+ouQqPifWbV3mCoBepf
+   cOrMHtozaKotl2nwrwYi5fv7NzmoLqmVYM5apJu1N6Y1UKYKX+fAh8jaU
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10400"; a="282713639"
+X-IronPort-AV: E=Sophos;i="5.92,252,1650956400"; 
+   d="scan'208";a="282713639"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2022 01:04:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,252,1650956400"; 
+   d="scan'208";a="661291463"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Jul 2022 01:04:32 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o9MUx-000Ljo-97;
+        Thu, 07 Jul 2022 08:04:31 +0000
+Date:   Thu, 07 Jul 2022 16:03:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ 62171cf15eb8209e0d07ea8b32566f396c4816de
+Message-ID: <62c6935e.eu9dsNnC/ION+mQ9%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20220503211954.1428919-1-frowand.list@gmail.com>
-In-Reply-To: <20220503211954.1428919-1-frowand.list@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 7 Jul 2022 09:21:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWhn8cY4usyqao-osEcSCcmkU+NYg21co+GxVfvg5+dhw@mail.gmail.com>
-Message-ID: <CAMuHMdWhn8cY4usyqao-osEcSCcmkU+NYg21co+GxVfvg5+dhw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] of: overlay: rename overlay source files from .dts
- to .dtso
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Tim Harvey <tharvey@gateworks.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Walle <michael@walle.cc>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Jason Liu <jason.hui.liu@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Frank,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 62171cf15eb8209e0d07ea8b32566f396c4816de  Merge branch 'pci/ctrl/vmd'
 
-On Tue, May 3, 2022 at 11:20 PM <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> In drivers/of/unittest-data/:
->    - Rename .dts overlay source files to use .dtso suffix.
->    - Add Makefile rule to build .dtbo.o assembly file from overlay
->      .dtso source file.
->    - Update Makefile to build .dtbo.o objects instead of .dtb.o from
->      unittest overlay source files.
->
-> Modify driver/of/unitest.c to use .dtbo.o based symbols instead of
-> .dtb.o
->
-> Modify scripts/Makefile.lib %.dtbo rule to depend upon %.dtso instead
-> of %.dts
->
-> Rename .dts overlay source files to use .dtso suffix in:
->    arch/arm64/boot/dts/freescale/
->    arch/arm64/boot/dts/xilinx/
->
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+elapsed time: 721m
 
-What is the status of this work?
-Thanks!
+configs tested: 58
+configs skipped: 2
 
-Gr{oetje,eeting}s,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-                        Geert
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+m68k                       m5249evb_defconfig
+sh                           sh2007_defconfig
+sh                         ecovec24_defconfig
+ia64                             allmodconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+i386                          randconfig-a001
+i386                          randconfig-a005
+x86_64                        randconfig-a015
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220706
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                    rhel-8.3-kselftests
+x86_64                           rhel-8.3-syz
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+clang tested configs:
+arm                      pxa255-idp_defconfig
+powerpc                     tqm8540_defconfig
+arm                      tct_hammer_defconfig
+mips                        qi_lb60_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-a014
+x86_64                        randconfig-a012
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r041-20220706
+hexagon              randconfig-r045-20220706
+riscv                randconfig-r042-20220706
+s390                 randconfig-r044-20220706
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
