@@ -2,59 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C724456A18F
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 13:59:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 617C956A1ED
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 14:28:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232060AbiGGLvp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jul 2022 07:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55256 "EHLO
+        id S235384AbiGGM1y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jul 2022 08:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234163AbiGGLvo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 07:51:44 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682404507D
-        for <linux-pci@vger.kernel.org>; Thu,  7 Jul 2022 04:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657194703; x=1688730703;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=d5nBe1M/tyJ7pOezjn2ZxeKMLBWKidb6hhY4cYx2+Bk=;
-  b=Eqb73k12BLtbNWaMBFdBytM1deXLaeSEffJpXLmnozOqUYzzaXFi08/F
-   jPvyjMWzZ2x8ANd3egLaCCbrAFuc6e7OCkVgmlQ9uNWp3v+YnB6xKxeGw
-   Oq6GxT5VxkpDUcfDkPNxdj87+rF+tLX20RzGKgSuisbtbxKd6zT6PlCMJ
-   f7+h5qFxVMf6AmdFBtFDBAFLHPRoi8m4YZUr0dXzN2TKVNegktiB/zY1x
-   KZH3/Y0Spxv7so97wlIAR6ik2lqdZ2PO4LqtSpkZNX6+Dxm4KMv6kP4cd
-   hPe/TKpOca+WqoSmKFyZoPF2t/5m60ohkE3pSsvL3uUISVagutQrk1Xou
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10400"; a="285130557"
-X-IronPort-AV: E=Sophos;i="5.92,252,1650956400"; 
-   d="scan'208";a="285130557"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2022 04:51:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,252,1650956400"; 
-   d="scan'208";a="568488917"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 07 Jul 2022 04:51:41 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o9Q2n-000LyF-6p;
-        Thu, 07 Jul 2022 11:51:41 +0000
-Date:   Thu, 07 Jul 2022 19:51:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/endpoint] BUILD SUCCESS
- 1bc2b7bfba6e2f64edf5e246f3af2967261f6c3d
-Message-ID: <62c6c8b3.cNUgqO/fwFA8jwlz%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S235072AbiGGM1y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 08:27:54 -0400
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B052251F;
+        Thu,  7 Jul 2022 05:27:53 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id v185so16632929ioe.11;
+        Thu, 07 Jul 2022 05:27:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=cMPT7f9qv5sQO6WNbfFTELIdIiXOvBw5cTsisXNHniQ=;
+        b=H1v4dAcR3R+lnwYPtIEQCKBk7xLj9VCoRBs0Y1HShtJqQDfLCIm17VSiC8FnDGT5b4
+         yW+uvtGzJlqQkD9mGjrkkcUMagPURP/6DMGcc74P5JDwxvUYEKOEBck2WE2Ii9Oyh5Tr
+         B/0KDpjRposrsw5ntBPJV44s36jTzTuRfdZJfcaMf9EkKYn82fHsI+/YsDoeXHtJB7ET
+         8IOYkYVZpx3+27XAEB4bNsv+wQ3vGBdbl2Ylm0x4naBVU1o80UIQgETYLEVhY7OOcS4r
+         Hx82jNbAJ5eWKLP1wRDPJKNfErDdP6HMK+npE35aYjUNf6CzwsHTGm9W8mxBck5v6GVX
+         sAkg==
+X-Gm-Message-State: AJIora+K1PVEpO/QX0l73UCIK67S+rDVFNfa3XNPEoIypmzKIpK3zP3A
+        r3oZieVND5qRKD863jmpLA==
+X-Google-Smtp-Source: AGRyM1tZlHGQo0cV0eRw2oO9lgiCjvxMu4CTwm0ERhDKTH/9dm5gg9bF2hOLr7xmiE2qJa9CFxMU5Q==
+X-Received: by 2002:a5e:a506:0:b0:66a:2cdc:e6f7 with SMTP id 6-20020a5ea506000000b0066a2cdce6f7mr25146629iog.113.1657196872555;
+        Thu, 07 Jul 2022 05:27:52 -0700 (PDT)
+Received: from robh.at.kernel.org ([98.38.210.73])
+        by smtp.gmail.com with ESMTPSA id z23-20020a05663803b700b00331c06bf620sm12890894jap.154.2022.07.07.05.27.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jul 2022 05:27:52 -0700 (PDT)
+Received: (nullmailer pid 1454232 invoked by uid 1000);
+        Thu, 07 Jul 2022 12:27:51 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     kthota@nvidia.com, sagar.tv@gmail.com, lpieralisi@kernel.org,
+        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+        kishon@ti.com, robh+dt@kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, jonathanh@nvidia.com,
+        gustavo.pimentel@synopsys.com, linux-tegra@vger.kernel.org,
+        thierry.reding@gmail.com, mmaddireddy@nvidia.com,
+        jingoohan1@gmail.com, kw@linux.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20220707081301.29961-4-vidyas@nvidia.com>
+References: <20220707081301.29961-1-vidyas@nvidia.com> <20220707081301.29961-4-vidyas@nvidia.com>
+Subject: Re: [PATCH V4 3/9] dt-bindings: PCI: tegra234: Add schema for tegra234 endpoint mode
+Date:   Thu, 07 Jul 2022 06:27:51 -0600
+Message-Id: <1657196871.476299.1454231.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,120 +63,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/endpoint
-branch HEAD: 1bc2b7bfba6e2f64edf5e246f3af2967261f6c3d  PCI: endpoint: Don't stop controller when unbinding endpoint function
+On Thu, 07 Jul 2022 13:42:55 +0530, Vidya Sagar wrote:
+> Add support for PCIe controllers that operate in the endpoint mode
+> in tegra234 chipset.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V4:
+> * Rebased on top of previous patch
+> 
+> V3:
+> * New patch in this series
+> 
+>  .../bindings/pci/nvidia,tegra194-pcie-ep.yaml | 123 +++++++++++++++++-
+>  1 file changed, 117 insertions(+), 6 deletions(-)
+> 
 
-elapsed time: 872m
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-configs tested: 99
-configs skipped: 3
+yamllint warnings/errors:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.example.dtb: pcie-ep@141a0000: Unevaluated properties are not allowed ('nvidia,enable-ext-refclk' was unexpected)
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
 
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-m68k                        mvme147_defconfig
-m68k                             alldefconfig
-xtensa                       common_defconfig
-powerpc                         wii_defconfig
-m68k                       m5249evb_defconfig
-sh                        apsh4ad0a_defconfig
-arm                          lpd270_defconfig
-arm                           viper_defconfig
-arc                     nsimosci_hs_defconfig
-sh                                  defconfig
-sh                          rsk7269_defconfig
-alpha                            alldefconfig
-openrisc                            defconfig
-arm                          badge4_defconfig
-m68k                         amcore_defconfig
-sh                           se7721_defconfig
-powerpc                  storcenter_defconfig
-xtensa                  audio_kc705_defconfig
-sh                            titan_defconfig
-mips                  decstation_64_defconfig
-powerpc                     mpc83xx_defconfig
-sh                          sdk7786_defconfig
-arm                       aspeed_g5_defconfig
-m68k                        m5307c3_defconfig
-mips                 decstation_r4k_defconfig
-sh                           se7712_defconfig
-sh                        edosk7705_defconfig
-arm                        mini2440_defconfig
-arm                             rpc_defconfig
-sh                           se7705_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-arm                  randconfig-c002-20220707
-ia64                             allmodconfig
-arc                              allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-alpha                            allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220706
-riscv                randconfig-r042-20220707
-arc                  randconfig-r043-20220707
-s390                 randconfig-r044-20220707
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
+doc reference errors (make refcheckdocs):
 
-clang tested configs:
-arm                      pxa255-idp_defconfig
-powerpc                     tqm8540_defconfig
-arm                      tct_hammer_defconfig
-mips                        qi_lb60_defconfig
-x86_64                        randconfig-k001
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-riscv                randconfig-r042-20220706
-hexagon              randconfig-r041-20220706
-hexagon              randconfig-r045-20220706
-s390                 randconfig-r044-20220706
-hexagon              randconfig-r045-20220707
-hexagon              randconfig-r041-20220707
+See https://patchwork.ozlabs.org/patch/
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
