@@ -2,156 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DB8956A4D0
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 16:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC51A56A504
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jul 2022 16:04:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235650AbiGGODE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jul 2022 10:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
+        id S235552AbiGGOEK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jul 2022 10:04:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235106AbiGGODC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 10:03:02 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DB9A2408D;
-        Thu,  7 Jul 2022 07:03:01 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id g126so5153510pfb.3;
-        Thu, 07 Jul 2022 07:03:01 -0700 (PDT)
+        with ESMTP id S235580AbiGGOEB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jul 2022 10:04:01 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F892D1FF
+        for <linux-pci@vger.kernel.org>; Thu,  7 Jul 2022 07:03:52 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id q7so23398lji.12
+        for <linux-pci@vger.kernel.org>; Thu, 07 Jul 2022 07:03:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=afbiyF16Fd4Ewaaf3EKKCpvpR7aHAsNAQp7K3TuQXs4=;
-        b=EzpeppBfdoHkOWruUNAYNHzOi8S5lBuVkWR/uarc/O7MDVJ2qM1NUNdy3hxzZeKinw
-         1f6tPe15AftcBiSP1Sugt5jiQpAKlLcyz+gPyHgHTvK6IkiuSg6SYHkmzqBCpGaHkm3K
-         GirawtqITR+EFkG0pF8QxPm0bxzk97EH7JYJxQXFRi4d1kRfsZVOuxKRapjByLByJ3DF
-         qAVqAZfaAfJT+F8T/W2rPtPmXy6/uaYwejGaDWQ5Frl3XCXwsQlqWF67lU3BIXdseGBS
-         CTJ5pH+oR76s++4uNTCxHCZwHNyWF4xdxY3ay2k5fQlKGRbstnEbIjnAVDZkl7wMQgN9
-         oSpA==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=WyY1Q+emlyPRZsoTVj1hTX+3CfEO5aLP6G83YP6zFA4=;
+        b=jmreL66khRs++ryL8bpgWYJ0T8jScNwki9hp4wFn5ziM2X/T4JmS+hi5s60cKknV25
+         T8TFUE3pvxKQK7asjhVefKFUnhIWZrRLIKpZ1ofbsY7ExqUsw3gJ9OfsL5Y198cyVOoX
+         rnH2SE8kwvuKl1Sn18XWA9bxVIcm7AIsdr74OGIHWX4a97Am/DNZ9UAhGZ9Gi3J7D2zQ
+         At3RCYtwtg8r0/mdw5RdE1w5x602qbBOEsWgqFjACaT3vLzXrbNPnyzYRbpu5Y6Q1l2N
+         xjxuJR1B6lrREnPmYlo43NXpDT4h2NL6XNoLk+t0vcCUl8bfl16VcDyfXI/LlTPFgoDu
+         gYkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=afbiyF16Fd4Ewaaf3EKKCpvpR7aHAsNAQp7K3TuQXs4=;
-        b=z/OhwksyOp469scWVs4PaYhNC01pXiyHvOwOAPTqy+pvH2sZnN6XRZ28vSAujPutvg
-         AQGgZhLZ6b3oc+7LSlfFt5U0/C+XJmECqeCtvLa4OnsKYoIxPft0iiHX4dtUOUVVNUB7
-         o72nh0ELJf3U9b+yyqEedzG2zEcK016yJwvgjxBOYlp6WuNXVcI+F2+gmAIiXH9GEXmI
-         e0vcR+88sWEl5sqYG3UvOQtrtLFGVXKrKxZQO0pdrK7dgKYQvLkQtqOvnIUOjXNMCnTL
-         ZOSG6KMdU1kw0QUexsBYdIFk/iqmwXqSO9SNDDktXRZnojoCdRBSKzl/F4iaHlhna0VS
-         T/iA==
-X-Gm-Message-State: AJIora+ocuIwxhLJzHhnnSu+WxjiLc3tnw/dFIKUzzDFT6j9ccAbwr5i
-        VaOjjRnKKhvxqeBmGOblA/WrVTwMxpHjaNmP
-X-Google-Smtp-Source: AGRyM1uGEg1zRLKU3mt/8yK/HfEqKFBdv1eoQpzxhqHLW6DjIp1gLh6JEsU/RWRdBfoHFypH/TfaNQ==
-X-Received: by 2002:a17:90b:4c8f:b0:1ec:cdd0:41b7 with SMTP id my15-20020a17090b4c8f00b001eccdd041b7mr5420238pjb.119.1657202580508;
-        Thu, 07 Jul 2022 07:03:00 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k127-20020a632485000000b004148cbdd4e5sm1215293pgk.57.2022.07.07.07.02.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 07:02:59 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Thu, 7 Jul 2022 07:02:58 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        virtualization@lists.linux-foundation.org,
-        usbb2k-api-dev@nongnu.org, tipc-discussion@lists.sourceforge.net,
-        target-devel@vger.kernel.org, sound-open-firmware@alsa-project.org,
-        samba-technical@lists.samba.org, rds-devel@oss.oracle.com,
-        patches@opensource.cirrus.com, osmocom-net-gprs@lists.osmocom.org,
-        openipmi-developer@lists.sourceforge.net, nvdimm@lists.linux.dev,
-        ntb@lists.linux.dev, netfilter-devel@vger.kernel.org,
-        netdev@vger.kernel.org, mjpeg-users@lists.sourceforge.net,
-        megaraidlinux.pdl@broadcom.com, linuxppc-dev@lists.ozlabs.org,
-        linux1394-devel@lists.sourceforge.net, linux-x25@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
-        linux-sctp@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-parport@lists.infradead.org,
-        linux-parisc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-nfc@lists.01.org, linux-mtd@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mm@kvack.org,
-        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linaro-mm-sig@lists.linaro.org,
-        legousb-devel@lists.sourceforge.net, kvm@vger.kernel.org,
-        keyrings@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
-        iommu@lists.linux.dev, iommu@lists.linux-foundation.org,
-        intel-wired-lan@lists.osuosl.org, greybus-dev@lists.linaro.org,
-        dri-devel@lists.freedesktop.org, dm-devel@redhat.com,
-        devicetree@vger.kernel.org, dev@openvswitch.org,
-        dccp@vger.kernel.org, damon@lists.linux.dev,
-        coreteam@netfilter.org, cgroups@vger.kernel.org,
-        ceph-devel@vger.kernel.org, ath11k@lists.infradead.org,
-        apparmor@lists.ubuntu.com, amd-gfx@lists.freedesktop.org,
-        alsa-devel@alsa-project.org,
-        accessrunner-general@lists.sourceforge.net
-Subject: Re: [linux-next:master] BUILD REGRESSION
- 088b9c375534d905a4d337c78db3b3bfbb52c4a0
-Message-ID: <20220707140258.GA3492673@roeck-us.net>
-References: <62c683a2.g1VSVt6BrQC6ZzOz%lkp@intel.com>
- <YsaUgfPbOg7WuBuB@kroah.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=WyY1Q+emlyPRZsoTVj1hTX+3CfEO5aLP6G83YP6zFA4=;
+        b=mEofjimorh3oJmAovCkplScTk+ocvkg/qDoc70i3vwIxZcAqQHh5s2h4qucNyJKoyZ
+         059og1cK7OtkDxIRA+92S0YLjWfxeXgfCT3iHY64H06wiXDPLM5ezzQTrdAAqB4YEJlF
+         hggkMcHKWIXQXPLhuuG58XFrWwTkL8K45+BBjxfBYvT373UXY0SEkpoxorDcUSjhC/Ue
+         sstJ6lEqEAQBquqSXjyoeA8r8zLNqSFfVoutqOaLAc8SdebPeC3idEo1TByFFh/9g/HW
+         e7hjWXXHHfeDDPTr3f6NIMQ8kLgwRAWxdiQ8TrZTxw+uV7Mqak0EYDiMwNzIjDEvEWW0
+         a5DQ==
+X-Gm-Message-State: AJIora/l0ds/YFBkWuzI33xKcttR3HrgBw8Wzv1+2DozjWgsrHbHSKfl
+        tLWcmm1ghqi+ofHyxkLHNlV+6A==
+X-Google-Smtp-Source: AGRyM1sQz6Me6qk8+w1E80fUIRqSI3EH65bTOkeMV4IBHIXq23MVKDL3VjLirivWZDsLaTpi2TbUog==
+X-Received: by 2002:a2e:b94e:0:b0:25b:b99f:4f58 with SMTP id 14-20020a2eb94e000000b0025bb99f4f58mr25741864ljs.263.1657202630398;
+        Thu, 07 Jul 2022 07:03:50 -0700 (PDT)
+Received: from [192.168.1.211] ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id i21-20020a2ea235000000b0025d519d0609sm273708ljm.44.2022.07.07.07.03.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Jul 2022 07:03:49 -0700 (PDT)
+Message-ID: <e00b1317-9c2e-0b11-8c0b-1fa4a17e4761@linaro.org>
+Date:   Thu, 7 Jul 2022 17:03:48 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YsaUgfPbOg7WuBuB@kroah.com>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v11 0/5] PCI: qcom: Rework pipe_clk/pipe_clk_src handling
+Content-Language: en-GB
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org, Johan Hovold <johan@kernel.org>
+References: <20220616182120.GA1099986@bhelgaas>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220616182120.GA1099986@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 10:08:33AM +0200, Greg KH wrote:
+Hi,
 
-[ ... ]
-> > 
-> > Unverified Error/Warning (likely false positive, please contact us if interested):
-> > 
-> > arch/x86/events/core.c:2114 init_hw_perf_events() warn: missing error code 'err'
-> > drivers/android/binder.c:1481:19-23: ERROR: from is NULL but dereferenced.
-> > drivers/android/binder.c:2920:29-33: ERROR: target_thread is NULL but dereferenced.
-> > drivers/android/binder.c:353:25-35: ERROR: node -> proc is NULL but dereferenced.
-> > drivers/android/binder.c:4888:16-20: ERROR: t is NULL but dereferenced.
-> > drivers/base/regmap/regmap.c:1996:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/char/random.c:869:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/firmware/arm_scmi/clock.c:394:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/firmware/arm_scmi/powercap.c:376:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/gpu/drm/amd/amdgpu/../pm/powerplay/hwmgr/vega10_powertune.c:1214:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/gpu/drm/amd/display/dc/os_types.h: drm/drm_print.h is included more than once.
-> > drivers/gpu/drm/bridge/ite-it66121.c:1398:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
-> > drivers/greybus/operation.c:617:1: internal compiler error: in arc_ifcvt, at config/arc/arc.c:9637
+On 16/06/2022 21:21, Bjorn Helgaas wrote:
+> On Wed, Jun 08, 2022 at 01:52:33PM +0300, Dmitry Baryshkov wrote:
+>> PCIe pipe clk (and some other clocks) must be parked to the "safe"
+>> source (bi_tcxo) when corresponding GDSC is turned off and on again.
+>> Currently this is handcoded in the PCIe driver by reparenting the
+>> gcc_pipe_N_clk_src clock.
+>>
+>> Instead of doing it manually, follow the approach used by
+>> clk_rcg2_shared_ops and implement this parking in the enable() and
+>> disable() clock operations for respective pipe clocks.
+>>
+>> Changes since v10:
+>>   - Added linux/bitfield.h include (lkp)
+>>   - Split fw_name/name lines in the gcc-sm8450.c (Johan)
+>>
+>> Changes since v9:
+>>   - Respin fixing Tested-by tags, no code changes
+>>
+>> Changes since v8:
+>>   - Readded .name to changed entries in gcc-sc7280 driver to restore
+>>     compatibility with older DTS,
+>>   - Rebased on top of linux-next, dropping reverts,
+>>   - Verified to include all R-b tags (excuse me, Johan, I missed them
+>>     in the previous iteration).
+>>
+>> Changes since v7:
+>>   - Brought back the struct clk_regmap_phy_mux (Johan)
+>>   - Fixed includes (Stephen)
+>>   - Dropped CLK_SET_RATE_PARENT flags from changed pipe clocks, they are
+>>     not set in the current code and they are useless as the PHY's clock
+>>     has fixed rate.
+>>
+>> Changes since v6:
+>>   - Switched the ops to use GENMASK/FIELD_GET/FIELD_PUT (Stephen),
+>>   - As all pipe/symbol clock source clocks have the same register (and
+>>     parents) layout, hardcode all the values. If the need arises, this
+>>     can be changed later (Stephen),
+>>   - Fixed commit messages and comments (suggested by Johan),
+>>   - Added revert for the clk_regmap_mux_safe that have been already
+>>     picked up by Bjorn.
+>>
+>> Changes since v5:
+>>   - Rename the clock to clk-regmap-phy-mux and the enable/disable values
+>>     to phy_src_val and ref_src_val respectively (as recommended by
+>>     Johan).
+>>
+>> Changes since v4:
+>>   - Renamed the clock to clk-regmap-pipe-src,
+>>   - Added mention of PCIe2 PHY to the commit message,
+>>   - Expanded commit messages to mention additional pipe clock details.
+>>
+>> Changes since v3:
+>>   - Replaced the clock multiplexer implementation with branch-like clock.
+>>
+>> Changes since v2:
+>>   - Added is_enabled() callback
+>>   - Added default parent to the pipe clock configuration
+>>
+>> Changes since v1:
+>>   - Rebased on top of [1].
+>>   - Removed erroneous Fixes tag from the patch 4.
+>>
+>> Changes since RFC:
+>>   - Rework clk-regmap-mux fields. Specify safe parent as P_* value rather
+>>     than specifying the register value directly
+>>   - Expand commit message to the first patch to specially mention that
+>>     it is required only on newer generations of Qualcomm chipsets.
+>>
+>> Dmitry Baryshkov (5):
+>>    clk: qcom: regmap: add PHY clock source implementation
+>>    clk: qcom: gcc-sm8450: use new clk_regmap_phy_mux_ops for PCIe pipe
+>>      clocks
+>>    clk: qcom: gcc-sc7280: use new clk_regmap_phy_mux_ops for PCIe pipe
+>>      clocks
+>>    PCI: qcom: Remove unnecessary pipe_clk handling
+>>    PCI: qcom: Drop manual pipe_clk_src handling
+>>
+>>
+>> Dmitry Baryshkov (5):
+>>    clk: qcom: regmap: add PHY clock source implementation
+>>    clk: qcom: gcc-sm8450: use new clk_regmap_phy_mux_ops for PCIe pipe
+>>      clocks
+>>    clk: qcom: gcc-sc7280: use new clk_regmap_phy_mux_ops for PCIe pipe
+>>      clocks
+>>    PCI: qcom: Remove unnecessary pipe_clk handling
+>>    PCI: qcom: Drop manual pipe_clk_src handling
+>>
+>>   drivers/clk/qcom/Makefile              |  1 +
+>>   drivers/clk/qcom/clk-regmap-phy-mux.c  | 62 ++++++++++++++++++++
+>>   drivers/clk/qcom/clk-regmap-phy-mux.h  | 33 +++++++++++
+>>   drivers/clk/qcom/gcc-sc7280.c          | 49 +++++-----------
+>>   drivers/clk/qcom/gcc-sm8450.c          | 49 +++++-----------
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 81 +-------------------------
+>>   6 files changed, 127 insertions(+), 148 deletions(-)
+>>   create mode 100644 drivers/clk/qcom/clk-regmap-phy-mux.c
+>>   create mode 100644 drivers/clk/qcom/clk-regmap-phy-mux.h
 > 
-> <snip>
+> I applied this to pci/ctrl/qcom for v5.20, thanks!
 > 
-> When the compiler crashes, why are you blaming all of these different
-> mailing lists?  Perhaps you need to fix your compiler :)
-> 
+> Clock folks (Bjorn A, Andy, Michael, Stephen), I assume you're OK with
+> these being merged via the PCI tree.  Let me know if you prefer
+> anything different.
 
-To be fair, it says above "likely false positive, please contact us
-if interested". Also, the 32-bit build errors _are_ real, and the NULL
-dereferences in the binder driver are at the very least suspicious.
+I noticed that this patchset is not a part of linux-next. Is it still 
+pending to be merged in 5.20?
 
-Guenter
+-- 
+With best wishes
+Dmitry
