@@ -2,291 +2,451 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D991A56BFD4
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 20:36:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F22B056C096
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 20:37:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238346AbiGHQgn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jul 2022 12:36:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50584 "EHLO
+        id S238258AbiGHQjv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jul 2022 12:39:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238147AbiGHQgm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 12:36:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 776A015FD0
-        for <linux-pci@vger.kernel.org>; Fri,  8 Jul 2022 09:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657298200;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aXaw6mV20yQ5ht83Q/Jeg7QwbEoeLxfLXC0kSLs4Xks=;
-        b=Ez295cuvcM6lDT5zMoJA55tP5MdCE4eokAYCTsVl2/EfFu9+4aD5EQsewR/RZSQdU+lSkp
-        gmSF7e0Z1JWxEG0MANgg79fN3uhz2oYl2m6DDzHRybDfHFUH/gE9E+eJsvbNK0E8tTpCTH
-        +63qu4H27JDztS7kvuAJk41NQQIOKpA=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-497-1l1uRDyVNzq0Suu8v_61qA-1; Fri, 08 Jul 2022 12:36:39 -0400
-X-MC-Unique: 1l1uRDyVNzq0Suu8v_61qA-1
-Received: by mail-il1-f197.google.com with SMTP id o9-20020a056e0214c900b002dc29c288bfso5993365ilk.3
-        for <linux-pci@vger.kernel.org>; Fri, 08 Jul 2022 09:36:39 -0700 (PDT)
+        with ESMTP id S236791AbiGHQjv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 12:39:51 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B230248DE;
+        Fri,  8 Jul 2022 09:39:49 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id p11so16138510qkg.12;
+        Fri, 08 Jul 2022 09:39:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Sb5KiY0qSYlKrjh7q7f8Z2AMm+G071r5Rq+Ft9X/kf4=;
+        b=RiYwC7EnaQAVXiffe0GwzzO0DBTyz2Ix3cMkVs11+eQo0EJtkkKS4y29QXf69FoxeM
+         QO/KqJsvRN9HRqBhkODGbsOYxpEBNGlZoCR2i+tEGaa1xcE2NSKrOQNFCnFyISFpFy5E
+         ENe5FRoKXSrIwAPRceRHHTZ9BDwHm+p3xhXTmNXMtN3msBd47D8dHo8SocU8fY/XUIdJ
+         mSW/9ZnTHz9P+/lXGAjgACTNfhnY5ao3yYsSggNTihRit33N4LcS2mZMMjZDZWTdsrx5
+         c3orsPZf+2V2lDFlln9w9rkReG2oCO4a6pNv1BzJB6LZgMaRFuBgUAw0uoVS0eV/aSlt
+         1u+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=aXaw6mV20yQ5ht83Q/Jeg7QwbEoeLxfLXC0kSLs4Xks=;
-        b=AA5OhNXelfHfPvC5DGp0FciHpgL7/laGjGLrk3Qtj9yHB0/FVDgeIONocwA1cZd7Zm
-         G1zYSKrMKS0hk0i0f8PycHwb47QemFfpkzcc9hdSqFS53kMCLN3S4dOyf2s1nCCIHtJt
-         3lZKI8QzkAVtU2NoHw+TxSRru3nJFak/jrUD0CfOmziIbtldMJFkjkBVaorFaScRBldk
-         jiOSeblgg0CyvG9QqZoDyYfhzh+bx8cO5/L8aDmA6i2INQwt3MHcDuRWObJHwVNNG2GM
-         vZEilK0WCKlIifeonxFLceD34WggT9CNIEeO4Prr5UaVMWfbs6/3BCCUMzit3ylDQwV9
-         0YMw==
-X-Gm-Message-State: AJIora/MhDoFYRbxYys6xSieY4aFSZEzQCaUsqZNFwk8RYPURuWUIVLf
-        ixFwYN5ACqGeVK5PXnDoysrdj6QTfaQgHgD6cd7m/6GOR0Be//QDpFODX1AnXtvIK5/39LWketK
-        rcwz0TsdG59e9mT8JhTCN
-X-Received: by 2002:a05:6e02:1a42:b0:2dc:47fc:bf29 with SMTP id u2-20020a056e021a4200b002dc47fcbf29mr2691145ilv.234.1657298198355;
-        Fri, 08 Jul 2022 09:36:38 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1u59rSyM0Utfi7YcCrOgQqetSoF7uWlUfXmJjwRamr6W32ra0kATqOCXjVPSRz09F8bIG7MXw==
-X-Received: by 2002:a05:6e02:1a42:b0:2dc:47fc:bf29 with SMTP id u2-20020a056e021a4200b002dc47fcbf29mr2691125ilv.234.1657298197957;
-        Fri, 08 Jul 2022 09:36:37 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id p3-20020a92da43000000b002daa3e1fe85sm12354636ilq.58.2022.07.08.09.36.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jul 2022 09:36:37 -0700 (PDT)
-Date:   Fri, 8 Jul 2022 10:36:12 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 2/6] vfio: Add a new device feature for the power
- management
-Message-ID: <20220708103612.18285301.alex.williamson@redhat.com>
-In-Reply-To: <ad80eb14-18a1-8895-ecfb-32687a4ba021@nvidia.com>
-References: <20220701110814.7310-1-abhsahu@nvidia.com>
-        <20220701110814.7310-3-abhsahu@nvidia.com>
-        <20220706093959.3bd2cbbb.alex.williamson@redhat.com>
-        <ad80eb14-18a1-8895-ecfb-32687a4ba021@nvidia.com>
-Organization: Red Hat
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Sb5KiY0qSYlKrjh7q7f8Z2AMm+G071r5Rq+Ft9X/kf4=;
+        b=l3URgrFQCzCeTOm6KvsVCE+uBnSYqyxOwMJOtsF5MKR9GdqQL/AZLSbEt4PimiXFle
+         gyIlkuXyuh2oN/HpC0olcGiYKtzgn90wSQYxujAlqqv9wOLQdSw2MS3nLPG5otfhWk0N
+         DbAA0F7AXsKHNguHtlirM7cmsOwJwwKEHvzLiNokioJPd3vNPQCnfV5WCMxShL3O8H8o
+         PhCOybqcZ4ojhzMk+z3QMC2Ns4RnuzhojIzUuFN5r5RTczjqr6tPQFIqmAGZarGVwCtT
+         6Jhgn69gcJiJ5PotSjKOIg7q9En+mjr3yBRkPEgIDpiV46GJTf7MaSd2iloyJdvW4xQA
+         yF9w==
+X-Gm-Message-State: AJIora+GGagVE+JOh9Uzsb5OiDt/Nv+0hgxbnw0Mvd9T7H0zZzcb7P6W
+        mAs4CbX1GbizLLrEg4vOufHl5jZGY4hhjHm5/wg=
+X-Google-Smtp-Source: AGRyM1uUEsXfYk7YjzediusJ/SU+Gcpm5/DFw+eU+MO2JzUivOav/S5vd9O6h2H1/KQvmnUwssfzAq2iArMgiFWbpi4=
+X-Received: by 2002:a05:620a:2456:b0:6af:31c6:c1af with SMTP id
+ h22-20020a05620a245600b006af31c6c1afmr3002673qkn.25.1657298388416; Fri, 08
+ Jul 2022 09:39:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20220624104420.257368-2-robimarko@gmail.com> <20220707194139.GA328930@bhelgaas>
+In-Reply-To: <20220707194139.GA328930@bhelgaas>
+From:   Robert Marko <robimarko@gmail.com>
+Date:   Fri, 8 Jul 2022 18:39:37 +0200
+Message-ID: <CAOX2RU6TFDtMW+3_rfqbUOy4AmEJh+8F8wPtLnJEBtpnzeMbdA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] PCI: qcom: Move all DBI register accesses after phy_power_on()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lpieralisi@kernel.org, Rob Herring <robh@kernel.org>, kw@linux.com,
+        Bjorn Helgaas <bhelgaas@google.com>, p.zabel@pengutronix.de,
+        jingoohan1@gmail.com, linux-pci@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        johan+linaro@kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 8 Jul 2022 15:09:22 +0530
-Abhishek Sahu <abhsahu@nvidia.com> wrote:
+CC-ing Christian who did a lot of work on 2.1.0 (IPQ806x).
 
-> On 7/6/2022 9:09 PM, Alex Williamson wrote:
-> > On Fri, 1 Jul 2022 16:38:10 +0530
-> > Abhishek Sahu <abhsahu@nvidia.com> wrote:
-> >  =20
-> >> This patch adds the new feature VFIO_DEVICE_FEATURE_POWER_MANAGEMENT
-> >> for the power management in the header file. The implementation for the
-> >> same will be added in the subsequent patches.
-> >>
-> >> With the standard registers, all power states cannot be achieved. The
-> >> platform-based power management needs to be involved to go into the
-> >> lowest power state. For all the platform-based power management, this
-> >> device feature can be used.
-> >>
-> >> This device feature uses flags to specify the different operations. In
-> >> the future, if any more power management functionality is needed then
-> >> a new flag can be added to it. It supports both GET and SET operations.
-> >>
-> >> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
-> >> ---
-> >>  include/uapi/linux/vfio.h | 55 +++++++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 55 insertions(+)
-> >>
-> >> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> >> index 733a1cddde30..7e00de5c21ea 100644
-> >> --- a/include/uapi/linux/vfio.h
-> >> +++ b/include/uapi/linux/vfio.h
-> >> @@ -986,6 +986,61 @@ enum vfio_device_mig_state {
-> >>  	VFIO_DEVICE_STATE_RUNNING_P2P =3D 5,
-> >>  };
-> >> =20
-> >> +/*
-> >> + * Perform power management-related operations for the VFIO device.
-> >> + *
-> >> + * The low power feature uses platform-based power management to move=
- the
-> >> + * device into the low power state.  This low power state is device-s=
-pecific.
-> >> + *
-> >> + * This device feature uses flags to specify the different operations.
-> >> + * It supports both the GET and SET operations.
-> >> + *
-> >> + * - VFIO_PM_LOW_POWER_ENTER flag moves the VFIO device into the low =
-power
-> >> + *   state with platform-based power management.  This low power stat=
-e will be
-> >> + *   internal to the VFIO driver and the user will not come to know w=
-hich power
-> >> + *   state is chosen.  Once the user has moved the VFIO device into t=
-he low
-> >> + *   power state, then the user should not do any device access witho=
-ut moving
-> >> + *   the device out of the low power state. =20
-> >=20
-> > Except we're wrapping device accesses to make this possible.  This
-> > should probably describe how any discrete access will wake the device
-> > but ongoing access through mmaps will generate user faults.
-> >  =20
->=20
->  Sure. I will add that details also.
->=20
-> >> + *
-> >> + * - VFIO_PM_LOW_POWER_EXIT flag moves the VFIO device out of the low=
- power
-> >> + *    state.  This flag should only be set if the user has previously=
- put the
-> >> + *    device into low power state with the VFIO_PM_LOW_POWER_ENTER fl=
-ag. =20
-> >=20
-> > Indenting.
-> >  =20
-> =20
->  I will fix this.
->=20
-> >> + *
-> >> + * - VFIO_PM_LOW_POWER_ENTER and VFIO_PM_LOW_POWER_EXIT are mutually =
-exclusive.
-> >> + *
-> >> + * - VFIO_PM_LOW_POWER_REENTERY_DISABLE flag is only valid with
-> >> + *   VFIO_PM_LOW_POWER_ENTER.  If there is any access for the VFIO de=
-vice on
-> >> + *   the host side, then the device will be moved out of the low powe=
-r state
-> >> + *   without the user's guest driver involvement.  Some devices requi=
-re the
-> >> + *   user's guest driver involvement for each low-power entry.  If th=
-is flag is
-> >> + *   set, then the re-entry to the low power state will be disabled, =
-and the
-> >> + *   host kernel will not move the device again into the low power st=
-ate.
-> >> + *   The VFIO driver internally maintains a list of devices for which=
- low
-> >> + *   power re-entry is disabled by default and for those devices, the
-> >> + *   re-entry will be disabled even if the user has not set this flag
-> >> + *   explicitly. =20
-> >=20
-> > Wrong polarity.  The kernel should not maintain the policy.  By default
-> > every wakeup, whether from host kernel accesses or via user accesses
-> > that do a pm-get should signal a wakeup to userspace.  Userspace needs
-> > to opt-out of that wakeup to let the kernel automatically re-enter low
-> > power and userspace needs to maintain the policy for which devices it
-> > wants that to occur.
-> >  =20
-> =20
->  Okay. So that means, in the kernel side, we don=E2=80=99t have to mainta=
-in
->  the list which currently contains NVIDIA device ID. Also, in our
->  updated approach, this opt-out of that wake-up means that user
->  has not provided eventfd in the feature SET ioctl. Correct ?
+Regards,
+Robert
 
-Yes, I'm imagining that if the user hasn't provided a one-shot wake-up
-eventfd, that's the opt-out for being notified of device wakes.  For
-example, pm-resume would have something like:
-
-=09
-	if (vdev->pm_wake_eventfd) {
-		eventfd_signal(vdev->pm_wake_eventfd, 1);
-		vdev->pm_wake_eventfd =3D NULL;
-		pm_runtime_get_noresume(dev);
-	}
-
-(eventfd pseudo handling substantially simplified)
-
-So w/o a wake-up eventfd, the user would need to call the pm feature
-exit ioctl to elevate the pm reference to prevent it going back to low
-power.  The pm feature exit ioctl would be optional if a wake eventfd is
-provided, so some piece of the eventfd context would need to remain to
-determine whether a pm-get is necessary.
-
-> >> + *
-> >> + * For the IOCTL call with VFIO_DEVICE_FEATURE_GET:
-> >> + *
-> >> + * - VFIO_PM_LOW_POWER_ENTER will be set if the user has put the devi=
-ce into
-> >> + *   the low power state, otherwise, VFIO_PM_LOW_POWER_EXIT will be s=
-et.
-> >> + *
-> >> + * - If the device is in a normal power state currently, then
-> >> + *   VFIO_PM_LOW_POWER_REENTERY_DISABLE will be set for the devices w=
-here low
-> >> + *   power re-entry is disabled by default.  If the device is in the =
-low power
-> >> + *   state currently, then VFIO_PM_LOW_POWER_REENTERY_DISABLE will be=
- set
-> >> + *   according to the current transition. =20
-> >=20
-> > Very confusing semantics.
-> >=20
-> > What if the feature SET ioctl took an eventfd and that eventfd was one
-> > time use.  Calling the ioctl would setup the eventfd to notify the user
-> > on wakeup and call pm-put.  Any access to the device via host, ioctl,
-> > or region would be wrapped in pm-get/put and the pm-resume handler
-> > would perform the matching pm-get to balance the feature SET and signal
-> > the eventfd.  =20
->=20
->  This seems a better option. It will help in making the ioctl simpler
->  and we don=E2=80=99t have to add a separate index for PME which I added =
-in
->  patch 6.=20
->=20
-> > If the user opts-out by not providing a wakeup eventfd,
-> > then the pm-resume handler does not perform a pm-get. Possibly we
-> > could even allow mmap access if a wake-up eventfd is provided. =20
->=20
->  Sorry. I am not clear on this mmap part. We currently invalidates
->  mapping before going into runtime-suspend. Now, if use tries do
->  mmap then do we need some extra handling in the fault handler ?
->  Need your help in understanding this part.
-
-The option that I'm thinking about is if the mmap fault handler is
-wrapped in a pm-get/put then we could actually populate the mmap.  In
-the case where the pm-get triggers the wake-eventfd in pm-resume, the
-device doesn't return to low power when the mmap fault handler calls
-pm-put.  This possibly allows that we could actually invalidate mmaps on
-pm-suspend rather than in the pm feature enter ioctl, essentially the
-same as we're doing for intx.  I wonder though if this allows the
-possibility that we just bounce between mmap fault and pm-suspend.  So
-long as some work can be done, for instance the pm-suspend occurs
-asynchronously to the pm-put, this might be ok.
-
-> > The
-> > feature GET ioctl would be used to exit low power behavior and would be
-> > a no-op if the wakeup eventfd had already been signaled.  Thanks,
-> > =20
-> =20
->  I will use the GET ioctl for low power exit instead of returning the
->  current status.
-
-Note that Yishai is proposing a device DMA dirty logging feature where
-the stop and start are exposed via SET on separate features, rather
-than SET/GET.  We should probably maintain some consistency between
-these use cases.  Possibly we might even want two separate pm enter
-ioctls, one with the wake eventfd and one without.  I think this is the
-sort of thing Jason is describing for future expansion of the dirty
-tracking uAPI.  Thanks,
-
-Alex
-
+On Thu, 7 Jul 2022 at 21:41, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Jun 24, 2022 at 12:44:20PM +0200, Robert Marko wrote:
+> > IPQ8074 requires the PHY to be powered on before accessing DBI registers.
+> > It's not clear whether other variants have the same dependency, but there
+> > seems to be no reason for them to be different, so move all the DBI
+> > accesses from .init() to .post_init() so they are all after phy_power_on().
+> >
+> > Signed-off-by: Robert Marko <robimarko@gmail.com>
+>
+> Would any of the qcom driver folks care to review and ack this?
+> Stanimir, Andy, Bjorn A (from get_maintainer.pl)?
+>
+> > ---
+> > Changes in v4:
+> > * Move 2.7.0 accesses as well
+> > * Correct title and description (Bjorn)
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 215 ++++++++++++++-----------
+> >  1 file changed, 119 insertions(+), 96 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 24708d5d817d..f1a156052fe7 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -348,8 +348,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+> >       struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+> >       struct dw_pcie *pci = pcie->pci;
+> >       struct device *dev = pci->dev;
+> > -     struct device_node *node = dev->of_node;
+> > -     u32 val;
+> >       int ret;
+> >
+> >       /* reset the PCIe interface as uboot can leave it undefined state */
+> > @@ -360,8 +358,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+> >       reset_control_assert(res->ext_reset);
+> >       reset_control_assert(res->phy_reset);
+> >
+> > -     writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > -
+> >       ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+> >       if (ret < 0) {
+> >               dev_err(dev, "cannot enable regulators\n");
+> > @@ -408,6 +404,35 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+> >       if (ret)
+> >               goto err_clks;
+> >
+> > +     return 0;
+> > +
+> > +err_clks:
+> > +     reset_control_assert(res->axi_reset);
+> > +err_deassert_axi:
+> > +     reset_control_assert(res->por_reset);
+> > +err_deassert_por:
+> > +     reset_control_assert(res->pci_reset);
+> > +err_deassert_pci:
+> > +     reset_control_assert(res->phy_reset);
+> > +err_deassert_phy:
+> > +     reset_control_assert(res->ext_reset);
+> > +err_deassert_ext:
+> > +     reset_control_assert(res->ahb_reset);
+> > +err_deassert_ahb:
+> > +     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int qcom_pcie_post_init_2_1_0(struct qcom_pcie *pcie)
+> > +{
+> > +     struct dw_pcie *pci = pcie->pci;
+> > +     struct device *dev = pci->dev;
+> > +     struct device_node *node = dev->of_node;
+> > +     u32 val;
+> > +
+> > +     writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > +
+> >       /* enable PCIe clocks and resets */
+> >       val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> >       val &= ~BIT(0);
+> > @@ -451,23 +476,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+> >              pci->dbi_base + PCIE20_AXI_MSTR_RESP_COMP_CTRL1);
+> >
+> >       return 0;
+> > -
+> > -err_clks:
+> > -     reset_control_assert(res->axi_reset);
+> > -err_deassert_axi:
+> > -     reset_control_assert(res->por_reset);
+> > -err_deassert_por:
+> > -     reset_control_assert(res->pci_reset);
+> > -err_deassert_pci:
+> > -     reset_control_assert(res->phy_reset);
+> > -err_deassert_phy:
+> > -     reset_control_assert(res->ext_reset);
+> > -err_deassert_ext:
+> > -     reset_control_assert(res->ahb_reset);
+> > -err_deassert_ahb:
+> > -     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > -
+> > -     return ret;
+> >  }
+> >
+> >  static int qcom_pcie_get_resources_1_0_0(struct qcom_pcie *pcie)
+> > @@ -555,16 +563,6 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+> >               goto err_slave;
+> >       }
+> >
+> > -     /* change DBI base address */
+> > -     writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> > -
+> > -     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> > -             u32 val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > -
+> > -             val |= BIT(31);
+> > -             writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > -     }
+> > -
+> >       return 0;
+> >  err_slave:
+> >       clk_disable_unprepare(res->slave_bus);
+> > @@ -580,6 +578,22 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+> >       return ret;
+> >  }
+> >
+> > +static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+> > +{
+> > +
+> > +     /* change DBI base address */
+> > +     writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> > +
+> > +     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> > +             u32 val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > +
+> > +             val |= BIT(31);
+> > +             writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+> >  {
+> >       u32 val;
+> > @@ -648,7 +662,6 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+> >       struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+> >       struct dw_pcie *pci = pcie->pci;
+> >       struct device *dev = pci->dev;
+> > -     u32 val;
+> >       int ret;
+> >
+> >       ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+> > @@ -681,27 +694,6 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+> >               goto err_slave_clk;
+> >       }
+> >
+> > -     /* enable PCIe clocks and resets */
+> > -     val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > -     val &= ~BIT(0);
+> > -     writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > -
+> > -     /* change DBI base address */
+> > -     writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> > -
+> > -     /* MAC PHY_POWERDOWN MUX DISABLE  */
+> > -     val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
+> > -     val &= ~BIT(29);
+> > -     writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
+> > -
+> > -     val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> > -     val |= BIT(4);
+> > -     writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> > -
+> > -     val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > -     val |= BIT(31);
+> > -     writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > -
+> >       return 0;
+> >
+> >  err_slave_clk:
+> > @@ -722,8 +714,30 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+> >       struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+> >       struct dw_pcie *pci = pcie->pci;
+> >       struct device *dev = pci->dev;
+> > +     u32 val;
+> >       int ret;
+> >
+> > +     /* enable PCIe clocks and resets */
+> > +     val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > +     val &= ~BIT(0);
+> > +     writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > +
+> > +     /* change DBI base address */
+> > +     writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> > +
+> > +     /* MAC PHY_POWERDOWN MUX DISABLE  */
+> > +     val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
+> > +     val &= ~BIT(29);
+> > +     writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
+> > +
+> > +     val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> > +     val |= BIT(4);
+> > +     writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> > +
+> > +     val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > +     val |= BIT(31);
+> > +     writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > +
+> >       ret = clk_prepare_enable(res->pipe_clk);
+> >       if (ret) {
+> >               dev_err(dev, "cannot prepare/enable pipe clock\n");
+> > @@ -837,7 +851,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> >       struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+> >       struct dw_pcie *pci = pcie->pci;
+> >       struct device *dev = pci->dev;
+> > -     u32 val;
+> >       int ret;
+> >
+> >       ret = reset_control_assert(res->axi_m_reset);
+> > @@ -962,6 +975,33 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> >       if (ret)
+> >               goto err_clks;
+> >
+> > +     return 0;
+> > +
+> > +err_clks:
+> > +     reset_control_assert(res->ahb_reset);
+> > +err_rst_ahb:
+> > +     reset_control_assert(res->pwr_reset);
+> > +err_rst_pwr:
+> > +     reset_control_assert(res->axi_s_reset);
+> > +err_rst_axi_s:
+> > +     reset_control_assert(res->axi_m_sticky_reset);
+> > +err_rst_axi_m_sticky:
+> > +     reset_control_assert(res->axi_m_reset);
+> > +err_rst_axi_m:
+> > +     reset_control_assert(res->pipe_sticky_reset);
+> > +err_rst_pipe_sticky:
+> > +     reset_control_assert(res->pipe_reset);
+> > +err_rst_pipe:
+> > +     reset_control_assert(res->phy_reset);
+> > +err_rst_phy:
+> > +     reset_control_assert(res->phy_ahb_reset);
+> > +     return ret;
+> > +}
+> > +
+> > +static int qcom_pcie_post_init_2_4_0(struct qcom_pcie *pcie)
+> > +{
+> > +     u32 val;
+> > +
+> >       /* enable PCIe clocks and resets */
+> >       val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> >       val &= ~BIT(0);
+> > @@ -984,26 +1024,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> >       writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> >
+> >       return 0;
+> > -
+> > -err_clks:
+> > -     reset_control_assert(res->ahb_reset);
+> > -err_rst_ahb:
+> > -     reset_control_assert(res->pwr_reset);
+> > -err_rst_pwr:
+> > -     reset_control_assert(res->axi_s_reset);
+> > -err_rst_axi_s:
+> > -     reset_control_assert(res->axi_m_sticky_reset);
+> > -err_rst_axi_m_sticky:
+> > -     reset_control_assert(res->axi_m_reset);
+> > -err_rst_axi_m:
+> > -     reset_control_assert(res->pipe_sticky_reset);
+> > -err_rst_pipe_sticky:
+> > -     reset_control_assert(res->pipe_reset);
+> > -err_rst_pipe:
+> > -     reset_control_assert(res->phy_reset);
+> > -err_rst_phy:
+> > -     reset_control_assert(res->phy_ahb_reset);
+> > -     return ret;
+> >  }
+> >
+> >  static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
+> > @@ -1237,7 +1257,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> >       struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> >       struct dw_pcie *pci = pcie->pci;
+> >       struct device *dev = pci->dev;
+> > -     u32 val;
+> >       int ret;
+> >
+> >       ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+> > @@ -1271,6 +1290,28 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> >       /* Wait for reset to complete, required on SM8450 */
+> >       usleep_range(1000, 1500);
+> >
+> > +     return 0;
+> > +err_disable_clocks:
+> > +     clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> > +err_disable_regulators:
+> > +     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
+> > +{
+> > +     struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > +
+> > +     clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> > +     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > +}
+> > +
+> > +static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+> > +{
+> > +     struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > +     u32 val;
+> > +
+> >       /* configure PCIe to RC mode */
+> >       writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
+> >
+> > @@ -1297,27 +1338,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> >               writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> >       }
+> >
+> > -     return 0;
+> > -err_disable_clocks:
+> > -     clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> > -err_disable_regulators:
+> > -     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > -
+> > -     return ret;
+> > -}
+> > -
+> > -static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
+> > -{
+> > -     struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > -
+> > -     clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> > -     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > -}
+> > -
+> > -static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+> > -{
+> > -     struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > -
+> >       /* Set pipe clock as clock source for pcie_pipe_clk_src */
+> >       if (pcie->cfg->pipe_clk_need_muxing)
+> >               clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
+> > @@ -1569,6 +1589,7 @@ static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+> >  static const struct qcom_pcie_ops ops_2_1_0 = {
+> >       .get_resources = qcom_pcie_get_resources_2_1_0,
+> >       .init = qcom_pcie_init_2_1_0,
+> > +     .post_init = qcom_pcie_post_init_2_1_0,
+> >       .deinit = qcom_pcie_deinit_2_1_0,
+> >       .ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
+> >  };
+> > @@ -1577,6 +1598,7 @@ static const struct qcom_pcie_ops ops_2_1_0 = {
+> >  static const struct qcom_pcie_ops ops_1_0_0 = {
+> >       .get_resources = qcom_pcie_get_resources_1_0_0,
+> >       .init = qcom_pcie_init_1_0_0,
+> > +     .post_init = qcom_pcie_post_init_1_0_0,
+> >       .deinit = qcom_pcie_deinit_1_0_0,
+> >       .ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
+> >  };
+> > @@ -1595,6 +1617,7 @@ static const struct qcom_pcie_ops ops_2_3_2 = {
+> >  static const struct qcom_pcie_ops ops_2_4_0 = {
+> >       .get_resources = qcom_pcie_get_resources_2_4_0,
+> >       .init = qcom_pcie_init_2_4_0,
+> > +     .post_init = qcom_pcie_post_init_2_4_0,
+> >       .deinit = qcom_pcie_deinit_2_4_0,
+> >       .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> >  };
+> > --
+> > 2.36.1
+> >
