@@ -2,155 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 377E656B8DE
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 13:50:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E60256BA2A
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 14:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237559AbiGHLst (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jul 2022 07:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
+        id S238076AbiGHM51 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jul 2022 08:57:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237352AbiGHLst (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 07:48:49 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 405FF13DC7
-        for <linux-pci@vger.kernel.org>; Fri,  8 Jul 2022 04:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657280928; x=1688816928;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pK584iIsR8NIUd5zOmX8VE0Ihx9kbeOS16OO+DOlxSA=;
-  b=FpLqYLcy/mpbATZmhU3t8tjsS4gQITPLJfDzMYqsDjUzfYrcInqi4Icd
-   qovDuvHvi5nhaI1NdI2UyoykLGqdeTe3LSuB89AKazfjzB95KsJruVFQa
-   dEgVHYU6SzP05QtERc38TCcjYTojPXZM/4modG464bLOfK2UraOmwiSRg
-   dubNJKgx8xGJ9+z7AJl2vFegK6ZC33RJsrKIgU3fBf+vjMZT8q8vsokbt
-   crM0KsLK2FMzlZj0DFSwmIgcCbZ/C4yvnzGPoCr8Pmg173pqiD+r63Vdp
-   kT4c1Y1Ov8ju/bV/pnj/FhQM/pViS9/jB5X6843977s+nPK3V1PvqpncP
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10401"; a="264675969"
-X-IronPort-AV: E=Sophos;i="5.92,255,1650956400"; 
-   d="scan'208";a="264675969"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2022 04:48:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,255,1650956400"; 
-   d="scan'208";a="621188378"
-Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 08 Jul 2022 04:48:46 -0700
-Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1o9mTV-000NQI-Ls;
-        Fri, 08 Jul 2022 11:48:45 +0000
-Date:   Fri, 08 Jul 2022 19:48:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/ctrl/qcom-pending] BUILD SUCCESS
- 44d07e984b93f4fd139745d3d84e2ae04a53ed72
-Message-ID: <62c8198e.Rcp8McFl1LxXXS/M%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S232561AbiGHM5V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 08:57:21 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136952B1A1;
+        Fri,  8 Jul 2022 05:57:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=OrQOqSGinfnBh7tXyYimN2eCxNK2hBryYE62nGBz+Y4=; b=V8Jy94+yAKK5vE4VSykLYZyLoX
+        4fhHT4pLFLk2/ch1DjE+RCEaUXmZEuK3b1YcVrz7r1zy28rFiNzxLjPtn4i9uTl382ia84/3UmxU0
+        AiTD8fGu50rLwlVNc2ZkcVCV72TOQMhfLrlbc7gUsZkiQekefTAoBK/nEYFzjrpuy9CTTHMG3VOus
+        ifPoOO1X4Pce1G4TcB3CAxe7memDNSHn1GHMz4HeptY3gxQuX97hC/VL+b3VSSp8gQNzk07xHQkuc
+        KxO7+VzKAMx7mUXcTZSVcuUaO/PqCMY0blZtGmh2m7YiHpK4aI0TJFG8/qUTtHkdr8zn8tvRpW/iV
+        l099tMUA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o9nXT-003Vk2-0s; Fri, 08 Jul 2022 12:56:55 +0000
+Date:   Fri, 8 Jul 2022 13:56:54 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Nadav Amit <namit@vmware.com>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Anish Swaminathan <anishs@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
+Subject: Re: [PATCH] MMIO should have more priority then IO
+Message-ID: <YsgplrrJnk5Ly19z@casper.infradead.org>
+References: <1656433761-9163-1-git-send-email-akaher@vmware.com>
+ <20220628180919.GA1850423@bhelgaas>
+ <25F843ED-7EB4-4D00-96CB-7DE1AC886460@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <25F843ED-7EB4-4D00-96CB-7DE1AC886460@vmware.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/qcom-pending
-branch HEAD: 44d07e984b93f4fd139745d3d84e2ae04a53ed72  PCI: qcom: Add IPQ60xx support
+On Fri, Jul 08, 2022 at 05:56:07AM +0000, Ajay Kaher wrote:
+> 
+> ﻿On 28/06/22, 11:39 PM, "Bjorn Helgaas" <helgaas@kernel.org> wrote:
+> > [+cc Matthew]
+> >
+> > On Tue, Jun 28, 2022 at 09:59:21PM +0530, Ajay Kaher wrote:
+> >> Port IO instructions (PIO) are less efficient than MMIO (memory
+> >> mapped I/O). They require twice as many PCI accesses and PIO
+> >> instructions are serializing. As a result, MMIO should be preferred
+> >> when possible over PIO.
+> >>
+> >> Bare metal test result
+> >> 1 million reads using raw_pci_read() took:
+> >> PIO: 0.433153 Sec.
+> >> MMIO: 0.268792 Sec.
+> >>
+> >> Virtual Machine test result
+> >> 1 hundred thousand reads using raw_pci_read() took:
+> >> PIO: 12.809 Sec.
+> >> MMIO: took 8.517 Sec.
 
-elapsed time: 895m
+While this is true, we're talking about config space accesses.  These
+should be rare.  What workload does this make any measurable difference
+to?
 
-configs tested: 74
-configs skipped: 2
+And looking at the results above, it's not so much the PIO vs MMIO
+that makes a difference, it's the virtualisation.  A mmio access goes
+from 269ns to 85us.  Rather than messing around with preferring MMIO
+over PIO for config space, having an "enlightenment" to do config
+space accesses would be a more profitable path.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> >> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> >> ---
+> >>  arch/x86/pci/common.c          |  8 ++++----
+> >>  1 files changed, 4 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+> >> index 3507f456f..0b3383d9c 100644
+> >> --- a/arch/x86/pci/common.c
+> >> +++ b/arch/x86/pci/common.c
+> >> @@ -40,20 +40,20 @@ const struct pci_raw_ops *__read_mostly raw_pci_ext_ops;
+> >>  int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
+> >>                                               int reg, int len, u32 *val)
+> >>  {
+> >> +     if (raw_pci_ext_ops)
+> >> +             return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, val);
+> >>       if (domain == 0 && reg < 256 && raw_pci_ops)
+> >>               return raw_pci_ops->read(domain, bus, devfn, reg, len, val);
+> >> -     if (raw_pci_ext_ops)
+> >> -             return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, val);
+> >>       return -EINVAL;
+> >
+> > This organization of raw_pci_read() dates to b6ce068a1285 ("Change
+> > pci_raw_ops to pci_raw_read/write"), by Matthew.  Cc'd him for
+> > comment, since I think he considered the ordering at the time.
+> 
+> Thanks Bjorn for quick response.
+> 
+> Matthew, b6ce068a1285 is old commit. It will be very helpful if you could
+> provide some detail on ordering as Bjorn mentioned above.
 
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-powerpc                      mgcoge_defconfig
-sh                             shx3_defconfig
-mips                           xway_defconfig
-arm                           stm32_defconfig
-sh                   sh7770_generic_defconfig
-mips                         tb0226_defconfig
-arm                        mvebu_v7_defconfig
-sh                         ap325rxa_defconfig
-powerpc                 mpc8540_ads_defconfig
-arm                        spear6xx_defconfig
-sh                      rts7751r2d1_defconfig
-sh                     magicpanelr2_defconfig
-arc                            hsdk_defconfig
-xtensa                    xip_kc705_defconfig
-arm                            qcom_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-arc                              allyesconfig
-alpha                            allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220707
-s390                 randconfig-r044-20220707
-riscv                randconfig-r042-20220707
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                              defconfig
-x86_64                               rhel-8.3
+Sorry for the delay; this came in while I was on holiday.
 
-clang tested configs:
-x86_64                        randconfig-k001
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-hexagon              randconfig-r045-20220707
-hexagon              randconfig-r041-20220707
+I'll note that b6ce068a1285 does _not_ cause any changes in whether
+MMIO or PIO is used for accesses below 256 bytes.  Yes, it introduces
+this code, but it also removes lines like this:
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+-       if (reg < 256)
+-               return pci_conf1_read(seg,bus,devfn,reg,len,value);
+
+from the MMCONFIG accessors.
+
+Those were introduced in a0ca99096094 by Ivan Kokshaysky.  But if you
+look further back in the file history, you can find all kinds of nasty
+bugs; broken BIOSes, resource conflicts, bleh.  You'd hope they've all
+been fixed by now, but do you want to bet?
+
+I still have a working machine here which hung when using MMCONFIG for all
+accesses.  The problem lay in, IIRC, the graphics BAR.  When attempting
+to size it (by writing all-ones to it and seeing what bits remained as
+zero), it happens to overlay the MMCONFIG area.  That meant that the
+subsequent attempt to write to the BAR actually ended up being a write
+to graphics memory ... and so did all subsequent MMCONFIG accesses.
+
+In short, here be dragons, and you need to move very VERY carefully to
+avoid breaking peoples machines.
+
+We do have the possibility of a white-list approach.  We can set
+'raw_pci_ops' to NULL on machines which we're certain mmconfig works.
+I still think you're better off having a special raw_pci_ops for vmware
+than you are dinking about trying to save 50% of the time.  If any of
+this is really worth it at all, which I doubt.
