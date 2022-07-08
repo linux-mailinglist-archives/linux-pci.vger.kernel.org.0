@@ -2,374 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ABFE56C392
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 01:14:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7BE456C447
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 01:15:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238589AbiGHTk6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jul 2022 15:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49150 "EHLO
+        id S239993AbiGHTt3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jul 2022 15:49:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238366AbiGHTk5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 15:40:57 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B9B167D2
-        for <linux-pci@vger.kernel.org>; Fri,  8 Jul 2022 12:40:56 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id os14so9074279ejb.4
-        for <linux-pci@vger.kernel.org>; Fri, 08 Jul 2022 12:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D45ApEmCt3WhWtvthKpMsI3UhJugpdMdUMehywVPzCs=;
-        b=OzxtyJQhLHmB7yf8BdJU5GmRULY5Qo8mDGgw1VCYZUUtOMjx2+0JZ4UqoSNUfM5ONf
-         GyafuzPVrbO/yg36bDA1QiQEN9YPHW+YwgP2kZl72nGgZ5YadezhuoGVQGb3DCfNQljc
-         qz2yolMu+Bg2ZhvLBvnAKGDnghbeZgOs/7GFY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D45ApEmCt3WhWtvthKpMsI3UhJugpdMdUMehywVPzCs=;
-        b=DCuDD6VmOTTjILuLqmRTHXFXJ1pyWJyWMSsYTVtzCpkh7dcH+Nyt/BufP5APKG9jsZ
-         5cgbHK6KCAaK/uXU1Q4u4bqLi5vxSBMvrjNUKCKeadhx70WoFZBr1ERUbfkvI9moGetb
-         VaFg669BEcJfu3SyzeCLURAl7MbTaZaTf1yAGIllfwSEMDh45pNUvsNvHUajlsJ7L1FE
-         UuIS0uQ3AkRnRhpKNHFJfvDVgrMnQbQYe999zeCm/5brIaO9tFIZwBQ+ldiCU0tI7aUx
-         wFZIJTeXJnydLJuNruj+ENMJ5mTY7uMA9+OAmvMoTFJaZD05wvZZkCC7l1V9a/bQ6rKQ
-         cGqw==
-X-Gm-Message-State: AJIora89sahXs1x09u2GvUYIz9c38q/mcx/YpGIGy8OqkoqyGUnynl3+
-        zLVI+bsBNzrobcNfSFrS7KMqGDWsCw7Wt+we4dFfHQ==
-X-Google-Smtp-Source: AGRyM1s1Wfj8J2PKtn3JRdOuteq8BRHpTPNp8Noq5oxlW05Ak+o/LAlMTR/rV8iioHfSnB/7dOUmbkVAOhkefGmHNs4=
-X-Received: by 2002:a17:907:9693:b0:726:372c:2c02 with SMTP id
- hd19-20020a170907969300b00726372c2c02mr5173693ejc.483.1657309255155; Fri, 08
- Jul 2022 12:40:55 -0700 (PDT)
+        with ESMTP id S238813AbiGHTt2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 15:49:28 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2078.outbound.protection.outlook.com [40.107.93.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB428734F;
+        Fri,  8 Jul 2022 12:49:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZL7eC7qG3BH7kJSlRA1pn3xFgZrfdIcDlmWhoyeDrRkslfkZ0AtCJerIntXOK+U2WwzA8mSueIOTpTP06DOCgCSEwwqoZr2cu9kQYyrx7uaiqTupZ5Z6cqBT0gW9eRPxHoYren8TlWULV7Gzbx1P5ZcpEYILWUrIc1jexC7c+0kwS2+RQjXXiYmcs15X9ZepnOcUcThc0bGNZaW502atstcT0LKb1Oaa796DNmqa84iIYTYCXRr14fpNfCJe4RK+MnB8h7+hnDIZ4Ftt9rNNqMRluoDP/EkaLOqvrp1LHIIxreMYchxIsoN98XNAEpXGralFlBiBouHuFeN+3rhRLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XEE9aUzFze7uv1ehjp1VnMiNmgbP2YgmfSYVP/oAUAY=;
+ b=O3KtbMo8wtCd2CKX3mhvJYxG/KnV0A2c+pXbIi8CqJNMssBWe26VBV3RZ3VpMAK0RqwzkexM0EpeNbow872gvF4hHMm7yEBMKvI3j7D+Miwt6B8J80BI+zg1Kzw5WAOJUj0AV3lS6IiwGeukZlosL3wMdbYNp9IZ1SI0qqkhdvlnNUaAqy4EwrBPghv5Usy6CZ6qrMIUvKAFnjIDeebyh4Jg3UlcZ8JGDUBb8xcOLeNgddEAFLQ2cdhF6MFhEWfOkZhK7pUBC+1ObxIbGuHLlRGy0FmS057SFvlonWtGE0EnaL3wq6mkaEAP+YyxRLni7qXj/BFf629r7ymwZgSKZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XEE9aUzFze7uv1ehjp1VnMiNmgbP2YgmfSYVP/oAUAY=;
+ b=gq6uywkGZWzToSRsAghxdRoZ8qNr/A9bPReV2ExData95yWzjzZwc/rrh77RNmoJkjcXbpdxoaEg1j0kN/JSIsd0m6owRh/4naTzBHNxE2P0ZZNrl4HKKShSaqn/gpspWJUombDKv0ix/SvpRD/KNnQtnWypieulUuPvaZfeLFY=
+Received: from BY3PR05MB8531.namprd05.prod.outlook.com (2603:10b6:a03:3ce::6)
+ by BN7PR05MB5731.namprd05.prod.outlook.com (2603:10b6:408:e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.15; Fri, 8 Jul
+ 2022 19:49:22 +0000
+Received: from BY3PR05MB8531.namprd05.prod.outlook.com
+ ([fe80::a4f8:718a:b2a0:977f]) by BY3PR05MB8531.namprd05.prod.outlook.com
+ ([fe80::a4f8:718a:b2a0:977f%6]) with mapi id 15.20.5417.021; Fri, 8 Jul 2022
+ 19:49:21 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Ajay Kaher <akaher@vmware.com>, Bjorn Helgaas <helgaas@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Anish Swaminathan <anishs@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
+Subject: Re: [PATCH] MMIO should have more priority then IO
+Thread-Topic: [PATCH] MMIO should have more priority then IO
+Thread-Index: AQHYiw9NzqWSNRsR1kyxPrXhcjObWa1lHkCAgA7qdoCAAHWQAIAAP7qAgAATwgCAAAszgIAAAjYAgAASVwA=
+Date:   Fri, 8 Jul 2022 19:49:21 +0000
+Message-ID: <85071FE5-E37A-44CF-9EF7-CB80C116A876@vmware.com>
+References: <1656433761-9163-1-git-send-email-akaher@vmware.com>
+ <20220628180919.GA1850423@bhelgaas>
+ <25F843ED-7EB4-4D00-96CB-7DE1AC886460@vmware.com>
+ <YsgplrrJnk5Ly19z@casper.infradead.org>
+ <96D533E5-F3AF-4062-B095-8C143C307E37@vmware.com>
+ <YshvnodeqmJV6uIJ@casper.infradead.org>
+ <1A0FA5B7-39E8-4CAE-90DD-E260937F14E1@vmware.com>
+ <Ysh63kRVGMFJMNfG@casper.infradead.org>
+In-Reply-To: <Ysh63kRVGMFJMNfG@casper.infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.100.31)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 17e5a1b8-f748-48d5-b541-08da611af41d
+x-ms-traffictypediagnostic: BN7PR05MB5731:EE_
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: =?utf-8?B?TUczRENWWTZRT2Uwd2Zlb0tOOE1iY2JmMXYydWNJbk9OVVlUYTJhd0dhempG?=
+ =?utf-8?B?cHJFemVkNkhNOGtUbDIxY2JZYlRJWW5JRk04bCtlbHlORHVoTFF4dHpvUzBm?=
+ =?utf-8?B?bVZsMXJDdGRxbXdJYlpCa3VQMGIxUWxldE12UXRLdUsxZ0szbFV2RGFWdTBN?=
+ =?utf-8?B?b1BZQ0pLZ3F5OVE3T2x2UXNJWDJMNFJFMzBmc0RUZVBweSswUUdZNW5jZ1lK?=
+ =?utf-8?B?dG9vUCtQa3RyeG5sbEtTTFJhVUhzSWEvdGtXRzV1WS80N1h6dDZnNTJibXBK?=
+ =?utf-8?B?ZjZnaUNqVWZMQzc5aVVVUEorWldOOGdJREZNT2srb0h5RWkwYUtBVGN0K1Bv?=
+ =?utf-8?B?eXJiVjBkR25jY3Q0bmtDWmN2Q3o1dTB3Y0h1ZHIrTytDM3FWVzVJRWdGbWNB?=
+ =?utf-8?B?d0krKytkWGovL1FZdjBHRjRISXZ5YnNQeS9pcThXU0d4VlNCNEs4LzF5NW4y?=
+ =?utf-8?B?NTJjNE9hRDB2R1VDcHlLSFdJNENETFo5M2M1QW9HODl5OGhRTnNuZlJydkFB?=
+ =?utf-8?B?MHlQRXhTN3dkREt2UG9MdDhuWU5yRXo2SjJRS3RRTjJQbW8wMDNialpibm02?=
+ =?utf-8?B?WDZRdXovbE0yT21TbEtxVEdqUEd3ZGZXdU1Xa2hQcmVlNVBWZ2ZjcTdnT0hx?=
+ =?utf-8?B?WGdxWk5TS1FpbUIwelRhcnBmanZqbHBJTUZFdkhQOHFWa0xJQWV2MkpCbXRm?=
+ =?utf-8?B?UFlQVzZPNUNlamwwNDRSWFQrTVpBS1RBS1NFMDNZRWpnd1k1SWhVaE0rRlpW?=
+ =?utf-8?B?RFRaa3hqa08reGV4NEpOdVpQM21YOFZpVXU3VEtiYlFjbTFML3ZUeCt4ekZI?=
+ =?utf-8?B?N25INmVJalBsWno2VER1WUZHWURsNEhNclV6T1lsSHVmbnAvcmlydkVhcWt3?=
+ =?utf-8?B?b29adGY5Zi8zenFMZUtTcHZ5SjNzQU9pVlB0K0lsb3BzT0I5NHNzc1hUTFhz?=
+ =?utf-8?B?dkxWSUtnbnZhUW1jelBxTUZ3UXJwWTNvSkhocitWcURCVGNnQS9acUFSWnpU?=
+ =?utf-8?B?alpaUE1ucGdMQjJNZnExWXVmY0FLMEF0ZEVEbWJ4VlMwaHhJcVJUL1lUTHZQ?=
+ =?utf-8?B?SlM1WXlQMFFrcnluRnZIOTVoUzR1eklQSjlWUGh6QjBpb3JwMWlnbjMyNElN?=
+ =?utf-8?B?RWVpSjAzSklFSWp0clYwOFA5ZGtHK1pvaGo2NnpHdWFyOU9ZK29xLzZRWWh5?=
+ =?utf-8?B?eDdnb2tuN0t3djdnc2Z5dXdNRWhrNFZDeGpXL1MzWkRUVGRuVVJEQkNXc1BU?=
+ =?utf-8?B?RFh1U1pRRzR4N0RTSmF3RzJTcVNWVmx0VFNrZXBoRDlIZGFJUT09?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR05MB8531.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(366004)(346002)(136003)(39860400002)(396003)(38100700002)(8676002)(5660300002)(66946007)(7416002)(66446008)(83380400001)(66476007)(64756008)(4326008)(66556008)(76116006)(122000001)(186003)(53546011)(38070700005)(6506007)(6916009)(54906003)(316002)(2616005)(478600001)(2906002)(33656002)(71200400001)(41300700001)(86362001)(6512007)(26005)(36756003)(8936002)(6486002)(45080400002)(556444004)(31884004)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?enU1K25KSGcwRWVQZmk1Wlk1UXdXQXJWejlBNFVzRXZ3aWJCZ2lFZUxJYm5p?=
+ =?utf-8?B?WUEvc25mUmNjNGhvWVVvd3l6bW9EUlhBelhsTXRmUEVMTys4emtIZUVNdWl2?=
+ =?utf-8?B?U211Y3VDRHdQVXBTUDQzNU1aQXlDUjFrMlhJQXV1YVRvVDFZcklqMXVTVUdT?=
+ =?utf-8?B?cHZWbDV3czZiSzZZemsrWlRtM2N3MTd3VkNkZDhMdzBnaTVmaDJrTWIyamhy?=
+ =?utf-8?B?b0VhZk0vZ3dvUGJBdTRwVzhVMTc5NDBaNjg2TkNvRXhNeDBzamQ5SnlFaUZi?=
+ =?utf-8?B?S0wxNStDU0ZMRTlqU3RMM0xidDlxUU9CaGNibzQwNENsNURORjlEdFVaWEEx?=
+ =?utf-8?B?UEQxVVIzT0RNWEh0RGpoM2Y5WUJHQ3AxZnJQZG5tbUN5cFltVmdPNVI0WVIv?=
+ =?utf-8?B?RkdYMjdLSzV3QW9LbkZkZm90K0pBVTNncnIwbVltcFBFZWtaeWNNaDZyR0xJ?=
+ =?utf-8?B?Z2Jyc2R4YkJ3L0tGSXdYVlNNUzFpMERuWlVrd0tlczNrMVdtOFFkV1Jja3Fr?=
+ =?utf-8?B?Ly83TzA3TEUxcVRwdGRjSFFnSlRtSzl0eklhYTc4a0JjdnlwU05WWHdxL21H?=
+ =?utf-8?B?VTJQeVF4M0Zob2Fxb3ZIY0grd2YyQW0wdkNrcEpZbVFZc1ZkWXBqQjZCQUc1?=
+ =?utf-8?B?K0RTUk9vSTF3L2hWU3haODNHa1orSnluUGJjckF6MlF0a2VxUzYvamlIWExZ?=
+ =?utf-8?B?WkRLY0tKSkUrNDNHSzdxdjZlNXVhTGhzZURzRmtyTitEVllRQjJkYjRQL1Rx?=
+ =?utf-8?B?V1RET2plTUc3d3NkYXNDL3pCbEZlejdUak90bVlOUkNlRCtzTk85YUl4N1RJ?=
+ =?utf-8?B?M0E0eEIwMmxMNktsWVVFTUZKNWFQQ3RId2h0UDZLdEhlcTJCRExvZVRvOVFW?=
+ =?utf-8?B?WlJxVGsxeW5LemNHZkhxajM2N05WaGoyclBCQWRicGxxaHc2cmRqRy9qUjY0?=
+ =?utf-8?B?UXdkZWVrT0ExL2x1WnNJVy8ybk0rdHEyQ0xLRk5UZ2RNVTFaaGtzb0YzSFQv?=
+ =?utf-8?B?RXVDSlpjc3QvVHVtdTNXQmR6eUE5dnFmT09ROU5EVVptREs0T1hvSWNsUFlU?=
+ =?utf-8?B?dVFtOERaSmxHV0YvWnhlREVjR0x5cHZwdmhVQmJhRVYyL1hPQ2VVWllsTm52?=
+ =?utf-8?B?a0x6b3lWdDFxNmhGUG5MQkg4QnJWTlFCVWhZeS82bldtK0tNbDVOWU9sZTZV?=
+ =?utf-8?B?dFdOell4RTNaN0dnVlZCbysxMHdtb3JiSEE0ZlRTajlLVW1zNUtVaGt6VjFG?=
+ =?utf-8?B?Q01uOE8zYmNaQ0Y2MXhWRXBwWERGSzREcitYWmc5MEUrQzAwdW9ZUGdaUERN?=
+ =?utf-8?B?dWxFdEV2MTJKM1U1clVLdzJQOXVjN1g3YkVPSVkzRHFJMVN6MUlISVJkbHFF?=
+ =?utf-8?B?QWJiT3dpWTh2VTRuUG1JQzNFRXRMcmRPcDZqcUM3Q1lYZ1NybTdqVFdrK010?=
+ =?utf-8?B?WjlucGlwV3BmOHdKNlNQQUE5TjJpc1BENncvMDdIa0F4UW5HVnI2MlgyUUdI?=
+ =?utf-8?B?VXkrMVBUVHdlNGRBNk9FRXdXczU0VFJPTVhtL2NOcWZPOHlqejFZeXJoMHRZ?=
+ =?utf-8?B?RjVVYUhSSmpZZ2hSWUpsL0NoOTNBUDNwTVNzOWhwOFpTTlNhUFlndWNwaFZr?=
+ =?utf-8?B?U0JQZjcyZDVabFI3LzFiTkg1VnZjSENhQkZvSkcrRUdJTnRUcTMreDdyaW1n?=
+ =?utf-8?B?d0ZGQlVFVVdRNlB1Q0cwSWl3a3REbjFQNjNwZVZiQzhLSldZUFh6ckpFc3hQ?=
+ =?utf-8?B?bUVEclhsd1dCRVBmRjhkWENGbWxPRGV5NGFtWFZKVjRwWVdZUStkZjQzMHFP?=
+ =?utf-8?B?ZVh6cWZNd1VaQWd1d1RDc2o0WnliS3JlZVIwbExNc1VhOExvU2paL29VNnND?=
+ =?utf-8?B?aDFKOTAwZ2MzUEdqT1RFdnVXK3RLUXJqWE8xQWhyM0tPalZ4SEJ4RVNVSVN3?=
+ =?utf-8?B?SEh4aUx5SEEzbzY2aVJBa1c3Ylhpdmc0Zko2VnRYcXB5SS8wZFR1cGtwUHRw?=
+ =?utf-8?B?dE9xaEV5akwzUkN3bzUwZ05qTzB5YXV5djlKMkh1Z2FsZ0YwekRLczZvNXM5?=
+ =?utf-8?B?WVJoTnRZZ2cxV09vZDlxWXpiZ0dvQXRtVHlDTHE5Z3ZaNjlZSFV0YnZaTHAv?=
+ =?utf-8?Q?AstVfLRxmrtyuo9AibfoKAvMp?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE1BC45A5A10054C81182E010B71FED1@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CA+-6iNzQZVi8MbyeZNcBzE0hGjGiYSUk3riSXxTALtFyC00aPQ@mail.gmail.com>
- <20220708190420.GA364925@bhelgaas>
-In-Reply-To: <20220708190420.GA364925@bhelgaas>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Fri, 8 Jul 2022 15:40:43 -0400
-Message-ID: <CA+-6iNxTYz_yDSbaXc_UKRGr=BxPCa1Lk001uCSmRbVY-WVxvw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] PCI: brcmstb: Split brcm_pcie_setup() into two funcs
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="00000000000073b3b405e3506133"
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY3PR05MB8531.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17e5a1b8-f748-48d5-b541-08da611af41d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2022 19:49:21.8665
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qdEzFx2jkpv93JH5J6zoLDHKM1S3AuP2txAsnuSyF8X9KNjqJ8EN7PrKiG7/9YeKLnJKp/qkaiP6MIU9HR3jQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR05MB5731
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---00000000000073b3b405e3506133
-Content-Type: text/plain; charset="UTF-8"
-
-On Fri, Jul 8, 2022 at 3:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Jul 08, 2022 at 09:29:27AM -0400, Jim Quinlan wrote:
-> > On Wed, Jul 6, 2022 at 5:56 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Jul 01, 2022 at 12:27:22PM -0400, Jim Quinlan wrote:
-> > > > We need to take some code in brcm_pcie_setup() and put it in a new function
-> > > > brcm_pcie_linkup().  In future commits the brcm_pcie_linkup() function will
-> > > > be called indirectly by pci_host_probe() as opposed to the host driver
-> > > > invoking it directly.
-> > > >
-> > > > Some code that was executed after the PCIe linkup is now placed so that it
-> > > > executes prior to linkup, since this code has to run prior to the
-> > > > invocation of pci_host_probe().
-> > >
-> > > This says we need to move some code from brcm_pcie_setup() to
-> > > brcm_pcie_linkup(), but not *why* we need to do that.
-> > I will elaborate in the commit message.
-> > >
-> > > In brcm_pcie_resume(), they're called together:
-> > >
-> > >   brcm_pcie_resume
-> > >     brcm_pcie_setup
-> > >     brcm_pcie_linkup
-> > >
-> > > In the probe path, they're not called together, but they're in the
-> > > same order:
-> > >
-> > >   brcm_pcie_probe
-> > >     brcm_pcie_setup
-> > >     pci_host_probe
-> > >       ...
-> > >         brcm_pcie_add_bus               # bus->ops->add_bus
-> > >           brcm_pcie_linkup
-> > >
-> > > Is there something that must happen *between* them in the probe path?
-> >
-> > Yes.  In the probe() case, we must do things in this order:
-> >
-> > 1. brcm_pcie_setup()
-> > 2. Turn on regulators
-> > 3. brcm_pcie_linkup()
->
-> Ah, I see, both 2) and 3) happen in brcm_pcie_add_bus:
->
->   brcm_pcie_add_bus                    # bus->ops->add_bus
->     pci_subdev_regulators_add_bus
->       regulator_bulk_enable            # turn on regulators
->     brcm_pcie_linkup
->
-> > Since the voltage regulators are turned on during enumeration,
-> > pci_host_probe() must be invoked prior to 3.  Before regulators, we
-> > did not care.
->
-> I guess in the pre-regulator case, i.e., pcie->sr not set, the power
-> for downstream devices must always be on.
->
-> > In the resume case, there is no enumeration of course but our driver
-> > has a handle to the regulators and can turn them on/off w/o help.
->
-> And I guess we don't need brcm_pcie_setup() in the resume path because
-> suspend turns off power only for downstream devices, not for the root
-> port itself, so the programming done by brcm_pcie_setup() doesn't need
-> to be done again.
-
-I'm not sure I understand what you are saying -- brcm_pcie_setup()  is
-called by brcm_pcie_resume()
-because it is needed.  brcm_pcie_setup() isn't concerned with power it
- just does the preparation
-required before attempting link-up.
-
-Regards,
-Jim Quinlan
-Broadcom STB
-
-
->
-> > > > Link: https://lore.kernel.org/r/20220106160332.2143-5-jim2101024@gmail.com
-> > > > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> > > > ---
-> > > >  drivers/pci/controller/pcie-brcmstb.c | 69 +++++++++++++++++----------
-> > > >  1 file changed, 43 insertions(+), 26 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > > > index e61058e13818..2bf5cc399fd0 100644
-> > > > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > > > @@ -926,16 +926,9 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
-> > > >
-> > > >  static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> > > >  {
-> > > > -     struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > > >       u64 rc_bar2_offset, rc_bar2_size;
-> > > >       void __iomem *base = pcie->base;
-> > > > -     struct device *dev = pcie->dev;
-> > > > -     struct resource_entry *entry;
-> > > > -     bool ssc_good = false;
-> > > > -     struct resource *res;
-> > > > -     int num_out_wins = 0;
-> > > > -     u16 nlw, cls, lnksta;
-> > > > -     int i, ret, memc;
-> > > > +     int ret, memc;
-> > > >       u32 tmp, burst, aspm_support;
-> > > >
-> > > >       /* Reset the bridge */
-> > > > @@ -1025,6 +1018,40 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> > > >       if (pcie->gen)
-> > > >               brcm_pcie_set_gen(pcie, pcie->gen);
-> > > >
-> > > > +     /* Don't advertise L0s capability if 'aspm-no-l0s' */
-> > > > +     aspm_support = PCIE_LINK_STATE_L1;
-> > > > +     if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-> > > > +             aspm_support |= PCIE_LINK_STATE_L0S;
-> > > > +     tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> > > > +     u32p_replace_bits(&tmp, aspm_support,
-> > > > +             PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> > > > +     writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> > > > +
-> > > > +     /*
-> > > > +      * For config space accesses on the RC, show the right class for
-> > > > +      * a PCIe-PCIe bridge (the default setting is to be EP mode).
-> > > > +      */
-> > > > +     tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-> > > > +     u32p_replace_bits(&tmp, 0x060400,
-> > > > +                       PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
-> > > > +     writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static int brcm_pcie_linkup(struct brcm_pcie *pcie)
-> > > > +{
-> > > > +     struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > > > +     struct device *dev = pcie->dev;
-> > > > +     void __iomem *base = pcie->base;
-> > > > +     struct resource_entry *entry;
-> > > > +     struct resource *res;
-> > > > +     int num_out_wins = 0;
-> > > > +     u16 nlw, cls, lnksta;
-> > > > +     bool ssc_good = false;
-> > > > +     u32 tmp;
-> > > > +     int ret, i;
-> > > > +
-> > > >       /* Unassert the fundamental reset */
-> > > >       pcie->perst_set(pcie, 0);
-> > > >
-> > > > @@ -1075,24 +1102,6 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> > > >               num_out_wins++;
-> > > >       }
-> > > >
-> > > > -     /* Don't advertise L0s capability if 'aspm-no-l0s' */
-> > > > -     aspm_support = PCIE_LINK_STATE_L1;
-> > > > -     if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-> > > > -             aspm_support |= PCIE_LINK_STATE_L0S;
-> > > > -     tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> > > > -     u32p_replace_bits(&tmp, aspm_support,
-> > > > -             PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> > > > -     writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> > > > -
-> > > > -     /*
-> > > > -      * For config space accesses on the RC, show the right class for
-> > > > -      * a PCIe-PCIe bridge (the default setting is to be EP mode).
-> > > > -      */
-> > > > -     tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-> > > > -     u32p_replace_bits(&tmp, 0x060400,
-> > > > -                       PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
-> > > > -     writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-> > > > -
-> > > >       if (pcie->ssc) {
-> > > >               ret = brcm_pcie_set_ssc(pcie);
-> > > >               if (ret == 0)
-> > > > @@ -1281,6 +1290,10 @@ static int brcm_pcie_resume(struct device *dev)
-> > > >       if (ret)
-> > > >               goto err_reset;
-> > > >
-> > > > +     ret = brcm_pcie_linkup(pcie);
-> > > > +     if (ret)
-> > > > +             goto err_reset;
-> > > > +
-> > > >       if (pcie->msi)
-> > > >               brcm_msi_set_regs(pcie->msi);
-> > > >
-> > > > @@ -1398,6 +1411,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
-> > > >       if (ret)
-> > > >               goto fail;
-> > > >
-> > > > +     ret = brcm_pcie_linkup(pcie);
-> > > > +     if (ret)
-> > > > +             goto fail;
-> > > > +
-> > > >       pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
-> > > >       if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
-> > > >               dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
-> > > > --
-> > > > 2.17.1
-> > > >
-> > > >
-> > > > _______________________________________________
-> > > > linux-arm-kernel mailing list
-> > > > linux-arm-kernel@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
->
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-
---00000000000073b3b405e3506133
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIQbgYJKoZIhvcNAQcCoIIQXzCCEFsCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg3FMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
-MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
-rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
-aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
-e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
-cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
-MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
-KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
-/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
-TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
-YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
-b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
-CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
-BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
-jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
-9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
-/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
-jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
-AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
-dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
-MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
-IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
-SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
-XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
-J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
-nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBU0wggQ1oAMCAQICDCPgI/V0ZP8BXsW/fzANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMTAyMjIwNjU4MTRaFw0yMjA5MDUwNzA4NDRaMIGO
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xFDASBgNVBAMTC0ppbSBRdWlubGFuMSkwJwYJKoZIhvcNAQkB
-FhpqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-ggEBANFi+GVatHc2ko+fxmheE2Z9v2FqyTUbRaMZ7ACvPf85cdFDEii6Q3zRndOqzyDc5ExtFkMY
-edssm6LsVIvAoMA3HtdjnW4UK6h4nQwerDCJu1VTTesrnJHGwGvIvrHbnc9esAE7/j2bRYIhfmSu
-6zDhwIb5POOvLpF7xcu/EEH8Yzvyi7qNfMY+j93e5PiRfC602f/XYK8LrF3a91GiGXSEBoTLeMge
-LeylbuEJGL9I80yqq8e6Z+Q6ulLxa6SopzpoysJe/vEVHgp9jPNppZzwKngVd2iDBRqpKlCngIAM
-DXgVGyEojXnuEbRs3NlB7wq1kJGlYysrnDug55ncJM8CAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFCeTeUYv84Mo3T1V+OyDdxib
-DDLvMA0GCSqGSIb3DQEBCwUAA4IBAQCCqR1PBVtHPvQHuG8bjMFQ94ZB7jmFEGhgfAsFJMaSMLov
-qyt8DKr8suCYF4dKGzqalbxo5QU9mmZXdLifqceHdt/Satxb+iGJjBhZg4E0cDds24ofYq+Lbww2
-YlIKC2HHxIN+JX2mFpavSXkshR5GT29B9EIJ8hgSjbs61XXeAcrmVIDfYbXQEmGbsnwqxdq+DJpQ
-S2kM2wvSlgSWDb6pL7myuKR5lCkQhj7piGSgrVLJRDRrMPw1L4MvnV9DjUFMlGCB40Hm6xqn/jm0
-8FCLlWhxve5mj+hgUOPETiKbjhCxJhhAPDdCvDRkZtJlQ8oxUVvXHugG8jm1YqB5AWx7MYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMI+Aj9XRk/wFexb9/
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAJPtW7tIdO0V/n7wbTLZbt27Ke0DCC
-erPkNPbaQHp5RzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA3
-MDgxOTQwNTVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAHtNkybQlMjMut1vsnLeVLjtqR3Ziw5+aN32iBro4A8lOvbVD
-EKK5xj59qkG0uQGcCpNVno2LOYnbc16t7Z+4cNeXEGiKYpj3Mvf3DSH4T0Z1kWAGyAybiIEniuZi
-hf2o6Z6HP2goTEVC5/thpcJVPZsJ1SpMzOH1FTCCdapGdkD6JCgT96NX4Iddiwj1tNXARYQ2WWWH
-yYJF5c/qN47fR8+7dQipZNi6e7M5yaHMpR204GLnp+49OoNFq9cG9AAuFIYgWYmHmBGZdcm3jBGk
-TSLuTMlcGSjyZSjF2WCAIfICEr3rNe83Ix2tJ0ZKvWtWMI5brekS+x5HKrep5G+2HA==
---00000000000073b3b405e3506133--
+T24gSnVsIDgsIDIwMjIsIGF0IDExOjQzIEFNLCBNYXR0aGV3IFdpbGNveCA8d2lsbHlAaW5mcmFk
+ZWFkLm9yZz4gd3JvdGU6DQoNCj4g4pqgIEV4dGVybmFsIEVtYWlsDQo+IA0KPiBPbiBGcmksIEp1
+bCAwOCwgMjAyMiBhdCAwNjozNTo0OFBNICswMDAwLCBOYWRhdiBBbWl0IHdyb3RlOg0KPj4gT24g
+SnVsIDgsIDIwMjIsIGF0IDEwOjU1IEFNLCBNYXR0aGV3IFdpbGNveCA8d2lsbHlAaW5mcmFkZWFk
+Lm9yZz4gd3JvdGU6DQo+PiANCj4+PiDimqAgRXh0ZXJuYWwgRW1haWwNCj4+PiANCj4+PiBPbiBG
+cmksIEp1bCAwOCwgMjAyMiBhdCAwNDo0NTowMFBNICswMDAwLCBOYWRhdiBBbWl0IHdyb3RlOg0K
+Pj4+PiBPbiBKdWwgOCwgMjAyMiwgYXQgNTo1NiBBTSwgTWF0dGhldyBXaWxjb3ggPHdpbGx5QGlu
+ZnJhZGVhZC5vcmc+IHdyb3RlOg0KPj4+PiANCj4+Pj4+IEFuZCBsb29raW5nIGF0IHRoZSByZXN1
+bHRzIGFib3ZlLCBpdCdzIG5vdCBzbyBtdWNoIHRoZSBQSU8gdnMgTU1JTw0KPj4+Pj4gdGhhdCBt
+YWtlcyBhIGRpZmZlcmVuY2UsIGl0J3MgdGhlIHZpcnR1YWxpc2F0aW9uLiBBIG1taW8gYWNjZXNz
+IGdvZXMNCj4+Pj4+IGZyb20gMjY5bnMgdG8gODV1cy4gUmF0aGVyIHRoYW4gbWVzc2luZyBhcm91
+bmQgd2l0aCBwcmVmZXJyaW5nIE1NSU8NCj4+Pj4+IG92ZXIgUElPIGZvciBjb25maWcgc3BhY2Us
+IGhhdmluZyBhbiAiZW5saWdodGVubWVudCIgdG8gZG8gY29uZmlnDQo+Pj4+PiBzcGFjZSBhY2Nl
+c3NlcyB3b3VsZCBiZSBhIG1vcmUgcHJvZml0YWJsZSBwYXRoLg0KPj4+PiANCj4+Pj4gSSBhbSB1
+bmZhbWlsaWFyIHdpdGggdGhlIG1vdGl2YXRpb24gZm9yIHRoaXMgcGF0Y2gsIGJ1dCBJIGp1c3Qg
+d2FudGVkIHRvDQo+Pj4+IGJyaWVmbHkgcmVnYXJkIHRoZSBhZHZpY2UgYWJvdXQgZW5saWdodG1l
+bnRzLg0KPj4+PiANCj4+Pj4g4oCcZW5saWdodGVubWVudOKAnSwgQUZBSUssIGlzIE1pY3Jvc29m
+dOKAmXMgdGVybSBmb3IgInBhcmEtdmlydHVhbGl6YXRpb24iLCBzbw0KPj4+PiBsZXTigJlzIHJl
+Z2FyZCB0aGUgZ2VuZXJpYyB0ZXJtLiBJIHRoaW5rIHRoYXQgeW91IGNvbnNpZGVyIHRoZSBiYXJl
+LW1ldGFsDQo+Pj4+IHJlc3VsdHMgYXMgdGhlIHBvc3NpYmxlIHJlc3VsdHMgZnJvbSBhIHBhcmF2
+aXJ0dWFsIG1hY2hpbmUsIHdoaWNoIGlzIG1vc3RseQ0KPj4+PiB3cm9uZy4gUGFyYS12aXJ0dWFs
+aXphdGlvbiB1c3VhbGx5IHN0aWxsIHJlcXVpcmVzIGEgVk0tZXhpdCBhbmQgZm9yIHRoZSBtb3N0
+DQo+Pj4+IHBhcnQgdGhlIGh5cGVydmlzb3IvaG9zdCBydW5zIHNpbWlsYXIgY29kZSBmb3IgTU1J
+Ty9oeXBlcmNhbGwgKGNvbmNlcHR1YWxseTsNCj4+Pj4gdGhlIGNvZGUgb2YgcGFyYXZpcnR1YWwg
+YW5kIGZ1bGx5LXZpcnR1YWwgZGV2aWNlcyBpcyBvZnRlbiBkaWZmZXJlbnQsIGJ1dA0KPj4+PiBJ
+SVVDLCB0aGlzIGlzIG5vdCB3aGF0IEFqYXkgbWVhc3VyZWQpLg0KPj4+PiANCj4+Pj4gUGFyYS12
+aXJ0dWFsaXphdGlvbiBjb3VsZCBoYXZlICpwZXJoYXBzKiBoZWxwZWQgdG8gcmVkdWNlIHRoZSBu
+dW1iZXIgb2YNCj4+Pj4gUElPL01NSU8gYW5kIGltcHJvdmUgcGVyZm9ybWFuY2UgdGhpcyB3YXku
+IElmLCBmb3IgaW5zdGFuY2UsIGFsbCB0aGUNCj4+Pj4gUElPL01NSU8gYXJlIGRvbmUgZHVyaW5n
+IGluaXRpYWxpemF0aW9uLCBhIHBhcmF2aXJ0dWFsIGludGVyZmFjZSBjYW4gYmUgdXNlDQo+Pj4+
+IHRvIGJhdGNoIHRoZW0gdG9nZXRoZXIsIGFuZCB0aGF0IHdvdWxkIGhlbHAuIEJ1dCBpdCBpcyBt
+b3JlIGNvbXBsaWNhdGVkIHRvDQo+Pj4+IGdldCBhIHBlcmZvcm1hbmNlIGJlbmVmaXQgZnJvbSBw
+YXJhdmlydHVhbGl6YXRpb24gaWYgdGhlIFBJTy9NTUlPIGFjY2Vzc2VzDQo+Pj4+IGFyZSDigJxz
+cHJlYWTigJ0sIGZvciBpbnN0YW5jZSwgZG9uZSBhZnRlciBlYWNoIGludGVycnVwdC4NCj4+PiAN
+Cj4+PiBXaGF0IGtpbmQgb2YgbG91c3kgcHJvZ3JhbW1pbmcgaW50ZXJmYWNlIHJlcXVpcmVzIHlv
+dSB0byBkbyBhIGNvbmZpZw0KPj4+IHNwYWNlIGFjY2VzcyBhZnRlciBldmVyeSBpbnRlcnJ1cHQ/
+IFRoaXMgaXMgbG9vbmV5LXR1bmVzLg0KPj4gDQo+PiBXaWxkIGV4YW1wbGUsIGhlbmNlIHRoZSDi
+gJxmb3IgaW5zdGFuY2XigJ0uDQo+IA0KPiBTdHVwaWQgZXhhbXBsZSB0aGF0IGRvZXNuJ3QgaGVs
+cC4NCj4gDQo+Pj4gWW91J3ZlIHVzZWQgYSBsb3Qgb2Ygd29yZHMgdG8gbm90IGFuc3dlciB0aGUg
+cXVlc3Rpb24gdGhhdCB3YXMgc28NCj4+PiBpbXBvcnRhbnQgdGhhdCBJIGFza2VkIGl0IHR3aWNl
+LiBXaGF0J3MgdGhlIHVzZSBjYXNlLCB3aGF0J3MgdGhlDQo+Pj4gd29ya2xvYWQgdGhhdCB3b3Vs
+ZCBiZW5lZml0IGZyb20gdGhpcyBwYXRjaD8NCj4+IA0KPj4gV2VsbCwgeW91IHVzZWQgYSBsb3Qg
+b2Ygd29yZHMgdG8gc2F5IOKAnGl0IGNhdXNlcyBwcm9ibGVtc+KAnSB3aXRob3V0IHNheWluZw0K
+Pj4gd2hpY2guIEl0IGFwcGVhcmVkIHlvdSBoYXZlIG1pc2NvbmNlcHRpb25zIGFib3V0IHBhcmF2
+aXJ0dWFsaXphdGlvbiB0aGF0DQo+PiBJIHdhbnRlZCB0byBjb3JyZWN0Lg0KPiANCj4gV2VsbCBu
+b3csIHRoYXQncyBzb21lIGJ1bGxzaGl0LiBJIGRpZCBteSBmdWNraW5nIHJlc2VhcmNoLiBJIHdl
+bnQNCj4gYmFjayAxNCsgeWVhcnMgaW4gaGlzdG9yeSB0byBmaWd1cmUgb3V0IHdoYXQgd2FzIGdv
+aW5nIG9uIGJhY2sgdGhlbi4NCj4gSSBjaXRlZCBjb21taXQgSURzLiBZb3UncmUganVzdCB0b3Nz
+aW5nIG9mZiBzb21lIG9waW5pb25zLg0KPiANCj4gSSBoYXZlIG5vIG1pc2NvbmNlcHRpb25zIGFi
+b3V0IHdoYXRldmVyIHlvdSB3YW50IHRvIGNhbGwgdGhlIG1lY2hhbmlzbQ0KPiBmb3IgY29tbXVu
+aWNhdGluZyB3aXRoIHRoZSBoeXBlcnZpc29yIGF0IGEgaGlnaGVyIGxldmVsIHRoYW4gInByb2Qg
+dGhpcw0KPiBieXRlIi4gRm9yIGV4YW1wbGUsIG9uZSBvZiB0aGUgbW9yZSBpbnRlbnNpdmUgdGhp
+bmdzIHdlIHVzZSBjb25maWcNCj4gc3BhY2UgZm9yIGlzIHNpemluZyBCQVJzLiBJZiB3ZSBoYWQg
+YSBoeXBlcmNhbGwgdG8gc2l6IGEgQkFSLCB0aGF0DQo+IHdvdWxkIGVsaW1pbmF0ZToNCj4gDQo+
+IC0gUmVhZCBjdXJyZW50IHZhbHVlIGZyb20gQkFSDQo+IC0gV3JpdGUgYWxsLW9uZXMgdG8gQkFS
+DQo+IC0gUmVhZCBuZXcgdmFsdWUgZnJvbSBCQVINCj4gLSBXcml0ZSBvcmlnaW5hbCB2YWx1ZSBi
+YWNrIHRvIEJBUg0KPiANCj4gQmluZ28sIG9uZSBoeXBlcmNhbGwgaW5zdGVhZCBvZiA0IE1NSU8g
+b3IgOCBQSU8gYWNjZXNzZXMuDQo+IA0KPiBKdXN0IGJlY2F1c2UgSSBkb24ndCB1c2UgeW91ciB0
+ZXJtaW5vbG9neSwgeW91IHRoaW5rIEkgaGF2ZQ0KPiAibWlzY29uY2VwdGlvbnMiPyBGdWNrIHlv
+dSwgeW91IGNvbmRlc2NlbmRpbmcgcGllY2Ugb2Ygc2hpdC4NCg0KTWF0dGhldywNCg0KSSBkaWQg
+bm90IG1lYW4gdG8gc291bmQgY29uZGVzY2VuZGluZyBhbmQgSSBhcG9sb2dpemUgaWYgSSBkaWQu
+IFlvdSBoYXZlIG15DQoqZnVsbCogcmVzcGVjdCBmb3IgeW91ciBjb2RpbmcvZGVzaWduIHNraWxs
+cy4NCg0KT3V0IG9mIG15IHJlc3BlY3QgdG8geW91LCBJIGFtIGdpdmluZyB5b3UgYSBwYXNzIG9u
+IHlvdXIgY29uZHVjdCB0aGlzIHRpbWUNCmFuZCAqdGhpcyB0aW1lIG9ubHkqLiBEbyBub3QgdXNl
+IHN1Y2ggbGFuZ3VhZ2Ugd2l0aCBtZSBvciBteSBjb2xsZWFndWVzDQphZ2Fpbi4gVGhlIG9ubHkg
+cmVhc29uIEkgZ290IGludm9sdmVkIGluIHRoaXMgZGlzY3Vzc2lvbiBpcyB0aGF0IEkgZmVlbCB0
+aGF0DQpteSBjb2xsZWFndWVzIGhhdmUgY29uY2VybnMgYWJvdXQga2VybmVsIHRveGljIGVudmly
+b25tZW50Lg0KDQpCYWNrIHRvIHRoZSBpc3N1ZSBhdCBoYW5kOiBJIHRoaW5rIHRoYXQgYSBuZXcg
+cGFyYXZpcnR1YWwgaW50ZXJmYWNlIGlzIGENCnBvc3NpYmxlIHNvbHV0aW9uLCB3aXRoIHNvbWUg
+c2VyaW91cyBkcmF3YmFja3MuIFhlbiBkaWQgc29tZXRoaW5nIHNpbWlsYXIsDQpJSVJDLCB0byBh
+IGNlcnRhaW4gZXh0ZW50Lg0KDQpNb3JlIHJlYXNvbmFibGUsIEkgdGhpbmssIGJhc2VkIG9uIHdo
+YXQgeW91IHNhaWQgYmVmb3JlLCBpcyB0byBjaGVjayBpZiB3ZQ0KcnVuIG9uIGEgaHlwZXJ2aXNv
+ciwgYW5kIHVwZGF0ZSByYXdfcGNpX29wcyBhY2NvcmRpbmdseS4gVGhlcmUgaXMgYW4gaXNzdWUN
+Cm9mIHdoZXRoZXIgaHlwZXJ2aXNvciBkZXRlY3Rpb24gbWlnaHQgdGFrZSBwbGFjZSB0b28gbGF0
+ZSwgYnV0IEkgdGhpbmsgdGhpcw0KY2FuIGJlIHJlbGF0aXZlbHkgZWFzaWx5IHJlc29sdmVkLiBU
+aGUgcXVlc3Rpb24gaXMgd2hldGhlciBhc3NpZ25lZCBkZXZpY2VzDQptaWdodCBzdGlsbCBiZSBi
+cm9rZW4uIEJhc2VkIG9uIHRoZSBpbmZvcm1hdGlvbiB0aGF0IHlvdSBwcm92aWRlZCAtIEkgZG8g
+bm90DQprbm93Lg0KDQpJZiB5b3UgY2FuIGFuc3dlciB0aGlzIHF1ZXN0aW9uLCB0aGF0IHdvdWxk
+IGJlIGhlbHBmdWwuIExldOKAmXMgYWxzbyB3YWl0IGZvcg0KQWpheSB0byBnaXZlIHNvbWUgbnVt
+YmVycyBhYm91dCBib290IHRpbWUgd2l0aCB0aGlzIGNoYW5nZS4NCg0K
