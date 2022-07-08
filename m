@@ -2,187 +2,497 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DF1456BF54
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 20:35:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D040F56C078
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 20:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238497AbiGHQpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jul 2022 12:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58038 "EHLO
+        id S238818AbiGHQsG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jul 2022 12:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238365AbiGHQpF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 12:45:05 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2058.outbound.protection.outlook.com [40.107.212.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788EDE005;
-        Fri,  8 Jul 2022 09:45:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DoN82lBuVPVAhEdNpWhGA55aDnZqRSSG/P2WOxUFZ9jvN19SurX0FRWqGhwJflR48zIJaiWe3GzhnK8weXSnziqwX8FJeYWHVGe54lnkaML6FlIpS4S3ADqxtZrlmRIsPrsX5aM8/7GPonG1p6f+C3tnnv+Zq3A4jjcQEpPhqv9DWnuerjYWKQubKsqaCBFYLAnXdV99GMEAYGweF3aIFA9cIiY1ImCVGIGKah0TG/bA9MhZvBNT50jbHQuZyUwlhRepadvGegJAwg3AWeY1EYUMLdVjgxj0cPVyZ+D4bPeHocF27kf4grsPn87yTROeMgDTE5XYs1JLOdu0G9/Rvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FJMapcwEpQTL8k0hUZaJlaDn0KJCWsd4KvzGaGew0UI=;
- b=a1NcGVUcGvFp1zWYuZebNmGGmGviAIBcIfvtagspQxLzLefP+Xyh0i974M0+paJqfHd9XWX9kFqddBW2FOoyMUD/SsgQYC53LLCDo1FQwsgpI1FuOUzAbLbK/mhb8NSK09Vnp3BLCU+IOFu9Wia8B+8SMmx99lQSm+2m7tK4o5fu6o1nj3l6zXzBQQ4STbRNlCdvLg6bwi47VY8LbuSvUrN4FEdSsBWGf30PSlOPZlyQyr0TtgqzUZTpRn6HEekJ6cMd0QXNMeddp6MuTYogJT2klrCZ43Z7VajpcgwnxbmSwQezuJaRc3esCDrWekKjnuSZKdCVYXpp/q2ccv7t0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FJMapcwEpQTL8k0hUZaJlaDn0KJCWsd4KvzGaGew0UI=;
- b=mqDqaie3h80BUnz7YNUKoxUGTPVfyL2btXSdawjJZ0bZRyPlFgE+H6qKDOwM27gT5sfWjYtHEeo6EdUei2HxMAp9uioUXhtWyCL8KFUx3G7qhXTvvjWsWFjhOiq/Q5wlW3/TIpo8pXz5blDpqaIXOPz7OopB1qCn8O4LD7fVkKg=
-Received: from BY3PR05MB8531.namprd05.prod.outlook.com (2603:10b6:a03:3ce::6)
- by CH2PR05MB7144.namprd05.prod.outlook.com (2603:10b6:610:49::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.14; Fri, 8 Jul
- 2022 16:45:00 +0000
-Received: from BY3PR05MB8531.namprd05.prod.outlook.com
- ([fe80::a4f8:718a:b2a0:977f]) by BY3PR05MB8531.namprd05.prod.outlook.com
- ([fe80::a4f8:718a:b2a0:977f%6]) with mapi id 15.20.5417.021; Fri, 8 Jul 2022
- 16:45:00 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Ajay Kaher <akaher@vmware.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Anish Swaminathan <anishs@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
-Subject: Re: [PATCH] MMIO should have more priority then IO
-Thread-Topic: [PATCH] MMIO should have more priority then IO
-Thread-Index: AQHYiw9NzqWSNRsR1kyxPrXhcjObWa1lHkCAgA7qdoCAAHWQAIAAP7qA
-Date:   Fri, 8 Jul 2022 16:45:00 +0000
-Message-ID: <96D533E5-F3AF-4062-B095-8C143C307E37@vmware.com>
-References: <1656433761-9163-1-git-send-email-akaher@vmware.com>
- <20220628180919.GA1850423@bhelgaas>
- <25F843ED-7EB4-4D00-96CB-7DE1AC886460@vmware.com>
- <YsgplrrJnk5Ly19z@casper.infradead.org>
-In-Reply-To: <YsgplrrJnk5Ly19z@casper.infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.100.31)
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vmware.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1a3917dd-8a06-4398-70a6-08da61013317
-x-ms-traffictypediagnostic: CH2PR05MB7144:EE_
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YVUxZpHIllMX3gWUfH7mF6yA7ldgt1HB3czIHmaS8rXhiNGwFBPCpdXztRCy8vmcdauGwKic/RO6qoeNNi7SXjANAi+PjNsL1PON2yTaalNBhDllVZYDrGNsFLXcXtSL3FODX2suLus9tIz69TeiTTczsFTncY+WYvMZI5SgLM46fHAoSp2bbY38gA+tm+iDSfH8Cpx67paXnbH7Wl6JgW+SLENvDb/XwKM6YKnUDPqOBfP5wI/gaVXjAHHqHrA87+4gw2LCqPTMFGHyr/7JVPdYkSGT+mrIlFKAFWnFslY5uJZu+QoEv+ngIh7djSWyYG/hxKg7isQtJwhD9yc88DrxOpot4EvD/hI+SFDPTxAqc47NRA0KFxmnLhx08eYvm0Key60esaY4LzQz8wN+XFnLHIj0eiG+mnhewVA+PWvceRCLHuu7ivjaH6hswWXdI7wM4clS/F9mq88FJUp98xoFc+zERwzqMaSUJOJdpzy17oJ0UJSmPAG17pnhkuAWN3nj9wOrBSGSLWqeh/hLCNuuC1Tx/vbUDM9POOvdIUVuavgxk08mGpQhAPQ2NebHYn/7zaXJ78KqtagoE+YxCKl/40NYu1KLFF29SGcCB80peJ5Lo98mCe4pso+Nlr55zntR28El4zDs8swhoR9P64lhJGYQDaX1fcu8g8qRHA3/VGRHCLFCq7hYWMgrNANVtmUI8j3tC0EJ50YM7IeR0qTw28ZKcnPz83+QqpIwJa7cRU/H7j042AWu7XjZHo4+EO8ADgpad0P7p0YFN++v+lyNPYU/xgQIij0+eT2f5nWvM2Cs0MAmheD5Z30pIpyC9Iy5maGD497VsPVCmhF4xf2xISCiLahOAgwdHyRAy7o=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR05MB8531.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(39860400002)(136003)(396003)(346002)(366004)(478600001)(6506007)(6916009)(38100700002)(6486002)(53546011)(186003)(64756008)(66446008)(33656002)(36756003)(54906003)(66946007)(8936002)(8676002)(2906002)(66556008)(41300700001)(316002)(71200400001)(2616005)(45080400002)(6512007)(26005)(7416002)(4326008)(83380400001)(86362001)(122000001)(5660300002)(76116006)(38070700005)(66476007)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?enJQb0YxWkthcFFlMk94aGZjb05mVVNCRUR5cVVwYm1tb2JpSGpWNzRXeDJG?=
- =?utf-8?B?c293eXUyTVBJcVpJODNiOW45T3VYdllqaG5mU1JpaEY3NnI0WC9WNlR1OFR3?=
- =?utf-8?B?MjNWUVd2M25JUE9UZ2hUZS83OVNKNVhBRHdyeWZYaXF2MWVLVTRoT281MzlH?=
- =?utf-8?B?enRreCs4RTVTNnFVSjlVQ0x0STQ1Q1dkMFJUQngxUWRXNzNTRG9hZ0Y0VGRn?=
- =?utf-8?B?aDRtTE12RHdIK3VsM25zUWpIcFRLT3lOaEpWbzlXQm4xZUtZaEM2MmRXRkNw?=
- =?utf-8?B?U3V6Qmp5ZmNNT09TcmUzMHN3Z25Za2UvZnNQbnN1eGRnS0E5WDVZY2RFZ01K?=
- =?utf-8?B?YkpQaGxPOXJCZU9QY3ZyZVZJaW9HbG94RjQwQmlwbVR0Wnd6NWtSd0puczJX?=
- =?utf-8?B?N0x5bWxIN254a1c1MUVITnVFTTh5bndrZk50aCtZUjhQdzZXajFWWlpyRjFw?=
- =?utf-8?B?NkVsUGxMWDcvN05tOFJ4c0xkQm5VTUxlcHhHOERmWm9ldFNDNEVnM1pZaGls?=
- =?utf-8?B?UElQSVdhYnZWcDY5bGlnUk5OL0hYTmdxVVFyVk0vN3Npd1NYS0orTXBTczJ1?=
- =?utf-8?B?Q2w0aUtucUdYZWVvVFhoay8zekpCM3Z0eDRMNWRoTVNkQzdjdyt4Wnk3RnZa?=
- =?utf-8?B?YnZLdFAwcGdXRGNYNzV5TGUwWDFpL2JiRDQwVXZtUUdMaGFkWGVKSnE1bnZG?=
- =?utf-8?B?V3h5WnpEUnVVeG9tVDNCQUQwSVFjeVc1aDhWMXdXSTJMZ1hsSXBLdmk3Z3NX?=
- =?utf-8?B?S2tTeGJQd0FySzlmSFRTNFJZdE5TTERsTmhxM2hkN0hjaE15bW1ENi9TaE9a?=
- =?utf-8?B?aCtjSmc4VGhQUFBoTmNhTmpHWHBqMHd3cnVCYlN5ZXdWcjJWeVdLY0UydUNu?=
- =?utf-8?B?REtZVE50aG1vTXgrblkyWHo4enJJdlVQaDhLM1pGaThDb2JWSElmU3cyb0ZG?=
- =?utf-8?B?Z3Q1Z3VtTUNDK0ZUaWN0bk1LazhYdEgxUkFhL1FoTGhjeGNtOGp1MmIzZWpu?=
- =?utf-8?B?ajNMZzg5Qi9OVE40WlYxWnI2djdTaWNBVy9oU1VJVVJGdFp2OUF2d3FNRWFC?=
- =?utf-8?B?VlBHTE05SENpYVArTmJWSUxibXBMeURkY2hHVU9XOVl1SDhCZjNMeVE5QTRp?=
- =?utf-8?B?KzB6OGYzOC83aDArdm1WYW5PdU9LODFmSEhKaEZLNjBlTG5ObitNNGdIbW9K?=
- =?utf-8?B?Z3pBSktXQk5LREQ3MzF6TjFTQmJyMzhGUjAzQmx1dmw0enlXK2h1OTBxZXlE?=
- =?utf-8?B?OTBBUEI2MXVaZmlYOU5yL2tkWG03ZGU1MDJ3VnNVdEFENk5CRTdMMkdoaHRB?=
- =?utf-8?B?MmJDQ2t5RW9aWXQ2NXNPK2ZRR3RWcVNremZTNzlyalZSODVCcndxTE5GWGls?=
- =?utf-8?B?amN2b1lzUEF1Qm9ROHA2VlNnZkVPMWVadTFnSkRuVzFFa0cxNXJDaWZKaUY2?=
- =?utf-8?B?cGxkdnJ5RGEvbUt3YVRLeFF3NUx6VTNWU29GV0ZnMEhoZlBnOVBLcExtT0VJ?=
- =?utf-8?B?bTRkOEdHSkpJZ09XM3FIVnhGS0RyWHpSYUhPUndyemZLbjI2UFpKT2huRnE0?=
- =?utf-8?B?ZmliYlhmU212eVNzZkdCVVVZbXBvaGQ2UjRCMlZyN2orNFdqZDVTZFJ5ZUEr?=
- =?utf-8?B?d2pUQ2hNckNlWXErNnAxbDNOK0tVM2NPQXRycVlrS3hDekMyZGNRU1NWeEpj?=
- =?utf-8?B?WDR3dzg4QjdhbFZVWFRRdG4zNWkxK2doRlJaaEJ5ck1IT3JUVTFOLy9MNUxa?=
- =?utf-8?B?VkE5UWpnTlJUTWxkdUFsMDJNem10YnB1U2Qvay9ZaEgrOE1ha2dlR0FBRmg4?=
- =?utf-8?B?cHlQZ2V2TXBsaHl3eEdVTm5Qb0syaGxwc1YwQkVwMHYxRlhPQjVydnVzZlZT?=
- =?utf-8?B?dG9adFZlcnhDUXRxOTFKQVgwai9UdmVvWGZUYTNkWEU4WmVGaEFWNUlVNUpx?=
- =?utf-8?B?bEQzeXpycG1CU3BCNkJCN0xOSmNHMnpMODQ2cng1Ymh3SWN6ZnQvclpKZDNp?=
- =?utf-8?B?RWFQdEdsYUxBckdKTEwxUXhVdnp4aXlDRVJ6UjVyY204bEFRQmNYZ2xURS82?=
- =?utf-8?B?U1FjbkdTSUNDb3dhUFBJZmpzT3JOWVNIcklhclc5MnVtT1hveHppYVlBUFYz?=
- =?utf-8?Q?VeSkG0Gz4iIHPkWSDXuiHLBxi?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <458D88FC099C9247B36928A9787BC561@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S238576AbiGHQsD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 12:48:03 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF287479D;
+        Fri,  8 Jul 2022 09:48:02 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id k30so19417348edk.8;
+        Fri, 08 Jul 2022 09:48:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:from:to:cc:subject:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dEItiQ5Wfx/MjYuNXMpf3u2kNpMY6DlJ85xsekgMiC8=;
+        b=WZ1DP+2K3+i0nGSOs8o0DYbvEG/VOYj5o0KIqoL+VWebNLOxATyQmlqYxHmc6kCJE2
+         JXDPGsl2YxvU9YodlMn1SIEWvzeSqGozkxd4TB3bzx0GjA9u5trH4X3ADeWH3hP3yyhC
+         WsNZaVl48GFDQ2+7u19UNsNeYFfdfpvRT1k2wwZAGwX4mYDzCpH32Ttz3VMBvKL1MSgC
+         J070i5GcrlSv2rlOZSbwUoWKYHDxMn1h70Tt0bBMvwMltTruLCwMue/HdtBCUPI1sob8
+         iHm1OIv5WNQeBaFZB1QOtdF5+jRStvwPDz1PKVeIrvrlPavprFsISHns1921SuAhvsNm
+         EaEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dEItiQ5Wfx/MjYuNXMpf3u2kNpMY6DlJ85xsekgMiC8=;
+        b=Wrx5bAhQc+227sOQizgjUUjpMQx8xTaks16pkOHvlXqObzxsZK4WXougTSNOB/ZTVM
+         y844sXaaruEj+it0/ddGEkZIKi03NVLswlpQGz2aULPROCwamMeDS6X+cbn2HFs/lMd8
+         CRoPzTo+Z+LZkC/NHMwI6adC0LCZtasjORA7vzM89W8qfHuCD0GnMon8BDwFgCjXx2fb
+         nkZGtoZySIL4sN/wlWVCLhCatH8Pti3YVm6I0RbRcpu5C3H4w8d9mPw1dbN2gkz7fPya
+         yYgwqw3XEeUxs+iBbs8LaXoNcClea+N+sLtoviQPCXLiJXguH/9y9THZw9ComkSwmQLx
+         F5nw==
+X-Gm-Message-State: AJIora+uXrBMJl2zfyEqbefZusxx+HqkluKToMXHK/QTRgD/2jgS/ocB
+        GHAUUrmkyJLD5XTX8rYmDYA=
+X-Google-Smtp-Source: AGRyM1tP3QmgrI1Z6rP8/Rmj2UCveZyeEAH3476jdibbS9sD9DHPYvJleXbWEaXTYE8nLqEniTO4AA==
+X-Received: by 2002:aa7:d702:0:b0:43a:5296:df67 with SMTP id t2-20020aa7d702000000b0043a5296df67mr5970081edq.314.1657298880299;
+        Fri, 08 Jul 2022 09:48:00 -0700 (PDT)
+Received: from Ansuel-xps. (93-42-70-190.ip85.fastwebnet.it. [93.42.70.190])
+        by smtp.gmail.com with ESMTPSA id s18-20020a056402015200b0043a7de4e526sm7683210edu.44.2022.07.08.09.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Jul 2022 09:47:59 -0700 (PDT)
+Message-ID: <62c85fbf.1c69fb81.3ef7.d88d@mx.google.com>
+X-Google-Original-Message-ID: <YshfvSBFvytSFIGO@Ansuel-xps.>
+Date:   Fri, 8 Jul 2022 18:47:57 +0200
+From:   Christian Marangi <ansuelsmth@gmail.com>
+To:     Robert Marko <robimarko@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lpieralisi@kernel.org, Rob Herring <robh@kernel.org>, kw@linux.com,
+        Bjorn Helgaas <bhelgaas@google.com>, p.zabel@pengutronix.de,
+        jingoohan1@gmail.com, linux-pci@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        johan+linaro@kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4 2/2] PCI: qcom: Move all DBI register accesses after
+ phy_power_on()
+References: <20220624104420.257368-2-robimarko@gmail.com>
+ <20220707194139.GA328930@bhelgaas>
+ <CAOX2RU6TFDtMW+3_rfqbUOy4AmEJh+8F8wPtLnJEBtpnzeMbdA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY3PR05MB8531.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a3917dd-8a06-4398-70a6-08da61013317
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2022 16:45:00.6226
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: h18o2An/U7kPrTq4vcFQZu+z3Xl58Z7Gh1dPUfZOLUYKljTekbeqr6pFp85UUJoUB8cDZG/tID344YGrjvAC2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR05MB7144
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOX2RU6TFDtMW+3_rfqbUOy4AmEJh+8F8wPtLnJEBtpnzeMbdA@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gSnVsIDgsIDIwMjIsIGF0IDU6NTYgQU0sIE1hdHRoZXcgV2lsY294IDx3aWxseUBpbmZyYWRl
-YWQub3JnPiB3cm90ZToNCg0KPiBBbmQgbG9va2luZyBhdCB0aGUgcmVzdWx0cyBhYm92ZSwgaXQn
-cyBub3Qgc28gbXVjaCB0aGUgUElPIHZzIE1NSU8NCj4gdGhhdCBtYWtlcyBhIGRpZmZlcmVuY2Us
-IGl0J3MgdGhlIHZpcnR1YWxpc2F0aW9uLiBBIG1taW8gYWNjZXNzIGdvZXMNCj4gZnJvbSAyNjlu
-cyB0byA4NXVzLiBSYXRoZXIgdGhhbiBtZXNzaW5nIGFyb3VuZCB3aXRoIHByZWZlcnJpbmcgTU1J
-Tw0KPiBvdmVyIFBJTyBmb3IgY29uZmlnIHNwYWNlLCBoYXZpbmcgYW4gImVubGlnaHRlbm1lbnQi
-IHRvIGRvIGNvbmZpZw0KPiBzcGFjZSBhY2Nlc3NlcyB3b3VsZCBiZSBhIG1vcmUgcHJvZml0YWJs
-ZSBwYXRoLg0KDQpJIGFtIHVuZmFtaWxpYXIgd2l0aCB0aGUgbW90aXZhdGlvbiBmb3IgdGhpcyBw
-YXRjaCwgYnV0IEkganVzdCB3YW50ZWQgdG8NCmJyaWVmbHkgcmVnYXJkIHRoZSBhZHZpY2UgYWJv
-dXQgZW5saWdodG1lbnRzLg0KDQrigJxlbmxpZ2h0ZW5tZW504oCdLCBBRkFJSywgaXMgTWljcm9z
-b2Z04oCZcyB0ZXJtIGZvciAicGFyYS12aXJ0dWFsaXphdGlvbiIsIHNvDQpsZXTigJlzIHJlZ2Fy
-ZCB0aGUgZ2VuZXJpYyB0ZXJtLiBJIHRoaW5rIHRoYXQgeW91IGNvbnNpZGVyIHRoZSBiYXJlLW1l
-dGFsDQpyZXN1bHRzIGFzIHRoZSBwb3NzaWJsZSByZXN1bHRzIGZyb20gYSBwYXJhdmlydHVhbCBt
-YWNoaW5lLCB3aGljaCBpcyBtb3N0bHkNCndyb25nLiBQYXJhLXZpcnR1YWxpemF0aW9uIHVzdWFs
-bHkgc3RpbGwgcmVxdWlyZXMgYSBWTS1leGl0IGFuZCBmb3IgdGhlIG1vc3QNCnBhcnQgdGhlIGh5
-cGVydmlzb3IvaG9zdCBydW5zIHNpbWlsYXIgY29kZSBmb3IgTU1JTy9oeXBlcmNhbGwgKGNvbmNl
-cHR1YWxseTsNCnRoZSBjb2RlIG9mIHBhcmF2aXJ0dWFsIGFuZCBmdWxseS12aXJ0dWFsIGRldmlj
-ZXMgaXMgb2Z0ZW4gZGlmZmVyZW50LCBidXQNCklJVUMsIHRoaXMgaXMgbm90IHdoYXQgQWpheSBt
-ZWFzdXJlZCkuDQoNClBhcmEtdmlydHVhbGl6YXRpb24gY291bGQgaGF2ZSAqcGVyaGFwcyogaGVs
-cGVkIHRvIHJlZHVjZSB0aGUgbnVtYmVyIG9mDQpQSU8vTU1JTyBhbmQgaW1wcm92ZSBwZXJmb3Jt
-YW5jZSB0aGlzIHdheS4gSWYsIGZvciBpbnN0YW5jZSwgYWxsIHRoZQ0KUElPL01NSU8gYXJlIGRv
-bmUgZHVyaW5nIGluaXRpYWxpemF0aW9uLCBhIHBhcmF2aXJ0dWFsIGludGVyZmFjZSBjYW4gYmUg
-dXNlDQp0byBiYXRjaCB0aGVtIHRvZ2V0aGVyLCBhbmQgdGhhdCB3b3VsZCBoZWxwLiBCdXQgaXQg
-aXMgbW9yZSBjb21wbGljYXRlZCB0bw0KZ2V0IGEgcGVyZm9ybWFuY2UgYmVuZWZpdCBmcm9tIHBh
-cmF2aXJ0dWFsaXphdGlvbiBpZiB0aGUgUElPL01NSU8gYWNjZXNzZXMNCmFyZSDigJxzcHJlYWTi
-gJ0sIGZvciBpbnN0YW5jZSwgZG9uZSBhZnRlciBlYWNoIGludGVycnVwdC4NCg0KUGFyYS12aXJ0
-YXVpbHphdGlvbiBhbmQgZnVsbC12aXJ0dWFsaXphdGlvbiBib3RoIGhhdmUgcHJvcyBhbmQgY29u
-cy4NClBhcmEtdmlydHVhbGl6YXRpb24gaXMgbWFueSB0aW1lcyBtb3JlIGVmZmljaWVudCwgYnV0
-IHJlcXVpcmVzIHRoZSBWTSB0bw0KaGF2ZSBkZWRpY2F0ZWQgZGV2aWNlIGRyaXZlcnMgZm9yIHRo
-ZSBtYXR0ZXIuIFRyeSB0byBydW4gYSBsZXNzLWNvbW1vbiBPUw0KdGhhbiBMaW51eCBhbmQgaXQg
-d291bGQgbm90IHdvcmsgc2luY2UgdGhlIE9TIHdvdWxkIG5vdCBoYXZlIGRyaXZlcnMgZm9yIHRo
-ZQ0KcGFyYXMtdmlydHVhbCBkZXZpY2VzLiBBbmQgZXZlbiBpZiB5b3UgYWRkIHN1cHBvcnQgdG9k
-YXkgZm9yIGEgcGFyYS12aXJ0dWFsDQpkZXZpY2VzLCB0aGVyZSBhcmUgbWFueSBkZXBsb3llZCBP
-U2VzIHRoYXQgZG8gbm90IGhhdmUgc3VjaCBzdXBwb3J0LCBhbmQgeW91DQp3b3VsZCBub3QgYmUg
-YWJsZSB0byBydW4gdGhlbSBpbiBhIFZNLg0KDQpSZWdhcmRsZXNzIHRvIHZpcnR1YWxpemF0aW9u
-LCBBamF54oCZcyByZXN1bHRzIHNob3cgUElPIGlzIHNsb3dlciBvbg0KYmFyZS1tZXRhbCwgYW5k
-IGFjY29yZGluZyB0byBoaXMgbnVtYmVycyBieSAxNjVucywgd2hpY2ggaXMgc2lnbmlmaWNhbnQu
-DQpFbXVsYXRpbmcgUElPIGluIGh5cGVydmlzb3JzIG9uIHg4NiBpcyBpbmhlcmVudGx5IG1vcmUg
-Y29tcGxleCB0aGFuIE1NSU8sIHNvDQp0aGUgcmVzdWx0cyBoZSBnb3Qgd291bGQgbW9zdCBsaWtl
-bHkgaGFwcGVuIG9uIGFsbCBoeXBlcnZpc29ycy4NCg0KdGw7ZHI6IExldOKAmXMga2VlcCB0aGlz
-IGRpc2N1c3Npb24gZm9jdXNlZCBhbmQgcHV0IHBhcmF2aXJ0dWFsaXphdGlvbiBhc2lkZS4NCkl0
-IGlzIG5vdCBhIHNvbHV0aW9uIGZvciBhbGwgdGhlIHByb2JsZW1zIGluIHRoZSB3b3JsZC4=
+On Fri, Jul 08, 2022 at 06:39:37PM +0200, Robert Marko wrote:
+> CC-ing Christian who did a lot of work on 2.1.0 (IPQ806x).
+> 
+> Regards,
+> Robert
+> 
+> On Thu, 7 Jul 2022 at 21:41, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Fri, Jun 24, 2022 at 12:44:20PM +0200, Robert Marko wrote:
+> > > IPQ8074 requires the PHY to be powered on before accessing DBI registers.
+> > > It's not clear whether other variants have the same dependency, but there
+> > > seems to be no reason for them to be different, so move all the DBI
+> > > accesses from .init() to .post_init() so they are all after phy_power_on().
+> > >
+> > > Signed-off-by: Robert Marko <robimarko@gmail.com>
+> >
+> > Would any of the qcom driver folks care to review and ack this?
+> > Stanimir, Andy, Bjorn A (from get_maintainer.pl)?
+> >
+
+Hi Bjorn,
+I tested this on ipq806x and the current patch cause regression as pci
+doesn't work anymore...
+This is a before the patch [1] and this is an after [2].
+
+As you notice the main problem here is
+[    2.559962] qcom-pcie 1b700000.pci: Phy link never came up
+
+The cause of this has already been bisected and actually it was a fixup
+pushed some time ago for 2_1_0.
+
+Uboot can leave the pci in an underfined state and this
+writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+is never called.
+
+This is mandatory to a correct init and MUST be called before regulator
+enable and reset deassert or the "Phy link never came up" problem is
+triggered.
+
+So to fix this we just have to have
+writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+in qcom_pcie_init_2_1_0 right after the reset_contro_assert.
+
+This command is also present in qcom_pcie_init_2_3_2 where the same
+exact reg is written so I assume 2_3_2 have the same regression and the
+write must be placed in init and can't be moved to post_init.
+
+Feel free to tell me how to proceed if I should post an additional patch
+or you prefer Robi to respin this with the few lines reverted.
+
+[1] https://gist.github.com/Ansuel/ec827319e585630356fc586273db6f0d
+[2] https://gist.github.com/Ansuel/63fbcab2681cd28a61ec52d7874fa30d
+
+> > > ---
+> > > Changes in v4:
+> > > * Move 2.7.0 accesses as well
+> > > * Correct title and description (Bjorn)
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-qcom.c | 215 ++++++++++++++-----------
+> > >  1 file changed, 119 insertions(+), 96 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > index 24708d5d817d..f1a156052fe7 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > @@ -348,8 +348,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+> > >       struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+> > >       struct dw_pcie *pci = pcie->pci;
+> > >       struct device *dev = pci->dev;
+> > > -     struct device_node *node = dev->of_node;
+> > > -     u32 val;
+> > >       int ret;
+> > >
+> > >       /* reset the PCIe interface as uboot can leave it undefined state */
+> > > @@ -360,8 +358,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+> > >       reset_control_assert(res->ext_reset);
+> > >       reset_control_assert(res->phy_reset);
+> > >
+> > > -     writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > > -
+> > >       ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+> > >       if (ret < 0) {
+> > >               dev_err(dev, "cannot enable regulators\n");
+> > > @@ -408,6 +404,35 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+> > >       if (ret)
+> > >               goto err_clks;
+> > >
+> > > +     return 0;
+> > > +
+> > > +err_clks:
+> > > +     reset_control_assert(res->axi_reset);
+> > > +err_deassert_axi:
+> > > +     reset_control_assert(res->por_reset);
+> > > +err_deassert_por:
+> > > +     reset_control_assert(res->pci_reset);
+> > > +err_deassert_pci:
+> > > +     reset_control_assert(res->phy_reset);
+> > > +err_deassert_phy:
+> > > +     reset_control_assert(res->ext_reset);
+> > > +err_deassert_ext:
+> > > +     reset_control_assert(res->ahb_reset);
+> > > +err_deassert_ahb:
+> > > +     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int qcom_pcie_post_init_2_1_0(struct qcom_pcie *pcie)
+> > > +{
+> > > +     struct dw_pcie *pci = pcie->pci;
+> > > +     struct device *dev = pci->dev;
+> > > +     struct device_node *node = dev->of_node;
+> > > +     u32 val;
+> > > +
+> > > +     writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > > +
+> > >       /* enable PCIe clocks and resets */
+> > >       val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > >       val &= ~BIT(0);
+> > > @@ -451,23 +476,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+> > >              pci->dbi_base + PCIE20_AXI_MSTR_RESP_COMP_CTRL1);
+> > >
+> > >       return 0;
+> > > -
+> > > -err_clks:
+> > > -     reset_control_assert(res->axi_reset);
+> > > -err_deassert_axi:
+> > > -     reset_control_assert(res->por_reset);
+> > > -err_deassert_por:
+> > > -     reset_control_assert(res->pci_reset);
+> > > -err_deassert_pci:
+> > > -     reset_control_assert(res->phy_reset);
+> > > -err_deassert_phy:
+> > > -     reset_control_assert(res->ext_reset);
+> > > -err_deassert_ext:
+> > > -     reset_control_assert(res->ahb_reset);
+> > > -err_deassert_ahb:
+> > > -     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > > -
+> > > -     return ret;
+> > >  }
+> > >
+> > >  static int qcom_pcie_get_resources_1_0_0(struct qcom_pcie *pcie)
+> > > @@ -555,16 +563,6 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+> > >               goto err_slave;
+> > >       }
+> > >
+> > > -     /* change DBI base address */
+> > > -     writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> > > -
+> > > -     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> > > -             u32 val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > > -
+> > > -             val |= BIT(31);
+> > > -             writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > > -     }
+> > > -
+> > >       return 0;
+> > >  err_slave:
+> > >       clk_disable_unprepare(res->slave_bus);
+> > > @@ -580,6 +578,22 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+> > >       return ret;
+> > >  }
+> > >
+> > > +static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+> > > +{
+> > > +
+> > > +     /* change DBI base address */
+> > > +     writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> > > +
+> > > +     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> > > +             u32 val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > > +
+> > > +             val |= BIT(31);
+> > > +             writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+> > >  {
+> > >       u32 val;
+> > > @@ -648,7 +662,6 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+> > >       struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+> > >       struct dw_pcie *pci = pcie->pci;
+> > >       struct device *dev = pci->dev;
+> > > -     u32 val;
+> > >       int ret;
+> > >
+> > >       ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+> > > @@ -681,27 +694,6 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+> > >               goto err_slave_clk;
+> > >       }
+> > >
+> > > -     /* enable PCIe clocks and resets */
+> > > -     val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > > -     val &= ~BIT(0);
+> > > -     writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > > -
+> > > -     /* change DBI base address */
+> > > -     writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> > > -
+> > > -     /* MAC PHY_POWERDOWN MUX DISABLE  */
+> > > -     val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
+> > > -     val &= ~BIT(29);
+> > > -     writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
+> > > -
+> > > -     val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> > > -     val |= BIT(4);
+> > > -     writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> > > -
+> > > -     val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > > -     val |= BIT(31);
+> > > -     writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > > -
+> > >       return 0;
+> > >
+> > >  err_slave_clk:
+> > > @@ -722,8 +714,30 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+> > >       struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+> > >       struct dw_pcie *pci = pcie->pci;
+> > >       struct device *dev = pci->dev;
+> > > +     u32 val;
+> > >       int ret;
+> > >
+> > > +     /* enable PCIe clocks and resets */
+> > > +     val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > > +     val &= ~BIT(0);
+> > > +     writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > > +
+> > > +     /* change DBI base address */
+> > > +     writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> > > +
+> > > +     /* MAC PHY_POWERDOWN MUX DISABLE  */
+> > > +     val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
+> > > +     val &= ~BIT(29);
+> > > +     writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
+> > > +
+> > > +     val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> > > +     val |= BIT(4);
+> > > +     writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> > > +
+> > > +     val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > > +     val |= BIT(31);
+> > > +     writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > > +
+> > >       ret = clk_prepare_enable(res->pipe_clk);
+> > >       if (ret) {
+> > >               dev_err(dev, "cannot prepare/enable pipe clock\n");
+> > > @@ -837,7 +851,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> > >       struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+> > >       struct dw_pcie *pci = pcie->pci;
+> > >       struct device *dev = pci->dev;
+> > > -     u32 val;
+> > >       int ret;
+> > >
+> > >       ret = reset_control_assert(res->axi_m_reset);
+> > > @@ -962,6 +975,33 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> > >       if (ret)
+> > >               goto err_clks;
+> > >
+> > > +     return 0;
+> > > +
+> > > +err_clks:
+> > > +     reset_control_assert(res->ahb_reset);
+> > > +err_rst_ahb:
+> > > +     reset_control_assert(res->pwr_reset);
+> > > +err_rst_pwr:
+> > > +     reset_control_assert(res->axi_s_reset);
+> > > +err_rst_axi_s:
+> > > +     reset_control_assert(res->axi_m_sticky_reset);
+> > > +err_rst_axi_m_sticky:
+> > > +     reset_control_assert(res->axi_m_reset);
+> > > +err_rst_axi_m:
+> > > +     reset_control_assert(res->pipe_sticky_reset);
+> > > +err_rst_pipe_sticky:
+> > > +     reset_control_assert(res->pipe_reset);
+> > > +err_rst_pipe:
+> > > +     reset_control_assert(res->phy_reset);
+> > > +err_rst_phy:
+> > > +     reset_control_assert(res->phy_ahb_reset);
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int qcom_pcie_post_init_2_4_0(struct qcom_pcie *pcie)
+> > > +{
+> > > +     u32 val;
+> > > +
+> > >       /* enable PCIe clocks and resets */
+> > >       val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > >       val &= ~BIT(0);
+> > > @@ -984,26 +1024,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> > >       writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+> > >
+> > >       return 0;
+> > > -
+> > > -err_clks:
+> > > -     reset_control_assert(res->ahb_reset);
+> > > -err_rst_ahb:
+> > > -     reset_control_assert(res->pwr_reset);
+> > > -err_rst_pwr:
+> > > -     reset_control_assert(res->axi_s_reset);
+> > > -err_rst_axi_s:
+> > > -     reset_control_assert(res->axi_m_sticky_reset);
+> > > -err_rst_axi_m_sticky:
+> > > -     reset_control_assert(res->axi_m_reset);
+> > > -err_rst_axi_m:
+> > > -     reset_control_assert(res->pipe_sticky_reset);
+> > > -err_rst_pipe_sticky:
+> > > -     reset_control_assert(res->pipe_reset);
+> > > -err_rst_pipe:
+> > > -     reset_control_assert(res->phy_reset);
+> > > -err_rst_phy:
+> > > -     reset_control_assert(res->phy_ahb_reset);
+> > > -     return ret;
+> > >  }
+> > >
+> > >  static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
+> > > @@ -1237,7 +1257,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> > >       struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > >       struct dw_pcie *pci = pcie->pci;
+> > >       struct device *dev = pci->dev;
+> > > -     u32 val;
+> > >       int ret;
+> > >
+> > >       ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+> > > @@ -1271,6 +1290,28 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> > >       /* Wait for reset to complete, required on SM8450 */
+> > >       usleep_range(1000, 1500);
+> > >
+> > > +     return 0;
+> > > +err_disable_clocks:
+> > > +     clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> > > +err_disable_regulators:
+> > > +     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
+> > > +{
+> > > +     struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > > +
+> > > +     clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> > > +     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > > +}
+> > > +
+> > > +static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+> > > +{
+> > > +     struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > > +     u32 val;
+> > > +
+> > >       /* configure PCIe to RC mode */
+> > >       writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
+> > >
+> > > @@ -1297,27 +1338,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> > >               writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> > >       }
+> > >
+> > > -     return 0;
+> > > -err_disable_clocks:
+> > > -     clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> > > -err_disable_regulators:
+> > > -     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > > -
+> > > -     return ret;
+> > > -}
+> > > -
+> > > -static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
+> > > -{
+> > > -     struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > > -
+> > > -     clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> > > -     regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> > > -}
+> > > -
+> > > -static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+> > > -{
+> > > -     struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> > > -
+> > >       /* Set pipe clock as clock source for pcie_pipe_clk_src */
+> > >       if (pcie->cfg->pipe_clk_need_muxing)
+> > >               clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
+> > > @@ -1569,6 +1589,7 @@ static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+> > >  static const struct qcom_pcie_ops ops_2_1_0 = {
+> > >       .get_resources = qcom_pcie_get_resources_2_1_0,
+> > >       .init = qcom_pcie_init_2_1_0,
+> > > +     .post_init = qcom_pcie_post_init_2_1_0,
+> > >       .deinit = qcom_pcie_deinit_2_1_0,
+> > >       .ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
+> > >  };
+> > > @@ -1577,6 +1598,7 @@ static const struct qcom_pcie_ops ops_2_1_0 = {
+> > >  static const struct qcom_pcie_ops ops_1_0_0 = {
+> > >       .get_resources = qcom_pcie_get_resources_1_0_0,
+> > >       .init = qcom_pcie_init_1_0_0,
+> > > +     .post_init = qcom_pcie_post_init_1_0_0,
+> > >       .deinit = qcom_pcie_deinit_1_0_0,
+> > >       .ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
+> > >  };
+> > > @@ -1595,6 +1617,7 @@ static const struct qcom_pcie_ops ops_2_3_2 = {
+> > >  static const struct qcom_pcie_ops ops_2_4_0 = {
+> > >       .get_resources = qcom_pcie_get_resources_2_4_0,
+> > >       .init = qcom_pcie_init_2_4_0,
+> > > +     .post_init = qcom_pcie_post_init_2_4_0,
+> > >       .deinit = qcom_pcie_deinit_2_4_0,
+> > >       .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> > >  };
+> > > --
+> > > 2.36.1
+> > >
+
+-- 
+	Ansuel
