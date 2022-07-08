@@ -2,73 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10AE656BABA
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 15:30:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FEBD56BAFB
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 15:39:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238055AbiGHN3o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jul 2022 09:29:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35870 "EHLO
+        id S238361AbiGHNhd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jul 2022 09:37:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237862AbiGHN3l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 09:29:41 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B722CCA6
-        for <linux-pci@vger.kernel.org>; Fri,  8 Jul 2022 06:29:39 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id l23so5929937ejr.5
-        for <linux-pci@vger.kernel.org>; Fri, 08 Jul 2022 06:29:39 -0700 (PDT)
+        with ESMTP id S238326AbiGHNh2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 09:37:28 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C170F1DA64
+        for <linux-pci@vger.kernel.org>; Fri,  8 Jul 2022 06:37:26 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id d2so37825351ejy.1
+        for <linux-pci@vger.kernel.org>; Fri, 08 Jul 2022 06:37:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xLpBzYN7b7OTQ6ZXO6u8hz9baie685xPOmDRw0Arw9I=;
-        b=KqOAA1DGwHvEpoMXDixkIhgQnelCMfPOIOTm9bRO9QafGllpX+slhSJ+YqlF1WfLxy
-         b6PEDjjbnlEtgBNjzmtvM7re26MaFiPmoeWQE18W9/j5aQU8yHY+FZs4kjzPo4FAPN4z
-         TS+EyoXSfuvA4Zt4Cf11af4v1qLbn5OzuiVWg=
+        bh=kLVMbfL7NI5QJWvN2osMHSuGvFiKLpzdTKvLQ3v/Tws=;
+        b=bcMO6z+b/iB+a1NxQj+fK7HOn6AVop/WFipx+N3BgYV3fypvVjSoVN6903UuWcrO1r
+         /7plKPATXl5s+ERzP89HW65ueGs5nN6jbHXsb1t7Jdjao9C7+I99K1OiTi3pbunZewhy
+         FvxiL+Cw6RayhlPq/UFXB4oBKFR+MOfWGTKKc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xLpBzYN7b7OTQ6ZXO6u8hz9baie685xPOmDRw0Arw9I=;
-        b=605hwe/eun7xDV0ACI+O7dxIuNAud+wseNWPcM//OntSxRydw6BEwRmk3VkIcZJKHG
-         PjYTuc5On+MeiYILjufLTGn3Zf/ovfdjgsDN8ks2wyaFREaSFfAjSqb5L0oL82yMnY3s
-         ISRqDNQ8Z9AYtp+s5bknfC9cUmD8G7e0fujaIsGwIeBE4LJQQHdt1rvVSrHjEeQ0PqWv
-         ZuoisvKoB/HqOnDWF8kEoxRurrFGIBT+TyLIbPp5KadkRYFoWK9WVAeGts7LONXLiJNy
-         Nz8qrjq9m2KRNcOhCYEWe3QD6f8+QcJO9Q7OYLQsylNv195MWY9QI2tAozBS2bfaFzv+
-         0LOQ==
-X-Gm-Message-State: AJIora8XBmqILB5pwnC1dE5nip7gEXXN4G6vg+RE4b51oBCPuu/2jsas
-        FNTgmUKgyvimwOILwbH8zln017GjUS4LWklkFwIWpQ==
-X-Google-Smtp-Source: AGRyM1vEDj25P8EV7USK0urrEat3wXgNEwKcGOJl0L24kfrPqzLoYuAIUnEf3VJgZeeT/wYsqfY3UZexC0iQ3VUl5/s=
-X-Received: by 2002:a17:907:6e05:b0:72a:a141:962 with SMTP id
- sd5-20020a1709076e0500b0072aa1410962mr3629511ejc.545.1657286978295; Fri, 08
- Jul 2022 06:29:38 -0700 (PDT)
+        bh=kLVMbfL7NI5QJWvN2osMHSuGvFiKLpzdTKvLQ3v/Tws=;
+        b=hQendTwu9nc84pDP7bVFHPwbKKupTP2476mZEGKIuzI7cMYoB+bN9Vs2g4GMqumg5v
+         8f1dIAZs59tULnEC6XnZfEdOmliwDOicYaVo3YeEj8L6ScSBRZLEmGy9EARoduOzp8Mm
+         nha8bbyiK7D5vpQmXOVXo06RAy8bMK5WFxCWKX7jrxGgS9zH3jrdEsAhahqCsiTOWn2b
+         TbwA3FyPRmNXF8EpyRyyc0+cnokwh2LPbPq3s5vJyaMpcZnVrww+yGFxzRb/jWRqHP2V
+         5cSbOV4pW8sIgCbdct4Er3wSTupa/Hs84FWraUgtNtGEA3AsIH6UhWisMcxYAd9f+PRn
+         bHSg==
+X-Gm-Message-State: AJIora9ZXid/V4p1lpoajZsoZcuaWiPvgCLPXLXGi4BTSx4SE5eccicQ
+        wKWRnDQJJWhqJMSjSqB/l/0FmqJw3mXlh+VZx3XeYw==
+X-Google-Smtp-Source: AGRyM1s4rld7Wmpu+ONRxJ5moE7eScQMqXggKBr4ZEDxcdvi5wAft8JZX4EuT909ciAVOYr0W0TpgqKsee/JoVQkH58=
+X-Received: by 2002:a17:906:106:b0:715:7cdf:400f with SMTP id
+ 6-20020a170906010600b007157cdf400fmr3683089eje.1.1657287444838; Fri, 08 Jul
+ 2022 06:37:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220701162726.31346-2-jim2101024@gmail.com> <20220706215603.GA221278@bhelgaas>
-In-Reply-To: <20220706215603.GA221278@bhelgaas>
+References: <20211209204726.6676-5-jim2101024@gmail.com> <20220706214200.GA224369@bhelgaas>
+In-Reply-To: <20220706214200.GA224369@bhelgaas>
 From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Fri, 8 Jul 2022 09:29:27 -0400
-Message-ID: <CA+-6iNzQZVi8MbyeZNcBzE0hGjGiYSUk3riSXxTALtFyC00aPQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+Date:   Fri, 8 Jul 2022 09:37:13 -0400
+Message-ID: <CA+-6iNyViHVgdmvhzTEMWDdaP7mm-38iqhdyknyq0z8Au2gWBg@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] PCI: brcmstb: Augment driver for MIPs SOCs
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Jim Quinlan <jim2101024@gmail.com>,
         "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, linux-mips@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
+        Kevin Cernekee <cernekee@gmail.com>,
         "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000a6a1cb05e34b3115"
+        boundary="00000000000079e94b05e34b4d2a"
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -79,187 +78,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000a6a1cb05e34b3115
+--00000000000079e94b05e34b4d2a
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jul 6, 2022 at 5:56 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Wed, Jul 6, 2022 at 5:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Fri, Jul 01, 2022 at 12:27:22PM -0400, Jim Quinlan wrote:
-> > We need to take some code in brcm_pcie_setup() and put it in a new function
-> > brcm_pcie_linkup().  In future commits the brcm_pcie_linkup() function will
-> > be called indirectly by pci_host_probe() as opposed to the host driver
-> > invoking it directly.
+> On Thu, Dec 09, 2021 at 03:47:25PM -0500, Jim Quinlan wrote:
+> > The current brcmstb driver works for Arm and Arm64.  A few things are
+> > modified here for us to support MIPs as well.
 > >
-> > Some code that was executed after the PCIe linkup is now placed so that it
-> > executes prior to linkup, since this code has to run prior to the
-> > invocation of pci_host_probe().
+> >   o There are four outbound range register groups and each directs a window
+> >     of up to 128MB.  Even though there are four 128MB DT "ranges" in the
+> >     bmips PCIe DT node, these ranges are contiguous and are collapsed into
+> >     a single range by the OF range parser.  Now the driver assumes a single
+> >     range -- for MIPs only -- and splits it back into 128MB sizes.
+> >
+> >   o For bcm7425, the config space accesses must be 32-bit reads or
+> >     writes.  In addition, the 4k config space register array is missing
+> >     and not used.
+> >
+> >   o The registers for the upper 32-bits of the outbound window address do
+> >     not exist.
+> >
+> >   o Burst size must be set to 256 (this refers to an internal bus).
+> > ...
 >
-> This says we need to move some code from brcm_pcie_setup() to
-> brcm_pcie_linkup(), but not *why* we need to do that.
-I will elaborate in the commit message.
+> > @@ -118,6 +118,7 @@
+> >  #define PCIE_MISC_HARD_PCIE_HARD_DEBUG                                       0x4204
+> >  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK     0x2
+> >  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK             0x08000000
+> > +#define  PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK               0x00800000
 >
-> In brcm_pcie_resume(), they're called together:
+> > @@ -883,7 +937,10 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >       pcie->bridge_sw_init_set(pcie, 0);
+> >
+> >       tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> > -     tmp &= ~PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK;
+> > +     if (is_bmips(pcie))
+> > +             tmp &= ~PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK;
+> > +     else
+> > +             tmp &= ~PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK;
+> >       writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> >       /* Wait for SerDes to be stable */
+> >       usleep_range(100, 200);
 >
->   brcm_pcie_resume
->     brcm_pcie_setup
->     brcm_pcie_linkup
+> brcm_pcie_resume() has similar code that updates
+> PCIE_MISC_HARD_PCIE_HARD_DEBUG [1]:
 >
-> In the probe path, they're not called together, but they're in the
-> same order:
+>   tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+>   u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
+>   writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
 >
->   brcm_pcie_probe
->     brcm_pcie_setup
->     pci_host_probe
->       ...
->         brcm_pcie_add_bus               # bus->ops->add_bus
->           brcm_pcie_linkup
+>   /* wait for serdes to be stable */
+>   udelay(100);
 >
-> Is there something that must happen *between* them in the probe path?
+> This patch didn't change brcm_pcie_resume() to check is_bmips().
+> Should it?
+>
+> If so, it would be nice to use the same method for updating the value
+> (either u32p_replace_bits or plain C bitops) in both places.
 
-Yes.  In the probe() case, we must do things in this order:
+Will send a patch to fix this, thanks.
 
-1. brcm_pcie_setup()
-2. Turn on regulators
-3. brcm_pcie_linkup()
-
-Since the voltage regulators are turned on during enumeration, pci_host_probe()
-must be invoked prior to 3.  Before regulators, we did not care.
-
-In the resume case, there is no enumeration of course but our driver
-has a handle to
-the regulators and can turn them on/off w/o help.
-
-Regards,
-Jim  Quinlan
-Broradcom STB
+Jim Quinlan
+Broadcom STB
 
 >
-> > Link: https://lore.kernel.org/r/20220106160332.2143-5-jim2101024@gmail.com
-> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 69 +++++++++++++++++----------
-> >  1 file changed, 43 insertions(+), 26 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > index e61058e13818..2bf5cc399fd0 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -926,16 +926,9 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
-> >
-> >  static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> >  {
-> > -     struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> >       u64 rc_bar2_offset, rc_bar2_size;
-> >       void __iomem *base = pcie->base;
-> > -     struct device *dev = pcie->dev;
-> > -     struct resource_entry *entry;
-> > -     bool ssc_good = false;
-> > -     struct resource *res;
-> > -     int num_out_wins = 0;
-> > -     u16 nlw, cls, lnksta;
-> > -     int i, ret, memc;
-> > +     int ret, memc;
-> >       u32 tmp, burst, aspm_support;
-> >
-> >       /* Reset the bridge */
-> > @@ -1025,6 +1018,40 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> >       if (pcie->gen)
-> >               brcm_pcie_set_gen(pcie, pcie->gen);
-> >
-> > +     /* Don't advertise L0s capability if 'aspm-no-l0s' */
-> > +     aspm_support = PCIE_LINK_STATE_L1;
-> > +     if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-> > +             aspm_support |= PCIE_LINK_STATE_L0S;
-> > +     tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> > +     u32p_replace_bits(&tmp, aspm_support,
-> > +             PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> > +     writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> > +
-> > +     /*
-> > +      * For config space accesses on the RC, show the right class for
-> > +      * a PCIe-PCIe bridge (the default setting is to be EP mode).
-> > +      */
-> > +     tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-> > +     u32p_replace_bits(&tmp, 0x060400,
-> > +                       PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
-> > +     writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int brcm_pcie_linkup(struct brcm_pcie *pcie)
-> > +{
-> > +     struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > +     struct device *dev = pcie->dev;
-> > +     void __iomem *base = pcie->base;
-> > +     struct resource_entry *entry;
-> > +     struct resource *res;
-> > +     int num_out_wins = 0;
-> > +     u16 nlw, cls, lnksta;
-> > +     bool ssc_good = false;
-> > +     u32 tmp;
-> > +     int ret, i;
-> > +
-> >       /* Unassert the fundamental reset */
-> >       pcie->perst_set(pcie, 0);
-> >
-> > @@ -1075,24 +1102,6 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> >               num_out_wins++;
-> >       }
-> >
-> > -     /* Don't advertise L0s capability if 'aspm-no-l0s' */
-> > -     aspm_support = PCIE_LINK_STATE_L1;
-> > -     if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-> > -             aspm_support |= PCIE_LINK_STATE_L0S;
-> > -     tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> > -     u32p_replace_bits(&tmp, aspm_support,
-> > -             PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-> > -     writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-> > -
-> > -     /*
-> > -      * For config space accesses on the RC, show the right class for
-> > -      * a PCIe-PCIe bridge (the default setting is to be EP mode).
-> > -      */
-> > -     tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-> > -     u32p_replace_bits(&tmp, 0x060400,
-> > -                       PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
-> > -     writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-> > -
-> >       if (pcie->ssc) {
-> >               ret = brcm_pcie_set_ssc(pcie);
-> >               if (ret == 0)
-> > @@ -1281,6 +1290,10 @@ static int brcm_pcie_resume(struct device *dev)
-> >       if (ret)
-> >               goto err_reset;
-> >
-> > +     ret = brcm_pcie_linkup(pcie);
-> > +     if (ret)
-> > +             goto err_reset;
-> > +
-> >       if (pcie->msi)
-> >               brcm_msi_set_regs(pcie->msi);
-> >
-> > @@ -1398,6 +1411,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
-> >       if (ret)
-> >               goto fail;
-> >
-> > +     ret = brcm_pcie_linkup(pcie);
-> > +     if (ret)
-> > +             goto fail;
-> > +
-> >       pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
-> >       if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
-> >               dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
-> > --
-> > 2.17.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-brcmstb.c?id=v5.18#n1452
 
---000000000000a6a1cb05e34b3115
+--00000000000079e94b05e34b4d2a
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -330,13 +217,13 @@ S2kM2wvSlgSWDb6pL7myuKR5lCkQhj7piGSgrVLJRDRrMPw1L4MvnV9DjUFMlGCB40Hm6xqn/jm0
 8FCLlWhxve5mj+hgUOPETiKbjhCxJhhAPDdCvDRkZtJlQ8oxUVvXHugG8jm1YqB5AWx7MYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMI+Aj9XRk/wFexb9/
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAZ0O7we2fMsvGb7CAm/oSCu+EHbfpQ
-N1qm687MzuXvojAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA3
-MDgxMzI5MzhaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCeYBHuLa/ys0kLMipzxxve69uaeFZL
+3HJKHcRYyJd63TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA3
+MDgxMzM3MjVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAvC5IEheQB/Qgx8flHQ00tHe+X9e373ctEGN0c3rlmki4cKq/
-Y0dselqrlexT6YPTT/s+R2mVaSVbtjp2qQwr9Br3VRD9H+hPtyd8VJZqO5rnyQg8e6wfEyBlOBcm
-YueaPG9YLJn4UXNI4CcxYKGzKSKpuvKIgxAzWhKrRyWBQ7LejPWQbuDbLnezfFmtoW3H+sRyoPbg
-AjdP+1BA/6f541zRAPbB7bHd1lH3pv4Zh5ax3975aXDyOvegDzaoum/cNKlZA1dttPa1pNklIBCA
-z85YQKvUpvCkIPBIQtf0d/zb/hOX3wWO9PWdtOjgGIsZXe32qEcfGnzWrfoh+P+UnA==
---000000000000a6a1cb05e34b3115--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAXL/FFlhM2qBgkAR83p/e3hoMYVVRB+nFSsmkYOU5iCACx3/a
+CXTr79M2JsyU3U7zMlo+LYD1LnWU22/0ex3txXKe0PP2RuoHQp9WqFJL+PsrWwRdaxB3/9e8TkLY
+a4/wIDlTWS90vCt+W7svIVFgWvX+3v9qSF0fwHHqm0fuFntp2NIRArvZj0AfIYRokdzQUvrEss61
++rYz2BPxUTrYbXLcse5wRHB/WngqabjZro6AvADbHVtUQa4ITz5CZpifVeRrWUJr9rbiNtJz0goE
+kk8Dy3NbFcbeSpMQ0N1xjQPGYsSkeEVNAAt1c/3txrfQS92TnwQF5Hlcd78tHUUVfw==
+--00000000000079e94b05e34b4d2a--
