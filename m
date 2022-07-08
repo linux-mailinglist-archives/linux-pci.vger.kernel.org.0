@@ -2,62 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0969156C342
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 01:14:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 718B556C1E2
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 01:12:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240460AbiGHVcH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jul 2022 17:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46078 "EHLO
+        id S239194AbiGHW1n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jul 2022 18:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238368AbiGHVcG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 17:32:06 -0400
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F07D9FE30;
-        Fri,  8 Jul 2022 14:32:05 -0700 (PDT)
-Received: by mail-il1-f180.google.com with SMTP id b12so904946ilh.4;
-        Fri, 08 Jul 2022 14:32:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=mPK7JqtCJf89laULVPANQB+hprBgnI5b+pSKYiY3/w8=;
-        b=8ACxCXkywtP4blRLHr4+X1xls1PN631DIDPOcXsZM7tYI5oOqdxPet2yfggkjdU6oe
-         R5RSQW2OdJdvDiOPcv932cyOgnslnbeqookhLU4rYKe8uJduQruwtLwnQVXG7ZSGom7m
-         tPExlk6FOgIJqkogoXcMbFq0GPfwFRQcWTVnI2PgneJ7OqX7uo40lkEixBuuIDWQpKhT
-         GAOyER2jJ4LQHg8LQYZlNByD+AnpSBVTvKAjLuUh51e5Lr2PWHJ7pbSfYsAmCPRqa2i/
-         vp4nCGt+jDefhXHx2Ouub2VTKAgF4gO/EX16DE6Bvvw/G0IfW1GdEysM5aCZQXUhubvU
-         bGmQ==
-X-Gm-Message-State: AJIora+XBKirke44SSl9F7O/tChhH77kZ6gyW09QvrsNNzK43ZXoxr2/
-        N6rp4sAty6NAZVTM5PkEdQ==
-X-Google-Smtp-Source: AGRyM1tCjV1LWB4OVa94Ub7ppM+PyrcTgBMr3Gdo0En5H45DKfvVy4UHV6k2oZR63GxcoKo/GZSd4A==
-X-Received: by 2002:a92:c811:0:b0:2dc:14bf:e15d with SMTP id v17-20020a92c811000000b002dc14bfe15dmr3121986iln.305.1657315924369;
-        Fri, 08 Jul 2022 14:32:04 -0700 (PDT)
-Received: from robh.at.kernel.org ([98.38.210.73])
-        by smtp.gmail.com with ESMTPSA id a11-20020a02734b000000b0033ebd47834fsm1530397jae.128.2022.07.08.14.32.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jul 2022 14:32:03 -0700 (PDT)
-Received: (nullmailer pid 1508198 invoked by uid 1000);
-        Fri, 08 Jul 2022 21:32:02 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     shawnguo@kernel.org, aisheng.dong@nxp.com, kw@linux.com,
-        tglx@linutronix.de, peng.fan@nxp.com, linux-kernel@vger.kernel.org,
-        kishon@ti.com, linux-imx@nxp.com,
-        krzysztof.kozlowski+dt@linaro.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, jdmason@kudzu.us, lorenzo.pieralisi@arm.com,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        ntb@lists.linux.dev, maz@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org
-In-Reply-To: <20220707210238.917477-2-Frank.Li@nxp.com>
-References: <20220707210238.917477-1-Frank.Li@nxp.com> <20220707210238.917477-2-Frank.Li@nxp.com>
-Subject: Re: [PATCH 2/3] dt-bindings: irqchip: imx mu work as msi controller
-Date:   Fri, 08 Jul 2022 15:32:02 -0600
-Message-Id: <1657315922.435976.1508197.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        with ESMTP id S238673AbiGHW1m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 18:27:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269A613B44E;
+        Fri,  8 Jul 2022 15:27:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A934A61CB4;
+        Fri,  8 Jul 2022 22:27:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DFAC341C0;
+        Fri,  8 Jul 2022 22:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657319260;
+        bh=NSKccF3DfSf79IP1kjoG4Ian4S3QUmuWsZN59jOWDzs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PINXnhFYC3EAMo/hvIMd6vsKBQapyiIq2lYJwGqxJwontcKB+Xv0UsJ819bDj/m+R
+         dpwwfJk8s0erz6ygHJ+FPyr7mK4MfGSxukUmSQW6gy8G5rvTMIneTr6g2BykHaSscv
+         e++5ZtKOt9ZoTKOj7BlvPWtYoLnkepCMU3/Mx3o/rB4v673eUmJCsPD8pkZ/qQvvPG
+         SRvVNe61zX4/hsWv7bMG5hejBpU80CmbniFcmmcJBRCVqDmAbJ2R7Km4OZ4XL261b0
+         9zDOVhiojEIRsTvioZbTcIXA92RDWBdemjRb3aDJllHjfxE1IBDT5juix3zfU1vnHF
+         XO0pMGYt9aVow==
+Date:   Fri, 8 Jul 2022 17:27:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/4] PCI: brcmstb: Split brcm_pcie_setup() into two
+ funcs
+Message-ID: <20220708222738.GA378386@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+-6iNxDTTKfxKbNPVnRaKmbXuy8cJAr22mws50=GkX3ncxWgA@mail.gmail.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,42 +69,146 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 07 Jul 2022 16:02:37 -0500, Frank Li wrote:
-> imx mu support generate irq by write a register.
-> provide msi controller support so other driver
-> can use it by standard msi interface.
+On Fri, Jul 08, 2022 at 04:38:30PM -0400, Jim Quinlan wrote:
+> On Fri, Jul 8, 2022 at 3:59 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Jul 08, 2022 at 03:40:43PM -0400, Jim Quinlan wrote:
+> > > On Fri, Jul 8, 2022 at 3:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Fri, Jul 08, 2022 at 09:29:27AM -0400, Jim Quinlan wrote:
+> > > > > On Wed, Jul 6, 2022 at 5:56 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Fri, Jul 01, 2022 at 12:27:22PM -0400, Jim Quinlan wrote:
+> > > > > > > We need to take some code in brcm_pcie_setup() and put it in a new function
+> > > > > > > brcm_pcie_linkup().  In future commits the brcm_pcie_linkup() function will
+> > > > > > > be called indirectly by pci_host_probe() as opposed to the host driver
+> > > > > > > invoking it directly.
+> > > > > > >
+> > > > > > > Some code that was executed after the PCIe linkup is now placed so that it
+> > > > > > > executes prior to linkup, since this code has to run prior to the
+> > > > > > > invocation of pci_host_probe().
+> > > > > >
+> > > > > > This says we need to move some code from brcm_pcie_setup() to
+> > > > > > brcm_pcie_linkup(), but not *why* we need to do that.
+> > > > > I will elaborate in the commit message.
+> > > > > >
+> > > > > > In brcm_pcie_resume(), they're called together:
+> > > > > >
+> > > > > >   brcm_pcie_resume
+> > > > > >     brcm_pcie_setup
+> > > > > >     brcm_pcie_linkup
+> > > > > >
+> > > > > > In the probe path, they're not called together, but they're in the
+> > > > > > same order:
+> > > > > >
+> > > > > >   brcm_pcie_probe
+> > > > > >     brcm_pcie_setup
+> > > > > >     pci_host_probe
+> > > > > >       ...
+> > > > > >         brcm_pcie_add_bus               # bus->ops->add_bus
+> > > > > >           brcm_pcie_linkup
+> > > > > >
+> > > > > > Is there something that must happen *between* them in the probe path?
+> > > > >
+> > > > > Yes.  In the probe() case, we must do things in this order:
+> > > > >
+> > > > > 1. brcm_pcie_setup()
+> > > > > 2. Turn on regulators
+> > > > > 3. brcm_pcie_linkup()
+> > > >
+> > > > Ah, I see, both 2) and 3) happen in brcm_pcie_add_bus:
+> > > >
+> > > >   brcm_pcie_add_bus                    # bus->ops->add_bus
+> > > >     pci_subdev_regulators_add_bus
+> > > >       regulator_bulk_enable            # turn on regulators
+> > > >     brcm_pcie_linkup
+> > > >
+> > > > > Since the voltage regulators are turned on during enumeration,
+> > > > > pci_host_probe() must be invoked prior to 3.  Before regulators, we
+> > > > > did not care.
+> > > >
+> > > > I guess in the pre-regulator case, i.e., pcie->sr not set, the power
+> > > > for downstream devices must always be on.
+> > > >
+> > > > > In the resume case, there is no enumeration of course but our driver
+> > > > > has a handle to the regulators and can turn them on/off w/o help.
+> > > >
+> > > > And I guess we don't need brcm_pcie_setup() in the resume path because
+> > > > suspend turns off power only for downstream devices, not for the root
+> > > > port itself, so the programming done by brcm_pcie_setup() doesn't need
+> > > > to be done again.
+> > >
+> > > I'm not sure I understand what you are saying -- brcm_pcie_setup()  is
+> > > called by brcm_pcie_resume()
+> > > because it is needed.  brcm_pcie_setup() isn't concerned with power it
+> > >  just does the preparation
+> > > required before attempting link-up.
+> >
+> > Oh, sorry, I totally misread that.
+> >
+> > But I wonder about the fact that probe and resume do these in
+> > different orders:
+> >
+> >   brcm_pcie_probe
+> >     brcm_pcie_setup                          # setup
+> >     pci_host_probe
+> >       ...
+> >         brcm_pcie_add_bus
+> >           pci_subdev_regulators_add_bus
+> >             regulator_bulk_enable            # regulators on
+> >           brcm_pcie_linkup                   # linkup
+> >
+> >   brcm_pcie_resume
+> >     regulator_bulk_enable                    # regulators on
+> >     brcm_pcie_setup                          # setup
+> >     brcm_pcie_linkup                         # linkup
+> >
+> brcm_pcie_setup() should be order-independent of brcm_pcie_linkup(),
+> but your point is valid -- it is prudent to keep the orders
+> consistent. Let me think
+> about this.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../interrupt-controller/fsl,mu-msi.yaml      | 94 +++++++++++++++++++
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.yaml
+> > Maybe pci_subdev_regulators_add_bus() could be done directly from
+> > brcm_pcie_probe() instead of in brcm_pcie_add_bus()?
+> > regulators must be directly under the root port node in DT, it seems
+> > like it would be reasonable to look for them in the probe path, which
+> > seems like what pcie-dw-rockchip.c, pcie-tegra194.c, and
+> > pcie-rockchip-host.c do.
+> At some point in the original patchset -- IIRC -- the RC driver was
+> searching the DT
+> tree for regulators.  However, doing a "get" on these regulators is pretty much
+> impossible if the "owning" device does not exist.  I even had a version that
+> partially created the downstream device;  this pullreq was a mess and
+> got feedback which  put me on the current approach.
+
+Ah, I suppose because the regulators are not under the host bridge
+itself, but under the *root port*, which is a PCI device that doesn't
+exist until we enumerate it.  Although I guess the root port is
+described in the DT, and the regulators are connected with that DT
+description, not directly with the pci_dev.
+
+> Reviews suggested  that the best location for the regulators should be located
+> in the root port DT node(s).  I agree with this. In addition, there
+> was a request to allow multiple regulators
+> to exist at each of the root ports in the downstream tree.
+
+Makes sense.
+
+> So if the RC driver
+> has to  potentially add multiple buses.  I really don't know how it
+> would do that,
+> and then call the pci_host_probe() w/o it failing.  Perhaps this is what ACPI
+> does before boot  -- I'm guessing here -- but I would also guess that it is
+> a decent amount of code as it is not far from doing enumeration.
 > 
+> One thing I could do is to allow the port driver's suspend/resume to do the
+> turning off/on of the regulators.  There are two issues with this: (1)
+> feedback suggested
+> to put the code local to the Brcmstb driver and (2) the "ep wakeup_capable"
+> code would also have to live in the port driver and I'm not sure this
+> would be welcome.
+> 
+> > Or maybe brcm_pcie_resume() should enable the regulators after
+> > brcm_pcie_setup() so it's the same order as the probe path?
+> I  think I'll do this.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Yep, sounds like the right thing.
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.example.dts:31.41-42 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [scripts/Makefile.lib:383: Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.example.dtb] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1404: dt_binding_check] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Bjorn
