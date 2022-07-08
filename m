@@ -2,63 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93F9156C389
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 01:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89DAC56C1D9
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 01:12:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239295AbiGHT7t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jul 2022 15:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33512 "EHLO
+        id S239058AbiGHULb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jul 2022 16:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231902AbiGHT7s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 15:59:48 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD09C183A9;
-        Fri,  8 Jul 2022 12:59:45 -0700 (PDT)
+        with ESMTP id S238794AbiGHULb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 16:11:31 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DED41BEA0;
+        Fri,  8 Jul 2022 13:11:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 680A0B82953;
-        Fri,  8 Jul 2022 19:59:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9456C341C0;
-        Fri,  8 Jul 2022 19:59:42 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C1A0BB82953;
+        Fri,  8 Jul 2022 20:11:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E4BC341C0;
+        Fri,  8 Jul 2022 20:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657310383;
-        bh=+AjKQiF4LiPg6oDcpkDj0Ni0dwsq4oPqmWlRHGeGSZ4=;
+        s=k20201202; t=1657311087;
+        bh=dSuZEii2kPeJ5k08UvvanEJ35KgMk4ZNaDHgAgpT+JY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Vf43t8YXcF3M7+Fm1x/UndCN9D68h7a43YEztdFC5jWE8HfpGO5pyrmhDUXEXh7dA
-         qrzG6nqr0eWq1RH/UPJqvzBeNVwKpNjR2Ou0yXZXEsmNAx7dpcFdLKZEef+vWU489s
-         krfXv1B+WPRGqsFfggvICptBwv2rsxjV1WQXFp/Jhr9a3TlcsnRF7caTtFX0L++/ZV
-         pkATJBeQV8reB39cUkPHd+5og7M+6w2VFSd8PYOyeHc1lmhAG/8EdNztKJc0Viyjh/
-         uUO09x/5Xo4oZbk4rVU3Q+pBpYGnPAt0jLFRXB/bZ3K/pJBzGmB8j5NEb72yFDbCg8
-         FI+aMvONTtfHA==
-Date:   Fri, 8 Jul 2022 14:59:40 -0500
+        b=f4xCtLZaM1SXzL8phG9I0RtcgPWeZQ6SqT41LIjkYrifHkklWm96Qcc1hAJ8Ax1HL
+         Y946fYtWQyodl0FwDnpWsV41o4Oo8XkXPOqvZGzQ/T5SF2yhd+uUvG9iiDrsm2Lhfd
+         QCPh6VlPn4BCTlao7wAnI5ejw+dcBVNjjptp/JyBVYN7sjKSK5w5hSZovdsDzX7XwV
+         1JGRogN5k+6HUL+9hVfy8zEwpVKEcsrPBF48OheRkOGi1SD6sIs54fbc/AbHSH5BoQ
+         L3TH9e8vKhRg+d9sA5mmrDid042KVtYLKdIkHxGD0D8/ByaLfZP3wXKlfrUVmXZzwQ
+         6cw8m14ifSNvA==
+Date:   Fri, 8 Jul 2022 15:11:25 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/4] PCI: brcmstb: Split brcm_pcie_setup() into two
- funcs
-Message-ID: <20220708195940.GA369714@bhelgaas>
+To:     Christian Marangi <ansuelsmth@gmail.com>
+Cc:     Robert Marko <robimarko@gmail.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lpieralisi@kernel.org, Rob Herring <robh@kernel.org>, kw@linux.com,
+        Bjorn Helgaas <bhelgaas@google.com>, p.zabel@pengutronix.de,
+        jingoohan1@gmail.com, linux-pci@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        johan+linaro@kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4 2/2] PCI: qcom: Move all DBI register accesses after
+ phy_power_on()
+Message-ID: <20220708201125.GA371162@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+-6iNxTYz_yDSbaXc_UKRGr=BxPCa1Lk001uCSmRbVY-WVxvw@mail.gmail.com>
+In-Reply-To: <62c883e3.1c69fb81.45d3d.7d2a@mx.google.com>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -69,103 +62,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 08, 2022 at 03:40:43PM -0400, Jim Quinlan wrote:
-> On Fri, Jul 8, 2022 at 3:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Jul 08, 2022 at 09:29:27AM -0400, Jim Quinlan wrote:
-> > > On Wed, Jul 6, 2022 at 5:56 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Fri, Jul 01, 2022 at 12:27:22PM -0400, Jim Quinlan wrote:
-> > > > > We need to take some code in brcm_pcie_setup() and put it in a new function
-> > > > > brcm_pcie_linkup().  In future commits the brcm_pcie_linkup() function will
-> > > > > be called indirectly by pci_host_probe() as opposed to the host driver
-> > > > > invoking it directly.
-> > > > >
-> > > > > Some code that was executed after the PCIe linkup is now placed so that it
-> > > > > executes prior to linkup, since this code has to run prior to the
-> > > > > invocation of pci_host_probe().
-> > > >
-> > > > This says we need to move some code from brcm_pcie_setup() to
-> > > > brcm_pcie_linkup(), but not *why* we need to do that.
-> > > I will elaborate in the commit message.
-> > > >
-> > > > In brcm_pcie_resume(), they're called together:
-> > > >
-> > > >   brcm_pcie_resume
-> > > >     brcm_pcie_setup
-> > > >     brcm_pcie_linkup
-> > > >
-> > > > In the probe path, they're not called together, but they're in the
-> > > > same order:
-> > > >
-> > > >   brcm_pcie_probe
-> > > >     brcm_pcie_setup
-> > > >     pci_host_probe
-> > > >       ...
-> > > >         brcm_pcie_add_bus               # bus->ops->add_bus
-> > > >           brcm_pcie_linkup
-> > > >
-> > > > Is there something that must happen *between* them in the probe path?
-> > >
-> > > Yes.  In the probe() case, we must do things in this order:
-> > >
-> > > 1. brcm_pcie_setup()
-> > > 2. Turn on regulators
-> > > 3. brcm_pcie_linkup()
-> >
-> > Ah, I see, both 2) and 3) happen in brcm_pcie_add_bus:
-> >
-> >   brcm_pcie_add_bus                    # bus->ops->add_bus
-> >     pci_subdev_regulators_add_bus
-> >       regulator_bulk_enable            # turn on regulators
-> >     brcm_pcie_linkup
-> >
-> > > Since the voltage regulators are turned on during enumeration,
-> > > pci_host_probe() must be invoked prior to 3.  Before regulators, we
-> > > did not care.
-> >
-> > I guess in the pre-regulator case, i.e., pcie->sr not set, the power
-> > for downstream devices must always be on.
-> >
-> > > In the resume case, there is no enumeration of course but our driver
-> > > has a handle to the regulators and can turn them on/off w/o help.
-> >
-> > And I guess we don't need brcm_pcie_setup() in the resume path because
-> > suspend turns off power only for downstream devices, not for the root
-> > port itself, so the programming done by brcm_pcie_setup() doesn't need
-> > to be done again.
+On Fri, Jul 08, 2022 at 09:22:09PM +0200, Christian Marangi wrote:
+> On Fri, Jul 08, 2022 at 02:17:09PM -0500, Bjorn Helgaas wrote:
+> > On Fri, Jul 08, 2022 at 07:02:48PM +0200, Christian Marangi wrote:
+> > > On Fri, Jul 08, 2022 at 06:47:57PM +0200, Christian Marangi wrote:
+> > > > On Fri, Jul 08, 2022 at 06:39:37PM +0200, Robert Marko wrote:
+> > > > > On Thu, 7 Jul 2022 at 21:41, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Fri, Jun 24, 2022 at 12:44:20PM +0200, Robert Marko wrote:
+> > > > > > > IPQ8074 requires the PHY to be powered on before accessing DBI registers.
+> > > > > > > It's not clear whether other variants have the same dependency, but there
+> > > > > > > seems to be no reason for them to be different, so move all the DBI
+> > > > > > > accesses from .init() to .post_init() so they are all after phy_power_on().
+> > > > > > >
+> > > > > > > Signed-off-by: Robert Marko <robimarko@gmail.com>
+> > > > > >
+> > > > > > Would any of the qcom driver folks care to review and ack this?
+> > > > > > Stanimir, Andy, Bjorn A (from get_maintainer.pl)?
+> > > > 
+> > > > Hi Bjorn,
+> > > > I tested this on ipq806x and the current patch cause regression as pci
+> > > > doesn't work anymore...
+> > > > This is a before the patch [1] and this is an after [2].
+> > > > 
+> > > > As you notice the main problem here is
+> > > > [    2.559962] qcom-pcie 1b700000.pci: Phy link never came up
+> > > > 
+> > > > The cause of this has already been bisected and actually it was a fixup
+> > > > pushed some time ago for 2_1_0.
+> > > > 
+> > > > Uboot can leave the pci in an underfined state and this
+> > > > writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > > > is never called.
+> > > > 
+> > > > This is mandatory to a correct init and MUST be called before regulator
+> > > > enable and reset deassert or the "Phy link never came up" problem is
+> > > > triggered.
+> > > > 
+> > > > So to fix this we just have to have
+> > > > writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > > > in qcom_pcie_init_2_1_0 right after the reset_contro_assert.
+> > > > 
+> > > > This command is also present in qcom_pcie_init_2_3_2 where the same
+> > > > exact reg is written so I assume 2_3_2 have the same regression and the
+> > > > write must be placed in init and can't be moved to post_init.
+> > > > 
+> > > > Feel free to tell me how to proceed if I should post an additional patch
+> > > > or you prefer Robi to respin this with the few lines reverted.
+> > > > 
+> > > > [1] https://gist.github.com/Ansuel/ec827319e585630356fc586273db6f0d
+> > > > [2] https://gist.github.com/Ansuel/63fbcab2681cd28a61ec52d7874fa30d
+> > > 
+> > > While testing this I notice something odd...
+> > > 
+> > > 2_4_2 prepare the pipe clock only AFTER PCIe clocks and reset are
+> > > enabled while in 2_1_0... That made me think there could be a problem
+> > > with the current code of 2_1_0... A quick change made me discover that
+> > > the problem is actually that we enable prepare_enable clock BEFORE the
+> > > value is written in PCIE20_PARF_PHY_CTRL.
+> > > 
+> > > By moving the clk_bulk_prepare_enable after the "enable PCIe clocks and
+> > > resets" make the pci work with the current change...
+> > > 
+> > > So it could be that the current changes are correct and it's really just
+> > > a bug in 2_1_0 enabling clock before writing the correct value...
+> > > 
+> > > Tell me how to proceed... think at this point a good idea would be to
+> > > create a separate patch and fix this for good.
+> > 
+> > Hmm, I think I made a mistake when I put this patch in the middle and
+> > applied other stuff on top of it.  I'd like to just postpone this
+> > patch while we work out these issues, but I think it's not completely
+> > trivial since it's in the middle.  I'll try to straighten this out
+> > next week.
 > 
-> I'm not sure I understand what you are saying -- brcm_pcie_setup()  is
-> called by brcm_pcie_resume()
-> because it is needed.  brcm_pcie_setup() isn't concerned with power it
->  just does the preparation
-> required before attempting link-up.
+> From my discoveries it really seems just a bug in 2_1_0 with enabling
+> the phy clk BEFORE setting the require bit...
+> 
+> Moving the bulk_prepare_enable after the bit is set makes everything
+> works as it should... If you want I can send a patch as that is clearly
+> a bug and currenty we have a workaround in place...
 
-Oh, sorry, I totally misread that.
-
-But I wonder about the fact that probe and resume do these in
-different orders:
-
-  brcm_pcie_probe
-    brcm_pcie_setup                          # setup
-    pci_host_probe
-      ...
-        brcm_pcie_add_bus
-	  pci_subdev_regulators_add_bus
-	    regulator_bulk_enable            # regulators on
-	  brcm_pcie_linkup                   # linkup
-
-  brcm_pcie_resume
-    regulator_bulk_enable                    # regulators on
-    brcm_pcie_setup                          # setup
-    brcm_pcie_linkup                         # linkup
-
-Maybe pci_subdev_regulators_add_bus() could be done directly from
-brcm_pcie_probe() instead of in brcm_pcie_add_bus()?  If the
-regulators must be directly under the root port node in DT, it seems
-like it would be reasonable to look for them in the probe path, which
-seems like what pcie-dw-rockchip.c, pcie-tegra194.c, and
-pcie-rockchip-host.c do.
-
-Or maybe brcm_pcie_resume() should enable the regulators after
-brcm_pcie_setup() so it's the same order as the probe path?
+That'd be great!  Since it's an actual bug fix, I think it would be
+good if it were a separate patch instead of doing in the middle of a
+patch that also does other things.
 
 Bjorn
