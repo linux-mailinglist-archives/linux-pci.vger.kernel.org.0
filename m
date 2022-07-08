@@ -2,400 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E08056B72C
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 12:22:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7270056B86A
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Jul 2022 13:26:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237475AbiGHKT2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jul 2022 06:19:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34496 "EHLO
+        id S237672AbiGHLZ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jul 2022 07:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237238AbiGHKT1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 06:19:27 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2088.outbound.protection.outlook.com [40.107.93.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242AE17A81;
-        Fri,  8 Jul 2022 03:19:26 -0700 (PDT)
+        with ESMTP id S237594AbiGHLZ0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jul 2022 07:25:26 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2093.outbound.protection.outlook.com [40.107.114.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90EEB88F38;
+        Fri,  8 Jul 2022 04:25:24 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QcrqwmYrcIn//JarQepsqMBN5zBOSon78ezP9/6f9BnmYcctOnMVbHqUSl2jZt0eO4ASTyAGS1lLH8Y82XQgyyJtxfG/36HhDGftNHJM2/PD/cjCN3d2GRdfLbbiZoi2nRcUEjCRSLUVOLFxctc+TY6WoXY1rvXcsrwonRt992FCHntNSWLVt2whUFSxzDu47Va/DIzTUaskmSTLGzEj67RiEGY7nUk10DvRNfSzArVfB80l8Os7MdxpDTgs+DfXe+fnPAGaFU5xiZMAxVSbBcttGrSH4iwnsChbjP6mAXoPj0P16FaQGq9hHb2ZcIpOo0NK5KXE6NsnfHu7sFj+gw==
+ b=l724cl/pWIFt2HQUDD0TDHUp6kyuyn5FQv/0cbBqFFSvHCIdVMNGixJN7+O1IHvs0Mw/2BzyZ80+dl6odgL4Sct2P9saOPQx1eQ3um99wP68AEKtF89oVZNkfG6Fdoau+On7pPQpQRYBNlw4F5AXGw8ggzVeaKq8IFpbxJhcBlfgOxd1zecnAMJtSny7Wx1tc91D/3S1SsgqUGbdRPBbTZ993a0t7m2uT8FKblzac3nfKNv0EZH1t3bRKp2cN8VYUQOnlHUAuimIV9abfpjOM+9rOUFphy7BdxpFGmU67cRRxsrgxv6o12rwXE4J6ul5Y2mmWDoliLi6geyoxyc8fg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V/4Oyb/5p3wBPhZOzKjnt2emO2qnESK7tX4e6527oWk=;
- b=Yd2yMud+oIU8MxjTP8s1s/YhSw9wM2k/zpylvYz/7CoKPx18Dv3edzr2r2qmJ0zuJKxpzyv97atT+o0rPjTghMynszPxKzb2GAiEhrp7MMBVSswInjltALRHNMxCS50xqGgNfDsRLmA6AunDEBk1c/1+q9cH8/y4c9mD5zxA0zAdk56qO5Uvk6ZBP7+MNywO77a4kw4A+uedecgnQTBaGvcVsJuR5JYrD7ZG/J6zvFoufnIXdn+WBKj9Ejm3CbrwZwT+C92dmva8WYdthU+YAdIN9iaVaHKi/QAD55MwBJX4I8KrjRMRvuFN/kKGPzRCvz78GARNAsNvj7dtrZ2C1A==
+ bh=T059K0wYXKaVCCQb/4MRrB7MhJJLQfNLD1nydIB1cNA=;
+ b=MS5E03KFkKVUj60sE2VlEuCGZACsHeq1Gp+mcAaVIEy8et9eZPF291GvQ69Y2YAGBtHvypUlPWh9MJrJme4eGxCe8XGvTm1FKRUCRuiBT6FNDESSjebiUpCmfDCOhNRiZsCb9uODKdKPRfiBWNzURkYoNKq6aZBQew8St7lgpcDfrUavRptGfe7qriLUiO/Rb0Xl+HhcCxtOUztRG29vrDP7JhfIVHdWwJAt4UXj8jraEtQlGAdaE3+JNCEiiGf1ruGNOrNiC0PPB2SEcscu4OjCNgUVoorSs2FqZyLPYe3xXcU6ZU3jk3TM7Q1Ld8SXReDLbGsOgxMSHyZirH3RAw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V/4Oyb/5p3wBPhZOzKjnt2emO2qnESK7tX4e6527oWk=;
- b=Ki8dq4RcEjL5tKAlpH7JgUVypuy1IDwMK5hyx8B/+07/EsGpZZa0MkWXfJMdoaSeQ2NxVgjnp1WEU7zbPFwpnlznaPiDjb8ScN87gGL3eha7YWKadsdNPv3ZDNP52ceGAHM154lqSPh/6DWTQj//GzgtF7S2E+CmWh38aHc09cqXShF0pluTq4PtnU+yUP1bUXv1oi8wCqQsvq5vzlYXn0pAO8hBux4Zm5e31gDSZemKx0w152k1vRcrj+Ac5/L4nTcIS/L2BS9GAIkw4FsJJhE1RREmAs50a0c+iFe3HPP++GdKICRcem3+fZ7t+BF58b/waa8Fb48fvXrqBsTpIA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
- by IA1PR12MB6355.namprd12.prod.outlook.com (2603:10b6:208:3e1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.21; Fri, 8 Jul
- 2022 10:19:23 +0000
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::3904:2c16:b3b7:c5f3]) by BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::3904:2c16:b3b7:c5f3%5]) with mapi id 15.20.5395.022; Fri, 8 Jul 2022
- 10:19:23 +0000
-Message-ID: <02f878e7-e83e-ff17-1cd4-c2d54eda4dbd@nvidia.com>
-Date:   Fri, 8 Jul 2022 15:49:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH] PCI: designware-ep: Move DBI access to init_complete if
- notifier is used
-Content-Language: en-US
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        kishon@ti.com, bhelgaas@google.com, robh@kernel.org,
-        lorenzo.pieralisi@arm.com
-Cc:     kw@linux.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Om Prakash Singh <omp@nvidia.com>
-References: <20220330060515.22328-1-manivannan.sadhasivam@linaro.org>
- <20220427101820.GC2536@thinkpad> <20220707165751.GB5458@thinkpad>
-From:   Vidya Sagar <vidyas@nvidia.com>
-In-Reply-To: <20220707165751.GB5458@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0PR01CA0064.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ad::6) To BN8PR12MB2900.namprd12.prod.outlook.com
- (2603:10b6:408:69::18)
+ bh=T059K0wYXKaVCCQb/4MRrB7MhJJLQfNLD1nydIB1cNA=;
+ b=iUyHgGTvCbwEma0BJKW7FDZRXH5EnRLc/VRu4iJJiuEPL1WVOmou+Ta1QqqH1/gpM+RGVy0EgrQuPqfhOU87sdH4c+RQD0ROmskdr6YVECdzrKvWD/pAzbIddR9NkVjWFpXEmy+tcX2eotprn8W1VSfTuybzlzSubDR+6dM84sE=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by TYCPR01MB9432.jpnprd01.prod.outlook.com
+ (2603:1096:400:198::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.17; Fri, 8 Jul
+ 2022 11:25:22 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::b596:754d:e595:bb2d]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::b596:754d:e595:bb2d%6]) with mapi id 15.20.5417.016; Fri, 8 Jul 2022
+ 11:25:22 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v3 09/13] PCI: renesas: Add R-Car Gen4 PCIe Host support
+Thread-Topic: [PATCH v3 09/13] PCI: renesas: Add R-Car Gen4 PCIe Host support
+Thread-Index: AQHYjShAgQj55T6hG0WCdmXoYXKRcq1pm4MAgArExsA=
+Date:   Fri, 8 Jul 2022 11:25:22 +0000
+Message-ID: <TYBPR01MB534151AE3E0C042CC7C67793D8829@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+References: <20220701085420.870306-1-yoshihiro.shimoda.uh@renesas.com>
+ <20220701085420.870306-10-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdVsOuLDbhBGrSO8r5i1WF+8scoLRNReyUW-tg4TQQL3gg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVsOuLDbhBGrSO8r5i1WF+8scoLRNReyUW-tg4TQQL3gg@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5cdd0f8f-245e-45c9-7bc9-08da60d48bf8
+x-ms-traffictypediagnostic: TYCPR01MB9432:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RuH29TeP8W9NHkvx+XDrNp2CHMo1Z3PIT5ZV/erZGRJ9wGMvYy73ksB1QF2uQ7FmZGzyYSYgNoTBd0+XTNgiuV7sKv5S54mfDYdYK56ELvU1lCdP6QbIe55RwLH2NzQG4B74hNxWtnS+yG/jWAC8J80mu7/nkL4ubyXk/O7heKgapl1/1bv7VNAKyRIf813PYd+llRES/r2rip5mfZXERqgRniox79jx4YVfNsCSRX3Mccr9C5/jjS6CEFAJKx9khqP1KIBxv4VEP4Kwlin5R8lScSwL6/0Dp4dkXhfgVmWJkEq2l84J80u/gR8uw2Lf6/kX93HWxBmvtmAEJ9sd0SY9puWT36Sr2EyfEwsymnM60VJiDl90RO78En0e0moacNG6tlRX6SZ0EFvBhyHcrnZ8k2T22Cu915yLRkyU+fVYsPAy+ovdWuGEjzOANCfW4eow/+y3frY+Pl2FNWQxK6DkKHIsm+DJJQaqsDiL3yr7ebPckcYTLn/ks1MlgdZfz43CsnSBojbjgqDWu3ZK1VzVey4D0e7uW4BQQJedhYxPO/Y+TQgS+lfRxWUc9A+ktnKrDHJoHHLu7mZMrTryNwGc9J8cxHk3pUFxOtUGMcaIWT1fRcKyFfNKJxSMY9vuhXQFAdg9XxwIAF9y6agJY2ocg5GkTqoqOax7kKkT38N5Rl6O1/Jj7QLKSbpRdlvHsK7MuOSTVhzz3Ooyr4Xn11bwkFr0bKJruPNkuKNFGc0EUpPLYpywqjfv1z6ENvY1zoD8hZEod1iQR4cNSm5rpMuqjmRby/2viZcThp46Q4epQvMV/lp75NCI3Pw1tIfh
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(136003)(366004)(39860400002)(396003)(66946007)(66476007)(64756008)(55016003)(41300700001)(66446008)(76116006)(66556008)(478600001)(316002)(71200400001)(4326008)(8676002)(7696005)(6506007)(53546011)(38100700002)(186003)(6916009)(54906003)(8936002)(4744005)(38070700005)(5660300002)(33656002)(7416002)(86362001)(2906002)(52536014)(122000001)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NG50ZGwyUnpjNFNkWFFyZnY2alJGNkNWT3ZlVWFwVXZIZVZGV2hlTkNpc2Ur?=
+ =?utf-8?B?UGh4VjZJWXVubGltWjRsOEpDOS9rRXlvRFhFR0RtRDBGbmFGSmd1a0s4UVRO?=
+ =?utf-8?B?NHl0eVk3LytYTnhua3ZFbVZkT3h6Q2VnajhTVDhZRmZWRDNnQiswSEV0STNE?=
+ =?utf-8?B?WmNCN0g5Y1dFWkFPdmQ1clh2aWY0ZG45NDFEWHJkNldsWXVpQmdpaGlGVFVu?=
+ =?utf-8?B?WGtHTVJpM2dtK0owR0RpaVkxd0U5Z2lKbU1tNDhFQ05mUVFxS2hMb090RGxL?=
+ =?utf-8?B?QlUwTmRQeTVTaHBIZUQxNG8rNWJjTnEzUE90Rk90M2o2RWR1bWM3WmFPNSta?=
+ =?utf-8?B?TXgzSFY2VnRCNGl1ci9BaU9aT1NXNmhrenJpMFZhQ2t0RU9waVNvMFQ4UklV?=
+ =?utf-8?B?YXpPM0NFMUlLR2R2T0JuY0ZEb3h4YmxkOE9ZQTZzUm5mMXBPNFAwZzZoK2NX?=
+ =?utf-8?B?NlpOWC9jQTNVb3NwSERvY0hOdklVcFJucFRRRzV6bzhnb0h3c1JGcnd2eWtE?=
+ =?utf-8?B?eDFWbGRsTXZsdENLQjJ3Z3NCbHNwNExBZ1lTc3FzRHFRanVlaXBTNkduL0Zp?=
+ =?utf-8?B?dUpqRGthRUxlaVkraGJFelNCYVVTYkNiNmZTRGFONXNtb0Z4Nm1DQys5RzRU?=
+ =?utf-8?B?ZDRPR2hzQTlHbFA4M0xpRDZyOFpVV2FEdnNycEkxd0Uxb3NuTFdMR0xBV2Yx?=
+ =?utf-8?B?NnVtdjdmVHBFT2xiLzlvQXJJSjYzTTk4bCtJTVZnR3FFU2VpYzFpdW82NHdv?=
+ =?utf-8?B?MW81Qkhwb3B4R21VUUwzU0tpL2FBOUxubzlGN0dyWnhiajBYOUl0ZEMyS3c5?=
+ =?utf-8?B?cmJyTnh6V1J1UVRwS3BiR3lrOHhqTFRiM2RvMXZhU0RJWUNNajhrUDhiVC9o?=
+ =?utf-8?B?YXhmWkN5L1U5Q0xCQmU0RWs4aGR4V3ovaHpVOCs2SkF6WWs1MDJ2anc2b3Iv?=
+ =?utf-8?B?RVBFL2k3NWNpTEtsZWMwM2dEVmFOaWJBREJDMmF0c3lLdmsySlFGaHFSYnJm?=
+ =?utf-8?B?bGxlbTc5VkNUd3YxaGlTa3NsZEpYa3dmZ3hRUUJHVmZWUGpKaVVORmhpanB0?=
+ =?utf-8?B?ZGhPbndJWDJJdHVkM2Mwajh6cXVGUUZ6ZVpSa1dDZ3ZEMVpia2E0ZWVMNGpY?=
+ =?utf-8?B?SnJxUDczeGxJeXhKSDJmbzVQcDROV255WGpvSk51MHM0czdiR3VRekhDcDFs?=
+ =?utf-8?B?WnBYQmJtVXVjbUYyc00vVHlhV2NwNDJyUjF6Qkx2TFkxc2MrdmVwVlozSGJ3?=
+ =?utf-8?B?RkU1VTlHc0VnMmpnbWhSSTQ3bU9QVXQrTlVBWWl5WkRwS1pvUlpOUzFKTm93?=
+ =?utf-8?B?RE5DY2ZtK1MyNHE3ci9UOHFmVEJCRkcxSis1Vk0yQ2dFdkJDRWVSUDNBa214?=
+ =?utf-8?B?ZS9BakNhWlNhWTdWWFM2eTU2UXBYMU9tRnFieWN2TTI1NXhqUkg3amtuOTFW?=
+ =?utf-8?B?V2hzMnEzTnZ5UHRCRnVvSThSNGdmLzk4cEx2LzB2TVNpNUhvU0JOSEFqN29E?=
+ =?utf-8?B?dytlTUJWMitLclQzdkhrd0N1WDhkWjdBcDJiNWNEV2M1b1g4OEVta2xPVldK?=
+ =?utf-8?B?TzVMcWlWTHViY1VOU20zdWxPUE5abnhTSkkrK09OR25EZFIzQjBvL0luQkJz?=
+ =?utf-8?B?L211aGJHdlZxWDZuaDdBWjNaTmtYY0wrcDNpeU1JVWN3OCtsUnRXUlBlYnVv?=
+ =?utf-8?B?Q1QzMWNRcUNjSW5iMW9FMGtsc0N4RkhxaHgzb1krY1V4TWM4T2dsYnh6WEc3?=
+ =?utf-8?B?Q09IU29QQ1AxY0RNQ1dGM2dXK09zTDRPVXJyZHE1Rm9VM1VOV0Fic0o5MDFP?=
+ =?utf-8?B?NFFZK3pseTdKL3BaaDlmRW03T29SZGRaWnQyaVE2UGgyOE1zdzBwQjFOU3dN?=
+ =?utf-8?B?UzVtMnBuOEp0NExlLzhlM1EvSS9QOWNaeFZ1MTA5Ny9aVGR4Y2dLMDg3dDNo?=
+ =?utf-8?B?R0E0Z0NIOVdCT0MrbzdZTVAvZEVtd1pQZE5Oc2hITUxwNHAxNGRQMEk0bnZY?=
+ =?utf-8?B?d3Fwczl6b3gwVHRENCtWU2lPRm93dnk3TmJhdTZNVlphbDBiSWswa1pvbDFL?=
+ =?utf-8?B?MkQvd1YwVmFyaERRTWRZOFduZXNiYjAvUVFlWEJ2SG15OTNMSGgwUVAyak9G?=
+ =?utf-8?B?ZVlFaFdXelF6RkxGNGU2cjdHd1BBNzZQU0hORUNwdStsY254b1pLdzVRaC9M?=
+ =?utf-8?B?LzJTd2dodjVaVExla3pMUDZjd1FVa29KQXFENkFJR05KMS9DYVpHRnJvVXdU?=
+ =?utf-8?B?VHZjSVU4dmU1QmVvQmRKL2N5cWh3PT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fa8e2592-09bf-4f89-cf72-08da60cb53d7
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6355:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AWgXzw8HMNATelnD4ljl+SmMdLayjXJaoWVc5lqkOwH0+zds7PAuZILjA6+j5wR/St/fHKkFaUIV51cVDWfxusyJ31IyZrcHEwcr1gt+6j3r5a+fSh6V49NeOezT7qBZ7IteIObUcn3IDKsHcP5JGpu5b52bRAxbVo0N+wocOrnRuQPiv9CuZnnfDqwYXmpe4Ks3zYr4ztjCMMd3umnVLMuvRjoEWQxbUYcF6hAYbDHU6flHry2oLkPp3T0dmPIs53CzFDUlpdwfN3HQ5nLNb6KmsTRG5HRE3H8XW3o1loABMhtubzMfepInVUxh3R6P45JP+6KFY+kemRn7DTDeEYRPDXkAPbku/WwXTHV47cCitY8ORCwi0qbeKVemtHON9BK50NEpP82VyWi8lrff976jdb2/UOZnetW+shUkFr5ibyK3zTp3NfJjituASiPbfgeAb5d3ga53Z2BHrhL6r29glnkzD9y/ABTkujLhF+yU2VwsKqfbvTuQCi0eV8oa1Yoz4czzcprLfrZqSkMklYY8aMFJ5L0I6YGt1CukTnQcsjxXgkjLCRnX5E96jkoEkNzshaNH3dVMCtDz0MnC3+s6nmdUrEPIqeNzE+0GJjqWpjjcG0i53svbNrCRi6KRRTyIXq76jKeeV8EUgZ2TRyrrIhi3aAfiOI3pCPU/b1Jo8R0d6Mgzp447bWJED1c7A4zrnuYP5Msu0ADN72LL70k4q1ISRI+GlJAkmj+oM/gjxu8hO+eP0rxFK/W3h0QCcNLuR6+SIYSi4J70Djg0UNhwkR98mDSEruGKVgTnqItHItqwinAY0T5CG6vHPsQi8gHUAIU53ijSZC7Rg9PqGg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(366004)(136003)(39860400002)(396003)(83380400001)(31696002)(6666004)(41300700001)(54906003)(316002)(6512007)(186003)(8936002)(5660300002)(4326008)(2906002)(26005)(36756003)(6506007)(66946007)(107886003)(66476007)(6486002)(86362001)(31686004)(2616005)(8676002)(53546011)(38100700002)(478600001)(66556008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MUJQalNYVVMxREx6SXZTTzlJY3J0WllISXQ2UzVNMVU0a0dsWXFCVnBpOXFk?=
- =?utf-8?B?K0plemw3QlFHaHRjUSt1bEJXWEs1QTNaRmczbW92Yy8vOGFFNkRteHlPUjho?=
- =?utf-8?B?SGFBcXFDVDNNZEMvQjNaRWYwc0c3anR0VGhCYzZmZGFOSkNET2ZaSFdUVlA5?=
- =?utf-8?B?N1NCSzNHcWl3cytiY1pPUUNYdEgrd0lPbzdFN0xGSEFFZW5neWhpQTg4Z3Ft?=
- =?utf-8?B?YWY4enZTUElvUlUwSTZRN2pYcCtXbDJLNFhHNWtTb3owT1Y5STNXelJMY2tU?=
- =?utf-8?B?d1h5Znd6MTI4dGlqbEMyUVVaWldKclg2dXcwLysweDloOVRVaG91cEFPbW93?=
- =?utf-8?B?U2pBYzgzUitFcEtUSWFZZk1vK29ld3BFbXFCU1dXU1hJSEx6SzB4eFkxeFZa?=
- =?utf-8?B?R0t4bU55anNoUWdOMU1JdnFQdVVGNmNqQU9jcklZOFlxM1l3WW5GUWFSenFW?=
- =?utf-8?B?T201NWJ1VVFzaE9Ya3F3WDdxcUxqSk5uMWQyZEZBWUVXN2lieitpU3M5SUkv?=
- =?utf-8?B?cHZvajg4d29FQklrNDV4NFd0c0pDMllUcDYycEprYklNNUhiL1RNZE5RTGVk?=
- =?utf-8?B?ZTZGa0JlMUsyWXhPaUJJNFluNWpTdGEwUmJGMUR2ZkwvcVpsV1NSdGgxc3VW?=
- =?utf-8?B?M1NFaEh2Nnpja0p3UElwTkNlTzBkVVpkVEkydjIvMFJPWTc5S0RCL0RxVDYw?=
- =?utf-8?B?SlJWK3JwdXdPWFpKS2NqRXd3b1g2eEFUVVpnbmkrTUE4MXV0ckxISEZnSTYx?=
- =?utf-8?B?MXYwcE8yYlhzR3VZQkwrdVprUGM3QlBMS2NScDZmdnN0enFWakNuaFRWZ3J1?=
- =?utf-8?B?Nmc0bTFHQkZpQTIyZjBFeDdveVVZRTMwOHdHNDA0WmlGQ09kUW5yRXVWakNz?=
- =?utf-8?B?RjlSbHRMZnBObDZmWEpEdVgrR2Q0Wmh4aGdvMW5ZeU03Z2NvclZVWmxKaThP?=
- =?utf-8?B?MlQ1M0Q1Zzhacy80OUQwUEMyTUw0eEZXU2VhVW5XNnBjcmdkSmU3NEZXR3V6?=
- =?utf-8?B?YysraWllR2dQU0dRRHFoUzdaOW1hck5VZ2hlMFNvbXliQ082clY0NTQ5OGxH?=
- =?utf-8?B?MEFNdXBmR1lWakNNNmFTVG0vcVphSXRsU3IxZTRxK3c3b2QwVTFyOG55QUtx?=
- =?utf-8?B?M2hxdWhvRGpwVnF3MHZyNmhYMW1VT2V5SFM3UTUveVNsZTUySG5TV1R2dXk2?=
- =?utf-8?B?M09waTYza3lpcUZ3VTZ3T0FEVEc3VlpFYkpZMzBXZUJucVNRNHpWcGMvNlFl?=
- =?utf-8?B?SkpBU3R3ZnFiRy9scGpKc3liQXNJZVFrQzY0TFJKQnZIV1UvNTJmR1hrMU9w?=
- =?utf-8?B?TVhrMlJXRVR4UmxHVmV3RDc4cHMraEU3d1A1QTNEWitFZHNwdmFJQ2ZMS1pv?=
- =?utf-8?B?MzcvNVkydmprTnFDcmpnV2lZQUxBZ1QvblN5V05FVVhsSGs0dDhHbm9jbW5n?=
- =?utf-8?B?cTRqellTU1hJYWZpaHZ0dk5TYzYyT2E4TmpkRnNLNXI5b3hsTkVkYkNmTy96?=
- =?utf-8?B?ajVNQTF6VEg0ZmwzTWhvOW8xNDhqZWYrMndoQncxN2kwMmt5NURlV3lRNlVX?=
- =?utf-8?B?c2NEYzlxcVkxcjAyd3pNdE52YXo4bnhhU1RVUXIxY0ZVUVRYT3htbDQ2U3lH?=
- =?utf-8?B?NVRzb05NZWc0WDI0WWdjSTBaQnloV25aRmdCWWZJeDdxdzRtNC8zVC80QThh?=
- =?utf-8?B?bVJ2cFBPRVI2ajg4OTRXNHBhaFNOaGNGcnpxWjJSYkNVZmFLbWI5aE9UN3Z3?=
- =?utf-8?B?SmVsTnNaNGs5V2Z6ZUtKUFM1Nm9waTh2VjRvenNjTXByMGVPNVJDd2F0S3ow?=
- =?utf-8?B?bWFGelV6YW1VUFRWTXJFd3dZLzJPZzVIZSszMk5tL0JIb28vc29GNU04ZXoz?=
- =?utf-8?B?dWM4ZndiUnJNZjNHaW5DN291Wk1FMzFFMUtoMFQvS2MvVGMrVU1pdnMwaGdl?=
- =?utf-8?B?VFZTdHhPUHltTkZVVCtWMkZKTldUTjdtc2JQR3JTL1JNYldhVG1PR3puMVJ6?=
- =?utf-8?B?SFZJM2tNUkp1WUFic0xCNGFVZk12TTQrbXE5Q0o2UEdYOEZMci9Xdkg5ZmJG?=
- =?utf-8?B?eERTN1poUlRXT0ovbDQ2OFJmemlzRWJ5Z3dWdWFsTE1JcGQ5NjMxa2cvZ295?=
- =?utf-8?Q?SXq4ftETTWaLp1uFgTeA8eHnn?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa8e2592-09bf-4f89-cf72-08da60cb53d7
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
+X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2022 10:19:23.1063
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cdd0f8f-245e-45c9-7bc9-08da60d48bf8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2022 11:25:22.3684
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dTuqJJU12FehpAsmvK47XvL8HQRqOu/oFcmqG94UKXNTPifDlCF1v1BP7jQwoquTWGwX3TZc7WqS4/G7f3edHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6355
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VHAcqbgZOcmkBu1qHNTxwi0at+45heUKTobJrWtwrK8WNjtklbKBvve8kkPrsTzB+CbapEuej4Hrw+SdQIrJvag2VCfLCCt5XkJFkxLNTsaZJY+sl7WO9GdtNhTXh9KY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9432
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I have a minor comment. Otherwise this patch looks fine.
-I verified it on Tegra194 and it works as expected.
-
-Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
-Tested-by: Vidya Sagar <vidyas@nvidia.com>
-
-On 7/7/2022 10:27 PM, Manivannan Sadhasivam wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Wed, Apr 27, 2022 at 03:48:26PM +0530, Manivannan Sadhasivam wrote:
->> On Wed, Mar 30, 2022 at 11:35:15AM +0530, Manivannan Sadhasivam wrote:
->>> For controllers supporting the CORE_INIT notifier, the resources are
->>> supposed to be enabled in the init_complete function. Currently,
->>> these controllers are enabling the resources during probe time due to
->>> the DBI access happens in dw_pcie_ep_init().
->>>
->>> This creates the dependency with the host PCIe controller since the
->>> resource enablement like PHY depends on host PCIe to be up. For the
->>> standalone endpoint usecase, this would never work. So let's move all DBI
->>> access to init_complete function if CORE_INIT notifier is used. For the
->>> controllers those doesn't support this notifier, this change is a NO-OP.
->>>
->>> Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>> Cc: Om Prakash Singh <omp@nvidia.com>
->>> Cc: Vidya Sagar <vidyas@nvidia.com>
->>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>
->> A gentle ping on this patch!
->>
-> 
-> Ping again!
-> 
-> Thanks,
-> Mani
-> 
->> Thanks,
->> Mani
->>
->>> ---
->>>   .../pci/controller/dwc/pcie-designware-ep.c   | 138 ++++++++++++------
->>>   drivers/pci/controller/dwc/pcie-designware.h  |   1 +
->>>   2 files changed, 94 insertions(+), 45 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> index 0eda8236c125..fb2bf4bf5ba0 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> @@ -636,6 +636,63 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
->>>      return 0;
->>>   }
->>>
->>> +static int dw_pcie_iatu_config(struct dw_pcie_ep *ep)
-
-How about using dw_pcie_ep_iatu_config() name? Just added 'ep' to be in 
-sync with other API names in this file.
-
->>> +{
->>> +   struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>> +   struct device *dev = pci->dev;
->>> +   void *addr;
->>> +
->>> +   dw_pcie_iatu_detect(pci);
->>> +
->>> +   ep->ib_window_map = devm_kcalloc(dev,
->>> +                                    BITS_TO_LONGS(pci->num_ib_windows),
->>> +                                    sizeof(long),
->>> +                                    GFP_KERNEL);
->>> +   if (!ep->ib_window_map)
->>> +           return -ENOMEM;
->>> +
->>> +   ep->ob_window_map = devm_kcalloc(dev,
->>> +                                    BITS_TO_LONGS(pci->num_ob_windows),
->>> +                                    sizeof(long),
->>> +                                    GFP_KERNEL);
->>> +   if (!ep->ob_window_map)
->>> +           return -ENOMEM;
->>> +
->>> +   addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
->>> +                       GFP_KERNEL);
->>> +   if (!addr)
->>> +           return -ENOMEM;
->>> +
->>> +   ep->outbound_addr = addr;
->>> +
->>> +   return 0;
->>> +}
->>> +
->>> +static int dw_pcie_ep_func_init(struct dw_pcie_ep *ep)
->>> +{
->>> +   struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>> +   struct dw_pcie_ep_func *ep_func;
->>> +   struct pci_epc *epc = ep->epc;
->>> +   struct device *dev = pci->dev;
->>> +   u8 func_no;
->>> +
->>> +   for (func_no = 0; func_no < epc->max_functions; func_no++) {
->>> +           ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
->>> +           if (!ep_func)
->>> +                   return -ENOMEM;
->>> +
->>> +           ep_func->func_no = func_no;
->>> +           ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
->>> +                                                         PCI_CAP_ID_MSI);
->>> +           ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
->>> +                                                          PCI_CAP_ID_MSIX);
->>> +
->>> +           list_add_tail(&ep_func->list, &ep->func_list);
->>> +   }
->>> +
->>> +   return 0;
->>> +}
->>> +
->>>   int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->>>   {
->>>      struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>> @@ -643,7 +700,22 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->>>      unsigned int nbars;
->>>      u8 hdr_type;
->>>      u32 reg;
->>> -   int i;
->>> +   int ret, i;
->>> +
->>> +   if (ep->core_init_notifier) {
->>> +           ret = dw_pcie_iatu_config(ep);
->>> +           if (ret)
->>> +                   return ret;
->>> +   }
->>> +
->>> +   if (ep->core_init_notifier) {
->>> +           ret = dw_pcie_ep_func_init(ep);
->>> +           if (ret)
->>> +                   return ret;
->>> +
->>> +           if (ep->ops->ep_init)
->>> +                   ep->ops->ep_init(ep);
->>> +   }
->>>
->>>      hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
->>>                 PCI_HEADER_TYPE_MASK;
->>> @@ -677,8 +749,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
->>>   int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>   {
->>>      int ret;
->>> -   void *addr;
->>> -   u8 func_no;
->>>      struct resource *res;
->>>      struct pci_epc *epc;
->>>      struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->>> @@ -686,7 +756,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>      struct platform_device *pdev = to_platform_device(dev);
->>>      struct device_node *np = dev->of_node;
->>>      const struct pci_epc_features *epc_features;
->>> -   struct dw_pcie_ep_func *ep_func;
->>> +
->>> +   if (ep->ops->get_features) {
->>> +           epc_features = ep->ops->get_features(ep);
->>> +           if (epc_features->core_init_notifier)
->>> +                   ep->core_init_notifier = true;
->>> +   }
->>>
->>>      INIT_LIST_HEAD(&ep->func_list);
->>>
->>> @@ -708,7 +783,11 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>              }
->>>      }
->>>
->>> -   dw_pcie_iatu_detect(pci);
->>> +   if (!ep->core_init_notifier) {
->>> +           ret = dw_pcie_iatu_config(ep);
->>> +           if (ret)
->>> +                   return ret;
->>> +   }
->>>
->>>      res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
->>>      if (!res)
->>> @@ -717,26 +796,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>      ep->phys_base = res->start;
->>>      ep->addr_size = resource_size(res);
->>>
->>> -   ep->ib_window_map = devm_kcalloc(dev,
->>> -                                    BITS_TO_LONGS(pci->num_ib_windows),
->>> -                                    sizeof(long),
->>> -                                    GFP_KERNEL);
->>> -   if (!ep->ib_window_map)
->>> -           return -ENOMEM;
->>> -
->>> -   ep->ob_window_map = devm_kcalloc(dev,
->>> -                                    BITS_TO_LONGS(pci->num_ob_windows),
->>> -                                    sizeof(long),
->>> -                                    GFP_KERNEL);
->>> -   if (!ep->ob_window_map)
->>> -           return -ENOMEM;
->>> -
->>> -   addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
->>> -                       GFP_KERNEL);
->>> -   if (!addr)
->>> -           return -ENOMEM;
->>> -   ep->outbound_addr = addr;
->>> -
->>>      if (pci->link_gen < 1)
->>>              pci->link_gen = of_pci_get_max_link_speed(np);
->>>
->>> @@ -753,23 +812,15 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>      if (ret < 0)
->>>              epc->max_functions = 1;
->>>
->>> -   for (func_no = 0; func_no < epc->max_functions; func_no++) {
->>> -           ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
->>> -           if (!ep_func)
->>> -                   return -ENOMEM;
->>> -
->>> -           ep_func->func_no = func_no;
->>> -           ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
->>> -                                                         PCI_CAP_ID_MSI);
->>> -           ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
->>> -                                                          PCI_CAP_ID_MSIX);
->>> +   if (!ep->core_init_notifier) {
->>> +           ret = dw_pcie_ep_func_init(ep);
->>> +           if (ret)
->>> +                   return ret;
->>>
->>> -           list_add_tail(&ep_func->list, &ep->func_list);
->>> +           if (ep->ops->ep_init)
->>> +                   ep->ops->ep_init(ep);
->>>      }
->>>
->>> -   if (ep->ops->ep_init)
->>> -           ep->ops->ep_init(ep);
->>> -
->>>      ret = pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
->>>                             ep->page_size);
->>>      if (ret < 0) {
->>> @@ -784,12 +835,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>              return -ENOMEM;
->>>      }
->>>
->>> -   if (ep->ops->get_features) {
->>> -           epc_features = ep->ops->get_features(ep);
->>> -           if (epc_features->core_init_notifier)
->>> -                   return 0;
->>> -   }
->>> +   if (!ep->core_init_notifier)
->>> +           return dw_pcie_ep_init_complete(ep);
->>>
->>> -   return dw_pcie_ep_init_complete(ep);
->>> +   return 0;
->>>   }
->>>   EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->>> index 7d6e9b7576be..aadb14159df7 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>> @@ -242,6 +242,7 @@ struct dw_pcie_ep {
->>>      void __iomem            *msi_mem;
->>>      phys_addr_t             msi_mem_phys;
->>>      struct pci_epf_bar      *epf_bar[PCI_STD_NUM_BARS];
->>> +   bool                    core_init_notifier;
->>>   };
->>>
->>>   struct dw_pcie_ops {
->>> --
->>> 2.25.1
->>>
-> 
-> --
-> மணிவண்ணன் சதாசிவம்
-> 
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogRnJpZGF5
+LCBKdWx5IDEsIDIwMjIgMTE6NTggUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24g
+RnJpLCBKdWwgMSwgMjAyMiBhdCAxMDo1NSBBTSBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGlo
+aXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IEFkZCBSLUNhciBHZW40IFBD
+SWUgSG9zdCBzdXBwb3J0LiBUaGlzIGNvbnRyb2xsZXIgaXMgYmFzZWQgb24NCj4gPiBTeW5vcHN5
+cyBEZXNpZ25XYXJlIFBDSWUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hp
+bW9kYSA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+DQo+IA0KPiBUaGFua3MgZm9y
+IHlvdXIgcGF0Y2ghDQo+IA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL3Bj
+aS9jb250cm9sbGVyL2R3Yy9wY2llLXJjYXItZ2VuNC1ob3N0LmMNCj4gDQo+ID4gK3N0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZ2VuNF9wY2llX29mX21hdGNoW10gPSB7DQo+
+ID4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gInJlbmVzYXMscmNhci1nZW40LXBjaWUiLCB9LA0K
+PiA+ICsgICAgICAge30sDQo+IA0KPiBQbGVhc2UgZHJvcCB0aGUgY29tbWEsIGFzIG5vIG5ldyBl
+bnRyaWVzIG11c3QgYmUgYWRkZWQgYWZ0ZXIgdGhlDQo+IHNlbnRpbmVsLg0KDQpJJ2xsIGRyb3Ag
+aXQgYW5kIHBhdGNoIDEwLzEzLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0K
+DQo+ID4gK307DQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUn
+cyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+IA0K
+PiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxs
+IG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMg
+SSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
