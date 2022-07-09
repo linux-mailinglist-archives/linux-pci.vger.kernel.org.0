@@ -2,56 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61EC956CA8E
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 18:19:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B1A56CB4F
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 22:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbiGIQTt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Jul 2022 12:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52052 "EHLO
+        id S229523AbiGIUGn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Jul 2022 16:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbiGIQTt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jul 2022 12:19:49 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E610459B3;
-        Sat,  9 Jul 2022 09:19:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id AC6E8CE0A7C;
-        Sat,  9 Jul 2022 16:19:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75201C3411C;
-        Sat,  9 Jul 2022 16:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657383583;
-        bh=7mY0eYx6SsKjTuFKCj7idZ27LE4RyLoq14eNDgpJ9kw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FJFNw2jSMiVVtHnFX9mu6Kakh8w2Nnh/y8ftcrYPq485cWssNEv4rHXKGiaFHtdvj
-         dNGxw4JGIjRkbMCLMvzQGLDK0E0RFeS2qptgpLznzbA58lBEv2JO7MHBP0eqnQcOnW
-         g0TCjucbVzhS88rffeQ7pDp2q8qtZikFevPwncB9tDF9uxJTi7Y6reFUsno8PWrBlF
-         IlfL+pkc/qMbSjyRfRSaOxxZ0rxOML8qBizAX/7c/RuI6UjVRTChoerW7zotoUQuCI
-         jA0s6z9FABFY+7FQm20QCIgEOXRdlzCaVmm47IDAnRC5tquYh0ttttXoJ/4NCZXasu
-         9g7m0SDjLanpg==
-Received: by pali.im (Postfix)
-        id 7062CAFA; Sat,  9 Jul 2022 18:19:40 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: mvebu: Dispose INTx irqs prior to removing INTx domain
-Date:   Sat,  9 Jul 2022 18:18:58 +0200
-Message-Id: <20220709161858.15031-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S229448AbiGIUGn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jul 2022 16:06:43 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FABE65E8;
+        Sat,  9 Jul 2022 13:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657397201; x=1688933201;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=eaeet4UkoL9q2ctVkzn6mx3f829Oc/d+Cy7adZh9bdk=;
+  b=Z00xQWUGEgF0SqVdF67/iMfv2WVsGU6SQQqQ6AIJk+HbO4IF57TKlky7
+   jq5AaA0Y5O5zcUQlkloMZ3RXoPkIP3f57sGm+Sf5lfJfzYQKySdoH4Gq/
+   4v8kixc29d5esyvtkOLzeia4a3AFwnAZ5s8afJkIwDJY2xKb9C8gX5/yB
+   DhVaTDVyDdLDfr+14sFO3r0pQeIPpSP81h7ZDsRGKsOD5o2KNdtd5Tldp
+   /+w5WCualibIxwDyjE9d0CVSnRYnu1iPYwLi4ZUSzNdGM5FM0JrBD7goL
+   eqqaEwkvNzuO7wyO7bTAiLLRB8Q7w9tDKmDgSljrQ93DUIZDxBsyglfMV
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10403"; a="264235998"
+X-IronPort-AV: E=Sophos;i="5.92,259,1650956400"; 
+   d="scan'208";a="264235998"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2022 13:06:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,259,1650956400"; 
+   d="scan'208";a="921343708"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Jul 2022 13:06:40 -0700
+Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Sat, 9 Jul 2022 13:06:40 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Sat, 9 Jul 2022 13:06:40 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.105)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Sat, 9 Jul 2022 13:06:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oSU+IbdpWRmbJl7vsDbswIK5yXVy70H58EVh11yRO/lpUkztX6V+LM+Xvsf4ab0AXH1/cRrPxYOrHPlWZqCAWrPjblycrhWnlYf7DZpt03GYWyXYfkpE/syothzx9Iy1lxaP6/Hw9NSK/Ip8ZaXOCbT+X3IBaNZfyQx7loLPY2RMhDR0CpQL0Cq2DjeNS3sxyHXLkvEkYpCKnzv5o0xIpVJMcv/NP2lKWpLwz6pewoEAqDaPzRT6YJROQ5ka3NXexpNWIAcMxPISpOO0vhARbY7zS9mRPTPvxYaGwA9sT4o6dTHoXc3TRGR6QVdN/0JwzPHwgDqRgJCeMQ8yOzTtCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NbGEeSs17IrUeQqHIw6I2/cKSXTQXPj6XJyBEsb2iGI=;
+ b=AC6IG06v0RfjYC8M7Xe+eOxc5kE7gMfTGJXH/fO4g4BR2NQpeq6HVdWAGb2eVPpuhqrJhkBEuyD/f1K4B0v/YprBP8jG7HmnygkywZ2DwQ3AlFRsuAn6syq6u84ZRWfLIhtrpquU1TzhQcLCnOwgm3k6u4/avLhsyPqc6c0iim8t0ey++mumZSf+19mp5xLdtWfUWXfy+TI9Uc7uhoTTcpzakoL7XdBHyYVjF1D8CIgjerIh4aImQLzHpzbrPdKZrY3BqJ5IDyKcMrS/Pzt7CPOl725LFzbilgv5hRE302HI8mLEYka7gXJVH/BaP4Nfyrt90CKg23YEPbNEl2jUbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by CY5PR11MB6163.namprd11.prod.outlook.com
+ (2603:10b6:930:28::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Sat, 9 Jul
+ 2022 20:06:38 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5417.021; Sat, 9 Jul 2022
+ 20:06:38 +0000
+Date:   Sat, 9 Jul 2022 13:06:36 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Adam Manzanares <a.manzanares@samsung.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>
+Subject: Re: [PATCH 01/46] tools/testing/cxl: Fix cxl_hdm_decode_init()
+ calling convention
+Message-ID: <62c9dfcc4bd7c_2c74df294c1@dwillia2-xfh.notmuch>
+References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
+ <165603870776.551046.8709990108936497723.stgit@dwillia2-xfh>
+ <CGME20220629174147uscas1p211384ae262e099484440ef285be26c75@uscas1p2.samsung.com>
+ <20220629174139.GA1139821@bgt-140510-bm01>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220629174139.GA1139821@bgt-140510-bm01>
+X-ClientProxiedBy: MWHPR17CA0078.namprd17.prod.outlook.com
+ (2603:10b6:300:c2::16) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e0cdec2e-bf82-4e0c-a2e0-08da61e68802
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6163:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kI07C/uRLiDRUKA8YnAAJJEgN1u9rEk0fuhW9P3JhD+FuVfvgwaU9g7rchSi9EuF5mw/er2blogaa+wvsFXAjnYZ8kUpgzncxso3tMLJ8Qdn2RU3nt38QKTgICUHFnSa1yI5a6xW8tlJSsZfWNl/4y+cKSRM9dRvz+L4ddYb48BuHPrOH/8SHJ/CFshpAhGPCIq8St9v31L+hsCE4q05jgLIApj7ovM89HQwMXu1CJu6dDj18js3Pi9RgFyfsq4RQX5pyk3e4EAZ96AjFCV0oF/6SvAbHDMVhhBG7+5AI9/K4N8R9jOnXkMst54R5nq0KPb1lNRiM/9JQkZMyI6mt9cmiEjmFib5anf5U7uVJ7mYiM0quKBAbQicVDkp1vFUGmJRVFrBbkq4UonUTQ0xoBAYgjQV0sRdDq72ExJ++ElqbB+casTK2UgmBWyg90NBrhfGYKcTytK848BshM4FCnckqNIF/byRMX+dFGg4QKCNJI4eeltgaXtb+YqPbfVTEWnejiR3467mgUrV4vuVkMGk6zrhdw61UOZUYPY7gPMyzaBGSJ8L120V0Kri6OboTH3b4jDFpC1mMU1zE9JTo5UCb5KSIZOai01Rw6WgMMK7AfQuQrkW/o7gBNpoMCgqsbQF/WensunaM/keRtrPs95V4KLm5tEzf111RT8kh/KWgEEXdMvpkHhNqdk/QcATLrnYnZqSEQmW8LJ3ln8XaKh5fnudiZtgxOSrr4+2/4BIopLS3ZywTzlIKgZgX0GM
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(136003)(396003)(39860400002)(346002)(376002)(4326008)(316002)(8676002)(66476007)(26005)(66946007)(6512007)(8936002)(6486002)(5660300002)(86362001)(9686003)(478600001)(82960400001)(6506007)(66556008)(38100700002)(110136005)(83380400001)(2906002)(41300700001)(54906003)(186003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FiUH78+DXOcBKDYykUTviC0/zaE/X/xazBbOnqJmv7CcDF3Fge1QKyQhqOhm?=
+ =?us-ascii?Q?XOWfuFlc4BA3De1fWNpuCKZmkw/555owvOo2WGdw8nrnTqvyMHHMyqAzD3wf?=
+ =?us-ascii?Q?ZS3bVuIc6BTfEai/KMmTpturWBqB4dHuZEQvZp4oHfpvtpf6SqCF/iMwvcIC?=
+ =?us-ascii?Q?ecK/5FHVdDqnjRRERC2fjpBcAEVUCSmB67z/4Vma+65L2pNtaukzW0EWIyc7?=
+ =?us-ascii?Q?n5FXGTFDKgGGGpJcZcfd9h6xmYI7gAhzXIq88mPy5RjmnMCITSH7tgR0Se7z?=
+ =?us-ascii?Q?rs5gdRBa6YfZm35udVLVvs6uGwQDEhlXVO8RZlEn3saCGAEPOKLnoKA29oxf?=
+ =?us-ascii?Q?ua4vJXJaH7YF9CzhKKQZlkT8hGDL0ZqxZ/2XDlNpe9D83MDWVcq1bMRDWW1o?=
+ =?us-ascii?Q?OzFpsMzt2ZP8ENXelwg4Z5LVIfzmD+xQLn4WSmsLskRI3QB6ISE2D3kR5ssT?=
+ =?us-ascii?Q?RIz7+LRsItRH/R8eKdYqNdz2ujZsXYA7lE/AUjCkd5GjgPRKnWFb/37d6ZiX?=
+ =?us-ascii?Q?gpdVtOK3YoS3w2B3l1qtuQpoJvuYU90JxNlS7VH/P1SvpyFQjBpa2qFFTB6X?=
+ =?us-ascii?Q?wxt48V43Bs1zgxMlaK6KNIJZlFSYmCAunmz6Y+UwkTSSbmMiy7lZW2PQms3j?=
+ =?us-ascii?Q?MvfRV2FIK+FgYt5N30cm93b9+v7N1CTzFHa+sRJN7Moxmk9oWUgR6KEctCmv?=
+ =?us-ascii?Q?IvZf31XbC1x96jSwGfxpuCH4f0Y0ArgVZYp3Bn/vt7eovX5KJiMFKcGgqd0T?=
+ =?us-ascii?Q?UmIIF40lFNUaFejerCTqYn0uKQ6TaUPVDgosoiKpkVR1p+S8OeezjsMEcHTf?=
+ =?us-ascii?Q?KnCbQ8VISLTvygRJXQAqwy5WLFPVY6Ka+pA4geVvchE5DVLXRdj1nD0MyVsd?=
+ =?us-ascii?Q?JeMzGTbnztK3TtwqpRf44aaPtV1/404d30jjpXr5oP/wlUkM+S6IWpLnyiWN?=
+ =?us-ascii?Q?aaz3qVSnPrXghTuTQGU9WM+kI1LvBuEFfJzRDt1pIYzBegXbPoe26KKLQkEc?=
+ =?us-ascii?Q?DajUif7JcFGh2GSWXlnB/Ixr34bJA1+glqWbyBlHi42vqU97ykh5llVIjIqu?=
+ =?us-ascii?Q?zh+XoP3BrrSei/IHxmikuNnU0TqD1mNKTua5V/l9I/Oanf6mLu6bxPZsaMsd?=
+ =?us-ascii?Q?6uc38hsjdx8OPmxJrpu1HgFGwKiZF6lrjpy2j7NZ6wAGS4TqOQXJP3ZG5Ffy?=
+ =?us-ascii?Q?2RAsgQyvb8qWaTg69o7J43Kq3FplRjckc/EC/mVJhVed86brIpRELr49RqHt?=
+ =?us-ascii?Q?WALh3SQduzQ5l92Q47ErddRo39dhDIHN2Ph3U00R77SGQGP08AJbTjzBQD/4?=
+ =?us-ascii?Q?1CkX8zYiZa+gvnixfaaD03W+3yReX6r91wfC+KpgcjRrCLBVMjARcFLD+wQ8?=
+ =?us-ascii?Q?I1wbgZdk1C6pR3TctZ0GHPUuDCMu+dCexxp7TQYfjo40MnKUN8vwVvOPiHaN?=
+ =?us-ascii?Q?fP4Z4WN1gZ0B0jx0yqzIM3PIak+hYHBQseXkOxq5/Ol72aTSZA7KvvVFusaY?=
+ =?us-ascii?Q?g7ZjRaFmJ3S9BVW1HSpCmFI+NBdbMu3HuVti9ne9CG9a9Td4C0goLNpsc5bx?=
+ =?us-ascii?Q?0NJ13r7aw0U9ndpblY6WRXK8EDIbqs1NAI23h3IjOYXyI2V4j0p6sKYKA9RE?=
+ =?us-ascii?Q?sg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0cdec2e-bf82-4e0c-a2e0-08da61e68802
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2022 20:06:38.0936
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pvV49pDU0gpGCbnyT+VveTgGxePgIFg9ohbvJm/AZ3tAIGnYHq9wQ/Qn4NMmoUjLGCIFKyMOcz/0Pn4ertlzWy6lv8dbUNndJ23qP9m2iQM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6163
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,132 +153,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Documentation for irq_domain_remove() says that all mapping within the
-domain must be disposed prior to domain remove.
+Adam Manzanares wrote:
+> On Thu, Jun 23, 2022 at 07:45:07PM -0700, Dan Williams wrote:
+> > This failing signature:
+> > 
+> > [    8.392669] cxl_bus_probe: cxl_port endpoint2: probe: 970997760
+> > [    8.392670] cxl_port: probe of endpoint2 failed with error 970997760
+> > [    8.392719] create_endpoint: cxl_mem mem0: add: endpoint2
+> > [    8.392721] cxl_mem mem0: endpoint2 failed probe
+> > [    8.392725] cxl_bus_probe: cxl_mem mem0: probe: -6
+> > 
+> > ...shows cxl_hdm_decode_init() resulting in a return code ("970997760")
+> > that looks like stack corruption. The problem goes away if
+> > cxl_hdm_decode_init() is not mocked via __wrap_cxl_hdm_decode_init().
+> > 
+> > The corruption results from the mismatch that the calling convention for
+> > cxl_hdm_decode_init() is:
+> > 
+> > int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
+> > 
+> > ...and __wrap_cxl_hdm_decode_init() is:
+> > 
+> > bool __wrap_cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
+> > 
+> > ...i.e. an int is expected but __wrap_hdm_decode_init() returns bool.
+> > 
+> > Fix the convention and cleanup the organization to match
+> > __wrap_cxl_await_media_ready() as the difference was a red herring that
+> > distracted from finding the bug.
+> > 
+> > Fixes: 92804edb11f0 ("cxl/pci: Drop @info argument to cxl_hdm_decode_init()")
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  tools/testing/cxl/test/mock.c |    8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+> > index f1f8c40948c5..bce6a21df0d5 100644
+> > --- a/tools/testing/cxl/test/mock.c
+> > +++ b/tools/testing/cxl/test/mock.c
+> > @@ -208,13 +208,15 @@ int __wrap_cxl_await_media_ready(struct cxl_dev_state *cxlds)
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(__wrap_cxl_await_media_ready, CXL);
+> >  
+> > -bool __wrap_cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
+> > -				struct cxl_hdm *cxlhdm)
+> > +int __wrap_cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
+> > +			       struct cxl_hdm *cxlhdm)
+> >  {
+> >  	int rc = 0, index;
+> >  	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+> >  
+> > -	if (!ops || !ops->is_mock_dev(cxlds->dev))
+> > +	if (ops && ops->is_mock_dev(cxlds->dev))
+> > +		rc = 0;
+> > +	else
+> >  		rc = cxl_hdm_decode_init(cxlds, cxlhdm);
+> >  	put_cxl_mock_ops(index);
+> >  
+> > 
+> 
+> 
+> Looks good.
+> 
+> Reviewed by: Adam Manzanares <a.manzanares@samsung.com>
 
-Currently INTx irqs are not disposed in pci-mvebu.c device unbind callback
-which cause that kernel crashes after unloading driver and trying to read
-/sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
-
-Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
-Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
-Depends on patch:
-https://lore.kernel.org/linux-pci/20220524122817.7199-1-pali@kernel.org/
-
-Here is the captured kernel crash which happens without this patch:
-
-$ cat /sys/kernel/debug/irq/irqs/64
-[  301.571370] 8<--- cut here ---
-[  301.574496] Unable to handle kernel paging request at virtual address 0a00002a
-[  301.581736] [0a00002a] *pgd=00000000
-[  301.585323] Internal error: Oops: 80000005 [#1] SMP ARM
-[  301.590560] Modules linked in:
-[  301.593621] CPU: 1 PID: 4641 Comm: cat Not tainted 5.16.0-rc1+ #192
-[  301.599905] Hardware name: Marvell Armada 380/385 (Device Tree)
-[  301.605836] PC is at 0xa00002a
-[  301.608896] LR is at irq_debug_show+0x210/0x2d4
-[  301.613440] pc : [<0a00002a>]    lr : [<c018ca40>]    psr: 200000b3
-[  301.619721] sp : c797fdd8  ip : 0000000b  fp : 0a00002b
-[  301.624957] r10: c0d9a364  r9 : 00000001  r8 : 00000000
-[  301.630192] r7 : c18fee18  r6 : c0da2a74  r5 : c18fee00  r4 : c66ec050
-[  301.636734] r3 : 00000001  r2 : c18fee18  r1 : 00000000  r0 : c66ec050
-[  301.643275] Flags: nzCv  IRQs off  FIQs on  Mode SVC_32  ISA Thumb  Segment none
-[  301.650689] Control: 10c5387d  Table: 0790c04a  DAC: 00000051
-[  301.656446] Register r0 information: slab seq_file start c66ec050 pointer offset 0
-[  301.664040] Register r1 information: NULL pointer
-[  301.668755] Register r2 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
-[  301.677480] Register r3 information: non-paged memory
-[  301.682543] Register r4 information: slab seq_file start c66ec050 pointer offset 0
-[  301.690133] Register r5 information: slab kmalloc-256 start c18fee00 pointer offset 0 size 256
-[  301.698770] Register r6 information: non-slab/vmalloc memory
-[  301.704442] Register r7 information: slab kmalloc-256 start c18fee00 pointer offset 24 size 256
-[  301.713165] Register r8 information: NULL pointer
-[  301.717879] Register r9 information: non-paged memory
-[  301.722941] Register r10 information: non-slab/vmalloc memory
-[  301.728699] Register r11 information: non-paged memory
-[  301.733848] Register r12 information: non-paged memory
-[  301.738997] Process cat (pid: 4641, stack limit = 0xf591166e)
-[  301.744756] Stack: (0xc797fdd8 to 0xc7980000)
-[  301.749123] fdc0:                                                       0000000a 830d3f3e
-[  301.757321] fde0: c1004f48 c0d9a374 c7a9cc10 c66ec050 00000000 c88af900 c797fe80 7ffff000
-[  301.765518] fe00: 00400cc0 c66ec068 00000001 c02c5cb8 00000000 00000000 c66ec078 c797fe68
-[  301.773715] fe20: c1cdf6c0 c7a9cc10 ffffffea c88af900 00000010 00000000 00000000 c88af900
-[  301.781911] fe40: c1004f48 c797ff78 00001000 00004004 c03efcb8 c02c6100 00001000 00000000
-[  301.790108] fe60: bec73e04 00001000 00000000 00000000 00001000 c797fe60 00000001 00000000
-[  301.798304] fe80: c88af900 00000000 00000000 00000000 00000000 00000000 00000000 40040000
-[  301.806501] fea0: 00000000 00000000 c1004f48 830d3f3e c88af900 c02c6018 c1c7a770 bec73e04
-[  301.814697] fec0: 00001000 c797ff78 00000001 c03efd0c 00001000 c88af900 00000000 bec73e04
-[  301.822894] fee0: c1004f48 c797ff78 00000001 c029c728 c887ca20 01100cca 0000004f 0045f000
-[  301.831091] ff00: 00000254 c790c010 c790c010 00000000 00000000 00000000 c5f6117c eeece9b8
-[  301.839288] ff20: 00000000 830d3f3e 00000000 c797ffb0 c79fc000 80000007 0045f5b8 00000254
-[  301.847484] ff40: c79fc040 00000004 c887ca20 830d3f3e 00000000 c1004f48 c88af900 00000000
-[  301.855681] ff60: 00000000 c88af900 bec73e04 00001000 00000000 c029cd68 00000000 00000000
-[  301.863877] ff80: 00000000 830d3f3e 00000000 00000000 01000000 00000003 c0100284 c1b8abc0
-[  301.872074] ffa0: 00000003 c0100060 00000000 00000000 00000003 bec73e04 00001000 00000000
-[  301.880270] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
-[  301.888468] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410 60000010 00000003 00000000 00000000
-[  301.896666] [<c018ca40>] (irq_debug_show) from [<c02c5cb8>] (seq_read_iter+0x1a4/0x504)
-[  301.904700] [<c02c5cb8>] (seq_read_iter) from [<c02c6100>] (seq_read+0xe8/0x12c)
-[  301.912117] [<c02c6100>] (seq_read) from [<c03efd0c>] (full_proxy_read+0x54/0x70)
-[  301.919623] [<c03efd0c>] (full_proxy_read) from [<c029c728>] (vfs_read+0xa0/0x2c8)
-[  301.927214] [<c029c728>] (vfs_read) from [<c029cd68>] (ksys_read+0x58/0xd0)
-[  301.934195] [<c029cd68>] (ksys_read) from [<c0100060>] (ret_fast_syscall+0x0/0x54)
-[  301.941785] Exception stack(0xc797ffa8 to 0xc797fff0)
-[  301.946849] ffa0:                   00000000 00000000 00000003 bec73e04 00001000 00000000
-[  301.955045] ffc0: 00000000 00000000 01000000 00000003 00000003 00000001 00000001 00000000
-[  301.963241] ffe0: bec73d98 bec73d88 b6f81f88 b6f81410
-[  301.968304] Code: bad PC value
-[  301.971365] ---[ end trace fe25fd26d042b605 ]---
-[  301.975992] Kernel panic - not syncing: Fatal exception
-[  301.981229] CPU0: stopping
-[  301.983946] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G      D           5.16.0-rc1+ #192
-[  301.991884] Hardware name: Marvell Armada 380/385 (Device Tree)
-[  301.997817] [<c010e120>] (unwind_backtrace) from [<c010a170>] (show_stack+0x10/0x14)
-[  302.005587] [<c010a170>] (show_stack) from [<c0bbf108>] (dump_stack_lvl+0x40/0x4c)
-[  302.013179] [<c0bbf108>] (dump_stack_lvl) from [<c010c3f8>] (do_handle_IPI+0xf4/0x128)
-[  302.021117] [<c010c3f8>] (do_handle_IPI) from [<c010c444>] (ipi_handler+0x18/0x20)
-[  302.028707] [<c010c444>] (ipi_handler) from [<c0185c5c>] (handle_percpu_devid_irq+0x78/0x124)
-[  302.037256] [<c0185c5c>] (handle_percpu_devid_irq) from [<c017ffb8>] (generic_handle_domain_irq+0x44/0x88)
-[  302.046938] [<c017ffb8>] (generic_handle_domain_irq) from [<c05f051c>] (gic_handle_irq+0x74/0x88)
-[  302.055839] [<c05f051c>] (gic_handle_irq) from [<c0bc7ef8>] (generic_handle_arch_irq+0x34/0x44)
-[  302.064564] [<c0bc7ef8>] (generic_handle_arch_irq) from [<c0100b10>] (__irq_svc+0x50/0x68)
-[  302.072851] Exception stack(0xc1001f00 to 0xc1001f48)
-[  302.077916] 1f00: 000d6830 00000000 00000001 c0116be0 c1004f90 c1004fd4 00000001 00000000
-[  302.086114] 1f20: c1004f48 c0f5d2a8 c1009e80 00000000 00000000 c1001f50 c01076f4 c01076f8
-[  302.094309] 1f40: 60000013 ffffffff
-[  302.097804] [<c0100b10>] (__irq_svc) from [<c01076f8>] (arch_cpu_idle+0x38/0x3c)
-[  302.105223] [<c01076f8>] (arch_cpu_idle) from [<c0bcf3a0>] (default_idle_call+0x1c/0x2c)
-[  302.113338] [<c0bcf3a0>] (default_idle_call) from [<c015db34>] (do_idle+0x1c8/0x218)
-[  302.121106] [<c015db34>] (do_idle) from [<c015de40>] (cpu_startup_entry+0x18/0x20)
-[  302.128697] [<c015de40>] (cpu_startup_entry) from [<c0f00fec>] (start_kernel+0x650/0x694)
-[  302.136901] Rebooting in 3 seconds..
----
- drivers/pci/controller/pci-mvebu.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index 31f53a019b8f..951030052358 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -1713,8 +1713,15 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
- 		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
- 
- 		/* Remove IRQ domains. */
--		if (port->intx_irq_domain)
-+		if (port->intx_irq_domain) {
-+			int virq, j;
-+			for (j = 0; j < PCI_NUM_INTX; j++) {
-+				virq = irq_find_mapping(port->intx_irq_domain, j);
-+				if (virq > 0)
-+					irq_dispose_mapping(virq);
-+			}
- 			irq_domain_remove(port->intx_irq_domain);
-+		}
- 
- 		/* Free config space for emulated root bridge. */
- 		pci_bridge_emul_cleanup(&port->bridge);
--- 
-2.20.1
-
+Just fyi, b4 did not auto-apply this tag due to the missing "-", caught
+it manually.
