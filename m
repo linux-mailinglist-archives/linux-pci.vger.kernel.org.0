@@ -2,77 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA72F56C7D1
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 10:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E95856C7E2
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 10:16:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbiGIICS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Jul 2022 04:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49526 "EHLO
+        id S229592AbiGIIQY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Jul 2022 04:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiGIICR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jul 2022 04:02:17 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3805470993
-        for <linux-pci@vger.kernel.org>; Sat,  9 Jul 2022 01:02:16 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id j3so865847pfb.6
-        for <linux-pci@vger.kernel.org>; Sat, 09 Jul 2022 01:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=1LvIk6cTreIksV1+554QjuQj/Z56N830zZ3HcrbhmJ8=;
-        b=iK839jPA0ee/NDlgGSNMk3CfEMb5iiG/k6trAWJmFJ9F5viM42OicX/uxr+G/gvdY9
-         78C8vs7JlyEkbFzf/K9mwfPvU2LeNIvNTeT7eVjsnR+4b5vbMEoL4i67EoRec95ikhbY
-         QevioK66sYcElRiu/XMMYp0cYoRQr+vTPZLR0WFfCmAFsOyCXih5+XbcMqPzKo7iLJH/
-         mcIh9uMS70yZJlzjuZP+oK1I5VlESskqTmO3a+AA32dUvjulCJbJHN2dOf/BNYrQUNem
-         39JWBOEm2XiF9Q2FvH2dBL/rTzxGjzSiHXPppjWhKfa830TTQJr1j9oDQ0qvVwzjZVBM
-         taEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1LvIk6cTreIksV1+554QjuQj/Z56N830zZ3HcrbhmJ8=;
-        b=DLVGbvraiL5TrVKunKFuol9iRinrKiG3jo3Wj1cP9/GFUvo/DyuFMl63JWzag1DiM9
-         bhDnI3lEtwg0D9QNO5E8KDLncgYFqkmpTN5oEedoA4mjmwYmLEUzyl/Cex8tykyrou1C
-         W2eHhd4AOsz1FF+pAoR7B5IZSuUlwPPSUWf8MXlRn7VSTOHyz9nwgsKdE1ew1LoPkn99
-         ANQyocr2bFovoKerz7De+74ALNMEhaRvVYCNWA2fVEKrB55yGaq2B6Mhyef6/ajsyUgh
-         fkjCrtMlEe55s5qOtky2+cC4j1XyQRfSPrlGf2JabBoBvEx5AX1T0DL3OuOnlsVliSx3
-         x2WA==
-X-Gm-Message-State: AJIora+PLvcEiOWrvWQKkPwMNcdPg61WQSgBvljqzPh1Nt0pIYZtItG+
-        aYQhkLz/Q6F9IZ9oSPtWZ/lm
-X-Google-Smtp-Source: AGRyM1tGTy3DTZXBtPorHiVELfYxch7JhUKQaVRjoVbPbNa5mkwRHMzp+8j0Hbq40sGlrc2K23ggvg==
-X-Received: by 2002:a63:e446:0:b0:412:937b:5a3c with SMTP id i6-20020a63e446000000b00412937b5a3cmr6781523pgk.316.1657353735753;
-        Sat, 09 Jul 2022 01:02:15 -0700 (PDT)
-Received: from thinkpad ([117.207.26.140])
-        by smtp.gmail.com with ESMTPSA id e3-20020a170902784300b001641b2d61d4sm770685pln.30.2022.07.09.01.02.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Jul 2022 01:02:15 -0700 (PDT)
-Date:   Sat, 9 Jul 2022 13:32:03 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/10] dt-bindings: PCI: qcom: Add SA8540P to binding
-Message-ID: <20220709080203.GL5063@thinkpad>
-References: <20220629141000.18111-1-johan+linaro@kernel.org>
- <20220629141000.18111-6-johan+linaro@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220629141000.18111-6-johan+linaro@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        with ESMTP id S229588AbiGIIQX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jul 2022 04:16:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E92C7479D;
+        Sat,  9 Jul 2022 01:16:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B35960DD1;
+        Sat,  9 Jul 2022 08:16:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58FCDC3411C;
+        Sat,  9 Jul 2022 08:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657354581;
+        bh=Kl4LrwMcV0jEgVeyaN0UKSr1LebWTO1m6bXIl4hmN3U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lV+MuBE5WlQTVkJkX6idN54XiOIhhYN0KigZFnazxeQixH2FmsVaS1EA5nRIoWMPb
+         6UBhOLp73j4iFbJ/sGcSp2F01CRHAODTtzCpGemi9B8HDbIAz5vWF2+bMl3PLWBhGC
+         shKKs/yzeWqwl1pjVkLTLjQMfcwcHDEv+sOOMFZAYHOyu34eWti/0jRRuBMnqxbXUF
+         9A0y/QkwzeF5Zy/1yZaPZmNiE+GvyI+GlevUI5toqBRWCHeD9mNcoTG4y1WJObxxTX
+         vEKKF/r5IrCm7Kajyfj2+tfEzLhlhFSkdwUA6zO2SVoPFbgcNj0niDdX4hxjMHc9xY
+         Qx2bOxYqcgnww==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1oA5dT-006K8H-0k;
+        Sat, 09 Jul 2022 09:16:19 +0100
+Date:   Sat, 09 Jul 2022 09:16:18 +0100
+Message-ID: <87fsja1z1p.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Frank Li <frank.li@nxp.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>
+Subject: Re: [EXT] Re: [PATCH 1/3] irqchip: imx mu worked as msi controller
+In-Reply-To: <PAXPR04MB9186714350C749DB6AADB35188829@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220707210238.917477-1-Frank.Li@nxp.com>
+        <87r12wkmkm.wl-maz@kernel.org>
+        <PAXPR04MB9186714350C749DB6AADB35188829@PAXPR04MB9186.eurprd04.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: frank.li@nxp.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, peng.fan@nxp.com, aisheng.dong@nxp.com, jdmason@kudzu.us, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, ntb@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -81,52 +87,192 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 29, 2022 at 04:09:55PM +0200, Johan Hovold wrote:
-> SA8540P is a new platform related to SC8280XP but which uses a single
-> host interrupt for MSI routing.
+On Fri, 08 Jul 2022 17:26:33 +0100,
+Frank Li <frank.li@nxp.com> wrote:
 > 
+> 
+> 
+> > -----Original Message-----
+> > From: Marc Zyngier <maz@kernel.org>
+> > Sent: Friday, July 8, 2022 3:59 AM
+> > To: Frank Li <frank.li@nxp.com>
+> > Cc: tglx@linutronix.de; robh+dt@kernel.org;
+> > krzysztof.kozlowski+dt@linaro.org; shawnguo@kernel.org;
+> > s.hauer@pengutronix.de; kw@linux.com; bhelgaas@google.com; linux-
+> > kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-pci@vger.kernel.org; Peng Fan
+> > <peng.fan@nxp.com>; Aisheng Dong <aisheng.dong@nxp.com>;
+> > jdmason@kudzu.us; kernel@pengutronix.de; festevam@gmail.com; dl-linux-
+> > imx <linux-imx@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com;
+> > ntb@lists.linux.dev
+> > Subject: [EXT] Re: [PATCH 1/3] irqchip: imx mu worked as msi controller
+> > 
+> > Caution: EXT Email
+> > 
+> > On Thu, 07 Jul 2022 22:02:36 +0100,
+> > Frank Li <Frank.Li@nxp.com> wrote:
+> > >
+> > > MU support generate irq by write data to a register.
+> > > This patch make mu worked as msi controller.
+> > > So MU can do doorbell by using standard msi api.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  drivers/irqchip/Kconfig          |   7 +
+> > >  drivers/irqchip/Makefile         |   1 +
+> > >  drivers/irqchip/irq-imx-mu-msi.c | 490
+> > +++++++++++++++++++++++++++++++
+> > >  3 files changed, 498 insertions(+)
+> > >  create mode 100644 drivers/irqchip/irq-imx-mu-msi.c
+> > >
 
-The newer chipsets are supposed to use 8 MSI's. How come this one uses only 1?
+[...]
+
+> > > +static void imx_mu_msi_mask_irq(struct irq_data *data)
+> > > +{
+> > > +     struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(data-
+> > >parent_data);
+> > > +
+> > > +     pci_msi_mask_irq(data);
+> > 
+> > What is this? Below, you create a platform MSI domain. Either you
+> > support PCI, and you create a PCI/MSI domain (and the above may make
+> > sense), or you are doing platform MSI, and the above is non-sense.
+> 
+> [Frank Li] You are right. This work as platform msi. Needn't call pci_msi_irq()  
+
+OK, hold that thought and see below.
+
+> > > +static int imx_mu_msi_domain_irq_alloc(struct irq_domain *domain,
+> > > +                                     unsigned int virq,
+> > > +                                     unsigned int nr_irqs,
+> > > +                                     void *args)
+> > > +{
+> > > +     struct imx_mu_msi *msi_data = domain->host_data;
+> > > +     msi_alloc_info_t *info = args;
+> > > +     int pos, err = 0;
+> > > +
+> > > +     pm_runtime_get_sync(&msi_data->pdev->dev);
+> > 
+> > The core code already deals with runtime PM. What prevents it from
+> > working, other than the fact you don't populate the device in the
+> > top-level domain?
+> 
+> [Frank Li]  Do you means power domain or irq domain?
+
+IRQ domain. See irq_domain_set_pm_device() and how PM is used on
+interrupt request.
+
+[...]
+
+> > > +static void imx_mu_msi_domain_irq_free(struct irq_domain *domain,
+> > > +                                    unsigned int virq, unsigned int nr_irqs)
+> > > +{
+> > > +     struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> > > +     struct imx_mu_msi *msi_data = irq_data_get_irq_chip_data(d);
+> > > +     int pos;
+> > > +
+> > > +     pos = d->hwirq;
+> > > +     if (pos < 0 || pos >= msi_data->irqs_num) {
+> > > +             pr_err("failed to teardown msi. Invalid hwirq %d\n", pos);
+> > > +             return;
+> > > +     }
+> > 
+> > How can this happen?
+> 
+> I just copy from irq-ls-scfg-msi.c
+
+I wish you didn't do that.
+
+> It should be impossible happen if everything work as expected. 
+
+Then it should go.
+
+[...]
+
+> > > +static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
+> > > +     .xTR    = 0x0,
+> > > +     .xRR    = 0x10,
+> > > +     .xSR    = {0x20, 0x20, 0x20, 0x20},
+> > > +     .xCR    = {0x24, 0x24, 0x24, 0x24},
+> > > +};
+> > > +
+> > > +static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
+> > > +     .xTR    = 0x20,
+> > > +     .xRR    = 0x40,
+> > > +     .xSR    = {0x60, 0x60, 0x60, 0x60},
+> > > +     .xCR    = {0x64, 0x64, 0x64, 0x64},
+> > > +};
+> > > +
+> > > +static const struct imx_mu_dcfg imx_mu_cfg_imx8ulp = {
+> > > +     .type   = IMX_MU_V2,
+> > > +     .xTR    = 0x200,
+> > > +     .xRR    = 0x280,
+> > > +     .xSR    = {0xC, 0x118, 0x124, 0x12C},
+> > > +     .xCR    = {0x110, 0x114, 0x120, 0x128},
+> > > +};
+> > > +
+> > > +static const struct imx_mu_dcfg imx_mu_cfg_imx8ulp_s4 = {
+> > > +     .type   = IMX_MU_V2 | IMX_MU_V2_S4,
+> > > +     .xTR    = 0x200,
+> > > +     .xRR    = 0x280,
+> > > +     .xSR    = {0xC, 0x118, 0x124, 0x12C},
+> > > +     .xCR    = {0x110, 0x114, 0x120, 0x128},
+> > > +};
+> > 
+> > What are these? We really don't need more magic numbers.
+> 
+> It is register offset.  The difference version MU hardware's
+> register map is difference.
+
+Then please document what this is, what the various registers are, and
+correctly set type everywhere.
+
+[...]
+
+> > If that's hardcoded, why do we need an extra variable? I also question
+> > the usefulness of this driver if the HW can only deal with *4* MSIs...
+> > This looks a bit like a joke.
+> 
+> MU don't really MSI controller.  Each MU have 4 channel.  
+> I.MX have several MU units.
+
+Then is it really useful to model that as a MSI controller? This
+smells of a mailbox controller to me instead. And I really worry that
+this device doesn't correctly preserve the ordering between a device
+doing DMA and generating an interrupt to indicate completion of the
+DMA transaction... Does this block offers such a guarantee?
+
+> PCI EP driver need an address as doorbell,  so PCI RC side can write
+> This address to trigger irq.  Ideally,  it use GIC-ITS. But our i.MX chip
+> Have not ITS support yet now.  So we can use MU as simple MSI controller.
+
+Is that an integrated EP on the same SoC? Or are you talking of two
+SoCs connected over PCIe? Also, you explicitly said that this was
+*not* a PCI/MSI controller. So what is this all about?
+
+[...]
+
+> > > +static int imx_mu_msi_remove(struct platform_device *pdev)
+> > > +{
+> > > +     struct imx_mu_msi *msi_data = platform_get_drvdata(pdev);
+> > > +
+> > > +     imx_mu_msi_teardown_hwirq(msi_data);
+> > > +
+> > > +     irq_domain_remove(msi_data->msi_domain);
+> > > +     irq_domain_remove(msi_data->parent);
+> > 
+> > How do you ensure that no device is still holding interrupts? Let me
+> > give you a hint: you can't. So removing an interrupt controller module
+> > should not be possible.
+> 
+> [Frank Li] I agree. But there are many *_remove under irqchip.
+
+That doesn't make it right.
 
 Thanks,
-Mani
 
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> index a039f6110322..e9a7c8c783e7 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -25,6 +25,7 @@ properties:
->        - qcom,pcie-ipq4019
->        - qcom,pcie-ipq8074
->        - qcom,pcie-qcs404
-> +      - qcom,pcie-sa8540p
->        - qcom,pcie-sc7280
->        - qcom,pcie-sc8180x
->        - qcom,pcie-sc8280xp
-> @@ -603,6 +604,7 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> +              - qcom,pcie-sa8540p
->                - qcom,pcie-sc8280xp
->      then:
->        properties:
-> @@ -720,6 +722,7 @@ allOf:
->                - qcom,pcie-ipq8064
->                - qcom,pcie-ipq8064-v2
->                - qcom,pcie-ipq8074
-> +              - qcom,pcie-sa8540p
->                - qcom,pcie-qcs404
->      then:
->        properties:
-> -- 
-> 2.35.1
-> 
+	M.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Without deviation from the norm, progress is not possible.
