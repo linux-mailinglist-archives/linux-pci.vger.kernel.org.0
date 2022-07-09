@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EECE56C7FE
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 10:24:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 805A756C802
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jul 2022 10:25:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229463AbiGIIYH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Jul 2022 04:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60244 "EHLO
+        id S229496AbiGIIZT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Jul 2022 04:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiGIIYF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jul 2022 04:24:05 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E8D21254
-        for <linux-pci@vger.kernel.org>; Sat,  9 Jul 2022 01:24:04 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id o18so770023pgu.9
-        for <linux-pci@vger.kernel.org>; Sat, 09 Jul 2022 01:24:04 -0700 (PDT)
+        with ESMTP id S229481AbiGIIZT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jul 2022 04:25:19 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02C94A805
+        for <linux-pci@vger.kernel.org>; Sat,  9 Jul 2022 01:25:17 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id z12-20020a17090a7b8c00b001ef84000b8bso3968045pjc.1
+        for <linux-pci@vger.kernel.org>; Sat, 09 Jul 2022 01:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3gp/nn7TzypARR1HY0tBDLC61zrtXrd5JCPdj/Mvc70=;
-        b=N/wwmsDdHpBDq0ftVTPt2g3Ij7VOBdzqX6RjoaQ+IMnMtRM9VtucOQtXhCBGlTnte8
-         HyLOEYaZlJnVhxvjto8ctXriUTIaM4U5mqSzZ+Z5IL2/gInNq9W2biYoGGFgMw7U/mFZ
-         tPfWqT8uYmGyv7Gje48QCNywm9ype7+w02OVWFkECxf5q0B6y0A7dJaVKmMKesr9BBNV
-         fOjNkCkXlpRV8YPZ180ndSaLVNkNNo61Es3M1zLfZ2ojb8tWj4Fm4qCS/yh2Ac/sTQzS
-         PZbJ0PI52lWDFSTMP2GQyDi1EHw05hc1jpvFl26/pJyj4PB/MUXEXkIVfKPOton0xelR
-         uV1g==
+        bh=/Sx0YWTOU70ldR3qqRLiimjlPwcJ9/ZDdFLcC6JdMgc=;
+        b=GFukNcWocDEKQ8p1Vr7y9wt8wzLNjfnf3r0mCzRBEbpO+N4nhKVlsoBIlYgNke4OIE
+         kcN6ptLfXPAuhhRQWeEmyLZMaXmJQEuPxHfh5V2uuBPE51gtC7yJOPm5/zFqTrKUiDiG
+         J7BxP0bL80mby6CoXKv91M6+/96Ye4vJ/JI9oza8IWlK/+q3LXFfU8c6EYsY29imoStr
+         XAGmZu19TYrQHd+p3RoyQ4FomGPbjMfLwAv8M8TKx207RxpRLRTdR21KbT/EnLmZ9nNT
+         wKlGglJxQRWf7Gm3LnO/W1+KASmkj190IoIy/ztV1fVJdemmOZYwJ4ZVSs+gjJm/+bIn
+         8bug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=3gp/nn7TzypARR1HY0tBDLC61zrtXrd5JCPdj/Mvc70=;
-        b=48OlV05AlNBOrnuBdD4t4Cn4zEHYLyiSvC+R/EwGCjeoyUrdEmTvIobU1TVoTtMxTS
-         y86fHXofMHE9lFZ28GpKI6H0pC2KoHlX8Zrd5yOoqeAgyi+VBEzqGpC4csYxnJ+R8BNT
-         Dp5zNs+Bu6F9YH1wHWr7h4iTlmQnuW35df3irMBQVJhA1CGBiiwaaer/JEINqnEIr/il
-         /7qJjel73NYzf2Tcj1HWAlmHKyPKtQ5bS0bcHTnvEmpkBYr/yXv6n+zaqxuO1fL5qbns
-         LKPQSNXT61w/CNavblWEzwN3VaujGW8zVauREsQzhOQWiRKCINvxuYnwHqHBTqPt98Xy
-         /Cog==
-X-Gm-Message-State: AJIora8rT38dKtgnWKO5uhOgFg215KeVUPxKzzn9XoNkwzsEDmIZTdna
-        ZkupsS8sZLeRFs+XSoOeM56f
-X-Google-Smtp-Source: AGRyM1vqFf1rz87+sr/2LMoPEXsknQv/uxV1HdkMlDUXB9PAQ/6oLtUzUZGwiSibD6yYNSKxXTcBVw==
-X-Received: by 2002:a65:6e04:0:b0:40d:26eb:8225 with SMTP id bd4-20020a656e04000000b0040d26eb8225mr7026485pgb.138.1657355044065;
-        Sat, 09 Jul 2022 01:24:04 -0700 (PDT)
+        bh=/Sx0YWTOU70ldR3qqRLiimjlPwcJ9/ZDdFLcC6JdMgc=;
+        b=FeF/R8fYZKbAIWrjw486f9hUZvh2HVKk5j8pIF84/7quk6BBBjntxg8Vt6lo/rYbWX
+         b/883DK2FGPdWl/UQ5/aPGOWJva5Mx13YQYp0n6cu5zmaI4072xvuj5EO3JdSRBvhoXc
+         eBsEIjZKAzYgbYLzVQ33FnEHMHjMjHaMaVczOgZIow/ByNKVEPd6/MZoRZ0pLoav7enK
+         aTpvglXE2UwPRj4qEketHpj0z9unmnvvrzrryUgpgcf01N0sVvrbE4v7pYTcrDPxotTm
+         Jn/DqpZKKOs5OWlHpwMMjYFUdWhy+TqPpVKsU53gw8BrG+8m2yq/qFmzxa05j1a/zOpL
+         ENBw==
+X-Gm-Message-State: AJIora+OXOaoi0wvpEWr6+1ejqRVXA5nN1oAAGfz/CEg5pQK+hxqfN64
+        63UZcd/KsABLYNMktSi5LkqX
+X-Google-Smtp-Source: AGRyM1ufOWTPz98QGa9I0QzB1DRe7WPSkiwMrjR3T/xAs6zT96KF64La56lHoPYR55s6Ev1/9xDfxA==
+X-Received: by 2002:a17:90b:4ac1:b0:1ef:c1ba:e73e with SMTP id mh1-20020a17090b4ac100b001efc1bae73emr4717331pjb.47.1657355117339;
+        Sat, 09 Jul 2022 01:25:17 -0700 (PDT)
 Received: from thinkpad ([117.207.26.140])
-        by smtp.gmail.com with ESMTPSA id l2-20020a17090a150200b001ef307e1deesm2898666pja.18.2022.07.09.01.23.58
+        by smtp.gmail.com with ESMTPSA id u188-20020a6260c5000000b0050dc7628183sm939074pfb.93.2022.07.09.01.25.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Jul 2022 01:24:03 -0700 (PDT)
-Date:   Sat, 9 Jul 2022 13:53:53 +0530
+        Sat, 09 Jul 2022 01:25:17 -0700 (PDT)
+Date:   Sat, 9 Jul 2022 13:55:09 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Johan Hovold <johan+linaro@kernel.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -62,15 +62,15 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] PCI: qcom: Make all optional clocks optional
-Message-ID: <20220709082353.GO5063@thinkpad>
+Subject: Re: [PATCH 09/10] PCI: qcom: Clean up IP configurations
+Message-ID: <20220709082509.GP5063@thinkpad>
 References: <20220629141000.18111-1-johan+linaro@kernel.org>
- <20220629141000.18111-9-johan+linaro@kernel.org>
+ <20220629141000.18111-10-johan+linaro@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220629141000.18111-9-johan+linaro@kernel.org>
+In-Reply-To: <20220629141000.18111-10-johan+linaro@kernel.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -81,17 +81,18 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 29, 2022 at 04:09:58PM +0200, Johan Hovold wrote:
-> The kernel is not a devicetree validator and does not need to re-encode
-> information which is already available in the devicetree.
+On Wed, Jun 29, 2022 at 04:09:59PM +0200, Johan Hovold wrote:
+> The various IP versions have different configurations that are encoded
+> in separate sets of operation callbacks. Currently, there is no need for
+> also maintaining corresponding sets of data parameters, but it is
+> conceivable that these may again be found useful (e.g. to implement
+> minor variations of the operation callbacks).
 > 
-> This is specifically true for the optional PCIe clocks, some of which
-> are really interconnect clocks.
+> Rename the default configuration structures after the IP version they
+> apply to so that they can more easily be reused by different SoCs.
 > 
-> Treat also the 2.7.0 optional clocks as truly optional instead of
-> maintaining a list of clocks per compatible (including two compatible
-> strings for the two identical controllers on sm8450) just to validate
-> the devicetree.
+> Note that SoC specific configurations can be added later if need arises
+> (e.g. cfg_sc8280xp).
 > 
 > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
@@ -101,100 +102,130 @@ Thanks,
 Mani
 
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 28 ++++----------------------
->  1 file changed, 4 insertions(+), 24 deletions(-)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 85 ++++++++------------------
+>  1 file changed, 27 insertions(+), 58 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 8ab88e5743da..1a564f624bb1 100644
+> index 1a564f624bb1..567601679465 100644
 > --- a/drivers/pci/controller/dwc/pcie-qcom.c
 > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -189,10 +189,6 @@ struct qcom_pcie_ops {
->  
->  struct qcom_pcie_cfg {
->  	const struct qcom_pcie_ops *ops;
-> -	unsigned int has_tbu_clk:1;
-> -	unsigned int has_ddrss_sf_tbu_clk:1;
-> -	unsigned int has_aggre0_clk:1;
-> -	unsigned int has_aggre1_clk:1;
+> @@ -1433,65 +1433,34 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+>  	.config_sid = qcom_pcie_config_sid_sm8250,
 >  };
 >  
->  struct qcom_pcie {
-> @@ -1140,14 +1136,6 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
->  	res->clks[idx++].id = "bus_master";
->  	res->clks[idx++].id = "bus_slave";
->  	res->clks[idx++].id = "slave_q2a";
-> -	if (pcie->cfg->has_tbu_clk)
-> -		res->clks[idx++].id = "tbu";
-> -	if (pcie->cfg->has_ddrss_sf_tbu_clk)
-> -		res->clks[idx++].id = "ddrss_sf_tbu";
-> -	if (pcie->cfg->has_aggre0_clk)
-> -		res->clks[idx++].id = "aggre0";
-> -	if (pcie->cfg->has_aggre1_clk)
-> -		res->clks[idx++].id = "aggre1";
->  
->  	num_clks = idx;
->  
-> @@ -1155,6 +1143,10 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
->  	if (ret < 0)
->  		return ret;
->  
-> +	res->clks[idx++].id = "tbu";
-> +	res->clks[idx++].id = "ddrss_sf_tbu";
-> +	res->clks[idx++].id = "aggre0";
-> +	res->clks[idx++].id = "aggre1";
->  	res->clks[idx++].id = "noc_aggr_4";
->  	res->clks[idx++].id = "noc_aggr_south_sf";
->  	res->clks[idx++].id = "cnoc_qx";
-> @@ -1463,17 +1455,14 @@ static const struct qcom_pcie_cfg ipq4019_cfg = {
->  
->  static const struct qcom_pcie_cfg sa8540p_cfg = {
->  	.ops = &ops_1_9_0,
-> -	.has_ddrss_sf_tbu_clk = true,
+> -static const struct qcom_pcie_cfg apq8084_cfg = {
+> +static const struct qcom_pcie_cfg cfg_1_0_0 = {
+>  	.ops = &ops_1_0_0,
 >  };
 >  
->  static const struct qcom_pcie_cfg sc8280xp_cfg = {
->  	.ops = &ops_1_9_0,
-> -	.has_ddrss_sf_tbu_clk = true,
+> -static const struct qcom_pcie_cfg ipq8064_cfg = {
+> +static const struct qcom_pcie_cfg cfg_1_9_0 = {
+> +	.ops = &ops_1_9_0,
+> +};
+> +
+> +static const struct qcom_pcie_cfg cfg_2_1_0 = {
+>  	.ops = &ops_2_1_0,
 >  };
 >  
->  static const struct qcom_pcie_cfg sdm845_cfg = {
+> -static const struct qcom_pcie_cfg msm8996_cfg = {
+> +static const struct qcom_pcie_cfg cfg_2_3_2 = {
+>  	.ops = &ops_2_3_2,
+>  };
+>  
+> -static const struct qcom_pcie_cfg ipq8074_cfg = {
+> +static const struct qcom_pcie_cfg cfg_2_3_3 = {
+>  	.ops = &ops_2_3_3,
+>  };
+>  
+> -static const struct qcom_pcie_cfg ipq4019_cfg = {
+> +static const struct qcom_pcie_cfg cfg_2_4_0 = {
+>  	.ops = &ops_2_4_0,
+>  };
+>  
+> -static const struct qcom_pcie_cfg sa8540p_cfg = {
+> -	.ops = &ops_1_9_0,
+> -};
+> -
+> -static const struct qcom_pcie_cfg sc8280xp_cfg = {
+> -	.ops = &ops_1_9_0,
+> -};
+> -
+> -static const struct qcom_pcie_cfg sdm845_cfg = {
+> +static const struct qcom_pcie_cfg cfg_2_7_0 = {
 >  	.ops = &ops_2_7_0,
-> -	.has_tbu_clk = true,
 >  };
 >  
->  static const struct qcom_pcie_cfg sm8150_cfg = {
-> @@ -1485,31 +1474,22 @@ static const struct qcom_pcie_cfg sm8150_cfg = {
->  
->  static const struct qcom_pcie_cfg sm8250_cfg = {
->  	.ops = &ops_1_9_0,
-> -	.has_tbu_clk = true,
-> -	.has_ddrss_sf_tbu_clk = true,
->  };
->  
->  static const struct qcom_pcie_cfg sm8450_pcie0_cfg = {
->  	.ops = &ops_1_9_0,
-> -	.has_ddrss_sf_tbu_clk = true,
-> -	.has_aggre0_clk = true,
-> -	.has_aggre1_clk = true,
->  };
->  
->  static const struct qcom_pcie_cfg sm8450_pcie1_cfg = {
->  	.ops = &ops_1_9_0,
-> -	.has_ddrss_sf_tbu_clk = true,
-> -	.has_aggre1_clk = true,
->  };
->  
->  static const struct qcom_pcie_cfg sc7280_cfg = {
->  	.ops = &ops_1_9_0,
-> -	.has_tbu_clk = true,
->  };
->  
->  static const struct qcom_pcie_cfg sc8180x_cfg = {
->  	.ops = &ops_1_9_0,
-> -	.has_tbu_clk = true,
->  };
->  
+> -static const struct qcom_pcie_cfg sm8150_cfg = {
+> -	/* sm8150 has qcom IP rev 1.5.0. However 1.5.0 ops are same as
+> -	 * 1.9.0, so reuse the same.
+> -	 */
+> -	.ops = &ops_1_9_0,
+> -};
+> -
+> -static const struct qcom_pcie_cfg sm8250_cfg = {
+> -	.ops = &ops_1_9_0,
+> -};
+> -
+> -static const struct qcom_pcie_cfg sm8450_pcie0_cfg = {
+> -	.ops = &ops_1_9_0,
+> -};
+> -
+> -static const struct qcom_pcie_cfg sm8450_pcie1_cfg = {
+> -	.ops = &ops_1_9_0,
+> -};
+> -
+> -static const struct qcom_pcie_cfg sc7280_cfg = {
+> -	.ops = &ops_1_9_0,
+> -};
+> -
+> -static const struct qcom_pcie_cfg sc8180x_cfg = {
+> -	.ops = &ops_1_9_0,
+> -};
+> -
 >  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.link_up = qcom_pcie_link_up,
+>  	.start_link = qcom_pcie_start_link,
+> @@ -1603,23 +1572,23 @@ static int qcom_pcie_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id qcom_pcie_match[] = {
+> -	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
+> -	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
+> -	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &ipq8064_cfg },
+> -	{ .compatible = "qcom,pcie-apq8064", .data = &ipq8064_cfg },
+> -	{ .compatible = "qcom,pcie-msm8996", .data = &msm8996_cfg },
+> -	{ .compatible = "qcom,pcie-ipq8074", .data = &ipq8074_cfg },
+> -	{ .compatible = "qcom,pcie-ipq4019", .data = &ipq4019_cfg },
+> -	{ .compatible = "qcom,pcie-qcs404", .data = &ipq4019_cfg },
+> -	{ .compatible = "qcom,pcie-sa8540p", .data = &sa8540p_cfg },
+> -	{ .compatible = "qcom,pcie-sdm845", .data = &sdm845_cfg },
+> -	{ .compatible = "qcom,pcie-sm8150", .data = &sm8150_cfg },
+> -	{ .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
+> -	{ .compatible = "qcom,pcie-sc8180x", .data = &sc8180x_cfg },
+> -	{ .compatible = "qcom,pcie-sc8280xp", .data = &sc8280xp_cfg },
+> -	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &sm8450_pcie0_cfg },
+> -	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &sm8450_pcie1_cfg },
+> -	{ .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
+> +	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> +	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
+> +	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+> +	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> +	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+> +	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
+> +	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
+> +	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+> +	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sdm845", .data = &cfg_2_7_0 },
+> +	{ .compatible = "qcom,pcie-sm8150", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sm8250", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sc8180x", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sc8280xp", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_pcie_match);
 > -- 
 > 2.35.1
 > 
