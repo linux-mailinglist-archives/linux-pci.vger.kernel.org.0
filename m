@@ -2,140 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 773BB56D0F3
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Jul 2022 21:06:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F32DF56D0FA
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Jul 2022 21:09:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbiGJTG3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 10 Jul 2022 15:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
+        id S229463AbiGJTJX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 10 Jul 2022 15:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiGJTG2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Jul 2022 15:06:28 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD2511C07;
-        Sun, 10 Jul 2022 12:06:27 -0700 (PDT)
+        with ESMTP id S229619AbiGJTJV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Jul 2022 15:09:21 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35F414D26;
+        Sun, 10 Jul 2022 12:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657479987; x=1689015987;
+  t=1657480160; x=1689016160;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=C6JnZ46VTyZBV5xFZMlGQ4AIp7H8Cu+6MGgsZ4jzzA0=;
-  b=BGp8+w2lwj53+ez5YIdiEz8SHsWBnIKhzdFP5J5VPp5hG6htvtmW/EDT
-   ptG+VxDtEGtEDheCQs+WR6kLtFC0dm2WFBH/2NOoT+w4lmMXZ3RHwOZar
-   ZQuYTeSUssm5IAU0vKC18+oc3TACYrrCfrVxJdnyqLhCHXV8Op4FMIB6Q
-   cw3f30mLX68PHQlj2srpMPAYj7/N7Q28V+UbsHc2zOYxx5wzaRvlGWibO
-   nzkxEGMoA0Voa98r+5a+wbkNhpjINGyFhwj3WpRAwc8/fEI+MLtcILkrg
-   eKGp7TYl4hpJ81QTFyGPvlU91iOmJmwMmNWwR83i2099Y2rdleVqUeAn9
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10404"; a="346219787"
+  bh=NpEmIG9olqC5lDfT3grolMghlzDBXijfRAtZdtKqhzE=;
+  b=ON0x+hw+6SnADNH0QwnaDq3nWoLCDU5VYJYYmH3X0gbWvGfBkAen1OEY
+   Jr/PBPqZ8W84qWPGqv012Nxmb2elonmORbFyZtZ25XinTzBUM4gocT6yD
+   P3wgElqAWfsyUT53WorNDYu2f7fPT7lCTO0bLz93ACU6POl43jW+V8Wi2
+   kErwZH9IWxBBT6nMKwoBD+yT9fZ+UGHXptZL5kRubbwnebZPk7qJJuoFf
+   ZkAVcFyZ/r9rFfzSMG2ZaNIun/iMLITFVqDld7y/bwrQpgC2qcSUWYPoW
+   9shxSdwjFZ2TjBknCYrQicyKWPFBtFLPUH3KHfwDy8RxbI/nmwTWfT9yy
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10404"; a="370843993"
 X-IronPort-AV: E=Sophos;i="5.92,261,1650956400"; 
-   d="scan'208";a="346219787"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2022 12:06:26 -0700
+   d="scan'208";a="370843993"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2022 12:09:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,261,1650956400"; 
-   d="scan'208";a="921552631"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2022 12:06:26 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="684170199"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Jul 2022 12:09:20 -0700
+Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Sun, 10 Jul 2022 12:06:26 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.1.2308.27; Sun, 10 Jul 2022 12:09:19 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Sun, 10 Jul 2022 12:06:26 -0700
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.49) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2308.27 via Frontend Transport; Sun, 10 Jul 2022 12:09:19 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Sun, 10 Jul 2022 12:06:25 -0700
+ 15.1.2308.27; Sun, 10 Jul 2022 12:09:19 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lhh7J3/pTvAL4meGTbpk4tObFNskJKzuwrrC/sAfLQjeEXRVYJwjzFp0RKz7UEMfKJu+627xvhQCGBmmA+sDY8JbC9/+w5DjIPfMg7RGTmG6dVntEozDVmrQCSHdiHm+aYLUb4CABrwVjHrCFobkLMjE1UDuoCJiR/9CZWxOpwCwVjMn8VErAAIz7GEI1YuysoQKJ9ofU5V6iCR/01dLfidwbUW1xIBOR/barz8diZMEwhW9ZLlOmJC1pkwKB7jvi1nhXPYnQOELRf3RjGluXatm9GyMFp8Re9bymc32/uM1HnOWUufodm8X3JWHGRUASBDCEp7OkjWE/0h7yApyPw==
+ b=gebHgbAys+9EwTlsdF629LX8Xd/etL5pa9u4pv5eGf6zI35rPwfHh5g5J/k6XtcFjeVB50pH7UxgesoaWJcOOYuvNvl/darz97h/VcqEVe88MigSvcHB+vAiqENnhXkli7x10RPRXNJyoXJ23Xj50uKdjuYmYJuPCQG9c7rFyfO0zhgSSI6I1KvgSKtjkd0TXLF3kwSA2HjNbWHGwYfjsIgFsFMgaBMt6y/D5dh5jlKJ8rjxLFsX/eKMBmsm5kDiWcpSyaP8svbedOTkAHs/QN4LQfSr4pKQJJBkBFPKs7P1mTTBvFOSpq2MMMTBNu4b8lfxJrVLUnzo1bWhzZFLtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/XnBa50lChu7LKyPIuIKmR3BlpTLx00+V+qdl7e6e0g=;
- b=T8zHmeYTnj3p11Cm8zndsPHmjdYU3X9/dI6gk1Bs2XDTBInu4yy2+9YSPjC/+lrXYkAqGtLgCnvTRs8cPEjIZo8IhYsJFnTlriDkvhbJvFp7D6cLfE4kPSIcx8a98LwNYCsCvN2k22BCO9dJ4R0D+OyH2xnj8HQWGPOvk1F5wJ2xMHxB6WkzrnDZzCeDKRhWp8RA/NiQ1hh+S4HTKEH3lGhbSQSK77u4HAvf7Y1uSk+JTE1aHsPjPUVqbJjU0hONuiBIy1+qEs4ZvnIXbFC333Aq1OwRk3o7Gy6Jw2W8blNbhke8fueY0j6WreErYvjomNb6Y3ZdEK32IaorL7pbQA==
+ bh=appOenBHWhXh2O8DF89V7vsyRHOmqcDWTr96Mptldro=;
+ b=nqbzttxkJOQ7c07dnzapEBHFiQl3RJBzaSsIJ1vx+8SeYhIHZfiIZpLXy/Y3KAHIcXHE2mcR/HqFj3awY6td5CT94kPStnZ/97f7BeCLCXhPD3mbwNL2QcxgCQBfQ/xGMJ+k9G8zTq/NqLgTVpF94AAAtRdd/PDJH41mr20icQ0q6362EYdBYazniX0LsYnuFX2leDkEkcq7pmF2ittXYxwr2muNM2PkJ4MJbz605rJHSTTSIzMKyoZPzv7ARrlG39CwuxexJC8ZUwjiMtzEjfWkmEPmAJmTBTRCLowew1hDSPXstFRJ0MO0zZNWdCBzsxQZcxdTiUej21MO8gEDwg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by BY5PR11MB4291.namprd11.prod.outlook.com
- (2603:10b6:a03:1c2::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Sun, 10 Jul
- 2022 19:06:23 +0000
+ (2603:10b6:301:50::20) by MN2PR11MB4432.namprd11.prod.outlook.com
+ (2603:10b6:208:193::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.20; Sun, 10 Jul
+ 2022 19:09:17 +0000
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5417.026; Sun, 10 Jul
- 2022 19:06:23 +0000
-Date:   Sun, 10 Jul 2022 12:06:21 -0700
+ 2022 19:09:17 +0000
+Date:   Sun, 10 Jul 2022 12:09:15 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
         <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
         <hch@lst.de>
-Subject: Re: [PATCH 28/46] cxl/port: Move dport tracking to an xarray
-Message-ID: <62cb232d48a38_3177ca294ac@dwillia2-xfh.notmuch>
+Subject: Re: [PATCH 29/46] cxl/port: Cache CXL host bridge data
+Message-ID: <62cb23db999e2_3535162947e@dwillia2-xfh.notmuch>
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
- <20220624041950.559155-3-dan.j.williams@intel.com>
- <20220630101808.0000714f@Huawei.com>
+ <20220624041950.559155-4-dan.j.williams@intel.com>
+ <20220630102105.000060ab@Huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220630101808.0000714f@Huawei.com>
-X-ClientProxiedBy: MW4PR03CA0035.namprd03.prod.outlook.com
- (2603:10b6:303:8e::10) To MWHPR1101MB2126.namprd11.prod.outlook.com
+In-Reply-To: <20220630102105.000060ab@Huawei.com>
+X-ClientProxiedBy: MWH0EPF00056D02.namprd21.prod.outlook.com
+ (2603:10b6:30f:fff2:0:1:0:f) To MWHPR1101MB2126.namprd11.prod.outlook.com
  (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: da44d5ec-8743-4fcc-77cb-08da62a747f4
-X-MS-TrafficTypeDiagnostic: BY5PR11MB4291:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a33cb4f-2284-4387-9d96-08da62a7afaa
+X-MS-TrafficTypeDiagnostic: MN2PR11MB4432:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OA+Gh4838BPNLxwXoxxOYiBKalveRJ/vB1bmLrcbYgQOg3oVQIHIbx3UugHZxaE5w8gQ7dgRUczE//kr+8CbNH69HXT0d77wW7z3N1SR7Btt5bhUTk/tbpdVJcZ1XEddc3K7bYWOvSj/q7RLUfrDCVb4S3SYzunmMkpOMGMF++y+BD/DwWk/JpJHpL8RWHSkgYxbck0wvpih9Zd0qHA8POTTmA8mBcq6Vsg9XtPFkne8HYDGNjk1k5M3RJyVx5Z/Jb4y9txUjgXnfMXUNHQGFCFBkXN2lh//WEZVekKiAZ/oNg81khVi3tHgJjvM56rXEkjWpfio/L+8DTtze5G8BjO/c+8lKIagX189KkUh/6lrEHfrTYvGJtr7pu/oe1weqlZrWwOuywjROIFsO7OJwyUtRvl2vJ0qDjm7A98H5ZYMWR7dkrIA9zZsgLg92ZU7NYOF1H+6MBewTJpvT81qsvbdlzfg30jKrLozTW/sXkrBc9tA6ws1Nv2JopLwZ883LI1OMSk6foZ8lxn2s/EO25RWavheOWRVMXQGoHPiioX6t0XwXpaI/Hq3cGse4ASTFICIBMD7UC4MrbC+uMwqRf7v+2oy4Qx9Yyx7dybOSyMPu/QqYCH//NU/mivpS32+dgb05gEom2zdWjsBET0EIZ9o+tFXPgOC10W+gfjoNbAH8es/3DDrgsNDsWcKr7gHugFXIeqzt9POjD8qy6SVwMC+x71+LYly4VJO1oaD9aWVjpLzBKJNeh68SOxXmQtEJuQgyLy0jPDUhmsZexH6myjO4HSsvIKaCyFd7opCSBz7JSzM0o9GTtki0XdSdnme
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(366004)(346002)(136003)(376002)(39860400002)(8936002)(5660300002)(9686003)(2906002)(83380400001)(82960400001)(86362001)(478600001)(38100700002)(110136005)(6486002)(66476007)(66556008)(66946007)(316002)(186003)(4326008)(8676002)(6506007)(41300700001)(6512007)(26005)(309714004);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: OXpVHtEtPyj9AIV6rQP1ezJcYI/JCT4LtYqsqEGcFsoAFU904Qx5GQu7MohhOB8R3SswG9/i+tuCQM38+DsbOgzyaxNf+br81JYWJj+n1qEIgk4eIldB9U8dwIbF+V+NfSmrYI0HRwOK1yAwW9E6VczCHL4Jz1JqXV+TRVyhEaBWVDN0qlW61I+ZmLdqYEYvsP6J6T1R/tLPJ9bo8ld6fbNC3Qf+vg5W4Pa4wHQp6KXiuK8E994unj4ibiDTd+mNkDyAffA8IGJPzbZM15dV3F/qPUBBeMzaU/L9lV9cLowkXiLrg7G/P3y0NqAUcjbFlpEZxvIyxm/kYQOTD4UXx6SLPKNEb6WEzBNb0XDmg6NZb18pBbgJ7RYTKYSZ+j7A0HO5LL7QdLGsLWzZ9jBm7dF08AAKM3xKc/uDNmoxqn3GQVEQq8u4nPHIbm1+YoOQwK4+fNMXb9Unid3XhM+NH1gi7ouH7FKAOmXXujVPpYygIuSY8goLIXSJEs6+K3AFr2/o/3a2It51TB28yLGKWiB63WsNf3XYrYT7705tCvAoHjkLbhI1t4gof/b3SsaY5kUcugJ2ui6KvBhPpgx1s/1l6PV1tNVqyPLvJ/83ERjofGjztl8Ufilni96NLaae9XsOzrf88X1Q26vYTbFGTnDO8U9OOSV9d9rukZ+5RI5g53m1v9Dbk5HOTRCeMhb3M/kVfFWr99TXB0RLv4jBNdWWOR/tSllLsRE7f0sblzi20HzMhbrt5a13LRPQQEVRequVbRb06Q+YadwUy/TeUg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(396003)(346002)(366004)(39860400002)(376002)(316002)(66946007)(66556008)(66476007)(8676002)(4326008)(5660300002)(110136005)(9686003)(6512007)(6506007)(26005)(83380400001)(186003)(86362001)(41300700001)(6486002)(82960400001)(478600001)(2906002)(38100700002)(8936002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QmFAoAAYivGP7Jc3iuK16KBvDetwGWGY5jusKPd4IU7WkL+tGyoshKiAwmBl?=
- =?us-ascii?Q?0KPOx2bQZFZw7YuCfKE1q4QYnA0L6jyANxiyH9UmzBEYXnkwJY2Etj/XSgGb?=
- =?us-ascii?Q?WO6pkTo2nAZqNndvANEnGCuCWVSWrBGATPS/oH+kd020z1l//gxETpQPLcqJ?=
- =?us-ascii?Q?f69CAmB6aeNSu1+1+44OyxVcXiAN/pShyfi59hWuvQqDAiYpaAZotRNC4ByE?=
- =?us-ascii?Q?tQTChqwoBvJyoXRe2MS+Z0npdiz8LtvKe+Rhmpl4bdb8OgsyWwN3AblCWKPp?=
- =?us-ascii?Q?QwZo0CEVRhTMuYlHlq+WEjojq20T/OWK70JPaNtRf5uWCOyGfLlBlrADDnrk?=
- =?us-ascii?Q?TFdGtGLUrEdh/ViXkXXOGhQ1v0xnH8Vk+ffVIKgLY2eeYvKwltKBLV3iintw?=
- =?us-ascii?Q?vMYDB/mvcljeq1qiln8OjMEnDAmZhdOgv131N57UKx5qAxveCbA56ReZgv+r?=
- =?us-ascii?Q?62VWI6pXRQbd6P8/ytMhLVjwXnRtAlyR53hImJiHPutZUYkBXiaGHj0g0cwl?=
- =?us-ascii?Q?E/qM7gYy7CPU16e8Sbx/R6h+RujO16j4xRrOd1l3XG1bzQoWIHSyP+xUqrCK?=
- =?us-ascii?Q?qOWsseHSc01CDDiPJ7VCryLMsytKm6JpK7b4BpzVNalwgkpj+UVgnhJGFpfi?=
- =?us-ascii?Q?dUg9r8EMrlEPCqDRWTXm9X5dIjiUZ/a41qjS4bEGOUS0hNmJr8Q8hutyehDt?=
- =?us-ascii?Q?G5ykDuWauoOTbn1uh3IpdSwn6mjw+w1WOBFJwLvPAUDjMbhM38TO/FfRUDtj?=
- =?us-ascii?Q?ez5HGFy/hVAos69st1WNGPROGS8gjC5kUcNtsXIO6/85Vb13aX5wwxLRcd6T?=
- =?us-ascii?Q?E+1uleRZ6xl0jzP8mTgfyAVDYK1/wtSiCIIQkLX0JqUp7T08nHAqSnjTOMSc?=
- =?us-ascii?Q?hRBIo88Ctcjpj3eCouf79GLNbwaClztmrhW0jgw8K8SmgK/8K1cySFPmYxty?=
- =?us-ascii?Q?x2exJ+xtT10+qRciOxIywN0PbWU4F2WsQQRJw3yy1tne1qT5vk9CIC+nLzs8?=
- =?us-ascii?Q?murTVOPc/KQkdHpJhloJMiogw8Oa9mv7Pl+TeqeuP5CHVTnwtvcDdu5XyrX9?=
- =?us-ascii?Q?tkjaC+bDBtgDl5pQIutpxsiCE0xikkyWBuFwNlBSX+nJASO+UZx2FQObkqA2?=
- =?us-ascii?Q?R/Y4wYx256R74RhkqABapXBCOeouxIMZKsAaplbU1Jrk3Rgy7Bsq1ggjG60o?=
- =?us-ascii?Q?h0JmX3Poy5D993LtLKQIlSmQQP5BvI8b3Ikxx3AX4gxmlvsYRxbQvsin6jjU?=
- =?us-ascii?Q?xLe89Mfu+ODuUF2lig64LFd1c7lfEVIOVrutDG7HZLafgMYGXcCbCHerC2gK?=
- =?us-ascii?Q?dVWeONptdJzZ539+I/Tqagte6CGDlvoGkq3CulwFUZ44EtT6ZeITCNgWD9bH?=
- =?us-ascii?Q?UbgIUul37BjrCZd6XuiCiSsz7uLx7+Yf7cj74ZWKwGYDUGZAcVwfAROqO0VE?=
- =?us-ascii?Q?xQTq7wmXNE5x3/81kVzS68TRcxZmfIn0GbpmFD2sErHr7VG3vMCDl5K2VmG0?=
- =?us-ascii?Q?tk3L4aiUiIufBOm8wvO1PxBIaY2L+qrYqlMfkXdaf1BoiFHIdc2Gc2dJNNvC?=
- =?us-ascii?Q?N5mk0TFqDfEVEsOO1nIKhYqEFSpxHWwox7v+i/wmksmggLJ+2ITUSQb7nWcy?=
- =?us-ascii?Q?jA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: da44d5ec-8743-4fcc-77cb-08da62a747f4
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DI+nDc41AEzr/ESmKWd9jyY3V4lsCWzabb2s2GPNgY28WKIaFzOeegaqXwu6?=
+ =?us-ascii?Q?8vCawFZN9Rxw4Nd+uOUtAUBx0NDPh3yP2HubMnQiZk0vswxrYN0t7qpXz1hE?=
+ =?us-ascii?Q?FO7yr5ZbrGmREUnqGrTJdm6JL60FrJ3Kog5ybkpXGwpiVEr4dzbXva2Zw2EG?=
+ =?us-ascii?Q?/ZGTD6ZFb+pNqefR1wmoyAvIbyL8PtMXtIIlhxw511Mm7x3AcOwVpsg+TmbQ?=
+ =?us-ascii?Q?iA6eLDFKmBxTT3rbCRtCOQbIHWUdrx/CcPFp5Q4fZgnsDb6HEYmcRe+GKICj?=
+ =?us-ascii?Q?Qc3xk1pmWVVFU/B8stBSAO4YgwRexF8NTT4wSzxw7sBX6khEr/EPiTyO1q+a?=
+ =?us-ascii?Q?iCj8oA+burZUGnabk7BV1DC1pdkrzesYz4j1UQNVq3tthLFmNeR/fJzh49py?=
+ =?us-ascii?Q?iXWHorioJCtSh2xbjRlFQePJ4IHvkarYp596hGfgk4TQNGTnyG81qmvGF/HI?=
+ =?us-ascii?Q?65s77QTu48OfxSV6QhGxG7/i3MReP+dadxLZam/aA3lUC2NhSbYay0txD45H?=
+ =?us-ascii?Q?Q+qwgaZLMDN0lc0sTF73UB4/CX99n3dhLVpKjPwDJZB7oSJBk8aybxciDpMU?=
+ =?us-ascii?Q?wbXWOJ4TzK71TCQwJ8E+NEQx3QLu6CayrI3mXPGbTx8qTuIsRJmin57SWWov?=
+ =?us-ascii?Q?Gg9nebRkM+kjuiqn4qjvz/Xf09zLsw9UB06vbWYD3dy/iq7WESVu9Ye/PPCy?=
+ =?us-ascii?Q?dJkBCJBtY12X52TGC8ozpChAuh3fnXSG3DeUqGzKmsaPXjUHjxL7sN8Ea3hf?=
+ =?us-ascii?Q?vBg7Jy0Ne8U8uIyFaJBBACT/grLVuaXXwIA1FLPmX8VsOgyPexCIH/B9LA/p?=
+ =?us-ascii?Q?GOaCf4YmumOmQEbZLa92JQwkYeBcd3yU6hltTE9FLaa0Rnz7lEww4BCThGX5?=
+ =?us-ascii?Q?xQhg8dz8v3DsomGenIwPWdWIdJgxhNxjgbeLKiPShe3bI1JsR0CfOvsJ/3ee?=
+ =?us-ascii?Q?ubUobL47QGOpuAxdafBykja3qG8upyfXmvAO1GTgmmdTIGIXV0odOMWvoAIo?=
+ =?us-ascii?Q?IEM77mzvQom8sR/xTHcmFcoXrmccz5xY6gJSFaqsBqbhGtoF+b1a7KZxOjrv?=
+ =?us-ascii?Q?UdqO8JEacbVjzdpBX+By0v7Ku9EtBTtt0k6+c4Usz9QQks/ic95KtAtAYTSu?=
+ =?us-ascii?Q?Gwl6Zv5XJiqHlnLL2Nl1z9twOAWpUt1bDhVb38glMlkqzy2FY9LosWPYPuBJ?=
+ =?us-ascii?Q?tMR9+RDmzr/I6UytB1NpggU2m+7HbvQRCJ8D0BJ67HOwS1ecQwdQXAdnIDlp?=
+ =?us-ascii?Q?fNvRLmB1Z3rimuhjyyCIO1vA8EIPldfKNRn1RE4W6oxFFY/liopwO+nasJfm?=
+ =?us-ascii?Q?PToNuzZAQp2vl22Hfq6B9ebTi2EoeDChsLr6oPTxlhoIM6zXrsWbOTNpIt2B?=
+ =?us-ascii?Q?SiuzFYK2TwGXBXVTsq6/c3E/u50/0uEoLEgCfPoGdggJ9EVkJThQ+sRqhOOE?=
+ =?us-ascii?Q?2c3zZkBvwdxqhQAm36Y6eGc6DQqEt8tg0Vq8bx7pv1ZKbnZ6+bf9jYC4Dyaj?=
+ =?us-ascii?Q?ILupNKL3aApGgzhiKJXII052oytm2D+Qgde/IgiRp92T+DoEGqOsXtaCXIco?=
+ =?us-ascii?Q?1cdjNGzzoEvn0I7BQvzmd1/PE7w+KmhX/yxLoY9ZC8ARKE3/StM6zSFM/b8b?=
+ =?us-ascii?Q?7g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a33cb4f-2284-4387-9d96-08da62a7afaa
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2022 19:06:23.4329
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2022 19:09:17.4319
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 044+8ZS8fgtVvdY4h2imxiq81t8GMKTLOqXNPEpHC3FvA0KSkOCG771eMiR/m6YSlMlulaUGJbLBOtIdebFLvfJs3dz4dNSrt9ewzQ4k8HM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4291
+X-MS-Exchange-CrossTenant-UserPrincipalName: rR2l3iRcsIxw+RQI23PcCm9Pl7YD/c1dDBRVzk0/C9SSeAKhwdBcaZy4vNAEIaeLYvZ6vJphx8XsDpFvaMNjw1CzudbZuESdrmkDjgTI0KQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4432
 X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
@@ -148,257 +148,82 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Jonathan Cameron wrote:
-> On Thu, 23 Jun 2022 21:19:32 -0700
+> On Thu, 23 Jun 2022 21:19:33 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 > 
-> > Reduce the complexity and the overhead of walking the topology to
-> > determine endpoint connectivity to root decoder interleave
-> > configurations.
+> > Region creation has need for checking host-bridge connectivity when
+> > adding endpoints to regions. Record, at port creation time, the
+> > host-bridge to provide a useful shortcut from any location in the
+> > topology to the most-significant ancestor.
 > > 
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Hi Dan,
+> Trivial comment inline, but otherwise seems reasonable to me.
 > 
-> A few minor comments inline around naming and also one query on why
-> the refactor or reap_ports is connected to the xarray change.
-> 
-> Thanks,
-> 
-> Jonathan
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
 > > ---
-> >  drivers/cxl/acpi.c      |  2 +-
-> >  drivers/cxl/core/hdm.c  |  6 ++-
-> >  drivers/cxl/core/port.c | 88 ++++++++++++++++++-----------------------
-> >  drivers/cxl/cxl.h       | 12 +++---
-> >  4 files changed, 51 insertions(+), 57 deletions(-)
+> >  drivers/cxl/core/port.c | 16 +++++++++++++++-
+> >  drivers/cxl/cxl.h       |  2 ++
+> >  2 files changed, 17 insertions(+), 1 deletion(-)
 > > 
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index 09fe92177d03..92ad1f359faf 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -197,7 +197,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
-> >  	if (!bridge)
-> >  		return 0;
-> >  
-> > -	dport = cxl_find_dport_by_dev(root_port, match);
-> > +	dport = cxl_dport_load(root_port, match);
-> 
-> Load is kind of specific to the xarray.  I'd be tempted to keep it to
-> original find naming.
-
-ok.
-
-> 
-> 
-> >  	if (!dport) {
-> >  		dev_dbg(host, "host bridge expected and not found\n");
-> >  		return 0;
-> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > index c0164f9b2195..672bf3e97811 100644
-> > --- a/drivers/cxl/core/hdm.c
-> > +++ b/drivers/cxl/core/hdm.c
-> > @@ -50,8 +50,9 @@ static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
-> >  int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
-> >  {
-> >  	struct cxl_switch_decoder *cxlsd;
-> > -	struct cxl_dport *dport;
-> > +	struct cxl_dport *dport = NULL;
-> >  	int single_port_map[1];
-> > +	unsigned long index;
-> >  
-> >  	cxlsd = cxl_switch_decoder_alloc(port, 1);
-> >  	if (IS_ERR(cxlsd))
-> > @@ -59,7 +60,8 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
-> >  
-> >  	device_lock_assert(&port->dev);
-> >  
-> > -	dport = list_first_entry(&port->dports, typeof(*dport), list);
-> > +	xa_for_each(&port->dports, index, dport)
-> > +		break;
-> >  	single_port_map[0] = dport->port_id;
-> >  
-> >  	return add_hdm_decoder(port, &cxlsd->cxld, single_port_map);
 > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index ea3ab9baf232..d2f6898940fa 100644
+> > index d2f6898940fa..c48f217e689a 100644
 > > --- a/drivers/cxl/core/port.c
 > > +++ b/drivers/cxl/core/port.c
-> > @@ -452,6 +452,7 @@ static void cxl_port_release(struct device *dev)
-> >  	xa_for_each(&port->endpoints, index, ep)
-> >  		cxl_ep_remove(port, ep);
-> >  	xa_destroy(&port->endpoints);
-> > +	xa_destroy(&port->dports);
-> >  	ida_free(&cxl_port_ida, port->id);
-> >  	kfree(port);
-> >  }
-> > @@ -566,7 +567,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+> > @@ -546,6 +546,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+> >  	if (rc < 0)
+> >  		goto err;
+> >  	port->id = rc;
+> > +	port->uport = uport;
+> >  
+> >  	/*
+> >  	 * The top-level cxl_port "cxl_root" does not have a cxl_port as
+> > @@ -556,14 +557,27 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+> >  	dev = &port->dev;
+> >  	if (parent_dport) {
+> >  		struct cxl_port *parent_port = parent_dport->port;
+> > +		struct cxl_port *iter;
+> >  
+> >  		port->depth = parent_port->depth + 1;
+> >  		port->parent_dport = parent_dport;
+> >  		dev->parent = &parent_port->dev;
+> > +		/*
+> > +		 * walk to the host bridge, or the first ancestor that knows
+> > +		 * the host bridge
+> > +		 */
+> > +		iter = port;
+> > +		while (!iter->host_bridge &&
+> > +		       !is_cxl_root(to_cxl_port(iter->dev.parent)))
+> > +			iter = to_cxl_port(iter->dev.parent);
+> > +		if (iter->host_bridge)
+> > +			port->host_bridge = iter->host_bridge;
+> > +		else
+> > +			port->host_bridge = iter->uport;
+> > +		dev_dbg(uport, "host-bridge: %s\n", dev_name(port->host_bridge));
+> >  	} else
+> >  		dev->parent = uport;
+> >  
+> > -	port->uport = uport;
 > >  	port->component_reg_phys = component_reg_phys;
 > >  	ida_init(&port->decoder_ida);
 > >  	port->dpa_end = -1;
-> > -	INIT_LIST_HEAD(&port->dports);
-> > +	xa_init(&port->dports);
-> >  	xa_init(&port->endpoints);
-> >  
-> >  	device_initialize(dev);
-> > @@ -696,17 +697,13 @@ static int match_root_child(struct device *dev, const void *match)
-> >  		return 0;
-> >  
-> >  	port = to_cxl_port(dev);
-> > -	device_lock(dev);
-> > -	list_for_each_entry(dport, &port->dports, list) {
-> > -		iter = match;
-> > -		while (iter) {
-> > -			if (iter == dport->dport)
-> > -				goto out;
-> > -			iter = iter->parent;
-> > -		}
-> > +	iter = match;
-> > +	while (iter) {
-> > +		dport = cxl_dport_load(port, iter);
-> > +		if (dport)
-> > +			break;
-> > +		iter = iter->parent;
-> >  	}
-> > -out:
-> > -	device_unlock(dev);
-> >  
-> >  	return !!iter;
-> >  }
-> > @@ -730,9 +727,10 @@ EXPORT_SYMBOL_NS_GPL(find_cxl_root, CXL);
-> >  static struct cxl_dport *find_dport(struct cxl_port *port, int id)
-> >  {
-> >  	struct cxl_dport *dport;
-> > +	unsigned long index;
-> >  
-> >  	device_lock_assert(&port->dev);
-> > -	list_for_each_entry (dport, &port->dports, list)
-> > +	xa_for_each(&port->dports, index, dport)
-> >  		if (dport->port_id == id)
-> >  			return dport;
-> >  	return NULL;
-> > @@ -741,18 +739,21 @@ static struct cxl_dport *find_dport(struct cxl_port *port, int id)
-> >  static int add_dport(struct cxl_port *port, struct cxl_dport *new)
-> >  {
-> >  	struct cxl_dport *dup;
-> > +	int rc;
-> >  
-> >  	device_lock_assert(&port->dev);
-> >  	dup = find_dport(port, new->port_id);
-> > -	if (dup)
-> > +	if (dup) {
-> >  		dev_err(&port->dev,
-> >  			"unable to add dport%d-%s non-unique port id (%s)\n",
-> >  			new->port_id, dev_name(new->dport),
-> >  			dev_name(dup->dport));
-> > -	else
-> > -		list_add_tail(&new->list, &port->dports);
-> > +		rc = -EBUSY;
-> 
-> Direct return slightly simpler and reduce indent on next bit plus makes
-> this more obviously an 'error condition' by indenting it.
-
-Looks good, yes.
-
-> 
-> > +	} else
-> > +		rc = xa_insert(&port->dports, (unsigned long)new->dport, new,
-> > +			       GFP_KERNEL);
-> >  
-> > -	return dup ? -EEXIST : 0;
-> > +	return rc;
-> >  }
-> >  
-> >  /*
-> > @@ -779,10 +780,8 @@ static void cxl_dport_remove(void *data)
-> >  	struct cxl_dport *dport = data;
-> >  	struct cxl_port *port = dport->port;
-> >  
-> > +	xa_erase(&port->dports, (unsigned long) dport->dport);
-> >  	put_device(dport->dport);
-> > -	cond_cxl_root_lock(port);
-> > -	list_del(&dport->list);
-> > -	cond_cxl_root_unlock(port);
-> >  }
-> >  
-> >  static void cxl_dport_unlink(void *data)
-> > @@ -834,7 +833,6 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
-> >  	if (!dport)
-> >  		return ERR_PTR(-ENOMEM);
-> >  
-> > -	INIT_LIST_HEAD(&dport->list);
-> >  	dport->dport = dport_dev;
-> >  	dport->port_id = port_id;
-> >  	dport->component_reg_phys = component_reg_phys;
-> > @@ -925,7 +923,7 @@ static int match_port_by_dport(struct device *dev, const void *data)
-> >  		return 0;
-> >  
-> >  	port = to_cxl_port(dev);
-> > -	dport = cxl_find_dport_by_dev(port, ctx->dport_dev);
-> > +	dport = cxl_dport_load(port, ctx->dport_dev);
-> >  	if (ctx->dport)
-> >  		*ctx->dport = dport;
-> >  	return dport != NULL;
-> > @@ -1025,19 +1023,27 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, CXL);
-> >   * for a port to be unregistered is when all memdevs beneath that port have gone
-> >   * through ->remove(). This "bottom-up" removal selectively removes individual
-> >   * child ports manually. This depends on devm_cxl_add_port() to not change is
-> > - * devm action registration order.
-> > + * devm action registration order, and for dports to have already been
-> > + * destroyed by reap_dports().
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 8e2c1b393552..0211cf0d3574 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -331,6 +331,7 @@ struct cxl_nvdimm {
+> >   * @component_reg_phys: component register capability base address (optional)
+> >   * @dead: last ep has been removed, force port re-creation
+> >   * @depth: How deep this port is relative to the root. depth 0 is the root.
+> > + * @host_bridge: Shortcut to the platform attach point for this port
 > >   */
-> > -static void delete_switch_port(struct cxl_port *port, struct list_head *dports)
-> > +static void delete_switch_port(struct cxl_port *port)
-> > +{
-> > +	devm_release_action(port->dev.parent, cxl_unlink_uport, port);
-> > +	devm_release_action(port->dev.parent, unregister_port, port);
-> > +}
-> > +
-> > +static void reap_dports(struct cxl_port *port)
-> >  {
-> > -	struct cxl_dport *dport, *_d;
-> > +	struct cxl_dport *dport;
-> > +	unsigned long index;
-> > +
-> > +	device_lock_assert(&port->dev);
-> >  
-> > -	list_for_each_entry_safe(dport, _d, dports, list) {
-> > +	xa_for_each(&port->dports, index, dport) {
-> >  		devm_release_action(&port->dev, cxl_dport_unlink, dport);
-> >  		devm_release_action(&port->dev, cxl_dport_remove, dport);
-> >  		devm_kfree(&port->dev, dport);
-> >  	}
-> > -	devm_release_action(port->dev.parent, cxl_unlink_uport, port);
-> > -	devm_release_action(port->dev.parent, unregister_port, port);
-> >  }
-> >  
-> >  static struct cxl_ep *cxl_ep_load(struct cxl_port *port,
-> > @@ -1054,8 +1060,8 @@ static void cxl_detach_ep(void *data)
-> >  	for (iter = &cxlmd->dev; iter; iter = grandparent(iter)) {
-> >  		struct device *dport_dev = grandparent(iter);
-> >  		struct cxl_port *port, *parent_port;
-> > -		LIST_HEAD(reap_dports);
-> >  		struct cxl_ep *ep;
-> > +		bool died = false;
-> >  
-> >  		if (!dport_dev)
-> >  			break;
-> > @@ -1095,15 +1101,16 @@ static void cxl_detach_ep(void *data)
-> >  			 * enumerated port. Block new cxl_add_ep() and garbage
-> >  			 * collect the port.
-> >  			 */
-> > +			died = true;
-> >  			port->dead = true;
-> > -			list_splice_init(&port->dports, &reap_dports);
-> > +			reap_dports(port);
-> 
-> I'm not immediately clear on why this refactor is tied up with moving
-> to the xarray.  Perhaps a comment in the commit message to add
-> more detail around this?
+> >  struct cxl_port {
+> >  	struct device dev;
+> > @@ -344,6 +345,7 @@ struct cxl_port {
+> >  	resource_size_t component_reg_phys;
+> >  	bool dead;
+> >  	unsigned int depth;
+> > +	struct device *host_bridge;
+> Would feel more natural up next to the struct device *uport element of cxl_port.
 
-Sure, added the following:
-
-   Note that cxl_detach_ep(), after it determines that the last @ep has
-   departed and decides to delete the port, now needs to walk the dport
-   array with the device_lock() held to remove entries. Previously
-   list_splice_init() could be used atomically delete all dport entries at
-   once and then perform entry tear down outside the lock. There is no
-   list_splice_init() equivalent for the xarray.
+Done.
