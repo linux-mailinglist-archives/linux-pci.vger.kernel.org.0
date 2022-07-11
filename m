@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 498D2570DA2
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 00:55:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38F8A570DBD
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 00:59:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231293AbiGKWyw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 18:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48960 "EHLO
+        id S229837AbiGKW7s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jul 2022 18:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231214AbiGKWyl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 18:54:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A517A643E3;
-        Mon, 11 Jul 2022 15:54:40 -0700 (PDT)
+        with ESMTP id S229568AbiGKW7s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 18:59:48 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63EA3509EB;
+        Mon, 11 Jul 2022 15:59:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 40E01612D7;
-        Mon, 11 Jul 2022 22:54:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA47C34115;
-        Mon, 11 Jul 2022 22:54:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1E2B9B81611;
+        Mon, 11 Jul 2022 22:59:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6878C34115;
+        Mon, 11 Jul 2022 22:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657580079;
-        bh=xG4WYnt2pDWcAgSjzTQqgeaw1HV6zEbIP5TmSZQv9V4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RO7PsVoXA2lACTlYaApR1PY+FprRwxwn3Z1jOocown9d/2WeRqXQXyiuNCJ7YA6SL
-         HgZ7N4arbFKjmQkBdue4doz2FDjQhT3tzZmZ0VNudGvZbAjMVHgIXRXh2rKnlwRH81
-         Q3YWaGMm3ZTX85M91QhtsbxE9/Z+8pk7gEeVW+GQmzYVGTuJikGn+gn2npZirHQBg5
-         qvX5ZJ2DrXcT+HH3S2lTYOOg+m163cM7KOX2XLzmlQjSLluBOiz69xKGVNKAEhKEzn
-         JhHkM+xszcqy0PlwilpnBmdIQ81Ngl6NvOVWsK6NkoJgBIPqo19Zjia47d96dY/M5Q
-         xmqu/i5M81GOA==
-Date:   Mon, 11 Jul 2022 17:54:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mohamed Khalfella <mkhalfella@purestorage.com>
-Cc:     stable@vger.kernel.org, Meeta Saggi <msaggi@purestorage.com>,
-        Eric Badger <ebadger@purestorage.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/AER: Iterate over error counters instead of error
- strings
-Message-ID: <20220711225437.GA703490@bhelgaas>
+        s=k20201202; t=1657580384;
+        bh=pbckF8CQeGBYncZRbq1u1LrG1FBJr8f03PbBYkrf4UA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O93hKy3KCgZUlHegyC/RvwcSQJLVyXIbYrv2glU0Gw4+WHqB+BBoMlrJ3/UFD+MCo
+         /eLtLLV8iwEMp3dLqF2jjbOlrZ9UpWg9XnVimoy4bs6uV9gT5z/k74lif1lhbrZwdE
+         knyQO97OnjxtIHz5hwPXlUCFGsy3wYG+8NTFadq7usulIdOsUvGwrJaaKWrNXeZWpX
+         ev6Zlk43bzWQxe/QUBoGH/4AEFWVjzieesCS54sreRsfOrOTdtMM7K+VUvx1fhbLga
+         MF66FgbtqNvrXG9a0LLbuRA1jWloxsKt9E3dRbhLdqmOB4lxJNDEjvOpLMAQB/HFLP
+         wZqN/Z+f3W2vQ==
+Received: by pali.im (Postfix)
+        id 9AE529D7; Tue, 12 Jul 2022 00:59:41 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: aardvark: Add support for PCI Bridge Subsystem Vendor ID on emulated bridge
+Date:   Tue, 12 Jul 2022 00:59:15 +0200
+Message-Id: <20220711225915.13896-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220711221823.12154-1-pali@kernel.org>
+References: <20220711221823.12154-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220509181441.31884-1-mkhalfella@purestorage.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,51 +60,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 09, 2022 at 06:14:41PM +0000, Mohamed Khalfella wrote:
-> PCI AER stats counters sysfs attributes need to iterate over
-> stats counters instead of stats names. Also, added a build
-> time check to make sure all counters have entries in strings
-> array.
-> 
-> Fixes: 0678e3109a3c ("PCI/AER: Simplify __aer_print_error()")
-> Cc: stable@vger.kernel.org
-> Reported-by: Meeta Saggi <msaggi@purestorage.com>
-> Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
-> Reviewed-by: Meeta Saggi <msaggi@purestorage.com>
-> Reviewed-by: Eric Badger <ebadger@purestorage.com>
+Register with Subsystem Device/Vendor ID is at offset 0x2c. Export is via
+emulated bridge.
 
-I added some info about why we need this to the commit log and applied
-to pci/err for v5.20.  Thank you!
+After this change Subsystem ID is visible in lspci output at line:
 
-> ---
->  drivers/pci/pcie/aer.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 9fa1f97e5b27..ce99a6d44786 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -533,7 +533,7 @@ static const char *aer_agent_string[] = {
->  	u64 *stats = pdev->aer_stats->stats_array;			\
->  	size_t len = 0;							\
->  									\
-> -	for (i = 0; i < ARRAY_SIZE(strings_array); i++) {		\
-> +	for (i = 0; i < ARRAY_SIZE(pdev->aer_stats->stats_array); i++) {\
->  		if (strings_array[i])					\
->  			len += sysfs_emit_at(buf, len, "%s %llu\n",	\
->  					     strings_array[i],		\
-> @@ -1342,6 +1342,11 @@ static int aer_probe(struct pcie_device *dev)
->  	struct device *device = &dev->device;
->  	struct pci_dev *port = dev->port;
->  
-> +	BUILD_BUG_ON(ARRAY_SIZE(aer_correctable_error_string) <
-> +		     AER_MAX_TYPEOF_COR_ERRS);
-> +	BUILD_BUG_ON(ARRAY_SIZE(aer_uncorrectable_error_string) <
-> +		     AER_MAX_TYPEOF_UNCOR_ERRS);
-> +
->  	/* Limit to Root Ports or Root Complex Event Collectors */
->  	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
->  	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-> -- 
-> 2.29.0
-> 
+  Capabilities: [40] Subsystem
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+
+---
+Changes in v2:
+* Fix wrong rebase, do not add PCIE_CORE_EXP_ROM_BAR_REG
+---
+ drivers/pci/controller/pci-aardvark.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 74511f015168..060936ef01fe 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -32,6 +32,7 @@
+ #define PCIE_CORE_DEV_ID_REG					0x0
+ #define PCIE_CORE_CMD_STATUS_REG				0x4
+ #define PCIE_CORE_DEV_REV_REG					0x8
++#define PCIE_CORE_SSDEV_ID_REG					0x2c
+ #define PCIE_CORE_PCIEXP_CAP					0xc0
+ #define PCIE_CORE_ERR_CAPCTL_REG				0x118
+ #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
+@@ -982,6 +983,8 @@ static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+ 	/* Indicates supports for Completion Retry Status */
+ 	bridge->pcie_conf.rootcap = cpu_to_le16(PCI_EXP_RTCAP_CRSVIS);
+ 
++	bridge->subsystem_vendor_id = advk_readl(pcie, PCIE_CORE_SSDEV_ID_REG) & 0xffff;
++	bridge->subsystem_id = advk_readl(pcie, PCIE_CORE_SSDEV_ID_REG) >> 16;
+ 	bridge->has_pcie = true;
+ 	bridge->data = pcie;
+ 	bridge->ops = &advk_pci_bridge_emul_ops;
+-- 
+2.20.1
+
