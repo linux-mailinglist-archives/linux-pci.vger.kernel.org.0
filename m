@@ -2,130 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C4F7570D6E
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 00:36:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAF4D570D88
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 00:48:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbiGKWgB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 18:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35986 "EHLO
+        id S229615AbiGKWr6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jul 2022 18:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiGKWgA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 18:36:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C4F31230;
-        Mon, 11 Jul 2022 15:35:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7ED31B815FB;
-        Mon, 11 Jul 2022 22:35:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E016BC3411C;
-        Mon, 11 Jul 2022 22:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657578957;
-        bh=7G6pKX09/F97v2cQQOGAgqFzqkQnDmYMUvTgW5etn68=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pjlkaOk7gXsJfMHGs2uR127IsIiny3oS5RupRJ+cnoJubzAyUNhCn5ktZYt+bkkLP
-         ZbDtX8n7xLsb/Br8Mv1I2wz4XulKqiAEcblcVYQnZpDR2Bp6Maf71Fs6eMaIOIztNp
-         Ex51UBpuF1hijYOOwxJXM1cqULQdAFk+/v7KxUmgZQ183V7UkdKwISf2LEig3t/bcP
-         vocLQjmt1VTrQXzg5usCbUQTFHRWOqs7iMETGyzXyCnTzT7wZlsgL51BKRD+3E167Y
-         oD3SYrSVN9/Lz5z2xJj2RNHPyrHh9LS84MX3Q5NixXad+uW+5T5NxNQJIxJyI0r+6o
-         /k9ndLEaU+MOQ==
-Date:   Mon, 11 Jul 2022 17:35:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Nick Child <nick.child@ibm.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] powerpc/pci: Hide pci_device_from_OF_node() for
- non-powermac code
-Message-ID: <20220711223555.GA702011@bhelgaas>
+        with ESMTP id S229476AbiGKWr6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 18:47:58 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2AD11DA5B;
+        Mon, 11 Jul 2022 15:47:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sVb8qI+Iy0WZdlOU+oxerSlvClQzfHKYxHE8YXk9e58=; b=rsrFIyjxmoIi1JK7GwRQ1fbpvN
+        nUfUOVKJ3rU7R707zHlbNUoEsmiWftZmgkmrV6tX4GwdOzPzy2j+eCWsyTHfsi3q5W6zwMlTAENCi
+        VMk0FDemCYS9Gj2vGHdMXFXw7oicN2djBNdOPmYBGcaKbiGvgy0JF821yMubcAd49uA0iPzV6+URj
+        Idp4jOqwqLqiHs32Q9VuKHinvX2+ybg65PYFvmGlakqpSZ6GpmmAapxfrV5VkuCMoYz0tEzu6CwcH
+        chXd7b5H9D7T9TiezBR/rzNCliG8fOY6WD/3OJYNmeMdFzMiQbT3bh/H7MWfN0YI3fc1BKiqpLzoy
+        iGJ2ZsFw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oB2Bf-006Lxj-SB; Mon, 11 Jul 2022 22:47:31 +0000
+Date:   Mon, 11 Jul 2022 23:47:31 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Li, Ming" <ming4.li@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V13.1] PCI/DOE: Add DOE mailbox support functions
+Message-ID: <Ysyog0OFUu+5MIxT@casper.infradead.org>
+References: <20220705154932.2141021-4-ira.weiny@intel.com>
+ <20220711222748.470340-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220706104308.5390-2-pali@kernel.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220711222748.470340-1-ira.weiny@intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 06, 2022 at 12:43:04PM +0200, Pali Rohár wrote:
-> Function pci_device_from_OF_node() is used only in powermac code.
-> So hide it from all other platforms as it is unsed.
+On Mon, Jul 11, 2022 at 03:27:48PM -0700, ira.weiny@intel.com wrote:
+> +/**
+> + * struct pci_doe_mb - State for a single DOE mailbox
+> + *
+> + * This state is used to manage a single DOE mailbox capability.  All fields
+> + * should be considered opaque to the consumers and the structure passed into
+> + * the helpers below after being created by devm_pci_doe_create()
+> + *
+> + * @pdev: PCI device this mailbox belongs to
+> + * @cap_offset: Capability offset
+> + * @prots: Array of protocols supported (encoded as long values)
+> + * @wq: Wait queue for work item
+> + * @work_queue: Queue of pci_doe_work items
+> + * @flags: Bit array of PCI_DOE_FLAG_* flags
+> + *
+> + * Note: @prots can't be allocated with struct size because the number of
+> + * protocols is not known until after this structure is in use.  However, the
+> + * single discovery protocol is always required to query for the number of
+> + * protocols.
+> + */
 
-s/unsed/unused/ (same typo in 3/5 patch)
+Can you add at least stub documentation in Documentation/PCI/doe.rst
+and include the kernel-doc from both pci-doe.c and pci-doe.h?
 
-These are for the powerpc folks, so I'm just kibbitzing here.
+> +static int pci_doe_abort(struct pci_doe_mb *doe_mb)
+> +{
+> +	struct pci_dev *pdev = doe_mb->pdev;
+> +	int offset = doe_mb->cap_offset;
+> +	unsigned long timeout_jiffies;
+> +
+> +	pci_dbg(pdev, "[%x] Issuing Abort\n", offset);
 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  arch/powerpc/include/asm/pci-bridge.h | 2 ++
->  arch/powerpc/kernel/pci_32.c          | 2 ++
->  arch/powerpc/kernel/pci_64.c          | 2 ++
->  3 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-> index c85f901227c9..98156932a1f5 100644
-> --- a/arch/powerpc/include/asm/pci-bridge.h
-> +++ b/arch/powerpc/include/asm/pci-bridge.h
-> @@ -170,8 +170,10 @@ static inline struct pci_controller *pci_bus_to_host(const struct pci_bus *bus)
->  	return bus->sysdata;
->  }
->  
-> +#ifdef CONFIG_PPC_PMAC
->  extern int pci_device_from_OF_node(struct device_node *node,
->  				   u8 *bus, u8 *devfn);
-> +#endif
->  #ifndef CONFIG_PPC64
->  
->  extern void pci_create_OF_bus_map(void);
-> diff --git a/arch/powerpc/kernel/pci_32.c b/arch/powerpc/kernel/pci_32.c
-> index 5a174936c9a0..c3b91fb62a71 100644
-> --- a/arch/powerpc/kernel/pci_32.c
-> +++ b/arch/powerpc/kernel/pci_32.c
-> @@ -154,6 +154,7 @@ pcibios_make_OF_bus_map(void)
->  }
->  
->  
-> +#ifdef CONFIG_PPC_PMAC
->  /*
->   * Returns the PCI device matching a given OF node
->   */
-> @@ -193,6 +194,7 @@ int pci_device_from_OF_node(struct device_node *node, u8 *bus, u8 *devfn)
->  	return -ENODEV;
->  }
->  EXPORT_SYMBOL(pci_device_from_OF_node);
-> +#endif
->  
->  /* We create the "pci-OF-bus-map" property now so it appears in the
->   * /proc device tree
-> diff --git a/arch/powerpc/kernel/pci_64.c b/arch/powerpc/kernel/pci_64.c
-> index 19b03ddf5631..0c7cfb9fab04 100644
-> --- a/arch/powerpc/kernel/pci_64.c
-> +++ b/arch/powerpc/kernel/pci_64.c
-> @@ -286,6 +286,7 @@ int pcibus_to_node(struct pci_bus *bus)
->  EXPORT_SYMBOL(pcibus_to_node);
->  #endif
->  
-> +#ifdef CONFIG_PPC_PMAC
->  int pci_device_from_OF_node(struct device_node *np, u8 *bus, u8 *devfn)
->  {
->  	if (!PCI_DN(np))
-> @@ -294,3 +295,4 @@ int pci_device_from_OF_node(struct device_node *np, u8 *bus, u8 *devfn)
->  	*devfn = PCI_DN(np)->devfn;
->  	return 0;
->  }
-> +#endif
-> -- 
-> 2.20.1
-> 
+"Issuing DOE abort", perhaps?
+
