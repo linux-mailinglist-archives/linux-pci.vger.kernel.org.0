@@ -2,149 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 236AD5709CD
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 20:20:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC2BB5709FB
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 20:33:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231246AbiGKSUI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 14:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
+        id S229709AbiGKSd5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jul 2022 14:33:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230498AbiGKSUI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 14:20:08 -0400
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD4D92B253;
-        Mon, 11 Jul 2022 11:19:57 -0700 (PDT)
-Received: from [127.0.0.1] ([73.223.250.219])
-        (authenticated bits=0)
-        by mail.zytor.com (8.17.1/8.15.2) with ESMTPSA id 26BIIgkM2907643
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 11 Jul 2022 11:18:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 26BIIgkM2907643
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2022070501; t=1657563523;
-        bh=rYKyoAm9NejlFDvavPBi1oFgoBtFXul3PFuCTQGr00o=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=XVu0jzhzb3sa1+Tk1eSDhp1f9Ih+66yhKoEMGdbiomtlRtc2H2bXTCHF+NbJmwLtv
-         Dc5/eQ5woSW8F/g976bAom6bW17uz64dD3EZ912zm45VBwOG/ARzcpJBJgyJb5BShm
-         yPgkJ436+n7uucNCRW6bt3f2sElS9Uyrq9wrwTBpdeJ4kZxVIE3hBFcpJTK42UvogE
-         q9l8w4bMDrYJJHXcgnjs2lbCGo796/G/NvKXjFO1Ru7zoBbSRJVPy9Z2ceCfU7WrJQ
-         F2b5Gb1bhrWLkCP74M1aDWpaAyXSQQZF7b1mCeuvevgyPfoVcMFmhsaJn1SbtB3yh8
-         9SHeIY2tDDxDw==
-Date:   Mon, 11 Jul 2022 11:18:40 -0700
-From:   "H. Peter Anvin" <hpa@zytor.com>
-To:     Ajay Kaher <akaher@vmware.com>, Nadav Amit <namit@vmware.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Anish Swaminathan <anishs@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] MMIO should have more priority then IO
-User-Agent: K-9 Mail for Android
-In-Reply-To: <F9E62470-71EA-40DD-875C-6B2B1831F3ED@vmware.com>
-References: <1656433761-9163-1-git-send-email-akaher@vmware.com> <20220628180919.GA1850423@bhelgaas> <25F843ED-7EB4-4D00-96CB-7DE1AC886460@vmware.com> <YsgplrrJnk5Ly19z@casper.infradead.org> <96D533E5-F3AF-4062-B095-8C143C307E37@vmware.com> <YshvnodeqmJV6uIJ@casper.infradead.org> <1A0FA5B7-39E8-4CAE-90DD-E260937F14E1@vmware.com> <Ysh63kRVGMFJMNfG@casper.infradead.org> <85071FE5-E37A-44CF-9EF7-CB80C116A876@vmware.com> <4E0E503E-64E1-4B0A-B96A-0CD554A67107@vmware.com> <83C436BD-E12E-420C-B651-B3788F1C4683@vmware.com> <F9E62470-71EA-40DD-875C-6B2B1831F3ED@vmware.com>
-Message-ID: <058DA908-87F7-438E-9850-9CD9DCCFD928@zytor.com>
+        with ESMTP id S230156AbiGKSd4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 14:33:56 -0400
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B29643F;
+        Mon, 11 Jul 2022 11:33:39 -0700 (PDT)
+Received: by mail-io1-f54.google.com with SMTP id n7so5733722ioo.7;
+        Mon, 11 Jul 2022 11:33:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=a7SPj/JcwiIibv/j3Xnv5Pkj9mSSAfyBYGS0cNpMSHk=;
+        b=lSd/w448Y+T9TH1ASU7L2LFJH7EMkH8UMRSTX292IlCPiPvzs2TNFxr/enMZFGHchw
+         vt/o/m6w41Rz8So73Diz28//ZuuTTG+98Pzknx+WoKZdtFq2houJocpWWcOdV0NQmwPy
+         tI9uCBCIdpU7OlRa62y39TahBdIcDQ5l5fTkU7sfqGsPNW7FUcmNEgWwSKMRXE+QVstr
+         MH4BUK8NChauNNY9Ly/OB57ya83mDcFfs50QEJfYDVh7M+2x17+3Cq0lpT9+WVKUtgxl
+         uXbkPo4/yrhjejOvp1i8Rj1SGXPwoqM0E05r13lD7D/DdZLOrPGSAe5/6zNi3bPcZUQz
+         JG+w==
+X-Gm-Message-State: AJIora+jBSX9Y+dWh6ftGZUzucDTQ2B/7SDDMvYYqy3/eMHRWNOLyZgH
+        7kn1L7RGbWTaGby7cGfC/g==
+X-Google-Smtp-Source: AGRyM1tEMxhJw/w9P3ZNB04okY94YF2i/D+LdTVD/y9iPPFmUuC8Kj1e7N1ygZK07c1GV1OHRwCcQg==
+X-Received: by 2002:a05:6638:1686:b0:33e:9977:2e1f with SMTP id f6-20020a056638168600b0033e99772e1fmr10688635jat.7.1657564418924;
+        Mon, 11 Jul 2022 11:33:38 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id y24-20020a056602201800b0067b755b2546sm3887807iod.24.2022.07.11.11.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jul 2022 11:33:38 -0700 (PDT)
+Received: (nullmailer pid 47902 invoked by uid 1000);
+        Mon, 11 Jul 2022 18:33:36 -0000
+Date:   Mon, 11 Jul 2022 12:33:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+        krzk+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 06/13] PCI: dwc: host: Read num-lanes property before
+ host_init()
+Message-ID: <20220711183336.GA4189538-robh@kernel.org>
+References: <20220701085420.870306-1-yoshihiro.shimoda.uh@renesas.com>
+ <20220701085420.870306-7-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220701085420.870306-7-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On July 11, 2022 10:53:54 AM PDT, Ajay Kaher <akaher@vmware=2Ecom> wrote:
->
->=EF=BB=BFOn 11/07/22, 10:34 PM, "Nadav Amit" <namit@vmware=2Ecom> wrote:
->
->> On Jul 10, 2022, at 11:31 PM, Ajay Kaher <akaher@vmware=2Ecom> wrote:
->>
->> During boot-time there are many PCI reads=2E Currently, when these read=
-s are
->> performed by a virtual machine, they all cause a VM-exit, and therefore=
- each
->> one of them induces a considerable overhead=2E
->>
->> When using MMIO (but not PIO), it is possible to map the PCI BARs of th=
-e
->> virtual machine to some memory area that holds the values that the =E2=
-=80=9Cemulated
->> hardware=E2=80=9D is supposed to return=2E The memory region is mapped =
-as "read-only=E2=80=9D
->> in the NPT/EPT, so reads from these BAR regions would be treated as reg=
-ular
->> memory reads=2E Writes would still be trapped and emulated by the hyper=
-visor=2E
->
->I guess some typo mistake in above paragraph, it's per-device PCI config =
-space
->i=2Ee=2E 4KB ECAM not PCI BARs=2E Please read above paragraph as:
->
->When using MMIO (but not PIO), it is possible to map the PCI config space=
- of the
->virtual machine to some memory area that holds the values that the =E2=80=
-=9Cemulated
->hardware=E2=80=9D is supposed to return=2E The memory region is mapped as=
- "read-only=E2=80=9D
->in the NPT/EPT, so reads from these PCI config space would be treated as =
-regular
->memory reads=2E Writes would still be trapped and emulated by the hypervi=
-sor=2E
->
->We will send v2 or new patch which will be VMware specific=2E
->
->> I have a vague recollection from some similar project that I had 10 yea=
-rs
->> ago that this might not work for certain emulated device registers=2E F=
-or
->> instance some hardware registers, specifically those the report hardwar=
-e
->> events, are =E2=80=9Cclear-on-read=E2=80=9D=2E Apparently, Ajay took th=
-at into consideration=2E
->>
->> That is the reason for this quite amazing difference - several orders o=
-f
->> magnitude - between the overhead that is caused by raw_pci_read(): 120u=
-s for
->> PIO and 100ns for MMIO=2E Admittedly, I do not understand why PIO acces=
-s would
->> take 120us (I would have expected it to be 10 times faster, at least), =
-but
->> the benefit is quite clear=2E
->
->
->
+On Fri, Jul 01, 2022 at 05:54:13PM +0900, Yoshihiro Shimoda wrote:
+> Vendor-specific initialization needs this information so that
+> read it before host_init(). And then, we can assume that
+> dw_pcie_{ep,host}_init() gets the property so that dw_pcie_setup()
+> doesn't need to get it again.
 
-For one thing, please correct the explanation=2E
+Patches 5 and 6 should be combined.
 
-It does not take "more PCI cycles" to use PIO =E2=80=93 they are exactly t=
-he same, in fact=2E  The source of improvements are all in the CPU and VMM =
-interfaces; on the PCI bus, they are (mostly) just address spaces=2E
+We already have 2 drivers (keystone and tegra) that need this earlier 
+still which this patch doesn't address. I think we need some sort of 
+function to initialize the dw_pcie struct with defaults to be called 
+after alloc or as part of alloc. To do the latter, there needs to be 
+more unification on whether dw_pcie is a pointer or struct in the 
+platform specific struct. That's a lot of churn though...
 
-"Using MMIO may allow a VMM to map a shadow memory area readonly, so read =
-transactions can be executed without needing any VMEXIT at all=2E In contra=
-st, PIO transactions to PCI configuration space are done through an indirec=
-t address-data interface, requiring two VMEXITs per transaction regardless =
-of the properties of the underlying register=2E"
-
-You should call out exactly what is being done to prevent incorrect handli=
-ng of registers with read side effects (I believe that would be all on the =
-VMM side; unfortunately the presence of a register with read side effects p=
-robably would mean losing this optimization for the entire 4K page =3D this=
- entire function, but read side effects have always been discouraged althou=
-gh not prohibited in config space=2E)
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
+>  drivers/pci/controller/dwc/pcie-designware.c      | 1 -
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 1e3972c487b5..cf875bdcfabb 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -336,6 +336,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	if (pci->link_gen < 1)
+>  		pci->link_gen = of_pci_get_max_link_speed(np);
+>  
+> +	of_property_read_u32(np, "num-lanes", &pci->num_lanes);
+> +
+>  	/* Set default bus ops */
+>  	bridge->ops = &dw_pcie_ops;
+>  	bridge->child_ops = &dw_child_pcie_ops;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index d92c8a25094f..101e892e22e8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -726,7 +726,6 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  	val |= PORT_LINK_DLL_LINK_EN;
+>  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+>  
+> -	of_property_read_u32(np, "num-lanes", &pci->num_lanes);
+>  	if (!pci->num_lanes) {
+>  		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
+>  		return;
+> -- 
+> 2.25.1
+> 
+> 
