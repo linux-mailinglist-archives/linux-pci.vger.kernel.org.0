@@ -2,295 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84A7157073D
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 17:39:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A92B65708A1
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 19:04:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbiGKPjK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 11:39:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
+        id S229760AbiGKREx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jul 2022 13:04:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230193AbiGKPjK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 11:39:10 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DB11F60D;
-        Mon, 11 Jul 2022 08:39:08 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id bf9so9313154lfb.13;
-        Mon, 11 Jul 2022 08:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=IzB4aGIN6G7r8EftpZUta/zP82Bj7XOeyFuzNgS6d4I=;
-        b=pnaR5Gj6EMZ7llJZbomgA7dg9b8T3yTjvlbxvgi0DlMKbDTLqtvLiVaCYPlyc4bdWt
-         XSP3mXSnc9t0tWSsWfhZKH99pElQpN03+huaIW+y5oWFhbLCah1+D3YANxIJt43Jm7IR
-         Px/a8vDmfK8QQaoMeFthzB62qPtw/XXcznEg+9Q0lt5i1il9PU0JPwNus4xQJmKAJqog
-         9ic5VdXayza9DWs1OW3yeg+Vt5JHKyYz0llyK6yX/DQL8oqpvjOaSoa60datqrKzMemB
-         xW4bRKd79fI0kySl8BgtePFzVCsN76n1uzv81gEOTH7bbBIn2N+zSLpLsXueiPh25EwI
-         xegw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=IzB4aGIN6G7r8EftpZUta/zP82Bj7XOeyFuzNgS6d4I=;
-        b=TAtgPVzQNamOM8Masu63skUm8PbHR3kbbddR12h/ngFDyx3rbEnQGalAr5G2wIYi+I
-         3FUbfLIGFxLrlqvkFm5vbh3bSzUJwX8MVzVQpu0ShEslecaZlbX+MSjzu5RjfJw+zyY4
-         PKXnXD/tAiTuf4QBIjCGghrzMMdaDOiJFf+u8jpOyo6iv2i/u4/g07vbFM3DLPlsIx45
-         AiyqZJyV5XD2VGCWAgLcXTOKl/dBXecjk27wbycE/uJGnHvgjjXH5rwSt9vbjbBkdX6Q
-         TNAFUPmZUR4QvT7mXML4XVesn3LKD7JLUJzR6TI3TPSkKhBwMZ55/O9M52LjTYekyoqX
-         TnUQ==
-X-Gm-Message-State: AJIora+c4ng9RFKxgQLsnMmPTy9pl06MMDXH7guK07aKLhOt32roSOOv
-        YaM//BLGOV5G+KwlSYoNaoA=
-X-Google-Smtp-Source: AGRyM1uWG4mLJ+4E2lDyHTaB8AyPKSkD0tFQEeBE/CJxgMgShS3tzB5+IoLgBIh8NZrSBBT7MW26IQ==
-X-Received: by 2002:a05:6512:e83:b0:489:c6fe:e121 with SMTP id bi3-20020a0565120e8300b00489c6fee121mr9674060lfb.100.1657553946969;
-        Mon, 11 Jul 2022 08:39:06 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id 2-20020ac25f02000000b0047f7bd03943sm1591216lfq.264.2022.07.11.08.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 08:39:06 -0700 (PDT)
-Date:   Mon, 11 Jul 2022 18:39:01 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] dmaengine: dw-edma: Add RP/EP local DMA
- controllers support
-Message-ID: <20220711153901.y6gjwstyuarcvjoj@mobilestation>
-References: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
- <20220610092133.uhsu5gphhvjhe2jm@mobilestation>
- <20220711144533.GA3830@thinkpad>
- <20220711144903.GB3830@thinkpad>
+        with ESMTP id S229470AbiGKREw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 13:04:52 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11013000.outbound.protection.outlook.com [52.101.64.0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E462AC5C;
+        Mon, 11 Jul 2022 10:04:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fD1LLWSDOoB410wQVJddrsXNcdzgEPo3JLgBazd6BZxwjovx6QXkzaB1KmIV24iNYQGmCmt/Ul2jX6poBK+EWhQdtD1uDIeVi4WzZTNEDY17SVU3ByDM5BR+Scoce8dUZNO5QUAb4h+PgOiZygPiXr9dEJGGuk9vb3igx4PHnScD9yaQySHOS4EFZFtob2QhCQXSiaXD40vgQ4LMOMbX4BNAiQKy20zkL5H8/XHP6FzHuS7d411TMgTDbO6oW3Eyg5srHdzQU1zMliAOurzqMQHE05d+IVAdozDKi4h7rmQt4wr57Ddms5lqAop4bY3SM1DU/w0eyRI/pXEjBsgiIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=m6ofbtdHvaZZ+53MvPzMLuWOFN/quyq0J3ciMHliXfo=;
+ b=Q9IQ5ltmMnz9tjhFWR/1AO7ON7ZBNaQhRvrMsmzA0moW2NBjBvAONRM10xd+PcRHK3TpfsaahxlTs0iT1GjWQnsmxnMrv18jmHdNzIHFauwfUo/DrdFHBWvUmSRxkizwmZhzJ0zMJvqT96pFW2aeGzAjrXNyL/kdKHnWZQvEt5EL5qVal/b7mzfVX8LFi1k8DWmJguCDhHCC+T8fhFc0KD9fBIfB5tNKzBnwyx30c9idIv5dnsCbOQkJMUZzh9QizvSsIJ5Snx//FLQYx3rsvAZOu0uv5aXIMIL0TaTDw7uyVr1OxI9MQl9gQbz4OcuzKWhdLQmgJkj1Wfl+Q4QEUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m6ofbtdHvaZZ+53MvPzMLuWOFN/quyq0J3ciMHliXfo=;
+ b=OxMDw66XgALqoLAZEsTAB61MNvEs7rv+isewiuFcM0pZ4s3En5+7bMJxCoWtmJnoo1os4vNV7FWDEWanCrMAsYSUOpuu2VqOTzwk5tanVAB36bLVmuJ0UHtJ+R6XrZLo7SJS3bDuC8DCITnRu+zvGszzzv2Zfgr0sipO/v9TXCA=
+Received: from BY3PR05MB8531.namprd05.prod.outlook.com (2603:10b6:a03:3ce::6)
+ by MN2PR05MB6783.namprd05.prod.outlook.com (2603:10b6:208:181::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.13; Mon, 11 Jul
+ 2022 17:04:48 +0000
+Received: from BY3PR05MB8531.namprd05.prod.outlook.com
+ ([fe80::a4f8:718a:b2a0:977f]) by BY3PR05MB8531.namprd05.prod.outlook.com
+ ([fe80::a4f8:718a:b2a0:977f%5]) with mapi id 15.20.5438.011; Mon, 11 Jul 2022
+ 17:04:48 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Anish Swaminathan <anishs@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ajay Kaher <akaher@vmware.com>
+Subject: Re: [PATCH] MMIO should have more priority then IO
+Thread-Topic: [PATCH] MMIO should have more priority then IO
+Thread-Index: AQHYiw9NzqWSNRsR1kyxPrXhcjObWa1lHkCAgA7qdoCAAHWQAIAAP7qAgAATwgCAAAszgIAAAjYAgAASVwCAA9g2AIAAsM+A
+Date:   Mon, 11 Jul 2022 17:04:48 +0000
+Message-ID: <83C436BD-E12E-420C-B651-B3788F1C4683@vmware.com>
+References: <1656433761-9163-1-git-send-email-akaher@vmware.com>
+ <20220628180919.GA1850423@bhelgaas>
+ <25F843ED-7EB4-4D00-96CB-7DE1AC886460@vmware.com>
+ <YsgplrrJnk5Ly19z@casper.infradead.org>
+ <96D533E5-F3AF-4062-B095-8C143C307E37@vmware.com>
+ <YshvnodeqmJV6uIJ@casper.infradead.org>
+ <1A0FA5B7-39E8-4CAE-90DD-E260937F14E1@vmware.com>
+ <Ysh63kRVGMFJMNfG@casper.infradead.org>
+ <85071FE5-E37A-44CF-9EF7-CB80C116A876@vmware.com>
+ <4E0E503E-64E1-4B0A-B96A-0CD554A67107@vmware.com>
+In-Reply-To: <4E0E503E-64E1-4B0A-B96A-0CD554A67107@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.100.31)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f11ef783-fea6-4d86-4cfd-08da635f761f
+x-ms-traffictypediagnostic: MN2PR05MB6783:EE_
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eo5Tx5hoEwiIVlnxBh0xeKvnKyNuDmntOFaq0g3qhoBdEob8hq6Q0bX/JxrJqI17tvaXGOoDCR95cEvF6bwPhkOt5NBB/EcQRWCdelNvyHn4j1dAtNYO/c7Sf9x30qvgXrTgl/W0U2ZTShOOJ7WcvRE8dJx09fuMFSQPFsH4+f9yWyzydsme6KCNl3k6zjp4YudCmx2TX4uZYJHONBTnxiQGsdZz96JCnZOArqvhI4O338W5T7mYpVmEkAkZp1gLxRw83kPXIcZbmrskfSrTPW/e9qL2xDEVF08rGLHkRNq37SbfjHWje3dKA5nKLNiym1zyuS3T+49BIUKRbPXQaFQ/3SfjRH2b49Dcv4EGZ3d0+HIJRHmvKyH9Ymki0fQbB0DI6lDGkuU6SIgy1dRGFYEqaoYjNqxJ0zqTdIJWwsr0CyofcZhqOAZyWYovieYXocrf1ldTp0C7Orn6xkOTK3E1LyAc5PsBcYrtUBnTSYJvrsVnvImzkrx0pWXtYsslIl6NhwCc9UP8IhOI5E3JJI8LHJd2H+PAg/Cghc+/0lXjUrGKxTL1Ob/vrj9gnXyey5ff4GXGtJzac5fIykZFtT9oxVHp7Zkouf82EzWtHAgx9FpDbOg9AI6CNMDl3+OmSsbxHJSPvIjPy5tjFB3qrXtP1WG47iaO7tmbTaJEAoyzGgIJeqrMQE2YFc1/VvT+6/dH9vc1W46eom8D3l0R8EX8B3asrQ2u48iy6htD8O5LFO8/Q1G334Ax13lAm5DN+eCsP50/w6NGGkwNhDw/eMikTm4CbdJ1UOKM56BnVL+sW42aJIGOQK8dCA4SygCxjonMpiGVg81qmODT4365al3YyRsZ2KqiWDc8W/+NrXM=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR05MB8531.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(6486002)(478600001)(66946007)(66446008)(38100700002)(53546011)(83380400001)(66476007)(41300700001)(2906002)(38070700005)(8936002)(71200400001)(6506007)(5660300002)(36756003)(186003)(33656002)(54906003)(6512007)(107886003)(2616005)(26005)(86362001)(8676002)(6916009)(122000001)(4326008)(76116006)(66556008)(7416002)(316002)(64756008)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Qk9vNERVcUdESG03OEN2emFNQXRrcmlpN1JhaERHK21iY2UxV09ueTB2Nysy?=
+ =?utf-8?B?eXIrSW1VR3BEMWJVR3pWSE9nVExoSUM1R1R5UVdhaUNZbHk2dEV5QUxQRkcv?=
+ =?utf-8?B?TnVFQ1pTSWY0Um8zY3NWb2tHUTlTT2YwUVd5U2d4N3NiUmh0dEk2bEpNWkVQ?=
+ =?utf-8?B?NTdjalZ3ek1HZ0w2ZUF4cVBxOVZVZ2dOTWJFUEh4MHdwbGFrYUlvRkl1eHNh?=
+ =?utf-8?B?NllWN05aR25saDNTdk5zZXZzc2hNaHRRMFV2a0FmR1U1YzY1ekpPc0pQRkJj?=
+ =?utf-8?B?V3ZWREhxZGF0Vkh5VUhIOW1hSlgyOXlWOGR1eHNsY1BsTi9hc3FpU0J1SWta?=
+ =?utf-8?B?TmNheVRGSEN0RU9oMzQvQThTYjZ5VWtFN094SWY3SVZnRzdNL000MUxiNkJS?=
+ =?utf-8?B?ZFRyY1VnY2pXSzJjVENmRFJiRmY3SWdKaDlmaWhyZ29pclBjWHo3NGVzN0h5?=
+ =?utf-8?B?ZTJBNHQ3UzNGcGE4a0pmcHY2TjFwalordytiTHVrUXU2UUtadTNkRVg4OU1Z?=
+ =?utf-8?B?TXZWQVdFNWNKZnNiRktaZllvbkh4SWkzWEtiRlJpTkswUG8rZ1pjMmE4WnlM?=
+ =?utf-8?B?V0JmRnkxSGdhRlQ0YU56VHI1VWFsOUlZTVh3a2U1ekNUaDVVNkhKSWxNRlhj?=
+ =?utf-8?B?Z3lnd1pXNUtWMDhzNStIeENuNDZJSElTcjIxUUtMNkk0bDk0bkx1L24veis4?=
+ =?utf-8?B?bEhMMU1rSkh3TDZybHd5Si9nRFVjZmpsZnVjMXJoQnFsT1NuaWQrb0FkNWF2?=
+ =?utf-8?B?QlNOdmJlSUtudnZHeEIrZkVlSkVhR0xCd0ZCaUJqZnhqRld2NXo5bnIwVzdW?=
+ =?utf-8?B?VEhZc0FsSmpDOWdpSDJiZzduRHErTGVDekc1WHl0NDdrNlM1NVd3YjJoT0Qr?=
+ =?utf-8?B?YXpwcGRpZ1dGcW1tSThCbTBJajFOZkwvbVNJOEl0MlBEcXNsNENuWG5kQUlo?=
+ =?utf-8?B?TUM2U2RTa3ltc1poYXRJZmdremw1aEU3d0g2dFpucjBvMC9xK3RzTzFKUWhi?=
+ =?utf-8?B?b0R5SVoxQWpPOTFnMGVFVlVOVlVBYXAzbVY2RjBnODEwOHcvZWI1VU93bDZ6?=
+ =?utf-8?B?ZE45MVJ0UHk2WXIxUVNFdFBSODdzRmtDakFyelhTTTdlUktLb3REYXQ1VDNU?=
+ =?utf-8?B?dm82ek1FYzlhMWJlUnpodVRRWTFTQ3VUdzk2cUhlYUt6aWpKY3h0Y21vRzhn?=
+ =?utf-8?B?eWJ1bjhadXFGZndZRkhoNm52dmJwVTRaUGQ0TVJBRStqL1pNa1ltRitBUlBL?=
+ =?utf-8?B?S1RwYTd6ak9uRjhrMnV1Z2Zoc2RLL1lzWDdxcmxaWVFmSVZXTzZxRUpEQm05?=
+ =?utf-8?B?dzh2RWxqc3RZOWVOVTVPd21maFRXd0YwckNQV2FMTGFrZnNEajRScS9JdlN0?=
+ =?utf-8?B?TFk3R1dUcmUxeUdHL1k4Y29uWXhycnpSbVJOTXVmcC92L09NVmgzcEVEOTZj?=
+ =?utf-8?B?QnpWNnRUeXNtNnZEUFY2K0M4VWNGd3RoUzJEdnFLd0tBT0FWbzlkVWZMazZF?=
+ =?utf-8?B?cDYxYVErSFl6bU9Zc2EvUmNoMC9tU2hwRktMa0RCWVRWMHlLL21EMmp3cXJ0?=
+ =?utf-8?B?cFc0c3dGclpCdmlZcFh1ODc3ZVhQRVlKcU8yT2UzYkI4bDFkbXZWYk9qdmxs?=
+ =?utf-8?B?emVoZGZZbjB6QnVpZFBhb1VKSzFrRVpXUzAxS1hyQ09RTmtweVlrNXlZa3Nr?=
+ =?utf-8?B?bHl4NGhJSDhkV0YyTzBlWVpWQXdCUnllcGNTM1FqdU45dTViaHRuMzdVM1JL?=
+ =?utf-8?B?dEFNcTVRbDJlMVVwRTJqeTVjMXh4NzhqZEFlZm84cHZ5N3hrSHIrUGUyVWhG?=
+ =?utf-8?B?Y0wvcmFiODdma2RaL1BGcG52c0UxdGljMEQzQ2RLYWFQUGJtZ3F4RVhWMnFW?=
+ =?utf-8?B?M255dDkvSGVIZU5UTWFRbGJiQmxhS1ZiU21ZOFRYK2Vabk1XdUJtQ1NhNjRU?=
+ =?utf-8?B?cExvTk9oQm9pNk9rUE9Ubmtva1V3aXJCekZ1NHFwS0hyMk9MRnE5SDdxTlJT?=
+ =?utf-8?B?cVhBRXhXTys3UmJBNmpzS281ZWtxcVlkNHFXaVdNQzJLeEs0bkM3eTRsa3ZM?=
+ =?utf-8?B?T3Q2K1FydytEaEN1NGd0WEtQdSs5dnRyMTdpRGZGWVpUSVo5NkNldFduSW9H?=
+ =?utf-8?Q?9wcg6MVAd8BmpY42cGifTInUT?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D398CFDCEFBF6E44B0223F4ACCE2CE97@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220711144903.GB3830@thinkpad>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY3PR05MB8531.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f11ef783-fea6-4d86-4cfd-08da635f761f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2022 17:04:48.0527
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fTq2JjD4vIZ7t2MZeCV0paX0ymgSl+oeKCQBJwloRlwGdBnMVB//9LEO2X9N9gEpemWMPrwFD9TuEHYrsyzoxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6783
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 11, 2022 at 08:19:03PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Jul 11, 2022 at 08:15:41PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Jun 10, 2022 at 12:21:33PM +0300, Serge Semin wrote:
-> > > On Fri, Jun 10, 2022 at 12:14:35PM +0300, Serge Semin wrote:
-> > > > This is a final patchset in the series created in the framework of
-> > > > my Baikal-T1 PCIe/eDMA-related work:
-> > > > 
-> > > > [1: In-progress v4] PCI: dwc: Various fixes and cleanups
-> > > > Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-> > > > [2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
-> > > > Link: https://lore.kernel.org/linux-pci/20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru/
-> > > > [3: In-progress v3] PCI: dwc: Add generic resources and Baikal-T1 support
-> > > > Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
-> > > > [4: In-progress v3] dmaengine: dw-edma: Add RP/EP local DMA support
-> > > > Link: ---you are looking at it---
-> > > > 
-> > > > Note it is very recommended to merge the patchsets in the same order as
-> > > > they are listed in the set above in order to have them applied smoothly.
-> > > > Nothing prevents them from being reviewed synchronously though.
-> > > > 
-> > > > Please note originally this series was self content, but due to Frank
-> > > > being a bit faster in his work submission I had to rebase my patchset onto
-> > > > his one. So now this patchset turns to be dependent on the Frank' work:
-> > > > 
-> > > > Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
-> > > > 
-> > > > So please merge Frank' series first before applying this one.
-> > > > 
-> > > > Here is a short summary regarding this patchset. The series starts with
-> > > > fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
-> > > > initializes the LL/DT base addresses for the platforms with not matching
-> > > > CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
-> > > > method to get a correct base address. After that you can find a series of
-> > > > the interleaved xfers fixes. It turned out the interleaved transfers
-> > > > implementation didn't work quite correctly from the very beginning for
-> > > > instance missing src/dst addresses initialization, etc. In the framework
-> > > > of the next two patches we suggest to add a new platform-specific
-> > > > callback - pci_address() and use it to convert the CPU address to the PCIe
-> > > > space address. It is at least required for the DW eDMA remote End-point
-> > > > setup on the platforms with not-matching CPU/PCIe address spaces. In case
-> > > > of the DW eDMA local RP/EP setup the conversion will be done automatically
-> > > > by the outbound iATU (if no DMA-bypass flag is specified for the
-> > > > corresponding iATU window). Then we introduce a set of the patches to make
-> > > > the DebugFS part of the code supporting the multi-eDMA controllers
-> > > > platforms. It starts with several cleanup patches and is closed joining
-> > > > the Read/Write channels into a single DMA-device as they originally should
-> > > > have been. After that you can find the patches with adding the non-atomic
-> > > > io-64 methods usage, dropping DT-region descriptors allocation, replacing
-> > > > chip IDs with the device name. In addition to that in order to have the
-> > > > eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
-> > > > dma-ranges-based memory ranges mapping since in case of the root port DT
-> > > > node it's applicable for the peripheral PCIe devices only. Finally at the
-> > > > series closure we introduce a generic DW eDMA controller support being
-> > > > available in the DW PCIe Root Port/Endpoint driver.
-> > > > 
-> > > > Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
-> > > > Changelog v2:
-> > > > - Drop the patches:
-> > > >   [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> > > >   [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
-> > > >   since they are going to be merged in in the framework of the
-> > > >   Frank's patchset.
-> > > > - Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
-> > > >   failure."
-> > > > - Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
-> > > >   definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
-> > > > - Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
-> > > >   'dent'." (@Manivannan)
-> > > > - Slightly extend the eDMA name array size. (@Manivannan)
-> > > > - Change the specific DMA mapping comment a bit to being
-> > > >   clearer. (@Manivannan)
-> > > > - Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
-> > > >   method."
-> > > > - Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
-> > > >   device. That happens if the driver is disabled. (@Manivannan)
-> > > > - Add "dma" registers resource mapping procedure. (@Manivannan)
-> > > > - Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
-> > > > - Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
-> > > > - Remove eDMA in the dw_pcie_ep_exit() method.
-> > > > - Move the dw_pcie_edma_detect() method execution to the tail of the
-> > > >   dw_pcie_ep_init() function.
-> > > > 
-> > > > Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
-> > > > Changelog v3:
-> > > 
-> > > > - Conditionally set dchan->dev->device.dma_coherent field since it can
-> > > >   be missing on some platforms. (@Manivannan)
-> > > > - Drop the patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
-> > > >   method". A similar modification has been done in another patchset.
-> > > > - Add more comprehensive and less regression prune eDMA block detection
-> > > >   procedure.
-> > > > - Drop the patch: "dma-direct: take dma-ranges/offsets into account in
-> > > >   resource mapping". It will be separately reviewed.
-> > > > - Remove Manivannan tb tag from the modified patches.
-> > > 
-> > > @Mani, several patches have been changed. Could you have a look at the
-> > > series one more time?
-> > > 
-> > 
-
-> > Reviewed all patches in this series. I believe this will still work on my
-> > hardware once I test it. But even if it doesn't work, we can fix it in
-> > 5.20-rc's as it supposed to be. So definitely not a show stopper.
-
-Hi Mani. Thanks for review. I'll make sure your tag will persist in
-the patch logs.
-
-> > 
-
-> > Vinod: Could you please merge this one for 5.20?
-> > 
-> 
-> Hmm, maybe this can go through pci tree as Bjorn merged earlier edma series as
-> well. In that case Vinod's ack is sufficient.
-
-As I said in the cover letter this series depends on the three more
-patchsets:
-[1: Done v4] PCI: dwc: Various fixes and cleanups
-Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/ctrl/dwc-fixes
-[2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
-Link: https://lore.kernel.org/linux-pci/20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru/
-[3: In-progress v3] PCI: dwc: Add generic resources and Baikal-T1 support
-Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/ 
-
-So at the very least they must be merged in first before this series
-gets into the kernel. #1 is already in Bjorn' repo. #2 is still on
-review, but no comments have been sent in v3. So it can be merged in
-as is. I desperately need Rob' feedback on my questions in order to
-re-submit #3. But it's not that easy to achieve at this moment first
-due to him being on vacation then him being very busy with other
-patches review.( So until series #3' review is done, this patchset
-will have to stay in limbo. Anyway I hope we'll settle all the issues
-with Rob soon.
-
--Sergey
-
-> 
-> But I'll leave it up to Bjorn and Vinod.
-> 
-> Thanks,
-> Mani
-> 
-> > Thanks,
-> > Mani
-> > 
-> > > -Sergey
-> > > 
-> > > > - Rebase onto the kernel v5.18.
-> > > > 
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> > > > Cc: "Krzysztof Wilczyński" <kw@linux.com>
-> > > > Cc: linux-pci@vger.kernel.org
-> > > > Cc: dmaengine@vger.kernel.org
-> > > > Cc: linux-kernel@vger.kernel.org
-> > > > 
-> > > > Serge Semin (24):
-> > > >   dmaengine: Fix dma_slave_config.dst_addr description
-> > > >   dmaengine: dw-edma: Release requested IRQs on failure
-> > > >   dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
-> > > >   dmaengine: dw-edma: Fix missing src/dst address of the interleaved
-> > > >     xfers
-> > > >   dmaengine: dw-edma: Don't permit non-inc interleaved xfers
-> > > >   dmaengine: dw-edma: Fix invalid interleaved xfers semantics
-> > > >   dmaengine: dw-edma: Add CPU to PCIe bus address translation
-> > > >   dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
-> > > >     glue-driver
-> > > >   dmaengine: dw-edma: Drop chancnt initialization
-> > > >   dmaengine: dw-edma: Fix DebugFS reg entry type
-> > > >   dmaengine: dw-edma: Stop checking debugfs_create_*() return value
-> > > >   dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
-> > > >   dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
-> > > >   dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
-> > > >   dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
-> > > >   dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
-> > > >   dmaengine: dw-edma: Join Write/Read channels into a single device
-> > > >   dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
-> > > >   dmaengine: dw-edma: Use non-atomic io-64 methods
-> > > >   dmaengine: dw-edma: Drop DT-region allocation
-> > > >   dmaengine: dw-edma: Replace chip ID number with device name
-> > > >   dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
-> > > >   dmaengine: dw-edma: Skip cleanup procedure if no private data found
-> > > >   PCI: dwc: Add DW eDMA engine support
-> > > > 
-> > > >  drivers/dma/dw-edma/dw-edma-core.c            | 216 +++++-----
-> > > >  drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
-> > > >  drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  76 ++--
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
-> > > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
-> > > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
-> > > >  .../pci/controller/dwc/pcie-designware-ep.c   |  12 +-
-> > > >  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
-> > > >  drivers/pci/controller/dwc/pcie-designware.c  | 186 +++++++++
-> > > >  drivers/pci/controller/dwc/pcie-designware.h  |  20 +
-> > > >  include/linux/dma/edma.h                      |  18 +-
-> > > >  include/linux/dmaengine.h                     |   2 +-
-> > > >  13 files changed, 589 insertions(+), 366 deletions(-)
-> > > > 
-> > > > -- 
-> > > > 2.35.1
-> > > > 
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+T24gSnVsIDEwLCAyMDIyLCBhdCAxMTozMSBQTSwgQWpheSBLYWhlciA8YWthaGVyQHZtd2FyZS5j
+b20+IHdyb3RlOg0KDQo+IE9uIDA5LzA3LzIyLCAxOjE5IEFNLCAiTmFkYXYgQW1pdCIgPG5hbWl0
+QHZtd2FyZS5jb20+IHdyb3RlOg0KPiANCj4+IE9uIEp1bCA4LCAyMDIyLCBhdCAxMTo0MyBBTSwg
+TWF0dGhldyBXaWxjb3ggPHdpbGx5QGluZnJhZGVhZC5vcmc+IHdyb3RlOg0KPiANCj4+PiBJIGhh
+dmUgbm8gbWlzY29uY2VwdGlvbnMgYWJvdXQgd2hhdGV2ZXIgeW91IHdhbnQgdG8gY2FsbCB0aGUg
+bWVjaGFuaXNtDQo+Pj4gZm9yIGNvbW11bmljYXRpbmcgd2l0aCB0aGUgaHlwZXJ2aXNvciBhdCBh
+IGhpZ2hlciBsZXZlbCB0aGFuICJwcm9kIHRoaXMNCj4+PiBieXRlIi4gRm9yIGV4YW1wbGUsIG9u
+ZSBvZiB0aGUgbW9yZSBpbnRlbnNpdmUgdGhpbmdzIHdlIHVzZSBjb25maWcNCj4+PiBzcGFjZSBm
+b3IgaXMgc2l6aW5nIEJBUnMuIElmIHdlIGhhZCBhIGh5cGVyY2FsbCB0byBzaXogYSBCQVIsIHRo
+YXQNCj4+PiB3b3VsZCBlbGltaW5hdGU6DQo+Pj4gDQo+Pj4gLSBSZWFkIGN1cnJlbnQgdmFsdWUg
+ZnJvbSBCQVINCj4+PiAtIFdyaXRlIGFsbC1vbmVzIHRvIEJBUg0KPj4+IC0gUmVhZCBuZXcgdmFs
+dWUgZnJvbSBCQVINCj4+PiAtIFdyaXRlIG9yaWdpbmFsIHZhbHVlIGJhY2sgdG8gQkFSDQo+Pj4g
+DQo+Pj4gQmluZ28sIG9uZSBoeXBlcmNhbGwgaW5zdGVhZCBvZiA0IE1NSU8gb3IgOCBQSU8gYWNj
+ZXNzZXMuDQo+IA0KPiBUbyBpbXByb3ZlIGZ1cnRoZXIgd2UgY2FuIGhhdmUgZm9sbG93aW5nIG1l
+Y2hhbmlzbToNCj4gTWFwIChhcyByZWFkIG9ubHkpIHRoZSAndmlydHVhbCBkZXZpY2UgY29uZmln
+IGkuZS4gNEtCIEVDQU0nIHRvDQo+IFZNIE1NSU8uIFZNIHdpbGwgaGF2ZSBkaXJlY3QgcmVhZCBh
+Y2Nlc3MgdXNpbmcgTU1JTyBidXQNCj4gbm90IHVzaW5nIFBJTy4NCj4gDQo+IFZpcnR1YWwgTWFj
+aGluZSB0ZXN0IHJlc3VsdCB3aXRoIGFib3ZlIG1lY2hhbmlzbToNCj4gMSBodW5kcmVkIHRob3Vz
+YW5kIHJlYWQgdXNpbmcgcmF3X3BjaV9yZWFkKCkgdG9vazoNCj4gUElPOiAxMi44MDkgU2VjLg0K
+PiBNTUlPOiAwLjAxMCBTZWMuDQo+IA0KPiBBbmQgd2hpbGUgVk0gYm9vdGluZywgUENJIHNjYW4g
+YW5kIGluaXRpYWxpemF0aW9uIHRpbWUgaGF2ZSBiZWVuDQo+IHJlZHVjZWQgYnkgfjY1JS4gSW4g
+b3VyIGNhc2UgaXQgcmVkdWNlZCB0byB+MTggbVNlYyBmcm9tIH41NSBtU2VjLg0KPiANCj4gVGhh
+bmtzIE1hdHRoZXcsIGZvciBzaGFyaW5nIGhpc3RvcnkgYW5kIHlvdXIgdmlld3Mgb24gdGhpcyBw
+YXRjaC4NCj4gDQo+IEFzIHlvdSBtZW50aW9uZWQgb3JkZXJpbmcgY2hhbmdlIG1heSBpbXBhY3Qg
+c29tZSBIYXJkd2FyZSwgc28NCj4gaXQncyBiZXR0ZXIgdG8gaGF2ZSB0aGlzIGNoYW5nZSBmb3Ig
+Vk13YXJlIGh5cGVydmlzb3Igb3IgZ2VuZXJpYyB0bw0KPiBhbGwgaHlwZXJ2aXNvci4NCg0KSSB3
+YXMgY2hhdHRpbmcgd2l0aCBBamF5LCBzaW5jZSBJIHBlcnNvbmFsbHkgZGlkIG5vdCBmdWxseSB1
+bmRlcnN0YW5kIGhpcw0KdXNlLWNhc2UgZnJvbSB0aGUgZW1haWwuIE90aGVycyBtYXkgaGF2ZSBm
+dWxseSB1bmRlcnN0b29kIGFuZCBjYW4gaWdub3JlDQp0aGlzIGVtYWlsLiBIZXJlIGlzIGEgc2hv
+cnQgc3VtbWFyeSBvZiBteSB1bmRlcnN0YW5kaW5nOg0KDQpEdXJpbmcgYm9vdC10aW1lIHRoZXJl
+IGFyZSBtYW55IFBDSSByZWFkcy4gQ3VycmVudGx5LCB3aGVuIHRoZXNlIHJlYWRzIGFyZQ0KcGVy
+Zm9ybWVkIGJ5IGEgdmlydHVhbCBtYWNoaW5lLCB0aGV5IGFsbCBjYXVzZSBhIFZNLWV4aXQsIGFu
+ZCB0aGVyZWZvcmUgZWFjaA0Kb25lIG9mIHRoZW0gaW5kdWNlcyBhIGNvbnNpZGVyYWJsZSBvdmVy
+aGVhZC4NCg0KV2hlbiB1c2luZyBNTUlPIChidXQgbm90IFBJTyksIGl0IGlzIHBvc3NpYmxlIHRv
+IG1hcCB0aGUgUENJIEJBUnMgb2YgdGhlDQp2aXJ0dWFsIG1hY2hpbmUgdG8gc29tZSBtZW1vcnkg
+YXJlYSB0aGF0IGhvbGRzIHRoZSB2YWx1ZXMgdGhhdCB0aGUg4oCcZW11bGF0ZWQNCmhhcmR3YXJl
+4oCdIGlzIHN1cHBvc2VkIHRvIHJldHVybi4gVGhlIG1lbW9yeSByZWdpb24gaXMgbWFwcGVkIGFz
+ICJyZWFkLW9ubHnigJ0NCmluIHRoZSBOUFQvRVBULCBzbyByZWFkcyBmcm9tIHRoZXNlIEJBUiBy
+ZWdpb25zIHdvdWxkIGJlIHRyZWF0ZWQgYXMgcmVndWxhcg0KbWVtb3J5IHJlYWRzLiBXcml0ZXMg
+d291bGQgc3RpbGwgYmUgdHJhcHBlZCBhbmQgZW11bGF0ZWQgYnkgdGhlIGh5cGVydmlzb3IuDQoN
+CkkgaGF2ZSBhIHZhZ3VlIHJlY29sbGVjdGlvbiBmcm9tIHNvbWUgc2ltaWxhciBwcm9qZWN0IHRo
+YXQgSSBoYWQgMTAgeWVhcnMNCmFnbyB0aGF0IHRoaXMgbWlnaHQgbm90IHdvcmsgZm9yIGNlcnRh
+aW4gZW11bGF0ZWQgZGV2aWNlIHJlZ2lzdGVycy4gRm9yDQppbnN0YW5jZSBzb21lIGhhcmR3YXJl
+IHJlZ2lzdGVycywgc3BlY2lmaWNhbGx5IHRob3NlIHRoZSByZXBvcnQgaGFyZHdhcmUNCmV2ZW50
+cywgYXJlIOKAnGNsZWFyLW9uLXJlYWTigJ0uIEFwcGFyZW50bHksIEFqYXkgdG9vayB0aGF0IGlu
+dG8gY29uc2lkZXJhdGlvbi4NCg0KVGhhdCBpcyB0aGUgcmVhc29uIGZvciB0aGlzIHF1aXRlIGFt
+YXppbmcgZGlmZmVyZW5jZSAtIHNldmVyYWwgb3JkZXJzIG9mDQptYWduaXR1ZGUgLSBiZXR3ZWVu
+IHRoZSBvdmVyaGVhZCB0aGF0IGlzIGNhdXNlZCBieSByYXdfcGNpX3JlYWQoKTogMTIwdXMgZm9y
+DQpQSU8gYW5kIDEwMG5zIGZvciBNTUlPLiBBZG1pdHRlZGx5LCBJIGRvIG5vdCB1bmRlcnN0YW5k
+IHdoeSBQSU8gYWNjZXNzIHdvdWxkDQp0YWtlIDEyMHVzIChJIHdvdWxkIGhhdmUgZXhwZWN0ZWQg
+aXQgdG8gYmUgMTAgdGltZXMgZmFzdGVyLCBhdCBsZWFzdCksIGJ1dA0KdGhlIGJlbmVmaXQgaXMg
+cXVpdGUgY2xlYXIuDQoNCg==
