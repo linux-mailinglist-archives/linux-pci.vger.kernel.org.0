@@ -2,142 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 011E256D2D3
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 04:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B37556D329
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 05:02:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbiGKCCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 10 Jul 2022 22:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54088 "EHLO
+        id S229579AbiGKDCf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 10 Jul 2022 23:02:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbiGKCCf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Jul 2022 22:02:35 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628B11837C;
-        Sun, 10 Jul 2022 19:02:30 -0700 (PDT)
+        with ESMTP id S229463AbiGKDCd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 10 Jul 2022 23:02:33 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E00DB4A0;
+        Sun, 10 Jul 2022 20:02:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657504950; x=1689040950;
+  t=1657508552; x=1689044552;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=W8RZjF7YISkvMRQY9nIvw5QicSHfAad76SG62mM/IhA=;
-  b=e8yH+bKdtGsW9nq07D8MNp+e+Iwla9e+d4/hC+WCJEbRzASUYaC5Zmq1
-   SIj8UE58pvxRQ0dDQ43QCKBc9fgpnIpJl+y6k3X0eB8eXpH+Ndp1WRlnX
-   4xaq6VU/u/I/bpPysQ3/j+sFKX5T+ugB3+oDc5LfH/0TMicPHNcFVysaA
-   CtIU7iSk5klEoUAXN4NWdIWs3/V/tHlx7FeLpDsw/7gkLNsblqk76VozL
-   7tZfsUW08AhhT12AxhUIT+wyp6AlOR+vWGtUXtxUAh/Ra/jJjBhMOVtiX
-   0adB3q5d6OTH2XxTW4zI/hQ9wMbhadqYI5W2oAz3Rmej0QmdYVOBMXPwD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10404"; a="284581069"
+  bh=uzM0c51xaSvN5/gI9Qa+a61HyKbP28jcNonUZ6jeqrE=;
+  b=QjzPz4h/4VetcARS5JCwuX6BDd/AwB+EvbztZIEL9+HMVNnq+cvOEIHJ
+   3kCJn80Zcs7D7C6E6Tjqz1iOfswhiohS9g/eb0yMeSIVcIZqLdBkss0HL
+   wgqC8oBNbmEla6Dpr43uiJiLBidFth+Zce0kCu9OyI/ozihkyCExdeYEj
+   12rqxKojSIY4DePLefD29OgtMh809a/gud5VJtgFVMad7WVX3/NKs9ORn
+   WfhLopkBFwYcC+pox53xgCGuL7Rda6GFYwUDERGxhzcOmwsggmXlG99gt
+   UJxETgSkSD0W8JR2OH6JYkO/ignBLRCIGCBswRxF/otdQqkg9Ccg9e5tO
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10404"; a="370874789"
 X-IronPort-AV: E=Sophos;i="5.92,262,1650956400"; 
-   d="scan'208";a="284581069"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2022 19:02:29 -0700
+   d="scan'208";a="370874789"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2022 20:02:29 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,262,1650956400"; 
-   d="scan'208";a="598885900"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Jul 2022 19:02:29 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+   d="scan'208";a="921627232"
+Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jul 2022 20:02:29 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Sun, 10 Jul 2022 19:02:29 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2308.27; Sun, 10 Jul 2022 20:02:29 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Sun, 10 Jul 2022 19:02:29 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2308.27; Sun, 10 Jul 2022 20:02:28 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Sun, 10 Jul 2022 20:02:28 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Sun, 10 Jul 2022 19:02:28 -0700
+ 15.1.2308.27; Sun, 10 Jul 2022 20:02:28 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NTXqi5iRjvjW4rpYgpqpjd3UEb128FvRtseaLlcTJPGiZKWPg22SXSDzcaKda8hqj/2j2WO1s5q8pf6yI7/hq3QBLZpOtEZRa0Ai418yh94nEBLwFSnp5L7IoOJPbX56xYHr96P+8SQ18e2/csyLSP4jssvZZTMSorthd+pvnNZfLoDg2QC9dzpHuDB4sE99Qr4yT2AU6j226i7Med2JGB4aiHo3lZBZXnEQB5bE6m4pq0mgDzBRLAy6GTu7GnsKYL6qVF+yEyPEt26AJIHeG3QhbnvqewwXzQXEqsBkQ9N5zNfw6go/LkpWuzKblWf8FMHvLKmcLqAp4/06g8UwaQ==
+ b=UmrWSQSEBJsesftGyAnH1D9JHr9qi4a8aXL62mEsVMUUNKspWl8jr2FDBxoQvLIo7aK0QeG2b9Y3cJHNZIkieww0n3Wx4orKr08JQ3kv48Cuzu4iQ/JtbA8W1OgfGYDYKtys+6pYFvRKuFen1/C/eW/KonRi1hHrLTQstXdBeMmRlJNVpHYuRKYJa+COxSDTVXVZ6Vsb/KE3zblwq/mfezsWt+QVrwtGTvudbaJn69w19ptFsD+Dgd0wAxuG5EfJe7WTMv+eAsHXdAVpT8XphOiYbRNqlR5KA2n+8NBhEiB7cMf1Npw4Vop1ctUydQDBTC2KV+td3Px5NFcL6D4zSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wE3XcEshfFKiPRBfO2CXlzD0hJBsxQh0eLOEaoVDALg=;
- b=Agp7e1ay5TGJ1XfV2CCa2qbDBAfKAPD7YQrM7y0TrzYEvXJOPglB7h1RJv7kzxjq6EfVObNts1P1X2a711Ueb3i8L/wVPoSVLjVmKBwH97vYyjotlCGsbTN9mKejST6Z3+EbpIe3yhQd9Ij56DdrF+AJNivt65tblG+CWofGclsqfkuMhQWoHvsNYf6mpTMlvXj5byUHwSWxQu15K08VOp0Q+fw9yoPHkx/K0C+xQk3CKHcJBBdOuLCyECpJdr/WHlr42DzdH6u+jAlYGtWgjOC8y5KD3otXtkBAgwiqYq9qVtsPpAxfbLbirMOwlzCRYMbfZ0RnOE02dtlrAGogzA==
+ bh=MV8sPIKNA2u3nQcSZQ2Ff0pnXQZSwuX6ELe6vPxXZkU=;
+ b=Iy7AXckc+nR6/SVQO8KdFA9qsUXSIARZTZXGaUaPXZpVvdGrIF/sedQYCNaWhtER1NFZ7/J25VdBqxEqPJCE968dTZfliFiYvXJrpbVKClpNvmoFAGM2k9oIN1+sQpRhnN+fy/G+0aJoRaSFLSSCXFZDZSmwA3d2DMUMBwzy63Jt9BIzytRjvvdlgymAaLyOouATQHHFDqVCR3vFFYw8o1YhWzH3SJu6ts71I5fV93CFpadfXvlS5d0WfW6hGExfjTib1E8eEKLyVwoWJ7SdeUyczVDB4Be6AAbMWoiWL1j3FO2Ij/cONEo62U71kr+dLF2y0Z4cZ691Dt0EPKSxnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by CH0PR11MB5394.namprd11.prod.outlook.com
- (2603:10b6:610:b9::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.20; Mon, 11 Jul
- 2022 02:02:26 +0000
+ (2603:10b6:301:50::20) by MW4PR11MB6761.namprd11.prod.outlook.com
+ (2603:10b6:303:20d::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Mon, 11 Jul
+ 2022 03:02:22 +0000
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5417.026; Mon, 11 Jul
- 2022 02:02:26 +0000
-Date:   Sun, 10 Jul 2022 19:02:24 -0700
+ 2022 03:02:22 +0000
+Date:   Sun, 10 Jul 2022 20:02:20 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
         <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
-        <hch@lst.de>, "Ben Widawsky" <bwidawsk@kernel.org>
-Subject: Re: [PATCH 40/46] cxl/region: Attach endpoint decoders
-Message-ID: <62cb84b0c2298_35351629442@dwillia2-xfh.notmuch>
+        <hch@lst.de>
+Subject: Re: [PATCH 42/46] cxl/hdm: Commit decoder state to hardware
+Message-ID: <62cb92bc27397_3535162945b@dwillia2-xfh.notmuch>
 References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
- <20220624041950.559155-15-dan.j.williams@intel.com>
- <20220630173437.0000604d@Huawei.com>
+ <20220624041950.559155-17-dan.j.williams@intel.com>
+ <20220630180541.0000259c@Huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220630173437.0000604d@Huawei.com>
-X-ClientProxiedBy: MW2PR16CA0021.namprd16.prod.outlook.com (2603:10b6:907::34)
- To MWHPR1101MB2126.namprd11.prod.outlook.com (2603:10b6:301:50::20)
+In-Reply-To: <20220630180541.0000259c@Huawei.com>
+X-ClientProxiedBy: MWHPR08CA0055.namprd08.prod.outlook.com
+ (2603:10b6:300:c0::29) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 20031e39-1396-43ba-802a-08da62e166fd
-X-MS-TrafficTypeDiagnostic: CH0PR11MB5394:EE_
+X-MS-Office365-Filtering-Correlation-Id: b353a425-5bb3-4ffe-f976-08da62e9c636
+X-MS-TrafficTypeDiagnostic: MW4PR11MB6761:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gDpeAL12NO9FLWLVn82Gmcp0YONq+ALvldc+pN3ebByFr/JsP2CgYrn3igTwnl6LES7UJjxAeskgXmojreLKv0MADccIES5KJOoCeFzbuoNOjBJMo/xyFnG+x4nEO8B/2ac4QGL8dEqihPRsTYZ7rE4ZNxM076gYjNKunIWr3psthmwxDJniR/3OpN2AGNNiiGa346RNlpQfJj1TekCfQc6P8nChP/RypsZKEhG++NGMfyt0877OE3Z5GUyVE3xgyLgXozKAEM1QmZj35wg6OxSfwK9WolsqGAfb6DTV8G7Yo3910jDKCu3wZTUABugBWJXj6YqSIijvgWlNriUdYjWgkL0pcuE+w9AuKP4pq2s+xiVbSM82g+Em/MLTViI5cmPE9W/Z69/BGA/Emqbwd4FIHFXVsJD3/Ly7FGRdJgRL05R92Eeqe2lb93vDTMWvTKA1l5+Hs5Ic2+OMfhSmimqPwsYBlxDqfvvc4n6xNmeqL+/nIk2AgErehD6V1Na/mppVqg4R/O9QMHkzS5kMdQkjnuTh2uK+W6Of5ibY79N7Qbyk+H9+5YOLkwYCtiyuxS9Wvw61rPsHkDbE3cb7G0iyaxFlljqOWwisMMP6eji8ApyWp8CyC2LqIbAlDVgT4mju7mTlvGRLNgUfyklLJv/A5WgC19W+5H2PgoYV67WRjSW5qASq2JY0mnZFOyg6mD7QM91X+PeHiICEGOnbjeYxZwLwwlhhDDhlLJwyV3jMgwaqkJIPVSZax/rjgjmHW5T06xdZnhdEFgXAvxcNAA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(396003)(376002)(39860400002)(366004)(136003)(110136005)(6486002)(478600001)(86362001)(38100700002)(66476007)(41300700001)(6506007)(4326008)(8676002)(66556008)(66946007)(316002)(186003)(6512007)(9686003)(26005)(8936002)(5660300002)(2906002)(83380400001)(82960400001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: VqVZ3nk3VGjWCuVUf8g7YRXzWgxhUq6RtrxvhfaR6gU+khVDHasDrrp1MMpNKABs+DYqshhAx2vGGzObqR+ZeTutzqs/W3nr5BpBE7Cb/Vz0qfx8yVP6VS6ipDccx4Zsl5eJvyk9sa94Uw6Ce9LBDh4BQeAyxQt4hmHOrvbpPIhDl5xg1fvWPCKWqMv9XaPtYYJLUtCJA8YqHXjM/1Ths4yk55JuhiMUrRv2d0huzbt7cZfggl6WGEggV+BZQ7RNJnGhxC1cC3Fo2Huidtkp1TgEjaeucGpHrUyEINcoijkhbJ3WFwX4Ug/I21taKI6epa7ljZpGs3VdB6XK4rnCi7RrLqR0HauFK9Ae4tbmNtm2w8Lv3gxBO5tGDXcNybzNkHb8ywwPAjmZ/JkInve69zX13vYroyXW89V5+KGayIyqE8a7pYAsjEVvWvP5Q6MneZIBxOPhTIXGAOc9dkg/AeuOqWgWGkawJ//i/e5G1CSCkFcsXyoOkp+8AKWa3TxdB3c3S8F3U3roaLXHG3MIZBgPbqwz7TdlKGBY3HEEBb1Kx2N9ZFv6oZKbqtiEpUQbBjJWtEeXTurYCu8fWEGSptwQANeTCibVfa6X1pokulyVr6Un/u1i536gzE2YkDd2P9d48KEKjDA9ndGUXpTVEE5FdLZoBjH3bkpYxuL7NAIiiS7xY8Et/uCgQVLOX4xQXv6tNXw7abqg6JtQSxrVXB7jZmH51Ypz3Tx4sLD//wjNGvAxBWRrptgFk8ltPFRZEtZZOk+WmvFWlAUMaNfCcA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(39860400002)(396003)(346002)(136003)(376002)(478600001)(8676002)(86362001)(30864003)(110136005)(41300700001)(2906002)(82960400001)(6486002)(83380400001)(4326008)(66556008)(186003)(66476007)(316002)(66946007)(9686003)(26005)(38100700002)(6512007)(8936002)(6506007)(5660300002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8I0rnbkL6UpSEdCC4LRam9nx845MGYL/rQFNtS8Z8dZXdtgFvrTTqlK9RZTH?=
- =?us-ascii?Q?q1TNntMSikWsN4FpWMwLjs1xmDbBeLkwY+PK9l3LmC9IYjXPqWvUq9+R8hxz?=
- =?us-ascii?Q?c2CoJd2kYVyuq4PuH1fbZ0rFFJnS5gOf93lCQftP1zBEIOGyJIWxno+M9w5P?=
- =?us-ascii?Q?I7sn1fB9lDxoMrlqW7BEZYYnnrud/Xehv2Km5piUxAZfAp0RjwW5Bx/gNVkE?=
- =?us-ascii?Q?cmb5zSG4biaAfOAl1wQ5oEFJ97azFvqvu214ij4QmDvFT0N0qgcMAf+wL//G?=
- =?us-ascii?Q?bogUk0+QDrWJ4aphsRkKZAY2DNHWrrNRbPWUoE5LzLG3P/E8hPy2Yb4t9L7E?=
- =?us-ascii?Q?IJzCru2JCWU1bVR2ECfdSyoHET1MqzfZSe5A5UWgxAOH17DWXjPdCJWkOClI?=
- =?us-ascii?Q?R28pTbZBpH3t1nmI3H6tCGZ9rCh06exKaFkO3SCgSrsUz2m5RFZ//U/0RXKB?=
- =?us-ascii?Q?IxVMX7Iz+fkg83AigRgh7nKM1nINl2zwhXfa2UolHP5n/yLyw5FXuWscg8Pm?=
- =?us-ascii?Q?/AOS9wsAv3C/YVrUqyhtfiWS6Jo81zKPOZTpZwlUbE3whFQ9OBg2XULsRd26?=
- =?us-ascii?Q?3ngkk7zyVopM4X5RFIglYV+xkAnYeu3oR4uewUxX2y0w+c0EegjYXAS65Ccm?=
- =?us-ascii?Q?aDOVvOQFYqrFfxjDe1JLbbw9EiDe6f/JZdaQU6HJi7eaC2MoK9cpkOYN9Nvb?=
- =?us-ascii?Q?+AAfkKPAuh0P7OR5HbXiUr/zFDJ8xylCcX8qso5Q6EwBO7b0Q/M+WvAlRaGW?=
- =?us-ascii?Q?ObzvJxA05zhvctIuFWjMBcMM23Nn9A0rLqsrbFPiK55o22T1Z17NXtqiTQiv?=
- =?us-ascii?Q?wA9f0Y1bJ1MSRtfSMLeqd/ycXDCzjQCjE5GVtw4UdM87OdX9wOGNg+vI/Opu?=
- =?us-ascii?Q?4I3XkumNwrfJYgFt9CdohQtDfryv8uexbdadd3ZfmwL+rbaUok9tGT6d6W+S?=
- =?us-ascii?Q?m0SU/uNFvXzi3YV2YhxIMhImnKoM6S/JHqxeLSsEFnJIr/TI5Kd7V/eA1aOU?=
- =?us-ascii?Q?UsjZjAAeFGaGzzkNj1IFKD6l+4zAsX8f6ch/Ly093G5CeLLPy3t8AE4sfPfP?=
- =?us-ascii?Q?BHGvN7o7XuNS3oZu0NMTeF+1+EaagNuhs9RV9FGUpuTyuGw64nIJ5b94Qyst?=
- =?us-ascii?Q?/6bzSPl6g7cacn7piTla6YsWCNUza8OR/F5LPYJf47BqKdDUWFjGzCAZU2ia?=
- =?us-ascii?Q?kFfIaafL41YCqV8/jkUpwSguAPg8vb6NfsPzWNr7UwsJb3n4OpPqQH/r6j51?=
- =?us-ascii?Q?wHIe3q0TCfeGMGq7TidxvicMFkZaGfSYW5ZtHBBk++KzVAjmy25YUS0OpIJ6?=
- =?us-ascii?Q?phEjEYlD7UudfGDR1Pyt3Oh+RneIckR3/DJ5OsfZjQvrpSOZO0i+a9Ju0Ba9?=
- =?us-ascii?Q?1pBVL8QkldBy8ZwVHb/viRFbdFQs2iKdWMV8Y9howo0qgSzGOrBHy2JyqGlq?=
- =?us-ascii?Q?3S9ayuzjTmlFLZFfaVdgFUNu0Bpz2n2NaoCw+hwQmXeJ7iJJ0pLRmtV6uyQx?=
- =?us-ascii?Q?cEvviI8HUrRi/+pLqM+b+0UM12nQtucGKV9Hm4Zh+24p5l+IC1JXVRTK7slc?=
- =?us-ascii?Q?MHM9VtORjTZVuOAT3RfMPt4Z4GWKBsQLrnfopZfCqXpoZV/OECcOBo4OetWh?=
- =?us-ascii?Q?GA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20031e39-1396-43ba-802a-08da62e166fd
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?La+W8HI1V9wewthsBI1uQpS3/3k/Qo9IagjgjVhUqEo6CQqsQAjIHXUO8o3c?=
+ =?us-ascii?Q?kYDg2hDozAANJ+ez5yH5ixl43d+qVp+GwmCLhoYkvQOG5IlPceRoRWesfcwu?=
+ =?us-ascii?Q?5IxrYo6OC66MX5/Kbbx+nWe34SVmu4XX0fEDnsesiO8p/GTMnirALvLEOoaH?=
+ =?us-ascii?Q?gv3u1MNmtJVSgsQyaK/TNHMNBCORO9wF0qHsDVf3d2ZHCHyaYpwoOOIRDdqz?=
+ =?us-ascii?Q?WyL84APvEP5+UtkQpQOYCMUHkhuyA6TE1l5u1zvXN3dVk1+umbWTKAeidIXq?=
+ =?us-ascii?Q?lRILv/t5PXaLDINNE54z80Yq3vXbhs8bbDaXVtbqVAYzJyz+85bbp7o5vTVv?=
+ =?us-ascii?Q?o1kPTgHqgjSb01AgJXvRYvBKgYzFWtfJMYqkBGyrVPH13itPbc6pHSrub8HK?=
+ =?us-ascii?Q?A3ShsrKgkz9JZ0wrYkd57YnIDQNkJkMc/fg6Gm43yhtv5XXtEn48CuuNNHO+?=
+ =?us-ascii?Q?lMbq+awkEr2Fxs5jFVS+rmPNuTv4LCm7e0+fyavHPvp837lR6ofZic7XI+UB?=
+ =?us-ascii?Q?A45gFbq2MdZg7NJdJPNP4awC167HFTOHSqgsPQ5QpRJwRNagfG2ly2pTPzy2?=
+ =?us-ascii?Q?30cbYYeZ53JDfZT5Y+hUT7dQg9FK7vT09Koidk5hYcZdfZ9oLddYtxmkc778?=
+ =?us-ascii?Q?GIt7yJ3TQm+Rj9c1adosKF/KV53GRQmghLlJkETUHSozHhDXZnTBSi0OvSHf?=
+ =?us-ascii?Q?hlMgxRKTyvYc8GjwMz22iK8vmFp73prehcMwDRB+QIh6GS5Aqf6GzescKwc6?=
+ =?us-ascii?Q?iRS+ySqcVcz719AwXvfRfH9n+ne//LqeFPrBcnCZli/0YQUJFMDoeTOJaaYz?=
+ =?us-ascii?Q?QRllLoWkKWn8SKIxQYLgiGThuMbv5rhrnYx5get/xAjTjq54Xkw7k6ndkfv9?=
+ =?us-ascii?Q?zduONx5HA+erLWEQae8y+GkFCOQA15z6MMMgrIUEQZl1h6rEN1sFjI/RUYqL?=
+ =?us-ascii?Q?p9g8Tvq9mzcj+0vLGmW++MsXQTbJnzSrlb060BdjUZprEHj7zQxVyDkJVsY7?=
+ =?us-ascii?Q?wf24Ee50tyM7XhOPVdImzmu0pSwCsrHXjOiFg45ziMIJdFgyujIb8mkaYnSp?=
+ =?us-ascii?Q?VIm+cjdQKETVU9Om80u5QQygyAVrH3kP9rJWbyZn+NMY6ddxR7YyvmOdPwMI?=
+ =?us-ascii?Q?UM41gC5XP4aWjJDYq9jOsJmDrJH9EW4Jt10cA7GbOQ+5g09gIwUMSzmZ5zf0?=
+ =?us-ascii?Q?L/Jhb4BRM9N8StUs8Z5M6MqL4a+yESQ1QXEXCUqsbilVlyQ682SwhCA5S6Uc?=
+ =?us-ascii?Q?sZu3OhuecA/dDeB/SH6MDEGrasFKA+bs257CjPFADmFCHC6bGj0/PLRs+j4l?=
+ =?us-ascii?Q?bcD7RKbC+6Bvx4LMgw0bVjpssv6BguuOPNdqYf2x6ZLV9MU+eVdX04UiOQvh?=
+ =?us-ascii?Q?Y9y5Vw0Mk/DwPGVs+M6sxj8DQx9gYu5jCkjB3Z4mNpPZFsPD3LH7y0LGpk0E?=
+ =?us-ascii?Q?wcZ9NtpWx+vWslb+cE3oW5PzrOseKRsq6aWJOqQh9NRpZ0CMt4pAy0mYh4nv?=
+ =?us-ascii?Q?MH4d6nTcOYnuJmeReK44EL3Jt8dTKhrygyR3VAutqzpwMUvcNlkaE7OFHOKU?=
+ =?us-ascii?Q?4kvRYeUFIpk79GQ1tWS4h9eIPxiMY2lwdl4j9QMWcUb1GI/wSfCli1SULZgX?=
+ =?us-ascii?Q?hQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b353a425-5bb3-4ffe-f976-08da62e9c636
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2022 02:02:26.4368
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2022 03:02:22.1239
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Vtpgu9FAAW7ti6fKfFqcVJJ9s3IkQaUAhFmcsoY/z0ZolmzMMkk7ZHsJpAhdNZ8nrBydGY1MR6Bh28ADAEiPo7v24wiXjSjGxHYP7cbEzYE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5394
+X-MS-Exchange-CrossTenant-UserPrincipalName: uilcMi/x2a8nyKoCQ9ZP9jiTXBHXcD+4klricVL5Yco9sq9WPTN0lP+ExeIQLbeM+ufH7jD4CLiQ24J3MmL2yGTPGN91O2nZC+6Lqsr0XpA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6761
 X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -147,305 +152,418 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Jonathan Cameron wrote:
-> On Thu, 23 Jun 2022 21:19:44 -0700
+> On Thu, 23 Jun 2022 21:19:46 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 > 
-> > CXL regions (interleave sets) are made up of a set of memory devices
-> > where each device maps a portion of the interleave with one of its
-> > decoders (see CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure).
-> > As endpoint decoders are identified by a provisioning tool they can be
-> > added to a region provided the region interleave properties are set
-> > (way, granularity, HPA) and DPA has been assigned to the decoder.
+> > After all the soft validation of the region has completed, convey the
+> > region configuration to hardware while being careful to commit decoders
+> > in specification mandated order. In addition to programming the endpoint
+> > decoder base-addres, intereleave ways and granularity, the switch
+> > decoder target lists are also established.
 > > 
-> > The attach event triggers several validation checks, for example:
-> > - is the DPA sized appropriately for the region
-> > - is the decoder reachable via the host-bridges identified by the
-> >   region's root decoder
-> > - is the device already active in a different region position slot
-> > - are there already regions with a higher HPA active on a given port
-> >   (per CXL 2.0 8.2.5.12.20 Committing Decoder Programming)
+> > While the kernel can enforce spec-mandated commit order, it can not
+> > enforce spec-mandated reset order. For example, the kernel can't stop
+> > someone from removing an endpoint device that is occupying decoderN in a
+> > switch decoder where decoderN+1 is also committed. To reset decoderN,
+> > decoderN+1 must be torn down first. That "tear down the world"
+> > implementation is saved for a follow-on patch.
 > > 
-> > ...and the attach event affords an opportunity to collect data and
-> > resources relevant to later programming the target lists in switch
-> > decoders, for example:
-> > - allocate a decoder at each cxl_port in the decode chain
-> > - for a given switch port, how many the region's endpoints are hosted
-> >   through the port
-> > - how many unique targets (next hops) does a port need to map to reach
-> >   those endpoints
+> > Callback operations are provided for the 'commit' and 'reset'
+> > operations. While those callbacks may prove useful for CXL accelerators
+> > (Type-2 devices with memory) the primary motivation is to enable a
+> > simple way for cxl_test to intercept those operations.
 > > 
-> > The act of reconciling this information and deploying it to the decoder
-> > configuration is saved for a follow-on patch.
-> > 
-> > Co-developed-by: Ben Widawsky <bwidawsk@kernel.org>
-> > Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> Trivial comments only in this one.
+> 
+> Jonathan
+> 
 > > ---
-> >  drivers/cxl/core/core.h   |   7 +
-> >  drivers/cxl/core/port.c   |  10 +-
-> >  drivers/cxl/core/region.c | 338 +++++++++++++++++++++++++++++++++++++-
-> >  drivers/cxl/cxl.h         |  20 +++
-> >  drivers/cxl/cxlmem.h      |   5 +
-> >  5 files changed, 372 insertions(+), 8 deletions(-)
+> >  Documentation/ABI/testing/sysfs-bus-cxl |  16 ++
+> >  drivers/cxl/core/hdm.c                  | 218 ++++++++++++++++++++++++
+> >  drivers/cxl/core/port.c                 |   1 +
+> >  drivers/cxl/core/region.c               | 189 ++++++++++++++++++--
+> >  drivers/cxl/cxl.h                       |  11 ++
+> >  tools/testing/cxl/test/cxl.c            |  46 +++++
+> >  6 files changed, 471 insertions(+), 10 deletions(-)
 > > 
 > 
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 2ee62dde8b23..72f98f1a782c 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -129,6 +129,8 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port)
+> >  		return ERR_PTR(-ENXIO);
+> >  	}
+> >  
+> > +	dev_set_drvdata(&port->dev, cxlhdm);
 > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 4830365f3857..65bf84abad57 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -428,6 +428,254 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
-> >  	return rc;
+> Trivial, but dev == &port->dev I think so you might as well use dev.
+
+Sure.
+
+> This feels like a bit of a hack as it just so happens nothing else is
+> in the port drvdata.  Maybe it's better to add a pointer from
+> port to cxlhdm?
+
+It's only valid while the port is attached to the cxl_port driver which
+sets it apart from other port data.
+
+> 
+> > +
+> >  	return cxlhdm;
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_hdm, CXL);
+> > @@ -444,6 +446,213 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+> >  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
 > >  }
 > >  
 > 
-> > +
-> > +static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
-> > +					       struct cxl_region *cxlr)
+> > +static int cxl_decoder_commit(struct cxl_decoder *cxld)
 > > +{
-> > +	struct cxl_region_ref *cxl_rr;
+> > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> > +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+> > +	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
+> > +	int id = cxld->id, rc;
+> > +	u64 base, size;
+> > +	u32 ctrl;
 > > +
-> > +	cxl_rr = kzalloc(sizeof(*cxl_rr), GFP_KERNEL);
-> > +	if (!cxl_rr)
-> > +		return NULL;
-> > +	cxl_rr->port = port;
-> > +	cxl_rr->region = cxlr;
-> > +	xa_init(&cxl_rr->endpoints);
-> > +	return cxl_rr;
-> > +}
+> > +	if (cxld->flags & CXL_DECODER_F_ENABLE)
+> > +		return 0;
 > > +
-> > +static void free_region_ref(struct cxl_region_ref *cxl_rr)
-> > +{
-> > +	struct cxl_port *port = cxl_rr->port;
-> > +	struct cxl_region *cxlr = cxl_rr->region;
-> > +	struct cxl_decoder *cxld = cxl_rr->decoder;
-> > +
-> > +	dev_WARN_ONCE(&cxlr->dev, cxld->region != cxlr, "region mismatch\n");
-> > +	if (cxld->region == cxlr) {
-> > +		cxld->region = NULL;
-> > +		put_device(&cxlr->dev);
+> > +	if (port->commit_end + 1 != id) {
+> > +		dev_dbg(&port->dev,
+> > +			"%s: out of order commit, expected decoder%d.%d\n",
+> > +			dev_name(&cxld->dev), port->id, port->commit_end + 1);
+> > +		return -EBUSY;
 > > +	}
 > > +
-> > +	xa_erase(&port->regions, (unsigned long)cxlr);
-> 
-> Why do we have things in a free_ function that aren't simply removing things
-> created in the alloc()?  I'd kind of expect this to be in a cxl_rr_del() or similar.
-
-Fixed it the other way by just open-coding cxl_rr_add() into
-alloc_region_ref(). There was no good reason to have them as separate
-steps.
-
-> 
-> > +	xa_destroy(&cxl_rr->endpoints);
-> > +	kfree(cxl_rr);
-> > +}
+> > +	down_read(&cxl_dpa_rwsem);
+> > +	/* common decoder settings */
+> > +	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> > +	cxld_set_interleave(cxld, &ctrl);
+> > +	cxld_set_type(cxld, &ctrl);
+> > +	cxld_set_hpa(cxld, &base, &size);
 > > +
-> > +static int cxl_rr_add(struct cxl_region_ref *cxl_rr)
-> > +{
-> > +	struct cxl_port *port = cxl_rr->port;
-> > +	struct cxl_region *cxlr = cxl_rr->region;
+> > +	writel(upper_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
+> > +	writel(lower_32_bits(base), hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
+> > +	writel(upper_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
+> > +	writel(lower_32_bits(size), hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
 > > +
-> > +	return xa_insert(&port->regions, (unsigned long)cxlr, cxl_rr,
-> > +			 GFP_KERNEL);
-> > +}
+> > +	if (is_switch_decoder(&cxld->dev)) {
+> > +		struct cxl_switch_decoder *cxlsd =
+> > +			to_cxl_switch_decoder(&cxld->dev);
+> > +		void __iomem *tl_hi = hdm + CXL_HDM_DECODER0_TL_HIGH(id);
+> > +		void __iomem *tl_lo = hdm + CXL_HDM_DECODER0_TL_LOW(id);
+> > +		u64 targets;
 > > +
-> > +static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
-> > +			 struct cxl_endpoint_decoder *cxled)
-> > +{
-> > +	int rc;
-> > +	struct cxl_port *port = cxl_rr->port;
-> > +	struct cxl_region *cxlr = cxl_rr->region;
-> > +	struct cxl_decoder *cxld = cxl_rr->decoder;
-> > +	struct cxl_ep *ep = cxl_ep_load(port, cxled_to_memdev(cxled));
-> > +
-> > +	rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
-> > +			 GFP_KERNEL);
-> > +	if (rc)
-> > +		return rc;
-> > +	cxl_rr->nr_eps++;
-> > +
-> > +	if (!cxld->region) {
-> > +		cxld->region = cxlr;
-> > +		get_device(&cxlr->dev);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int cxl_port_attach_region(struct cxl_port *port,
-> > +				  struct cxl_region *cxlr,
-> > +				  struct cxl_endpoint_decoder *cxled, int pos)
-> > +{
-> > +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> > +	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
-> > +	struct cxl_region_ref *cxl_rr = NULL, *iter;
-> > +	struct cxl_region_params *p = &cxlr->params;
-> > +	struct cxl_decoder *cxld = NULL;
-> > +	unsigned long index;
-> > +	int rc = -EBUSY;
-> > +
-> > +	lockdep_assert_held_write(&cxl_region_rwsem);
-> 
-> This function is complex enough that maybe it would benefit from
-> some saying what each part is doing.
-
-...added a kdoc block:
-
-/**
- * cxl_port_attach_region() - track a region's interest in a port by endpoint
- * @port: port to add a new region reference 'struct cxl_region_ref'
- * @cxlr: region to attach to @port
- * @cxled: endpoint decoder used to create or further pin a region reference
- * @pos: interleave position of @cxled in @cxlr
- *
- * The attach event is an opportunity to validate CXL decode setup
- * constraints and record metadata needed for programming HDM decoders,
- * in particular decoder target lists.
- *
- * The steps are:
- * - validate that there are no other regions with a higher HPA already
- *   associated with @port
- * - establish a region reference if one is not already present
- *   - additionally allocate a decoder instance that will host @cxlr on
- *     @port
- * - pin the region reference by the endpoint
- * - account for how many entries in @port's target list are needed to
- *   cover all of the added endpoints.
- */
-
-> 
-> > +
-> > +	xa_for_each(&port->regions, index, iter) {
-> > +		struct cxl_region_params *ip = &iter->region->params;
-> > +
-> > +		if (iter->region == cxlr)
-> > +			cxl_rr = iter;
-> > +		if (ip->res->start > p->res->start) {
-> > +			dev_dbg(&cxlr->dev,
-> > +				"%s: HPA order violation %s:%pr vs %pr\n",
-> > +				dev_name(&port->dev),
-> > +				dev_name(&iter->region->dev), ip->res, p->res);
-> > +			return -EBUSY;
-> > +		}
-> > +	}
-> > +
-> > +	if (cxl_rr) {
-> > +		struct cxl_ep *ep_iter;
-> > +		int found = 0;
-> > +
-> > +		cxld = cxl_rr->decoder;
-> > +		xa_for_each(&cxl_rr->endpoints, index, ep_iter) {
-> > +			if (ep_iter == ep)
-> > +				continue;
-> > +			if (ep_iter->next == ep->next) {
-> > +				found++;
-> > +				break;
-> > +			}
-> > +		}
-> > +
-> > +		/*
-> > +		 * If this is a new target or if this port is direct connected
-> > +		 * to this endpoint then add to the target count.
-> > +		 */
-> > +		if (!found || !ep->next)
-> > +			cxl_rr->nr_targets++;
-> > +	} else {
-> > +		cxl_rr = alloc_region_ref(port, cxlr);
-> > +		if (!cxl_rr) {
-> > +			dev_dbg(&cxlr->dev,
-> > +				"%s: failed to allocate region reference\n",
-> > +				dev_name(&port->dev));
-> > +			return -ENOMEM;
-> > +		}
-> > +		rc = cxl_rr_add(cxl_rr);
+> > +		rc = cxlsd_set_targets(cxlsd, &targets);
 > > +		if (rc) {
-> > +			dev_dbg(&cxlr->dev,
-> > +				"%s: failed to track region reference\n",
-> > +				dev_name(&port->dev));
-> > +			kfree(cxl_rr);
-> > +			return rc;
+> > +			dev_dbg(&port->dev, "%s: target configuration error\n",
+> > +				dev_name(&cxld->dev));
+> > +			goto err;
 > > +		}
+> > +
+> > +		writel(upper_32_bits(targets), tl_hi);
+> > +		writel(lower_32_bits(targets), tl_lo);
+> > +	} else {
+> > +		struct cxl_endpoint_decoder *cxled =
+> > +			to_cxl_endpoint_decoder(&cxld->dev);
+> > +		void __iomem *sk_hi = hdm + CXL_HDM_DECODER0_SKIP_HIGH(id);
+> > +		void __iomem *sk_lo = hdm + CXL_HDM_DECODER0_SKIP_LOW(id);
+> > +
+> > +		writel(upper_32_bits(cxled->skip), sk_hi);
+> > +		writel(lower_32_bits(cxled->skip), sk_lo);
 > > +	}
 > > +
-> > +	if (!cxld) {
-> > +		if (port == cxled_to_port(cxled))
-> > +			cxld = &cxled->cxld;
-> > +		else
-> > +			cxld = cxl_region_find_decoder(port, cxlr);
-> > +		if (!cxld) {
-> > +			dev_dbg(&cxlr->dev, "%s: no decoder available\n",
-> > +				dev_name(&port->dev));
-> > +			goto out_erase;
-> > +		}
+> > +	writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
+> > +	up_read(&cxl_dpa_rwsem);
 > > +
-> > +		if (cxld->region) {
-> > +			dev_dbg(&cxlr->dev, "%s: %s already attached to %s\n",
-> > +				dev_name(&port->dev), dev_name(&cxld->dev),
-> > +				dev_name(&cxld->region->dev));
-> > +			rc = -EBUSY;
-> > +			goto out_erase;
-> > +		}
-> > +
-> > +		cxl_rr->decoder = cxld;
-> > +	}
-> > +
-> > +	rc = cxl_rr_ep_add(cxl_rr, cxled);
+> > +	port->commit_end++;
+> 
+> Obviously doesn't matter as resetting on error, but
+> feels like the increment of commit_end++ should only follow
+> succesful commit / await_commit();
+
+Then it would need a special ->reset() flavor to do everything but the
+commit_end management. As long as cxl_region_rwsem is held over the
+combination, nothing can sneak in and observe the intermediate state.
+
+> > +	rc = cxld_await_commit(hdm, cxld->id);
+> > +err:
 > > +	if (rc) {
-> > +		dev_dbg(&cxlr->dev,
-> > +			"%s: failed to track endpoint %s:%s reference\n",
-> > +			dev_name(&port->dev), dev_name(&cxlmd->dev),
-> > +			dev_name(&cxld->dev));
-> > +		goto out_erase;
+> > +		dev_dbg(&port->dev, "%s: error %d committing decoder\n",
+> > +			dev_name(&cxld->dev), rc);
+> > +		cxld->reset(cxld);
+> > +		return rc;
+> > +	}
+> > +	cxld->flags |= CXL_DECODER_F_ENABLE;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int cxl_decoder_reset(struct cxl_decoder *cxld)
+> > +{
+> > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> > +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+> > +	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
+> > +	int id = cxld->id;
+> > +	u32 ctrl;
+> > +
+> > +	if ((cxld->flags & CXL_DECODER_F_ENABLE) ==  0)
+> 
+> extra space after ==
+
+got it.
+
+> 
+> > +		return 0;
+> > +
+> 
+> ...
+> 
+> 
+> >  		
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index 7034300e72b2..eee1615d2319 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -630,6 +630,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+> >  	port->component_reg_phys = component_reg_phys;
+> >  	ida_init(&port->decoder_ida);
+> >  	port->dpa_end = -1;
+> > +	port->commit_end = -1;
+> >  	xa_init(&port->dports);
+> >  	xa_init(&port->endpoints);
+> >  	xa_init(&port->regions);
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index 071b8cafe2bb..b90160c4f975 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -112,6 +112,168 @@ static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
+> >  }
+> >  static DEVICE_ATTR_RW(uuid);
+> 
+> ...
+> 
+> 
+> > +static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+> > +{
+> > +	struct cxl_region_params *p = &cxlr->params;
+> > +	int i;
+> > +
+> > +	for (i = count - 1; i >= 0; i--) {
+> > +		struct cxl_endpoint_decoder *cxled = p->targets[i];
+> > +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> > +		struct cxl_port *iter = cxled_to_port(cxled);
+> > +		struct cxl_ep *ep;
+> > +		int rc;
+> > +
+> > +		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
+> > +			iter = to_cxl_port(iter->dev.parent);
+> > +
+> > +		for (ep = cxl_ep_load(iter, cxlmd); iter;
+> > +		     iter = ep->next, ep = cxl_ep_load(iter, cxlmd)) {
+> > +			struct cxl_region_ref *cxl_rr;
+> > +			struct cxl_decoder *cxld;
+> > +
+> > +			cxl_rr = cxl_rr_load(iter, cxlr);
+> > +			cxld = cxl_rr->decoder;
+> > +			rc = cxld->reset(cxld);
+> > +			if (rc)
+> > +				return rc;
+> > +		}
+> > +
+> > +		rc = cxled->cxld.reset(&cxled->cxld);
+> > +		if (rc)
+> > +			return rc;
 > > +	}
 > > +
 > > +	return 0;
-> > +out_erase:
-> > +	if (cxl_rr->nr_eps == 0)
-> > +		free_region_ref(cxl_rr);
+> > +}
+> > +
+> > +static int cxl_region_decode_commit(struct cxl_region *cxlr)
+> > +{
+> > +	struct cxl_region_params *p = &cxlr->params;
+> > +	int i, rc;
+> > +
+> > +	for (i = 0; i < p->nr_targets; i++) {
+> > +		struct cxl_endpoint_decoder *cxled = p->targets[i];
+> > +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> > +		struct cxl_region_ref *cxl_rr;
+> > +		struct cxl_decoder *cxld;
+> > +		struct cxl_port *iter;
+> > +		struct cxl_ep *ep;
+> > +
+> > +		/* commit bottom up */
+> > +		for (iter = cxled_to_port(cxled); !is_cxl_root(iter);
+> > +		     iter = to_cxl_port(iter->dev.parent)) {
+> > +			cxl_rr = cxl_rr_load(iter, cxlr);
+> > +			cxld = cxl_rr->decoder;
+> > +			rc = cxld->commit(cxld);
+> > +			if (rc)
+> > +				break;
+> > +		}
+> > +
+> > +		if (is_cxl_root(iter))
+> > +			continue;
+> > +
+> > +		/* teardown top down */
+> 
+> Comment on why we are tearing down.  I guess because previous
+> somehow didn't end up at the root?
+
+Correct, one of those commits in the loop above failed causing it to
+break out. Added a comment.
+
+> 
+> > +		for (ep = cxl_ep_load(iter, cxlmd); ep && iter;
+> > +		     iter = ep->next, ep = cxl_ep_load(iter, cxlmd)) {
+> > +			cxl_rr = cxl_rr_load(iter, cxlr);
+> > +			cxld = cxl_rr->decoder;
+> > +			cxld->reset(cxld);
+> > +		}
+> > +
+> > +		cxled->cxld.reset(&cxled->cxld);
+> > +		if (i == 0)
+> > +			return rc;
+> > +		break;
+> > +	}
+> > +
+> > +	if (i >= p->nr_targets)
+> > +		return 0;
+> > +
+> > +	/* undo the targets that were successfully committed */
+> > +	cxl_region_decode_reset(cxlr, i);
 > > +	return rc;
 > > +}
 > > +
-> 
-> >  
-> >  static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
-> >  {
-> > +	struct cxl_port *iter, *ep_port = cxled_to_port(cxled);
-> >  	struct cxl_region *cxlr = cxled->cxld.region;
-> >  	struct cxl_region_params *p;
-> >  
-> > @@ -481,6 +811,10 @@ static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
-> >  	p = &cxlr->params;
-> >  	get_device(&cxlr->dev);
-> >  
-> > +	for (iter = ep_port; !is_cxl_root(iter);
-> > +	     iter = to_cxl_port(iter->dev.parent))
-> > +		cxl_port_detach_region(iter, cxlr, cxled);
+> > +static ssize_t commit_store(struct device *dev, struct device_attribute *attr,
+> > +			    const char *buf, size_t len)
+> > +{
+> > +	struct cxl_region *cxlr = to_cxl_region(dev);
+> > +	struct cxl_region_params *p = &cxlr->params;
+> > +	bool commit;
+> > +	ssize_t rc;
 > > +
-> >  	if (cxled->pos < 0 || cxled->pos >= p->interleave_ways ||
-> >  	    p->targets[cxled->pos] != cxled) {
-> >  		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> > @@ -491,6 +825,8 @@ static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
-> >  		goto out;
-> >  	}
+> > +	rc = kstrtobool(buf, &commit);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	rc = down_write_killable(&cxl_region_rwsem);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	/* Already in the requested state? */
+> > +	if (commit && p->state >= CXL_CONFIG_COMMIT)
+> > +		goto out;
+> > +	if (!commit && p->state < CXL_CONFIG_COMMIT)
+> > +		goto out;
+> > +
+> > +	/* Not ready to commit? */
+> > +	if (commit && p->state < CXL_CONFIG_ACTIVE) {
+> > +		rc = -ENXIO;
+> > +		goto out;
+> > +	}
+> > +
+> > +	if (commit)
+> > +		rc = cxl_region_decode_commit(cxlr);
+> > +	else {
+> > +		p->state = CXL_CONFIG_RESET_PENDING;
+> > +		up_write(&cxl_region_rwsem);
+> > +		device_release_driver(&cxlr->dev);
+> > +		down_write(&cxl_region_rwsem);
+> > +
+> > +		if (p->state == CXL_CONFIG_RESET_PENDING)
+> 
+> What path results in that changing in last few lines?
+> Perhaps a comment if there is something we need to protect against?
+
+The lock needs to be dropped before calling device_release_driver(),
+after reacquiring the lock need to revalidate that the reset is still
+pending. Added a comment.
+
+> 
+> 
+> > +			rc = cxl_region_decode_reset(cxlr, p->interleave_ways);
+> > +	}
+> > +
+> > +	if (rc)
+> > +		goto out;
+> > +
+> > +	if (commit)
+> > +		p->state = CXL_CONFIG_COMMIT;
+> > +	else if (p->state == CXL_CONFIG_RESET_PENDING)
+> > +		p->state = CXL_CONFIG_ACTIVE;
+> > +
+> > +out:
+> > +	up_write(&cxl_region_rwsem);
+> > +
+> > +	if (rc)
+> > +		return rc;
+> > +	return len;
+> > +}
+> 
+> 
+> ...
+> 
+> 
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index a93d7c4efd1a..fc14f6805f2c 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -54,6 +54,7 @@
+> >  #define   CXL_HDM_DECODER0_CTRL_LOCK BIT(8)
+> >  #define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
+> >  #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
+> > +#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
+> >  #define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
+> >  #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
+> >  #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
+> > @@ -257,6 +258,8 @@ enum cxl_decoder_type {
+> >   * @target_type: accelerator vs expander (type2 vs type3) selector
+> >   * @region: currently assigned region for this decoder
+> >   * @flags: memory type capabilities and locking
+> > + * @commit: device/decoder-type specific callback to commit settings to hw
+> > + * @commit: device/decoder-type specific callback to reset hw settings
+> 
+> @reset
+
+Yup.
+
+> 
+> >  */
+> >  struct cxl_decoder {
+> >  	struct device dev;
+> > @@ -267,6 +270,8 @@ struct cxl_decoder {
+> >  	enum cxl_decoder_type target_type;
+> >  	struct cxl_region *region;
+> >  	unsigned long flags;
+> > +	int (*commit)(struct cxl_decoder *cxld);
+> > +	int (*reset)(struct cxl_decoder *cxld);
+> >  };
 > >  
-> > +	if (p->state == CXL_CONFIG_ACTIVE)
-> 
-> I 'think' the state is either CXL_CONFIG_ACTIVE or CXL_CONFIG_INTERLEAVE_ACTIVE,
-> so you could set this unconditionally.  A comment here on permissible
-> states would be useful for future reference.
-
-cxl_region_detach() should not care if the region state is idle. Not
-that it will happen in the current code, but the only expectation is
-that if the region is active and a endpoint departs it must be
-downgraded in config state. CXL_CONFIG_IDLE is permissible, although not
-expected. I do not think a comment is needed if the "if (p->state ==
-CXL_CONFIG_ACTIVE)" check stays.
-
-> 
-> > +		p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
-> >  	p->targets[cxled->pos] = NULL;
-> >  	p->nr_targets--;
 > 
 > 
+> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> > index 51d517fa62ee..94653201631c 100644
+> > --- a/tools/testing/cxl/test/cxl.c
+> > +++ b/tools/testing/cxl/test/cxl.c
+> > @@ -429,6 +429,50 @@ static int map_targets(struct device *dev, void *data)
+> >  	return 0;
+> >  }
+> >  
+> 
+> ...
+> 
+> > +static int mock_decoder_reset(struct cxl_decoder *cxld)
+> > +{
+> > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> > +	int id = cxld->id;
+> > +
+> > +	if ((cxld->flags & CXL_DECODER_F_ENABLE) ==  0)
+> 
+> bonus space after ==
 
-
+copy-pasta plus missed clang-format. Fixed.
