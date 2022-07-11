@@ -2,71 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBD24570DC6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 01:02:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 541D2570DFD
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 01:11:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231515AbiGKXCR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 19:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55528 "EHLO
+        id S229608AbiGKXL0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jul 2022 19:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230390AbiGKXCQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 19:02:16 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D821774E3C
-        for <linux-pci@vger.kernel.org>; Mon, 11 Jul 2022 16:02:13 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id j3so5996700pfb.6
-        for <linux-pci@vger.kernel.org>; Mon, 11 Jul 2022 16:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zQXYkIpLa/jRv8ngkizdneaBLdDBpj/gCgWHugoncaE=;
-        b=X/5PcPYqGqKuus1jat1z2VDjmGnFRlWFHPH2K9MAZocdY+pZKAu34y993HN6SNVKmS
-         cDtn7l1Vyb7XKJpemTGBWS9vphxKWpKMdthKiM0nSLVjl9DPUQq7HKuRKW3b3nLFnjU8
-         SBP0182OirwDB7BgZls6GFj1KXOhaFARIykUI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zQXYkIpLa/jRv8ngkizdneaBLdDBpj/gCgWHugoncaE=;
-        b=8Nz/UvGgeBUuowOX3yF/JoyE6kmmDA5CcRYM4Px9uz/yjvbZY2NL9xUAjdXAfVofy4
-         XeVtceJtzq9HLbsGYbXXK0rs0wdJuC0fGG+LbnkDpibKm2TLX0yDhVW00uE6y28akkCo
-         rNGRiBP4lY2IsP2TRihfqCYGQH63glfp0SiGXd9Z87oJcYpJDuK2G0YjAZE2K3QSsLTo
-         qKS01xrtflCGHk+5caiSR6TFKYbUiYBZC3ACHriZdmsIE8MZIVNolLZMfEiwYoFhGT3v
-         0BDTNdzPNkrrVb4PieH5H8FuXloM9t0Bi2CMap+fZTCukWMD9YfqDO8SJVIB1dWUjO6p
-         Xrgw==
-X-Gm-Message-State: AJIora+cjqP9L4KNx0N5gFMtKKE+recOW4Qeou2rSbC0PBqcPrW2HvL0
-        hYAbV8yJEEWmQfgORCjQ2HYMyw==
-X-Google-Smtp-Source: AGRyM1vd+YT28J4QtbEwB9SqrDW2ijRXinz1/hQByXl8qLxAh5tbMVtL1AGh7dMFvZN0PHy8+1tZ0g==
-X-Received: by 2002:a65:49c5:0:b0:412:6e3e:bd91 with SMTP id t5-20020a6549c5000000b004126e3ebd91mr18068217pgs.221.1657580533320;
-        Mon, 11 Jul 2022 16:02:13 -0700 (PDT)
-Received: from medusa.lab.kspace.sh (c-98-207-191-243.hsd1.ca.comcast.net. [98.207.191.243])
-        by smtp.googlemail.com with ESMTPSA id y15-20020a655b0f000000b0040d75537824sm4735325pgq.86.2022.07.11.16.02.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 16:02:12 -0700 (PDT)
-Date:   Mon, 11 Jul 2022 16:02:11 -0700
-From:   Mohamed Khalfella <mkhalfella@purestorage.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     stable@vger.kernel.org, Meeta Saggi <msaggi@purestorage.com>,
-        Eric Badger <ebadger@purestorage.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/AER: Iterate over error counters instead of error
- strings
-Message-ID: <20220711230211.GD3182270@medusa>
-References: <20220509181441.31884-1-mkhalfella@purestorage.com>
- <20220711225437.GA703490@bhelgaas>
+        with ESMTP id S229682AbiGKXL0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 19:11:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE786509EB;
+        Mon, 11 Jul 2022 16:11:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4CE4FB81614;
+        Mon, 11 Jul 2022 23:11:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0CEC3411C;
+        Mon, 11 Jul 2022 23:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657581079;
+        bh=hbjCuI4LFeNLRJgLro7+lbaVQ+PcWcqQbC2LOg4e1Ug=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Zu04jqa6icPQJexIaWAv9B1aGuO1HVUafN33YBKkEIT0gHdIcn2T6jYKkyg6UeS8q
+         dPJ1zR/hizq5IsX1fedeOsJk5YFKdbVeuVblABXznthJO7YaXMlfx64VeyMQ91X7Em
+         81ScRoWdtkeRpHYcEZ+MWLiVJORBz7+OE+kF3dZ4mwcnVHF8jdfikGQ6LM2YRHWZ8l
+         FqO71RptN4Bv0VbGtG2Q+FWG3idPX84cn/BDX+kBDpB3CmshvTdrMAKKKqGauDZf3u
+         mkoFAkjipB+hYQcjh/Mn1cgpULaOkS59taQx5ZDjZF6720iHsGNOW4eviZtkiKYUkR
+         P8wVwvwNmlyxQ==
+Date:   Mon, 11 Jul 2022 18:11:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI:ASPM: Remove pcie_aspm_pm_state_change()
+Message-ID: <20220711231117.GA706272@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220711225437.GA703490@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <20220509073639.2048236-1-kai.heng.feng@canonical.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -75,53 +56,94 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-07-11 17:54:37 -0500, Bjorn Helgaas wrote:
-> On Mon, May 09, 2022 at 06:14:41PM +0000, Mohamed Khalfella wrote:
-> > PCI AER stats counters sysfs attributes need to iterate over
-> > stats counters instead of stats names. Also, added a build
-> > time check to make sure all counters have entries in strings
-> > array.
-> > 
-> > Fixes: 0678e3109a3c ("PCI/AER: Simplify __aer_print_error()")
-> > Cc: stable@vger.kernel.org
-> > Reported-by: Meeta Saggi <msaggi@purestorage.com>
-> > Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
-> > Reviewed-by: Meeta Saggi <msaggi@purestorage.com>
-> > Reviewed-by: Eric Badger <ebadger@purestorage.com>
+On Mon, May 09, 2022 at 03:36:37PM +0800, Kai-Heng Feng wrote:
+> pcie_aspm_pm_state_change() was introduced at the inception of PCIe
+> ASPM code.
 > 
-> I added some info about why we need this to the commit log and applied
-> to pci/err for v5.20.  Thank you!
-That is good news! Thank you for helping out.
+> However, it can cause some issues. For instance, when ASPM config is
+> changed via sysfs, those changes won't persist across power state change
+> because pcie_aspm_pm_state_change() overwrites them.
 > 
-> > ---
-> >  drivers/pci/pcie/aer.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 9fa1f97e5b27..ce99a6d44786 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -533,7 +533,7 @@ static const char *aer_agent_string[] = {
-> >  	u64 *stats = pdev->aer_stats->stats_array;			\
-> >  	size_t len = 0;							\
-> >  									\
-> > -	for (i = 0; i < ARRAY_SIZE(strings_array); i++) {		\
-> > +	for (i = 0; i < ARRAY_SIZE(pdev->aer_stats->stats_array); i++) {\
-> >  		if (strings_array[i])					\
-> >  			len += sysfs_emit_at(buf, len, "%s %llu\n",	\
-> >  					     strings_array[i],		\
-> > @@ -1342,6 +1342,11 @@ static int aer_probe(struct pcie_device *dev)
-> >  	struct device *device = &dev->device;
-> >  	struct pci_dev *port = dev->port;
-> >  
-> > +	BUILD_BUG_ON(ARRAY_SIZE(aer_correctable_error_string) <
-> > +		     AER_MAX_TYPEOF_COR_ERRS);
-> > +	BUILD_BUG_ON(ARRAY_SIZE(aer_uncorrectable_error_string) <
-> > +		     AER_MAX_TYPEOF_UNCOR_ERRS);
-> > +
-> >  	/* Limit to Root Ports or Root Complex Event Collectors */
-> >  	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-> >  	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-> > -- 
-> > 2.29.0
-> > 
+> In addition to that, if the driver is to restore L1ss [1] after system
+> resume, the restored states will also be overwritten by
+> pcie_aspm_pm_state_change().
+> 
+> So remove pcie_aspm_pm_state_change() for now, if there's any hardware
+> really needs it to function, a quirk can be used instead.
+> 
+> [1] https://lore.kernel.org/linux-pci/20220201123536.12962-1-vidyas@nvidia.com/
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
+Applied to pci/aspm for v5.20, thanks!
+
+> ---
+>  drivers/pci/pci.c       |  3 ---
+>  drivers/pci/pci.h       |  2 --
+>  drivers/pci/pcie/aspm.c | 19 -------------------
+>  3 files changed, 24 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9ecce435fb3f1..d09f7b60ee4dc 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1181,9 +1181,6 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+>  	if (need_restore)
+>  		pci_restore_bars(dev);
+>  
+> -	if (dev->bus->self)
+> -		pcie_aspm_pm_state_change(dev->bus->self);
+> -
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 3d60cabde1a15..86a19f293d4ad 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -560,12 +560,10 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+>  #ifdef CONFIG_PCIEASPM
+>  void pcie_aspm_init_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+> -void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+>  #else
+>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+> -static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+>  #endif
+>  
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index a96b7424c9bc8..7f76a5875feb4 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1012,25 +1012,6 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+>  	up_read(&pci_bus_sem);
+>  }
+>  
+> -/* @pdev: the root port or switch downstream port */
+> -void pcie_aspm_pm_state_change(struct pci_dev *pdev)
+> -{
+> -	struct pcie_link_state *link = pdev->link_state;
+> -
+> -	if (aspm_disabled || !link)
+> -		return;
+> -	/*
+> -	 * Devices changed PM state, we should recheck if latency
+> -	 * meets all functions' requirement
+> -	 */
+> -	down_read(&pci_bus_sem);
+> -	mutex_lock(&aspm_lock);
+> -	pcie_update_aspm_capable(link->root);
+> -	pcie_config_aspm_path(link);
+> -	mutex_unlock(&aspm_lock);
+> -	up_read(&pci_bus_sem);
+> -}
+> -
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev)
+>  {
+>  	struct pcie_link_state *link = pdev->link_state;
+> -- 
+> 2.34.1
+> 
