@@ -2,48 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E53685710B9
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 05:17:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C664A5711A9
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 07:03:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231709AbiGLDRg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 23:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37596 "EHLO
+        id S229872AbiGLFDx convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 12 Jul 2022 01:03:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231320AbiGLDRc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 23:17:32 -0400
-X-Greylist: delayed 534 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Jul 2022 20:17:27 PDT
-Received: from ns3090144.ip-54-36-61.eu (ns3090144.ip-54-36-61.eu [54.36.61.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC7092849
-        for <linux-pci@vger.kernel.org>; Mon, 11 Jul 2022 20:17:27 -0700 (PDT)
-Received: by ns3090144.ip-54-36-61.eu (Postfix, from userid 10003)
-        id 7265D29E018C; Tue, 12 Jul 2022 05:14:05 +0200 (CEST)
+        with ESMTP id S229476AbiGLFDw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jul 2022 01:03:52 -0400
+X-Greylist: delayed 33668 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Jul 2022 22:03:50 PDT
+Received: from gw12.vladavia.ru (mx1.vladavia.ru [91.207.252.247])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4176C1183B
+        for <linux-pci@vger.kernel.org>; Mon, 11 Jul 2022 22:03:49 -0700 (PDT)
+Received: from ec2-3-140-195-239.us-east-2.compute.amazonaws.com ([3.140.195.239]:57126 helo=johnlewis.com)
+        by gw12.vladavia.ru with esmtpsa  (TLS1) tls TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA
+        (Exim 4.95)
+        (envelope-from <robert_turner256@johnlewis.com>)
+        id 1oAzIg-0000En-1g
+        for linux-pci@vger.kernel.org;
+        Tue, 12 Jul 2022 05:42:35 +1000
+X-SASI-Hits: BODYTEXTP_SIZE_3000_LESS 0.000000, BODY_SIZE_1300_1399 0.000000,
+        BODY_SIZE_2000_LESS 0.000000, BODY_SIZE_5000_LESS 0.000000,
+        BODY_SIZE_7000_LESS 0.000000, FROM_NAME_PHRASE 0.000000, HTML_00_01 0.050000,
+        HTML_00_10 0.050000, NO_URI_HTTPS 0.000000, RDNS_GENERIC_POOLED 0.000000,
+        RDNS_SUSP 0.000000, RDNS_SUSP_GENERIC 0.000000,
+        REPLYTO_FROM_DIFF_ADDY 0.100000, SENDER_NO_AUTH 0.000000,
+        SINGLE_URI_IN_BODY 0.000000, __ANY_URI 0.000000, __BODY_NO_MAILTO 0.000000,
+        __BUSINESS_SIGNATURE 0.000000, __CT 0.000000, __CTE 0.000000,
+        __CT_TEXT_PLAIN 0.000000, __FRAUD_COMMON 0.000000, __FRAUD_REPLY 0.000000,
+        __FROM_NAME_NOT_IN_BODY 0.000000, __FUR_HEADER 0.000000, __HAS_FROM 0.000000,
+        __HAS_MSGID 0.000000, __HAS_REPLYTO 0.000000, __HEADER_ORDER_FROM 0.000000,
+        __INT_PROD_LOC 0.000000, __INVOICE_MULTILINGUAL 0.000000,
+        __LINES_OF_YELLING 0.000000, __MIME_TEXT_ONLY 0.000000,
+        __MIME_TEXT_P 0.000000, __MIME_TEXT_P1 0.000000, __MIME_VERSION 0.000000,
+        __NO_HTML_TAG_RAW 0.000000, __SANE_MSGID 0.000000,
+        __SINGLE_URI_TEXT 0.000000, __STOCK_PHRASE_6 0.000000,
+        __TO_MALFORMED_2 0.000000, __TO_NO_NAME 0.000000, __URI_IN_BODY 0.000000,
+        __URI_MAILTO 0.000000, __URI_NOT_IMG 0.000000, __URI_NO_PATH 0.000000,
+        __URI_WITHOUT_PATH 0.000000
+X-SASI-Probability: 8%
+X-SASI-RCODE: 200
+X-SASI-Version: Antispam-Engine: 4.1.4, AntispamData: 2022.3.11.110917
+Reply-To: robert_turner@johnlewis-trades.com
+From:   John Lewis & Partnership <robert_turner256@johnlewis.com>
 To:     linux-pci@vger.kernel.org
-Subject: =?UTF-8?Q?s5yar6_=F0=9F=92=9D_Candice_want_to_play_with_you!?=  =?UTF-8?Q?_Start_Game:_https://letsg0dancing.page.link/go=3F?=  =?UTF-8?Q?84w_=F0=9F=92=9D_a_patag=C3=A9_avec_vous_un_articl?=  =?UTF-8?Q?e_de_Monaco_Info?=
-Date:   Tue, 12 Jul 2022 03:14:05 +0000
-From:   WordPress <no-reply@monacoinfo.com>
-Reply-To: linux-pci@vger.kernel.org
-Message-ID: <GVyqhjUM49buQe9CHnXviHs1EGSznJ5bMKUD4KWr2uA@monacoinfo.com>
-X-Mailer: PHPMailer 6.6.0 (https://github.com/PHPMailer/PHPMailer)
+Subject: JL-(11/07/22)-Order_Enquiry =
+Date:   12 Jul 2022 05:42:33 +1000
+Message-ID: <20220712014320.B2E4ACF6A5BCDD8A@johnlewis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=2.9 required=5.0 tests=BAYES_50,PLING_QUERY,
-        RCVD_IN_MSPIKE_H2,SHORT_SHORTNER,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=2.0 required=5.0 tests=ADVANCE_FEE_3_NEW,BAYES_50,
+        RCVD_IN_DNSWL_MED,SPF_FAIL,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-s5yar6 💝 Candice want to play with you! Start Game: https://letsg0dancing.page.link/go?84w 💝 vous envoie un article. Vous pouvez la consulter à l'adresse suivante :
+Dear linux-pci
 
-https://monacoinfo.com:443/video/chroniques-cuture-les-escapades-de-jean-pierre-la-chapelle-des-penitents-blancs-de-la-tour/
 
-cfatmh
+ 
+The world famous brand John Lewis & Partners, is UK's largest 
+multi-channel retailer with over 126 shops and multiple expansion 
+in Africa furnished by European/Asian/American products. We are
+sourcing new products to attract new customers and also retain 
+our existing ones, create new partnerships with companies dealing 
+with different kinds of goods globally.
+ 
+Your company's products are of interest to our market as we have 
+an amazing market for your products.Provide us your current 
+catalog through email to review more. We hope to be able to order
+with you and start a long-term friendly, respectable and solid 
+business partnership. Please we would appreciate it if you could 
+send us your stock availability via email if any.
 
-Vous pouvez consulter d'autres articles sur le site https://monacoinfo.com
+ 
+Our payment terms are 15 days net in Europe, 30 days Net in UK 
+and 30 days net in Asia/USA as we have operated with over 5297 
+suppliers around the globe for the past 50 years now. For
+immediate response Send your reply to "robert_turner@johnlewis-
+trades.com" for us to be able to treat with care and urgency.
 
-A Bientôt
-
+ 
+Best Regards
+Rob Turner
+Head Of Procurement Operations
+John Lewis & Partners.
+robert_turner@johnlewis-trades.com
+Tel: +44-7451-274090
+WhatsApp: +447497483925
+www.johnlewis.com
+REGISTERED OFFICE: 171 VICTORIA STREET, LONDON SW1E 5NN
