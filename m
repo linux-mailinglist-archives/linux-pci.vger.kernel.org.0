@@ -2,224 +2,389 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C26F570A70
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 21:13:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 703D6570AA4
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 21:21:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbiGKTNj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 15:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54084 "EHLO
+        id S231684AbiGKTVs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jul 2022 15:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbiGKTNh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 15:13:37 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A3A5FA4;
-        Mon, 11 Jul 2022 12:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657566816; x=1689102816;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=SZz3iCsx5EnHXkCF1HIL8Z59IEct6ZEhiMrN88JFbBY=;
-  b=bWB9+YSV0TyryEbl+aqrWfin/WDUECHSPkOPsVXSRkVF7vxBlEHFQ9xv
-   x6hkw9nkqzKkN+zzgh2yhhBxF76BEDNMY7A9Jk4dCIeplBAhs8gLBoJ9J
-   13aeqST/TQCPKmX8rjhkZluQ+lwUFBT1Wwta2r2saKMxkdJ79RuhyBb1C
-   WGfPKVK8wUhQ9YsN7UpQ21Yth6sb8RCJTdFuT2rFwNfqoCj3vkbKbGscL
-   g2f13FXd5VkP+OBnmvMZJFpcgBPurWpkNtOSyb2jKnRWUjegFDa9wt3o7
-   t+qiRdFm/s5d5ajluKIAqSDRKWq4VsiTa4oXVGhxH3QdyHi5yjLRz2y/s
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10405"; a="310358027"
-X-IronPort-AV: E=Sophos;i="5.92,263,1650956400"; 
-   d="scan'208";a="310358027"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2022 12:13:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,263,1650956400"; 
-   d="scan'208";a="599128581"
-Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Jul 2022 12:13:36 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 11 Jul 2022 12:13:35 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Mon, 11 Jul 2022 12:13:35 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Mon, 11 Jul 2022 12:13:35 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Mon, 11 Jul 2022 12:13:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YYOiqJ9dxEmYdxhkSeNW2/G6iYC7/8qthYSKh7eQ/0zrNDHYY2gOsIyj/B4ZMn9OOhF+5haM+Ofya4a7FG3wgzYiqxJnmstGbNWJ4tHyaxZRp8gK9ayypJAuYwbrM1/Q1r6UncGulIdDlRCjKj5tyIQj3i2S1789lHpL+J23/MB6/iSDZAAdwkshIJfvKKPSQakye4uqeHPtQWijxQfQD8zDYGHKc5qJpuJVHfeWyRRHoNLgrx2hiuyTbQ1XRUQDwbLXhLdfTmgy5DTiLW6UbsnMfkrIBej58A8CEa3xXtuWe8KfWWtGjAVNR0uSmjpHBuVzMu/rAuqXZwlI67f4Mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3/z4HFI+dDcminVxis0djUomRK1k95AN+t2tNq2/zQs=;
- b=OMff0Mk1jnrumITA3FsGswm4VF9IFhy3kxEKEvA/2CS8pZGp7UK4Rgf8RC3jhAtkgnt0vvDzIMUHMpxIREiRiPqgauiKD0Y0KOjdIGvhtlTRSYoG4NDHNzyGZU8c4V4R7xxTUUZmfvkvtfMLIdZ5OhOd2MXPHuxzUHBkWAFcrXkLJRYeNGIalUqzvIX0VW2YPKmqymtZj9qbkJIZBDrdPnXet2d8it3dSS3TNymg6+RH77ruholHje8W1iKhJMf9/Gt8CajF8gpxhilTpN3dqnfWATVxLgMmRznxut11ZDhqn0qpN/BnNEGVPo9swvHInDDSIlBn7QXeSscoE8NvdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
- CY4PR11MB1639.namprd11.prod.outlook.com (2603:10b6:910:f::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5417.15; Mon, 11 Jul 2022 19:13:33 +0000
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::f188:57e2:349e:51da]) by DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::f188:57e2:349e:51da%9]) with mapi id 15.20.5417.020; Mon, 11 Jul 2022
- 19:13:32 +0000
-Date:   Mon, 11 Jul 2022 12:13:25 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Li, Ming" <ming4.li@intel.com>, Lukas Wunner <lukas@wunner.de>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V13 3/9] PCI: Create PCIe library functions in support of
- DOE mailboxes.
-Message-ID: <Ysx2VdJJQFWp1oC9@iweiny-desk3>
-References: <20220705154932.2141021-4-ira.weiny@intel.com>
- <20220707162223.GA307520@bhelgaas>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220707162223.GA307520@bhelgaas>
-X-ClientProxiedBy: BYAPR05CA0073.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::14) To DM4PR11MB6311.namprd11.prod.outlook.com
- (2603:10b6:8:a6::21)
+        with ESMTP id S229807AbiGKTVr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 15:21:47 -0400
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E9677483;
+        Mon, 11 Jul 2022 12:21:46 -0700 (PDT)
+Received: by mail-io1-f51.google.com with SMTP id n7so5860523ioo.7;
+        Mon, 11 Jul 2022 12:21:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LQBkw/1t1jsiyMxxLEya+9sUfa3+KmfgQx3Z4P2Cfzw=;
+        b=ZFbZ983KHoTGyUUsmTciXpA4TgqDkOjJEsYd4xBbA5H+KWB80vf+CyZ6wQN+s6xEHE
+         bdHFJ+KebCx8YOK8UNk5GuJ5nSscbs22deOIJbTYMcCYKWWzMwf0esjljvb24HQO7T3n
+         PdrCgSydHqOK2OWXabLLvTs3lKgf0FMG1Tx2hn/Vy/nQrrab3hul0pq59hP2CBM5nDRb
+         86qTGbvs/QlENRGO0kyf0yaQIIvBsSWdciaw+aXpv6pEcyIJWJHguaGlDESLRS3jFWu+
+         Rh70tZWyQM1BPkEI4tM2uTlhtkgH2PfIN43XHRVU4jU6BMULwRgH3fUwH+ZFEFzPRvc3
+         fq7w==
+X-Gm-Message-State: AJIora8TdC5tS74NPvcmhLddLki0ItJROuAx8e0bS3j/2R/rHSmq/Fr2
+        YlHwGaHD9nc4vbx7xXHTRQ==
+X-Google-Smtp-Source: AGRyM1tG+hKg3apN6v6YBT3QwrDKQ5b9vYwXaX7DWyX1W0rGWMj5NNifv4hhEu+WzdEpQ5nRy+B76Q==
+X-Received: by 2002:a05:6638:2052:b0:33b:c087:6aa1 with SMTP id t18-20020a056638205200b0033bc0876aa1mr11546621jaj.122.1657567305667;
+        Mon, 11 Jul 2022 12:21:45 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id u14-20020a02230e000000b0033197f42be0sm3182580jau.157.2022.07.11.12.21.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jul 2022 12:21:45 -0700 (PDT)
+Received: (nullmailer pid 126689 invoked by uid 1000);
+        Mon, 11 Jul 2022 19:21:43 -0000
+Date:   Mon, 11 Jul 2022 13:21:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, lpieralisi@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, kw@linux.com, kishon@ti.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH V4 1/9] dt-bindings: pci: tegra: Convert to json-schema
+Message-ID: <20220711192143.GA111260-robh@kernel.org>
+References: <20220707081301.29961-1-vidyas@nvidia.com>
+ <20220707081301.29961-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0a0be430-01b5-4e09-0a82-08da6371724d
-X-MS-TrafficTypeDiagnostic: CY4PR11MB1639:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: G2tBS1XGO76Tx9//vBzfUSv/kK5XtdOxgziXSHHNWzAcOdXAIJNIWrZMnovQrwwsvL/G8rAVaoCecasQ9flEK6XIZq9nvMl4z2JRUzbZoT3YQarv6bQWbuP/TO5W50hI9uB80tu0Tmmw/5sz4mhMEFC2peFFdsMvgFWOexJ9vNbGhH/h7PSvFwFVc5V/BN0mCVMHMGCP6zpBlj6QGruu7P3NnwydZhTFIo4VUXh/Iw9Ok9q34ZdWEqBZ3TADy4vfoB6RsiP1hVWLORwqaWhQL0ePThAat7cXo2BpwLM+OETKbEmGT+8o8cUvSFIsjWni9t9vg+a8BkTpTmDzueBOvTtTzWV4JSJ/nrPRAWvo7V0cQ9OM0H0eJkp82LnhWNLVHAlRIMLpWqcyAGLLRI6zZfgqZBUWi9NZ+fx0lCdb7AARYKphLTXMx3Ky/VLFyD7SUWgFoN/I3Qu05Sj1DHT275j6EboKxtciGj8wckCmIE7NoKKLQuxywaLsGwigf6nofV8z5iVAug2PTdleIiOm3ZwPnT5y+imMMNSB1g2aGdmX5NYKKFMXFBSFg+tuRAc2Umx5beCK1IXyb/nG5G1uMk347llxNuL0uD6zISX+6sHUuq9+U/TJACt8Ca83xCIUKdbCpNYqLZgGIpQZFGZfT6uMPj6JVr7vw3cFLQV0C7R0nZHwQD+DNWLLRWh9X53C3a8pMkNUyC+wBfaisVekfW4VhftLLHAvojQV3nliTDfsLbxP1Jr2SsvrcBKZ5Le8
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(346002)(396003)(39860400002)(376002)(136003)(366004)(44832011)(38100700002)(82960400001)(5660300002)(86362001)(8676002)(8936002)(66556008)(66946007)(66476007)(83380400001)(4326008)(316002)(6506007)(478600001)(6486002)(54906003)(6916009)(6666004)(9686003)(2906002)(6512007)(186003)(33716001)(15650500001)(41300700001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ayo1Rhpw+niB5jRwmJqCfeAUPp52hvyzDFwsNnBlclcZjNZf056ZNlKdkK0q?=
- =?us-ascii?Q?WxValJK8qGy65hWTS3fcjqpDeHIqPzjZUAJE01KD55G38zMd7vLSQZhEjRbq?=
- =?us-ascii?Q?rsjKgW61KFirxdqqV+41R5bjfXKRS67woKzRgQuaZ/X/lhGspYegtFgJRRTI?=
- =?us-ascii?Q?CIatVqHnUTW2sYZIUUU6BhR8WfLVEe6f3JkuXTOCWEjSZAh6VKOVc5KEfhHC?=
- =?us-ascii?Q?YI5Y8CW9Qh+x1lMR1jQ5gg/hZQeXTUJwNzpoF0E5ihhxYKRFksH5E8gy0iK2?=
- =?us-ascii?Q?ksqmRz7IcdjWjC1Pacd6amQUq2qCHmd+2UaW6p5P6xh5BsZTPKYzIP+KEVbW?=
- =?us-ascii?Q?7FhrHlsNsa4yJ0GB2Lxx/eaHgVn8W6ulad42woOIYNO1NzfQov3eq0R+9Zl/?=
- =?us-ascii?Q?Sz4mzKmC9UM+uQPKd7nsjbW8ySwZNHYG3XwjrVb7SUuPLxUVlwdtysfeisTo?=
- =?us-ascii?Q?B8cTSsSU8HcSU5g8v+PpTgt8dY4f0w4j+4qDOhI3SxBz+vefgokKglefAT63?=
- =?us-ascii?Q?9yregkD/7MdqlmxsX8zF4BlZEFZZCEU3ObN3r+QRmZrDnHJNMfyaWZ7AEBwq?=
- =?us-ascii?Q?bS2yobOOgM7yMJ/Mq42Cp26l2oOT6rjm6igcZrg9lLDBLRuoQMhioe7kSAy3?=
- =?us-ascii?Q?McEikwznsHHkIlLWMhRAgF2pxjm87b2HY5EbMbGIRS+i/kD6PtEVHdbppzZs?=
- =?us-ascii?Q?mO2V5pYH5snnccL1Pkw0HcogCK7A4MbgUx+pSNJXS5fZBNPe2AIVXx881bRX?=
- =?us-ascii?Q?tXo+trr243VAvekXa2jshzYwKWfA9ah/s7TW/AlS8r8mELWjh5BkmcE2OK/e?=
- =?us-ascii?Q?88je9YKdZquw0XmtO+mjx1YLOahs+1asaA9Bq7McW0UqKXBNgRQYTSJ7Pig0?=
- =?us-ascii?Q?3dc3kHrDgvU/HE55EfK4AP0ed26AD5D2CQYn0Ya/sTAGUPJezHSL+DyNC//J?=
- =?us-ascii?Q?tP6RXZsi7yAQdoTO//zePYiFn8gi+1f8jRrKIJU7VR3NNyK9ku7O7BB27yAL?=
- =?us-ascii?Q?7VyiWg2KtiR0yYfohRDxgxTCxad31mmDFhtpSw9pyCyKKy3A25JohYvdSMKJ?=
- =?us-ascii?Q?pZ3aZXSbPSOoirBedx6q8LUyad2YSEN5mJgnF3SqquRO4ce2/qxwUpKdMIB7?=
- =?us-ascii?Q?m0gPTmGXiLSFuWCnO50Q749xbh4/o0l0QZdgGv1/t2Eh9XM+YCXlJd5UET1b?=
- =?us-ascii?Q?4giYf4jC3V7FVMPVMogmW2+7430NFCJKthm6m6+9bsqPZC83B7mfN6Be08J4?=
- =?us-ascii?Q?Y9Um+aGIzSSSL/PkS6IfZHcmFP5TJspH9g0KuHj+7x7l28AnF914HLBLz+8D?=
- =?us-ascii?Q?U/n/G53+eeIqQx/5wYIdDiASntrqCN1A87wrDjjLKsnPPgJuewkFj1/yUC5R?=
- =?us-ascii?Q?6l1SkoIvNQU15HWaZqsTFPHBp+EdbtJlUyHGv5aZA8mevycmJkCDyPasTkvd?=
- =?us-ascii?Q?1jrDFiH9pfkdwWgoVdrW8djNkMUUP202v1qU9OklzJPoe4vUuJ3zCrdYR09Q?=
- =?us-ascii?Q?eR5Z83GG8eOPJPYJo0+JfqmrStTwajDkFkbFyMF6MhzLC70b9RLZyH9jK8gq?=
- =?us-ascii?Q?giXSrl40Eg5TUmxd0q9Mz2MT4avjFzBoz9XQ0iE7A2xOtGvXycQo7rF7bE35?=
- =?us-ascii?Q?KJdrsJCv5Y1oVSBWfNJT7mUPCxWc+x2P/TMd9k6lYpJw?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a0be430-01b5-4e09-0a82-08da6371724d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2022 19:13:32.8014
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J2MqjJ1+78rrobB+gk10zR7JsTgYGKe2VZ4K/5bTgpPnUxAV1QPCNqycbqhibZN/AsxnWELZ8gjeM6UHPv15hw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1639
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220707081301.29961-2-vidyas@nvidia.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 11:22:23AM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 05, 2022 at 08:49:26AM -0700, ira.weiny@intel.com wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Thu, Jul 07, 2022 at 01:42:53PM +0530, Vidya Sagar wrote:
+> Convert the Tegra194 PCIe bindings from the free-form text format to
+> json-schema.
 > 
-> Possible subject:
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> V4:
+> * Addressed review comments from Krzysztof and Rob
 > 
->   PCI/DOE: Add DOE mailbox support functions
+> V3:
+> * New patch in this series. Added as part of addressing Rob's review
+>   comment to convert the existing .txt file to .yaml schema
 > 
-> (no trailing period required)
-> 
-> > Introduced in a PCIe r6.0, sec 6.30, DOE provides a config space based
-> > mailbox with standard protocol discovery.  Each mailbox is accessed
-> > through a DOE Extended Capability.
-> > 
-> > Each DOE mailbox must support the DOE discovery protocol in addition to
-> > any number of additional protocols.
-> > 
-> > Define core PCIe functionality to manage a single PCIe DOE mailbox at a
-> > defined config space offset.  Functionality includes iterating,
-> > creating, query of supported protocol, and task submission.  Destruction
-> > of the mailboxes is device managed.
-> > 
-> > Cc: "Li, Ming" <ming4.li@intel.com>
-> > Cc: Bjorn Helgaas <helgaas@kernel.org>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> Whenever the CXL folks are happy with this:
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> > +static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> > ...
-> > +		pci_err(pdev,
-> > +			"[%x] expected [VID, Protocol] = [%04x, %02x], got [%04x, %02x]\n",
-> 
-> Since the string already wraps, I think there's no benefit to starting
-> it on its own line.  Joining with "pci_err(pdev, "[%x] ..." improves
-> greppability slightly.
-> 
-> > +			pci_err(pdev,
-> > +				"[%x] busy detected; another entity is sending conflicting requests\n",
-> > +				offset);
-> 
-> Ditto.
-> 
-> > + * pci_doe_submit_task() - Submit a task to be processed by the state machine
-> > ...
-> > + * RETURNS: 0 when task has been successful queued, -ERRNO on error
-> 
-> successfully
-> 
-> > +int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> > ...
-> > +	 * DOE requests must be a whole number of DW
-> > +	 * and the response needs to be big enough for at least 1 DW
-> 
-> Rewrap to fill 78 columns or so.
+>  .../bindings/pci/nvidia,tegra194-pcie-ep.yaml | 228 ++++++++++++++++
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     | 245 -----------------
+>  .../bindings/pci/nvidia,tegra194-pcie.yaml    | 257 ++++++++++++++++++
+>  .../devicetree/bindings/pci/snps,dw-pcie.yaml |   2 +-
+>  4 files changed, 486 insertions(+), 246 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
 
-Thanks, I've fixed these up and will submit a 13.1 soon with Willy's change to
-xa_mk_value() which he caught from the other thread.
+[...]
 
-Thanks again for all the review,
-Ira
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> new file mode 100644
+> index 000000000000..5d7cb56c86a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.yaml
+> @@ -0,0 +1,257 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/nvidia,tegra194-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NVIDIA Tegra194 (and later) PCIe controller (Synopsys DesignWare Core based)
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Jon Hunter <jonathanh@nvidia.com>
+> +  - Vidya Sagar <vidyas@nvidia.com>
+> +
+> +description: |
+> +  This PCIe controller is based on the Synopsis Designware PCIe IP and thus
+> +  inherits all the common properties defined in snps,dw-pcie.yaml. Some of the
+> +  controller instances are dual mode where in they can work either in root port
+> +  mode or endpoint mode but one at a time.
+> +
+> +  see nvidia,tegra194-pcie-ep.yaml for details on the endpoint mode device tree
+> +  bindings.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nvidia,tegra194-pcie
+> +
+> +  reg:
+> +    items:
+> +      - description: controller's application logic registers
+> +      - description: configuration registers
+> +      - description: iATU and DMA registers. This is where the iATU (internal
+> +          Address Translation Unit) registers of the PCIe core are made
+> +          available for software access.
+> +      - description: The aperture where the root port's own configuration
+> +          registers are available.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: appl
+> +      - const: config
+> +      - const: atu_dma
+> +      - const: dbi
+> +
+> +  interrupts:
+> +    items:
+> +      - description: controller interrupt
+> +      - description: MSI interrupt
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: intr
+> +      - const: msi
+> +
+> +  clocks:
+> +    items:
+> +      - description: module clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +
+> +  resets:
+> +    items:
+> +      - description: APB bus interface reset
+> +      - description: module reset
+> +
+> +  reset-names:
+> +    items:
+> +      - const: apb
+> +      - const: core
+> +
+> +  phys:
+> +    minItems: 1
+> +    maxItems: 8
+> +
+> +  phy-names:
+> +    minItems: 1
+> +    items:
+> +      - const: p2u-0
+> +      - const: p2u-1
+> +      - const: p2u-2
+> +      - const: p2u-3
+> +      - const: p2u-4
+> +      - const: p2u-5
+> +      - const: p2u-6
+> +      - const: p2u-7
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +    description: |
+> +      A phandle to the node that controls power to the respective PCIe
+> +      controller and a specifier name for the PCIe controller.
+> +
+> +      specifiers are defined in "include/dt-bindings/power/tegra194-powergate.h" file.
+> +
+> +  interconnects:
+> +    items:
+> +      - description: memory read client
+> +      - description: memory write client
+> +
+> +  interconnect-names:
+> +    items:
+> +      - const: dma-mem # read
+> +      - const: write
+> +
+> +  dma-coherent: true
+> +
+> +  nvidia,bpmp:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      Must contain a pair of phandle to BPMP controller node followed by
+> +      controller ID. Following are the controller IDs for each controller:
+> +
+> +        0: C0
+> +        1: C1
+> +        2: C2
+> +        3: C3
+> +        4: C4
+> +        5: C5
+> +    items:
+> +      - items:
+> +          - description: phandle to BPMP controller node
+> +          - description: PCIe controller ID
+> +            maximum: 5
+> +
+> +  nvidia,update-fc-fixup:
+> +    description: |
+> +      This is a boolean property and needs to be present to improve performance
+> +      when a platform is designed in such a way that it satisfies at least one
+> +      of the following conditions thereby enabling root port to exchange
+> +      optimum number of FC (Flow Control) credits with downstream devices:
+> +
+> +        1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
+> +        2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths and
+> +          a) speed is Gen-2 and MPS is 256B
+> +          b) speed is >= Gen-3 with any MPS
+> +
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +  nvidia,aspm-cmrt-us:
+> +    description: Common Mode Restore Time for proper operation of ASPM to be
+> +      specified in microseconds
+> +
+> +  nvidia,aspm-pwr-on-t-us:
+> +    description: Power On time for proper operation of ASPM to be specified in
+> +      microseconds
+> +
+> +  nvidia,aspm-l0s-entrance-latency-us:
+> +    description: ASPM L0s entrance latency to be specified in microseconds
+> +
+> +  vddio-pex-ctl-supply:
+> +    description: A phandle to the regulator supply for PCIe side band signals.
+> +
+> +  vpcie3v3-supply:
+> +    description: A phandle to the regulator node that supplies 3.3V to the slot
+> +      if the platform has one such slot. (Ex:- x16 slot owned by C5 controller
+> +      in p2972-0000 platform).
+> +
+> +  vpcie12v-supply:
+> +    description: A phandle to the regulator node that supplies 12V to the slot
+> +      if the platform has one such slot. (Ex:- x16 slot owned by C5 controller
+> +      in p2972-0000 platform).
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
 
+Already referenced by this:
+
+> +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> +
+> +unevaluatedProperties: false
+> +
+> +required:
+
+> +  - compatible
+> +  - reg
+> +  - reg-names
+
+Already required by snps,dw-pcie.yaml.
+
+> +  - interrupts
+> +  - interrupt-names
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - power-domains
+> +  - bus-range
+
+Should not be required. 0-0xff is the default.
+
+> +  - ranges
+
+Already required by pci-bus.yaml
+
+> +  - vddio-pex-ctl-supply
+> +  - num-lanes
+> +  - phys
+> +  - phy-names
+> +  - nvidia,bpmp
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/tegra194-clock.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/tegra194-powergate.h>
+> +    #include <dt-bindings/reset/tegra194-reset.h>
+> +
+> +    bus@0 {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        ranges = <0x0 0x0 0x0 0x8 0x0>;
+> +
+> +        pcie@14180000 {
+> +            compatible = "nvidia,tegra194-pcie";
+> +            power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+> +            reg = <0x0 0x14180000 0x0 0x00020000>, /* appl registers (128K)      */
+> +                  <0x0 0x38000000 0x0 0x00040000>, /* configuration space (256K) */
+> +                  <0x0 0x38040000 0x0 0x00040000>, /* iATU_DMA reg space (256K)  */
+> +                  <0x0 0x38080000 0x0 0x00040000>; /* DBI reg space (256K)       */
+> +            reg-names = "appl", "config", "atu_dma", "dbi";
+> +
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            device_type = "pci";
+> +            num-lanes = <8>;
+> +            linux,pci-domain = <0>;
+> +
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&pex_rst_c5_out_state>, <&clkreq_c5_bi_dir_state>;
+> +
+> +            clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
+> +            clock-names = "core";
+> +
+> +            resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
+> +                     <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
+> +            reset-names = "apb", "core";
+> +
+> +            interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>, /* controller interrupt */
+> +                         <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>; /* MSI interrupt */
+> +            interrupt-names = "intr", "msi";
+> +
+> +            #interrupt-cells = <1>;
+> +            interrupt-map-mask = <0 0 0 0>;
+> +            interrupt-map = <0 0 0 0 &gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +            nvidia,bpmp = <&bpmp 0>;
+> +
+> +            supports-clkreq;
+> +            nvidia,aspm-cmrt-us = <60>;
+> +            nvidia,aspm-pwr-on-t-us = <20>;
+> +            nvidia,aspm-l0s-entrance-latency-us = <3>;
+> +
+> +            bus-range = <0x0 0xff>;
+> +            ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000>, /* downstream I/O */
+> +                     <0x82000000 0x0  0x38200000 0x0  0x38200000 0x0 0x01e00000>, /* non-prefetch memory */
+> +                     <0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>; /* prefetchable memory */
+> +
+> +            vddio-pex-ctl-supply = <&vdd_1v8ao>;
+> +            vpcie3v3-supply = <&vdd_3v3_pcie>;
+> +            vpcie12v-supply = <&vdd_12v_pcie>;
+> +
+> +            phys = <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
+> +                   <&p2u_hsio_5>;
+> +            phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> index c90e5e2d25f6..7e0bf941fbfe 100644
+> --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> @@ -35,7 +35,7 @@ properties:
+>      maxItems: 5
+>      items:
+>        enum: [ dbi, dbi2, config, atu, app, elbi, mgmt, ctrl, parf, cfg, link,
+> -              ulreg, smu, mpu, apb, phy ]
+> +              ulreg, smu, mpu, apb, phy, appl, atu_dma ]
+
+I'd put 'appl' next to 'app' and 'atu_dma' next to 'atu'.
+
+With those fixes,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+
+Rob
