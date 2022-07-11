@@ -2,138 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41A4C570473
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 15:39:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 813D45705CC
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 16:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbiGKNjD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 09:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
+        id S231365AbiGKOix (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jul 2022 10:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229654AbiGKNjC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 09:39:02 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29B532471;
-        Mon, 11 Jul 2022 06:38:58 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id r14so7079523wrg.1;
-        Mon, 11 Jul 2022 06:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ijkgD7ZriVJmUcfff67pNvWh6S6gwoHm/DJ12ZvJ9uA=;
-        b=e1h/336AU3nLPRUhstVU3Zt54ZKFfwqDbDZrHkci4ufZvR41oQG3QHh917PrOnzbmX
-         etinpldZ3qW8q4BjMe4zNjyUmN6gZMW62KNhQOZZJrbNZw7wC/X6rwrYrNlw5plpPVi8
-         IHmxuyiTUF4R77svK2aC8Rc4iCzjjOQVjzLB3q4G/1GHIu+/Odmo0AdIRhZMdLIdF14o
-         Hd8Pho1MClLLqTq6yeYYIwwZZf41HaOaixfaMP2xGEinBOq00En9bkzMz6wsiuTmxeB5
-         fI9ZD6tCnit+KDMooQ7Z0H3QVXVKCVT9SDClG1q3SXdaxO/La4ApaftoQiTtbyycX++R
-         WA3g==
+        with ESMTP id S231379AbiGKOir (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 10:38:47 -0400
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB6C110F;
+        Mon, 11 Jul 2022 07:38:45 -0700 (PDT)
+Received: by mail-il1-f181.google.com with SMTP id v2so3118641ilo.7;
+        Mon, 11 Jul 2022 07:38:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=ijkgD7ZriVJmUcfff67pNvWh6S6gwoHm/DJ12ZvJ9uA=;
-        b=C5oy8s8RmkNwEUAT+zp/ZQXS75Ej7DKvDsSj02D64KV1ut5sVh9ByWu3VBFoi0djSq
-         dhYLkHpRX2ofZl1AV0vlzkNs/bA/kSreX+Fb9neOWcD94LStHIxKi+2KCOXMckW3h+OR
-         5f+9HG4UciPDJ3iDqNPFZtnU1f4Et733o9hjMENxC3EvL7pSyXumW2bQ3MzQN3bgkH/k
-         0O5qLQa2uTAeVzWoY2lIlzxhgKvt+pjyhpXPY94vGorC+mBls0Dx+IfXdaJmUBh8VSlg
-         /+1+bTv684Gbvn6K6cp7qdZjPqeem0y0V+LFZ/Frk8vp2FJwlfV8agKlFKF7I1FfO3y6
-         ukTw==
-X-Gm-Message-State: AJIora8saWO5gAP03dLCFoy9pXfPpvPwOnLMNzoB8kU3saFd6wtppRvX
-        6iIEnqoiH5McFXTdn/yMdoM=
-X-Google-Smtp-Source: AGRyM1s1l03Qmp8/F9WVwyipXx6JeVkeH8936Z/lS/k2eMqhzt0t4DbF29+0Ns6/hr1NHmDgBLjlsw==
-X-Received: by 2002:a5d:4982:0:b0:21d:6e04:1fb3 with SMTP id r2-20020a5d4982000000b0021d6e041fb3mr16929899wrq.69.1657546737253;
-        Mon, 11 Jul 2022 06:38:57 -0700 (PDT)
-Received: from gmail.com ([81.168.73.77])
-        by smtp.gmail.com with ESMTPSA id h126-20020a1c2184000000b003a18de85a64sm6910219wmh.24.2022.07.11.06.38.56
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QI8NoXmTu99A3BGvUDI/8ShLiNFWmdGoMBR5ix0lWDo=;
+        b=isFWdPpUsJEtb3YRqEZyVZhJdZUgu6rdoaukTP8lBnC3z2f8C7vYXvm2NozLaGg5lw
+         TFT+4lZQc/RFEFZASQzNz5nrZ26Rq7RFhrgBV3/fE3CzHSq5cXToSiHuDJPqyaNQ5QHt
+         1Jd2jl9+CPja65JysdSisuAhBlzoUvkd6PDuUJR0xITokLDEytfr2rTagL4+aMTOGhJU
+         QIaw6qW9wxPgyoZKgO0PMu7xZ9TQy9kugpNSk61mLCmWJSjzITQQeJb7tFRyk+8nDdyu
+         4wUkkh36wnL4qH/SC6upR4gYHa6zj6Ka2yrx9ZYNxPqpXf8szltwE20H5nBHbfJYyn2b
+         l0Vg==
+X-Gm-Message-State: AJIora+vMsqjZHl2nThta2mBgmSov+a5uKhzx5UHgiCbN5Q9ujwoqOws
+        rHm+K3A2uEjcZzx1T5ZkCA==
+X-Google-Smtp-Source: AGRyM1vv3IGpJxVA3/ctWFf3shZBxzdiPh3c5Ui151b/79yHG8d9Nn0GwZ8SPYFxfnp8pK50KoGb7g==
+X-Received: by 2002:a05:6e02:164b:b0:2dc:85e3:238b with SMTP id v11-20020a056e02164b00b002dc85e3238bmr1220980ilu.121.1657550324397;
+        Mon, 11 Jul 2022 07:38:44 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id r16-20020a92c5b0000000b002dad39ff841sm2787827ilt.19.2022.07.11.07.38.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 06:38:56 -0700 (PDT)
-Date:   Mon, 11 Jul 2022 14:38:54 +0100
-From:   Martin Habets <habetsm.xilinx@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-        edumazet@google.com, netdev@vger.kernel.org,
-        ecree.xilinx@gmail.com, linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH net-next v2 0/2] sfc: Add EF100 BAR config support
-Message-ID: <Yswn7p+OWODbT7AR@gmail.com>
-Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>, davem@davemloft.net,
-        kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-        netdev@vger.kernel.org, ecree.xilinx@gmail.com,
-        linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <165719918216.28149.7678451615870416505.stgit@palantir17.mph.net>
- <20220707155500.GA305857@bhelgaas>
+        Mon, 11 Jul 2022 07:38:44 -0700 (PDT)
+Received: (nullmailer pid 3845949 invoked by uid 1000);
+        Mon, 11 Jul 2022 14:38:42 -0000
+Date:   Mon, 11 Jul 2022 08:38:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     kthota@nvidia.com, sagar.tv@gmail.com, lpieralisi@kernel.org,
+        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+        kishon@ti.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, jonathanh@nvidia.com,
+        gustavo.pimentel@synopsys.com, linux-tegra@vger.kernel.org,
+        thierry.reding@gmail.com, mmaddireddy@nvidia.com,
+        jingoohan1@gmail.com, kw@linux.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 3/9] dt-bindings: PCI: tegra234: Add schema for
+ tegra234 endpoint mode
+Message-ID: <20220711143842.GA3840001-robh@kernel.org>
+References: <20220707081301.29961-1-vidyas@nvidia.com>
+ <20220707081301.29961-4-vidyas@nvidia.com>
+ <1657196871.476299.1454231.nullmailer@robh.at.kernel.org>
+ <afc9cd15-a895-792f-3f49-1dca3694b0f3@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220707155500.GA305857@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <afc9cd15-a895-792f-3f49-1dca3694b0f3@nvidia.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 10:55:00AM -0500, Bjorn Helgaas wrote:
-> On Thu, Jul 07, 2022 at 02:07:07PM +0100, Martin Habets wrote:
-> > The EF100 NICs allow for different register layouts of a PCI memory BAR.
-> > This series provides the framework to switch this layout at runtime.
-> > 
-> > Subsequent patch series will use this to add support for vDPA.
+On Sat, Jul 09, 2022 at 08:03:45AM +0530, Vidya Sagar wrote:
 > 
-> Normally drivers rely on the PCI Vendor and Device ID to learn the
-> number of BARs and their layouts.  I guess this series implies that
-> doesn't work on this device?  And the user needs to manually specify
-> what kind of device this is?
-
-When a new PCI device is added (like a VF) it always starts of with
-the register layout for an EF100 network device. This is hardcoded,
-i.e. it cannot be customised.
-The layout can be changed after bootup, and only after the sfc driver has
-bound to the device.
-The PCI Vendor and Device ID do not change when the layout is changed.
-
-For vDPA specifically we return the Xilinx PCI Vendor and our device ID
-to the vDPA framework via struct vdpa_config_opts.
-
-> I'm confused about how this is supposed to work.  What if the driver
-> is built-in and claims a device before the user can specify the
-> register layout?
-
-The bar_config file will only exist once the sfc driver has bound to
-the device. So in fact we count on that driver getting loaded.
-When a new value is written to bar_config it is the sfc driver that
-instructs the NIC to change the register layout.
-
-> What if the user specifies the wrong layout and the
-> driver writes to the wrong registers?
-
-We have specific hardware and driver requirements for this sort of
-situation. For example, the register layouts must have some common
-registers (to ensure some compatibility).
-A layout that is too different will require a separate device ID.
-A driver that writes to the wrong register is a bug.
-
-Maybe the name "bar_config" is causing most of the confusion here.
-Internally we also talk about "function profiles" or "personalities",
-but we thought such a name would be too vague.
-
-Martin
-
-> > ---
-> > 
-> > Martin Habets (2):
-> >       sfc: Add EF100 BAR config support
-> >       sfc: Implement change of BAR configuration
+> 
+> On 7/7/2022 5:57 PM, Rob Herring wrote:
+> > External email: Use caution opening links or attachments
 > > 
 > > 
-> >  drivers/net/ethernet/sfc/ef100_nic.c |   80 ++++++++++++++++++++++++++++++++++
-> >  drivers/net/ethernet/sfc/ef100_nic.h |    6 +++
-> >  2 files changed, 86 insertions(+)
+> > On Thu, 07 Jul 2022 13:42:55 +0530, Vidya Sagar wrote:
+> > > Add support for PCIe controllers that operate in the endpoint mode
+> > > in tegra234 chipset.
+> > > 
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > ---
+> > > V4:
+> > > * Rebased on top of previous patch
+> > > 
+> > > V3:
+> > > * New patch in this series
+> > > 
+> > >   .../bindings/pci/nvidia,tegra194-pcie-ep.yaml | 123 +++++++++++++++++-
+> > >   1 file changed, 117 insertions(+), 6 deletions(-)
+> > > 
 > > 
-> > --
-> > Martin Habets <habetsm.xilinx@gmail.com>
+> > My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> > 
+> > yamllint warnings/errors:
+> > 
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.example.dtb: pcie-ep@141a0000: Unevaluated properties are not allowed ('nvidia,enable-ext-refclk' was unexpected)
+> >          From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
+> > 
+> > doc reference errors (make refcheckdocs):
+> > 
+> > See https://patchwork.ozlabs.org/patch/
+> > 
+> > This check can fail if there are any dependencies. The base for a patch
+> > series is generally the most recent rc1.
+> > 
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> > date:
+> > 
+> > pip3 install dtschema --upgrade
+> > 
+> > Please check and re-submit.
+> 
+> I did run 'make dt_binding_check' before sending the patches for review and
+> didn't observe any issue. Just to make sure that I observe the same issue
+> locally, I updated dtschema and gave DT_CHECKER_FLAGS=-m and yet didn't
+> observe the tool reporting any issue.
+> FWIW, I think I missed adding the documentation for
+> 'nvidia,enable-ext-refclk' property. I'll add it and send again, but before
+> that, I would like to see if my change addresses the issue correctly and
+> also there are no other issues. Could you please help me with why I'm not
+> observing the issue locally?
+
+There's a fix for unevaluatedProperties that's only in the dtschema main 
+branch and not yet in a release.
+
+Rob
