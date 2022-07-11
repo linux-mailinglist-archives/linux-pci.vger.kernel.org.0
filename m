@@ -2,58 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF7715701C4
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 14:10:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9DDB5703AF
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Jul 2022 14:59:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231624AbiGKMKt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jul 2022 08:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39272 "EHLO
+        id S229679AbiGKM7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jul 2022 08:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231620AbiGKMKs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 08:10:48 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B10C49B4B;
-        Mon, 11 Jul 2022 05:10:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3846CB80ED7;
-        Mon, 11 Jul 2022 12:10:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8895C34115;
-        Mon, 11 Jul 2022 12:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657541445;
-        bh=A2vqBbzpMVWKfDpC3m2AhDB490zHtivAEnRyuR6TAjY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ue5p6kKSr04mMCumm+ey6QjwRCScrVXkcQFvhov3N8VFxcOvj1Z8hMxH8tMHH8sU+
-         HnydaS6OeroOUvNXnn/dJ8URrtOrgMgRd0mQKua7ZsNX7tRDmvHm2ez85poO1yTcbk
-         dHVo2Id1iTcVl+nMk6j4bxs1nJqOBVRnOlkNWfEZxMJCqPxj5qMvt6FlVehufTNhTj
-         oD0Smi6zULtkbVrVl+oeUv9YyuZGUQpL29jKNepGzajkFEu6Md12wRDVGQUZaQ7kpX
-         Kv6nwALF2Afz+F4iwpDKAs5DvNFzZKIXTSB5WDlmwwOM/l4k0AeyZ26qulfxUuiFWT
-         alfxwduBeHAVA==
-Received: by pali.im (Postfix)
-        id 61D32276F; Mon, 11 Jul 2022 14:10:42 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S232090AbiGKM6s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jul 2022 08:58:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5353F6559B
+        for <linux-pci@vger.kernel.org>; Mon, 11 Jul 2022 05:58:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657544275;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o5Nsw6JQqAFz7iPy3gn9GJSjCtE8dQQPM/HAEaey5x4=;
+        b=bWCf7rU3vsMx1OLNGWpIiaBYD/KoeMlBpQbomQe/sJRX0kF0s8u1dVxJwszh6ZODrsTRYz
+        us6KOUAW5kprNNlQgVbQwAormsx8CqnVETUAJkyIS9J2gUrCRB222Gwv3xNnbJ5YOpo28h
+        eeCYIlRMMQCq+AF9Yppu1YswPoqlZHI=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-271-4ifFgM9cPgaC8E5WmKExeA-1; Mon, 11 Jul 2022 08:57:54 -0400
+X-MC-Unique: 4ifFgM9cPgaC8E5WmKExeA-1
+Received: by mail-io1-f69.google.com with SMTP id r15-20020a6bd90f000000b0067b9b7acc50so501179ioc.15
+        for <linux-pci@vger.kernel.org>; Mon, 11 Jul 2022 05:57:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=o5Nsw6JQqAFz7iPy3gn9GJSjCtE8dQQPM/HAEaey5x4=;
+        b=1NIQaoms0426VGeONPzv99Sn4pNZazQNtmkLLXxHWHp7XgrbC72jgTODD5VLmBDxKR
+         2qjSFiV7ZqJcP68A3JN5OG2YUYZdr777sv43Kq8usz49hDODDp/zg3Ak8BChVyLrQ5Xz
+         F1cmwpgvWx4otJiXxmBMYIQBvSN1fkkkP/Gvk2yYtk+KLHiX1gunqBBq1rATWANqpndh
+         tChsXMFOzTnkvrU3qmGSJGyH9kXDNNQuBnzkdqLFpmPw7TjUWaDChzWGbUzj9TVfSVEV
+         B3ity2oSZY/Mv/D8rv9CBXAjQclB80DPVH+CZRIQrJOuI3UKXBRdJzdW+wH4Lq2EPi3c
+         Z6nQ==
+X-Gm-Message-State: AJIora8Y/Xrp1LJS6Ck2Ee481iNhk4EqBk1uibUiig0m7gOePxBk8QtF
+        h0jBe62W85kkqOS1m2ScsWJnufZnaYhbR6zIy3jr3lESBzoPl4KQ+FNEkcFk/J64Q3er1yIU5cc
+        JUrRGwH37a/xiESqqfwrN
+X-Received: by 2002:a92:d342:0:b0:2dc:365b:28f2 with SMTP id a2-20020a92d342000000b002dc365b28f2mr9706506ilh.67.1657544273915;
+        Mon, 11 Jul 2022 05:57:53 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vykKbfv8Khf64NN0lmMPSoXDbZrcv9tsbqYhk70TqkgEDeZ1eTfuZs3u8OS2iSy5LTVaChyA==
+X-Received: by 2002:a92:d342:0:b0:2dc:365b:28f2 with SMTP id a2-20020a92d342000000b002dc365b28f2mr9706494ilh.67.1657544273607;
+        Mon, 11 Jul 2022 05:57:53 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id d6-20020a92d5c6000000b002dc78ec7f2bsm1480601ilq.48.2022.07.11.05.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jul 2022 05:57:53 -0700 (PDT)
+Date:   Mon, 11 Jul 2022 06:57:51 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Abhishek Sahu <abhsahu@nvidia.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] PCI: aardvark: Do static allocation of irq_chip
-Date:   Mon, 11 Jul 2022 14:06:26 +0200
-Message-Id: <20220711120626.11492-3-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220711120626.11492-1-pali@kernel.org>
-References: <20220711120626.11492-1-pali@kernel.org>
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/6] vfio/pci: Mask INTx during runtime suspend
+Message-ID: <20220711065751.4c082618.alex.williamson@redhat.com>
+In-Reply-To: <31109e06-48f5-0a12-b310-e284a7b517db@nvidia.com>
+References: <20220701110814.7310-1-abhsahu@nvidia.com>
+        <20220701110814.7310-2-abhsahu@nvidia.com>
+        <20220706093945.30d65ce6.alex.williamson@redhat.com>
+        <3b143762-d6ce-ac70-59ae-a0c2e66ffc1b@nvidia.com>
+        <20220708094508.49ba647f.alex.williamson@redhat.com>
+        <31109e06-48f5-0a12-b310-e284a7b517db@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,84 +90,217 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is no need to allocate struct irq_chip in pci-aardvark.c dynamically
-at runtime. Use static allocation like for any other irq_chip usage.
+On Mon, 11 Jul 2022 14:48:34 +0530
+Abhishek Sahu <abhsahu@nvidia.com> wrote:
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
+> On 7/8/2022 9:15 PM, Alex Williamson wrote:
+> > On Fri, 8 Jul 2022 14:51:30 +0530
+> > Abhishek Sahu <abhsahu@nvidia.com> wrote:
+> >  =20
+> >> On 7/6/2022 9:09 PM, Alex Williamson wrote: =20
+> >>> On Fri, 1 Jul 2022 16:38:09 +0530
+> >>> Abhishek Sahu <abhsahu@nvidia.com> wrote:
+> >>>    =20
+> >>>> This patch adds INTx handling during runtime suspend/resume.
+> >>>> All the suspend/resume related code for the user to put the device
+> >>>> into the low power state will be added in subsequent patches.
+> >>>>
+> >>>> The INTx are shared among devices. Whenever any INTx interrupt comes=
+   =20
+> >>>
+> >>> "The INTx lines may be shared..."
+> >>>    =20
+> >>>> for the VFIO devices, then vfio_intx_handler() will be called for ea=
+ch
+> >>>> device. Inside vfio_intx_handler(), it calls pci_check_and_mask_intx=
+()   =20
+> >>>
+> >>> "...device sharing the interrupt."
+> >>>    =20
+> >>>> and checks if the interrupt has been generated for the current devic=
+e.
+> >>>> Now, if the device is already in the D3cold state, then the config s=
+pace
+> >>>> can not be read. Attempt to read config space in D3cold state can
+> >>>> cause system unresponsiveness in a few systems. To prevent this, mask
+> >>>> INTx in runtime suspend callback and unmask the same in runtime resu=
+me
+> >>>> callback. If INTx has been already masked, then no handling is needed
+> >>>> in runtime suspend/resume callbacks. 'pm_intx_masked' tracks this, a=
+nd
+> >>>> vfio_pci_intx_mask() has been updated to return true if INTx has been
+> >>>> masked inside this function.
+> >>>>
+> >>>> For the runtime suspend which is triggered for the no user of VFIO
+> >>>> device, the is_intx() will return false and these callbacks won't do
+> >>>> anything.
+> >>>>
+> >>>> The MSI/MSI-X are not shared so similar handling should not be
+> >>>> needed for MSI/MSI-X. vfio_msihandler() triggers eventfd_signal()
+> >>>> without doing any device-specific config access. When the user perfo=
+rms
+> >>>> any config access or IOCTL after receiving the eventfd notification,
+> >>>> then the device will be moved to the D0 state first before
+> >>>> servicing any request.
+> >>>>
+> >>>> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+> >>>> ---
+> >>>>  drivers/vfio/pci/vfio_pci_core.c  | 37 +++++++++++++++++++++++++++-=
 ---
- drivers/pci/controller/pci-aardvark.c | 24 +++++++-----------------
- 1 file changed, 7 insertions(+), 17 deletions(-)
+> >>>>  drivers/vfio/pci/vfio_pci_intrs.c |  6 ++++-
+> >>>>  include/linux/vfio_pci_core.h     |  3 ++-
+> >>>>  3 files changed, 40 insertions(+), 6 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfi=
+o_pci_core.c
+> >>>> index a0d69ddaf90d..5948d930449b 100644
+> >>>> --- a/drivers/vfio/pci/vfio_pci_core.c
+> >>>> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> >>>> @@ -259,16 +259,45 @@ int vfio_pci_set_power_state(struct vfio_pci_c=
+ore_device *vdev, pci_power_t stat
+> >>>>  	return ret;
+> >>>>  }
+> >>>> =20
+> >>>> +#ifdef CONFIG_PM
+> >>>> +static int vfio_pci_core_runtime_suspend(struct device *dev)
+> >>>> +{
+> >>>> +	struct vfio_pci_core_device *vdev =3D dev_get_drvdata(dev);
+> >>>> +
+> >>>> +	/*
+> >>>> +	 * If INTx is enabled, then mask INTx before going into the runtime
+> >>>> +	 * suspended state and unmask the same in the runtime resume.
+> >>>> +	 * If INTx has already been masked by the user, then
+> >>>> +	 * vfio_pci_intx_mask() will return false and in that case, INTx
+> >>>> +	 * should not be unmasked in the runtime resume.
+> >>>> +	 */
+> >>>> +	vdev->pm_intx_masked =3D (is_intx(vdev) && vfio_pci_intx_mask(vdev=
+));
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int vfio_pci_core_runtime_resume(struct device *dev)
+> >>>> +{
+> >>>> +	struct vfio_pci_core_device *vdev =3D dev_get_drvdata(dev);
+> >>>> +
+> >>>> +	if (vdev->pm_intx_masked)
+> >>>> +		vfio_pci_intx_unmask(vdev);
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +#endif /* CONFIG_PM */
+> >>>> +
+> >>>>  /*
+> >>>> - * The dev_pm_ops needs to be provided to make pci-driver runtime P=
+M working,
+> >>>> - * so use structure without any callbacks.
+> >>>> - *
+> >>>>   * The pci-driver core runtime PM routines always save the device s=
+tate
+> >>>>   * before going into suspended state. If the device is going into l=
+ow power
+> >>>>   * state with only with runtime PM ops, then no explicit handling i=
+s needed
+> >>>>   * for the devices which have NoSoftRst-.
+> >>>>   */
+> >>>> -static const struct dev_pm_ops vfio_pci_core_pm_ops =3D { };
+> >>>> +static const struct dev_pm_ops vfio_pci_core_pm_ops =3D {
+> >>>> +	SET_RUNTIME_PM_OPS(vfio_pci_core_runtime_suspend,
+> >>>> +			   vfio_pci_core_runtime_resume,
+> >>>> +			   NULL)
+> >>>> +};
+> >>>> =20
+> >>>>  int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+> >>>>  {
+> >>>> diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vf=
+io_pci_intrs.c
+> >>>> index 6069a11fb51a..1a37db99df48 100644
+> >>>> --- a/drivers/vfio/pci/vfio_pci_intrs.c
+> >>>> +++ b/drivers/vfio/pci/vfio_pci_intrs.c
+> >>>> @@ -33,10 +33,12 @@ static void vfio_send_intx_eventfd(void *opaque,=
+ void *unused)
+> >>>>  		eventfd_signal(vdev->ctx[0].trigger, 1);
+> >>>>  }
+> >>>> =20
+> >>>> -void vfio_pci_intx_mask(struct vfio_pci_core_device *vdev)
+> >>>> +/* Returns true if INTx has been masked by this function. */
+> >>>> +bool vfio_pci_intx_mask(struct vfio_pci_core_device *vdev)
+> >>>>  {
+> >>>>  	struct pci_dev *pdev =3D vdev->pdev;
+> >>>>  	unsigned long flags;
+> >>>> +	bool intx_masked =3D false;
+> >>>> =20
+> >>>>  	spin_lock_irqsave(&vdev->irqlock, flags);
+> >>>> =20
+> >>>> @@ -60,9 +62,11 @@ void vfio_pci_intx_mask(struct vfio_pci_core_devi=
+ce *vdev)
+> >>>>  			disable_irq_nosync(pdev->irq);
+> >>>> =20
+> >>>>  		vdev->ctx[0].masked =3D true;
+> >>>> +		intx_masked =3D true;
+> >>>>  	}
+> >>>> =20
+> >>>>  	spin_unlock_irqrestore(&vdev->irqlock, flags);
+> >>>> +	return intx_masked;
+> >>>>  }   =20
+> >>>
+> >>>
+> >>> There's certainly another path through this function that masks the
+> >>> interrupt, which makes the definition of this return value a bit
+> >>> confusing.   =20
+> >>
+> >>  For our case we should not hit that path. But we can return the
+> >>  intx_masked true from that path as well to align return value.
+> >> =20
+> >>> Wouldn't it be simpler not to overload the masked flag on
+> >>> the interrupt context like this and instead set a new flag on the vdev
+> >>> under irqlock to indicate the device is unable to generate interrupts.
+> >>> The irq handler would add a test of this flag before any tests that
+> >>> would access the device.  Thanks,
+> >>>
+> >>> Alex
+> >>>     =20
+> >>
+> >>  We will set this flag inside runtime_suspend callback but the
+> >>  device can be in non-D3cold state (For example, if user has
+> >>  disabled d3cold explicitly by sysfs, the D3cold is not supported in
+> >>  the platform, etc.). Also, in D3cold supported case, the device will
+> >>  be in D0 till the PCI core moves the device into D3cold. In this case,
+> >>  there is possibility that the device can generate an interrupt.
+> >>  If we add check in the IRQ handler, then we won=E2=80=99t check and c=
+lear
+> >>  the IRQ status, but the interrupt line will still be asserted
+> >>  which can cause interrupt flooding.
+> >>
+> >>  This was the reason for disabling interrupt itself instead of
+> >>  checking flag in the IRQ handler. =20
+> >=20
+> > Ok, maybe this is largely a clarification of the return value of
+> > vfio_pci_intx_mask().  I think what you're looking for is whether the
+> > context mask was changed, rather than whether the interrupt is masked,
+> > which I think avoids the confusion regarding whether the first branch
+> > should return true or false.  So the variable should be something like
+> > "masked_changed" and the comment changed to "Returns true if the INTx
+> > vfio_pci_irq_ctx.masked value is changed".
+> >  =20
+>=20
+>  Thanks Alex.
+>  I will rename the variable and update the comment.
+>=20
+> > Testing is_intx() outside of the irqlock is potentially racy, so do we
+> > need to add the pm-get/put wrappers on ioctls first to avoid the
+> > possibility that pm-suspend can race a SET_IRQS ioctl?  Thanks,
+> >=20
+> > Alex
+> >  =20
+> =20
+>  Even after adding this patch, the runtime suspend will not be supported
+>  for the device with users. It will be supported only after patch 4 in
+>  this patch series. So with this patch, the pm-suspend can be called only
+>  for the cases where vfio device has no user and there we should not see
+>  the race condition.
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 8bea5801d50a..74511f015168 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -274,7 +274,6 @@ struct advk_pcie {
- 	u8 wins_count;
- 	struct irq_domain *rp_irq_domain;
- 	struct irq_domain *irq_domain;
--	struct irq_chip irq_chip;
- 	raw_spinlock_t irq_lock;
- 	struct irq_domain *msi_domain;
- 	struct irq_domain *msi_inner_domain;
-@@ -1328,13 +1327,19 @@ static void advk_pcie_irq_unmask(struct irq_data *d)
- 	raw_spin_unlock_irqrestore(&pcie->irq_lock, flags);
- }
- 
-+static struct irq_chip advk_irq_chip = {
-+	.name = "advk-INTx",
-+	.irq_mask = advk_pcie_irq_mask,
-+	.irq_unmask = advk_pcie_irq_unmask,
-+};
-+
- static int advk_pcie_irq_map(struct irq_domain *h,
- 			     unsigned int virq, irq_hw_number_t hwirq)
- {
- 	struct advk_pcie *pcie = h->host_data;
- 
- 	irq_set_status_flags(virq, IRQ_LEVEL);
--	irq_set_chip_and_handler(virq, &pcie->irq_chip,
-+	irq_set_chip_and_handler(virq, &advk_irq_chip,
- 				 handle_level_irq);
- 	irq_set_chip_data(virq, pcie);
- 
-@@ -1394,7 +1399,6 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
- 	struct device *dev = &pcie->pdev->dev;
- 	struct device_node *node = dev->of_node;
- 	struct device_node *pcie_intc_node;
--	struct irq_chip *irq_chip;
- 	int ret = 0;
- 
- 	raw_spin_lock_init(&pcie->irq_lock);
-@@ -1405,28 +1409,14 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
- 		return -ENODEV;
- 	}
- 
--	irq_chip = &pcie->irq_chip;
--
--	irq_chip->name = devm_kasprintf(dev, GFP_KERNEL, "%s-irq",
--					dev_name(dev));
--	if (!irq_chip->name) {
--		ret = -ENOMEM;
--		goto out_put_node;
--	}
--
--	irq_chip->irq_mask = advk_pcie_irq_mask;
--	irq_chip->irq_unmask = advk_pcie_irq_unmask;
--
- 	pcie->irq_domain =
- 		irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
- 				      &advk_pcie_irq_domain_ops, pcie);
- 	if (!pcie->irq_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
- 		ret = -ENOMEM;
--		goto out_put_node;
- 	}
- 
--out_put_node:
- 	of_node_put(pcie_intc_node);
- 	return ret;
- }
--- 
-2.20.1
+We should also not see is_intx() true for unused devices.  Thanks,
+
+Alex
 
