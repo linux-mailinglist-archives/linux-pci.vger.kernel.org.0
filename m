@@ -2,47 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36970571EC7
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 17:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67EBE571EE1
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 17:21:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230517AbiGLPSK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jul 2022 11:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
+        id S233389AbiGLPVs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jul 2022 11:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232714AbiGLPRu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jul 2022 11:17:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EEBCF6CB
-        for <linux-pci@vger.kernel.org>; Tue, 12 Jul 2022 08:12:46 -0700 (PDT)
+        with ESMTP id S233466AbiGLPVW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jul 2022 11:21:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3159A14025;
+        Tue, 12 Jul 2022 08:18:52 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 09C09615D1
-        for <linux-pci@vger.kernel.org>; Tue, 12 Jul 2022 15:12:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A2FC3411C;
-        Tue, 12 Jul 2022 15:12:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CC0B3B819D1;
+        Tue, 12 Jul 2022 15:18:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33190C3411C;
+        Tue, 12 Jul 2022 15:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657638765;
-        bh=zYmYv+p2ZYyw8Xl+wl1xc6VDkuo1V92KQk+eFvF0m3s=;
+        s=k20201202; t=1657639129;
+        bh=SQi3anDx9ImSp0D1yOJfqnUIR/zJGBkVtJpq68FoFhQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pBlTTDR6s7OkNOKejaQP5YDxwFzIRe7mWA4YBEfXMOAXrvkDxyhFxp5CEy/5B82U+
-         L4MT0vSY+oyFkUh4pizP2ZXAgDkacYPi3EPxx6xkZCETyTVNOcJW0wyCf1q12avttI
-         y0KOXtDNuZe3mjAJNiMbyLb04wjWiaOTsw8fvfCvdzsdikcdwzGx4uXLz3kT710Iwl
-         xn0YqIwvBRwyr3HRu5YH5WJHVJLwBSq0jm7LTcpi8b6hoOXyXRdl63NYD98x2LBYOv
-         XvOevskwPhwmSTjhYqK+oO3zmPng99bJnlXKeOjB089n26lAtJ1bqXP8wdNLbRUl6l
-         yYGtOuty4UmWA==
-Date:   Tue, 12 Jul 2022 10:12:43 -0500
+        b=U/h1ew29u9NtkfB80rucIkfFo/GIuuYudh5bE66AyjeA2t3WhyGQO3c+y3eqkD66g
+         l2iHPYulITFhQUtGRqySg0IPC+KopRZBXFeOzIUvyOP6P8DHO6olAraT0efGQWqNDa
+         zfVCeb8v2uZvYE9mqGAclQiS13kzOVFG1JGD5YI+WUqHkyXMo2XyvCcXKtSeuE6PWo
+         uC0IWcjNCXnYAxC4A7lXh8vY6V7ZDIyJJHPO/JTMQQgME94rRT9/QvLtKAE+mHXlWc
+         e+PDoYYrdunsCD4J9es1gHu+mDeIlAqoJ7sh0kf2BVSWOMfj1Wa5iVv7hNmTLuqcU1
+         9YcIjOcMN+mWw==
+Date:   Tue, 12 Jul 2022 10:18:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        kbuild-all@lists.01.org, linux-pci@vger.kernel.org
-Subject: Re: [helgaas-pci:pci/aspm 1/1] drivers/pci/pci.c:1391:17: error:
- implicit declaration of function 'pcie_aspm_pm_state_change'
-Message-ID: <20220712151243.GA766749@bhelgaas>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Shunsuke Mie <mie@igel.co.jp>, Li Chen <lchen@ambarella.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: endpoint: IS_ERR() vs NULL bug in
+ pci_epf_test_init_dma_chan()
+Message-ID: <20220712151847.GA767932@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202207121915.ogXzRUd6-lkp@intel.com>
+In-Reply-To: <Ys2GSTnZhuLzzQG5@kili>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,122 +60,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 07:26:53PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aspm
-> head:   a27544423802e94e88da50b6bfd6cceedcd7dab6
-> commit: a27544423802e94e88da50b6bfd6cceedcd7dab6 [1/1] PCI/ASPM: Remove pcie_aspm_pm_state_change()
-> config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20220712/202207121915.ogXzRUd6-lkp@intel.com/config)
-> compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
-> reproduce (this is a W=1 build):
->         # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=a27544423802e94e88da50b6bfd6cceedcd7dab6
->         git remote add helgaas-pci https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
->         git fetch --no-tags helgaas-pci pci/aspm
->         git checkout a27544423802e94e88da50b6bfd6cceedcd7dab6
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
+On Tue, Jul 12, 2022 at 05:33:45PM +0300, Dan Carpenter wrote:
+> The dma_request_channel() function doesn't return error pointers, it
+> returns NULL.
 > 
-> If you fix the issue, kindly add following tag where applicable
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/pci/pci.c: In function 'pci_set_low_power_state':
-> >> drivers/pci/pci.c:1391:17: error: implicit declaration of function 'pcie_aspm_pm_state_change' [-Werror=implicit-function-declaration]
->     1391 |                 pcie_aspm_pm_state_change(dev->bus->self);
->          |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
->    cc1: some warnings being treated as errors
+> Fixes: fff86dfbbf82 ("PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-This happened because Kai-Heng's original patch was posted before
-Rafael's restructuring in 10aa5377fc8a ("PCI/PM: Split
-pci_raw_set_power_state()") and 7957d201456f ("PCI/PM: Relocate
-pci_set_low_power_state()"), which added another call.
+Thanks, I squashed this into fff86dfbbf82 on my pci/ctrl/dwc-edma
+branch.  I added a mention of Shunsuke's previous post of a similar
+fix, but merged this one because it fixes both the RX and TX paths.
 
-I dropped the new call as well.
-
-> vim +/pcie_aspm_pm_state_change +1391 drivers/pci/pci.c
+> ---
+> v2: Clean up the first IS_ERR_OR_NULL() check as well
 > 
-> 0e5dd46b761195 Rafael J. Wysocki 2009-03-26  1322  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1323  /**
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1324   * pci_set_low_power_state - Put a PCI device into a low-power state.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1325   * @dev: PCI device to handle.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1326   * @state: PCI power state (D1, D2, D3hot) to put the device into.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1327   *
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1328   * Use the device's PCI_PM_CTRL register to put it into a low-power state.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1329   *
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1330   * RETURN VALUE:
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1331   * -EINVAL if the requested state is invalid.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1332   * -EIO if device does not support PCI PM or its PM capabilities register has a
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1333   * wrong version, or device doesn't support the requested state.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1334   * 0 if device already is in the requested state.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1335   * 0 if device's power state has been successfully changed.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1336   */
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1337  static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state)
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1338  {
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1339  	u16 pmcsr;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1340  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1341  	if (!dev->pm_cap)
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1342  		return -EIO;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1343  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1344  	/*
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1345  	 * Validate transition: We can enter D0 from any state, but if
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1346  	 * we're already in a low-power state, we can only go deeper.  E.g.,
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1347  	 * we can go from D1 to D3, but we can't go directly from D3 to D1;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1348  	 * we'd have to go from D3 to D0, then to D1.
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1349  	 */
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1350  	if (dev->current_state <= PCI_D3cold && dev->current_state > state) {
-> 0aacdc95740180 Rafael J. Wysocki 2022-05-05  1351  		pci_dbg(dev, "Invalid power transition (from %s to %s)\n",
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1352  			pci_power_name(dev->current_state),
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1353  			pci_power_name(state));
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1354  		return -EINVAL;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1355  	}
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1356  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1357  	/* Check if this device supports the desired state */
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1358  	if ((state == PCI_D1 && !dev->d1_support)
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1359  	   || (state == PCI_D2 && !dev->d2_support))
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1360  		return -EIO;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1361  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1362  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1363  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1364  		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1365  			pci_power_name(dev->current_state),
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1366  			pci_power_name(state));
-> 1aa85bb14d8ed0 Rafael J. Wysocki 2022-05-05  1367  		dev->current_state = PCI_D3cold;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1368  		return -EIO;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1369  	}
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1370  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1371  	pmcsr &= ~PCI_PM_CTRL_STATE_MASK;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1372  	pmcsr |= state;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1373  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1374  	/* Enter specified state */
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1375  	pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, pmcsr);
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1376  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1377  	/* Mandatory power management transition delays; see PCI PM 1.2. */
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1378  	if (state == PCI_D3hot)
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1379  		pci_dev_d3_sleep(dev);
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1380  	else if (state == PCI_D2)
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1381  		udelay(PCI_PM_D2_DELAY);
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1382  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1383  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1384  	dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1385  	if (dev->current_state != state)
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1386  		pci_info_ratelimited(dev, "Refused to change power state from %s to %s\n",
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1387  				     pci_power_name(dev->current_state),
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1388  				     pci_power_name(state));
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1389  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1390  	if (dev->bus->self)
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05 @1391  		pcie_aspm_pm_state_change(dev->bus->self);
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1392  
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1393  	return 0;
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1394  }
-> 7957d201456f43 Rafael J. Wysocki 2022-05-05  1395  
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> :::::: The code at line 1391 was first introduced by commit
-> :::::: 7957d201456f436557870cf8bbd47328a280c522 PCI/PM: Relocate pci_set_low_power_state()
-> 
-> :::::: TO: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> :::::: CC: Bjorn Helgaas <bhelgaas@google.com>
-> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 34aac220dd4c..36b1801a061b 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -211,7 +211,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_SLAVE, mask);
+>  	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
+> -	if (IS_ERR_OR_NULL(dma_chan)) {
+> +	if (!dma_chan) {
+>  		dev_info(dev, "Failed to get private DMA rx channel. Falling back to generic one\n");
+>  		goto fail_back_tx;
+>  	}
+> @@ -221,7 +221,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+>  	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
+>  	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
+>  
+> -	if (IS_ERR(dma_chan)) {
+> +	if (!dma_chan) {
+>  		dev_info(dev, "Failed to get private DMA tx channel. Falling back to generic one\n");
+>  		goto fail_back_rx;
+>  	}
 > -- 
-> 0-DAY CI Kernel Test Service
-> https://01.org/lkp
+> 2.35.1
+> 
