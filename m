@@ -2,58 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3FD357187A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 13:27:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DD48571A27
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 14:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbiGLL1P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jul 2022 07:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40580 "EHLO
+        id S230111AbiGLMiz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jul 2022 08:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbiGLL1P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jul 2022 07:27:15 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27CB42F3B5
-        for <linux-pci@vger.kernel.org>; Tue, 12 Jul 2022 04:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657625234; x=1689161234;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=69+kbG0tq7oeIcas49yyGin4VqWwYxLBRJtlwlIyde4=;
-  b=PQz2veqp8pe3wJzemYlD2C6GCIj48V6yUFZFtiznGqaXMxlPdE1WeZOc
-   7zTALXTtqc6zb1jhiSUk4ZJ+1FJolKEJ1JJOXDGK3CHWxM7xHpCs8p9Ad
-   4pdHWM1OXphZpaIn0M8oDQBDPFDJ0ETnxUhKDDXIj6vCOHrMZOIAFGHHC
-   7kS8WkMnjCkdomJJD7ZIbM9SfXKqScRBqWTSX3F/xoRQNnXeVI9PTcEtC
-   7YZd70/lCUcAmUqHXLNHZUJp3zVLdNIhxN7nlUJ2UaM7NODaU5ZAtp/e3
-   ZBTPjCtc6BzuomNOuuF0YLlCAfbyt1vzgcWcPPsOmrE/VFCb8ZEiQHY5G
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10405"; a="371216775"
-X-IronPort-AV: E=Sophos;i="5.92,265,1650956400"; 
-   d="scan'208";a="371216775"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2022 04:27:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,265,1650956400"; 
-   d="scan'208";a="662919108"
-Received: from lkp-server02.sh.intel.com (HELO 8708c84be1ad) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2022 04:27:12 -0700
-Received: from kbuild by 8708c84be1ad with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oBE2p-00024d-Hr;
-        Tue, 12 Jul 2022 11:27:11 +0000
-Date:   Tue, 12 Jul 2022 19:26:53 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [helgaas-pci:pci/aspm 1/1] drivers/pci/pci.c:1391:17: error:
- implicit declaration of function 'pcie_aspm_pm_state_change'
-Message-ID: <202207121915.ogXzRUd6-lkp@intel.com>
+        with ESMTP id S229669AbiGLMiy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jul 2022 08:38:54 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFE621E32;
+        Tue, 12 Jul 2022 05:38:51 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Lj0d71bM7zlVpC;
+        Tue, 12 Jul 2022 20:37:15 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 12 Jul 2022 20:38:48 +0800
+CC:     <yangyicong@hisilicon.com>, <gregkh@linuxfoundation.org>,
+        <alexander.shishkin@linux.intel.com>, <leo.yan@linaro.org>,
+        <james.clark@arm.com>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <acme@kernel.org>, <jonathan.cameron@huawei.com>,
+        <john.garry@huawei.com>, <helgaas@kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <suzuki.poulose@arm.com>,
+        <mark.rutland@arm.com>, <joro@8bytes.org>,
+        <shameerali.kolothum.thodi@huawei.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v9 7/8] docs: trace: Add HiSilicon PTT device driver
+ documentation
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20220606115555.41103-1-yangyicong@hisilicon.com>
+ <20220606115555.41103-8-yangyicong@hisilicon.com>
+ <20220706175751.GA2546265@p14s>
+ <75afb15e-9fc2-d14a-c72d-dc33589cfc0e@huawei.com>
+ <20220707162015.GA2609651@p14s>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <0569c6e2-48b2-9d9e-a8cc-971e41d78365@huawei.com>
+Date:   Tue, 12 Jul 2022 20:38:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+In-Reply-To: <20220707162015.GA2609651@p14s>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,115 +66,290 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aspm
-head:   a27544423802e94e88da50b6bfd6cceedcd7dab6
-commit: a27544423802e94e88da50b6bfd6cceedcd7dab6 [1/1] PCI/ASPM: Remove pcie_aspm_pm_state_change()
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20220712/202207121915.ogXzRUd6-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
-reproduce (this is a W=1 build):
-        # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=a27544423802e94e88da50b6bfd6cceedcd7dab6
-        git remote add helgaas-pci https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
-        git fetch --no-tags helgaas-pci pci/aspm
-        git checkout a27544423802e94e88da50b6bfd6cceedcd7dab6
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
+On 2022/7/8 0:20, Mathieu Poirier wrote:
+> On Thu, Jul 07, 2022 at 07:43:21PM +0800, Yicong Yang wrote:
+>> On 2022/7/7 1:57, Mathieu Poirier wrote:
+>>> Hi,
+>>>
+>>> I have started looking at this set.
+>>
+>> Thanks!
+>>
+>>>
+>>> On Mon, Jun 06, 2022 at 07:55:54PM +0800, Yicong Yang wrote:
+>>>> Document the introduction and usage of HiSilicon PTT device driver.
+>>>>
+>>>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>> ---
+>>>>  Documentation/trace/hisi-ptt.rst | 307 +++++++++++++++++++++++++++++++
+>>>>  Documentation/trace/index.rst    |   1 +
+>>>
+>>> The "get_maintainer" script clearly indicates that Jonathan Corbet maintains the
+>>> Documentation directory and yet he is not CC'ed on this patch, nor is the
+>>> linux-doc mainling list.  As such, it would not be possible to merge this
+>>> patchset.
+>>>
+>>
+>> sorry for missing. +cc'ed.
+>>
+>>>>  2 files changed, 308 insertions(+)
+>>>>  create mode 100644 Documentation/trace/hisi-ptt.rst
+>>>>
+>>>> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
+>>>> new file mode 100644
+>>>> index 000000000000..0a3112244d40
+>>>> --- /dev/null
+>>>> +++ b/Documentation/trace/hisi-ptt.rst
+>>>> @@ -0,0 +1,307 @@
+>>>> +.. SPDX-License-Identifier: GPL-2.0
+>>>> +
+>>>> +======================================
+>>>> +HiSilicon PCIe Tune and Trace device
+>>>> +======================================
+>>>> +
+>>>> +Introduction
+>>>> +============
+>>>> +
+>>>> +HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex
+>>>> +integrated Endpoint (RCiEP) device, providing the capability
+>>>> +to dynamically monitor and tune the PCIe link's events (tune),
+>>>> +and trace the TLP headers (trace). The two functions are independent,
+>>>> +but is recommended to use them together to analyze and enhance the
+>>>> +PCIe link's performance.
+>>>> +
+>>>> +On Kunpeng 930 SoC, the PCIe Root Complex is composed of several
+>>>> +PCIe cores. Each PCIe core includes several Root Ports and a PTT
+>>>> +RCiEP, like below. The PTT device is capable of tuning and
+>>>> +tracing the links of the PCIe core.
+>>>> +::
+>>>> +
+>>>> +          +--------------Core 0-------+
+>>>> +          |       |       [   PTT   ] |
+>>>> +          |       |       [Root Port]---[Endpoint]
+>>>> +          |       |       [Root Port]---[Endpoint]
+>>>> +          |       |       [Root Port]---[Endpoint]
+>>>> +    Root Complex  |------Core 1-------+
+>>>> +          |       |       [   PTT   ] |
+>>>> +          |       |       [Root Port]---[ Switch ]---[Endpoint]
+>>>> +          |       |       [Root Port]---[Endpoint] `-[Endpoint]
+>>>> +          |       |       [Root Port]---[Endpoint]
+>>>> +          +---------------------------+
+>>>> +
+>>>> +The PTT device driver registers one PMU device for each PTT device.
+>>>> +The name of each PTT device is composed of 'hisi_ptt' prefix with
+>>>> +the id of the SICL and the Core where it locates. The Kunpeng 930
+>>>> +SoC encapsulates multiple CPU dies (SCCL, Super CPU Cluster) and
+>>>> +IO dies (SICL, Super I/O Cluster), where there's one PCIe Root
+>>>> +Complex for each SICL.
+>>>> +::
+>>>> +
+>>>> +    /sys/devices/hisi_ptt<sicl_id>_<core_id>
+>>>
+>>> All entries added to sysfs should have corresponding documentation.  See [1] and
+>>> [2] for details and [3] for an example.
+>>>
+>>> [1]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/README
+>>> [2]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/testing
+>>> [3]. https://elixir.bootlin.com/linux/latest/source/Documentation/ABI/testing/sysfs-bus-coresight-devices-etm4x
+>>>
+>>
+>> ok. I'll add a patch for ABI description. Thanks for the reference.
+>>
+>>>> +
+>>>> +Tune
+>>>> +====
+>>>> +
+>>>> +PTT tune is designed for monitoring and adjusting PCIe link parameters (events).
+>>>> +Currently we support events in 4 classes. The scope of the events
+>>>> +covers the PCIe core to which the PTT device belongs.
+>>>> +
+>>>> +Each event is presented as a file under $(PTT PMU dir)/tune, and
+>>>> +a simple open/read/write/close cycle will be used to tune the event.
+>>>> +::
+>>>> +
+>>>> +    $ cd /sys/devices/hisi_ptt<sicl_id>_<core_id>/tune
+>>>> +    $ ls
+>>>> +    qos_tx_cpl    qos_tx_np    qos_tx_p
+>>>> +    tx_path_rx_req_alloc_buf_level
+>>>> +    tx_path_tx_req_alloc_buf_level
+>>>
+>>> These look overly long... How about watermark_rx and watermark_tx?
+>>>
+>>
+>> These are gotten from the hardware manual and abbreviated. These events are highly connected
+>> to the hardware desgin so I think it's better to keep consistence. The watermark_{rx, tx} will
+>> become ambigious when we add more events for Rx path or other Tx path events.
+>>
+>> The event code is composed of two parts. First part (tx_path) describes which path it belongs to
+>> and second part describes the function ({rx,tx}_req_alloc_buf_level). We called the link path
+>> between CPU and PCIe RC as Rx path and the path between PCIe RC to the PCIe link as Tx path.
+>> So we need to have tx_path prefix for the Tx path and {rx, tx}_req_alloc_buf_level for the
+>> requested watermark of {inbound, outbound} buffer allocation. Indeed we have other Tx path
+>> buffer events which are not exported in this series.
+>>
+> 
+> I will not be maintaining nor using this driver so the choice is entirely yours.
+> That being said the end result is the same - those names are, in my opinion, too
+> long.
+> 
+>>
+>>>> +    $ cat qos_tx_dp
+>>>> +    1
+>>>> +    $ echo 2 > qos_tx_dp
+>>>> +    $ cat qos_tx_dp
+>>>> +    2
+>>>> +
+>>>> +Current value (numerical value) of the event can be simply read
+>>>> +from the file, and the desired value written to the file to tune.
+>>>> +
+>>>> +1. Tx path QoS control
+>>>> +------------------------
+>>>> +
+>>>> +The following files are provided to tune the QoS of the tx path of
+>>>> +the PCIe core.
+>>>> +
+>>>> +- qos_tx_cpl: weight of Tx completion TLPs
+>>>> +- qos_tx_np: weight of Tx non-posted TLPs
+>>>> +- qos_tx_p: weight of Tx posted TLPs
+>>>> +
+>>>> +The weight influences the proportion of certain packets on the PCIe link.
+>>>> +For example, for the storage scenario, increase the proportion
+>>>> +of the completion packets on the link to enhance the performance as
+>>>> +more completions are consumed.
+>>>> +
+>>>> +The available tune data of these events is [0, 1, 2].
+>>>> +Writing a negative value will return an error, and out of range
+>>>> +values will be converted to 2. Note that the event value just
+>>>> +indicates a probable level, but is not precise.
+>>>> +
+>>>> +2. Tx path buffer control
+>>>> +-------------------------
+>>>> +
+>>>> +Following files are provided to tune the buffer of tx path of the PCIe core.
+>>>> +
+>>>> +- tx_path_rx_req_alloc_buf_level: watermark of Rx requested
+>>>> +- tx_path_tx_req_alloc_buf_level: watermark of Tx requested
+>>>> +
+>>>> +These events influence the watermark of the buffer allocated for each
+>>>> +type. Rx means the inbound while Tx means outbound. The packets will
+>>>> +be stored in the buffer first and then transmitted either when the
+>>>> +watermark reached or when timed out. For a busy direction, you should
+>>>> +increase the related buffer watermark to avoid frequently posting and
+>>>> +thus enhance the performance. In most cases just keep the default value.
+>>>> +
+>>>> +The available tune data of above events is [0, 1, 2].
+>>>> +Writing a negative value will return an error, and out of range
+>>>> +values will be converted to 2. Note that the event value just
+>>>> +indicates a probable level, but is not precise.
+>>>
+>>> This is useful documentation but it also should be found in the ABI
+>>> documentation referred to above.
+>>>
+>>>> +
+>>>> +Trace
+>>>> +=====
+>>>> +
+>>>> +PTT trace is designed for dumping the TLP headers to the memory, which
+>>>> +can be used to analyze the transactions and usage condition of the PCIe
+>>>> +Link. You can choose to filter the traced headers by either requester ID,
+>>>> +or those downstream of a set of Root Ports on the same core of the PTT
+>>>> +device. It's also supported to trace the headers of certain type and of
+>>>> +certain direction.
+>>>> +
+>>>> +You can use the perf command `perf record` to set the parameters, start
+>>>> +trace and get the data. It's also supported to decode the trace
+>>>> +data with `perf report`. The control parameters for trace is inputted
+>>>> +as event code for each events, which will be further illustrated later.
+>>>> +An example usage is like
+>>>> +::
+>>>> +
+>>>> +    $ perf record -e hisi_ptt0_2/filter=0x80001,type=1,direction=1,
+>>>> +      format=1/ -- sleep 5
+>>>> +
+>>>> +This will trace the TLP headers downstream root port 0000:00:10.1 (event
+>>>> +code for event 'filter' is 0x80001) with type of posted TLP requests,
+>>>> +direction of inbound and traced data format of 8DW.
+>>>> +
+>>>> +1. filter
+>>>> +---------
+>>>> +
+>>>> +The TLP headers to trace can be filtered by the Root Ports or the requester
+>>>> +ID of the endpoints, which are located on the same core of the PTT device.
+>>>> +You can set the filter by specifying the `filter` parameter which is required
+>>>> +to start the trace. The parameter value is 20 bit. The supported filters and
+>>>> +related values are outputted through `available_root_port_filters` and
+>>>> +`available_requester_filters` sysfs attributes for Root Ports and Requesters
+>>>> +respectively.
+>>>> +::
+>>>> +
+>>>> +    $ cat available_root_port_filters
+>>>> +    0000:00:10.0	0x80001
+>>>> +    0000:00:11.0	0x80004
+>>>> +    $ cat available_requester_filters
+>>>> +    0000:01:00.0	0x00100
+>>>> +    0000:01:00.1	0x00101
+>>>
+>>> If I remember correctly, one of the rule for sysfs is one line per entry.
+>>>
+>>
+>> Since one PTT devices may support several Root Ports and Endpoints on its core, I find no better
+>> way to make this information convenient and easy to use for the users to collect. So maybe this
+>> canbe an exception and there seems to have some limited examples like
+>> /sys/devices/system/node/node<N>/{meminfo, vmstat, meminfo}.
+> 
+> You can either find a better solution or argue the matter with Greg.  I suggest
+> to introduce new directories, i.e "root_port_filters" and "requested_filters"
+> and under those have entries like "port0", "port1" and so on.
+> 
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+Thanks for the suggestion and it does make sense to me. But I've tried it and met some problems.
+I intended to create two attribute groups for each kind of filter and create attribute for each
+available filter. like:
 
-All errors (new ones prefixed by >>):
+$ ls root_port_filters    # each filter exists as an sysfs attribute
+0000:00:10.0 0000:00:11.0
+$ cat root_port_filters/0000:00:10.0    # read the attribute get the filter value
+0x80001
 
-   drivers/pci/pci.c: In function 'pci_set_low_power_state':
->> drivers/pci/pci.c:1391:17: error: implicit declaration of function 'pcie_aspm_pm_state_change' [-Werror=implicit-function-declaration]
-    1391 |                 pcie_aspm_pm_state_change(dev->bus->self);
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+In pratice we may have no filter for certain types, for example no endpoint found on this PCIe
+core then we'll have no filter attributes under requester_filters directory. Or if endpoint
+devices are hot removed or manually removed through sysfs by the user, the filter attributes
+will be created/destroyed dynamically (will support following this series, an implementation
+will be like in [1]) which may make the directory empty. But sysfs won't allow to have an
+empty attribute group, restricted in [2].
 
+[1] https://lore.kernel.org/lkml/20220407125841.3678-4-yangyicong@hisilicon.com/
+[2] https://github.com/torvalds/linux/blob/5cf3bb0d3a2d0de94f3f551f0e4211068818aabf/fs/sysfs/group.c#L121
 
-vim +/pcie_aspm_pm_state_change +1391 drivers/pci/pci.c
-
-0e5dd46b761195 Rafael J. Wysocki 2009-03-26  1322  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1323  /**
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1324   * pci_set_low_power_state - Put a PCI device into a low-power state.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1325   * @dev: PCI device to handle.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1326   * @state: PCI power state (D1, D2, D3hot) to put the device into.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1327   *
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1328   * Use the device's PCI_PM_CTRL register to put it into a low-power state.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1329   *
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1330   * RETURN VALUE:
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1331   * -EINVAL if the requested state is invalid.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1332   * -EIO if device does not support PCI PM or its PM capabilities register has a
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1333   * wrong version, or device doesn't support the requested state.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1334   * 0 if device already is in the requested state.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1335   * 0 if device's power state has been successfully changed.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1336   */
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1337  static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state)
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1338  {
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1339  	u16 pmcsr;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1340  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1341  	if (!dev->pm_cap)
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1342  		return -EIO;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1343  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1344  	/*
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1345  	 * Validate transition: We can enter D0 from any state, but if
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1346  	 * we're already in a low-power state, we can only go deeper.  E.g.,
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1347  	 * we can go from D1 to D3, but we can't go directly from D3 to D1;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1348  	 * we'd have to go from D3 to D0, then to D1.
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1349  	 */
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1350  	if (dev->current_state <= PCI_D3cold && dev->current_state > state) {
-0aacdc95740180 Rafael J. Wysocki 2022-05-05  1351  		pci_dbg(dev, "Invalid power transition (from %s to %s)\n",
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1352  			pci_power_name(dev->current_state),
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1353  			pci_power_name(state));
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1354  		return -EINVAL;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1355  	}
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1356  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1357  	/* Check if this device supports the desired state */
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1358  	if ((state == PCI_D1 && !dev->d1_support)
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1359  	   || (state == PCI_D2 && !dev->d2_support))
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1360  		return -EIO;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1361  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1362  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1363  	if (PCI_POSSIBLE_ERROR(pmcsr)) {
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1364  		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1365  			pci_power_name(dev->current_state),
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1366  			pci_power_name(state));
-1aa85bb14d8ed0 Rafael J. Wysocki 2022-05-05  1367  		dev->current_state = PCI_D3cold;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1368  		return -EIO;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1369  	}
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1370  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1371  	pmcsr &= ~PCI_PM_CTRL_STATE_MASK;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1372  	pmcsr |= state;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1373  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1374  	/* Enter specified state */
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1375  	pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, pmcsr);
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1376  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1377  	/* Mandatory power management transition delays; see PCI PM 1.2. */
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1378  	if (state == PCI_D3hot)
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1379  		pci_dev_d3_sleep(dev);
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1380  	else if (state == PCI_D2)
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1381  		udelay(PCI_PM_D2_DELAY);
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1382  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1383  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1384  	dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1385  	if (dev->current_state != state)
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1386  		pci_info_ratelimited(dev, "Refused to change power state from %s to %s\n",
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1387  				     pci_power_name(dev->current_state),
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1388  				     pci_power_name(state));
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1389  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1390  	if (dev->bus->self)
-7957d201456f43 Rafael J. Wysocki 2022-05-05 @1391  		pcie_aspm_pm_state_change(dev->bus->self);
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1392  
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1393  	return 0;
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1394  }
-7957d201456f43 Rafael J. Wysocki 2022-05-05  1395  
-
-:::::: The code at line 1391 was first introduced by commit
-:::::: 7957d201456f436557870cf8bbd47328a280c522 PCI/PM: Relocate pci_set_low_power_state()
-
-:::::: TO: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-:::::: CC: Bjorn Helgaas <bhelgaas@google.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+>>
+>>>> +
+>>>> +Note that multiple Root Ports can be specified at one time, but only
+>>>> +one Endpoint function can be specified in one trace. Specifying both
+>>>> +Root Port and function at the same time is not supported.
+>>>> +
+>>>> +If no filter is available, reading the related filter sysfs attribute
+>>>> +will get an empty string.
+>>>> +::
+>>>> +
+>>>> +    $ cat available_root_port_filters
+>>>> +
+>>>> +    $ cat available_requester_filters
+>>>
+>>> Those too look overly long, and where to find them is not documented.  As such
+>>> users have to guest that it must be somewhere under
+>>> /sys/devices/hisi_ptt<sicl_id>_<core_id>/.
+>>>
+>>
+>> Since Root Port and Requester are PCIe terminologies so it's better to have them
+>> embedded to make it clear. Maybe 'available' can be removed.
+>>
+>> Will have all these sysfs attributes documented.
+>>
+>>> More comments tomorrow.
+>>>
+>>
+>> Thanks,
+>> Yicong
+> .
+> 
