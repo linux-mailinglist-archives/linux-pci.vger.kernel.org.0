@@ -2,53 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A0DC57269A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 21:49:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9FB85726BE
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jul 2022 21:54:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232444AbiGLTto (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jul 2022 15:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
+        id S232020AbiGLTyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jul 2022 15:54:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233970AbiGLTsa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jul 2022 15:48:30 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A620BD6A0;
-        Tue, 12 Jul 2022 12:41:26 -0700 (PDT)
+        with ESMTP id S233517AbiGLTxp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jul 2022 15:53:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C739AC7D;
+        Tue, 12 Jul 2022 12:49:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 032E1B81BD0;
-        Tue, 12 Jul 2022 19:41:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F76CC3411E;
-        Tue, 12 Jul 2022 19:41:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 81705B81BCF;
+        Tue, 12 Jul 2022 19:49:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9EB4C3411C;
+        Tue, 12 Jul 2022 19:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657654883;
-        bh=A8IHI6uBF4PEsAf4qntIS6Lk50a5/zGqa5XnyLKFtf8=;
+        s=k20201202; t=1657655378;
+        bh=iESlDrScC/rVazYwSLBhRbeFWM571m/Ic3CS9bNhtDw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sB1J0NLa0XjUbBeirYQ2QSsa5I6dnLPfNBFn334MLKmsYwlD564iE2yVRni0ms8UW
-         l2t5IQ50TlaS7YUTftiL/z6Cd0hTSSlLKPt1A//m8zBolHVpnw78D+la5BFMq0zK8/
-         ZRYtfHH5VrTnK7dMrvwRnMLfDwWT2yn5bBqIdmtuJJ2McEU+YTvKOu89phZO1LSFXZ
-         odQqanGVuU4U4QeH99Hya3FT/dyDczK701un2lMRWRFmcGjX4WNr/WCOEZZlc2+DEb
-         TkZ83VdIylNl82C19AwwPIx2khtnvDbfBDtcno+Wvb8M9rWqWmCJEULpCR+baqMHyZ
-         NZ2v0FFLZ86yg==
-Date:   Tue, 12 Jul 2022 14:41:21 -0500
+        b=jExbeJVODS4jEr4Pva7YdtCUu5ofN+KmVsrG3GINIJl/IUDpY4/2HxVlLpXpar4TH
+         qSZ4Xmu7KRI2lwQpl0PTlDsgLB2Iw6h4gdO8+8ehZbwxEbxbko+ryrWD3U7FYNcwEX
+         /yzLUGHlV3NzkErF23VSM4O+VPrqaphloIyd+Z9s98E1S25kWCRYhzqELnTe7deU0s
+         nJk90o3RWf+CUImH/jlQKwC3sCT5Jh8tH0uwQSni6Lw2XFD2xvYRvLpLBAUYHmRvgg
+         KFVG41vW1OPZjA2HMLUS+ieIz38BlZEIYMZljzTuQMPhDYx6NhFVY8iPyblC8uxSP0
+         9Eel3FgdjvN6A==
+Date:   Tue, 12 Jul 2022 14:49:36 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH] PCI: dwc: Use the bitmap API to allocate bitmaps
-Message-ID: <20220712194121.GA789611@bhelgaas>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     kishon@ti.com, lpieralisi@kernel.org, kw@linux.com,
+        bhelgaas@google.com, jdmason@kudzu.us, Frank.Li@nxp.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] NTB: EPF: Mark pci_read and pci_write as static
+Message-ID: <20220712194936.GA790126@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bc6586a603abc0db7d4531308b698fbe7a6d7083.1657375829.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20220708020035.8071-1-jrdr.linux@gmail.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -59,47 +54,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Serge]
-
-On Sat, Jul 09, 2022 at 04:10:52PM +0200, Christophe JAILLET wrote:
-> Use devm_bitmap_zalloc() instead of hand-writing them.
+On Fri, Jul 08, 2022 at 07:30:35AM +0530, Souptick Joarder wrote:
+> From: "Souptick Joarder (HPE)" <jrdr.linux@gmail.com>
 > 
-> It is less verbose and it improves the semantic.
+> kernel test robot throws below warning ->
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> drivers/pci/endpoint/functions/pci-epf-vntb.c:975:5: warning:
+> no previous prototype for 'pci_read' [-Wmissing-prototypes]
+> drivers/pci/endpoint/functions/pci-epf-vntb.c:984:5: warning:
+> no previous prototype for 'pci_write' [-Wmissing-prototypes]
+> 
+> mark them as static.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Souptick Joarder (HPE) <jrdr.linux@gmail.com>
 
-Applied to pci/ctrl/dwc for v5.20, thanks!
+IIUC this series is going via Jon.  Let me know if I need to do
+anything.
 
 > ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index fb887495f53e..ad54aaa71a02 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -721,17 +721,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	ep->phys_base = res->start;
->  	ep->addr_size = resource_size(res);
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> index ebf7e243eefa..111568089d45 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> @@ -972,7 +972,7 @@ uint32_t pci_space[] = {
+>  	0,		//Max Lat, Min Gnt, interrupt pin, interrupt line
+>  };
 >  
-> -	ep->ib_window_map = devm_kcalloc(dev,
-> -					 BITS_TO_LONGS(pci->num_ib_windows),
-> -					 sizeof(long),
-> -					 GFP_KERNEL);
-> +	ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
-> +					       GFP_KERNEL);
->  	if (!ep->ib_window_map)
->  		return -ENOMEM;
+> -int pci_read(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val)
+> +static int pci_read(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val)
+>  {
+>  	if (devfn == 0) {
+>  		memcpy(val, ((uint8_t *)pci_space) + where, size);
+> @@ -981,7 +981,7 @@ int pci_read(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *
+>  	return -1;
+>  }
 >  
-> -	ep->ob_window_map = devm_kcalloc(dev,
-> -					 BITS_TO_LONGS(pci->num_ob_windows),
-> -					 sizeof(long),
-> -					 GFP_KERNEL);
-> +	ep->ob_window_map = devm_bitmap_zalloc(dev, pci->num_ob_windows,
-> +					       GFP_KERNEL);
->  	if (!ep->ob_window_map)
->  		return -ENOMEM;
->  
+> -int pci_write(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val)
+> +static int pci_write(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val)
+>  {
+>  	return 0;
+>  }
 > -- 
-> 2.34.1
+> 2.25.1
 > 
