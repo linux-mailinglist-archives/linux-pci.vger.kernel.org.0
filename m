@@ -2,126 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 504D75732EC
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jul 2022 11:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E75C5732F5
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jul 2022 11:37:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236097AbiGMJgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jul 2022 05:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53556 "EHLO
+        id S231969AbiGMJhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jul 2022 05:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236158AbiGMJgB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 05:36:01 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F872250E
-        for <linux-pci@vger.kernel.org>; Wed, 13 Jul 2022 02:35:56 -0700 (PDT)
-Received: from ramsan.of.borg ([84.195.186.194])
-        by xavier.telenet-ops.be with bizsmtp
-        id uZbt2700R4C55Sk01Zbtd4; Wed, 13 Jul 2022 11:35:54 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1oBYmf-003LRy-7N; Wed, 13 Jul 2022 11:35:53 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1oBYme-00B78G-Ol; Wed, 13 Jul 2022 11:35:52 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] PCI: Fix dropping valid root bus resources with .end = zero
-Date:   Wed, 13 Jul 2022 11:35:50 +0200
-Message-Id: <9c41a4372b27420c732ff5599d823e363de00c6d.1657704829.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S236234AbiGMJhE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 05:37:04 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA6FF32D5;
+        Wed, 13 Jul 2022 02:36:56 -0700 (PDT)
+Received: by mail-qt1-f171.google.com with SMTP id y3so11382795qtv.5;
+        Wed, 13 Jul 2022 02:36:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xQ7N/fYLlysLbE4zdECWnWy27WreI9oEQxiTnGoMGOc=;
+        b=HYys9IgnJCWNzM+6vk+2H14DanpEbL6+ZOHdTpD4Nq7XHO8Qefix1pCCvI1CXxzRxd
+         MFyLQonCez/l/90P4l64znB9efd0dxbcP3yLNkgZrTdR8e/wUVPPemgyyOPfO7SYD9Fj
+         /CJ+5Y2DM8uE6qEGMT62w6ST2bk1RXiL2wQwdJFhKi8JrmCglIEovmXv35NfuOMi03R5
+         JsHO6+4rS5vbuyuEgXFzSr8G3xk6JpzYhnSKsKbQNmat32yRpZMQdn8HttGiYGDNFQ5u
+         iZlM3P8W5DRq/uTu1PuhHEpHiY76UFUtm+ybgbA7jml2pUAOCucCQ4+AMNhvDnLzOFD9
+         uAVQ==
+X-Gm-Message-State: AJIora+Yim3pUifcYfeckLa3ke7u5knohP5HPIMrOewM+20w7zMKNePJ
+        X1cTOXwcHIyatnkHr4srx8bcHhXDV/QLLA==
+X-Google-Smtp-Source: AGRyM1u+12N7nN4GfKQcL+35Ef6Dp/u7kPvbDN7fGktpzs00FWDntqb2C1Wuf6kay8EK9KwNILzECw==
+X-Received: by 2002:ac8:5c94:0:b0:31b:899:3063 with SMTP id r20-20020ac85c94000000b0031b08993063mr1988143qta.153.1657705014171;
+        Wed, 13 Jul 2022 02:36:54 -0700 (PDT)
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
+        by smtp.gmail.com with ESMTPSA id fp6-20020a05622a508600b0031eb0bb5c3csm7823150qtb.28.2022.07.13.02.36.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Jul 2022 02:36:53 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id g4so18314343ybg.9;
+        Wed, 13 Jul 2022 02:36:53 -0700 (PDT)
+X-Received: by 2002:a05:6902:1246:b0:66e:ea31:8d05 with SMTP id
+ t6-20020a056902124600b0066eea318d05mr2830637ybu.89.1657705013318; Wed, 13 Jul
+ 2022 02:36:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20210713075726.1232938-1-kai.heng.feng@canonical.com>
+ <20210713125007.1260304-1-kai.heng.feng@canonical.com> <5331e942ff28bb191d62bb403b03ceb7d750856c.camel@sipsolutions.net>
+In-Reply-To: <5331e942ff28bb191d62bb403b03ceb7d750856c.camel@sipsolutions.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 13 Jul 2022 11:36:41 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWrLxHi6x0VKeB3emHYkDcVmAm=u4K2xzPqKOQ9znvuNg@mail.gmail.com>
+Message-ID: <CAMuHMdWrLxHi6x0VKeB3emHYkDcVmAm=u4K2xzPqKOQ9znvuNg@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Reinstate "PCI: Coalesce host bridge contiguous apertures"
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On r8a7791/koelsch:
+Hi Johannes,
 
-    kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
-    # cat /sys/kernel/debug/kmemleak
-    unreferenced object 0xc3a34e00 (size 64):
-      comm "swapper/0", pid 1, jiffies 4294937460 (age 199.080s)
-      hex dump (first 32 bytes):
-	b4 5d 81 f0 b4 5d 81 f0 c0 b0 a2 c3 00 00 00 00  .]...]..........
-	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-      backtrace:
-	[<fe3aa979>] __kmalloc+0xf0/0x140
-	[<34bd6bc0>] resource_list_create_entry+0x18/0x38
-	[<767046bc>] pci_add_resource_offset+0x20/0x68
-	[<b3f3edf2>] devm_of_pci_get_host_bridge_resources.constprop.0+0xb0/0x390
+On Wed, Nov 17, 2021 at 6:41 PM Johannes Berg <johannes@sipsolutions.net> wrote:
+> So this patch landed now ... :)
+>
+> > +     /* Coalesce contiguous windows */
+> > +     resource_list_for_each_entry_safe(window, n, &resources) {
+> > +             if (list_is_last(&window->node, &resources))
+> > +                     break;
+> > +
+> > +             next = list_next_entry(window, node);
+> > +             offset = window->offset;
+> > +             res = window->res;
+> > +             next_offset = next->offset;
+> > +             next_res = next->res;
+> > +
+> > +             if (res->flags != next_res->flags || offset != next_offset)
+> > +                     continue;
+> > +
+> > +             if (res->end + 1 == next_res->start) {
+> > +                     next_res->start = res->start;
+> > +                     res->flags = res->start = res->end = 0;
+> > +             }
+> > +     }
+> >
+>
+> Maybe this was already a problem before - but I had a stupid thing in
+> arch/um/drivers/virt-pci.c (busn_resource has start == end == 0), and
+> your changes here caused that resource to be dropped off the list.
+>
+> Now this wouldn't be a problem, but we add it using pci_add_resource()
+> and then that does a memory allocation, but you don't free it here? I'm
+> not sure it'd even be safe to free it here and I'll just set
+> busn_resource to have end==1 instead (it's all kind of virtual).
+>
+> But I still wanted to ask if this might be a problem here for others.
 
-When coalescing two resources for a contiguous aperture, the first
-resource is enlarged to cover the full contiguous range, while the
-second resource is marked invalid.  This invalidation is done by
-clearing the flags, start, and end members.
+Yes it is.  I've sent a fix
+https://lore.kernel.org/r/9c41a4372b27420c732ff5599d823e363de00c6d.1657704829.git.geert+renesas@glider.be
 
-When adding the initial resources to the bus later, invalid resources
-are skipped.  Unfortunately, the check for an invalid resource considers
-only the end member, causing false positives.
+Gr{oetje,eeting}s,
 
-E.g. on r8a7791/koelsch, root bus resource 0 ("bus 00") is skipped, and
-no longer registered with pci_bus_insert_busn_res() (causing the memory
-leak), nor printed:
+                        Geert
 
-     pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
-     pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff -> 0x00ee080000
-     pci-rcar-gen2 ee090000.pci: PCI: revision 11
-     pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
-    -pci_bus 0000:00: root bus resource [bus 00]
-     pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Fix this by only skipping resources where all of the flags, start, and
-end members are zero.
-
-Fixes: 7c3855c423b17f6c ("PCI: Coalesce host bridge contiguous apertures")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Is there any side effect of not registering the root bus resource with
-pci_bus_insert_busn_res()?  This is the resource created by
-of_pci_parse_bus_range(), and thus affects any DT platforms using
-"bus-range = <0 0>".
-
-Perhaps checking for "!res->flags" would be sufficient?
-
-I assume this still causes memory leaks on systems where resources are
-coalesced, as the second resource of a contiguous aperture is no longer
-referenced? Perhaps instead of clearing the resource, it should be
-removed from the list (and freed? is it actually safe to do that?)?
-
-Apparently Johannes had identified the bug before, but didn't realize
-the full impact...
-https://lore.kernel.org/r/5331e942ff28bb191d62bb403b03ceb7d750856c.camel@sipsolutions.net/
----
- drivers/pci/probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 17a969942d37033a..be628798d279ada0 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -994,7 +994,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	resource_list_for_each_entry_safe(window, n, &resources) {
- 		offset = window->offset;
- 		res = window->res;
--		if (!res->end)
-+		if (!res->flags && !res->start && !res->end)
- 			continue;
- 
- 		list_move_tail(&window->node, &bridge->windows);
--- 
-2.25.1
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
