@@ -2,188 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6714B573210
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jul 2022 11:07:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 504D75732EC
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jul 2022 11:36:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236060AbiGMJH2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jul 2022 05:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52224 "EHLO
+        id S236097AbiGMJgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jul 2022 05:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236061AbiGMJHY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 05:07:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D32BF421E
-        for <linux-pci@vger.kernel.org>; Wed, 13 Jul 2022 02:07:19 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1oBYKr-0000bg-3E; Wed, 13 Jul 2022 11:07:09 +0200
-Message-ID: <eb64cbf58ae6b6fd1e6b993f15e2c5871f4e1650.camel@pengutronix.de>
-Subject: Re: [PATCH v14 17/17] PCI: imx6: Reformat suspend callback to keep
- symmetric with resume
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
-        robh+dt@kernel.org, broonie@kernel.org, lorenzo.pieralisi@arm.com,
-        festevam@gmail.com, francesco.dolcini@toradex.com
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Date:   Wed, 13 Jul 2022 11:07:08 +0200
-In-Reply-To: <1656645935-1370-18-git-send-email-hongxing.zhu@nxp.com>
-References: <1656645935-1370-1-git-send-email-hongxing.zhu@nxp.com>
-         <1656645935-1370-18-git-send-email-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+        with ESMTP id S236158AbiGMJgB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 05:36:01 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F872250E
+        for <linux-pci@vger.kernel.org>; Wed, 13 Jul 2022 02:35:56 -0700 (PDT)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by xavier.telenet-ops.be with bizsmtp
+        id uZbt2700R4C55Sk01Zbtd4; Wed, 13 Jul 2022 11:35:54 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1oBYmf-003LRy-7N; Wed, 13 Jul 2022 11:35:53 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1oBYme-00B78G-Ol; Wed, 13 Jul 2022 11:35:52 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] PCI: Fix dropping valid root bus resources with .end = zero
+Date:   Wed, 13 Jul 2022 11:35:50 +0200
+Message-Id: <9c41a4372b27420c732ff5599d823e363de00c6d.1657704829.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Freitag, dem 01.07.2022 um 11:25 +0800 schrieb Richard Zhu:
-> Create imx6_pcie_stop_link() and imx6_pcie_host_exit() functions.
-> Encapsulate clocks, regulators disables and PHY uninitialization into
-> imx6_pcie_host_exit().
-> To keep suspend/resume symmetric as much as possible, invoke these two
-> new created functions in suspend callback.
-> 
-> To be symmetric with imx6_pcie_host_exit(), move imx6_pcie_clk_enable()
-> to imx6_pcie_host_init() from imx6_pcie_deassert_core_reset().
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+On r8a7791/koelsch:
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+    kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
+    # cat /sys/kernel/debug/kmemleak
+    unreferenced object 0xc3a34e00 (size 64):
+      comm "swapper/0", pid 1, jiffies 4294937460 (age 199.080s)
+      hex dump (first 32 bytes):
+	b4 5d 81 f0 b4 5d 81 f0 c0 b0 a2 c3 00 00 00 00  .]...]..........
+	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+      backtrace:
+	[<fe3aa979>] __kmalloc+0xf0/0x140
+	[<34bd6bc0>] resource_list_create_entry+0x18/0x38
+	[<767046bc>] pci_add_resource_offset+0x20/0x68
+	[<b3f3edf2>] devm_of_pci_get_host_bridge_resources.constprop.0+0xb0/0x390
 
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 60 ++++++++++++++++-----------
->  1 file changed, 36 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 1cf8bf9035f2..bf8992a6c238 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -703,13 +703,6 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  {
->  	struct dw_pcie *pci = imx6_pcie->pci;
->  	struct device *dev = pci->dev;
-> -	int ret;
-> -
-> -	ret = imx6_pcie_clk_enable(imx6_pcie);
-> -	if (ret) {
-> -		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
-> -		return ret;
-> -	}
->  
->  	switch (imx6_pcie->drvdata->variant) {
->  	case IMX8MQ:
-> @@ -905,6 +898,14 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
->  	return 0;
->  }
->  
-> +static void imx6_pcie_stop_link(struct dw_pcie *pci)
-> +{
-> +	struct device *dev = pci->dev;
-> +
-> +	/* Turn off PCIe LTSSM */
-> +	imx6_pcie_ltssm_disable(dev);
-> +}
-> +
->  static int imx6_pcie_host_init(struct pcie_port *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -922,11 +923,17 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
->  			return ret;
->  		}
->  	}
-> +	ret = imx6_pcie_clk_enable(imx6_pcie);
-> +	if (ret) {
-> +		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
-> +		goto err_reg_disable;
-> +	}
-> +
->  	if (imx6_pcie->phy) {
->  		ret = phy_power_on(imx6_pcie->phy);
->  		if (ret) {
->  			dev_err(dev, "pcie phy power up failed.\n");
-> -			goto err_reg_disable;
-> +			goto err_clk_disable;
->  		}
->  	}
->  
-> @@ -947,17 +954,33 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
->  
->  	return 0;
->  
-> -err_clk_disable:
-> -	imx6_pcie_clk_disable(imx6_pcie);
->  err_phy_off:
->  	if (imx6_pcie->phy)
->  		phy_power_off(imx6_pcie->phy);
-> +err_clk_disable:
-> +	imx6_pcie_clk_disable(imx6_pcie);
->  err_reg_disable:
->  	if (imx6_pcie->vpcie)
->  		regulator_disable(imx6_pcie->vpcie);
->  	return ret;
->  }
->  
-> +static void imx6_pcie_host_exit(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
-> +
-> +	if (imx6_pcie->phy) {
-> +		if (phy_power_off(imx6_pcie->phy))
-> +			dev_err(pci->dev, "unable to power off PHY\n");
-> +		phy_exit(imx6_pcie->phy);
-> +	}
-> +	imx6_pcie_clk_disable(imx6_pcie);
-> +
-> +	if (imx6_pcie->vpcie)
-> +		regulator_disable(imx6_pcie->vpcie);
-> +}
-> +
->  static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
->  	.host_init = imx6_pcie_host_init,
->  };
-> @@ -1007,25 +1030,14 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
->  static int imx6_pcie_suspend_noirq(struct device *dev)
->  {
->  	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
-> +	struct pcie_port *pp = &imx6_pcie->pci->pp;
->  
->  	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
->  		return 0;
->  
->  	imx6_pcie_pm_turnoff(imx6_pcie);
-> -	imx6_pcie_ltssm_disable(dev);
-> -	imx6_pcie_clk_disable(imx6_pcie);
-> -	switch (imx6_pcie->drvdata->variant) {
-> -	case IMX8MM:
-> -		if (phy_power_off(imx6_pcie->phy))
-> -			dev_err(dev, "unable to power off PHY\n");
-> -		phy_exit(imx6_pcie->phy);
-> -		break;
-> -	default:
-> -		break;
-> -	}
-> -
-> -	if (imx6_pcie->vpcie)
-> -		regulator_disable(imx6_pcie->vpcie);
-> +	imx6_pcie_stop_link(imx6_pcie->pci);
-> +	imx6_pcie_host_exit(pp);
->  
->  	return 0;
->  }
+When coalescing two resources for a contiguous aperture, the first
+resource is enlarged to cover the full contiguous range, while the
+second resource is marked invalid.  This invalidation is done by
+clearing the flags, start, and end members.
 
+When adding the initial resources to the bus later, invalid resources
+are skipped.  Unfortunately, the check for an invalid resource considers
+only the end member, causing false positives.
+
+E.g. on r8a7791/koelsch, root bus resource 0 ("bus 00") is skipped, and
+no longer registered with pci_bus_insert_busn_res() (causing the memory
+leak), nor printed:
+
+     pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
+     pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff -> 0x00ee080000
+     pci-rcar-gen2 ee090000.pci: PCI: revision 11
+     pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
+    -pci_bus 0000:00: root bus resource [bus 00]
+     pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
+
+Fix this by only skipping resources where all of the flags, start, and
+end members are zero.
+
+Fixes: 7c3855c423b17f6c ("PCI: Coalesce host bridge contiguous apertures")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Is there any side effect of not registering the root bus resource with
+pci_bus_insert_busn_res()?  This is the resource created by
+of_pci_parse_bus_range(), and thus affects any DT platforms using
+"bus-range = <0 0>".
+
+Perhaps checking for "!res->flags" would be sufficient?
+
+I assume this still causes memory leaks on systems where resources are
+coalesced, as the second resource of a contiguous aperture is no longer
+referenced? Perhaps instead of clearing the resource, it should be
+removed from the list (and freed? is it actually safe to do that?)?
+
+Apparently Johannes had identified the bug before, but didn't realize
+the full impact...
+https://lore.kernel.org/r/5331e942ff28bb191d62bb403b03ceb7d750856c.camel@sipsolutions.net/
+---
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 17a969942d37033a..be628798d279ada0 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -994,7 +994,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	resource_list_for_each_entry_safe(window, n, &resources) {
+ 		offset = window->offset;
+ 		res = window->res;
+-		if (!res->end)
++		if (!res->flags && !res->start && !res->end)
+ 			continue;
+ 
+ 		list_move_tail(&window->node, &bridge->windows);
+-- 
+2.25.1
 
