@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E93BC57315C
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jul 2022 10:42:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D55B573169
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jul 2022 10:45:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234788AbiGMImO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jul 2022 04:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51112 "EHLO
+        id S230192AbiGMIpB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jul 2022 04:45:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235637AbiGMIlc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 04:41:32 -0400
+        with ESMTP id S234399AbiGMIpA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 04:45:00 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F478EF9E3
-        for <linux-pci@vger.kernel.org>; Wed, 13 Jul 2022 01:41:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC86BFAC4
+        for <linux-pci@vger.kernel.org>; Wed, 13 Jul 2022 01:44:59 -0700 (PDT)
 Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <l.stach@pengutronix.de>)
-        id 1oBXvg-0004GD-PG; Wed, 13 Jul 2022 10:41:08 +0200
-Message-ID: <2cfe481fdbd074ef6ff7e95bf32b5c99e6a26aca.camel@pengutronix.de>
-Subject: Re: [PATCH v14 11/17] PCI: imx6: Move regulator enable out of
- imx6_pcie_deassert_core_reset()
+        id 1oBXzI-00051F-1d; Wed, 13 Jul 2022 10:44:52 +0200
+Message-ID: <cf3ee1c46da73693a05ecc81ddd3bf81d4d8f185.camel@pengutronix.de>
+Subject: Re: [PATCH v14 12/17] PCI: imx6: Mark the link down as non-fatal
+ error
 From:   Lucas Stach <l.stach@pengutronix.de>
 To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
         robh+dt@kernel.org, broonie@kernel.org, lorenzo.pieralisi@arm.com,
@@ -29,10 +29,10 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com
-Date:   Wed, 13 Jul 2022 10:41:07 +0200
-In-Reply-To: <1656645935-1370-12-git-send-email-hongxing.zhu@nxp.com>
+Date:   Wed, 13 Jul 2022 10:44:50 +0200
+In-Reply-To: <1656645935-1370-13-git-send-email-hongxing.zhu@nxp.com>
 References: <1656645935-1370-1-git-send-email-hongxing.zhu@nxp.com>
-         <1656645935-1370-12-git-send-email-hongxing.zhu@nxp.com>
+         <1656645935-1370-13-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
@@ -51,100 +51,53 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Am Freitag, dem 01.07.2022 um 11:25 +0800 schrieb Richard Zhu:
-> Move regulator enable out of imx6_pcie_deassert_core_reset(), since the
-> regulator_enable() has nothing to do in with
-> imx6_pcie_deassert_core_reset().
+> Let the driver probe successfully, return zero in imx6_pcie_start_link()
+> when PCIe link is down.
 > 
+> Link: https://lore.kernel.org/r/1655189942-12678-7-git-send-email-hongxing.zhu@nxp.com
 > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Ah, so you are doing things in two steps. Disregard my first comment on
-the last patch then.
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
 > ---
->  drivers/pci/controller/dwc/pci-imx6.c | 36 ++++++++++++---------------
->  1 file changed, 16 insertions(+), 20 deletions(-)
+>  drivers/pci/controller/dwc/pci-imx6.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index f72eb609769b..0b168f0d57b8 100644
+> index 0b168f0d57b8..e236f824c808 100644
 > --- a/drivers/pci/controller/dwc/pci-imx6.c
 > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -712,19 +712,10 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	struct device *dev = pci->dev;
->  	int ret;
+> @@ -836,7 +836,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+>  	/* Start LTSSM. */
+>  	imx6_pcie_ltssm_enable(dev);
 >  
-> -	if (imx6_pcie->vpcie) {
-> -		ret = regulator_enable(imx6_pcie->vpcie);
-> -		if (ret) {
-> -			dev_err(dev, "failed to enable vpcie regulator: %d\n",
-> -				ret);
-> -			return ret;
-> -		}
-> -	}
-> -
->  	ret = imx6_pcie_clk_enable(imx6_pcie);
->  	if (ret) {
->  		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
-> -		goto err_clks;
-> +		return ret;
+> -	dw_pcie_wait_for_link(pci);
+> +	ret = dw_pcie_wait_for_link(pci);
+> +	if (ret)
+> +		goto err_reset_phy;
+>  
+>  	if (pci->link_gen == 2) {
+>  		/* Allow Gen2 mode after the link is up. */
+> @@ -872,7 +874,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+>  		}
+>  
+>  		/* Make sure link training is finished as well! */
+> -		dw_pcie_wait_for_link(pci);
+> +		ret = dw_pcie_wait_for_link(pci);
+> +		if (ret)
+> +			goto err_reset_phy;
+>  	} else {
+>  		dev_info(dev, "Link: Gen2 disabled\n");
 >  	}
->  
->  	switch (imx6_pcie->drvdata->variant) {
-> @@ -783,15 +774,6 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	}
->  
->  	return 0;
-> -
-> -err_clks:
-> -	if (imx6_pcie->vpcie) {
-> -		ret = regulator_disable(imx6_pcie->vpcie);
-> -		if (ret)
-> -			dev_err(dev, "failed to disable vpcie regulator: %d\n",
-> -				ret);
-> -	}
+> @@ -886,7 +890,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+>  		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
+>  		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
+>  	imx6_pcie_reset_phy(imx6_pcie);
 > -	return ret;
+> +	return 0;
 >  }
 >  
->  static int imx6_pcie_wait_for_speed_change(struct imx6_pcie *imx6_pcie)
-> @@ -916,15 +898,29 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
->  
->  	imx6_pcie_assert_core_reset(imx6_pcie);
->  	imx6_pcie_init_phy(imx6_pcie);
-> +	if (imx6_pcie->vpcie) {
-> +		ret = regulator_enable(imx6_pcie->vpcie);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable vpcie regulator: %d\n",
-> +				ret);
-> +			return ret;
-
-If the regulator enable fails, you don't roll back the PHY init and
-core reset. This seems harmless now, but might have unintended
-consequences if the PHY code changes. I think it should be safe to move
-the regulator enable before the PHY init and core reset assert to avoid
-introducing more failure cleanup paths here.
-
-Regards,
-Lucas
-
-> +		}
-> +	}
-> +
->  	ret = imx6_pcie_deassert_core_reset(imx6_pcie);
->  	if (ret < 0) {
->  		dev_err(dev, "pcie deassert core reset failed: %d\n", ret);
-> -		return ret;
-> +		goto err_reg_disable;
->  	}
->  
->  	imx6_setup_phy_mpll(imx6_pcie);
->  
->  	return 0;
-> +
-> +err_reg_disable:
-> +	if (imx6_pcie->vpcie)
-> +		regulator_disable(imx6_pcie->vpcie);
-> +	return ret;
->  }
->  
->  static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
+>  static int imx6_pcie_host_init(struct pcie_port *pp)
 
 
