@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81A705730DD
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jul 2022 10:21:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40133573110
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jul 2022 10:27:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235545AbiGMIVq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jul 2022 04:21:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52718 "EHLO
+        id S235592AbiGMI1X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jul 2022 04:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235384AbiGMIVJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 04:21:09 -0400
+        with ESMTP id S235246AbiGMI0s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 04:26:48 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4E184EC6
-        for <linux-pci@vger.kernel.org>; Wed, 13 Jul 2022 01:17:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B6AC20BDC
+        for <linux-pci@vger.kernel.org>; Wed, 13 Jul 2022 01:26:12 -0700 (PDT)
 Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <l.stach@pengutronix.de>)
-        id 1oBXYq-0008P4-DS; Wed, 13 Jul 2022 10:17:32 +0200
-Message-ID: <20ce8aae480ba224392ec86b279a72bd4cc0e573.camel@pengutronix.de>
-Subject: Re: [PATCH v14 05/17] PCI: imx6: Factor out ref clock disable to
- match enable
+        id 1oBXh6-0001Xl-MY; Wed, 13 Jul 2022 10:26:04 +0200
+Message-ID: <29492f419daf4334546826c54b206ccb2858063d.camel@pengutronix.de>
+Subject: Re: [PATCH v14 09/17] PCI: imx6: Call host init function directly
+ in resume
 From:   Lucas Stach <l.stach@pengutronix.de>
 To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
         robh+dt@kernel.org, broonie@kernel.org, lorenzo.pieralisi@arm.com,
@@ -29,10 +29,10 @@ To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com
-Date:   Wed, 13 Jul 2022 10:17:31 +0200
-In-Reply-To: <1656645935-1370-6-git-send-email-hongxing.zhu@nxp.com>
+Date:   Wed, 13 Jul 2022 10:26:03 +0200
+In-Reply-To: <1656645935-1370-10-git-send-email-hongxing.zhu@nxp.com>
 References: <1656645935-1370-1-git-send-email-hongxing.zhu@nxp.com>
-         <1656645935-1370-6-git-send-email-hongxing.zhu@nxp.com>
+         <1656645935-1370-10-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
@@ -51,69 +51,37 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Am Freitag, dem 01.07.2022 um 11:25 +0800 schrieb Richard Zhu:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+> Call imx6_pcie_host_init() instead of duplicating codes in resume.
 > 
-> The PCIe ref clocks are specific to different variants.  The enables are
-> already split out into imx6_pcie_enable_ref_clk(), but the disables were
-> combined with the more generic bus/phy/pcie clock disables in
-> imx6_pcie_clk_disable().
-> 
-> Split out the variant-specific disables into imx6_pcie_disable_ref_clk() to
-> match imx6_pcie_enable_ref_clk().
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+
+So this isn't strictly a de-duplication, as imx6_pcie_host_init also
+does the MPLL setup again on i.MX6SX. Which I believe is absolutely the
+right thing to do in resume, even though I'm not aware of any system
+that would be affected by this change.
 
 Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
 > ---
->  drivers/pci/controller/dwc/pci-imx6.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
+>  drivers/pci/controller/dwc/pci-imx6.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 38f208eea2d7..f458461880dc 100644
+> index eaae144db4f3..2b42c37f1617 100644
 > --- a/drivers/pci/controller/dwc/pci-imx6.c
 > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -580,12 +580,8 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  	return ret;
->  }
+> @@ -1034,9 +1034,9 @@ static int imx6_pcie_resume_noirq(struct device *dev)
+>  	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
+>  		return 0;
 >  
-> -static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
-> +static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
->  {
-> -	clk_disable_unprepare(imx6_pcie->pcie);
-> -	clk_disable_unprepare(imx6_pcie->pcie_phy);
-> -	clk_disable_unprepare(imx6_pcie->pcie_bus);
-> -
->  	switch (imx6_pcie->drvdata->variant) {
->  	case IMX6SX:
->  		clk_disable_unprepare(imx6_pcie->pcie_inbound_axi);
-> @@ -595,8 +591,8 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
->  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
->  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
->  		break;
-> -	case IMX8MQ:
->  	case IMX8MM:
-> +	case IMX8MQ:
->  		clk_disable_unprepare(imx6_pcie->pcie_aux);
->  		break;
->  	default:
-> @@ -604,6 +600,14 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
->  	}
->  }
+> -	imx6_pcie_assert_core_reset(imx6_pcie);
+> -	imx6_pcie_init_phy(imx6_pcie);
+> -	imx6_pcie_deassert_core_reset(imx6_pcie);
+> +	ret = imx6_pcie_host_init(pp);
+> +	if (ret)
+> +		return ret;
+>  	dw_pcie_setup_rc(pp);
 >  
-> +static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
-> +{
-> +	clk_disable_unprepare(imx6_pcie->pcie);
-> +	clk_disable_unprepare(imx6_pcie->pcie_phy);
-> +	clk_disable_unprepare(imx6_pcie->pcie_bus);
-> +	imx6_pcie_disable_ref_clk(imx6_pcie);
-> +}
-> +
->  static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  {
->  	struct device *dev = imx6_pcie->pci->dev;
+>  	ret = imx6_pcie_start_link(imx6_pcie->pci);
 
 
