@@ -2,50 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 641B65753C2
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 19:10:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EE7E575531
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 20:42:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232593AbiGNRKT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jul 2022 13:10:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40760 "EHLO
+        id S238661AbiGNSmL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jul 2022 14:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231892AbiGNRKS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 13:10:18 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 426884B0E4;
-        Thu, 14 Jul 2022 10:10:17 -0700 (PDT)
+        with ESMTP id S232093AbiGNSmK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 14:42:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F085959250;
+        Thu, 14 Jul 2022 11:42:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 03399B82775;
-        Thu, 14 Jul 2022 17:10:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47A68C34114;
-        Thu, 14 Jul 2022 17:10:14 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6188EB82885;
+        Thu, 14 Jul 2022 18:42:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 654C1C34114;
+        Thu, 14 Jul 2022 18:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657818614;
-        bh=vDQxXLVTJFK74v+ZithVlCtCKw4wiZkU9/wB6juRoEU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bvL7bvjMsOvuOQmCDwSwj5lzPREWDmApOpqeLXKQjmN3bg3cEBG5r6MfUcq5AseHG
-         dDQO/LSkZM5CqWu93miSLvmLCdAwrCwCaWjFCjV0CFwtdm6pWrKrBY0B1hhZoG+V8F
-         FEqCme8WNY+uER2OitXOKLcnVG5CrrHdmk4MYMYbstWs9nRCcwP2mcVWeverfWC443
-         YyG9LN2As52rL+2ykwheYKPlcwLbiuBWCELDi194WRK8IiY8st/YdpTYpesW98hTl5
-         IBSCgGsbjeiy/ChNeVpgfofYwf3S7arLJO85A7a7rKAfr3Lfem71hN3mUFK/ZlNS5K
-         gv4wGle0dKf9g==
-Date:   Thu, 14 Jul 2022 12:10:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
-        broonie@kernel.org, lorenzo.pieralisi@arm.com, festevam@gmail.com,
-        francesco.dolcini@toradex.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-Subject: Re: [PATCH v15 0/17] PCI: imx6: refine codes and add the error
- propagation
-Message-ID: <20220714171012.GA1029546@bhelgaas>
+        s=k20201202; t=1657824125;
+        bh=mDPYepdb8ZMtjYZIy9oLieQo0ev/tUm3Vj50xM8X0vs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sIzi7aF/eVJ0hOZudaNg0t7EaydKlWLoBgQAgqn6wmwiNCxZBn9RfvmAskbV2GRI/
+         Yj78cZtpmVQxvvKWZ6c4AJ+YJcuiyr582e17YId+zebT7M39boWFHN9HtQatJfnf77
+         4gGIJwPpJDsNpiYhM+SvgReHBq0kkQiPrMPNVPpV+TGAmTcS9BUrhC4Jt/8lFaPBgw
+         CoTPLlHTGbbRXeTgWlyrqCVFbjUT8Yg+gseWd3SqARsiBGueEWIEX767YofOjoKQP/
+         5q9rrxHbeIQn3L3T0MTrvOEgk4Sfz7vmLjnMZsQWIdH1Ot6tCaMDlV2bylEIaxPLDY
+         6bhl84SG1YLYA==
+Received: by pali.im (Postfix)
+        id BB5281295; Thu, 14 Jul 2022 20:42:02 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: Assign PCI domain by ida_alloc()
+Date:   Thu, 14 Jul 2022 20:41:30 +0200
+Message-Id: <20220714184130.5436-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220702204737.7719-1-pali@kernel.org>
+References: <20220702204737.7719-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1657783869-19194-1-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,164 +57,216 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 03:30:52PM +0800, Richard Zhu wrote:
-> This series patches refine pci-imx6 driver and do the following main changes.
-> - Encapsulate the clock enable into one standalone function
-> - Add the error propagation from host_init and resume
-> - Turn off regulator when the system is in suspend mode
-> - Let the probe successfully when link never comes up
-> - Do not hide the phy driver callbacks in core reset and clk_enable.
-> - Keep symmetric as much as possible between suspend and resume callbacks.
-> BTW, this series are verified on i.MX8MM EVK board when one NVME is used.
-> 
-> Main changes from v14 to v15 refer to Lucas' comments and Bjorn's suggestions:
-> Only the five patches listed below have changes.
-> 10/17
-> - Remove regulator_disable() from imx6_pcie_shutdown() and update the commit
->   log accordingly refer to Lucas' comments.
-> 11/17
-> - Move the regulator enable before the PHY init and core reset assert to
->   avoid introducing more failure cleanup paths refer to Lucas' comments.
-> 14/17 has the codes conflictions.
-> - Rebase the 14/17 patch because of the codes conflictions introduced by
->   previous 11/17 new changes.
-> 16/17
-> - Add the missing the IMX8MQ case and drop the default case in
->   imx6_pcie_ltssm_disable() refer to Lucas' comments.
-> 17/17
-> - Rebase the codes and resolve the codes conflictions introduced by
->   previous 11/17 new changes.
-> - Correct one failure cleanup in imx6_pcie_host_init().
-> 
-> Main changes from v13 to v14 refer to Bjorn's comments:
-> - To keep suspend/resume symmetric as much as possible. Create
->   imx6_pcie_stop_link() and imx6_pcie_host_exit() functions, and invoke
->   them in suspend callback.
-> - Since the imx6_pcie_clk_disable() is invoked by imx6_pcie_host_exit(),
->   to be symmetric with imx6_pcie_host_exit(), move imx6_pcie_clk_enable()
->   to imx6_pcie_host_init() from imx6_pcie_deassert_core_reset().
-> 
-> Main changes from v12 to v13:
-> - Call imx6_pcie_host_init() instead of duplicating codes in resume.
-> - Move the regulator enable out of imx6_pcie_deassert_core_reset().
->   Re-format the error handling in imx6_pcie_deassert_core_reset()
->   and imx6_pcie_host_init() accordingly.
-> 
-> Main changes from v11 to v12 issued by Bjorn:
-> - Add four intro patches to move code around to collect similar things
->   (PHY management, reset management) together.  This makes the first
->   diff to collect clock enables simpler because it's not cluttered with
->   unrelated things that didn't actually change.
-> - Factor out ref clock disables so the disable function structure matches
->   the enable structure.
-> - Drop unused "ret" from "Reduce resume time ..." to avoid bisection
->   hole, then add it back in "Do not hide phy driver ..." where we start
->   using it again.
-> - Add patch to make imx6_pcie_clk_disable() symmetric with
->   imx6_pcie_clk_enable() in terms of enable/disable ordering.
-> 
-> Main changes from v10 to v11:
-> No code changes, just do the following operations refer to Bjorn's comments.
->   - Split #6 patch into two patches.
->   - Rebase to v5.19-rc1 based on for-next branch of Shawn's git.
-> 
-> Main changes from v9 to v10:
-> - Add the "Reviewed-by: Lucas Stach <l.stach@pengutronix.de>" tag into #3
->   and #4 patches.
-> - Refer to Bjorn's comments:
->   - refine the commit of the first patch
->   - keep alignment of the message format in the second patch
->   - More specific commit and subject of the #5 and #7 patches.
-> - Move the regualtor_disable into suspend, turn off the regulator when bus
->   is powered off and system in suspend mode.
-> - Let the driver probe successfully, return zero in imx6_pcie_start_link()
->   when PCIe link is down. 
->   In this link down scenario, only start the PCIe link training in resume
->   when the link is up before system suspend to avoid the long latency in
->   the link training period.
-> - Don't hide phy driver callbacks in core reset and clk_enable, and refine
->   the error handling accordingly.
-> - Drop the #8 patch of v9 series, since the clocks and powers are not gated
->   off anymore when link is down.
-> 
-> Main changes from v8 to v9:
-> - Don't change pcie-designware codes, and do the error exit process only in
->   pci-imx6 driver internally.
-> - Move the phy driver callbacks to the proper places
-> 
-> Main changes from v7 to v8:
-> Regarding Bjorn's review comments.
-> - Align the format of the dev_info message and refine commit log of
->   #6/7/8 patches.
-> - Rename the err_reset_phy label, since there is no PHY reset in the out
-> 
-> Main changes from v6 to v7:
-> - Keep the regulator usage counter balance in the #5 patch of v6 series.
-> 
-> Main changes from v5 to v6:
-> - Refer to the following discussion with Fabio, fix the dump by his patch.
->   https://patchwork.kernel.org/project/linux-pci/patch/1641368602-20401-6-git-send-email-hongxing.zhu@nxp.com/
->   Refine and rebase this patch-set after Fabio' dump fix patch is merged.
-> - Add one new #4 patch to disable i.MX6QDL REF clock too when disable clocks
-> - Split the regulator refine codes into one standalone patch #5 in this version.
-> 
-> Main changes from v4 to v5:
-> - Since i.MX8MM PCIe support had been merged. Based on Lorenzo's git repos,
->   resend the patch-set after rebase.
-> 
-> Main changes from v3 to v4:
-> - Regarding Mark's comments, delete the regulator_is_enabled() check.
-> - Squash #3 and #6 of v3 patch into #5 patch of v4 set.
-> 
-> Main changes from v2 to v3:
-> - Add "Reviewed-by: Lucas Stach <l.stach@pengutronix.de>" tag into
->   first two patches.
-> - Add a Fixes tag into #3 patch.
-> - Split the #4 of v2 to two patches, one is clock disable codes move,
->   the other one is the acutal clock unbalance fix.
-> - Add a new host_exit() callback into dw_pcie_host_ops, then it could be
->   invoked to handle the unbalance issue in the error handling after
->   host_init() function when link is down.
-> - Add a new host_exit() callback for i.MX PCIe driver to handle this case
->   in the error handling after host_init.
-> 
-> Main changes from v1 to v2:
-> Regarding Lucas' comments.
->   - Move the placement of the new imx6_pcie_clk_enable() to avoid the
->     forward declarition.
->   - Seperate the second patch of v1 patch-set to three patches.
->   - Use the module_param to replace the kernel command line.
-> Regarding Bjorn's comments:
->   - Use the cover-letter for a multi-patch series.
->   - Correct the subject line, and refine the commit logs. For example,
->     remove the timestamp of the logs.
-> 
-> Bjorn Helgaas (5):
->   PCI: imx6: Move imx6_pcie_grp_offset(), imx6_pcie_configure_type()
->     earlier
->   PCI: imx6: Move PHY management functions together
->   PCI: imx6: Move imx6_pcie_enable_ref_clk() earlier
->   PCI: imx6: Factor out ref clock disable to match enable
->   PCI: imx6: Disable clocks in reverse order of enable
-> 
-> Richard Zhu (12):
->   PCI: imx6: Move imx6_pcie_clk_disable() earlier
->   PCI: imx6: Collect clock enables in imx6_pcie_clk_enable()
->   PCI: imx6: Propagate .host_init() errors to caller
->   PCI: imx6: Disable i.MX6QDL clock when disabling ref clocks
->   PCI: imx6: Call host init function directly in resume
->   PCI: imx6: Turn off regulator when system is in suspend mode
->   PCI: imx6: Move regulator enable out of
->     imx6_pcie_deassert_core_reset()
->   PCI: imx6: Mark the link down as non-fatal error
->   PCI: imx6: Reduce resume time by only starting link if it was up
->     before suspend
->   PCI: imx6: Do not hide phy driver callbacks and refine the error
->     handling
->   PCI: imx6: Move the imx6_pcie_ltssm_disable() earlier
->   PCI: imx6: Reformat suspend callback to keep symmetric with resume
-> 
-> drivers/pci/controller/dwc/pci-imx6.c | 660 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------
-> 1 file changed, 357 insertions(+), 303 deletions(-)
+Replace assignment of PCI domain from atomic_inc_return() to ida_alloc().
 
-Applied to pci/ctrl/imx6 for v5.20, thanks!
+Use two IDAs, one for static domain allocations (those which are defined in
+device tree) and second for dynamic allocations (all other).
+
+During removal of root bus / host bridge release also allocated domain id.
+So released id can be reused again, for example in situation when
+dynamically loading and unloading native PCI host bridge drivers.
+
+This change also allows to mix static device tree assignment and dynamic by
+kernel as all static allocations are reserved in dynamic pool.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+Idea of this patch comes from the following discussion:
+https://lore.kernel.org/linux-pci/20210412123936.25555-1-pali@kernel.org/t/#u
+
+Changes in v2:
+* Fix broken compilation
+---
+ drivers/pci/pci.c    | 103 +++++++++++++++++++++++++------------------
+ drivers/pci/probe.c  |   5 +++
+ drivers/pci/remove.c |   6 +++
+ include/linux/pci.h  |   1 +
+ 4 files changed, 72 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index cfaf40a540a8..34fdcee6634a 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6762,60 +6762,70 @@ static void pci_no_domains(void)
+ }
+ 
+ #ifdef CONFIG_PCI_DOMAINS_GENERIC
+-static atomic_t __domain_nr = ATOMIC_INIT(-1);
++static DEFINE_IDA(pci_domain_nr_static_ida);
++static DEFINE_IDA(pci_domain_nr_dynamic_ida);
+ 
+-static int pci_get_new_domain_nr(void)
++static void of_pci_reserve_static_domain_nr(void)
+ {
+-	return atomic_inc_return(&__domain_nr);
++	struct device_node *np;
++	int domain_nr;
++
++	for_each_node_by_type(np, "pci") {
++		domain_nr = of_get_pci_domain_nr(np);
++		if (domain_nr < 0)
++			continue;
++		/*
++		 * Permanently allocate domain_nr in dynamic_ida
++		 * to prevent it from dynamic allocation.
++		 */
++		ida_alloc_range(&pci_domain_nr_dynamic_ida,
++				domain_nr, domain_nr, GFP_KERNEL);
++	}
+ }
+ 
+ static int of_pci_bus_find_domain_nr(struct device *parent)
+ {
+-	static int use_dt_domains = -1;
+-	int domain = -1;
++	static bool static_domains_reserved = false;
++	int domain_nr;
+ 
+-	if (parent)
+-		domain = of_get_pci_domain_nr(parent->of_node);
++	/* On the first call scan device tree for static allocations. */
++	if (!static_domains_reserved) {
++		of_pci_reserve_static_domain_nr();
++		static_domains_reserved = true;
++	}
++
++	if (parent) {
++		/*
++		 * If domain is in DT then allocate it in static IDA.
++		 * This prevent duplicate static allocations in case
++		 * of errors in DT.
++		 */
++		domain_nr = of_get_pci_domain_nr(parent->of_node);
++		if (domain_nr >= 0)
++			return ida_alloc_range(&pci_domain_nr_static_ida,
++					       domain_nr, domain_nr,
++					       GFP_KERNEL);
++	}
+ 
+ 	/*
+-	 * Check DT domain and use_dt_domains values.
+-	 *
+-	 * If DT domain property is valid (domain >= 0) and
+-	 * use_dt_domains != 0, the DT assignment is valid since this means
+-	 * we have not previously allocated a domain number by using
+-	 * pci_get_new_domain_nr(); we should also update use_dt_domains to
+-	 * 1, to indicate that we have just assigned a domain number from
+-	 * DT.
+-	 *
+-	 * If DT domain property value is not valid (ie domain < 0), and we
+-	 * have not previously assigned a domain number from DT
+-	 * (use_dt_domains != 1) we should assign a domain number by
+-	 * using the:
+-	 *
+-	 * pci_get_new_domain_nr()
+-	 *
+-	 * API and update the use_dt_domains value to keep track of method we
+-	 * are using to assign domain numbers (use_dt_domains = 0).
+-	 *
+-	 * All other combinations imply we have a platform that is trying
+-	 * to mix domain numbers obtained from DT and pci_get_new_domain_nr(),
+-	 * which is a recipe for domain mishandling and it is prevented by
+-	 * invalidating the domain value (domain = -1) and printing a
+-	 * corresponding error.
++	 * If domain was not specified in DT then choose free id from dynamic
++	 * allocations. All domain numbers from DT are permanently in dynamic
++	 * allocations to prevent assigning them to other DT nodes without
++	 * static domain.
+ 	 */
+-	if (domain >= 0 && use_dt_domains) {
+-		use_dt_domains = 1;
+-	} else if (domain < 0 && use_dt_domains != 1) {
+-		use_dt_domains = 0;
+-		domain = pci_get_new_domain_nr();
+-	} else {
+-		if (parent)
+-			pr_err("Node %pOF has ", parent->of_node);
+-		pr_err("Inconsistent \"linux,pci-domain\" property in DT\n");
+-		domain = -1;
+-	}
++	return ida_alloc(&pci_domain_nr_dynamic_ida, GFP_KERNEL);
++}
+ 
+-	return domain;
++static void of_pci_bus_release_domain_nr(struct pci_bus *bus, struct device *parent)
++{
++	if (bus->domain_nr < 0)
++		return;
++
++	/* Release domain from ida in which was it allocated. */
++	if (of_get_pci_domain_nr(parent->of_node) == bus->domain_nr)
++		ida_free(&pci_domain_nr_static_ida, bus->domain_nr);
++	else
++		ida_free(&pci_domain_nr_dynamic_ida, bus->domain_nr);
+ }
+ 
+ int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent)
+@@ -6823,6 +6833,13 @@ int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent)
+ 	return acpi_disabled ? of_pci_bus_find_domain_nr(parent) :
+ 			       acpi_pci_bus_find_domain_nr(bus);
+ }
++
++void pci_bus_release_domain_nr(struct pci_bus *bus, struct device *parent)
++{
++	if (!acpi_disabled)
++		return;
++	of_pci_bus_release_domain_nr(bus, parent);
++}
+ #endif
+ 
+ /**
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 17a969942d37..12092d238403 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -906,6 +906,8 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 		bus->domain_nr = pci_bus_find_domain_nr(bus, parent);
+ 	else
+ 		bus->domain_nr = bridge->domain_nr;
++	if (bus->domain_nr < 0)
++		goto free;
+ #endif
+ 
+ 	b = pci_find_bus(pci_domain_nr(bus), bridge->busnr);
+@@ -1030,6 +1032,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	device_del(&bridge->dev);
+ 
+ free:
++#ifdef CONFIG_PCI_DOMAINS_GENERIC
++	pci_bus_release_domain_nr(bus, parent);
++#endif
+ 	kfree(bus);
+ 	return err;
+ }
+diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+index 4c54c75050dc..0145aef1b930 100644
+--- a/drivers/pci/remove.c
++++ b/drivers/pci/remove.c
+@@ -160,6 +160,12 @@ void pci_remove_root_bus(struct pci_bus *bus)
+ 	pci_remove_bus(bus);
+ 	host_bridge->bus = NULL;
+ 
++#ifdef CONFIG_PCI_DOMAINS_GENERIC
++	/* Release domain_nr if it was dynamically allocated */
++	if (host_bridge->domain_nr == PCI_DOMAIN_NR_NOT_SET)
++		pci_bus_release_domain_nr(bus, host_bridge->dev.parent);
++#endif
++
+ 	/* remove the host bridge */
+ 	device_del(&host_bridge->dev);
+ }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 81a57b498f22..6c7f27e62bcc 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1723,6 +1723,7 @@ static inline int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
+ { return 0; }
+ #endif
+ int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent);
++void pci_bus_release_domain_nr(struct pci_bus *bus, struct device *parent);
+ #endif
+ 
+ /* Some architectures require additional setup to direct VGA traffic */
+-- 
+2.20.1
+
