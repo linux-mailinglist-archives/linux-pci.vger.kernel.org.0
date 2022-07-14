@@ -2,193 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7602857461C
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 09:48:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5E935746FC
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 10:37:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237614AbiGNHsS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jul 2022 03:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44454 "EHLO
+        id S236457AbiGNIhE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jul 2022 04:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237612AbiGNHrn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 03:47:43 -0400
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1DAB3AB23;
-        Thu, 14 Jul 2022 00:47:15 -0700 (PDT)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 78BA21A2049;
-        Thu, 14 Jul 2022 09:47:14 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 12BDE1A2034;
-        Thu, 14 Jul 2022 09:47:14 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 6AD0F180327D;
-        Thu, 14 Jul 2022 15:47:12 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
-        broonie@kernel.org, lorenzo.pieralisi@arm.com, festevam@gmail.com,
-        francesco.dolcini@toradex.com
-Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-Subject: [PATCH v15 17/17] PCI: imx6: Reformat suspend callback to keep symmetric with resume
-Date:   Thu, 14 Jul 2022 15:31:09 +0800
-Message-Id: <1657783869-19194-18-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1657783869-19194-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1657783869-19194-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S235877AbiGNIg5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 04:36:57 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3EC63FA02
+        for <linux-pci@vger.kernel.org>; Thu, 14 Jul 2022 01:36:51 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id h17so1627606wrx.0
+        for <linux-pci@vger.kernel.org>; Thu, 14 Jul 2022 01:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=H3bGT1ZyGPu3PRQJlJHyQI9TvTjBPuNSyHjFOzNfiP0=;
+        b=nfF93HFABydKtKUN6hm08YjvNRh2G4i7biDP0iGWKm0CJI/6tO/7ASVGiMVbrFcvre
+         dFe7LS0o6XmnC1olR6EZQT61Pk5CcDXk8EOCE/ZUPQPC2WOF08wHjQNTI98f51BXkTW7
+         5dyslKzFlMJ1FAFUBcS5XSZMuJJQc0mVGS8sJL1EcuApFLh9MbSY3DeHMChVpm6lylO2
+         ZiD2YD5TYnCnW1RYesj2zabgr2TZokupGOdRW5Wg1Wsic5Yzi6a7GNVAIH/aFq924Tv4
+         l/BLkapdJUQdDh1nnfELCxBLwNTsd2zSHh12MGEWr6e9uOYA2kL+ohlW7KhzBK2CbHvs
+         dAHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=H3bGT1ZyGPu3PRQJlJHyQI9TvTjBPuNSyHjFOzNfiP0=;
+        b=UbUGP5zt0KyywQsXd/JnkglKVBEYUwJW6PKVuotEN4bINlTS60wWzWEYpDbd6bblyM
+         ALRBcHdxrDUXI2kx+gqIkftTv/lMBxDdGbd/LPXIhByYSZ6iHLGDA1AQ8lXG84LPIxHI
+         ZlMb5QdpkOOsJE6z8cxtC9Ba6uasT60zlSMSVHCe0xgy/vG7NWfAEIO9dMCIAKFPfZtg
+         b39SQGfMrgDaPOGQJlaBCPInyp5IipZuF01R1sWVOZmW3lCOnzEQti//y+keVKbUdZzC
+         3bCT6xrkdOfXwgN51kQXugZ6IzK5GBllzMUWl+usHU02ZqTVw6m9VMOtNWENDpjd6e5m
+         fZGA==
+X-Gm-Message-State: AJIora/TirMYuUFBnfTTqiZhhTtN80CZ6l5Gl/+wRGppgin4KQgZ5khZ
+        gTQgf4JfrbMCmvAprymyW+2o922M12ACvOpD/dT+86Nu3aeUhA==
+X-Google-Smtp-Source: AGRyM1sBAY02anFyAAkYvB61573ohyB+lIVHvdune1I2St249pttaSZdeqZISv5rckThyg5u7Q/retQg6yCpkFrJ9YI=
+X-Received: by 2002:a05:6512:1307:b0:47f:baa4:52c5 with SMTP id
+ x7-20020a056512130700b0047fbaa452c5mr4350443lfu.103.1657787798421; Thu, 14
+ Jul 2022 01:36:38 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a2e:9041:0:0:0:0:0 with HTTP; Thu, 14 Jul 2022 01:36:37
+ -0700 (PDT)
+Reply-To: abdwabbomaddahm@gmail.com
+From:   Abdwabbo Maddah <abdwabbomaddah746@gmail.com>
+Date:   Thu, 14 Jul 2022 09:36:37 +0100
+Message-ID: <CAFC-3idDfFB0Mmtq-N-n6z5Ly7T-KDCJtvbc0UgtirMnTLYTCg@mail.gmail.com>
+Subject: Get back to me... URGENT
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:42a listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4598]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [abdwabbomaddah746[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [abdwabbomaddah746[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Create imx6_pcie_stop_link() and imx6_pcie_host_exit() functions.
-Encapsulate clocks, regulators disables and PHY uninitialization into
-imx6_pcie_host_exit().
-
-To keep suspend/resume symmetric as much as possible, invoke these two
-new created functions in suspend callback.
-
-To be symmetric with imx6_pcie_host_exit(), move imx6_pcie_clk_enable()
-to imx6_pcie_host_init() from imx6_pcie_deassert_core_reset().
-
-Link: https://lore.kernel.org/r/1656645935-1370-18-git-send-email-hongxing.zhu@nxp.com
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
----
- drivers/pci/controller/dwc/pci-imx6.c | 62 ++++++++++++++++-----------
- 1 file changed, 37 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 21e9101f63f0..b7a7e3465f28 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -703,13 +703,6 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- {
- 	struct dw_pcie *pci = imx6_pcie->pci;
- 	struct device *dev = pci->dev;
--	int ret;
--
--	ret = imx6_pcie_clk_enable(imx6_pcie);
--	if (ret) {
--		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
--		return ret;
--	}
- 
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX8MQ:
-@@ -904,6 +897,14 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 	return 0;
- }
- 
-+static void imx6_pcie_stop_link(struct dw_pcie *pci)
-+{
-+	struct device *dev = pci->dev;
-+
-+	/* Turn off PCIe LTSSM */
-+	imx6_pcie_ltssm_disable(dev);
-+}
-+
- static int imx6_pcie_host_init(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -923,11 +924,17 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
- 	imx6_pcie_assert_core_reset(imx6_pcie);
- 	imx6_pcie_init_phy(imx6_pcie);
- 
-+	ret = imx6_pcie_clk_enable(imx6_pcie);
-+	if (ret) {
-+		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
-+		goto err_reg_disable;
-+	}
-+
- 	if (imx6_pcie->phy) {
- 		ret = phy_power_on(imx6_pcie->phy);
- 		if (ret) {
- 			dev_err(dev, "pcie phy power up failed\n");
--			goto err_reg_disable;
-+			goto err_clk_disable;
- 		}
- 	}
- 
-@@ -941,24 +948,40 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
- 		ret = phy_init(imx6_pcie->phy);
- 		if (ret) {
- 			dev_err(dev, "waiting for phy ready timeout!\n");
--			goto err_clk_disable;
-+			goto err_phy_off;
- 		}
- 	}
- 	imx6_setup_phy_mpll(imx6_pcie);
- 
- 	return 0;
- 
--err_clk_disable:
--	imx6_pcie_clk_disable(imx6_pcie);
- err_phy_off:
- 	if (imx6_pcie->phy)
- 		phy_power_off(imx6_pcie->phy);
-+err_clk_disable:
-+	imx6_pcie_clk_disable(imx6_pcie);
- err_reg_disable:
- 	if (imx6_pcie->vpcie)
- 		regulator_disable(imx6_pcie->vpcie);
- 	return ret;
- }
- 
-+static void imx6_pcie_host_exit(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
-+
-+	if (imx6_pcie->phy) {
-+		if (phy_power_off(imx6_pcie->phy))
-+			dev_err(pci->dev, "unable to power off PHY\n");
-+		phy_exit(imx6_pcie->phy);
-+	}
-+	imx6_pcie_clk_disable(imx6_pcie);
-+
-+	if (imx6_pcie->vpcie)
-+		regulator_disable(imx6_pcie->vpcie);
-+}
-+
- static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
- 	.host_init = imx6_pcie_host_init,
- };
-@@ -1008,25 +1031,14 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
- static int imx6_pcie_suspend_noirq(struct device *dev)
- {
- 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
-+	struct pcie_port *pp = &imx6_pcie->pci->pp;
- 
- 	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
- 		return 0;
- 
- 	imx6_pcie_pm_turnoff(imx6_pcie);
--	imx6_pcie_ltssm_disable(dev);
--	imx6_pcie_clk_disable(imx6_pcie);
--	switch (imx6_pcie->drvdata->variant) {
--	case IMX8MM:
--		if (phy_power_off(imx6_pcie->phy))
--			dev_err(dev, "unable to power off PHY\n");
--		phy_exit(imx6_pcie->phy);
--		break;
--	default:
--		break;
--	}
--
--	if (imx6_pcie->vpcie)
--		regulator_disable(imx6_pcie->vpcie);
-+	imx6_pcie_stop_link(imx6_pcie->pci);
-+	imx6_pcie_host_exit(pp);
- 
- 	return 0;
- }
 -- 
-2.25.1
-
+Dear,
+I had sent you a mail but i don't think you received it that's why am
+writing you again.It is important you get back to me as soon as you
+can.
+Abd-Wabbo Maddah
