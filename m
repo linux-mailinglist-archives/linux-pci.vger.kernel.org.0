@@ -2,61 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 656EF5740BA
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 03:02:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E95E5740C5
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 03:07:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231150AbiGNBCX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jul 2022 21:02:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44370 "EHLO
+        id S230133AbiGNBHW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jul 2022 21:07:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbiGNBCW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 21:02:22 -0400
+        with ESMTP id S229657AbiGNBHV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jul 2022 21:07:21 -0400
 Received: from extserv.mm-sol.com (ns.mm-sol.com [37.157.136.199])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D951CB02;
-        Wed, 13 Jul 2022 18:02:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864AE1EAC8;
+        Wed, 13 Jul 2022 18:07:20 -0700 (PDT)
 Received: from [192.168.1.11] (unknown [195.24.90.54])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: svarbanov@mm-sol.com)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 3ED2BD2EE;
-        Thu, 14 Jul 2022 04:02:16 +0300 (EEST)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 018DFD2F3;
+        Thu, 14 Jul 2022 04:07:17 +0300 (EEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1657760537; bh=VKchntFKKIUycsNptcWL+GET5RQN91ySF9YKBZI59U8=;
+        t=1657760838; bh=mAG87b/Rz00R7S5lWkO464tvyYZ6zSSv0akbCiqbGt4=;
         h=Date:Subject:To:Cc:From:From;
-        b=kFL5y7CcinGaYD2ZR82z6bnWSEnexqR1IRKx6ZTkqBpUM/a7bNn91RNeWUpXyQ+NX
-         QnH3RbHDlQPd5WSf3vglAbAXnisasq0o+ubBrfFkJyO7GG8Z3D9HOkv2J9xX2idV/m
-         ekJSB/sW1RqW5cxwD8w51d90z7iozD4DbxevTAgOOKGz4D8ICZItUomtmI1blDEtxC
-         PB+KVvV2UoLEdwQ99mctis3Lf6AWSccQoHFLh3B/6fzlB/KPpfqLg5U/kl29JLzufi
-         T+nePakQWgkjwA6mhcMsG4RVUWvPW8pR90pjv7l3FTiTqR1Iaz6fVicH+sG9WT8+4d
-         grpaEy//Tyvuw==
-Message-ID: <3f9e1c18-bc61-8690-5427-ba8dc5fad7ad@mm-sol.com>
-Date:   Thu, 14 Jul 2022 04:02:13 +0300
+        b=ejyy8UYRFHznhUOI96LxcPz90zQQgKq1RoJ1HsEB6rOl6PzEvYeoKob4ZLBQ+57QJ
+         W+qvDl2GAG6Wf2Rgyb8TbZi+IYh8RtHIsiAcwWvIaP20c3A9h7y3p07BTV1+yr6mtZ
+         yeaXaJtiF7cUw+cr/NsYQL3mPSPkKtxtsiirtZhPCLv/mdwYLSkR+iSFLPA6HK4yh4
+         2fiAkH2oOj+fTeT8dPKJAE1Dyfq0ahrWt3hjpJISinS2+D5JrDVLzvDgfduD67yfhm
+         skTbQ21qaBk572vbc+tQ1qHtzS0z7yemnd4cXJ/sfa/fRoCUYheIiiyx0TPTP/tBu1
+         P3mi5siR4U4VQ==
+Message-ID: <8044c29c-ca00-c901-1b5b-073329b37618@mm-sol.com>
+Date:   Thu, 14 Jul 2022 04:07:10 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-Subject: Re: [PATCH v17 5/6] dt-bindings: PCI: qcom: Support additional MSI
- interrupts
+Subject: Re: [PATCH v11 4/5] PCI: qcom: Remove unnecessary pipe_clk handling
 Content-Language: en-US
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Herring <robh@kernel.org>
-References: <20220707134733.2436629-1-dmitry.baryshkov@linaro.org>
- <20220707134733.2436629-6-dmitry.baryshkov@linaro.org>
+References: <20220608105238.2973600-1-dmitry.baryshkov@linaro.org>
+ <20220608105238.2973600-5-dmitry.baryshkov@linaro.org>
 From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-In-Reply-To: <20220707134733.2436629-6-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20220608105238.2973600-5-dmitry.baryshkov@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,18 +65,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Dmitry,
 
-
-On 7/7/22 16:47, Dmitry Baryshkov wrote:
-> On Qualcomm platforms each group of 32 MSI vectors is routed to the
-> separate GIC interrupt. Document mapping of additional interrupts.
+On 6/8/22 13:52, Dmitry Baryshkov wrote:
+> PCIe PHY drivers (both QMP and PCIe2) already do clk_prepare_enable() /
+> clk_prepare_disable() pipe_clk. Remove extra calls to enable/disable
+> this clock from the PCIe driver, so that the PHY driver can manage the
+> clock on its own.
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+> Tested-by: Johan Hovold <johan+linaro@kernel.org>
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  .../devicetree/bindings/pci/qcom,pcie.yaml    | 51 +++++++++++++++++--
->  1 file changed, 48 insertions(+), 3 deletions
+>  drivers/pci/controller/dwc/pcie-qcom.c | 44 ++------------------------
+>  1 file changed, 3 insertions(+), 41 deletions(-)
+> 
+
+I'm very happy to see that is gone.
 
 Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
