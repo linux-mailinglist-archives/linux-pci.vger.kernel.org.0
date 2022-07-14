@@ -2,303 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A04B5575733
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 23:47:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 672F15757F1
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 01:16:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240996AbiGNVrw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jul 2022 17:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44224 "EHLO
+        id S240931AbiGNXQU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jul 2022 19:16:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236175AbiGNVru (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 17:47:50 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469B270987;
-        Thu, 14 Jul 2022 14:47:35 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id g16-20020a17090a7d1000b001ea9f820449so9818125pjl.5;
-        Thu, 14 Jul 2022 14:47:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QRpP4wv4SP78zMbJieYZRGjlucw4i6a87UghGmQ/Zos=;
-        b=B2OLa4zOVsBODJNEuPedPpYhqAC6E5akFsMuJOI4gK0l9wevU4FY6lAXZWg/E490LO
-         Qer2BTg8k06oidKAdl4bbK7PucbdS35jGoia38jJKnIGwwFYgpXO7/ZFvZbR4ryNyQW/
-         nW/vAPt8VQiAdQyKFaAoUOZ/HS74nbJ76wRg3pw8rH29AABeOwusSRNBFryQ7AOY4C/N
-         gewBhw7X9Xr8AIhjl/2RoyIAcbXcRO7ZDttBE3yFXuyqWgMFayDQhg1Y1DOcw+oycjIp
-         TAiVxyXnveBLY5UGOx3bkH8f8+lUD2DdbxqIRZF+8SpW8z6zCccovk31eoytICbPyy+T
-         UcVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QRpP4wv4SP78zMbJieYZRGjlucw4i6a87UghGmQ/Zos=;
-        b=03b0+lree6/tMZBWW5t06HMzMdu+5KjIdsH2VMFCMfYW6I6hWQz6YE3/nvp6GoZK+h
-         iKhhya6Ae2wIUU6/PnR8/e9JEeSgWQHykbTZu0z9vYgGTXv8g3dE+3TcVpjFZIB72t9m
-         cVl7wO7EUxXRvoHnUQXlyptffHhFQ0AmqNiZ+9IOx4Ya9qNh/IFtvanmIumhPWrTat2I
-         F4laGwweINSC0c4z08HdZDjLdVhtgkqts3EnvNOspOpixrPatViJmvY6dlVNETCC+zEU
-         5qNKD7qfqpO33zLWSRG6JsPllLERqY1sFQ4Gn0BxYz5pn2P8BQ9SK4HA60NbP1RBuqns
-         y8wg==
-X-Gm-Message-State: AJIora+l1UTFdFmNKaqj8wfF0KOBL4vRm1eF+gyOZ9r4CEh1nQVgx6aO
-        /h94SiitMQ4Xn/5TlYBtlPmR0k8qDAXXRA==
-X-Google-Smtp-Source: AGRyM1s5uz3FfXCDO2h1CS+7jUumhKELLfh0Co4Djiwfjnrm57JlmZLBsOxTuueDSz+6xS1jeqEDhA==
-X-Received: by 2002:a17:902:7807:b0:16b:e3d5:b2ce with SMTP id p7-20020a170902780700b0016be3d5b2cemr10039004pll.18.1657835254498;
-        Thu, 14 Jul 2022 14:47:34 -0700 (PDT)
-Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
-        by smtp.gmail.com with ESMTPSA id f15-20020aa7968f000000b00528c22fbb45sm2219737pfk.141.2022.07.14.14.47.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 14:47:34 -0700 (PDT)
-From:   Stafford Horne <shorne@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Stafford Horne <shorne@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [RFC PATCH 2/2] asm-generic: Add new pci.h and use it
-Date:   Fri, 15 Jul 2022 06:46:57 +0900
-Message-Id: <20220714214657.2402250-3-shorne@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220714214657.2402250-1-shorne@gmail.com>
-References: <20220714214657.2402250-1-shorne@gmail.com>
+        with ESMTP id S240920AbiGNXQU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 19:16:20 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6B1B70E52;
+        Thu, 14 Jul 2022 16:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657840578; x=1689376578;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FrYh3K9iwXAx6UuvS+41bwa0q58BzXMelivLnufGNBc=;
+  b=dDipWpuB/5/6qMV0Xh9JhBItKlGvkQhthmEs4MtCASYGk0ulTBA/Vdnw
+   +tD7sqR0Uy1315OQkuCH1768HWJZdsH+kD1lsoUjEf5YgcDI8J/8pJYuU
+   s2wBH/tS6AZljAkzCOjL205cFYJiBLYhWx5u6JQhewBm+cS38He9vnc02
+   FA0jitX5RZVjrzHaUflyv4Coxu8uCD7ZD+Sfow/rzNVKWDdz+OkeiLDIq
+   HkKo/V1yvET2vV3Hpqw5Bo4k9O2br639YO3dg9lsQ/BP3XxL1dV9KsdGX
+   bn3hJaKlRUjCS4luVVKbqVL2UyKHxZVHWbS4R++hD7POw3EMlGl+7JQgW
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="268676975"
+X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
+   d="scan'208";a="268676975"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 16:16:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
+   d="scan'208";a="663970223"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2022 16:16:10 -0700
+Received: from rjingar-desk5.amr.corp.intel.com (vicentes-mobl.amr.corp.intel.com [10.209.132.117])
+        by linux.intel.com (Postfix) with ESMTP id 0E86E580812;
+        Thu, 14 Jul 2022 16:16:10 -0700 (PDT)
+From:   Rajvi Jingar <rajvi.jingar@linux.intel.com>
+To:     rafael.j.wysocki@intel.com, bhelgaas@google.com
+Cc:     rajvi.jingar@linux.intel.com, david.e.box@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v2 1/2] PCI/PM: refactor pci_pm_suspend_noirq()
+Date:   Thu, 14 Jul 2022 16:16:08 -0700
+Message-Id: <20220714231609.3962051-1-rajvi.jingar@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The asm/pci.h used for many newer architectures share similar
-definitions.  Move the common parts to asm-generic/pci.h to allow for
-sharing code.
+The state of the device is saved during pci_pm_suspend_noirq(), if it
+has not already been saved, regardless of the skip_bus_pm flag value. So
+skip_bus_pm check is removed before saving the device state.
 
-Two things to note are:
-
- - isa_dma_bridge_buggy, traditionally this is defined in asm/dma.h but
-   these architectures avoid creating that file and add the definition
-   to asm/pci.h.
- - ARCH_GENERIC_PCI_MMAP_RESOURCE, csky does not define this so we
-   undefine it after including asm-generic/pci.h.  Why doesn't csky
-   define it?
-
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- arch/arm64/include/asm/pci.h | 18 ++--------------
- arch/csky/include/asm/pci.h  | 24 ++++------------------
- arch/riscv/include/asm/pci.h | 25 +++-------------------
- arch/um/include/asm/pci.h    | 24 ++--------------------
- include/asm-generic/pci.h    | 40 ++++++++++++++++++++++++++++++++++++
- 5 files changed, 51 insertions(+), 80 deletions(-)
- create mode 100644 include/asm-generic/pci.h
+ v1->v2: no change
+---
+ drivers/pci/pci-driver.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-index b33ca260e3c9..016eb6b46dc0 100644
---- a/arch/arm64/include/asm/pci.h
-+++ b/arch/arm64/include/asm/pci.h
-@@ -9,7 +9,6 @@
- #include <asm/io.h>
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 49238ddd39ee..1f64de3e5280 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -867,20 +867,14 @@ static int pci_pm_suspend_noirq(struct device *dev)
+ 		}
+ 	}
  
- #define PCIBIOS_MIN_IO		0x1000
--#define PCIBIOS_MIN_MEM		0
+-	if (pci_dev->skip_bus_pm) {
++	if (!pci_dev->state_saved) {
++		pci_save_state(pci_dev);
+ 		/*
+-		 * Either the device is a bridge with a child in D0 below it, or
+-		 * the function is running for the second time in a row without
+-		 * going through full resume, which is possible only during
+-		 * suspend-to-idle in a spurious wakeup case.  The device should
+-		 * be in D0 at this point, but if it is a bridge, it may be
+-		 * necessary to save its state.
++		 * If the device is a bridge with a child in D0 below it, it needs to
++		 * stay in D0, so check skip_bus_pm to avoid putting it into a
++		 * low-power state in that case.
+ 		 */
+-		if (!pci_dev->state_saved)
+-			pci_save_state(pci_dev);
+-	} else if (!pci_dev->state_saved) {
+-		pci_save_state(pci_dev);
+-		if (pci_power_manageable(pci_dev))
++		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+ 			pci_prepare_to_sleep(pci_dev);
+ 	}
  
- /*
-  * Set to 1 if the kernel should re-assign all PCI bus numbers
-@@ -18,21 +17,8 @@
- 	(pci_has_flag(PCI_REASSIGN_ALL_BUS))
- 
- #define arch_can_pci_mmap_wc() 1
--#define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
- 
--extern int isa_dma_bridge_buggy;
--
--#ifdef CONFIG_PCI
--static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
--{
--	/* no legacy IRQ on arm64 */
--	return -ENODEV;
--}
--
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	return 1;
--}
--#endif  /* CONFIG_PCI */
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
- #endif  /* __ASM_PCI_H */
-diff --git a/arch/csky/include/asm/pci.h b/arch/csky/include/asm/pci.h
-index ebc765b1f78b..44866c1ad461 100644
---- a/arch/csky/include/asm/pci.h
-+++ b/arch/csky/include/asm/pci.h
-@@ -9,26 +9,10 @@
- 
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
--/* C-SKY shim does not initialize PCI bus */
--#define pcibios_assign_all_busses() 1
--
--extern int isa_dma_bridge_buggy;
--
--#ifdef CONFIG_PCI
--static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
--{
--	/* no legacy IRQ on csky */
--	return -ENODEV;
--}
--
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--#endif  /* CONFIG_PCI */
-+/* csky doesn't use generic pci resource mapping */
-+#undef ARCH_GENERIC_PCI_MMAP_RESOURCE
- 
- #endif  /* __ASM_CSKY_PCI_H */
-diff --git a/arch/riscv/include/asm/pci.h b/arch/riscv/include/asm/pci.h
-index 7fd52a30e605..12ce8150cfb0 100644
---- a/arch/riscv/include/asm/pci.h
-+++ b/arch/riscv/include/asm/pci.h
-@@ -12,29 +12,7 @@
- 
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
--
--/* RISC-V shim does not initialize PCI bus */
--#define pcibios_assign_all_busses() 1
--
--#define ARCH_GENERIC_PCI_MMAP_RESOURCE 1
--
--extern int isa_dma_bridge_buggy;
--
- #ifdef CONFIG_PCI
--static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
--{
--	/* no legacy IRQ on risc-v */
--	return -ENODEV;
--}
--
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--
- #ifdef	CONFIG_NUMA
- 
- static inline int pcibus_to_node(struct pci_bus *bus)
-@@ -50,4 +28,7 @@ static inline int pcibus_to_node(struct pci_bus *bus)
- 
- #endif  /* CONFIG_PCI */
- 
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
-+
- #endif  /* _ASM_RISCV_PCI_H */
-diff --git a/arch/um/include/asm/pci.h b/arch/um/include/asm/pci.h
-index da13fd5519ef..34fe4921b5fa 100644
---- a/arch/um/include/asm/pci.h
-+++ b/arch/um/include/asm/pci.h
-@@ -4,28 +4,8 @@
- #include <linux/types.h>
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
--
--#define pcibios_assign_all_busses() 1
--
--extern int isa_dma_bridge_buggy;
--
--#ifdef CONFIG_PCI
--static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
--{
--	/* no legacy IRQs */
--	return -ENODEV;
--}
--#endif
--
--#ifdef CONFIG_PCI_DOMAINS
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--#endif  /* CONFIG_PCI */
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
- #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
- /*
-diff --git a/include/asm-generic/pci.h b/include/asm-generic/pci.h
-new file mode 100644
-index 000000000000..1aa4d7a08aca
---- /dev/null
-+++ b/include/asm-generic/pci.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __ASM_GENERIC_PCI_H
-+#define __ASM_GENERIC_PCI_H
-+
-+#include <linux/types.h>
-+
-+#ifndef PCIBIOS_MIN_IO
-+#define PCIBIOS_MIN_IO		0
-+#endif
-+
-+#define PCIBIOS_MIN_MEM		0
-+
-+#ifndef pcibios_assign_all_busses
-+/* For bootloaders that do not initialize the PCI bus */
-+#define pcibios_assign_all_busses() 1
-+#endif
-+
-+extern int isa_dma_bridge_buggy;
-+
-+/* Enable generic resource mapping code in drivers/pci/ */
-+#define ARCH_GENERIC_PCI_MMAP_RESOURCE
-+
-+#ifdef CONFIG_PCI
-+
-+static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-+{
-+	/* no legacy ide irq support */
-+	return -ENODEV;
-+}
-+
-+static inline int pci_proc_domain(struct pci_bus *bus)
-+{
-+	/* always show the domain in /proc */
-+	return 1;
-+}
-+
-+#endif /* CONFIG_PCI */
-+
-+#endif /* __ASM_GENERIC_PCI_H */
 -- 
-2.36.1
+2.25.1
 
