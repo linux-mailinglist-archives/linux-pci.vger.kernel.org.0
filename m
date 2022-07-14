@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AC2F5750CD
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 16:29:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E739E5750D5
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 16:30:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235109AbiGNO3v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jul 2022 10:29:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42472 "EHLO
+        id S239185AbiGNOaf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jul 2022 10:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235792AbiGNO3u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 10:29:50 -0400
+        with ESMTP id S237618AbiGNOad (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 10:30:33 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 78E5A5C377
-        for <linux-pci@vger.kernel.org>; Thu, 14 Jul 2022 07:29:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AA3735C9D1
+        for <linux-pci@vger.kernel.org>; Thu, 14 Jul 2022 07:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657808988;
+        s=mimecast20190719; t=1657809030;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=N8oBD289dGEOPLHJiPefuD87Ky4LKaAMPVE1HnT2THU=;
-        b=iClZfEDVgDNQghCEk4+SnhMQIcBbKbDL2Z+MxiEBtgAgVbHQOHFHTmfeXPBmFjVWZHIFuQ
-        qPwHoJ3OFx7CKTOW1acjtsyXbsJUhptCnByGmd6xp1szTboRq6IjF42NBqclU65CWyS/jV
-        ffJiT+xRn23Ml10HLk4lIcZed438paQ=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ntTuSjA4Qbr6GUmqmKDR9KDLjR1tsalNNR6HXiXW8Mg=;
+        b=fInL5zrlqqgcotMyrr9GRsVUXrVFZ6lXVU97hFWMeIG67F6gCsJL9tGd2l4lXpnyBWtZkc
+        6i3arEVM3meBu7ZZnTI5dyRU+Pqj64JPntEtIUDjq3FcgjnTFqTuDXv1XQwxLG08F2M3S9
+        aMEUFnluulya6EUHCm3LFj+3L5FpZPY=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-614-53NgrR3TMjWH7ubTGxfjSA-1; Thu, 14 Jul 2022 10:29:46 -0400
-X-MC-Unique: 53NgrR3TMjWH7ubTGxfjSA-1
-Received: by mail-qk1-f198.google.com with SMTP id h8-20020a05620a284800b006b5c98f09fbso265209qkp.21
-        for <linux-pci@vger.kernel.org>; Thu, 14 Jul 2022 07:29:46 -0700 (PDT)
+ us-mta-140-xsSA9QdmNO6n6DtwUnB3Ww-1; Thu, 14 Jul 2022 10:30:23 -0400
+X-MC-Unique: xsSA9QdmNO6n6DtwUnB3Ww-1
+Received: by mail-qv1-f72.google.com with SMTP id m11-20020a0cfbab000000b004738181b474so1325610qvp.6
+        for <linux-pci@vger.kernel.org>; Thu, 14 Jul 2022 07:30:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N8oBD289dGEOPLHJiPefuD87Ky4LKaAMPVE1HnT2THU=;
-        b=kXlUZwVrM79en9hv8rexhCD7HrzkpK4Iv18N/XGRawQnE1hZE9zvegIW9omdzmgaUn
-         Is0V72z7QiaLkGMh0SvxaxrOmPn1tJd9b+Nu4HQ+0P0XhQlCXVA7Kmpa6z32L3dmeATa
-         JgL7085uTSzxfgqVl5pYXAF71DRJDps/E2dU9hc4ojuHQus12DM8rTlx4dd8sjnRWrjo
-         nQBx8ZTD7CCj6Sk6pflevAHxr8ueKM07cS01rSnpT5mR0f3tOc/8SrRTk7WH+jX5VD9t
-         ljRKo9gh98HHyJxOEklsrzNKl98V1lWLTlCDQQDlWjQOxSxTcmIpLdxdn2tOShL/1q/p
-         7cJQ==
-X-Gm-Message-State: AJIora/vuEDKpVFQDdPPRK+vNtQf/j2y6Ncg5rbY1P8SAsppRNeVS8fx
-        vx6dCR+C2KTg9pNqgNy+ojUvkwZX0E05fe+uSxzRh/Pk3m9ubS1wYqOgc/9izZDO6kySI3sU52b
-        GVWL4DlFW1b20+9WKnhRm
-X-Received: by 2002:a05:620a:490b:b0:6b5:50ba:df51 with SMTP id ed11-20020a05620a490b00b006b550badf51mr6154039qkb.53.1657808986446;
-        Thu, 14 Jul 2022 07:29:46 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1t16Q/9bg8jc78Kiv5IS34JX5fMV5xULfn6e6fF+bl1rBRgdTiM9zrPFe4bMltLNPjW6XLFWQ==
-X-Received: by 2002:a05:620a:490b:b0:6b5:50ba:df51 with SMTP id ed11-20020a05620a490b00b006b550badf51mr6154013qkb.53.1657808986204;
-        Thu, 14 Jul 2022 07:29:46 -0700 (PDT)
+        bh=ntTuSjA4Qbr6GUmqmKDR9KDLjR1tsalNNR6HXiXW8Mg=;
+        b=2qa9CD4d5HOmzJad6EWLonaC0PPT4mXaDbLZ9ErMm688GaGshTzv5pSA27wr6i+i2m
+         cugxWdSBsgiS2ItDUregMKVWBT4Wm368S/wWkq0vbhOnvXui31PYldf76lyRYWUq5kp3
+         4sqszwCaKahS9kdZ/bFqnGr4K6j6mPPRanc6bzxkIK89OhP/sZuJe8GTnFrqbxeqfRdx
+         V/cdROMPmFFYjRDhs1Ur78LLQZK3HcSQrSA5C9aRKzsCx96Vs+CpeCFCqenfPucsehCI
+         ki1Eu1muEJBcApOPNrL2gqG8jk+Dh6BbMVDMxTCyDZMI54Kp480aUszS/cLbYRpzk1p/
+         q5kQ==
+X-Gm-Message-State: AJIora8KoBQmKLWkky1aHICWZAGREXZCmxxIwKPPeWe7Qj5dYSCgzlIO
+        gcLKxKwPPC0dPmau9rPKSS879+XFK0hqJqB6OfPGdaVDgdj+3ERYB27u0B0ABV/2Vp6L8vwn8lL
+        CoLbr/TuMleg7YYXB3by/
+X-Received: by 2002:a37:c444:0:b0:6b5:bb9b:94ef with SMTP id h4-20020a37c444000000b006b5bb9b94efmr5122280qkm.411.1657809023366;
+        Thu, 14 Jul 2022 07:30:23 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vHB5XxL+b05VlwhYR1I2Pf+3ogfGMLZm4EL5k8yaXQWkjJU/o0PvlbmbMRhd+zQrATU/ckpQ==
+X-Received: by 2002:a37:c444:0:b0:6b5:bb9b:94ef with SMTP id h4-20020a37c444000000b006b5bb9b94efmr5122258qkm.411.1657809023140;
+        Thu, 14 Jul 2022 07:30:23 -0700 (PDT)
 Received: from xps13 (c-98-239-145-235.hsd1.wv.comcast.net. [98.239.145.235])
-        by smtp.gmail.com with ESMTPSA id v11-20020a05622a014b00b0031e99798d70sm1719199qtw.29.2022.07.14.07.29.45
+        by smtp.gmail.com with ESMTPSA id q7-20020a05620a0d8700b006b57b63a8ddsm1502612qkl.122.2022.07.14.07.30.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 07:29:45 -0700 (PDT)
-Date:   Thu, 14 Jul 2022 10:29:44 -0400
+        Thu, 14 Jul 2022 07:30:22 -0700 (PDT)
+Date:   Thu, 14 Jul 2022 10:30:21 -0400
 From:   Brian Masney <bmasney@redhat.com>
 To:     Johan Hovold <johan+linaro@kernel.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -69,15 +69,15 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 3/8] dt-bindings: PCI: qcom: Add SA8540P to binding
-Message-ID: <YtAoWOngodHMLY9L@xps13>
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/8] PCI: qcom: Add support for SA8540P
+Message-ID: <YtAoffqhZQi1vIHa@xps13>
 References: <20220714071348.6792-1-johan+linaro@kernel.org>
- <20220714071348.6792-4-johan+linaro@kernel.org>
+ <20220714071348.6792-6-johan+linaro@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220714071348.6792-4-johan+linaro@kernel.org>
+In-Reply-To: <20220714071348.6792-6-johan+linaro@kernel.org>
 User-Agent: Mutt/2.2.6 (2022-06-05)
 X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -89,11 +89,17 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 09:13:43AM +0200, Johan Hovold wrote:
-> SA8540P is a new platform related to SC8280XP but which uses a single
-> host interrupt for MSI routing.
+On Thu, Jul 14, 2022 at 09:13:45AM +0200, Johan Hovold wrote:
+> The SA8540P platform has five PCIe controllers: two 4-lane, two 2-lane
+> and one 1-lane.
 > 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Add a new "qcom,pcie-sa8540p" compatible string and reuse the 1.9.0 ops.
+> 
+> Note that like for SC8280XP, the SA8540P controllers need two or three
+> interconnect clocks to be enabled.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
 Reviewed-by: Brian Masney <bmasney@redhat.com>
