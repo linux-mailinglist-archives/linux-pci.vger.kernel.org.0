@@ -2,109 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0CDE575102
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 16:43:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E0B7575120
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jul 2022 16:54:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239349AbiGNOnL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jul 2022 10:43:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51518 "EHLO
+        id S238638AbiGNOyQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jul 2022 10:54:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239182AbiGNOnG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 10:43:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C72AD3ED42
-        for <linux-pci@vger.kernel.org>; Thu, 14 Jul 2022 07:43:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657809784;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eIdNk8O1gW+R+g6m9uiQ7NltrhT3ipP3bmVkK691BR8=;
-        b=iJuMRWlCTqJ6TBk6ZUyE7C0zf+GfKkvwZMet8zFC11j+4sSuPCOSs8uQoIlhDvPbgNUSNm
-        eWrY2krh1RhXHxJkR9v958HOxkMvY4nn2KvvjvRpQ1uZlJvTfvqAZ21taaEv1EtGHGZa2/
-        u/KgAzrZwlfHYCKJjvVLaK3rpKhWmag=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-586-so8mzQJLMCaOXY_doCOINQ-1; Thu, 14 Jul 2022 10:42:56 -0400
-X-MC-Unique: so8mzQJLMCaOXY_doCOINQ-1
-Received: by mail-qt1-f197.google.com with SMTP id o22-20020ac87c56000000b0031d4ab81b21so1635607qtv.1
-        for <linux-pci@vger.kernel.org>; Thu, 14 Jul 2022 07:42:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eIdNk8O1gW+R+g6m9uiQ7NltrhT3ipP3bmVkK691BR8=;
-        b=eZB7NZ6uMpTtL7DanBKZiqVPmncqWu6zZ/+GBcI3XQDAv2WScddbgaH6Sd5duQbnWM
-         Kj9e0p1QiXSMxSJrVFrrtyYGKMaGiXGK1LttY7j05V9xnNQgzyKyqTv2ZZSzbDdtrs76
-         63OBApNe0K+o2hzDQ1ELRoKDv+1xJbjzCkJBx2oMFg2QNkBHq5Hl09+qaVaunC6M1Cxs
-         4oyndzOjtMfbHL8pw+I8b2qrPgZapl4mt/QwXqY/WvV6jxswF3KfC9Vjz8InokAlMTAQ
-         BzOSRFRN92l5YIMciemRSdZTLIB4Ket9mmPKBIF1Jg7JlkjsI0NDik3P5qtdcxp4+MMo
-         zQ4g==
-X-Gm-Message-State: AJIora++e2lYN+rkh6Ek4ghHSfdzzls/0MXd7L3Sm6rxddk7pPhZqvoz
-        6lOKXi+NOyOkbVzKf37xfvnCKx3v17/lGroBNOmcNZ75S9KQP9E98dOKIWgCcd12oRpzqXl+pDN
-        2i1olNW75x3944fUsM8YY
-X-Received: by 2002:a05:620a:e86:b0:6b5:4fc9:c0e5 with SMTP id w6-20020a05620a0e8600b006b54fc9c0e5mr6014482qkm.246.1657809776286;
-        Thu, 14 Jul 2022 07:42:56 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1u2p7lnj/YvP13oXDzpbzDj2LWU9ar42HAS8jRvmxUOpAd7BSRKi0iPqQbo+IpZSJ6Yqxpisw==
-X-Received: by 2002:a05:620a:e86:b0:6b5:4fc9:c0e5 with SMTP id w6-20020a05620a0e8600b006b54fc9c0e5mr6014463qkm.246.1657809776056;
-        Thu, 14 Jul 2022 07:42:56 -0700 (PDT)
-Received: from xps13 (c-98-239-145-235.hsd1.wv.comcast.net. [98.239.145.235])
-        by smtp.gmail.com with ESMTPSA id e17-20020ac84911000000b0031eaabd2117sm1606432qtq.12.2022.07.14.07.42.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 07:42:55 -0700 (PDT)
-Date:   Thu, 14 Jul 2022 10:42:54 -0400
-From:   Brian Masney <bmasney@redhat.com>
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 7/8] PCI: qcom: Clean up IP configurations
-Message-ID: <YtArbrYztI3FHZsb@xps13>
-References: <20220714071348.6792-1-johan+linaro@kernel.org>
- <20220714071348.6792-8-johan+linaro@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        with ESMTP id S238940AbiGNOyO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 10:54:14 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4824D79;
+        Thu, 14 Jul 2022 07:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657810453; x=1689346453;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=R0MQY+TsU/R7528c92SinEiSabQEJF7WNeNLyUIcjX0=;
+  b=LgFTxPTuEOLkJzC5r/LbMcQD/4HYVYpRbXl8MbGZUMDc6J8F6llqSKgR
+   M0kMpwgLU6U9LrQqq4bN2Q5wGiWDQZrf+TK9Z7u91oppqNSofMRVmfsC+
+   0Ck6NXtPwrON0E2coDra68uvzXx2xb1rtHMAIABZSFi819mpn6K1npxND
+   bQ54GJJEZ63l6Kjt54NC6tZwqEEIpFI2yomEnCKkmQVtbE3Z1RFC/f0Q8
+   BGCbMZedcOGwOPSh+jDPqvUeGLtIugs82tb1CcBUhAlnZJTqNukqgrREx
+   mLWddmKcaMOD1CDI3CpDmWRwDgGO0qypyNGl35u8G4YcUkFfuGPNmT/j0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="311185780"
+X-IronPort-AV: E=Sophos;i="5.92,271,1650956400"; 
+   d="scan'208";a="311185780"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 07:54:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,271,1650956400"; 
+   d="scan'208";a="653901696"
+Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Jul 2022 07:54:12 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Thu, 14 Jul 2022 07:54:11 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Thu, 14 Jul 2022 07:54:11 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Thu, 14 Jul 2022 07:54:11 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.104)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Thu, 14 Jul 2022 07:54:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mOWL4TS6KiO8LgwU3I+f9u5xxPrj78/5PFlFaAAC/J8xig69GOCfEvg70Jl1VFYJ9uxYyJQJWTm5ISKQOP2Bk31F9qsGHJ0mc1VzegZIZmlbpxWixOloFRy3LJassBBRP9ou3VlazhTInFL8pmFhz2OaOTyqMFZgz6ztD8Goox6ywaA+v04GiLOA2BhlhRrByy2pZ2iCHkmzI8A97C3oliGEJqwpLU5k0qtDflJX9Qu+pTw/WdVTSiMH5132YtHygMjBvLEsFe3PCCUuD9ZekAtnrp5Oveb/V7pnTgRUWJ1CzPlYqFLagWhQrprx6m0Qfu9/VMb6/XTsiMu/ownjhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M8lNeWhSZHlOPpGI8Lr6Amj0Q92cFUk9CnGC0extYqA=;
+ b=idspYoc7OB0p6IMrbaeMJpYX4Jbr9JrzaB94FFmJPi5SSG3m04DSTz2UlOyRusrLXPxw99Ula/P0ZVHhkJHOskBIuA/QsFySuQnjIvvTqLVSNR/QYChy3WawTlF4hVeJ9sTSLfLFQCemy0JdAX+Ll0u9YX6LmZvZ7jZsAF//FPB4eSQVVNZCJxU+rqB5COw4/QFrUqOVYg1Pa5eYBvAG1XwLfeyjvxkKQUWmL3pXnufHJ1no5tQsVSb60+LMgnu4plUE+lXDwSPrZ4btJD1sYz4hL0wXDMuia0p6IQbk9rwg5U2SV/NNA06jyNyK6Q4cI1F2J684LoLEUGQupim3BQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
+ CY4PR11MB1718.namprd11.prod.outlook.com (2603:10b6:903:2c::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5417.23; Thu, 14 Jul 2022 14:54:09 +0000
+Received: from DM4PR11MB6311.namprd11.prod.outlook.com
+ ([fe80::3154:e32f:e50c:4fa6]) by DM4PR11MB6311.namprd11.prod.outlook.com
+ ([fe80::3154:e32f:e50c:4fa6%5]) with mapi id 15.20.5417.026; Thu, 14 Jul 2022
+ 14:54:08 +0000
+Date:   Thu, 14 Jul 2022 07:54:00 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Li, Ming" <ming4.li@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V13.1] PCI/DOE: Add DOE mailbox support functions
+Message-ID: <YtAuCLg2iEePyK9q@iweiny-desk3>
+References: <20220705154932.2141021-4-ira.weiny@intel.com>
+ <20220711222748.470340-1-ira.weiny@intel.com>
+ <Ysyog0OFUu+5MIxT@casper.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220714071348.6792-8-johan+linaro@kernel.org>
-User-Agent: Mutt/2.2.6 (2022-06-05)
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <Ysyog0OFUu+5MIxT@casper.infradead.org>
+X-ClientProxiedBy: SJ0PR05CA0126.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::11) To DM4PR11MB6311.namprd11.prod.outlook.com
+ (2603:10b6:8:a6::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 25bf0d3e-c7ab-4856-7f6b-08da65a8b489
+X-MS-TrafficTypeDiagnostic: CY4PR11MB1718:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: znvRkcstGWZik0+tVCzyVAzG3it52wntXF4ckepBZXHAV9Xh61S/lDykVDkdkL0EBqHBzgy2y6U61ZHwqU/g7xwZLB13yECa/BDqRQneKXCER9ZJhvyadVpaI0D1ox7NBrBpi+9TTLTVmgScO+OBAzM3z/27IL3GBCXPlpyJFpHl+WvlEmPhJEmFxCtrf/lBSRUv8SSOoGTOfMAsIARWIVHW9hoJGB/WJsKXtva0erByBkgIM4JYO599GPYMcUUMsXY4bkWtIiv3W2CmsQpJFxDPxTHmuI7DmBYzCnIpk2ziEo9Ze+4yuxO+ikWdtElxCKM3vmXaVmsuw/L16EkIXdxfKQZSpbi648nm8/z8BuOLe60ZOt9miHsIoQEuhIYbs2zdAD1657PVRQcq8wOxRXpgqpx4Z1ojV+6GvuHia53+xboDqnvZMGPydBNXBlh+A+xS3yA+W1KMU5ImN5mH9ZOqcIv9yQowLFO4gDyzCB6QEwv6I2Lzoj0lFnRDPS2rBEFncKKnGXkwnJ5ypjiKpl1E2f18d18EyQNfSjfinmTaTXucSzj4Sf1NSCFWQvhU9RtF5XqNC7DxZbUn+b3vAm2iQiLajHahqHn+gJMkXalm+njTU6YFjnZpxVmkO822o+WSNTu6t12HoSbAnYylQbM1AlHH0WJBr3jYK67OKfTmqTeEPqLGi9WglNi4dGp6VM2rel6b09bR3kY3aDBIHhDDrqM+syPs/3TEsElcp3vHQiTRGbLeiR0ry0O0AOzu9X7gZe/DDGbPF884trKKiQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(366004)(136003)(346002)(39860400002)(396003)(376002)(2906002)(15650500001)(66476007)(5660300002)(44832011)(8936002)(66946007)(4326008)(8676002)(66556008)(54906003)(33716001)(6916009)(316002)(6512007)(86362001)(9686003)(6506007)(6666004)(6486002)(186003)(41300700001)(82960400001)(38100700002)(478600001)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fhezgeJy1ai6GmsCAbO2VPoW+ss1ycZ33/k+ekG6IwyygPJc9tZJOf7u54oc?=
+ =?us-ascii?Q?P+6MtLYAQaa6/NYGeLGgCoepn7wRfvUFxHqma3LzzH7bXJclSeZFXc1u2C0T?=
+ =?us-ascii?Q?fd0Nkewqib99QmTGDPNQgckIOn8smCNqX/wYTFHqtfutjHGNViVqm2oQ2Idv?=
+ =?us-ascii?Q?fxoaxEhNjE3DItaf347BKukTEc+sLi9nIUA+zEsmCjj13W8NidO9SUuzESIE?=
+ =?us-ascii?Q?Ox6ZW6+zvA/MvAeO6bfWNijWQV+i7fXv5WqyZ+kZmo1RO5te5DFmgolcpWqz?=
+ =?us-ascii?Q?O5QhIeJF6Jp3BwjZT5GeiEqwSEYcQn0Uv5BRr/h17gcHrenBdx6kx65sOxvN?=
+ =?us-ascii?Q?5pOC7gyZJNvq0veR+08RlKr4Z9UmSH+KPHY7xIBnCKDSEtDiIo4zqd/Nu3GK?=
+ =?us-ascii?Q?3i/Yoeus7WpHIWNRoc7UnM1b97l1Lq5BNTCWBZ+LoyuHB4glG0IloLWbLE9/?=
+ =?us-ascii?Q?Ub/I5gpkitPe52DgBmSehES9Q+7DnQ8QETBmbXp9T02XoJgUTMGZhIt4+w+m?=
+ =?us-ascii?Q?/KDo09GL1IisLVedHPl7AKm28o/6wwMveVUKQsTBo+56sIqBbYyshj/aJ9Nv?=
+ =?us-ascii?Q?734kgImMzSjz6Vz64qVyiAjD2v7L62Rm+o8gafvNB1wwlmp8DrPG+qwc5uuO?=
+ =?us-ascii?Q?M/W8wK1ilm31cg+oeWprJcjR0V6ReBPjPIwODNMK4dqmguAhGPzXhHeCSdJ5?=
+ =?us-ascii?Q?nR/QCeo0ncGwU+tPOL8BKeDdE5/7OAxFI5HOK2fWfs5qoL8H66Dr8bp6yRfH?=
+ =?us-ascii?Q?pvlemaCvMiR+Q37O3nfC1tDxHuhIOxHDmoS+auoO8rsAz75xXzQXzxtqjWaU?=
+ =?us-ascii?Q?DFO4wsPqyLjmtLss4nO62wMbAvmGeUazHakl1B3mUCZ2TtRZUokmVNS7aEnV?=
+ =?us-ascii?Q?NCHo9T/9a/A3Ig8Ps0JV55Xh8DOSNqQ21U7uvWXGaYtGYt7cOeebUKuShvZ+?=
+ =?us-ascii?Q?mMSPsr9XPoj8/yv/Chg6NxVBRX1O1mkEgrnTFdYETTIztA2onjYgpJclUM4W?=
+ =?us-ascii?Q?fZDWjtRLTccVsqGKiX3Ga8dJJoUjAinnteqGldU61qGpDyfNYjxh5eSzhhKe?=
+ =?us-ascii?Q?zk0I0WYTjRMciLwFT2FtbBjJpU1DzAQk/ATS0plCL1GOUwqHkHPGjSb3XAYQ?=
+ =?us-ascii?Q?a38s3dapJwtT6Fdens5yxux/u6Canrev2paRJr4VhTmzkVEUlk+d1f/C1G25?=
+ =?us-ascii?Q?7ZBqHzPY+OsdJ7uN0Rq7zkcxwbD0s/pIsrmgrxxM1Da/Gw5JNx2rAbSn181N?=
+ =?us-ascii?Q?0Cmgjho87SgqjDRqmJal937XFueP0Rn/jfpCMEHxGp/YEajRsWKjgLbZNOmd?=
+ =?us-ascii?Q?UWx0QNm3O4ZnLA7abxAv9iW1ztjmtjvGBIvF8n+b/zoWJEot+BAIVc4VZJLR?=
+ =?us-ascii?Q?JF4nMnM7bLo6126isjHTTcxPf8VuAWsvR2ygccZeq+QMBsbHgX58isP5gfkn?=
+ =?us-ascii?Q?/K+F6NGzwt3/X3GvLGpZfA+J6tQ9uv1472RUSWmu9S8XseTygL3oYXalYDoJ?=
+ =?us-ascii?Q?ZuejmLd2PxhCQiel5H+wgLGCUP8kOK03p3VtHCHzexwPJm4jUKRIhAQhPdSS?=
+ =?us-ascii?Q?sP3vIUw2njlpsInzduen7r9nfZ55MYLtwNeP9ATVDyEc1R5noWoPzxiOTQNP?=
+ =?us-ascii?Q?n26M5W6sYRVsPDH0qthTpr0+HtD/dJ/A1xX81yrdl0yw?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25bf0d3e-c7ab-4856-7f6b-08da65a8b489
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2022 14:54:08.6835
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kxWTIyAFLM1ptpKtzZJjEiN1j4lP3wbeKA0pgsuXlNW612u8Sk+enHK1r1XU1LaT8VKymCRzbU+IcFPEe/G8zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1718
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 09:13:47AM +0200, Johan Hovold wrote:
-> The various IP versions have different configurations that are encoded
-> in separate sets of operation callbacks. Currently, there is no need for
-> also maintaining corresponding sets of data parameters, but it is
-> conceivable that these may again be found useful (e.g. to implement
-> minor variations of the operation callbacks).
+On Mon, Jul 11, 2022 at 11:47:31PM +0100, Matthew Wilcox wrote:
+> On Mon, Jul 11, 2022 at 03:27:48PM -0700, ira.weiny@intel.com wrote:
+> > +/**
+> > + * struct pci_doe_mb - State for a single DOE mailbox
+> > + *
+> > + * This state is used to manage a single DOE mailbox capability.  All fields
+> > + * should be considered opaque to the consumers and the structure passed into
+> > + * the helpers below after being created by devm_pci_doe_create()
+> > + *
+> > + * @pdev: PCI device this mailbox belongs to
+> > + * @cap_offset: Capability offset
+> > + * @prots: Array of protocols supported (encoded as long values)
+> > + * @wq: Wait queue for work item
+> > + * @work_queue: Queue of pci_doe_work items
+> > + * @flags: Bit array of PCI_DOE_FLAG_* flags
+> > + *
+> > + * Note: @prots can't be allocated with struct size because the number of
+> > + * protocols is not known until after this structure is in use.  However, the
+> > + * single discovery protocol is always required to query for the number of
+> > + * protocols.
+> > + */
 > 
-> Rename the default configuration structures after the IP version they
-> apply to so that they can more easily be reused by different SoCs.
-> 
-> Note that SoC specific configurations can be added later if need arises
-> (e.g. cfg_sc8280xp).
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> Can you add at least stub documentation in Documentation/PCI/doe.rst
+> and include the kernel-doc from both pci-doe.c and pci-doe.h?
 
-Reviewed-by: Brian Masney <bmasney@redhat.com>
+Yes that is a good idea, thanks.
+
+> 
+> > +static int pci_doe_abort(struct pci_doe_mb *doe_mb)
+> > +{
+> > +	struct pci_dev *pdev = doe_mb->pdev;
+> > +	int offset = doe_mb->cap_offset;
+> > +	unsigned long timeout_jiffies;
+> > +
+> > +	pci_dbg(pdev, "[%x] Issuing Abort\n", offset);
+> 
+> "Issuing DOE abort", perhaps?
+
+I've set dev_fmt to prefix with "DOE: ".  So I think that should be ok.
+
+Thanks for the review!
+Ira
 
