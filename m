@@ -2,55 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48494575872
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 02:04:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0955C575879
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 02:05:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241083AbiGOAEr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jul 2022 20:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39980 "EHLO
+        id S241053AbiGOAFL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jul 2022 20:05:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241076AbiGOAEr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 20:04:47 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FC873592;
-        Thu, 14 Jul 2022 17:04:45 -0700 (PDT)
+        with ESMTP id S241093AbiGOAFJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 20:05:09 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F18E5735B2;
+        Thu, 14 Jul 2022 17:05:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657843485; x=1689379485;
+  t=1657843508; x=1689379508;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AGGVqkzYjbpmuio4U2LN0wVdQD5CLNvX7/u550PTzko=;
-  b=Pvbyy+AGQhHxoavJ3cMo1bABCKaSchLuRKwiyziA1sUhZyLbH2bkOYjE
-   Xko+33NU5QPLmhe2bW3xlwqEZ/f3DQktVTpMm2HAitxPvj2b/dKi35P+7
-   VyjdcYy9q74ZR1S0tzbK7JyIYheYgiZmCBxhaPhAHBmyXvS7eV2aI6Ivf
-   1oRrKPVZ9Teh+fmjyKgNU0ZEc25Bb5YFEfxL5rQsGG/mkC1zuBZdy8oUQ
-   MSNPX2p6k91yjB4GlpWJfKpYcwrQ2/qSDNVvhgkOYRxQzu+M+hGkQX6bW
-   3Y8zctZ/wFYxWybRIDBjavTvAd7rhzosZeEeByX3oB+gmQWWJx98JVplY
+  bh=9b5PpGGK2UxDyTUnFeAvPu4Z8fwgVuv06qsL9vaoOeg=;
+  b=fiM4wdfZEEWqxlZVGijkb6o2//RvEQMQ/UCVR28quv1DfE+5ZnNAs1ov
+   TZuBiopzaSb0bGnEJxMDVxQfd6JKosPUuM/8H7D6qkOrJPKFbfSemHMe7
+   VaDq+op01oiQf7JwE0BiyWsvi27wN+U3tUfBQO1ii6ScdQYT8PZdK2is1
+   72GCEZgSwL9y2Nb1ck80JAM3rpfgqNsyINOSdg8ptXZnCqEsNtXmMYG7V
+   2vvI7hNZ6ol2/4UXh7zuTqFoV9od9AMpv4vreEaivDGqAqkOFnSCNrtfp
+   N+ImQrKqpy27+U+mkPxNmPhBrz90OFhjK4/sk2HM/Ktfown8puG/hGNT8
    g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="284418754"
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="283220810"
 X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="284418754"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:02:53 -0700
+   d="scan'208";a="283220810"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:02:59 -0700
 X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="571302969"
+   d="scan'208";a="600310911"
 Received: from jlcone-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.2.90])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:02:52 -0700
-Subject: [PATCH v2 23/28] cxl/region: Attach endpoint decoders
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:02:58 -0700
+Subject: [PATCH v2 24/28] cxl/region: Program target lists
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <bwidawsk@kernel.org>, hch@lst.de,
-        nvdimm@lists.linux.dev, linux-pci@vger.kernel.org
-Date:   Thu, 14 Jul 2022 17:02:52 -0700
-Message-ID: <165784337277.1758207.4108508181328528703.stgit@dwillia2-xfh.jf.intel.com>
+Cc:     hch@lst.de, nvdimm@lists.linux.dev, linux-pci@vger.kernel.org
+Date:   Thu, 14 Jul 2022 17:02:58 -0700
+Message-ID: <165784337827.1758207.132121746122685208.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
 References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -59,582 +58,421 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-CXL regions (interleave sets) are made up of a set of memory devices
-where each device maps a portion of the interleave with one of its
-decoders (see CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure).
-As endpoint decoders are identified by a provisioning tool they can be
-added to a region provided the region interleave properties are set
-(way, granularity, HPA) and DPA has been assigned to the decoder.
+Once the region's interleave geometry (ways, granularity, size) is
+established and all the endpoint decoder targets are assigned, the next
+phase is to program all the intermediate decoders. Specifically, each
+CXL switch in the path between the endpoint and its CXL host-bridge
+(including the logical switch internal to the host-bridge) needs to have
+its decoders programmed and the target list order assigned.
 
-The attach event triggers several validation checks, for example:
-- is the DPA sized appropriately for the region
-- is the decoder reachable via the host-bridges identified by the
-  region's root decoder
-- is the device already active in a different region position slot
-- are there already regions with a higher HPA active on a given port
-  (per CXL 2.0 8.2.5.12.20 Committing Decoder Programming)
+The difficulty in this implementation lies in determining which endpoint
+decoder ordering combinations are valid. Consider the cxl_test case of 2
+host bridges, each of those host-bridges attached to 2 switches, and
+each of those switches attached to 2 endpoints for a potential 8-way
+interleave. The x2 interleave at the host-bridge level requires that all
+even numbered endpoint decoder positions be located on the "left" hand
+side of the topology tree, and the odd numbered positions on the other.
+The endpoints that are peers on the same switch need to have a position
+that can be routed with a dedicated address bit per-endpoint. See
+check_last_peer() for the details.
 
-...and the attach event affords an opportunity to collect data and
-resources relevant to later programming the target lists in switch
-decoders, for example:
-- allocate a decoder at each cxl_port in the decode chain
-- for a given switch port, how many the region's endpoints are hosted
-  through the port
-- how many unique targets (next hops) does a port need to map to reach
-  those endpoints
-
-The act of reconciling this information and deploying it to the decoder
-configuration is saved for a follow-on patch.
-
-Co-developed-by: Ben Widawsky <bwidawsk@kernel.org>
-Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/core.h   |    7 +
- drivers/cxl/core/port.c   |   10 -
- drivers/cxl/core/region.c |  364 ++++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/cxl.h         |   20 ++
- drivers/cxl/cxlmem.h      |    5 +
- 5 files changed, 394 insertions(+), 12 deletions(-)
+ drivers/cxl/core/core.h   |    4 +
+ drivers/cxl/core/port.c   |    4 -
+ drivers/cxl/core/region.c |  262 +++++++++++++++++++++++++++++++++++++++++++--
+ drivers/cxl/cxl.h         |    2 
+ 4 files changed, 260 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index a60ad9f656fd..6edd8174c2b5 100644
+index 6edd8174c2b5..fcf14b8a3c87 100644
 --- a/drivers/cxl/core/core.h
 +++ b/drivers/cxl/core/core.h
-@@ -41,6 +41,13 @@ resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
- resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled);
+@@ -42,9 +42,13 @@ resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled);
  extern struct rw_semaphore cxl_dpa_rwsem;
  
-+bool is_switch_decoder(struct device *dev);
-+static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
-+					 struct cxl_memdev *cxlmd)
-+{
-+	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
-+}
+ bool is_switch_decoder(struct device *dev);
++struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
+ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+ 					 struct cxl_memdev *cxlmd)
+ {
++	if (!port)
++		return NULL;
 +
- int cxl_memdev_init(void);
- void cxl_memdev_exit(void);
- void cxl_mbox_init(void);
+ 	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
+ }
+ 
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 2f0b47db53da..d234afc47e89 100644
+index d234afc47e89..215ce5e16986 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -448,7 +448,7 @@ bool is_root_decoder(struct device *dev)
- }
- EXPORT_SYMBOL_NS_GPL(is_root_decoder, CXL);
- 
--static bool is_switch_decoder(struct device *dev)
-+bool is_switch_decoder(struct device *dev)
- {
- 	return is_root_decoder(dev) || dev->type == &cxl_decoder_switch_type;
- }
-@@ -504,6 +504,7 @@ static void cxl_port_release(struct device *dev)
- 		cxl_ep_remove(port, ep);
- 	xa_destroy(&port->endpoints);
- 	xa_destroy(&port->dports);
-+	xa_destroy(&port->regions);
- 	ida_free(&cxl_port_ida, port->id);
- 	kfree(port);
- }
-@@ -635,6 +636,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
- 	port->hdm_end = -1;
- 	xa_init(&port->dports);
- 	xa_init(&port->endpoints);
-+	xa_init(&port->regions);
- 
- 	device_initialize(dev);
- 	lockdep_set_class_and_subclass(&dev->mutex, &cxl_port_key, port->depth);
-@@ -1109,12 +1111,6 @@ static void reap_dports(struct cxl_port *port)
- 	}
+@@ -146,8 +146,6 @@ static ssize_t emit_target_list(struct cxl_switch_decoder *cxlsd, char *buf)
+ 	return offset;
  }
  
--static struct cxl_ep *cxl_ep_load(struct cxl_port *port,
--				  struct cxl_memdev *cxlmd)
--{
--	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
--}
+-static struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
 -
- int devm_cxl_add_endpoint(struct cxl_memdev *cxlmd,
- 			  struct cxl_dport *parent_dport)
+ static ssize_t target_list_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
  {
+@@ -472,7 +470,7 @@ struct cxl_endpoint_decoder *to_cxl_endpoint_decoder(struct device *dev)
+ }
+ EXPORT_SYMBOL_NS_GPL(to_cxl_endpoint_decoder, CXL);
+ 
+-static struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev)
++struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev)
+ {
+ 	if (dev_WARN_ONCE(dev, !is_switch_decoder(dev),
+ 			  "not a cxl_switch_decoder device\n"))
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 871bfdbb9bc8..8ac0c557f6aa 100644
+index 8ac0c557f6aa..225340529fc3 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -433,21 +433,294 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
- 	return rc;
+@@ -485,6 +485,7 @@ static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
+ 		return NULL;
+ 	cxl_rr->port = port;
+ 	cxl_rr->region = cxlr;
++	cxl_rr->nr_targets = 1;
+ 	xa_init(&cxl_rr->endpoints);
+ 
+ 	rc = xa_insert(&port->regions, (unsigned long)cxlr, cxl_rr, GFP_KERNEL);
+@@ -525,10 +526,12 @@ static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
+ 	struct cxl_decoder *cxld = cxl_rr->decoder;
+ 	struct cxl_ep *ep = cxl_ep_load(port, cxled_to_memdev(cxled));
+ 
+-	rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
+-			 GFP_KERNEL);
+-	if (rc)
+-		return rc;
++	if (ep) {
++		rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
++			       GFP_KERNEL);
++		if (rc)
++			return rc;
++	}
+ 	cxl_rr->nr_eps++;
+ 
+ 	if (!cxld->region) {
+@@ -565,7 +568,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
+ 				  struct cxl_endpoint_decoder *cxled, int pos)
+ {
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+-	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
++	const struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
+ 	struct cxl_region_ref *cxl_rr = NULL, *iter;
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	struct cxl_decoder *cxld = NULL;
+@@ -649,6 +652,16 @@ static int cxl_port_attach_region(struct cxl_port *port,
+ 		goto out_erase;
+ 	}
+ 
++	dev_dbg(&cxlr->dev,
++		"%s:%s %s add: %s:%s @ %d next: %s nr_eps: %d nr_targets: %d\n",
++		dev_name(port->uport), dev_name(&port->dev),
++		dev_name(&cxld->dev), dev_name(&cxlmd->dev),
++		dev_name(&cxled->cxld.dev), pos,
++		ep ? ep->next ? dev_name(ep->next->uport) :
++				      dev_name(&cxlmd->dev) :
++			   "none",
++		cxl_rr->nr_eps, cxl_rr->nr_targets);
++
+ 	return 0;
+ out_erase:
+ 	if (cxl_rr->nr_eps == 0)
+@@ -667,7 +680,7 @@ static void cxl_port_detach_region(struct cxl_port *port,
+ 				   struct cxl_endpoint_decoder *cxled)
+ {
+ 	struct cxl_region_ref *cxl_rr;
+-	struct cxl_ep *ep;
++	struct cxl_ep *ep = NULL;
+ 
+ 	lockdep_assert_held_write(&cxl_region_rwsem);
+ 
+@@ -675,7 +688,14 @@ static void cxl_port_detach_region(struct cxl_port *port,
+ 	if (!cxl_rr)
+ 		return;
+ 
+-	ep = xa_erase(&cxl_rr->endpoints, (unsigned long)cxled);
++	/*
++	 * Endpoint ports do not carry cxl_ep references, and they
++	 * never target more than one endpoint by definition
++	 */
++	if (cxl_rr->decoder == &cxled->cxld)
++		cxl_rr->nr_eps--;
++	else
++		ep = xa_erase(&cxl_rr->endpoints, (unsigned long)cxled);
+ 	if (ep) {
+ 		struct cxl_ep *ep_iter;
+ 		unsigned long index;
+@@ -696,6 +716,224 @@ static void cxl_port_detach_region(struct cxl_port *port,
+ 		free_region_ref(cxl_rr);
  }
  
--/*
-- * - Check that the given endpoint is attached to a host-bridge identified
-- *   in the root interleave.
-+static int match_free_decoder(struct device *dev, void *data)
-+{
-+	struct cxl_decoder *cxld;
-+	int *id = data;
-+
-+	if (!is_switch_decoder(dev))
-+		return 0;
-+
-+	cxld = to_cxl_decoder(dev);
-+
-+	/* enforce ordered allocation */
-+	if (cxld->id != *id)
-+		return 0;
-+
-+	if (!cxld->region)
-+		return 1;
-+
-+	(*id)++;
-+
-+	return 0;
-+}
-+
-+static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
-+						   struct cxl_region *cxlr)
-+{
-+	struct device *dev;
-+	int id = 0;
-+
-+	dev = device_find_child(&port->dev, &id, match_free_decoder);
-+	if (!dev)
-+		return NULL;
-+	/*
-+	 * This decoder is pinned registered as long as the endpoint decoder is
-+	 * registered, and endpoint decoder unregistration holds the
-+	 * cxl_region_rwsem over unregister events, so no need to hold on to
-+	 * this extra reference.
-+	 */
-+	put_device(dev);
-+	return to_cxl_decoder(dev);
-+}
-+
-+static struct cxl_region_ref *alloc_region_ref(struct cxl_port *port,
-+					       struct cxl_region *cxlr)
-+{
-+	struct cxl_region_ref *cxl_rr;
-+	int rc;
-+
-+	cxl_rr = kzalloc(sizeof(*cxl_rr), GFP_KERNEL);
-+	if (!cxl_rr)
-+		return NULL;
-+	cxl_rr->port = port;
-+	cxl_rr->region = cxlr;
-+	xa_init(&cxl_rr->endpoints);
-+
-+	rc = xa_insert(&port->regions, (unsigned long)cxlr, cxl_rr, GFP_KERNEL);
-+	if (rc) {
-+		dev_dbg(&cxlr->dev,
-+			"%s: failed to track region reference: %d\n",
-+			dev_name(&port->dev), rc);
-+		kfree(cxl_rr);
-+		return NULL;
-+	}
-+
-+	return cxl_rr;
-+}
-+
-+static void free_region_ref(struct cxl_region_ref *cxl_rr)
-+{
-+	struct cxl_port *port = cxl_rr->port;
-+	struct cxl_region *cxlr = cxl_rr->region;
-+	struct cxl_decoder *cxld = cxl_rr->decoder;
-+
-+	dev_WARN_ONCE(&cxlr->dev, cxld->region != cxlr, "region mismatch\n");
-+	if (cxld->region == cxlr) {
-+		cxld->region = NULL;
-+		put_device(&cxlr->dev);
-+	}
-+
-+	xa_erase(&port->regions, (unsigned long)cxlr);
-+	xa_destroy(&cxl_rr->endpoints);
-+	kfree(cxl_rr);
-+}
-+
-+static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
-+			 struct cxl_endpoint_decoder *cxled)
-+{
-+	int rc;
-+	struct cxl_port *port = cxl_rr->port;
-+	struct cxl_region *cxlr = cxl_rr->region;
-+	struct cxl_decoder *cxld = cxl_rr->decoder;
-+	struct cxl_ep *ep = cxl_ep_load(port, cxled_to_memdev(cxled));
-+
-+	rc = xa_insert(&cxl_rr->endpoints, (unsigned long)cxled, ep,
-+			 GFP_KERNEL);
-+	if (rc)
-+		return rc;
-+	cxl_rr->nr_eps++;
-+
-+	if (!cxld->region) {
-+		cxld->region = cxlr;
-+		get_device(&cxlr->dev);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * cxl_port_attach_region() - track a region's interest in a port by endpoint
-+ * @port: port to add a new region reference 'struct cxl_region_ref'
-+ * @cxlr: region to attach to @port
-+ * @cxled: endpoint decoder used to create or further pin a region reference
-+ * @pos: interleave position of @cxled in @cxlr
-+ *
-+ * The attach event is an opportunity to validate CXL decode setup
-+ * constraints and record metadata needed for programming HDM decoders,
-+ * in particular decoder target lists.
-+ *
-+ * The steps are:
-+ * - validate that there are no other regions with a higher HPA already
-+ *   associated with @port
-+ * - establish a region reference if one is not already present
-+ *   - additionally allocate a decoder instance that will host @cxlr on
-+ *     @port
-+ * - pin the region reference by the endpoint
-+ * - account for how many entries in @port's target list are needed to
-+ *   cover all of the added endpoints.
-  */
-+static int cxl_port_attach_region(struct cxl_port *port,
-+				  struct cxl_region *cxlr,
-+				  struct cxl_endpoint_decoder *cxled, int pos)
++static int check_last_peer(struct cxl_endpoint_decoder *cxled,
++			   struct cxl_ep *ep, struct cxl_region_ref *cxl_rr,
++			   int distance)
 +{
 +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
-+	struct cxl_region_ref *cxl_rr = NULL, *iter;
++	struct cxl_region *cxlr = cxl_rr->region;
 +	struct cxl_region_params *p = &cxlr->params;
-+	struct cxl_decoder *cxld = NULL;
-+	unsigned long index;
-+	int rc = -EBUSY;
++	struct cxl_endpoint_decoder *cxled_peer;
++	struct cxl_port *port = cxl_rr->port;
++	struct cxl_memdev *cxlmd_peer;
++	struct cxl_ep *ep_peer;
++	int pos = cxled->pos;
 +
-+	lockdep_assert_held_write(&cxl_region_rwsem);
-+
-+	xa_for_each(&port->regions, index, iter) {
-+		struct cxl_region_params *ip = &iter->region->params;
-+
-+		if (iter->region == cxlr)
-+			cxl_rr = iter;
-+		if (ip->res->start > p->res->start) {
-+			dev_dbg(&cxlr->dev,
-+				"%s: HPA order violation %s:%pr vs %pr\n",
-+				dev_name(&port->dev),
-+				dev_name(&iter->region->dev), ip->res, p->res);
-+			return -EBUSY;
-+		}
++	/*
++	 * If this position wants to share a dport with the last endpoint mapped
++	 * then that endpoint, at index 'position - distance', must also be
++	 * mapped by this dport.
++	 */
++	if (pos < distance) {
++		dev_dbg(&cxlr->dev, "%s:%s: cannot host %s:%s at %d\n",
++			dev_name(port->uport), dev_name(&port->dev),
++			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
++		return -ENXIO;
 +	}
-+
-+	if (cxl_rr) {
-+		struct cxl_ep *ep_iter;
-+		int found = 0;
-+
-+		cxld = cxl_rr->decoder;
-+		xa_for_each(&cxl_rr->endpoints, index, ep_iter) {
-+			if (ep_iter == ep)
-+				continue;
-+			if (ep_iter->next == ep->next) {
-+				found++;
-+				break;
-+			}
-+		}
-+
-+		/*
-+		 * If this is a new target or if this port is direct connected
-+		 * to this endpoint then add to the target count.
-+		 */
-+		if (!found || !ep->next)
-+			cxl_rr->nr_targets++;
-+	} else {
-+		cxl_rr = alloc_region_ref(port, cxlr);
-+		if (!cxl_rr) {
-+			dev_dbg(&cxlr->dev,
-+				"%s: failed to allocate region reference\n",
-+				dev_name(&port->dev));
-+			return -ENOMEM;
-+		}
-+	}
-+
-+	if (!cxld) {
-+		if (port == cxled_to_port(cxled))
-+			cxld = &cxled->cxld;
-+		else
-+			cxld = cxl_region_find_decoder(port, cxlr);
-+		if (!cxld) {
-+			dev_dbg(&cxlr->dev, "%s: no decoder available\n",
-+				dev_name(&port->dev));
-+			goto out_erase;
-+		}
-+
-+		if (cxld->region) {
-+			dev_dbg(&cxlr->dev, "%s: %s already attached to %s\n",
-+				dev_name(&port->dev), dev_name(&cxld->dev),
-+				dev_name(&cxld->region->dev));
-+			rc = -EBUSY;
-+			goto out_erase;
-+		}
-+
-+		cxl_rr->decoder = cxld;
-+	}
-+
-+	rc = cxl_rr_ep_add(cxl_rr, cxled);
-+	if (rc) {
++	cxled_peer = p->targets[pos - distance];
++	cxlmd_peer = cxled_to_memdev(cxled_peer);
++	ep_peer = cxl_ep_load(port, cxlmd_peer);
++	if (ep->dport != ep_peer->dport) {
 +		dev_dbg(&cxlr->dev,
-+			"%s: failed to track endpoint %s:%s reference\n",
-+			dev_name(&port->dev), dev_name(&cxlmd->dev),
-+			dev_name(&cxld->dev));
-+		goto out_erase;
++			"%s:%s: %s:%s pos %d mismatched peer %s:%s\n",
++			dev_name(port->uport), dev_name(&port->dev),
++			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos,
++			dev_name(&cxlmd_peer->dev),
++			dev_name(&cxled_peer->cxld.dev));
++		return -ENXIO;
 +	}
 +
 +	return 0;
-+out_erase:
-+	if (cxl_rr->nr_eps == 0)
-+		free_region_ref(cxl_rr);
-+	return rc;
 +}
 +
-+static struct cxl_region_ref *cxl_rr_load(struct cxl_port *port,
-+					  struct cxl_region *cxlr)
++static int cxl_port_setup_targets(struct cxl_port *port,
++				  struct cxl_region *cxlr,
++				  struct cxl_endpoint_decoder *cxled)
 +{
-+	return xa_load(&port->regions, (unsigned long)cxlr);
-+}
++	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
++	int parent_iw, parent_ig, ig, iw, rc, inc = 0, pos = cxled->pos;
++	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
++	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
++	struct cxl_region_params *p = &cxlr->params;
++	struct cxl_decoder *cxld = cxl_rr->decoder;
++	struct cxl_switch_decoder *cxlsd;
++	u16 eig, peig;
++	u8 eiw, peiw;
 +
-+static void cxl_port_detach_region(struct cxl_port *port,
-+				   struct cxl_region *cxlr,
-+				   struct cxl_endpoint_decoder *cxled)
-+{
-+	struct cxl_region_ref *cxl_rr;
-+	struct cxl_ep *ep;
-+
-+	lockdep_assert_held_write(&cxl_region_rwsem);
-+
-+	cxl_rr = cxl_rr_load(port, cxlr);
-+	if (!cxl_rr)
-+		return;
-+
-+	ep = xa_erase(&cxl_rr->endpoints, (unsigned long)cxled);
-+	if (ep) {
-+		struct cxl_ep *ep_iter;
-+		unsigned long index;
-+		int found = 0;
-+
-+		cxl_rr->nr_eps--;
-+		xa_for_each(&cxl_rr->endpoints, index, ep_iter) {
-+			if (ep_iter->next == ep->next) {
-+				found++;
-+				break;
-+			}
-+		}
-+		if (!found)
-+			cxl_rr->nr_targets--;
++	/*
++	 * While root level decoders support x3, x6, x12, switch level
++	 * decoders only support powers of 2 up to x16.
++	 */
++	if (!is_power_of_2(cxl_rr->nr_targets)) {
++		dev_dbg(&cxlr->dev, "%s:%s: invalid target count %d\n",
++			dev_name(port->uport), dev_name(&port->dev),
++			cxl_rr->nr_targets);
++		return -EINVAL;
 +	}
 +
-+	if (cxl_rr->nr_eps == 0)
-+		free_region_ref(cxl_rr);
++	cxlsd = to_cxl_switch_decoder(&cxld->dev);
++	if (cxl_rr->nr_targets_set) {
++		int i, distance;
++
++		distance = p->nr_targets / cxl_rr->nr_targets;
++		for (i = 0; i < cxl_rr->nr_targets_set; i++)
++			if (ep->dport == cxlsd->target[i]) {
++				rc = check_last_peer(cxled, ep, cxl_rr,
++						     distance);
++				if (rc)
++					return rc;
++				goto out_target_set;
++			}
++		goto add_target;
++	}
++
++	if (is_cxl_root(parent_port)) {
++		parent_ig = cxlrd->cxlsd.cxld.interleave_granularity;
++		parent_iw = cxlrd->cxlsd.cxld.interleave_ways;
++		/*
++		 * For purposes of address bit routing, use power-of-2 math for
++		 * switch ports.
++		 */
++		if (!is_power_of_2(parent_iw))
++			parent_iw /= 3;
++	} else {
++		struct cxl_region_ref *parent_rr;
++		struct cxl_decoder *parent_cxld;
++
++		parent_rr = cxl_rr_load(parent_port, cxlr);
++		parent_cxld = parent_rr->decoder;
++		parent_ig = parent_cxld->interleave_granularity;
++		parent_iw = parent_cxld->interleave_ways;
++	}
++
++	granularity_to_cxl(parent_ig, &peig);
++	ways_to_cxl(parent_iw, &peiw);
++
++	iw = cxl_rr->nr_targets;
++	ways_to_cxl(iw, &eiw);
++	if (cxl_rr->nr_targets > 1) {
++		u32 address_bit = max(peig + peiw, eiw + peig);
++
++		eig = address_bit - eiw + 1;
++	} else {
++		eiw = peiw;
++		eig = peig;
++	}
++
++	rc = cxl_to_granularity(eig, &ig);
++	if (rc) {
++		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
++			dev_name(port->uport), dev_name(&port->dev),
++			256 << eig);
++		return rc;
++	}
++
++	cxld->interleave_ways = iw;
++	cxld->interleave_granularity = ig;
++	dev_dbg(&cxlr->dev, "%s:%s iw: %d ig: %d\n", dev_name(port->uport),
++		dev_name(&port->dev), iw, ig);
++add_target:
++	if (cxl_rr->nr_targets_set == cxl_rr->nr_targets) {
++		dev_dbg(&cxlr->dev,
++			"%s:%s: targets full trying to add %s:%s at %d\n",
++			dev_name(port->uport), dev_name(&port->dev),
++			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
++		return -ENXIO;
++	}
++	cxlsd->target[cxl_rr->nr_targets_set] = ep->dport;
++	inc = 1;
++out_target_set:
++	cxl_rr->nr_targets_set += inc;
++	dev_dbg(&cxlr->dev, "%s:%s target[%d] = %s for %s:%s @ %d\n",
++		dev_name(port->uport), dev_name(&port->dev),
++		cxl_rr->nr_targets_set - 1, dev_name(ep->dport->dport),
++		dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), pos);
++
++	return 0;
++}
++
++static void cxl_port_reset_targets(struct cxl_port *port,
++				   struct cxl_region *cxlr)
++{
++	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
++
++	/*
++	 * After the last endpoint has been detached the entire cxl_rr may now
++	 * be gone.
++	 */
++	if (cxl_rr)
++		cxl_rr->nr_targets_set = 0;
++}
++
++static void cxl_region_teardown_targets(struct cxl_region *cxlr)
++{
++	struct cxl_region_params *p = &cxlr->params;
++	struct cxl_endpoint_decoder *cxled;
++	struct cxl_memdev *cxlmd;
++	struct cxl_port *iter;
++	struct cxl_ep *ep;
++	int i;
++
++	for (i = 0; i < p->nr_targets; i++) {
++		cxled = p->targets[i];
++		cxlmd = cxled_to_memdev(cxled);
++
++		iter = cxled_to_port(cxled);
++		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
++			iter = to_cxl_port(iter->dev.parent);
++
++		for (ep = cxl_ep_load(iter, cxlmd); iter;
++		     iter = ep->next, ep = cxl_ep_load(iter, cxlmd))
++			cxl_port_reset_targets(iter, cxlr);
++	}
++}
++
++static int cxl_region_setup_targets(struct cxl_region *cxlr)
++{
++	struct cxl_region_params *p = &cxlr->params;
++	struct cxl_endpoint_decoder *cxled;
++	struct cxl_memdev *cxlmd;
++	struct cxl_port *iter;
++	struct cxl_ep *ep;
++	int i, rc;
++
++	for (i = 0; i < p->nr_targets; i++) {
++		cxled = p->targets[i];
++		cxlmd = cxled_to_memdev(cxled);
++
++		iter = cxled_to_port(cxled);
++		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
++			iter = to_cxl_port(iter->dev.parent);
++
++		/*
++		 * Descend the topology tree programming targets while
++		 * looking for conflicts.
++		 */
++		for (ep = cxl_ep_load(iter, cxlmd); iter;
++		     iter = ep->next, ep = cxl_ep_load(iter, cxlmd)) {
++			rc = cxl_port_setup_targets(iter, cxlr, cxled);
++			if (rc) {
++				cxl_region_teardown_targets(cxlr);
++				return rc;
++			}
++		}
++	}
++
++	return 0;
 +}
 +
  static int cxl_region_attach(struct cxl_region *cxlr,
  			     struct cxl_endpoint_decoder *cxled, int pos)
  {
-+	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	struct cxl_port *ep_port, *root_port, *iter;
- 	struct cxl_region_params *p = &cxlr->params;
-+	struct cxl_dport *dport;
-+	int i, rc = -ENXIO;
- 
- 	if (cxled->mode == CXL_DECODER_DEAD) {
- 		dev_dbg(&cxlr->dev, "%s dead\n", dev_name(&cxled->cxld.dev));
- 		return -ENODEV;
- 	}
- 
--	if (pos >= p->interleave_ways) {
-+	/* all full of members, or interleave config not established? */
-+	if (p->state > CXL_CONFIG_INTERLEAVE_ACTIVE) {
-+		dev_dbg(&cxlr->dev, "region already active\n");
-+		return -EBUSY;
-+	} else if (p->state < CXL_CONFIG_INTERLEAVE_ACTIVE) {
-+		dev_dbg(&cxlr->dev, "interleave config missing\n");
-+		return -ENXIO;
-+	}
-+
-+	if (pos < 0 || pos >= p->interleave_ways) {
- 		dev_dbg(&cxlr->dev, "position %d out of range %d\n", pos,
- 			p->interleave_ways);
- 		return -ENXIO;
-@@ -466,15 +739,90 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		return -EBUSY;
- 	}
- 
-+	for (i = 0; i < p->interleave_ways; i++) {
-+		struct cxl_endpoint_decoder *cxled_target;
-+		struct cxl_memdev *cxlmd_target;
-+
-+		cxled_target = p->targets[pos];
-+		if (!cxled_target)
-+			continue;
-+
-+		cxlmd_target = cxled_to_memdev(cxled_target);
-+		if (cxlmd_target == cxlmd) {
-+			dev_dbg(&cxlr->dev,
-+				"%s already specified at position %d via: %s\n",
-+				dev_name(&cxlmd->dev), pos,
-+				dev_name(&cxled_target->cxld.dev));
-+			return -EBUSY;
-+		}
-+	}
-+
-+	ep_port = cxled_to_port(cxled);
-+	root_port = cxlrd_to_port(cxlrd);
-+	dport = cxl_find_dport_by_dev(root_port, ep_port->host_bridge);
-+	if (!dport) {
-+		dev_dbg(&cxlr->dev, "%s:%s invalid target for %s\n",
-+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-+			dev_name(cxlr->dev.parent));
-+		return -ENXIO;
-+	}
-+
-+	if (cxlrd->calc_hb(cxlrd, pos) != dport) {
-+		dev_dbg(&cxlr->dev, "%s:%s invalid target position for %s\n",
-+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-+			dev_name(&cxlrd->cxlsd.cxld.dev));
-+		return -ENXIO;
-+	}
-+
-+	if (cxled->cxld.target_type != cxlr->type) {
-+		dev_dbg(&cxlr->dev, "%s:%s type mismatch: %d vs %d\n",
-+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-+			cxled->cxld.target_type, cxlr->type);
-+		return -ENXIO;
-+	}
-+
-+	if (!cxled->dpa_res) {
-+		dev_dbg(&cxlr->dev, "%s:%s: missing DPA allocation.\n",
-+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
-+		return -ENXIO;
-+	}
-+
-+	if (resource_size(cxled->dpa_res) * p->interleave_ways !=
-+	    resource_size(p->res)) {
-+		dev_dbg(&cxlr->dev,
-+			"%s:%s: decoder-size-%#llx * ways-%d != region-size-%#llx\n",
-+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-+			(u64)resource_size(cxled->dpa_res), p->interleave_ways,
-+			(u64)resource_size(p->res));
-+		return -EINVAL;
-+	}
-+
-+	for (iter = ep_port; !is_cxl_root(iter);
-+	     iter = to_cxl_port(iter->dev.parent)) {
-+		rc = cxl_port_attach_region(iter, cxlr, cxled, pos);
-+		if (rc)
-+			goto err;
-+	}
-+
- 	p->targets[pos] = cxled;
+@@ -808,8 +1046,12 @@ static int cxl_region_attach(struct cxl_region *cxlr,
  	cxled->pos = pos;
  	p->nr_targets++;
  
-+	if (p->nr_targets == p->interleave_ways)
-+		p->state = CXL_CONFIG_ACTIVE;
-+
+-	if (p->nr_targets == p->interleave_ways)
++	if (p->nr_targets == p->interleave_ways) {
++		rc = cxl_region_setup_targets(cxlr);
++		if (rc)
++			goto err;
+ 		p->state = CXL_CONFIG_ACTIVE;
++	}
+ 
  	return 0;
-+
-+err:
-+	for (iter = ep_port; !is_cxl_root(iter);
-+	     iter = to_cxl_port(iter->dev.parent))
-+		cxl_port_detach_region(iter, cxlr, cxled);
-+	return rc;
- }
  
- static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
- {
-+	struct cxl_port *iter, *ep_port = cxled_to_port(cxled);
- 	struct cxl_region *cxlr = cxled->cxld.region;
- 	struct cxl_region_params *p;
- 
-@@ -486,6 +834,10 @@ static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
- 	p = &cxlr->params;
- 	get_device(&cxlr->dev);
- 
-+	for (iter = ep_port; !is_cxl_root(iter);
-+	     iter = to_cxl_port(iter->dev.parent))
-+		cxl_port_detach_region(iter, cxlr, cxled);
-+
- 	if (cxled->pos < 0 || cxled->pos >= p->interleave_ways ||
- 	    p->targets[cxled->pos] != cxled) {
- 		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-@@ -496,10 +848,12 @@ static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
+@@ -848,8 +1090,10 @@ static void cxl_region_detach(struct cxl_endpoint_decoder *cxled)
  		goto out;
  	}
  
-+	if (p->state == CXL_CONFIG_ACTIVE)
-+		p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
+-	if (p->state == CXL_CONFIG_ACTIVE)
++	if (p->state == CXL_CONFIG_ACTIVE) {
+ 		p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
++		cxl_region_teardown_targets(cxlr);
++	}
  	p->targets[cxled->pos] = NULL;
  	p->nr_targets--;
  
--	/* notify the region driver that one of its targets has deparated */
-+	/* notify the region driver that one of its targets has departed */
- 	up_write(&cxl_region_rwsem);
- 	device_release_driver(&cxlr->dev);
- 	down_write(&cxl_region_rwsem);
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index cd81e642e900..637768609a75 100644
+index 637768609a75..70862141209b 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -421,6 +421,7 @@ struct cxl_nvdimm {
-  * @id: id for port device-name
-  * @dports: cxl_dport instances referenced by decoders
-  * @endpoints: cxl_ep instances, endpoints that are a descendant of this port
-+ * @regions: cxl_region_ref instances, regions mapped by this port
-  * @parent_dport: dport that points to this port in the parent
-  * @decoder_ida: allocator for decoder ids
-  * @hdm_end: track last allocated HDM decoder instance for allocation ordering
-@@ -435,6 +436,7 @@ struct cxl_port {
- 	int id;
- 	struct xarray dports;
+@@ -484,6 +484,7 @@ struct cxl_ep {
+  * @decoder: decoder assigned for @region in @port
+  * @region: region for this reference
+  * @endpoints: cxl_ep references for region members beneath @port
++ * @nr_targets_set: track how many targets have been programmed during setup
+  * @nr_eps: number of endpoints beneath @port
+  * @nr_targets: number of distinct targets needed to reach @nr_eps
+  */
+@@ -492,6 +493,7 @@ struct cxl_region_ref {
+ 	struct cxl_decoder *decoder;
+ 	struct cxl_region *region;
  	struct xarray endpoints;
-+	struct xarray regions;
- 	struct cxl_dport *parent_dport;
- 	struct ida decoder_ida;
- 	int hdm_end;
-@@ -476,6 +478,24 @@ struct cxl_ep {
- 	struct cxl_port *next;
++	int nr_targets_set;
+ 	int nr_eps;
+ 	int nr_targets;
  };
- 
-+/**
-+ * struct cxl_region_ref - track a region's interest in a port
-+ * @port: point in topology to install this reference
-+ * @decoder: decoder assigned for @region in @port
-+ * @region: region for this reference
-+ * @endpoints: cxl_ep references for region members beneath @port
-+ * @nr_eps: number of endpoints beneath @port
-+ * @nr_targets: number of distinct targets needed to reach @nr_eps
-+ */
-+struct cxl_region_ref {
-+	struct cxl_port *port;
-+	struct cxl_decoder *decoder;
-+	struct cxl_region *region;
-+	struct xarray endpoints;
-+	int nr_eps;
-+	int nr_targets;
-+};
-+
- /*
-  * The platform firmware device hosting the root is also the top of the
-  * CXL port topology. All other CXL ports have another CXL port as their
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index eee96016c3c7..a83bb6782d23 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -55,6 +55,11 @@ static inline struct cxl_port *cxled_to_port(struct cxl_endpoint_decoder *cxled)
- 	return to_cxl_port(cxled->cxld.dev.parent);
- }
- 
-+static inline struct cxl_port *cxlrd_to_port(struct cxl_root_decoder *cxlrd)
-+{
-+	return to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
-+}
-+
- static inline struct cxl_memdev *
- cxled_to_memdev(struct cxl_endpoint_decoder *cxled)
- {
 
