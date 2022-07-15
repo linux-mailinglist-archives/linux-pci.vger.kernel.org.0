@@ -2,111 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C30575C94
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 09:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 992EC575CF1
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 10:04:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbiGOHni (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 03:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
+        id S231698AbiGOIER (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 04:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230312AbiGOHne (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 03:43:34 -0400
+        with ESMTP id S230225AbiGOIEQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 04:04:16 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A085D1DF;
-        Fri, 15 Jul 2022 00:43:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 064E961D65;
+        Fri, 15 Jul 2022 01:04:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D518619CB;
-        Fri, 15 Jul 2022 07:43:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A3E4C34115;
-        Fri, 15 Jul 2022 07:43:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A019F61F35;
+        Fri, 15 Jul 2022 08:04:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD348C34115;
+        Fri, 15 Jul 2022 08:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657871012;
-        bh=0iGDNIkKNv/Up65EK2U2773EXnDVZqycw7MK0mT2K0U=;
+        s=k20201202; t=1657872255;
+        bh=4eoGergpOqcE4ttRkFKv9ntlQ2YzgMrnZ25BFzNcBqY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gGAovutajNnUoHyY93NBbHukld9fKKNu1xIGKtRyYAsdFeIrQdRy0CLI0IaVZnGpW
-         pHnbRPPireGo6J5ShQxtpjDP2gd/YitIEvRc2ALODmhP6EdGSICookvTZsxbVXa/Sf
-         RG5PVN9W+CCe8YuikNVmRcbOKRLUlkmMFqb0vXWhKeaSdyi6EcK2xuMDAkgflXqpRN
-         b83WEOPD8/QT5nKJanjqA1SDkrNfWP/P1jbBRP9IiAm1KnTS3DaTPP2ESt2jwdrFwe
-         JLRY7zh+CCI8FW2rt504Bb8snjLg6Nv/CgpGgrzb1cy0gEnHABe3HZg/SUidN9DL3X
-         BI7hDF7fAdCWw==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1oCFz6-0007tQ-Od; Fri, 15 Jul 2022 09:43:37 +0200
-Date:   Fri, 15 Jul 2022 09:43:36 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Brian Masney <bmasney@redhat.com>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        b=D0dK6sy/O9Dk8HVk3XO7fvxqQU6LlwDlISzOnkl4kuVK7gqEfKT6ZidxklB+TTNOQ
+         b7eJmZFltqKmYrC6wegXx6K7ZD7TvPfcapE0HTT+XYcLHq563j9iPfKBrISIbLNQQx
+         uRTT0xJPqEl8XWbdC9yFXZCeSSdWzeESB4wUiT2Zkx1uV3N+uCMbZa28ozT4T7tWLC
+         KX88ycWSAZwuHKmY1xt7eH931uNbbzFb2ZztQeqmoSa+nOAwRo2rORAqfeAmpKjmKj
+         z0835q1QJo+c9ZiWErMhAb6dP7W+BMq0SwOXT06fAGxSO7ok/ue+mkkpOYaUxNleKg
+         v9FiOyj7X0VLg==
+Received: by pali.im (Postfix)
+        id 35632A32; Fri, 15 Jul 2022 10:04:12 +0200 (CEST)
+Date:   Fri, 15 Jul 2022 10:04:12 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] PCI: qcom: Sort device-id table
-Message-ID: <YtEaqHT7NdXPhK+y@hovoldconsulting.com>
-References: <20220714071348.6792-1-johan+linaro@kernel.org>
- <20220714071348.6792-9-johan+linaro@kernel.org>
- <YtAny03L/RLk9nv6@xps13>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] arm: ioremap: Fix compilation of code which use
+ pci_remap_iospace() without CONFIG_MMU
+Message-ID: <20220715080412.j3wgvzlv5evp5zbb@pali>
+References: <20220714185700.6137-1-pali@kernel.org>
+ <20220714200443.GA1036464@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YtAny03L/RLk9nv6@xps13>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220714200443.GA1036464@bhelgaas>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 10:27:23AM -0400, Brian Masney wrote:
-> On Thu, Jul 14, 2022 at 09:13:48AM +0200, Johan Hovold wrote:
-> > Sort the device-id table entries alphabetically by compatible string to
-> > make it easier to find entries and add new ones.
-> > 
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 8dddb72f8647..fea921cca8fa 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -1749,24 +1749,24 @@ static int qcom_pcie_remove(struct platform_device *pdev)
-> >  }
-> >  
-> >  static const struct of_device_id qcom_pcie_match[] = {
-> > +	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
-> >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
-> > +	{ .compatible = "qcom,pcie-ipq6018", .data = &cfg_2_9_0 },
-> >  	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
-> >  	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
-> > -	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
-> > -	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
-> >  	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
-> >  	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
+On Thursday 14 July 2022 15:04:43 Bjorn Helgaas wrote:
+> [+cc linux-pci, update Lorenzo's email addr]
 > 
-> qcom,pcie-ipq4019 should be moved up above qcom,pcie-ipq6018.
+> Hi Pali,
+> 
+> Thanks for cc'ing me.  I think your previous notes didn't include
+> linux-pci or me, so I missed them.
 
-If we only had some sort of machine that could sort strings for us... ;)
-I'll rely on vim for this from now on.
+https://lore.kernel.org/r/20211205123209.lyx76daqdwzqwex4@pali/
 
-Perhaps Bjorn H can fix that up when applying unless I'll be sending a
-v3 for some other reason. This series still depends on the MSI rework to
-be applied first.
-
-Thanks for reviewing.
-
-Johan
+> It looks like bc02973a06a6 was merged via the PCI tree for v5.17 [1],
+> so we should probably merge the fix the same way.
+> 
+> Russell, let me know if you object.  Otherwise, I put it on pci/misc
+> for v5.20.
+> 
+> [1] https://lore.kernel.org/r/20220114155608.GA557997@bhelgaas
+> 
+> On Thu, Jul 14, 2022 at 08:57:00PM +0200, Pali Rohár wrote:
+> > Custom ARM version of pci_remap_iospace() is implemented only for MMU
+> > kernel builds. So do not define pci_remap_iospace() without CONFIG_MMU.
+> >
+> > See compilation failures:
+> > https://lore.kernel.org/r/202112040150.wvyJZIZO-lkp@intel.com/
+> > https://lore.kernel.org/r/202112261802.u9iXqdWh-lkp@intel.com/
+> > https://lore.kernel.org/r/202201131529.A2s7rKQc-lkp@intel.com/
+> > https://lore.kernel.org/r/202203090147.24cUL0De-lkp@intel.com/
+> > 
+> > Fixes: bc02973a06a6 ("arm: ioremap: Implement standard PCI function pci_remap_iospace()")
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > 
+> > ---
+> > 
+> > PING!!!! Is somebody interested in fixing these compile errors? As nobody
+> > answered to my emails where I proposed this fix more than half year ago and
+> > asked for opinion...
+> > 
+> > https://lore.kernel.org/r/20211204022131.bmhla4gkph7s7hy2@pali/
+> > https://lore.kernel.org/r/20211205123209.lyx76daqdwzqwex4@pali/
+> > https://lore.kernel.org/r/20211226215135.blcnafbuwhrq5ram@pali/
+> > https://lore.kernel.org/r/20220113134938.3tx7iiukphvazvsq@pali/
+> > https://lore.kernel.org/r/20220308184851.jmw2xvrapy5wzwof@pali/
+> > 
+> > If nobody is interested then please STOP sending me these Intel "0-DAY CI
+> > Kernel Test Service" emails. Thanks!
+> > ---
+> >  arch/arm/include/asm/io.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
+> > index eba7cbc93b86..47cf79229b7c 100644
+> > --- a/arch/arm/include/asm/io.h
+> > +++ b/arch/arm/include/asm/io.h
+> > @@ -180,10 +180,12 @@ void pci_ioremap_set_mem_type(int mem_type);
+> >  static inline void pci_ioremap_set_mem_type(int mem_type) {}
+> >  #endif
+> >  
+> > +#ifdef CONFIG_MMU
+> >  struct resource;
+> >  
+> >  #define pci_remap_iospace pci_remap_iospace
+> >  int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
+> > +#endif
+> >  
+> >  /*
+> >   * PCI configuration space mapping function.
+> > -- 
+> > 2.20.1
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
