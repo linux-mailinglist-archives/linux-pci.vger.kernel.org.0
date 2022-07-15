@@ -2,55 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C40576A18
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 00:43:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B49F0576A25
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 00:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232360AbiGOWny (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 18:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44872 "EHLO
+        id S230424AbiGOWtR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 18:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230429AbiGOWnc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 18:43:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DCC8E6D6;
-        Fri, 15 Jul 2022 15:43:07 -0700 (PDT)
+        with ESMTP id S230404AbiGOWtQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 18:49:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452BC422E1;
+        Fri, 15 Jul 2022 15:49:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9BA76618BF;
-        Fri, 15 Jul 2022 22:43:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE14BC34115;
-        Fri, 15 Jul 2022 22:43:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D512C61AEA;
+        Fri, 15 Jul 2022 22:49:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5377C3411E;
+        Fri, 15 Jul 2022 22:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657924986;
-        bh=+Ghj1AGYNiL5sUfl4veMNlQQN216yF6xPHyedaWdvTs=;
+        s=k20201202; t=1657925354;
+        bh=/HK8+6F2X24xjQ7OGtj8N78bPEbS4rUf1HbEkEcWz0c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aQZObKXCg15oT9Y3LaBxVR/Jm2Ol1m3/FYzwFErSEvorEhDs0YiXE3aZPL7kuOh6z
-         wbf/M2G71nWJhdA3te5TPI4vBEUwvl5NWRu7fi9i56xNuF+hvwvZ3ikoaL+cPIdVWx
-         etLgA83V+OdaVazN2ibIv37FVQB19Kv4whwblBvA3Zzbvccco/ucmDYh4N8RL2GNnC
-         JW+2UdrhHaF2kUKmiBMePz3Kag8V7EPdE0g2qqjgMI9GW51FmkBg22t0xAShQ/RxNg
-         i4yfmqEwpDXGMru1kV8rcu9wkw8+GUV1Tp44oBvpRx2C2aRmIgDtk7x/QsQi9Rw40e
-         qDyAyR+jiNB/w==
-Date:   Fri, 15 Jul 2022 17:43:03 -0500
+        b=evXgj3yNkRI6HvFzrpBM26FOti3FIvdzxUvD8k77uj3aoRDt94ERnVjHetrWIMqwm
+         lHQz2UAQk7RUuNtjX61jlIBEI+9NJ/WNmhepK/foupVbnSk9ZH9k+fX9HjduU/9QR5
+         Jckp3R2MSL3jaA7EjfrS269Tu+BauLCMrkeT7RgPwe5TSsLjJwWXK9jjjydKqV3Tp2
+         zn6pErQqqAmEX4W9v8pIhF/tJPyaYpa86QGMrO9vtlLd1wwn8MRV2PWDX4jQ3I+/4L
+         ZpjaBaZhae/a6coQin0Aui8lGps0VK4sXDa8Ej00RyNLk8Ilj+9LifOWS3zoLgJArZ
+         Vg2wPKb4q5Ehw==
+Date:   Fri, 15 Jul 2022 17:49:11 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-phy@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/2] phy: samsung: phy-exynos-pcie: sanitize
- init/power_on callbacks
-Message-ID: <20220715224303.GA1207726@bhelgaas>
+To:     Manyi Li <limanyi@uniontech.com>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        bhelgaas@google.com, refactormyself@gmail.com, kw@linux.com,
+        rajatja@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
+        rafael@kernel.org
+Subject: Re: [PATCH] PCI/ASPM: Should not report ASPM support to BIOS if FADT
+ indicates ASPM is unsupported
+Message-ID: <20220715224911.GA1208192@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YtFRAkt4onP4CZIj@matsya>
+In-Reply-To: <20220715093236.GA12020@srcf.ucam.org>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -60,51 +56,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 05:05:30PM +0530, Vinod Koul wrote:
-> On 12-07-22, 15:12, Bjorn Helgaas wrote:
-> > On Tue, Jul 05, 2022 at 11:55:23AM +0530, Vinod Koul wrote:
-> > > On 29-06-22, 00:04, Marek Szyprowski wrote:
-> > > > The exynos-pcie driver called phy_power_on() and then phy_init() for some
-> > > > historical reasons. However the generic PHY framework assumes that the
-> > > > proper sequence is to call phy_init() first, then phy_power_on(). The
-> > > > operations done by both functions should be considered as one action and
-> > > > as such they are called by the exynos-pcie driver (without doing anything
-> > > > between them). The initialization is just a sequence of register writes,
-> > > > which cannot be altered, without breaking the hardware operation.
-> > > > 
-> > > > To match the generic PHY framework requirement, simply move all register
-> > > > writes to the phy_init()/phy_exit() and drop power_on()/power_off()
-> > > > callbacks. This way the driver will also work with the old (incorrect)
-> > > > PHY initialization call sequence.
+Manyi, FYI, your emails aren't making it to the linux-pci list (or to
+me), so I'm missing most of this conversation.
+
+If you look at the lore archive:
+  https://lore.kernel.org/all/20220713112612.6935-1-limanyi@uniontech.com/
+you'll see all the message-ids that are not found.
+
+Maybe you're sending HTML or something else vger doesn't like?
+http://vger.kernel.org/majordomo-info.html#taboo
+
+On Fri, Jul 15, 2022 at 10:32:36AM +0100, Matthew Garrett wrote:
+> On Fri, Jul 15, 2022 at 05:19:25PM +0800, Manyi Li wrote:
+> > On 2022/7/15 16:29, Matthew Garrett wrote:
+> > > On Fri, Jul 15, 2022 at 03:40:36PM +0800, Manyi Li wrote:
 > > > 
-> > > Is the plan to merge thru pcie tree?
+> > > > Please see the details of this issus:
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=216245
+> > > 
+> > > Hmm. The only case where changing aspm_support_enabled to false should
+> > > matter is in pcie_aspm_init_link_state(), where it looks like we'll
+> > > potentially rewrite some registers even if aspm_disabled is true. I
+> > > think in theory we shouldn't actually modify anything as a result, and
+> > > the lspcis from the bug don't show any ASPM values having changed, but I
+> > > don't trust Realtek hardware in the general case so maybe it gets upset
+> > > here? If the proposed patch is to just set aspm_support_enabled to false
+> > > when we see the FADT bit set then I think this is fine.
+> > > 
 > > 
-> > I guess these patches should go together.  I don't see any major
-> > exynos series pending, but I do have two minor pci-exynos.c patches in
-> > the queue.
-> > 
-> > If you ack it (after resolution of your question below) I'd be happy
-> > to take both if it doesn't cause trouble for you.
+> > "aspm_support_enabled" alse be used in calculate_support():
+> > if (pcie_aspm_support_enabled())
+> >     support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
+> > When set OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT, cause this AER
+> > issue. I want don't set OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT when
+> > we see the FADT bit set.
 > 
-> Done now.
-
-Is this an ack?
-
-I didn't see any response to your question (added back below).  Are
-you happy with the patch as-is?
-
-> > > > @@ -51,6 +51,13 @@ static int exynos5433_pcie_phy_init(struct phy *phy)
-> > > >  {
-> > > >       struct exynos_pcie_phy *ep = phy_get_drvdata(phy);
-> > > >
-> > > > +     regmap_update_bits(ep->pmureg, EXYNOS5433_PMU_PCIE_PHY_OFFSET,
-> > > > +                        BIT(0), 1);
-> > > > +     regmap_update_bits(ep->fsysreg, PCIE_EXYNOS5433_PHY_GLOBAL_RESET,
-> > > > +                        PCIE_APP_REQ_EXIT_L1_MODE, 0);
-> > > > +     regmap_update_bits(ep->fsysreg, PCIE_EXYNOS5433_PHY_L1SUB_CM_CON,
-> > > > +                        PCIE_REFCLK_GATING_EN, 0);
-> > > > +
-> > > 
-> > > why not retain exynos5433_pcie_phy_power_on() and call it from here and
-> > > drop in ops. It would be clear to reader that these are for turning on
-> > > the phy...
+> Oh hm. Are you sure it's the OSC call that breaks it? I have some 
+> recollection that I verified the behaviour of Windows here, but it's 
+> been over 10 years since I touched this so I could well be wrong. I can 
+> try to set up a test env to verify the behaviour of Windows when it 
+> comes to _OSC if the FADT says ASPM is unsupported.
