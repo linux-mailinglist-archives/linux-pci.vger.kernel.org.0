@@ -2,177 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A44BF57613C
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 14:25:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A673F576139
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 14:24:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233559AbiGOMZE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 08:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
+        id S232933AbiGOMYy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 08:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234091AbiGOMZC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 08:25:02 -0400
-X-Greylist: delayed 1497 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 15 Jul 2022 05:25:01 PDT
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C14820E6;
-        Fri, 15 Jul 2022 05:25:01 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26FBApQx010543;
-        Fri, 15 Jul 2022 12:00:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id; s=qcppdkim1;
- bh=iOyl1ZRSLD3l7RdXgKTCXz7qYTdfN8+bAFd8DLwJ2ws=;
- b=XL9g06Nl7BrhVvo86cin/AjhZvKCye/45JSdhr3AYJYnh+VN8FZuI9DBi10q/WNAB/Qh
- aVe6QZZeLqUXjtale2W7CDpOra1QoySk49QXAllNVja4R71FOLy/o1FXrOsR/cyUE2B5
- FKiXQTkyEDeI+yCOtQuW7ZrI0PsVZKKxcEUS5FSzJ/zHuZtp0FWKh93vHY6JxVH6gv+B
- cJaoz8gzY3Yn+74XDzrz3JUZ7Tga7KetdzVJPlISZoPJSkHFumkDhBkLR7KbPnU5g8iK
- 5Xarkbe0noIs0mnhszVamT/vPuwr9AMBwN3qlXECG4yfCJv0M+nvWL/PlqDU+hKYw6MO pg== 
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3hay68sdux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 Jul 2022 12:00:32 +0000
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 26FC0Tiw008598;
-        Fri, 15 Jul 2022 12:00:29 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3h72rjjfkq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 15 Jul 2022 12:00:29 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 26FC0SCA008593;
-        Fri, 15 Jul 2022 12:00:28 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.37])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 26FC0SoH008592;
-        Fri, 15 Jul 2022 12:00:28 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id D2C8242E3; Fri, 15 Jul 2022 17:30:27 +0530 (+0530)
-From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
-To:     helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
-        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        with ESMTP id S229526AbiGOMYx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 08:24:53 -0400
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A77C1814A5;
+        Fri, 15 Jul 2022 05:24:52 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id c131so7450326ybf.9;
+        Fri, 15 Jul 2022 05:24:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QmoyCDeaSy0Y4BLqpZD4hIwfUSZvp3gh3g/tY1Os7n4=;
+        b=gHFfYJP3+22pnwC9WvkQlHarRgfcdYInwlGU1bnz9uD3CixVb6osL36HpZ0aLtf/D5
+         jjdBX6piorRS0N1o7y/Zh56o2O+mQvlJAwsAeo1r8qZPjLw6z3eGM3BcVLr1QuGjVs5x
+         5kNsFhY3pOvQ/pDOWprn8JYKil5tkxgeZcIl/+DKkBF9VP09SfMHm59Fl09z4uG16sp0
+         0WRFjfSw+yC36Lb6Z8CFeY6vfY0zBjEX0NmAFLae9ifmChj+WGhwWOsD8UzOKKwveLHK
+         Za/m4/nH2FKq7v5feqIVqP0p6vGY08zjAufK6ES3JUTOff7AXgJ0I5Yrba3irFBgW4Wo
+         uHqw==
+X-Gm-Message-State: AJIora8WFd7aWvPFCrsYl7spBGGI2kFumjVWfHTmdCBYDeIhHgAVAi6t
+        8JDaf8lsd3apwLpKSvSPsMtIL9TxmrHwLX0LSw4=
+X-Google-Smtp-Source: AGRyM1vG21oV6A3QVXCpfotTxqB0C9JWJCppfsJ2Qa/5lcfLJFdYGFVVBzPo5GqWOzeTNBCmOw1/cf33RQTxQUYfxFo=
+X-Received: by 2002:a25:664f:0:b0:66c:d0f4:36cc with SMTP id
+ z15-20020a25664f000000b0066cd0f436ccmr13225660ybm.482.1657887891874; Fri, 15
+ Jul 2022 05:24:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220713112612.6935-1-limanyi@uniontech.com> <20220713182852.GA841582@bhelgaas>
+ <CAAd53p7g2Md73=UU6Rp-TZkksc+H02KAX58bWCzsgQ__VwvJ+g@mail.gmail.com> <62d11a02.1c69fb81.ee60c.b0efSMTPIN_ADDED_BROKEN@mx.google.com>
+In-Reply-To: <62d11a02.1c69fb81.ee60c.b0efSMTPIN_ADDED_BROKEN@mx.google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 15 Jul 2022 14:24:39 +0200
+Message-ID: <CAJZ5v0gKMqOwg3JLx4PBksnpUhgaDDfahmE5RjJMTByOLAQOFg@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ASPM: Should not report ASPM support to BIOS if FADT
+ indicates ASPM is unsupported
+To:     Manyi Li <limanyi@uniontech.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rajat Jain <rajatja@google.com>
-Subject: [PATCH v6] PCI/ASPM: Update LTR threshold based upon reported max latencies
-Date:   Fri, 15 Jul 2022 17:30:12 +0530
-Message-Id: <1657886421-779-1-git-send-email-quic_krichai@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: hy1lWfwyhxyVMDEEKJJECT3jKQFk5oxn
-X-Proofpoint-ORIG-GUID: hy1lWfwyhxyVMDEEKJJECT3jKQFk5oxn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-15_04,2022-07-15_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- adultscore=0 impostorscore=0 priorityscore=1501 clxscore=1011
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2207150053
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In ASPM driver, LTR threshold scale and value are updated based on
-tcommon_mode and t_poweron values. In kioxia NVMe L1.2 is failing due to
-LTR threshold scale and value are greater values than max snoop/non-snoop
-value.
+On Fri, Jul 15, 2022 at 9:40 AM Manyi Li <limanyi@uniontech.com> wrote:
+>
+>
+>
+> On 2022/7/14 11:20, Kai-Heng Feng wrote:
+> > [+Cc Matthew]
+> >
+> > On Thu, Jul 14, 2022 at 2:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >>
+> >> [+cc Kai-Heng, Vidya, who also have ASPM patches in flight]
+> >>
+> >> On Wed, Jul 13, 2022 at 07:26:12PM +0800, Manyi Li wrote:
+> >>> Startup log of ASUSTeK X456UJ Notebook show:
+> >>> [    0.130563] ACPI FADT declares the system doesn't support PCIe ASPM, so disable it
+> >>> [   48.092472] pcieport 0000:00:1c.5: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
+> >>> [   48.092479] pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=00000001/00002000
+> >>> [   48.092481] pcieport 0000:00:1c.5:    [ 0] RxErr
+> >>> [   48.092490] pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
+> >>> [   48.092504] pcieport 0000:00:1c.5: AER: can't find device of ID00e5
+> >>> [   48.092506] pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
+> >>
+> >> Can you elaborate on the connection between the FADT ASPM bit and the
+> >> AER logs above?
+>
+> Sorry,I don't know about that.
+>
+> >>
+> >> What problem are we solving here?  A single corrected error being
+> >> logged?  An infinite stream of errors?  A device that doesn't work at
+> >> all?
+> >
+> > Agree, what's the real symptom of the issue?
+>
+> Please see the details of this issus:
+> https://bugzilla.kernel.org/show_bug.cgi?id=216245
+>
+> >
+> >>
+> >> We don't need the dmesg timestamps unless they contribute to
+> >> understanding the problem.  I don't think they do in this case.
+> >
+> > According to commit 387d37577fdd ("PCI: Don't clear ASPM bits when the
+> > FADT declares it's unsupported"), the bit means "just use the ASPM
+> > bits handed over by BIOS".
+> >
+> > However, I do wonder why both drivers/pci/pci-acpi.c and
+> > drivers/acpi/pci_root.c are doing the ACPI_FADT_NO_ASPM check,
 
-Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when
-reported snoop/no-snoop values is greather than or equal to
-LTR_L1.2_THRESHOLD value.
+Because pci_root.c doesn't read aspm_disabled.
 
-Signed-off-by: Prasad Malisetty  <quic_pmaliset@quicinc.com>
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
+> > maybe one of them should be removed?
 
-I am taking this patch forward as prasad is no more working with our org.
-changes since v5:
-	- no changes, just reposting as standalone patch instead of reply to
-	  previous patch.
-Changes since v4:
-	- Replaced conditional statements with min and max.
-changes since v3:
-	- Changed the logic to include this condition "snoop/nosnoop
-	  latencies are not equal to zero and lower than LTR_L1.2_THRESHOLD"
-Changes since v2:
-	- Replaced LTRME logic with max snoop/no-snoop latencies check.
-Changes since v1:
-	- Added missing variable declaration in v1 patch
----
- drivers/pci/pcie/aspm.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Arguably, pci_root.c could look at aspm_disabled instead of looking at
+the FADT flag directly.
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index a96b742..676c03e 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -461,14 +461,36 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
- {
- 	struct pci_dev *child = link->downstream, *parent = link->pdev;
- 	u32 val1, val2, scale1, scale2;
-+	u32 max_val, max_scale, max_snp_scale, max_snp_val, max_nsnp_scale, max_nsnp_val;
- 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
- 	u32 ctl1 = 0, ctl2 = 0;
- 	u32 pctl1, pctl2, cctl1, cctl2;
- 	u32 pl1_2_enables, cl1_2_enables;
-+	u16 ltr;
-+	u16 max_snoop_lat, max_nosnoop_lat;
- 
- 	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
- 		return;
- 
-+	ltr = pci_find_ext_capability(child, PCI_EXT_CAP_ID_LTR);
-+	if (!ltr)
-+		return;
-+
-+	pci_read_config_word(child, ltr + PCI_LTR_MAX_SNOOP_LAT, &max_snoop_lat);
-+	pci_read_config_word(child, ltr + PCI_LTR_MAX_NOSNOOP_LAT, &max_nosnoop_lat);
-+
-+	max_snp_scale = (max_snoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
-+	max_snp_val = max_snoop_lat & PCI_LTR_VALUE_MASK;
-+
-+	max_nsnp_scale = (max_nosnoop_lat & PCI_LTR_SCALE_MASK) >> PCI_LTR_SCALE_SHIFT;
-+	max_nsnp_val = max_nosnoop_lat & PCI_LTR_VALUE_MASK;
-+
-+	/* choose the greater max scale value between snoop and no snoop value*/
-+	max_scale = max(max_snp_scale, max_nsnp_scale);
-+
-+	/* choose the greater max value between snoop and no snoop scales */
-+	max_val = max(max_snp_val, max_nsnp_val);
-+
- 	/* Choose the greater of the two Port Common_Mode_Restore_Times */
- 	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
- 	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
-@@ -501,6 +523,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
- 	 */
- 	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
- 	encode_l12_threshold(l1_2_threshold, &scale, &value);
-+
-+	/*
-+	 * Based on PCIe r4.1, sec 5.5.1, L1.2 substate must be entered when reported
-+	 * snoop/no-snoop values are greather than or equal to LTR_L1.2_THRESHOLD value.
-+	 */
-+	scale = min(scale, max_scale);
-+	value = min(value, max_val);
-+
- 	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
- 
- 	/* Some broken devices only support dword access to L1 SS */
--- 
-2.7.4
+> I think duplicate work has been done, but comment
+> in drivers/acpi/pci_root.c is
+> * We want to disable ASPM here, but aspm_disabled
+> * needs to remain in its state from boot so that we
+> * properly handle PCIe 1.1 devices.  So we set this
+> * flag here, to defer the action until after the ACPI
+> * root scan.
+>
+> I don't understand this logic.
 
+This is about the case after failing acpi_pci_osc_control_set() and
+generally we need to defer setting aspm_disabled because of
+pcie_aspm_sanity_check().
+
+> >
+> >>
+> >>> Signed-off-by: Manyi Li <limanyi@uniontech.com>
+> >>> ---
+> >>>   drivers/pci/pcie/aspm.c | 1 +
+> >>>   1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> >>> index a96b7424c9bc..b173d3c75ae7 100644
+> >>> --- a/drivers/pci/pcie/aspm.c
+> >>> +++ b/drivers/pci/pcie/aspm.c
+> >>> @@ -1359,6 +1359,7 @@ void pcie_no_aspm(void)
+> >>>        if (!aspm_force) {
+> >>>                aspm_policy = POLICY_DEFAULT;
+> >>>                aspm_disabled = 1;
+> >>> +             aspm_support_enabled = false;
+> >>
+> >> This makes pcie_no_aspm() work the same as booting with
+> >> "pcie_aspm=off".  That might be reasonable.
+> >>
+> >> I do wonder why we need both "aspm_disabled" and
+> >> "aspm_support_enabled".  And I wonder why we need to set "aspm_policy"
+> >> when we're disabling ASPM.  But those aren't really connected to your
+> >> change here.
+> >
+> >  From what I can understand "aspm_disabled" means "don't touch ASPM
+> > left by BIOS", and "aspm_support_enabled" means "whether ASPM is
+> > disabled via command line".
+> > There seems to be some overlaps though.
+>
+> According to commit 8b8bae901ce23 ("PCI/ACPI: Report ASPM support to
+> BIOS if not disabled from command line"), "aspm_support_enabled" means
+> whether or not report ASPM support to the BIOS through _OSC.
+
+Right.
