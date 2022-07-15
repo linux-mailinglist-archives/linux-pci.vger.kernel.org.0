@@ -2,102 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A03BC576A66
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 01:06:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62742576A70
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 01:12:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229973AbiGOXGe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 19:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37312 "EHLO
+        id S231699AbiGOXM1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 19:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbiGOXGd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 19:06:33 -0400
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 461238B497;
-        Fri, 15 Jul 2022 16:06:32 -0700 (PDT)
-Received: by mail-io1-f43.google.com with SMTP id v185so4977553ioe.11;
-        Fri, 15 Jul 2022 16:06:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=WS+m6FCV1ih7kQYyoEE+Xpgv4hF6eBI9SGC0nwJm3wI=;
-        b=4QlHkrE2SWydcunm0CcgFwjypBz1SVw4Fm6XLbhNoYl5tnpDmYX9zyrP1BstyZT3Gi
-         RA2nu8KDpeLUdIVTMMJBCYCLpJk2S+pJAQFmwID/ee1eoeWZmn8n0BTMCCNeGi9GnXmJ
-         aD2yAk6RHZrWrMdZgkgZX8mC6qp/pOLnACDXn5igvYHbT5THh3KssnmWK1i3i7PiezzN
-         Cgl5D+ejkjtncR99U/XcTGWkRy7RY03WOBlWNfbvPqBIFEOTSg/UD+MzHb40KGsCa/6i
-         eYBu01kvM1zhvJA2k0KHBx5BjSWVrPhCrRRiUPhDp1zhwVzsY6j6yE+xbJQ5BcaEGHf/
-         Yb1w==
-X-Gm-Message-State: AJIora8BUEsBkOXr8LzdPmhI68lkQtKGw4vazbogXYD4kRYtmeFb7YcT
-        Uxpxaso18LlyM/mM1MnYvw==
-X-Google-Smtp-Source: AGRyM1vJzwIneWYq4VBZo4Q8Al9UejZ/c08fHYNczA4GDDXLOiIf81FvnXssYQRPzsCwTbZnDVFD6w==
-X-Received: by 2002:a05:6602:1346:b0:669:35d4:1a81 with SMTP id i6-20020a056602134600b0066935d41a81mr8128000iov.112.1657926391461;
-        Fri, 15 Jul 2022 16:06:31 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id b13-20020a92ce0d000000b002dc6fd9a84bsm2149256ilo.79.2022.07.15.16.06.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Jul 2022 16:06:31 -0700 (PDT)
-Received: (nullmailer pid 1631476 invoked by uid 1000);
-        Fri, 15 Jul 2022 23:06:28 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
-        peng.fan@nxp.com, ntb@lists.linux.dev, kernel@vger.kernel.org,
-        s.hauer@pengutronix.de, aisheng.dong@nxp.com, kw@linux.com,
-        linux-arm-kernel@lists.infradead.org, kishon@ti.com,
-        maz@kernel.org, festevam@gmail.com, shawnguo@kernel.org,
-        tglx@linutronix.de, krzysztof.kozlowski+dt@linaro.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        jdmason@kudzu.us, linux-imx@nxp.com, kernel@pengutronix.de
-In-Reply-To: <20220715192219.1489403-4-Frank.Li@nxp.com>
-References: <20220715192219.1489403-1-Frank.Li@nxp.com> <20220715192219.1489403-4-Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: irqchip: imx mu work as msi controller
-Date:   Fri, 15 Jul 2022 17:06:28 -0600
-Message-Id: <1657926388.230921.1631475.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S231540AbiGOXM0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 19:12:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A29C26D54E;
+        Fri, 15 Jul 2022 16:12:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 41E7C61AE1;
+        Fri, 15 Jul 2022 23:12:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F26C34115;
+        Fri, 15 Jul 2022 23:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657926744;
+        bh=gWF6p/e5bQgEu3Lm9V/vPDeCZtniM/aHoIU18lhyAl0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=q/dv42xM7AWBcJ4xHFeFxaqhUMC7SW2RV25TqCrYpVNi+TX6+NED1tSe28INHHyRD
+         HAs0r5sTycWwEy3ub2cOLt5KOc5EBJRU/+ip3GM1yEcreOoo0yarTSs99xe4y8wrt1
+         D9n5QmpHVpB9AJcf80jBDl8J+99LRRqQYjIirIWeBUB15u62acG5vbIlT8KHDiTle+
+         TiSP84Hf5Bo99ObHNLd6T8yyD6VDRFF9VVbFT9rcIHpGYrjDI0Nkb32YYwWPaAIPwU
+         IFr4VXmq6vvFwJxjfh4ebVSq11DWrhAS5d4nND/m082Mod/7sZxiVHJqkN5Ubr2UZK
+         PorvGJaJ8O52A==
+Date:   Fri, 15 Jul 2022 18:12:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-phy@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/2] phy: samsung: phy-exynos-pcie: sanitize
+ init/power_on callbacks
+Message-ID: <20220715231222.GA1210037@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220715224303.GA1207726@bhelgaas>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 15 Jul 2022 14:22:18 -0500, Frank Li wrote:
-> imx mu support generate irq by write a register.
-> provide msi controller support so other driver
-> can use it by standard msi interface.
+On Fri, Jul 15, 2022 at 05:43:03PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jul 15, 2022 at 05:05:30PM +0530, Vinod Koul wrote:
+> > On 12-07-22, 15:12, Bjorn Helgaas wrote:
+> > > On Tue, Jul 05, 2022 at 11:55:23AM +0530, Vinod Koul wrote:
+> > > > On 29-06-22, 00:04, Marek Szyprowski wrote:
+> > > > > The exynos-pcie driver called phy_power_on() and then phy_init() for some
+> > > > > historical reasons. However the generic PHY framework assumes that the
+> > > > > proper sequence is to call phy_init() first, then phy_power_on(). The
+> > > > > operations done by both functions should be considered as one action and
+> > > > > as such they are called by the exynos-pcie driver (without doing anything
+> > > > > between them). The initialization is just a sequence of register writes,
+> > > > > which cannot be altered, without breaking the hardware operation.
+> > > > > 
+> > > > > To match the generic PHY framework requirement, simply move all register
+> > > > > writes to the phy_init()/phy_exit() and drop power_on()/power_off()
+> > > > > callbacks. This way the driver will also work with the old (incorrect)
+> > > > > PHY initialization call sequence.
+> > > > 
+> > > > Is the plan to merge thru pcie tree?
+> > > 
+> > > I guess these patches should go together.  I don't see any major
+> > > exynos series pending, but I do have two minor pci-exynos.c patches in
+> > > the queue.
+> > > 
+> > > If you ack it (after resolution of your question below) I'd be happy
+> > > to take both if it doesn't cause trouble for you.
+> > 
+> > Done now.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../interrupt-controller/fsl,mu-msi.yaml      | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.yaml
+> Is this an ack?
 > 
+> I didn't see any response to your question (added back below).  Are
+> you happy with the patch as-is?
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Oops, sorry, I missed your ack [1].  That was more recent than your
+question, so I assume you're ok with the patch as-is.
 
-yamllint warnings/errors:
+I *would* like an ack from the maintainer, but I'm not sure whether
+Jingoo is still paying attention to pci-exynos.c.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.example.dtb: interrupt-controller@5d270000: '#interrupt-cells' is a dependency of 'interrupt-controller'
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/fsl,mu-msi.example.dtb: interrupt-controller@5d270000: '#interrupt-cells' is a dependency of 'interrupt-controller'
-	From schema: /usr/local/lib/python3.10/dist-packages/dtschema/schemas/interrupt-controller.yaml
+[1] https://lore.kernel.org/r/YtFQ67MmloipjNzj@matsya
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+> > > > > @@ -51,6 +51,13 @@ static int exynos5433_pcie_phy_init(struct phy *phy)
+> > > > >  {
+> > > > >       struct exynos_pcie_phy *ep = phy_get_drvdata(phy);
+> > > > >
+> > > > > +     regmap_update_bits(ep->pmureg, EXYNOS5433_PMU_PCIE_PHY_OFFSET,
+> > > > > +                        BIT(0), 1);
+> > > > > +     regmap_update_bits(ep->fsysreg, PCIE_EXYNOS5433_PHY_GLOBAL_RESET,
+> > > > > +                        PCIE_APP_REQ_EXIT_L1_MODE, 0);
+> > > > > +     regmap_update_bits(ep->fsysreg, PCIE_EXYNOS5433_PHY_L1SUB_CM_CON,
+> > > > > +                        PCIE_REFCLK_GATING_EN, 0);
+> > > > > +
+> > > > 
+> > > > why not retain exynos5433_pcie_phy_power_on() and call it from here and
+> > > > drop in ops. It would be clear to reader that these are for turning on
+> > > > the phy...
