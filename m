@@ -2,119 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5896D5766A3
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 20:18:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A098F5766B5
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 20:27:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229975AbiGOSSY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 14:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42696 "EHLO
+        id S229631AbiGOS1W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 14:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiGOSSX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 14:18:23 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187175C34D;
-        Fri, 15 Jul 2022 11:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657909102; x=1689445102;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TUQ7avMuLxhf37gvjWMg7acpWzikzJL0j5/UqprSQsU=;
-  b=VLY+ZEqYYlBuqI9K36GnEjSd5+TQlc0/aS8oLYwbmKCpkCg7Xn2oGzDN
-   1BmBS/wICldkzQQXpAFAy/pTFcMoZttRJ9jwsDYVU3FOy8ojbzdCqZZpR
-   ipZDExGamnghdGeFO6OioVUy/U6MOpCOZdgZUiZ9TjAAMLHZoA2Nknufc
-   vB7qt1s/9xleRDdssPLi6SNhECYudSbPhLsp2DFbQTUIdJvrWpS8MkWTJ
-   T/pzxJt91d6BJR65CqQ2vggcGiWMc6Xil3TcyH+fCFxV3emYlBCxsZFoZ
-   iUuuX2RaZ3CdXf9nkmcBLgcDF8IjAqXD3UQEJPokyH8/9Rjw/YjftGTvE
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10409"; a="266280341"
-X-IronPort-AV: E=Sophos;i="5.92,274,1650956400"; 
-   d="scan'208";a="266280341"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2022 11:18:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,274,1650956400"; 
-   d="scan'208";a="571621269"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 15 Jul 2022 11:18:21 -0700
-Received: from rjingar-desk5.amr.corp.intel.com (unknown [10.213.176.154])
-        by linux.intel.com (Postfix) with ESMTP id 4C168580BDB;
-        Fri, 15 Jul 2022 11:18:21 -0700 (PDT)
-From:   Rajvi Jingar <rajvi.jingar@linux.intel.com>
-To:     rafael.j.wysocki@intel.com, bhelgaas@google.com
-Cc:     rajvi.jingar@linux.intel.com, david.e.box@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v3 2/2] PCI/PTM: fix to maintain pci_dev->ptm_enabled
-Date:   Fri, 15 Jul 2022 11:18:09 -0700
-Message-Id: <20220715181809.232147-2-rajvi.jingar@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220715181809.232147-1-rajvi.jingar@linux.intel.com>
-References: <20220715181809.232147-1-rajvi.jingar@linux.intel.com>
+        with ESMTP id S229513AbiGOS1W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 14:27:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332CE67CA2;
+        Fri, 15 Jul 2022 11:27:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C3A5C6232B;
+        Fri, 15 Jul 2022 18:27:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F95C34115;
+        Fri, 15 Jul 2022 18:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657909638;
+        bh=GLrIOUKfTCEiitR+k/dayuHMYy8E4I2pvFk24p8afZA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jfZGg70EGZ58zaDDn8ZKKNJ8DPyDu0cAcpK/AV7rGjYSqpmQotBcWt0MgwPOkhep0
+         pAYxNSAtmitca9ADEZoaQJ0IJD3UrZ5iPwUfV3JOSWUl6i/cvE261pirar6sgIjY1t
+         iT6n2bxgn81JNrPKzAMPg+MHWDVbgmtelLQe0pycRpH5zQn7IIDq3h86fb0WmjpmBD
+         uNK96PLwO+cq3NzoacPSPLbZbf2ajetQ8iela16p3uWFLra+7JAGgnmpp5f2S+wPt6
+         CKIJ9hC+1Sq0bRYCkqw8svNte0bM0tC948wdr87usqzTnRIYj49UFYk+ajYRDOvMhp
+         MaglZ3Q/Xe+ZQ==
+Date:   Fri, 15 Jul 2022 13:27:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 0/4] PCI: brcmstb: Re-submit reverted patchset
+Message-ID: <20220715182715.GA1145359@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220701162726.31346-1-jim2101024@gmail.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_dev->ptm_enabled needs to be maintained to reflect the current PTM
-state of the device. In pci_ptm_disable(), clear ptm_enabled from
-'struct pci_dev' on disabling PTM state for the device.
-In pci_restore_ptm_state(), set dev->ptm_enabled based on the restored
-PTM state of the device.
+On Fri, Jul 01, 2022 at 12:27:21PM -0400, Jim Quinlan wrote:
+> A submission [1] was made to enable a PCIe root port to turn on regulators
+> for downstream devices.  It was accepted.  Months later, a regression was
+> discovered on an RPi CM4 [2].  The patchset was reverted [3] as the fix
+> came too late in the release cycle.  The regression in question is
+> triggered only when the PCIe RC DT node has no root port subnode, which is
+> a perfectly reasonsable configuration.
+> ...
 
-In pci_ptm_disable(), perform ptm_enabled check to avoid config space
-access in case if PTM is already disabled for the device. ptm_enabled
-won't be set for non-PCIe devices so pci_is_pcie(dev) check is not
-needed anymore.
+> Jim Quinlan (4):
+>   PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+>   PCI: brcmstb: Add mechanism to turn on subdev regulators
+>   PCI: brcmstb: oAdd control of subdevice voltage regulators
+>   PCI: brcmstb: Do not turn off WOL regulators on suspend
+> 
+>  drivers/pci/controller/pcie-brcmstb.c | 257 +++++++++++++++++++++++---
+>  1 file changed, 227 insertions(+), 30 deletions(-)
 
-Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- v1->v2:
-   - add ptm_enabled check in pci_ptm_disable().
-   - set the dev->ptm_enabled value in pci_restore_ptm_state().
- v2->v3:
-   - remove pci_is_pcie(dev) check in pci_ptm_disable().
-   - add Reviewed-by tag in commit message
----
- drivers/pci/pcie/ptm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I'm assuming there's a v2 coming soonish?  We should see -rc7 this
+weekend and likely a final v5.19 release on July 24, so v5.20 material
+should be tidied up by then.
 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 368a254e3124..1ce241d4538f 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -34,7 +34,7 @@ void pci_disable_ptm(struct pci_dev *dev)
- 	int ptm;
- 	u16 ctrl;
- 
--	if (!pci_is_pcie(dev))
-+	if (!dev->ptm_enabled)
- 		return;
- 
- 	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-@@ -44,6 +44,7 @@ void pci_disable_ptm(struct pci_dev *dev)
- 	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
- 	ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
- 	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
-+	dev->ptm_enabled = 0;
- }
- 
- void pci_save_ptm_state(struct pci_dev *dev)
-@@ -83,6 +84,7 @@ void pci_restore_ptm_state(struct pci_dev *dev)
- 
- 	cap = (u16 *)&save_state->cap.data[0];
- 	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, *cap);
-+	dev->ptm_enabled = !!(*cap & PCI_PTM_CTRL_ENABLE);
- }
- 
- void pci_ptm_init(struct pci_dev *dev)
--- 
-2.25.1
-
+Bjorn
