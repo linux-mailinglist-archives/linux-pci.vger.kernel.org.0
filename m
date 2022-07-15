@@ -2,164 +2,260 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB493575992
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 04:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9F795759C3
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 05:04:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241286AbiGOC1p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jul 2022 22:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39314 "EHLO
+        id S241078AbiGODEe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jul 2022 23:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbiGOC1o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 22:27:44 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70757538B;
-        Thu, 14 Jul 2022 19:27:43 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id 70so3500387pfx.1;
-        Thu, 14 Jul 2022 19:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2PHQEHiPUK5/kMXd0Tiaa/2KkMXqEO7YBVcbpRdWkzU=;
-        b=IEJMJOhzDLt+yfASXyPdeXR1oGGTsGDx3vl/pKDJYU0fM7xGoEYifRYmndgoDBn8V+
-         8KaH2UOTKaWNm2bcmSVrDZgCQRS5bZdc/JErVv0oiKI4D779tqf8qqqo8Y4iLSedLKu6
-         KJvBrd7MyyR0lBJJ++sR+EsLWE8c5/Kb5Z0fTJPJtZS1NwarGIQrRHk8mNKtsfmdVnsk
-         DdHkjkVUI3Go5QJOuWJ7tFYeVZyOTWJ1DVFRKCXBlPEbNV+fVinpn4yVP5n1HJQodgh9
-         gnwtaOMTLLw/5pbt9rN0/tXbYqausx/cGWYNWZ3PmgEiWfJZrxEj2bcNKssaqRx0mKTs
-         9LaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2PHQEHiPUK5/kMXd0Tiaa/2KkMXqEO7YBVcbpRdWkzU=;
-        b=anzorEmxO85UsEOGY79quda28Vup/O9mu/0P2oIsBhYfxOUJPiVm5chHxphIUi+qG8
-         4JKlUTYDfFuNQ2NdgKL7kYaFgHDjNzvTWC5SPjdUkoc7IK7oy4kcH7iMkaO0zqc19Ov6
-         hEebLt4VbY2sACEh5DmypErbaGEDKMBy4gjp9JnDMGrQ/Jj85i6pIOeVGDj3GkGptVle
-         hWNJ4bjSksMCBcYYStGk9+gXIKB4HVU7U5iqbIG/X7qYXz9/D7dUu2eeEfJNP0HpFm2p
-         mGQ1NyDrUwmqzIrqCUkQMX+c+u8jZJ/nkh6eRtPnlINY5r+zs4qkH0dUbANz428TkgjW
-         u73g==
-X-Gm-Message-State: AJIora8lPZykhRvvBAWD4qPP2kEntgbVxTreeZ7C766wrU0aAjiVrjT1
-        ZbEJ8hknm2iWb1TTMIHV398=
-X-Google-Smtp-Source: AGRyM1tFpAPO14ibbARmvlyA7Dm2i3y8ihIra24Y5oG5D9v2V9oCrT80IZwFQQ8AdtfnaIGZOBL3gA==
-X-Received: by 2002:a63:9547:0:b0:408:be53:b599 with SMTP id t7-20020a639547000000b00408be53b599mr10179125pgn.463.1657852063244;
-        Thu, 14 Jul 2022 19:27:43 -0700 (PDT)
-Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
-        by smtp.gmail.com with ESMTPSA id v22-20020a631516000000b0040caab35e5bsm1998257pgl.89.2022.07.14.19.27.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 19:27:42 -0700 (PDT)
-Date:   Fri, 15 Jul 2022 11:27:41 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        with ESMTP id S232384AbiGODEd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 23:04:33 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6121C67160;
+        Thu, 14 Jul 2022 20:04:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657854271; x=1689390271;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=32/fxDOhUxkprR2fU2fifm0PVwDfpR2M9Z4DH6kt46A=;
+  b=EhpqGk3XQn13KHMptLu9u4xgvjZwmNRwYkiUU/8R3uHB7UYJt23G2brJ
+   OIuhKPC4/10hDfTo3YXrOz3tCN+hV74Fuo04beH4pYxIUbIsUMmzldqsy
+   tEJw4rMIbZqSpxbP3wQZxMgSQGY62P5MzbSgbmFSmMKRCl6yG79HuRz3O
+   JCW6PIi+BU6Ns6L9UEI/bnpp4QUdb07qC9YpyRUGY1dPw7XvIBq+unJoM
+   uLjjFonCbHkW7i9Mlc2I4wSrSiiqIcuXOjy1CJ98UrDtrSwg0bmd8qQql
+   +zO1L4IdjjWWJathej2xAwUbxUFfWzOm3c3cRXpE9QpXUa2AV1ac2fSe5
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="372003573"
+X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
+   d="scan'208";a="372003573"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 20:04:31 -0700
+X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
+   d="scan'208";a="654152457"
+Received: from mbordone-mobl.amr.corp.intel.com (HELO localhost) ([10.255.5.217])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 20:04:28 -0700
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Nick Child <nick.child@ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "open list:ALPHA PORT" <linux-alpha@vger.kernel.org>,
-        "open list:IA64 (Itanium) PL..." <linux-ia64@vger.kernel.org>,
-        "open list:M68K ARCHITECTURE" <linux-m68k@lists.linux-m68k.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, linux-pci@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Subject: Re: [RFC PATCH 1/2] asm-generic: Remove pci.h copying code out to
- architectures
-Message-ID: <YtDQnQOeDF6RID4g@antec>
-References: <20220714214657.2402250-1-shorne@gmail.com>
- <20220714214657.2402250-2-shorne@gmail.com>
- <CAMo8BfKkGRHiFq1vu1ZKkURkUqC+Ee7D42yuKrCeDF+578s9cw@mail.gmail.com>
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Lukas Wunner <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V14 0/7] CXL: Read CDAT
+Date:   Thu, 14 Jul 2022 20:04:17 -0700
+Message-Id: <20220715030424.462963-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMo8BfKkGRHiFq1vu1ZKkURkUqC+Ee7D42yuKrCeDF+578s9cw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 06:45:27PM -0700, Max Filippov wrote:
-> On Thu, Jul 14, 2022 at 2:47 PM Stafford Horne <shorne@gmail.com> wrote:
-> >
-> > The generic pci.h header provides a definition of pci_get_legacy_ide_irq
-> > which is used by architectures that use PC-style interrupt numbers.
-> >
-> > This patch removes the old pci.h in order to make room for a new
-> > pci.h to be used by arm64, riscv, openrisc, etc.
-> >
-> > The existing code in pci.h is moved out to architectures.
-> >
-> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
-> > Signed-off-by: Stafford Horne <shorne@gmail.com>
-> > ---
-> >  arch/alpha/include/asm/pci.h   |  1 -
-> >  arch/ia64/include/asm/pci.h    |  1 -
-> >  arch/m68k/include/asm/pci.h    |  7 +++++--
-> >  arch/powerpc/include/asm/pci.h |  1 -
-> >  arch/s390/include/asm/pci.h    |  6 +++++-
-> >  arch/sparc/include/asm/pci.h   |  5 ++++-
-> >  arch/x86/include/asm/pci.h     |  6 ++++--
-> >  arch/xtensa/include/asm/pci.h  |  6 ++++--
-> >  include/asm-generic/pci.h      | 17 -----------------
-> >  9 files changed, 22 insertions(+), 28 deletions(-)
-> >  delete mode 100644 include/asm-generic/pci.h
-> 
-> [...]
-> 
-> > diff --git a/arch/xtensa/include/asm/pci.h b/arch/xtensa/include/asm/pci.h
-> > index 8e2b48a268db..f57ede61f5db 100644
-> > --- a/arch/xtensa/include/asm/pci.h
-> > +++ b/arch/xtensa/include/asm/pci.h
-> > @@ -43,7 +43,9 @@
-> >  #define ARCH_GENERIC_PCI_MMAP_RESOURCE 1
-> >  #define arch_can_pci_mmap_io()         1
-> >
-> > -/* Generic PCI */
-> > -#include <asm-generic/pci.h>
-> 
-> Ok.
-> 
-> > +static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-> > +{
-> > +       return channel ? 15 : 14;
-> > +}
-> 
-> This addition does not make sense for the xtensa as it isn't even possible
-> to enable PNP support (the only user of this function) on xtensa.
+From: Ira Weiny <ira.weiny@intel.com>
 
-Thanks for your feedback, this is the kind of feedback I was hoping to fish out
-with this patch.  I will look into completely removing this then.
+Details of changes are in the individual patches.
 
--Stafford
+Major changes from V13:[10]
+	Dan minor updates
+	Willy's suggestion of documentation is good but I'm deferring it until
+	we get the location of the PCI mailboxes settled.
+	Drop retry CDAT patch
+	Drop DSMAS patch
+	Rebased on latest cxl-pending
+
+CXL drivers need various data which are provided through generic DOE mailboxes
+as defined in the PCIe 6.0 spec.[1]
+
+One such data is the Coherent Device Attribute Table (CDAT).  CDAT data provides
+coherent information about the various devices in the system.  It was developed
+because systems no longer have a priori knowledge of all coherent devices
+within a system.  CDAT describes the coherent characteristics of the
+components on the CXL bus separate from system configurations.  The OS can
+then, for example, use this information to form correct interleave sets.
+
+To begin reading the CDAT the OS must have support to access the DOE mailboxes
+provided by the CXL devices.
+
+Because DOE is not specific to DOE but is provided within the PCI spec, the
+series adds PCI DOE capability library functions.  These functions allow for
+the iteration of the DOE capabilities on a device as well as creating
+pci_doe_mb structures which can control the operation of the DOE state machine.
+
+For now the iteration of and storage of the DOE mailboxes is done on memdev
+objects within the CXL stack.  When this is needed in more generic code this
+can be lifted later.
+
+This work was tested using qemu.
+
+[0] https://lore.kernel.org/linux-cxl/20211105235056.3711389-1-ira.weiny@intel.com/
+[1] https://pcisig.com/specifications
+[2] https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+[3] https://lore.kernel.org/linux-cxl/20220201071952.900068-1-ira.weiny@intel.com/
+[4] https://lore.kernel.org/linux-cxl/20220330235920.2800929-1-ira.weiny@intel.com/
+[5] https://lore.kernel.org/linux-cxl/20220414203237.2198665-1-ira.weiny@intel.com/
+[6] https://lore.kernel.org/linux-cxl/20220531152632.1397976-1-ira.weiny@intel.com/
+[7] https://lore.kernel.org/linux-cxl/20220605005049.2155874-1-ira.weiny@intel.com/
+[8] https://lore.kernel.org/linux-cxl/20220610202259.3544623-1-ira.weiny@intel.com/
+[9] https://lore.kernel.org/linux-cxl/20220628041527.742333-1-ira.weiny@intel.com/
+[10] https://lore.kernel.org/linux-cxl/20220705154932.2141021-1-ira.weiny@intel.com/
+
+
+Previous changes
+================
+
+Changes from V12:[9]
+	A couple of bug fixes in the new XArray stuff
+	Remove the IRQ support because I did not realize how that worked and it
+	was complicating things.
+	Remove busy retries and replace with an error as there is no good way
+	to ensure it will work.
+	Other code clean ups mentioned in the individual patches.
+
+Changes from V11:[8]
+	The major change in this version is to remove the workqueue from the
+	internal implementation of the state machine.  A single ordered
+	workqueue within each mailbox processes tasks submitted.  This
+	workqueue takes care of all locking and guarantees that tasks are
+	completed in the order submitted.  Any synchronization which is
+	required between tasks will need to be handled by the user of the
+	mailbox.  However, the user can depend on work items being completed in
+	the order they are submitted.  So a single thread submitter is
+	guaranteed to get all work items completed in order.  This also aids in
+	the support of a single mailbox supporting multiple protocols.  Each
+	protocol could have a separate thread submitting tasks for that
+	protocol.  The mailbox object will ensure that each protocol task is
+	complete before another task starts.  But multiple user threads can be
+	submitting tasks for different protocols all at the same time without
+	regard to other protocols being used.
+
+	XArrays are used throughout the series.
+
+	Other minor changes are noted in the individual patches.
+
+Changes from V10:[7]
+	Address Ben Widawsky's comments
+		Protect against potentially malicious devices.
+		Fix ownership issue of cdat_mb
+
+Changes from V9:[6]
+	Address feedback from
+		Lukas Wunner, Davidlohr Bueso, Jonathan Cameron,
+		Alison Schofield, and Ben Widawsky
+		Details in each individual patch.
+
+Changes from V8:[5]
+	For this version I've punted a bit to get it out and drop the auxiliary
+	bus functionality.  I like where Jonathan is going with the port driver
+	idea.  I think eventually the irq/mailbox creation will need to be more
+	generic in a PCI port driver.  I've modeled this version on such an
+	architecture but used the CXL port for the time being.
+
+	From Dan
+		Drop the auxiliary bus/device
+	From Jonathan
+		Cleanups
+	From Bjorn
+		Clean up commit messages
+		move pci-doe.c to doe.c
+		Clean up PCI spec references
+		Ensure all messages use pci_*()
+		Add offset to error messages to distinguish mailboxes
+			use hex for DOE offsets
+		Print 4 nibbles for Vendor ID and 2 for type.
+		s/irq/IRQ in comments
+		Fix long lines
+		Fix typos
+
+
+Changes from V7:[4]
+	Avoid code bloat by making pci-doe.c conditional on CONFIG_PCI_DOE
+		which is auto selected by the CXL_PCI config option.
+	Minor code clean ups
+	Fix bug in pci_doe_supports_prot()
+	Rebase to cxl-pending
+
+Changes from V6:[3]
+	The big change is the removal of the auxiliary bus code from the PCI
+	layer.  The auxiliary bus usage is now in the CXL layer.  The PCI layer
+	provides helpers for subsystems to utilize DOE mailboxes by creating a
+	pci_doe_mb object which controls a state machine for that mailbox
+	capability.  The CXL layer wraps this object in an auxiliary device and
+	driver which can then be used to determine if the kernel is controlling
+	the capability or it is available to be used by user space.  Reads from
+	user space via lspci are allowed.  Writes are allowed but flagged via a
+	tainting the kernel.
+
+	Feedback from Bjorn, Jonathan, and Dan
+		Details in each patch
+
+Changes from V5:[0]
+
+	Rework the patch set to split PCI vs CXL changes
+		Also make each change a bit more stand alone for easier review
+	Add cxl_cdat structure
+	Put CDAT related data structures in cdat.h
+	Clarify some device lifetimes with comments
+	Incorporate feedback from Jonathan, Bjorn and Dan
+		The bigest change is placing the DOE scanning code into the
+			pci_doe driver (part of the PCI codre).
+		Validate the CDAT when it is read rather than before DSMAS
+			parsing
+		Do not report DSMAS failure as an error, report a warning and
+			keep going.
+		Retry reading the table 1 time.
+	Update commit messages and this cover letter
+
+
+
+Ira Weiny (5):
+  PCI: Replace magic constant for PCI Sig Vendor ID
+  cxl/pci: Create PCI DOE mailbox's for memory devices
+  driver-core: Introduce BIN_ATTR_ADMIN_{RO,RW}
+  cxl/port: Read CDAT table
+  cxl/port: Introduce cxl_cdat_valid()
+
+Jonathan Cameron (2):
+  PCI: Add vendor ID for the PCI SIG
+  PCI/DOE: Add DOE mailbox support functions
+
+ .clang-format                           |   1 +
+ Documentation/ABI/testing/sysfs-bus-cxl |  10 +
+ drivers/cxl/Kconfig                     |   1 +
+ drivers/cxl/cdat.h                      |  63 +++
+ drivers/cxl/core/pci.c                  | 206 +++++++++
+ drivers/cxl/cxl.h                       |   5 +
+ drivers/cxl/cxlmem.h                    |   3 +
+ drivers/cxl/cxlpci.h                    |   1 +
+ drivers/cxl/pci.c                       |  44 ++
+ drivers/cxl/port.c                      |  54 +++
+ drivers/pci/Kconfig                     |   3 +
+ drivers/pci/Makefile                    |   1 +
+ drivers/pci/doe.c                       | 546 ++++++++++++++++++++++++
+ drivers/pci/probe.c                     |   2 +-
+ include/linux/pci-doe.h                 |  79 ++++
+ include/linux/pci_ids.h                 |   1 +
+ include/linux/sysfs.h                   |  16 +
+ include/uapi/linux/pci_regs.h           |  29 +-
+ 18 files changed, 1063 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/cxl/cdat.h
+ create mode 100644 drivers/pci/doe.c
+ create mode 100644 include/linux/pci-doe.h
+
+
+base-commit: b060edfd8cdd52bc8648392500bf152a8dd6d4c5
+-- 
+2.35.3
+
