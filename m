@@ -2,102 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37EA6575C81
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 09:41:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35C30575C94
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 09:44:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231776AbiGOHkc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 03:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40634 "EHLO
+        id S229693AbiGOHni (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 03:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbiGOHkb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 03:40:31 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4FE1753BE;
-        Fri, 15 Jul 2022 00:40:30 -0700 (PDT)
-Received: from mail-yw1-f182.google.com ([209.85.128.182]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MA7Ss-1oNpiA3254-00BfVX; Fri, 15 Jul 2022 09:40:28 +0200
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-31cf1adbf92so39648387b3.4;
-        Fri, 15 Jul 2022 00:40:27 -0700 (PDT)
-X-Gm-Message-State: AJIora/fTKTlEaQ6ForIwp6vaAUn/b1dpffbCpl9ZZp7EW7eVUyBRrY+
-        OOlAwzzHtCrJhUczSWFnSA3F0hO+0qnHf0ghyiY=
-X-Google-Smtp-Source: AGRyM1uqN7hbJWu1Kc45V1df/TuEhLpRBy0jFrUgJKDcJEoO7ehMJuFR6t3QFdid1eQbrmQCLxECRTpajxA3X2Ob8Ys=
-X-Received: by 2002:a81:1e4d:0:b0:31c:86f1:95b1 with SMTP id
- e74-20020a811e4d000000b0031c86f195b1mr14141207ywe.42.1657870826723; Fri, 15
- Jul 2022 00:40:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220714214657.2402250-1-shorne@gmail.com> <20220714214657.2402250-2-shorne@gmail.com>
- <CAMo8BfKkGRHiFq1vu1ZKkURkUqC+Ee7D42yuKrCeDF+578s9cw@mail.gmail.com>
-In-Reply-To: <CAMo8BfKkGRHiFq1vu1ZKkURkUqC+Ee7D42yuKrCeDF+578s9cw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 15 Jul 2022 09:40:10 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3S5crDdUcO0kAgOLVGYgXnkU9D3uo44Wrcu5LdAWCGoQ@mail.gmail.com>
-Message-ID: <CAK8P3a3S5crDdUcO0kAgOLVGYgXnkU9D3uo44Wrcu5LdAWCGoQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] asm-generic: Remove pci.h copying code out to architectures
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     Stafford Horne <shorne@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        with ESMTP id S230312AbiGOHne (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 03:43:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A085D1DF;
+        Fri, 15 Jul 2022 00:43:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D518619CB;
+        Fri, 15 Jul 2022 07:43:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A3E4C34115;
+        Fri, 15 Jul 2022 07:43:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657871012;
+        bh=0iGDNIkKNv/Up65EK2U2773EXnDVZqycw7MK0mT2K0U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gGAovutajNnUoHyY93NBbHukld9fKKNu1xIGKtRyYAsdFeIrQdRy0CLI0IaVZnGpW
+         pHnbRPPireGo6J5ShQxtpjDP2gd/YitIEvRc2ALODmhP6EdGSICookvTZsxbVXa/Sf
+         RG5PVN9W+CCe8YuikNVmRcbOKRLUlkmMFqb0vXWhKeaSdyi6EcK2xuMDAkgflXqpRN
+         b83WEOPD8/QT5nKJanjqA1SDkrNfWP/P1jbBRP9IiAm1KnTS3DaTPP2ESt2jwdrFwe
+         JLRY7zh+CCI8FW2rt504Bb8snjLg6Nv/CgpGgrzb1cy0gEnHABe3HZg/SUidN9DL3X
+         BI7hDF7fAdCWw==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1oCFz6-0007tQ-Od; Fri, 15 Jul 2022 09:43:37 +0200
+Date:   Fri, 15 Jul 2022 09:43:36 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Brian Masney <bmasney@redhat.com>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Nick Child <nick.child@ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "open list:ALPHA PORT" <linux-alpha@vger.kernel.org>,
-        "open list:IA64 (Itanium) PL..." <linux-ia64@vger.kernel.org>,
-        "open list:M68K ARCHITECTURE" <linux-m68k@lists.linux-m68k.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:xBt1Buqz4uz21xjgRTcz1sB5ZZm4RpSgjeDdgjcJqTVZpbgGxE9
- nD1Zu4Ge/pN+IeJ5he3jwNMmhWT/KQ3Tih2/6CVgZId1G/PwWsU/qowRmpQOyfQoQmRELAt
- O10L1cjPx95JNrnrugzLqkMFdBASwkg7W3Y7jkVvUZ2Vh4E6XJobZnUTDU1xZGnR6J8Ks3c
- d7BkFYX1WbWfFA63SEFXQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:seUnc9f1U8s=:S9bJx32885XPj3UntqciIn
- ryJq6wlXd/INdO3qLpKv+zCWHiUjDZHNmdPUsxhqmWEa6ZmnX3NvQ6MeLIbAd7o+CAlnsafus
- i6abMxSuJr9BGrFHXiAxrKZsCbGYlKWDaeBu0foqLJvV32PORbOHK8cus2vZRSGLElHIF+V47
- pvCZWmjE1I9A4hSILa+lvmBteOWavAMvo4PuzH3bl+SJGR9gYLOWU76tKbbO1ev+0wg1dkfJ5
- jOkbcykeZEbY7bJ4JT3Kz8xo4oc93rUUELLafzbIWwCdOln8ovo4DIlrFkLawnUqdn41KTZta
- cFPNuJW3CvbABFv8dsogeL7fN12yN4Kkgw/TPHMIVVrBBmhxRo0d/TZTJqcrs1biQHTOUG9dZ
- qm+D02lYx5lTen6fDRIlPt2K7ob7TKdEOzBhR0v+/91FZZCGY1t0MD4mUaXTa9CzdnE2MxJ8B
- YJWBF61C1YkdlKt1pVua25I1BXCzAFjCn1PjGmdBbGS2LFNTnqOikH1V0oxOf7zRDz/IXOjuH
- czUNZlrKFoEKu4X0Ui99YyM0CqG3o2h7CmsLh1sdC9NmN7r2Fokzucsn4it15JPSVSY5SFGUP
- LRyKGnUfuYWNKhpkJLqEINJ9de8p6aWvBjdfBllf+cZ/FJujV62i2d1HUj9UYmqlUhyJq1Rsi
- itoNBMjEm6QsNefBh/wXaPPABqzFahvNiJ0qTDow2Ei7rKvAlSkA49IX1DnPzE6GLN82Y9oEs
- F4pvQjtLbS4jo0FS7R2xfwsOEXeIZ/mXlHNC6LHMWI+lBUgpWEfJ4GktmCkEXYZyYI3np/PBw
- BqfiRAVc9YXGgJDvTumU2YsGpgrAOXJcSE+XeecOUGLMAlQo51d20sGA78I9SDjWn1YQgsyBM
- UBE4CRWuJ9+H8oksXb0w==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] PCI: qcom: Sort device-id table
+Message-ID: <YtEaqHT7NdXPhK+y@hovoldconsulting.com>
+References: <20220714071348.6792-1-johan+linaro@kernel.org>
+ <20220714071348.6792-9-johan+linaro@kernel.org>
+ <YtAny03L/RLk9nv6@xps13>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YtAny03L/RLk9nv6@xps13>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -105,45 +70,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 3:45 AM Max Filippov <jcmvbkbc@gmail.com> wrote:
-> On Thu, Jul 14, 2022 at 2:47 PM Stafford Horne <shorne@gmail.com> wrote:
->
-> > +static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-> > +{
-> > +       return channel ? 15 : 14;
-> > +}
->
-> This addition does not make sense for the xtensa as it isn't even possible
-> to enable PNP support (the only user of this function) on xtensa.
+On Thu, Jul 14, 2022 at 10:27:23AM -0400, Brian Masney wrote:
+> On Thu, Jul 14, 2022 at 09:13:48AM +0200, Johan Hovold wrote:
+> > Sort the device-id table entries alphabetically by compatible string to
+> > make it easier to find entries and add new ones.
+> > 
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 8dddb72f8647..fea921cca8fa 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -1749,24 +1749,24 @@ static int qcom_pcie_remove(struct platform_device *pdev)
+> >  }
+> >  
+> >  static const struct of_device_id qcom_pcie_match[] = {
+> > +	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> > +	{ .compatible = "qcom,pcie-ipq6018", .data = &cfg_2_9_0 },
+> >  	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
+> >  	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+> > -	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> > -	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+> >  	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
+> >  	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
+> 
+> qcom,pcie-ipq4019 should be moved up above qcom,pcie-ipq6018.
 
-Nice catch! I had looked at this function earlier and only tried to infer
-which architectures might have this based on who has those interrupt
-numbers reserved for ISA devices, but looking at CONFIG_PNP is clearly
-better here.
+If we only had some sort of machine that could sort strings for us... ;)
+I'll rely on vim for this from now on.
 
-PNP depends on "ISA || ACPI", and this already rules out most
-architectures. The remaining ones are:
+Perhaps Bjorn H can fix that up when applying unless I'll be sending a
+v3 for some other reason. This series still depends on the MSI rework to
+be applied first.
 
-* x86, ia64, alpha: These clearly use PNP based on-board devices on
-   common machines, and use PC-style interrupts
+Thanks for reviewing.
 
-* arm64, loongarch: These select PNP when ACPI is enabled. I don't
-   think they actually use PNP, but for the moment the function needs to
-  be defined, probably returning 0. Loongarch still lacks PCI support
-  though, so asm/pci.h is not yet there.
-
-* arm, mips, powerpc: Only a few older machines in each of these
-  support ISA devices, and the function is probably machine specific.
-  These all have a custom pci.h already and don't use the asm-generic
-  version.
-
-* m68k: there are two that enable CONFIG_ISA and one that enables
-  CONFIG_PCI, but nothing that has both, so we don't need this
-  function.
-
-In summary, I think only x86 actually uses this function, and it is
-correct there, everything else either has its own implementation
-or does not need it, so the existing asm-generic/pci.h file can
-just be folded into the x86 asm/pci.h. That is a great cleanup.
-
-        Arnd
+Johan
