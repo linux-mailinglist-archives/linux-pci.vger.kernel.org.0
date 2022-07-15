@@ -2,268 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65639576486
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 17:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CBD2576515
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 18:04:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234928AbiGOPgr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 11:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        id S229550AbiGOQEy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 12:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235010AbiGOPgn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 11:36:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EEB5A2D1
-        for <linux-pci@vger.kernel.org>; Fri, 15 Jul 2022 08:36:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 17242B82D11
-        for <linux-pci@vger.kernel.org>; Fri, 15 Jul 2022 15:36:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52F0BC3411E;
-        Fri, 15 Jul 2022 15:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657899399;
-        bh=2dlhaiT/PHyRwDrAtnA08dgWECmHLItKNahH8WkarKE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h4trP2ob4A2ErmThvl4gd1T45jmNOHpJkkmZ1awCz0oVwyj3JrvX4aII3IAojU2cY
-         KAL8JO4lD+5wrEwZermgbP2S6YQntn1mltQMgzIsNlxZCIOJXSSMZy41QDCWvhoDin
-         WTJLS8uD2tqzjUjc81LhSAPt+6xIZ+FVx1QtG+itb+vj9LiJDiNlOnIMDp9YHYY+IP
-         8hYbSXLqvxjc4bjlzYzlS84ICY7j+AKCltICffaAqHt47At18N6HHVY1jMkg+siLay
-         YtRjbWZ4ccJ+VXGhP3pkiFebBRkZtEvZi0UCdnOeOYBuKMZsws2SZSYVWV4auPNq4U
-         ZkfDrh/37CVxg==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stafford Horne <shorne@gmail.com>
-Subject: [PATCH 2/2] [RFC] sparc: Use generic pci_mmap_resource_range()
-Date:   Fri, 15 Jul 2022 17:36:17 +0200
-Message-Id: <20220715153617.3393420-2-arnd@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20220715153617.3393420-1-arnd@kernel.org>
-References: <20220715153617.3393420-1-arnd@kernel.org>
+        with ESMTP id S229559AbiGOQEy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 12:04:54 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6243443322
+        for <linux-pci@vger.kernel.org>; Fri, 15 Jul 2022 09:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657901093; x=1689437093;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZA9pEQoBtFoYG8q2j1IACdXszy5e0gBbgCJoO7SJIyE=;
+  b=n6JAxlFbQarwSPT8NaNDr+SvL9j/S7FagcKJZQIyu7wYNGv76Hf806Lc
+   Q2Sx5pnoskvaOHbvG6M8ghmD/q1D0GO5Xx0zJ42Dn9Zd2lCS0LeveV78p
+   SGV/NbGtoDhAZrwKa5kZVsqqYQoQB0Hdd3AbNPXavHCChag3PcDfylcEL
+   24cr43UUD6YO4RgjKjrbl8Y69fXrsRgeY0NG815gCfPaG3je9u0iJtuuK
+   P/2dIDDwNuDV7AonO+WNtVidl0rcGfVAnpJnAWZ773h9WfYtD1F1CiyRs
+   jRNg3CZWaX7fLvYVqDpVOCiERnoodOYqunK+ohqfogCGyjVNSqTJxgcKt
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="284588982"
+X-IronPort-AV: E=Sophos;i="5.92,274,1650956400"; 
+   d="scan'208";a="284588982"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2022 09:04:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,274,1650956400"; 
+   d="scan'208";a="571569273"
+Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 15 Jul 2022 09:04:33 -0700
+Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1oCNnt-0000Ol-9L;
+        Fri, 15 Jul 2022 16:04:33 +0000
+Date:   Sat, 16 Jul 2022 00:04:30 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/ctrl/dwc] BUILD SUCCESS
+ 908903ae8701a0b73cfa71ef203feb6e9261dcf4
+Message-ID: <62d1900e.hXUwQ/b6MySZplem%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/dwc
+branch HEAD: 908903ae8701a0b73cfa71ef203feb6e9261dcf4  PCI: dwc: Use the bitmap API to allocate bitmaps
 
-The main feature of the sparc specific implementation of
-pci_mmap_resource_range() is that it allows mapping the entire PCI
-I/O space for a PCI host bridge using the /proc/bus/pci interface on a
-bridge device.
+elapsed time: 4036m
 
-The generic implementation cannot do this, but it also appears that this
-got broken for sparc by commit 9eff02e2042f ("PCI: check mmap range of
-/proc/bus/pci files too"), which enforces that each address is part of
-a BAR for kernels after 2.6.28.
+configs tested: 153
+configs skipped: 4
 
-Remove it all, assuming that the corresponding user space code has
-already been changed to access /dev/ioport instead a long time ago.
-The pci_iobar_pfn() function needs to be added to make it possible
-to map I/O resources. This is adapted from the powerpc version.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Link: https://lore.kernel.org/lkml/1519887203.622.3.camel@infradead.org/t/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-It's quite possible that I missed something important, but it
-appears that David Miller was thinking of the pre-2.6.28 behavior
-that was already broken when David Woodhouse sent his series.
----
- arch/sparc/include/asm/pci.h |   1 +
- arch/sparc/kernel/pci.c      | 154 +----------------------------------
- 2 files changed, 5 insertions(+), 150 deletions(-)
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+sh                         apsh4a3a_defconfig
+sh                           se7751_defconfig
+arm                         nhk8815_defconfig
+sparc                             allnoconfig
+arm                           h3600_defconfig
+mips                         cobalt_defconfig
+sh                        sh7785lcr_defconfig
+arm64                            alldefconfig
+nios2                         3c120_defconfig
+m68k                       m5275evb_defconfig
+arm                        oxnas_v6_defconfig
+arm                        clps711x_defconfig
+powerpc                      pcm030_defconfig
+m68k                          atari_defconfig
+arc                          axs103_defconfig
+powerpc                     pq2fads_defconfig
+arm                             ezx_defconfig
+arc                 nsimosci_hs_smp_defconfig
+csky                              allnoconfig
+xtensa                  nommu_kc705_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                             sh03_defconfig
+m68k                        m5272c3_defconfig
+arc                                 defconfig
+arm                         at91_dt_defconfig
+nios2                            allyesconfig
+alpha                             allnoconfig
+sh                           se7343_defconfig
+sh                             espt_defconfig
+powerpc                 mpc8540_ads_defconfig
+arm                           viper_defconfig
+sh                        edosk7705_defconfig
+arc                              alldefconfig
+powerpc                  iss476-smp_defconfig
+mips                         bigsur_defconfig
+powerpc                         wii_defconfig
+mips                      loongson3_defconfig
+sparc                       sparc64_defconfig
+sparc64                          alldefconfig
+powerpc                     redwood_defconfig
+arm                       aspeed_g5_defconfig
+sh                               alldefconfig
+openrisc                            defconfig
+x86_64                                  kexec
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220715
+arc                               allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+x86_64                        randconfig-a013
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-diff --git a/arch/sparc/include/asm/pci.h b/arch/sparc/include/asm/pci.h
-index 4deddf430e5d..dff90dce6cb7 100644
---- a/arch/sparc/include/asm/pci.h
-+++ b/arch/sparc/include/asm/pci.h
-@@ -37,6 +37,7 @@ static inline int pci_proc_domain(struct pci_bus *bus)
- #define HAVE_PCI_MMAP
- #define arch_can_pci_mmap_io()	1
- #define HAVE_ARCH_PCI_GET_UNMAPPED_AREA
-+#define ARCH_GENERIC_PCI_MMAP_RESOURCE
- #define get_pci_unmapped_area get_fb_unmapped_area
- #endif /* CONFIG_SPARC64 */
- 
-diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
-index f580db840bf7..cb1ef25116e9 100644
---- a/arch/sparc/kernel/pci.c
-+++ b/arch/sparc/kernel/pci.c
-@@ -751,161 +751,15 @@ int pcibios_enable_device(struct pci_dev *dev, int mask)
- }
- 
- /* Platform support for /proc/bus/pci/X/Y mmap()s. */
--
--/* If the user uses a host-bridge as the PCI device, he may use
-- * this to perform a raw mmap() of the I/O or MEM space behind
-- * that controller.
-- *
-- * This can be useful for execution of x86 PCI bios initialization code
-- * on a PCI card, like the xfree86 int10 stuff does.
-- */
--static int __pci_mmap_make_offset_bus(struct pci_dev *pdev, struct vm_area_struct *vma,
--				      enum pci_mmap_state mmap_state)
-+int pci_iobar_pfn(struct pci_dev *pdev, int bar, struct vm_area_struct *vma)
- {
- 	struct pci_pbm_info *pbm = pdev->dev.archdata.host_controller;
--	unsigned long space_size, user_offset, user_size;
--
--	if (mmap_state == pci_mmap_io) {
--		space_size = resource_size(&pbm->io_space);
--	} else {
--		space_size = resource_size(&pbm->mem_space);
--	}
--
--	/* Make sure the request is in range. */
--	user_offset = vma->vm_pgoff << PAGE_SHIFT;
--	user_size = vma->vm_end - vma->vm_start;
-+	resource_size_t ioaddr = pci_resource_start(pdev, bar);
- 
--	if (user_offset >= space_size ||
--	    (user_offset + user_size) > space_size)
-+	if (!pbm)
- 		return -EINVAL;
- 
--	if (mmap_state == pci_mmap_io) {
--		vma->vm_pgoff = (pbm->io_space.start +
--				 user_offset) >> PAGE_SHIFT;
--	} else {
--		vma->vm_pgoff = (pbm->mem_space.start +
--				 user_offset) >> PAGE_SHIFT;
--	}
--
--	return 0;
--}
--
--/* Adjust vm_pgoff of VMA such that it is the physical page offset
-- * corresponding to the 32-bit pci bus offset for DEV requested by the user.
-- *
-- * Basically, the user finds the base address for his device which he wishes
-- * to mmap.  They read the 32-bit value from the config space base register,
-- * add whatever PAGE_SIZE multiple offset they wish, and feed this into the
-- * offset parameter of mmap on /proc/bus/pci/XXX for that device.
-- *
-- * Returns negative error code on failure, zero on success.
-- */
--static int __pci_mmap_make_offset(struct pci_dev *pdev,
--				  struct vm_area_struct *vma,
--				  enum pci_mmap_state mmap_state)
--{
--	unsigned long user_paddr, user_size;
--	int i, err;
--
--	/* First compute the physical address in vma->vm_pgoff,
--	 * making sure the user offset is within range in the
--	 * appropriate PCI space.
--	 */
--	err = __pci_mmap_make_offset_bus(pdev, vma, mmap_state);
--	if (err)
--		return err;
--
--	/* If this is a mapping on a host bridge, any address
--	 * is OK.
--	 */
--	if ((pdev->class >> 8) == PCI_CLASS_BRIDGE_HOST)
--		return err;
--
--	/* Otherwise make sure it's in the range for one of the
--	 * device's resources.
--	 */
--	user_paddr = vma->vm_pgoff << PAGE_SHIFT;
--	user_size = vma->vm_end - vma->vm_start;
--
--	for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
--		struct resource *rp = &pdev->resource[i];
--		resource_size_t aligned_end;
--
--		/* Active? */
--		if (!rp->flags)
--			continue;
--
--		/* Same type? */
--		if (i == PCI_ROM_RESOURCE) {
--			if (mmap_state != pci_mmap_mem)
--				continue;
--		} else {
--			if ((mmap_state == pci_mmap_io &&
--			     (rp->flags & IORESOURCE_IO) == 0) ||
--			    (mmap_state == pci_mmap_mem &&
--			     (rp->flags & IORESOURCE_MEM) == 0))
--				continue;
--		}
--
--		/* Align the resource end to the next page address.
--		 * PAGE_SIZE intentionally added instead of (PAGE_SIZE - 1),
--		 * because actually we need the address of the next byte
--		 * after rp->end.
--		 */
--		aligned_end = (rp->end + PAGE_SIZE) & PAGE_MASK;
--
--		if ((rp->start <= user_paddr) &&
--		    (user_paddr + user_size) <= aligned_end)
--			break;
--	}
--
--	if (i > PCI_ROM_RESOURCE)
--		return -EINVAL;
--
--	return 0;
--}
--
--/* Set vm_page_prot of VMA, as appropriate for this architecture, for a pci
-- * device mapping.
-- */
--static void __pci_mmap_set_pgprot(struct pci_dev *dev, struct vm_area_struct *vma,
--					     enum pci_mmap_state mmap_state)
--{
--	/* Our io_remap_pfn_range takes care of this, do nothing.  */
--}
--
--/* Perform the actual remap of the pages for a PCI device mapping, as appropriate
-- * for this architecture.  The region in the process to map is described by vm_start
-- * and vm_end members of VMA, the BAR relative address is found in vm_pgoff.
-- * The pci device structure is provided so that architectures may make mapping
-- * decisions on a per-device or per-bus basis.
-- *
-- * Returns a negative error code on failure, zero on success.
-- */
--int pci_mmap_resource_range(struct pci_dev *dev, int bar,
--			    struct vm_area_struct *vma,
--			    enum pci_mmap_state mmap_state, int write_combine)
--{
--	int ret;
--	resource_size_t start, end;
--
--	/* convert per-BAR address to PCI bus address */
--	pci_resource_to_user(dev, bar, &dev->resource[bar], &start, &end);
--	vma->vm_pgoff += start >> PAGE_SHIFT;
--
--	ret = __pci_mmap_make_offset(dev, vma, mmap_state);
--	if (ret < 0)
--		return ret;
--
--	__pci_mmap_set_pgprot(dev, vma, mmap_state);
--
--	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
--	ret = io_remap_pfn_range(vma, vma->vm_start,
--				 vma->vm_pgoff,
--				 vma->vm_end - vma->vm_start,
--				 vma->vm_page_prot);
--	if (ret)
--		return ret;
-+	vma->vm_pgoff += (ioaddr + pbm->io_space.start) >> PAGE_SHIFT;
- 
- 	return 0;
- }
+clang tested configs:
+mips                          ath79_defconfig
+arm                            dove_defconfig
+arm                      tct_hammer_defconfig
+powerpc                 mpc836x_mds_defconfig
+arm                           spitz_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arm                       versatile_defconfig
+arm                        mvebu_v5_defconfig
+mips                     cu1830-neo_defconfig
+powerpc                 mpc8560_ads_defconfig
+powerpc                     tqm8560_defconfig
+arm                      pxa255-idp_defconfig
+mips                        workpad_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                          g5_defconfig
+powerpc                    gamecube_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                    mvme5100_defconfig
+arm                        vexpress_defconfig
+arm                   milbeaut_m10v_defconfig
+s390                             alldefconfig
+powerpc                   lite5200b_defconfig
+arm                          pcm027_defconfig
+arm                       cns3420vb_defconfig
+mips                      malta_kvm_defconfig
+powerpc                        fsp2_defconfig
+hexagon                             defconfig
+powerpc                      ppc44x_defconfig
+mips                           ip28_defconfig
+powerpc                   bluestone_defconfig
+powerpc                     ppa8548_defconfig
+powerpc                     kilauea_defconfig
+powerpc                          allyesconfig
+mips                       rbtx49xx_defconfig
+mips                        omega2p_defconfig
+arm                          moxart_defconfig
+powerpc                     mpc512x_defconfig
+mips                     cu1000-neo_defconfig
+arm                         orion5x_defconfig
+powerpc                      pmac32_defconfig
+arm                         socfpga_defconfig
+riscv                            alldefconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220714
+hexagon              randconfig-r041-20220714
+hexagon              randconfig-r045-20220715
+s390                 randconfig-r044-20220715
+hexagon              randconfig-r041-20220715
+riscv                randconfig-r042-20220715
+
 -- 
-2.29.2
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
