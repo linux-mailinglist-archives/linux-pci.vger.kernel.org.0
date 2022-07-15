@@ -2,92 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0418D5760A0
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 13:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D7C35760CB
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 13:47:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbiGOLfh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 07:35:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58566 "EHLO
+        id S230388AbiGOLrB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 07:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233264AbiGOLfg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 07:35:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCFD45D5B6;
-        Fri, 15 Jul 2022 04:35:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D1A3622EA;
-        Fri, 15 Jul 2022 11:35:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF2FEC34115;
-        Fri, 15 Jul 2022 11:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657884934;
-        bh=AVfJz6hAs+kgFPameBwL8dCVrV6mu62fj//RcFwFdVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gUKMR4hnkbs/CLLUl33Nkedzr4Yfirduk8yTGfhmnXXbni528zYlpNoFdDPQ3uLDt
-         IGQRs2REVZvf3GznJmTZBf6hh85lFMuujmTya790svjziG1PiHKu/6T5/Fwfv6sSDx
-         kYersxM4H7vOJOa/FbyjHB8OqdgEFVmzkxcL5c9G3+HhZZ1zvB4OEM/1kVZ2zO20PH
-         GaK9qwjWyGtc69H5pe+WfDtZ2MXMGmV9yM7E6u0vpkfSN2L52H5lWDDxuRXOd+dgwg
-         s5qowh61WNJF7tIltDvOXmH4MmEZjMD9bfAAeeSKLHVF2HfjAfx8cKQ+i8hUqdX6lq
-         mRypnBH65poTA==
-Date:   Fri, 15 Jul 2022 17:05:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-phy@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/2] phy: samsung: phy-exynos-pcie: sanitize
- init/power_on callbacks
-Message-ID: <YtFRAkt4onP4CZIj@matsya>
-References: <YsPZU83Jl/kcqR8h@matsya>
- <20220712201227.GA791612@bhelgaas>
+        with ESMTP id S229551AbiGOLrA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 07:47:00 -0400
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF556A9EB;
+        Fri, 15 Jul 2022 04:46:56 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id l11so7978116ybu.13;
+        Fri, 15 Jul 2022 04:46:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WqoOKe5SVWSzGVBe5LzZqUphjZiBkwI10kR9M9RPLG0=;
+        b=faZXnEm709nWF062CsgWRkuMtPiYwgJRZhADYAbkSvDhU+cNDQXFc+MHs0qhI5mj3F
+         AjAPFtEKeDKDdXgwmBsKA2aG2Ujn4Is/KLpNG78hImXTFJi4x6SddjhuIzddndTPXIyV
+         Kach4MebRKuP1cQpwsHcuGSLP2ILWT9FBO0VxxF3KoXvA2sckKj/6OvoQBpZm738uKKy
+         57gHW/XAChuDzg1Gl0yywonaEbYLDBialOq7GAe0IbCw30zQbGfh0c7gbCAc6lAdgT1d
+         n/0Q53H/Af6ErEun5l2YODsYvLObIGvkdg3xnzrD6JcSDMWy0RqX/oN3hIa37Jw+vVjJ
+         mekQ==
+X-Gm-Message-State: AJIora+MUP9qkbLBrBHROjL/RuGtYgkWyfqICgfD3htZ2y5iHA/SUCK3
+        2KDj6WgrC7fAvFDuJnj+ikWdrTcDfnRVZ1ZYqIk=
+X-Google-Smtp-Source: AGRyM1sqsGvLp77687+ihXREWyb60Vyk9yStrYlnFMG8MmY9EaCy0g8z/PVcJl2MmO4vTXXSR0BCEHi4c4qGwWggN+Q=
+X-Received: by 2002:a05:6902:154f:b0:66e:e2d3:ce1 with SMTP id
+ r15-20020a056902154f00b0066ee2d30ce1mr12620794ybu.365.1657885615913; Fri, 15
+ Jul 2022 04:46:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220712201227.GA791612@bhelgaas>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20220714231609.3962051-1-rajvi.jingar@linux.intel.com> <20220714231609.3962051-2-rajvi.jingar@linux.intel.com>
+In-Reply-To: <20220714231609.3962051-2-rajvi.jingar@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 15 Jul 2022 13:46:43 +0200
+Message-ID: <CAJZ5v0g9XZ+K+C9g0a4MeMe9Ug2qkacSf4DoXR8F82Y0+gW09A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] PCI/PTM: fix to maintain pci_dev->ptm_enabled
+To:     Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        David Box <david.e.box@linux.intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12-07-22, 15:12, Bjorn Helgaas wrote:
-> On Tue, Jul 05, 2022 at 11:55:23AM +0530, Vinod Koul wrote:
-> > On 29-06-22, 00:04, Marek Szyprowski wrote:
-> > > The exynos-pcie driver called phy_power_on() and then phy_init() for some
-> > > historical reasons. However the generic PHY framework assumes that the
-> > > proper sequence is to call phy_init() first, then phy_power_on(). The
-> > > operations done by both functions should be considered as one action and
-> > > as such they are called by the exynos-pcie driver (without doing anything
-> > > between them). The initialization is just a sequence of register writes,
-> > > which cannot be altered, without breaking the hardware operation.
-> > > 
-> > > To match the generic PHY framework requirement, simply move all register
-> > > writes to the phy_init()/phy_exit() and drop power_on()/power_off()
-> > > callbacks. This way the driver will also work with the old (incorrect)
-> > > PHY initialization call sequence.
-> > 
-> > Is the plan to merge thru pcie tree?
-> 
-> I guess these patches should go together.  I don't see any major
-> exynos series pending, but I do have two minor pci-exynos.c patches in
-> the queue.
-> 
-> If you ack it (after resolution of your question below) I'd be happy
-> to take both if it doesn't cause trouble for you.
+On Fri, Jul 15, 2022 at 1:16 AM Rajvi Jingar
+<rajvi.jingar@linux.intel.com> wrote:
+>
+> pci_dev->ptm_enabled needs to be maintained to reflect the current PTM
+> state of the device. In pci_ptm_disable(), clear ptm_enabled from
+> 'struct pci_dev' on disabling PTM state for the device.
+> In pci_restore_ptm_state(), set dev->ptm_enabled based on the restored
+> PTM state of the device.
+>
+> Also, perform ptm_enabled check in pci_ptm_disable() to avoid config
+> space access in case if PTM is already disabled for the device.
+>
+> Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+> ---
+>  v1->v2:
+>    - add ptm_enabled check in pci_ptm_disable().
+>    - set the dev->ptm_enabled value in pci_restore_ptm_state().
+> ---
+>  drivers/pci/pcie/ptm.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+> index 368a254e3124..8dc7d2285a0d 100644
+> --- a/drivers/pci/pcie/ptm.c
+> +++ b/drivers/pci/pcie/ptm.c
+> @@ -34,6 +34,9 @@ void pci_disable_ptm(struct pci_dev *dev)
+>         int ptm;
+>         u16 ctrl;
+>
+> +       if (!dev->ptm_enabled)
+> +               return;
+> +
+>         if (!pci_is_pcie(dev))
+>                 return;
 
-Done now.
+After the check you've added this doesn't need to be checked any more,
+because ptm_enabled will not be set if pci_is_pcie(dev) is not true
+AFAICS.
 
--- 
-~Vinod
+Otherwise the patch looks good to me, so with the above addressed,
+please feel free to add
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+to it.
+
+Thanks!
+
+>
+> @@ -44,6 +47,7 @@ void pci_disable_ptm(struct pci_dev *dev)
+>         pci_read_config_word(dev, ptm + PCI_PTM_CTRL, &ctrl);
+>         ctrl &= ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
+>         pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
+> +       dev->ptm_enabled = 0;
+>  }
+>
+>  void pci_save_ptm_state(struct pci_dev *dev)
+> @@ -83,6 +87,7 @@ void pci_restore_ptm_state(struct pci_dev *dev)
+>
+>         cap = (u16 *)&save_state->cap.data[0];
+>         pci_write_config_word(dev, ptm + PCI_PTM_CTRL, *cap);
+> +       dev->ptm_enabled = !!(*cap & PCI_PTM_CTRL_ENABLE);
+>  }
+>
+>  void pci_ptm_init(struct pci_dev *dev)
+> --
+> 2.25.1
+>
