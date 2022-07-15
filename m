@@ -2,48 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDD2857586F
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 02:04:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F04AD57587E
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jul 2022 02:05:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232313AbiGOAEl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jul 2022 20:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39874 "EHLO
+        id S241115AbiGOAF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jul 2022 20:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241076AbiGOAEk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 20:04:40 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A875966AE0;
-        Thu, 14 Jul 2022 17:04:39 -0700 (PDT)
+        with ESMTP id S241106AbiGOAFZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jul 2022 20:05:25 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAB473902;
+        Thu, 14 Jul 2022 17:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657843479; x=1689379479;
+  t=1657843522; x=1689379522;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pDhRf3qBnQEd9BweVVOXaxp4SJT1O6WGOvb5VpLfORo=;
-  b=g9aW+F74lEtFgQUSV0ITRHr7doLIv4E5bzOr9OuA+HZbYtCQO8Iwalrx
-   ZGRVGqJa4rntiMdKY59czNy0lxWfAd1s437V9BxOMDeV7Kjwub+ANWaXK
-   hzRWoWLS5ND26DSlapUDs9g7ha/Ktzr8DSt+/jNaQfcEEiFXenNlip78l
-   xkWkwJq5oFkrro0QohHS1bncN29pmqPt6VpOEHSq9+l4b6raadycLmxt8
-   0sxvOPapTFwrVtC6+zlwKqnyLJLypW434NjqM9GJSGKd2ss1cO0FmZX1U
-   4h/frQtBb2G710NuqmnMnA/nRAhe5Z+IA7vVMN+JkO9TzVDMf0ioe7TKl
+  bh=TgQ3wfpkvJiu1CZKehyIA3pvixwKsN+GwHLtVvvU30k=;
+  b=dKS5NX8kj+lwq8uDdnJFB6avuNuSLs3bX0d9eyMU05WjOJMLe8e2/C3a
+   9hgWibYVbsl8oR9JzwFT1WtFI7y73md15jpswDUQck2tHAW/zpWbCRrVB
+   ev0nHHMDTkCYK9+F5fjnBi1KiP/gqCayomoKa7leLMXo9jqFX0YmM4j1t
+   Tyyb30/uzynhUTE32YDrIT0fbF54iXfIcxwbWwo1mwyDT/RBxlUjX8gSN
+   aP+TarlchlGUUAYISXIx+N+fBJ89SiFmqMjXXYAbc2Txjn82L5mR8GtGH
+   ja4H1ljDE4RJrYeG3k2BLoVx7BBMw3exGjfn46GaZ6iQXZ3zIYJgcTReU
    A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="266074581"
+X-IronPort-AV: E=McAfee;i="6400,9594,10408"; a="371978415"
 X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="266074581"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:03:10 -0700
+   d="scan'208";a="371978415"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:03:16 -0700
 X-IronPort-AV: E=Sophos;i="5.92,272,1650956400"; 
-   d="scan'208";a="685766925"
+   d="scan'208";a="571303156"
 Received: from jlcone-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.2.90])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:03:10 -0700
-Subject: [PATCH v2 26/28] cxl/region: Add region driver boiler plate
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 17:03:15 -0700
+Subject: [PATCH v2 27/28] cxl/pmem: Fix offline_nvdimm_bus() to offline by
+ bridge
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <bwidawsk@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>, hch@lst.de,
-        nvdimm@lists.linux.dev, linux-pci@vger.kernel.org
-Date:   Thu, 14 Jul 2022 17:03:09 -0700
-Message-ID: <165784338963.1758207.3908994719897882778.stgit@dwillia2-xfh.jf.intel.com>
+Cc:     hch@lst.de, nvdimm@lists.linux.dev, linux-pci@vger.kernel.org
+Date:   Thu, 14 Jul 2022 17:03:15 -0700
+Message-ID: <165784339569.1758207.1557084545278004577.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
 References: <165784324066.1758207.15025479284039479071.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -60,170 +59,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The CXL region driver is responsible for routing fully formed CXL
-regions to one of libnvdimm, for persistent memory regions, device-dax
-for volatile memory regions, or just act as an enumeration placeholder
-if the region was setup and configuration locked by platform firmware.
-In the platform-firmware-setup case the expectation is that region is
-already accounted in the system memory map, i.e. already enabled as
-"System RAM".
+Be careful to only disable cxl_pmem objects related to a given
+cxl_nvdimm_bridge. Otherwise, offline_nvdimm_bus() reaches across CXL
+domains and disables more than is expected.
 
-For now, just attach to CXL regions in the CXL_CONFIG_COMMIT state, and
-take no further action.
-
-Given this driver is just a small / simple router, include it in the
-core rather than its own module.
-
-Co-developed-by: Ben Widawsky <bwidawsk@kernel.org>
-Signed-off-by: Ben Widawsky <bwidawsk@kernel.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://lore.kernel.org/r/20220624041950.559155-18-dan.j.williams@intel.com
+Fixes: 21083f51521f ("cxl/pmem: Register 'pmem' / cxl_nvdimm devices")
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/core.h   |   12 ++++++++++++
- drivers/cxl/core/port.c   |    9 +++++++++
- drivers/cxl/core/region.c |   45 ++++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/cxl.h         |    1 +
- 4 files changed, 66 insertions(+), 1 deletion(-)
+ drivers/cxl/cxl.h  |    1 +
+ drivers/cxl/pmem.c |   21 +++++++++++++++++----
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index fcf14b8a3c87..391aadf9e7fa 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -13,14 +13,26 @@ extern struct attribute_group cxl_base_attribute_group;
- extern struct device_attribute dev_attr_create_pmem_region;
- extern struct device_attribute dev_attr_delete_region;
- extern struct device_attribute dev_attr_region;
-+extern const struct device_type cxl_region_type;
- void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
- #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
-+#define CXL_REGION_TYPE(x) (&cxl_region_type)
- #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
-+int cxl_region_init(void);
-+void cxl_region_exit(void);
- #else
- static inline void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
- {
- }
-+static inline int cxl_region_init(void)
-+{
-+	return 0;
-+}
-+static inline void cxl_region_exit(void)
-+{
-+}
- #define CXL_REGION_ATTR(x) NULL
-+#define CXL_REGION_TYPE(x) NULL
- #define SET_CXL_REGION_ATTR(x)
- #endif
- 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 7ab9a98c5d4f..194003525397 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -51,6 +51,8 @@ static int cxl_device_id(struct device *dev)
- 	}
- 	if (is_cxl_memdev(dev))
- 		return CXL_DEVICE_MEMORY_EXPANDER;
-+	if (dev->type == CXL_REGION_TYPE())
-+		return CXL_DEVICE_REGION;
- 	return 0;
- }
- 
-@@ -1864,8 +1866,14 @@ static __init int cxl_core_init(void)
- 	if (rc)
- 		goto err_bus;
- 
-+	rc = cxl_region_init();
-+	if (rc)
-+		goto err_region;
-+
- 	return 0;
- 
-+err_region:
-+	bus_unregister(&cxl_bus_type);
- err_bus:
- 	destroy_workqueue(cxl_bus_wq);
- err_wq:
-@@ -1875,6 +1883,7 @@ static __init int cxl_core_init(void)
- 
- static void cxl_core_exit(void)
- {
-+	cxl_region_exit();
- 	bus_unregister(&cxl_bus_type);
- 	destroy_workqueue(cxl_bus_wq);
- 	cxl_memdev_exit();
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index de794344d964..20871bdb6858 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1444,7 +1444,7 @@ static void cxl_region_release(struct device *dev)
- 	kfree(cxlr);
- }
- 
--static const struct device_type cxl_region_type = {
-+const struct device_type cxl_region_type = {
- 	.name = "cxl_region",
- 	.release = cxl_region_release,
- 	.groups = region_groups
-@@ -1644,4 +1644,47 @@ static ssize_t delete_region_store(struct device *dev,
- }
- DEVICE_ATTR_WO(delete_region);
- 
-+static int cxl_region_probe(struct device *dev)
-+{
-+	struct cxl_region *cxlr = to_cxl_region(dev);
-+	struct cxl_region_params *p = &cxlr->params;
-+	int rc;
-+
-+	rc = down_read_interruptible(&cxl_region_rwsem);
-+	if (rc) {
-+		dev_dbg(&cxlr->dev, "probe interrupted\n");
-+		return rc;
-+	}
-+
-+	if (p->state < CXL_CONFIG_COMMIT) {
-+		dev_dbg(&cxlr->dev, "config state: %d\n", p->state);
-+		rc = -ENXIO;
-+	}
-+
-+	/*
-+	 * From this point on any path that changes the region's state away from
-+	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
-+	 */
-+	up_read(&cxl_region_rwsem);
-+
-+	return rc;
-+}
-+
-+static struct cxl_driver cxl_region_driver = {
-+	.name = "cxl_region",
-+	.probe = cxl_region_probe,
-+	.id = CXL_DEVICE_REGION,
-+};
-+
-+int cxl_region_init(void)
-+{
-+	return cxl_driver_register(&cxl_region_driver);
-+}
-+
-+void cxl_region_exit(void)
-+{
-+	cxl_driver_unregister(&cxl_region_driver);
-+}
-+
- MODULE_IMPORT_NS(CXL);
-+MODULE_ALIAS_CXL(CXL_DEVICE_REGION);
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index a51709613c43..9aedd471193a 100644
+index 9aedd471193a..a32093602df9 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -592,6 +592,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- #define CXL_DEVICE_PORT			3
- #define CXL_DEVICE_ROOT			4
- #define CXL_DEVICE_MEMORY_EXPANDER	5
-+#define CXL_DEVICE_REGION		6
+@@ -418,6 +418,7 @@ struct cxl_nvdimm_bridge {
+ struct cxl_nvdimm {
+ 	struct device dev;
+ 	struct cxl_memdev *cxlmd;
++	struct cxl_nvdimm_bridge *bridge;
+ };
  
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
+ /**
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 0aaa70b4e0f7..b271f6e90b91 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -26,7 +26,10 @@ static void clear_exclusive(void *cxlds)
+ 
+ static void unregister_nvdimm(void *nvdimm)
+ {
++	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
++
+ 	nvdimm_delete(nvdimm);
++	cxl_nvd->bridge = NULL;
+ }
+ 
+ static int cxl_nvdimm_probe(struct device *dev)
+@@ -66,6 +69,7 @@ static int cxl_nvdimm_probe(struct device *dev)
+ 	}
+ 
+ 	dev_set_drvdata(dev, nvdimm);
++	cxl_nvd->bridge = cxl_nvb;
+ 	rc = devm_add_action_or_reset(dev, unregister_nvdimm, nvdimm);
+ out:
+ 	device_unlock(&cxl_nvb->dev);
+@@ -204,15 +208,23 @@ static bool online_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb)
+ 	return cxl_nvb->nvdimm_bus != NULL;
+ }
+ 
+-static int cxl_nvdimm_release_driver(struct device *dev, void *data)
++static int cxl_nvdimm_release_driver(struct device *dev, void *cxl_nvb)
+ {
++	struct cxl_nvdimm *cxl_nvd;
++
+ 	if (!is_cxl_nvdimm(dev))
+ 		return 0;
++
++	cxl_nvd = to_cxl_nvdimm(dev);
++	if (cxl_nvd->bridge != cxl_nvb)
++		return 0;
++
+ 	device_release_driver(dev);
+ 	return 0;
+ }
+ 
+-static void offline_nvdimm_bus(struct nvdimm_bus *nvdimm_bus)
++static void offline_nvdimm_bus(struct cxl_nvdimm_bridge *cxl_nvb,
++			       struct nvdimm_bus *nvdimm_bus)
+ {
+ 	if (!nvdimm_bus)
+ 		return;
+@@ -222,7 +234,8 @@ static void offline_nvdimm_bus(struct nvdimm_bus *nvdimm_bus)
+ 	 * nvdimm_bus_unregister() rips the nvdimm objects out from
+ 	 * underneath them.
+ 	 */
+-	bus_for_each_dev(&cxl_bus_type, NULL, NULL, cxl_nvdimm_release_driver);
++	bus_for_each_dev(&cxl_bus_type, NULL, cxl_nvb,
++			 cxl_nvdimm_release_driver);
+ 	nvdimm_bus_unregister(nvdimm_bus);
+ }
+ 
+@@ -260,7 +273,7 @@ static void cxl_nvb_update_state(struct work_struct *work)
+ 
+ 		dev_dbg(&cxl_nvb->dev, "rescan: %d\n", rc);
+ 	}
+-	offline_nvdimm_bus(victim_bus);
++	offline_nvdimm_bus(cxl_nvb, victim_bus);
+ 
+ 	put_device(&cxl_nvb->dev);
+ }
 
