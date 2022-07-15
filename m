@@ -2,151 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5090A5769D7
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 00:23:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 070875769FB
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 00:37:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231768AbiGOWXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jul 2022 18:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58074 "EHLO
+        id S229648AbiGOWhf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jul 2022 18:37:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230458AbiGOWXO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 18:23:14 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6952661B21;
-        Fri, 15 Jul 2022 15:23:13 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id j1-20020a17090aeb0100b001ef777a7befso9071807pjz.0;
-        Fri, 15 Jul 2022 15:23:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ou4ITJAtDpdEe2oGXNdiIauXOvcSg7DQL0fAZO9cl2U=;
-        b=Q8lGAoHw8McxXXPUu9JJi1XBb9QitejFhB3EEwl7pOmObYxg0niuVsgwD5pp+sh+vE
-         xuIKedL/WXyDOOgKJBNrsDZftnMo9VkkzEBAU07KrLja6rRFtcHKmFquU9rhG815UU2M
-         4qN1XN8OsBzeKfEo5BTfdcSUJQ2BwjYyJuOFMY1ANoellCCLxbAHe55abXJ7Zm6HvfQg
-         GKaa2Vtf5KUXirx9wqbsorAJO9z4sV3vRf0YDGd8uZXmu52ax/4hGUDH+Qk3BfTyJPaN
-         iAwhnKMbwb+t+CoQOhksE/3VAGMsc4nRaI5nIO7QpJ2agWHS8WCalQSMbeCbYh/XUxGP
-         0SVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ou4ITJAtDpdEe2oGXNdiIauXOvcSg7DQL0fAZO9cl2U=;
-        b=x08JxCvc5rlQ5ZmgNiCzeJKKD0khSHmMG1Linjb+lulR/ekCIW7YI4xU9wcl7EOLRe
-         ZoYZOhgg5C+qx7gTsJj88V69d0XVs6VJPUNHrJ/7/A9CaBOedV0MfL/NqbsXVYsW71eY
-         lWzI0mcztRxxdWPO1tOuSz2+y4WoPwb2cTMiujnblCyMLQgC/xKs9rox0BVogtXu3YHK
-         7uDm/gRC9vYEUeCIpyYyjp+VxfV+sAR6IfKTOZy+ouYamt7fIiuKuEhuu4MtHrZP3IT+
-         ibxRZwh1C949nmWbw/dV1qw5qsc53qMd13K71Kc/L4/pJ3QKnXSY9ThDhAnroz2h9rMs
-         bUJQ==
-X-Gm-Message-State: AJIora84iZb2eVpPtQhjvJK45J+4qhmEx0ku1rges7Ir1S3zMx+nxMdo
-        35lS67olAUwwS7rvMJuk64Q=
-X-Google-Smtp-Source: AGRyM1tY7KJ/8yKzDhwZuUT2Q/d9pehX12mE0ZjdresU33mAA0lNxgF0E239suZTF5xMlCXXfdaB4Q==
-X-Received: by 2002:a17:90b:3e8e:b0:1f0:1ac:5908 with SMTP id rj14-20020a17090b3e8e00b001f001ac5908mr17817321pjb.175.1657923792909;
-        Fri, 15 Jul 2022 15:23:12 -0700 (PDT)
-Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
-        by smtp.gmail.com with ESMTPSA id j20-20020a170902759400b00161ccdc172dsm4013893pll.300.2022.07.15.15.23.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Jul 2022 15:23:12 -0700 (PDT)
-Date:   Sat, 16 Jul 2022 07:23:10 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-csky@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [RFC PATCH 2/2] asm-generic: Add new pci.h and use it
-Message-ID: <YtHozgXIkpyWHKth@antec>
-References: <20220714214657.2402250-1-shorne@gmail.com>
- <20220714214657.2402250-3-shorne@gmail.com>
- <CAK8P3a2_HKMf8nMcSkK1_jyCEHEdzz=YiRmPvN+ACbPTafXJzA@mail.gmail.com>
+        with ESMTP id S230341AbiGOWhe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jul 2022 18:37:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658B06BC19;
+        Fri, 15 Jul 2022 15:37:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DE43F619AC;
+        Fri, 15 Jul 2022 22:37:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA07C3411E;
+        Fri, 15 Jul 2022 22:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657924650;
+        bh=d/azbyEVdFZlo7JV/C9g5tOBZLmX1z3s/YUXa/PuKxg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EYNFuHu/nuAFHUbcicDmnFwVtZjpid/FQXLaVvQol6ZUzJuSAY5uglpeAlu/YKr51
+         Mey5XkLZjK2v5/RwjIaMwVGrrGIEoLHchS6CUKJdMrqOVkklP/ItJierO7zjNpYQR0
+         r2M9y77+P1xEHmLeZMV2NugDzZBe1Xv4CO2QudaKafM26LfUML4QWhjvQo4kfcP3Yq
+         mX9vv854mV6rfNDii5Zwc9CzPtgO7hSn/gFpt7VVWA+szJDYvLJ40AH+X6skhsqoxV
+         7XL5eytton3eCo0og498WyCopjfJoLlanCd5xHrYx8mJHoh1ADVTO+LyjL2PrXOAVj
+         +9sXoPAkFFmhA==
+Date:   Fri, 15 Jul 2022 17:37:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Johan Hovold <johan+linaro@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] PCI: qcom: Add support for SC8280XP and SA8540P
+Message-ID: <20220715223728.GA1205880@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2_HKMf8nMcSkK1_jyCEHEdzz=YiRmPvN+ACbPTafXJzA@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220714071348.6792-1-johan+linaro@kernel.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 10:09:21AM +0200, Arnd Bergmann wrote:
-> On Thu, Jul 14, 2022 at 11:46 PM Stafford Horne <shorne@gmail.com> wrote:
-> >
-> > The asm/pci.h used for many newer architectures share similar
-> > definitions.  Move the common parts to asm-generic/pci.h to allow for
-> > sharing code.
-> 
-> This looks very nice, thanks for doing it!
-> 
-> > Two things to note are:
-> >
-> >  - isa_dma_bridge_buggy, traditionally this is defined in asm/dma.h but
-> >    these architectures avoid creating that file and add the definition
-> >    to asm/pci.h.
-> 
-> I would prefer if we could just kill off this variable for non-x86, as it's
-> only set to a nonzero value in two implementations that are both
-> x86-specific and most of the references are gone. That does not have
-> to be part of this series though, if you don't want to address it here, just
-> add a comment to the new pci.h file.
+On Thu, Jul 14, 2022 at 09:13:40AM +0200, Johan Hovold wrote:
+> This series adds support for the PCIe controllers found on SC8280XP and
+> SA8540P.
 
-I will look at it, maybe in a v3.
+These look fairly straightforward, and I don't mind doing minor tweaks
+and conflict resolution, but given that we've got four or five cooks
+in the qcom kitchen, I'm looking for an ack from Stan before spending
+too much time on this.
 
-> >  - ARCH_GENERIC_PCI_MMAP_RESOURCE, csky does not define this so we
-> >    undefine it after including asm-generic/pci.h.  Why doesn't csky
-> >    define it?
+> Included are also three patches that clean up the way the driver handles
+> different IP revisions (e.g. by modelling optional clocks as being truly
+> optional).
 > 
-> Adding David Woodhouse to Cc, as he introduced this interface. As I
-> understand it, this was meant as a replacement for the old
-> architecture specific pci_mmap_page_range interface, and is ideally
-> used everywhere.
+> These patches depend on the recently merged (but currently held off?)
+> PIPE clock series:
 > 
-> It's probably something that slipped through the review of csky and
-> should have been there.
+> 	https://lore.kernel.org/all/20220608105238.2973600-1-dmitry.baryshkov@linaro.org/
+
+As far as I know it's on pci/ctrl/qcom [1], in -next, and ready to go.
+It's based on Bjorn A's immutable branch [2].
+
+> as well as the about-to-be-merged MSI series (v17):
 > 
-> As an aside, it seems the pci_mmap_page_range() cleanup was
-> left almost complete, with sparc being the only one left after
-> David Miller found a problem with the generic code. Not sure if
-> this was ever resolved:
-> https://lore.kernel.org/lkml/1519887203.622.3.camel@infradead.org/t/#u
-
-I see, I will leave it foe now.
-
-> > +#ifndef PCIBIOS_MIN_IO
-> > +#define PCIBIOS_MIN_IO         0
-> > +#endif
-> > +
-> > +#define PCIBIOS_MIN_MEM                0
+> 	https://lore.kernel.org/all/20220707134733.2436629-6-dmitry.baryshkov@linaro.org/
 > 
-> We should probably #ifdef both of these for consistency.
-
-OK.
-
-> > +static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-> > +{
-> > +       /* no legacy ide irq support */
-> > +       return -ENODEV;
-> > +}
+> Note that the final patch in the PIPE clock series is currently missing
+> from the pci/ctrl/qcom-pending branch:
 > 
-> And this can just go away now, according to what we found.
+> 	https://lore.kernel.org/all/20220608105238.2973600-6-dmitry.baryshkov@linaro.org/
 
-Yeah, that will be nice.
+I think I fixed that, let me know if not; see [1].
 
--Stafford
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=839fbdee4c08
+[2] https://lore.kernel.org/linux-pci/YroMyWNO8ZLk1bTe@builder.lan/
+
+> Changes in v2
+>  - drop the two DT schema fixes which have been applied by Bjorn H and
+>    squashed into the MSI v17 series by Dmitry, respectively
+>  - rebase on pci/ctrl/qcom-pending (2022-07-14)
+>  - fix compatible sort order (Krzysztof)
+>  - amend commit message for first patch to clarify motivation
+>    (Krzysztof)
+>  - add acks and reviewed-by tags from Dmitry, Krzysztof, Mani and Rob
+> 
+> 
+> Johan Hovold (8):
+>   dt-bindings: PCI: qcom: Enumerate platforms with single msi interrupt
+>   dt-bindings: PCI: qcom: Add SC8280XP to binding
+>   dt-bindings: PCI: qcom: Add SA8540P to binding
+>   PCI: qcom: Add support for SC8280XP
+>   PCI: qcom: Add support for SA8540P
+>   PCI: qcom: Make all optional clocks optional
+>   PCI: qcom: Clean up IP configurations
+>   PCI: qcom: Sort device-id table
+> 
+>  .../devicetree/bindings/pci/qcom,pcie.yaml    |  70 +++++++++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 121 +++++++-----------
+>  2 files changed, 114 insertions(+), 77 deletions(-)
+> 
+> -- 
+> 2.35.1
+> 
