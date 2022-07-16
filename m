@@ -2,208 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F1C4577017
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 18:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB5985771C9
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Jul 2022 00:25:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbiGPQV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Jul 2022 12:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38150 "EHLO
+        id S231684AbiGPWZC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Jul 2022 18:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiGPQVZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 12:21:25 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563351583F
-        for <linux-pci@vger.kernel.org>; Sat, 16 Jul 2022 09:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657988484; x=1689524484;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=l2/+jG6Niw3piIq8FCeuQl0krknO0ObnJv/CccaACX4=;
-  b=VSQJ26fiQyTPR+zVTFs0bwSy7/DNYTlumxtGqBZFxrs5MnSAWZOnLBHD
-   VuDx4RfdN6r4gY+6EXRcdath8B6PcxdQ1UgSeRxA7YgJyxh2GdZnNbEIr
-   NE38/9KZVQGHataVFicwWywXA4Hum11vrS5aS5z5D08WalrgakADy5/tS
-   R5mKhaDgyp74it8FnQd9R1Rtw9GI1xia7BmYwdD5Xc6TBMYju5ay6CwFS
-   cUn/ZBwJilIKR+Fv5iMKYs1YuGwF49MuQVukqLVsnNP78v06Tj9OUnEzR
-   Qqeh7fbHCiJz57QxcpsXFOIioz3/W2Asj4woT5jGd5nuc03KuWiXFjAAN
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10410"; a="286722035"
-X-IronPort-AV: E=Sophos;i="5.92,277,1650956400"; 
-   d="scan'208";a="286722035"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2022 09:21:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,277,1650956400"; 
-   d="scan'208";a="546999972"
-Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 16 Jul 2022 09:21:22 -0700
-Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oCkXh-0001nx-R8;
-        Sat, 16 Jul 2022 16:21:21 +0000
-Date:   Sun, 17 Jul 2022 00:21:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [helgaas-pci:pci/misc 2/2] drivers/pcmcia/omap_cf.c:240:18: error:
- implicit declaration of function 'pci_remap_iospace'; did you mean
- 'pci_remap_cfgspace'?
-Message-ID: <202207170012.RhbvYS0z-lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229619AbiGPWZC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 18:25:02 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2275D1C90D;
+        Sat, 16 Jul 2022 15:25:01 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id 23so7471232pgc.8;
+        Sat, 16 Jul 2022 15:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=DD9+PSwr6U6sHyRODEYS90F8ToJiRT1Fstf8yvbN2dY=;
+        b=mOlGlmoVlrkAh9J+MareGX9X6NFNX2mFkM9+DhYHDooKBT3BQ03XwCuHddQ1xI9mK9
+         2VH7LIDVqSZwM/OTIAIonH+ZMG9ikVqRWRfNS1n78mAIhOki8satfZoFeRgs7ecQKHKb
+         8rJy6Obg7vjLSt13yyw91WgR7S9llNj7T53GI1iSrCz3fhPhIOupeKZXmMp3OsE4BLsv
+         t3CjRhcTCx1f9+PAvD9NfoRl1Ox6gAsEs1wqlgk2gzwiTNI9MgHQ6ds73rZpmzWbc0pD
+         DDz0z2xvMsGuz2DmQF5EWDMJYah3Wb1nwQDrRxzcqCQZS6iPUq5e3cM7OM18gfFaIGow
+         hXgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DD9+PSwr6U6sHyRODEYS90F8ToJiRT1Fstf8yvbN2dY=;
+        b=j0dTGE3yTkssP8RthcToCDjVvJnI2AY5CIT8KpVH9Rv4hrnFUTsdMLHc/xVZNV8uQ9
+         ncrdegNyF8K1lfbc9qo/I55OLM3kQ7ukX0ogY6YeTTlTlQIsDPPKe942CvwNxoBAwY0r
+         N7H5fJmb62HxQSD2u8RLecpEvaBvmFetHm0kUOOZXB8dQDoRpSs6cVSm0JEUTUlst/QU
+         klBHoDb6DjUYk5TmkeRQo9HgkpQ5UFvXYuUFL7n+Ovz4XPD/97d3BdGVvyp23xO0jWI0
+         l4k14Spk2co0n8TRBiL00oKbhI74XUz1Impjs3TzKY81RIpZSkjoIyCqCg++enZSmO0B
+         V+dA==
+X-Gm-Message-State: AJIora9BN5nn5TMa3s//5lH2GA48fSn6PE2g6AwPMS0nq5r3MC50zd20
+        FqRGj9111C0lSzNUdy/TmAyGvdalyO4=
+X-Google-Smtp-Source: AGRyM1sevGz6TvgsR/3v2+nd0Kl/YAE4nAjg1/EV+OylXhhmE0kDW8PJjvm3WkoXnlHg1yki3Nb80Q==
+X-Received: by 2002:a63:4c05:0:b0:419:78b2:d775 with SMTP id z5-20020a634c05000000b0041978b2d775mr18068145pga.62.1658010300468;
+        Sat, 16 Jul 2022 15:25:00 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
+        by smtp.gmail.com with ESMTPSA id y12-20020aa78f2c000000b00528c149fe97sm6318662pfr.89.2022.07.16.15.24.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Jul 2022 15:25:00 -0700 (PDT)
+From:   Jim Quinlan <jim2101024@gmail.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+        james.quinlan@broadcom.com
+Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE), Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 0/6] PCI: brcmstb: Re-submit reverted patchset
+Date:   Sat, 16 Jul 2022 18:24:47 -0400
+Message-Id: <20220716222454.29914-1-jim2101024@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
-head:   c86c8360959ec706576baf17237dec3004154d4b
-commit: c86c8360959ec706576baf17237dec3004154d4b [2/2] arm: ioremap: Fix pci_remap_iospace() when CONFIG_MMU unset
-config: arm-randconfig-r016-20220715 (https://download.01.org/0day-ci/archive/20220717/202207170012.RhbvYS0z-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=c86c8360959ec706576baf17237dec3004154d4b
-        git remote add helgaas-pci https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
-        git fetch --no-tags helgaas-pci pci/misc
-        git checkout c86c8360959ec706576baf17237dec3004154d4b
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/pcmcia/
+V2  -- As v1 included the minimal code to fix a regression.  v2 does
+       the same but adds some improvements suggested by Bjorn.
+    -- In the unlikely but possible case that some other driver
+       starts using the port driver's dev_data field, do not overwrite
+       it but issue an error and return.
+    -- Functions probe() and resume() do similar operations but
+       did them in a different order; make this order consistent
+       for both.
+    -- New commit to remove forward declarations.
+    -- New commit for only the PCIe config-space access "refusal mode".
+    -- brcm_pcie_linkup renamed to brcm_pcie_start_link
+    -- Add '_noirq' to the brcm_pcie_{suspend,resume} function names
+       to match the dev_pm_ops names.
+    -- Changes to commit messages:
+           o Explain why we are splitting a function in two parts.
+           o s/RB/Root Port/
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+    NOTE for Bjorn: The two commits "add mechanism .." and "add control ..."
+        would probably be more clear if they were squashed.  They are kept
+        separate as the first one's code may someday be moved under the Port
+        driver.  As such, there's some churn.
 
-All errors (new ones prefixed by >>):
+    NOTE for Bjorn: There is no hurry on Broadcom's side wrt which
+        release cycle/phase this patchset is applied.  It goes in
+        when you think it is ready.
 
-   drivers/pcmcia/omap_cf.c: In function 'omap_cf_set_socket':
-   drivers/pcmcia/omap_cf.c:127:25: warning: variable 'control' set but not used [-Wunused-but-set-variable]
-     127 |         u16             control;
-         |                         ^~~~~~~
-   drivers/pcmcia/omap_cf.c: In function 'omap_cf_probe':
->> drivers/pcmcia/omap_cf.c:240:18: error: implicit declaration of function 'pci_remap_iospace'; did you mean 'pci_remap_cfgspace'? [-Werror=implicit-function-declaration]
-     240 |         status = pci_remap_iospace(&iospace, cf->phys_cf + SZ_4K);
-         |                  ^~~~~~~~~~~~~~~~~
-         |                  pci_remap_cfgspace
-   cc1: some warnings being treated as errors
+V1 -- Resubmission of patchset after original was reverted for a
+    regression.
+
+    A submission [1] was made to enable a PCIe root port to turn on
+    regulators for downstream devices.  It was accepted.  Months later, a
+    regression was discovered on an RPi CM4 [2].  The patchset was reverted
+    [3] as the fix came too late in the release cycle.  The regression in
+    question is triggered only when the PCIe RC DT node has no root port
+    subnode, which is a perfectly reasonsable configuration.
+
+    The original commits are now being resubmitted with some modifications
+    to fix the regression.  The modifcations on the original commits are
+    described below (the SHA is that of the original commit):
+
+    [830aa6f29f07  PCI: brcmstb: Split brcm_pcie_setup() into two funcs]
+        NOTE: In the originally submitted patchset, this commit introduced a
+        regression that was corrected by a subsequent commit in the same
+        patchset.  Let's not do this again.
+
+        @@ -1411,6 +1411,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+            if (ret)
+                    goto fail;
+
+        +       ret = brcm_pcie_linkup(pcie);
+        +       if (ret)
+        +               goto fail;
 
 
-vim +240 drivers/pcmcia/omap_cf.c
+    [67211aadcb4b  PCI: brcmstb: Add mechanism to turn on subdev regulators]
+        NOTE: Not related to the regression, the regulators must be freed whenever
+        the PCIe tree is dismantled:
 
-f74e48a51c38f5 David Brownell   2005-09-09  195  
-f74e48a51c38f5 David Brownell   2005-09-09  196  /*
-f74e48a51c38f5 David Brownell   2005-09-09  197   * NOTE:  right now the only board-specific platform_data is
-f74e48a51c38f5 David Brownell   2005-09-09  198   * "what chipselect is used".  Boards could want more.
-f74e48a51c38f5 David Brownell   2005-09-09  199   */
-f74e48a51c38f5 David Brownell   2005-09-09  200  
-b6d2cccb55b518 David Brownell   2007-04-08  201  static int __init omap_cf_probe(struct platform_device *pdev)
-f74e48a51c38f5 David Brownell   2005-09-09  202  {
-f74e48a51c38f5 David Brownell   2005-09-09  203  	unsigned		seg;
-f74e48a51c38f5 David Brownell   2005-09-09  204  	struct omap_cf_socket	*cf;
-f74e48a51c38f5 David Brownell   2005-09-09  205  	int			irq;
-f74e48a51c38f5 David Brownell   2005-09-09  206  	int			status;
-d87d44f7ab353d Arnd Bergmann    2019-08-05  207  	struct resource		*res;
-df99e7bbbec318 Arnd Bergmann    2019-08-06  208  	struct resource		iospace = DEFINE_RES_IO(SZ_64, SZ_4K);
-f74e48a51c38f5 David Brownell   2005-09-09  209  
-b6d2cccb55b518 David Brownell   2007-04-08  210  	seg = (int) pdev->dev.platform_data;
-f74e48a51c38f5 David Brownell   2005-09-09  211  	if (seg == 0 || seg > 3)
-f74e48a51c38f5 David Brownell   2005-09-09  212  		return -ENODEV;
-f74e48a51c38f5 David Brownell   2005-09-09  213  
-f74e48a51c38f5 David Brownell   2005-09-09  214  	/* either CFLASH.IREQ (INT_1610_CF) or some GPIO */
-f74e48a51c38f5 David Brownell   2005-09-09  215  	irq = platform_get_irq(pdev, 0);
-489447380a2921 David Vrabel     2006-01-19  216  	if (irq < 0)
-f74e48a51c38f5 David Brownell   2005-09-09  217  		return -EINVAL;
-f74e48a51c38f5 David Brownell   2005-09-09  218  
-d87d44f7ab353d Arnd Bergmann    2019-08-05  219  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-d87d44f7ab353d Arnd Bergmann    2019-08-05  220  
-cd86128088554d Robert P. J. Day 2006-12-13  221  	cf = kzalloc(sizeof *cf, GFP_KERNEL);
-f74e48a51c38f5 David Brownell   2005-09-09  222  	if (!cf)
-f74e48a51c38f5 David Brownell   2005-09-09  223  		return -ENOMEM;
-41760d0e0f1a01 Kees Cook        2017-10-21  224  	timer_setup(&cf->timer, omap_cf_timer, 0);
-f74e48a51c38f5 David Brownell   2005-09-09  225  
-f74e48a51c38f5 David Brownell   2005-09-09  226  	cf->pdev = pdev;
-b6d2cccb55b518 David Brownell   2007-04-08  227  	platform_set_drvdata(pdev, cf);
-f74e48a51c38f5 David Brownell   2005-09-09  228  
-f74e48a51c38f5 David Brownell   2005-09-09  229  	/* this primarily just shuts up irq handling noise */
-dace145374b8e3 Thomas Gleixner  2006-07-01  230  	status = request_irq(irq, omap_cf_irq, IRQF_SHARED,
-f74e48a51c38f5 David Brownell   2005-09-09  231  			driver_name, cf);
-f74e48a51c38f5 David Brownell   2005-09-09  232  	if (status < 0)
-f74e48a51c38f5 David Brownell   2005-09-09  233  		goto fail0;
-f74e48a51c38f5 David Brownell   2005-09-09  234  	cf->irq = irq;
-f74e48a51c38f5 David Brownell   2005-09-09  235  	cf->socket.pci_irq = irq;
-d87d44f7ab353d Arnd Bergmann    2019-08-05  236  	cf->phys_cf = res->start;
-f74e48a51c38f5 David Brownell   2005-09-09  237  
-f74e48a51c38f5 David Brownell   2005-09-09  238  	/* pcmcia layer only remaps "real" memory */
-df99e7bbbec318 Arnd Bergmann    2019-08-06  239  	cf->socket.io_offset = iospace.start;
-df99e7bbbec318 Arnd Bergmann    2019-08-06 @240  	status = pci_remap_iospace(&iospace, cf->phys_cf + SZ_4K);
-df99e7bbbec318 Arnd Bergmann    2019-08-06  241  	if (status) {
-70d3a462fc244b Wang ShaoBo      2020-11-25  242  		status = -ENOMEM;
-f74e48a51c38f5 David Brownell   2005-09-09  243  		goto fail1;
-70d3a462fc244b Wang ShaoBo      2020-11-25  244  	}
-f74e48a51c38f5 David Brownell   2005-09-09  245  
-70d3a462fc244b Wang ShaoBo      2020-11-25  246  	if (!request_mem_region(cf->phys_cf, SZ_8K, driver_name)) {
-70d3a462fc244b Wang ShaoBo      2020-11-25  247  		status = -ENXIO;
-f74e48a51c38f5 David Brownell   2005-09-09  248  		goto fail1;
-70d3a462fc244b Wang ShaoBo      2020-11-25  249  	}
-f74e48a51c38f5 David Brownell   2005-09-09  250  
-f74e48a51c38f5 David Brownell   2005-09-09  251  	/* NOTE:  CF conflicts with MMC1 */
-f74e48a51c38f5 David Brownell   2005-09-09  252  	omap_cfg_reg(W11_1610_CF_CD1);
-f74e48a51c38f5 David Brownell   2005-09-09  253  	omap_cfg_reg(P11_1610_CF_CD2);
-f74e48a51c38f5 David Brownell   2005-09-09  254  	omap_cfg_reg(R11_1610_CF_IOIS16);
-f74e48a51c38f5 David Brownell   2005-09-09  255  	omap_cfg_reg(V10_1610_CF_IREQ);
-f74e48a51c38f5 David Brownell   2005-09-09  256  	omap_cfg_reg(W10_1610_CF_RESET);
-f74e48a51c38f5 David Brownell   2005-09-09  257  
-030b15457d8069 Tony Lindgren    2008-07-03  258  	omap_writew(~(1 << seg), CF_CFG);
-f74e48a51c38f5 David Brownell   2005-09-09  259  
-f74e48a51c38f5 David Brownell   2005-09-09  260  	pr_info("%s: cs%d on irq %d\n", driver_name, seg, irq);
-f74e48a51c38f5 David Brownell   2005-09-09  261  
-f74e48a51c38f5 David Brownell   2005-09-09  262  	/* CF uses armxor_ck, which is "always" available */
-f74e48a51c38f5 David Brownell   2005-09-09  263  
-f74e48a51c38f5 David Brownell   2005-09-09  264  	pr_debug("%s: sts %04x cfg %04x control %04x %s\n", driver_name,
-030b15457d8069 Tony Lindgren    2008-07-03  265  		omap_readw(CF_STATUS), omap_readw(CF_CFG),
-030b15457d8069 Tony Lindgren    2008-07-03  266  		omap_readw(CF_CONTROL),
-f74e48a51c38f5 David Brownell   2005-09-09  267  		omap_cf_present() ? "present" : "(not present)");
-f74e48a51c38f5 David Brownell   2005-09-09  268  
-f74e48a51c38f5 David Brownell   2005-09-09  269  	cf->socket.owner = THIS_MODULE;
-b6d2cccb55b518 David Brownell   2007-04-08  270  	cf->socket.dev.parent = &pdev->dev;
-f74e48a51c38f5 David Brownell   2005-09-09  271  	cf->socket.ops = &omap_cf_ops;
-f74e48a51c38f5 David Brownell   2005-09-09  272  	cf->socket.resource_ops = &pccard_static_ops;
-f74e48a51c38f5 David Brownell   2005-09-09  273  	cf->socket.features = SS_CAP_PCCARD | SS_CAP_STATIC_MAP
-f74e48a51c38f5 David Brownell   2005-09-09  274  				| SS_CAP_MEM_ALIGN;
-f74e48a51c38f5 David Brownell   2005-09-09  275  	cf->socket.map_size = SZ_2K;
-dcb9c39236a27c David Brownell   2006-09-30  276  	cf->socket.io[0].res = &cf->iomem;
-f74e48a51c38f5 David Brownell   2005-09-09  277  
-f74e48a51c38f5 David Brownell   2005-09-09  278  	status = pcmcia_register_socket(&cf->socket);
-f74e48a51c38f5 David Brownell   2005-09-09  279  	if (status < 0)
-f74e48a51c38f5 David Brownell   2005-09-09  280  		goto fail2;
-f74e48a51c38f5 David Brownell   2005-09-09  281  
-f74e48a51c38f5 David Brownell   2005-09-09  282  	cf->active = 1;
-f74e48a51c38f5 David Brownell   2005-09-09  283  	mod_timer(&cf->timer, jiffies + POLL_INTERVAL);
-f74e48a51c38f5 David Brownell   2005-09-09  284  	return 0;
-f74e48a51c38f5 David Brownell   2005-09-09  285  
-f74e48a51c38f5 David Brownell   2005-09-09  286  fail2:
-f74e48a51c38f5 David Brownell   2005-09-09  287  	release_mem_region(cf->phys_cf, SZ_8K);
-f74e48a51c38f5 David Brownell   2005-09-09  288  fail1:
-f74e48a51c38f5 David Brownell   2005-09-09  289  	free_irq(irq, cf);
-f74e48a51c38f5 David Brownell   2005-09-09  290  fail0:
-f74e48a51c38f5 David Brownell   2005-09-09  291  	kfree(cf);
-f74e48a51c38f5 David Brownell   2005-09-09  292  	return status;
-f74e48a51c38f5 David Brownell   2005-09-09  293  }
-f74e48a51c38f5 David Brownell   2005-09-09  294  
+        @@ -507,6 +507,7 @@ static void pci_subdev_regulators_remove_bus(struct pci_bus *bus)
 
-:::::: The code at line 240 was first introduced by commit
-:::::: df99e7bbbec3180693b3d932a9cbc88346e2a30e ARM: omap1: use pci_remap_iospace() for omap_cf
+        if (regulator_bulk_disable(sr->num_supplies, sr->supplies))
+                    dev_err(dev, "failed to disable regulators for downstream device\n");
+        +       regulator_bulk_free(sr->num_supplies, sr->supplies);
+            dev->driver_data = NULL;
 
-:::::: TO: Arnd Bergmann <arnd@arndb.de>
-:::::: CC: Arnd Bergmann <arnd@arndb.de>
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+    [93e41f3fca3d  PCI: brcmstb: Add control of subdevice voltage regulators]
+        NOTE: If the PCIe RC DT node was missing a Root Port subnode, the PCIe
+        link-up was skipped.  This is the regression.  Fix it by attempting
+        link-up even if the Root Port DT subnode is missing.
+
+        @@ -503,11 +503,10 @@ static int pci_subdev_regulators_add_bus(struct pci_bus *bus)
+
+         static int brcm_pcie_add_bus(struct pci_bus *bus)
+         {
+        -       struct device *dev = &bus->dev;
+            struct brcm_pcie *pcie = (struct brcm_pcie *) bus->sysdata;
+            int ret;
+
+        -       if (!dev->of_node || !bus->parent || !pci_is_root_bus(bus->parent))
+        +       if (!bus->parent || !pci_is_root_bus(bus->parent))
+                    return 0;
+
+            ret = pci_subdev_regulators_add_bus(bus);
+
+    [1] https://lore.kernel.org/r/20220106160332.2143-1-jim2101024@gmail.com
+    [2] https://bugzilla.kernel.org/show_bug.cgi?id=215925
+    [3] https://lore.kernel.org/linux-pci/20220511201856.808690-1-helgaas@kernel.org/
+
+Jim Quinlan (6):
+  PCI: brcmstb: Remove unnecessary forward declarations
+  PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+  PCI: brcmstb: Add "refusal mode" to preclude PCIe-induced CPU aborts
+  PCI: brcmstb: Add mechanism to turn on subdev regulators
+  PCI: brcmstb: Add control of subdevice voltage regulators
+  PCI: brcmstb: Do not turn off WOL regulators on suspend
+
+ drivers/pci/controller/pcie-brcmstb.c | 438 +++++++++++++++++++-------
+ 1 file changed, 332 insertions(+), 106 deletions(-)
+
+
+base-commit: c5fe7a97f20c7f3070ac870144515c0fabc6b999
+--
+2.17.1
