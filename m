@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DBCEE5771D7
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Jul 2022 00:28:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2238B5771DB
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Jul 2022 00:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232573AbiGPWZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Jul 2022 18:25:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38078 "EHLO
+        id S232528AbiGPWZN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Jul 2022 18:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232572AbiGPWZH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 18:25:07 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 768AC1C91C;
-        Sat, 16 Jul 2022 15:25:06 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id c139so1305838pfc.2;
-        Sat, 16 Jul 2022 15:25:06 -0700 (PDT)
+        with ESMTP id S232591AbiGPWZL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 18:25:11 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA381C91D;
+        Sat, 16 Jul 2022 15:25:09 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id q13-20020a17090a304d00b001f1af9a18a2so694786pjl.5;
+        Sat, 16 Jul 2022 15:25:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UA2iSTXYz9HjpyWctyFLbZx1A3AhwC5oV8QF3I5X1cM=;
-        b=mMENpA/Fv9wUTX+vKmefub6AgdlUIiVKM/zE84zMV752qPADpLc+WC9R3mNjPZcDu1
-         gH8wM8Pf8E07hVvWqt+j+56PAYJEMmj2PyLhPsWL8HCTL6P268+OYiVWi3z96B4YKtoe
-         U5gWfL5WdMYiz+SuK3CkfCesHUB8S1wayl8tvhdCNSirKBfsENMQAP1kRyRBOewzCyTm
-         +M0yOd7sVtGqpgFfLtyegKQSj4+ZPDrAeMmWSr1zJgzXqkagIltbm/RTmTEuPdfLNBKM
-         /3CZxXM3PQF8aimP6gyxAUxmznyFmXuhUzshySZYzZ7fKoeoP4WdBVo1ltUkFQYx7Y7j
-         qd2Q==
+        bh=VkZuzjpphc3hRwU3DZRuPBK7JhfYOuym3N4nWR7ADgs=;
+        b=it06odQYV4an9HwynsjEosZr1HZe64JDlVydFVDU22TVm6YybuB9qumKvbS1IE61sH
+         /qdHnF/gAMWv41oujk5+WDfNAPoGSX7tV8/P9Mjj/0+U4Hd+AwF54szjML7idRvL5Ibn
+         BsJEENppGe14IxeP/9dVDToaaqbhQJbsVP1VW0sB7qdyMHxWw0S8VBwX+Hi/D3zStlUO
+         sr2xDe1rUbuW99covL0cNzRbxYyUr4Y/xiyq1oDhtkHkg9Tmm831OqTLZl7KZtdTuswM
+         PaNcp0EiXVLeTbwG43tZOu6M3Jh16SgaUOJT632efQqyadXde+RXejsbwXYSwJSVFcGf
+         WKdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=UA2iSTXYz9HjpyWctyFLbZx1A3AhwC5oV8QF3I5X1cM=;
-        b=fWMtqFt9hEcRNn40IJGrjyu6DzKlX2mf4a4I9wst3B+bubJkdYHOORZqCB9KrsECP8
-         ibtadKepz4kApRH3hQWMhsU4SgC0YfcAsQc90ETGwc1MPvN9ssMn5AvvaVqGZ1IY6lbc
-         HRGcNy6FP7TyglOrox3LbCwkvn7+wZYmqLo3O5prYiJc+f+Dyr4QTYn3C8Q2FcntZmIX
-         cdJX4ZKmSHYAEQPDh8KFq0AF9rSjVQUiCJ1MinEEi0LkMZJ0HDVWj2aJTzmvmybKc4Oc
-         XifqXpP/0XVtd9zYR2IFTJaSgx0s4FWNkREOTdSPQSnq5mZ2p9jw2T11Mh7TkHNT5b2G
-         9AZQ==
-X-Gm-Message-State: AJIora+bSC6y8bKe0fl6/jTFy7xQSuEi8/O/NCu+aeULo/LQh2EE7G1K
-        oDvOAo6SWSBZct9/Uta2EB/bBtXqq/E=
-X-Google-Smtp-Source: AGRyM1u8riRGlBHRbvzjBqYEwJUVYsJqkT5qxeenlL3SHSf6WlYTyMFEA3+42EkM3Fjic8ow4xR7wQ==
-X-Received: by 2002:a63:e80e:0:b0:419:d02c:fc8b with SMTP id s14-20020a63e80e000000b00419d02cfc8bmr10549317pgh.385.1658010305827;
-        Sat, 16 Jul 2022 15:25:05 -0700 (PDT)
+        bh=VkZuzjpphc3hRwU3DZRuPBK7JhfYOuym3N4nWR7ADgs=;
+        b=yAX36/MMinVHTBy2eVEzz+viaRSek6W3Lkfev0VJ9L6jd70dfCEfnlTM+q+Co5/S0j
+         d/yNLmZDxRp9EpopFr5Z2Vf6A6icDJT7SF9ngiVkcducYONt2vwObfbvXH35TkqcTxF2
+         a7uV/MiQcZ8eSwYpzGGomn770CcIyZzkAgDSDlzFhrrYgtFeYaIQN0CXiGMEcaVpxsJu
+         o4Aejjj8QtyIyhM/7vvEMIrv56ymuGf1xLNeH9jlKP8YdUyj30IPJPhFDayhC91gpmJf
+         JmghQLeFJ+MMgfkWV61sLiAaKquJWhaP5G6GtqYPbCwLjpbfsyPicuQVGRuUjmS+Ly9g
+         NPBA==
+X-Gm-Message-State: AJIora8+cs7cdEecTe+v6GBVmfqxDh5VxF1SKYVkgVbxBREQUlPCO7xO
+        yHxLPyRB4+m7gPXjqyh9FnA0IB1G6tI=
+X-Google-Smtp-Source: AGRyM1u0b1AVxEG8PTsHKsFb7AKI7+0nqm3Lcti6d1dONMD5vgZfHb0Ct1AJCWvrKGIc/xnENm9gpg==
+X-Received: by 2002:a17:902:f64f:b0:16c:23c2:e2dd with SMTP id m15-20020a170902f64f00b0016c23c2e2ddmr20547647plg.3.1658010308459;
+        Sat, 16 Jul 2022 15:25:08 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id y12-20020aa78f2c000000b00528c149fe97sm6318662pfr.89.2022.07.16.15.25.03
+        by smtp.gmail.com with ESMTPSA id y12-20020aa78f2c000000b00528c149fe97sm6318662pfr.89.2022.07.16.15.25.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Jul 2022 15:25:05 -0700 (PDT)
+        Sat, 16 Jul 2022 15:25:08 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -63,9 +63,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/6] PCI: brcmstb: Split brcm_pcie_setup() into two funcs
-Date:   Sat, 16 Jul 2022 18:24:49 -0400
-Message-Id: <20220716222454.29914-3-jim2101024@gmail.com>
+Subject: [PATCH v2 3/6] PCI: brcmstb: Add "refusal mode" to preclude PCIe-induced CPU aborts
+Date:   Sat, 16 Jul 2022 18:24:50 -0400
+Message-Id: <20220716222454.29914-4-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220716222454.29914-1-jim2101024@gmail.com>
 References: <20220716222454.29914-1-jim2101024@gmail.com>
@@ -79,152 +79,98 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently, the function does the setup for establishing PCIe link-up
-with the downstream device, and it does the actual link-up as well.
-The calling sequence is (roughly) the following in the probe:
+Our PCIe RC HW has an atypical behavior: if it does not have PCIe link
+established between itself and downstream, any subsequent config space
+access causes a CPU abort.  This commit sets a "refusal mode" if the PCIe
+link-up fails, and this has our pci_ops map_bus function returning a NULL
+address, which in turn precludes the access from happening.
 
--> brcm_pcie_probe()
-    -> brcm_pcie_setup();                       /* Set-up and link-up */
-    -> pci_host_probe(bridge);
+Right now, "refusal mode" is window dressing.  It will become relevant
+in a future commit when brcm_pcie_start_link() is invoked during
+enumeration instead of before it.
 
-This commit splits the setup function in two: brcm_pcie_setup(), which only
-does the set-up, and brcm_pcie_start_link(), which only does the link-up.
-The reason why we are doing this is to lay a foundation for subsequent
-commits so that we can turn on any power regulators, as described in the
-root port's DT node, prior to doing link-up.  We do this by defining an
-add_bus() callback which is invoked during enumeraion.  At the end of this
-patchset the probe function trace will look something like this:
-
--> brcm_pcie_probe()
-    -> brcm_pcie_setup();                       /* Set-up only */
-    -> pci_host_probe(bridge);
-        -> [enumeration]
-            -> pci_alloc_child_bus()
-                -> bus->ops->add_bus(bus);      /* We've set this op */
-                -> brcm_pcie_add_bus()          /* Our callback      */
-                     -> [turn on regulators]    /* Main objective!   */
-                     -> brcm_pcie_start_link()  /* Link-up           */
-
-One final note: some code that was executed after the PCIe linkup is now
-placed so that it executes prior to linkup, since this code has to run
-prior to the invocation of pci_host_probe().
-
-Link: https://lore.kernel.org/r/20220106160332.2143-5-jim2101024@gmail.com
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 69 +++++++++++++++++----------
- 1 file changed, 43 insertions(+), 26 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index bd88a0a46c63..c026446d5830 100644
+index c026446d5830..72219a4f3964 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -849,16 +849,9 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+@@ -255,6 +255,7 @@ struct brcm_pcie {
+ 	u32			hw_rev;
+ 	void			(*perst_set)(struct brcm_pcie *pcie, u32 val);
+ 	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
++	bool			refusal_mode;
+ };
  
- static int brcm_pcie_setup(struct brcm_pcie *pcie)
- {
--	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
- 	u64 rc_bar2_offset, rc_bar2_size;
- 	void __iomem *base = pcie->base;
--	struct device *dev = pcie->dev;
--	struct resource_entry *entry;
--	bool ssc_good = false;
--	struct resource *res;
--	int num_out_wins = 0;
--	u16 nlw, cls, lnksta;
--	int i, ret, memc;
-+	int ret, memc;
- 	u32 tmp, burst, aspm_support;
+ static inline bool is_bmips(const struct brcm_pcie *pcie)
+@@ -687,6 +688,19 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
+ 	if (pci_is_root_bus(bus))
+ 		return PCI_SLOT(devfn) ? NULL : base + where;
  
- 	/* Reset the bridge */
-@@ -948,6 +941,40 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	if (pcie->gen)
- 		brcm_pcie_set_gen(pcie, pcie->gen);
++	if (pcie->refusal_mode) {
++		/*
++		 * At this point we do not have PCIe link-up.  If there is
++		 * a config read or write access besides those targeting
++		 * the host bridge, our PCIe HW throws a CPU abort.  To
++		 * prevent this we return the NULL address.  The calling
++		 * functions -- pci_generic_config_*() -- will notice this
++		 * and not perform the access, and if it is a read access,
++		 * 0xffffffff is returned.
++		 */
++		return NULL;
++	}
++
+ 	/* For devices, write to the config space index register */
+ 	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
+ 	writel(idx, pcie->base + PCIE_EXT_CFG_INDEX);
+@@ -704,6 +718,11 @@ static void __iomem *brcm_pcie_map_conf32(struct pci_bus *bus, unsigned int devf
+ 	if (pci_is_root_bus(bus))
+ 		return PCI_SLOT(devfn) ? NULL : base + (where & ~0x3);
  
-+	/* Don't advertise L0s capability if 'aspm-no-l0s' */
-+	aspm_support = PCIE_LINK_STATE_L1;
-+	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
-+		aspm_support |= PCIE_LINK_STATE_L0S;
-+	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
-+	u32p_replace_bits(&tmp, aspm_support,
-+		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
-+	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
++	if (pcie->refusal_mode) {
++		/* See note above in brcm_pcie_map_conf() */
++		return NULL;
++	}
 +
-+	/*
-+	 * For config space accesses on the RC, show the right class for
-+	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
-+	 */
-+	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-+	u32p_replace_bits(&tmp, 0x060400,
-+			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
-+	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
-+
-+	return 0;
-+}
-+
-+static int brcm_pcie_start_link(struct brcm_pcie *pcie)
-+{
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-+	struct device *dev = pcie->dev;
-+	void __iomem *base = pcie->base;
-+	struct resource_entry *entry;
-+	struct resource *res;
-+	int num_out_wins = 0;
-+	u16 nlw, cls, lnksta;
-+	bool ssc_good = false;
-+	u32 tmp;
-+	int ret, i;
-+
- 	/* Unassert the fundamental reset */
- 	pcie->perst_set(pcie, 0);
- 
-@@ -998,24 +1025,6 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 		num_out_wins++;
+ 	/* For devices, write to the config space index register */
+ 	idx = PCIE_ECAM_OFFSET(bus->number, devfn, (where & ~3));
+ 	writel(idx, base + IDX_ADDR(pcie));
+@@ -989,6 +1008,7 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ 		dev_err(dev, "link down\n");
+ 		return -ENODEV;
  	}
++	pcie->refusal_mode = false;
  
--	/* Don't advertise L0s capability if 'aspm-no-l0s' */
--	aspm_support = PCIE_LINK_STATE_L1;
--	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
--		aspm_support |= PCIE_LINK_STATE_L0S;
--	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
--	u32p_replace_bits(&tmp, aspm_support,
--		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
--	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
--
--	/*
--	 * For config space accesses on the RC, show the right class for
--	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
--	 */
--	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
--	u32p_replace_bits(&tmp, 0x060400,
--			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
--	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
--
- 	if (pcie->ssc) {
- 		ret = brcm_pcie_set_ssc(pcie);
- 		if (ret == 0)
-@@ -1204,6 +1213,10 @@ static int brcm_pcie_resume(struct device *dev)
- 	if (ret)
- 		goto err_reset;
+ 	if (!brcm_pcie_rc_mode(pcie)) {
+ 		dev_err(dev, "PCIe misconfigured; is in EP mode\n");
+@@ -1134,6 +1154,8 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+ 	void __iomem *base = pcie->base;
+ 	int tmp;
  
-+	ret = brcm_pcie_start_link(pcie);
-+	if (ret)
-+		goto err_reset;
++	pcie->refusal_mode = true;
 +
- 	if (pcie->msi)
- 		brcm_msi_set_regs(pcie->msi);
+ 	if (brcm_pcie_link_up(pcie))
+ 		brcm_pcie_enter_l23(pcie);
+ 	/* Assert fundamental reset */
+@@ -1185,6 +1207,7 @@ static int brcm_pcie_resume(struct device *dev)
+ 	u32 tmp;
+ 	int ret;
  
-@@ -1393,6 +1406,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
++	pcie->refusal_mode = true;
+ 	base = pcie->base;
+ 	ret = clk_prepare_enable(pcie->clk);
  	if (ret)
- 		goto fail;
+@@ -1361,6 +1384,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	pcie->type = data->type;
+ 	pcie->perst_set = data->perst_set;
+ 	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
++	pcie->refusal_mode = true;
  
-+	ret = brcm_pcie_start_link(pcie);
-+	if (ret)
-+		goto fail;
-+
- 	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
- 	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
- 		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
+ 	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pcie->base))
 -- 
 2.17.1
 
