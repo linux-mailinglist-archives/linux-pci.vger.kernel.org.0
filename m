@@ -2,187 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA36E576CAC
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 11:01:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 040D9576D36
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 11:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbiGPJBK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Jul 2022 05:01:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38480 "EHLO
+        id S231998AbiGPJyf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Jul 2022 05:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbiGPJBJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 05:01:09 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74ACD20F6E
-        for <linux-pci@vger.kernel.org>; Sat, 16 Jul 2022 02:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657962066; x=1689498066;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=L9mehp/hSVQkiJrYRMNEonxUniyC9iBvKlRarh2qMYA=;
-  b=Gc42APeql1OfZF8qsKUULtZJ5m3waZf2mZ44v1suRfkp+w0Rh1q61IoC
-   majAYgh/2UJWR8ksJ3tLPsyN/nvUCAAr5SE4CDo5tohM2xnb8dPdoUDnT
-   7+ZfBf8E+LtKpcI5ZPZS7/dpz8/br5CD2Rrjb1kVXJEIXRTa0hCOg0hsS
-   ioO59VFA+8PL1edJCMiqMRLsghzaX2Cu1UJHDz25CeCZ545u7rqzpbRLE
-   f/wrq70yPVvJKiG8yuGqirE7E3RoQeFHVOa0kVUQi+yseh8Yi2WpqIPeB
-   DimkcxwrfWz1SU+ZnBV/q7NJVN3qeGTT7StZFwWkoOnYUEp0Ne8tfYOoC
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10409"; a="347648294"
-X-IronPort-AV: E=Sophos;i="5.92,276,1650956400"; 
-   d="scan'208";a="347648294"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2022 02:01:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,276,1650956400"; 
-   d="scan'208";a="773238174"
-Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 16 Jul 2022 02:01:04 -0700
-Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1oCdfc-0001Jt-8R;
-        Sat, 16 Jul 2022 09:01:04 +0000
-Date:   Sat, 16 Jul 2022 17:00:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/ctrl/qcom] BUILD SUCCESS
- 839fbdee4c080eb95567cbcf6366072a56d3a3cc
-Message-ID: <62d27e47.Nizq6B+8sEX+PpGW%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229521AbiGPJye (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 05:54:34 -0400
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C1EDFDA
+        for <linux-pci@vger.kernel.org>; Sat, 16 Jul 2022 02:54:33 -0700 (PDT)
+Received: by mail-vk1-xa2f.google.com with SMTP id bj51so2306781vkb.11
+        for <linux-pci@vger.kernel.org>; Sat, 16 Jul 2022 02:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C5SB/zwbik4i86HhQBfT3nalBoNUNUGeEa7w8npJ2X0=;
+        b=g5ZRv4A9+TT3vOk95UvTlPqKLtYbCP/sUasIdil7WCB8Duxdai79T09lCo/pOAQxfx
+         66JJA5SCPFohTDKryA2bvhw9UdKGsoog/+p70Q/jmkVTnT6LARIt9Mt7UsIjPs0ysbzx
+         cXNolYNRJaDxs7TcztIl0/p8RGBfTitXAr+4ad4k1jIfxCTMUebXjHJsxYKgs8UbU8DX
+         zbL7LZegW6Y6KCryD2cGoSqfZy5ZtJ3Qe2MVJtdn/6iDH1YBo6FU1f7mjNvphce7hF0o
+         2uuR43arVMMT1SzcTlh2gXk0qbmur91dmdIDE8pgiXoHrHkxYYJL8HJpyD/6xr0Hf6w2
+         nt+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C5SB/zwbik4i86HhQBfT3nalBoNUNUGeEa7w8npJ2X0=;
+        b=RChbHFGx2XzHfGLMACci9l2jr5vzMOPOHP0PJS1H/qFJcEf5uSjYDs0pI8eBIVsIpy
+         MUxt3Eo6GX7sEHOdVqs5GkgvrwMJwjgu0ZBDw2YEMGfLhLfHqMPwL1WUCnssHL+Rbp2V
+         vafGr2WB135TrybxDrRXksZFV1pS5iQo47hbuj/fF5Vv9SG7vkPaEkfTbkEkVZRQhUg9
+         e7LERrBU5qQJUDhmkv3XUtcOirgSXEtLFuts2yuMqwBOINo2XwMvhDuxK99HCd+zQJtg
+         zkYGvq/jYAyrhqzaGfU+1uHo1eQiPkdSTjgv+Oo+GR1dou4UJGxnIgTjiH4eFwpzAsaK
+         SsNQ==
+X-Gm-Message-State: AJIora8mu/Lp8zPzv48zOHKaGxzEaSJscS1piw5ZbJo2WIvT/tquF52m
+        gGUZh5f35INul42nDk6clAnWxUBEvu7hMgQigSY=
+X-Google-Smtp-Source: AGRyM1sgncPRElp2m6SKRpU3QJCUEUyuCgaX0vtEIQ/lL8oD3B7dUnjZfjdCuOH0Sxa3aevUAE17Kzx9E1FpD/I9ics=
+X-Received: by 2002:a1f:a887:0:b0:36c:8458:b061 with SMTP id
+ r129-20020a1fa887000000b0036c8458b061mr6737853vke.19.1657965272483; Sat, 16
+ Jul 2022 02:54:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220714124216.1489304-1-chenhuacai@loongson.cn> <20220715221816.GA1203890@bhelgaas>
+In-Reply-To: <20220715221816.GA1203890@bhelgaas>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Sat, 16 Jul 2022 17:54:19 +0800
+Message-ID: <CAAhV-H5wQfGJFcR9DOACSPSTNDzoKVYcXNs7KNpQwCj2XZ65Hg@mail.gmail.com>
+Subject: Re: [PATCH V16 0/7] PCI: Loongson pci improvements and quirks
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/qcom
-branch HEAD: 839fbdee4c080eb95567cbcf6366072a56d3a3cc  dt-bindings: PCI: qcom: Fix reset conditional
+Hi, Bjorn,
 
-elapsed time: 722m
+On Sat, Jul 16, 2022 at 6:18 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Jul 14, 2022 at 08:42:09PM +0800, Huacai Chen wrote:
+> > This patchset improves Loongson PCI controller driver and resolves some
+> > problems: LS2K/LS7A's PCI config space supports 1/2/4-bytes access, so
+> > the first patch use pci_generic_config_read()/pci_generic_config_write()
+> > for them; the second patch add ACPI init support which will be used by
+> > LoongArch; the third patch improves the mrrs quirk for LS7A chipset; The
+> > fourth patch add a new quirk for LS7A chipset to avoid poweroff/reboot
+> > failure, and the fifth patch add a new quirk for LS7A chipset to fix the
+> > multifunction devices' irq pin mappings.
+> > ...
+>
+> > Huacai Chen, Tiezhu Yang and Jianmin Lv(6):
+> >  PCI/ACPI: Guard ARM64-specific mcfg_quirks
+> >  PCI: loongson: Use generic 8/16/32-bit config ops on LS2K/LS7A.
+> >  PCI: loongson: Add ACPI init support.
+> >  PCI: loongson: Don't access non-existant devices.
+> >  PCI: Add quirk for multifunction devices of LS7A.
+>
+> I applied the above to pci/ctrl/loongson to get them out of the way.
+Thank you very much!
 
-configs tested: 105
-configs skipped: 4
+>
+> >  PCI: loongson: Improve the MRRS quirk for LS7A.
+> >  PCI: Add quirk for LS7A to avoid reboot failure.
+>
+> These touch core code in some sort of ugly ways and I'm still thinking
+> about them.
+Yes, it is ugly, but I hope it can be solved in some way, at least the
+MRRS problem is not only Loongson-specific and can be shared by
+others.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-i386                          randconfig-c001
-arm                      footbridge_defconfig
-xtensa                              defconfig
-openrisc                    or1ksim_defconfig
-arm                        mvebu_v7_defconfig
-powerpc                 mpc85xx_cds_defconfig
-parisc                generic-32bit_defconfig
-s390                       zfcpdump_defconfig
-m68k                             alldefconfig
-arm                     eseries_pxa_defconfig
-sh                         ap325rxa_defconfig
-arm                          gemini_defconfig
-arm                           sama5_defconfig
-xtensa                generic_kc705_defconfig
-mips                           jazz_defconfig
-arm                          simpad_defconfig
-arm                       multi_v4t_defconfig
-powerpc                     ep8248e_defconfig
-sh                        sh7763rdp_defconfig
-mips                    maltaup_xpa_defconfig
-xtensa                    xip_kc705_defconfig
-powerpc                     tqm8555_defconfig
-sh                        sh7785lcr_defconfig
-ia64                             alldefconfig
-openrisc                 simple_smp_defconfig
-sh                           se7721_defconfig
-m68k                        mvme147_defconfig
-sh                          polaris_defconfig
-powerpc                  storcenter_defconfig
-arc                            hsdk_defconfig
-s390                                defconfig
-s390                             allmodconfig
-arc                                 defconfig
-alpha                               defconfig
-s390                             allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-
-clang tested configs:
-i386                             allyesconfig
-arm                    vt8500_v6_v7_defconfig
-mips                      pic32mzda_defconfig
-mips                           mtx1_defconfig
-powerpc                      ppc64e_defconfig
-arm                       aspeed_g4_defconfig
-arm                          moxart_defconfig
-powerpc                     ppa8548_defconfig
-mips                      maltaaprp_defconfig
-arm                        mvebu_v5_defconfig
-arm                         bcm2835_defconfig
-riscv                          rv32_defconfig
-mips                  cavium_octeon_defconfig
-arm                       netwinder_defconfig
-mips                       lemote2f_defconfig
-arm                   milbeaut_m10v_defconfig
-powerpc                    ge_imp3a_defconfig
-arm                          collie_defconfig
-x86_64                        randconfig-k001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-hexagon              randconfig-r045-20220715
-s390                 randconfig-r044-20220715
-hexagon              randconfig-r041-20220715
-riscv                randconfig-r042-20220715
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Huacai
