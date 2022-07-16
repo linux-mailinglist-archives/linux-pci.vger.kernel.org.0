@@ -2,294 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9931F576C58
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 09:32:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9FA576C60
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 09:36:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229588AbiGPHcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Jul 2022 03:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51376 "EHLO
+        id S230096AbiGPHgF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Jul 2022 03:36:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbiGPHcP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 03:32:15 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395C11AF04
-        for <linux-pci@vger.kernel.org>; Sat, 16 Jul 2022 00:32:13 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id t127so6071260vsb.8
-        for <linux-pci@vger.kernel.org>; Sat, 16 Jul 2022 00:32:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZeIeAQ5O0PJc1AeTfyUU2c4K/msu4VsnXnc5IiTjhKI=;
-        b=BHFQiFxlxVbYc8Ks+5I8ylbjeKM16ONUGhU10Z11GfleciEnZ2aR+K5UsdNtajcxN8
-         ZpLmww7/X2mkmPia/uY+ol8ApSNNzYckCLXk4L1EHFRaJzlBTeDRcXC8i8x5W0AbSThJ
-         OjAjq+ORGlaHFbU+OBLOBHvdNY11JxEyVJ0iUPtlE8WCaoRVgdlAyvNV1Mv9DyIU+sQb
-         2X+O5sW71c7GIl2AGZu+7fMMzRqKnOPZNBlot6At12I7hMv4+zeb3lizbAKniJ3XU24Z
-         y153CtB7KQ+xWfJmf+wU/omIE5IpOEE6i2iNPJ8Q3by2+6uhV4ty2mDiiNO+BF1FA1s0
-         18IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZeIeAQ5O0PJc1AeTfyUU2c4K/msu4VsnXnc5IiTjhKI=;
-        b=o9r1n3nEWSUw3GGXKFdrJkD0hgvLI6c4UNi9cqAEFr29UW+cT7dTRnbic5bY12uD+z
-         i1EwuqxTBHhCXLHHzKiJFl3oc/vUhOOdACH4NTjH7MX0o7sl0Cw5S5vZmYPEAYJFjf1E
-         8b6z/DflQFAHrDpPRJZ2HQTbQ/RN76PFib6TGAk6wd2soyM01wQ+jMtAZdbbV5jZXaYQ
-         LHXiQ6THlSh8a3zWg8JsCEubl70/zWd/oX0ukCz6B5gEkyw143yCOZTIYO/WDw3TcH+H
-         87lDsX5oEkEAFaY2+/F1S8ObTzYrqCTvn48P9mVpoXabCW0eVmEV3djBux4Aq8+1+YNx
-         +HiQ==
-X-Gm-Message-State: AJIora9OwP90u22Y+YokOJ3CBRi3tjPhU1m+XJSeEJJuMI6abGi8wlAz
-        lSyhgROJETJ+4Y+Vl4sH+F8F204WTN4VIwvpcD/hGe6akMSsIaLI
-X-Google-Smtp-Source: AGRyM1t7sb2hJe84L53NbjhfD+1LqXhfB7jJKZF1zYur7SVaOKKg1pdKMANT1nQ2Z4kj/KmxF/JeER+0ZvwxUAWN6uM=
-X-Received: by 2002:a67:ec05:0:b0:357:7a48:cba8 with SMTP id
- d5-20020a67ec05000000b003577a48cba8mr7489686vso.78.1657956732263; Sat, 16 Jul
- 2022 00:32:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220714124216.1489304-1-chenhuacai@loongson.cn>
- <20220714124216.1489304-6-chenhuacai@loongson.cn> <05be8921-8287-b939-bde8-983dbbfeac62@loongson.cn>
-In-Reply-To: <05be8921-8287-b939-bde8-983dbbfeac62@loongson.cn>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Sat, 16 Jul 2022 15:31:59 +0800
-Message-ID: <CAAhV-H5M9buy2an5R3FX=77m9uRLStztbtpbs8NgiBqCbLtJ1w@mail.gmail.com>
-Subject: Re: [PATCH V16 5/7] PCI: loongson: Improve the MRRS quirk for LS7A
-To:     Jianmin Lv <lvjianmin@loongson.cn>
+        with ESMTP id S229543AbiGPHgE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 03:36:04 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA69E2E9DC
+        for <linux-pci@vger.kernel.org>; Sat, 16 Jul 2022 00:36:00 -0700 (PDT)
+Received: from [10.20.42.19] (unknown [10.20.42.19])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax+eBSatJio0oiAA--.3205S3;
+        Sat, 16 Jul 2022 15:35:46 +0800 (CST)
+Subject: Re: [PATCH V16 7/7] PCI: Add quirk for multifunction devices of LS7A
+From:   Jianmin Lv <lvjianmin@loongson.cn>
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220716032334.GA1228076@bhelgaas>
+ <6e56ee68-4b87-4b04-9a43-c223dcd1b0fe@loongson.cn>
+Message-ID: <c749c3b9-2916-1a3f-6be5-4217c469b4c5@loongson.cn>
+Date:   Sat, 16 Jul 2022 15:35:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <6e56ee68-4b87-4b04-9a43-c223dcd1b0fe@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Ax+eBSatJio0oiAA--.3205S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFyxCrWDuw1DXF1kAFW7CFg_yoW5KFyfpr
+        WrJF1UtFWUGr18Ar1qyw18AFyjqr45Ja45Xr1DJFyxGw4qvr1Yqr4UXr4qgF17Jr48Jr1j
+        vrW5JryxZr1UZr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBm1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+        jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4
+        CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+        Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY
+        0VAS07AlzVAYIcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaV
+        Av8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
+        8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Jianmin,
 
-On Sat, Jul 16, 2022 at 3:15 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
->
-> Hi, Huacai and Bjorn,
->
-> Actually, I don't think we have to fix the MRRS issue of 7A in this
-> way(change core code of PCI). The reasons are:
->
-> - First, we don't know if other pci controlers have simillar issue, at
-> least I don't see yet. I think if *only we* have the issue, maybe we can
-> fix it in our controller driver rather than changing core code. And in
-> future, if the issue is proved a common one, abstract it then by common w=
-ay.
->
-Keystone's pci controller has the same problem (maybe DesignWare based
-controllers all have the same problem), this is discussed for a long
-time.
 
-Huacai
-> - Second, even though we limit the MRRS in pcie_set_readrq() according
-> to the flag set in quirk function, some drivers(e.g. in
-> drivers/rapidio/devices/tsi721.c, maybe other driver do this in future,
-> I dont't know.) directly call pcie_capability_clear_and_set_word to set
-> MRRS, which will still break the fix.
->
-> - Third, on resuming from S3, the MRRS stored in memory should be
-> allowed to set to dev ctrl reg(because the reg has been reset during S3).
->
->
-> Fix MMRS in our controller driver by using self-defined config_write(),
-> maybe like this:
->
-> static u32 handle_mrrs_limit(struct pci_bus *bus, unsigned int devfn,
-> void __iomem *addr, u32 val)
-> {
->       u32 tmp;
->       bool runtime_flag =3D 1;
->       int pos =3D pci_bus_find_capability_nolock(bus, devfn, PCI_CAP_ID_E=
-XP);
->
-> #ifdef CONFIG_PM_SLEEP
->        if (pm_suspend_target_state =3D=3D PM_SUSPEND_ON)
->              runtime_flag =3D 0;
-> #endif
->
->        if (resume_flag && pos !=3D 0 && (pos + PCI_EXP_DEVCTL) =3D=3D reg=
-) {
->              tmp =3D readl(addr);
->              if ((val & PCI_EXP_DEVCTL_READRQ) > (tmp &
-> PCI_EXP_DEVCTL_READRQ)) {
->                      val &=3D ~PCI_EXP_DEVCTL_READRQ;
->                      val |=3D (tmp & PCI_EXP_DEVCTL_READRQ);
->              }
->        }
->        return val;
->
-> }
->
->
-> static int loongson_pci_config_write32(struct pci_bus *bus, unsigned int
-> devfn,
->                                 int where, int size, u32 val)
-> {
->          void __iomem *addr;
->          u32 mask, tmp;
->          int reg =3D where & ~3;
->
->          addr =3D bus->ops->map_bus(bus, devfn, where & ~0x3);
->          if (!addr)
->                  return PCIBIOS_DEVICE_NOT_FOUND;
->          val =3D handle_mrrs_limit(bus, devfn, addr, reg, val);
->          writel(val, addr);
->
->          return PCIBIOS_SUCCESSFUL;
-> }
->
-> And I still have to emphasize on the fix in this way: It's still does
-> not work for pciehp. It's only used for addressing MRRS issue of 7A
-> revisions which have no pciehp support.
->
-> And in future, for new revision, we just need to skip handle_mrrs_limit.
->
-> The way described here is just my immature opinion, we can discuss it
-> if required.
->
-> Thanks.
->
-> On 2022/7/14 =E4=B8=8B=E5=8D=888:42, Huacai Chen wrote:
-> > In new revision of LS7A, some PCIe ports support larger value than 256,
-> > but their maximum supported MRRS values are not detectable. Moreover,
-> > the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> > MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> > will actually set a big value in its driver. So the only possible way
-> > is configure MRRS of all devices in BIOS, and add a pci host bridge bit
-> > flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
-> >
-> > However, according to PCIe Spec, it is legal for an OS to program any
-> > value for MRRS, and it is also legal for an endpoint to generate a Read
-> > Request with any size up to its MRRS. As the hardware engineers say, th=
-e
-> > root cause here is LS7A doesn't break up large read requests. In detail=
-,
-> > LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Rea=
-d
-> > request with a size that's "too big" ("too big" means larger than the
-> > PCIe ports can handle, which means 256 for some ports and 4096 for the
-> > others, and of course this is a problem in the LS7A's hardware design).
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >   drivers/pci/controller/pci-loongson.c | 44 +++++++++-----------------=
--
-> >   drivers/pci/pci.c                     |  6 ++++
-> >   include/linux/pci.h                   |  1 +
-> >   3 files changed, 22 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/contro=
-ller/pci-loongson.c
-> > index 594653154deb..af73bb766e48 100644
-> > --- a/drivers/pci/controller/pci-loongson.c
-> > +++ b/drivers/pci/controller/pci-loongson.c
-> > @@ -68,37 +68,23 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> >                       DEV_LS7A_LPC, system_bus_quirk);
-> >
-> > -static void loongson_mrrs_quirk(struct pci_dev *dev)
-> > +static void loongson_mrrs_quirk(struct pci_dev *pdev)
-> >   {
-> > -     struct pci_bus *bus =3D dev->bus;
-> > -     struct pci_dev *bridge;
-> > -     static const struct pci_device_id bridge_devids[] =3D {
-> > -             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
-> > -             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
-> > -             { PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
-> > -             { 0, },
-> > -     };
-> > -
-> > -     /* look for the matching bridge */
-> > -     while (!pci_is_root_bus(bus)) {
-> > -             bridge =3D bus->self;
-> > -             bus =3D bus->parent;
-> > -             /*
-> > -              * Some Loongson PCIe ports have a h/w limitation of
-> > -              * 256 bytes maximum read request size. They can't handle
-> > -              * anything larger than this. So force this limit on
-> > -              * any devices attached under these ports.
-> > -              */
-> > -             if (pci_match_id(bridge_devids, bridge)) {
-> > -                     if (pcie_get_readrq(dev) > 256) {
-> > -                             pci_info(dev, "limiting MRRS to 256\n");
-> > -                             pcie_set_readrq(dev, 256);
-> > -                     }
-> > -                     break;
-> > -             }
-> > -     }
-> > +     /*
-> > +      * Some Loongson PCIe ports have h/w limitations of maximum read
-> > +      * request size. They can't handle anything larger than this. So
-> > +      * force this limit on any devices attached under these ports.
-> > +      */
-> > +     struct pci_host_bridge *bridge =3D pci_find_host_bridge(pdev->bus=
-);
-> > +
-> > +     bridge->no_inc_mrrs =3D 1;
-> >   }
-> > -DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > +                     DEV_PCIE_PORT_0, loongson_mrrs_quirk);
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > +                     DEV_PCIE_PORT_1, loongson_mrrs_quirk);
-> > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > +                     DEV_PCIE_PORT_2, loongson_mrrs_quirk);
-> >
-> >   static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *b=
-us)
-> >   {
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index cfaf40a540a8..79157cbad835 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -6052,6 +6052,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
-> >   {
-> >       u16 v;
-> >       int ret;
-> > +     struct pci_host_bridge *bridge =3D pci_find_host_bridge(dev->bus)=
-;
-> >
-> >       if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
-> >               return -EINVAL;
-> > @@ -6070,6 +6071,11 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
-> >
-> >       v =3D (ffs(rq) - 8) << 12;
-> >
-> > +     if (bridge->no_inc_mrrs) {
-> > +             if (rq > pcie_get_readrq(dev))
-> > +                     return -EINVAL;
-> > +     }
-> > +
-> >       ret =3D pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-> >                                                 PCI_EXP_DEVCTL_READRQ, =
-v);
-> >
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 81a57b498f22..a9211074add6 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -569,6 +569,7 @@ struct pci_host_bridge {
-> >       void            *release_data;
-> >       unsigned int    ignore_reset_delay:1;   /* For entire hierarchy *=
-/
-> >       unsigned int    no_ext_tags:1;          /* No Extended Tags */
-> > +     unsigned int    no_inc_mrrs:1;          /* No Increase MRRS */
-> >       unsigned int    native_aer:1;           /* OS may use PCIe AER */
-> >       unsigned int    native_pcie_hotplug:1;  /* OS may use PCIe hotplu=
-g */
-> >       unsigned int    native_shpc_hotplug:1;  /* OS may use SHPC hotplu=
-g */
-> >
->
+On 2022/7/16 下午2:12, Jianmin Lv wrote:
+> 
+> 
+> On 2022/7/16 上午11:23, Bjorn Helgaas wrote:
+>> On Sat, Jul 16, 2022 at 10:27:00AM +0800, Jianmin Lv wrote:
+>>> On 2022/7/16 上午12:37, Bjorn Helgaas wrote:
+>>>> On Fri, Jul 15, 2022 at 04:05:12PM +0800, Jianmin Lv wrote:
+>>>>> On 2022/7/15 上午11:44, Bjorn Helgaas wrote:
+>>>>>> On Thu, Jul 14, 2022 at 08:42:16PM +0800, Huacai Chen wrote:
+>>>>>>> From: Jianmin Lv <lvjianmin@loongson.cn>
+>>>>>>>
+>>>>>>> In LS7A, multifunction device use same PCI PIN (because the
+>>>>>>> PIN register report the same INTx value to each function)
+>>>>>>> but we need different IRQ for different functions, so add a
+>>>>>>> quirk to fix it for standard PCI PIN usage.
+>>>>>>>
+>>>>>>> This patch only affect ACPI based systems (and only needed
+>>>>>>> by ACPI based systems, too). For DT based systems, the irq
+>>>>>>> mappings is defined in .dts files and be handled by
+>>>>>>> of_irq_parse_pci().
+>>>>>>
+>>>>>> I'm sorry, I know you've explained this before, but I don't
+>>>>>> understand yet, so let's try again.  I *think* you're saying
+>>>>>> that:
+>>>>>>
+>>>>>>      - These devices integrated into LS7A all report 0 in their
+>>>>>>      Interrupt Pin registers.  Per spec, this means they do not
+>>>>>>      use INTx (PCIe r6.0, sec 7.5.1.1.13).
+>>>>>>
+>>>>>>      - However, these devices actually *do* use INTx.  Function
+>>>>>>      0 uses INTA, function 1 uses INTB, ..., function 4 uses
+>>>>>>      INTA, ...
+>>>>>>
+>>>>>>      - The quirk overrides the incorrect values read from the
+>>>>>>      Interrupt Pin registers.
+>>>>>
+>>>>> Yes, right.
+>>>
+>>> Sorry, I didn't see the first item here carefully, so I have to
+>>> correct it: all the integrated devices in 7A report 1 in PIN reg
+>>> instead of 0.
+>>
+>>>>>> But I'm still confused about how loongson_map_irq() gets called.  The
+>>>>>> only likely path I see is here:
+>>>>>>
+>>>>>>      pci_device_probe                            # pci_bus_type.probe
+>>>>>>        pci_assign_irq
+>>>>>>          pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin)
+>>>>>>          if (pin)
+>>>>>>     bridge->swizzle_irq(dev, &pin)
+>>>>>>     irq = bridge->map_irq(dev, slot, pin)
+>>>>>>
+>>>>>> where bridge->map_irq points to loongson_map_irq().  But
+>>>>>> pci_assign_irq() should read 0 from PCI_INTERRUPT_PIN [1], so it
+>>>>>> wouldn't call bridge->map_irq().  Obviously I'm missing something.
+>>>>>>
+>>>
+>>> Same thing, PCI_INTERRUPT_PIN reports 1, so bridge->map_irq() will be
+>>> called.
+>>
+>> OK, that makes a lot more sense, thank you!
+>>
+>> But it does leave another question: the quirk applies to
+>> DEV_PCIE_PORT_0 (0x7a09), DEV_PCIE_PORT_1 (0x7a19), and
+>> DEV_PCIE_PORT_2 (0x7a29).
+>>
+>> According to the .dtsi [1], all those root ports are at function 0,
+>> and if they report INTA, the quirk will also compute INTA.  So why do
+>> you need to apply the quirk for them?
+>>
+> 
+> Oh, yes, I don't think they are required either. The fix is only 
+> required for multi-func devices of 7A.
+> 
+> Huacai, we should remove PCIE ports from the patch.
+> 
+>> The same would apply to any Device ID that only appears at function 0,
+>> which looks like it also includes DEV_LS7A_OHCI (0x7a24), and
+>> DEV_LS7A_GPU (0x7a15).
+>>
+
+Same thing, they are also not required.
+
+>> [1] 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/boot/dts/loongson/ls7a-pch.dtsi?id=v5.18#n231 
+>>
+>>
+> 
+> 
+
