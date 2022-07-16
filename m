@@ -2,148 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D722D576C20
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 08:12:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E848576C46
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jul 2022 08:54:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbiGPGMa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Jul 2022 02:12:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41902 "EHLO
+        id S229521AbiGPGyF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Jul 2022 02:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbiGPGM3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 02:12:29 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE2173C178
-        for <linux-pci@vger.kernel.org>; Fri, 15 Jul 2022 23:12:27 -0700 (PDT)
-Received: from [10.20.42.19] (unknown [10.20.42.19])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr9G+VtJiljEiAA--.4434S3;
-        Sat, 16 Jul 2022 14:12:14 +0800 (CST)
-Subject: Re: [PATCH V16 7/7] PCI: Add quirk for multifunction devices of LS7A
+        with ESMTP id S229436AbiGPGyE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 02:54:04 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE2319C1D
+        for <linux-pci@vger.kernel.org>; Fri, 15 Jul 2022 23:54:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657954443; x=1689490443;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ecyCQdjimfk87Z5cT9E2QvZy+Wl6fLzOs3mNzXcNakM=;
+  b=gB4olANxWZsPeWW4T7vct2R8RufWgAWl4lHFAH4yVInmiX7d7mLfvjK/
+   RM1cxF3RbIs0QKF07WA19D3mtXOFZUuHA614rDVm0pt5xy/GrQux8uNHu
+   et5/0wOG3u5ekrvBkztMJg6fdIqpdIEEyv+6B+E0Dv1hnBSQuhdHxlhMr
+   //EIR7QGXgVt0cYEN9fAwNzGHgKEjgevjJmynGUs3liparUU4QJax06oF
+   mJo+jQ0JQFU0EwkfLI7j8Sax0Z9kYll/EwLGTjp1PbINZmtn8xgbAyfag
+   TH6zOZyP1mEzOhIi2F0zbq8siUo/ayShcmlevmgg5FZPcL4K5QPLhC5tM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10409"; a="265742809"
+X-IronPort-AV: E=Sophos;i="5.92,276,1650956400"; 
+   d="scan'208";a="265742809"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2022 23:54:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,276,1650956400"; 
+   d="scan'208";a="571811698"
+Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 15 Jul 2022 23:54:01 -0700
+Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1oCbgf-0001FL-4N;
+        Sat, 16 Jul 2022 06:54:01 +0000
+Date:   Sat, 16 Jul 2022 14:53:31 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20220716032334.GA1228076@bhelgaas>
-From:   Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <6e56ee68-4b87-4b04-9a43-c223dcd1b0fe@loongson.cn>
-Date:   Sat, 16 Jul 2022 14:12:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/err] BUILD SUCCESS
+ 5e6ae050955b566484f3cc6a66e3925eae87a0ed
+Message-ID: <62d2606b.nV7HXufbTiYveROG%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20220716032334.GA1228076@bhelgaas>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxr9G+VtJiljEiAA--.4434S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFyfGFyfuFyUWF4kKrWDCFg_yoW5Zr4UpF
-        W5AF1UtF4DXr10yrWqyw1FvF4Sqr43AFy5Xrn8J3929wn0v348tr45Xrs0kFsrJr18tr40
-        vayrXryxZrWUZ3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBv1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4x0Y4vEx4A2
-        jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4
-        CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-        Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY
-        0VAS07AlzVAYIcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaV
-        Av8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
-        IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
-        0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
-        A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/err
+branch HEAD: 5e6ae050955b566484f3cc6a66e3925eae87a0ed  PCI/AER: Iterate over error counters instead of error strings
 
+elapsed time: 3541m
 
-On 2022/7/16 上午11:23, Bjorn Helgaas wrote:
-> On Sat, Jul 16, 2022 at 10:27:00AM +0800, Jianmin Lv wrote:
->> On 2022/7/16 上午12:37, Bjorn Helgaas wrote:
->>> On Fri, Jul 15, 2022 at 04:05:12PM +0800, Jianmin Lv wrote:
->>>> On 2022/7/15 上午11:44, Bjorn Helgaas wrote:
->>>>> On Thu, Jul 14, 2022 at 08:42:16PM +0800, Huacai Chen wrote:
->>>>>> From: Jianmin Lv <lvjianmin@loongson.cn>
->>>>>>
->>>>>> In LS7A, multifunction device use same PCI PIN (because the
->>>>>> PIN register report the same INTx value to each function)
->>>>>> but we need different IRQ for different functions, so add a
->>>>>> quirk to fix it for standard PCI PIN usage.
->>>>>>
->>>>>> This patch only affect ACPI based systems (and only needed
->>>>>> by ACPI based systems, too). For DT based systems, the irq
->>>>>> mappings is defined in .dts files and be handled by
->>>>>> of_irq_parse_pci().
->>>>>
->>>>> I'm sorry, I know you've explained this before, but I don't
->>>>> understand yet, so let's try again.  I *think* you're saying
->>>>> that:
->>>>>
->>>>>      - These devices integrated into LS7A all report 0 in their
->>>>>      Interrupt Pin registers.  Per spec, this means they do not
->>>>>      use INTx (PCIe r6.0, sec 7.5.1.1.13).
->>>>>
->>>>>      - However, these devices actually *do* use INTx.  Function
->>>>>      0 uses INTA, function 1 uses INTB, ..., function 4 uses
->>>>>      INTA, ...
->>>>>
->>>>>      - The quirk overrides the incorrect values read from the
->>>>>      Interrupt Pin registers.
->>>>
->>>> Yes, right.
->>
->> Sorry, I didn't see the first item here carefully, so I have to
->> correct it: all the integrated devices in 7A report 1 in PIN reg
->> instead of 0.
-> 
->>>>> But I'm still confused about how loongson_map_irq() gets called.  The
->>>>> only likely path I see is here:
->>>>>
->>>>>      pci_device_probe                            # pci_bus_type.probe
->>>>>        pci_assign_irq
->>>>>          pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin)
->>>>>          if (pin)
->>>>> 	bridge->swizzle_irq(dev, &pin)
->>>>> 	irq = bridge->map_irq(dev, slot, pin)
->>>>>
->>>>> where bridge->map_irq points to loongson_map_irq().  But
->>>>> pci_assign_irq() should read 0 from PCI_INTERRUPT_PIN [1], so it
->>>>> wouldn't call bridge->map_irq().  Obviously I'm missing something.
->>>>>
->>
->> Same thing, PCI_INTERRUPT_PIN reports 1, so bridge->map_irq() will be
->> called.
-> 
-> OK, that makes a lot more sense, thank you!
-> 
-> But it does leave another question: the quirk applies to
-> DEV_PCIE_PORT_0 (0x7a09), DEV_PCIE_PORT_1 (0x7a19), and
-> DEV_PCIE_PORT_2 (0x7a29).
-> 
-> According to the .dtsi [1], all those root ports are at function 0,
-> and if they report INTA, the quirk will also compute INTA.  So why do
-> you need to apply the quirk for them?
-> 
+configs tested: 149
+configs skipped: 5
 
-Oh, yes, I don't think they are required either. The fix is only 
-required for multi-func devices of 7A.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Huacai, we should remove PCIE ports from the patch.
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+sparc                             allnoconfig
+arm                           h3600_defconfig
+mips                         cobalt_defconfig
+sh                        sh7785lcr_defconfig
+arm                        mvebu_v7_defconfig
+powerpc                 mpc85xx_cds_defconfig
+parisc                generic-32bit_defconfig
+m68k                       m5275evb_defconfig
+arm                        oxnas_v6_defconfig
+arm                     eseries_pxa_defconfig
+sh                         ap325rxa_defconfig
+arm                          gemini_defconfig
+arm                           sama5_defconfig
+xtensa                generic_kc705_defconfig
+arm                        clps711x_defconfig
+powerpc                      pcm030_defconfig
+m68k                          atari_defconfig
+arc                          axs103_defconfig
+powerpc                     pq2fads_defconfig
+arm                             ezx_defconfig
+mips                           jazz_defconfig
+arm                          simpad_defconfig
+arm                       multi_v4t_defconfig
+sh                             sh03_defconfig
+m68k                        m5272c3_defconfig
+arc                                 defconfig
+arm                         at91_dt_defconfig
+nios2                            allyesconfig
+alpha                             allnoconfig
+sh                           se7343_defconfig
+sh                             espt_defconfig
+powerpc                 mpc8540_ads_defconfig
+arm                           viper_defconfig
+sh                        edosk7705_defconfig
+powerpc                     redwood_defconfig
+arm                       aspeed_g5_defconfig
+sh                               alldefconfig
+openrisc                            defconfig
+x86_64                                  kexec
+sparc                               defconfig
+xtensa                           allyesconfig
+csky                                defconfig
+sparc                            allyesconfig
+s390                                defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                             allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220715
+csky                              allnoconfig
+arc                               allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+i386                          randconfig-a005
+x86_64                        randconfig-a015
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
 
-> The same would apply to any Device ID that only appears at function 0,
-> which looks like it also includes DEV_LS7A_OHCI (0x7a24), and
-> DEV_LS7A_GPU (0x7a15).
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/boot/dts/loongson/ls7a-pch.dtsi?id=v5.18#n231
-> 
+clang tested configs:
+mips                          ath79_defconfig
+arm                            dove_defconfig
+arm                           spitz_defconfig
+powerpc                 mpc836x_rdk_defconfig
+powerpc                 mpc8560_ads_defconfig
+powerpc                     tqm8560_defconfig
+arm                      pxa255-idp_defconfig
+mips                        workpad_defconfig
+powerpc                          g5_defconfig
+powerpc                    gamecube_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                    mvme5100_defconfig
+arm                        vexpress_defconfig
+arm                   milbeaut_m10v_defconfig
+s390                             alldefconfig
+powerpc                   lite5200b_defconfig
+arm                          pcm027_defconfig
+arm                       cns3420vb_defconfig
+mips                      malta_kvm_defconfig
+powerpc                        fsp2_defconfig
+hexagon                             defconfig
+powerpc                      ppc44x_defconfig
+mips                           ip28_defconfig
+powerpc                     ppa8548_defconfig
+powerpc                     kilauea_defconfig
+powerpc                          allyesconfig
+mips                       rbtx49xx_defconfig
+mips                        omega2p_defconfig
+arm                          moxart_defconfig
+powerpc                     mpc512x_defconfig
+mips                     cu1000-neo_defconfig
+arm                         orion5x_defconfig
+powerpc                      pmac32_defconfig
+arm                         socfpga_defconfig
+riscv                            alldefconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220714
+hexagon              randconfig-r041-20220714
+hexagon              randconfig-r045-20220715
+s390                 randconfig-r044-20220715
+hexagon              randconfig-r041-20220715
+riscv                randconfig-r042-20220715
 
-
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
