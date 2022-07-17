@@ -2,303 +2,253 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72A745773BF
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Jul 2022 05:35:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B26C577512
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Jul 2022 10:25:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232691AbiGQDf0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Jul 2022 23:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52726 "EHLO
+        id S229544AbiGQIZa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Jul 2022 04:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230273AbiGQDfU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Jul 2022 23:35:20 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EFAB165A9;
-        Sat, 16 Jul 2022 20:35:19 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id 72so7846893pge.0;
-        Sat, 16 Jul 2022 20:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xv2PvDmoyOL9LB+6uvx+zPygvIwvBJhKrGc5MQCkb40=;
-        b=ZWVQHPWoRcjOaDC1WJd99IHoPIdfuDS5WO0w6MPg3RfLuHAN49GW4jC9rGrvMm+XFv
-         jifUaIssay+7+Wc66UNuSO4F2Q+tAtuPVxkKx+tIxrmRHDIdjSlEk9oqyJXpN7jW4xYo
-         lhra752D95aaAQDco7zsWBQUJ0eGdbJpfsYrs7/wioQLCKUVEmwytfZAhy9x0jEiXsXO
-         iy6hYeYPGwXXeQm3Yxi0jfA0yNX2B88vCUClPG648+QSoCX/SAebiBX3lCD9n+eNUIkm
-         FFUW7z6jbXlYFMkaykePVPgnRMczSPDT4W85HCUGK8R/Ei4+BqRkg5l32zScIpZ1Aprp
-         +bYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xv2PvDmoyOL9LB+6uvx+zPygvIwvBJhKrGc5MQCkb40=;
-        b=c/rlTddqugGgudeGquD2uuXoyUEkSm0URsd+oqHm2h/XgnyaBnA3RMK+Ya+7En/zDU
-         GcqYixSxewpDoF8SLQSzIYCFogorjVF3Wpp0VmcKICpYxC15kmgj80eMsosAlEL8Azv3
-         1F3wJTfAkhLCITcEqZyujYSQr4QPou+mwE+U7AviQNgorn2L0sKYIvflfhOZnD/f4CwU
-         cFJCX+3WOgy70ynXR6VJAqtmS1FIanj1zBNAjJEX0Ecj2ai0wyCmbXNnJjpxeHv33LGx
-         FxVLYXzT7ghNVuFkLwekF7fmhI6+Z8AWFQ0VPCqOh/MCam6stoH0UYPzXl35f/OOZUYo
-         PpwA==
-X-Gm-Message-State: AJIora8FHMBg+Mr6uFzEiJmc9g4MEsw125EkfNjSgLys2Cq10EO35PAB
-        RcogG0SOE0vqX8PLOG5isQrREL22zOo3vg==
-X-Google-Smtp-Source: AGRyM1v2om8t0UM8MyVaid0Ngu+307Bu4Jr6afHyZaBkUkJHozBAsL+a+jvIFpzs5xOBn/jDmVm1FQ==
-X-Received: by 2002:a63:210:0:b0:419:c604:2c2b with SMTP id 16-20020a630210000000b00419c6042c2bmr12673684pgc.190.1658028918439;
-        Sat, 16 Jul 2022 20:35:18 -0700 (PDT)
-Received: from localhost ([2409:10:24a0:4700:e8ad:216a:2a9d:6d0c])
-        by smtp.gmail.com with ESMTPSA id x6-20020a170902ec8600b0016bedb7ed1esm6421111plg.116.2022.07.16.20.35.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Jul 2022 20:35:18 -0700 (PDT)
-From:   Stafford Horne <shorne@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Stafford Horne <shorne@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH v2 2/2] asm-generic: Add new pci.h and use it
-Date:   Sun, 17 Jul 2022 12:34:53 +0900
-Message-Id: <20220717033453.2896843-3-shorne@gmail.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220717033453.2896843-1-shorne@gmail.com>
-References: <20220717033453.2896843-1-shorne@gmail.com>
+        with ESMTP id S229476AbiGQIZ3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Jul 2022 04:25:29 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60E7140A4
+        for <linux-pci@vger.kernel.org>; Sun, 17 Jul 2022 01:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658046329; x=1689582329;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k7KqN5CXYIllVfX/ceqjmppi7s21O5abh2RCpyIp9FU=;
+  b=Ql/+wfqSOwZXC7mTAzrCmVi7JFuqemml96+hG2kyqNJIIjjeyDIH0YHC
+   +wwiIeeBtPU/pJ7zV6zqWtYL9W+cQO1yzJRoYjGJadUf691c4/+L6HOIK
+   WtXbzkjEbJQlQPn0sokn+HmrCU6zPypTzp5kjM1qFEjYcCIIB2AISNbYL
+   EdRRQNNmo71jc/DuhaG87jMWUjxcQTws261RgWb18DwTth5T/ndF/KeDS
+   Bd8Ps0rMOAGUcii2dZOWJkqBqzfhnJ/GknyEAUDdUQSBNiBB2LAVjWjSp
+   6bVucc18yEnTNFu0NuhHtPTX8cJSe6gYwrIGjdObVRXEW3VLJDY/fPS3U
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10410"; a="284796872"
+X-IronPort-AV: E=Sophos;i="5.92,278,1650956400"; 
+   d="scan'208";a="284796872"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2022 01:25:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,278,1650956400"; 
+   d="scan'208";a="572042698"
+Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 17 Jul 2022 01:25:22 -0700
+Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1oCzab-000313-Tb;
+        Sun, 17 Jul 2022 08:25:21 +0000
+Date:   Sun, 17 Jul 2022 16:25:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ 778aca71a6c0212a91ad22e8389345533e9bbcac
+Message-ID: <62d3c76b.09gHC0LYBqrqTAHz%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The asm/pci.h used for many newer architectures share similar
-definitions.  Move the common parts to asm-generic/pci.h to allow for
-sharing code.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 778aca71a6c0212a91ad22e8389345533e9bbcac  Merge branch 'pci/misc'
 
-Two things to note are:
+elapsed time: 1977m
 
- - isa_dma_bridge_buggy, traditionally this is defined in asm/dma.h but
-   these architectures avoid creating that file and add the definition
-   to asm/pci.h.
- - ARCH_GENERIC_PCI_MMAP_RESOURCE, csky does not define this so we
-   undefine it after including asm-generic/pci.h.  Why doesn't csky
-   define it?
- - pci_get_legacy_ide_irq, This function is only used on architectures
-   that support PNP.  It is only maintained for arm64, in other
-   architectures it is removed.
+configs tested: 171
+configs skipped: 5
 
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
- arch/arm64/include/asm/pci.h | 12 +++---------
- arch/csky/include/asm/pci.h  | 24 ++++--------------------
- arch/riscv/include/asm/pci.h | 25 +++----------------------
- arch/um/include/asm/pci.h    | 24 ++----------------------
- include/asm-generic/pci.h    | 36 ++++++++++++++++++++++++++++++++++++
- 5 files changed, 48 insertions(+), 73 deletions(-)
- create mode 100644 include/asm-generic/pci.h
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-index b33ca260e3c9..1180e83712f5 100644
---- a/arch/arm64/include/asm/pci.h
-+++ b/arch/arm64/include/asm/pci.h
-@@ -9,7 +9,6 @@
- #include <asm/io.h>
- 
- #define PCIBIOS_MIN_IO		0x1000
--#define PCIBIOS_MIN_MEM		0
- 
- /*
-  * Set to 1 if the kernel should re-assign all PCI bus numbers
-@@ -18,9 +17,6 @@
- 	(pci_has_flag(PCI_REASSIGN_ALL_BUS))
- 
- #define arch_can_pci_mmap_wc() 1
--#define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
--
--extern int isa_dma_bridge_buggy;
- 
- #ifdef CONFIG_PCI
- static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-@@ -28,11 +24,9 @@ static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
- 	/* no legacy IRQ on arm64 */
- 	return -ENODEV;
- }
--
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	return 1;
--}
- #endif  /* CONFIG_PCI */
- 
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
-+
- #endif  /* __ASM_PCI_H */
-diff --git a/arch/csky/include/asm/pci.h b/arch/csky/include/asm/pci.h
-index ebc765b1f78b..44866c1ad461 100644
---- a/arch/csky/include/asm/pci.h
-+++ b/arch/csky/include/asm/pci.h
-@@ -9,26 +9,10 @@
- 
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
--/* C-SKY shim does not initialize PCI bus */
--#define pcibios_assign_all_busses() 1
--
--extern int isa_dma_bridge_buggy;
--
--#ifdef CONFIG_PCI
--static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
--{
--	/* no legacy IRQ on csky */
--	return -ENODEV;
--}
--
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--#endif  /* CONFIG_PCI */
-+/* csky doesn't use generic pci resource mapping */
-+#undef ARCH_GENERIC_PCI_MMAP_RESOURCE
- 
- #endif  /* __ASM_CSKY_PCI_H */
-diff --git a/arch/riscv/include/asm/pci.h b/arch/riscv/include/asm/pci.h
-index 7fd52a30e605..12ce8150cfb0 100644
---- a/arch/riscv/include/asm/pci.h
-+++ b/arch/riscv/include/asm/pci.h
-@@ -12,29 +12,7 @@
- 
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
--
--/* RISC-V shim does not initialize PCI bus */
--#define pcibios_assign_all_busses() 1
--
--#define ARCH_GENERIC_PCI_MMAP_RESOURCE 1
--
--extern int isa_dma_bridge_buggy;
--
- #ifdef CONFIG_PCI
--static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
--{
--	/* no legacy IRQ on risc-v */
--	return -ENODEV;
--}
--
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--
- #ifdef	CONFIG_NUMA
- 
- static inline int pcibus_to_node(struct pci_bus *bus)
-@@ -50,4 +28,7 @@ static inline int pcibus_to_node(struct pci_bus *bus)
- 
- #endif  /* CONFIG_PCI */
- 
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
-+
- #endif  /* _ASM_RISCV_PCI_H */
-diff --git a/arch/um/include/asm/pci.h b/arch/um/include/asm/pci.h
-index da13fd5519ef..34fe4921b5fa 100644
---- a/arch/um/include/asm/pci.h
-+++ b/arch/um/include/asm/pci.h
-@@ -4,28 +4,8 @@
- #include <linux/types.h>
- #include <asm/io.h>
- 
--#define PCIBIOS_MIN_IO		0
--#define PCIBIOS_MIN_MEM		0
--
--#define pcibios_assign_all_busses() 1
--
--extern int isa_dma_bridge_buggy;
--
--#ifdef CONFIG_PCI
--static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
--{
--	/* no legacy IRQs */
--	return -ENODEV;
--}
--#endif
--
--#ifdef CONFIG_PCI_DOMAINS
--static inline int pci_proc_domain(struct pci_bus *bus)
--{
--	/* always show the domain in /proc */
--	return 1;
--}
--#endif  /* CONFIG_PCI */
-+/* Generic PCI */
-+#include <asm-generic/pci.h>
- 
- #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
- /*
-diff --git a/include/asm-generic/pci.h b/include/asm-generic/pci.h
-new file mode 100644
-index 000000000000..fbc25741696a
---- /dev/null
-+++ b/include/asm-generic/pci.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __ASM_GENERIC_PCI_H
-+#define __ASM_GENERIC_PCI_H
-+
-+#include <linux/types.h>
-+
-+#ifndef PCIBIOS_MIN_IO
-+#define PCIBIOS_MIN_IO		0
-+#endif
-+
-+#ifndef PCIBIOS_MIN_MEM
-+#define PCIBIOS_MIN_MEM		0
-+#endif
-+
-+#ifndef pcibios_assign_all_busses
-+/* For bootloaders that do not initialize the PCI bus */
-+#define pcibios_assign_all_busses() 1
-+#endif
-+
-+extern int isa_dma_bridge_buggy;
-+
-+/* Enable generic resource mapping code in drivers/pci/ */
-+#define ARCH_GENERIC_PCI_MMAP_RESOURCE
-+
-+#ifdef CONFIG_PCI
-+
-+static inline int pci_proc_domain(struct pci_bus *bus)
-+{
-+	/* always show the domain in /proc */
-+	return 1;
-+}
-+
-+#endif /* CONFIG_PCI */
-+
-+#endif /* __ASM_GENERIC_PCI_H */
+gcc tested configs:
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-c001
+powerpc              randconfig-c003-20220717
+arm                      footbridge_defconfig
+xtensa                              defconfig
+openrisc                    or1ksim_defconfig
+arm                        mvebu_v7_defconfig
+powerpc                 mpc85xx_cds_defconfig
+parisc                generic-32bit_defconfig
+mips                      loongson3_defconfig
+powerpc                        cell_defconfig
+powerpc                      chrp32_defconfig
+loongarch                           defconfig
+mips                       bmips_be_defconfig
+sh                          landisk_defconfig
+powerpc                      pcm030_defconfig
+sh                         microdev_defconfig
+arm                            lart_defconfig
+sh                         ecovec24_defconfig
+arm                     eseries_pxa_defconfig
+sh                         ap325rxa_defconfig
+arm                          gemini_defconfig
+arm                           sama5_defconfig
+xtensa                generic_kc705_defconfig
+xtensa                  nommu_kc705_defconfig
+arm                            mps2_defconfig
+mips                           jazz_defconfig
+arm                          simpad_defconfig
+arm                       multi_v4t_defconfig
+powerpc                     ep8248e_defconfig
+sh                        sh7763rdp_defconfig
+mips                    maltaup_xpa_defconfig
+arm64                               defconfig
+sparc64                          alldefconfig
+um                             i386_defconfig
+arm                      jornada720_defconfig
+arm                        keystone_defconfig
+powerpc                      tqm8xx_defconfig
+xtensa                    xip_kc705_defconfig
+powerpc                     tqm8555_defconfig
+sh                        sh7785lcr_defconfig
+mips                             allyesconfig
+sh                           se7750_defconfig
+arm                        spear6xx_defconfig
+powerpc                     tqm8548_defconfig
+arm                         lpc18xx_defconfig
+powerpc                 mpc837x_rdb_defconfig
+sh                          urquell_defconfig
+ia64                             alldefconfig
+openrisc                 simple_smp_defconfig
+sh                           se7721_defconfig
+m68k                        mvme147_defconfig
+sh                          polaris_defconfig
+powerpc                  storcenter_defconfig
+arc                            hsdk_defconfig
+i386                                defconfig
+sh                   secureedge5410_defconfig
+powerpc                    sam440ep_defconfig
+mips                         tb0226_defconfig
+sparc                               defconfig
+xtensa                           allyesconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+s390                                defconfig
+s390                             allmodconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+arm                              allmodconfig
+m68k                                defconfig
+ia64                                defconfig
+mips                             allmodconfig
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220715
+ia64                             allmodconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                             allyesconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+x86_64                        randconfig-a013
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+mips                       rbtx49xx_defconfig
+mips                     cu1830-neo_defconfig
+powerpc                     tqm5200_defconfig
+mips                        qi_lb60_defconfig
+powerpc                     kilauea_defconfig
+i386                             allyesconfig
+arm                    vt8500_v6_v7_defconfig
+mips                      pic32mzda_defconfig
+mips                           mtx1_defconfig
+powerpc                      ppc64e_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                    mvme5100_defconfig
+arm                       aspeed_g4_defconfig
+arm                          moxart_defconfig
+powerpc                     ppa8548_defconfig
+mips                      maltaaprp_defconfig
+arm                        multi_v5_defconfig
+arm                       imx_v4_v5_defconfig
+riscv                          rv32_defconfig
+mips                        workpad_defconfig
+arm                        mvebu_v5_defconfig
+arm                         bcm2835_defconfig
+powerpc                    socrates_defconfig
+powerpc               mpc834x_itxgp_defconfig
+mips                      malta_kvm_defconfig
+mips                           ip28_defconfig
+mips                  cavium_octeon_defconfig
+arm                       netwinder_defconfig
+mips                       lemote2f_defconfig
+arm                   milbeaut_m10v_defconfig
+powerpc                    ge_imp3a_defconfig
+arm                          collie_defconfig
+mips                     loongson1c_defconfig
+arm                         orion5x_defconfig
+powerpc                      obs600_defconfig
+arm                            dove_defconfig
+arm                     davinci_all_defconfig
+x86_64                        randconfig-k001
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220716
+hexagon              randconfig-r045-20220715
+s390                 randconfig-r044-20220715
+hexagon              randconfig-r041-20220716
+hexagon              randconfig-r041-20220715
+riscv                randconfig-r042-20220715
+
 -- 
-2.36.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
