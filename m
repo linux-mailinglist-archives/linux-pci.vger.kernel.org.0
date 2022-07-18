@@ -2,54 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8B9B577CC0
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 09:44:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FC6C577CCD
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 09:49:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230240AbiGRHoH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jul 2022 03:44:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36342 "EHLO
+        id S232986AbiGRHtq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jul 2022 03:49:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230171AbiGRHoE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 03:44:04 -0400
+        with ESMTP id S229815AbiGRHtq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 03:49:46 -0400
 Received: from extserv.mm-sol.com (ns.mm-sol.com [37.157.136.199])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9796F63D6;
-        Mon, 18 Jul 2022 00:44:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD2C1209B;
+        Mon, 18 Jul 2022 00:49:45 -0700 (PDT)
 Received: from [192.168.1.7] (unknown [195.24.90.54])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: svarbanov@mm-sol.com)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id AB337D2E3;
-        Mon, 18 Jul 2022 10:43:58 +0300 (EEST)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id D7E08D2E3;
+        Mon, 18 Jul 2022 10:49:42 +0300 (EEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1658130239; bh=J2XEYZ7B+4jlGgZLIA7nxTffPaKXrEtUOke3dtH0o4A=;
+        t=1658130583; bh=xf8vuKL8G7ik7cebVncZ887DV9yRiKhEp9uMoJOL7mo=;
         h=Date:Subject:To:Cc:From:From;
-        b=UEHMbqGc0/Xd6wlIuArKJOYm3ei7nKsevKujc2jIU/mFOBjf9hF1ynuSvp4CjcONC
-         qAMxNBLzYcos6Xaihx16T6tWqdgpUZykNLZDtNQ+3Eqzy2o3l4nLWnSVQc8dbVVL4d
-         N7HKi3tt6TRePbksPwWmqH+VxUXSE5F9YCExEHRY2+1CkKQwryeK/SH4TKBLCs81Nb
-         1bbwkky/euPn3dV320ieaaqH1+OLi4/BoSW2CaBIOCac85vqngTy4gFJS0FcVrHpc/
-         YaOwJg0ri+E0/rHEfXbXW1Xskq697oqDGxDw5d1qsX5NiGZnA9dYopF/+fjiTQwtZy
-         BmJSZRJ3tm/kQ==
-Message-ID: <d6db1784-0b21-9bdb-8528-3f814da188b0@mm-sol.com>
-Date:   Mon, 18 Jul 2022 10:43:56 +0300
+        b=qVNX5bIxsn/TWs9nKnIXMetNespY3j9sEPFdb8ev/CfTHM6Fr0N06oHLECN8woVLA
+         PLnt1wUcdVAfyHKgPJt8XwMMIUS0ucWT7efK2CDa1AaNvpQrIH4mwfGk2FiH7UMu2d
+         DtBYD+ni9LJl16dvcWetjMMVt8RrBbmRRd428NEV7pLCT4IPNwFwU47XQyCitpYekP
+         DrGXhCtnFW4jhm7NzyJeHW2e3oW/8z4RMzDQ1fVA0Rp29ZIqDIPkK5M9vN+N1Cv3Wr
+         jxKtJvjUF8SQwcnrAXWMdMD0DcjagGloo6fAhxMrwQMNGhSais0ulbtRjFtEdLS6hh
+         jA5fpMtfnOK4w==
+Message-ID: <aa11b2ec-7196-7423-151c-1797966d0cd2@mm-sol.com>
+Date:   Mon, 18 Jul 2022 10:49:40 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-Subject: Re: [PATCH] PCI: qcom: Add support for modular builds
+Subject: Re: [PATCH v2 0/8] PCI: qcom: Add support for SC8280XP and SA8540P
 Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+To:     Johan Hovold <johan+linaro@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220715165601.GA1139849@bhelgaas>
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220714071348.6792-1-johan+linaro@kernel.org>
 From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-In-Reply-To: <20220715165601.GA1139849@bhelgaas>
+In-Reply-To: <20220714071348.6792-1-johan+linaro@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -61,45 +63,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Johan,
 
+Thank you for your work, especially for for the last three patches ;-)
 
-On 7/15/22 19:56, Bjorn Helgaas wrote:
-> On Thu, Jul 14, 2022 at 04:05:41PM +0300, Dmitry Baryshkov wrote:
->> On 14/07/2022 15:19, Stanimir Varbanov wrote:
->>> Please take a look why we made it built-in first [1].
->>>
->>> If arguments there are still valid I don't see why to make it a module
->>> again.
->>>
->>> [1] https://lkml.org/lkml/2016/8/24/694
->>
->> It looks like there is a move to make all non-essential drivers buildable as
->> modules. For example, the Kirin, dra7xx, Meson PCI controllers are now
->> buildable as modules. So I think we can follow that and allow building the
->> pcie-qcom as a module.
+On 7/14/22 10:13, Johan Hovold wrote:
+> This series adds support for the PCIe controllers found on SC8280XP and
+> SA8540P.
 > 
-> IIUC the arguments in [1] are that:
+> Included are also three patches that clean up the way the driver handles
+> different IP revisions (e.g. by modelling optional clocks as being truly
+> optional).
 > 
->   - Kconfig is bool, so it can't be built as a module
->   - there's no sensible use case for unbind
+> These patches depend on the recently merged (but currently held off?)
+> PIPE clock series:
 > 
-> Those described the situation at the time, and there's no point in
-> having .remove() and using module_platform_driver() if Kconfig is
-> bool.
+> 	https://lore.kernel.org/all/20220608105238.2973600-1-dmitry.baryshkov@linaro.org/
 > 
-> But they don't seem like arguments for why the driver couldn't be
-> *made* modular.
+> as well as the about-to-be-merged MSI series (v17):
+> 
+> 	https://lore.kernel.org/all/20220707134733.2436629-6-dmitry.baryshkov@linaro.org/
+> 
+> Note that the final patch in the PIPE clock series is currently missing
+> from the pci/ctrl/qcom-pending branch:
+> 
+> 	https://lore.kernel.org/all/20220608105238.2973600-6-dmitry.baryshkov@linaro.org/
+> 
+> Johan
+> 
+> 
+> Changes in v2
+>  - drop the two DT schema fixes which have been applied by Bjorn H and
+>    squashed into the MSI v17 series by Dmitry, respectively
+>  - rebase on pci/ctrl/qcom-pending (2022-07-14)
+>  - fix compatible sort order (Krzysztof)
+>  - amend commit message for first patch to clarify motivation
+>    (Krzysztof)
+>  - add acks and reviewed-by tags from Dmitry, Krzysztof, Mani and Rob
+> 
+> 
+> Johan Hovold (8):
+>   dt-bindings: PCI: qcom: Enumerate platforms with single msi interrupt
+>   dt-bindings: PCI: qcom: Add SC8280XP to binding
+>   dt-bindings: PCI: qcom: Add SA8540P to binding
+>   PCI: qcom: Add support for SC8280XP
+>   PCI: qcom: Add support for SA8540P
+>   PCI: qcom: Make all optional clocks optional
+>   PCI: qcom: Clean up IP configurations
+>   PCI: qcom: Sort device-id table
+> 
+>  .../devicetree/bindings/pci/qcom,pcie.yaml    |  70 +++++++++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 121 +++++++-----------
+>  2 files changed, 114 insertions(+), 77 deletions(-)
+> 
 
-I guess the core of the problem was lack of dw_pcie_host_deinit() at
-that time.
-> 
-> I think drivers *should* be modular unless there's a technical reason
-> they can't be.
+For the whole set:
 
-I agree.
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
-> 
-> Bjorn
 
 -- 
 regards,
