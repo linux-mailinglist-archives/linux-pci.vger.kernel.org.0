@@ -2,111 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84C96577C2F
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 09:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8B9B577CC0
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 09:44:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233194AbiGRHK0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jul 2022 03:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44440 "EHLO
+        id S230240AbiGRHoH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jul 2022 03:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233159AbiGRHK0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 03:10:26 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC5117079;
-        Mon, 18 Jul 2022 00:10:24 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LmY0r3K9qzVfrT;
-        Mon, 18 Jul 2022 15:06:36 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 18 Jul 2022 15:10:22 +0800
-CC:     <gregkh@linuxfoundation.org>, <alexander.shishkin@linux.intel.com>,
-        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
-        <robin.murphy@arm.com>, <acme@kernel.org>, <peterz@infradead.org>,
-        <corbet@lwn.net>, <mathieu.poirier@linaro.org>,
-        <mark.rutland@arm.com>, <jonathan.cameron@huawei.com>,
-        <john.garry@huawei.com>, <helgaas@kernel.org>,
-        <lorenzo.pieralisi@arm.com>, <suzuki.poulose@arm.com>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <iommu@lists.linux.dev>,
-        <linux-doc@vger.kernel.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, Yicong Yang <yangyicong@hisilicon.com>
-Subject: Re: [PATCH v10 7/8] docs: trace: Add HiSilicon PTT device driver
- documentation
-To:     Bagas Sanjaya <bagasdotme@gmail.com>
-References: <20220714092710.53486-1-yangyicong@hisilicon.com>
- <20220714092710.53486-8-yangyicong@hisilicon.com>
- <YtEgoZveaZJ3a7+4@debian.me>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <f0dc5cb8-ec3b-eb8f-98e3-4a6301e8be06@huawei.com>
-Date:   Mon, 18 Jul 2022 15:10:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S230171AbiGRHoE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 03:44:04 -0400
+Received: from extserv.mm-sol.com (ns.mm-sol.com [37.157.136.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9796F63D6;
+        Mon, 18 Jul 2022 00:44:02 -0700 (PDT)
+Received: from [192.168.1.7] (unknown [195.24.90.54])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: svarbanov@mm-sol.com)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id AB337D2E3;
+        Mon, 18 Jul 2022 10:43:58 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1658130239; bh=J2XEYZ7B+4jlGgZLIA7nxTffPaKXrEtUOke3dtH0o4A=;
+        h=Date:Subject:To:Cc:From:From;
+        b=UEHMbqGc0/Xd6wlIuArKJOYm3ei7nKsevKujc2jIU/mFOBjf9hF1ynuSvp4CjcONC
+         qAMxNBLzYcos6Xaihx16T6tWqdgpUZykNLZDtNQ+3Eqzy2o3l4nLWnSVQc8dbVVL4d
+         N7HKi3tt6TRePbksPwWmqH+VxUXSE5F9YCExEHRY2+1CkKQwryeK/SH4TKBLCs81Nb
+         1bbwkky/euPn3dV320ieaaqH1+OLi4/BoSW2CaBIOCac85vqngTy4gFJS0FcVrHpc/
+         YaOwJg0ri+E0/rHEfXbXW1Xskq697oqDGxDw5d1qsX5NiGZnA9dYopF/+fjiTQwtZy
+         BmJSZRJ3tm/kQ==
+Message-ID: <d6db1784-0b21-9bdb-8528-3f814da188b0@mm-sol.com>
+Date:   Mon, 18 Jul 2022 10:43:56 +0300
 MIME-Version: 1.0
-In-Reply-To: <YtEgoZveaZJ3a7+4@debian.me>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] PCI: qcom: Add support for modular builds
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220715165601.GA1139849@bhelgaas>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+In-Reply-To: <20220715165601.GA1139849@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/7/15 16:09, Bagas Sanjaya wrote:
-> On Thu, Jul 14, 2022 at 05:27:09PM +0800, Yicong Yang wrote:
->> +1. Tx path QoS control
->> +------------------------
->> +
-> <snip>
->> +2. Tx path buffer control
->> +-------------------------
->> +
-> 
-> Shouldn't Tx in the headings above be lowercase (tx)?
 
-Tx is used to keep consistence with other places.
+
+On 7/15/22 19:56, Bjorn Helgaas wrote:
+> On Thu, Jul 14, 2022 at 04:05:41PM +0300, Dmitry Baryshkov wrote:
+>> On 14/07/2022 15:19, Stanimir Varbanov wrote:
+>>> Please take a look why we made it built-in first [1].
+>>>
+>>> If arguments there are still valid I don't see why to make it a module
+>>> again.
+>>>
+>>> [1] https://lkml.org/lkml/2016/8/24/694
+>>
+>> It looks like there is a move to make all non-essential drivers buildable as
+>> modules. For example, the Kirin, dra7xx, Meson PCI controllers are now
+>> buildable as modules. So I think we can follow that and allow building the
+>> pcie-qcom as a module.
+> 
+> IIUC the arguments in [1] are that:
+> 
+>   - Kconfig is bool, so it can't be built as a module
+>   - there's no sensible use case for unbind
+> 
+> Those described the situation at the time, and there's no point in
+> having .remove() and using module_platform_driver() if Kconfig is
+> bool.
+> 
+> But they don't seem like arguments for why the driver couldn't be
+> *made* modular.
+
+I guess the core of the problem was lack of dw_pcie_host_deinit() at
+that time.
+> 
+> I think drivers *should* be modular unless there's a technical reason
+> they can't be.
+
+I agree.
 
 > 
->> +1. filter
->> +---------
-> <snip>
->> +2. type
->> +-------
-> <snip>
->> +3. direction
->> +------------
-> <snip>
->> +4. format
->> +--------------
-> <snip>
->> +5. memory management
->> +--------------------
-> <snip>
->> +6. decoding
->> +-----------
-> 
-> I think these headings above should use title case instead.
+> Bjorn
 
-ok.
-
-> 
-> Anyway, the documentation (htmldocs) builds successfully without new
-> warnings.
-> 
-> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> 
-
-Thanks.
-
+-- 
+regards,
+Stan
