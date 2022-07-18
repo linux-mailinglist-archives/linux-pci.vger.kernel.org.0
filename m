@@ -2,104 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57742578289
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 14:42:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA690578346
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 15:11:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233722AbiGRMmi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jul 2022 08:42:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
+        id S233722AbiGRNLr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jul 2022 09:11:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234240AbiGRMmh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 08:42:37 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AF31A068;
-        Mon, 18 Jul 2022 05:42:35 -0700 (PDT)
-Received: from mail-yb1-f174.google.com ([209.85.219.174]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1Ml3ym-1noIWk1QcO-00lVLF; Mon, 18 Jul 2022 14:42:34 +0200
-Received: by mail-yb1-f174.google.com with SMTP id 75so20514047ybf.4;
-        Mon, 18 Jul 2022 05:42:33 -0700 (PDT)
-X-Gm-Message-State: AJIora+Bs2UwQXoBtV6ct8cbngKY6WqL6shi9w4xPPyYH6VwoZN/sbmw
-        rltAH+g+YkRbd94JwtFaUI2fqm9fdmlrSd7mFlM=
-X-Google-Smtp-Source: AGRyM1sS3ea7c3HilOgs/Nxe1l1twVZnqz2GtJLQRGd0cq1YnLTsC/jtrEpc3UYWeODWD8muMDisZeWXdNvOW2J4vUM=
-X-Received: by 2002:a25:3b05:0:b0:66e:c216:4da3 with SMTP id
- i5-20020a253b05000000b0066ec2164da3mr28311420yba.550.1658148152980; Mon, 18
- Jul 2022 05:42:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <YtVKzW4vh1nRSqbx@debian>
-In-Reply-To: <YtVKzW4vh1nRSqbx@debian>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 18 Jul 2022 14:42:16 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0MYMbRk1tVmWUBWfnD-1Z5P3fE+DvNycnXaffzqc3htw@mail.gmail.com>
-Message-ID: <CAK8P3a0MYMbRk1tVmWUBWfnD-1Z5P3fE+DvNycnXaffzqc3htw@mail.gmail.com>
-Subject: Re: build failure of next-20220718 due to 'imx6_pcie_host_exit'
- defined but not used
-To:     "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
+        with ESMTP id S233992AbiGRNLr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 09:11:47 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331D617E00;
+        Mon, 18 Jul 2022 06:11:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D3359B81606;
+        Mon, 18 Jul 2022 13:11:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C460C341C0;
+        Mon, 18 Jul 2022 13:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658149894;
+        bh=MhGofgDoMMDBdAYGoofIPmQh3z/yVJHsZX4HZNkNyqU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ChJF1Wyq7nDl3fBXZP72NQONyySuxH8CVGQp/Ro3xH6Wpl2RCdplHf8pIwjn12+Oj
+         HfMgZY5rGxRQ9uAn9xNq2/bXVppk2Ws//EAF7y55ZYXazqv0a3d1U2qJLae6jz0Wna
+         0MA1/oKD9LCHWfujdie9UM3oJeuoBXCXrFaZSRtInlCQH3Qt5hO4iBpCZDaYX//ZDB
+         o9H1j7ZVZXrcMcCskmXSHIuK5U1NvCpYJcKDC0B8fRP1ubDfOB4kdhe42nuR4xoqRb
+         xgzC5MWMTXWe9e+Q4EB9upyUcMFsw3CGHrL4z8MldwjVPM3gGHvgkEC21meim5MmVe
+         /If+vjgPIDAIQ==
+Received: by pali.im (Postfix)
+        id 58BAF7FD; Mon, 18 Jul 2022 15:11:31 +0200 (CEST)
+Date:   Mon, 18 Jul 2022 15:11:31 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:tjloAKR9xLc6+p0Q6Y6zY/oCyyDrm/eBFl1AY0QLATa0AhvVQwH
- 2GxoI93nUUQpIQjieuzUE+H49cVK7UFmQ0ezwYeBTNxBD0n1bMqRJe0wyZCCNOKbRTnIo6x
- 9m+XTffI+xfuuujlv5/xlrznQ6GcAby6xMnpJNlmY9CPbzXmgoF3wg/BMeopiyAtBaBHt9/
- XBsu33urblo4ed2Z1YGTg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JCK6NE6T8VE=:CjfW4h9i966oPuThifeZ3R
- EjxCVZyYaMfaVbPVkxnr1Nr4+p5ggyixcLw2XBM8JbqAKvGzacW4447/5twlQwXPnKLcXSEoz
- G4d4U3/VjWRAUvBUARE3YmeYQHc7Z5VteH0FsD3z4mdzQNqO61hqqOAoiWAaSuGMQgF2ciLX7
- E9Tbq5oq3IYYIsPtFo9YB2KnlOwDqpIDbzSNjDtlJ6WYSFPdWLsZkl+F/oMfLTe5I1i5/tWAa
- OrYWPalDATGjsaZcUPKr7TJy1bKSYR+gDDa8UACC6zl0b/6spgEGqmytVv+AdnDICyLwFA+qH
- kAL8soQMSJdknXKQyfi0DABCPBBMBHRCFeGoBswwKIZ5tVOLlJCD4m4UQ73s5iIrjJbQMK8GT
- ndXaVGKBmwUmke4eDlyVCfNwjm2ySAvXcm1PrMqP7jiWb9D5ikptB6Rdg/N588Z0L7Qxbttfq
- wDiIA0YwEYT0h9hHsbOkv0sAKpv+sRY6ouheP3a8HDuVTB1FXMWG76tsQalwGgADeOMK0WgzV
- S0WHHEl8qrhT1rSFwkxV07EeL/eW8F8tf8A9854AJLlAJy3Of6QETtpuUYxEYstqoxsGr3lbj
- f7fP2uDXs7HynyZwmnq6QksSENr8fDMeHM+tKwOH81TMBx7OTQH5M9vEMf5unNOuX/fH2E+c9
- pATxr0xHc0Y9djJ9SaPGVW+KwKMbB7c4/zfFYeHYsXKxm7HTD3pjErqiuRcbRL0PgoB0Oak1v
- mQUH94xiejcsY9ASLNyJR+Uy9APT/tbFN6jHCt6SnmxCiyBcnxgTc/pRKnnXdbEXO3ykww0qA
- cQdFrmIZlGMIRR7w4FOHIc3+VSY2YIYu5cBvHQlOb3AVjQFW/5fjLSvefNGgkJGcS+JQc6TsS
- kBS09Ec2meKFklxfCodQ==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/6] PCI: brcmstb: Split brcm_pcie_setup() into two
+ funcs
+Message-ID: <20220718131131.dclndpkkh7yojhj4@pali>
+References: <20220716222454.29914-1-jim2101024@gmail.com>
+ <20220716222454.29914-3-jim2101024@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220716222454.29914-3-jim2101024@gmail.com>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 18, 2022 at 1:58 PM Sudip Mukherjee (Codethink)
-<sudipm.mukherjee@gmail.com> wrote:
->
-> Hi All,
->
-> Not sure if it has been reported, builds of alpha, csky, xtensa, riscv, s390 allmodsconfig
-> have failed to build next-20220718 with the error:
->
->
-> drivers/pci/controller/dwc/pci-imx6.c:973:13: error: 'imx6_pcie_host_exit' defined but not used [-Werror=unused-function]
->   973 | static void imx6_pcie_host_exit(struct dw_pcie_rp *pp)
->       |             ^~~~~~~~~~~~~~~~~~~
-> drivers/pci/controller/dwc/pci-imx6.c:904:13: error: 'imx6_pcie_stop_link' defined but not used [-Werror=unused-function]
->   904 | static void imx6_pcie_stop_link(struct dw_pcie *pci)
->       |             ^~~~~~~~~~~~~~~~~~~
->
+Hello!
 
-These are called from inside an "#ifdef CONFIG_PM_SLEEP" section. The best
-fix is to remove the #ifdef and replace SET_NOIRQ_SYSTEM_SLEEP_PM_OPS()
-with the new simpler NOIRQ_SYSTEM_SLEEP_PM_OPS().
+On Saturday 16 July 2022 18:24:49 Jim Quinlan wrote:
+> @@ -948,6 +941,40 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>  	if (pcie->gen)
+>  		brcm_pcie_set_gen(pcie, pcie->gen);
+>  
+> +	/* Don't advertise L0s capability if 'aspm-no-l0s' */
+> +	aspm_support = PCIE_LINK_STATE_L1;
+> +	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
+> +		aspm_support |= PCIE_LINK_STATE_L0S;
+> +	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> +	u32p_replace_bits(&tmp, aspm_support,
+> +		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+> +	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> +
+> +	/*
+> +	 * For config space accesses on the RC, show the right class for
+> +	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+> +	 */
+> +	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
+> +	u32p_replace_bits(&tmp, 0x060400,
 
-          Arnd
+There is already macro PCI_CLASS_BRIDGE_PCI_NORMAL, so please use it
+instead of magic constant.
+
+I introduced it recently in commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=904b10fb189cc15376e9bfce1ef0282e68b0b004
+
+> +			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
+> +	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
+> +
+> +	return 0;
+> +}
