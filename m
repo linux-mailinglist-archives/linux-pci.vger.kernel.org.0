@@ -2,103 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D2FA57816E
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 14:00:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57742578289
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 14:42:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233271AbiGRMAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jul 2022 08:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47846 "EHLO
+        id S233722AbiGRMmi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jul 2022 08:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbiGRMAg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 08:00:36 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17E717A90;
-        Mon, 18 Jul 2022 05:00:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id A57EACE1698;
-        Mon, 18 Jul 2022 12:00:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D434FC341C0;
-        Mon, 18 Jul 2022 12:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658145628;
-        bh=sGRj1qXf7qH5c/aqUGJ+GwJ1LMbx6Qsg9ex7gdrUBwo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OQgmnlFhri8bnNZ9apf6ajfwayJZs6d0jduCqLy416gCkGxwlzEIuRCW8/ijcbHi3
-         LC9D7dbN+k17NgLmA1FfRDdJJYfaypy4xQ796q5BuvBvacfFSTjovZADvQP3Kt/j3i
-         vVgF1boG9KxikUckzn+LMvrZOuqAcFZjVxscs9eD22+oQWPcO7FQJSJOoiCJb9BSwp
-         ch0sraky8bo9tK0llp15vtIFHumTkMO7hn6jnAsvaRzujI5O3p3JKKPqzWU3fTHKGk
-         ixN72HCbLSq+SK+82TKMzvBIDzUFqSWI2Wm6oHKA65sTg73Bo3AyROgEcv4eUo7pTe
-         iBmCfqaa67/8A==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1oDPQE-0005hU-8V; Mon, 18 Jul 2022 14:00:22 +0200
-Date:   Mon, 18 Jul 2022 14:00:22 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 7/8] PCI: qcom: Clean up IP configurations
-Message-ID: <YtVLVkluQHiyf1dp@hovoldconsulting.com>
-References: <20220714071348.6792-1-johan+linaro@kernel.org>
- <20220714071348.6792-8-johan+linaro@kernel.org>
- <91edff9a-53f2-647b-04a8-76d15f22a8f2@linaro.org>
+        with ESMTP id S234240AbiGRMmh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 08:42:37 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AF31A068;
+        Mon, 18 Jul 2022 05:42:35 -0700 (PDT)
+Received: from mail-yb1-f174.google.com ([209.85.219.174]) by
+ mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1Ml3ym-1noIWk1QcO-00lVLF; Mon, 18 Jul 2022 14:42:34 +0200
+Received: by mail-yb1-f174.google.com with SMTP id 75so20514047ybf.4;
+        Mon, 18 Jul 2022 05:42:33 -0700 (PDT)
+X-Gm-Message-State: AJIora+Bs2UwQXoBtV6ct8cbngKY6WqL6shi9w4xPPyYH6VwoZN/sbmw
+        rltAH+g+YkRbd94JwtFaUI2fqm9fdmlrSd7mFlM=
+X-Google-Smtp-Source: AGRyM1sS3ea7c3HilOgs/Nxe1l1twVZnqz2GtJLQRGd0cq1YnLTsC/jtrEpc3UYWeODWD8muMDisZeWXdNvOW2J4vUM=
+X-Received: by 2002:a25:3b05:0:b0:66e:c216:4da3 with SMTP id
+ i5-20020a253b05000000b0066ec2164da3mr28311420yba.550.1658148152980; Mon, 18
+ Jul 2022 05:42:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91edff9a-53f2-647b-04a8-76d15f22a8f2@linaro.org>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <YtVKzW4vh1nRSqbx@debian>
+In-Reply-To: <YtVKzW4vh1nRSqbx@debian>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 18 Jul 2022 14:42:16 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0MYMbRk1tVmWUBWfnD-1Z5P3fE+DvNycnXaffzqc3htw@mail.gmail.com>
+Message-ID: <CAK8P3a0MYMbRk1tVmWUBWfnD-1Z5P3fE+DvNycnXaffzqc3htw@mail.gmail.com>
+Subject: Re: build failure of next-20220718 due to 'imx6_pcie_host_exit'
+ defined but not used
+To:     "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:tjloAKR9xLc6+p0Q6Y6zY/oCyyDrm/eBFl1AY0QLATa0AhvVQwH
+ 2GxoI93nUUQpIQjieuzUE+H49cVK7UFmQ0ezwYeBTNxBD0n1bMqRJe0wyZCCNOKbRTnIo6x
+ 9m+XTffI+xfuuujlv5/xlrznQ6GcAby6xMnpJNlmY9CPbzXmgoF3wg/BMeopiyAtBaBHt9/
+ XBsu33urblo4ed2Z1YGTg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JCK6NE6T8VE=:CjfW4h9i966oPuThifeZ3R
+ EjxCVZyYaMfaVbPVkxnr1Nr4+p5ggyixcLw2XBM8JbqAKvGzacW4447/5twlQwXPnKLcXSEoz
+ G4d4U3/VjWRAUvBUARE3YmeYQHc7Z5VteH0FsD3z4mdzQNqO61hqqOAoiWAaSuGMQgF2ciLX7
+ E9Tbq5oq3IYYIsPtFo9YB2KnlOwDqpIDbzSNjDtlJ6WYSFPdWLsZkl+F/oMfLTe5I1i5/tWAa
+ OrYWPalDATGjsaZcUPKr7TJy1bKSYR+gDDa8UACC6zl0b/6spgEGqmytVv+AdnDICyLwFA+qH
+ kAL8soQMSJdknXKQyfi0DABCPBBMBHRCFeGoBswwKIZ5tVOLlJCD4m4UQ73s5iIrjJbQMK8GT
+ ndXaVGKBmwUmke4eDlyVCfNwjm2ySAvXcm1PrMqP7jiWb9D5ikptB6Rdg/N588Z0L7Qxbttfq
+ wDiIA0YwEYT0h9hHsbOkv0sAKpv+sRY6ouheP3a8HDuVTB1FXMWG76tsQalwGgADeOMK0WgzV
+ S0WHHEl8qrhT1rSFwkxV07EeL/eW8F8tf8A9854AJLlAJy3Of6QETtpuUYxEYstqoxsGr3lbj
+ f7fP2uDXs7HynyZwmnq6QksSENr8fDMeHM+tKwOH81TMBx7OTQH5M9vEMf5unNOuX/fH2E+c9
+ pATxr0xHc0Y9djJ9SaPGVW+KwKMbB7c4/zfFYeHYsXKxm7HTD3pjErqiuRcbRL0PgoB0Oak1v
+ mQUH94xiejcsY9ASLNyJR+Uy9APT/tbFN6jHCt6SnmxCiyBcnxgTc/pRKnnXdbEXO3ykww0qA
+ cQdFrmIZlGMIRR7w4FOHIc3+VSY2YIYu5cBvHQlOb3AVjQFW/5fjLSvefNGgkJGcS+JQc6TsS
+ kBS09Ec2meKFklxfCodQ==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 18, 2022 at 01:39:32PM +0300, Dmitry Baryshkov wrote:
-> On 14/07/2022 10:13, Johan Hovold wrote:
-> > The various IP versions have different configurations that are encoded
-> > in separate sets of operation callbacks. Currently, there is no need for
-> > also maintaining corresponding sets of data parameters, but it is
-> > conceivable that these may again be found useful (e.g. to implement
-> > minor variations of the operation callbacks).
-> > 
-> > Rename the default configuration structures after the IP version they
-> > apply to so that they can more easily be reused by different SoCs.
-> > 
-> > Note that SoC specific configurations can be added later if need arises
-> > (e.g. cfg_sc8280xp).
-> > 
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> 
-> 
-> If we have nothing left in the qcom_pcie_cfg other than the .ops, what 
-> about dropping the qcom_pcie_cfg completely and using the qcom_pcie_ops 
-> as match data?
+On Mon, Jul 18, 2022 at 1:58 PM Sudip Mukherjee (Codethink)
+<sudipm.mukherjee@gmail.com> wrote:
+>
+> Hi All,
+>
+> Not sure if it has been reported, builds of alpha, csky, xtensa, riscv, s390 allmodsconfig
+> have failed to build next-20220718 with the error:
+>
+>
+> drivers/pci/controller/dwc/pci-imx6.c:973:13: error: 'imx6_pcie_host_exit' defined but not used [-Werror=unused-function]
+>   973 | static void imx6_pcie_host_exit(struct dw_pcie_rp *pp)
+>       |             ^~~~~~~~~~~~~~~~~~~
+> drivers/pci/controller/dwc/pci-imx6.c:904:13: error: 'imx6_pcie_stop_link' defined but not used [-Werror=unused-function]
+>   904 | static void imx6_pcie_stop_link(struct dw_pcie *pci)
+>       |             ^~~~~~~~~~~~~~~~~~~
+>
 
-As I mention above I decided to keep the config structures as they can
-be used to implement minor variations of the ops.
- 
-> This patch is nevertheless:
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+These are called from inside an "#ifdef CONFIG_PM_SLEEP" section. The best
+fix is to remove the #ifdef and replace SET_NOIRQ_SYSTEM_SLEEP_PM_OPS()
+with the new simpler NOIRQ_SYSTEM_SLEEP_PM_OPS().
 
-Thanks for reviewing.
-
-Johan
+          Arnd
