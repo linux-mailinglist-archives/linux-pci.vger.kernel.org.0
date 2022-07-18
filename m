@@ -2,126 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FC6C577CCD
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 09:49:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36BF2577D69
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 10:22:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232986AbiGRHtq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jul 2022 03:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
+        id S233799AbiGRIWa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jul 2022 04:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbiGRHtq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 03:49:46 -0400
-Received: from extserv.mm-sol.com (ns.mm-sol.com [37.157.136.199])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD2C1209B;
-        Mon, 18 Jul 2022 00:49:45 -0700 (PDT)
-Received: from [192.168.1.7] (unknown [195.24.90.54])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: svarbanov@mm-sol.com)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id D7E08D2E3;
-        Mon, 18 Jul 2022 10:49:42 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1658130583; bh=xf8vuKL8G7ik7cebVncZ887DV9yRiKhEp9uMoJOL7mo=;
-        h=Date:Subject:To:Cc:From:From;
-        b=qVNX5bIxsn/TWs9nKnIXMetNespY3j9sEPFdb8ev/CfTHM6Fr0N06oHLECN8woVLA
-         PLnt1wUcdVAfyHKgPJt8XwMMIUS0ucWT7efK2CDa1AaNvpQrIH4mwfGk2FiH7UMu2d
-         DtBYD+ni9LJl16dvcWetjMMVt8RrBbmRRd428NEV7pLCT4IPNwFwU47XQyCitpYekP
-         DrGXhCtnFW4jhm7NzyJeHW2e3oW/8z4RMzDQ1fVA0Rp29ZIqDIPkK5M9vN+N1Cv3Wr
-         jxKtJvjUF8SQwcnrAXWMdMD0DcjagGloo6fAhxMrwQMNGhSais0ulbtRjFtEdLS6hh
-         jA5fpMtfnOK4w==
-Message-ID: <aa11b2ec-7196-7423-151c-1797966d0cd2@mm-sol.com>
-Date:   Mon, 18 Jul 2022 10:49:40 +0300
+        with ESMTP id S233786AbiGRIW1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 04:22:27 -0400
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1623F1900B;
+        Mon, 18 Jul 2022 01:22:27 -0700 (PDT)
+Received: by mail-qv1-f43.google.com with SMTP id r12so8265037qvm.3;
+        Mon, 18 Jul 2022 01:22:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EQibuB+HRd3lrCPdCHjd5Kptvz7t3wE5RCUTUbzpTH8=;
+        b=NlrPf2Ceni4K+B8ZD1iIzmYW1ljlu/GQcpa6Y3gFvAEaIHCjBYn7M1oR+PFH5bcPDa
+         xSib4vCYKrPj8UNxVwnSTIZLLYk8loGs2ZBxMfYJtNSXFdIe4X/Sxh3hn1PzosQfelLr
+         4wqLNYa48Teo2Ki0Ds2Arv7Uod1adopX4O2hf7Q0Ci4L3i89RJFrb6eos3ll9FZFx3xO
+         t810/hkl9gCfwNzHJ/wIZei+4U7dWLRdx4MtO9mwAT0v9v9rZUI44l+3T3Dl2826C4Fz
+         xuUDf0xaTlhz577ronNrkv0PjQI5nrIANMbO06qX95a6vdMVFA9OEcafXDJXUBd/iLHo
+         KpQw==
+X-Gm-Message-State: AJIora8fB2I1YbexVYBV1YUtiOStH48WSbMTLrE4T9Pb4rNRowUrHP9Y
+        OaMI8kEuTELK8B7yeXr32Ss3i+NbJv68vA==
+X-Google-Smtp-Source: AGRyM1v0AfWpISYzwGkWUx12otwWQtC3/XMcNcCr45toH8/q0KPo9Daexw3wlSCj/xaFjYR96YafYQ==
+X-Received: by 2002:a05:6214:2aa1:b0:473:2cc2:63e with SMTP id js1-20020a0562142aa100b004732cc2063emr20457565qvb.26.1658132546301;
+        Mon, 18 Jul 2022 01:22:26 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id bk34-20020a05620a1a2200b006af1f0af045sm10390047qkb.107.2022.07.18.01.22.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jul 2022 01:22:26 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-31bf3656517so98859317b3.12;
+        Mon, 18 Jul 2022 01:22:25 -0700 (PDT)
+X-Received: by 2002:a81:5404:0:b0:31c:c24d:94b0 with SMTP id
+ i4-20020a815404000000b0031cc24d94b0mr28386378ywb.502.1658132545091; Mon, 18
+ Jul 2022 01:22:25 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 0/8] PCI: qcom: Add support for SC8280XP and SA8540P
-Content-Language: en-US
-To:     Johan Hovold <johan+linaro@kernel.org>,
+References: <20220718004114.3925745-1-shorne@gmail.com> <20220718004114.3925745-2-shorne@gmail.com>
+In-Reply-To: <20220718004114.3925745-2-shorne@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 Jul 2022 10:22:13 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVP=1ovo62oXaOXT4ipA9Qb61XQ1e4XVVi1gEi+s+wtTQ@mail.gmail.com>
+Message-ID: <CAMuHMdVP=1ovo62oXaOXT4ipA9Qb61XQ1e4XVVi1gEi+s+wtTQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] asm-generic: Remove pci.h copying remaining code
+ to x86
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220714071348.6792-1-johan+linaro@kernel.org>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-In-Reply-To: <20220714071348.6792-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nick Child <nick.child@ibm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Johan,
+On Mon, Jul 18, 2022 at 2:41 AM Stafford Horne <shorne@gmail.com> wrote:
+> The generic pci.h header now only provides a definition of
+> pci_get_legacy_ide_irq which is used by architectures that support PNP.
+> Of the architectures that use asm-generic/pci.h this is only x86.
+>
+> This patch removes the old pci.h in order to make room for a new
+> pci.h to be used by arm64, riscv, openrisc, etc.
+>
+> The existing code in pci.h is moved out to x86.  On other architectures
+> we clean up any outstanding references.
+>
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
+> ---
+> Since v2:
+>  - Remove pci_get_legacy_ide_irq in m68k
+> Since v1:
+>  - Remove pci_get_legacy_ide_irq for most architectures as its not needed.
 
-Thank you for your work, especially for for the last three patches ;-)
+>  arch/m68k/include/asm/pci.h    |  2 --
 
-On 7/14/22 10:13, Johan Hovold wrote:
-> This series adds support for the PCIe controllers found on SC8280XP and
-> SA8540P.
-> 
-> Included are also three patches that clean up the way the driver handles
-> different IP revisions (e.g. by modelling optional clocks as being truly
-> optional).
-> 
-> These patches depend on the recently merged (but currently held off?)
-> PIPE clock series:
-> 
-> 	https://lore.kernel.org/all/20220608105238.2973600-1-dmitry.baryshkov@linaro.org/
-> 
-> as well as the about-to-be-merged MSI series (v17):
-> 
-> 	https://lore.kernel.org/all/20220707134733.2436629-6-dmitry.baryshkov@linaro.org/
-> 
-> Note that the final patch in the PIPE clock series is currently missing
-> from the pci/ctrl/qcom-pending branch:
-> 
-> 	https://lore.kernel.org/all/20220608105238.2973600-6-dmitry.baryshkov@linaro.org/
-> 
-> Johan
-> 
-> 
-> Changes in v2
->  - drop the two DT schema fixes which have been applied by Bjorn H and
->    squashed into the MSI v17 series by Dmitry, respectively
->  - rebase on pci/ctrl/qcom-pending (2022-07-14)
->  - fix compatible sort order (Krzysztof)
->  - amend commit message for first patch to clarify motivation
->    (Krzysztof)
->  - add acks and reviewed-by tags from Dmitry, Krzysztof, Mani and Rob
-> 
-> 
-> Johan Hovold (8):
->   dt-bindings: PCI: qcom: Enumerate platforms with single msi interrupt
->   dt-bindings: PCI: qcom: Add SC8280XP to binding
->   dt-bindings: PCI: qcom: Add SA8540P to binding
->   PCI: qcom: Add support for SC8280XP
->   PCI: qcom: Add support for SA8540P
->   PCI: qcom: Make all optional clocks optional
->   PCI: qcom: Clean up IP configurations
->   PCI: qcom: Sort device-id table
-> 
->  .../devicetree/bindings/pci/qcom,pcie.yaml    |  70 +++++++++-
->  drivers/pci/controller/dwc/pcie-qcom.c        | 121 +++++++-----------
->  2 files changed, 114 insertions(+), 77 deletions(-)
-> 
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-For the whole set:
+Gr{oetje,eeting}s,
 
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
--- 
-regards,
-Stan
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
