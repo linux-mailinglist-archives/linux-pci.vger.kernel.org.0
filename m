@@ -2,78 +2,273 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E23B0578A33
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 21:01:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D238578AA0
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jul 2022 21:23:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234436AbiGRTBs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jul 2022 15:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55744 "EHLO
+        id S235704AbiGRTXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jul 2022 15:23:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234440AbiGRTB3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 15:01:29 -0400
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B736B2FFFA
-        for <linux-pci@vger.kernel.org>; Mon, 18 Jul 2022 12:01:19 -0700 (PDT)
-Received: by mail-ua1-x929.google.com with SMTP id v17so4323664uam.1
-        for <linux-pci@vger.kernel.org>; Mon, 18 Jul 2022 12:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
-        b=IQXHlBQ3jHSYUTt89EYBBYMpS/rXYtHBaNUJ6e2ZzB07/ETpvOJM0/ZijryokIEfDh
-         oJG0jiachEiIldTcksV5XzU+dy3csOVeMrzVRYAIpdf4PUrGYfI/KNNvcLIWjvmc8oHa
-         yWKlPWKnOFkuEw2Mq2CzZYpqcRK9kJ+LygeUXE0izxh4s3I+nauj1w40rP+480vJCi+X
-         rAPSoEvo8wXV23cydMjOZnuzBivYToT/OwjRuq1iqX/8Isb8Rqougy46FnOdoQuh9Z/u
-         z7xKihQATs9EIIDqpmGAQl/2n//vpMk3ZDpLHQioaLk/1hVBrL4som/CgeyT77yPFwbn
-         VU6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
-        b=kNQmAynt2tivL7k7S5MvsJmvjLe3kegdG4/mAVJeBYKKila2XgsvcNAWpDSJjxpYMU
-         xObWt2u7XExRqJ9dYd7BAC8od1116eIqIVfUh5dlcpSuuN+yw2K/2UUNIRjQj6JRxhir
-         V2ufV2XBYbElSayTG8Q+OVemCcnl1JMln1wnnjkaz9I6HlxVqc9IXAPSV6OeVmKACYXx
-         BadKWXPXKQD+Nab+BS6fFbKtDaZ4doJdFJDgGoMpJ6KJHlRs3Q69kfcl4AYfq5ODjbdk
-         Yw1UeDTE6+lcxMFROsuEjAi6/I1Da/WZcd2kXkTWg69PhTGF9a347fpaUWciUw6xDQD6
-         dJ+Q==
-X-Gm-Message-State: AJIora88/sGcPjPB8Chx3Pk8lLSMK2hJiFUI9/5pRE2TMjYxqJCuiIv+
-        OVfA5CHqe6UhP529tt801neVkp8KjMNhRY+XzSOaaSKjvk1WDA==
-X-Google-Smtp-Source: AGRyM1sOF4caZ/Mzb7i1HwUB8dyXYAmjf9y+Pd1nVHRKiUHeMR6opOrMc10oZNu5DLkN2HS0cpkKNGEh0T+MU99Jmes=
-X-Received: by 2002:a81:5747:0:b0:31d:1bb8:65b7 with SMTP id
- l68-20020a815747000000b0031d1bb865b7mr30830046ywb.168.1658170865217; Mon, 18
- Jul 2022 12:01:05 -0700 (PDT)
+        with ESMTP id S235701AbiGRTXq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 15:23:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4792F67C;
+        Mon, 18 Jul 2022 12:23:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 95ACF616CD;
+        Mon, 18 Jul 2022 19:23:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8A4C341C0;
+        Mon, 18 Jul 2022 19:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658172223;
+        bh=zn268JVToH1CrQ7zJIK0eZF4kMGLavgHTgGjFqMHSE0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=B69LvkOepfV5ubz8OtDW5ZNqbnWmPX+1y97k9GTrGOFc/ZDKVdyaWA83uSdsQRvmm
+         aIpGgTkNxRM8JM2wqHM7Kg9c1uXUuORV575Xh+ZPAbWG7dgjtJMmg8vqD9Vh2ykTBD
+         ML5RpFcZ3rr9EPwzOrLUJLs8U9foLpw9vgXrxupvcaiyTfTrQkiX6ssGvB3hZanFgC
+         xyvNBmQ649eGhktPXPznZYkC/K+EabhsMnvH3zCLNxLdPxU9RX9BCvifv4pcuY62Lz
+         oSbr9N6ikbrolDxYOWx75MyiQ1K/fsZ4QC/KxkR9YsU6za8P2e0Zmv4cYzx5sTEEYO
+         HkmwenW4DThNw==
+Date:   Mon, 18 Jul 2022 14:23:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/6] PCI: brcmstb: Split brcm_pcie_setup() into two
+ funcs
+Message-ID: <20220718192341.GA1437687@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a05:6919:4004:b0:cc:50ff:b3d8 with HTTP; Mon, 18 Jul 2022
- 12:01:04 -0700 (PDT)
-Reply-To: lilywilliam989@gmail.com
-From:   Lily William <sgtalberts@gmail.com>
-Date:   Mon, 18 Jul 2022 11:01:04 -0800
-Message-ID: <CALPTejMFgL0Bg7jCKa7j+5KxVv_jnSM4ZPq-QhHCiUpG_ZswsQ@mail.gmail.com>
-Subject: Hi Dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+-6iNwjPr2gu_oyn4NheLPJZHh-3eib-3onz63sfNOJpdJ6Tw@mail.gmail.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dear,
+On Mon, Jul 18, 2022 at 02:56:03PM -0400, Jim Quinlan wrote:
+> On Mon, Jul 18, 2022 at 2:14 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Sat, Jul 16, 2022 at 06:24:49PM -0400, Jim Quinlan wrote:
+> > > Currently, the function does the setup for establishing PCIe link-up
+> > > with the downstream device, and it does the actual link-up as well.
+> > > The calling sequence is (roughly) the following in the probe:
+> > >
+> > > -> brcm_pcie_probe()
+> > >     -> brcm_pcie_setup();                       /* Set-up and link-up */
+> > >     -> pci_host_probe(bridge);
+> > >
+> > > This commit splits the setup function in two: brcm_pcie_setup(), which only
+> > > does the set-up, and brcm_pcie_start_link(), which only does the link-up.
+> > > The reason why we are doing this is to lay a foundation for subsequent
+> > > commits so that we can turn on any power regulators, as described in the
+> > > root port's DT node, prior to doing link-up.
+> >
+> > All drivers that care about power regulators turn them on before
+> > link-up, but typically those regulators are described directly under
+> > the host bridge itself.
+> 
+> Actually, what you describe is what I proposed with my v1 back in Nov 2020.
+> The binding commit message said,
+> 
+>     "Quite similar to the regulator bindings found in
+>     "rockchip-pcie-host.txt", this allows optional regulators to be
+>     attached and controlled by the PCIe RC driver."
+> 
+> > IIUC the difference here is that you have regulators described under
+> > Root Ports (not the host bridge/Root Complex itself), so you don't
+> > know about them until you've enumerated the Root Ports.
+> > brcm_pcie_probe() can't turn them on directly because it doesn't know
+> > what Root Ports are present and doesn't know about regulators below
+> > them.
+> 
+> The reviewer's requested me to move the regulator node(s)
+> elsewhere, and at some point later it was requested to be placed
+> under the Root Port driver.  I would love to return them under the
+> host bridge, just say the word!
 
-My name is Dr Lily William from the United States.I am a French and
-American nationality (dual) living in the U.S and sometimes in France
-for Work Purpose.
+I'm not suggesting a change in that design; I'm only trying to
+understand and clarify the commit log.
 
-I hope you consider my friend request. I will share some of my pics
-and more details about myself when I get your response.
+I looked briefly for the suggestion to put the regulators under the
+Root Port instead of the host bridge, but didn't find it.  I don't
+know enough to have an opinion yet.
 
-Thanks
+> > So I think brcm_pcie_setup() does initialization that doesn't depend
+> > on the link or any downstream devices, and brcm_pcie_start_link() does
+> > things that depend on the link being up.  Right?
+>
+> Yes.
+> 
+> > If so, "start_link" might be a slight misnomer since AFAICT
+> > brcm_pcie_start_link() doesn't do anything to initiate link-up except
+> > maybe deasserting fundamental reset.  Some drivers start the LTSSM or
+> > explicitly enable link training, but brcm_pcie_start_link() doesn't
+> > seem to do anything like that.
+> >
+> > brcm_pcie_start_link() still does brcm_pcie_set_outbound_win().  Does
+> > that really depend on the link being up?  If that only affects the
+> > Root Port, maybe it could be done before link-up?
+>
+> Some of the registers cannot be accessed until after linkup but these do
+> not have that issue.  I will change this.
 
-With love
-Lily
+Here's my attempt (assuming we don't change the DT regulator design):
+
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index bd88a0a46c63..70cad1cbcbb4 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -852,14 +852,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+ 	u64 rc_bar2_offset, rc_bar2_size;
+ 	void __iomem *base = pcie->base;
+-	struct device *dev = pcie->dev;
++	int ret, memc;
++	u32 tmp, burst, aspm_support;
+ 	struct resource_entry *entry;
+-	bool ssc_good = false;
+ 	struct resource *res;
+ 	int num_out_wins = 0;
+-	u16 nlw, cls, lnksta;
+-	int i, ret, memc;
+-	u32 tmp, burst, aspm_support;
+ 
+ 	/* Reset the bridge */
+ 	pcie->bridge_sw_init_set(pcie, 1);
+@@ -948,25 +945,23 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	if (pcie->gen)
+ 		brcm_pcie_set_gen(pcie, pcie->gen);
+ 
+-	/* Unassert the fundamental reset */
+-	pcie->perst_set(pcie, 0);
++	/* Don't advertise L0s capability if 'aspm-no-l0s' */
++	aspm_support = PCIE_LINK_STATE_L1;
++	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
++		aspm_support |= PCIE_LINK_STATE_L0S;
++	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
++	u32p_replace_bits(&tmp, aspm_support,
++		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
++	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+ 
+ 	/*
+-	 * Give the RC/EP time to wake up, before trying to configure RC.
+-	 * Intermittently check status for link-up, up to a total of 100ms.
++	 * For config space accesses on the RC, show the right class for
++	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+ 	 */
+-	for (i = 0; i < 100 && !brcm_pcie_link_up(pcie); i += 5)
+-		msleep(5);
+-
+-	if (!brcm_pcie_link_up(pcie)) {
+-		dev_err(dev, "link down\n");
+-		return -ENODEV;
+-	}
+-
+-	if (!brcm_pcie_rc_mode(pcie)) {
+-		dev_err(dev, "PCIe misconfigured; is in EP mode\n");
+-		return -EINVAL;
+-	}
++	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
++	u32p_replace_bits(&tmp, PCI_CLASS_BRIDGE_PCI_NORMAL,
++			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
++	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
+ 
+ 	resource_list_for_each_entry(entry, &bridge->windows) {
+ 		res = entry->res;
+@@ -998,23 +993,37 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 		num_out_wins++;
+ 	}
+ 
+-	/* Don't advertise L0s capability if 'aspm-no-l0s' */
+-	aspm_support = PCIE_LINK_STATE_L1;
+-	if (!of_property_read_bool(pcie->np, "aspm-no-l0s"))
+-		aspm_support |= PCIE_LINK_STATE_L0S;
+-	tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+-	u32p_replace_bits(&tmp, aspm_support,
+-		PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK);
+-	writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
++	return 0;
++}
++
++static int brcm_pcie_start_link(struct brcm_pcie *pcie)
++{
++	struct device *dev = pcie->dev;
++	void __iomem *base = pcie->base;
++	u16 nlw, cls, lnksta;
++	bool ssc_good = false;
++	u32 tmp;
++	int ret, i;
++
++	/* Unassert the fundamental reset */
++	pcie->perst_set(pcie, 0);
+ 
+ 	/*
+-	 * For config space accesses on the RC, show the right class for
+-	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
++	 * Give the RC/EP time to wake up, before trying to configure RC.
++	 * Intermittently check status for link-up, up to a total of 100ms.
+ 	 */
+-	tmp = readl(base + PCIE_RC_CFG_PRIV1_ID_VAL3);
+-	u32p_replace_bits(&tmp, 0x060400,
+-			  PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK);
+-	writel(tmp, base + PCIE_RC_CFG_PRIV1_ID_VAL3);
++	for (i = 0; i < 100 && !brcm_pcie_link_up(pcie); i += 5)
++		msleep(5);
++
++	if (!brcm_pcie_link_up(pcie)) {
++		dev_err(dev, "link down\n");
++		return -ENODEV;
++	}
++
++	if (!brcm_pcie_rc_mode(pcie)) {
++		dev_err(dev, "PCIe misconfigured; is in EP mode\n");
++		return -EINVAL;
++	}
+ 
+ 	if (pcie->ssc) {
+ 		ret = brcm_pcie_set_ssc(pcie);
+@@ -1204,6 +1213,10 @@ static int brcm_pcie_resume(struct device *dev)
+ 	if (ret)
+ 		goto err_reset;
+ 
++	ret = brcm_pcie_start_link(pcie);
++	if (ret)
++		goto err_reset;
++
+ 	if (pcie->msi)
+ 		brcm_msi_set_regs(pcie->msi);
+ 
+@@ -1393,6 +1406,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto fail;
+ 
++	ret = brcm_pcie_start_link(pcie);
++	if (ret)
++		goto fail;
++
+ 	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
+ 	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
+ 		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
