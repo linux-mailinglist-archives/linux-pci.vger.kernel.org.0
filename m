@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FF4F579705
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 12:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5461557970C
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 12:02:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237322AbiGSKBU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Jul 2022 06:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
+        id S232216AbiGSKBX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Jul 2022 06:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237012AbiGSKBS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 06:01:18 -0400
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9AF32EC9;
-        Tue, 19 Jul 2022 03:01:17 -0700 (PDT)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3664E1A0ABE;
-        Tue, 19 Jul 2022 12:01:16 +0200 (CEST)
+        with ESMTP id S237340AbiGSKBU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 06:01:20 -0400
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D734632EC9;
+        Tue, 19 Jul 2022 03:01:18 -0700 (PDT)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 79529200C44;
+        Tue, 19 Jul 2022 12:01:17 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E3C2B1A0ABB;
-        Tue, 19 Jul 2022 12:01:15 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 32BDE200C32;
+        Tue, 19 Jul 2022 12:01:17 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id EE46A180222C;
-        Tue, 19 Jul 2022 18:01:13 +0800 (+08)
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 42BF0181D0CA;
+        Tue, 19 Jul 2022 18:01:15 +0800 (+08)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
         lorenzo.pieralisi@arm.com, shawnguo@kernel.org, kishon@ti.com,
@@ -31,9 +31,9 @@ Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com
-Subject: [PATCH v1 02/10] dt-bindings: imx6q-pcie: Add iMX8MQ PCIe EP mode compatible string
-Date:   Tue, 19 Jul 2022 17:45:31 +0800
-Message-Id: <1658223939-25478-3-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v1 03/10] PCI: dwc: Kconfig: Add iMX PCIe EP mode support
+Date:   Tue, 19 Jul 2022 17:45:32 +0800
+Message-Id: <1658223939-25478-4-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1658223939-25478-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1658223939-25478-1-git-send-email-hongxing.zhu@nxp.com>
@@ -46,25 +46,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add i.MX8MQ PCIe endpoint mode compatible string.
+Since i.MX PCIe is one dual mode PCIe controller.
+Add i.MX PCIe EP mode support, and split the PCIe modes to the Root
+Complex mode and Endpoint mode.
 
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/Kconfig | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-index d52c6396fe11..85b7c1663054 100644
---- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-@@ -28,6 +28,7 @@ properties:
-       - fsl,imx8mm-pcie
-       - fsl,imx8mp-pcie
-       - fsl,imx8mm-pcie-ep
-+      - fsl,imx8mq-pcie-ep
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 62ce3abf0f19..a24d8cacf1be 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -92,10 +92,33 @@ config PCI_EXYNOS
+ 	  functions to implement the driver.
  
-   reg:
-     items:
+ config PCI_IMX6
+-	bool "Freescale i.MX6/7/8 PCIe controller"
++	bool
++
++config PCI_IMX6_HOST
++	bool "Freescale i.MX6/7/8 PCIe controller host mode"
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
++	select PCI_IMX6
++	help
++	  Enables support for the PCIe controller Root Complex mode in the
++	  iMX6/7/8 SoCs.
++	  This controller can work either as EP or RC. In order to enable
++	  host-specific features PCIE_DW_HOST must be selected and in order
++	  to enable device-specific features PCIE_DW_EP must be selected.
++
++config PCI_IMX6_EP
++	bool "Freescale i.MX6/7/8 PCIe controller endpoint mode"
++	depends on ARCH_MXC || COMPILE_TEST
++	depends on PCI_ENDPOINT
++	select PCIE_DW_EP
++	select PCI_IMX6
++	help
++	  Enables support for the PCIe controller endpoint mode in the
++	  iMX6/7/8 SoCs.
++	  This controller can work either as EP or RC. In order to enable
++	  host-specific features PCIE_DW_HOST must be selected and in order
++	  to enable device-specific features PCIE_DW_EP must be selected.
+ 
+ config PCIE_SPEAR13XX
+ 	bool "STMicroelectronics SPEAr PCIe controller"
 -- 
 2.25.1
 
