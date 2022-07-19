@@ -2,424 +2,348 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20DBE579027
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 03:55:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 129E357916E
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 05:44:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233441AbiGSBzG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jul 2022 21:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60632 "EHLO
+        id S234596AbiGSDoJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jul 2022 23:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236097AbiGSBzF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 21:55:05 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BF91E1;
-        Mon, 18 Jul 2022 18:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658195703; x=1689731703;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nFRYithJSfRZZ0xYfwllM+AmGo/QEFYATpTslKKCsbY=;
-  b=G+c01Qo5ku0cB5VaZGkaI/BXEsIu5muaSzVRdbngIVKEfHut6yqhfLCv
-   pAld3K9IftCg88T+jLcvRPVV54NiqypncmnPzFVw3dTfpK0f3CFLkUMrQ
-   p9R7dIP+ntXsrKOXwZPHgK/F6xsRMFdTs0mPQVmHH+qJx9LIBiLrqXBG4
-   dYMJ9XLKInM6AG5BuGvpVx8UyMnBMOjxeG/DI6XcV0hF3gzOUWzD7iRBa
-   P3SWJPEJJRXgzip6qCi729HOW2myGxL1L5bxXiPjGFpYhsDhogSGqiFyI
-   CeDxLw/RzN60HGLHLxSzHRe2QCiOF2y9IrXOU3BcvtFlLRK78VvSszywl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10412"; a="269386755"
-X-IronPort-AV: E=Sophos;i="5.92,282,1650956400"; 
-   d="scan'208";a="269386755"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 18:55:02 -0700
-X-IronPort-AV: E=Sophos;i="5.92,282,1650956400"; 
-   d="scan'208";a="547719586"
-Received: from dmolator-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.66.31])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2022 18:55:02 -0700
-Subject: [PATCH v15 6/7] cxl/port: Read CDAT table
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-pci@vger.kernel.org,
-        lukas@wunner.de, bhelgaas@google.com
-Date:   Mon, 18 Jul 2022 18:55:01 -0700
-Message-ID: <165819557164.881384.15799533765517431824.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <20220715030424.462963-7-ira.weiny@intel.com>
-References: <20220715030424.462963-7-ira.weiny@intel.com>
-User-Agent: StGit/0.18-3-g996c
+        with ESMTP id S234323AbiGSDoH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jul 2022 23:44:07 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF3F81BE84
+        for <linux-pci@vger.kernel.org>; Mon, 18 Jul 2022 20:44:05 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id s21so13532234pjq.4
+        for <linux-pci@vger.kernel.org>; Mon, 18 Jul 2022 20:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=w7xQfXVqVf+8i390/ce6X32QWNcsJH7gQ4PHVa5GP2M=;
+        b=JmGrMusyuRsDt0oP7DI0K9GQpc60uNkLyxoFSHiiEIP2z7dttoYdgxqIOAh+k+mhZa
+         FIc7p0ptfXFLgMQDGxQesX4p5TteXU2VjO7DfWQLDLhdhaGvP0IAEn+ixzS+IKn5idq5
+         JNTr0JZpPDrtd7xD1ncv2SL6p8WRtKukg3t7CLnsQrBYkYnXjCVOTKb/6fWwXE9BOnzE
+         aAItQTm/hgCo79ehPVx3TvcIqd340sK8egm3iQvWdN6Ah0S9F24pH+l/ypCqxMt/wkOH
+         L/wo5Q0FgHIgy7K74MflbkGE1ihMug0s2LBnVXYdChHUnKYNzTb9uFImFQ/rjuJCLbx6
+         6M7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=w7xQfXVqVf+8i390/ce6X32QWNcsJH7gQ4PHVa5GP2M=;
+        b=CUXbkZ1caO8aFi5pDX06XeiXK2YinIHmPkDbsg5LD/+CEVROOcqA4KU+M0ZUcCiFkq
+         4aHp56CN+Fh/TmduP5aMSmmV1Os/SLztXr0ehqYl+Xj+QR7JwyEeP+m+KibgFXMCExYI
+         y5papa+C3bRN0FspXaLesTn5ObFi0cwZECyZdGAsv60l5kqRErLiF5OKaUGJFTE1JmsL
+         w9GawZGGerMWU+H4lVo9rwMnsp7SumjwKdcTHnvVD5hRMjb6byk19TmJxOmEGf4jjSk8
+         j0gZ2G7XijN+TSpfuUBQcbu88YqUpYIyaVoBeFVzJM12VOOTDu7eGpRFwdGCBFCmbfKa
+         +m8A==
+X-Gm-Message-State: AJIora8LsJ76vh3dTrR+O2sFOcgqhoIZkGZMDAS43mPUVDiLRHjsOOOw
+        4d8mU6WgnuzWC1VCfwcyF9IO
+X-Google-Smtp-Source: AGRyM1uuwgPjI/vdy0x4Wjg9ytwvWrXBcB2ldK0xBU0IWbw8MNXu0yJQl2+nq37k3PsWcL1JpBAS7A==
+X-Received: by 2002:a17:90b:3911:b0:1ef:fa84:dc80 with SMTP id ob17-20020a17090b391100b001effa84dc80mr42742343pjb.7.1658202245165;
+        Mon, 18 Jul 2022 20:44:05 -0700 (PDT)
+Received: from thinkpad ([117.217.180.99])
+        by smtp.gmail.com with ESMTPSA id br12-20020a17090b0f0c00b001ef42b3c5besm10202842pjb.23.2022.07.18.20.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Jul 2022 20:44:04 -0700 (PDT)
+Date:   Tue, 19 Jul 2022 09:13:58 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     kishon@ti.com, bhelgaas@google.com, robh@kernel.org,
+        lorenzo.pieralisi@arm.com, kw@linux.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Om Prakash Singh <omp@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH] PCI: designware-ep: Move DBI access to init_complete if
+ notifier is used
+Message-ID: <20220719034348.GA4390@thinkpad>
+References: <20220330060515.22328-1-manivannan.sadhasivam@linaro.org>
+ <20220715213958.GA1192967@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220715213958.GA1192967@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Fri, Jul 15, 2022 at 04:39:58PM -0500, Bjorn Helgaas wrote:
+> On Wed, Mar 30, 2022 at 11:35:15AM +0530, Manivannan Sadhasivam wrote:
+> > For controllers supporting the CORE_INIT notifier, the resources are
+> > supposed to be enabled in the init_complete function. Currently,
+> > these controllers are enabling the resources during probe time due to
+> > the DBI access happens in dw_pcie_ep_init().
+> > 
+> > This creates the dependency with the host PCIe controller since the
+> > resource enablement like PHY depends on host PCIe to be up. For the
+> > standalone endpoint usecase, this would never work. So let's move all DBI
+> > access to init_complete function if CORE_INIT notifier is used. For the
+> > controllers those doesn't support this notifier, this change is a NO-OP.
+> > 
+> > Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > Cc: Om Prakash Singh <omp@nvidia.com>
+> > Cc: Vidya Sagar <vidyas@nvidia.com>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   | 138 ++++++++++++------
+> >  drivers/pci/controller/dwc/pcie-designware.h  |   1 +
+> >  2 files changed, 94 insertions(+), 45 deletions(-)
+> 
+> Sorry this got missed.  Seems like there are two patches to solve the
+> same problem:
+> 
+>   1) This patch, and
+>   2) Vidya's patch (https://lore.kernel.org/linux-pci/20220622040133.31058-1-vidyas@nvidia.com/)
+> 
+> I don't know much about dwc or this issue, but if these patches are
+> functionally equivalent, I think Vidya's is a little more attractive
+> because:
+> 
+>   - It's smaller (49 insertions(+), 39 deletions(-)).
+> 
+>   - "core_init_notifier" looks like sort of a corner-case feature and
+>     Vidya's patch doesn't depend on it so it seems more maintainable.
+> 
+>   - It's more straightforward to read -- it basically just moves
+>     things from dw_pcie_ep_init() to dw_pcie_ep_init_complete(), which
+>     is exactly the sort of thing I expect if we're doing something out
+>     of order.
+> 
 
-The per-device CDAT data provides performance data that is relevant for
-mapping which CXL devices can participate in which CXL ranges by QTG
-(QoS Throttling Group) (per ECN: CXL 2.0 CEDT CFMWS & QTG_DSM) [1]. The
-QTG association specified in the ECN is advisory. Until the
-cxl_acpi driver grows support for invoking the QTG _DSM method the CDAT
-data is only of interest to userspace that may need it for debug
-purposes.
+I agree that Vidya's patch is simple but as per the feedback from Kishon on my
+previous patch, I had to add some extra logic to make sure the move of DBI
+access doesn't affect the non core_init_notifier platforms.
 
-Search the DOE mailboxes available, query CDAT data, cache the data and
-make it available via a sysfs binary attribute per endpoint at:
+So with my patch, the logic added is essentailly a NO-OP on those.
 
-/sys/bus/cxl/devices/endpointX/CDAT
+Thanks,
+Mani
 
-...similar to other ACPI-structured table data in
-/sys/firmware/ACPI/tables. The CDAT is relative to 'struct cxl_port'
-objects since switches in addition to endpoints can host a CDAT
-instance. Switch CDAT support is not implemented.
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 0eda8236c125..fb2bf4bf5ba0 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -636,6 +636,63 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+> >  	return 0;
+> >  }
+> >  
+> > +static int dw_pcie_iatu_config(struct dw_pcie_ep *ep)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > +	struct device *dev = pci->dev;
+> > +	void *addr;
+> > +
+> > +	dw_pcie_iatu_detect(pci);
+> > +
+> > +	ep->ib_window_map = devm_kcalloc(dev,
+> > +					 BITS_TO_LONGS(pci->num_ib_windows),
+> > +					 sizeof(long),
+> > +					 GFP_KERNEL);
+> > +	if (!ep->ib_window_map)
+> > +		return -ENOMEM;
+> > +
+> > +	ep->ob_window_map = devm_kcalloc(dev,
+> > +					 BITS_TO_LONGS(pci->num_ob_windows),
+> > +					 sizeof(long),
+> > +					 GFP_KERNEL);
+> > +	if (!ep->ob_window_map)
+> > +		return -ENOMEM;
+> > +
+> > +	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
+> > +			    GFP_KERNEL);
+> > +	if (!addr)
+> > +		return -ENOMEM;
+> > +
+> > +	ep->outbound_addr = addr;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int dw_pcie_ep_func_init(struct dw_pcie_ep *ep)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > +	struct dw_pcie_ep_func *ep_func;
+> > +	struct pci_epc *epc = ep->epc;
+> > +	struct device *dev = pci->dev;
+> > +	u8 func_no;
+> > +
+> > +	for (func_no = 0; func_no < epc->max_functions; func_no++) {
+> > +		ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
+> > +		if (!ep_func)
+> > +			return -ENOMEM;
+> > +
+> > +		ep_func->func_no = func_no;
+> > +		ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
+> > +							      PCI_CAP_ID_MSI);
+> > +		ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
+> > +							       PCI_CAP_ID_MSIX);
+> > +
+> > +		list_add_tail(&ep_func->list, &ep->func_list);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+> >  {
+> >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > @@ -643,7 +700,22 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+> >  	unsigned int nbars;
+> >  	u8 hdr_type;
+> >  	u32 reg;
+> > -	int i;
+> > +	int ret, i;
+> > +
+> > +	if (ep->core_init_notifier) {
+> > +		ret = dw_pcie_iatu_config(ep);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	if (ep->core_init_notifier) {
+> > +		ret = dw_pcie_ep_func_init(ep);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		if (ep->ops->ep_init)
+> > +			ep->ops->ep_init(ep);
+> > +	}
+> >  
+> >  	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
+> >  		   PCI_HEADER_TYPE_MASK;
+> > @@ -677,8 +749,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+> >  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  {
+> >  	int ret;
+> > -	void *addr;
+> > -	u8 func_no;
+> >  	struct resource *res;
+> >  	struct pci_epc *epc;
+> >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > @@ -686,7 +756,12 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  	struct platform_device *pdev = to_platform_device(dev);
+> >  	struct device_node *np = dev->of_node;
+> >  	const struct pci_epc_features *epc_features;
+> > -	struct dw_pcie_ep_func *ep_func;
+> > +
+> > +	if (ep->ops->get_features) {
+> > +		epc_features = ep->ops->get_features(ep);
+> > +		if (epc_features->core_init_notifier)
+> > +			ep->core_init_notifier = true;
+> > +	}
+> >  
+> >  	INIT_LIST_HEAD(&ep->func_list);
+> >  
+> > @@ -708,7 +783,11 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  		}
+> >  	}
+> >  
+> > -	dw_pcie_iatu_detect(pci);
+> > +	if (!ep->core_init_notifier) {
+> > +		ret = dw_pcie_iatu_config(ep);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> >  
+> >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> >  	if (!res)
+> > @@ -717,26 +796,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  	ep->phys_base = res->start;
+> >  	ep->addr_size = resource_size(res);
+> >  
+> > -	ep->ib_window_map = devm_kcalloc(dev,
+> > -					 BITS_TO_LONGS(pci->num_ib_windows),
+> > -					 sizeof(long),
+> > -					 GFP_KERNEL);
+> > -	if (!ep->ib_window_map)
+> > -		return -ENOMEM;
+> > -
+> > -	ep->ob_window_map = devm_kcalloc(dev,
+> > -					 BITS_TO_LONGS(pci->num_ob_windows),
+> > -					 sizeof(long),
+> > -					 GFP_KERNEL);
+> > -	if (!ep->ob_window_map)
+> > -		return -ENOMEM;
+> > -
+> > -	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
+> > -			    GFP_KERNEL);
+> > -	if (!addr)
+> > -		return -ENOMEM;
+> > -	ep->outbound_addr = addr;
+> > -
+> >  	if (pci->link_gen < 1)
+> >  		pci->link_gen = of_pci_get_max_link_speed(np);
+> >  
+> > @@ -753,23 +812,15 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  	if (ret < 0)
+> >  		epc->max_functions = 1;
+> >  
+> > -	for (func_no = 0; func_no < epc->max_functions; func_no++) {
+> > -		ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
+> > -		if (!ep_func)
+> > -			return -ENOMEM;
+> > -
+> > -		ep_func->func_no = func_no;
+> > -		ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
+> > -							      PCI_CAP_ID_MSI);
+> > -		ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
+> > -							       PCI_CAP_ID_MSIX);
+> > +	if (!ep->core_init_notifier) {
+> > +		ret = dw_pcie_ep_func_init(ep);
+> > +		if (ret)
+> > +			return ret;
+> >  
+> > -		list_add_tail(&ep_func->list, &ep->func_list);
+> > +		if (ep->ops->ep_init)
+> > +			ep->ops->ep_init(ep);
+> >  	}
+> >  
+> > -	if (ep->ops->ep_init)
+> > -		ep->ops->ep_init(ep);
+> > -
+> >  	ret = pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+> >  			       ep->page_size);
+> >  	if (ret < 0) {
+> > @@ -784,12 +835,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  		return -ENOMEM;
+> >  	}
+> >  
+> > -	if (ep->ops->get_features) {
+> > -		epc_features = ep->ops->get_features(ep);
+> > -		if (epc_features->core_init_notifier)
+> > -			return 0;
+> > -	}
+> > +	if (!ep->core_init_notifier)
+> > +		return dw_pcie_ep_init_complete(ep);
+> >  
+> > -	return dw_pcie_ep_init_complete(ep);
+> > +	return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index 7d6e9b7576be..aadb14159df7 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -242,6 +242,7 @@ struct dw_pcie_ep {
+> >  	void __iomem		*msi_mem;
+> >  	phys_addr_t		msi_mem_phys;
+> >  	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
+> > +	bool			core_init_notifier;
+> >  };
+> >  
+> >  struct dw_pcie_ops {
+> > -- 
+> > 2.25.1
+> > 
 
-This does not support table updates at runtime. It will always provide
-whatever was there when first cached. It is also the case that table
-updates are not expected outside of explicit DPA address map affecting
-commands like Set Partition with the immediate flag set. Given that the
-driver does not support Set Partition with the immediate flag set there
-is no current need for update support.
-
-Link: https://www.computeexpresslink.org/spec-landing [1]
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-[djbw: drop in-kernel parsing infra for now, and other minor fixups]
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v14:
-- Add a DECLARE_CDAT_DOE_TASK() to reduce boilerplate in the functions
-- Delete cdat.h since the parsing code is deferred until later
-- Add some more details to the changelog about the expectations for this
-  implementation
-
- Documentation/ABI/testing/sysfs-bus-cxl |   10 ++
- drivers/cxl/core/pci.c                  |  173 +++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h                       |    7 +
- drivers/cxl/cxlpci.h                    |    1 
- drivers/cxl/port.c                      |   53 +++++++++
- 5 files changed, 244 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 1fd5984b6158..e94c5aebc368 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -164,3 +164,13 @@ Description:
- 		expander memory (type-3). The 'target_type' attribute indicates
- 		the current setting which may dynamically change based on what
- 		memory regions are activated in this decode hierarchy.
-+
-+What:		/sys/bus/cxl/devices/endpointX/CDAT
-+Date:		July, 2022
-+KernelVersion:	v5.20
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) If this sysfs entry is not present no DOE mailbox was
-+		found to support CDAT data.  If it is present and the length of
-+		the data is 0 reading the CDAT data failed.  Otherwise the CDAT
-+		data is reported.
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 7672789c3225..9240df53ed87 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -4,6 +4,7 @@
- #include <linux/device.h>
- #include <linux/delay.h>
- #include <linux/pci.h>
-+#include <linux/pci-doe.h>
- #include <cxlpci.h>
- #include <cxlmem.h>
- #include <cxl.h>
-@@ -452,3 +453,175 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
- 	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
-+
-+#define CXL_DOE_TABLE_ACCESS_REQ_CODE		0x000000ff
-+#define   CXL_DOE_TABLE_ACCESS_REQ_CODE_READ	0
-+#define CXL_DOE_TABLE_ACCESS_TABLE_TYPE		0x0000ff00
-+#define   CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA	0
-+#define CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE	0xffff0000
-+#define CXL_DOE_TABLE_ACCESS_LAST_ENTRY		0xffff
-+#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
-+
-+static struct pci_doe_mb *find_cdat_doe(struct device *uport)
-+{
-+	struct cxl_memdev *cxlmd;
-+	struct cxl_dev_state *cxlds;
-+	unsigned long index;
-+	void *entry;
-+
-+	cxlmd = to_cxl_memdev(uport);
-+	cxlds = cxlmd->cxlds;
-+
-+	xa_for_each(&cxlds->doe_mbs, index, entry) {
-+		struct pci_doe_mb *cur = entry;
-+
-+		if (pci_doe_supports_prot(cur, PCI_DVSEC_VENDOR_ID_CXL,
-+					  CXL_DOE_PROTOCOL_TABLE_ACCESS))
-+			return cur;
-+	}
-+
-+	return NULL;
-+}
-+
-+#define CDAT_DOE_REQ(entry_handle)					\
-+	(FIELD_PREP(CXL_DOE_TABLE_ACCESS_REQ_CODE,			\
-+		    CXL_DOE_TABLE_ACCESS_REQ_CODE_READ) |		\
-+	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_TABLE_TYPE,			\
-+		    CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA) |		\
-+	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle)))
-+
-+static void cxl_doe_task_complete(struct pci_doe_task *task)
-+{
-+	complete(task->private);
-+}
-+
-+struct cdat_doe_task {
-+	u32 request_pl;
-+	u32 response_pl[32];
-+	struct completion c;
-+	struct pci_doe_task task;
-+};
-+
-+#define DECLARE_CDAT_DOE_TASK(req, cdt)                       \
-+struct cdat_doe_task cdt = {                                  \
-+	.c = COMPLETION_INITIALIZER_ONSTACK(cdt.c),           \
-+	.request_pl = req,				      \
-+	.task = {                                             \
-+		.prot.vid = PCI_DVSEC_VENDOR_ID_CXL,        \
-+		.prot.type = CXL_DOE_PROTOCOL_TABLE_ACCESS, \
-+		.request_pl = &cdt.request_pl,                \
-+		.request_pl_sz = sizeof(cdt.request_pl),      \
-+		.response_pl = cdt.response_pl,               \
-+		.response_pl_sz = sizeof(cdt.response_pl),    \
-+		.complete = cxl_doe_task_complete,            \
-+		.private = &cdt.c,                            \
-+	}                                                     \
-+}
-+
-+static int cxl_cdat_get_length(struct device *dev,
-+			       struct pci_doe_mb *cdat_doe,
-+			       size_t *length)
-+{
-+	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
-+	int rc;
-+
-+	rc = pci_doe_submit_task(cdat_doe, &t.task);
-+	if (rc < 0) {
-+		dev_err(dev, "DOE submit failed: %d", rc);
-+		return rc;
-+	}
-+	wait_for_completion(&t.c);
-+	if (t.task.rv < sizeof(u32))
-+		return -EIO;
-+
-+	*length = t.response_pl[1];
-+	dev_dbg(dev, "CDAT length %zu\n", *length);
-+
-+	return 0;
-+}
-+
-+static int cxl_cdat_read_table(struct device *dev,
-+			       struct pci_doe_mb *cdat_doe,
-+			       struct cxl_cdat *cdat)
-+{
-+	size_t length = cdat->length;
-+	u32 *data = cdat->table;
-+	int entry_handle = 0;
-+
-+	do {
-+		DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(entry_handle), t);
-+		size_t entry_dw;
-+		u32 *entry;
-+		int rc;
-+
-+		rc = pci_doe_submit_task(cdat_doe, &t.task);
-+		if (rc < 0) {
-+			dev_err(dev, "DOE submit failed: %d", rc);
-+			return rc;
-+		}
-+		wait_for_completion(&t.c);
-+		/* 1 DW header + 1 DW data min */
-+		if (t.task.rv < (2 * sizeof(u32)))
-+			return -EIO;
-+
-+		/* Get the CXL table access header entry handle */
-+		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
-+					 t.response_pl[0]);
-+		entry = t.response_pl + 1;
-+		entry_dw = t.task.rv / sizeof(u32);
-+		/* Skip Header */
-+		entry_dw -= 1;
-+		entry_dw = min(length / sizeof(u32), entry_dw);
-+		/* Prevent length < 1 DW from causing a buffer overflow */
-+		if (entry_dw) {
-+			memcpy(data, entry, entry_dw * sizeof(u32));
-+			length -= entry_dw * sizeof(u32);
-+			data += entry_dw;
-+		}
-+	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
-+
-+	return 0;
-+}
-+
-+/**
-+ * read_cdat_data - Read the CDAT data on this port
-+ * @port: Port to read data from
-+ *
-+ * This call will sleep waiting for responses from the DOE mailbox.
-+ */
-+void read_cdat_data(struct cxl_port *port)
-+{
-+	struct pci_doe_mb *cdat_doe;
-+	struct device *dev = &port->dev;
-+	struct device *uport = port->uport;
-+	size_t cdat_length;
-+	int rc;
-+
-+	cdat_doe = find_cdat_doe(uport);
-+	if (!cdat_doe) {
-+		dev_dbg(dev, "No CDAT mailbox\n");
-+		return;
-+	}
-+
-+	port->cdat_available = true;
-+
-+	if (cxl_cdat_get_length(dev, cdat_doe, &cdat_length)) {
-+		dev_dbg(dev, "No CDAT length\n");
-+		return;
-+	}
-+
-+	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
-+	if (!port->cdat.table)
-+		return;
-+
-+	port->cdat.length = cdat_length;
-+	rc = cxl_cdat_read_table(dev, cdat_doe, &port->cdat);
-+	if (rc) {
-+		/* Don't leave table data allocated on error */
-+		devm_kfree(dev, port->cdat.table);
-+		port->cdat.table = NULL;
-+		port->cdat.length = 0;
-+		dev_err(dev, "CDAT data read error\n");
-+	}
-+}
-+EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 570bd9f8141b..21a9d6fcc61e 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -289,6 +289,8 @@ struct cxl_nvdimm {
-  * @component_reg_phys: component register capability base address (optional)
-  * @dead: last ep has been removed, force port re-creation
-  * @depth: How deep this port is relative to the root. depth 0 is the root.
-+ * @cdat: Cached CDAT data
-+ * @cdat_available: Should a CDAT attribute be available in sysfs
-  */
- struct cxl_port {
- 	struct device dev;
-@@ -301,6 +303,11 @@ struct cxl_port {
- 	resource_size_t component_reg_phys;
- 	bool dead;
- 	unsigned int depth;
-+	struct cxl_cdat {
-+		void *table;
-+		size_t length;
-+	} cdat;
-+	bool cdat_available;
- };
- 
- /**
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index fce1c11729c2..eec597dbe763 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -74,4 +74,5 @@ static inline resource_size_t cxl_regmap_to_base(struct pci_dev *pdev,
- int devm_cxl_port_enumerate_dports(struct cxl_port *port);
- struct cxl_dev_state;
- int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
-+void read_cdat_data(struct cxl_port *port);
- #endif /* __CXL_PCI_H__ */
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 3cf308f114c4..5453771bf330 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -53,6 +53,9 @@ static int cxl_port_probe(struct device *dev)
- 		struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport);
- 		struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
-+		/* Cache the data early to ensure is_visible() works */
-+		read_cdat_data(port);
-+
- 		get_device(&cxlmd->dev);
- 		rc = devm_add_action_or_reset(dev, schedule_detach, cxlmd);
- 		if (rc)
-@@ -78,10 +81,60 @@ static int cxl_port_probe(struct device *dev)
- 	return 0;
- }
- 
-+static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
-+			 struct bin_attribute *bin_attr, char *buf,
-+			 loff_t offset, size_t count)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct cxl_port *port = to_cxl_port(dev);
-+
-+	if (!port->cdat_available)
-+		return -ENXIO;
-+
-+	if (!port->cdat.table)
-+		return 0;
-+
-+	return memory_read_from_buffer(buf, count, &offset,
-+				       port->cdat.table,
-+				       port->cdat.length);
-+}
-+
-+static BIN_ATTR_ADMIN_RO(CDAT, 0);
-+
-+static umode_t cxl_port_bin_attr_is_visible(struct kobject *kobj,
-+					    struct bin_attribute *attr, int i)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct cxl_port *port = to_cxl_port(dev);
-+
-+	if ((attr == &bin_attr_CDAT) && port->cdat_available)
-+		return attr->attr.mode;
-+
-+	return 0;
-+}
-+
-+static struct bin_attribute *cxl_cdat_bin_attributes[] = {
-+	&bin_attr_CDAT,
-+	NULL,
-+};
-+
-+static struct attribute_group cxl_cdat_attribute_group = {
-+	.bin_attrs = cxl_cdat_bin_attributes,
-+	.is_bin_visible = cxl_port_bin_attr_is_visible,
-+};
-+
-+static const struct attribute_group *cxl_port_attribute_groups[] = {
-+	&cxl_cdat_attribute_group,
-+	NULL,
-+};
-+
- static struct cxl_driver cxl_port_driver = {
- 	.name = "cxl_port",
- 	.probe = cxl_port_probe,
- 	.id = CXL_DEVICE_PORT,
-+	.drv = {
-+		.dev_groups = cxl_port_attribute_groups,
-+	},
- };
- 
- module_cxl_driver(cxl_port_driver);
-
+-- 
+மணிவண்ணன் சதாசிவம்
