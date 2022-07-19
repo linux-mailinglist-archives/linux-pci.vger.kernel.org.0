@@ -2,73 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95DD057A3D3
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 17:58:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EE7057A43A
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 18:36:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239673AbiGSP6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Jul 2022 11:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36290 "EHLO
+        id S233392AbiGSQgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Jul 2022 12:36:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239672AbiGSP6n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 11:58:43 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19285B7A5
-        for <linux-pci@vger.kernel.org>; Tue, 19 Jul 2022 08:58:40 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id s18-20020a17090aa11200b001f1e9e2438cso3417600pjp.2
-        for <linux-pci@vger.kernel.org>; Tue, 19 Jul 2022 08:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GtB8BI3Lg6RgIY+Axlp49dX2tSqW+wRJGV6SskGWNCM=;
-        b=X9q2GMc7HLMzv8eirrUEa5w1MWi56Y0W9j1JKwKt/i1hk0onwXPhvLNJuaz04N5yLC
-         QFzEf+SdOP0+Ok5BCOqp5kJnwAlrPuXztiqghKC0+T7VuOmuNm/UA6mcOGMRX27SdVDg
-         MIHYRin+E7ZWiYZ64pkCzFtLSM0a92iD994BxYhngFMi8qh09rSjw+3UDF6EwPHAfNm0
-         lA+tnQFr3nLUQHma2Wk56b5JO57cQHqs2e03f+jJVKp1vvtgCSBMuGC2nf2OAwzSD6ZX
-         Te4nQTx1/QnL5hXh6coSlvDGehckBcBOi3cUsrRpSdcBDGWwC/K+te9+oMGQbZaDhnia
-         ojCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=GtB8BI3Lg6RgIY+Axlp49dX2tSqW+wRJGV6SskGWNCM=;
-        b=CjWiatT+YMTXb+GQdVuV+9TgpUH9McvmOtaRVC2SapqUOTxqP77DRPDTsIqRSVVyPp
-         SYnSKS+MqUqJk4TBrINEp7L1559L4WXrm4Nfg54mwPmDn9kLvaTAkXkMBYrQY1TZF6/F
-         mB0SQ3n+0T1O0d2lTume+u2ZY5Lu7QLMZX06RDkjw7P9Kyo7nDYdc07Ho+s1BJzk6IQ8
-         iKNawj4Tk5gK/3OS88IH+T4BHCdXg33dqMZi4hPoEyuCxVgJsS1+tP0WaPsqe1rsx8Nk
-         OTJw6BbF4+fTap7Ypp5lbM2Kn7wRxYu9QwqHNSJLsM2kt6V9048Jqads2Ma/axcES4Lz
-         Zynw==
-X-Gm-Message-State: AJIora/uk9wJ5BRkSn1CSENnHW7hKZY24r5AYpqXNZ/j0pf/SM9r4q/Y
-        R4Ke6wa/9IUhRaXRE99sNOEakg==
-X-Google-Smtp-Source: AGRyM1umXjHvfiCigjJ7IRDdLwG4rJDpGBCKgBPKB6XLgieis4LZ9EeDAGrjqpraxW+lvusRBwMHrQ==
-X-Received: by 2002:a17:902:eb86:b0:16c:c491:fce7 with SMTP id q6-20020a170902eb8600b0016cc491fce7mr24066423plg.14.1658246319913;
-        Tue, 19 Jul 2022 08:58:39 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id e2-20020a17090a118200b001ef3f85d1aasm14072478pja.9.2022.07.19.08.58.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Jul 2022 08:58:39 -0700 (PDT)
-Date:   Tue, 19 Jul 2022 08:58:39 -0700 (PDT)
-X-Google-Original-Date: Tue, 19 Jul 2022 08:58:37 PDT (-0700)
-Subject:     Re: [PATCH v3 2/2] asm-generic: Add new pci.h and use it
-In-Reply-To: <20220718004114.3925745-3-shorne@gmail.com>
-CC:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        shorne@gmail.com, catalin.marinas@arm.com,
-        Will Deacon <will@kernel.org>, guoren@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-um@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arch@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     shorne@gmail.com
-Message-ID: <mhng-3ae42214-abe0-4fad-9fa9-8f19809fa4d9@palmer-mbp2014>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S235587AbiGSQgB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 12:36:01 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34FA9DEB9;
+        Tue, 19 Jul 2022 09:35:59 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LnPYK5fc9z683Rr;
+        Wed, 20 Jul 2022 00:34:13 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 19 Jul 2022 18:35:56 +0200
+Received: from localhost (10.81.209.49) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 19 Jul
+ 2022 17:35:55 +0100
+Date:   Tue, 19 Jul 2022 17:35:53 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Li, Ming" <ming4.li@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V14 3/7] PCI/DOE: Add DOE mailbox support functions
+Message-ID: <20220719173553.000067c6@Huawei.com>
+In-Reply-To: <20220715030424.462963-4-ira.weiny@intel.com>
+References: <20220715030424.462963-1-ira.weiny@intel.com>
+        <20220715030424.462963-4-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.209.49]
+X-ClientProxiedBy: lhreml749-chm.china.huawei.com (10.201.108.199) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,239 +63,350 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 17 Jul 2022 17:41:14 PDT (-0700), shorne@gmail.com wrote:
-> The asm/pci.h used for many newer architectures share similar
-> definitions.  Move the common parts to asm-generic/pci.h to allow for
-> sharing code.
->
-> Two things to note are:
->
->  - isa_dma_bridge_buggy, traditionally this is defined in asm/dma.h but
->    these architectures avoid creating that file and add the definition
->    to asm/pci.h.
->  - ARCH_GENERIC_PCI_MMAP_RESOURCE, csky does not define this so we
->    undefine it after including asm-generic/pci.h.  Why doesn't csky
->    define it?
->  - pci_get_legacy_ide_irq, This function is only used on architectures
->    that support PNP.  It is only maintained for arm64, in other
->    architectures it is removed.
->
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Link: https://lore.kernel.org/lkml/CAK8P3a0JmPeczfmMBE__vn=Jbvf=nkbpVaZCycyv40pZNCJJXQ@mail.gmail.com/
-> Signed-off-by: Stafford Horne <shorne@gmail.com>
-> ---
-> Second note on isa_dma_bridge_buggy, this is set on x86 but it it also set in
-> pci/quirks.c.  We discussed limiting it only to x86 though as its a general
-> quick triggered by pci ids I think it will be more tricky than we thought so I
-> will leave as is.  It might be nice to move it out of asm/dma.h and into
-> asm/pci.h though.
->
-> Since v2:
->  - Nothing
-> Since v1:
->  - Remove definition of pci_get_legacy_ide_irq
->
->  arch/arm64/include/asm/pci.h | 12 +++---------
->  arch/csky/include/asm/pci.h  | 24 ++++--------------------
->  arch/riscv/include/asm/pci.h | 25 +++----------------------
->  arch/um/include/asm/pci.h    | 24 ++----------------------
->  include/asm-generic/pci.h    | 36 ++++++++++++++++++++++++++++++++++++
->  5 files changed, 48 insertions(+), 73 deletions(-)
->  create mode 100644 include/asm-generic/pci.h
->
-> diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-> index b33ca260e3c9..1180e83712f5 100644
-> --- a/arch/arm64/include/asm/pci.h
-> +++ b/arch/arm64/include/asm/pci.h
-> @@ -9,7 +9,6 @@
->  #include <asm/io.h>
->
->  #define PCIBIOS_MIN_IO		0x1000
-> -#define PCIBIOS_MIN_MEM		0
->
->  /*
->   * Set to 1 if the kernel should re-assign all PCI bus numbers
-> @@ -18,9 +17,6 @@
->  	(pci_has_flag(PCI_REASSIGN_ALL_BUS))
->
->  #define arch_can_pci_mmap_wc() 1
-> -#define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
-> -
-> -extern int isa_dma_bridge_buggy;
->
->  #ifdef CONFIG_PCI
->  static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-> @@ -28,11 +24,9 @@ static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
->  	/* no legacy IRQ on arm64 */
->  	return -ENODEV;
->  }
-> -
-> -static inline int pci_proc_domain(struct pci_bus *bus)
-> -{
-> -	return 1;
-> -}
->  #endif  /* CONFIG_PCI */
->
-> +/* Generic PCI */
-> +#include <asm-generic/pci.h>
-> +
->  #endif  /* __ASM_PCI_H */
-> diff --git a/arch/csky/include/asm/pci.h b/arch/csky/include/asm/pci.h
-> index ebc765b1f78b..44866c1ad461 100644
-> --- a/arch/csky/include/asm/pci.h
-> +++ b/arch/csky/include/asm/pci.h
-> @@ -9,26 +9,10 @@
->
->  #include <asm/io.h>
->
-> -#define PCIBIOS_MIN_IO		0
-> -#define PCIBIOS_MIN_MEM		0
-> +/* Generic PCI */
-> +#include <asm-generic/pci.h>
->
-> -/* C-SKY shim does not initialize PCI bus */
-> -#define pcibios_assign_all_busses() 1
-> -
-> -extern int isa_dma_bridge_buggy;
-> -
-> -#ifdef CONFIG_PCI
-> -static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-> -{
-> -	/* no legacy IRQ on csky */
-> -	return -ENODEV;
-> -}
-> -
-> -static inline int pci_proc_domain(struct pci_bus *bus)
-> -{
-> -	/* always show the domain in /proc */
-> -	return 1;
-> -}
-> -#endif  /* CONFIG_PCI */
-> +/* csky doesn't use generic pci resource mapping */
-> +#undef ARCH_GENERIC_PCI_MMAP_RESOURCE
->
->  #endif  /* __ASM_CSKY_PCI_H */
-> diff --git a/arch/riscv/include/asm/pci.h b/arch/riscv/include/asm/pci.h
-> index 7fd52a30e605..12ce8150cfb0 100644
-> --- a/arch/riscv/include/asm/pci.h
-> +++ b/arch/riscv/include/asm/pci.h
-> @@ -12,29 +12,7 @@
->
->  #include <asm/io.h>
->
-> -#define PCIBIOS_MIN_IO		0
-> -#define PCIBIOS_MIN_MEM		0
+On Thu, 14 Jul 2022 20:04:20 -0700
+ira.weiny@intel.com wrote:
 
-My for-next changes these in bb356ddb78b2 ("RISC-V: PCI: Avoid handing 
-out address 0 to devices").  Do you mind either splitting out the 
-arch/riscv bits or having this in via some sort of shared tag?
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Introduced in a PCIe r6.0, sec 6.30, DOE provides a config space based
+> mailbox with standard protocol discovery.  Each mailbox is accessed
+> through a DOE Extended Capability.
+> 
+> Each DOE mailbox must support the DOE discovery protocol in addition to
+> any number of additional protocols.
+> 
+> Define core PCIe functionality to manage a single PCIe DOE mailbox at a
+> defined config space offset.  Functionality includes iterating,
+> creating, query of supported protocol, and task submission.  Destruction
+> of the mailboxes is device managed.
+> 
+> Cc: "Li, Ming" <ming4.li@intel.com>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Acked-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Hi Ira,
 
-> -
-> -/* RISC-V shim does not initialize PCI bus */
-> -#define pcibios_assign_all_busses() 1
-> -
-> -#define ARCH_GENERIC_PCI_MMAP_RESOURCE 1
-> -
-> -extern int isa_dma_bridge_buggy;
-> -
->  #ifdef CONFIG_PCI
-> -static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-> -{
-> -	/* no legacy IRQ on risc-v */
-> -	return -ENODEV;
-> -}
-> -
-> -static inline int pci_proc_domain(struct pci_bus *bus)
-> -{
-> -	/* always show the domain in /proc */
-> -	return 1;
-> -}
-> -
->  #ifdef	CONFIG_NUMA
->
->  static inline int pcibus_to_node(struct pci_bus *bus)
-> @@ -50,4 +28,7 @@ static inline int pcibus_to_node(struct pci_bus *bus)
->
->  #endif  /* CONFIG_PCI */
->
-> +/* Generic PCI */
-> +#include <asm-generic/pci.h>
-> +
->  #endif  /* _ASM_RISCV_PCI_H */
-> diff --git a/arch/um/include/asm/pci.h b/arch/um/include/asm/pci.h
-> index da13fd5519ef..34fe4921b5fa 100644
-> --- a/arch/um/include/asm/pci.h
-> +++ b/arch/um/include/asm/pci.h
-> @@ -4,28 +4,8 @@
->  #include <linux/types.h>
->  #include <asm/io.h>
->
-> -#define PCIBIOS_MIN_IO		0
-> -#define PCIBIOS_MIN_MEM		0
-> -
-> -#define pcibios_assign_all_busses() 1
-> -
-> -extern int isa_dma_bridge_buggy;
-> -
-> -#ifdef CONFIG_PCI
-> -static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
-> -{
-> -	/* no legacy IRQs */
-> -	return -ENODEV;
-> -}
-> -#endif
-> -
-> -#ifdef CONFIG_PCI_DOMAINS
-> -static inline int pci_proc_domain(struct pci_bus *bus)
-> -{
-> -	/* always show the domain in /proc */
-> -	return 1;
-> -}
-> -#endif  /* CONFIG_PCI */
-> +/* Generic PCI */
-> +#include <asm-generic/pci.h>
->
->  #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
->  /*
-> diff --git a/include/asm-generic/pci.h b/include/asm-generic/pci.h
+Thanks for persisting with this!
+
+So, I think this works, but there is at least one 'sleep' I can't
+see a purpose for.  I think it's just a left over from refactoring.
+
+A few other more trivial things inline.
+
+Thanks,
+
+Jonathan
+
+
+> 
+>>  # Endpoint library must be initialized before its users
+>  obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
 > new file mode 100644
-> index 000000000000..fbc25741696a
+> index 000000000000..12c3762be22f
 > --- /dev/null
-> +++ b/include/asm-generic/pci.h
-> @@ -0,0 +1,36 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +++ b/drivers/pci/doe.c
+> @@ -0,0 +1,546 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Data Object Exchange
+> + *	PCIe r6.0, sec 6.30 DOE
+> + *
+> + * Copyright (C) 2021 Huawei
+> + *	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> + *
+> + * Copyright (C) 2022 Intel Corporation
+> + *	Ira Weiny <ira.weiny@intel.com>
+> + */
 > +
-> +#ifndef __ASM_GENERIC_PCI_H
-> +#define __ASM_GENERIC_PCI_H
+> +#define dev_fmt(fmt) "DOE: " fmt
 > +
-> +#include <linux/types.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/delay.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+> +#include <linux/workqueue.h>
 > +
-> +#ifndef PCIBIOS_MIN_IO
-> +#define PCIBIOS_MIN_IO		0
-> +#endif
+> +#define PCI_DOE_PROTOCOL_DISCOVERY 0
 > +
-> +#ifndef PCIBIOS_MIN_MEM
-> +#define PCIBIOS_MIN_MEM		0
-> +#endif
-> +
-> +#ifndef pcibios_assign_all_busses
-> +/* For bootloaders that do not initialize the PCI bus */
-> +#define pcibios_assign_all_busses() 1
-> +#endif
-> +
-> +extern int isa_dma_bridge_buggy;
-> +
-> +/* Enable generic resource mapping code in drivers/pci/ */
-> +#define ARCH_GENERIC_PCI_MMAP_RESOURCE
-> +
-> +#ifdef CONFIG_PCI
-> +
-> +static inline int pci_proc_domain(struct pci_bus *bus)
+> +#define PCI_DOE_BUSY_MAX_RETRIES 16
+Left over from removed code.
+
+> +static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
+
+This feels misnamed to me now.  It's not waiting for the DOE, it's
+just sleeping unless we cancel.  The actual poll / wait is handled
+outside this.  pci_doe_sleep_unless_cancel() maybe?
+
 > +{
-> +	/* always show the domain in /proc */
-> +	return 1;
+> +	if (wait_event_timeout(doe_mb->wq,
+> +			       test_bit(PCI_DOE_FLAG_CANCEL, &doe_mb->flags),
+> +			       timeout))
+> +		return -EIO;
+> +	return 0;
+> +}
+
+> +static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+> +			    struct pci_doe_task *task)
+> +{
+> +	struct pci_dev *pdev = doe_mb->pdev;
+> +	int offset = doe_mb->cap_offset;
+> +	u32 val;
+> +	int i;
+> +
+> +	/*
+> +	 * Check the DOE busy bit is not set. If it is set, this could indicate
+> +	 * someone other than Linux (e.g. firmware) is using the mailbox. Note
+> +	 * it is expected that firmware and OS will negotiate access rights via
+> +	 * an, as yet to be defined method.
+
+trivial: an, as yet to be defined, method.
+
+> +	 */
+> +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> +	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
+> +		return -EBUSY;
+> +
+> +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
+> +		return -EIO;
+> +
+> +	/* Write DOE Header */
+> +	val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, task->prot.vid) |
+> +		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->prot.type);
+> +	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
+> +	/* Length is 2 DW of header + length of payload in DW */
+> +	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+> +			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
+> +					  2 + task->request_pl_sz /
+> +						sizeof(u32)));
+> +	for (i = 0; i < task->request_pl_sz / sizeof(u32); i++)
+> +		pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+> +				       task->request_pl[i]);
+> +
+> +	pci_doe_write_ctrl(doe_mb, PCI_DOE_CTRL_GO);
+> +
+> +	/* Request is sent - now wait for poll or IRQ */
+
+Could drop the IRQ given not currently handling.  Though I suppose it's correct
+documentation for this function, so can leave it if preferred.
+More than possible we'll get a follow up patch dropping it though from
+someone doing cleanup.
+
+> +	return 0;
 > +}
 > +
-> +#endif /* CONFIG_PCI */
+
+...
+
 > +
-> +#endif /* __ASM_GENERIC_PCI_H */
+> +static void doe_statemachine_work(struct work_struct *work)
+> +{
+> +	struct pci_doe_task *task = container_of(work, struct pci_doe_task,
+> +						 work);
+> +	struct pci_doe_mb *doe_mb = task->doe_mb;
+> +	struct pci_dev *pdev = doe_mb->pdev;
+> +	int offset = doe_mb->cap_offset;
+> +	unsigned long timeout_jiffies;
+> +	u32 val;
+> +	int rc;
+> +
+> +	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags)) {
+> +		signal_task_complete(task, -EIO);
+> +		return;
+> +	}
+> +
+> +	/* Send request */
+> +	rc = pci_doe_send_req(doe_mb, task);
+> +
+nitpick, but blank line separating call from error handling reduces
+readability in my opinion.
+
+> +	if (rc) {
+> +		/*
+> +		 * The specification does not provide any guidance on how to
+> +		 * resolve conflicting requests from other entities.
+> +		 * Furthermore, it is likely that busy will not be detected
+> +		 * most of the time.  Flag any detection of status busy with an
+> +		 * error.
+> +		 */
+> +		if (rc == -EBUSY)
+> +			dev_err_ratelimited(&pdev->dev, "[%x] busy detected; another entity is sending conflicting requests\n",
+> +					    offset);
+> +		signal_task_abort(task, rc);
+> +		return;
+> +	}
+> +
+> +	timeout_jiffies = jiffies + PCI_DOE_TIMEOUT;
+> +	rc = pci_doe_wait(doe_mb, PCI_DOE_POLL_INTERVAL);
+
+What's this particular wait for?  I think you can just move directly to checking
+if the response is ready.
+
+> +	if (rc) {
+> +		signal_task_abort(task, rc);
+> +		return;
+> +	}
+> +
+> +	/* Poll for response */
+> +retry_resp:
+> +	pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
+> +	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
+> +		signal_task_abort(task, -EIO);
+> +		return;
+> +	}
+> +
+> +	if (!FIELD_GET(PCI_DOE_STATUS_DATA_OBJECT_READY, val)) {
+> +		if (time_after(jiffies, timeout_jiffies)) {
+> +			signal_task_abort(task, -EIO);
+> +			return;
+> +		}
+> +		rc = pci_doe_wait(doe_mb, PCI_DOE_POLL_INTERVAL);
+> +		if (rc) {
+> +			signal_task_abort(task, rc);
+> +			return;
+> +		}
+> +		goto retry_resp;
+> +	}
+> +
+> +	rc  = pci_doe_recv_resp(doe_mb, task);
+> +	if (rc < 0) {
+> +		signal_task_abort(task, rc);
+> +		return;
+> +	}
+> +
+> +	signal_task_complete(task, rc);
+> +}
+> +
+
+> +/**
+> + * pci_doe_supports_prot() - Return if the DOE instance supports the given
+> + *			     protocol
+> + * @doe_mb: DOE mailbox capability to query
+> + * @vid: Protocol Vendor ID
+> + * @type: Protocol type
+> + *
+> + * RETURNS: True if the DOE mailbox supports the protocol specified
+> + */
+> +bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+> +{
+> +	unsigned long index;
+> +	void *entry;
+> +
+> +	/* The discovery protocol must always be supported */
+> +	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_PROTOCOL_DISCOVERY)
+> +		return true;
+
+Given how cheap this look up is now it's all in xarray, we could drop this
+'optimization'.  I'm fairly sure the discovery protocol will always be
+discovered (spec says it must be returned when calling itself as the fist
+protocol).
+
+> +
+> +	xa_for_each(&doe_mb->prots, index, entry)
+> +		if (entry == pci_doe_xa_prot_entry(vid, type))
+> +			return true;
+> +
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
+
+
+> +EXPORT_SYMBOL_GPL(pci_doe_submit_task);
+> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+> new file mode 100644
+> index 000000000000..c77f6258c996
+> --- /dev/null
+> +++ b/include/linux/pci-doe.h
+> @@ -0,0 +1,79 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Data Object Exchange
+> + *	PCIe r6.0, sec 6.30 DOE
+> + *
+> + * Copyright (C) 2021 Huawei
+> + *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> + *
+> + * Copyright (C) 2022 Intel Corporation
+> + *	Ira Weiny <ira.weiny@intel.com>
+> + */
+> +
+> +#ifndef LINUX_PCI_DOE_H
+> +#define LINUX_PCI_DOE_H
+> +
+> +#include <linux/completion.h>
+
+include not needed any more.
+
+Thanks,
+
+Jonathan
+
+> +
+> +struct pci_doe_protocol {
+> +	u16 vid;
+> +	u8 type;
+> +};
+> +
+> +struct pci_doe_mb;
+> +
+> +/**
+> + * struct pci_doe_task - represents a single query/response
+> + *
+> + * @prot: DOE Protocol
+> + * @request_pl: The request payload
+> + * @request_pl_sz: Size of the request payload (bytes)
+> + * @response_pl: The response payload
+> + * @response_pl_sz: Size of the response payload (bytes)
+> + * @rv: Return value.  Length of received response or error (bytes)
+> + * @complete: Called when task is complete
+> + * @private: Private data for the consumer
+> + * @work: Used internally by the mailbox
+> + * @doe_mb: Used internally by the mailbox
+> + *
+> + * The payload sizes and rv are specified in bytes with the following
+> + * restrictions concerning the protocol.
+> + *
+> + *	1) The request_pl_sz must be a multiple of double words (4 bytes)
+> + *	2) The response_pl_sz must be >= a single double word (4 bytes)
+> + *	3) rv is returned as bytes but it will be a multiple of double words
+> + *
+> + * NOTE there is no need for the caller to initialize work or doe_mb.
+> + */
+> +struct pci_doe_task {
+> +	struct pci_doe_protocol prot;
+> +	u32 *request_pl;
+> +	size_t request_pl_sz;
+> +	u32 *response_pl;
+> +	size_t response_pl_sz;
+> +	int rv;
+> +	void (*complete)(struct pci_doe_task *task);
+> +	void *private;
+> +
+> +	/* No need for the user to initialize these fields */
+> +	struct work_struct work;
+> +	struct pci_doe_mb *doe_mb;
+> +};
+> +
+> +/**
+> + * pci_doe_for_each_off - Iterate each DOE capability
+> + * @pdev: struct pci_dev to iterate
+> + * @off: u16 of config space offset of each mailbox capability found
+> + */
+> +#define pci_doe_for_each_off(pdev, off) \
+> +	for (off = pci_find_next_ext_capability(pdev, off, \
+> +					PCI_EXT_CAP_ID_DOE); \
+> +		off > 0; \
+> +		off = pci_find_next_ext_capability(pdev, off, \
+> +					PCI_EXT_CAP_ID_DOE))
+> +
+> +struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
+> +bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
+> +int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
+> +
+> +#endif
+
