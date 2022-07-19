@@ -2,173 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A659F579549
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 10:34:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 632BD5795A0
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jul 2022 10:54:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235414AbiGSIeZ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 19 Jul 2022 04:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44044 "EHLO
+        id S237148AbiGSIyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Jul 2022 04:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230001AbiGSIeZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 04:34:25 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD71232BA7;
-        Tue, 19 Jul 2022 01:34:23 -0700 (PDT)
-Received: from mail-ot1-f48.google.com ([209.85.210.48]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MI5YN-1oGj6I3zQF-00FFE9; Tue, 19 Jul 2022 10:34:22 +0200
-Received: by mail-ot1-f48.google.com with SMTP id r22-20020a056830419600b0061c6edc5dcfso11153969otu.12;
-        Tue, 19 Jul 2022 01:34:21 -0700 (PDT)
-X-Gm-Message-State: AJIora8zDtd34SM0f8Evi8yusEvG+001JjS3ZKiZntDKkWa1m5Gd8Wn6
-        EWoqGiregyMRFEeOMHA1qgCpirfFj1v37o1/Lw4=
-X-Google-Smtp-Source: AGRyM1ufEAWksjkMvj9tEJzYY5hH71bvz6izLKVChTmEgCkEaBUSJ/YN8HWkIZNgYF2aCIi2ybpPIw7GMEG0afM3trQ=
-X-Received: by 2002:a81:6dce:0:b0:31e:5a3b:d3a2 with SMTP id
- i197-20020a816dce000000b0031e5a3bd3a2mr2244432ywc.495.1658217945828; Tue, 19
- Jul 2022 01:05:45 -0700 (PDT)
+        with ESMTP id S237142AbiGSIyi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 04:54:38 -0400
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74FA10561;
+        Tue, 19 Jul 2022 01:54:37 -0700 (PDT)
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26J73udP014321;
+        Tue, 19 Jul 2022 01:54:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pfpt0220;
+ bh=43NylK9vU9jEIhVd4w7Tv6pt6V3Rf4VRjNPWeqLM19w=;
+ b=hOhbvbGhCK9wixtr9u8WqQEAzY2xIbqrOsph5/caovAEO3QtwhyJ6/n1pFdFJ10IROgO
+ sXx1pe+f/QxKkh4gZungFj5YBatQ7xx2DXLycVQX1MiX5gkA9CntbcEMvMh3GFMXTtz6
+ +WRXWa+eqHuElJIVyqhEuu7EjOeO5NL/hA8XJuGY667wW93AIJb0kcyAPmaMGNI/gUWQ
+ 7TXOUeU/nPHnnBE0wP5K1vnNBJ2CiaUnVuN3dPV4Rgif2lja5INKU6+Z4ZqOxoG4XpaD
+ f8PXY9WF+W4e/P+Yxzy/e3VwkWYtBKo7u3dWD6tGuT0ODz6KjztMmboNna3cunhf4MRN Iw== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+        by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3hdqw18ae8-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 19 Jul 2022 01:54:19 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 19 Jul
+ 2022 01:54:18 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 19 Jul 2022 01:54:18 -0700
+Received: from proliant-dl360 (unknown [10.110.150.170])
+        by maili.marvell.com (Postfix) with ESMTP id 48A5C3F70A2;
+        Tue, 19 Jul 2022 01:54:17 -0700 (PDT)
+Date:   Tue, 19 Jul 2022 01:54:17 -0700
+From:   Wojciech Bartczak <wbartczak@marvell.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Issues with A3720 PCIe controller driver pci-aardvark.c
+Message-ID: <20220719085417.GA25397@proliant-dl360>
+References: <20210723221710.wtztsrddudnxeoj3@pali>
+ <20220216200940.fwdwk5rcb4zq6dyg@pali> <20220710112108.jegpz4khfsrb4ahd@pali>
 MIME-Version: 1.0
-References: <20220718202843.6766-1-maukka@ext.kapsi.fi> <20220718202843.6766-4-maukka@ext.kapsi.fi>
-In-Reply-To: <20220718202843.6766-4-maukka@ext.kapsi.fi>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 19 Jul 2022 10:05:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a042yoLR0eqt4Bm0KH4X9SJhUsjKDh1S9M+MF6mU1mPNw@mail.gmail.com>
-Message-ID: <CAK8P3a042yoLR0eqt4Bm0KH4X9SJhUsjKDh1S9M+MF6mU1mPNw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: mvebu: add support for orion5x
-To:     Mauri Sandberg <maukka@ext.kapsi.fi>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:S0/HcIKDpqem1xph+v8nynll+9XBx7ff9rz8qcK9eJZWtL07V2R
- 8jAYs2eqxL9aRB0jlT3oPV0TDRlOumUpa97016u50zhYEHR/3QGsV2x4BqUkHy2qjdv/0vj
- LtuhjpSGWuCeEaUukUYIqZi3Bcucopbi85ZmZeNos/DsfXTNH7T3ChTgendkngXDRQzlR7e
- Nd5+DX/N/nz8PhMskmFbA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PavivdfLPIg=:/LYI37Cd5I6g3+EGFq5fWC
- cevZJlL46u2g2Z5FuN0+5yBKlhG4hcRyVi8eoF8oGWLHzJouWPbXqbPBT+Cy0JuePXgcvpOkD
- GWIRBf3Y6AeN0Kmce6VFlR0zxzWOVMrTMN6no1s1x4mhhJFXcLtX+PT2mwmdjN90Yu9vf5TVe
- MIWQbKM2+QhSy3Njld2AeHum0AhhFyxQYxnfbiQyZNBgVQJw6NuNFecmjn0WAWtfnmeYReONk
- c3LCaHs+b2xLXW0ktGIaTNdHAh+88gRct0rMvJizKTKrYkbwwXduy4h6oXA6Ygauf11B4FHGH
- Umob9nrZsv3xNROgvxtT00jPZjk56J+snK0ghpVgda5ctPhDyqDelkwnhWNCgOrHZNSwT2t3n
- zuwp8lDJQNihgMii+RE4v/APUBJA4u/8B+MmhWUwwORhOI4eyCmjCcYX/d8bRJPoXVLL5WCO1
- k6AbSdma+EyXPX+6zcNPESCfkEaaXYfbAe2uMYKweSqOP1QWf87WH3BR7sfOFqZHvTvjWRA+Y
- fl+IRvVj0eeE2Avo0HnKhb+n8iK7OEKBUEKAQVSnU3lslG0KBdE/lmb+poQw4zpgn7X1ST4kI
- xrcw5/xfEpkurchzy7XwKBHVSuc6Y+SxtuVVyHjV6yb1z1NJqBmbGkP2fRi5sgkorFBi7ZJcI
- tL7iy7p0Nv+jyAWpXanxUgRy9bxh3rVJk2Izr1SM9IHWRPJDYfRrsmLKrDPb11Tw/KwbpAt2G
- Pyruw4GRQ4FKa84APoHkIxitJsoX+O4z3ceF7dSQDmbb1tMueGgZ5UqpmTIaKv5XsQ0bUMvD+
- lOvqscAMZGe91S/Bhg8btDfk33B8tHe82dqx/qUeZFMlaXoGYU/talUQBlQKEwM5ZhxAd2qtv
- A2NF2tHvGeVdQOBv14/A==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220710112108.jegpz4khfsrb4ahd@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-ORIG-GUID: lc6VoWLx7hvIIWFfqxTgFgE5bZYFvCW7
+X-Proofpoint-GUID: lc6VoWLx7hvIIWFfqxTgFgE5bZYFvCW7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-18_22,2022-07-18_01,2022-06-22_01
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 18, 2022 at 10:28 PM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
->
-> Add support for orion5x PCIe controller.
->
-> There is Orion-specific errata that config space via CF8/CFC registers
-> is broken. Workaround documented in errata documented (linked from above
-> documentation) does not work when DMA is used and instead other
-> undocumented workaround is needed which maps config space to memory
-> (and therefore avoids usage of broken CF8/CFC memory mapped registers).
->
-> Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
-> Cc: Pali Roh√°r <pali@kernel.org>
+On Sun, Jul 10, 2022 at 01:21:08PM +0200, Pali Roh·r wrote:
+> + Other people from Marvell active on LKML.
+> 
+> Could you please look at this issue and give us some comment? It is
+> really critical issue which needs to be solved.
+> 
 
-Nice job, glad you managed to figure this out!
+Hi Pali,
 
-> diff --git a/arch/arm/mach-orion5x/common.c b/arch/arm/mach-orion5x/common.c
-> index 7bcb41137bbf..9d8be5ce1266 100644
-> --- a/arch/arm/mach-orion5x/common.c
-> +++ b/arch/arm/mach-orion5x/common.c
-> @@ -231,19 +231,6 @@ void __init orion5x_init_early(void)
->
->  void orion5x_setup_wins(void)
->  {
-> -       /*
-> -        * The PCIe windows will no longer be statically allocated
-> -        * here once Orion5x is migrated to the pci-mvebu driver.
-> -        */
-> -       mvebu_mbus_add_window_remap_by_id(ORION_MBUS_PCIE_IO_TARGET,
-> -                                         ORION_MBUS_PCIE_IO_ATTR,
-> -                                         ORION5X_PCIE_IO_PHYS_BASE,
-> -                                         ORION5X_PCIE_IO_SIZE,
-> -                                         ORION5X_PCIE_IO_BUS_BASE);
-> -       mvebu_mbus_add_window_by_id(ORION_MBUS_PCIE_MEM_TARGET,
-> -                                   ORION_MBUS_PCIE_MEM_ATTR,
-> -                                   ORION5X_PCIE_MEM_PHYS_BASE,
-> -                                   ORION5X_PCIE_MEM_SIZE);
->         mvebu_mbus_add_window_remap_by_id(ORION_MBUS_PCI_IO_TARGET,
->                                           ORION_MBUS_PCI_IO_ATTR,
->                                           ORION5X_PCI_IO_PHYS_BASE,
+Thank you for reaching me out. I hope I can help.
+I don't work directly over Armada A3720 nor knowing anyone from team.
+Unfortunately, this means I have no access to the data/code you are
+looking for. Nevertheless, I have escalated this problem internally.
+I believe this should help to get to right people which can investigate
+patch/issue and do actual work.
 
-If the idea is to have the PCI_MVEBU driver only used for the DT based orion5x
-machines, but not the legacy board files, I suspect this breaks the legacy
-pci driver, unless you move the mbus configuration into the pcie_setup()
-function.
+Kind regards,
+Wojciech.
 
-> +/* Relevant only for Orion-1/Orion-NAS */
-> +#define ORION5X_PCIE_WA_PHYS_BASE      0xf0000000
-> +#define ORION5X_PCIE_WA_VIRT_BASE      IOMEM(0xfd000000)
-
-You should not need to hardcode these here. The ORION5X_PCIE_WA_PHYS_BASE
-should already be part of the DT binding. There is little practical difference
-here, but I see no value in taking the shortcut here either.
-
-For the ORION5X_PCIE_WA_VIRT_BASE, you rely on this to match the
-definition in arch/arm/mach-orion5x/common.c, and this is rather fragile.
-
-Instead, please use ioremap() to create a mapping at runtime. The ioremap()
-implementation on ARM is smart enough to reuse the address from the static
-mapping in common.c, but will also keep working if that should go away.
-
-> +#define ORION5X_PCIE_WA_SIZE           SZ_16M
-> +#define ORION_MBUS_PCIE_WA_TARGET      0x04
-> +#define ORION_MBUS_PCIE_WA_ATTR                0x79
-> +
-> +static int mvebu_pcie_child_rd_conf_wa(struct pci_bus *bus, u32 devfn, int where, int size, u32 *val)
-> +{
-> +       struct mvebu_pcie *pcie = bus->sysdata;
-> +       struct mvebu_pcie_port *port;
-> +
-> +       port = mvebu_pcie_find_port(pcie, bus, devfn);
-> +       if (!port)
-> +               return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +       if (!mvebu_pcie_link_up(port))
-> +               return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +       /*
-> +        * We only support access to the non-extended configuration
-> +        * space when using the WA access method (or we would have to
-> +        * sacrifice 256M of CPU virtual address space.)
-> +        */
-> +       if (where >= 0x100) {
-> +               *val = 0xffffffff;
-> +               return PCIBIOS_DEVICE_NOT_FOUND;
-> +       }
-> +
-> +       return orion_pcie_rd_conf_wa(ORION5X_PCIE_WA_VIRT_BASE, bus, devfn, where, size, val);
-> +}
-> +
-
-This is probably good enough here, though I think you could also use
-the trick from drivers/pci/ecam.c and map each bus at a time.
-
-      Arnd
+> On Wednesday 16 February 2022 21:09:40 Pali Roh·r wrote:
+> > + Bharat, Veerasenareddy and Wojciech from Marvell
+> > 
+> > Hello! Could you please look at this email and help us with this Marvell HW issue?
+> > 
+> > On Saturday 24 July 2021 00:17:10 Pali Roh·r wrote:
+> > > Hello Konstantin!
+> > > 
+> > > There are issues with Marvell Armada 3720 PCIe controller when high
+> > > performance PCIe card (e.g. WiFi AX) is connected to this SOC. Under
+> > > heavy load PCIe controller sends fatal abort to CPU and kernel crash.
+> > > 
+> > > In Marvell Armada 3700 Functional Errata, Guidelines, and Restrictions
+> > > document is described erratum 3.12 PCIe Completion Timeout (Ref #: 251)
+> > > which may be relevant. But neither Bjorn, Thomas nor me were able to
+> > > understood text of this erratum. And we have already spent lot of time
+> > > on this erratum. My guess that is that in erratum itself are mistakes
+> > > and there are missing some other important details.
+> > > 
+> > > Konstantin, are you able to understand this erratum? Or do you know
+> > > somebody in Marvell who understand this erratum and can explain details
+> > > to us? Or do you know some more details about this erratum?
+> > > 
+> > > Also it would be useful if you / Marvell could share text of this
+> > > erratum with linux-pci people as currently it is available only on
+> > > Marvell Customer Portal which requires registration with signed NDA.
+> > > 
+> > > In past Thomas wrote patch "according to this erratum" and I have
+> > > rebased, rewritten and resent it to linux-pci mailing list for review:
+> > > https://lore.kernel.org/linux-pci/20210624222621.4776-6-pali@kernel.org/
+> > > 
+> > > Similar patch is available also in kernel which is part of Marvell SDK.
+> > > 
+> > > Bjorn has objections for this patch as he thinks that bit DIS_ORD_CHK in
+> > > that patch should be disabled. Seems that enabling this bit effectively
+> > > disables PCIe strong ordering model. PCIe kernel drivers rely on PCIe
+> > > strong ordering, so it would implicate that that bit should not be
+> > > enabled. Which is opposite of what is mentioned patch doing.
+> > > 
+> > > Konstantin, could you help us with this problem?
