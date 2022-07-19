@@ -2,164 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC30D57A9AB
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 00:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 812AD57A9AD
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jul 2022 00:16:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231350AbiGSWPX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Jul 2022 18:15:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51140 "EHLO
+        id S233316AbiGSWQp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Jul 2022 18:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbiGSWPW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 18:15:22 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E244A829;
-        Tue, 19 Jul 2022 15:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658268921; x=1689804921;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=oB+Qhoil1PUMtPV0N8Fy5lOrc9hThwYriw+/Lhiji88=;
-  b=ddSo6od3QzoPcdNZSatOe09ThJQbS+JXC2x5Uawqr5ggB2mB8jgB3IP1
-   0EV5awJVp+eTbXv5c9JXah1AkACEROWIHv+Lam2+x4owZQvdtdHl9/o+b
-   lIImqoCDzhd9ttvJ5ZbiHwmyrWEQH4L6S5s5VJQUaFPQ7V/Em3AeMLOQ5
-   9vf+0AQMPjOkzxxLVtfKKRIewFvgPucE1HW5yh3pa7oLoQg4OiQVjiIEI
-   LosmJgWayR3THJM4NU2IyRl5tX77cnVucRShdtrjmj72EhEpGVPg4vqQO
-   mgiOm+Sc2ROYhe4fQFNANYabJpLQdpUD6xfAFr+v9Z7mB5mDQ+oOfjDiU
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10413"; a="372922360"
-X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
-   d="scan'208";a="372922360"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 15:15:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
-   d="scan'208";a="625382109"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga008.jf.intel.com with ESMTP; 19 Jul 2022 15:15:20 -0700
-Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Tue, 19 Jul 2022 15:15:20 -0700
-Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
- ORSMSX608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Tue, 19 Jul 2022 15:15:19 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28 via Frontend Transport; Tue, 19 Jul 2022 15:15:19 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Tue, 19 Jul 2022 15:15:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lH1z44kb8dmVaNaFHsE+nMly7xvzs5iHx4pWPyITFmXTMDLV4Dp3myc3YXdPUUKmRyZUXtuvYwjA80fkzbmG0Acf8+PtGECSjMJoOMB5KDjIVeQjmi7mwpZbOkPmv2mdESgkUnt/f+ekGngN0fsIAQpaNAIoa64qdd5LpzbIn+U0AxsvC0GNNyUqDfc+XLDcV4S44SIfveFX7MnG/qU2m4OushqMOqpIBLL2MRKtUrlN57ujGEPH1RXZxyP+LPdcPSqEUiGY5yshN13HDZMlJbjS85AtLFc0Gu3CbkQJrWPCMrnINi8AL28PLXY4Uez7/s6i2Upt/NneXZvgDHlfAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4xfDJxEOODeR7on39keOG4SUO5aokPOqLVqpJ+Tft24=;
- b=Nu7RYCtgdEsd72zZ7rHGIICK3oKVHY009BeId0paeIKd8OQUBFHl6MXeM0C79UJSehs80gv2g/H5dxjUSy4EzRcwSnBax6AeM6SII4RUpVNXrTYmJGpLZGT3QOho4TKZT/xFlSoQxWeHOEoFwVXE52L5nAtHrCfwoI9g7wLgwsGxKzLbFdTvf2fvIrEnNztb1j+YGg3++8VRKTFWezjQmHQchKliV6auRzbueOenz3ZhhMXoaHSzoiY/kT0fz31tuqXimNzR/1JI+PUVs3fDOD7b/kRAPHL4tamXiYRNsHM68j7kORPUaURtoKwWRirpe9zeLtUU57/e0lNe5SR+8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by PH0PR11MB5174.namprd11.prod.outlook.com
- (2603:10b6:510:3b::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.17; Tue, 19 Jul
- 2022 22:15:18 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::6466:20a6:57b4:1edf]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::6466:20a6:57b4:1edf%11]) with mapi id 15.20.5438.024; Tue, 19 Jul
- 2022 22:15:18 +0000
-Date:   Tue, 19 Jul 2022 15:15:16 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
-        <hch@lst.de>, "Ben Widawsky" <bwidawsk@kernel.org>
-Subject: Re: [PATCH 36/46] cxl/region: Add interleave ways attribute
-Message-ID: <62d72cf43c74_11a1662945b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <165603869943.551046.3498980330327696732.stgit@dwillia2-xfh>
- <20220624041950.559155-11-dan.j.williams@intel.com>
- <20220630144420.000005b5@Huawei.com>
- <62cb6f9a74b33_3535162944e@dwillia2-xfh.notmuch>
- <20220719154718.000077ec@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220719154718.000077ec@Huawei.com>
-X-ClientProxiedBy: BYAPR02CA0034.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::47) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+        with ESMTP id S229565AbiGSWQp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jul 2022 18:16:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8FC4C62C;
+        Tue, 19 Jul 2022 15:16:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EACCDB81D78;
+        Tue, 19 Jul 2022 22:16:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC72C341CA;
+        Tue, 19 Jul 2022 22:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658268999;
+        bh=mYGEOu11Ux+xMeeiBucT0QIkBYxBBFukVuPKg0cuYv0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=vLyWN6P4TRw1hKQN86GnXE4o6I0Q6Cll+rIOfs4lDOP14D1qtAlX6AAFEZ6xvRmIF
+         cqsRhUY1mzKXqFL982KD6QQfystVrLY5hNRVdamwFPLfdlkNa8rGfASy9qnA0tFcpg
+         SLcjVpb+p2l216lkKklVE7+Dph3XzutZIIlQCX+mwD/lUsOqW5t+0CLdABUFCCYtd4
+         8bL7w6s5IT6Q3TNxTCtF1G2jhLtKk3+XsJyYakqMe7xAVu+eKLNaSORi2WPkSGgbhD
+         wOd9Rg0FuWvjuSX3bBlB9k42jZp5v9UkyEkF/0MlDTDSEJQMJXGPyzNWMaK8iQRKQb
+         YnYz+bSwBzVkg==
+Date:   Tue, 19 Jul 2022 17:16:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V16 4/6] cxl/pci: Create PCI DOE mailbox's for memory
+ devices
+Message-ID: <20220719221637.GA1585132@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 17cd3992-4d0f-4f48-96cf-08da69d429c8
-X-MS-TrafficTypeDiagnostic: PH0PR11MB5174:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GtL7zBVWHLhZ//dlekUva04XwQSb58KeFPZFlOGWXeYnF4Nm7S/0yWQh2gpsK7JXCcilHrSWyvzPzBJjD2ewLmBsLNquvsX0No4uQu9RcqvWJgV41n8uZGYDw95DwVeWAb9jHclUu4jGGioyv68bByXpC/OvEJ9o0hqAiwZU3Yx/z+p1WhF5qiJZTKl1t0S5nXt8N23p6bbxeTlq7Ao0iYwKeMk32E7DweyGUGcLpUSFshj6T4oKxMKqmjFdoVdHnDSme3bgFLpNighsfkpH0vJ2iHsdT9t9mLNjJ6nonQ9FP+qV4HyeC0st5CchLUO86a0RNZy4soFlVvAeFj6BYSklF/DFcfi5q6ZBFMmulfREtlRQDHfphZj5X51GayZydDrpa5lmI8YfJ9xqakpZB5SQbodFDWQJG1yNi0KD3F85afkATewBtqNpWyBXGmmgUsL9d9aCUPdGi4Jn7ihDQAncAMZWHvAsrrZtuiyKgXcfQbzaDQVJTZYrb97kkmrcp4FcO/p///mSjORGXxmPe7CQjWx6NPZ63U6xWaSA9oAQTuZhJMkHnNxCWDVvtOakda8tHxR+D+vnXD8uuKkRhdhWu97iTcyB7cpW6yNQGHOt/7OQGOD4GmsaAvDASnHWkUE92BseIuF9AQ92Q14XMPhgQ2oz6DTIQswUQEOj6Srx3zgRVGv873JPA+8yUDBhAs5efZSk/0ZjBaEKnCjVDjW7o6q081Cm1DiXorBNuLcmcRDuP+64Aqi3qsK6joEo
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(346002)(376002)(136003)(366004)(396003)(5660300002)(8936002)(8676002)(4744005)(2906002)(66946007)(110136005)(86362001)(316002)(4326008)(66556008)(66476007)(82960400001)(6486002)(478600001)(41300700001)(26005)(9686003)(38100700002)(186003)(6506007)(6512007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OLvMkiVeiPvAwZC1rDFwdMptWBEtP4QJITD0cKjE1YtsGyzUF3eDjM3JaYmn?=
- =?us-ascii?Q?9ruWZwIyOg28gEovt1yyyN0mTNSabpmmQ6PK+5cxWNNEHftXjWmy4Uts12zE?=
- =?us-ascii?Q?SUFlNL/KTnDogVDjn0BKoIJTmOdY9J81WTBeNdc44tRoYCAdDvXdcKwZxodP?=
- =?us-ascii?Q?d8S9xgkyG42WCgY80qAclqZmP/uzrU9ghuP06/Dd3Uv6r31/lhdl/sPZwxB5?=
- =?us-ascii?Q?fLb1hEJziEYZZ5+AVthda5N15FK5ChxqmbWeCCiEAtku2wK8+XU1BQk7xG2T?=
- =?us-ascii?Q?3Dndf49m5ABb57KHWlBMizmBrIQTCsk689xT2iv0nt1fO7dACfy2zgruVmvc?=
- =?us-ascii?Q?UD8cn0dwiHiAFgsahII6kunGo3I7YT5zR/Lcb5x0urFuVTSDwo7Nhd8jDG7Q?=
- =?us-ascii?Q?QbmQc8NzbPVvL6+FDoIp6V03E5x6mZO/E4HuKQODMN4i4g+mGwkU85uF5rlO?=
- =?us-ascii?Q?eZ3thZU2eaWSB5qOgUUem4xtgPL14eoTpXNV5If7uLAc+pwII1Gj5g4fMOgC?=
- =?us-ascii?Q?IhgUAcyfMKxOIF60IeM1ug97s3qoj7OxX0TVBS0KyQI5gnDKV6nX5mZBrXWA?=
- =?us-ascii?Q?+ruQCGQCQ/e01oscJvnn/zi8o4kBPybG/mR+w0xeDwciT7Ddn9X7hot9T6I9?=
- =?us-ascii?Q?6ZWS0rLxl+XuGGGr8xVpIBghH0hiFWDGvQniuaKuXBBH0/XRYM42MRca6z4e?=
- =?us-ascii?Q?GDeiH16oIbYeGxh+HeIcP+hiK7PDcZDuQXFfBKylxDbwb64gPo19Wye3Ckcm?=
- =?us-ascii?Q?Dr7GiUvTFU1cT0vI/tJ0kHxas3rsvR52eBXPuKoYuCkd0Eg8nBPuiQpM8yCK?=
- =?us-ascii?Q?838wi/9ZlxRJjPLETWVKQsJbtWmxkmqErAM+6tmRAbdFILI0NAK9yNxaEdaB?=
- =?us-ascii?Q?tXUy6QabTkqNUwhS8Rpj4dyO7hB/Xq6DS70tfaBCaKtQAMZFmWTgdwsP9KTj?=
- =?us-ascii?Q?Cdjq+BZQRWaRMFCG2/EogGBq838zumNAUk5DG2R6f/tsrw4AyrlT9UjAyf9v?=
- =?us-ascii?Q?BkyC4iqob+OnBUppgPYjyNWh/zwCfenztd38IowJBm0XGxKMDzSCLQBhkLTm?=
- =?us-ascii?Q?9JfQhr7m5p/ifQ7JPPhXoOrXLp1DvC1jz/c4B7uEKj5BXboaWQdQHSmR0Gp7?=
- =?us-ascii?Q?6aHkLE7+ckTptH4nAV8pJvpOoILhRGnLzxXePm7IdAFlmwLcQy+g/bfIqgOl?=
- =?us-ascii?Q?uACATfEyf4HyqK0mhVcFukNiE7oXguNNAvTzOfLY+Nt8enxuB77ZWohPcxg4?=
- =?us-ascii?Q?aNof/zwo01tS9ezNf9bezxU3MhA/+N1zphUvf2cyObKF5bBCIGw82BTCa3Qz?=
- =?us-ascii?Q?vQxDB9kivTpxQCv1D7kdNZD03Tj6XucUGAMnNEhrlw7W3wpXWJrRvKvrUp84?=
- =?us-ascii?Q?l+Wybn9jSKdM5R9q5tAnf0NKjIiVfK9BwaYOpKoBRCvcz8x34etOylA1ltZi?=
- =?us-ascii?Q?jGHO+XcYpvuzVm90KDnijiGMLwLHZGG2qImZ5BYdMjgpOo6Sf1QEZEydK6Il?=
- =?us-ascii?Q?NuLtNpdraZ86sTGJQOmvfM0ex6k+CmNComhio4c/dxo89lKxGIJ2hktU5pRQ?=
- =?us-ascii?Q?GoL4O5O6xxY8T4E4VCHw3NMAE/XVvuvfk2A5y9Xoi7XdLI577IYXvoi374Ck?=
- =?us-ascii?Q?Zw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17cd3992-4d0f-4f48-96cf-08da69d429c8
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2022 22:15:18.2903
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SXbxab+pdnKsz8Q/jjyD2ATbveLl4DZKbxt/HksPWw39olVNoGjnUDiE3BTeZArqKpz7kBw54uQINMfwRr/tvD8pLlsUAPqXXasF6J/3gLk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5174
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220719205249.566684-5-ira.weiny@intel.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jonathan Cameron wrote:
-> > No, I would prefer that as far as the Linux implementation is concerned
-> > the software-guide does not exist. In the sense that the Linux
-> > implementation choices supersede and are otherwise a superset of what
-> > the guide recommends.
-> 
-> ah. I phrased that badly. I just meant lift the argument as a comment rather
-> than a cross reference.
+In subject, s/mailbox's/mailboxes/
 
-Oh, you mean promote it to an actual rationale comment rather than just
-parrot what the code is doing? Yeah, that's a good idea.
+On Tue, Jul 19, 2022 at 01:52:47PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> DOE mailbox objects will be needed for various mailbox communications
+> with each memory device.
+> 
+> Iterate each DOE mailbox capability and create PCI DOE mailbox objects
+> as found.
+> 
+> It is not anticipated that this is the final resting place for the
+> iteration of the DOE devices.  The support of switch ports will drive
+> this code into the PCIe side.  In this imagined architecture the CXL
+> port driver would then query into the PCI device for the DOE mailbox
+> array.
+> 
+> For now creating the mailboxes in the CXL port is good enough for the
+> endpoints.  Later PCIe ports will need to support this to support switch
+> ports more generically.
+
+> +static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+> +{
+> +	struct device *dev = cxlds->dev;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	u16 off = 0;
+> +
+> +	xa_init(&cxlds->doe_mbs);
+> +	if (devm_add_action(&pdev->dev, cxl_pci_destroy_doe, &cxlds->doe_mbs)) {
+> +		dev_err(dev, "Failed to create XArray for DOE's\n");
+
+s/DOE's/DOEs/
+
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Mailbox creation is best effort.  Higher layers must determine if
+> +	 * the lack of a mailbox for their protocol is a device failure or not.
+> +	 */
+> +	pci_doe_for_each_off(pdev, off) {
+> +		struct pci_doe_mb *doe_mb;
+> +
+> +		doe_mb = pcim_doe_create_mb(pdev, off);
+> +		if (IS_ERR(doe_mb)) {
+> +			dev_err(dev, "Failed to create MB object for MB @ %x\n",
+
+Maybe "%#x" to avoid ambiguity?  Also below.
+
+> +				off);
+> +			continue;
+> +		}
+> +
+> +		if (xa_insert(&cxlds->doe_mbs, off, doe_mb, GFP_KERNEL)) {
+> +			dev_err(dev, "xa_insert failed to insert MB @ %x\n",
+> +				off);
+> +			continue;
+> +		}
+> +
+> +		dev_dbg(dev, "Created DOE mailbox @%x\n", off);
+> +	}
+> +}
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct cxl_register_map map;
+> @@ -434,6 +476,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  	cxlds->component_reg_phys = cxl_regmap_to_base(pdev, &map);
+>  
+> +	devm_cxl_pci_create_doe(cxlds);
+> +
+>  	rc = cxl_pci_setup_mailbox(cxlds);
+>  	if (rc)
+>  		return rc;
+> -- 
+> 2.35.3
+> 
